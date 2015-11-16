@@ -1279,6 +1279,18 @@ services.factory('GetProgramPeriodTracerProductsTrend', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/tracer-products-trend.json', {}, {});
 });
 
+services.factory('DashboardReportingPerformance', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/reporting-performance.json', {}, {});
+});
+
+services.factory('DashboardDistrictStockSummary', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/district-stock-summary.json', {}, {});
+});
+
+services.factory('DashboardFacilityStockSummary', function($resource) {
+    return $resource('/dashboard/program/:programId/period/:periodId/facility-stock-summary.json', {}, {});
+});
+
 services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function($resource) {
     return $resource('/dashboard/program/:programId/period/:periodId/product/:productCode/stocked-out-facilities.json', {}, {});
 });
@@ -1317,4 +1329,39 @@ services.factory('FacilitiesByLevel', function($resource){
     return $resource('/reports/facility-By-level.json',{},{});
 });
 
+services.factory('RequisitionReportService', function($resource){
+    return $resource('/reports/requisition-report.json',{},{});
+});
 
+services.factory('ProductReportService', function ($resource) {
+    return {
+        loadAllProducts: function () {
+            return $resource('/rest-api/lookup/products', {pageSize: 2000}, {});
+        },
+        loadProductReport: function () {
+            return $resource('/reports/single-product-report', {}, {save: {method: 'POST'}});
+        },
+        loadFacilityReport: function () {
+            return $resource('/reports/all-products-report', {}, {save: {method: 'POST'}});
+        }
+    };
+});
+
+services.factory('FacilityService',function($resource){
+    return {
+        allFacilities: function () {
+            return $resource('/rest-api/lookup/facilities', {pageSize: 2000}, {});
+        }
+    };
+});
+
+services.factory('GeographicZoneService',function($resource){
+    return {
+        loadGeographicZone: function () {
+            return $resource('/rest-api/lookup/geographic-zones', {}, {});
+        },
+        loadGeographicLevel: function () {
+            return $resource('/rest-api/lookup/geographic-levels', {}, {});
+        }
+    };
+});

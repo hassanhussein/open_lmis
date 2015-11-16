@@ -49,7 +49,8 @@ public class VaccineReportRepository {
     lineItemService.saveCampaignLineItems(report.getCampaignLineItems(), report.getId());
   }
 
-  public void update(VaccineReport report){
+  public void update(VaccineReport report, Long userId) {
+    report.setModifiedBy(userId);
     mapper.update(report);
     saveDetails(report);
   }
@@ -147,6 +148,14 @@ public class VaccineReportRepository {
   }
   public List<HashMap<String, Object>> vaccineUsageTrendByGeographicZone(Long periodId, Long zoneId, String productCode){
     return mapper.vaccineUsageTrendByGeographicZone(periodId, zoneId, productCode);
+  }
+
+  public List<HashMap<String, Object>> getAggregateDropOuts(Long periodId, Long zoneId){
+    return mapper.getAggregateDropOuts(periodId, zoneId);
+  }
+
+  public List<HashMap<String, Object>> getDropOuts(Long reportId){
+    return mapper.getDropOuts(reportId);
   }
 
   public GeographicZone getNationalZone() {
