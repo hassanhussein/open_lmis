@@ -55,12 +55,12 @@ public class AnnualDistrictDemographicEstimateServiceTest {
   AnnualDistrictDemographicEstimateService service;
 
   private EstimateForm getDemographicEstimateFormForOneDistrict(AnnualDistrictEstimateEntry... facilityEstimateEntry) {
-    EstimateForm form  = new EstimateForm();
+    EstimateForm form = new EstimateForm();
     form.setEstimateLineItems(new ArrayList<EstimateFormLineItem>());
 
     EstimateFormLineItem lineItem = make(a(EstimateFormLineItemBuilder.defaultDemographicEstimateLineItem));
     lineItem.setDistrictEstimates(new ArrayList<AnnualDistrictEstimateEntry>());
-    for(AnnualDistrictEstimateEntry entry : facilityEstimateEntry){
+    for (AnnualDistrictEstimateEntry entry : facilityEstimateEntry) {
       lineItem.getDistrictEstimates().add(entry);
     }
 
@@ -99,6 +99,9 @@ public class AnnualDistrictDemographicEstimateServiceTest {
       with(AnnualDistrictEstimateBuilder.id, 3L),
       with(AnnualDistrictEstimateBuilder.isFinal, true)));
 
+    when(repository.getEntryBy(districtEstimateEntry.getYear(), districtEstimateEntry.getDistrictId(), districtEstimateEntry.getProgramId(), districtEstimateEntry.getDemographicEstimateId()))
+      .thenReturn(districtEstimateEntry);
+
     EstimateForm form = getDemographicEstimateFormForOneDistrict(districtEstimateEntry);
 
     districtEstimateEntry.setIsFinal(true);
@@ -112,14 +115,14 @@ public class AnnualDistrictDemographicEstimateServiceTest {
   public void shouldFinalize() throws Exception {
     AnnualDistrictEstimateEntry districtEstimateEntry = make(a(AnnualDistrictEstimateBuilder.defaultAnnualDistrictEstimateEntry,
       with(AnnualDistrictEstimateBuilder.id, 3L),
-      with(AnnualDistrictEstimateBuilder.isFinal,false)));
+      with(AnnualDistrictEstimateBuilder.isFinal, false)));
     EstimateForm form = getDemographicEstimateFormForOneDistrict(districtEstimateEntry);
 
-    service.finalize(form, 2L);
+    service.finalizeEstimate(form, 2L);
 
     verify(repository, never()).insert(districtEstimateEntry);
     verify(repository, times(1)).update(any(AnnualDistrictEstimateEntry.class));
-    verify(repository, times(1)).finalize(any(AnnualDistrictEstimateEntry.class));
+    verify(repository, times(1)).finalizeEstimate(any(AnnualDistrictEstimateEntry.class));
   }
 
   @Test
@@ -134,7 +137,7 @@ public class AnnualDistrictDemographicEstimateServiceTest {
 
     verify(repository, never()).insert(districtEstimateEntry);
     verify(repository, never()).update(districtEstimateEntry);
-    verify(repository, never()).finalize(districtEstimateEntry);
+    verify(repository, never()).finalizeEstimate(districtEstimateEntry);
     verify(repository, times(1)).undoFinalize(any(AnnualDistrictEstimateEntry.class));
   }
 

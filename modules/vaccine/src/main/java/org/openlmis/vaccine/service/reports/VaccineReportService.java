@@ -101,14 +101,14 @@ public class VaccineReportService {
   }
 
   @Transactional
-  public void save(VaccineReport report) {
-    repository.update(report);
+  public void save(VaccineReport report, Long userId) {
+    repository.update(report, userId);
   }
 
   @Transactional
   public void submit(VaccineReport report, Long userId) {
     report.setStatus(ReportStatus.SUBMITTED);
-    repository.update(report);
+    repository.update(report, userId);
     ReportStatusChange change = new ReportStatusChange(report, ReportStatus.SUBMITTED, userId);
     reportStatusChangeRepository.insert(change);
   }
@@ -122,6 +122,8 @@ public class VaccineReportService {
     List<Vitamin> vitamins = vitaminRepository.getAll();
     List<VitaminSupplementationAgeGroup> ageGroups = ageGroupRepository.getAll();
 
+    VaccineReport previousReport = this.getPreviousReport(facilityId, programId, periodId);
+
     report = new VaccineReport();
     report.setFacilityId(facilityId);
     report.setProgramId(programId);
@@ -129,7 +131,7 @@ public class VaccineReportService {
     report.setStatus(ReportStatus.DRAFT);
 
     // 1. copy the products list and initiate the logistics tab.
-    report.initializeLogisticsLineItems(programProducts);
+    report.initializeLogisticsLineItems(programProducts, previousReport);
 
     // 2. copy the product + dosage settings and initiate the coverage tab.
     report.initializeCoverageLineItems(dosesToCover);
@@ -142,6 +144,11 @@ public class VaccineReportService {
 
     report.initializeVitaminLineItems(vitamins, ageGroups);
     return report;
+  }
+
+  private VaccineReport getPreviousReport(Long facilityId, Long programId, Long periodId) {
+    Long reportId = repository.findLastReportBeforePeriod(facilityId, programId, periodId);
+    return repository.getByIdWithFullDetails(reportId);
   }
 
   public List<ReportStatusDTO> getReportedPeriodsFor(Long facilityId, Long programId) {
@@ -160,7 +167,6 @@ public class VaccineReportService {
       startDate = lastRequest.getPeriod().getStartDate();
     }
 
-    Long lastPeriodId = lastRequest == null ? null : lastRequest.getPeriodId();
     List<ReportStatusDTO> results = new ArrayList<>();
     // find all periods that are after this period, and before today.
 
@@ -280,6 +286,12 @@ public class VaccineReportService {
     }
     return repository.getVitaminSupplementationAggregateReport(periodId, zoneId);
   }
+  private List<HashMap<String, Object>> getDropOuts(Long reportId, Long facilityId, Long periodId, Long zoneId) {
+    if (facilityId != null && facilityId != 0) {
+      return repository.getDropOuts(reportId);
+    }
+    return repository.getAggregateDropOuts(periodId, zoneId);
+  }
 
   public List<HashMap<String, Object>> vaccineUsageTrend(String facilityCode, String productCode, Long periodId, Long zoneId){
 
@@ -319,6 +331,7 @@ public class VaccineReportService {
     data.put("targetPopulation", getTargetPopulation(facilityId, periodId, zoneId));
     data.put("syringes", getSyringeAndSafetyBoxReport(reportId, facilityId, periodId, zoneId));
     data.put("vitamins", getVitaminsReport(reportId, facilityId, periodId, zoneId));
+    data.put("dropOuts", getDropOuts(reportId, facilityId, periodId, zoneId));
 
 
     return data;

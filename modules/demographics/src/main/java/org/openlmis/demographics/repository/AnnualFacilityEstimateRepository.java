@@ -42,12 +42,16 @@ public class AnnualFacilityEstimateRepository {
     return mapper.update(estimate);
   }
 
+  public AnnualFacilityEstimateEntry getEntryBy(Integer year, Long facilityId, Long programId, Long categoryId){
+    return mapper.getEntryBy(year, facilityId, programId, categoryId);
+  }
+
   public List<EstimateFormLineItem> getFacilityList(Long programId, String requsitionGroupIds) {
     return mapper.getFacilityList(programId, requsitionGroupIds);
   }
 
-  public Integer finalize(AnnualFacilityEstimateEntry estimate){
-    return mapper.finalize(estimate);
+  public Integer finalizeEstimate(AnnualFacilityEstimateEntry estimate){
+    return mapper.finalizeEstimate(estimate);
   }
 
   public Integer undoFinalize(AnnualFacilityEstimateEntry estimate){

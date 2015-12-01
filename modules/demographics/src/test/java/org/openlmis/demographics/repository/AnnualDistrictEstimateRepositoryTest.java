@@ -84,9 +84,9 @@ public class AnnualDistrictEstimateRepositoryTest {
   public void shouldFinalize() throws Exception {
     AnnualDistrictEstimateEntry estimate = make(an(AnnualDistrictEstimateBuilder.defaultAnnualDistrictEstimateEntry));
 
-    repository.finalize(estimate);
+    repository.finalizeEstimate(estimate);
 
-    verify(mapper).finalize(estimate);
+    verify(mapper).finalizeEstimate(estimate);
   }
 
   @Test
@@ -97,4 +97,13 @@ public class AnnualDistrictEstimateRepositoryTest {
 
     verify(mapper).undoFinalize(estimate);
   }
+
+  @Test
+  public void shouldGetByFacilityProgramYearAndCategory() throws Exception {
+
+    repository.getEntryBy(2005, 2L, 5L, 6L);
+
+    verify(mapper).getEntryBy(2005, 2L, 5L, 6L);
+  }
+
 }
