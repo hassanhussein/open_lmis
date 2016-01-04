@@ -43,12 +43,12 @@ public interface StockedOutReportMapper {
     // Gets the count of the total facility count under the selection criteria
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalFacilities")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getTotalFacilities(Map params);
+    public List<Integer> getTotalFacilities(@Param("filterCriteria") ReportParameter params);
 
     // Gets the count of the total facility count that are stocked out under the selection criteria
     @SelectProvider(type=StockedOutReportQueryBuilder.class, method="getTotalStockedoutFacilities")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<Integer> getStockedoutTotalFacilities(Map params);
+    public List<Integer> getStockedoutTotalFacilities(@Param("filterCriteria") ReportParameter params);
 
 
 }

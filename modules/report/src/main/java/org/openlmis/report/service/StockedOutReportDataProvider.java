@@ -20,6 +20,7 @@ import org.openlmis.report.mapper.StockedOutReportMapper;
 import org.openlmis.report.mapper.lookup.FacilityTypeReportMapper;
 import org.openlmis.report.model.ReportData;
 import org.openlmis.report.model.params.StockedOutReportParam;
+import org.openlmis.report.model.report.StockedOutReport;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,10 +98,10 @@ public class StockedOutReportDataProvider extends ReportDataProvider {
   @Override
   public HashMap<String, String> getAdditionalReportData(Map params) {
     HashMap<String, String> result = new HashMap<String, String>();
-
+    StockedOutReportParam param = getReportFilterData(params);
     // spit out the summary section on the report.
-    String totalFacilities = reportMapper.getTotalFacilities(params).get(0).toString();
-    String stockedOut = reportMapper.getStockedoutTotalFacilities(params).get(0).toString();
+    String totalFacilities = reportMapper.getTotalFacilities(param).get(0).toString();
+    String stockedOut = reportMapper.getStockedoutTotalFacilities(param).get(0).toString();
     result.put("TOTAL_FACILITIES", totalFacilities);
     result.put("TOTAL_STOCKEDOUT", stockedOut);
 
