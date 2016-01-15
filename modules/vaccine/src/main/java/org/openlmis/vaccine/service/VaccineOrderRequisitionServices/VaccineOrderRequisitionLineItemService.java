@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.openlmis.vaccine.utils.ListUtil.emptyIfNull;
+import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 
 @Service
 public class VaccineOrderRequisitionLineItemService {
@@ -23,7 +23,12 @@ public class VaccineOrderRequisitionLineItemService {
                 itemRepository.Insert(lineItem);
             } else {
 
-                itemRepository.Update(lineItem);
+                if(lineItem.getMaximumStock() < lineItem.getStockOnHand()) {
+                    lineItem.setQuantityRequested(0L);
+                    itemRepository.Update(lineItem);
+                }else {
+                    itemRepository.Update(lineItem);
+                }
             }
 
 

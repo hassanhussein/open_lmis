@@ -59,11 +59,6 @@
       </div>
 
     </li>
-
-    <li ng-show="hasReportingPermission()">
-      <a id="report-menu" href="/public/pages/report/index.html" openlmis-message="link.reports"></a>
-    </li>
-
     <li>
       <a id="equipment-menu" href="javascript: void(0)" openlmis-message="link.equipments"></a>
       <div class="submenu">
@@ -85,17 +80,27 @@
         </ul>
       </div>
     </li>
-    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
-      <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
+    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('APPROVE_IVD')">
+      <a id="ivd" href="" openlmis-message="link.ivd.form"></a>
       <div class="submenu">
         <ul>
           <li ng-show="hasPermission('CREATE_IVD')">
-            <a href="/public/pages/vaccine/report/index.html"
-                openlmis-message="link.vaccine.create"></a>
+            <a href="/public/pages/ivd-form/index.html"
+               openlmis-message="link.vaccine.create"></a>
           </li>
           <li ng-show="hasPermission('VIEW_IVD')">
-            <a href="/public/pages/vaccine/report/index.html#/view" openlmis-message="link.view.ivd"></a>
+            <a href="/public/pages/ivd-form/index.html#/view" openlmis-message="link.view.ivd"></a>
           </li>
+          <li ng-show="hasPermission('APPROVE_IVD')">
+            <a href="/public/pages/ivd-form/index.html#/approve" openlmis-message="link.approve.ivd"></a>
+          </li>
+        </ul>
+      </div>
+    </li>
+    <li  ng-show="hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
+      <a id="vaccine" href="" openlmis-message="link.vaccine"></a>
+      <div class="submenu">
+        <ul>
           <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
             <a id="manage-distribution"
                href="/public/pages/logistics/distribution/index.html#/manage"
@@ -114,11 +119,30 @@
             <div class="submenu">
                 <ul>
                     <li >
+                        <a id='reportingPeformance'
+                           href="/public/pages/vaccine/report/index.html#/completeness-and-timeliness"
+                           openlmis-message="report.completeness.and.timeliness.by.district.report"   ></a>
+                    </li>
+                    <li >
                         <a id='performanceByDropout'
                            href="/public/pages/vaccine/report/index.html#/performance-by-dropout-rate-by-district"
                        openlmis-message="link.vaccine.report.performance.dropout"   ></a>
                     </li>
-                    </ul>
+                    <li>
+                        <a href="/public/pages/vaccine/report/index.html#/status-vaccination-supply-receive" openlmis-message="link.vaccine.report.status.vaccination.supply.receive"></a>
+                    </li>
+                    <li>
+                        <a href="/public/pages/vaccine/report/index.html#/performance-coverage" openlmis-message="link.vaccine.report.performance.by.coverage"></a>
+                    </li>
+                    <li >
+                        <a id='trendMinMaxColdRange'
+                           href="/public/pages/vaccine/report/index.html#/trend-min-max-cold-range"
+                           openlmis-message="link.vaccine.report.trend.min.max.cold.range"   ></a>
+                    </li>
+                    <li>
+                        <a href="/public/pages/vaccine/report/index.html#/adequacy-level-of-supply" openlmis-message="link.vaccine.report.adequacy.level.of.supply"></a>
+                    </li>
+                     </ul>
                 </div>
             </li>
           <li>
@@ -440,6 +464,11 @@
               href="/public/pages/dashboard/index_new.html#/dashboard-new"
               openlmis-message="link.dashboard"></a>
     </li>
+      <li>
+          <a
+                  href="/public/pages/vaccine/dashboard/index.html#/dashboard"
+                  openlmis-message="link.dashboard"></a>
+      </li>
   </ul>
 </div>
 <div class="navigation-locale-bar">

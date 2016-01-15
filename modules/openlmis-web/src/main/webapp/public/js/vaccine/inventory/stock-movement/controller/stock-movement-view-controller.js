@@ -9,7 +9,7 @@
  */
 
 
-function StockMovementViewController($scope, $window,SaveDistribution,StockEvent, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location) {
+function StockMovementViewController($scope, $window,SaveDistribution,StockEvent,configurations, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location) {
 
     var orderId = parseInt($routeParams.id, 10);
     var programId = parseInt($routeParams.programId, 10);
@@ -19,7 +19,8 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
     var toFacilityId = parseInt($routeParams.facilityId, 10);
     $scope.toFacilityName = $routeParams.facilityName;
 
-    var program = programs;
+    var program = configurations.programs;
+    $scope.period=configurations.period;
 
     $scope.line = [];
     $scope.facilities = [];
@@ -46,7 +47,7 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                 $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) || 1;
                 $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
                 $scope.stockCardsByCategory = $scope.pageLineItems.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
-
+              // console.log(JSON.stringify($scope.stockCardsByCategory));
             });
         }
 
@@ -109,66 +110,74 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                 distribution.distributionDate = $scope.stockCardsByCategory[0].issueDate;
                 distribution.periodId = periodId;
                 distribution.orderId = orderId;
-                distribution.voucherNumber = $scope.stockCardsByCategory[0].issueVoucher;
                 distribution.lineItems=[];
-                distribution.distributionType="ROUTINE";
+                distribution.distributionType="SCHEDULED";
                 distribution.status="PENDING";
 
                 $scope.stockCardsByCategory.forEach(function (st) {
 
                     st.stockCards.forEach(function (s) {
 
-                        var list = {};
+                           var lineItem = {};
 
-                           list.productId = s.product.id;
-
+                           lineItem.productId = s.product.id;
                            if(s.lotsOnHand.length >0)
                            {
-                           list.lots = [];
-                           var lotSum = 0;
-                           s.lotsOnHand.forEach(function (l) {
+                               lineItem.lots = [];
+                               var lotSum = 0;
+                               s.lotsOnHand.forEach(function (l) {
 
+                                   if( l.quantity >0)
+                                   {
+                                       var lot = {};
+                                       var event={};
+                                       event.type="ISSUE";
+                                       event.productCode= s.product.code;
+                                       event.facilityId=toFacilityId;
+                                       event.lotId= l.lot.id;
+                                       event.quantity= l.quantity;
+                                       event.customProps={"occurred":$scope.stockCardsByCategory[0].issueDate};
+                                       events.push(event);
 
-                               if( l.quantity >0)
+                                       lot.lotId = l.lot.id;
+                                       lot.quantity = l.quantity;
+                                       if(l.customProps !==undefined && l.customProps !== null && l.customProps.vvmstatus !==undefined  )
+                                       {
+                                         lot.vvmStatus=l.customProps.vvmstatus;
+                                       }
+                                       lineItem.lots.push(lot);
+                                       lotSum = lotSum + l.quantity;
+                                   }
+                                  });
+                                   lineItem.quantity = lotSum;
+
+                           }
+                        else{
+                               if(s.quantity >0)
                                {
-                                   var lot = {};
                                    var event={};
                                    event.type="ISSUE";
                                    event.productCode= s.product.code;
                                    event.facilityId=toFacilityId;
-                                   event.lotId= l.lot.id;
-                                   event.quantity= l.quantity;
-                                   event.customPros={"occurred":st.issueDate};
+                                   event.quantity= s.quantity;
+                                   event.customProps={"occurred":$scope.stockCardsByCategory[0].issueDate};
                                    events.push(event);
-
-                                   lot.lotId = l.lot.id;
-                                   lot.quantity = l.quantity;
-                                   list.lots.push(lot);
-                                   lotSum = lotSum + l.quantity;
+                                   lineItem.quantity=s.quantity;
+                                   if(s.customProps !==undefined && s.customProps !==null && s.customProps.vvmstatus !==undefined  )
+                                   {
+                                       lineItem.vvmStatus=s.customProps.vvmstatus;
+                                   }
                                }
 
-
-                              });
-                               list.quantity = lotSum;
-                               distribution.lineItems.push(list);
-
                            }
-                        else{
-                               var event={};
-                               event.type="ISSUE";
-                               event.productCode= s.product.code;
-                               event.facilityId=toFacilityId;
-                               event.quantity= st.quantity;
-                               event.customPros={"occurred":st.issueDate};
-                               events.push(event);
-
-                           }
-
-                        distribution.lineItems.push(list);
-
+                        if(lineItem.quantity >0)
+                        {
+                              distribution.lineItems.push(lineItem);
+                        }
                     });
 
                 });
+                console.log(JSON.stringify(events));
               StockEvent.save({facilityId:homeFacility.id},events,function(data){
                    SaveDistribution.save(distribution,function(distribution) {
                         UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
@@ -235,6 +244,19 @@ StockMovementViewController.resolve = {
         }, 100);
 
         return deferred.promise;
-    }
+    },
+
+    configurations:function($q, $timeout, VaccineInventoryConfigurations) {
+                                 var deferred = $q.defer();
+                                 var configurations={};
+                                 $timeout(function () {
+                                    VaccineInventoryConfigurations.get(function(data)
+                                    {
+                                          configurations=data;
+                                          deferred.resolve(configurations);
+                                    });
+                                 }, 100);
+                                 return deferred.promise;
+            }
 
 };

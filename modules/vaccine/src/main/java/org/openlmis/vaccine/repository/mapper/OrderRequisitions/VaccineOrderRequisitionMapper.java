@@ -5,24 +5,20 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
-import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.stockmanagement.domain.LotOnHand;
-import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 import org.springframework.stereotype.Repository;
 
-import java.util.Date;
 import java.util.List;
 
 @Repository
 public interface VaccineOrderRequisitionMapper {
 
     @Insert("INSERT INTO vaccine_order_requisitions (periodId,programId,status,supervisoryNodeId,facilityId,orderDate," +
-            " createdBy, createdDate,modifiedBy,modifiedDate,emergency )    " +
+            " createdBy, createdDate,modifiedBy,modifiedDate,emergency,reason )    " +
             "VALUES (#{periodId},#{programId},#{status},#{supervisoryNodeId},#{facilityId},#{orderDate}," +
-            "#{createdBy}, NOW(),#{modifiedBy},NOW(),#{emergency} )")
+            "#{createdBy}, NOW(),#{modifiedBy},NOW(),#{emergency},#{reason} )")
     @Options(useGeneratedKeys = true)
     Integer insert(VaccineOrderRequisition orderRequisition);
 
@@ -35,7 +31,8 @@ public interface VaccineOrderRequisitionMapper {
             "orderDate = #{orderDate}," +
             "modifiedBy = #{createdBy}, " +
             "modifiedDate = #{modifiedDate}," +
-            "emergency = #{emergency} " +
+            "emergency = #{emergency}, " +
+            "reason  = #{reason} " +
             "WHERE id = #{id} ")
     void update(VaccineOrderRequisition orderRequisition);
 
@@ -83,7 +80,7 @@ public interface VaccineOrderRequisitionMapper {
             "   and m.facilityId = #{facilityId} ")
     Long getScheduleFor(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
-    @Select("SELECT DISTINCT f.id AS facilityId,r.periodId,f.name facilityName,R.orderDate,R.ID,R.STATUS,ra.programid AS programId,pp.name periodName  " +
+    @Select("SELECT DISTINCT f.id AS facilityId,r.periodId,f.name facilityName,R.orderDate::date orderDate,R.ID,R.STATUS,ra.programid AS programId,pp.name periodName  " +
             "   FROM facilities f  " +
             "     JOIN requisition_group_members m ON m.facilityid = f.id  " +
             "     JOIN requisition_groups rg ON rg.id = m.requisitiongroupid  " +
@@ -121,6 +118,16 @@ public interface VaccineOrderRequisitionMapper {
                                                 @Param("dateRangeEnd") String dateRangeEnd
                                                 ,@Param("programId") Long programId);
 
+
+    @Select("SELECT ic.* FROM isa_coefficients ic \n" +
+            "JOIN facility_program_products fpp ON fpp.isaCoefficientsId = ic.id \n" +
+            "JOIN program_products pp on fpp.programproductId = pp.id\n" +
+            "JOIN products p on p.id = pp.productId\n" +
+            "WHERE facilityId = #{facilityId}")
+    List<OrderRequisitionStockCardDTO>getAllByFacility(@Param("facilityId") Long facilityId,
+                                                       @Param("programId") Long programId);
+
+
     @Select("SELECT *" +
             " FROM vw_stock_cards" +
             " WHERE facilityid = #{facilityId}" +
@@ -129,21 +136,15 @@ public interface VaccineOrderRequisitionMapper {
             @Result(property = "id", column = "id"),
             @Result(property = "product", column = "productId", javaType = Product.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
+            @Result(property = "keyValues", column = "id", javaType = List.class,
+                    one = @One(select = "org.openlmis.stockmanagement.repository.mapper.StockCardMapper.getStockCardKeyValues")),
+            @Result(property = "entries", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.stockmanagement.repository.mapper.StockCardMapper.getEntries")),
             @Result(property = "lotsOnHand", column = "id", javaType = List.class,
-                    many = @Many(select = "getLotsOnHand"))
+                    many = @Many(select = "org.openlmis.stockmanagement.repository.mapper.StockCardMapper.getLotsOnHand"))
 
     })
     List<OrderRequisitionStockCardDTO> getAllByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
-
-    @Select("SELECT loh.*" +
-            " FROM lots_on_hand loh" +
-            " WHERE loh.stockcardid = #{stockCardId}")
-    @Results({
-            @Result(
-                    property = "lot", column = "lotId", javaType = Lot.class,
-                    one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getById"))
-    })
-    List<LotOnHand> getLotsOnHand(@Param("stockCardId") Long stockCardId);
 
 }
 

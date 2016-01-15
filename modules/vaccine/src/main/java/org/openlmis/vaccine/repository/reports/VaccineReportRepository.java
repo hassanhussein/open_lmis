@@ -13,15 +13,14 @@
 package org.openlmis.vaccine.repository.reports;
 
 import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.vaccine.domain.reports.*;
-import org.openlmis.vaccine.dto.ReportStatusDTO;
+import org.openlmis.core.service.GeographicZoneService;
+import org.openlmis.ivdform.domain.reports.*;
+import org.openlmis.vaccine.domain.reports.VaccineCoverageReport;
 import org.openlmis.vaccine.repository.mapper.reports.VaccineReportMapper;
-import org.openlmis.vaccine.service.reports.VaccineLineItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Component
 public class VaccineReportRepository {
@@ -29,55 +28,10 @@ public class VaccineReportRepository {
   @Autowired
   VaccineReportMapper mapper;
 
-  @Autowired
-  VaccineLineItemService lineItemService;
+    @Autowired
+    GeographicZoneService geographicZoneService;
 
 
-  public void insert(VaccineReport report){
-    mapper.insert(report);
-    saveDetails(report);
-  }
-
-
-  public void saveDetails(VaccineReport report){
-    lineItemService.saveLogisticsLineItems(report.getLogisticsLineItems(), report.getId());
-    lineItemService.saveDiseaseLineItems(report.getDiseaseLineItems(), report.getId());
-    lineItemService.saveCoverageLineItems(report.getCoverageLineItems(),report.getId());
-    lineItemService.saveColdChainLIneItems(report.getColdChainLineItems(), report.getId());
-    lineItemService.saveVitaminLineItems(report.getVitaminSupplementationLineItems(), report.getId());
-    lineItemService.saveAdverseEffectLineItems(report.getAdverseEffectLineItems(), report.getId());
-    lineItemService.saveCampaignLineItems(report.getCampaignLineItems(), report.getId());
-  }
-
-  public void update(VaccineReport report, Long userId) {
-    report.setModifiedBy(userId);
-    mapper.update(report);
-    saveDetails(report);
-  }
-
-  public VaccineReport getById(Long id){
-    return mapper.getById(id);
-  }
-
-  public VaccineReport getByIdWithFullDetails(Long id){
-    return mapper.getByIdWithFullDetails(id);
-  }
-
-  public VaccineReport getByProgramPeriod(Long facilityId, Long programId, Long periodId ){
-    return mapper.getByPeriodFacilityProgram(facilityId, programId, periodId);
-  }
-
-  public VaccineReport getLastReport(Long facilityId, Long programId) {
-    return mapper.getLastReport(facilityId, programId);
-  }
-
-  public Long getScheduleFor(Long facilityId, Long programId) {
-    return mapper.getScheduleFor(facilityId, programId);
-  }
-
-  public List<ReportStatusDTO> getReportedPeriodsForFacility(Long facilityId, Long programId) {
-    return mapper.getReportedPeriodsForFacility(facilityId, programId);
-  }
   public Long getReportIdForFacilityAndPeriod(Long facilityId, Long periodId){
     return mapper.getReportIdForFacilityAndPeriod(facilityId, periodId);
   }
@@ -88,7 +42,12 @@ public class VaccineReportRepository {
   public List<DiseaseLineItem> getDiseaseSurveillanceAggregateReport(Long periodId, Long zoneId){
     return mapper.getDiseaseSurveillanceAggregateByGeoZone(periodId, zoneId);
   }
-
+  public HashMap<String, DiseaseLineItem> getCumFacilityDiseaseSurveillance(Long reportId){
+    return mapper.getCumFacilityDiseaseSurveillance(reportId);
+  }
+public HashMap<String, DiseaseLineItem> getCumDiseaseSurveillanceAggregateReport(Long periodId, Long zoneId){
+  return mapper.getCumDiseaseSurveillanceAggregateByGeoZone(periodId, zoneId);
+}
   public List<ColdChainLineItem> getColdChain(Long reportId){
     return mapper.getColdChain(reportId);
   }
@@ -112,7 +71,12 @@ public class VaccineReportRepository {
   public List<HashMap<String , Object>> getVaccineCoverageAggregateReport(Long periodId, Long zoneId){
     return mapper.getVaccineCoverageAggregateReportByGeoZone(periodId, zoneId);
   }
-
+public HashMap<String, VaccineCoverageReport> calculateVaccineCoverageReport( Long reportId){
+  return mapper.calculateVaccineCoverageReport(reportId);
+}
+  public HashMap<String, VaccineCoverageReport> calculateVaccineCoverageReport( Long periodId, Long zoneId){
+    return mapper.calculateAggeregatedVaccineCoverageReport(periodId, zoneId);
+  }
   public List<VaccineReport> getImmunizationSession(Long reportId){
     return mapper.getImmunizationSession(reportId);
   }
@@ -162,7 +126,48 @@ public class VaccineReportRepository {
     return mapper.getNationalZone();
   }
 
-  public Long findLastReportBeforePeriod(Long facilityId, Long programId, Long periodId) {
-    return mapper.findPreviousReport(facilityId, programId, periodId);
-  }
+
+    public List<Map<String, Object>> getPerformanceCoverageMainReportDataByRegionAggregate(Date startDate, Date endDate, Long districtId, Long productId){
+        return mapper.getPerformanceCoverageMainReportDataByRegionAggregate(startDate, endDate, districtId, productId);
+    }
+
+    public List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByRegionAggregate(Date startDate, Date endDate, Long districtId, Long productId){
+        return mapper.getPerformanceCoverageSummaryReportDataByRegionAggregate(startDate, endDate, districtId, productId);
+    }
+
+    public List<Map<String, Object>> getPerformanceCoverageMainReportDataByDistrict(Date startDate, Date endDate, Long districtId, Long productId){
+        return  mapper.getPerformanceCoverageMainReportDataByDistrict(startDate, endDate, districtId, productId);
+    }
+
+    public List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByDistrict(Date startDate, Date endDate, Long districtId, Long productId){
+        return mapper.getPerformanceCoverageSummaryReportDataByDistrict(startDate, endDate, districtId, productId);
+    }
+    public List<Map<String, Object>> getPerformanceCoverageMainReportDataByRegion(Date startDate, Date endDate, Long districtId, Long productId){
+        return mapper.getPerformanceCoverageMainReportDataByRegion(startDate, endDate, districtId, productId);
+    }
+    public List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByRegion(Date startDate, Date endDate, Long districtId, Long productId){
+        return  mapper.getPerformanceCoverageSummaryReportDataByRegion(startDate, endDate, districtId, productId);
+    }
+
+
+    public List<Map<String,Object>> getCompletenessAndTimelinessMainReportDataByDistrict(Date startDate, Date endDate, Long districtId, Long productId) {
+        return mapper.getCompletenessAndTimelinessMainReportDataByDistrict(startDate, endDate, districtId, productId);
+    }
+
+    public List<Map<String,Object>> getCompletenessAndTimelinessSummaryReportDataByDistrict(Date startDate, Date endDate, Long districtId, Long productId) {
+         return mapper.getCompletenessAndTimelinessSummaryReportDataByDistrict(startDate, endDate, districtId, productId);
+    }
+
+    public List<Map<String, Object>> getCompletenessAndTimelinessAggregateSummaryReportDataByDistrict(Date startDate, Date endDate, Long districtId, Long productId) {
+        return mapper.getCompletenessAndTimelinessAggregateSummaryReportDataByDistrict(startDate, endDate, districtId, productId);
+    }
+
+    public List<Map<String,Object>> getAdequacyLevelOfSupplyByDistrict(Date startDate, Date endDate, Long districtId, Long productId) {
+        return mapper.getAdequacyLevelOfSupplyReportDataByDistrict(startDate, endDate, districtId, productId);
+    }
+
+    public List<Map<String,Object>> getAdequacyLevelOfSupplyByRegion(Date startDate, Date endDate, Long districtId, Long productId) {
+        return mapper.getAdequacyLevelOfSupplyReportDataByRegion(startDate, endDate, districtId, productId);
+    }
+
 }

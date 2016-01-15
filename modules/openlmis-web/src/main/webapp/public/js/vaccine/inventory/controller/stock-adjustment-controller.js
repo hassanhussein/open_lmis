@@ -8,21 +8,23 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockAdjustmentController($scope, $timeout,$window,$routeParams,programs,StockCardsByCategory,productsConfiguration,StockEvent,localStorageService,homeFacility,adjustmentTypes,UserFacilityList) {
+function StockAdjustmentController($scope, $timeout,$window,$routeParams,StockCardsByCategory,configurations,StockEvent,localStorageService,homeFacility,VaccineAdjustmentReasons,UserFacilityList) {
 
     //Get Home Facility
     $scope.currentStockLot = undefined;
     $scope.adjustmentReasonsDialogModal = false;
-    $scope.userPrograms=programs;
-    $scope.adjustmentTypes=adjustmentTypes;
+    $scope.userPrograms=configurations.programs;
     $scope.adjustmentReason={};
-    $scope.vvmStatuses=[{"value":1,"name":" 1 "},{"value":2,"name":" 2 "}];
-    $scope.productsConfiguration=productsConfiguration;
+    $scope.vvmStatuses=[{"value":"1","name":" 1 "},{"value":"2","name":" 2 "}];
+    $scope.productsConfiguration=configurations.productsConfiguration;
     var AdjustmentReasons=[];
 
     var loadStockCards=function(programId, facilityId){
             StockCardsByCategory.get(programId,facilityId).then(function(data){
                 $scope.stockCardsToDisplay=data;
+                VaccineAdjustmentReasons.get({programId:programId},function(data){
+                       $scope.adjustmentTypes=data.adjustmentReasons;
+                });
             });
         };
     if(homeFacility){
@@ -63,7 +65,6 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,program
     };
     $scope.removeAdjustmentReason=function(adjustment)
     {
-        console.log(adjustment);
         $scope.currentStockLot.adjustmentReasons = $.grep($scope.currentStockLot.adjustmentReasons, function (reasonObj) {
               return (adjustment !== reasonObj);
             });
@@ -106,7 +107,6 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,program
             var events=[];
             $scope.stockCardsToDisplay.forEach(function(st){
                 st.stockCards.forEach(function(s){
-                 console.log(JSON.stringify(s));
                     if(s.lotsOnHand !==undefined && s.lotsOnHand.length>0){
                         s.lotsOnHand.forEach(function(l){
                             if(l.quantity !== undefined)
@@ -118,10 +118,15 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,program
                                         event.quantity=reason.quantity;
                                         event.lotId=l.lot.id;
                                         event.reasonName=reason.name;
+                                        if(l.customProps !==null && l.customProps.vvmstatus !==undefined)
+                                        {
+                                            event.customProps={"vvmStatus":l.customProps.vvmstatus};
+                                        }
                                         events.push(event);
                                     });
                             }
                         });
+                        console.log(JSON.stringify(events));
                     }
                     else{
                      if(s.quantity !==undefined && s.quantity >0)
@@ -138,7 +143,6 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,program
                     }
                 });
             });
-            console.log(JSON.stringify(events));
            StockEvent.save({facilityId:homeFacility.id},events, function (data) {
                if(data.success !==null)
                {
@@ -194,7 +198,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,program
            };
           $scope.vvmTracked=function(c)
           {
-             var config=_.filter(productsConfiguration, function(obj) {
+             var config=_.filter(configurations.productsConfiguration, function(obj) {
                    return obj.product.id===c.product.id;
              });
 
@@ -224,42 +228,16 @@ StockAdjustmentController.resolve = {
             }, 100);
             return deferred.promise;
          },
-         adjustmentTypes: function ($q, $timeout,VaccineAdjustmentReasons ) {
-                     var deferred = $q.defer();
-
-                     $timeout(function () {
-                              //Load Adjustment reasons
-                              VaccineAdjustmentReasons.get({},function(data){
-                                     deferred.resolve(data.adjustmentReasons);
-                              });
-                     }, 100);
-                     return deferred.promise;
-        },
-        programs:function ($q, $timeout, VaccineInventoryPrograms) {
-                    var deferred = $q.defer();
-                    var programs={};
-
-                    $timeout(function () {
-                             VaccineInventoryPrograms.get({},function(data){
-                               programs=data.programs;
-                                deferred.resolve(programs);
-                             });
-                    }, 100);
-                    return deferred.promise;
-        },
-
-        productsConfiguration:function($q, $timeout, VaccineInventoryPrograms,VaccineInventoryConfigurations) {
+        configurations:function($q, $timeout, VaccineInventoryConfigurations) {
                      var deferred = $q.defer();
                      var configurations={};
                      $timeout(function () {
                         VaccineInventoryConfigurations.get(function(data)
                         {
-                              configurations=data.Configurations;
+                              configurations=data;
                               deferred.resolve(configurations);
                         });
                      }, 100);
                      return deferred.promise;
-                }
-
-
+         }
 };

@@ -144,7 +144,9 @@ services.factory('TreeGeographicZoneList',function ($resource){
 services.factory('TreeGeographicZoneListByProgram',function ($resource){
   return $resource('/reports//geographic-zones/tree-program.json', {}, {});
 });
-
+services.factory('TreeGeographicTreeByProgramNoZones',function ($resource){
+    return $resource('/reports/geographic-zones/tree-no-zones.json', {}, {});
+});
 services.factory('ReportRegimens',function ($resource){
     return $resource('/reports/regiments.json', {}, {}) ;
 });
@@ -791,6 +793,9 @@ services.factory('HelpUsertopicList', function ($resource) {
 services.factory('SiteContent', function ($resource) {
     return $resource('/site_content/:content_name.json', {}, {post:{method:'GET'}});
 });
+services.factory('HelpContentByKey', function ($resource) {
+    return $resource('/general_content/:content_key.json', {}, {post:{method:'GET'}});
+});
 services.factory('VaccineTargetUpdate', function ($resource) {
     return $resource('/vaccine/target/create.json', {}, {post:{method:'POST'}});
 });
@@ -1299,7 +1304,9 @@ services.factory('GetStockOutFacilitiesForProgramPeriodAndProductCode', function
 services.factory('GetVaccineReportPeriodTree',function ($resource){
     return $resource('/reports/vaccineYearSchedulePeriod', {}, {});
 });
-
+services.factory('GetVaccineReportPeriodFlat',function ($resource){
+    return $resource('/reports/vaccineYearSchedulePeriodFlat', {}, {});
+});
 services.factory("ELMISInterface",function($resource)  {
     return   {
         getInterface : function(){
@@ -1328,6 +1335,7 @@ services.factory('ELMISInterfaceSave', function ($resource) {
 services.factory('FacilitiesByLevel', function($resource){
     return $resource('/reports/facility-By-level.json',{},{});
 });
+
 
 services.factory('RequisitionReportService', function($resource){
     return $resource('/reports/requisition-report.json',{},{});
@@ -1358,6 +1366,10 @@ services.factory('FacilityService',function($resource){
     };
 });
 
+services.factory('ColdChainTemperaturesReport', function($resource){
+    return $resource('/reports/reportdata/vaccineTemperature.json',{},{});
+});
+
 services.factory('GeographicZoneService',function($resource){
     return {
         loadGeographicZone: function () {
@@ -1367,4 +1379,14 @@ services.factory('GeographicZoneService',function($resource){
             return $resource('/rest-api/lookup/geographic-levels', {}, {});
         }
     };
+});
+
+
+services.factory('VaccineStockStatusReport',function($resource){
+    return $resource('/reports/reportdata/vaccineStockStatus.json',{},{});
+});
+
+
+services.factory('StockLedgerReport',function($resource){
+    return $resource('/reports/reportdata/stockLedgerReport.json',{},{});
 });

@@ -13,15 +13,18 @@ package org.openlmis.web.controller.demographics;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.demographics.dto.StockRequirements;
-import org.openlmis.demographics.service.StockRequirementsService;
+import org.openlmis.vaccine.dto.StockRequirements;
+import org.openlmis.vaccine.service.StockRequirementsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -78,6 +81,7 @@ public class StockRequirementsController extends BaseController
                  "<b>ReorderLevel:</b>  This equals isaValue * eop " +
                  "</p> "
     )
+
     @RequestMapping(value = "/rest-api/facility/{facilityId}/program/{programId}/stockRequirements", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity getStockRequirements(@PathVariable Long facilityId, @PathVariable Long programId)
     {
@@ -89,4 +93,11 @@ public class StockRequirementsController extends BaseController
         String JSON =  StockRequirements.getJSONArray(stockRequirements);
         return OpenLmisResponse.response(JSON);
     }
+
+    @RequestMapping(value = "/rest-api/facility/{facilityId}/program/{programId}/stockRequirementsData", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest request) {
+        return OpenLmisResponse.response("stock_requirements", stockRequirementsService.getStockRequirements(facilityId,programId));
+    }
+
+
 }

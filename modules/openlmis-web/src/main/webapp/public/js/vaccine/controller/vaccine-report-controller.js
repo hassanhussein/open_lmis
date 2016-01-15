@@ -53,9 +53,11 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
 
                 if($scope.data !== null){
                     $scope.diseaseSurveillance = $scope.data.diseaseSurveillance;
+                    $scope.cumDiseaseSurveillance = $scope.data.cumDiseaseSurveillance;
                     $scope.coldChain = $scope.data.coldChain;
                     $scope.adverseEffect = $scope.data.adverseEffect;
                     $scope.vaccineCoverage = $scope.data.vaccineCoverage;
+                    $scope.vaccineCoverageCalculation = $scope.data.vaccineCoverageCalculation;
                     $scope.immunizationSession = $scope.data.immunizationSession;
                     $scope.vaccination = $scope.data.vaccination;
                     $scope.syringes = $scope.data.syringes;
@@ -63,13 +65,39 @@ function VaccineReportPOCReportController($scope, VaccineMonthlyReport, VaccineU
                     $scope.targetPopulation = $scope.data.targetPopulation;
                     $scope.vitaminSupplementation = $scope.data.vitaminSupplementation;
                     $scope.dropOuts = $scope.data.dropOuts;
+                    extractCoverage( $scope.vaccineCoverage,$scope.vaccineCoverageCalculation);
+                    extractDiseaseSurvilane($scope.diseaseSurveillance,$scope.cumDiseaseSurveillance);
                 }
             });
 
         }
 
     };
+function extractCoverage(coverageList, coverageTotalCalculation) {
+    var length = coverageList.length;
+    for (i = 0; i < length; i++) {
+        var coverage = coverageList[i];
+        var calcCoverage = coverageTotalCalculation[coverage.product_name + "_" + coverage.display_name];
+        coverage.cum_within_total = calcCoverage.within_total;
+        coverage.cum_within_coverage = calcCoverage.within_coverage;
+        coverage.cum_outside_total = calcCoverage.outside_total;
+        coverage.cum_within_outside_total = calcCoverage.within_outside_total;
+        coverage.cum_within_outside_coverage = calcCoverage.within_outside_coverage;
 
+    }
+}
+    function extractDiseaseSurvilane(diseaseSurveillanceList, cumDiseaseSurveillanceList){
+        var length=diseaseSurveillanceList.length;
+        for(i=0;i<length;i++) {
+            var diseaseSurveillance= diseaseSurveillanceList[i];
+            var cumDiseaseSurveillance = cumDiseaseSurveillanceList[diseaseSurveillance.diseaseName];
+            diseaseSurveillance.cumulative=cumDiseaseSurveillance.calculatedCumulativeCases;
+            diseaseSurveillance.calculatedCumulativeDeaths=cumDiseaseSurveillance.calculatedCumulativeDeaths;
+
+
+        }
+
+}
     $scope.renderGraph = function(facilityCode, productCode){
         $scope.filter.facilityCode = isUndefined(facilityCode)? '' : facilityCode;
         $scope.filter.productCode =  isUndefined(productCode)? '': productCode;

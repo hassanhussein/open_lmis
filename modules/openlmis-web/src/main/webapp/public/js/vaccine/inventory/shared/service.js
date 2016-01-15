@@ -25,12 +25,11 @@ services.factory('StockCardsByCategory', function($resource,StockCards,$q, $time
 
                                  StockCards.get({facilityId:fId},function(data){
                                         var stockCards=data.stockCards;
-
                                         stockCards.forEach(function(s){
-                                              s.displayOrder=s.product.form.displayOrder;
                                               var product= _.filter(programProducts, function(obj) {
                                                   return obj.product.primaryName === s.product.primaryName;
                                               });
+                                                s.displayOrder=product[0].productCategory.displayOrder;
                                                 s.productCategory=product[0].productCategory;
                                         });
                                         stockCards=_.sortBy(stockCards,'displayOrder');
@@ -70,34 +69,28 @@ return {
 });
 
 services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLevelSupervisedFacilities,StockCards,DistributedFacilities){
-     var programId;
-     var facilityId;
-     var allSupervisedFacilities;
-     var stockCards;
-     var distributions;
-     var facilities={};
-     facilities.routine=[];
-     facilities.emergence=[];
+     var programId;var facilityId;var allSupervisedFacilities;var stockCards;var distributions;var facilities={};
+     facilities.scheduled=[];
+     facilities.unscheduled=[];
 
      function get(pId,fId) {
          var deferred =$q.defer();
                      $timeout(function(){
                          if(!isNaN(pId)){
                             OneLevelSupervisedFacilities.get(function(f){
-
                                 StockCards.get({facilityId:fId},function(s){
                                     DistributedFacilities.get(function(d){
-                                        allSupervisedFacilities=f.facilities;
-                                        stockCards=s.stockCards;
-                                        distributions=d.Distributions;
+                                        allSupervisedFacilities=f.facilities;stockCards=s.stockCards;distributions=d.Distributions;
+//                                        console.log(JSON.stringify(angular.extend(allSupervisedFacilities,distributions,stockCards)));
                                         allSupervisedFacilities.forEach(function(facility){
-
                                              facility.productsToIssue=[];
                                              var facilityDistribution=_.findWhere(distributions,{toFacilityId:facility.id});
                                              facility.status=(facilityDistribution !== undefined)?facilityDistribution.status:undefined;
                                              facility.voucherNumber=(facilityDistribution !== undefined)?facilityDistribution.voucherNumber:undefined;
                                              facility.distributionDate=(facilityDistribution !== undefined)?facilityDistribution.distributionDate:undefined;
                                              facility.distributionId=(facilityDistribution !== undefined)?facilityDistribution.id:undefined;
+                                             facility.toFacilityId=(facilityDistribution !== undefined)?facilityDistribution.toFacilityId:undefined;
+                                             facility.fromFacilityId=(facilityDistribution !== undefined)?facilityDistribution.fromFacilityId:undefined;
                                              stockCards.forEach(function(stockCard){
                                                  var product={};
                                                  var distributedProduct;
@@ -110,8 +103,10 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLev
                                                  product.productCode=stockCard.product.code;
                                                  product.displayOrder=stockCard.product.id;
                                                  product.totalQuantityOnHand=stockCard.totalQuantityOnHand;
+                                                 product.totalQuantityOnHand2=product.totalQuantityOnHand;
                                                  product.quantity=(distributedProduct===undefined || facility.status==="RECEIVED")?0:distributedProduct.quantity;
-                                                 product.emergenceQuantity=0;
+                                                 product.originalIssueQuantity=product.quantity;
+                                                 product.unScheduledQuantity=0;
                                                  product.lineItemId=(distributedProduct===undefined)?null:distributedProduct.id;
                                                  product.initialQuantity=(distributedProduct === undefined)?null:distributedProduct.quantity;
                                                  if(stockCard.lotsOnHand !== undefined && stockCard.lotsOnHand.length >0)
@@ -127,13 +122,21 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLev
                                                           lotOnHand.lotId=lot.lot.id;
                                                           lotOnHand.lotCode=lot.lot.lotCode;
                                                           lotOnHand.quantityOnHand=lot.quantityOnHand;
+                                                          lotOnHand.quantityOnHand2=lot.quantityOnHand;
                                                           lotOnHand.quantity=(distributedLot === undefined || facility.status==="RECEIVED" )?0:distributedLot.quantity;
+                                                          lotOnHand.originalIssueQuantity=lotOnHand.quantity;
                                                           lotOnHand.lineItemLotId=(distributedLot === undefined)?null:distributedLot.id;
                                                           lotOnHand.initialQuantity=(distributedLot === undefined)?null:distributedLot.quantity;
-                                                          lotOnHand.vvmStatus=lot.vvmStatus;
+                                                          lotOnHand.vvmStatus=(lot.customProps !== undefined && lot.customProps !== null && lot.customProps.vvmstatus !== undefined)?lot.customProps.vvmstatus:undefined;
+                                                          lotOnHand.vvmStatus=(lot.customProps !== undefined && lot.customProps !== null && lot.customProps.vvmstatus !== undefined)?lot.customProps.vvmstatus:null;
                                                           lotOnHand.expirationDate=lot.lot.expirationDate;
                                                           product.lots.push(lotOnHand);
                                                       });
+                                                      var lotsAscExpiration=_.sortBy(product.lots,'expirationDate');
+                                                      var lotsDescExpiration=lotsAscExpiration.reverse();
+                                                      var lotAscVVM=_.sortBy(lotsDescExpiration,'vvmStatus');
+
+                                                      product.lots=lotAscVVM.reverse();
                                                  }
 
                                                  facility.productsToIssue.push(product);
@@ -142,10 +145,10 @@ services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLev
 
                                         });
 
-                                         facilities.routine = $.grep(allSupervisedFacilities, function (facility) {
+                                         facilities.scheduled = $.grep(allSupervisedFacilities, function (facility) {
                                                    return facility.status !=='RECEIVED';
                                          });
-                                         facilities.emergency = $.grep(allSupervisedFacilities, function (facility) {
+                                         facilities.unscheduled = $.grep(allSupervisedFacilities, function (facility) {
                                                    return facility.status ==="RECEIVED";
                                          });
                                          deferred.resolve(facilities);
@@ -183,14 +186,18 @@ services.factory('VaccineOrderRequisitionByCategory', function ($resource, Vacci
                         var overallData = data.report;
 
                         var lineItems = data.report.lineItems;
-
+                         console.log(JSON.stringify(lineItems));
                         lineItems.forEach(function(s){
-                            s.displayOrder=s.product.form.displayOrder;
+
+                           // s.displayOrder=s.productId;
                             var product= _.filter(programProducts, function(obj) {
                                 return obj.product.primaryName === s.product.primaryName;
                             });
+                            s.displayOrder=product[0].productCategory.displayOrder;
                             s.productCategory=product[0].productCategory;
+
                         });
+
                         lineItems=_.sortBy(lineItems,'displayOrder');
 
                         var byCategory=_.groupBy(lineItems,function(s){
@@ -339,6 +346,7 @@ services.factory('StockCardsByCategoryAndRequisition', function ($resource, Stoc
                             var stockCards = data.stockCards;
 
                             stockCards.forEach(function (s) {
+
                                 var product = _.filter(programProducts, function (obj) {
                                     return obj.product.primaryName === s.product.primaryName;
                                 });
@@ -392,7 +400,7 @@ services.factory('StockCardsByCategoryAndRequisition', function ($resource, Stoc
     };
 });
 
-services.factory('StockCardsForProgramByCategory', function ($resource, VaccineOrderRequisitionReport, RequisitionForFacility, $q, $timeout, VaccineOrderRequisitionProgramProduct) {
+services.factory('StockCardsForProgramByCategory', function ($resource,StockCards, VaccineOrderRequisitionReport, RequisitionForFacility, $q, $timeout, VaccineOrderRequisitionProgramProduct) {
 
     var programProducts = [];
     var programId;
@@ -415,12 +423,16 @@ services.factory('StockCardsForProgramByCategory', function ($resource, VaccineO
 
                             quantityRequested = data.requisitionList;
 
-                            VaccineOrderRequisitionReport.get({facilityId: fId, programId: pId}, function (data) {
+                            StockCards.get({facilityId: fId}, function (data) {
                                 var stockCards = data.stockCards;
-                                //console.log(stockCards);
-
-
                                 stockCards.forEach(function (s) {
+
+//                                     var lotsAscExpiration=_.sortBy(s.lotsOnHand,'lot.expirationDate');
+//                                     var lotsDescExpiration=lotsAscExpiration.reverse();
+//                                     var lotAscVVM=_.sortBy(lotsDescExpiration,'customProps.vvmstatus');
+//
+//                                     s.lotsOnHand=lotAscVVM.reverse();
+
                                     if (s.product.id !== undefined && quantityRequested !==undefined) {
 
                                         var product = _.filter(programProducts, function (obj) {
@@ -439,7 +451,6 @@ services.factory('StockCardsForProgramByCategory', function ($resource, VaccineO
 
                                         if (quantityToRequest.length > 0 && product[0].productCategory !==undefined) {
                                             s.productCategory = product[0].productCategory;
-                                            console.log(product[0]);
 
                                             s.quantityRequested = quantityToRequest[0].quantityRequested;
 
@@ -466,7 +477,7 @@ services.factory('StockCardsForProgramByCategory', function ($resource, VaccineO
             }
             else {
                 var stockCardsToDisplay = [];
-                VaccineOrderRequisitionReport.get({facilityId: fId, programId: pId}, function (data) {
+                StockCards.get({facilityId: fId}, function (data) {
                     var stockCards = data.stockCards;
                     if (stockCards.length > 0) {
                         stockCardsToDisplay = [{"productCategory": "no-category", "stockCards": stockCards}];
