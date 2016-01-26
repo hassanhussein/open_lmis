@@ -17,11 +17,11 @@ import org.openlmis.core.repository.SMSRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -62,6 +62,8 @@ public class SMSManagementService {
         String urlString = pushSmsUrl+"&text="+content.replaceAll(" ","+")+"&to="+phoneNumber.toString();
 
         try {
+            smsRepository.SaveSMSMessage("Outgoing", content, phoneNumber, new Date(),false);
+
             URL url = new URL(urlString.toString());
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -73,7 +75,6 @@ public class SMSManagementService {
             while ((line = reader.readLine()) != null) {
                 buffer = buffer.append(line).append("\n");
             }
-            smsRepository.SaveSMSMessage("Outgoing", content, phoneNumber, new Date(),true);
             System.out.println("Submit request= " + urlString.toString());
             System.out.println("response : "+buffer.toString());
             System.out.println("INFO : all sent disconnect.");
