@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityGeoTreeDto;
-import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.dto.FacilitySupervisor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
@@ -180,6 +179,10 @@ public class FacilityRepository {
     return mapper.getHomeFacilityWithRights(userId, commaSeparateRightNames(rightNames));
   }
 
+  public Facility getHomeFacilityForRights(Long userId, Long programId , String... rightNames) {
+    return mapper.getHomeFacilityWithRightsByProgram(userId, programId, commaSeparateRightNames(rightNames));
+  }
+
   public FacilityType getFacilityTypeByCode(FacilityType facilityType) {
     facilityType = mapper.getFacilityTypeForCode(facilityType.getCode());
     if (facilityType == null) {
@@ -249,10 +252,6 @@ public class FacilityRepository {
   }
 
   public List<FacilitySupervisor> getFacilitySupervisors(Long facilityId) {  return mapper.getFacilitySupervisors(facilityId); }
-
-  public List<FacilityImages> getFacilityImages(Long facilityId) {
-    return mapper.getFacilityImages(facilityId);
-  }
 
   public List<Facility> getAllForGeographicZone(Long geographicZoneId){
       return mapper.getForGeographicZone(geographicZoneId);

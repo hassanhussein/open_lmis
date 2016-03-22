@@ -80,7 +80,7 @@ public interface VaccineOrderRequisitionMapper {
             "   and m.facilityId = #{facilityId} ")
     Long getScheduleFor(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
-    @Select("SELECT DISTINCT f.id AS facilityId,r.periodId,f.name facilityName,R.orderDate::date orderDate,R.ID,R.STATUS,ra.programid AS programId,pp.name periodName  " +
+    @Select("SELECT DISTINCT f.id AS facilityId,r.periodId,f.name facilityName,R.orderDate orderDate,r.createdDate,R.ID,R.STATUS,ra.programid AS programId,pp.name periodName  " +
             "   FROM facilities f  " +
             "     JOIN requisition_group_members m ON m.facilityid = f.id  " +
             "     JOIN requisition_groups rg ON rg.id = m.requisitiongroupid  " +
@@ -88,7 +88,7 @@ public interface VaccineOrderRequisitionMapper {
             "     JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid " +
             "     JOIN vaccine_order_requisitions r on f.id = r.facilityId and sn.id = r.supervisorynodeid " +
             "     JOIN processing_periods pp on r.periodId = pp.id " +
-            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED') and r.programId = #{programId} and sn.FACILITYiD = #{facilityId}")
+            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId}")
       List<OrderRequisitionDTO> getPendingRequest(@Param("userId") Long userId, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 
@@ -107,11 +107,11 @@ public interface VaccineOrderRequisitionMapper {
             " WHERE programId = #{programId} AND periodId = #{periodId} and facilityId = #{facilityId} and R.STATUS  IN('SUBMITTED') ")
     List<OrderRequisitionDTO> getAllBy(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("facilityId") Long facilityId);
 
-    @Select("select r.id,p.name programName, f.name facilityName,r.status,pp.startdate periodStartDate,pp.enddate periodEndDate,emergency,orderDate::timestamp  from vaccine_order_requisitions r   " +
+    @Select("select r.id,p.name programName, f.name facilityName,r.status,pp.startdate periodStartDate,pp.enddate periodEndDate,emergency, orderDate  from vaccine_order_requisitions r   " +
             "JOIN programs p on r.programId =p.id  " +
             "JOIN processing_periods pp on r.periodId = pp.id  " +
             "JOIN facilities f on r.facilityId= f.id    "+
-            " WHERE programId = #{programId} AND r.createdDate >= #{dateRangeStart}::date and r.createdDate <= #{dateRangeEnd}::date  " +
+            " WHERE programId = #{programId} AND r.createdDate::date >= #{dateRangeStart}::date and r.createdDate::date <= #{dateRangeEnd}::date  " +
             " and facilityId = #{facilityId} and R.STATUS  IN('SUBMITTED')")
     List<OrderRequisitionDTO> getSearchedDataBy(@Param("facilityId") Long facilityId,
                                                 @Param("dateRangeStart") String dateRangeStart,
@@ -146,5 +146,21 @@ public interface VaccineOrderRequisitionMapper {
     })
     List<OrderRequisitionStockCardDTO> getAllByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
+    @Select("select * from supervisory_nodes where facilityId = #{facilityId} ")
+    List<OrderRequisitionDTO>getSupervisoryNodeByFacility(@Param("facilityId") Long facilityId);
+
+   @Select(" select o.periodId, o.id orderId, facilityId, (select name from facilities where id = o.facilityId) facilityName,  " +
+           "li.quantityRequested,li.productName,p.code productCode,p.id productId  " +
+           " from vaccine_order_requisitions o  " +
+           "JOIN vaccine_order_requisition_line_items li ON o.id = li.orderId " +
+           "JOIN products p ON li.productId = p.Id " +
+           "WHERE status = 'SUBMITTED' AND programId = #{program} AND facilityId = ANY(#{facilityIds}::int[])" +
+           " ORDER BY p.id ")
+    List<OrderRequisitionDTO> getConsolidatedList(@Param("program") Long program,@Param("facilityIds") String facilityIds);
+
+    @Update("Update vaccine_order_requisitions SET   "
+            +" isVerified = true " +
+            "WHERE id = #{orderId}  ")
+    Long verifyVaccineOrderRequisition(@Param("orderId") Long orderId);
 }
 

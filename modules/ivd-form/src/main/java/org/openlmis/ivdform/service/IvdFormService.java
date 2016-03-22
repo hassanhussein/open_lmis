@@ -14,6 +14,7 @@ package org.openlmis.ivdform.service;
 
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.domain.RightName;
@@ -25,16 +26,16 @@ import org.openlmis.ivdform.domain.VaccineDisease;
 import org.openlmis.ivdform.domain.VaccineProductDose;
 import org.openlmis.ivdform.domain.Vitamin;
 import org.openlmis.ivdform.domain.VitaminSupplementationAgeGroup;
-import org.openlmis.ivdform.domain.reports.ColdChainLineItem;
-import org.openlmis.ivdform.domain.reports.ReportStatus;
-import org.openlmis.ivdform.domain.reports.ReportStatusChange;
-import org.openlmis.ivdform.domain.reports.VaccineReport;
+import org.openlmis.ivdform.domain.reports.*;
+import org.openlmis.ivdform.dto.FacilityIvdSummary;
 import org.openlmis.ivdform.dto.ReportStatusDTO;
 import org.openlmis.ivdform.dto.RoutineReportDTO;
+import org.openlmis.ivdform.dto.StockStatusSummary;
 import org.openlmis.ivdform.repository.VitaminRepository;
 import org.openlmis.ivdform.repository.VitaminSupplementationAgeGroupRepository;
-import org.openlmis.ivdform.repository.reports.IvdFormRepository;
 import org.openlmis.ivdform.repository.reports.ColdChainLineItemRepository;
+import org.openlmis.ivdform.repository.reports.IvdFormRepository;
+import org.openlmis.ivdform.repository.reports.LogisticsLineItemRepository;
 import org.openlmis.ivdform.repository.reports.StatusChangeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,8 @@ import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 @NoArgsConstructor
 public class IvdFormService {
 
+  private static final String STOCK_STATUS_FOUND = "STOCK_STATUS_FOUND";
+  private static final String STOCK_STATUS_NOT_FOUND = "STOCK_STATUS_NOT_FOUND";
   @Autowired
   IvdFormRepository repository;
 
@@ -88,6 +91,9 @@ public class IvdFormService {
   AnnualFacilityDemographicEstimateService annualFacilityDemographicEstimateService;
 
   @Autowired
+  LogisticsLineItemRepository logisticsLineItemRepository;
+
+  @Autowired
   MessageService messageService;
 
   @Autowired
@@ -101,6 +107,9 @@ public class IvdFormService {
 
   @Autowired
   GeographicZoneService geographicZoneService;
+
+  @Autowired
+  IVDNotificationService ivdNotificationService;
 
   private static final String DATE_FORMAT = "yyyy-MM-dd";
 
@@ -128,6 +137,7 @@ public class IvdFormService {
     repository.update(report, userId);
     ReportStatusChange change = new ReportStatusChange(report, ReportStatus.SUBMITTED, userId);
     reportStatusChangeRepository.insert(change);
+    ivdNotificationService.sendIVDStatusChangeNotification(report, userId);
   }
 
   private VaccineReport createNewVaccineReport(Long facilityId, Long programId, Long periodId) {
@@ -186,14 +196,14 @@ public class IvdFormService {
 
     List<ReportStatusDTO> results = new ArrayList<>();
     List<ProcessingPeriod> periods = periodService.getAllPeriodsForDateRange(scheduleId, startDate, endDate);
-    if (lastRequest != null ) {
+    if (lastRequest != null) {
 
       List<VaccineReport> rejectedReports = repository.getRejectedReports(facilityId, programId);
-      for(VaccineReport rReport : rejectedReports){
+      for (VaccineReport rReport : rejectedReports) {
         results.add(createReportStatusDto(facilityId, programId, rReport));
       }
 
-      if( lastRequest.getStatus().equals(ReportStatus.DRAFT)) {
+      if (lastRequest.getStatus().equals(ReportStatus.DRAFT)) {
         results.add(createReportStatusDto(facilityId, programId, lastRequest));
       }
     }
@@ -214,7 +224,7 @@ public class IvdFormService {
     return results;
   }
 
-  private ReportStatusDTO createReportStatusDto(Long facilityId, Long programId, VaccineReport report) {
+  private static ReportStatusDTO createReportStatusDto(Long facilityId, Long programId, VaccineReport report) {
     ReportStatusDTO reportStatusDTO = new ReportStatusDTO();
     reportStatusDTO.setPeriodName(report.getPeriod().getName());
     reportStatusDTO.setPeriodId(report.getPeriod().getId());
@@ -239,20 +249,85 @@ public class IvdFormService {
 
   public List<RoutineReportDTO> getApprovalPendingForms(Long userId, Long programId) {
     String facilityIds = commaSeparator.commaSeparateIds(facilityService.getUserSupervisedFacilities(userId, programId, RightName.APPROVE_IVD));
-    return repository.getApprovalPendingForms( facilityIds);
+    return repository.getApprovalPendingForms(facilityIds);
   }
 
   public void approve(VaccineReport report, Long userId) {
     report.setStatus(ReportStatus.APPROVED);
+    Long reportSubmitterUserId = getReportSubmitterUserId(report.getId());
     repository.update(report, userId);
     ReportStatusChange change = new ReportStatusChange(report, ReportStatus.APPROVED, userId);
     reportStatusChangeRepository.insert(change);
+    ivdNotificationService.sendIVDStatusChangeNotification(report, reportSubmitterUserId);
   }
 
   public void reject(VaccineReport report, Long userId) {
     report.setStatus(ReportStatus.REJECTED);
+    Long reportSubmitterUserId = getReportSubmitterUserId(report.getId());
     repository.update(report, userId);
     ReportStatusChange change = new ReportStatusChange(report, ReportStatus.REJECTED, userId);
     reportStatusChangeRepository.insert(change);
+    ivdNotificationService.sendIVDStatusChangeNotification(report, reportSubmitterUserId);
+  }
+
+  public FacilityIvdSummary getStockStatusForAllProductsInFacility(String facilityCode, String programCode, Long periodId) {
+    FacilityIvdSummary summary = new FacilityIvdSummary(facilityCode, programCode, periodId);
+    List<LogisticsLineItem> list = logisticsLineItemRepository.getApprovedLineItemListFor(programCode, facilityCode, periodId);
+    if (!emptyIfNull(list).isEmpty()) {
+      Facility facility = facilityService.getFacilityByCode(facilityCode);
+
+      Long reportId = this.getReportIdForFacilityAndPeriod(facility.getId(), periodId);
+      VaccineReport report = repository.getByIdWithFullDetails(reportId);
+      summary.setEquipments(report.getColdChainLineItems());
+
+      summary.setStatus(STOCK_STATUS_FOUND);
+      summary.setProducts(new ArrayList<StockStatusSummary>());
+      for (LogisticsLineItem item : list) {
+        summary.getProducts().add(populateStockStatusSummary(facilityCode, item.getProductCode(), programCode, periodId, item));
+      }
+    } else {
+      summary.setStatus(STOCK_STATUS_NOT_FOUND);
+    }
+    return summary;
+  }
+
+  public StockStatusSummary getStockStatusForProductInFacility(String facilityCode, String productCode, String programCode, Long periodId) {
+    LogisticsLineItem periodicLLI = logisticsLineItemRepository.getApprovedLineItemFor(programCode, productCode, facilityCode, periodId);
+    return populateStockStatusSummary(facilityCode, productCode, programCode, periodId, periodicLLI);
+  }
+
+  private StockStatusSummary populateStockStatusSummary(String facilityCode, String productCode, String programCode, Long periodId, LogisticsLineItem periodicLLI) {
+    StockStatusSummary response = new StockStatusSummary();
+    response.setPeriodId(periodId);
+    response.setProductCode(productCode);
+    if (periodicLLI != null) {
+      response.setDaysOutOfStock(periodicLLI.getDaysStockedOut());
+      response.setStockStatus(periodicLLI.getClosingBalance());
+      response.setProductId(periodicLLI.getProductId());
+      response.setStatus(STOCK_STATUS_FOUND);
+
+      List<LogisticsLineItem> previousThreeSubmissions = logisticsLineItemRepository.getUpTo3PreviousPeriodLineItemsFor(programCode, productCode, facilityCode, periodId);
+      response.setAmc(calculateAMC(previousThreeSubmissions));
+    } else {
+      response.setStatus(STOCK_STATUS_NOT_FOUND);
+    }
+    return response;
+  }
+
+    private Long getReportSubmitterUserId(Long vaccineReportId){
+        VaccineReport previousReport =  repository.getById(vaccineReportId);
+        return previousReport != null ? previousReport.getModifiedBy() : null;
+    }
+
+  private static Long calculateAMC(List<LogisticsLineItem> previousThree) {
+    Long sum = 0L;
+    int count = 0;
+    for (LogisticsLineItem lineItem : emptyIfNull(previousThree)) {
+      if (lineItem.getQuantityIssued() != null) {
+        sum += lineItem.getQuantityIssued();
+        count++;
+      }
+    }
+    return (count == 0) ? 0L : sum / count;
   }
 }

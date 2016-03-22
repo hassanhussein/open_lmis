@@ -2,12 +2,14 @@ package org.openlmis.vaccine.repository.inventory;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
 import org.openlmis.vaccine.domain.inventory.VoucherNumberCode;
+import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
 import org.openlmis.vaccine.repository.mapper.inventory.VaccineInventoryDistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,7 +25,7 @@ public class VaccineInventoryDistributionRepository {
     VaccineInventoryDistributionMapper mapper;
 
     public List<Facility> getOneLevelSupervisedFacilities(Long facilityId) {
-        return mapper.getOneLevelSupervisedFacities(facilityId);
+        return mapper.getOneLevelSupervisedFacilities(facilityId);
     }
     public Integer saveDistribution(VaccineDistribution vaccineDistribution) {
         return mapper.saveDistribution(vaccineDistribution);
@@ -49,16 +51,16 @@ public class VaccineInventoryDistributionRepository {
         return mapper.updateDistributionLineItemLot(vaccineDistributionLineItemLot);
     }
 
-    public List<VaccineDistribution> getDistributedFacilitiesByMonth(int month, int year) {
-        return mapper.getDistributedFacilitiesByMonth(month, year);
+    public VaccineDistribution getDistributionForFacilityByMonth(Long facilityId, int month, int year) {
+        return mapper.getDistributionForFacilityByMonth(facilityId, month, year);
     }
 
-    public List<VaccineDistribution> getDistributedFacilitiesByPeriod(Long periodId) {
-        return mapper.getDistributedFacilitiesByPeriod(periodId);
+    public VaccineDistribution getDistributionForFacilityByPeriod(Long facilityId, Long periodId) {
+        return mapper.getDistributionForFacilityByPeriod(facilityId, periodId);
     }
 
-    public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId, Date distributionDate) {
-        return mapper.getCurrentPeriod(facilityId, programId, distributionDate);
+    public ProcessingPeriod getSupervisedCurrentPeriod(Long facilityId, Long programId, Date distributionDate) {
+        return mapper.getSupervisedCurrentPeriod(facilityId, programId, distributionDate);
     }
 
     public VaccineDistribution getById(Long id) {
@@ -82,4 +84,31 @@ public class VaccineInventoryDistributionRepository {
     {
         return mapper.getFacilityVoucherNumberCode(facilityId);
     }
+
+    public VaccineDistribution getAllDistributionsForNotification(Long facilityId)
+    {
+        return mapper.getAllDistributionsForNotification(facilityId);
+    }
+    public Long updateNotification(Long Id){
+        return mapper.updateNotification(Id);
+    }
+
+    public VaccineDistribution getDistributionByToFacility(Long facilityId) {
+        return mapper.getDistributionByToFacility(facilityId);
+    }
+
+    public Long getSupervisorFacilityId(Long facilityId) {
+        return mapper.getSupervisorFacilityId(facilityId);
+    }
+
+    public List<VaccineDistributionAlertDTO>getPendingDistributionAlert(Long facilityId){
+        return mapper.getPendingConsignmentAlert(facilityId);
+    }
+    public List<VaccineDistributionAlertDTO>getPendingNotificationFoLowerLevel(Long facilityId){
+        return mapper.getPendingConsignmentToLowerLevel(facilityId);
+    }
+    public List<Facility> getFacilitiesSameType(Long facilityId, String query) {
+        return mapper.getFacilitiesSameType(facilityId, query.toLowerCase());
+    }
+
 }

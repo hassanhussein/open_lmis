@@ -18,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ISA;
 import org.openlmis.core.dto.IsaDTO;
 
@@ -32,13 +33,17 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @NoArgsConstructor
 @JsonSerialize(include = NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class StockRequirements
+public class StockRequirements extends BaseModel
 {
-  Long facilityId;
+    Long programId;
+    Long facilityId;
   String facilityCode;
   Long productId;
   String productCategory;
   String productName;
+  Integer year;
+
+    Integer presentation;
 
   ISA isa;
 
@@ -50,71 +55,121 @@ public class StockRequirements
 
   Integer annualNeed;
 
-  Integer quarterlyNeed;
+  Integer supplyPeriodNeed;
 
-  Double MinimumStock;
+  Integer minimumStock;
 
-  Double MaximumStock;
+  Integer maximumStock;
 
-  Double ReorderLevel;
+  Integer reorderLevel;
 
   IsaDTO isaDTO;
 
   int isaValue = 0;
 
-  Double bufferStock;
+  Integer bufferStock;
+
+    //If anyone likes this pattern that this method is intended to support, the method should be generalized and moved elsewhere
+    public static String getJSONArray(List<StockRequirements> items) {
+        StringBuilder builder = new StringBuilder("[");
+        for (int i = 0; i < items.size(); i++) {
+            builder.append(items.get(i).getJSON());
+            if (i < items.size() - 1)
+                builder.append(",");
+        }
+        builder.append("]");
+
+        return builder.toString();
+    }
 
   public Integer getIsaValue()
   {
-    if(isa == null || population == null)
-      return null;
-    return isa.calculate(population);
+      if(isaValue == 0) {
+          if (isa == null || population == null)
+              return null;
+          return getMultipleOfPresentation(isa.calculate(population));
+      }else{
+          return isaValue;
+      }
   }
 
-  public Double getMinimumStock()
+  public Integer getMinimumStock()
   {
-    if(getIsaValue() == null || minMonthsOfStock == null)
+      if(getIsaValue() == null || minMonthsOfStock == null)
       return null;
-    Double value = getIsaValue() * minMonthsOfStock;
-    return MinimumStock = value;
+    Integer value = getIsaValue() * minMonthsOfStock.intValue();
+      return minimumStock = getMultipleOfPresentation(value);
   }
 
-  public Double getMaximumStock()
+  public Integer getMaximumStock()
   {
-    if(getIsaValue() == null || maxMonthsOfStock == null)
-      return null;
-    Double value = getIsaValue() * maxMonthsOfStock;
-    return MaximumStock= value;
+    if(maximumStock == null) {
+        if (getIsaValue() == null || maxMonthsOfStock == null)
+            return null;
+        Double value = (getIsaValue() * maxMonthsOfStock +getBufferStock());
+        return maximumStock = getMultipleOfPresentation(value.intValue());
+    }
+      else{
+        return maximumStock;
+    }
   }
 
-  public Double getReorderLevel()
+  public Integer getReorderLevel()
   {
-    if(getIsaValue() == null || eop == null)
-      return null;
-    return getIsaValue() * eop;
+     if(reorderLevel ==null) {
+         if (getIsaValue() == null || eop == null)
+             return null;
+         Double value=getIsaValue() * eop;
+         return getMultipleOfPresentation(value.intValue());
+     }
+      else{
+         return reorderLevel;
+     }
   }
 
   public Integer getAnnualNeed(){
-    if(getIsaValue() == null)
-      return null;
-    return getIsaValue() * 12;
+    if(annualNeed == null) {
+        if (getIsaValue() == null)
+            return null;
+        return getMultipleOfPresentation(getIsaValue() * 12);
+    }else
+    {
+        return annualNeed;
+    }
   }
 
-  public Integer getQuarterlyNeed(){
-    if (getAnnualNeed() == null)
-      return null;
-    return getAnnualNeed() / 4;
+  public Integer getSupplyPeriodNeed(){
+    if(supplyPeriodNeed ==null) {
+        if (getIsaValue() == null)
+            return null;
+        Double value=getIsaValue() * maxMonthsOfStock;
+        return getMultipleOfPresentation(value.intValue());
+    }
+      else{
+        return supplyPeriodNeed;
+    }
   }
 
-
-  public Double getBufferStock(){
-      if(getQuarterlyNeed() == null && isa == null)
-          return null;
-      return Double.valueOf((getQuarterlyNeed() * isa.getBufferPercentage()) / 100);
+  public Integer getBufferStock(){
+      if(bufferStock ==null) {
+          if (getSupplyPeriodNeed() == null && isa == null)
+              return null;
+          Double value=((getSupplyPeriodNeed() * isa.getBufferPercentage()) / 100);
+          return getMultipleOfPresentation(value.intValue());
+      }
+      else{
+          return bufferStock;
+      }
   }
 
-
-
+    private Integer getMultipleOfPresentation(Integer value) {
+        if (value > 0 && presentation != null) {
+            return value + (presentation - (value % presentation));
+        }
+        {
+            return value;
+        }
+    }
 
   public String getJSON()
   {
@@ -190,27 +245,11 @@ public class StockRequirements
     builder.append(", \"annualNeed\": ");
     builder.append(getAnnualNeed());
 
-    builder.append(", \"quarterlyNeed\": ");
-    builder.append(getQuarterlyNeed());
+    builder.append(", \"supplyPeriodNeed\": ");
+    builder.append(getSupplyPeriodNeed());
 
 
     builder.append("}");
-
-    return builder.toString();
-  }
-
-
-  //If anyone likes this pattern that this method is intended to support, the method should be generalized and moved elsewhere
-  public static String getJSONArray(List<StockRequirements> items)
-  {
-    StringBuilder builder = new StringBuilder("[");
-    for(int i=0; i<items.size(); i++)
-    {
-      builder.append(items.get(i).getJSON());
-      if(i < items.size() - 1)
-        builder.append(",");
-    }
-    builder.append("]");
 
     return builder.toString();
   }

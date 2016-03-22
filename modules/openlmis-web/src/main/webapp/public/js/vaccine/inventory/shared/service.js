@@ -22,15 +22,23 @@ services.factory('StockCardsByCategory', function($resource,StockCards,$q, $time
                     if(!isNaN(pId)){
                         VaccineProgramProducts.get({programId:pId},function(data){
                                  programProducts=data.programProductList;
-
                                  StockCards.get({facilityId:fId},function(data){
                                         var stockCards=data.stockCards;
                                         stockCards.forEach(function(s){
                                               var product= _.filter(programProducts, function(obj) {
                                                   return obj.product.primaryName === s.product.primaryName;
                                               });
-                                                s.displayOrder=product[0].productCategory.displayOrder;
+                                                s.displayOrder=product[0].id;
                                                 s.productCategory=product[0].productCategory;
+                                                s.presentation=product[0].product.dosesPerDispensingUnit;
+
+                                                var lotsAscExpiration=s.lotsOnHand.sort(function(a,b){
+                                                    return (a.lot.expirationDate > b.lot.expirationDate) ? 1 : ((b.lot.expirationDate > a.lot.expirationDate) ? -1 : 0);
+                                                });
+                                                var lotsDescVvmStatus=lotsAscExpiration.sort(function(a,b){
+                                                    return (a.customProps.vvmstatus > b.customProps.vvmstatus) ? -1 : ((b.customProps.vvmstatus > a.customProps.vvmstatus) ? 1 : 0);
+                                                });
+                                                s.lotsOnHand=lotsDescVvmStatus;
                                         });
                                         stockCards=_.sortBy(stockCards,'displayOrder');
 
@@ -68,96 +76,20 @@ return {
  };
 });
 
-services.factory('FacilitiesWithProducts', function($resource,$timeout,$q,OneLevelSupervisedFacilities,StockCards,DistributedFacilities){
-     var programId;var facilityId;var allSupervisedFacilities;var stockCards;var distributions;var facilities={};
-     facilities.scheduled=[];
-     facilities.unscheduled=[];
-
-     function get(pId,fId) {
+services.factory('FacilityWithProducts', function($resource,$timeout,$q,StockCards,FacilityDistributionForecastAndLastPeriod,QuantityRequired){
+     function get(program,facility, homeFacilityId) {
          var deferred =$q.defer();
                      $timeout(function(){
-                         if(!isNaN(pId)){
-                            OneLevelSupervisedFacilities.get(function(f){
-                                StockCards.get({facilityId:fId},function(s){
-                                    DistributedFacilities.get(function(d){
-                                        allSupervisedFacilities=f.facilities;stockCards=s.stockCards;distributions=d.Distributions;
-//                                        console.log(JSON.stringify(angular.extend(allSupervisedFacilities,distributions,stockCards)));
-                                        allSupervisedFacilities.forEach(function(facility){
-                                             facility.productsToIssue=[];
-                                             var facilityDistribution=_.findWhere(distributions,{toFacilityId:facility.id});
-                                             facility.status=(facilityDistribution !== undefined)?facilityDistribution.status:undefined;
-                                             facility.voucherNumber=(facilityDistribution !== undefined)?facilityDistribution.voucherNumber:undefined;
-                                             facility.distributionDate=(facilityDistribution !== undefined)?facilityDistribution.distributionDate:undefined;
-                                             facility.distributionId=(facilityDistribution !== undefined)?facilityDistribution.id:undefined;
-                                             facility.toFacilityId=(facilityDistribution !== undefined)?facilityDistribution.toFacilityId:undefined;
-                                             facility.fromFacilityId=(facilityDistribution !== undefined)?facilityDistribution.fromFacilityId:undefined;
-                                             stockCards.forEach(function(stockCard){
-                                                 var product={};
-                                                 var distributedProduct;
-                                                 if(facilityDistribution !== undefined)
-                                                 {
-                                                     distributedProduct=_.findWhere(facilityDistribution.lineItems,{productId:stockCard.product.id});
-                                                 }
-                                                 product.name=stockCard.product.primaryName;
-                                                 product.productId=stockCard.product.id;
-                                                 product.productCode=stockCard.product.code;
-                                                 product.displayOrder=stockCard.product.id;
-                                                 product.totalQuantityOnHand=stockCard.totalQuantityOnHand;
-                                                 product.totalQuantityOnHand2=product.totalQuantityOnHand;
-                                                 product.quantity=(distributedProduct===undefined || facility.status==="RECEIVED")?0:distributedProduct.quantity;
-                                                 product.originalIssueQuantity=product.quantity;
-                                                 product.unScheduledQuantity=0;
-                                                 product.lineItemId=(distributedProduct===undefined)?null:distributedProduct.id;
-                                                 product.initialQuantity=(distributedProduct === undefined)?null:distributedProduct.quantity;
-                                                 if(stockCard.lotsOnHand !== undefined && stockCard.lotsOnHand.length >0)
-                                                 {
-                                                      product.lots=[];
-                                                      stockCard.lotsOnHand.forEach(function(lot){
-                                                          var lotOnHand={};
-                                                          var distributedLot;
-                                                          if(distributedProduct !== undefined)
-                                                          {
-                                                             distributedLot=_.findWhere(distributedProduct.lots,{lotId:lot.lot.id});
-                                                          }
-                                                          lotOnHand.lotId=lot.lot.id;
-                                                          lotOnHand.lotCode=lot.lot.lotCode;
-                                                          lotOnHand.quantityOnHand=lot.quantityOnHand;
-                                                          lotOnHand.quantityOnHand2=lot.quantityOnHand;
-                                                          lotOnHand.quantity=(distributedLot === undefined || facility.status==="RECEIVED" )?0:distributedLot.quantity;
-                                                          lotOnHand.originalIssueQuantity=lotOnHand.quantity;
-                                                          lotOnHand.lineItemLotId=(distributedLot === undefined)?null:distributedLot.id;
-                                                          lotOnHand.initialQuantity=(distributedLot === undefined)?null:distributedLot.quantity;
-                                                          lotOnHand.vvmStatus=(lot.customProps !== undefined && lot.customProps !== null && lot.customProps.vvmstatus !== undefined)?lot.customProps.vvmstatus:undefined;
-                                                          lotOnHand.vvmStatus=(lot.customProps !== undefined && lot.customProps !== null && lot.customProps.vvmstatus !== undefined)?lot.customProps.vvmstatus:null;
-                                                          lotOnHand.expirationDate=lot.lot.expirationDate;
-                                                          product.lots.push(lotOnHand);
-                                                      });
-                                                      var lotsAscExpiration=_.sortBy(product.lots,'expirationDate');
-                                                      var lotsDescExpiration=lotsAscExpiration.reverse();
-                                                      var lotAscVVM=_.sortBy(lotsDescExpiration,'vvmStatus');
-
-                                                      product.lots=lotAscVVM.reverse();
-                                                 }
-
-                                                 facility.productsToIssue.push(product);
-                                                 facility.productsToIssue=_.sortBy(facility.productsToIssue,'displayOrder');
-                                             });
-
+                         if(program !== null){
+                                StockCards.get({facilityId:homeFacilityId},function(s){
+                                    FacilityDistributionForecastAndLastPeriod.get({facilityId:facility.id,programId:program.id},function(distributionForecastAndPeriod){
+                                        QuantityRequired.get({facilityCode:facility.code,programCode:program.code,periodId:distributionForecastAndPeriod.lastPeriod[0].id},function(report){
+                                             var facilityWithProducts=new FacilitiesWithProducts(facility,s.stockCards,distributionForecastAndPeriod,report);
+                                             deferred.resolve(facilityWithProducts);
                                         });
-
-                                         facilities.scheduled = $.grep(allSupervisedFacilities, function (facility) {
-                                                   return facility.status !=='RECEIVED';
-                                         });
-                                         facilities.unscheduled = $.grep(allSupervisedFacilities, function (facility) {
-                                                   return facility.status ==="RECEIVED";
-                                         });
-                                         deferred.resolve(facilities);
                                     });
-
                                 });
-                             });
                          }
-
                      },100);
           return deferred.promise;
 
@@ -186,7 +118,7 @@ services.factory('VaccineOrderRequisitionByCategory', function ($resource, Vacci
                         var overallData = data.report;
 
                         var lineItems = data.report.lineItems;
-                         console.log(JSON.stringify(lineItems));
+
                         lineItems.forEach(function(s){
 
                            // s.displayOrder=s.productId;
@@ -251,30 +183,11 @@ services.factory('StockRequirementsData', function ($resource, StockRequirements
         $timeout(function () {
             if (!isNaN(program) && !isUndefined(homeFacility)) {
 
-                VaccineOrderRequisitionProgramProduct.get({programId: program}, function (data) {
-                    programProducts = data.programProductList;
-
-
                     StockRequirements.get({facilityId: homeFacility, programId: program}, function (data) {
-
-                        pageLineItems = data;
-                        pageLineItems.forEach(function (s) {
-
-                            if (s.isaValue !== null && s.eop !== null && s.maxMonthsOfStock !== null) {
-
-                                var product = _.filter(programProducts, function (obj) {
-                                    if (s.productName !== undefined) {
-                                        return obj.product.primaryName === s.productName;
-                                    }
-                                });
-                                s.productCategory = product[0].productCategory;
-                            }
-
-
-                        });
+                        pageLineItems = data.stock_requirements;
 
                         var byCategory = _.groupBy(pageLineItems, function (s) {
-                            return s.productCategory.name;
+                            return s.productCategory;
 
                         });
                         var stockCardsToDisplay = $.map(byCategory, function (value, index) {
@@ -286,10 +199,6 @@ services.factory('StockRequirementsData', function ($resource, StockRequirements
                         deferred.resolve(stockCardsToDisplay);
 
                     });
-
-
-                });
-
 
             } else {
                 var stockCardsToDisplay = [];
@@ -427,11 +336,14 @@ services.factory('StockCardsForProgramByCategory', function ($resource,StockCard
                                 var stockCards = data.stockCards;
                                 stockCards.forEach(function (s) {
 
-//                                     var lotsAscExpiration=_.sortBy(s.lotsOnHand,'lot.expirationDate');
-//                                     var lotsDescExpiration=lotsAscExpiration.reverse();
-//                                     var lotAscVVM=_.sortBy(lotsDescExpiration,'customProps.vvmstatus');
-//
-//                                     s.lotsOnHand=lotAscVVM.reverse();
+                                    var lotsAscExpiration=s.lotsOnHand.sort(function(a,b){
+                                        return (a.lot.expirationDate > b.lot.expirationDate) ? 1 : ((b.lot.expirationDate > a.lot.expirationDate) ? -1 : 0);
+                                    });
+                                    var lotsDescVvmStatus=lotsAscExpiration.sort(function(a,b){
+                                        return (a.customProps.vvmstatus > b.customProps.vvmstatus) ? -1 : ((b.customProps.vvmstatus > a.customProps.vvmstatus) ? 1 : 0);
+                                    });
+
+                                    s.lotsOnHand=lotsDescVvmStatus;
 
                                     if (s.product.id !== undefined && quantityRequested !==undefined) {
 
@@ -451,7 +363,7 @@ services.factory('StockCardsForProgramByCategory', function ($resource,StockCard
 
                                         if (quantityToRequest.length > 0 && product[0].productCategory !==undefined) {
                                             s.productCategory = product[0].productCategory;
-
+                                            s.presentation = product[0].product.dosesPerDispensingUnit;
                                             s.quantityRequested = quantityToRequest[0].quantityRequested;
 
                                         }
@@ -527,21 +439,7 @@ services.factory('VaccineOrderRequisitionProgramProduct', function ($resource) {
     return $resource('/vaccine/orderRequisition/:programId.json', {programId: '@programId'}, {});
 });
 
-
-
 services.factory('StockRequirements', function ($resource) {
-
-    return $resource(
-        '/rest-api/facility/:facilityId/program/:programId/stockRequirements.json',
-        {facilityId: '@facilityId', programId: '@programId'},
-        {
-            'get': {
-                method: 'GET',
-                transformResponse: function (data) {
-                    return angular.fromJson(data);
-                },
-                isArray: true //since list property is an array
-            }
-        }
-    );
+    return $resource('/rest-api/facility/:facilityId/program/:programId/stockRequirements.json',{facilityId: '@facilityId', programId: '@programId'},{});
 });
+

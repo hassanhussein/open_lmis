@@ -1,13 +1,14 @@
 <!--
-  ~ This program is part of the OpenLMIS logistics management information system platform software.
-  ~ Copyright © 2013 VillageReach
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
   ~
   ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  ~  
-  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
-
 <div ng-controller="CreateEquipmentLineItemController">
   <div>
     {{rnr.equipmentErrorMessage}}
@@ -24,11 +25,6 @@
                 <th class="col-product" >
                     <div class="regimen-heading">
                         <span openlmis-message="rnr.equipment.equipment.name"></span>
-                    </div>
-                </th>
-                <th class="span1" >
-                    <div class="regimen-heading">
-                        <span openlmis-message="rnr.equipment.model"></span>
                     </div>
                 </th>
                 <th class="span1" >
@@ -69,39 +65,40 @@
                     ng-bind="equipmentLineItem.equipmentCategory"></td>
             </tr>
             <tr>
-                <td class="cell-input">
-                    <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+                <td class="cell-input padding2px ">
+                    <span ng-bind="equipmentLineItem.code" class="cell-text" ></span>
                 </td>
-                <td class="cell-input">
-                    <span ng-bind="equipmentLineItem.equipmentName" class="cell-text"></span>
+                <td class="cell-input padding2px ">
+                  <span class="col-product cell-text">
+                     <span ng-bind="equipmentLineItem.equipmentName" class="padding2px"></span>
+                  </span>
                 </td>
-                <td class="cell-input">
-                    <span ng-bind="equipmentLineItem.equipmentModel" class="cell-text"></span>
+                <td class="cell-input padding2px">
+                  <span class="col-product cell-text">
+                    <span ng-bind="equipmentLineItem.equipmentSerial" class="padding2px"></span>
+                  </span>
                 </td>
-                <td class="cell-input">
-                    <span ng-bind="equipmentLineItem.equipmentSerial" class="cell-text"></span>
-                </td>
-                <td class="cell-input" style="padding-top:5px;">
+                <td class="cell-input padding2px">
                      <select ng-disabled="formDisabled" class="cell-text" ng-model="equipmentLineItem.operationalStatusId" ng-change="equipmentStatusChanged(equipmentLineItem);">
                          <option  ng-repeat="status in equipmentOperationalStatus" value="{{status.id}}" ng-selected="equipmentLineItem.operationalStatusId == status.id">{{status.name}}</option>
                      </select>
                 </td>
-                <td class="cell-input">
-                    <input ng-disabled="formDisabled" class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTestCount" type="text" ng-model="equipmentLineItem.testCount">
+                <td class="cell-input col-general padding2px">
+                    <input ng-disabled="formDisabled"  ng-disable="disableForm || !equipmentLineItem.enableTestCount" type="text" ng-model="equipmentLineItem.testCount">
                 </td>
-                <td class="cell-input">
-                    <input ng-disabled="formDisabled" class="cell-text" ng-disable="disableForm || !equipmentLineItem.enableTotalCount" type="text" ng-model="equipmentLineItem.totalCount">
+                <td class="cell-input col-general padding2px">
+                    <input ng-disabled="formDisabled"  ng-disable="disableForm || !equipmentLineItem.enableTotalCount" type="text" ng-model="equipmentLineItem.totalCount">
                 </td>
-                <td class="cell-input">
-                    <input ng-disabled="formDisabled" class="cell-text" type="text" ng-model="equipmentLineItem.daysOutOfUse">
+                <td class="cell-input col-general padding2px">
+                    <input ng-disabled="formDisabled" type="text" ng-model="equipmentLineItem.daysOutOfUse">
                 </td>
                 <td class="cell-input" >
-                  <span  ng-class="( ( equipmentLineItem.remarks == undefined || equipmentLineItem.remarks == '' ) && equipmentLineItem.operationalStatusId == 3)?'cell-error-highlight':''" class="input-error-parent-cell" >
-                    <input ng-disabled="formDisabled" class="cell-text" type="text" ng-model="equipmentLineItem.remarks">
+                  <span  ng-class="{'cell-error-highlight': (requiresRemarks(equipmentLineItem))}" class="input-error-parent-cell" >
+                    <input ng-disabled="formDisabled"  type="text" ng-model="equipmentLineItem.remarks">
                   </span>
                   <span
                         class="alert alert-warning warning-alert"
-                        ng-show="( ( equipmentLineItem.remarks == undefined || equipmentLineItem.remarks == '' ) && equipmentLineItem.operationalStatusId == 3)"
+                        ng-show="requiresRemarks(equipmentLineItem)"
                         openlmis-message="equipment.error.related.products.ordered">
                   </span>
                 </td>

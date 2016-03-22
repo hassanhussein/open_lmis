@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class VaccineDashboardRepository {
@@ -26,27 +27,27 @@ public class VaccineDashboardRepository {
     @Autowired
     VaccineDashboardMapper mapper;
 
-    public HashMap<String, Object> getReportingSummary(  Long user){
+    public Map<String, Object> getReportingSummary(  Long user){
         return mapper.getReportingSummary(user);
     }
 
-    public HashMap<String, Object> getReportingDetails(Long userId){
+    public List<HashMap<String, Object>> getReportingDetails(Long userId){
         return mapper.getReportingDetails(userId);
     }
 
-    public HashMap<String, Object> getRepairingSummary(Long userId){
+    public Map<String, Object> getRepairingSummary(Long userId){
         return mapper.getRepairingSummary( userId);
     }
 
-    public HashMap<String, Object> getRepairingDetails(Long userId){
+    public List<HashMap<String, Object>> getRepairingDetails(Long userId){
         return mapper.getRepairingDetails(userId);
     }
 
-    public HashMap<String, Object> getInvestigatingSummary(Long userId){
+    public Map<String, Object> getInvestigatingSummary(Long userId){
         return mapper.getInvestigatingSummary(userId);
     }
 
-    public HashMap<String, Object> getInvestigatingDetails(Long userId){
+    public List<HashMap<String, Object>> getInvestigatingDetails(Long userId){
         return mapper.getInvestigatingDetails(userId);
     }
 
@@ -123,5 +124,15 @@ public class VaccineDashboardRepository {
     public List<HashMap<String, Object>> getDistrictStock(Long period, Long product){
         return mapper.getDistrictStock(period, product);
     }
+    public Long isDistrictUser(Long userId){
+        return mapper.isDistrictUser(userId);
+    }
 
+    public List<HashMap<String,Object>> getFacilityStock(Long period, Long product, Long userId) {
+        return mapper.getFacilityStock(period, product, userId);
+    }
+
+    public List<HashMap<String, Object>> getFacilityStockDetail(Date fromDate, Date toDate, Long product, Long userId) {
+        return mapper.getFacilityStockDetail(fromDate, toDate, product, userId);
+    }
 }

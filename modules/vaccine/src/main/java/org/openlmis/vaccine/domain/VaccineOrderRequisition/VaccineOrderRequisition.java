@@ -9,10 +9,10 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
-import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
-import org.openlmis.vaccine.dto.StockRequirements;
+import org.openlmis.vaccine.dto.StockRequirementsDTO;
 
+import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,13 +41,20 @@ public class VaccineOrderRequisition extends BaseModel {
     private List<VaccineOrderRequisitionStatusChange> statusChanges;
     private List<VaccineOrderRequisitionColumns> columnsList;
     private List<OrderRequisitionStockCardDTO> stockCards;
+    private int presentation;
+    private long value;
 
+    public int multipleOfPresentation(int presentation, long value) {
+        this.presentation = presentation;
+        this.value = value;
+        return (int) ((presentation > 0) ? value + (presentation - (value % presentation)) :value);
+    }
 
-    public void initiateOrder(List<StockRequirements> requirementsList, ProductService service, StockCardMapper stockCardMapper) {
+    public void initiateOrder(List<StockRequirementsDTO> requirementsList, ProductService service, StockCardMapper stockCardMapper) {
         lineItems = new ArrayList<>();
 
 
-        for (StockRequirements stockRequirements : requirementsList) {
+        for (StockRequirementsDTO stockRequirements : requirementsList) {
 
 
             if (stockRequirements.getIsaValue() != null) {
@@ -56,30 +63,24 @@ public class VaccineOrderRequisition extends BaseModel {
                 lineItem.setOrderId(id);
                 lineItem.setProductId(stockRequirements.getProductId());
                 lineItem.setProductName(stockRequirements.getProductName());
-                lineItem.setMaxmonthsofstock(stockRequirements.getMaxMonthsOfStock());
 
                 lineItem.setOverriddenisa(stockRequirements.getIsaValue());
-                lineItem.setEop(stockRequirements.getEop());
 
                 Product p = service.getById(stockRequirements.getProductId());
                 StockCard s = stockCardMapper.getByFacilityAndProduct(stockRequirements.getFacilityId(), p.getCode());
                 if (s != null){
-                    lineItem.setStockOnHand(s.getTotalQuantityOnHand());
+                    int soh = multipleOfPresentation(p.getDosesPerDispensingUnit(),s.getTotalQuantityOnHand());
+                    lineItem.setStockOnHand(Long.valueOf(soh));
                 }
                 else {
                     lineItem.setStockOnHand(0L);
                 }
-                lineItem.setMinMonthsOfStock(stockRequirements.getMinMonthsOfStock());
                 lineItem.setOrderedDate(form.format(new Date()));
                 lineItem.setBufferStock(stockRequirements.getBufferStock());
-
-                lineItem.setMaximumStock(stockRequirements.getMaximumStock());
+                int maxS= multipleOfPresentation(p.getDosesPerDispensingUnit(), Long.valueOf(stockRequirements.getMaximumStock()));
+                lineItem.setMaximumStock(maxS);
                 lineItem.setReOrderLevel(stockRequirements.getReorderLevel());
                 lineItem.setCategory(stockRequirements.getProductCategory());
-                lineItem.setPopulation(stockRequirements.getPopulation());
-
-                lineItem.setIsa(stockRequirements.getIsa());
-
 
                 lineItem.setMinimumStock(stockRequirements.getMinimumStock());
                 lineItem.setAnnualNeed(stockRequirements.getAnnualNeed());

@@ -8,7 +8,7 @@
  * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
  */
 
-function StockAdjustmentController($scope, $timeout,$window,$routeParams,StockCardsByCategory,configurations,StockEvent,localStorageService,homeFacility,VaccineAdjustmentReasons,UserFacilityList) {
+function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog,StockCardsByCategory,configurations,StockEvent,localStorageService,homeFacility,VaccineAdjustmentReasons,UserFacilityList) {
 
     //Get Home Facility
     $scope.currentStockLot = undefined;
@@ -104,54 +104,72 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,StockCa
 
      };
      $scope.updateStock=function(){
-            var events=[];
-            $scope.stockCardsToDisplay.forEach(function(st){
-                st.stockCards.forEach(function(s){
-                    if(s.lotsOnHand !==undefined && s.lotsOnHand.length>0){
-                        s.lotsOnHand.forEach(function(l){
-                            if(l.quantity !== undefined)
-                            {
-                                    l.adjustmentReasons.forEach(function(reason){
-                                        var event={};
-                                        event.type= "ADJUSTMENT";
-                                        event.productCode=s.product.code;
-                                        event.quantity=reason.quantity;
-                                        event.lotId=l.lot.id;
-                                        event.reasonName=reason.name;
-                                        if(l.customProps !==null && l.customProps.vvmstatus !==undefined)
-                                        {
-                                            event.customProps={"vvmStatus":l.customProps.vvmstatus};
-                                        }
-                                        events.push(event);
-                                    });
-                            }
-                        });
-                        console.log(JSON.stringify(events));
-                    }
-                    else{
-                     if(s.quantity !==undefined && s.quantity >0)
-                     {
-                        s.adjustmentReasons.forEach(function(reason){
-                            var event={};
-                            event.type= "ADJUSTMENT";
-                            event.productCode=s.product.code;
-                            event.quantity=reason.quantity;
-                            event.reasonName=reason.name;
-                            events.push(event);
-                        });
-                     }
-                    }
+
+            if($scope.adjustmentForm.$invalid)
+            {
+                console.log(JSON.stringify($scope.adjustmentForm));
+                $scope.showFormError=true;
+                return;
+            }
+
+            var callBack=function(result){
+               if(result){
+                var events=[];
+                $scope.stockCardsToDisplay.forEach(function(st){
+                    st.stockCards.forEach(function(s){
+                        if(s.lotsOnHand !==undefined && s.lotsOnHand.length>0){
+                            s.lotsOnHand.forEach(function(l){
+                                if(l.quantity !== undefined)
+                                {
+                                        l.adjustmentReasons.forEach(function(reason){
+                                            var event={};
+                                            event.type= "ADJUSTMENT";
+                                            event.productCode=s.product.code;
+                                            event.quantity=reason.quantity;
+                                            event.lotId=l.lot.id;
+                                            event.reasonName=reason.name;
+                                            if(l.customProps !==null && l.customProps.vvmstatus !==undefined)
+                                            {
+                                                event.customProps={"vvmStatus":l.customProps.vvmstatus};
+                                            }
+                                            events.push(event);
+                                        });
+                                }
+                            });
+                        }
+                        else{
+                         if(s.quantity !==undefined)
+                         {
+                            s.adjustmentReasons.forEach(function(reason){
+                                var event={};
+                                event.type= "ADJUSTMENT";
+                                event.productCode=s.product.code;
+                                event.quantity=reason.quantity;
+                                event.reasonName=reason.name;
+                                events.push(event);
+                            });
+                         }
+                        }
+                    });
                 });
-            });
-           StockEvent.save({facilityId:homeFacility.id},events, function (data) {
-               if(data.success !==null)
-               {
-                     $scope.message=data.success;
-                     $timeout(function(){
-                       $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
-                     },900);
-               }
-            });
+               StockEvent.save({facilityId:homeFacility.id},events, function (data) {
+                   if(data.success !==null)
+                   {
+                         $scope.message=data.success;
+                         $timeout(function(){
+                           $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
+                         },900);
+                   }
+                });
+            }
+          };
+
+          var options = {
+                     id: "confirmDialog",
+                     header: "label.confirm.adjust.stock.action",
+                     body: "msg.question.adjust.stock.confirmation"
+                  };
+          OpenLmisDialog.newDialog(options, callBack, $dialog);
      };
      $scope.cancel=function(){
         $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
@@ -177,9 +195,17 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,StockCa
      function updateAdjustmentReasonForLot(adjustmentReasons)
      {
 
+         var additive;
+         if($scope.currentStockLot.lot !==undefined){
+            additive=($scope.currentStockLot.quantity - $scope.currentStockLot.quantityOnHand >=0)?true:false;
+         }
+         else  if($scope.currentStockLot.lot ===undefined)
+         {
+            additive=($scope.currentStockLot.quantity - $scope.currentStockLot.totalQuantityOnHand >=0)?true:false;
+         }
          var adjustmentReasonsForLot = _.pluck(_.pluck(adjustmentReasons, 'type'), 'name');
          $scope.adjustmentReasonsToDisplay = $.grep($scope.adjustmentTypes, function (adjustmentTypeObject) {
-              return $.inArray(adjustmentTypeObject.name, adjustmentReasonsForLot) == -1;
+              return $.inArray(adjustmentTypeObject.name, adjustmentReasonsForLot) == -1 && adjustmentTypeObject.additive === additive;
           });
      }
 
@@ -228,11 +254,11 @@ StockAdjustmentController.resolve = {
             }, 100);
             return deferred.promise;
          },
-        configurations:function($q, $timeout, VaccineInventoryConfigurations) {
+        configurations:function($q, $timeout, AllVaccineInventoryConfigurations) {
                      var deferred = $q.defer();
                      var configurations={};
                      $timeout(function () {
-                        VaccineInventoryConfigurations.get(function(data)
+                        AllVaccineInventoryConfigurations.get(function(data)
                         {
                               configurations=data;
                               deferred.resolve(configurations);

@@ -30,7 +30,16 @@
 
 
 
-<h2 id="podPageTitle"><span openlmis-message="label.title.vaccine.forecasting"></span> </h2>
+<h2 id="podPageTitle"><span openlmis-message="label.title.vaccine.forecasting"></span>
+
+<span class="pull-right print-button">
+    <a id="printButton" class="btn btn-primary" ng-href="/vaccine/inventory/demand-forecasting/print" openlmis-message="button.print"
+       target="_blank"></a>
+  </span>
+
+</h2>
+
+
 
 
 <form name="orderRequisitionForm">
@@ -43,6 +52,7 @@
             <thead>
             <tr>
                 <th class="col-product "><span openlmis-message="header.routine.vaccine"></span></th>
+                <th id="unitOfMeasure" style="width: 100px;" class="col-unit-measure" openlmis-message="header.unit.of.measure"></th>
                 <th class="col-maximumStock "><span openlmis-message="header.annual.needs"></span></th>
                 <th class="col-quarterlyNeeds"><span openlmis-message="header.quaterly.needs"></span></th>
                 <th class="col-quarterlyNeeds"><span openlmis-message="header.monthly.needs"></span></th>
@@ -57,7 +67,7 @@
 
 
             <tr ng-repeat-start = "category in pageLineItems">
-                <td class="productCategory" id="productCategoryName{{$index}}" colspan="7"   ng-show="$index == 0 || ( $index > 0 && category.productCategory != pageLineItems[$index - 1].productCategory)"
+                <td class="productCategory" id="productCategoryName{{$index}}" colspan="8"   ng-show="$index == 0 || ( $index > 0 && category.productCategory != pageLineItems[$index - 1].productCategory)"
                  ng-bind="category.productCategory" >
                 </td>
             </tr>
@@ -67,12 +77,16 @@
                 <td class="cell-input col-product">
                     <span ng-bind="item.productName" id="productName{{$index}}" class="cell-text"></span>
                 </td>
+                <td class="cell-input col-unit-measure"  style="text-align: left; !important;">
+                    <span ng-bind="item.dosageUnit" id="item.dosageUnit{{$index}}" class="cell-text"></span>
+                </td>
+
                 <td class="cell-input col-maximumStock">
                         <span ng-bind="item.annualNeed | number" id="item.annualNeed{{$index}}"
                               class="cell-text"></span>
                 </td>
                 <td class="cell-input">
-                        <span ng-bind="item.quarterlyNeed | number"  id="item.quarterlyNeed{{$index}}"
+                        <span ng-bind="item.supplyPeriodNeed | number"  id="item.supplyPeriodNeed{{$index}}"
                               class="cell-text"></span>
                 </td>
                 <td class="cell-input">
@@ -88,7 +102,7 @@
 
                 <td class="cell-input col-bufferStock">
 
-                        <span ng-bind="(item.quarterlyNeed * (item.isaCoefficients.bufferPercentage)/100).toFixed(2) | number" id="bufferStock{{$index}}"
+                        <span ng-bind="item.bufferStock| number" id="bufferStock{{$index}}"
                               class="cell-text"></span>
                 </td>
 

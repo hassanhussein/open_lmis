@@ -11,6 +11,8 @@
 package org.openlmis.vaccine.service.inventory;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.vaccine.repository.inventory.VaccineInventoryRepository;
@@ -30,6 +32,9 @@ public class VaccineInventoryService {
     @Autowired
     LotRepository lotRepository;
 
+    @Autowired
+    private FacilityApprovedProductRepository facilityApprovedProductRepository = null;
+
     public List<Lot> getLotsByProductId(Long productId) {
         return repository.getLotsByProductId(productId);
     }
@@ -37,4 +42,26 @@ public class VaccineInventoryService {
     public Lot insertLot(Lot lot) {
         return lotRepository.getOrCreateLot(lot);
     }
+
+    public List<FacilityTypeApprovedProduct> facilityTypeApprovedProduct(Long facilityId, Long programId) {
+        return facilityApprovedProductRepository.getAllByFacilityAndProgramId(facilityId,programId);
+    }
+
+    //TODO To delete this code on production
+    public Integer deleteRequisitions() {
+        return repository.deleteOrderRequisitions();
+    }
+
+    public Integer deleteDistributions() {
+        return repository.deleteDistributions();
+    }
+
+    public Integer deleteStockCards() {
+        return repository.deleteStockCards();
+    }
+
+    public Integer deleteLots() {
+        return repository.deleteLots();
+    }
+    //TODO End To delete
 }

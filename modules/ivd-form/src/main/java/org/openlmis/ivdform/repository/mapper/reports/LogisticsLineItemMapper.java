@@ -32,6 +32,7 @@ public interface LogisticsLineItemMapper {
   @Update("UPDATE vaccine_report_logistics_line_items " +
       " set " +
       " reportId = #{reportId} " +
+      ", skipped = #{skipped}" +
       ", productId = #{productId} " +
       ", productCode = #{productCode} " +
       ", productCategory = #{productCategory} " +
@@ -64,4 +65,39 @@ public interface LogisticsLineItemMapper {
   })
   List<LogisticsLineItem> getLineItems(@Param("reportId") Long reportId);
 
+  @Select("SELECT * FROM vaccine_report_logistics_line_items rli " +
+    " JOIN vaccine_reports r on r.id = rli.reportId " +
+    " JOIN programs p on r.programId = p.id " +
+    " JOIN facilities f on f.id = r.facilityId " +
+    " WHERE p.code = #{programCode} " +
+    "    and f.code = #{facilityCode} " +
+    "    and rli.productCode = #{productCode} " +
+    "    and r.periodId = #{periodId} " +
+    "    and r.status = 'APPROVED' " +
+    " limit 1")
+  LogisticsLineItem getApprovedLineItemFor(@Param("programCode") String programCode, @Param("productCode") String productCode, @Param("facilityCode") String facilityCode, @Param("periodId") Long periodId);
+
+  @Select("SELECT * FROM vaccine_report_logistics_line_items rli " +
+    " JOIN vaccine_reports r on r.id = rli.reportId " +
+    " JOIN programs p on r.programId = p.id " +
+    " JOIN facilities f on f.id = r.facilityId " +
+    " WHERE p.code = #{programCode} " +
+    "    and f.code = #{facilityCode} " +
+    "    and r.periodId = #{periodId} " +
+    "    and r.status = 'APPROVED' " )
+  List<LogisticsLineItem> getApprovedLineItemListFor(@Param("programCode") String programCode, @Param("facilityCode") String facilityCode, @Param("periodId") Long periodId);
+
+
+  @Select("SELECT * FROM vaccine_report_logistics_line_items rli " +
+    " JOIN vaccine_reports r on r.id = rli.reportId " +
+    " JOIN programs p on r.programId = p.id " +
+    " JOIN facilities f on f.id = r.facilityId " +
+    " WHERE p.code = #{programCode} " +
+    "    and f.code = #{facilityCode} " +
+    "    and rli.productCode = #{productCode} " +
+    "    and r.periodId <= #{periodId} " +
+    "    and r.status = 'APPROVED' " +
+    " ORDER BY r.periodId DESC " +
+    " limit 3")
+  List<LogisticsLineItem> getUpTo3PreviousPeriodLineItemsFor(@Param("programCode") String programCode, @Param("productCode") String productCode, @Param("facilityCode") String facilityCode, @Param("periodId") Long periodId);
 }

@@ -1,38 +1,25 @@
 /*
- *
  * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- *  Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *
- *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.vaccine.repository.mapper.reports.builder;/*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
- *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
- */
-
+package org.openlmis.vaccine.repository.mapper.reports.builder;
 import org.openlmis.vaccine.domain.reports.params.PerformanceByDropoutRateParam;
 import org.openlmis.vaccine.repository.mapper.reports.builder.helpers.PerformanceByDropOutRateHelper;
-
 import java.util.Map;
-
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
 
 public class TrendOfMinMaxColdRangeBuilder {
     public String getTredofMinMaxColdRangeFacilityQuery(Map params) {
-        String query = "";
+        String query ;
         PerformanceByDropoutRateParam filter = (PerformanceByDropoutRateParam) params.get("filterCriteria");
         BEGIN();
         SELECT(" d.region_name");
@@ -62,19 +49,18 @@ public class TrendOfMinMaxColdRangeBuilder {
         WHERE(" tr.programid = (SELECT id FROM programs p WHERE p.enableivdform = TRUE )");
         WHERE(PerformanceByDropOutRateHelper.isFilteredPeriodStartDate("tr.period_start_date"));
         WHERE(PerformanceByDropOutRateHelper.isFilteredPeriodEndDate("tr.period_end_date"));
-        if (param.getFacility_id() != null && param.getFacility_id() != 0l) {
+        if (param.getFacility_id() != null && param.getFacility_id() != 0L) {
             WHERE(PerformanceByDropOutRateHelper.isFilteredFacilityId("tr.facility_id"));
         }
-//    discuss why product id is not part of the view
-//    WHERE(PerformanceByDropOutRateHelper.isFilteredProductId("tr.product_id"));
+
         WHERE(PerformanceByDropOutRateHelper.isFilteredGeographicZoneId("d.parent", "d.region_id", "d.district_id"));
 
 
     }
 
     public String getTredofMinMaxColdRangeDistrictQuery(Map params) {
-        String query = "";
-        PerformanceByDropoutRateParam filter = (PerformanceByDropoutRateParam) params.get("filterCriteria");
+        String query ;
+
         BEGIN();
         SELECT(" d.region_name");
         SELECT("   d.district_name");
@@ -92,28 +78,18 @@ public class TrendOfMinMaxColdRangeBuilder {
         JOIN(" geographic_zones gz ON gz.id = d.district_id");
         JOIN(" vw_vaccine_target_population vt ON tr.facility_id =  vt.facility_id and vt.year = extract(year from tr.period_start_date)  and vt.geographic_zone_id = gz.id and vt.category_id = 1");
         WHERE("tr.status= 'Functional'");
-        writeRegionPredicates(filter);
+        writeRegionPredicates();
         GROUP_BY("1,2,3,4");
         ORDER_BY(" 1,2,3");
         query = SQL();
         return query;
     }
 
-    private static void writeDistrictPredicates(PerformanceByDropoutRateParam param) {
-        WHERE(" tr.programid = (SELECT id FROM programs p WHERE p.enableivdform = TRUE )");
-        WHERE(PerformanceByDropOutRateHelper.isFilteredPeriodStartDate("tr.period_start_date"));
-        WHERE(PerformanceByDropOutRateHelper.isFilteredPeriodEndDate("tr.period_end_date"));
 
-//    discuss why product id is not part of the view
-//    WHERE(PerformanceByDropOutRateHelper.isFilteredProductId("tr.product_id"));
-        WHERE(PerformanceByDropOutRateHelper.isFilteredGeographicZoneId("d.parent", "d.region_id", "d.district_id"));
-
-
-    }
 
     public String getTredofMinMaxColdRangeRegionQuery(Map params) {
-        String query = "";
-        PerformanceByDropoutRateParam filter = (PerformanceByDropoutRateParam) params.get("filterCriteria");
+        String query ;
+
         BEGIN();
         SELECT(" d.region_name");
         SELECT("    to_date(tr.period_name, 'Mon YYYY') period_name");
@@ -130,7 +106,7 @@ public class TrendOfMinMaxColdRangeBuilder {
         JOIN(" geographic_zones gz ON gz.id = d.district_id");
         JOIN(" vw_vaccine_target_population vt ON tr.facility_id =  vt.facility_id and vt.year = extract(year from tr.period_start_date)  and vt.geographic_zone_id = gz.id and vt.category_id = 1");
         WHERE("tr.status= 'Functional'");
-        writeRegionPredicates(filter);
+        writeRegionPredicates();
         GROUP_BY("1,2,3");
         ORDER_BY(" 1,2");
 
@@ -138,13 +114,12 @@ public class TrendOfMinMaxColdRangeBuilder {
         return query;
     }
 
-    private static void writeRegionPredicates(PerformanceByDropoutRateParam param) {
+    private static void writeRegionPredicates() {
         WHERE(" tr.programid = (SELECT id FROM programs p WHERE p.enableivdform = TRUE )");
         WHERE(PerformanceByDropOutRateHelper.isFilteredPeriodStartDate("tr.period_start_date"));
         WHERE(PerformanceByDropOutRateHelper.isFilteredPeriodEndDate("tr.period_end_date"));
 
-//    discuss why product id is not part of the view
-//    WHERE(PerformanceByDropOutRateHelper.isFilteredProductId("tr.product_id"));
+
         WHERE(PerformanceByDropOutRateHelper.isFilteredGeographicZoneId("d.parent", "d.region_id", "d.district_id"));
 
 
@@ -152,26 +127,26 @@ public class TrendOfMinMaxColdRangeBuilder {
 /*
 
  */
-    public static String getFacilityVaccineTargetInformation(Map params) {
-        String query = "";
-        PerformanceByDropoutRateParam filter = (PerformanceByDropoutRateParam) params.get("filterCriteria");
+    public static String getFacilityVaccineTargetInformation() {
+        String query ;
+
         BEGIN();
         SELECT(" d.region_name");
         SELECT("   d.district_name");
-        SELECT("    f.facility_name");
+        SELECT("    f.name facility_name");
         SELECT(" vt.target_value_monthly targetpopulation");
         FROM(" vw_vaccine_target_population vt ");
         JOIN(" geographic_zones gz ON gz.id = vt.geographic_zone_id");
         JOIN(" vw_districts d ON vt.geographic_zone_id = d.district_id ");
         JOIN(" facilities f on f.id=vt.facility_id");
-        writePopulationPredicts(filter);
-        GROUP_BY(" 1,2,3 ");
+        writePopulationPredicts();
+        GROUP_BY(" 1,2,3,4 ");
         query = SQL();
         return query;
     }
-    public static String getDistrictVaccineTargetInformation(Map params) {
-        String query = "";
-        PerformanceByDropoutRateParam filter = (PerformanceByDropoutRateParam) params.get("filterCriteria");
+    public static String getDistrictVaccineTargetInformation() {
+        String query ;
+
         BEGIN();
         SELECT(" d.region_name");
         SELECT("   d.district_name");
@@ -180,14 +155,14 @@ public class TrendOfMinMaxColdRangeBuilder {
         FROM(" vw_vaccine_target_population vt ");
         JOIN(" geographic_zones gz ON gz.id = vt.geographic_zone_id");
         JOIN(" vw_districts d ON vt.geographic_zone_id = d.district_id ");
-        writePopulationPredicts(filter);
+        writePopulationPredicts();
         GROUP_BY(" 1,2 ");
         query = SQL();
         return query;
     }
-    public static String getRegionVaccineTargetInformation(Map params) {
-        String query = "";
-        PerformanceByDropoutRateParam filter = (PerformanceByDropoutRateParam) params.get("filterCriteria");
+    public static String getRegionVaccineTargetInformation() {
+        String query ;
+
         BEGIN();
         SELECT(" d.region_name");
 
@@ -195,12 +170,12 @@ public class TrendOfMinMaxColdRangeBuilder {
         FROM(" vw_vaccine_target_population vt ");
         JOIN(" geographic_zones gz ON gz.id = vt.geographic_zone_id");
         JOIN(" vw_districts d ON vt.geographic_zone_id = d.district_id ");
-        writePopulationPredicts(filter);
+        writePopulationPredicts();
         GROUP_BY(" 1 ");
         query = SQL();
         return query;
     }
-    private static void writePopulationPredicts(PerformanceByDropoutRateParam param) {
+    private static void writePopulationPredicts() {
         WHERE(" vt.program_id = (SELECT id FROM programs p WHERE p.enableivdform = TRUE )");
         WHERE(" vt.category_id=(select id from demographic_estimate_categories c where c.name='Population')");
         WHERE(PerformanceByDropOutRateHelper.isFilteredByYearFromPeriodStart("vt.year"));

@@ -41,7 +41,14 @@ angular.module('vaccine-report-create', ['openlmis', 'ngGrid', 'angularCombine',
                  controller: AdequacyLevelOfSupplyController,
                  templateUrl:'partials/view/adequacy-level-of-supply.html'
              }).
-
+            when('/classification-vaccine-utilization-performance', {
+                controller: ClassificationVaccineUtilizationPerformanceController,
+                templateUrl:'partials/view/classification-vaccine-utilization-performance.html'
+            }).
+            when('/categorization-vaccine-utilization-performance', {
+                controller: CategorizationVaccineUtilizationPerformanceController,
+                templateUrl:'partials/view/categorization-vaccine-utilization-performance.html'
+            }).
             otherwise({redirectTo: '/list'});
     }]).config(function (angularCombineConfigProvider) {
         angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');

@@ -11,7 +11,12 @@
  */
 
 
-function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePendingRequisitions,programs,$location,homeFacility,VaccineOrderRequisitionLastReport, localStorageService,StockCardsByCategory,Forecast) {
+function StockOnHandController($scope,$window,$filter,settings,pendingNotificationForMyStore,receiveConsignmentNotification,UpdateDistributionsForNotification,GetDistributionNotification,EquipmentNonFunctional,VaccinePendingRequisitions,programs,$location,homeFacility,VaccineOrderRequisitionLastReport, localStorageService,StockCardsByCategory,Forecast) {
+
+    $scope.receiveNotification = [];
+    $scope.pendingReceiveNotification = pendingNotificationForMyStore;
+    $scope.receiveNotification = receiveConsignmentNotification;
+    $scope.number_of_days =  settings;
     $scope.createOrder = false;
     $scope.receiveConsignment = false;
     $scope.selectedProgramId = null;
@@ -24,6 +29,7 @@ function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePend
     $scope.userPrograms = programs;
     $scope.date = new Date();
     $scope.selectedType = "0";//My facility selected by default;
+    $scope.stockLoaded=false;
 
 
     $scope.data = {"stockcards": null};//Set default chart stock cards data to null;
@@ -34,14 +40,16 @@ function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePend
     var loadStockCards=function(programId, facilityId){
         StockCardsByCategory.get(programId ,facilityId).then(function(data){
                $scope.stockCardsByCategory=data;
+               $scope.stockLoaded=true;
                if( $scope.stockCardsByCategory[0] !== undefined){
 
-                    Forecast.query({programId:programId ,facilityId:facilityId},
+                    Forecast.get({programId:programId ,facilityId:facilityId},
                     function(data){
                             $scope.data = {"stockcards": $scope.stockCardsByCategory[0].stockCards};
-                            $scope.data.forecasts=data;
+                            $scope.data.forecasts=data.stock_requirements;
                             $scope.showGraph=true;
                             $scope.init=false;
+
                      });
 
                }
@@ -82,7 +90,6 @@ function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePend
             $scope.filter={};
         }
     };
-     //When the filter change reload Data
     $scope.OnFilterChanged = function () {
             $scope.showGraph=false;
             $scope.data={"stockcards": null};
@@ -90,10 +97,8 @@ function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePend
             {
                $scope.selectedFacilityId = $scope.filter.facilityId;
             }
-//            if($scope.selectedProgramId !== null && $scope.selectedFacilityId !== null)
-//             {
+
                 loadStockCards(parseInt($scope.selectedProgramId,10),parseInt($scope.selectedFacilityId,10));
-//             }
      };
 
     //Load Right to check if user level can Send Requisition ond do stock adjustment
@@ -155,6 +160,22 @@ function StockOnHandController($scope,$window,EquipmentNonFunctional,VaccinePend
             }
         });
 
+    GetDistributionNotification.get({}, function(data){
+        if(!isUndefined(data.remarks)){
+            $scope.messageInfo2 = 'Comments On the Order Requisition Submitted On :  '+data.remarks.orderDate;
+            $scope.remarks = data.remarks;
+        }
+    });
+
+    $scope.update = function(distributionId) {
+      if(distributionId !== null){
+        UpdateDistributionsForNotification.get({id:parseInt(distributionId,10)}, function (data) {
+
+            $location.path('/');
+        });
+    }
+    };
+
 
 
 }
@@ -184,5 +205,42 @@ StockOnHandController.resolve = {
             });
         }, 100);
         return deferred.promise;
+    },
+    receiveConsignmentNotification: function ($q, $timeout, PendingConsignmentNotification) {
+        var deferred = $q.defer();
+        var programs = {};
+
+        $timeout(function () {
+            PendingConsignmentNotification.get({}, function (data) {
+                programs = data.pendingConsignments;
+                deferred.resolve(programs);
+            });
+        }, 100);
+        return deferred.promise;
+    },
+
+    settings: function ($q, $timeout, SettingsByKey) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            SettingsByKey.get({key:'NUMBER_OF_DAYS_PANDING_TO_RECEIVE_CONSIGNMENT'}, function (data) {
+                deferred.resolve(data.settings.value);
+            });
+        }, 100);
+
+        return deferred.promise;
+    },
+
+    pendingNotificationForMyStore: function ($q, $timeout, PendingNotificationForLowerLevel) {
+        var deferred = $q.defer();
+        var programs = {};
+
+        $timeout(function () {
+            PendingNotificationForLowerLevel.get({}, function (data) {
+                programs = data.pendingConsignmentNotification;
+                deferred.resolve(programs);
+            });
+        }, 100);
+        return deferred.promise;
     }
+
 };

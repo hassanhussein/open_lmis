@@ -1,12 +1,15 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.openlmis.vaccine.repository.reports;
 import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplies;
 import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyDistrict;
@@ -23,24 +26,18 @@ public class BundledDistributionVaccinationSuppliesRepository {
     @Autowired
     private BundledDistributionVaccinationSuppliesMapper vaccinationSuppliesMapper;
   public  List<BundledDistributionVaccinationSupplies> getBundledDistributionVaccinationSupplies(Long year, Long productId){
-      List<BundledDistributionVaccinationSupplies> vaccinationSuppliesList=null;
-      System.out.println(" year and product id is "+ year + " "+ productId);
+      List<BundledDistributionVaccinationSupplies> vaccinationSuppliesList;
       vaccinationSuppliesList=vaccinationSuppliesMapper.getBundledDistributionVaccinationSupplies(year,productId);
-      System.out.println(" year and product id is "+ year + " "+ productId + "  "+vaccinationSuppliesList.size());
       return vaccinationSuppliesList;
     }
     public  BundledDistributionVaccinationSupplyDistrict getBundledDistributionVaccinationSuppliesDistrictSummary(Long year, Long productId){
-        BundledDistributionVaccinationSupplyDistrict vaccinationSupplyDistrict=null;
-        System.out.println(" year and product id is "+ year + " "+ productId);
+        BundledDistributionVaccinationSupplyDistrict vaccinationSupplyDistrict;
         vaccinationSupplyDistrict=vaccinationSuppliesMapper.getBundledDistributionVaccinationSuppliesDistrictSummary(year,productId);
-
         return vaccinationSupplyDistrict;
     }
     public BundledDistributionVaccinationSupplyRegion getBundledDistributionVaccinationSuppliesRegionSummary(Long year, Long productId){
-        BundledDistributionVaccinationSupplyRegion vaccinationSupplyRegion=null;
-        System.out.println(" year and product id is "+ year + " "+ productId);
+        BundledDistributionVaccinationSupplyRegion vaccinationSupplyRegion;
         vaccinationSupplyRegion=vaccinationSuppliesMapper.getBundledDistributionVaccinationSuppliesRegionSummary(year,productId);
-
         return vaccinationSupplyRegion;
     }
 

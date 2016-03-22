@@ -41,16 +41,12 @@ function VaccineForecastingController($scope,$routeParams,$location,programs,hom
         $location.search('page', $scope.currentPage);
     });
 
-
-    $scope.$on('$routeUpdate', function () {
-        refreshPageLineItems();
-    });
-
     $scope.greaterThan = function(prop,val){
         return function(item){
             return item[prop] > val;
         };
     };
+
 
 }
 

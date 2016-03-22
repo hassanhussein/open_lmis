@@ -32,13 +32,12 @@ function CompletenesssAndTimelinessReportController($scope, $routeParams, Comple
                 periodEnd:   $scope.periodEnddate,
                 range:       $scope.range,
                 district:    utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone,
-                product:     0
             },
 
             function (data) {
 
                      $scope.error = "";
-                     $scope.datarows = data.completenessAndTimeliness.mainreport;
+                     $scope.datarows = mainReportDataWithSubAndGrandTotal(data.completenessAndTimeliness.mainreport);
                      $scope.summary = data.completenessAndTimeliness.summary;
                      $scope.summaryPeriodLists = data.completenessAndTimeliness.summaryPeriodLists;
                      $scope.aggregateSummary = data.completenessAndTimeliness.aggregateSummary;
@@ -60,10 +59,55 @@ function CompletenesssAndTimelinessReportController($scope, $routeParams, Comple
                    else{
                         $scope.allRegionSelection = false;
                     }
-
-
             });
     };
+
+    $scope.groupBy = "district_name";
+
+    function mainReportDataWithSubAndGrandTotal(reportData){
+
+       if(reportData.length === 0)
+           return;
+
+        // get unique district
+        var uniqueDistrictName = _.uniq(_.pluck(reportData,  $scope.groupBy));
+        var reportDataWithAggregates = [];
+
+        _.each(uniqueDistrictName, function(districtName){
+            //main report rows
+            reportDataWithAggregates.push({data: _.where(reportData, {district_name: districtName})});
+            //sub total
+            reportDataWithAggregates.push({subtotal : {
+                target_total:   getColumnSubTotal(reportData, districtName, "target"),
+                expected_total: getColumnSubTotal(reportData, districtName, "expected"),
+                reported_total: getColumnSubTotal(reportData, districtName, "reported"),
+                late_total:     getColumnSubTotal(reportData, districtName, "late"),
+                fixed_total:    getColumnSubTotal(reportData, districtName, "fixed"),
+                outreach_total: getColumnSubTotal(reportData, districtName, "outreach"),
+                session_total:  getColumnSubTotal(reportData, districtName, "session_total")
+            }});
+        });
+            // grand total
+           reportDataWithAggregates.push({grandtotal : {
+                target_total:   getGrandTotal(reportData, "target"),
+                expected_total: getGrandTotal(reportData, "expected"),
+                reported_total: getGrandTotal(reportData, "reported"),
+                late_total:     getGrandTotal(reportData, "late"),
+                fixed_total:    getGrandTotal(reportData, "fixed"),
+                outreach_total: getGrandTotal(reportData, "outreach"),
+                session_total:  getGrandTotal(reportData, "session_total")
+            }});
+
+        return reportDataWithAggregates;
+    }
+
+    function getColumnSubTotal(reportData, districtName, columnToBeAgregated){
+        return _.chain(reportData).where({district_name:  districtName}).pluck(columnToBeAgregated).reduce(function(memo, num){ return memo + num; }, 0).value();
+    }
+
+    function getGrandTotal(reportData, columnToBeAgregated){
+        return _.chain(reportData).pluck(columnToBeAgregated).reduce(function(memo, num){ return memo + num; }, 0).value();
+    }
 
     function generateDistrictStoreAggregateData(summary){
         $scope.aggregateTableData = [];
@@ -90,43 +134,8 @@ function CompletenesssAndTimelinessReportController($scope, $routeParams, Comple
             $scope.aggregateTableData.push(col);
 
         });
-        generateSummaryTableLegendData();
-    }
-
-    function generateSummaryTableLegendData(){
-      var completed = [];
-      var onTime = [];
-
-        _.each($scope.aggregateTableData, function(item, index) {
-
-            for(i=0; i < item.length; i++)
-            {
-                if (i === 0) continue;
-
-                if(index === 0) {
-                    completed[i-1] = item[i].val === '-' ? 0 : 1 ;
-                    onTime[i-1] = item[i].val === 'T' ? 1 : 0 ;
-                }
-                else {
-                    completed[i-1] = item[i].val === '-' ? completed[i-1] : completed[i-1]+1 ;
-                    onTime[i-1] = item[i].val === 'T' ? onTime[i-1]+1 : onTime[i-1];
-                }
-            }
-        });
-
-        var completeness = [];
-        var timeliness = [];
-
-        for(i=0; i < completed.length; i++){
-            completeness[i] =   Math.round(((completed[i]/$scope.aggregateExpectedStoresCount)*100)*100)/100;
-            timeliness[i] =  completed[i] === 0 ? 0 : Math.round(((onTime[i]/completed[i])*100)*100)/100;
-        }
-
-        $scope.aggregateSummaryLegendData = {completed: completed, ontime: onTime, completeness: completeness, timeliness:timeliness };
-        console.log($scope.aggregateSummaryLegendData);
 
     }
-
 
     function pivotResultSet(summary){
 
@@ -160,26 +169,5 @@ function CompletenesssAndTimelinessReportController($scope, $routeParams, Comple
         });
     }
 
-    // ================need to find to reuse the report filter =====/
-    TreeGeographicZoneList.get(function(data) {
-        $scope.zones = data.zone;
-    });
-
-    GetUserUnassignedSupervisoryNode.get({
-        program: 82
-    }, function(data) {
-        $scope.user_geo_level = "-- All Regions/Districts---";//messageService.get('report.filter.all.geographic.zones');
-        if (!angular.isUndefined(data.supervisory_nodes)) {
-            if (data.supervisory_nodes === 0)
-                $scope.user_geo_level = messageService.get('report.filter.national');
-        }
-
-    });
-
-    ReportProductsByProgram.get({programId: 82}, function (data) {
-        $scope.product = data.productList;
-    });
-
-    //+====================================================
 
 }

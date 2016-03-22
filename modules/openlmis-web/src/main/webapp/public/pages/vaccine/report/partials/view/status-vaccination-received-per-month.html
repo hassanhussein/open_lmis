@@ -38,10 +38,7 @@
             </h2>
 
             <div class="box-icon">
-                <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')"
-                   class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
-                <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
-                   class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+
             </div>
         </div>
         <div>
@@ -58,9 +55,10 @@
                                                 cm-model="filter.product"
                         "></vaccine-product-filter>
 
-                        <static-period-filter range="range" startdate="filter.periodStart" enddate="filter.periodEnd"
-                                              rangemax="10" error="perioderror"></static-period-filter>
+                        <!--<static-period-filter range="range" startdate="filter.periodStart" enddate="filter.periodEnd"-->
+                                              <!--rangemax="10" error="perioderror"></static-period-filter>-->
 
+                        <static-year-filter year="year" startdate="filter.periodStart" enddate="filter.periodEnd" ></static-year-filter>
                         <br/>
                     </div>
 
@@ -142,7 +140,7 @@
 
                             </th>
                             <th>
-                                <span openlmis-message="label.vaccine.supply.status.waseted"></span>
+                                <span openlmis-message="label.vaccine.supply.status.wastage"></span>
 
                             </th>
                             <th style="max-width: 30px ">
@@ -334,7 +332,7 @@
 
                             </th>
                             <th>
-                                <span openlmis-message="label.vaccine.supply.status.waseted"></span>
+                                <span openlmis-message="label.vaccine.supply.status.wastage"></span>
 
                             </th>
                             <th>

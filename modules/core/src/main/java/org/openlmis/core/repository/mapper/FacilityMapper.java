@@ -18,7 +18,6 @@ import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.PriceSchedule;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityGeoTreeDto;
-import org.openlmis.core.dto.FacilityImages;
 import org.openlmis.core.dto.FacilitySupervisor;
 import org.springframework.stereotype.Repository;
 
@@ -164,6 +163,18 @@ public interface FacilityMapper {
     @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
   })
   Facility getHomeFacilityWithRights(@Param("userId") Long userId,
+                                     @Param("commaSeparatedRights") String commaSeparatedRights);
+
+  @Select({"SELECT DISTINCT F.* FROM facilities F INNER JOIN users U ON U.facilityId = F.id",
+    "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId",
+    "WHERE U.id = #{userId} AND RA.programId = #{programId} and RR.rightName = ANY(#{commaSeparatedRights}::VARCHAR[]) AND RA.supervisoryNodeId IS NULL"})
+  @Results(value = {
+    @Result(property = "geographicZone.id", column = "geographicZoneId"),
+    @Result(property = "facilityType", column = "typeId", javaType = Long.class, one = @One(select = "getFacilityTypeById")),
+    @Result(property = "operatedBy", column = "operatedById", javaType = Long.class, one = @One(select = "getFacilityOperatorById"))
+  })
+  Facility getHomeFacilityWithRightsByProgram(@Param("userId") Long userId,
+                                              @Param("programId") Long programId,
                                      @Param("commaSeparatedRights") String commaSeparatedRights);
 
   @Select({"SELECT DISTINCT f.* FROM facilities f",
@@ -377,9 +388,6 @@ public interface FacilityMapper {
       "WHERE ",
       " active = true and facilityId = #{facilityId}"})
   List<FacilityContact> getEmailContacts(Long facilityId);
-
-  @Select("SELECT * from odk_submission_data where facilityId = #{facilityId}")
-  List<FacilityImages> getFacilityImages(Long facilityId);
 
     @Select("SELECT DISTINCT userid as userId, username as name, email as contact   \n" +
             "            FROM role_assignments  \n" +

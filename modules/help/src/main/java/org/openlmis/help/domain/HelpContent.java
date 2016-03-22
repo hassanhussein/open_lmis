@@ -25,10 +25,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.upload.Importable;
-import org.openlmis.upload.annotation.ImportField;
+
 
 
 @EqualsAndHashCode(callSuper = false)
@@ -38,21 +36,8 @@ import org.openlmis.upload.annotation.ImportField;
 public class HelpContent extends BaseModel{
 
     private HelpTopic helpTopic;
-//    private
     private String name;
     private String htmlContent;
     private String imageLink;
-//    @JsonIgnore
-//    @Override
-//    public String toString() {
-//        final StringBuffer sb = new StringBuffer("HelpContent{");
-//        sb.append("id=").append(id);
-//
-//        sb.append("helpTopic=").append(helpTopic.getId());
-//        sb.append(", name='").append(name).append('\'');
-//        sb.append(", htmlContent='").append(htmlContent).append('\'');
-//        sb.append(", imageLink='").append(imageLink).append('\'');
-//        sb.append('}');
-//        return sb.toString();
-//    }
+
 }

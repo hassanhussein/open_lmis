@@ -1,22 +1,31 @@
-function ViewVaccineOrderRequisitionController($scope, $window, VaccinePendingRequisitions, programs, $routeParams, facility, $location, messageService) {
+function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $rootScope, SupervisoryNodeByFacilityAndRequisition, VaccinePendingRequisitions, programs, $routeParams, facility, $location, messageService) {
     var program = programs;
     var facilit = facility;
 
-    $scope.pageSize = parseInt(10,10);
+    $scope.stockLoaded=false;
+
+    StockCards.get({facilityId: parseInt(facilit.id, 10)}, function (data) {
+            if (!isUndefined(data.stockCards) || data.stockCards.length > 0)
+             $scope.stockCards = data.stockCards;
+            else
+                $scope.stockLoaded=true;
+    });
+
+    $scope.pageSize = parseInt(10, 10);
 
     $scope.noRequisitions = false;
 
     var refreshPageLineItems = function () {
         VaccinePendingRequisitions.get({
-            facilityId: parseInt(facilit.id,10),
-            programId: parseInt(program[0].id,10)
+            facilityId: parseInt(facilit.id, 10),
+            programId: parseInt(program[0].id, 10)
         }, function (data) {
             $scope.pendingRequisition = data.pendingRequest;
             $scope.numberOfPages = Math.ceil($scope.pendingRequisition.length / $scope.pageSize) || 1;
             $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
             $scope.pageLineItems = $scope.pendingRequisition.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
             if (!$scope.pendingRequisition.length)   $scope.noRequisitions = true;
-
+            console.log($scope.pageLineItems);
 
         });
     };
@@ -51,7 +60,63 @@ function ViewVaccineOrderRequisitionController($scope, $window, VaccinePendingRe
     };
     var ct_nocheck = "<div class=\"ngSelectionCell\"><input style=\"display:none\" tabindex=\"-1\" class=\"ngSelectionCheckbox\" type=\"checkbox\" ng-checked=\"row.selected\"/></div>";
 
-    $scope.gridOptions = {
+    $scope.gridOptionsForNationalLevel = {
+
+        data: 'pageLineItems',
+        selectedItems: $scope.selectedItems,
+        displayFooter: false,
+        multiSelect: true,
+        showSelectionCheckbox: true,
+        enableColumnResize: true,
+        sortInfo: $scope.sortOptions,
+        enableSorting: true,
+        useExternalSorting: true,
+        beforeSelectionChange: function (row) {
+            row.changed = true;
+            return true;
+        },
+
+        afterSelectionChange: function (rowItem, event) {
+            var consolidated = [];
+            if (rowItem.length) {
+
+                _.each(rowItem, function (itm) {
+
+                    if (itm.selected) {
+                        consolidated.push(itm.entity.facilityId);
+                    }
+                });
+                updateItemOnSelectionChange(consolidated);
+            } else {
+                if (rowItem.selected) {
+                    updateItemOnSelectionChange($scope.selectedItems);
+
+                }
+            }
+            return true;
+        },
+
+        columnDefs: [
+            {field: 'facilityName', displayName: messageService.get("label.store")},
+            {field: 'periodName', displayName: messageService.get("label.period")},
+            {field: 'status', displayName: messageService.get("label.status")},
+            {
+                field: 'createdDate',
+                displayName: messageService.get("label.date.submitted"),
+                cellFilter: 'date:\'dd-MM-yyyy\''
+            },
+
+            {
+                field: ' ',
+                cellTemplate: '<button style="width:100px; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7); background-image: linear-gradient(to bottom, #42a7ad, #356b6f);background-repeat: repeat-x;border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);  background-color: #356b6f;"  type="button" class="btn btn-primary btn-small grid-btn" ng-click="viewRequest(row.entity)">View</button> ',
+                width: 150
+            }
+        ], filterOptions: $scope.filterOptions
+    };
+
+
+    $scope.gridOptionsForRegionLevel = {
+
         data: 'pageLineItems',
         selectedItems: $scope.selectedItems,
         multiSelect: false,
@@ -81,18 +146,30 @@ function ViewVaccineOrderRequisitionController($scope, $window, VaccinePendingRe
             {field: 'periodName', displayName: messageService.get("label.period")},
             {field: 'status', displayName: messageService.get("label.status")},
             {
-                field: 'orderDate',
+                field: 'createdDate',
                 displayName: messageService.get("label.date.submitted"),
                 cellFilter: 'date:\'dd-MM-yyyy\''
+
             },
             {
                 field: ' ',
                 cellTemplate: '<button style="width:100px; text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7); background-image: linear-gradient(to bottom, #42a7ad, #356b6f);background-repeat: repeat-x;border-color: rgba(255, 255, 255, 0.3) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);  background-color: #356b6f;"  type="button" class="btn btn-primary btn-small grid-btn" ng-click="distributeToFacility(row.entity)" >Issue</button> ',
-
                 width: 150
             }
         ], filterOptions: $scope.filterOptions
     };
+
+    SupervisoryNodeByFacilityAndRequisition.get({facilityId: parseInt(facility.id, 10)}, function (data) {
+        $scope.supervisoryNode = data.supervisoryNodes;
+        if (data.supervisoryNodes === null) {
+            $scope.gridOption = true;
+        } else {
+            $scope.gridOpt = true;
+
+        }
+
+
+    });
 
 
     //This event will update the filter text.
@@ -125,9 +202,24 @@ function ViewVaccineOrderRequisitionController($scope, $window, VaccinePendingRe
         $scope.selectedSearchOption = searchOption;
     };
 
-   var updateItemOnSelectionChange = function (data) {
 
-       // return $routeParams.id = data.entity.id;
+    var updateItemOnSelectionChange = function (item) {
+
+
+        $scope.facilitySelected = [];
+
+        angular.forEach($scope.selectedItems, function (itm, idx) {
+            $scope.facilitySelected.push(itm.facilityId);
+        });
+        $routeParams.facilityId = $scope.facilitySelected;
+        $routeParams.program = parseInt(program[0].id, 10);
+        $routeParams.homeFacility = parseInt(facilit.id,10);
+
+    };
+
+    $scope.consolidateOrder = function () {
+
+        $location.path('/consolidate/' + $routeParams.program + '/' + $routeParams.facilityId + '/'+$routeParams.homeFacility);
 
     };
 
@@ -137,7 +229,18 @@ function ViewVaccineOrderRequisitionController($scope, $window, VaccinePendingRe
 
     };
 
+    $scope.viewRequest = function (row) {
 
+        $rootScope.viewOrder = true;
+        $rootScope.cancelOrderRequest = true;
+        $rootScope.reportId = row.id;
+        $location.path('/view-requisition/' + row.id + '/' + row.programId);
+
+    };
+
+    $rootScope.cancelViewOrder = function () {
+        $location.path('/search');
+    };
 }
 
 

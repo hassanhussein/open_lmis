@@ -18,7 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.utils.DateUtil;
-import org.openlmis.report.model.ReportData;
+import org.openlmis.report.model.ResultRow;
 
 import java.util.Date;
 
@@ -26,16 +26,23 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class VaccineStockStatusReport implements ReportData {
+public class VaccineStockStatusReport implements ResultRow {
 
     private String product;
     private String district;
-    private Double soh;
+    private Integer soh;
     private Date lastUpdate;
     private String facilityName;
     private Double monthlyStock;
     private String facilityType;
     private int facilityId;
+    private int productId;
+
+    private Long isaValue;
+
+    private Integer mos;
+
+    //private JSONPObject products;
 
     public String getLastUpdate(){
         return DateUtil.getFormattedDate(this.lastUpdate, "dd-MM-yyyy");

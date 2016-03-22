@@ -12,16 +12,18 @@ package org.openlmis.vaccine.service.inventory;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
-import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
-import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
-import org.openlmis.vaccine.domain.inventory.VoucherNumberCode;
+import org.openlmis.vaccine.domain.inventory.*;
+import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
+import org.openlmis.vaccine.repository.inventory.VaccineDistributionStatusChangeRepository;
 import org.openlmis.vaccine.repository.inventory.VaccineInventoryDistributionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,23 +36,24 @@ import java.util.List;
 @NoArgsConstructor
 public class VaccineInventoryDistributionService {
 
+    public static final String cvsRegionCode = "label.vaccine.voucher.number.region.for.cvs";
+    public static final String cvsDistrictCode = "label.vaccine.voucher.number.district.for.cvs";
+    public static final String rvsDistrictCode = "label.vaccine.voucher.number.district.for.rvs";
     @Autowired
     VaccineInventoryDistributionRepository repository;
-
     @Autowired
     ProgramService programService;
-
     @Autowired
     FacilityService facilityService;
-
     @Autowired
     MessageService messageService;
+    @Autowired
+    ProcessingScheduleService processingScheduleService;
+    @Autowired
+    ProcessingPeriodRepository processingPeriodRepository;
 
-    public  static  final String cvsRegionCode="label.vaccine.voucher.number.region.for.cvs";
-
-    public  static  final String cvsDistrictCode="label.vaccine.voucher.number.district.for.cvs";
-
-    public  static  final String rvsDistrictCode="label.vaccine.voucher.number.district.for.rvs";
+    @Autowired
+    private VaccineDistributionStatusChangeRepository statusChangeRepository;
 
     public List<Facility> getFacilities(Long userId) {
         Facility homeFacility = facilityService.getHomeFacility(userId);
@@ -62,26 +65,37 @@ public class VaccineInventoryDistributionService {
         return repository.getOneLevelSupervisedFacilities(facilityId);
     }
 
+
     public Long save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period
-        Facility homeFacility = facilityService.getHomeFacility(userId);
-        Long facilityId = homeFacility.getId();
-        List<Program> programs = programService.getAllIvdPrograms();
-        Long programId = programs.get(0).getId();
 
-        ProcessingPeriod period = getCurrentPeriod(facilityId, programId, distribution.getDistributionDate());
+        Facility homeFacility = facilityService.getHomeFacility(userId);
+        Long homeFacilityId = homeFacility.getId();
+        ProcessingPeriod period = null;
+        if (null != distribution.getToFacilityId() && null != distribution.getProgramId()) {
+            period = getCurrentPeriod(distribution.getToFacilityId(), distribution.getProgramId());
+        }
         if (period != null) {
             distribution.setPeriodId(period.getId());
         }
 
-        distribution.setVoucherNumber(generateVoucherNumber(facilityId,programId));
+        if (null == distribution.getVoucherNumber())
+        distribution.setVoucherNumber(generateVoucherNumber(homeFacilityId, distribution.getProgramId()));
 
         if (distribution.getId() != null) {
             distribution.setModifiedBy(userId);
             repository.updateDistribution(distribution);
+
+            //Update status changes to keep distribution log
+            VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
+            statusChangeRepository.insert(statusChange);
         } else {
             distribution.setCreatedBy(userId);
             repository.saveDistribution(distribution);
+
+            //Update status changes to keep distribution log
+            VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
+            statusChangeRepository.insert(statusChange);
         }
 
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
@@ -107,91 +121,81 @@ public class VaccineInventoryDistributionService {
     }
 
     private String generateVoucherNumber(Long facilityId, Long programId) {
-        VoucherNumberCode voucherNumberCode=new VoucherNumberCode();
-        voucherNumberCode =repository.getFacilityVoucherNumberCode(facilityId);
 
-        String lastVoucherNumber=repository.getLastVoucherNumber();
-        String newVoucherNumber=null;
-        Long newSerial=null;
+        VoucherNumberCode voucherNumberCode = repository.getFacilityVoucherNumberCode(facilityId);
+
+        String lastVoucherNumber = repository.getLastVoucherNumber();
+        String newVoucherNumber;
+        Long newSerial;
 
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         int year = cal.get(Calendar.YEAR);
 
-        if(lastVoucherNumber !=null) {
+        if (lastVoucherNumber != null) {
             String serialString = lastVoucherNumber.substring(lastVoucherNumber.lastIndexOf('/') + 1);
             Long serial = Long.parseLong(serialString);
             newSerial = serial + 1;
+        } else {
+            newSerial = 1L;
         }
-        else{
-            newSerial=1L;
-        }
-        String[] nationalCodes=voucherNumberCode.getNational().split("\\s+");
-        String nationalCode=(nationalCodes.length >1)?(nationalCodes[0].substring(0,2).toUpperCase()+nationalCodes[1].substring(0, 1).toUpperCase()): (nationalCodes[0].substring(0, 3).toUpperCase());
 
-        String regionCode="";
-        if(voucherNumberCode.getRegion().equalsIgnoreCase("cvs-region-code")){
-            regionCode=messageService.message(cvsRegionCode);
+        String nationalCode = "";
+        if (null != voucherNumberCode.getNational()) {
+            String[] nationalCodes = voucherNumberCode.getNational().split("\\s+");
+            nationalCode = (nationalCodes.length > 1) ? (nationalCodes[0].substring(0, 2).toUpperCase() + nationalCodes[1].substring(0, 1).toUpperCase()) : (nationalCodes[0].substring(0, 3).toUpperCase());
         }
-        else {
-            String[] regionCodes = voucherNumberCode.getRegion().split("\\s+");
-            regionCode = (regionCodes.length > 1) ? (regionCodes[0].substring(0, 2).toUpperCase() + regionCodes[1].substring(0, 1).toUpperCase()) : (regionCodes[0].substring(0, 3).toUpperCase());
+        String regionCode = "";
+        if (null != voucherNumberCode.getRegion()) {
+            if (voucherNumberCode.getRegion().equalsIgnoreCase("cvs-region-code")) {
+                regionCode = messageService.message(cvsRegionCode);
+            } else {
+                String[] regionCodes = voucherNumberCode.getRegion().split("\\s+");
+                regionCode = (regionCodes.length > 1) ? (regionCodes[0].substring(0, 2).toUpperCase() + regionCodes[1].substring(0, 1).toUpperCase()) : (regionCodes[0].substring(0, 3).toUpperCase());
+            }
         }
-        String districtCode="";
-        if(voucherNumberCode.getDistrict().equalsIgnoreCase("cvs-district-code"))
-        {
+        String districtCode = "";
+        if (null != voucherNumberCode.getDistrict()) {
+            if (voucherNumberCode.getDistrict().equalsIgnoreCase("cvs-district-code")) {
 
-            districtCode=messageService.message(cvsDistrictCode);
+                districtCode = messageService.message(cvsDistrictCode);
+            } else if (voucherNumberCode.getDistrict().equalsIgnoreCase("rvs-district-code")) {
+                districtCode = messageService.message(rvsDistrictCode);
+            } else {
+                String[] districtCodes = voucherNumberCode.getDistrict().split("\\s+");
+                districtCode = (districtCodes.length > 1) ? (districtCodes[0].substring(0, 2).toUpperCase() + districtCodes[1].substring(0, 1).toUpperCase()) : (districtCodes[0].substring(0, 3).toUpperCase());
+            }
         }
-        else if(voucherNumberCode.getDistrict().equalsIgnoreCase("rvs-district-code")){
-            districtCode=messageService.message(rvsDistrictCode);
-        }
-        else {
-            String[] districtCodes = voucherNumberCode.getDistrict().split("\\s+");
-            districtCode = (districtCodes.length > 1) ? (districtCodes[0].substring(0, 2).toUpperCase() + districtCodes[1].substring(0, 1).toUpperCase()) : (districtCodes[0].substring(0, 3).toUpperCase());
-        }
-        newVoucherNumber = nationalCode+"/"+regionCode+"/"+districtCode+"/" + year +"/" + newSerial;
+        newVoucherNumber = nationalCode + "/" + regionCode + "/" + districtCode + "/" + year + "/" + newSerial;
         return newVoucherNumber;
     }
 
-    public List<VaccineDistribution> getDistributedFacilitiesByPeriod(Long userId) {
-        Facility homeFacility = facilityService.getHomeFacility(userId);
-        Long facilityId = homeFacility.getId();
-        List<Program> programs = programService.getAllIvdPrograms();
-        Long programId =(programs ==null)?null: programs.get(0).getId();
-
-        ProcessingPeriod period = getCurrentPeriod(facilityId, programId, new Date());
+    public VaccineDistribution getDistributionForFacilityByPeriod(Long facilityId, Long programId) {
+        ProcessingPeriod period = getCurrentPeriod(facilityId, programId);
         if (period != null) {
-            return repository.getDistributedFacilitiesByPeriod(period.getId());
+            return repository.getDistributionForFacilityByPeriod(facilityId, period.getId());
         } else {
             Date date = new Date();
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
             int month = cal.get(Calendar.MONTH) + 1;
             int year = cal.get(Calendar.YEAR);
-            return repository.getDistributedFacilitiesByMonth(month, year);
+            return repository.getDistributionForFacilityByMonth(facilityId, month, year);
         }
     }
 
-    public List<VaccineDistribution> getDistributedFacilitiesByDate(Long userId) {
-        Date date = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int year = cal.get(Calendar.YEAR);
-        return repository.getDistributedFacilitiesByMonth(month, year);
+    public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId) {
+        Date programStartDate = programService.getProgramStartDate(facilityId, programId);
+        return processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
     }
 
-    public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId, Date distributionDate) {
-        return repository.getCurrentPeriod(facilityId, programId, distributionDate);
-    }
-    public ProcessingPeriod getCurrentPeriod(Long userId) {
+    public ProcessingPeriod getSupervisedCurrentPeriod(Long userId) {
         Facility homeFacility = facilityService.getHomeFacility(userId);
         Long facilityId = homeFacility.getId();
         List<Program> programs = programService.getAllIvdPrograms();
-        Long programId =(programs ==null)?null: programs.get(0).getId();
-        return repository.getCurrentPeriod(facilityId, programId, new Date());
+        Long programId = (programs == null) ? null : programs.get(0).getId();
+        return repository.getSupervisedCurrentPeriod(facilityId, programId, new Date());
     }
 
     public VaccineDistribution getById(Long id) {
@@ -202,16 +206,61 @@ public class VaccineInventoryDistributionService {
         return repository.getLotsByProductId(productId);
     }
 
-    public VaccineDistribution getDistributionByVoucherNumber(Long userId,String voucherNumber){
+    public VaccineDistribution getDistributionByVoucherNumber(Long userId, String voucherNumber) {
         Facility homeFacility = facilityService.getHomeFacility(userId);
         Long facilityId = homeFacility.getId();
-        return repository.getDistributionByVoucherNumber(facilityId,voucherNumber);
+        return repository.getDistributionByVoucherNumber(facilityId, voucherNumber);
     }
 
-    public VoucherNumberCode  getFacilityGeographicZone(Long userId)
-    {
+    public VoucherNumberCode getFacilityGeographicZone(Long userId) {
         Facility homeFacility = facilityService.getHomeFacility(userId);
         Long facilityId = homeFacility.getId();
         return repository.getFacilityVoucherNumberCode(facilityId);
     }
+
+
+    public List<VaccineDistribution> saveConsolidatedList(List<VaccineDistribution> distributionList, Long userId) {
+
+        for (VaccineDistribution distribute : distributionList) {
+
+            save(distribute,userId);
+
+        }
+
+        return distributionList;
+
+    }
+
+    public VaccineDistribution getAllDistributionsForNotification(Long facilityId) {
+        return repository.getAllDistributionsForNotification(facilityId);
+    }
+
+    public Long UpdateNotification(Long Id){
+        return repository.updateNotification(Id);
+    }
+
+    public List<ProcessingPeriod> getLastPeriod(Long facilityId, Long programId) {
+        ProcessingPeriod currentPeriod = getCurrentPeriod(facilityId, programId);
+        return processingPeriodRepository.getNPreviousPeriods(currentPeriod, 1);
+    }
+
+    public VaccineDistribution getDistributionByToFacility(Long facilityId) {
+        return repository.getDistributionByToFacility(facilityId);
+    }
+
+    public Long getSupervisorFacilityId(Long facilityId) {
+        return repository.getSupervisorFacilityId(facilityId);
+    }
+
+   public List<VaccineDistributionAlertDTO>getPendingReceivedAlert(Long facilityId){
+       return repository.getPendingDistributionAlert(facilityId);
+   }
+
+   public List<VaccineDistributionAlertDTO>getPendingNotificationForLowerLevel(Long facilityId){
+       return repository.getPendingNotificationFoLowerLevel(facilityId);
+   }
+    public List<Facility> getFacilitiesSameType(Long facilityId, String query) {
+        return repository.getFacilitiesSameType(facilityId, query);
+    }
+
 }

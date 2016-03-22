@@ -1,22 +1,25 @@
 
 
 
-function CreateVaccineOrderRequisition($scope, $dialog, $window, report, VaccineOrderRequisitionSubmit, $location) {
+function CreateVaccineOrderRequisition($scope, $dialog,$routeParams, $window, report, VaccineOrderRequisitionSubmit, $location) {
+
 
     $scope.report = new VaccineOrderRequisition(report);
-
+console.log($scope.report);
     $scope.orderModal = false;
 
     $scope.selectedType = 0;
 
     $scope.productFormChange = function () {
         $scope.selectedType = 0;
+        $scope.calculateVial = false;
         $scope.report = new VaccineOrderRequisition(report);
 
     };
 
     $scope.productFormChange1 = function () {
         $scope.selectedType = 1;
+        $scope.calculateVial = true;
         $scope.report = new VaccineOrderRequisition2(report);
 
     };
@@ -31,7 +34,7 @@ function CreateVaccineOrderRequisition($scope, $dialog, $window, report, Vaccine
     };
 
     $scope.submit = function () {
-
+        var printWindow;
         if ($scope.report.emergency === true) {
             $scope.orderModal = true;
         } else {
@@ -41,16 +44,12 @@ function CreateVaccineOrderRequisition($scope, $dialog, $window, report, Vaccine
                 if (result) {
 
                     VaccineOrderRequisitionSubmit.update($scope.report, function (data) {
-
                         var url = '/vaccine/orderRequisition/' + data.report.id + '/print';
-                        $window.open(url, '_blank');
-
+                        printWindow.location.href=url;
                         $scope.disableButton = true;
-
                         $window.location = '/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
-
-                       // $location.path('/initiate');
                     });
+                    printWindow= $window.open('about:blank','_blank');
                     $scope.message = "label.form.Submitted.Successfully";
                 }
             };
@@ -70,17 +69,14 @@ function CreateVaccineOrderRequisition($scope, $dialog, $window, report, Vaccine
     };
 
     $scope.submitEmergency = function () {
-
+        var printWindow;
         VaccineOrderRequisitionSubmit.update($scope.report, function (data) {
-
             var url = '/vaccine/orderRequisition/' + data.report.id + '/print';
-            $window.open(url, '_blank');
-
+            printWindow.location.href=url;
             $scope.message = "label.form.Submitted.Successfully";
-
             $window.location = '/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
-
         });
+        printWindow= $window.open('about:blank','_blank');
 
 
     };
@@ -88,6 +84,13 @@ function CreateVaccineOrderRequisition($scope, $dialog, $window, report, Vaccine
     $scope.cancel = function () {
         $window.location = '/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
     };
+
+    $scope.viewOrderPrint = function () {
+
+        var url = '/vaccine/orderRequisition/' +  parseInt($routeParams.id,10) + '/print';
+        $window.open(url, '_blank');
+    };
+
 
 
 }

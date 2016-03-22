@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.repository.mapper.inventory;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Product;
@@ -9,6 +10,7 @@ import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItem;
 import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.domain.inventory.VoucherNumberCode;
+import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -17,22 +19,22 @@ import java.util.List;
 @Repository
 public interface VaccineInventoryDistributionMapper {
 
-    @Select("SELECT f.id ,f.name FROM requisition_group_members rgm\n" +
+    @Select("SELECT f.id ,f.code,f.name FROM requisition_group_members rgm\n" +
             "JOIN facilities f ON f.id=rgm.facilityid\n" +
             "JOIN requisition_groups rg ON rg.id=rgm.requisitiongroupid\n" +
             "JOIN supervisory_nodes sn ON sn.id= rg.supervisorynodeid\n" +
             "WHERE sn.facilityid=#{facilityId};")
-    List<Facility> getOneLevelSupervisedFacities(@Param("facilityId") Long facilityId);
+    List<Facility> getOneLevelSupervisedFacilities(@Param("facilityId") Long facilityId);
 
     @Insert("insert into vaccine_distributions " +
-            " (tofacilityid, fromfacilityid, vouchernumber, distributiondate, periodid,orderid,status, distributiontype, createdby, createddate, modifiedby,modifieddate )" +
+            " (tofacilityid, fromfacilityid, vouchernumber, distributiondate, periodid,orderid,status, distributiontype, createdby, createddate, modifiedby,modifieddate,remarks )" +
             " values " +
-            " (#{toFacilityId}, #{fromFacilityId}, #{voucherNumber}, #{distributionDate}, #{periodId}, #{orderId}, #{status},#{distributionType}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
+            " (#{toFacilityId}, #{fromFacilityId}, #{voucherNumber}, #{distributionDate}, #{periodId}, #{orderId}, #{status},#{distributionType}, #{createdBy},NOW(),#{modifiedBy},NOW(),#{remarks}) ")
     @Options(useGeneratedKeys = true)
     Integer saveDistribution(VaccineDistribution vaccineDistribution);
 
     @Update("update vaccine_distributions set " +
-            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW() " +
+            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
             " where id=#{id}"
     )
     Integer updateDistribution(VaccineDistribution vaccineDistribution);
@@ -76,29 +78,26 @@ public interface VaccineInventoryDistributionMapper {
             @Result(property = "startDate", column = "startdate"),
             @Result(property = "endDate", column = "enddate")
     })
-    ProcessingPeriod getCurrentPeriod(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("distributionDate") Date distributionDate);
+    ProcessingPeriod getSupervisedCurrentPeriod(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("distributionDate") Date distributionDate);
 
     @Select("SELECT *" +
             " FROM vaccine_distributions " +
-            " WHERE distributiontype='SCHEDULED' AND EXTRACT(MONTH FROM distributionDate) = #{month} AND EXTRACT(YEAR FROM distributionDate) = #{year};"
+            " WHERE tofacilityid=#{facilityId} AND distributiontype='ROUTINE' AND EXTRACT(MONTH FROM distributionDate) = #{month} AND EXTRACT(YEAR FROM distributionDate) = #{year} LIMIT 1;"
     )
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
                     many = @Many(select = "getLineItems"))})
-    List<VaccineDistribution> getDistributedFacilitiesByMonth(@Param("month") int month, @Param("year") int year);
+    VaccineDistribution getDistributionForFacilityByMonth(@Param("facilityId") Long facilityId, @Param("month") int month, @Param("year") int year);
 
     @Select("SELECT *" +
             " FROM vaccine_distributions " +
-            " WHERE periodId=#{periodId} AND distributiontype='SCHEDULED'")
+            " WHERE periodId=#{periodId} AND distributiontype='ROUTINE' AND" +
+            " tofacilityid=#{facilityId} LIMIT 1 ")
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
                     many = @Many(select = "getLineItems"))})
-    List<VaccineDistribution> getDistributedFacilitiesByPeriod(@Param("periodId") Long periodId);
+    VaccineDistribution getDistributionForFacilityByPeriod(@Param("facilityId") Long facilityId, @Param("periodId") Long periodId);
 
-//    @Select("SELECT *" +
-//            " FROM vaccine_distribution_line_items" +
-//            " WHERE distributionid = #{distributionId}"
-//    )
     @Select("Select li.*,oli.quantityRequested from vaccine_distribution_line_items li " +
             " left outer JOIN vaccine_order_requisitions o ON o.id = (select orderid from vaccine_distributions where id=#{distributionId} limit 1) " +
             " left outer join Vaccine_order_requisition_line_items oli ON o.id=oli.orderId AND li.productId = oli.productId" +
@@ -153,4 +152,70 @@ public interface VaccineInventoryDistributionMapper {
 
     @Select("Select * from vw_vaccine_distribution_voucher_no_fields WHERE facilityid=#{facilityId}")
     VoucherNumberCode getFacilityVoucherNumberCode(@Param("facilityId") Long facilityId);
+
+    @Select("select vd.Id, count(remarks) total, remarks, to_char(o.createdDate,'dd-MM-YYYY' ) orderDate   " +
+            " from vaccine_distributions vd" +
+            " JOIN vaccine_order_requisitions o on vd.orderId = O.ID  " +
+            "where toFacilityId = #{facilityId} and notified = false and  " +
+            " vd.status = 'PENDING' and remarks is not Null  group by remarks,vd.Id,o.createdDate  order by vd.Id  DESC limit 1 ")
+    VaccineDistribution getAllDistributionsForNotification(@Param("facilityId") Long facilityId);
+
+    @Select(" update vaccine_distributions SET notified = true WHERE id = #{Id} ")
+    Long updateNotification(@Param("Id") Long Id);
+
+    @Select("SELECT *" +
+            " FROM vaccine_distributions " +
+            " WHERE tofacilityid=#{facilityId} AND  status='PENDING' order by createddate ASC LIMIT 1")
+    @Results({@Result(property = "id", column = "id"),
+            @Result(property = "fromFacilityId", column = "fromFacilityId"),
+            @Result(property = "lineItems", column = "id", javaType = List.class,
+                    many = @Many(select = "getLineItems")),
+            @Result(property = "fromFacility", column = "fromFacilityId", javaType = Facility.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))})
+    VaccineDistribution getDistributionByToFacility(@Param("facilityId") Long facilityId);
+
+    @Select("select sn2.facilityid from supervisory_nodes sn1 " +
+            " join supervisory_nodes sn2 on sn1.parentid=sn2.id " +
+            " where sn1.facilityId=#{facilityId}")
+    Long getSupervisorFacilityId(@Param("facilityId") Long facilityId);
+
+    @Select("     SELECT \n" +
+            "            (select name toFacilityName from facilities where id =toFacilityId ),  \n" +
+            "            (select name fromFacilityName from facilities where id =fromFacilityId ),\n" +
+            "            (select cellphone from users where id=s.modifiedby),\n" +
+            "            (select concat(firstname,' ',lastName) as modifiedBy from users where id=s.modifiedby),\n" +
+            "            s.modifieddate,distributionDate,s.modifiedBy,voucherNumber,d.status,orderdate  \n" +
+            "            FROM vaccine_distributions d  \n" +
+            "            JOIN vaccine_distribution_status_changes s ON d.id = s.distributionId \n" +
+            "            JOIN vaccine_order_requisitions o ON d.orderId = o.id \n" +
+            "            WHERE d.status = 'PENDING' AND \n" +
+            "            ((select current_date - s.modifiedDate::date) >=(select (((EXTRACT(EPOCH FROM CAST(  ( SELECT configuration_settings.value::integer FROM configuration_settings   \n" +
+            "            WHERE configuration_settings.key::text = 'NUMBER_OF_DAYS_PANDING_TO_RECEIVE_CONSIGNMENT'::text) || ' days' AS INTERVAL)  \n" +
+            "            ) / 60) / 60) / 24)::integer)) AND \n" +
+            "            fromFacilityId = #{facilityId} ")
+    List<VaccineDistributionAlertDTO>getPendingConsignmentAlert(@Param("facilityId") Long facilityId);
+
+
+    @Select("     SELECT \n" +
+            "            (select name toFacilityName from facilities where id =toFacilityId ),  \n" +
+            "            (select name fromFacilityName from facilities where id =fromFacilityId ),\n" +
+            "            (select cellphone from users where id=s.modifiedby),\n" +
+            "            (select concat(firstname,' ',lastName) as modifiedBy from users where id=s.modifiedby),\n" +
+            "            s.modifieddate,distributionDate,s.modifiedBy,voucherNumber,d.status,orderdate  \n" +
+            "            FROM vaccine_distributions d  \n" +
+            "            JOIN vaccine_distribution_status_changes s ON d.id = s.distributionId \n" +
+            "            JOIN vaccine_order_requisitions o ON d.orderId = o.id \n" +
+            "            WHERE d.status = 'PENDING' AND \n" +
+            "            ((select current_date - s.modifiedDate::date) >=(select (((EXTRACT(EPOCH FROM CAST(  ( SELECT configuration_settings.value::integer FROM configuration_settings   \n" +
+            "            WHERE configuration_settings.key::text = 'NUMBER_OF_DAYS_PANDING_TO_RECEIVE_CONSIGNMENT'::text) || ' days' AS INTERVAL)  \n" +
+            "            ) / 60) / 60) / 24)::integer)) AND \n" +
+            "            toFacilityId = #{facilityId}")
+    List<VaccineDistributionAlertDTO>getPendingConsignmentToLowerLevel(@Param("facilityId") Long facilityId);
+
+    @Select("select f.code, f.name, f.description, f.id from facilities f " +
+            " join facility_types ft on f.typeid=ft.id " +
+            " where ft.code =(select faty.code from facilities fa join facility_types faty on fa.typeid=faty.id where fa.id=#{facilityId}) " +
+            " and f.id <> #{facilityId} and LOWER(f.name) LIKE '%' || LOWER(#{query}) || '%'")
+    List<Facility> getFacilitiesSameType(@Param("facilityId") Long facilityId, @Param("query") String query);
+
 }

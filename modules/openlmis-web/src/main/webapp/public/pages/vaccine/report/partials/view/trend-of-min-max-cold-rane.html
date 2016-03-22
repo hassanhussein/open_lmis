@@ -29,10 +29,7 @@
                     class="break"></span>
             </h2>
             <div class="box-icon">
-                <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')"
-                   class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
-                <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
-                   class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+
             </div>
         </div>
         <div>
@@ -47,9 +44,10 @@
                                              zones="zones" val="filter.zone"></vaccine-zone-filter>
 
 
-                        <static-period-filter range="range" startdate="filter.periodStart" enddate="filter.periodEnd"
-                                              rangemax="10" error="perioderror"></static-period-filter>
+                        <!--<static-period-filter range="range" startdate="filter.periodStart" enddate="filter.periodEnd"-->
+                                              <!--rangemax="10" error="perioderror"></static-period-filter>-->
 
+                        <static-year-filter year="year" startdate="filter.periodStart" enddate="filter.periodEnd" ></static-year-filter>
                         <br/>
                     </div>
 
@@ -101,12 +99,9 @@
                         <span openlmis-message="label.period"></span>
 
                     </th>
-                    <th rowspan="2" style="width: 10px">
-                        <span openlmis-message="label.population"></span>
 
-                    </th>
                     <th colspan="2" style=" text-align: center; vertical-align: middle">
-                        <span openlmis-message="label.regrigator.temprature"></span>
+                        <span openlmis-message="label.refrigerator.temprature"></span>
 
                     </th>
                     <th colspan="2" style=" text-align: center; vertical-align: middle">
@@ -199,8 +194,7 @@
                     <td ng-bind="subRow.period_name| date:'MMM-yyyy'"
                         ng-style="{'text-align':'right'}"/>
 
-                    <td ng-bind="subRow.targetpopulation| number"
-                        ng-style="{'text-align':'right'}"/>
+
 
                     <td ng-bind="subRow.mintemp| number"
                         ng-style="{'background-color':getBackGroundColorForTd(subRow.mintemp)  ,'text-align':'right'}"/>
@@ -231,8 +225,7 @@
                         <span openlmis-message="label.total"></span>
                     </td>
 
-                    <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right','border-top-style':'solid', 'border-top-color': 'black', 'border-top-width': '2px'}"
-                        style="text-align:right; " ng-bind="report.targetpopulation| number"></td>
+
 
                     <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right','font-weight':'bold','text-align':'right','border-top-style':'solid', 'border-top-color': 'black', 'border-top-width': '2px'}"
                         style="text-align:right; " ng-bind="report.mintemp| number"></td>
@@ -266,20 +259,18 @@
 
                 <tbody >
                 <tr ng-repeat="row in colValueList" ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}">
-                    <td
+                    <td  ng-show="{{ !(row.rangeName === '5_alarm_episode_less_min' || row.rangeName === '6_alarm_episode_greater_min') }}"
                             ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}"
                             ng-bind="getColumnNameSummary(row.rangeName)" />
 
-                    <td
+                    <td  ng-show="{{ !(row.rangeName === '5_alarm_episode_less_min' || row.rangeName === '6_alarm_episode_greater_min') }}"
                             ng-style="{'width':'40px','background-color': getBackGroundColorSummary(row.rangeName)}"
                             ng-repeat="column in columnVals track by $index">
-                                    <span  ng-if="row.coldRangeColumnValues[$index].value>0"
+                                    <span
                                           ng-bind="row.coldRangeColumnValues[$index].value">
 
                                     </span>
-                                     <span ng-if="row.coldRangeColumnValues[$index].value==0">
-                                        -
-                                    </span>
+
                     </td>
 
                 </tr>
@@ -303,12 +294,9 @@
                         <span openlmis-message="label.period"></span>
 
                     </th>
-                    <th rowspan="2" style="width: 10px">
-                        <span openlmis-message="label.population"></span>
 
-                    </th>
                     <th colspan="2" style=" text-align: center; vertical-align: middle">
-                        <span openlmis-message="label.regrigator.temprature"></span>
+                        <span openlmis-message="label.refrigerator.temprature"></span>
 
                     </th>
                     <th colspan="2" style=" text-align: center; vertical-align: middle">
@@ -381,8 +369,7 @@
                             ></td>
                     <td ng-bind="row.period_name| date:'MMM-yyyy'"
                         ng-style="{'text-align':'right'}"/>
-                    <td ng-bind="row.targetpopulation| number"
-                        ng-style="{'text-align':'right'}"/>
+
                     <td ng-bind="row.mintemp| number"
                         ng-style="{'background-color':getBackGroundColorForTd(row.mintemp)  ,'text-align':'right'}"/>
 
@@ -411,8 +398,7 @@
                         <span openlmis-message="label.total"></span>
                     </td>
 
-                    <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right','border-top-style':'solid', 'border-top-color': 'black', 'border-top-width': '2px'}"
-                        style="text-align:right; " ng-bind="report.targetpopulation| number"></td>
+
 
                     <td ng-style="{'background-color':getBackGroundColor(calculateTotalPercentage(report.total_bcg_vaccinated,report.total_mr_vaccinated)) ,'font-weight':'bold','text-align':'right','font-weight':'bold','text-align':'right','border-top-style':'solid', 'border-top-color': 'black', 'border-top-width': '2px'}"
                         style="text-align:right; " ng-bind="report.mintemp| number"></td>
@@ -447,18 +433,18 @@
 
                 <tbody ng-repeat="row in regionColumnVals">
                 <tr ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}">
-                    <td ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}" ng-bind="getColumnNameSummary(row.rangeName)"/>
+
+                    <td ng-show="{{ !(row.rangeName === '5_alarm_episode_less_min' || row.rangeName === '6_alarm_episode_greater_min') }}" ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}" ng-bind="getColumnNameSummary(row.rangeName)"/>
 
 
-                    <td ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}"
+                    <td  ng-show="{{ !(row.rangeName === '5_alarm_episode_less_min' || row.rangeName === '6_alarm_episode_greater_min') }}" ng-style="{'background-color': getBackGroundColorSummary(row.rangeName)}"
                         ng-repeat="column in columnVals track by $index">
-                                    <span ng-if="row.coldRangeColumnValues[$index].value>0"
+
+                                    <span
                                           ng-bind="row.coldRangeColumnValues[$index].value">
 
                                     </span>
-                                     <span ng-if="row.coldRangeColumnValues[$index].value==0">
-                                        -
-                                    </span>
+
                     </td>
 
                 </tr>

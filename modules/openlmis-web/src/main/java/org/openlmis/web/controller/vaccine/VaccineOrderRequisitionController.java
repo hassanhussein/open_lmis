@@ -32,6 +32,8 @@ import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiForm
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.*;
+
+import static org.openlmis.core.domain.RightName.VIEW_VACCINE_ORDER_REQUISITION;
 import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.core.web.OpenLmisResponse.success;
@@ -45,6 +47,7 @@ public class VaccineOrderRequisitionController extends BaseController {
     private static final String PROGRAM_PRODUCT_LIST = "programProductList";
     private static final String PRINT_ORDER_REQUISITION = "Vaccine Order Requisition";
     private static final String PRINT_ISSUE_STOCK = "vims_distribution";
+    private static final String PRINT_CONSOLIDATED = "Print_Consolidated_list_report";
     private static final String ORDER_REQUISITION_SEARCH = "search";
 
     @Autowired
@@ -68,6 +71,9 @@ public class VaccineOrderRequisitionController extends BaseController {
     private ProgramProductService programProductService;
     @Autowired
     private JasperReportsViewFactory jasperReportsViewFactory;
+
+    @Autowired
+    SupervisoryNodeService supervisoryNodeService;
 
     @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION, VIEW_ORDER_REQUISITION')")
@@ -263,6 +269,74 @@ public class VaccineOrderRequisitionController extends BaseController {
 
         List<OrderRequisitionStockCardDTO> stockCards = service.getStockCards(facilityId, programId);
         return OpenLmisResponse.response("stockCards", stockCards);
+    }
+
+    @RequestMapping(value = "supervisoryNodeByFacilityAndRequisition/{facilityId}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getSupervisoryNodeByFacilityAndRequisition(@PathVariable Long facilityId) {
+
+        List<OrderRequisitionDTO> requisitionDTOs = service.getSupervisoryNodeByFacility(facilityId);
+        SupervisoryNode supervisoryNode = supervisoryNodeService.getParent(requisitionDTOs.get(0).getId());
+        return OpenLmisResponse.response("supervisoryNodes", supervisoryNode);
+    }
+
+    @RequestMapping(value = "getConsolidatedOrderList/{program}/{facilityId}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getConsolidatedOrderList(
+            @PathVariable Long program,
+            @PathVariable List<Long> facilityId) {
+
+        return OpenLmisResponse.response("consolidatedOrders", service.getConsolidatedList(program,facilityId));
+    }
+
+    public static String  getCommaSeparatedIds(List<Long> idList){
+        return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
+    }
+
+
+    @RequestMapping(value = "consolidate/print/{facilityId}", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printConsolidatedList(@PathVariable  List<Long> facilityId) throws JRException, IOException, ClassNotFoundException {
+        Template orPrintTemplate = templateService.getByName(PRINT_CONSOLIDATED);
+        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("format", "pdf");
+        Locale currentLocale = messageService.getCurrentLocale();
+        map.put(JRParameter.REPORT_LOCALE, currentLocale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
+        Resource reportResource = new ClassPathResource("report");
+        Resource imgResource = new ClassPathResource("images");
+        ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
+        map.put(Constants.OPERATOR_NAME, configuration.getValue());
+
+        String separator = System.getProperty("file.separator");
+        map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
+        map.put("FACILITY_ID", getCommaSeparatedIds(facilityId));
+
+        return new ModelAndView(jasperView, map);
+    }
+
+
+    @RequestMapping(value = "facilities/{id}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacility(@PathVariable(value = "id") Long id) {
+        return response("facility", facilityService.getById(id));
+    }
+
+
+    @RequestMapping(value = "view-order-requisition", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> listForViewingOrderRequisition(HttpServletRequest request) {
+        return response("facilities", facilityService.getHomeFacility(loggedInUserId(request)));
+    }
+
+    @RequestMapping(value = "updateVerify/{orderId}", method = RequestMethod.PUT, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> verifyOrderRequisition(@PathVariable(value = "orderId") Long orderId) {
+
+        try {
+            service.verifyVaccineOrderRequisition(orderId);
+            return success("Saved Successifully");
+
+        } catch (DataException e) {
+            return error(e, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 

@@ -1,12 +1,15 @@
 /*
- * This program was produced for the U.S. Agency for International Development. It was prepared by the USAID | DELIVER PROJECT, Task Order 4. It is part of a project which utilizes code originally licensed under the terms of the Mozilla Public License (MPL) v2 and therefore is licensed under MPL v2 or later.
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * This program is free software: you can redistribute it and/or modify it under the terms of the Mozilla Public License as published by the Mozilla Foundation, either version 2 of the License, or (at your option) any later version.
+ * Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the Mozilla Public License for more details.
+ * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  *
- * You should have received a copy of the Mozilla Public License along with this program. If not, see http://www.mozilla.org/MPL/
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.openlmis.vaccine.service.reports;
 
 import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplies;
@@ -14,6 +17,8 @@ import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyD
 import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyRegion;
 import org.openlmis.vaccine.domain.reports.BundledDistributionVaccinationSupplyReport;
 import org.openlmis.vaccine.repository.reports.BundledDistributionVaccinationSuppliesRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,13 +28,16 @@ import java.util.List;
 public class BundledDistributionVaccinationSuppliesService {
     @Autowired
     private BundledDistributionVaccinationSuppliesRepository vaccinationSuppliesRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(VaccineReportService.class);
+
+
     public BundledDistributionVaccinationSupplyReport getBundledDistributionVaccinationSupplies(Long year, Long productId){
-        System.out.println(" year and product id is "+ year + " "+ productId);
+
         List<BundledDistributionVaccinationSupplies> vaccinationSupplyList=null;
         BundledDistributionVaccinationSupplyRegion vaccinationSupplyRegion=null;
         BundledDistributionVaccinationSupplyDistrict vaccinationSupplyDistrict=null;
         BundledDistributionVaccinationSupplyReport vaccinationSupplyReport=null;
-        Long totalPopulation=0l;
+        Long totalPopulation=0L;
         try {
             vaccinationSupplyReport= new BundledDistributionVaccinationSupplyReport();
             vaccinationSupplyList=vaccinationSuppliesRepository.getBundledDistributionVaccinationSupplies(year, productId);
@@ -39,23 +47,17 @@ public class BundledDistributionVaccinationSuppliesService {
             vaccinationSupplyReport.setVaccinationSupplyRegion(vaccinationSupplyRegion);
             vaccinationSupplyReport.setVaccinationSupplyDistrict(vaccinationSupplyDistrict);
             for (BundledDistributionVaccinationSupplies vaccinationSupplies: vaccinationSupplyList){
-                totalPopulation+=vaccinationSupplies.getPopulation();
+                totalPopulation=   totalPopulation+vaccinationSupplies.getPopulation();
             }
             vaccinationSupplyReport.setTotalPopulation(totalPopulation);
         }catch (Exception ex){
-            System.out.println("Exception "+ ex.getMessage());
+            LOGGER.warn("Exception "+ ex.getMessage(),ex);
         }
 
-        System.out.println(" year and product id is "+ year + " "+ productId + "  "+vaccinationSupplyList.size());
+
         return  vaccinationSupplyReport;
     }
 
-    public BundledDistributionVaccinationSupplyReport prepareReport(List<BundledDistributionVaccinationSupplies> vaccinationSuppliesList){
-        BundledDistributionVaccinationSupplyReport vaccinationSupplyReport= new BundledDistributionVaccinationSupplyReport();
-        for(BundledDistributionVaccinationSupplies vaccinationSupplies: vaccinationSuppliesList){
-            //if()
-        }
-        return vaccinationSupplyReport;
-    }
+
 }
 

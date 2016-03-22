@@ -9,12 +9,11 @@
  */
 
 
-function StockMovementViewController($scope, $window,SaveDistribution,StockEvent,configurations, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location) {
+function StockMovementViewController($scope,verifyDistribution, $window,$timeout,SaveDistribution,StockEvent,configurations, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location) {
 
     var orderId = parseInt($routeParams.id, 10);
     var programId = parseInt($routeParams.programId, 10);
     var periodId = parseInt($routeParams.periodId, 10);
-
     var homeFacilityId = parseInt(homeFacility.id, 10);
     var toFacilityId = parseInt($routeParams.facilityId, 10);
     $scope.toFacilityName = $routeParams.facilityName;
@@ -30,7 +29,7 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
     var pageLineItems = [];
 
     $scope.homeFacility = $routeParams.facility;
-
+    $scope.showNoProductErrorMessage=false;
 
     var refreshPageLineItems = function () {
 
@@ -47,7 +46,6 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                 $scope.numberOfPages = Math.ceil(pageLineItems.length / $scope.pageSize) || 1;
                 $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
                 $scope.stockCardsByCategory = $scope.pageLineItems.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
-              // console.log(JSON.stringify($scope.stockCardsByCategory));
             });
         }
 
@@ -66,19 +64,15 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
 
 
     $scope.sumLots = function (c) {
-
+         $scope.showNoProductErrorMessage=false;
         var total = 0;
         c.lotsOnHand.forEach(function (l) {
             var x = ((l.quantity === '' || l.quantity === undefined) ? 0 : parseInt(l.quantity, 10));
             total = total + x;
 
         });
-
         $scope.total = total;
-
-
         c.sum = parseInt(c.quantityRequested, 10) - total;
-
     };
 
     $scope.save = function () {
@@ -88,11 +82,35 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
     var printTest = false;
 
     $scope.submit = function () {
-//        if ($scope.orderRequisitionForm.$error.required) {
-//            $scope.showError = true;
-//            $scope.error = "The form you submitted is invalid. Please revise and try again.";
-//            return;
-//        }
+        $scope.allProductsZero=true;
+        var printWindow;
+        $scope.stockCardsByCategory.forEach(function (st) {
+            st.stockCards.forEach(function (s) {
+                    if( s.quantity > 0){
+                      $scope.allProductsZero=false;
+                    }
+                    else if(s.lotsOnHand.length >0)
+                    {
+                         s.lotsOnHand.forEach(function (l) {
+                           if(l.quantity >0)
+                           {
+                               $scope.allProductsZero=false;
+                           }
+                         });
+                    }
+              });
+        });
+
+        if($scope.issueForm.$invalid)
+        {
+            $scope.showError = true;
+            $scope.error = "The form you submitted is invalid. Please revise and try again.";
+            return;
+        }
+        if($scope.allProductsZero){
+             $scope.showNoProductErrorMessage=true;
+             return;
+        }
 
         var transaction = {};
         transaction.transactionList = [];
@@ -107,6 +125,7 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
 
                 distribution.fromFacilityId = homeFacility.id;
                 distribution.toFacilityId= toFacilityId;
+                distribution.programId=program[0].id;programId;
                 distribution.distributionDate = $scope.stockCardsByCategory[0].issueDate;
                 distribution.periodId = periodId;
                 distribution.orderId = orderId;
@@ -136,6 +155,7 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                                        event.facilityId=toFacilityId;
                                        event.lotId= l.lot.id;
                                        event.quantity= l.quantity;
+                                       event.occurred=$scope.stockCardsByCategory[0].issueDate;
                                        event.customProps={"occurred":$scope.stockCardsByCategory[0].issueDate};
                                        events.push(event);
 
@@ -160,6 +180,7 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                                    event.productCode= s.product.code;
                                    event.facilityId=toFacilityId;
                                    event.quantity= s.quantity;
+                                   event.occurred=$scope.stockCardsByCategory[0].issueDate;
                                    event.customProps={"occurred":$scope.stockCardsByCategory[0].issueDate};
                                    events.push(event);
                                    lineItem.quantity=s.quantity;
@@ -177,15 +198,23 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
                     });
 
                 });
-                console.log(JSON.stringify(events));
               StockEvent.save({facilityId:homeFacility.id},events,function(data){
                    SaveDistribution.save(distribution,function(distribution) {
-                        UpdateOrderRequisitionStatus.update({orderId: orderId}, function () {
-                            print(distribution.distributionId);
-                            $scope.message = "label.form.Submitted.Successfully";
-                         });
+                       $scope.message = "label.form.Submitted.Successfully";
+                       var url = '/vaccine/orderRequisition/issue/print/'+distribution.distributionId;
+                       printWindow.location.href=url;
+                       console.log(orderId);
+
+                       verifyDistribution.update({orderId:orderId}, function(){
+
+                       });
+                       $timeout(function(){
+                           $window.location = '/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
+
+                       },900);
                    });
                });
+               printWindow= $window.open('about:blank','_blank');
 
             }
         };
@@ -201,15 +230,6 @@ function StockMovementViewController($scope, $window,SaveDistribution,StockEvent
 
 
     };
-
-    var print = function(distributionId){
-              var url = '/vaccine/orderRequisition/issue/print/'+distributionId;
-               $window.open(url, '_blank');
-
-               $window.location = '/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
-
-         };
-
 
     $scope.cancel = function () {
         $window.location = '/public/pages/vaccine/order-requisition/index.html#/view';
@@ -246,11 +266,11 @@ StockMovementViewController.resolve = {
         return deferred.promise;
     },
 
-    configurations:function($q, $timeout, VaccineInventoryConfigurations) {
+    configurations:function($q, $timeout, AllVaccineInventoryConfigurations) {
                                  var deferred = $q.defer();
                                  var configurations={};
                                  $timeout(function () {
-                                    VaccineInventoryConfigurations.get(function(data)
+                                    AllVaccineInventoryConfigurations.get(function(data)
                                     {
                                           configurations=data;
                                           deferred.resolve(configurations);
