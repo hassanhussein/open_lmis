@@ -31,10 +31,9 @@ public class OrderSummaryQueryBuilder {
 
          BEGIN();
 
-          SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product AS description, packstoship , packsize, requisition_line_item_losses_adjustments.quantity AS discrepancy");
+          SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product AS description, packstoship , packsize");
           FROM("vw_requisition_detail");
           INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
-          LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
           writePredicates(filter);
           ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, OrderSummaryReport.class,"facility_name asc"));
@@ -44,10 +43,9 @@ public class OrderSummaryQueryBuilder {
 
           BEGIN();
 
-          SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product AS description, packstoship ,  packsize, requisition_line_item_losses_adjustments.quantity AS discrepancy");
+          SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product AS description, packstoship ,  packsize");
           FROM("vw_requisition_detail");
           INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
-          LEFT_OUTER_JOIN("requisition_line_item_losses_adjustments ON vw_requisition_detail.req_line_id = requisition_line_item_losses_adjustments.requisitionlineitemid");
 
           writePredicates(filter);
           ORDER_BY(QueryHelpers.getSortOrder(sortCriteria,OrderSummaryReport.class,"facility_name asc"));
