@@ -472,7 +472,7 @@
                 <!--<optgroup ng-repeat="year in periods"  label="{{year.year}}">-->
 
                     <!--<option ng-repeat-start="v in year.children" value="-1">{{v.groupname}}</option>-->
-                    <option ng-repeat="v in periods" value="{{v.periodid}}" ng-selected="period == v.periodid"> &nbsp; &nbsp; {{v.periodname}}</option>
+                    <option ng-repeat="v in periods" value="{{v.periodid}}" ng-selected="period == v.periodid"> &nbsp; &nbsp; {{v.startdate|date:'MMM yyyy'}}</option>
 
                 <!--</optgroup>-->
             </select>
@@ -544,8 +544,8 @@
 <script type="text/ng-template" id="filter-range-pagination">
     <div>
             <label for="range-pagination"  class="labels" openlmis-message="{{fieldLabel}}"> <span class="label-required">*</span></label>
-            <div>
-                <select style="width: 140px" id="range-pagination" ui-select2 class="input-large" ng-model="offset">
+            <div style="width: 60px; max-height: 12px;">
+                <select style="width: 80px; height:20px " id="range-pagination" ui-select2 class="input-large" ng-model="offset">
                     <option ng-repeat="page in pages" ng-value="{{ page.offset }}" ng-selected="offset == page.offset">{{ page.value }}</option>
                 </select>
             </div>

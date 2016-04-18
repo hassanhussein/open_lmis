@@ -529,3 +529,26 @@ services.factory('verifyDistribution',function($resource){
 services.factory('FacilitiesSameType',function($resource){
     return $resource('/vaccine/inventory/distribution/facilities/same-type/:facilityId/:query',{facilityId:'@facilityId',query:'@query'},{});
 });
+
+services.factory('DistributionsByDate',function($resource){
+    return $resource('/vaccine/inventory/distribution/get-by-date/:facilityId',{facilityId:'@facilityId'},{});
+});
+
+services.factory('VaccineDashboardMonthlyStockStatus', function($resource){
+    return $resource('/vaccine/dashboard/monthly-stock-status.json',{},{});
+});
+services.factory('VaccineDashboardDistrictStockStatus', function($resource){
+    return $resource('/vaccine/dashboard/district-stock-status.json',{},{});
+});
+services.factory('VaccineDashboardFacilityStockStatus', function($resource){
+    return $resource('/vaccine/dashboard/facility-stock-status.json',{},{});
+});
+services.factory('VaccineDashboardFacilityStockStatusDetails', function($resource){
+    return $resource('/vaccine/dashboard/facility-stock-status-details.json',{},{});
+});
+services.factory('VaccineCurrentPeriod', function($resource){
+    return $resource('/vaccine/dashboard/vaccine-current-period.json',{},{});
+});
+services.factory('UserGeographicZonePereference', function($resource){
+    return $resource('/vaccine/dashboard/user-geographic-zone-preference.json',{},{});
+});

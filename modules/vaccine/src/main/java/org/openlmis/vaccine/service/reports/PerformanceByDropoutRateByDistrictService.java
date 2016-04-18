@@ -21,7 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import sun.misc.Cache;
+
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -102,6 +102,9 @@ public class PerformanceByDropoutRateByDistrictService {
 
 
         performanceByDisrictReport = this.aggregateReport(performanceByDropoutRateByDistrictList);
+      if(  filterParam.getProduct_id().equals(DTP_PRODUCT_ID)){
+          performanceByDisrictReport.setDtpProduct(true);
+      }
         performanceByDisrictReport.setPopulation(population);
         performanceByDisrictReport.setRegionPopulation(regionPpulation);
         performanceByDisrictReport.setRegionReport(isRegionReport);

@@ -15,10 +15,6 @@
 function ClassificationVaccineUtilizationPerformanceController($scope, ClassificationVaccineUtilizationPerformance, ReportProductsByProgram) {
 
 
-    ReportProductsByProgram.get({programId: 82}, function (data) {
-        $scope.product = data.productList;
-    });
-
     $scope.perioderror = "";
 
     $scope.OnFilterChanged = function () {
@@ -43,7 +39,7 @@ function ClassificationVaccineUtilizationPerformanceController($scope, Classific
             },
 
             function (data) {
-                console.log(data);
+
                 $scope.error = "";
                 $scope.zonereport =data.classificationVaccineUtilizationPerformance.zoneReport;
                 $scope.facilityReportList = data.classificationVaccineUtilizationPerformance.facilityReport;
@@ -53,7 +49,7 @@ function ClassificationVaccineUtilizationPerformanceController($scope, Classific
 
                 extractPopulationInfo($scope.zonereport,  $scope.population,2);
                 extractPopulationInfo($scope.facilityReportList,  $scope.population,1);
-                extractPopulationInfo($scope.facilityReportList, $scope.regionPopulation,3);
+                extractPopulationInfo($scope.regionReportList, $scope.regionPopulation,3);
 
                 $scope.zonereport = cumulateMonthProgressive($scope.zonereport, 2);
                 $scope.facilityReportList = cumulateMonthProgressive( $scope.facilityReportList, 1);
@@ -200,18 +196,22 @@ function ClassificationVaccineUtilizationPerformanceController($scope, Classific
         var totalDistricts = 0;
         var totalFacilities = 0;
         var totalPopulation = 0;
-        var districts = _.pluck($scope.zonereport, 'geographic_zone_name'),
-            facilities = _.pluck($scope.zonereport, 'facility_count');
-        console.log("facility count");
-        console.log(facilities);
+        var totalRegionPopulation = 0;
+        var districts = _.pluck($scope.facilityReport ? $scope.facilityReportList : $scope.zonereport, 'geographic_zone_name');
+            //facilities = _.pluck($scope.facilityReport ? $scope.facilityReportList : $scope.zonereport, 'facility_count');
+
         totalDistricts = _.uniq(districts).length;
         _.each($scope.zoneMainReport, function (facility) {
             totalFacilities += facility.report.facility_count;
             totalPopulation += facility.report.population;
         });
+        _.each($scope.regionMainReport, function (facility) {
+            totalRegionPopulation += facility.report.population;
+        });
         $scope.totalDistricts = totalDistricts;
-        $scope.totalFacilities = totalFacilities;
+        $scope.totalFacilities = $scope.facilityReport && !utils.isEmpty($scope.zoneMainReport) ? $scope.zoneMainReport.length : totalFacilities;
         $scope.totalPopulation = totalPopulation;
+        $scope.totalRegionPopulation = totalRegionPopulation;
     }
 
 
@@ -296,7 +296,7 @@ function ClassificationVaccineUtilizationPerformanceController($scope, Classific
                     total_used = unformattedReport[i].used;
                 }
                 usage_rate = total_vaccinated / total_used * 100;
-                coverage_rate = total_vaccinated / (total_population * target * 0.1);
+                coverage_rate =total_population!==null && total_population!==0 ? total_vaccinated / (total_population * target * 0.1):0;
                 wastage_rate = 100 - usage_rate;
                 unformattedReport[i].total_population = total_population;
                 unformattedReport[i].total_vaccinated = total_vaccinated;
@@ -306,20 +306,11 @@ function ClassificationVaccineUtilizationPerformanceController($scope, Classific
                 unformattedReport[i].wastage_rate = wastage_rate;
                 unformattedReport[i].classification = determineClass(coverage_rate, wastage_rate);
                 unformattedReport[i].hide = unformattedReport[i].year_number == $scope.year && unformattedReport[i].month_number < $scope.month ? true : false;
-                console.log("district  " + getKey(unformattedReport[i], type) + "  year " + unformattedReport[i].year_number +
-                    " month " + unformattedReport[i].month_number +
-                    " population " + unformattedReport[i].population +
-                    " population " + unformattedReport[i].population +
-                    " tot_population " + unformattedReport[i].total_population +
-                    " usage_rate " + unformattedReport[i].usage_rate +
-                    " coverage_rate " + unformattedReport[i].coverage_rate +
-                    " wastage_rate " + unformattedReport[i].wastage_rate +
-                    " hidden " + unformattedReport[i].hide +
-                    " year " + $scope.year +
-                    " month number is " + $scope.month);
+
 
             }
         }
+
         return unformattedReport;
 
     }
@@ -341,21 +332,31 @@ function ClassificationVaccineUtilizationPerformanceController($scope, Classific
     }
 
     function extractPopulationInfo(reportList, popuplationList, type) {
+console.log("report list \n" + type + "\n"+ JSON.stringify(reportList));
+        console.log("population list \n" + type + "\n"+ JSON.stringify(popuplationList));
+        if(utils.isNullOrUndefined(reportList)||  utils.isNullOrUndefined(popuplationList)){
+            return;
+        }
         var population = 0;
         var denominator = 0;
         var i = 0;
+
+
         var repLen = reportList.length;
         var popuLen = popuplationList.length;
 
         for (i; i < repLen; i++) {
             var j = 0;
-            var repKey = getPopulationKey(reportList[i], type);
-            for (j; j < popuLen; j++) {
+            var repKey = type===1?reportList[i].facility_name: type==2?reportList[i].geographic_zone_name:reportList[i].region_name;
+            repKey=repKey  + "_" + parseInt(reportList[i].year_number, 10);
+                      for (j; j < popuLen; j++) {
                 population = 0;
                 denominator = 0;
-                var currentKey = getPopulationKey(popuplationList[j], type);
+                var currentKey = getPopulationKey(popuplationList[j], type)+ "_" + parseInt(popuplationList[j].year, 10);
+                          console.log("rep_key\n"+ repKey);
+                          console.log("currentKey\n"+ currentKey);
 
-                if (angular.equals(repKey, currentKey)) {
+                if (repKey=== currentKey) {
                     population = popuplationList[j].population;
                     denominator = popuplationList[j].denominator;
 
@@ -366,17 +367,19 @@ function ClassificationVaccineUtilizationPerformanceController($scope, Classific
             reportList[i].population = population;
 
         }
+
         return population;
     }
     function getPopulationKey(dreport, type) {
         var keyValue = '';
         if (type === 1) {
-            keyValue = dreport.facility_name + "_" + parseInt(dreport.year, 10);
+            keyValue = dreport.facility_name ;
         } else if (type === 2) {
-            keyValue = dreport.district_name + "_" + parseInt(dreport.year, 10);
+            keyValue = dreport.district_name ;
+
         }
         else {
-            keyValue = dreport.region_name + "_" + parseInt(dreport.year, 10);
+            keyValue = dreport.region_name ;
         }
 
         return keyValue;

@@ -12,7 +12,7 @@
  *
  */
 
-function StatusVaccinationReceiceController($scope,StatuVaccinationSupply,SettingsByKey){
+function StatusVaccinationReceiceController($scope, StatuVaccinationSupply, SettingsByKey){
     $scope.minTemp;
     $scope.maxTemp;
     $scope.minEpisode;
@@ -40,7 +40,7 @@ function StatusVaccinationReceiceController($scope,StatuVaccinationSupply,Settin
     $scope.OnFilterChanged = function () {
 
         $scope.data = $scope.datarows = [];
-        $scope.filter.facilityId='' ;
+        $scope.filter.facility='' ;
         $scope.filter.geographicZoneId = $scope.filter.zone;
         $scope.filter.productId = $scope.filter.product;
         $scope.filter.periodId = 0;
@@ -50,23 +50,26 @@ function StatusVaccinationReceiceController($scope,StatuVaccinationSupply,Settin
         var param=   $scope.filter;
 
         $scope.error_message='';
-        StatuVaccinationSupply.get(param, function (data) {
+        if(!utils.isNullOrUndefined($scope.filter)&&!utils.isNullOrUndefined($scope.filter.periodStart)&&!utils.isNullOrUndefined($scope.filter.periodEnd) && !utils.isNullOrUndefined($scope.filter.product)&&$scope.filter.product!==0) {
+            StatuVaccinationSupply.get(param, function (data) {
 
-            if (data !== undefined) {
+                if (data !== undefined || data !== null) {
 
-                $scope.data = data.statusOfVaccinationSupplyReceiveReport.facilityDistrictVaccineStatusList;
+                    var columnKeysToBeAggregated = ["targetpopulation", "received", "onhand", "issued", "used", "wasted", "administered"];
+                    var districtNameKey = "district_name";
+                    var includeGrandTotal = false;
 
-                $scope.datarows = $scope.data;
-                $scope.regionrows = data.statusOfVaccinationSupplyReceiveReport.regionVaccineStatusList;
-                $scope.reportType = data.statusOfVaccinationSupplyReceiveReport.facilityReport;
-
-                $scope.report = data.statusOfVaccinationSupplyReceiveReport;
-
-
-
-            }
-        });
+                    $scope.data = data.statusOfVaccinationSupplyReceiveReport.facilityDistrictVaccineStatusList;
+                    $scope.datarows = utils.getDistrictBasedReportDataWithSubAndGrandTotal($scope.data, districtNameKey, columnKeysToBeAggregated, includeGrandTotal);
+                    $scope.regionrows = data.statusOfVaccinationSupplyReceiveReport.regionVaccineStatusList;
+                    $scope.reportType = data.statusOfVaccinationSupplyReceiveReport.facilityReport;
+                    $scope.report = data.statusOfVaccinationSupplyReceiveReport;
+                }
+            });
+        }
     };
+
+
     $scope.getBackGroundColorForTd=function(value) {
         var bgColor='blue';
         if(value< $scope.minTemp){
