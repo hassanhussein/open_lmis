@@ -13,11 +13,14 @@ import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
 import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
+import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
+import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionLineItemService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineOrderRequisitionsColumnService;
+import org.openlmis.vaccine.service.inventory.VaccineInventoryDistributionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -49,6 +52,8 @@ public class VaccineOrderRequisitionController extends BaseController {
     private static final String PRINT_ISSUE_STOCK = "vims_distribution";
     private static final String PRINT_CONSOLIDATED = "Print_Consolidated_list_report";
     private static final String ORDER_REQUISITION_SEARCH = "search";
+    private static final String PENDING_CONSIGNMENT_FOR_LOWER_LEVEL = "pendingToReceiveLowerLevel";
+    private static final String PENDING_CONSIGNMENT = "pendingToReceive";
 
     @Autowired
     VaccineOrderRequisitionService service;
@@ -68,12 +73,21 @@ public class VaccineOrderRequisitionController extends BaseController {
     @Autowired
     ConfigurationSettingService settingService;
     @Autowired
+    SupervisoryNodeService supervisoryNodeService;
+    @Autowired
+    VaccineInventoryDistributionService inventoryDistributionService;
+    @Autowired
+    VaccineInventoryDistributionService distributionService;
+    @Autowired
     private ProgramProductService programProductService;
     @Autowired
     private JasperReportsViewFactory jasperReportsViewFactory;
-
     @Autowired
-    SupervisoryNodeService supervisoryNodeService;
+    private VaccineNotificationService notificationService;
+
+    public static String getCommaSeparatedIds(List<Long> idList) {
+        return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
+    }
 
     @RequestMapping(value = "periods/{facilityId}/{programId}", method = RequestMethod.GET)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION, VIEW_ORDER_REQUISITION')")
@@ -86,7 +100,6 @@ public class VaccineOrderRequisitionController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getViewPeriods(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request) {
         return response("periods", service.getReportedPeriodsFor(facilityId, programId));
     }
-
 
     @RequestMapping(value = "initialize/{periodId}/{programId}/{facilityId}")
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_ORDER_REQUISITION, VIEW_ORDER_REQUISITION')")
@@ -141,17 +154,19 @@ public class VaccineOrderRequisitionController extends BaseController {
         return response("homeFacility", facilityService.getHomeFacility(loggedInUserId(request)));
     }
 
-    @RequestMapping(value = "getPendingRequest/{facilityId}/{programId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getPendingRequest(@PathVariable Long facilityId, @PathVariable Long programId, HttpServletRequest request) {
+    @RequestMapping(value = "getPendingRequest/{facilityId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPendingRequest(@PathVariable Long facilityId, HttpServletRequest request) {
 
-        return response("pendingRequest", service.getPendingRequest(loggedInUserId(request), facilityId, programId));
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("pendingRequest", service.getPendingRequest(loggedInUserId(request), facilityId));
+        response.getBody().addData(PENDING_CONSIGNMENT_FOR_LOWER_LEVEL, inventoryDistributionService.getPendingReceivedAlert(facilityId));
+        response.getBody().addData(PENDING_CONSIGNMENT, inventoryDistributionService.getPendingNotificationForLowerLevel(facilityId));
+        return response;
     }
 
     @RequestMapping(value = "getAllBy/{programId}/{periodId}/{facilityId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllBy(@PathVariable Long programId, @PathVariable Long periodId, @PathVariable Long facilityId, HttpServletRequest request) {
         return response("requisitionList", service.getAllBy(programId, periodId, facilityId));
     }
-
 
     @RequestMapping(value = "updateOrderRequest/{orderId}", method = RequestMethod.PUT, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse>
@@ -179,7 +194,6 @@ public class VaccineOrderRequisitionController extends BaseController {
         return response("programs", programService.getAllIvdPrograms());
     }
 
-
     @RequestMapping(value = "loggedInUserDetails.json", method = RequestMethod.GET)
     public ResponseEntity<OpenLmisResponse> getLoggedInUserProfiles(HttpServletRequest request) {
         Long userId = loggedInUserId(request);
@@ -193,7 +207,6 @@ public class VaccineOrderRequisitionController extends BaseController {
         User user = userService.getById(userId);
         return response("programs", programService.getProgramsSupportedByUserHomeFacilityWithRights(user.getFacilityId(), userId, "CREATE_REQUISITION", "AUTHORIZE_REQUISITION"));
     }
-
 
     @RequestMapping(value = "/{programId}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getProgramProductsByProgram(@PathVariable Long programId) {
@@ -225,7 +238,6 @@ public class VaccineOrderRequisitionController extends BaseController {
         return new ModelAndView(jasperView, map);
     }
 
-
     @RequestMapping(value = "issue/print/{id}", method = GET, headers = ACCEPT_JSON)
     public ModelAndView printIssueStock(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
         Template orPrintTemplate = templateService.getByName(PRINT_ISSUE_STOCK);
@@ -249,10 +261,8 @@ public class VaccineOrderRequisitionController extends BaseController {
         String separator = System.getProperty("file.separator");
         map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
         map.put("ISSUE_ID", id.intValue());
-
         return new ModelAndView(jasperView, map);
     }
-
 
     @RequestMapping(value = "search", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_REQUISITION')")
@@ -291,11 +301,6 @@ public class VaccineOrderRequisitionController extends BaseController {
         return OpenLmisResponse.response("consolidatedOrders", service.getConsolidatedList(program,facilityId));
     }
 
-    public static String  getCommaSeparatedIds(List<Long> idList){
-        return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
-    }
-
-
     @RequestMapping(value = "consolidate/print/{facilityId}", method = GET, headers = ACCEPT_JSON)
     public ModelAndView printConsolidatedList(@PathVariable  List<Long> facilityId) throws JRException, IOException, ClassNotFoundException {
         Template orPrintTemplate = templateService.getByName(PRINT_CONSOLIDATED);
@@ -313,7 +318,7 @@ public class VaccineOrderRequisitionController extends BaseController {
 
         String separator = System.getProperty("file.separator");
         map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
-        map.put("FACILITY_ID", getCommaSeparatedIds(facilityId));
+        map.put("DISTRIBUTION_ID", getCommaSeparatedIds(facilityId));
 
         return new ModelAndView(jasperView, map);
     }
@@ -341,6 +346,22 @@ public class VaccineOrderRequisitionController extends BaseController {
             return error(e, HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @RequestMapping(value = "getTotalPendingRequest/{facilityId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTotalPendingRequest(@PathVariable Long facilityId, HttpServletRequest request) {
+
+        return response("totalPendingRequest", service.getTotalPendingRequest(loggedInUserId(request), facilityId));
+    }
+
+    @RequestMapping(value = "sendNotification/{distributionId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> sendNotification(@PathVariable Long distributionId, HttpServletRequest request) {
+        VaccineDistribution distribution = null;
+        if (!(distributionId == null)) {
+            distribution = distributionService.getDistributionById(distributionId);
+            notificationService.sendIssuingEmail(distribution);
+        }
+        return response("message", distribution);
     }
 
 

@@ -41,7 +41,7 @@
                 <form ng-submit="filterGrid()" name="filterForm" novalidate>
                     <div   class="clearfix">
 
-                        <vaccine-zone-filter class="horizontalFilters form-cell" facilityid="filter.facility" faccility="true" pro="filter.program" user_geo_level="user_geo_level" zones="zones" val="filter.zone" ></vaccine-zone-filter>
+                        <vaccine-zone-filter class="horizontalFilters form-cell" facilityid="filter.facility" faccility="false" pro="filter.program" user_geo_level="user_geo_level" zones="zones" val="filter.zone" ></vaccine-zone-filter>
 
                         <vaccine-dropout-filter defaultselction="defualt" class="horizontalFilters form-cell" filterproduct="filter.product"  ></vaccine-dropout-filter>
 
@@ -221,7 +221,7 @@
                                 ng-style="{'background-color':getBackGroundColor(row) ,'text-align':'right'}"/>
 
 
-                            <td ng-bind="concatPercentage(row.bcg_mr_dropout)"
+                            <td class="number" ng-bind="concatPercentage(row.bcg_mr_dropout)"
                                 ng-style="{'background-color':getBackGroundColor(row) ,'text-align':'right'}"/>
 
 
@@ -314,7 +314,8 @@
                         </tr>
                         <tr>
                             <td ng-style="{'min-width':'2800px','background-color': nonReporting}" >Non reporting</td>
-                            <td  ng-style="{'background-color': nonReporting}" ng-repeat="column in nonReportingDistrict track by $index" ng-bind="nonReportingDistrict[staticYear + '_' +$index].count"></td>
+                            <td ng-style="{'background-color': nonReporting}" ng-repeat="column in columnVals track by $index" ng-bind="nonReportingDistrict[staticYear + '_' +$index]!=null?nonReportingDistrict[staticYear + '_' +$index].count:0"></td>
+
                         </tr>
                         </tbody>
                     </table>
@@ -459,7 +460,7 @@
                                 ng-style="{'background-color':getBackGroundColor(row) ,'text-align':'right'}"/>
 
 
-                            <td ng-bind="concatPercentage(row.bcg_mr_dropout)"
+                            <td class="number" ng-bind="concatPercentage(row.bcg_mr_dropout)"
                                 ng-style="{'background-color':getBackGroundColor(row) ,'text-align':'right'}"/>
 
 
@@ -550,7 +551,7 @@
                         </tr>
                         <tr>
                             <td ng-style="{'min-width':'2800px','background-color': nonReporting}" >Non reporting</td>
-                            <td  ng-style="{'background-color': nonReporting}" ng-repeat="column in nonReportingDistrict track by $index" ng-bind="nonReportingRegion[staticYear + '_' +$index].count"></td>
+                            <td  ng-style="{'background-color': nonReporting}" ng-repeat="column in columnVals track by $index" ng-bind="nonReportingRegion[staticYear + '_' +$index]!=null?nonReportingRegion[staticYear + '_' +$index].count:0"></td>
                         </tr>
                         </tbody>
                     </table>

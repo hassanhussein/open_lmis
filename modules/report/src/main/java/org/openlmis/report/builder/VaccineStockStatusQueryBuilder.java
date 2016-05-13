@@ -5,11 +5,6 @@ import org.openlmis.report.model.params.VaccineStockStatusParam;
 
 import java.util.Map;
 
-import static org.apache.ibatis.jdbc.SqlBuilder.*;
-import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
-import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.multiProductFilterBy;
-
-
 public class VaccineStockStatusQueryBuilder {
 
     public String getQuery(Map params) {
@@ -37,7 +32,7 @@ public class VaccineStockStatusQueryBuilder {
                 "   WHERE  x.r <= 1    " +
                 "   ORDER BY facilityId,productId )  " +
                 "   SELECT facilityId, productId, facilityName,product,lastUpdate,soh,isaValue,   " +
-                "   CASE WHEN isaValue > 0 THEN  ROUND((coalesce(soh,0) / coalesce(isaValue,10)),0) else 0 end as mos  " +
+                "   CASE WHEN isaValue > 0 THEN  ROUND((soh::numeric(10,2) / isaValue::numeric(10,2)),2) else 0 end as mos " +
                 "   FROM Q  "
         );
 

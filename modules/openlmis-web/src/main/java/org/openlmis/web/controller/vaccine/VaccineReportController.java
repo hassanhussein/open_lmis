@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/vaccine/report/")
@@ -61,9 +62,9 @@ public class VaccineReportController extends BaseController {
     }
 
     @RequestMapping(value = "vaccine-usage-trend")
-    public ResponseEntity<OpenLmisResponse> vaccineUsageTrend(@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId) {
-
-        return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId));
+    public ResponseEntity<OpenLmisResponse> vaccineUsageTrend( HttpServletRequest request,@RequestParam("facilityCode") String facilityCode, @RequestParam("productCode") String productCode, @RequestParam("period") Long periodId, @RequestParam("zone") Long zoneId) {
+Long userId= this.loggedInUserId(request);
+        return OpenLmisResponse.response("vaccineUsageTrend", service.vaccineUsageTrend(facilityCode, productCode, periodId, zoneId,userId));
     }
 
     @RequestMapping(value = "/orderRequisition/downloadPDF", method = RequestMethod.GET)
@@ -74,16 +75,18 @@ public class VaccineReportController extends BaseController {
         return new ModelAndView("orderRequisitionPDF", "listOrders", listOrders);
     }
 
-    @RequestMapping(value = "/performanceCoverage", method = RequestMethod.GET)
-    public ResponseEntity<OpenLmisResponse> performanceCoverage(@RequestParam(value = "periodStart", required = false) String periodStart,
-                                                                @RequestParam(value = "periodEnd", required = false) String periodEnd,
-                                                                @RequestParam("district") Long districtId,
-                                                                @RequestParam("product") Long product) {
+  @RequestMapping(value = "/performanceCoverage", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> performanceCoverage(@RequestParam(value = "periodStart", required = false) String periodStart,
+                                                              @RequestParam(value = "periodEnd", required = false) String periodEnd,
+                                                              @RequestParam("district") Long districtId,
+                                                              @RequestParam("product") Long product,
+                                                              @RequestParam("doseId") Long doseId
+  ) {
 
+    return OpenLmisResponse.response("performanceCoverage",
+        service.getPerformanceCoverageReportData(periodStart, periodEnd, districtId, product, doseId));
+  }
 
-        return OpenLmisResponse.response("performanceCoverage",
-                service.getPerformanceCoverageReportData(periodStart, periodEnd, districtId, product));
-    }
 
     @RequestMapping(value = "/completenessAndTimeliness", method = RequestMethod.GET)
     public ResponseEntity<OpenLmisResponse> completenessAndTimeliness(@RequestParam(value = "periodStart", required = false) String periodStart,
@@ -138,5 +141,9 @@ public class VaccineReportController extends BaseController {
     public ResponseEntity<OpenLmisResponse> loadYearList() {
         return OpenLmisResponse.response("years",
                 service.loadYearList());
+    }
+    @RequestMapping(value = "/coverageAndDropoutCoefficient", method = RequestMethod.GET)
+      public  ResponseEntity<OpenLmisResponse> getCoverageAndDropoutCoeffients(   @RequestParam("product") Long product){
+        return OpenLmisResponse.response("coefficients", service.getCoverageAndDropoutCoeffients(product));
     }
 }

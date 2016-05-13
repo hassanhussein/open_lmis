@@ -47,6 +47,7 @@
     }
 
     input[type="text"]{height:30px !important;}
+    input[type="text"].orderNumberError{border:1px solid #ff0000 !important;}
 
     table.receive{
         background:#FAFAFA;
@@ -64,13 +65,12 @@
 </style>
 
 <div >
-    <h2><span openlmis-message="label.vaccine.stock.receive"></span></h2>
+    <h2 ng-if="isTransferIn === undefined"><span openlmis-message="label.vaccine.stock.receive"></span></h2>
+
+    <h2 ng-if="isTransferIn === true"><span openlmis-message="label.vaccine.transfer.in"></span></h2>
 
     <div ng-show="hasStock && !hasPermission('INITIALIZE_STOCK') && hasPermission('OPEN_STOCK_RECEIVING_PROCESS')">
-        <input type="checkbox"
-               ng-init="isTransferIn=false"
 
-               ng-model="isTransferIn">&nbsp;<span openlmis-message="label.vaccine.transfer.in"></span>
     </div>
     <br/>
     <div class="row-fluid" >
@@ -101,7 +101,13 @@
                                         <span class="label-required">*</span>:&nbsp;
                                         <input ng-reqiured=" hasPermission('OPEN_STOCK_RECEIVING_PROCESS')" type="text"
                                                name="orderNumber" ng-required="true"
-                                               ng-model="orderNumber" ng-change="clear()"/>
+                                               ng-class="{'orderNumberError':orderNumberExist}"
+                                               ng-model="orderNumber" ng-change="clear()" ng-blur="checkOrderNumber()"/>
+                                        <span ng-show="orderNumberExist" style="color:#ff0000">
+                                            <br/>
+                                            <span style="margin-left:120px"
+                                                  openlmis-message="error.message.order.number.exist"></span>
+                                        </span>
 
                                     </div>
                                     <div class="span4"
@@ -151,12 +157,12 @@
             </div>
                 <div class="rnr-table" ng-show=" !hasPermission('OPEN_STOCK_RECEIVING_PROCESS') || isTransferIn">
                     <ng-include
-                            src="'/public/pages/vaccine/inventory/partials/voucher-receive-stock-partial.html?i=14'"></ng-include>
+                            src="'/public/pages/vaccine/inventory/partials/voucher-receive-stock-partial.html'"></ng-include>
             </div>
             </div>
             <div ng-show="!isTransferIn && (hasPermission('OPEN_STOCK_RECEIVING_PROCESS') || hasPermission('INITIALIZE_STOCK') || !hasStock)">
                 <ng-include
-                        src="'/public/pages/vaccine/inventory/partials/open-receive-stock-partial.html?'"></ng-include>
+                        src="'/public/pages/vaccine/inventory/partials/open-receive-stock-partial.html?i=21'"></ng-include>
             </div>
         </div>
     </div>
@@ -172,7 +178,7 @@
                    openlmis-message="button.submit"/>
 
             <input ng-show="!isTransferIn && (hasPermission('OPEN_STOCK_RECEIVING_PROCESS') || !hasStock || hasPermission('INITIALIZE_STOCK'))"
-                   ng-disabled="openReceiveForm.$invalid || receivedProducts.length == 0 ||(hasStock && hasPermission('OPEN_STOCK_RECEIVING_PROCESS') && orderNumber ==null) || (hasStock && hasPermission('OPEN_STOCK_RECEIVING_PROCESS') && orderDate==null)"
+                   ng-disabled="orderNumberExist || openReceiveForm.$invalid || receivedProducts.length == 0 ||(hasStock && hasPermission('OPEN_STOCK_RECEIVING_PROCESS') && orderNumber ==null) || (hasStock && hasPermission('OPEN_STOCK_RECEIVING_PROCESS') && orderDate==null)"
                    type="submit"
                    id="submit-button2"
                    ng-click="openReceive()"

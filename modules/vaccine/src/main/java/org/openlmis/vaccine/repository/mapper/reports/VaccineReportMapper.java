@@ -326,10 +326,10 @@ public interface VaccineReportMapper {
     List<VitaminSupplementationLineItem> getVitaminSupplementationAggregateReport(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("userId") Long userId);
 
     @Select("select COALESCE(fr.quantity_issued, 0) quantity_issued, COALESCE(fr.closing_balance, 0) closing_balance, pp.name period_name \n" +
-            "from fn_vaccine_facility_n_rnrs('Vaccine',#{facilityCode}, #{productCode},4) fr \n" +
+            "from fn_vaccine_facility_n_rnrs('Vaccine',#{facilityCode}, #{productCode},4, #{userId}::integer) fr \n" +
             "JOIN processing_periods pp ON pp.id = fr.period_id\n" +
             " order by pp.id asc;")
-    List<HashMap<String, Object>> vaccineUsageTrend(@Param("facilityCode") String facilityCode, @Param("productCode") String productCode);
+    List<HashMap<String, Object>> vaccineUsageTrend(@Param("facilityCode") String facilityCode, @Param("productCode") String productCode, @Param("userId") Long userId);
 
     @Select("SELECT product_code,\n" +
             "MAX(display_order) display_order," +
@@ -382,10 +382,10 @@ public interface VaccineReportMapper {
     List<HashMap<String, Object>> getVaccinationAggregateByGeoZoneReport(@Param("productCategoryCode") String categoryCode, @Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("userId") Long userId);
 
     @Select("select COALESCE(fr.quantity_issued, 0) quantity_issued, COALESCE(fr.closing_balance, 0) closing_balance, pp.name period_name \n" +
-            "from fn_vaccine_geozone_n_rnrs('Vaccine', #{periodId}::integer ,#{zoneId}::integer, #{productCode},4) fr\n" +
+            "from fn_vaccine_geozone_n_rnrs('Vaccine', #{periodId}::integer ,#{zoneId}::integer, #{productCode},4,#{userId}::integer) fr\n" +
             "JOIN processing_periods pp ON pp.id = fr.period_id\n" +
             " order by pp.id asc")
-    List<HashMap<String, Object>> vaccineUsageTrendByGeographicZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("productCode") String productCode);
+    List<HashMap<String, Object>> vaccineUsageTrendByGeographicZone(@Param("periodId") Long periodId, @Param("zoneId") Long zoneId, @Param("productCode") String productCode, @Param("userId") Long userId);
 
     @Select("select\n" +
             "product_code, \n" +
@@ -448,29 +448,29 @@ public interface VaccineReportMapper {
     // Performance coverage report
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageMainReportDataByDistrict")
     List<Map<String, Object>> getPerformanceCoverageMainReportDataByDistrict(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                             @Param("productId") Long productId);
+                                                                             @Param("productId") Long productId, @Param("doseId") Long doseId);
 
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageSummaryReportDataByDistrict")
     List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByDistrict(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                                @Param("productId") Long productId);
+                                                                                @Param("productId") Long productId, @Param("doseId") Long doseId);
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageMainReportDataByRegion")
     List<Map<String, Object>> getPerformanceCoverageMainReportDataByRegion(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                           @Param("productId") Long productId);
+                                                                           @Param("productId") Long productId, @Param("doseId") Long doseId);
 
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageSummaryReportDataByRegion")
     List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByRegion(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                              @Param("productId") Long productId);
+                                                                              @Param("productId") Long productId, @Param("doseId") Long doseId);
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageMainReportDataByRegionAggregate")
     List<Map<String, Object>> getPerformanceCoverageMainReportDataByRegionAggregate(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                                    @Param("productId") Long productId);
+                                                                                    @Param("productId") Long productId, @Param("doseId") Long doseId);
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageSummaryReportDataByRegionAggregate")
     List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByRegionAggregate(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                                       @Param("productId") Long productId);
+                                                                                       @Param("productId") Long productId, @Param("doseId") Long doseId);
 
 
     // Completeness and Timeliness report
@@ -541,20 +541,30 @@ public interface VaccineReportMapper {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("zoneId") Long zoneId,
-            @Param("productId") Long productId);
+            @Param("productId") Long productId,
+            @Param("doseId") Long doseId);
     @SelectProvider(type = ClassificationVaccineUtilizationPerformanceQueryBuilder.class, method = "getDistrictPopulationInformation")
     public  List<Map<String,Object>> getClassficationVaccinePopulationForDistrict(
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("zoneId") Long zoneId,
-            @Param("productId") Long productId);
+            @Param("productId") Long productId,
+            @Param("doseId") Long doseId);
 
     @SelectProvider(type = ClassificationVaccineUtilizationPerformanceQueryBuilder.class, method = "getRegionPopulationInformation")
     public  List<Map<String,Object>> getClassficationVaccinePopulationForRegion(
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("zoneId") Long zoneId,
-            @Param("productId") Long productId);
+            @Param("productId") Long productId,
+            @Param("doseId") Long doseId);
     @SelectProvider(type=ClassificationVaccineUtilizationPerformanceQueryBuilder.class, method = "getYearQuery")
     public List<Map<String,Object>> getDistincitYearList();
+
+    @Select("select coalesce(whoratio,0) coverage,  coalesce(dropout,0) dropout , coalesce(wastagefactor,0) wastage\n" +
+            "from program_products pp \n" +
+            "join isa_coefficients c on pp.isacoefficientsid = c.id\n" +
+            "join vaccine_inventory_product_configurations pc on pc.productid=pp.productid\n" +
+            "where pp.productid = #{productId}")
+    public Map<String,String> getCoverageAndDropoutCoeffients(  @Param("productId") Long productId);
 }

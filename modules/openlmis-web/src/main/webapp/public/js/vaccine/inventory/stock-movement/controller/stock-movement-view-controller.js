@@ -1,15 +1,14 @@
 /*
- * This program is part of the OpenLMIS logistics management information system platform software.
- * Copyright © 2013 VillageReach
+ * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+ *
+ * Copyright (C) 2015 Clinton Health Access Initiative (CHAI)/MoHCDGEC Tanzania.
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the GNU Affero General Public License for more details.
  */
 
-
-function StockMovementViewController($scope,verifyDistribution, $window,$timeout,SaveDistribution,StockEvent,configurations, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location) {
+function StockMovementViewController($scope,verifyDistribution, $window,$timeout,SaveDistribution,StockEvent,configurations, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location,SendIssueNotification) {
 
     var orderId = parseInt($routeParams.id, 10);
     var programId = parseInt($routeParams.programId, 10);
@@ -130,7 +129,7 @@ function StockMovementViewController($scope,verifyDistribution, $window,$timeout
                 distribution.periodId = periodId;
                 distribution.orderId = orderId;
                 distribution.lineItems=[];
-                distribution.distributionType="SCHEDULED";
+                distribution.distributionType="ROUTINE";
                 distribution.status="PENDING";
 
                 $scope.stockCardsByCategory.forEach(function (st) {
@@ -199,17 +198,18 @@ function StockMovementViewController($scope,verifyDistribution, $window,$timeout
 
                 });
               StockEvent.save({facilityId:homeFacility.id},events,function(data){
-                   SaveDistribution.save(distribution,function(distribution) {
+                   SaveDistribution.save(distribution,function(d) {
                        $scope.message = "label.form.Submitted.Successfully";
-                       var url = '/vaccine/orderRequisition/issue/print/'+distribution.distributionId;
+                       var url = '/vaccine/orderRequisition/issue/print/'+d.distributionId;
                        printWindow.location.href=url;
-                       console.log(orderId);
 
+                       SendIssueNotification.get({distributionId:d.distributionId},function(data){
+                       });
                        verifyDistribution.update({orderId:orderId}, function(){
 
                        });
                        $timeout(function(){
-                           $window.location = '/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
+                           $window.location = '/public/pages/vaccine/dashboard/index.html#/dashboard';
 
                        },900);
                    });

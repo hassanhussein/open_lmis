@@ -211,7 +211,7 @@ services.factory('VaccineOrderRequisitionColumns', function ($resource) {
 });
 
 services.factory('VaccinePendingRequisitions', function ($resource) {
-    return $resource('/vaccine/orderRequisition/getPendingRequest/:facilityId/:programId.json', {}, {});
+    return $resource('/vaccine/orderRequisition/getPendingRequest/:facilityId.json', {}, {});
 });
 
 
@@ -551,4 +551,37 @@ services.factory('VaccineCurrentPeriod', function($resource){
 });
 services.factory('UserGeographicZonePereference', function($resource){
     return $resource('/vaccine/dashboard/user-geographic-zone-preference.json',{},{});
+});
+
+services.factory('VaccineProductDoseList', function($resource){
+    return $resource('/vaccine/product-dose/get/:programId/:productId.json',{},{});
+});
+
+services.factory('VaccineDashboardFacilityInventoryStockStatus', function($resource){
+    return $resource('/vaccine/dashboard/facility-inventory-stock-status.json',{},{});
+});
+
+services.factory('VaccineDashboardSupervisedFacilityInventoryStockStatus', function($resource){
+    return $resource('/vaccine/dashboard/supervised-facilities-inventory-stock-status.json',{},{});
+});
+
+services.factory('VaccineTotalPendingRequisitions', function ($resource) {
+    return $resource('/vaccine/orderRequisition/getTotalPendingRequest/:facilityId.json', {}, {});
+});
+
+services.factory('ExistingDistribution', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/get-if-exist/', {}, {});
+});
+
+
+services.factory('BatchExpiryNotification', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/getBatchExpiryNotification/', {}, {});
+});
+
+services.factory('CoefficientValues',function($resource) {
+    return $resource('/vaccine/report/coverageAndDropoutCoefficient.json', {}, {});
+});
+
+services.factory('SendIssueNotification',function($resource) {
+    return $resource('/vaccine/orderRequisition/sendNotification/:distributionId.json', {distributionId:'@distributionId'}, {});
 });

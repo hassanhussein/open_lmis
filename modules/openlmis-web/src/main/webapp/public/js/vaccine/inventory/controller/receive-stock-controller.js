@@ -1,17 +1,14 @@
 /*
  * Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
  *
- * Copyright (C) 2015 Clinton Health Access Initiative (CHAI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+ * Copyright (C) 2015 Clinton Health Access Initiative (CHAI)/MoHCDGEC Tanzania.
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the GNU Affero General Public License for more details.
  */
 
-
-function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,UpdateOrderRequisitionStatus,$timeout,$window,$dialog,configurations,homeFacility,SaveDistribution,VaccineProgramProducts,FacilityTypeAndProgramProducts,Distribution,DistributionWithSupervisorId, ProductLots,StockEvent,localStorageService,$location, $anchorScroll) {
+function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,UpdateOrderRequisitionStatus,$timeout,$window,$dialog,configurations,homeFacility,SaveDistribution,VaccineProgramProducts,FacilityTypeAndProgramProducts,Distribution,DistributionWithSupervisorId, ProductLots,StockEvent,localStorageService,$location, $anchorScroll,ExistingDistribution) {
 
     $scope.hasStock=homeFacility.hasStock;
     $scope.userPrograms=configurations.programs;
@@ -26,6 +23,8 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
     $scope.productsConfiguration=configurations.productsConfiguration;
     $scope.period=configurations.period;
     $scope.manufacturers = manufacturers;
+    $scope.isTransferIn=($location.url() ==='/transfer-in')?true:undefined;
+//    console.log($location.url());
 
     $scope.loadProducts=function(facilityId,programId){
         FacilityTypeAndProgramProducts.get({facilityId:facilityId, programId:programId},function(data){
@@ -162,7 +161,7 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
                                  });
                             }
                             $timeout(function(){
-                                $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
+                                $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
                             },900);
                          });
 
@@ -249,7 +248,7 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
                          }
                          $scope.message=true;
                          $timeout(function(){
-                              $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
+                              $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
                           },900);
                     });
 
@@ -267,7 +266,7 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
 
 
     $scope.cancel=function(){
-       $window.location='/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand';
+       $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
     };
     if($scope.userPrograms.length > 1)
     {
@@ -310,11 +309,11 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
         });
      };
     $scope.addLot=function(lotToAdd){
+
+            lotToAdd.lot=_.findWhere($scope.lotsToDisplay,{id:parseInt(lotToAdd.lotId,10)});
             $scope.productToAdd.lots.push(lotToAdd);
             $scope.lotToAdd={};
             updateLotsToDisplay($scope.productToAdd.lots);
-            $location.hash('scroll-to-lot');
-            $anchorScroll();
     };
 
     $scope.removeProductLot=function(lot){
@@ -411,12 +410,24 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
             $scope.distribution.categorisedLineItems= $.map(byCategory, function (value, index) {
                  return [{"productCategory": index, "lineItems": value}];
             });
-//            console.log(JSON.stringify($scope.distribution.categorisedLineItems));
      };
 
      $scope.clear=function(){
         $scope.distribution=undefined;
         $scope.voucherNumberSearched=false;
+        $scope.orderNumberExist=false;
+     };
+
+     $scope.checkOrderNumber=function(){
+        if($scope.orderNumber !== undefined){
+             ExistingDistribution.get({voucherNumber:$scope.orderNumber},function(data){
+                  console.log(data);
+                  if(data.distribution !== null)
+                   {
+                      $scope.orderNumberExist =true;
+                  }
+             });
+        }
      };
 
      $scope.showNewLotModal=function(productToAdd){
@@ -437,8 +448,9 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
        newLot.expirationDate=$filter('date')($scope.newLot.expirationDate,"yyyy-MM-dd");
         Lot.create(newLot,function(data){
                $scope.newLotModal=false;
+               $scope.lotToAdd.lotId=data.lot.id;
+               console.log(JSON.stringify($scope.selectedLot));
                $scope.loadProductLots(data.lot.product);
-               //$scope.productToAdd.lot=data.lot;
         });
      };
 
