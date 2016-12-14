@@ -4,13 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.utils.DateUtil;
 import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -28,6 +23,10 @@ public class VaccineStockStatusParam extends BaseParam implements ReportParamete
     private Long program;
 
     private String productCategory;
+
+    private String facilityIds;
+
+    private Boolean isMOS;
 
 
 }

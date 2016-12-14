@@ -25,7 +25,7 @@ public class StockLedgerReportQueryBuilder {
 
         StockLedgerReportParam filter = (StockLedgerReportParam) params.get("filterCriteria");
 
-        return ("Select primaryname product,id,date , facility storeName, received, issued, adjustment,total,lotnumber,expirationdate,vvm vvmStatus, (SUM(total) over(partition by lotnumber order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +
+        return ("Select primaryname product,id,date , facility storeName, received, issued, adjustment,total,lotnumber,voucherNumber,manufacturerName,expirationdate,vvm vvmStatus, (SUM(total) over(partition by lotnumber order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +
                 "FROM  " +
                 "(WITH Q AS (  " +
                 "select MAX(p.primaryname) primaryname  , 0 as id, MAX(#{filterCriteria.startDate})::timestamp with time zone as date,  " +
@@ -33,10 +33,14 @@ public class StockLedgerReportQueryBuilder {
                 "0::INTEGER as received,  " +
                 "0::INTEGER as issued,   " +
                 "0::INTEGER as adjustment, " +
-                "l.lotnumber,  " +
+                "l.lotnumber, " +
+                "MAX(l.manufacturerName) as manufacturerName , " +
                 "MAX(l.expirationdate::DATE) as expirationdate, " +
                 "MAX(skvvvm.valuecolumn) as vvm,  " +
-                "SUM(se.quantity)::integer as total  " +
+                "SUM(se.quantity)::integer as total,  " +
+                "MAX( (select voucherNumber from vaccine_distributions vd   " +
+                "LEFT JOIN Vaccine_distribution_line_items li ON vd.id = li.distributionId   " +
+                "WHERE li.productId = p.id limit 1)  ) as voucherNumber  " +
                 "from stock_card_entries se  " +
                 "join stock_cards s ON s.id=se.stockcardid  " +
                 "join lots_on_hand lo ON lo.id=se.lotonhandid  " +
@@ -53,10 +57,13 @@ public class StockLedgerReportQueryBuilder {
                 "case when se.type ='CREDIT' then se.quantity else 0 end as received,  " +
                 "case when se.type ='DEBIT' then se.quantity else 0 end as issued,  " +
                 "case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment,  " +
-                "l.lotnumber,  " +
+                "l.lotnumber, l.manufacturerName, " +
                 "l.expirationdate::DATE,  " +
                 "skvvvm.valuecolumn as vvm,  " +
-                "se.quantity::integer as total  " +
+                "se.quantity::integer as total,    " +
+                " (SELECT voucherNumber from vaccine_distributions vd   " +
+                "LEFT JOIN Vaccine_distribution_line_items li ON vd.id = li.distributionId   " +
+                "WHERE li.productId = p.id limit 1) as voucherNumber  " +
                 "from stock_card_entries se  " +
                 "join stock_cards s ON s.id=se.stockcardid  " +
                 "join lots_on_hand lo ON lo.id=se.lotonhandid  " +

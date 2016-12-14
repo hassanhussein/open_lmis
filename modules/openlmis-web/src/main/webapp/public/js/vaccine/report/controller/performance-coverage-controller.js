@@ -12,26 +12,33 @@
  *
  */
 
-function PerformanceCoverageReportController($scope, $routeParams, PerformanceCoverage, Settings, ReportProductsByProgram, TreeGeographicZoneList, messageService, GetUserUnassignedSupervisoryNode) {
+function PerformanceCoverageReportController($scope, $routeParams, PerformanceCoverage, SettingsByKey, ReportProductsByProgram,  messageService,DenominatorName ) {
 
     $scope.perioderror = "";
     $scope.grayCount = {};
     $scope.regionGrayCount = {};
+    $scope.coverageReportParams ={};
     $scope.OnFilterChanged = function () {
 
-        // prevent first time loading
+        $scope.coverageReportParams =  {
+            periodStart: $scope.periodStartDate,
+            periodEnd: $scope.periodEnddate,
+            range: $scope.range,
+            district: utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone,
+            product: $scope.filter.product,
+            doseId : utils.isEmpty($scope.filter.dose) ? 0 : $scope.filter.dose
+        };
+
+         // prevent first time loading
         if (utils.isEmpty($scope.filter.product) || $scope.filter.product === "0" || utils.isEmpty($scope.periodStartDate) || utils.isEmpty($scope.periodEnddate) || !utils.isEmpty($scope.perioderror))
             return;
-
+        DenominatorName.get(  $scope.coverageReportParams,
+        function(data){
+            $scope.denominatorName=data.denominatorName;
+        });
         PerformanceCoverage.get(
-            {
-                periodStart: $scope.periodStartDate,
-                periodEnd: $scope.periodEnddate,
-                range: $scope.range,
-                district: utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone,
-                product: $scope.filter.product,
-                doseId : utils.isEmpty($scope.filter.dose) ? 0 : $scope.filter.dose
-            },
+
+            $scope.coverageReportParams,
 
             function (data) {
                 var formattedDistrictJson = [];
@@ -96,6 +103,13 @@ function PerformanceCoverageReportController($scope, $routeParams, PerformanceCo
             });
     };
 
+    $scope.exportReport   = function (type){
+        $scope.filter.pdformat = 1;
+        var params = jQuery.param($scope.coverageReportParams);
+        var url = '/reports/download/performance_coverage/' + type +'?' + params;
+        window.open(url);
+    };
+
     $scope.calculateVaccinated = function (targetPopulation, vaccinated) {
         return targetPopulation !== null && targetPopulation > 0 ? parseFloat(vaccinated / targetPopulation * 100).toFixed(2) : 0;
     };
@@ -124,27 +138,25 @@ function PerformanceCoverageReportController($scope, $routeParams, PerformanceCo
     };
 
 
-    Settings.get({}, function (data) {
 
-        _.each(data.settings.list, function (item) {
 
-            if (item.key === "VCP_GREEN")
-                $scope.colors.color_ninty_percent = item.value;
-            //else if (item.key === "VCP_BLUE")
-            //    $scope.colors.color_80_percent = item.value;
-            else if (item.key === "VCP_ORANGE")
-                $scope.colors.color_80_percent = item.value;
-            else if (item.key === "VCP_RED") {
-                $scope.colors.color_50_percent_below = item.value;
-                $scope.colors.color_50_percent_above = item.value;
-            }
-            else if (item.key === "VCP_NON_REPORTING") {
-                $scope.colors.color_non_reporting = item.value;
-            }
-        });
+    SettingsByKey.get({key: 'VCP_GREEN'}, function (data) {
+
+        $scope.colors.color_ninty_percent =data.settings.value;
     });
+    SettingsByKey.get({key: 'VCP_ORANGE'}, function (data) {
 
+        $scope.colors.color_80_percent =data.settings.value;
+    });
+    SettingsByKey.get({key: 'VCP_RED'}, function (data) {
 
+        $scope.colors.color_50_percent_below = data.settings.value;
+        $scope.colors.color_50_percent_above = data.settings.value;
+    });
+    SettingsByKey.get({key: 'VCP_NON_REPORTING'}, function (data) {
+
+        $scope.colors.color_non_reporting = data.settings.value;
+    });
     $scope.bgColorCode = function (value) {
         var percentageCoverage = $scope.calculateVaccinated(value.target, value.vaccinated);// value.coverage;
 
@@ -356,6 +368,8 @@ function PerformanceCoverageReportController($scope, $routeParams, PerformanceCo
 
     function findMonthValue(reportList, type) {
         var formattedData = [];
+        var date= new Date($scope.periodEnddate);
+        var indexValue=date.getMonth()+1;
         var grayCount = {};
         if (utils.isEmpty(reportList)) {
             return reportList;
@@ -373,7 +387,7 @@ function PerformanceCoverageReportController($scope, $routeParams, PerformanceCo
                 }
             });
             for (var key in distrctList) {
-                for (var i = 0; i < 12; i++) {
+                for (var i = 0; i < indexValue; i++) {
                     var hasValue = false;
                     for (var j = 0; j < len; j++) {
                         if (angular.equals(getPopulationKey(reportList[j], type), key) && reportList[j].month === i + 1) {

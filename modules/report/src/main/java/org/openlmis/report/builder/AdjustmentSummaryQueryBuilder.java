@@ -19,16 +19,18 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 
+
 public class AdjustmentSummaryQueryBuilder {
 
   public static String getQuery(Map params) {
 
     AdjustmentSummaryReportParam filter = (AdjustmentSummaryReportParam) params.get("filterCriteria");
     BEGIN();
-    SELECT("processing_periods_name as period");
-    SELECT(" product productDescription");
-    SELECT("product_category_name category");
-    SELECT("facility_type_name facilityType,facility_name facilityName, adjustment_type, t.description as adjustmentType, adjutment_qty adjustment, adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment, supplying_facility_name supplyingFacility");
+    SELECT("facility_code as facilityCode, facility_name facilityName, facility_type_name facilityType, d.zone_name as province");
+    SELECT("d.district_name as district, program_name as program, productcode, product productDescription, supplying_facility_name supplyingFacility");
+    SELECT("t.description  AS  adjustmentType, extract(year from processing_periods_start_date) as year, initcap(to_char(processing_periods_start_date, 'mon')) as month");
+    SELECT("adjutment_qty adjustment, processing_periods_name as period, product_category_name category, adjustment_type");
+    SELECT("adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment");
     FROM("vw_requisition_adjustment ");
       JOIN(" facilities f on f.id = vw_requisition_adjustment.facility_id ");
       JOIN(" vw_districts d on f.geographicZoneId = d.district_id ");
@@ -47,7 +49,7 @@ public class AdjustmentSummaryQueryBuilder {
       WHERE(geoZoneIsFilteredBy("d"));
     }
     if (filter.getFacility() != 0) {
-      WHERE(facilityIsFilteredBy("f.id"));
+      WHERE(facilityIsFilteredBy("vw_requisition_adjustment.facility_id"));
     }
 
     if (filter.getProductCategory() != 0L ) {
@@ -60,6 +62,9 @@ public class AdjustmentSummaryQueryBuilder {
 
     if (filter.getAdjustmentType() != null && !"0".equals(filter.getAdjustmentType()) && !filter.getAdjustmentType().isEmpty()) {
       WHERE("adjustment_type = #{filterCriteria.adjustmentType}");
+    }
+    if(filter.getFacilityOperator() != 0L){
+      WHERE("f.operatedById = " + filter.getFacilityOperator().toString());
     }
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));
     return SQL();

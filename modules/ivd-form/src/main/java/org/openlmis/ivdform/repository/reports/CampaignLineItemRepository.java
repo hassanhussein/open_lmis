@@ -31,4 +31,7 @@ public class CampaignLineItemRepository {
     mapper.update(lineItem);
   }
 
+  public void deleteFor(Long reportId) {
+    mapper.deleteLineItems(reportId);
+  }
 }

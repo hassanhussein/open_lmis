@@ -15,6 +15,10 @@ package org.openlmis.vaccine.repository.mapper.reports;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.ivdform.domain.reports.*;
+import org.openlmis.report.builder.CompletenessAndTimelinessQueryBuilder;
+import org.openlmis.report.builder.CategorizationVaccineUtilizationPerformanceQueryBuilder;
+import org.openlmis.report.builder.ClassificationVaccineUtilizationPerformanceQueryBuilder;
+import org.openlmis.report.builder.PerformanceCoverageQueryBuilder;
 import org.openlmis.vaccine.domain.reports.VaccineCoverageReport;
 import org.openlmis.vaccine.repository.mapper.reports.builder.*;
 import org.springframework.stereotype.Repository;
@@ -448,40 +452,29 @@ public interface VaccineReportMapper {
     // Performance coverage report
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageMainReportDataByDistrict")
     List<Map<String, Object>> getPerformanceCoverageMainReportDataByDistrict(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                             @Param("productId") Long productId, @Param("doseId") Long doseId);
+                                                                             @Param("productId") Long productId, @Param("doseId") Long doseId, @Param("userId") Long userId);
 
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageSummaryReportDataByDistrict")
     List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByDistrict(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                                @Param("productId") Long productId, @Param("doseId") Long doseId);
+                                                                                @Param("productId") Long productId, @Param("doseId") Long doseId, @Param("userId") Long userId);
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageMainReportDataByRegion")
     List<Map<String, Object>> getPerformanceCoverageMainReportDataByRegion(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                           @Param("productId") Long productId, @Param("doseId") Long doseId);
+                                                                           @Param("productId") Long productId, @Param("doseId") Long doseId, @Param("userId") Long userId);
 
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageSummaryReportDataByRegion")
     List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByRegion(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                              @Param("productId") Long productId, @Param("doseId") Long doseId);
+                                                                              @Param("productId") Long productId, @Param("doseId") Long doseId, @Param("userId") Long userId);
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageMainReportDataByRegionAggregate")
     List<Map<String, Object>> getPerformanceCoverageMainReportDataByRegionAggregate(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                                    @Param("productId") Long productId, @Param("doseId") Long doseId);
+                                                                                    @Param("productId") Long productId, @Param("doseId") Long doseId, @Param("userId") Long userId);
 
     @SelectProvider(type = PerformanceCoverageQueryBuilder.class, method = "selectPerformanceCoverageSummaryReportDataByRegionAggregate")
     List<Map<String, Object>> getPerformanceCoverageSummaryReportDataByRegionAggregate(@Param("startDate") Date startDate, @Param("endDate") Date endDate, @Param("districtId") Long districtId,
-                                                                                       @Param("productId") Long productId, @Param("doseId") Long doseId);
-
-
-    // Completeness and Timeliness report
-
-    @SelectProvider(type = CompletenessAndTimelinessQueryBuilder.class, method = "selectCompletenessAndTimelinessMainReportDataByDistrict")
-    List<Map<String, Object>> getCompletenessAndTimelinessMainReportDataByDistrict(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
-                                                                                   @Param("districtId") Long districtId);
-
-    @SelectProvider(type = CompletenessAndTimelinessQueryBuilder.class, method = "selectCompletenessAndTimelinessSummaryReportDataByDistrict")
-    List<Map<String, Object>> getCompletenessAndTimelinessSummaryReportDataByDistrict(@Param("startDate") Date startDate, @Param("endDate") Date endDate,
-                                                                                      @Param("districtId") Long districtId);
+                                                                                       @Param("productId") Long productId, @Param("doseId") Long doseId, @Param("userId") Long userId);
 
 
     @SelectProvider(type = AdequacyLevelReportQueryBuilder.class, method = "selectAdequacyLevelOfSupplyReportDataByDistrict")

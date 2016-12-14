@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -656,6 +655,42 @@ public class InteractiveReportController extends BaseController {
         List<StockLedgerReport> reportData =
                 (List<StockLedgerReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, reportData);
+    }
+
+    @RequestMapping(value = "/reportdata/performanceCoverage", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getPerformanceCoverageReportData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                      HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("performance_coverage");
+
+        PerformanceCoverageDataProvider dataProvider = (PerformanceCoverageDataProvider)report.getReportDataProvider();
+
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+
+        List<PerformanceCoverageReport> reportData = (List<PerformanceCoverageReport>)dataProvider.getReportBody(request.getParameterMap(),
+                request.getParameterMap(), page, max);
+
+        return new Pages(page, max, reportData);
+    }
+
+    @RequestMapping(value = "/reportdata/completenessAndTimeliness", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_VACCINE_REPORT')")
+    public CompletenessAndTimelinessReport getCompletenessAndTimelinessReportData(
+                                                  HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("completeness_and_timelness");
+
+        CompletenessAndTimelinessReportDataProvider dataProvider = (CompletenessAndTimelinessReportDataProvider)report.getReportDataProvider();
+
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+
+        CompletenessAndTimelinessReport reportData = (CompletenessAndTimelinessReport) dataProvider.
+                getCompletenessAndTimelinessReportData(request.getParameterMap());
+
+        return reportData;
     }
 
 }

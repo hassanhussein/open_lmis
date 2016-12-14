@@ -29,7 +29,17 @@ var VaccineReport = function (report) {
     this.mainProducts = _.where(this.products, {fullSupply: true});
     this.coverageLineItems = getCoverageLineItems(this.coverageLineItems, this);
     this.logisticsLineItems = getLogisticsLineItems(this.logisticsLineItems, this);
-    this.coverageLineItemViews = _.groupBy(this.coverageLineItems, 'productId');
+    this.coverageLineItemViews = [];
+    var coverages = _.groupBy(this.coverageLineItems, 'productId');
+    //insert these groups in the order of products
+    for(var i = 0; i < this.logisticsLineItems.length; i++){
+      var product = this.logisticsLineItems[i];
+      var coverageGroup = coverages[product.productId];
+      if(coverageGroup !== undefined){
+        this.coverageLineItemViews.push(coverageGroup);
+      }
+    }
+
     this.editable = (this.status === 'DRAFT' || this.status === 'REJECTED');
     this.ready = true;
   };
@@ -43,6 +53,10 @@ var VaccineReport = function (report) {
 
   VaccineReport.prototype.isCoverageTabValid = function () {
     return this.coverageLineItems.checkIfRequiredFieldsAreValid(['regularMale', 'regularFemale','outreachMale','outreachFemale']);
+  };
+
+  VaccineReport.prototype.isReportingDateValid = function(){
+    return !(this.submissionDate === undefined || this.submissionDate === null);
   };
 
   VaccineReport.prototype.isLogisticsTabValid = function () {
@@ -72,6 +86,7 @@ var VaccineReport = function (report) {
   VaccineReport.prototype.isValid = function () {
     this.validate = true;
     this.validations = {
+        submissionDate: this.isReportingDateValid(),
         logisticsTab: this.isLogisticsTabValid(),
         diseaseTab: this.isDiseaseTabValid(),
         coverageTab: this.isCoverageTabValid(),

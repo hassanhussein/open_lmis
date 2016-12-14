@@ -17,11 +17,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.core.builder.ProcessingPeriodBuilder;
-import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
@@ -42,8 +40,8 @@ import org.openlmis.ivdform.domain.reports.VaccineReport;
 import org.openlmis.ivdform.dto.ReportStatusDTO;
 import org.openlmis.ivdform.repository.VitaminRepository;
 import org.openlmis.ivdform.repository.VitaminSupplementationAgeGroupRepository;
-import org.openlmis.ivdform.repository.reports.IvdFormRepository;
 import org.openlmis.ivdform.repository.reports.ColdChainLineItemRepository;
+import org.openlmis.ivdform.repository.reports.IvdFormRepository;
 import org.openlmis.ivdform.repository.reports.StatusChangeRepository;
 import org.openlmis.ivdform.service.*;
 
@@ -111,6 +109,8 @@ public class IvdFormServiceTest {
   @InjectMocks
   IvdFormService service;
 
+  VaccineReport persistedReport;
+
   @Before
   public void setup() throws Exception {
     when(programProductService.getActiveByProgram(1L))
@@ -126,6 +126,8 @@ public class IvdFormServiceTest {
     when(ageGroupRepository.getAll())
         .thenReturn(new ArrayList<VitaminSupplementationAgeGroup>());
 
+    persistedReport = make(a(VaccineReportBuilder.defaultVaccineReport));
+
   }
 
 
@@ -137,34 +139,6 @@ public class IvdFormServiceTest {
     VaccineReport result = service.initialize(1L, 1L, 1L, 1L);
     verify(programProductService, never()).getActiveByProgram(1L);
     assertThat(result, is(report));
-  }
-
-  @Test
-  public void shouldInitializeWhenRecordIsNotFound() throws Exception {
-    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
-
-    when(repository.getByProgramPeriod(1L, 1L, 1L)).thenReturn(null);
-    when(configService.getBoolValue(ConfigurationSettingKey.DEFAULT_ZERO))
-        .thenReturn(Boolean.FALSE);
-
-    doNothing().when(repository).insert(report);
-
-    VaccineReport result = service.initialize(1L, 1L, 1L, 1L);
-
-    verify(repository).insert(Matchers.any(VaccineReport.class));
-  }
-
-  @Test
-  public void shouldGetPeriodsFor() throws Exception {
-
-  }
-
-  @Test
-  public void shouldSave() throws Exception {
-    VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
-    doNothing().when(repository).update(report, 2L);
-    service.save(report, 2L);
-    verify(repository).update(report, 2L);
   }
 
   @Test
@@ -183,9 +157,15 @@ public class IvdFormServiceTest {
   @Test
   public void shouldSubmit() throws Exception {
     VaccineReport report = make(a(VaccineReportBuilder.defaultVaccineReport));
-    doNothing().when(repository).update(report, 2L);
+    report.setId(10L);
+    when(repository.getReportIdForFacilityAndPeriod(report.getFacilityId(), report.getPeriodId()))
+        .thenReturn(report.getId());
+    when(repository.getByIdWithFullDetails(report.getId()))
+        .thenReturn(persistedReport);
+    doNothing().when(repository).update(persistedReport, report, 2L);
+    doNothing().when(repository).changeStatus(report, ReportStatus.SUBMITTED, 2L);
     service.submit(report, 2L);
-    verify(repository).update(report, 2L);
+    verify(repository).update(persistedReport, report, 2L);
     assertThat(report.getStatus(), is(ReportStatus.SUBMITTED));
   }
 

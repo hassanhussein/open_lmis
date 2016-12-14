@@ -23,6 +23,7 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.ivdform.domain.VaccineDisease;
@@ -77,6 +78,8 @@ public class VaccineReport extends BaseModel {
   private List<ColdChainLineItem> coldChainLineItems;
   private List<ReportStatusChange> reportStatusChanges;
 
+  public String rejectionComment;
+
 
   public void initializeLogisticsLineItems(List<ProgramProduct> programProducts, VaccineReport previousReport, Boolean defaultFieldsToZero) {
     logisticsLineItems = new ArrayList<>();
@@ -95,6 +98,7 @@ public class VaccineReport extends BaseModel {
       item.setProductCode(pp.getProduct().getCode());
       item.setProductName(pp.getProduct().getPrimaryName());
       item.setProductCategory(pp.getProductCategory().getName());
+      item.setDosageUnit(pp.getProduct().getDosageUnit().getCode());
       item.setDisplayOrder(pp.getDisplayOrder());
 
       if (previousReport != null) {
@@ -152,6 +156,7 @@ public class VaccineReport extends BaseModel {
       item.setTrackFemale(dose.getTrackFemale());
       item.setDisplayOrder(dose.getDisplayOrder());
       item.setDisplayName(dose.getDisplayName());
+      item.setProductName(dose.getProductName());
       item.setProductId(dose.getProductId());
       if(defaultFieldsToZero){
         item.setRegularMale(0L);
@@ -189,7 +194,7 @@ public class VaccineReport extends BaseModel {
         item.setDisplayOrder(displayOrder);
         item.setVitaminName(vitamin.getName());
         item.setVaccineVitaminId(vitamin.getId());
-
+        item.setAgeGroup(ageGroup.getName());
         if(defaultFieldsToZero){
           item.setMaleValue(0L);
           item.setFemaleValue(0L);
@@ -201,4 +206,18 @@ public class VaccineReport extends BaseModel {
     }
   }
 
+  public void validateBasicHeaders(){
+    if(this.getPeriodId() == null || this.getFacilityId() == null || this.getProgramId() == null){
+      throw new DataException("error.ivd.form.submitted.misses.required.fields");
+    }
+  }
+
+  public void copyValuesFrom(VaccineReport report) {
+    this.setRejectionComment(report.rejectionComment);
+    this.setFixedImmunizationSessions(report.fixedImmunizationSessions);
+    this.setMajorImmunizationActivities(report.majorImmunizationActivities);
+    this.setOutreachImmunizationSessions(report.outreachImmunizationSessions);
+    this.setOutreachImmunizationSessionsCanceled(report.outreachImmunizationSessionsCanceled);
+    this.setSubmissionDate(report.getSubmissionDate());
+  }
 }

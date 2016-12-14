@@ -43,6 +43,14 @@
     background:#F2F2F2 !important;
     }
 
+    td.lot-expired span{
+    color:#d58512;
+    }
+
+    td.cross span{
+    text-decoration:line-through;
+    }
+
 
     <!--th.header {-->
     <!--background: #F2F2F2; !important;-->
@@ -337,7 +345,7 @@
                         <strong for="facilityLabel" openlmis-message="label.vaccine.stock.distributed.to"></strong>
                         <span id='facility2' ng-bind="facilityToIssue.name"></span>
                     </div>
-                    <div class="span4">
+                    <div class="span5">
                         <strong id="received-date-label" openlmis-message="label.vaccine.issue.date"> </strong>
                         <span class="label-required">*</span>:&nbsp;
                         <input ng-required="true"
@@ -345,11 +353,11 @@
                                class="receivingDate"
                                name="issueDate"
                                type="text"
-                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false, maxDate:'today',minDate:period.stringStartDate}"
+                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false, maxDate:'today'}"
                                ng-model="facilityToIssue.issueDate"
                                ui-date-format="yy-mm-dd"/>
                     </div>
-                    <div class="span4">
+                    <div class="span3">
                         <strong id='issueTypeLabel' openlmis-message="label.type"> </strong>:&nbsp;
                         <span id='issueType' ng-bind="facilityToIssue.type"></span>
                     </div>
@@ -402,26 +410,29 @@
                     </tr>
                     <tr ng-class-odd="'odd'" ng-class-even="'even'" ng-init="$index%2==0?(color='odd'): (color='even')"
                         ng-repeat-start="product in category.productsToIssue">
-                        <td class="cell-input disabled last-row" rowspan="{{product.lots.length}}">
+                        <td class="cell-input disabled last-row"
+                            rowspan="{{(product.lots.length===0)?1:product.lots.length}}">
                         <span class="cell-text"  ng-bind="product.name"></span>
                     </td>
-                        <td class="cell-input disabled last-row" rowspan="{{product.lots.length}}">
+                        <td class="cell-input disabled last-row"
+                            rowspan="{{(product.lots.length===0)?1:product.lots.length}}">
                             <span class="cell-text" ng-bind="product.dosageUnit"></span>
                         </td>
                         <td class="cell-input disabled"
-                            ng-class="{'skip':product.lots === undefined,'last-row':product.lots.length==1}">
+                            ng-class="{'skip':product.lots === undefined,'last-row':product.lots.length==1,'lot-expired':product.lots[0].hasExpired}">
                         <span class="cell-text" ng-bind="product.lots[0].lotCode"></span>
+                            <span ng-show="product.lots[0].hasExpired" class="cell-text">&nbsp;(Expired)</span>
                     </td>
                         <td class="cell-input disabled"
-                            ng-class="{'skip':product.lots === undefined,'last-row':product.lots.length==1}">
+                            ng-class="{'skip':product.lots === undefined,'last-row':product.lots.length==1,'lot-expired':product.lots[0].hasExpired}">
                         <span class="cell-text" ng-bind="product.lots[0].vvmStatus"></span>
                     </td>
                         <td class="cell-input disabled"
-                            ng-class="{'skip':product.lots === undefined,'last-row':product.lots.length==1}">
+                            ng-class="{'skip':product.lots === undefined,'last-row':product.lots.length==1,'lot-expired':product.lots[0].hasExpired}">
                             <span class="cell-text" ng-bind="product.lots[0].expirationDate | date:'MMM-yyyy'"></span>
                         </td>
                         <td class="cell-input disabled "
-                            ng-class="{'last-row':product.lots.length==1, 'max-error':(product.lots[0].quantityOnHand < product.lots[0].quantity)}">
+                            ng-class="{'last-row':product.lots.length==1, 'max-error':(product.lots[0].quantityOnHand < product.lots[0].quantity),'lot-expired':product.lots[0].hasExpired,'cross':product.lots[0].hasExpired}">
                             <span class="cell-text" ng-bind="product.lots[0].quantityOnHand | number"
                                   ng-show="product.lots.length > 0"></span>
                             <span class="cell-text" ng-bind="product.totalQuantityOnHand | number"
@@ -435,7 +446,7 @@
                                    ng-change="updateCurrentTotal(product)"
                                    numeric-validator="positiveInteger"
                                    divisible-by-presentation="{{product.presentation}}"
-                                   ng-disabled="product.lots.length > 1 && product.lots[1].quantity >0"
+                                   ng-disabled="(product.lots.length > 1 && !product.lots[1].hasExpired && product.lots[1].quantity >0) || product.lots[0].hasExpired"
                                    maxlength="8"
                                    type="text"/>
                             <input ng-show="product.lots === undefined"
@@ -444,6 +455,7 @@
                                    name="{{product.name}}" ng-model="product.quantity"
                                    ng-change="updateCurrentTotal(product)"
                                    numeric-validator="positiveInteger"
+                                   ng-disabled="product.totalQuantityOnHand === 0"
                                    maxlength="8"
                                    type="text"
                                    divisible-by-presentation="{{product.presentation}}"
@@ -458,17 +470,18 @@
                     </td>
                 </tr>
                     <tr ng-repeat-end ng-repeat="lot in product.lots" ng-show="!$first" ng-class="color">
-                        <td class="cell-input disabled" ng-class="{'last-row':$last}">
+                        <td class="cell-input disabled" ng-class="{'last-row':$last,'lot-expired':lot.hasExpired}">
                         <span class="cell-text" ng-bind="lot.lotCode"></span>
+                            <span ng-show="lot.hasExpired" class="cell-text">&nbsp;(Expired)</span>
                     </td>
-                        <td class="cell-input disabled" ng-class="{'last-row':$last}">
+                        <td class="cell-input disabled" ng-class="{'last-row':$last,'lot-expired':lot.hasExpired}">
                         <span class="cell-text" ng-bind="lot.vvmStatus"></span>
                     </td>
-                        <td class="cell-input disabled" ng-class="{'last-row':$last}">
+                        <td class="cell-input disabled" ng-class="{'last-row':$last,'lot-expired':lot.hasExpired}">
                             <span class="cell-text" ng-bind="lot.expirationDate | date:'MMM-yyyy'"></span>
                         </td>
                         <td class="cell-input disabled"
-                            ng-class="{'last-row':$last, 'max-error':lot.quantityOnHand < lot.quantity}">
+                            ng-class="{'last-row':$last, 'max-error':lot.quantityOnHand < lot.quantity,'lot-expired':lot.hasExpired,'cross':lot.hasExpired}">
                             <span class="cell-text" ng-bind="lot.quantityOnHand | number"></span>
                     </td>
                         <td class="col-general cell-input" ng-class="{'last-row':$last}">
@@ -481,8 +494,8 @@
                                    numeric-validator="positiveInteger"
                                    maxlength="8" type="text"
                                    divisible-by-presentation="{{product.presentation}}"
-                                   ng-disabled="product.lots[$index-1].quantity ===undefined || product.lots[$index-1].quantity != product.lots[$index-1].quantityOnHand ||
-                                        product.lots[$index +1].quantity >0"
+                                   ng-disabled="((!product.lots[$index-1].hasExpired && (product.lots[$index-1].quantity ===undefined || product.lots[$index-1].quantity != product.lots[$index-1].quantityOnHand)) ||
+                                        product.lots[$index +1].quantity >0) || lot.hasExpired"
                                     />
                     </td>
                 </tr>

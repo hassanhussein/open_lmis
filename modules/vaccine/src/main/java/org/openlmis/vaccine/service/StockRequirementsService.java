@@ -112,7 +112,7 @@ public class StockRequirementsService
                     requirements.setIsa(isa);
                     requirements.setProductId(productId);
                     requirements.setProductName(facilityProgramProduct.getProduct().getPrimaryName());
-
+                    requirements.setCurrentPrice(facilityProgramProduct.getCurrentPrice());
                     //Set population
                     Long populationSource = (isa != null) ? isa.getPopulationSource() : null;
                     requirements.setPopulation(populationService.getPopulation(facility, facilityProgramProduct.getProgram(), populationSource));
@@ -149,7 +149,7 @@ public class StockRequirementsService
     private void save(StockRequirements requirements)
     {
         StockRequirementsDTO existingRequirement = repository.getByProductId(requirements.getProgramId(), requirements.getFacilityId(), requirements.getProductId(), requirements.getYear());
-        if(requirements.getIsaValue() >0 && existingRequirement==null) {
+        if (requirements.getIsaValue() >= 0 && existingRequirement == null) {
             repository.save(requirements);
         }
 
@@ -185,7 +185,7 @@ public class StockRequirementsService
                 newSupplyRequirements.setFacilityCode(vaccineRequirements.getFacilityCode());
                 newSupplyRequirements.setYear(year);
                 newSupplyRequirements.setPopulation(vaccineRequirements.getPopulation());
-
+                newSupplyRequirements.setCurrentPrice(vaccineRequirements.getCurrentPrice());
                 //ISA
                 ISA isa = facilityProgramProduct.getOverriddenIsa();
                 if (isa == null) {
@@ -249,6 +249,7 @@ public class StockRequirementsService
                 newSupplyRequirements.setProductId(supplyProductId);
                 newSupplyRequirements.setFacilityCode(vaccineRequirements.getFacilityCode());
                 newSupplyRequirements.setYear(year);
+                newSupplyRequirements.setCurrentPrice(vaccineRequirements.getCurrentPrice());
 
                 Integer vaccineAnnualNeed=vaccineRequirements.getAnnualNeed();
                 Integer vaccinePresentation=vaccineRequirements.getPresentation();
@@ -287,6 +288,7 @@ public class StockRequirementsService
                     }
                 }
                 else{
+                    if (newSupplyRequirements.getIsaValue() != null)
                     save(newSupplyRequirements);
                 }
                 setSafetyBox(programProductsByProgram, newSupplyRequirements);
@@ -313,7 +315,7 @@ public class StockRequirementsService
                         newSafetyBoxRequirements.setFacilityId(supplyRequirements.getFacilityId());
                         newSafetyBoxRequirements.setProductId(safetyBox.getId());
                         newSafetyBoxRequirements.setYear(supplyRequirements.getYear());
-
+                        newSafetyBoxRequirements.setCurrentPrice(supplyRequirements.getCurrentPrice());
                         ISA isa = facilityProgramProduct.getOverriddenIsa();
                         if (isa == null) {
                             if (facilityProgramProduct.getProgramProductIsa() != null) {
@@ -321,7 +323,8 @@ public class StockRequirementsService
                             }
                         }
                         newSafetyBoxRequirements.setIsa(isa);
-                        Double safetyBoxIsaValue=((supplyRequirements.getAnnualNeed()/100)*isa.getWastageFactor())/12;
+                        Double supplyAnnualNeed = (supplyRequirements.getAnnualNeed() != null) ? supplyRequirements.getAnnualNeed() : 0.0;
+                        Double safetyBoxIsaValue = ((supplyAnnualNeed / 100) * isa.getWastageFactor()) / 12;
                         safetyBoxIsaValue = (safetyBoxIsaValue < 1) ? 1 : safetyBoxIsaValue;
                         newSafetyBoxRequirements.setIsaValue(safetyBoxIsaValue.intValue());
 

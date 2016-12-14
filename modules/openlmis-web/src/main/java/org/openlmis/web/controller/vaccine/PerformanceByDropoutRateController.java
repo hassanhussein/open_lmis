@@ -14,35 +14,36 @@ package org.openlmis.web.controller.vaccine;
 
 import org.apache.log4j.Logger;
 import org.openlmis.core.web.OpenLmisResponse;
-
-import org.openlmis.vaccine.domain.reports.DropoutProduct;
-import org.openlmis.vaccine.domain.reports.PerformanceByDisrictReport;
-
-import org.openlmis.vaccine.service.reports.PerformanceByDropoutRateByDistrictService;
+import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.report.model.report.vaccine.DropoutProduct;
+import org.openlmis.report.model.report.vaccine.PerformanceByDisrictReport;
+import org.openlmis.report.service.PerformanceByDropoutRateByDistrictService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/vaccine/report/")
-public class PerformanceByDropoutRateController {
+public class PerformanceByDropoutRateController extends BaseController{
     public static final  String PERFORMANCE_BY_DROPOUT_RATE_LIST="PerformanceByDropoutRateList";
     public static final  String DROPOUT_PRODUCT_LIST="dropoutProductsList";
     private static final Logger LOGGER = Logger.getLogger(PerformanceByDropoutRateController.class);
   @Autowired
     private PerformanceByDropoutRateByDistrictService service;
     @RequestMapping(value = "performanceByDropoutRateByDistrict", method = RequestMethod.GET, headers = "Accept=application/json")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_VACCINE_REPORT')")
     public ResponseEntity<OpenLmisResponse> getPerformanceByDropoutRateList( HttpServletRequest request){
         PerformanceByDisrictReport performanceByDropoutRateByDistrictList=null;
+        Long userId=this.loggedInUserId(request);
 
         try {
-            performanceByDropoutRateByDistrictList=service.loadPerformanceByDropoutRateDistrictReports(request.getParameterMap());
+            performanceByDropoutRateByDistrictList=service.loadPerformanceByDropoutRateDistrictReports(request.getParameterMap(),userId);
         }catch (Exception ex){
             LOGGER.warn(" Exception is :" ,ex);
         }

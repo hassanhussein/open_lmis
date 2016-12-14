@@ -102,6 +102,7 @@
                     <th openlmis-message="label.equipment.year.of.installation"></th>
                     <th openlmis-message="label.equipment.age"></th>
                     <th openlmis-message="label.equipment.replacement.year"></th>
+                    <th openlmis-message="label.delete"></th>
                     <th ng-show="">Temperature Status</th>
                 </tr>
                 </thead>
@@ -149,6 +150,7 @@
                     <td>{{item.yearOfInstallation}}</td>
                     <td>{{getAge(item.yearOfInstallation)}}</td>
                     <td>{{getReplacementYear(item.yearOfInstallation)}}</td>
+                    <td><button ng-show="hasPermission('DELETE_EQUIPMENT_INVENTORY')" class="btn btn-danger" ng-click="deleteInventory(item.id)">Delete</button></td>
                     <td ng-show =""><span>
                          <a ng-show="item.equipment.id" class="btn btn-primary" ng-click="updateTemperatureStatusModal(item)"
                             ng-href="">
@@ -163,6 +165,8 @@
                 <thead>
                 <tr class="gradient-header">
                     <th class="col-row-number">#</th>
+                    <th openlmis-message="label.equipment.district"></th>
+                    <th openlmis-message="label.equipment.facility"></th>
                     <th openlmis-message="label.equipment.equipment"></th>
                     <th openlmis-message="label.equipment.manufacturer"></th>
                     <th openlmis-message="label.equipment.model"></th>
@@ -173,6 +177,8 @@
                 <tbody>
                 <tr ng-repeat="item in inventory">
                     <td>{{$index + 1}}</td>
+                    <td>{{item.facility.geographicZone.name}}</td>
+                    <td>{{item.facility.name}}</td>
                     <td>
                         <a ng-href="#/edit/{{selectedType}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}/{{currentPage}}">{{item.equipment.name}}</a>
                     </td>

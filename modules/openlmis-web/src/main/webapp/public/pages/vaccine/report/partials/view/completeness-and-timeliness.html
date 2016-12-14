@@ -34,9 +34,6 @@
         font-weight:bold;
     }
 
-    .NONREPORTING_rows{
-        background-color: #ff0000;
-    }
 
 </style>
 <div class="row-fluid">
@@ -52,7 +49,7 @@
                 <div  class="clearfix">
                     <!--================================ filter start ====================-->
                     <vaccine-zone-filter class="horizontalFilters form-cell" facilityid="filter.facility" faccility="false" pro="filter.program" user_geo_level="user_geo_level" zones="zones" val="filter.zone" ></vaccine-zone-filter>
-                    <static-year-filter year="year" startdate="periodStartDate" enddate="periodEnddate" ></static-year-filter>
+                    <static-year-filter perioderror="perioderror" year="year" startdate="periodStartDate" enddate="periodEnddate" ></static-year-filter>
                     <!--======================== filter end =========================-->
                 </div>
             </form>
@@ -72,6 +69,10 @@
         <div class="content-body">
         <div style="font-weight: normal" ng-show="datarows == undefined || datarows.length == 0" openlmis-message="label.report.no.data.to.show"></div>
             <div id="parent" ng-show="datarows.length > 0">
+                <div class="box-icon" style="float:right;">
+                    <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+                    <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+                </div>
                     <h2 openlmis-message="completeness.and.timliness.header.comp.and.tim.by.district"></h2>
                     <table class="rnr-table table-bordered table">
                         <thead>
@@ -109,32 +110,32 @@
                         <tbody>
                             <tr ng-repeat-start="d in datarows"></tr>
                              <tr ng-repeat="row in d.data">
-                                 <td >{{ d.data[$index-1].region_name == row.region_name  ? '' : row.region_name }}</td>
-                                 <td >{{ d.data[$index-1].district_name == row.district_name ? '' : row.district_name }}</td>
-                                 <td class="{{row.reporting_status}}_rows"  style="background-color : {{bgColorCode(row)}}" >{{row.period_name}}</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}"  >{{ row.reporting_status === "REPORTING" ? getLocalMessage('label.yes') : getLocalMessage('label.no')  }}</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}"  >{{row.expected | number}}</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}"  >{{row.reported | number}}</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}" >{{row.late | number}}</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}"  >{{row.percent_reported}}%</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}" >{{row.percent_late}}%</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}" >{{row.fixed | number}}</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}" >{{row.outreach | number}}</td>
-                                 <td class="number {{row.reporting_status}}_rows" style="background-color : {{bgColorCode(row)}}" >{{row.session_total | number}}</td>
+                                 <td >{{ d.data[$index-1].regionName == row.regionName  ? '' : row.regionName }}</td>
+                                 <td >{{ d.data[$index-1].districtName == row.districtName ? '' : row.districtName }}</td>
+                                 <td class="{{row.reportingstatus}}_rows"  >{{row.periodName}}</td>
+                                 <td class="number"  >{{ row.reportingStatus === "REPORTING" ? getLocalMessage('label.yes') : getLocalMessage('label.no')  }}</td>
+                                 <td class="number"  >{{row.expected | number}}</td>
+                                 <td class="number"  >{{row.reported | number}}</td>
+                                 <td class="number" >{{row.late | number}}</td>
+                                 <td class="number" style="background-color : {{bgColorCode(row)}}" >{{row.percentReported}}%</td>
+                                 <td class="number" style="background-color : {{bgColorCode(row)}}" >{{row.percentLate}}%</td>
+                                 <td class="number" >{{row.fixed | number}}</td>
+                                 <td class="number" >{{row.outreach | number}}</td>
+                                 <td class="number" >{{row.sessionTotal | number}}</td>
                             </tr>
                             <tr  ng-if="d.subtotal" class="aggregate-row">
                                 <td></td>
                                 <td class="aggregate-row">Annual Report Rate</td>
                                 <td class="aggregate-row"></td>
-                               <td class="aggregate-row"  ></td>
+                               <td class="aggregate-row"></td>
                                 <td class="number aggregate-row" >{{d.subtotal.expected | number}}</td>
                                 <td class="number aggregate-row" >{{d.subtotal.reported | number}}</td>
                                 <td class="number aggregate-row" >{{d.subtotal.late | number}}</td>
-                                <td class="number aggregate-row" >{{d.subtotal.reported /d.subtotal.expected * 100 | number:0}}%</td>
-                                <td class="number aggregate-row" >{{d.subtotal.late /d.subtotal.reported * 100 | number:0}}%</td>
+                                <td class="number aggregate-row" >{{d.subtotal.reported /d.subtotal.expected * 100 | number:2}}%</td>
+                                <td class="number aggregate-row" >{{d.subtotal.late /d.subtotal.reported * 100 | number:2}}%</td>
                                 <td class="number aggregate-row" >{{d.subtotal.fixed | number}}</td>
                                 <td class="number aggregate-row" >{{d.subtotal.outreach | number}}</td>
-                                <td class="number aggregate-row" >{{d.subtotal.session_total | number}}</td>
+                                <td class="number aggregate-row" >{{d.subtotal.sessionTotal | number}}</td>
                             </tr>
                             <tr ng-repeat-end ng-if="d.grandtotal" class="aggregate-row">
                                 <td></td>
@@ -144,11 +145,11 @@
                                 <td class="number aggregate-row" >{{d.grandtotal.expected | number}}</td>
                                 <td class="number aggregate-row" >{{d.grandtotal.reported | number}}</td>
                                 <td class="number aggregate-row" >{{d.grandtotal.late | number}}</td>
-                                <td class="number aggregate-row" >{{d.grandtotal.reported /d.grandtotal.expected * 100 | number:0}}%</td>
-                                <td class="number aggregate-row" >{{d.grandtotal.lated /d.grandtotal.reported * 100 | number:0}}%</td>
+                                <td class="number aggregate-row" >{{d.grandtotal.reported /d.grandtotal.expected * 100 | number:2}}%</td>
+                                <td class="number aggregate-row" >{{d.grandtotal.late /d.grandtotal.reported * 100 | number:2}}%</td>
                                 <td class="number aggregate-row" >{{d.grandtotal.fixed | number}}</td>
                                 <td class="number aggregate-row" >{{d.grandtotal.outreach | number}}</td>
-                                <td class="number aggregate-row" >{{d.grandtotal.session_total | number}}</td>
+                                <td class="number aggregate-row" >{{d.grandtotal.sessionTotal | number}}</td>
                             </tr>
                         </tbody>
                     </table>

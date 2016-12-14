@@ -12,16 +12,17 @@
 package org.openlmis.web.controller.vaccine.inventory;
 
 
-import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
-import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.domain.FacilityTypeApprovedProduct;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramProductService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-
 import org.openlmis.report.util.Constants;
 import org.openlmis.reporting.model.Template;
 import org.openlmis.reporting.service.JasperReportsViewFactory;
@@ -34,12 +35,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
+import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.*;
 
 import static org.openlmis.core.web.OpenLmisResponse.response;
@@ -55,6 +58,8 @@ public class VaccineInventoryController extends BaseController {
     private static final String FACILITY_TYPE_PROGRAM_PRODUCT_LIST = "facilityProduct";
 
     private static final  String PRINT_DEMAND_FORECASTING = "demand-forecasting";
+
+    private static  final  String FILE_NAME = "demand_forecasting";
 
     @Autowired
     ProgramService programService;
@@ -108,54 +113,73 @@ public class VaccineInventoryController extends BaseController {
     }
 
     //TODO To delete this code on production
-    @RequestMapping(value = "delete-requisitions", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity deleteRequisitions(){
-        return OpenLmisResponse.response("deleteRequisitions", service.deleteRequisitions());
-    }
-
-    @RequestMapping(value = "delete-distributions", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity deleteDistributions(){
-        return OpenLmisResponse.response("deleteDistributions", service.deleteDistributions());
-    }
-
-    @RequestMapping(value = "delete-stock-cards", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity deleteStockCards() {
-        return OpenLmisResponse.response("deleteStockCards", service.deleteStockCards());
-    }
-
-    @RequestMapping(value = "delete-lots", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity deleteLots() {
-        return OpenLmisResponse.response("deleteLots", service.deleteLots());
-    }
+//    @RequestMapping(value = "delete-requisitions", method = GET, headers = ACCEPT_JSON)
+//    public ResponseEntity deleteRequisitions(){
+//        return OpenLmisResponse.response("deleteRequisitions", service.deleteRequisitions());
+//    }
+//
+//    @RequestMapping(value = "delete-distributions", method = GET, headers = ACCEPT_JSON)
+//    public ResponseEntity deleteDistributions(){
+//        return OpenLmisResponse.response("deleteDistributions", service.deleteDistributions());
+//    }
+//
+//    @RequestMapping(value = "delete-stock-cards", method = GET, headers = ACCEPT_JSON)
+//    public ResponseEntity deleteStockCards() {
+//        return OpenLmisResponse.response("deleteStockCards", service.deleteStockCards());
+//    }
+//
+//    @RequestMapping(value = "delete-lots", method = GET, headers = ACCEPT_JSON)
+//    public ResponseEntity deleteLots() {
+//        return OpenLmisResponse.response("deleteLots", service.deleteLots());
+//    }
     //TODO  End To delete this code on production
 
     public static String  getCommaSeparatedIds(List<Long> idList){
         return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
     }
 
-    @RequestMapping(value = "demand-forecasting/print", method = GET, headers = ACCEPT_JSON)
-    public ModelAndView printDemandForecasting(HttpServletRequest request) throws JRException, IOException, ClassNotFoundException {
-        Long userId = loggedInUserId(request);
-        Template orPrintTemplate = templateService.getByName(PRINT_DEMAND_FORECASTING);
-        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
-        Map<String, Object> map = new HashMap<>();
-        map.put("format", "pdf");
-        Locale currentLocale = messageService.getCurrentLocale();
-        map.put(JRParameter.REPORT_LOCALE, currentLocale);
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
-        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
-        Resource reportResource = new ClassPathResource("report");
-        Resource imgResource = new ClassPathResource("images");
-        ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
-        map.put(Constants.OPERATOR_NAME, configuration.getValue());
-        configuration=  settingService.getByKey(Constants.REPORT_PROGRAM_TITLE);
-        map.put(Constants.REPORT_PROGRAM_TITLE,configuration.getValue());
-        String separator = System.getProperty("file.separator");
-        map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
-        map.put("FACILITY_ID", facilityService.getHomeFacility(userId).getId());
 
-        return new ModelAndView(jasperView, map);
-    }
+ @RequestMapping(value = "demandForecasting/print/{format}", method = GET, headers = ACCEPT_JSON)
+ public ModelAndView handleRequest(HttpServletRequest httpServletRequest,
+                                   @PathVariable String format) throws Exception {
 
+     Long userId = loggedInUserId(httpServletRequest);
+     Template dfPrintTemplate = templateService.getByName(PRINT_DEMAND_FORECASTING);
+
+     Map<String, Object> map = new HashMap<>();
+
+     //Default format to pdf
+     if (StringUtils.hasText(format)) {
+         if (!(format.equalsIgnoreCase("pdf") || format.equalsIgnoreCase("html")
+                 || format.equalsIgnoreCase("csv") || format.equalsIgnoreCase("xls"))) {
+             format = "pdf";
+         }
+     } else {
+         format = "pdf";
+     }
+     // get the View that will render the report.
+     // in actual controller, based on report id requested, get the report name and build URL and use
+    AbstractJasperReportsSingleFormatView jasperView;
+    jasperView = jasperReportsViewFactory.getJasperReportsView(
+                 httpServletRequest, null, dfPrintTemplate, format,
+                 FILE_NAME
+    );
+     // add parameters used by the report
+     Locale currentLocale = messageService.getCurrentLocale();
+     map.put(JRParameter.REPORT_LOCALE, currentLocale);
+     ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+     map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
+     Resource reportResource = new ClassPathResource("report");
+     Resource imgResource = new ClassPathResource("images");
+     ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
+     map.put(Constants.OPERATOR_NAME, configuration.getValue());
+     configuration = settingService.getByKey(Constants.REPORT_PROGRAM_TITLE);
+     map.put(Constants.REPORT_PROGRAM_TITLE, configuration.getValue());
+     String separator = System.getProperty("file.separator");
+     map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
+     map.put("FACILITY_ID", facilityService.getHomeFacility(userId).getId());
+
+     return new ModelAndView(jasperView, map);
+ }
 
 }

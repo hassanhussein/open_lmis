@@ -140,7 +140,7 @@ public interface FacilityMapper {
   @Select("SELECT id FROM facilities WHERE LOWER(code) = LOWER(#{code})")
   Long getIdForCode(String code);
 
-  @Select("SELECT DISTINCT f.code, f.name, f.description, f.id FROM facilities f " +
+  @Select("SELECT DISTINCT f.code, f.name, f.description, f.id, f.geographicZoneId FROM facilities f " +
     "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
     "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
     "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programId = ps.programId AND rgps.requisitionGroupId=rgm.requisitionGroupId)" +
@@ -151,6 +151,9 @@ public interface FacilityMapper {
     "AND ps.active = TRUE " +
     "AND f.virtualFacility = FALSE " +
       " ORDER BY f.name ")
+  @Results(value = {
+      @Result(property = "geographicZone.id", column = "geographicZoneId")
+  })
   List<Facility> getFacilitiesBy(@Param(value = "programId") Long programId,
                                  @Param(value = "requisitionGroupIds") String requisitionGroupIds);
 
@@ -377,16 +380,16 @@ public interface FacilityMapper {
     }
   }
 
-  @Select({"SELECT id as userId, username as name, cellphone as contact ",
-      "FROM users ",
+  @Select({"SELECT u.id as userId, u.firstName || ' ' || u.lastName as name, u.cellphone as contact, f.name as facilityName ",
+      "FROM users u join facilities f on f.id = u.facilityId ",
       "WHERE ",
-      " active = true and facilityId = #{facilityId}"})
+      " u.active = true and u.facilityId = #{facilityId}"})
   List<FacilityContact> getSmsContacts(Long facilityId);
 
-  @Select({"SELECT id as userId, username as name, email as contact ",
-      "FROM users ",
+  @Select({"SELECT id as userId, u.firstName || ' ' || u.lastName as name, email as contact, f.name as facilityName ",
+      "FROM users u join facilities f on f.id = u.facilityId ",
       "WHERE ",
-      " active = true and facilityId = #{facilityId}"})
+      " u.active = true and u.facilityId = #{facilityId}"})
   List<FacilityContact> getEmailContacts(Long facilityId);
 
     @Select("SELECT DISTINCT userid as userId, username as name, email as contact   \n" +

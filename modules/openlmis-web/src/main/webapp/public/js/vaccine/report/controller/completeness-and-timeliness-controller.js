@@ -22,36 +22,48 @@ function CompletenesssAndTimelinessReportController($scope, CompletenessAndTimel
             }
         });
     });
-       $scope.OnFilterChanged = function () {
+
+    $scope.exportReport   = function (type){
+        $scope.filter.pdformat = 1;
+        var params = jQuery.param($scope.timelinessReportParams);
+        var url = '/reports/download/completeness_and_timelness/' + type +'?' + params;
+        window.open(url);
+    };
+
+    $scope.timelinessReportParams ={};
+
+
+
+    $scope.OnFilterChanged = function () {
 
         // prevent first time loading
         if (utils.isEmpty($scope.periodStartDate) || utils.isEmpty($scope.periodEnddate) || !utils.isEmpty($scope.perioderror))
             return;
 
+           $scope.timelinessReportParams =  {
+               periodStart: $scope.periodStartDate,
+               periodEnd:   $scope.periodEnddate,
+               range:       $scope.range,
+               district:    utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone
+           };
 
-         CompletenessAndTimeliness.get(
-            {
-
-                periodStart: $scope.periodStartDate,
-                periodEnd:   $scope.periodEnddate,
-                range:       $scope.range,
-                district:    utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone,
-            },
+        CompletenessAndTimeliness.get(
+             $scope.timelinessReportParams ,
 
             function (data) {
 
-                    var columnKeysToBeAggregated = ["target", "expected", "reported", "late", "fixed", "outreach", "session_total"];
-                    var districtNameKey = "district_name";
+                    var columnKeysToBeAggregated = ["target", "expected", "reported", "late", "fixed", "outreach", "sessionTotal"];
+                    var districtNameKey = "districtName";
                     var includeGrandTotal = true;
 
                      $scope.error = "";
-                     $scope.datarows = utils.getDistrictBasedReportDataWithSubAndGrandTotal(data.completenessAndTimeliness.mainreport,
+                     $scope.datarows = utils.getDistrictBasedReportDataWithSubAndGrandTotal(data.completenessAndTimelinessReport.mainReport,
                                                                                             districtNameKey,
                                                                                             columnKeysToBeAggregated,
                                                                                             includeGrandTotal);
-                     $scope.summary = data.completenessAndTimeliness.summary;
-                     $scope.summaryPeriodLists = data.completenessAndTimeliness.summaryPeriodLists;
-                     $scope.aggregateSummary = data.completenessAndTimeliness.aggregateSummary;
+                     $scope.summary = data.completenessAndTimelinessReport.summaryReport;
+                     $scope.summaryPeriodLists = data.completenessAndTimelinessReport.summaryPeriodList;
+                     $scope.aggregateSummary = data.completenessAndTimelinessReport.aggregateSummary;
 
                      // Get a unique periods for the header
                      var uniquePeriods    = _.chain($scope.summary).indexBy("period").values().value();
@@ -77,7 +89,7 @@ function CompletenesssAndTimelinessReportController($scope, CompletenessAndTimel
                 if(item.year === summary[i].year && item.month === summary[i].month) {
                     $scope.expected.push     ({total:summary[i].expected});
                     $scope.reported.push     ({total:summary[i].reported});
-                    $scope.ontime.push       ({total:summary[i].ontime});
+                    $scope.ontime.push       ({total:summary[i].onTime});
                     $scope.completeness.push ({total:summary[i].reported === 0 ? 0 : Math.round(((summary[i].reported/summary[i].expected) * 100)*100)/100});
                     $scope.timelines.push    ({total:summary[i].ontime === 0 ? 0 : Math.round(((summary[i].ontime/summary[i].reported) * 100)*100)/100});
                     break;
@@ -97,7 +109,7 @@ function CompletenesssAndTimelinessReportController($scope, CompletenessAndTimel
 
     $scope.bgColorCode = function (value) {
 
-        if ( value.reporting_status !== 'REPORTING') {
+        if ( value.reportingStatus !== 'REPORTING') {
             return $scope.color_non_reporting;
         }else{
             return "white";

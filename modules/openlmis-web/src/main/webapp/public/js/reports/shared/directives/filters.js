@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-app.directive('filterContainer', ['$routeParams', '$location', 'messageService', function ($routeParams, $location, messageService) {
+app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'messageService', function ($routeParams, $location, $timeout, messageService) {
     return {
         restrict: 'EA',
         scope: true,
@@ -70,20 +70,25 @@ app.directive('filterContainer', ['$routeParams', '$location', 'messageService',
             };
 
             function isValid() {
-                var all_required_fields_set = true;
-
+                if($scope.noRequiredParameter){
+                    return true;
+                }
+                var all_required_fields_set = false;
                 // check if all of the required parameters have been specified
                 if (!angular.isUndefined($scope.requiredFilters)) {
+                    all_required_fields_set = true;
                     var requiredFilters = _.values($scope.requiredFilters);
+                    if(requiredFilters.length === 0){
+                      all_required_fields_set = false;
+                    }
                     for (var i = 0; i < requiredFilters.length; i++) {
                         var field = requiredFilters[i];
-                        if (isUndefined($scope.filter[field]) || _.isEmpty($scope.filter[field]) || $scope.filter[field] === 0 || $scope.filter[field] === -1) {
+                        if (isUndefined($scope.filter[field]) || $scope.filter[field] === '' || $scope.filter[field] === 0 || $scope.filter[field] === -1) {
                             all_required_fields_set = false;
                             break;
                         }
                     }
                 }
-
                 return all_required_fields_set;
             }
 
@@ -99,9 +104,10 @@ app.directive('filterContainer', ['$routeParams', '$location', 'messageService',
 
 
             $scope.$on('filter-changed', $scope.filterChanged);
-            $scope.filterChanged();
+            $timeout($scope.filterChanged, 100);
         },
-        link: function (scope) {
+        link: function (scope, elm, attr) {
+            scope.noRequiredParameter = ( "true" === (attr.noRequiredParam) );
             angular.extend(scope, {
                 showMoreFilters: false,
 
@@ -115,7 +121,6 @@ app.directive('filterContainer', ['$routeParams', '$location', 'messageService',
                     }
                     return array;
                 },
-
                 toggleMoreFilters: function () {
                     scope.showMoreFilters = !scope.showMoreFilters;
                 }
@@ -278,7 +283,11 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
                     ReportProgramSchedules.get({
                         program: scope.filter.program
                     }, function (data) {
-                        scope.schedules = scope.unshift(data.schedules, 'report.filter.select.group');
+                      if(data.schedules.length === 1){
+                        scope.filter.schedule = data.schedules[0].id;
+                        scope.notifyFilterChanged('schedule-changed');
+                      }
+                      scope.schedules = scope.unshift(data.schedules, 'report.filter.select.group');
                     });
                 };
 
@@ -301,12 +310,17 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
                 TreeGeographicZoneListByProgram.get({
                     program: $scope.filter.program
                 }, function (data) {
-                    $scope.zones = data.zone;
-
+                    $scope.zones = [data.zone];
+                    if($scope.selectedZone === undefined || $scope.selectedZone === null){
+                      $scope.selectedZone = data.zone;
+                    }
                 });
             } else {
                 TreeGeographicZoneList.get(function (data) {
-                    $scope.zones = data.zone;
+                    $scope.zones = [data.zone];
+                    if($scope.selectedZone === undefined){
+                        $scope.selectedZone = data.zone;
+                    }
                 });
             }
         };
@@ -327,7 +341,21 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
             restrict: 'E',
             require: '^filterContainer',
             link: function (scope, elm, attr) {
+                scope.$watch('selectedZone', function(){
+                  if(scope.$parent.filter !== undefined && scope.selectedZone !== undefined && scope.selectedZone !== null){
+                    scope.$parent.filter.zone = scope.selectedZone.id;
+                    scope.$parent.filter.zoneName = scope.selectedZone.name.replace(/%20/g, '+');
+                    scope.notifyFilterChanged('zone-filter-changed');
+                  }
+                });
+
                 scope.registerRequired('zone', attr);
+                if(scope.filter !== undefined && scope.filter !== null && scope.filter.zone !== undefined){
+                  scope.selectedZone = {
+                      id: scope.filter.zone,
+                    name: scope.filter.zoneName.replace(/\+/g, ' ')
+                  };
+                }
 
                 if (attr.districtOnly) {
                     scope.showDistrictOnly = true;
@@ -448,9 +476,6 @@ app.directive('productCategoryFilter', ['ProductCategoriesByProgram', '$routePar
             require: '^filterContainer',
             link: function (scope, elm, attr) {
                 scope.registerRequired('productCategory', attr);
-                if (!$routeParams.productCategory) {
-                    scope.productCategories = scope.unshift([], 'report.filter.all.product.categories');
-                }
 
                 var onProgramChanged = function () {
                     ProductCategoriesByProgram.get({
@@ -469,30 +494,45 @@ app.directive('productCategoryFilter', ['ProductCategoriesByProgram', '$routePar
 app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
     function (FacilitiesByProgramParams, $routeParams) {
 
-        var onPgCascadedVarsChanged = function ($scope) {
+        var onPgCascadedVarsChanged = function ($scope, required) {
+
+            var filter_caption = '';
+
+            if(!isUndefined(required) && angular.equals(required, 'true') ){
+                filter_caption =  'report.filter.select.facility';
+            }
+            else {
+                filter_caption = 'report.filter.all.facilities';
+            }
 
             if (!$routeParams.program) {
-                $scope.facilities = $scope.unshift([], 'report.filter.all.facilities');
+                if(isUndefined(required))
+                    $scope.facilities = $scope.unshift([], filter_caption);
+                else
+                    $scope.facilities = $scope.unshift([], filter_caption);
             }
 
             if (isUndefined($scope.filter.program) || $scope.filter.program === 0) {
                 return;
             }
 
-            var program = (angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
-            var schedule = (angular.isDefined($scope.filter.schedule)) ? $scope.filter.schedule : 0;
-            var facilityType = (angular.isDefined($scope.filter.facilityType)) ? $scope.filter.facilityType : 0;
-            var requisitionGroup = (angular.isDefined($scope.filter.requisitionGroup)) ? $scope.filter.requisitionGroup : 0;
-            var zone = (angular.isDefined($scope.filter.zone)) ? $scope.filter.zone : 0;
+            var program = (!utils.isEmpty($scope.filter.program)) ? $scope.filter.program : 0;
+            var schedule = (!utils.isEmpty($scope.filter.schedule)) ? $scope.filter.schedule : 0;
+            var facilityType = (!utils.isEmpty($scope.filter.facilityType)) ? $scope.filter.facilityType : 0;
+            var requisitionGroup = (!utils.isEmpty($scope.filter.requisitionGroup)) ? $scope.filter.requisitionGroup : 0;
+            var zone = (!utils.isEmpty($scope.filter.zone)) ? $scope.filter.zone : 0;
+            var facilityOperator = (!utils.isEmpty($scope.filter.facilityOperator)) ? $scope.filter.facilityOperator : 0;
+
             // load facilities
             FacilitiesByProgramParams.get({
                 program: program,
                 schedule: schedule,
                 type: facilityType,
                 requisitionGroup: requisitionGroup,
-                zone: zone
+                zone: zone,
+                facilityOperator: facilityOperator
             }, function (data) {
-                $scope.facilities = $scope.unshift(data.facilities, 'report.filter.all.facilities');
+                    $scope.facilities = $scope.unshift(data.facilities, filter_caption);
             });
         };
 
@@ -503,7 +543,7 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
                 scope.registerRequired('facility', attr);
 
                 var onChange = function () {
-                    onPgCascadedVarsChanged(scope);
+                    onPgCascadedVarsChanged(scope, attr.required);
                 };
 
                 scope.subscribeOnChanged('facility', 'requisition-group', onChange, false);
@@ -511,6 +551,7 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
                 scope.subscribeOnChanged('facility', 'schedule', onChange, false);
                 scope.subscribeOnChanged('facility', 'facility-type', onChange, false);
                 scope.subscribeOnChanged('facility', 'program', onChange, true);
+                scope.subscribeOnChanged('facility', 'facility-operator', onChange, true);
             },
             templateUrl: 'filter-facility-template'
         };
@@ -836,6 +877,13 @@ app.directive('regimenFilter', ['ReportRegimensByCategory',
     }
 ]);
 
+app.directive('topRightTableSummary', [function(){
+    return {
+      restrict: 'EA',
+      templateUrl: '/public/pages/reports/shared/top-right-pagination-summary.html'
+    };
+}]);
+
 app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
     function ($filter, ngTableParams) {
 
@@ -847,7 +895,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                 scope.tableParams = new ngTableParams({
                     page: 1,
                     total: 0,
-                    count: 25
+                    count: 100
                 });
 
                 scope.paramsChanged = function (params) {
@@ -856,7 +904,12 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                     if (scope.data === undefined) {
                         scope.datarows = [];
                         params.total = 0;
+                        params.page = 1;
                     } else {
+                        if(((params.page - 1) * params.count) > scope.data.length){
+                            // reset the page number to 1.
+                            params.page = 1;
+                        }
                         var data = scope.data;
                         var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
                         orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
@@ -892,8 +945,8 @@ app.directive('equipmentTypeFilter', ['ReportEquipmentTypes', function (ReportEq
     };
 }]);
 
-app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCategoryProductByProgramTree', 'GetYearSchedulePeriodTree',
-    function (ReportUserPrograms, GetProductCategoryProductByProgramTree, GetYearSchedulePeriodTree) {
+app.directive('programProductPeriodFilter', ['ReportUserPrograms', 'GetProductCategoryProductByProgramTree', 'GetYearSchedulePeriodTree', 'SettingsByKey',
+    function (ReportUserPrograms, GetProductCategoryProductByProgramTree, GetYearSchedulePeriodTree, SettingsByKey) {
 
         // When a program filter changes
         var onProgramChanged = function ($scope) {
@@ -1058,8 +1111,8 @@ app.directive('vaccineFacilityLevelFilter', ['FacilitiesByLevel', 'VaccineInvent
         }]
 );
 
-app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographicZoneList', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService', 'VaccineSupervisedIvdPrograms',
-    function (FacilitiesByGeographicZone, TreeGeographicZoneList, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService, VaccineSupervisedIvdPrograms) {
+app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographicZoneList', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService', 'VimsVaccineSupervisedIvdPrograms',
+    function (FacilitiesByGeographicZone, TreeGeographicZoneList, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService, VimsVaccineSupervisedIvdPrograms) {
         var onPgCascadedVarsChanged1 = function ($scope) {
             var zone = ( angular.isDefined($scope.filterZone)) ? $scope.filterZone : 0;
             FacilitiesByGeographicZone.get({
@@ -1078,15 +1131,16 @@ app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographi
         var onCascadedVarsChanged = function ($scope) {
 
 
-            VaccineSupervisedIvdPrograms.get({}, function (data) {
+            VimsVaccineSupervisedIvdPrograms.get({}, function (data) {
 
                 $scope.program = data.programs[0].id;
-
                 TreeGeographicTreeByProgramNoZones.get({
                     program: $scope.program
                 }, function (data) {
-                    $scope.zones = data.zone;
-
+                    $scope.zones = [data.zone];
+                    if($scope.selectedZone === undefined || $scope.selectedZone === null){
+                      $scope.selectedZone = data.zone;
+                    }
 
                 });
 
@@ -1245,7 +1299,7 @@ app.directive('vaccineMonthlyPeriodTreeFilter', ['GetVaccineReportPeriodFlat', '
                 onChange: '&'
             },
             controller: function ($scope) {
-
+                $scope.$evalAsync(function () {
                 $scope.period_placeholder = messageService.get('label.select.period');
                 SettingsByKey.get({key: 'VACCINE_LATE_REPORTING_DAYS'}, function (data, er) {
                     $scope.cutoffdate = data.settings.value;
@@ -1254,22 +1308,23 @@ app.directive('vaccineMonthlyPeriodTreeFilter', ['GetVaccineReportPeriodFlat', '
                     if (!utils.isNullOrUndefined(data) && !utils.isNullOrUndefined(data).vaccineCurrentPeriod) {
                         var defaultPeriodId = data.vaccineCurrentPeriod.current_period;
                         $scope.filter = {defaultPeriodId: defaultPeriodId};
+                        GetVaccineReportPeriodFlat.get({}, function (data) {
+                            $scope.periods = data.vaccinePeriods.periods;
+                            if (!angular.isUndefined($scope.periods)) {
+                                if ($scope.periods.length === 0)
+                                    $scope.period_placeholder = messageService.get('report.filter.period.no.vaccine.record');
+                            }
+
+                            $scope.period = $scope.filter.defaultPeriodId;
+
+                        });
 
                     }
 
                 });
-                $scope.$evalAsync(function () {
+
                     //Load period tree
-                    GetVaccineReportPeriodFlat.get({}, function (data) {
-                        $scope.periods = data.vaccinePeriods.periods;
-                        if (!angular.isUndefined($scope.periods)) {
-                            if ($scope.periods.length === 0)
-                                $scope.period_placeholder = messageService.get('report.filter.period.no.vaccine.record');
-                        }
 
-                        $scope.period = $scope.filter.defaultPeriodId;
-
-                    });
                 });
                 //if(!isUndefined($scope.default)){
                 //    $scope.period = $scope.default;
@@ -1445,16 +1500,16 @@ app.directive('rangePagination', ['SettingsByKey', function (SettingsByKey) {
             });
 
         } else {
-        for (var i = 1; i <= loops; i++) {
-            offset = (i - 1) * range;
-            extremeVal = total > i * range ? i * range : total;
-            if (offset >= total) break;
-            pages.push({
-                offset: offset,
-                range: range,
-                value: (offset + 1).toString().concat('-').concat(extremeVal.toString())
-            });
-        }
+            for (var i = 1; i <= loops; i++) {
+                offset = (i - 1) * range;
+                extremeVal = total > i * range ? i * range : total;
+                if (offset >= total) break;
+                pages.push({
+                    offset: offset,
+                    range: range,
+                    value: (offset + 1).toString().concat('-').concat(extremeVal.toString())
+                });
+            }
 
         }
 
@@ -1610,6 +1665,7 @@ app.directive('staticYearFilter', ['StaticYears', 'SettingsByKey', function (Sta
             staticYear: '=year',
             periodStartdate: '=startdate',
             periodEnddate: '=enddate',
+            perioderror: '=perioderror',
             onChange: '&'
         },
 
@@ -1629,15 +1685,15 @@ app.directive('staticYearFilter', ['StaticYears', 'SettingsByKey', function (Sta
                 data.years.forEach(function (value) {
                     $scope.years.push(value);
                 });
-
+                $scope.years.push({id: '-1', year_value: 'Custom Period'});
                 $scope.staticYear = $scope.years[0].id;
 
             });
 
 
             $scope.$watch('staticYear', function (newValues, oldValues) {
-                if (!utils.isNullOrUndefined($scope.staticYear)) {
-                    periods = utils.getYearStartAndEnd($scope.staticYear, $scope.cutoffdate);
+                if (!utils.isNullOrUndefined($scope.staticYear) && $scope.staticYear >= 0) {
+                    periods = utils.getYearStartAndEnd($scope.staticYear, $scope.periodStartdate, $scope.periodEnddate, $scope.cutoffdate);
 
 
                     $scope.periodStartdate = periods.startdate;
@@ -1650,13 +1706,50 @@ app.directive('staticYearFilter', ['StaticYears', 'SettingsByKey', function (Sta
                 }
             });
 
+            $scope.$watchCollection('[periodStartdate,periodEnddate]', function (newValues, oldValues) {
+                if (utils.isEmpty($scope.periodStartdate) || utils.isEmpty($scope.periodEnddate))
+                    return;
+                var datediff = differenceInDays();
+                var yearDif = yearDifference();
+
+                if (datediff < 0) {
+                    $scope.perioderror = 'Period start date must be before or equal to end date';
+                }
+                else if (yearDif !== 0) {
+                    $scope.perioderror = 'Start and End date should be in same year';
+                }
+                else
+                    $scope.perioderror="";
+                    $scope.$parent.OnFilterChanged();
+
+            });
+            var differenceInDays = function () {
+
+                var one = new Date($scope.periodStartdate),
+                    two = new Date($scope.periodEnddate);
+
+                var millisecondsPerDay = 1000 * 60 * 60 * 24;
+                var millisBetween = two.getTime() - one.getTime();
+                var days = millisBetween / millisecondsPerDay;
+
+                return Math.floor(days);
+            };
+            var yearDifference = function () {
+                var one = new Date($scope.periodStartdate),
+                    two = new Date($scope.periodEnddate);
+                var startyear = one.getFullYear(),
+                    endYear = two.getFullYear();
+                var dif = startyear - endYear;
+                return Math.floor(dif);
+
+            };
         },
         templateUrl: 'filter-static-year'
     };
 }]);
 
-app.directive('vaccineProductDosesFilter', ['VaccineProductDoseList', 'messageService', 'VaccineSupervisedIvdPrograms',
-        function (VaccineProductDoseList, messageService, VaccineSupervisedIvdPrograms) {
+app.directive('vaccineProductDosesFilter', ['VaccineProductDoseList', 'messageService', 'VimsVaccineSupervisedIvdPrograms',
+    function (VaccineProductDoseList, messageService, VimsVaccineSupervisedIvdPrograms) {
 
         return {
             restrict: 'E',
@@ -1670,24 +1763,25 @@ app.directive('vaccineProductDosesFilter', ['VaccineProductDoseList', 'messageSe
 
                 $scope.$watch('product', function (newValues, oldValues) {
 
-                    VaccineSupervisedIvdPrograms.get({}, function (data) {
+                    VimsVaccineSupervisedIvdPrograms.get({}, function (data) {
 
                         VaccineProductDoseList.get(
-                            {  programId: data.programs[0].id,
+                            {
+                                programId: data.programs[0].id,
                                 productId: $scope.product
                             },
 
-                            function(result){
+                            function (result) {
                                 $scope.doses = !utils.isNullOrUndefined(result.doses) ? result.doses : null;
                                 !utils.isNullOrUndefined(result.doses) ? $scope.doses.unshift({displayName: selectAllDoses}) :
-                                        $scope.doses.push({displayName: selectAllDoses});
+                                    $scope.doses.push({displayName: selectAllDoses});
                             });
                     });
                 });
 
-                $scope.filterChanged = function(){
+                $scope.filterChanged = function () {
                     $scope.$parent.filter.dose = $scope.filter.dose;
-                  $scope.$parent.OnFilterChanged();
+                    $scope.$parent.OnFilterChanged();
                 };
 
             },
@@ -1714,15 +1808,15 @@ app.directive('vaccineStockDateFilter', [
                 if (!isUndefined($scope.default)) {
                     $scope.filterToDate = $scope.default;
                 } else {
-                      var d = new Date();
-                      month = '' + (d.getMonth() + 1);
-                      day = '' + d.getDate();
-                      year = d.getFullYear();
+                    var d = new Date();
+                    month = '' + (d.getMonth() + 1);
+                    day = '' + d.getDate();
+                    year = d.getFullYear();
 
-                      if (month.length < 2) month = '0' + month;
-                      if (day.length < 2) day = '0' + day;
+                    if (month.length < 2) month = '0' + month;
+                    if (day.length < 2) day = '0' + day;
 
-                     $scope.filterToDate =[year, month, day].join('-');
+                    $scope.filterToDate = [year, month, day].join('-');
                 }
 
                 $scope.$watch('filterToDate', function (newValues, oldValues) {
@@ -1749,27 +1843,27 @@ app.directive('vaccineStockFacilityLevelFilter', ['ReportFacilityLevels', 'Vacci
             },
             controller: function ($scope) {
 
-                VaccineSupervisedIvdPrograms.get({},function(data){
-                    ReportFacilityLevels.get({program:data.programs[0].id},function(data2){
-                         var facilityLevels=[];
-                         var hasRVS=_.where(data2.facilityLevels,{code:'rvs'});
-                         var hasCVS=_.where(data2.facilityLevels,{code:'cvs'});
-                         var isUpperThanDvs=(hasRVS.length >0)?true:false;
-                         var isUpperThanRVS=(hasCVS.length >0)?true:false;
+                VaccineSupervisedIvdPrograms.get({}, function (data) {
+                    ReportFacilityLevels.get({program: data.programs[0].id}, function (data2) {
+                        var facilityLevels = [];
+                        var hasRVS = _.where(data2.facilityLevels, {code: 'rvs'});
+                        var hasCVS = _.where(data2.facilityLevels, {code: 'cvs'});
+                        var isUpperThanDvs = (hasRVS.length > 0) ? true : false;
+                        var isUpperThanRVS = (hasCVS.length > 0) ? true : false;
 
-                         data2.facilityLevels.forEach(function(level){
-                              if(level.code === 'rvs' && isUpperThanRVS){
-                                     facilityLevels.push(level);
-                              }
-                              if(level.code === 'dvs' && isUpperThanDvs){
-                                     facilityLevels.push(level);
-                              }
+                        data2.facilityLevels.forEach(function (level) {
+                            if (level.code === 'rvs' && isUpperThanRVS) {
+                                facilityLevels.push(level);
+                            }
+                            if (level.code === 'dvs' && isUpperThanDvs) {
+                                facilityLevels.push(level);
+                            }
 
-                         });
-                         $scope.facilityLevels=facilityLevels.sort(function(a,b){
-                             return (a.displayOrder > b.displayOrder) ? 1 : ((b.displayOrder > a.displayOrder) ? -1 : 0);
-                         });
-                         $scope.filterFacilityLevel = $scope.facilityLevels[0].code;
+                        });
+                        $scope.facilityLevels = facilityLevels.sort(function (a, b) {
+                            return (a.displayOrder > b.displayOrder) ? 1 : ((b.displayOrder > a.displayOrder) ? -1 : 0);
+                        });
+                        $scope.filterFacilityLevel = $scope.facilityLevels[0].code;
                     });
 
                 });
@@ -1800,12 +1894,46 @@ app.directive('customLegend', [
             },
 
             controller: function ($scope) {
-               console.log($scope.data);
+
                 $scope.$watch('data', function (newValues, oldValues) {
 
                 });
             },
             templateUrl: 'filter-custom-legend-template'
+        };
+    }
+]);
+
+app.directive('datepickerPopup', function ($filter){
+    return {
+        restrict: 'EAC',
+        require: 'ngModel',
+        link: function(scope, elem, attrs, ngModel) {
+            ngModel.$parsers.push(function toModel(date) {
+                return $filter('date')(date, "yyyy-MM-dd");
+            });
+        }
+    };
+});
+
+app.directive('facilityOperatorFilter', ['GetAllFacilityOperators', '$routeParams', 'messageService',
+    function (GetAllFacilityOperators, $routeParams, messageService) {
+
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+
+                scope.registerRequired('facilityOperator', attr);
+                GetAllFacilityOperators.get({},
+                    function (data) {
+                       scope.facilityOperators = data.facilityOperators;
+                        scope.facilityOperators.unshift({
+                            'text': messageService.get('report.filter.all.facility.operators')
+                        });
+                    });
+            },
+            templateUrl: 'filter-facility-operator-template'
         };
     }
 ]);
