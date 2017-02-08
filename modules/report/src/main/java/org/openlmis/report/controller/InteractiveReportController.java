@@ -693,4 +693,45 @@ public class InteractiveReportController extends BaseController {
         return reportData;
     }
 
+
+    @RequestMapping(value = "/reportdata/onTimeInFullReport", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getOnTmeInFullData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("vaccine_on_time_in_full_report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<OnTimeInFullReport> reportData =
+                (List<OnTimeInFullReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, reportData);
+    }
+
+    @RequestMapping(value = "/reportdata/getMinMaxVaccineData", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getMinMaxVaccineReportData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("min_max_vaccine_report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<MinMaxVaccineReport> reportData =
+                (List<MinMaxVaccineReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, reportData);
+    }
+
+
+    @RequestMapping(value = "/reportdata/getDistributionSummaryData", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getDistributionSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("distribution_summary_report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<DistributionSummaryReport> reportData =
+                (List<DistributionSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, reportData);
+    }
+
 }

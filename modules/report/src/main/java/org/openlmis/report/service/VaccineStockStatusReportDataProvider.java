@@ -8,7 +8,7 @@ import org.openlmis.core.service.FacilityService;
 import org.openlmis.report.mapper.VaccineStockStatusMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.VaccineStockStatusParam;
-import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.model.report.VaccineStockStatusReport;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +34,18 @@ public class VaccineStockStatusReportDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return reportMapper.getReport(getReportFilterData(filterCriteria), rowBounds);
+       return  reportMapper.getReport(getReportFilterData(filterCriteria),rowBounds);
+
     }
 
+    public int getTotal(List<VaccineStockStatusReport> stockStatusReport){
+        int total = 0;
+        for (VaccineStockStatusReport aStockStatusReport : stockStatusReport) {
+
+            total += aStockStatusReport.getAdequacy();
+        }
+        return (total / stockStatusReport.size()) * 100;
+    }
     public VaccineStockStatusParam getReportFilterData(Map<String, String[]> filterCriteria) {
 
         VaccineStockStatusParam param = new VaccineStockStatusParam();

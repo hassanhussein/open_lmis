@@ -476,6 +476,9 @@ app.directive('productCategoryFilter', ['ProductCategoriesByProgram', '$routePar
             require: '^filterContainer',
             link: function (scope, elm, attr) {
                 scope.registerRequired('productCategory', attr);
+                if (!$routeParams.productCategory) {
+                    scope.productCategories = scope.unshift([], 'report.filter.all.product.categories');
+                }
 
                 var onProgramChanged = function () {
                     ProductCategoriesByProgram.get({
@@ -1140,6 +1143,8 @@ app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographi
                     $scope.zones = [data.zone];
                     if($scope.selectedZone === undefined || $scope.selectedZone === null){
                       $scope.selectedZone = data.zone;
+                        $scope.filterZone =  $scope.zones [0];
+
                     }
 
                 });
@@ -1681,11 +1686,10 @@ app.directive('staticYearFilter', ['StaticYears', 'SettingsByKey', function (Sta
                 }
             });
             StaticYears.get({}, function (data) {
-                $scope.years.push({id: '0', year_value: 'Current Period'});
+
                 data.years.forEach(function (value) {
                     $scope.years.push(value);
                 });
-                $scope.years.push({id: '-1', year_value: 'Custom Period'});
                 $scope.staticYear = $scope.years[0].id;
 
             });
@@ -1934,6 +1938,69 @@ app.directive('facilityOperatorFilter', ['GetAllFacilityOperators', '$routeParam
                     });
             },
             templateUrl: 'filter-facility-operator-template'
+        };
+    }
+]);
+
+
+
+
+
+app.directive('vaccineFacilityByDistrictFilter', ['UserFacilityWithViewStockLedgerReport', '$routeParams',
+
+        function (UserFacilityWithViewStockLedgerReport, $routeParams) {
+
+            var onCascadedPVarsChanged = function ($scope, attr) {
+
+                if (!$routeParams.program) {
+                    $scope.facilities = $scope.unshift([], 'report.filter.all.facilities');
+                }
+
+              /*  if (isUndefined($scope.filter.program) || $scope.filter.program === 0) {
+                    return;
+                }*/
+
+                UserFacilityWithViewStockLedgerReport.get(function (data) {
+                    $scope.facilities = (attr.required) ? $scope.unshift(data.facilities, 'report.filter.select.facility') : $scope.unshift(data.facilities, 'report.filter.all.facilities');
+                });
+
+            };
+
+            return {
+                restrict: 'E',
+                link: function (scope, elm, attr) {
+                   scope.registerRequired('facility', attr);
+
+                    var onParentChanged = function () {
+                        onCascadedPVarsChanged(scope, attr);
+                    };
+                    scope.subscribeOnChanged('facility','program', onParentChanged, true);
+                },
+                templateUrl: 'filter-vaccine-facility-by-level-template'
+            };
+
+
+        }]
+);
+
+
+
+app.directive('vaccineFacilitByDistrictFilter', ['UserFacilityWithViewStockLedgerReport', '$routeParams', 'messageService',
+    function (UserFacilityWithViewStockLedgerReport, $routeParams, messageService) {
+
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+
+                scope.registerRequired('facility', attr);
+
+                UserFacilityWithViewStockLedgerReport.get(function (data) {
+                    scope.facilities = (attr.required) ? scope.unshift(data.facilities, 'report.filter.select.facility') : scope.unshift(data.facilities, 'report.filter.all.facilities');
+                });
+
+            },
+            templateUrl: 'filter-vaccine-facility-by-level-template'
         };
     }
 ]);
