@@ -19,6 +19,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Product;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -46,9 +49,11 @@ public class Equipment extends BaseModel {
 
   private Integer inventoryCount;
 
+  private List<Product> relatedProducts;
+
   public boolean equalsByMakeAndModel(Equipment other) {
-    return other.manufacturer != null && other.model != null
-        && other.manufacturer.equalsIgnoreCase(manufacturer) && other.model.equalsIgnoreCase(model);
+    return other.manufacturer != null && other.equipmentModel != null && equipmentModel.getId() != null
+        && other.manufacturer.equalsIgnoreCase(manufacturer) && other.equipmentModel.getId() == equipmentModel.getId();
   }
 
   public boolean isRemovable() {
@@ -59,4 +64,5 @@ public class Equipment extends BaseModel {
 
   private Long designationId;
 
+  private EquipmentModel equipmentModel;
 }

@@ -47,7 +47,12 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
                                     EquipmentNonFunctional,
                                     VaccinePendingRequisitions,
                                     daysNotReceive,
-                                    batchToExpireNotification) {
+                                    batchToExpireNotification,
+                                    VaccineInventorySummaryData,
+                                    VaccineInventorySummaryDetails,
+                                    receiveNotification,receiveDistributionDetailList,
+                                    minimumStockNotification
+) {
     $scope.actionBar = {openPanel: true};
     $scope.performance = {openPanel: false};
     $scope.coverage = {openPanel: false};
@@ -55,6 +60,7 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
     $scope.wastage = {openPanel: false};
     $scope.stockStatus = {openPanel: false};
     $scope.stockFacilityStatus = {openPanel: false};
+    $scope.vaccineInventory = {openPanel: false};
     $scope.homeFacility = homeFacility;
     $scope.sessions = {
         openPanel: true
@@ -67,6 +73,7 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
     $scope.sessions = {
         loadData: false
     };
+    $scope.vaccineInventory = {loadData:false};
 
     $scope.expandAllTabs = function (value) {
         $scope.actionBar = {openPanel: value};
@@ -76,6 +83,7 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
         $scope.wastage = {openPanel: value};
         $scope.stockStatus = {openPanel: value};
         $scope.stockFacilityStatus = {openPanel: value};
+        $scope.vaccineInventory = {openPanel: value};
 
         $scope.sessions = {
             openPanel: value
@@ -102,6 +110,7 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
     $scope.label = {zone: messageService.get('label.zone'), period: messageService.get('label.period')};
     $scope.userPreferences = userPreferences;
     $scope.daysForUnreceivedNotification = daysNotReceive;
+    $scope.receiveNotification = receiveNotification;
     /////////////////////////////////////////////////////////////////////////
     // coverage - Monthly, District, Facility
     //////////////////////////////////////////////////////////////////////////
@@ -290,6 +299,7 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
     };
 
 
+
 // bundling
     $scope.bundling = {
         dataPoints: [],
@@ -427,11 +437,11 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
                 $scope.facilityCoverage.data = data.facilityCoverage;
                 if (!isUndefined($scope.facilityCoverage.data)) {
                     $scope.filter.totalFacilityCoverage = $scope.facilityCoverage.data.length;
+                    $scope.districtCoveragePagination();
                 } else {
                     $scope.filter.totalFacilityCoverage = 0;
                 }
             });
-
 
         }
     };
@@ -447,6 +457,8 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
         if (!isUndefined($scope.filter.districtCoverageOffset)) {
             $scope.districtCoverage.dataPoints = $scope.districtCoverage.data.slice(parseInt($scope.filter.districtCoverageOffset, 10), s);
         }
+        else if($scope.filter.totalFacilityCoverage > 0)
+            $scope.districtCoverage.dataPoints = $scope.districtCoverage.data;
     };
     $scope.coverageDetailCallback = function () {
         if (!isUndefined($scope.startDate) && !isUndefined($scope.endDate) && !isUndefined($scope.filter.coverage.product) && $scope.filter.coverage.product !== 0) {
@@ -965,6 +977,8 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
             $scope.supplyingAllPendingOrders = data.pendingRequest;
             $scope.supplyingPendingReceive.supplyingPendingToReceive = data.pendingToReceive;
             $scope.supplyingPendingReceive.supplyingPendingToReceiveLowerLevel = data.pendingToReceiveLowerLevel;
+            $scope.supplyingPendingReceive.daysForUnreceivedNotification= daysNotReceive;
+
             if (data.pendingRequest !== undefined)
                 $scope.supplying.orders = data.pendingRequest.length;
             else {
@@ -1383,6 +1397,66 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
 
         }
     };
+    //Vaccine Inventory
+
+
+    var vaccineInventoryData = VaccineInventorySummaryData;
+ console.log(vaccineInventoryData);
+    $scope.vaccineInventorySummaryData = {
+
+        dataPoints:vaccineInventoryData,
+        dataColumns: [
+            {"id": "overstock", "name":"overstock", "type": "donut"},
+            {"id": 'sufficient', "name":"sufficient", "type": "donut"},
+            {"id": "minimum", "name":"Understock", "type": "donut"},
+            {"id": "zero", "name":"Zero stock", "type": "donut"}
+        ]
+    };
+
+
+
+    $scope.clicked = {};
+    $scope.showClick = function (data) {
+        console.log(data);
+        $scope.clicked = data;
+        dataV();
+        VaccineInventorySummaryDetails.get({status:$scope.clicked.id}, function(data){
+            console.log(data);
+            $scope.name = data.name;
+            $scope.vaccineInventoryStock = data.vaccineInventoryStockDetails;
+console.log(data.vaccineInventoryStockDetails);
+            var z = [{"product":"BCG","zero":10,name :"zero"}];
+          /*  $scope.inventory = {
+
+                dataPoints:z,
+                dataColumns:[{"id":"zero", name:"zero", type:"bar"}],
+                dataX:{
+                    "id":"product"
+                }
+
+
+            };*/
+
+
+
+
+        });
+
+        //console.log(data);
+    };
+function dataV(){
+    console.log(vaccineInventoryData);
+    $scope.vaccineInventorySummaryData2 = {
+
+        dataPoints:vaccineInventoryData,
+        dataColumns: [
+            {"id": "overstock", "name":"overstock", "type": "bar"},
+            {"id": 'sufficient', "name":"sufficient", "type": "bar"},
+            {"id": "minimum", "name":"Understock", "type": "bar"},
+            {"id": "zero", "name":"Zero stock", "type": "bar"}
+        ],
+        dataX:{"id":"overstock"}
+    };}
 
     $scope.openStockStatusHelp = function () {
         var modalInstance = $modal.open({
@@ -1663,6 +1737,64 @@ function VaccineDashboardController($scope, $q, $timeout, VaccineDashboardSummar
 
         return dropoutList;
     }
+
+
+//For Receiving Notification
+      $scope.totalReceive = receiveDistributionDetailList.receiveNotification.length;
+
+    $scope.toggleSlider = function () {
+
+        var modalInstance = $modal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'receiveDistributionNotification.html',
+            controller: 'ModalInstanceCtrl',
+            size: 'lg',
+            windowClass: 'my-modal-popup',
+            resolve: {
+                items: function () {
+
+                    return receiveDistributionDetailList.receiveNotification;
+                }
+            }
+        });
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selected = selectedItem;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+
+
+    };
+
+
+
+    //For MinimumStock Notification
+
+   $scope.totalMinimumStock= minimumStockNotification.minimumStock.length;
+
+    $scope.toggleSlider2 = function () {
+
+        var modalInstance = $modal.open({
+            animation: $scope.animationsEnabled,
+            templateUrl: 'minimumStockNotification.html',
+            controller: 'ModalInstanceCtrl',
+            size: 'lg',
+            windowClass: 'my-modal-popup',
+            resolve: {
+                items: function () {
+
+                    return minimumStockNotification.minimumStock;
+                }
+            }
+        });
+        modalInstance.result.then(function (selectedItem) {
+            $scope.selected = selectedItem;
+        }, function () {
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+
+
+    };
 
 }
 VaccineDashboardController.resolve = {
@@ -1971,6 +2103,22 @@ VaccineDashboardController.resolve = {
 
     },
 
+    receiveDistributionDetailList: function ($q, $timeout, ReceiveDistributionAlert) {
+        var deferred = $q.defer();
+        $timeout(function () {
+
+            ReceiveDistributionAlert.get(function (data) {
+                deferred.resolve(data);
+
+
+            });
+
+        }, 100);
+
+        return deferred.promise;
+
+    },
+
     isDistrictUser: function ($q, $timeout, IsDistrictUser) {
         var deferred = $q.defer();
         $timeout(function () {
@@ -2028,6 +2176,66 @@ VaccineDashboardController.resolve = {
 
         return deferred.promise;
 
+    },
+    VaccineInventorySummaryData: function ($q, $timeout, VaccineInventorySummary) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            VaccineInventorySummary.get({}, function (data) {
+                var summary = [];
+                if (!isUndefined(data.stockOverView)) {
+                    summary = data.stockOverView;
+
+                }
+                console.log(summary);
+
+                deferred.resolve(summary);
+
+
+            });
+
+        }, 100);
+
+        return deferred.promise;
+
+    },
+    receiveNotification: function ($q, $timeout, ReceiveNotification) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            ReceiveNotification.get({}, function (data) {
+                var summary = [];
+                if (!isUndefined(data)) {
+                    summary = data;
+
+                }
+                console.log(summary);
+
+                deferred.resolve(summary);
+
+            });
+
+        }, 100);
+
+        return deferred.promise;
+
+    },
+    minimumStockNotification: function ($q, $timeout, MinimumStockNotification) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            MinimumStockNotification.get({}, function (data) {
+                var summary = [];
+                if (!isUndefined(data)) {
+                    summary = data;
+
+                }
+                deferred.resolve(summary);
+
+            });
+
+        }, 100);
+
+        return deferred.promise;
+
     }
+
 
 };

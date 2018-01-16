@@ -15,8 +15,7 @@ package org.openlmis.equipment.repository;
 
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -70,4 +69,15 @@ public class EquipmentRepository {
     }
   }
 
+  public List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes() {
+    return mapper.getBioChemistryEquipmentTestTypes();
+  }
+
+  public List<ManualTestTypes> getManualTestTypes() {
+    return mapper.getManualTestTypes();
+  }
+
+  public Equipment getByTypeManufacturerAndModel(Long equipmentTypeId, String manufacturer, Long modelId, String model) {
+    return mapper.getByTypeManufacturerAndModel(equipmentTypeId, manufacturer, modelId, model);
+  }
 }

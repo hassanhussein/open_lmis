@@ -14,12 +14,11 @@ package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.equipment.domain.ColdChainEquipmentDesignation;
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentEnergyType;
-import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.core.domain.Product;
+import org.openlmis.equipment.domain.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -51,6 +50,7 @@ public interface EquipmentMapper {
         " GROUP BY equipments.id" +
         " ORDER BY id DESC")
     @Results({
+            @Result(property = "id", column = "id"),
             @Result(
                     property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
@@ -58,9 +58,19 @@ public interface EquipmentMapper {
             @Result(
                     property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
                     one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+            @Result(
+                property = "relatedProducts", column = "id", javaType = List.class,
+                many = @Many(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getRelatedProducts")),
             @Result(property = "energyTypeId", column = "energyTypeId")
     })
     List<Equipment> getByType(@Param("equipmentTypeId") Long equipmentTypeId, RowBounds rowBounds);
+
+
+    @Select("SELECT p.id, p.code, p.primaryName, p.strength, true as active  from products p " +
+        " JOIN equipment_products etp on etp.productId = p.id " +
+        " WHERE " +
+        "  etp.equipmentId = #{equipmentId}")
+    List<Product> getRelatedProducts(@Param("equipmentId") Long equipmentId);
 
   @Select("SELECT equipments.*" +
       "   , COUNT(equipment_inventories.id) AS inventorycount,  " +
@@ -88,6 +98,40 @@ public interface EquipmentMapper {
   })
   List<Equipment> getAllByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
+  /** old equipment data has a text based 'model' field so that get equipment
+   *  by model we need to use both the 'model'::String and the new 'modelId'::Int fields
+   **/
+  @Select("SELECT equipments.*" +
+          "   , COUNT(equipment_inventories.id) AS inventorycount,  " +
+          " equipment_cold_chain_equipments.*  " +
+          " FROM equipments" +
+          "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id " +
+          "   LEFT JOIN equipment_cold_chain_equipments  ON equipment_cold_chain_equipments.equipmentId = equipments.ID " +
+          " WHERE equipmentTypeId = #{equipmentTypeId} AND manufacturer = #{manufacturer} " +
+          " AND ((modelId = #{modelId} AND model is null) or (modelId  is null AND model = #{model}))" +
+          " GROUP BY equipments.id,equipment_cold_chain_equipments.equipmentid" +
+          " ORDER BY name LIMIT 1")
+  @Results({
+          @Result(
+                  property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+          @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+          @Result(
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+          @Result(property = "energyTypeId", column = "energyTypeId"),
+          @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
+          @Result(property = "designationId", column = "designationId"),
+          @Result(
+                  property = "equipmentModel", column = "modelId", javaType = EquipmentModel.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentModelMapper.getById"))
+
+
+  })
+  Equipment getByTypeManufacturerAndModel(@Param("equipmentTypeId")Long equipmentTypeId, @Param("manufacturer") String manufacturer,
+                                      @Param("modelId") Long modelId, @Param("model") String model);
+
   @Select("SELECT COUNT(id) FROM equipments WHERE equipmentTypeId = #{equipmentTypeId} ")
   Integer getCountByType(@Param("equipmentTypeId") Long equipmentTypeId);
 
@@ -105,7 +149,10 @@ public interface EquipmentMapper {
           @Result(
                   property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
                   one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
-          @Result(property = "energyTypeId", column = "energyTypeId")
+          @Result(property = "energyTypeId", column = "energyTypeId"),
+          @Result(
+                  property = "equipmentModel", column = "modelId", javaType = EquipmentModel.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentModelMapper.getById"))
 
   })
   Equipment getById(@Param("id") Long id);
@@ -117,18 +164,34 @@ public interface EquipmentMapper {
       " WHERE p.id = #{programId}")
   List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
 
-  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, energyTypeId) " +
+  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, modelId, energyTypeId) " +
       "values " +
-      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model},#{energyTypeId})")
+      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model}, #{equipmentModel.id}, #{energyTypeId})")
   @Options(useGeneratedKeys = true)
   void insert(Equipment equipment);
 
   @Update("UPDATE equipments " +
       "set " +
-      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, energyTypeId = #{energyTypeId} " +
+      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, modelId = #{equipmentModel.id}, energyTypeId = #{energyTypeId} " +
       "WHERE id = #{id}")
   void update(Equipment equipment);
 
+
     @Delete("DELETE FROM equipments WHERE id = #{Id}")
     void remove(Long Id);
+
+  @Select("select * from equipment_bio_chemistry_test_types")
+  @Results({
+          @Result(property = "id", column = "id"),
+          @Result(
+                  property = "testProducts", column = "id", javaType = List.class,
+                  many = @Many(select = "getBioChemistryEquipmentTestProducts"))
+  })
+  List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes();
+
+  @Select("select * from equipment_bio_chemistry_products where testtypeid = #{id}")
+  List<NonFunctionalTestProducts> getBioChemistryEquipmentTestProducts(Long id);
+
+  @Select("select * from manual_test_types")
+  List<ManualTestTypes> getManualTestTypes();
 }

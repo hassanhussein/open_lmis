@@ -110,7 +110,7 @@ var utils = {
 
     },
 
-    getYearStartAndEnd: function (year,_startDate,_endDate, _cuttofdate) {
+    getYearStartAndEnd: function (year, _startDate, _endDate, _cuttofdate, type) {
 
         var periodValues = [];
         var endDate;
@@ -120,19 +120,34 @@ var utils = {
                 periodValues = utils.getVaccineCustomDateRange(1, null, null, _cuttofdate);
 
             } else {
+                if(type===0) {
+                    periodValues = {
+                        enddate: utils.formatDate(new Date(year, 12, 0)),
+                        startdate: utils.formatDate(new Date(year, 0, 1))
+                    };
+                }
+                else{
+                    periodValues = {
+                        enddate: utils.formatDate(new Date(year, _endDate, 0)),
+                        startdate: utils.formatDate(new Date(year, _startDate, 1))
+                    };
+                }
+            }
+        } else {
+            if (type === 0) {
+                periodValues = {startdate: _startDate, enddate: _endDate};
+            }else if(type===1){
                 periodValues = {
-                    enddate: utils.formatDate(new Date(year, 12, 0)),
-                    startdate: utils.formatDate(new Date(year, 0, 1))
+                    enddate: utils.formatDate(new Date(year, _endDate+1, 0)),
+                    startdate: utils.formatDate(new Date(year, _startDate, 1))
                 };
             }
-        }else{
-
-            periodValues= {startdate: _startDate, enddate: _endDate};
             return periodValues;
         }
         return periodValues;
 
     },
+
     getVaccineMonthlyDefaultPeriod: function (periods, cuttoffDate) {
         var monthBack = 0;
         var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -281,7 +296,7 @@ var utils = {
             if (districtData.length > 1) {
 
                 _.each(columnKeys, function (columnKey) {
-                    district_total[columnKey] = utils.getReportColumnSubTotal(reportData, districtName, columnKey, type);
+                    district_total[columnKey] = utils.getReportColumnSubTotalVS(reportData, districtName, columnKey, type);
                 });
 
                 reportDataWithAggregates.push({subtotal: district_total});
@@ -319,6 +334,21 @@ var utils = {
             }, 0).value();
         }
         return _.chain(reportData).where({districtname: districtName}).pluck(columnToBeAgregated).reduce(function (memo, num) {
+            return memo + num;
+        }, 0).value();
+    },
+    getReportColumnSubTotalVS: function (reportData, districtName, columnToBeAgregated, type) {
+
+        if (type === 1) {
+            return _.chain(reportData).where({facility_name: districtName}).pluck(columnToBeAgregated).reduce(function (memo, num) {
+                return memo + num;
+            }, 0).value();
+        } else if (type === 3) {
+            return _.chain(reportData).where({region_name: districtName}).pluck(columnToBeAgregated).reduce(function (memo, num) {
+                return memo + num;
+            }, 0).value();
+        }
+        return _.chain(reportData).where({district_name: districtName}).pluck(columnToBeAgregated).reduce(function (memo, num) {
             return memo + num;
         }, 0).value();
     },

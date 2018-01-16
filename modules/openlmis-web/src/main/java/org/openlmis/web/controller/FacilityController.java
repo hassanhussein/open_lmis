@@ -15,6 +15,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.FacilityOwnerService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.core.service.RequisitionGroupService;
@@ -63,7 +64,8 @@ public class FacilityController extends BaseController {
 
   @Autowired
   RequisitionGroupService requisitionGroupService;
-
+@Autowired
+  FacilityOwnerService facilityOwnerService;
   @RequestMapping(value = "/facilities", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_USER')")
   public ResponseEntity<OpenLmisResponse> get(@RequestParam(value = "searchParam", required = false) String searchParam,
@@ -107,7 +109,7 @@ public class FacilityController extends BaseController {
     return facilityReferenceData.addFacilityTypes(facilityService.getAllTypes()).
       addFacilityOperators(facilityService.getAllOperators()).
       addGeographicZones(facilityService.getAllZones()).
-      addPrograms(programService.getAll()).get();
+      addPrograms(programService.getAll()).addFacilityOwners(facilityOwnerService.getAllFacilityOwners()).get();
   }
 
   private ModelMap getFacilityResponse(@PathVariable(value = "programId") Long programId, Long userId, String... rights) {
@@ -287,5 +289,33 @@ public class FacilityController extends BaseController {
   @RequestMapping(value = "/get-facility-supervisors-by-program", method = GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getFacilitySupervisors(@RequestParam("programId") Long program,@RequestParam("facilityId") Long facilityId) {
     return OpenLmisResponse.response("supervisors",facilityService.getFacilitySuperVisorBy(program,facilityId));
+  }
+
+
+  @RequestMapping(value = "/getDistrictGeoTree", method = GET)
+  public ResponseEntity<OpenLmisResponse> getDistrictGeoTree(HttpServletRequest httpServletRequest) {
+
+    ResponseEntity<OpenLmisResponse> response;
+    response = OpenLmisResponse.success("");
+    response.getBody().addData("regionFacilityTree", facilityService.getDistrictGeoTree(loggedInUserId(httpServletRequest)));
+    return response;
+  }
+
+  @RequestMapping(value = "/getFacilityTypeByFac/{facilityId}", method = GET)
+  public ResponseEntity<OpenLmisResponse> getFacilityTypeByFac(HttpServletRequest httpServletRequest,@PathVariable Long facilityId) {
+
+    ResponseEntity<OpenLmisResponse> response;
+    response = OpenLmisResponse.success("");
+    response.getBody().addData("facilityTypes", facilityService.getFacilityTypeByFac(facilityId));
+    return response;
+  }
+
+  @RequestMapping(value = "/getByDistrict/{districtId}", method = GET)
+  public ResponseEntity<OpenLmisResponse> getByDistrict(HttpServletRequest httpServletRequest,@PathVariable Long districtId) {
+
+    ResponseEntity<OpenLmisResponse> response;
+    response = OpenLmisResponse.success("");
+    response.getBody().addData("facility", facilityService.getByDistrict(districtId));
+    return response;
   }
 }

@@ -16,8 +16,7 @@ import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureStatusDTO;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
@@ -86,22 +85,22 @@ public class EquipmentInventoryService {
     // Only need to do this for non-CCE
     Equipment equipment = inventory.getEquipment();
     if (!equipment.getEquipmentType().isColdChain()) {
-      Boolean equipmentFound = false;
+      //Boolean equipmentFound = false;
       Long equipmentTypeId = equipment.getEquipmentTypeId();
 
       // Check to see if equipment already exists in db
-      List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
-      for (Equipment e : equipments) {
-        if (e.equalsByMakeAndModel(equipment)) {
-          // Equipment already exists in db
-          equipmentFound = true;
-          equipment = e;
-          break;
-        }
-      }
+     // List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
+
+      Equipment existingEquipment = equipmentService.getByTypeManufacturerAndModel(equipmentTypeId,
+              equipment.getManufacturer(),
+              equipment.getEquipmentModel().getId(),
+              equipment.getModel());
+
+      //equipment = existingEquipment == null ? equipment : existingEquipment;
 
       equipment.setModifiedBy(inventory.getModifiedBy());
-      if (!equipmentFound) {
+      equipment.setModel(null);
+      if (existingEquipment == null) {
         equipment.setCreatedBy(inventory.getCreatedBy());
         equipmentRepository.insert(equipment);
       } else {
@@ -135,4 +134,20 @@ public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
     repository.deleteEquipmentInventory(inventoryId);
   }
 
+
+  public List<EquipmentInventory>getInventoryByFacilityAndProgram(Long facilityId, Long programId){
+    return repository.getInventoryByFacilityAndProgram(facilityId,programId);
+  }
+
+  public List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes(){
+    return equipmentService.getBioChemistryEquipmentTestTypes();
+  }
+
+  public List<ManualTestTypes> getManualTestTypes(){
+    return equipmentService.getManualTestTypes();
+  }
+
+  public EquipmentInventory getInventoryBySerialNumber(String serialNumber) {
+    return repository.findBySerialNumber(serialNumber);
+  }
 }

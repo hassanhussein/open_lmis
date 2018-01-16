@@ -19,6 +19,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.DistrictConsumptionQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
+import org.openlmis.report.model.report.DistrictConsumptionByFacilityReport;
 import org.openlmis.report.model.report.DistrictConsumptionReport;
 import org.springframework.stereotype.Repository;
 
@@ -28,13 +29,22 @@ import java.util.Map;
 @Repository
 public interface DistrictConsumptionReportMapper {
 
-  @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "getQuery")
+  @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "getDistrictConsumptionQuery")
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-  public List<DistrictConsumptionReport> getFilteredSortedPagedAdjustmentSummaryReport(
+  public List<DistrictConsumptionReport> getDistrictConsumption(
     @Param("filterCriteria") ReportParameter filterCriteria,
     @Param("SortCriteria") Map<String, String[]> sortCriteria,
     @Param("RowBounds") RowBounds rowBounds,
     @Param("userId") Long userId
+  );
+
+  @SelectProvider(type = DistrictConsumptionQueryBuilder.class, method = "getFacilityConsumptionQuery")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  public List<DistrictConsumptionByFacilityReport> getFacilityConsumption(
+          @Param("filterCriteria") ReportParameter filterCriteria,
+          @Param("SortCriteria") Map<String, String[]> sortCriteria,
+          @Param("RowBounds") RowBounds rowBounds,
+          @Param("userId") Long userId
   );
 
 }

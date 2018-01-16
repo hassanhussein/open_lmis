@@ -12,6 +12,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.DistrictGeoTree;
 import org.openlmis.core.dto.FacilityContact;
 import org.openlmis.core.dto.FacilityGeoTreeDto;
 import org.openlmis.core.dto.FacilitySupervisor;
@@ -276,4 +277,31 @@ public class FacilityRepository {
       return mapper.getSuperVisedUserFacility(program,facilityId);
     }
 
+  public List<Facility> getFacilitiesByCommaSeparatedCodes(String commaSeparatedCodes) {
+    return mapper.getFacilitiesByCommaSeparatedCodes(commaSeparatedCodes);
+  }
+
+  public Facility getParentFacility(Long facilityId) {
+    return mapper.getParentFacility(facilityId);
+  }
+
+  public FacilityType getFaciltyTypeById(Long id) {
+    return mapper.getFacilityTypeById(id);
+  }
+
+  public Facility getByGeographicZoneId(Long district, Long levelId){
+    return mapper.getByGeographicZoneId(district,levelId);
+  }
+
+  public List<DistrictGeoTree> getDistrictGeoTree(Long userId) {
+    return mapper.getDistrictGeoTree(userId);
+  }
+
+  public FacilityType getFacilityTypeByFac(Long facilityId){
+    return mapper.getFacilityTypeByFac(facilityId);
+  }
+
+  public Facility getFacilityByParentGeoZone(Long parentId){
+    return mapper.getFacilityByParentGeoZone(parentId);
+  }
 }

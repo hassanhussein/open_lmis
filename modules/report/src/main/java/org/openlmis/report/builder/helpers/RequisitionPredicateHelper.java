@@ -62,7 +62,9 @@ public class RequisitionPredicateHelper {
   public static String facilityTypeIsFilteredBy(String field) {
     return String.format("%s= #{filterCriteria.facilityType}", field);
   }
-
+  public static String facilityOwnerIdFilteredBy(String field) {
+    return String.format("%s= #{filterCriteria.facilityOwner}", field);
+  }
   public static String regimenCategoryIsFilteredBy(String field) {
     return String.format("%s= #{filterCriteria.regimenCategory}", field);
   }
@@ -82,5 +84,39 @@ public class RequisitionPredicateHelper {
   public static String endDateFilteredBy(String field, String endDate) {
     return String.format("%1$s <= '%2$s'::DATE ", field, endDate);
   }
+  public static String facilityStatusFilteredBy(String field, String facilityStatusList) {
+    return String.format("%1$s in ('%2$s')", field, facilityStatusList);
+  }
+  public static String facilityOwnerIsFilteredBy(String field) {
+    return String.format("%s= #{filterCriteria.facilityOwner}", field);
+  }
 
+  public static String reportTypeFilteredBy(String field) {
+    return String.format("%s = #{filterCriteria.isEmergency}::boolean", field);
+  }
+
+
+  /**
+   *  a predicate for getting a start date of a period for any selected date @param startDate
+   * @param field
+   * @param startDate
+   * @return
+   */
+  public static String periodStartDateRangeFilteredBy(String field, String startDate){
+    return String.format("%1$s::date >= (select p.startdate::DATE from processing_periods p\n" +
+            "where p.startdate <= '%2$s'\n" +
+            "order by startdate desc limit 1)", field, startDate);
+  }
+
+  /**
+   * a predicate for getting a end date of a period for any selected date @param endDate
+   * @param field
+   * @param endDate
+   * @return
+   */
+  public static String periodEndDateRangeFilteredBy(String field, String endDate){
+    return String.format("%1$s::date <= (select p.enddate::DATE from processing_periods p " +
+            "where p.enddate >= '%2$s' " +
+            "order by p.enddate ASC  limit 1) ", field, endDate);
+  }
 }

@@ -10,6 +10,8 @@
 
 package org.openlmis.vaccine.service.inventory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
@@ -27,11 +29,15 @@ import org.openlmis.vaccine.repository.inventory.VaccineDistributionStatusChange
 import org.openlmis.vaccine.repository.inventory.VaccineInventoryDistributionRepository;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @NoArgsConstructor
@@ -60,25 +66,35 @@ public class VaccineInventoryDistributionService {
     @Autowired
     private VaccineNotificationService notificationService;
 
+
     public List<Facility> getFacilities(Long userId) {
         Facility homeFacility = facilityService.getHomeFacility(userId);
         Long facilityId = homeFacility.getId();
         return getOneLevelSupervisedFacilities(facilityId);
     }
 
+    public List<Facility> getSameLevelFacilities(Long userId) {
+        Facility homeFacility = facilityService.getHomeFacility(userId);
+        Facility parentFacility = facilityService.getParentFacility(homeFacility.getId());
+        return getOneLevelSupervisedFacilities(parentFacility.getId());
+    }
+
     public List<Facility> getOneLevelSupervisedFacilities(Long facilityId) {
         return repository.getOneLevelSupervisedFacilities(facilityId);
     }
 
-
+@Transactional
     public Long save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period
-
+        System.out.println(distribution.getPeriodId());
         Facility homeFacility = facilityService.getHomeFacility(userId);
         Long homeFacilityId = homeFacility.getId();
         ProcessingPeriod period = null;
         if (null != distribution.getToFacilityId() && null != distribution.getProgramId()) {
-            period = getCurrentPeriod(distribution.getToFacilityId(), distribution.getProgramId());
+            period = getCurrentPeriod_new(distribution.getToFacilityId(), distribution.getProgramId(), distribution.getDistributionDate());
+            System.out.println("period");
+            System.out.println(period.getId());
+            System.out.println(distribution.getDistributionDate());
         }
         if (period != null) {
             distribution.setPeriodId(period.getId());
@@ -96,11 +112,20 @@ public class VaccineInventoryDistributionService {
             statusChangeRepository.insert(statusChange);
         } else {
             distribution.setCreatedBy(userId);
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                System.out.println("Distribution");
+                System.out.println(mapper.writeValueAsString(distribution));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
             repository.saveDistribution(distribution);
+            System.out.println("Distribution Id");
 
             //Update status changes to keep distribution log
             VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
             statusChangeRepository.insert(statusChange);
+
         }
 
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
@@ -191,8 +216,21 @@ public class VaccineInventoryDistributionService {
     }
 
     public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId) {
+        System.out.println("FCILITY");
+        System.out.println(facilityId);
         Date programStartDate = programService.getProgramStartDate(facilityId, programId);
         return processingScheduleService.getCurrentPeriod(facilityId, programId, programStartDate);
+    }
+
+  public List<ProcessingPeriod> getALlBelowPeriod(Long facilityId, Long programId) {
+
+        Date programStartDate = programService.getProgramStartDate(facilityId, programId);
+        return processingScheduleService.getCurrentPeriodForDistribution(facilityId, programId,programStartDate);
+    }
+
+    public ProcessingPeriod getCurrentPeriod_new(Long facilityId, Long programId,Date distributionDate) {
+        Date programStartDate = programService.getProgramStartDate(facilityId, programId);
+        return processingScheduleService.getCurrentPeriodNew(facilityId, programId, distributionDate);
     }
 
     public ProcessingPeriod getSupervisedCurrentPeriod(Long userId) {
@@ -299,4 +337,22 @@ public class VaccineInventoryDistributionService {
         return repository.getDistributionsByDateRangeAndFacility(facilityId, startDate,endDate);
     }
 
+    public List<VaccineDistribution> getDistributionsByDateRangeForFacility(Long facilityId, String startDate, String endDate) {
+        return repository.getDistributionsByDateRangeForFacility(facilityId, startDate, endDate);
+    }
+
+    public List<VaccineDistribution> searchDistributionsByDateRangeAndFacility(Long facilityId, String startDate, String endDate,String distributionType, String searchParam) {
+        return  repository.searchDistributionByDateRangeAndFacility(facilityId,startDate,endDate,distributionType,searchParam);
+    }
+    public List<VaccineDistribution>getReceiveNotification(Long facilityId){
+        return repository.getReceiveNotification(facilityId);
+    }
+
+    public List<VaccineDistributionAlertDTO>getReceiveDistributionAlert(Long facilityId){
+        return repository.getReceiveDistributionAlert(facilityId);
+    }
+
+    public List<Map<String,Object>>getMinimumStockNotification(Long userId,Long facilityId){
+        return repository.getMinimumStockNotification(facilityId);
+    }
 }

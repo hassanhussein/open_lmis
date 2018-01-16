@@ -20,6 +20,8 @@ import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.service.*;
 import org.openlmis.demographics.service.AnnualFacilityDemographicEstimateService;
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.ivdform.domain.VaccineDisease;
 import org.openlmis.ivdform.domain.VaccineProductDose;
 import org.openlmis.ivdform.domain.Vitamin;
@@ -115,6 +117,9 @@ public class IvdFormService {
   @Autowired
   ConfigurationSettingService configService;
 
+  @Autowired
+  EquipmentInventoryService equipmentInventoryService;
+
   private static final String DATE_FORMAT = "yyyy-MM-dd";
 
   @Transactional
@@ -157,7 +162,24 @@ public class IvdFormService {
     VaccineReport reportFromDb = getVaccineReportFromDbForUpdate(report);
     repository.update(reportFromDb, report, userId);
     repository.changeStatus(reportFromDb, ReportStatus.SUBMITTED, userId);
+    updateEquipmentStatus(report, userId);
     notificationService.sendIVDStatusChangeNotification(reportFromDb, userId);
+  }
+
+  private void updateEquipmentStatus(VaccineReport report, Long userId) {
+    Boolean requiresNotification = false;
+    for (ColdChainLineItem lineItem : emptyIfNull(report.getColdChainLineItems())) {
+      if (!lineItem.getSkipped()) {
+        EquipmentInventory inventory = equipmentInventoryService.getInventoryById(lineItem.getEquipmentInventoryId());
+        inventory.setOperationalStatusId(lineItem.getOperationalStatusId());
+        inventory.setModifiedBy(userId);
+        equipmentInventoryService.updateStatus(inventory);
+        requiresNotification = true;
+      }
+    }
+    if (requiresNotification) {
+      equipmentInventoryService.updateNonFunctionalEquipments();
+    }
   }
 
   private VaccineReport getVaccineReportFromDbForUpdate(VaccineReport report) {
@@ -226,7 +248,7 @@ public class IvdFormService {
     if (lastRequest != null) {
       lastRequest.setPeriod(periodService.getById(lastRequest.getPeriodId()));
       Date lastReportStartDate = lastRequest.getPeriod().getStartDate();
-      if(startDate.before(lastReportStartDate)){
+      if (startDate.before(lastReportStartDate)) {
         startDate = lastReportStartDate;
       }
     }

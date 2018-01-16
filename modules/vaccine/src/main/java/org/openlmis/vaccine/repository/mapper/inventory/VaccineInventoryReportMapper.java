@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.vaccine.dto.VaccineDistributionDTO;
 import org.openlmis.vaccine.repository.mapper.inventory.builder.VaccineInventoryReportQueryBuilder;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,7 @@ public interface VaccineInventoryReportMapper {
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate,
             @Param("districtId") Long districtId,
+             @Param("type") String type,
             RowBounds rowBounds
     );
 
@@ -32,13 +34,22 @@ public interface VaccineInventoryReportMapper {
             "join vaccine_distributions d on d.id=dl.distributionid\n" +
             "join facilities f on f.id=d.tofacilityid\n" +
             "join products p on p.id=dl.productid\n" +
-            "where d.periodid=#{periodId} and d.fromfacilityid=#{facilityId}\n" +
+            "where d.periodid=#{periodId} and d.fromfacilityid=#{facilityId} and DISTRIBUTIONTYPE=#{type}\n" +
             "group by f.name, p.primaryname\n" +
             "order by f.name, productid")
-    List<Map<String,String>> getDistributedFacilities(@Param("periodId")Long periodId, @Param("facilityId")Long facilityId,
-                                                      RowBounds rowBounds);
+    List<Map<String,String>> getDistributedFacilities(@Param("periodId") Long periodId, @Param("facilityId") Long facilityId,
+                                                    @Param("type") String type);
 
     @Select("select count(Distinct d.tofacilityid) total from vaccine_distributions d\n" +
-            "where d.periodid=#{periodId} and d.fromfacilityid=#{facilityId}")
-    Integer getTotalDistributedFacilities(@Param("periodId")Long periodId, @Param("facilityId")Long facilityId);
+            "where d.periodid=#{periodId} and d.fromfacilityid=#{facilityId} and DISTRIBUTIONTYPE=#{type}")
+    Integer getTotalDistributedFacilities(@Param("periodId")Long periodId, @Param("facilityId")Long facilityId,@Param("type") String type);
+
+    @Select(" \n" +
+            "               SELECT periodId FROM vaccine_distributions d \n" +
+            "               JOIN processing_periods p ON  d.periodID = p.id\n" +
+            "                WHERE tofacilityId=#{facilityId}  AND \n" +
+            "                periodid = (SELECT max(periodID) FROM vaccine_distributions WHERE tofacilityId=#{facilityId} and distributionDate <=#{distributionDate} LIMIT1)\n" +
+            "                LIMIT 1 ")
+    VaccineDistributionDTO getDistributionPeriod(@Param("distributionDate") String distributionDate,@Param("facilityId")Long facilityId);
+
 }

@@ -1050,9 +1050,7 @@ services.factory('RmnchProducts', function($resource){
     return $resource('/reports/rmnch-products.json',{},{});
 });
 
-services.factory('CustomReportList', function ($resource) {
-    return $resource('/report-api/list.json', {}, {});
-});
+
 
 services.factory('CustomReportFullList', function ($resource) {
     return $resource('/report-api/full-list.json', {}, {});
@@ -1223,6 +1221,10 @@ services.factory('ReportProductsByProgramWithoutDescriptions',function($resource
     return $resource('/reports/program-products-with-no-descriptions/:programId.json',{},{});
 });
 
+services.factory('ReportProductsByProgramWithoutDescriptionsAndSyringes',function($resource){
+    return $resource('/reports/program-products-with-no-descriptions-and-program-and-syringes.json',{},{});
+});
+
 services.factory('StaticYears',function($resource){
     return $resource('/vaccine/report/staticYearList.json',{},{});
 });
@@ -1254,4 +1256,52 @@ services.factory('MinMaxStockReport',function($resource){
 
 services.factory('DistributionSummaryReport',function($resource){
     return $resource('/reports/reportdata/getDistributionSummaryData.json',{},{});
+});
+
+services.factory('VaccineReceivedSummarReport',function($resource){
+    return $resource('/reports/reportdata/getConsignmentReceivedData.json',{},{});
+});
+
+services.factory('ReportFacilityLevelWithoutProgram', function ($resource) {
+    return $resource('/reports/facility-levelWithNoProgram.json', {}, {});
+});
+
+services.factory('ProductCategoriesWithoutProgram', function($resource){
+    return $resource('/reports/productCategoriesWithoutProgram.json', {}, {});
+}) ;
+
+services.factory('ReportProductsByProgramWithoutDescriptionsAndProgram', function($resource){
+    return $resource('/reports/program-products-with-no-descriptions-and-program.json', {}, {});
+}) ;
+
+services.factory('ReportProductsWithoutDescriptionsAndWithoutProgram', function($resource){
+    return $resource('/reports/program-products-with-no-descriptions-and-without-program.json', {}, {});
+}) ;
+
+
+services.factory('ReportPeriodsByYear', function ($resource) {
+    return $resource('/reports/year/:year/periods.json', {}, {});
+});
+
+services.factory('StockEventReport', function ($resource) {
+    return $resource('/reports/reportdata/stock-event.json', {}, {});
+});
+
+services.factory('LogTagInfo', function ($resource) {
+    return $resource('/reports/reportdata/log-tag.json', {}, {});
+});
+services.factory('FacilityOnwerList', function ($resource) {
+    return $resource('/reports/facility_owners.json', {}, {});
+});
+
+services.factory('ManualTestType', function ($resource) {
+    return $resource('/manualTestTypes/types/:tid', {tid:'@tid'}, {});
+});
+
+services.factory('GetProductById', function ($resource) {
+    return $resource('/products/product/:id.json', {id:'@id'}, {});
+});
+
+services.factory('GetRejectedRnRReport', function ($resource) {
+    return $resource('/reports/reportdata/rejectedRnR', {}, {});
 });

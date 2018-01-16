@@ -37,5 +37,10 @@ public class CustomReport extends BaseModel{
 
   private String columnoptions;
 
+  private String meta;
+
+  private Boolean active;
+
+  private Integer displayOrder;
 
 }

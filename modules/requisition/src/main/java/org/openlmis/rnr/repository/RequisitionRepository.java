@@ -16,12 +16,14 @@ import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.SignatureMapper;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
+import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import static org.openlmis.rnr.domain.RnrStatus.*;
 @Repository
 public class RequisitionRepository {
 
+  public static final String FUNCTIONAL = "FUNCTIONAL";
   @Autowired
   private RequisitionMapper requisitionMapper;
 
@@ -67,6 +70,11 @@ public class RequisitionRepository {
   @Autowired
   private SignatureMapper signatureMapper;
 
+  @Autowired
+  private ManualTestsLineItemMapper manualTestMapper;
+
+  @Autowired
+  private EquipmentOperationalStatusService operationalStatusService;
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
@@ -75,6 +83,7 @@ public class RequisitionRepository {
     insertLineItems(requisition, requisition.getNonFullSupplyLineItems());
     insertRegimenLineItems(requisition, requisition.getRegimenLineItems());
     insertEquipmentStatus(requisition, requisition.getEquipmentLineItems());
+    insertManualTestsLineItems(requisition, requisition.getManualTestLineItems());
   }
 
   public void insertPatientQuantificationLineItems(Rnr rnr) {
@@ -87,6 +96,10 @@ public class RequisitionRepository {
   }
 
   private void insertEquipmentStatus(Rnr requisition, List<EquipmentLineItem> equipmentLineItems) {
+
+    List<EquipmentLineItemBioChemistryTests> generatedNonFunctionalTestes =
+            equipmentLineItemMapper.getEmptyBioChemistryEquipmentTestWithProducts();
+
     for (EquipmentLineItem equipmentLineItem : equipmentLineItems) {
       EquipmentInventoryStatus status = getStatusFromEquipmentLineItem(equipmentLineItem);
       equipmentInventoryStatusMapper.insert(status);
@@ -95,14 +108,41 @@ public class RequisitionRepository {
       equipmentLineItem.setRnrId(requisition.getId());
       equipmentLineItem.setModifiedBy(requisition.getModifiedBy());
       equipmentLineItemMapper.insert(equipmentLineItem);
+
+      List<EquipmentLineItemBioChemistryTests> newNonFunctionalTestes;
+      newNonFunctionalTestes = generatedNonFunctionalTestes;
+
+      if(equipmentLineItem.getIsBioChemistryEquipment() != null && equipmentLineItem.getIsBioChemistryEquipment()) {
+          newNonFunctionalTestes.stream().forEach(test -> {
+              test.setEquipmentLineItemId(equipmentLineItem.getId().intValue());
+              test.setModifiedBy(requisition.getModifiedBy());
+              test.setCreatedBy(requisition.getModifiedBy());
+              test.setCreatedDate(requisition.getCreatedDate());
+              test.setModifiedDate(requisition.getModifiedDate());
+              equipmentLineItemMapper.insertEquipmentLineItemBioChemistryTests(test);
+          });
+      }
     }
+  }
+
+  private void insertManualTestsLineItems(Rnr requisition, List<ManualTestesLineItem> manualTestLineItems) {
+    manualTestLineItems.stream().forEach(item -> {
+          item.setRnrId(requisition.getId());
+          item.setModifiedBy(requisition.getModifiedBy());
+          item.setCreatedBy(requisition.getCreatedBy());
+          manualTestMapper.insertManualTestLineItem(item);
+    });
   }
 
   private EquipmentInventoryStatus getStatusFromEquipmentLineItem(EquipmentLineItem equipmentLineItem) {
     EquipmentInventoryStatus status = new EquipmentInventoryStatus();
     status.setId(equipmentLineItem.getInventoryStatusId());
     status.setInventoryId(equipmentLineItem.getEquipmentInventoryId());
-    status.setStatusId(equipmentLineItem.getOperationalStatusId());
+
+    if(equipmentLineItem.getOperationalStatusId() == null)
+      status.setStatusId(operationalStatusService.getByCode(FUNCTIONAL).getId());
+    else status.setStatusId(equipmentLineItem.getOperationalStatusId());
+
     return status;
   }
 
@@ -129,12 +169,35 @@ public class RequisitionRepository {
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
       updateEquipmentLineItems(rnr);
+      updateManualTestsLineItems(rnr);
     }
+  }
+
+  private void updateManualTestsLineItems(Rnr rnr) {
+    if(rnr.getManualTestLineItems() == null) return;
+
+    rnr.getManualTestLineItems().stream().forEach(item ->{
+      item.setModifiedBy(rnr.getModifiedBy());
+      item.setModifiedDate(rnr.getModifiedDate());
+      manualTestMapper.updateManualTestLineItem(item);
+    });
   }
 
   private void updateEquipmentLineItems(Rnr rnr) {
     for(EquipmentLineItem item : rnr.getEquipmentLineItems()){
       equipmentLineItemMapper.update(item);
+
+      if(item.getBioChemistryTestes() != null) {
+        //if bio chemistry equipment operational status is null, set 'functional' as functional status
+        if(item.getOperationalStatusId() == null)
+          item.setOperationalStatusId(operationalStatusService.getByCode(FUNCTIONAL).getId());
+
+        item.getBioChemistryTestes().stream().forEach(test -> {
+          test.setModifiedBy(rnr.getModifiedBy());
+          test.setModifiedDate(rnr.getModifiedDate());
+          equipmentLineItemMapper.updateEquipmentLineItemBioChemistryTests(test);
+        });
+      }
 
       EquipmentInventoryStatus status = getStatusFromEquipmentLineItem(item);
       equipmentInventoryStatusMapper.update(status);
@@ -313,5 +376,13 @@ public class RequisitionRepository {
       signatureMapper.insertSignature(signature);
       requisitionMapper.insertRnrSignature(rnr, signature);
     }
+  }
+
+  public Rnr getRnrBy(Long facilityId, Long periodId, Long programId, boolean emergency) {
+    return requisitionMapper.getRnrBy(facilityId, periodId, programId, emergency);
+  }
+
+  public List<Rnr> getUnreleasedPreviousRequisitions(Rnr rnr) {
+    return requisitionMapper.getUnreleasedPreviousRequisitions(rnr);
   }
 }

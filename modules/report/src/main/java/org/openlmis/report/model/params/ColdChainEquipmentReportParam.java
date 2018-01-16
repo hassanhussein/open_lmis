@@ -16,7 +16,8 @@ import org.openlmis.report.model.ReportParameter;
 public class ColdChainEquipmentReportParam extends BaseParam
         implements ReportParameter {
 
-    private Long program;
+    //private Long program;
     private String facilityLevel;
     private String facilityIds;
+    private Long zone;
 }

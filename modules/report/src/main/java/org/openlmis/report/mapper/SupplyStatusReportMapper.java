@@ -12,13 +12,7 @@
 
 package org.openlmis.report.mapper;
 
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
-import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.builder.SupplyStatusQueryBuilder;
-import org.openlmis.report.model.params.SupplyStatusReportParam;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.report.SupplyStatusReport;
 import org.springframework.stereotype.Repository;
 
@@ -27,11 +21,84 @@ import java.util.List;
 @Repository
 public interface SupplyStatusReportMapper {
 
-
-    @SelectProvider(type=SupplyStatusQueryBuilder.class, method="getSupplyStatus")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<SupplyStatusReport> getSupplyStatus(@Param("filterCriteria")SupplyStatusReportParam params
-                                                    , @Param("RowBounds") RowBounds rowBounds
-                                                    , @Param("userId") Long userId  );
+  @Select("SELECT " +
+      "  li.rnrid, " +
+      "  li.productCode, " +
+      "  li.product, " +
+      "  li.dispensingUnit as unit, " +
+      "  li.beginningbalance          AS beginningbalance, " +
+      "  li.quantityreceived          AS quantityReceived, " +
+      "  li.quantitydispensed         AS quantitydispensed, " +
+      "  li.stockinhand               AS stockinhand, " +
+      "  COALESCE(li.stockinhand,0) / (CASE WHEN COALESCE(li.amc,1) = 0 THEN 1 ELSE  COALESCE(li.amc,1) END)  AS mos, " +
+      "  li.quantityapproved          AS quantityapproved, " +
+      "  li.totallossesandadjustments AS totallossesandadjustments, " +
+      "  li.newpatientcount           AS newpatientcount, " +
+      "  li.stockoutdays              AS stockoutdays, " +
+      "  li.normalizedconsumption     AS normalizedconsumption, " +
+      "  li.amc                       AS amc, " +
+      "  li.maxmonthsofstock          AS maxmonthsofstock, " +
+      "  li.maxstockquantity          AS maxstockquantity, " +
+      "  li.packstoship               AS packstoship, " +
+      "  li.quantityapproved         AS quantityRequested, " +
+      "  prl.stockinhand              AS previousStockInHand, " +
+      "  sli.quantityShipped," +
+      "  COALESCE(sli.substitutedproductquantityshipped,0) as substituteProductQuantityShipped," +
+      "  COALESCE(sli.quantityShipped,0) + COALESCE(sli.substitutedproductquantityshipped,0) as totalQuantityShipped, " +
+      "  li.packsize, " +
+      "  (CASE WHEN prl.stockInHand IS NOT NULL AND prl.stockInHand != li.beginningBalance  THEN 1 ELSE 0 END) as openingBalanceError, " +
+      "  CASE WHEN (li.quantityrequested != li.calculatedorderquantity) THEN 1 ELSE 0 END as quantityRequestedWasChanged, " +
+      "  CASE WHEN li.stockinhand <> ( COALESCE(li.beginningbalance, 0) + COALESCE(li.quantityreceived, 0) - " +
+      "                      COALESCE(li.quantitydispensed, 0) + " +
+      "                      COALESCE(li.totallossesandadjustments, 0)) THEN 1 ELSE 0 END AS stockInHandError, " +
+      "  sli.substitutedproductcode, " +
+      "  sli.substitutedproductname, " +
+      "  sli.substitutedproductquantityshipped, " +
+      "  sli.quantityshipped " +
+      "FROM " +
+      "  requisition_line_items li " +
+      "  LEFT JOIN ( " +
+      "              SELECT productCode, stockinhand " +
+      "              FROM  requisition_line_items rr " +
+      "                WHERE rr.rnrid = ( SELECT max(previousrnrid) " +
+      "                                   FROM vw_previous_rnr WHERE " +
+      "                                     id = #{rnrid}) " +
+      "            )  as prl " +
+      "       ON li.productcode = prl.productcode " +
+      "  LEFT JOIN ( " +
+      "              SELECT DISTINCT " +
+      "                productcode, " +
+      "                quantityshipped, " +
+      "                substitutedproductcode, " +
+      "                substitutedproductname, " +
+      "                substitutedproductquantityshipped " +
+      "              FROM " +
+      "                ( " +
+      "                  SELECT " +
+      "                    NULL    orderid, " +
+      "                    NULL AS quantityshipped, " +
+      "                    productcode, " +
+      "                    substitutedproductcode, " +
+      "                    substitutedproductname, " +
+      "                    substitutedproductquantityshipped " +
+      "                  FROM shipment_line_items li " +
+      "                  WHERE li.substitutedproductcode IS NOT NULL AND orderid = #{rnrid} " +
+      "                  UNION " +
+      "                  SELECT " +
+      "                    orderid, " +
+      "                    sum(quantityshipped) quantityshipped, " +
+      "                    productcode, " +
+      "                    NULL                 substitutedproductcode, " +
+      "                    NULL AS              substitutedproductname, " +
+      "                    NULL AS              substitutedproductquantityshipped " +
+      "                  FROM shipment_line_items " +
+      "                  WHERE orderid = #{rnrid} " +
+      "                  GROUP BY orderid, productcode " +
+      "                ) AS tr " +
+      "              ORDER BY productcode, substitutedproductcode DESC " +
+      "        ) sli on sli.productcode = li.productcode" +
+      " WHERE " +
+      "  li.rnrid = #{rnrid} and skipped = false order by productCode")
+  List<SupplyStatusReport> getSupplyStatus(Long rnrId);
 
 }

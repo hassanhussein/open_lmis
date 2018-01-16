@@ -28,7 +28,7 @@ import java.util.Map;
 public interface RequisitionMapper {
 
   @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, sourceApplication, emergency, allocatedBudget, modifiedBy, createdBy) " +
-    "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy})")
+      "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy})")
   @Options(useGeneratedKeys = true)
   void insert(Rnr requisition);
 
@@ -51,13 +51,15 @@ public interface RequisitionMapper {
       @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
       @Result(property = "regimenLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")) ,
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
       @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
       @Result(property = "patientQuantifications", javaType = List.class, column = "id",
           many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
       @Result(property = "rnrSignatures", column = "id", javaType = List.class,
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId"))
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
+      @Result(property = "manualTestLineItems", column = "id", javaType = List.class,
+              many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId"))
   })
   Rnr getById(Long rnrId);
 
@@ -71,21 +73,28 @@ public interface RequisitionMapper {
       @Result(property = "period.id", column = "periodId")})
   List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment);
 
-  @Select({"SELECT r.id, r.emergency, r.programId, r.facilityId, r.periodId, r.modifiedDate" +
-    "     , p.id as programId, p.code as programCode, p.name as programName " +
-    "     , f.id as facilityId, f.code as facilityCode, f.name as facilityName " +
-    "     , ft.name as facilityType " +
-    "     , gz.name as districtName " +
-    "     , pr.StartDate as periodStartDate, pr.endDate as periodEndDate, pr.name as periodName " +
-    "     , (select max(createdDate) from requisition_status_changes rsc where rsc.rnrId = r.id and rsc.status = 'SUBMITTED') as submittedDate",
-    " FROM requisitions r " +
-      " join programs p on p.id = r.programId " +
-      " join facilities f on f.id = r.facilityId " +
-      " join processing_periods pr on pr.id = r.periodId " +
-      " join facility_types ft on ft.id = f.typeId " +
-      " join geographic_zones gz on gz.id = f.geographicZoneId ",
-    "WHERE programId =  #{programId}",
-    "AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')"})
+  @Select({"SELECT r.id, r.emergency, r.programId, r.facilityId, r.periodId, r.modifiedDate\n" +
+      "           , p.id as programId, p.code as programCode, p.name as programName  \n" +
+      "           , f.id as facilityId, f.code as facilityCode, f.name as facilityName  \n" +
+      "           , ft.name as facilityType  \n" +
+      "           , gz.name as districtName  \n" +
+      "           , pr.StartDate as periodStartDate, pr.endDate as periodEndDate, pr.name as periodName\n" +
+      "           , (select max(createdDate) from requisition_status_changes rsc where rsc.rnrId = r.id and rsc.status = 'SUBMITTED') as submittedDate\n" +
+      "       FROM requisitions r  \n" +
+      "           join programs p on p.id = r.programId  \n" +
+      "           join facilities f on f.id = r.facilityId  \n" +
+      "           join processing_periods pr on pr.id = r.periodId  \n" +
+      "           join facility_types ft on ft.id = f.typeId  \n" +
+      "           join geographic_zones gz on gz.id = f.geographicZoneId\n" +
+      "          join (SELECT   r.emergency, r.programId, r.facilityId, max(r.periodId) periodId\n" +
+      "             from requisitions r\n" +
+      "             WHERE programId =   #{programId}\n" +
+      "             AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')\n" +
+      "             GROUP BY 1,2,3 ORDER BY r.facilityid) t\n" +
+      "           on t.programid =r.programid and t.periodId=r.periodid and t.facilityid=r.facilityid and t.emergency=r.emergency\n" +
+      "      WHERE r.programId =   #{programId}\n" +
+      "      AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')\n" +
+      "order by r.facilityid"})
   List<RnrDTO> getAuthorizedRequisitionsDTO(RoleAssignment roleAssignment);
 
   @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id}")
@@ -107,7 +116,7 @@ public interface RequisitionMapper {
 
   @Select({"SELECT * FROM requisitions r",
       "WHERE facilityId = #{facility.id}"}
-      )
+  )
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "program", javaType = Program.class, column = "programId",
@@ -128,7 +137,7 @@ public interface RequisitionMapper {
       @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
       @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
       @Result(property = "rnrSignatures", column = "id", javaType = List.class,
-        many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
+          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
       )
   })
   List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
@@ -239,7 +248,7 @@ public interface RequisitionMapper {
   Long getProgramId(Long rnrId);
 
   @Select("select * from fn_delete_rnr( #{rnrId} )")
-  String deleteRnR(@Param("rnrId")Integer rnrId);
+  String deleteRnR(@Param("rnrId") Integer rnrId);
 
   @Update({"UPDATE requisitions SET",
       "clientSubmittedNotes = COALESCE(#{clientSubmittedNotes}, clientSubmittedNotes),",
@@ -250,11 +259,31 @@ public interface RequisitionMapper {
   @Insert("INSERT INTO requisition_signatures(signatureId, rnrId) VALUES " +
       "(#{signature.id}, #{rnr.id})")
   void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);
+
   @Select("SELECT * FROM requisition_signatures " +
       "JOIN signatures " +
       "ON signatures.id = requisition_signatures.signatureId " +
       "WHERE requisition_signatures.rnrId = #{rnrId} ")
   List<Signature> getRnrSignaturesByRnrId(Long rnrId);
+
+  @Select("SELECT * FROM requisitions " +
+      "WHERE " +
+      " facilityId = #{facilityId} " +
+      "and periodId = #{periodId} " +
+      "and programId = #{programId} " +
+      "and emergency = #{emergency}")
+  Rnr getRnrBy(@Param("facilityId") Long facilityId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("emergency") boolean emergency);
+
+  @Select({"SELECT r.* from requisitions r",
+      "JOIN processing_periods p " +
+          "on p.id = r.periodid " +
+          "and p.startDate < (select max(pp.startDate) from processing_periods pp where pp.id = #{rnr.period.id})",
+      "where ",
+      "r.facilityid = #{rnr.facility.id} ",
+      "and r.programid = #{rnr.program.id} ",
+      "and r.emergency = false " ,
+      "and r.status = 'APPROVED'"})
+  List<Rnr> getUnreleasedPreviousRequisitions(@Param("rnr") Rnr rnr);
 
   public class ApprovedRequisitionSearch {
 

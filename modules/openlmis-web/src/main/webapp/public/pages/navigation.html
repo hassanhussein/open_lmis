@@ -8,6 +8,8 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
   -->
 
+
+
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
   <ul class="clearfix" style="display:none">
     <li >
@@ -86,6 +88,29 @@
                href="/public/pages/logistics/distribution/index.html#/manage"
                openlmis-message="link.distributions"></a>
           </li>
+            <li>
+                <a href="/public/pages/vaccine/stock-on-hand/index.html#/initiate"
+                   openlmis-message="link.stock.on.hand"></a>
+
+            </li>
+
+            <li>
+                <a href="/public/pages/vaccine/stock-availability/index.html#/initiate"
+                   >Stock Availability Summary</a>
+
+            </li>
+
+            <li ng-show="hasPermission('VIEW_VIMS_DASHBOARD_V2')">
+                <a href="/public/pages/vaccine/dash/index3.html#/myApp"
+                        >Dash Board</a>
+
+            </li>
+
+            <li ng-show="hasPermission('VIEW_STOCK_SUMMARY')">
+                <a href="/public/pages/vaccine/stock-summary/index.html#/initiate"
+                   >Stock Status</a>
+
+            </li>
           <li class="beak"></li>
             <li ng-show="hasPermission('MANAGE_VACCINE_PRODUCTS_CONFIGURATION')">
                 <a href="/public/pages/vaccine/inventory/index.html#/configuration"
@@ -189,19 +214,15 @@
                    >Previous Issue Voucher</a>
             </li>
 
-
           <li ng-show="hasPermission('MASS_DISTRIBUTION')">
             <a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"
                openlmis-message="link.vaccine.distribute"></a>
           </li>
 
-            <li ng-show="hasPermission('MASS_DISTRIBUTION')">
+            <li ng-show="hasPermission('MANAGE_FACILITY_DISTRIBUTION')">
             <a href="/public/pages/vaccine/inventory/index.html#/facility-distribution">Facility Distribution</a>
           </li>
-          <li ng-show="hasPermission('MANAGE_STOCK')">
-            <a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"
-               openlmis-message="link.vaccine.distribute"></a>
-          </li>
+
           <li ng-show="hasPermission('USE_BARCODE_FEATURE')">
               <a href="/public/pages/vaccine/inventory/index.html#/distribute_barcode"
               >Distribute with Barcode</a>
@@ -223,7 +244,13 @@
                    openlmis-message="link.vaccine.transfer.out"></a>
             </li>
 
-          <li>
+            <li ng-show="hasPermission('MANAGE_STOCK') ">
+                <a href="/public/pages/vaccine/inventory/index.html#/transfer-issue-voucher"
+                        >Transfer In/Out Issue Voucher</a>
+            </li>
+
+
+            <li>
             <a href="/public/pages/var/index.html#/">VAR</a>
           </li>
 
@@ -235,6 +262,10 @@
 
           <div class="submenu">
               <ul>
+                  <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
+                      <a id='log-tag-menu' href="/public/pages/admin/upload-log-tag/index.html"
+                              >Upload Log Tag</a>
+                  </li>
                   <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
                       <a id="equipment-inventory"
                          href="/public/pages/admin/equipment/inventory/index.html"
@@ -253,6 +284,8 @@
           </div>
       </li>
     <li ng-include="'/public/pages/reports/navigation.html'"></li>
+
+
     <li>
       <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
 
@@ -359,6 +392,10 @@
                       <a href="/public/pages/admin/interfaces/index.html"
                          openlmis-message="link.admin.elmis.interface"></a>
                   </li>
+                  <li ng-show="hasPermission('MANAGE_MANUAL_TEST_TYPES')">
+                      <a href="/public/pages/admin/manual-test-types/index.html"
+                         openlmis-message="link.admin.manage.manual.tests"></a>
+                  </li>
                 <li class="beak"></li>
               </ul>
             </div>
@@ -416,6 +453,11 @@
                             </a>
                         </li>
 
+                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                            <a href="/public/pages/admin/equipment/model/index.html">
+                                <span id="equipement_model" openlmis-message="link.manage.equipment.model" ></span>
+                            </a>
+                        </li>
 
                     </ul>
                 </div>
@@ -432,6 +474,11 @@
                   </ul>
                 </div>
             </li>
+          <li ng-show="hasPermission('SYSTEM_SETTINGS')">
+            <a
+                href="/public/pages/admin/supply-partner/index.html"
+                ><span openlmis-message="link.manage.supply.partners"></span></a>
+          </li>
             <li class="has-children"  >
             <a id="demographic-admin" href="" openlmis-message="link.manage.demographic.estimates"></a>
             <div class="submenu">
@@ -458,6 +505,10 @@
               <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
                  openlmis-message="link.admin.manage.custom.reports"></a>
             </li>
+            <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
+                <a id='manageLogTagTemperature' href="/public/pages/vaccine/inventory/log-tag-temperature/index.html#/list"
+                   >Manage Log Tag</a>
+            </li>
             <li class="has-children" ng-show="hasPermission('CONFIGURE_HELP_CONTENT')">
                 <a id="manage-help-option"
                    href="/public/pages/help/helpTopic/index.html"
@@ -483,11 +534,46 @@
       </div>
 
     <li ng-show="hasPermission('ACCESS_ILS_GATEWAY')">
-        <a
+    <!--    <a
             href="/public/pages/ils-gateway/index.html#/dashboard"
-            openlmis-message="link.ils"></a>
+            openlmis-message="link.ils">
+
+        </a>-->
+
+
     </li>
-    <li ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
+
+
+<!--
+          <a href="/public/pages/vaccine/stock-availability/index.html#/dashboard">
+-->
+            <!--  <a href="#">
+                  <span class="glyphicon glyphicon-envelope"></span>
+              </a>-->
+
+         <!-- <a>
+        <i class="flaticon-alert" style=""></i>
+          </a>-->
+
+<!--
+          <a href="" style="height: 50% !important;"><i class="flaticon-alert"></i></a>
+-->
+<!--<li>
+
+
+    <div id="circle"><span style="font-size: 100% !important;text-align: center !important;
+vertical-align: top !important;">
+    <strong>78</strong>
+    </span></div>
+
+   <a href="#" class="ico">&nbsp;&nbsp;&nbsp;
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alerts</a>
+
+</li>-->
+
+
+
+      <li ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
       <a
               href="/public/pages/dashboard/index_new.html#/dashboard-new"
               openlmis-message="link.dashboard"></a>
@@ -497,6 +583,11 @@
                   href="/public/pages/dashboard/index.html#/dashboard"
                   openlmis-message="link.dashboard"></a>
       </li>
+
+      <li ng-show="hasPermission('VIEW_VIMS_NOTIFICATION')">
+          <ng-include src="'/public/pages/notification.html'"></ng-include>
+      </li>
+
   </ul>
 </div>
 <div class="navigation-locale-bar">

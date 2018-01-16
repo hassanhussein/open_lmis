@@ -386,7 +386,7 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="vaccine_stock_status"/>
-                    <property name="template" value="vaccine-stock-status-report.jasper"/>
+                    <property name="template" value="vaccine-stock-status-version2.jasper"/>
                     <property name="reportDataProvider" ref="vaccineStockStatusReportDataProvider"/>
                     <property name="id" value="RP-replacement-plan"/>
                     <property name="name" value="Vaccine Stock Status Report"/>
@@ -499,11 +499,71 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="distribution_summary_report"/>
-                    <property name="template" value="distribution-summary-report.jasper"/>
+                    <property name="template" value="vaccine-distribution-summary-report.jasper"/>
                     <property name="reportDataProvider" ref="distributionSummaryReportDataProvider"/>
                     <property name="id" value="distribution_summary_report"/>
                     <property name="name" value="Distribution Summary Report"/>
                     <property name="title" value="report.title.distribution.summary.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="vaccine_received_summary_report"/>
+                    <property name="template" value="vaccine-received-summary-report.jasper"/>
+                    <property name="reportDataProvider" ref="vaccineReceivedReportDataProvider"/>
+                    <property name="id" value="Consignment Received Summary Report"/>
+                    <property name="name" value="Consignment Received Summary Report"/>
+                    <property name="title" value="report.title.received.summary.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="vaccine_stock_status_soh"/>
+                    <property name="template" value="vaccine-stock-status-version-soh.jasper"/>
+                    <property name="reportDataProvider" ref="vaccineStockStatusReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Vaccine Stock Status Report"/>
+                    <property name="title" value="report.vaccine.title.stock.status"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="stock_event"/>
+                    <property name="template" value="min-max-stock-adequacy.jasper"/>
+                    <property name="reportDataProvider" ref="stockEventReportDataProvider"/>
+                    <property name="id" value="RP-replacement-plan"/>
+                    <property name="name" value="Stock Adequacy Report"/>
+                    <property name="title" value="Stock Adequacy Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="log_tag"/>
+                    <property name="template" value="log-tag.jasper"/>
+                    <property name="reportDataProvider" ref="logTagReportDataProvider"/>
+                    <property name="id" value="RP-log-tag"/>
+                    <property name="name" value="Log Tag Temperature Reportt"/>
+                    <property name="title" value="Log Tag Temperature Report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="reporting_status"/>
+                    <property name="template" value="reporting-status.jasper"/>
+                    <property name="reportDataProvider" ref="nonReportingFacilityReportDataProvider"/>
+                    <property name="id" value="RP-Reporting-Status"/>
+                    <property name="name" value="Reporting Status"/>
+                    <property name="title" value="header.report.reporting.status"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="rejected_rnr"/>
+                    <property name="template" value="reporting-status.jasper"/>
+                    <property name="reportDataProvider" ref="rejectedRnRReportDataProvider"/>
+                    <property name="id" value="RP-Reporting-Status"/>
+                    <property name="name" value="Rejected RnR"/>
+                    <property name="title" value="Rejected RnR By District"/>
                     <property name="version" value="1.0"/>
                 </bean>
             </list>

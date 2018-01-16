@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface VaccineInventoryDistributionMapper {
@@ -139,7 +140,7 @@ public interface VaccineInventoryDistributionMapper {
 
     @Select("SELECT *" +
             " FROM vaccine_distributions " +
-            "WHERE tofacilityid=#{facilityId} AND vouchernumber=#{voucherNumber} AND status='PENDING' LIMIT 1")
+            "WHERE tofacilityid=#{facilityId} AND vouchernumber=#{voucherNumber} AND status='PENDING' order by distributiondate desc LIMIT 1")
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
                     many = @Many(select = "getLineItems")),
@@ -165,7 +166,7 @@ public interface VaccineInventoryDistributionMapper {
 
     @Select("SELECT *" +
             " FROM vaccine_distributions " +
-            " WHERE tofacilityid=#{facilityId} AND  status='PENDING' order by createddate ASC LIMIT 1")
+            " WHERE tofacilityid=#{facilityId} AND  status='PENDING'  order by distributiondate desc LIMIT 1")
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "fromFacilityId", column = "fromFacilityId"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
@@ -222,7 +223,7 @@ public interface VaccineInventoryDistributionMapper {
             " FROM vaccine_distributions " +
             " WHERE fromfacilityid=#{facilityId} AND  " +
             " distributiondate::DATE = #{date}::DATE AND distributionType='ROUTINE'" +
-            " order by createddate DESC")
+            " order by distributiondate DESC")
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "toFacilityId", column = "toFacilityId"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
@@ -235,7 +236,7 @@ public interface VaccineInventoryDistributionMapper {
             " FROM vaccine_distributions " +
             " WHERE fromfacilityid=#{facilityId} AND  " +
             " distributiondate::DATE >= #{date}::DATE AND distributiondate::DATE <= #{endDate}::DATE  AND distributionType= #{distributionType}  " +
-            " order by createddate DESC")
+            " order by distributiondate::DATE DESC")
     @Results({@Result(property = "id", column = "id"),
             @Result(property = "toFacilityId", column = "toFacilityId"),
             @Result(property = "lineItems", column = "id", javaType = List.class,
@@ -298,6 +299,26 @@ public interface VaccineInventoryDistributionMapper {
     List<VaccineDistribution> getDistributionsByDateRangeAndFacility(@Param("facilityId") Long facilityId,
                                                                      @Param("startDate") String startDate,
                                                                      @Param("endDate") String endDate);
+    @Select("SELECT * from vaccine_distributionS s   " +
+            "where tofacilityId = #{facilityId}  AND    " +
+            " ((SELECT FT.CODE FROM FACILITIES   " +
+            " JOIN FACILITY_TYPES FT ON facilities.typeId = FT.ID  " +
+            " WHERE facilities.ID = toFacilityId)  =  " +
+            "  (SELECT FT.CODE FROM FACILITIES  " +
+            " JOIN FACILITY_TYPES FT ON facilities.typeId = FT.ID   " +
+            " WHERE facilities.ID = FROMFacilityId)) AND ORDERID IS NULL  AND " +
+            " distributiondate::DATE >= #{startDate}::DATE  and " +
+            " distributiondate::DATE <= #{endDate}::DATE  " +
+            " order by createddate DESC")
+    @Results({@Result(property = "id", column = "id"),
+            @Result(property = "toFacilityId", column = "toFacilityId"),
+            @Result(property = "lineItems", column = "id", javaType = List.class,
+                    many = @Many(select = "getLineItems")),
+            @Result(property = "toFacility", column = "toFacilityId", javaType = Facility.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))})
+    List<VaccineDistribution> getDistributionsByDateRangeForFacility(@Param("facilityId") Long facilityId,
+                                                                     @Param("startDate") String startDate,
+                                                                     @Param("endDate") String endDate);
 
 
     @Select("SELECT *" +
@@ -312,9 +333,54 @@ public interface VaccineInventoryDistributionMapper {
                     one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))})
     VaccineDistribution getAllDistributionsByVoucherNumber(@Param("facilityId") Long facilityId,@Param("voucherNumber") String voucherNumber);
 
+    @Select("SELECT * " +
+            " FROM vaccine_distributions " +
+            " WHERE fromfacilityid=#{facilityId} AND  " +
+            " distributiondate::DATE >= #{startDate}::DATE AND distributiondate::DATE <= #{endDate}::DATE  AND distributionType= #{distributionType} " +
+            " AND toFacilityId= ( " +
+            " SELECT f.id FROM FACILITIES F " +
+            " LEFT JOIN vaccine_distributions vd on F.id = toFacilityId " +
+            " WHERE  LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%' and fromfacilityid=#{facilityId}  LIMIT 1 )"+
+            " " +
+            " order by createddate DESC")
+    @Results({@Result(property = "id", column = "id"),
+            @Result(property = "toFacilityId", column = "toFacilityId"),
+            @Result(property = "lineItems", column = "id", javaType = List.class,
+                    many = @Many(select = "getLineItems")),
+            @Result(property = "toFacility", column = "toFacilityId", javaType = Facility.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))})
+    List<VaccineDistribution> searchDistributionAndFacilityByDateRange(@Param("facilityId") Long facilityId,
+                                                                     @Param("startDate") String startDate,
+                                                                     @Param("endDate") String endDate,
+                                                                       @Param("distributionType") String distributionType,
+                                                                       @Param("searchParam") String searchParam);
+
+    @Select(" select * from vaccine_distributions where status='PENDING' and toFacilityId=#{facilityId}")
+    List<VaccineDistribution>getReeceiveNotiication(@Param("facilityId")Long facilityId);
 
 
+    @Select("     SELECT \n" +
+            "            (select name toFacilityName from facilities where id =toFacilityId ),  \n" +
+            "            (select name fromFacilityName from facilities where id =fromFacilityId ),\n" +
+            "            (select cellphone from users where id=s.modifiedby),\n" +
+            "            (select concat(firstname,' ',lastName) as modifiedBy from users where id=s.modifiedby),\n" +
+            "            s.modifieddate,distributionDate,s.modifiedBy,voucherNumber,d.status,orderdate  \n" +
+            "            FROM vaccine_distributions d  \n" +
+            "            JOIN vaccine_distribution_status_changes s ON d.id = s.distributionId \n" +
+            "            JOIN vaccine_order_requisitions o ON d.orderId = o.id \n" +
+            "            WHERE d.status = 'PENDING' AND \n" +
+            "            toFacilityId = #{facilityId} ")
+    List<VaccineDistributionAlertDTO>getReceiveDistributionAlert(@Param("facilityId") Long facilityId);
 
+@Select(" WITH r AS(\n" +
+        "                             select * from stock_requirements R\n" +
+        "                            JOIN stock_cards s ON  r.facilityId = S.FACILITYiD and r.productId = S.PRODUCTiD \n" +
+        "                            JOIN products p ON s.productId = p.id\n" +
+        "                            where s.facilityId=#{facilityId} and year = extract(year from NOW()::Date)\n" +
+        "                            )SELECT * FROM r\n" +
+        "                            WHERE( select fn_get_vaccine_stock_color(r.maximumstock::int, r.reorderlevel::int, r.bufferstock::int, R.TOTALQUANTITYONHAND::int) \n" +
+        "                           = (SELECT value FROM configuration_settings WHERE LOWER(key) = LOWER('STOCK_LESS_THAN_BUFFER_COLOR') LIMIT 1))\n")
+    List<Map<String,Object>>getMinimumStockNotification(@Param("facilityId")Long facilityId);
 
 
 }

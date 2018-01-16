@@ -599,6 +599,10 @@ services.factory('GetAllOneLevelFacilities', function ($resource) {
     return $resource('/vaccine/inventory/distribution/getOneLevelSuperVisedFacility.json', {}, {});
 });
 
+services.factory('GetSameLevelFacilities', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/getSameLevelFacilities.json', {}, {});
+});
+
 services.factory('GetDistributionsByDateRangeAndFacility', function ($resource) {
     return $resource('/vaccine/inventory/distribution/getDistributionsByDateRangeAndFacility.json', {}, {});
 });
@@ -617,4 +621,89 @@ services.factory('VaccineDistributedFacilitiesReport', function ($resource) {
 
 services.factory('VaccineDistributionProgramProduct', function ($resource) {
     return $resource('/vaccine/orderRequisition/:programId.json', {programId: '@programId'}, {});
+});
+
+
+services.factory('searchDistributionsByDateRange',function($resource){
+    return $resource('/vaccine/inventory/distribution/searh-by-date-range/:facilityId',{facilityId:'@facilityId'},{});
+});
+
+services.factory('GetDistributionsByDateRangeForFacility', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/getDistributionsByDateRangeForFacility.json', {}, {});
+});
+
+
+services.factory('VaccineInventorySummary', function($resource){
+
+    return $resource('/vaccine/dashboard/stock-status-over-view.json',{},{});
+});
+
+services.factory('VaccineInventorySummaryDetails', function($resource){
+
+    return $resource('/vaccine/dashboard/vaccineInventoryStockDetails.json',{},{});
+});
+services.factory('GetVaccineInventoryDetails', function($resource){
+
+    return $resource('/vaccine/dashboard/vaccineInventoryDetails.json',{},{});
+});
+
+services.factory('GetVaccineInventoryFacilityDetails', function($resource){
+
+    return $resource('/vaccine/dashboard/vaccineInventoryFacilityDetails.json',{},{});
+});
+
+//Log Tag API
+services.factory('GetAllLogTagTemperature', function($resource){
+
+    return $resource('/log-tag-api/getLogTagTemps.json',{},{});
+});
+
+services.factory('GetAllLogTagTemperatureById',function($resource){
+    return $resource('/log-tag-api/byId/:id',{id:'@id'},{});
+});
+
+services.factory('SaveLogTagTemperatureInfo', function ($resource) {
+    return $resource('/log-tag-api/save', {}, {});
+});
+
+services.factory('ReceiveNotification', function ($resource) {
+    return $resource('/vaccine/orderRequisition/receiveNotification', {}, {});
+});
+
+services.factory('ReceiveDistributionAlert', function ($resource) {
+    return $resource('/vaccine/orderRequisition/receiveDistributionAlert', {}, {});
+});
+
+services.factory('MinimumStockNotification', function ($resource) {
+    return $resource('/vaccine/orderRequisition/getMinimumStock', {}, {});
+});
+
+services.factory('AvailableStockDashboard', function($resource){
+
+    return $resource('/vaccine/dashboard/availableStock.json',{},{});
+});
+
+
+//Dashboard API
+
+services.factory('FullStockAvailableForDashboard', function($resource){
+    return $resource('/vaccine/dashboard/fullStockAvailability.json',{},{});
+});
+
+services.factory('AggregateFacilityPerformance', function($resource){
+    return $resource('/vaccine/dashboard/getNationalPerformance.json',{},{});
+});
+
+services.factory('ReportingTarget', function($resource){
+    return $resource('/vaccine/dashboard/reportingTarget.json',{},{});
+});
+
+services.factory('GetDistrictCategorization', function($resource){
+    return $resource('/vaccine/dashboard/categorization.json',{},{});
+});
+services.factory('GetVaccineCoverageByRegionAndProduct', function($resource){
+    return $resource('/vaccine/dashboard/VaccineCoverageByRegionAndProduct.json',{},{});
+});
+services.factory('GetRejectedRnR', function($resource){
+    return $resource('/reports/getRejectedRnR.json',{},{});
 });

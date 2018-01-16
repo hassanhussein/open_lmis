@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @NoArgsConstructor
@@ -28,7 +29,8 @@ public class VaccineInventoryDistributionRepository {
         return mapper.getOneLevelSupervisedFacilities(facilityId);
     }
     public Integer saveDistribution(VaccineDistribution vaccineDistribution) {
-        return mapper.saveDistribution(vaccineDistribution);
+       return mapper.saveDistribution(vaccineDistribution);
+
     }
 
     public Integer updateDistribution(VaccineDistribution vaccineDistribution) {
@@ -136,5 +138,26 @@ public class VaccineInventoryDistributionRepository {
 
     public List<VaccineDistribution> getDistributionsByDateRangeAndFacility(Long facilityId, String startDate, String endDate) {
         return mapper.getDistributionsByDateRangeAndFacility(facilityId, startDate,endDate);
+    }
+
+    public List<VaccineDistribution> getDistributionsByDateRangeForFacility(Long facilityId, String startDate, String endDate) {
+        return mapper.getDistributionsByDateRangeForFacility(facilityId, startDate, endDate);
+    }
+
+    public List<VaccineDistribution> searchDistributionByDateRangeAndFacility(Long facilityId, String startDate, String endDate,String distributionType, String searchParam) {
+
+        return mapper.searchDistributionAndFacilityByDateRange(facilityId,startDate,endDate,distributionType,searchParam);
+    }
+    public List<VaccineDistribution>getReceiveNotification(Long facilityId){
+        return mapper.getReeceiveNotiication(facilityId);
+    }
+
+    public List<VaccineDistributionAlertDTO>getReceiveDistributionAlert(Long facilityId){
+        return mapper.getReceiveDistributionAlert(facilityId);
+    }
+
+    public List<Map<String,Object>>getMinimumStockNotification(Long facilityId){
+        return mapper.getMinimumStockNotification(facilityId);
+
     }
 }

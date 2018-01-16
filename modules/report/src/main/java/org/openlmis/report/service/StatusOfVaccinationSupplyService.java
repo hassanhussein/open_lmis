@@ -41,7 +41,7 @@ public class StatusOfVaccinationSupplyService {
         Map<String, StatusOfVaccinationSuppliesRecievedDetail> regionPopulationMap ;
         PerformanceByDropoutRateParam filterParam ;
         filterParam = ReportsCommonUtilService.prepareParam(filterCriteria);
-        isRegionReport = filterParam.getGeographic_zone_id() == 0 ? true : false;
+        isRegionReport = filterParam.getGeographic_zone_id() == 437 ? true : false;
         isFacilityReport = dropoutRateByDistrictRepository.isDistrictLevel(filterParam.getGeographic_zone_id());
         if (isFacilityReport) {
             statusOfVaccinationSuppliesFacilityDistrictList = this.repository.loadStatusOfVaccineSupplyForFacilityReports(filterParam);
@@ -94,6 +94,7 @@ public class StatusOfVaccinationSupplyService {
         float totalUsed = 0f;
         float totalWasted = 0f;
         float totalAdminstered = 0f;
+        float totalVaccinated = 0f;
         Long totalPopulation = 0L;
         for (StatusOfVaccinationSuppliesRecievedDetail statusOfVaccinationSuppliesRecievedDetail : statusOfVaccinationSuppliesFacilityDistrictList) {
 
@@ -103,6 +104,7 @@ public class StatusOfVaccinationSupplyService {
             totalUsed += statusOfVaccinationSuppliesRecievedDetail.getUsed();
             totalWasted += statusOfVaccinationSuppliesRecievedDetail.getWasted();
             totalAdminstered += statusOfVaccinationSuppliesRecievedDetail.getAdministered();
+            totalVaccinated+=statusOfVaccinationSuppliesRecievedDetail.getVaccinated();
             totalPopulation += statusOfVaccinationSuppliesRecievedDetail.getTargetpopulation();
         }
         suppliesReceivedReport.setTotalReceived(totalReceived);
@@ -112,6 +114,7 @@ public class StatusOfVaccinationSupplyService {
         suppliesReceivedReport.setTotalWasted(totalWasted);
         suppliesReceivedReport.setTotalAdminstered(totalAdminstered);
         suppliesReceivedReport.setTotalPopulation(totalPopulation);
+        suppliesReceivedReport.setTotalVaccinated(totalVaccinated);
         return suppliesReceivedReport;
     }
 }

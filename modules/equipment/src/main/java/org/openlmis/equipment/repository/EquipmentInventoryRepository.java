@@ -158,4 +158,11 @@ public class EquipmentInventoryRepository {
     mapper.deleteEquipmentInventory(inventoryId);
   }
 
+  public List<EquipmentInventory> getInventoryByFacilityAndProgram(Long facilityId, Long programId){
+     return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
+  }
+
+  public EquipmentInventory findBySerialNumber(String serialNumber) {
+    return mapper.findInventoryBySerialNumber(serialNumber);
+  }
 }

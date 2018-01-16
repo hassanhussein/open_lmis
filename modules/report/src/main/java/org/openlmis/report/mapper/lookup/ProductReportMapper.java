@@ -82,7 +82,7 @@ public interface ProductReportMapper {
           "     order by name ")
   List<Product> getPushProgramProducts();
 
-  @Select("SELECT p.id, (coalesce(p.primaryname,'') || ' ' || coalesce(form.code,'') || ' ' || coalesce(p.strength,'') || ' ' || coalesce(du.code,'')) as name, p.code, pp.productcategoryid as categoryid, " +
+  @Select("SELECT p.id, p.primaryname, (coalesce(p.primaryname,'') || ' ' || coalesce(form.code,'') || ' ' || coalesce(p.strength,'') || ' ' || coalesce(du.code,'')) as name, p.code, pp.productcategoryid as categoryid, " +
     "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
     " " +
     "   FROM " +
@@ -148,4 +148,19 @@ public interface ProductReportMapper {
             " order by name "
     )
     List<Product> getProductsForProgramWithoutDescriptions(Long programId);
+
+
+    @Select("SELECT p.id, p.primaryname as name, p.code, pp.productcategoryid categoryid, " +
+            "CASE WHEN p.tracer = true THEN 'Indicator Product' ELSE 'Regular' END tracer" +
+            " " +
+            "   FROM " +
+            "       products as p " +
+            "             join product_forms as form on form.id = p.formid " +
+            "             join dosage_units as du on du.id = p.dosageunitid" +
+            "         join program_products pp on p.id = pp.productId " +
+            "         join product_categories pc ON pp.productCategoryId = PC.ID" +
+            "     where pp.programId = #{programId} and pp.active = true AND lower(PC.CODE) = 'vaccine'" +
+            " order by name "
+    )
+    List<Product> getProgramProductsWithoutDescriptionsAndSyringes(Long programId);
 }

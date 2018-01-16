@@ -31,7 +31,7 @@
                   <td>
                     <span class="red" ng-show="current.id == report.id">>></span>
                     {{$index + 1}}
-                    <a href="" ng-click="select(report)">{{report.name}}</a>
+                    <span class="red">{{report.active === true? '': 'X '}}</span><a href="" ng-click="select(report)">{{report.name}}</a>
                   </td>
                 </tr>
               </table>
@@ -64,9 +64,25 @@
             <div class="form-row row-fluid">
               <div class="span6">
                 <div class="form-cell">
+                  <div>
+                    <label>Active</label>
+                    <div class="form-field">
+                      <input ng-model="current.active" placeholder="Name" type="checkbox"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-row row-fluid">
+              <div class="span6">
+                <div class="form-cell">
                   <label>Category</label>
                   <div class="form-field">
                     <input ng-model="current.category" placeholder="Category Name" type="text">
+                  </div>
+                  <div class="form-field">
+                    <label>Display Order</label>
+                    <input type="text" ng-model="current.displayOrder"/>
                   </div>
                 </div>
               </div>
@@ -75,7 +91,7 @@
                   <div class="form-field">
                     <label>Description</label>
                     <div>
-                      <textarea  ng-model="current.description" placeholder="Name" rows="3" type="text"/>
+                      <textarea ng-model="current.description" placeholder="Name" rows="3" type="text"/>
                     </div>
                   </div>
                 </div>
@@ -94,11 +110,15 @@
                 <label>Filters</label>
                 <div class="editor" id="filtereditor"></div>
               </div>
+              <div class="field">
+                <label>Meta Data</label>
+                <div class="editor" id="metaeditor"></div>
+              </div>
               <div class="divider ui"></div>
               <button ng-click="Save()">Save</button>
-            </form>
-          </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+</div>

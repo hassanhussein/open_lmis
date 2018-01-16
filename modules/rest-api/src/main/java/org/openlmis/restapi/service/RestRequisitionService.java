@@ -11,6 +11,7 @@
 package org.openlmis.restapi.service;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.CollectionUtils;
@@ -151,7 +152,10 @@ public class RestRequisitionService {
       rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
 
     }else{
-      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period, SOURCE_APPLICATION_ELMIS_FE);
+      //by default, this API is being called from ELMIS_FE
+      //if not, the application would have specified it's name.
+      String sourceApplication = Strings.isNullOrEmpty( report.getSourceApplication()) ? SOURCE_APPLICATION_ELMIS_FE : report.getSourceApplication();
+      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period, sourceApplication);
     }
 
     List<RnrLineItem> fullSupplyProducts = new ArrayList<>();
@@ -343,5 +347,38 @@ public class RestRequisitionService {
         return Report.prepareForREST(input);
       }
     }).toList();
+  }
+
+  public Rnr initiateRnr(Long facilityId, Long programId, Long userId, Boolean emergency, Long periodId, String sourceApplication) {
+    Facility reportingFacility = facilityService.getFacilityById(facilityId);
+    Program reportingProgram = programService.getById(programId);
+    ProcessingPeriod period = processingPeriodService.getById(periodId);
+
+    Rnr rnr;
+    List<Rnr> rnrs = null;
+
+    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+    searchCriteria.setProgramId(reportingProgram.getId());
+    searchCriteria.setFacilityId(reportingFacility.getId());
+    searchCriteria.setWithoutLineItems(true);
+    searchCriteria.setUserId(userId);
+
+    if(periodId != null) {
+      //check if the requisition has already been initiated / submitted / authorized.
+      restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
+      rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+    }
+
+
+    if(rnrs != null && rnrs.size() > 0){
+      rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
+
+    }else{
+      //by default, this API is being called from ELMIS_FE
+      //if not, the application would have specified it's name.
+      sourceApplication = Strings.isNullOrEmpty(sourceApplication) ? SOURCE_APPLICATION_ELMIS_FE : sourceApplication;
+      rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, emergency, period, sourceApplication);
+    }
+    return rnr;
   }
 }

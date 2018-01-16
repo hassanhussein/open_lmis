@@ -6,19 +6,24 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
 import org.openlmis.db.repository.mapper.DbMapper;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.equipment.service.EquipmentInventoryService;
+import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
+import org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -51,6 +56,10 @@ public class RequisitionService {
   public static final String SEARCH_SUPPLYING_DEPOT_NAME = "supplyingDepot";
   public static final String CONVERT_TO_ORDER_PAGE_SIZE = "order.page.size";
   public static final String NUMBER_OF_PAGES = "number_of_pages";
+  public static final String TESTTYPES = "testtypes";
+  public static final String TESTPRODUCTS = "testproducts";
+  public static final String MANUALTESTTYPES = "manualtesttypes";
+  public static final String OBSOLETE = "OBSOLETE";
 
   @Autowired
   private RequisitionRepository requisitionRepository;
@@ -101,6 +110,15 @@ public class RequisitionService {
 
   @Autowired
   private ProductPriceScheduleService priceScheduleService;
+
+  @Autowired
+  private SupplyPartnerService supplyPartnerService;
+
+  @Autowired
+  private ManualTestsLineItemMapper manualTestMapper;
+
+  @Autowired
+  private EquipmentOperationalStatusService equipmentOperationalStatusService;
 
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
@@ -155,7 +173,9 @@ public class RequisitionService {
     // if program supports equipments, initialize it here.
     if (program.getIsEquipmentConfigured()) {
       populateEquipments(requisition);
+      populateManualTests(requisition);
     }
+
     requisition.setSourceApplication(sourceApplication);
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
@@ -185,7 +205,16 @@ public class RequisitionService {
   private void populateEquipments(Rnr requisition) {
     List<EquipmentInventory> inventories = equipmentInventoryService.getInventoryForFacility(requisition.getFacility().getId(), requisition.getProgram().getId());
     requisition.setEquipmentLineItems(new ArrayList<EquipmentLineItem>());
+
+    EquipmentOperationalStatus obsoleteEquipmentStatus =
+            equipmentOperationalStatusService.getByCode(OBSOLETE);
+
+    //if the equipment status become obsolete on the previous Rnr,
+    // ignore it for the current and the following Rnr
     for (EquipmentInventory inv : inventories) {
+      if(inv.getOperationalStatusId() == obsoleteEquipmentStatus.getId())
+        continue;
+
       EquipmentLineItem lineItem = new EquipmentLineItem();
       lineItem.setRnrId(requisition.getId());
       lineItem.setEquipmentSerial(inv.getSerialNumber());
@@ -195,9 +224,15 @@ public class RequisitionService {
       lineItem.setOperationalStatusId(inv.getOperationalStatusId());
       lineItem.setEquipmentName(inv.getEquipment().getName());
       lineItem.setDaysOutOfUse(0L);
+      lineItem.setIsBioChemistryEquipment(inv.getEquipment().getEquipmentType().getIsBioChemistry());
 
       requisition.getEquipmentLineItems().add(lineItem);
     }
+  }
+
+  private void populateManualTests(Rnr requisition){
+    List<ManualTestesLineItem> generatedManualTestLineItem = manualTestMapper.getGeneratedEmptyManualTestLineItem();
+    requisition.setManualTestLineItems(generatedManualTestLineItem);
   }
 
   private void populateAllocatedBudget(Rnr requisition) {
@@ -227,6 +262,7 @@ public class RequisitionService {
       savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
       //TODO: copy only the editable fields.
       savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
+      savedRnr.setManualTestLineItems(rnr.getManualTestLineItems());
     }
 
     requisitionRepository.update(savedRnr);
@@ -292,6 +328,9 @@ public class RequisitionService {
 
     savedRnr.calculateForApproval();
 
+    if (requiresSplitting(savedRnr)) {
+      splitRequisition(savedRnr, requisition.getModifiedBy());
+    }
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
 
     boolean notifyStatusChange = true;
@@ -306,10 +345,78 @@ public class RequisitionService {
 
     savedRnr.setModifiedBy(requisition.getModifiedBy());
     requisitionRepository.approve(savedRnr);
-
     logStatusChangeAndNotify(savedRnr, notifyStatusChange, name);
 
     return savedRnr;
+  }
+
+  private void splitRequisition(Rnr savedRnr, Long userId) {
+
+    if (supplyPartnerService != null) {
+      List<SupplyPartnerProgram> subscriptions = supplyPartnerService.getSubscriptionsWithDetails(savedRnr.getFacility().getId(), savedRnr.getProgram().getId());
+      for (SupplyPartnerProgram subscription : subscriptions) {
+
+        Rnr existingRnr = requisitionRepository.getRnrBy(savedRnr.getFacility().getId(), savedRnr.getPeriod().getId(), subscription.getDestinationProgramId(), savedRnr.isEmergency());
+        if (existingRnr != null) {
+          // there was an rnr already - skip splitting.
+          continue;
+        }
+
+        List<RnrLineItem> lineItems = findSubscribedLineItems(savedRnr, subscription);
+
+        if (lineItems.size() > 0) {
+          ArrayList<RnrLineItem> newRnrLineItems = new ArrayList<>();
+          for (RnrLineItem li : lineItems) {
+            // clone the object
+            RnrLineItem nli = new RnrLineItem();
+            BeanUtils.copyProperties(li, nli);
+            newRnrLineItems.add(nli);
+
+            li.setQuantityApproved(0);
+            li.setRemarks("Supplied by other warehouse/partner");
+          }
+          // generate the new rnr
+          Program destinationProgram = programService.getById(subscription.getDestinationProgramId());
+          Rnr rnr = new Rnr(savedRnr.getFacility(), destinationProgram, savedRnr.getPeriod());
+          rnr.setEmergency(savedRnr.isEmergency());
+          rnr.setSupervisoryNodeId(subscription.getDestinationSupervisoryNodeId());
+          rnr.setCreatedBy(userId);
+          rnr.setModifiedBy(userId);
+          rnr.setFullSupplyLineItems(newRnrLineItems);
+          requisitionRepository.insert(rnr);
+          User user = userService.getById(userId);
+          rnr.setStatus(RnrStatus.SUBMITTED);
+          requisitionRepository.logStatusChange(rnr, user.getFullName());
+          rnr.setStatus(savedRnr.getStatus());
+          update(rnr);
+
+
+        }
+      }
+    }
+
+  }
+
+  private List<RnrLineItem> findSubscribedLineItems(Rnr savedRnr, SupplyPartnerProgram subscription) {
+    List<String> productCodes = subscription.getProducts().stream().map(p -> p.getCode()).collect(Collectors.toList());
+    return savedRnr
+        .getAllLineItems()
+        .stream()
+        .filter(l -> productCodes.contains(l.getProductCode()))
+        .collect(Collectors.toList());
+  }
+
+  private Boolean requiresSplitting(Rnr savedRnr) {
+
+    //is there a subscription for this facility and program
+    if (supplyPartnerService != null) {
+      List<SupplyPartnerProgram> subscriptions = supplyPartnerService.getSubscriptions(savedRnr.getFacility().getId(), savedRnr.getProgram().getId());
+      if (subscriptions != null && subscriptions.size() > 0) {
+        return true;
+      }
+    }
+    // iterate on each subscription
+    return false;
   }
 
   public void releaseRequisitionsAsOrder(List<Rnr> requisitions, Long userId) {
@@ -691,5 +798,30 @@ public class RequisitionService {
   public void insertRnrSignatures(Rnr rnr) {
     requisitionRepository.insertRnrSignatures(rnr);
   }
+
+  public void releaseWithoutOrder(Rnr rnr, User user) {
+    Rnr requisition = requisitionRepository.getById(rnr.getId());
+    if(requisition.getStatus().equals(RnrStatus.APPROVED)) {
+      requisition.setStatus(RnrStatus.RELEASED_NO_ORDER);
+      requisition.setModifiedBy(user.getId());
+      requisitionRepository.update(requisition);
+      requisitionRepository.logStatusChange(requisition, user.getUserName());
+    }
+  }
+
+
+  public List<Rnr> getUnreleasedRequisitionsFor(Rnr rnr) {
+    return requisitionRepository.getUnreleasedPreviousRequisitions(rnr);
+  }
+
+  public Map<String, Object> getLabEquipmentReferenceData(){
+    Map<String, Object> referenceData = new HashMap<>();
+    referenceData.put(TESTTYPES, equipmentInventoryService.getBioChemistryEquipmentTestTypes());
+    referenceData.put(MANUALTESTTYPES, equipmentInventoryService.getManualTestTypes());
+
+    return referenceData;
+
+  }
+
 }
 

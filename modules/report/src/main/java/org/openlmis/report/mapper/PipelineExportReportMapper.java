@@ -15,23 +15,43 @@ package org.openlmis.report.mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.builder.PipelineExportQueryBuilder;
-import org.openlmis.report.model.ReportParameter;
-import org.openlmis.report.model.report.PipelineExportReport;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Product;
+import org.openlmis.report.model.params.PipelineExportParams;
+import org.openlmis.report.model.report.PipelineConsumptionLineItem;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 @Repository
 public interface PipelineExportReportMapper {
 
-    @SelectProvider(type=PipelineExportQueryBuilder.class, method="getQuery")
-    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
-    public List<PipelineExportReport> getReport( @Param("filterCriteria") ReportParameter filterCriteria,
-                                              @Param("SortCriteria") Map<String, String[]> sortCriteria ,
-                                              @Param("RowBounds")RowBounds rowBounds);
+  @Select("select productCode, product, pp.name period, sum(COALESCE(quantityDispensed,0)) as consumption, sum(COALESCE(totalLossesAndAdjustments,0)) as adjustment " +
+          " from requisition_line_items li \n" +
+          " JOIN requisitions r on r.id = li.rnrid " +
+          " JOIN processing_periods pp on r.periodid = pp.id " +
+          " JOIN facilities f on r.facilityId = f.id \n" +
+          " JOIN vw_districts d on d.district_id = f.geographicZoneId \n" +
+          " where r.programid = #{filterCriteria.program} " +
+          " AND r.periodid = #{filterCriteria.period} " +
+          " AND r.status in ( 'IN_APPROVAL', 'RELEASED', 'APPROVED', 'RELEASED_NO_ORDER' ) " +
+          " AND r.facilityId in (select facility_id from vw_user_facilities where user_id = #{filterCriteria.userId} and program_id = #{filterCriteria.program})" +
+          " GROUP BY productCode, product, pp.name" +
+          " order by product")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  List<PipelineConsumptionLineItem> getReport(@Param("filterCriteria") PipelineExportParams filterCriteria,
+                                              @Param("SortCriteria") Map<String, String[]> sortCriteria,
+                                              @Param("RowBounds") RowBounds rowBounds);
+
+  @Select("select p.* from products p " +
+      " join program_products pp " +
+      " on pp.productId = p.id " +
+      " where pp.programId = #{filterCriteria.program}")
+  List<Product> getProductsForProgram(@Param("filterCriteria") PipelineExportParams filterCriteria);
+
+  @Select("select * from processing_periods where id = #{filterCriteria.period}")
+  ProcessingPeriod getPeriod(@Param("filterCriteria") PipelineExportParams reportFilterData);
 }

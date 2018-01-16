@@ -101,4 +101,12 @@ public class ProductRepository {
   public Product getById(Long id) {
     return mapper.getById(id);
   }
+
+  public List<Product> getProductsByCommaSeparatedCode(String commaSeparatedCodes) {
+    return mapper.getProductsByCommaSeparatedCodes(commaSeparatedCodes);
+  }
+
+  public Product getByPrimaryName(String name) {
+    return mapper.getByPrimaryName(name);
+  }
 }

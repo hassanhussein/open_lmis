@@ -12,6 +12,7 @@
 package org.openlmis.web.controller.vaccine.inventory;
 
 
+import lombok.NoArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import org.apache.ibatis.annotations.Param;
@@ -31,6 +32,7 @@ import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.vaccine.domain.inventory.VaccineDistribution;
 import org.openlmis.vaccine.service.StockRequirementsService;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
+import org.openlmis.vaccine.service.inventory.SdpNotificationService;
 import org.openlmis.vaccine.service.inventory.VaccineInventoryDistributionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -56,6 +58,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
+@NoArgsConstructor
 @RequestMapping(value = "/vaccine/inventory/distribution")
 public class VaccineInventoryDistributionController extends BaseController {
     private static final String PROGRAMS = "programs";
@@ -90,6 +93,9 @@ public class VaccineInventoryDistributionController extends BaseController {
     private JasperReportsViewFactory jasperReportsViewFactory;
     @Autowired
     private VaccineNotificationService notificationService;
+    @Autowired
+    private SdpNotificationService sdpNotificationService;
+
 
     public static String getCommaSeparatedIds(List<Long> idList) {
         return idList == null ? "{}" : idList.toString().replace("[", "{").replace("]", "}");
@@ -100,8 +106,10 @@ public class VaccineInventoryDistributionController extends BaseController {
     @Transactional
     public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineDistribution distribution, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
-        Long distributionId = service.save(distribution,userId);
-        return OpenLmisResponse.response("distributionId", distributionId);
+        sdpNotificationService.updateNotification(distribution,userId);
+        System.out.println("I'm first");
+        System.out.println(distribution.getId());
+        return OpenLmisResponse.response("distributionId", distribution.getId());
     }
 
     @RequestMapping(value = "get-distributed/{facilityId}/{programId}", method = GET, headers = ACCEPT_JSON)
@@ -171,6 +179,7 @@ public class VaccineInventoryDistributionController extends BaseController {
                                                               HttpServletRequest request) {
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getDistributionForFacilityByPeriod(facilityId, programId));
         response.getBody().addData(LAST_PERIOD, service.getLastPeriod(facilityId, programId));
+        response.getBody().addData("lasPeriodAllData",service.getALlBelowPeriod(facilityId,programId));
         response.getBody().addData(CURRENT_PERIOD, service.getCurrentPeriod(facilityId, programId));
         response.getBody().addData(FORECAST, requirementsService.getStockRequirements(facilityId, programId));
         response.getBody().addData(PROGRAM_PRODUCT_LIST, programProductService.getByProgram(new Program(programId)));
@@ -293,11 +302,96 @@ public class VaccineInventoryDistributionController extends BaseController {
         return OpenLmisResponse.response("facilities", service.getFacilities(loggedInUserId(request)));
     }
 
+    @RequestMapping(value = "getSameLevelFacilities", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    public ResponseEntity<OpenLmisResponse> getSameLevelFacilities(HttpServletRequest request) {
+
+        return OpenLmisResponse.response("facilities", service.getSameLevelFacilities(loggedInUserId(request)));
+    }
+
     @RequestMapping(value = "getDistributionsByDateRangeAndFacility", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
     public ResponseEntity<OpenLmisResponse> getDistributionsByDateRangeAndFacility(HttpServletRequest request,
             @Param("facilityId") Long facilityId,@Param("startDate") String startDate,@Param("endDate") String endDate) {
         return OpenLmisResponse.response("distributions", service.getDistributionsByDateRangeAndFacility(facilityId,startDate,endDate));
+    }
+
+    @RequestMapping(value = "getDistributionsByDateRangeForFacility", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    public ResponseEntity<OpenLmisResponse> getDistributionsByDateRangeForFacility(HttpServletRequest request,
+            @Param("facilityId") Long facilityId,@Param("startDate") String startDate,@Param("endDate") String endDate) {
+        return OpenLmisResponse.response("distributions", service.getDistributionsByDateRangeForFacility(facilityId, startDate, endDate));
+    }
+
+    //Search Distribution by Date Range
+
+    @RequestMapping(value = "searh-by-date-range/{facilityId}", method = GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK')")
+    public ResponseEntity<OpenLmisResponse> getDistributionsByDateRange(@PathVariable Long facilityId,
+                                                                        @Param("startDate") String startDate,
+                                                                        @Param("endDate") String endDate
+                                                                        ,@Param("type") String type,
+                                                                        @Param("searchParam") String searchParam,
+                                                                        HttpServletRequest request) throws ParseException {
+        if (null == facilityId) {
+            return OpenLmisResponse.error(messageService.message("error.facility.unknown"), HttpStatus.BAD_REQUEST);
+        } else {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            String distributionType = "";
+            distributionType = "ROUTINE";
+            distributionType = (null== type)?distributionType:type;
+            String dateString = (startDate == null) ? formatter.format(new Date()) : startDate;
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTIONS, service.searchDistributionsByDateRangeAndFacility(facilityId, dateString, endDate, distributionType, searchParam));
+            return response;
+        }
+    }
+
+
+    @RequestMapping(value = "stock-on-hand/print/{facilityId}", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printStockOnHand(@PathVariable Long facilityId,HttpServletRequest request) throws JRException, IOException, ClassNotFoundException {
+       Long facility = null;
+        Facility facility1 = facilityService.getHomeFacility(loggedInUserId(request));
+
+        Facility f = facilityService.getById(facilityId);
+
+        if (f != null) {
+            facility = facilityId;
+        } else {
+            facility = facility1.getId();
+        }
+
+        Template orPrintTemplate = templateService.getByName("stock_on_hand_repo");
+        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("format", "pdf");
+        Locale currentLocale = messageService.getCurrentLocale();
+        map.put(JRParameter.REPORT_LOCALE, currentLocale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
+        Resource reportResource = new ClassPathResource("report");
+        Resource imgResource = new ClassPathResource("images");
+        ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
+        map.put(Constants.OPERATOR_NAME, configuration.getValue());
+
+        String separator = System.getProperty("file.separator");
+        map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
+        map.put("facilityId", f.getId().intValue());
+        map.put("facilityName",f.getName());
+
+        return new ModelAndView(jasperView, map);
+    }
+
+    @RequestMapping(value = "distribution/{distributionId}", method = GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    public ResponseEntity<OpenLmisResponse> getDistributionByDistributionId(@PathVariable Long distributionId,
+                                                                          HttpServletRequest request) {
+        if (null == distributionId) {
+            return OpenLmisResponse.error(messageService.message("error.facility.unknown"), HttpStatus.BAD_REQUEST);
+        } else {
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getDistributionById(distributionId));
+           // response.getBody().addData(SUPERVISOR_ID, service.getSupervisorFacilityId(distributionId));
+            return response;
+        }
     }
 
 }

@@ -1,7 +1,10 @@
 package org.openlmis.report.builder;
 
+import org.openlmis.report.model.params.CompletenessAndTimelinessReportParam;
 import org.openlmis.report.model.params.DistributionSummaryReportParam;
+import org.openlmis.report.model.params.VaccineReceivedSummaryReportParam;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -9,32 +12,73 @@ import java.util.Map;
  */
 public class DistributionSummaryQueryBuilder {
 
-    public String getQuery(Map params) {
 
-        DistributionSummaryReportParam filter = (DistributionSummaryReportParam) params.get("filterCriteria");
+    private static String sql;
 
-        return "  select max(vw.region_name) region, MAX(vw.district_name) district,max(f.id) facilityId,max(p.id) productId,max(d.periodid) period, f.name facilityName, p.primaryname product, sum(dl.quantity) quantityIssued \n" +
-                " from vaccine_distribution_line_items dl\n" +
-                " join vaccine_distributions d on d.id=dl.distributionid\n" +
-                " join facilities f on f.id=d.tofacilityid\n" +
-                " join products p on p.id=dl.productid\n" +
-                " left join vw_districts vw ON f.geographicZoneId = vw.district_id  " +
-                " group by f.name, p.primaryname\n" +
-                " order by f.name, productid ";
+    public static String getDistributionQueryData(Map params) {
 
-         //TODO: Add filter
+        DistributionSummaryReportParam param = getParamsValues(params);
+
+        sql = "                SELECT vw.region_name region, vw.district_name district,\n" +
+                "                VW.DISTRICT_ID districtId,f.id facilityId,p.id productId,f.name facilityName, p.primaryname product,\n" +
+                "                SUM(dl.quantity) quantityIssued \n" +
+                "                FROM vaccine_distribution_line_items dl\n" +
+                "                JOIN vaccine_distributions d on d.id=dl.distributionid \n" +
+                "                JOIN facilities f on f.id=d.toFacilityId \n" +
+                "                JOIN facility_types ft on f.typeid = ft.id\n" +
+                "                JOIN products p on p.id=dl.productId\n" +
+                "                join processing_periods pp on pp.id = d.periodid \n" +
+                "                JOIN vw_districts vw ON f.geographicZoneId = vw.district_id  \n" +
+                "                WHERE fromFacilityId= (SELECT f.id FROM users U, facilities F \n" +
+                "                WHERE U.facilityId = F.id AND U.id = " + param.getUserId() + " AND f.active = TRUE AND f.virtualFacility = FALSE)" +
+                "                AND   pp.startdate::date >='" + param.getPeriodStart() + "'  and pp.enddate::date <=   '" + param.getPeriodEnd() + "' " +
+                writeDistrictPredicate(param.getDistrict()) +
+                "                group by 1,2,3,4 ,5\n" +
+                "                order by vw.region_name, productId \n";
+
+        return sql;
+
+
+    }
+
+    public static String getReceivedConsignmentSummaryData(Map params) {
+
+        DistributionSummaryReportParam param = getParamsValues(params);
+
+        sql = "                SELECT pc.displayOrder, vw.region_name region, vw.district_name district,\n" +
+                "                VW.DISTRICT_ID districtId,f.id facilityId,p.id productId,f.name facilityName, p.primaryname product,\n" +
+                "                d.modifiedDate receivedDate,SUM(dl.quantity) quantityReceived \n" +
+                "                FROM vaccine_distribution_line_items dl\n" +
+                "                JOIN vaccine_distributions d on d.id=dl.distributionid \n" +
+                "                JOIN facilities f on f.id=d.fromFacilityId \n" +
+                "                JOIN facility_types ft on f.typeid = ft.id\n" +
+                "                JOIN products p on p.id=dl.productId\n" +
+                "                JOIN program_products ppc ON p.id = ppc.productId " +
+                "                JOIN product_categories pc ON ppc.productCategoryId = pc.id    "+
+                "                join processing_periods pp on pp.id = d.periodid \n" +
+                "                JOIN vw_districts vw ON f.geographicZoneId = vw.district_id  \n" +
+                "                WHERE toFacilityId= (SELECT f.id FROM users U, facilities F \n" +
+                "                WHERE U.facilityId = F.id AND U.id = " + param.getUserId() + " AND f.active = TRUE AND f.virtualFacility = FALSE)" +
+                "                AND   d.modifiedDate::date >='" + param.getPeriodStart() + "'  and d.modifiedDate::date <=   '" + param.getPeriodEnd() + "' " +
+                                 writeDistrictPredicate(param.getDistrict()) +
+                "                group by 1,2,3,4 ,5,6,7,8,9\n" +
+                "                order by pc.displayOrder,productId,d.modifiedDate,vw.region_name ASC\n";
+
+        return sql;
+
     }
 
 
-    private static String writePredicates(DistributionSummaryReportParam param) {
+    private static String writeDistrictPredicate(Long zone) {
 
-        String predicate = "";
-
-        predicate = " WHERE fromFacilityId = " + param.getFacility();
-        predicate += "  and vd.modifiedDate >=#{filterCriteria.startDate}::date";
-        predicate += " and vd.modifiedDate <=#{filterCriteria.endDate}::date";
-
+        String predicate = " ";
+        if (zone != 0 && zone != null) {
+            predicate = " AND (district_id = " + zone + " or zone_id = " + zone + " or region_id = " + zone + " or parent = " + zone + ")";
+        }
         return predicate;
+    }
 
+    public static DistributionSummaryReportParam getParamsValues(Map param) {
+        return (DistributionSummaryReportParam) param.get("filterCriteria");
     }
 }

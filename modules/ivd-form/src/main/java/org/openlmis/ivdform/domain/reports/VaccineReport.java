@@ -54,7 +54,6 @@ public class VaccineReport extends BaseModel {
   private Long plannedOutreachImmunizationSessions;
   private Long outreachImmunizationSessions;
   private Long outreachImmunizationSessionsCanceled;
-  private DropOutRate dropOutRate;
 
   @JsonDeserialize(using = DateDeserializer.class)
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -63,6 +62,7 @@ public class VaccineReport extends BaseModel {
   private List<VaccineIvdTabVisibility> tabVisibilitySettings;
 
   private List<LogisticsLineItem> logisticsLineItems;
+  @Deprecated
   private List<LogisticsLineItem> vaccineProductsLogisticsLineItems;
   private List<AdverseEffectLineItem> adverseEffectLineItems;
   private List<CampaignLineItem> campaignLineItems;
@@ -105,6 +105,7 @@ public class VaccineReport extends BaseModel {
         LogisticsLineItem lineitem = previousLineItemMap.get(item.getProductCode());
         if (lineitem != null) {
           item.setOpeningBalance(lineitem.getClosingBalance());
+          item.setOpeningBalanceFromPreviousPeriod(true);
           item.setClosingBalance(item.getOpeningBalance());
         }
       }
@@ -216,6 +217,7 @@ public class VaccineReport extends BaseModel {
     this.setRejectionComment(report.rejectionComment);
     this.setFixedImmunizationSessions(report.fixedImmunizationSessions);
     this.setMajorImmunizationActivities(report.majorImmunizationActivities);
+    this.setPlannedOutreachImmunizationSessions(report.plannedOutreachImmunizationSessions);
     this.setOutreachImmunizationSessions(report.outreachImmunizationSessions);
     this.setOutreachImmunizationSessionsCanceled(report.outreachImmunizationSessionsCanceled);
     this.setSubmissionDate(report.getSubmissionDate());

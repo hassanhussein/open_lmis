@@ -65,7 +65,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                            ELSE 'N'::text    \n" +
                 "                         END AS reporting_status   \n" +
                 "                                from programs_supported ps    \n" +
-                "                                left join vaccine_reports vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid    \n" +
+                "                                left join vaccine_reports vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid  and status in ('SUBMITTED','APPROVED','REJECTED')  \n" +
                 "                                left outer join processing_periods pp on pp.id = vr.periodid   \n" +
                 "                                join facilities f on f.id = ps.facilityId     \n" +
                 "                                join geographic_zones z on z.id = f.geographicZoneId    \n" +
@@ -97,7 +97,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                        from temp t   \n" +
                 "                            join vw_districts vd on vd.district_id = t.geographiczoneid     \n" +
                 writeDistrictPredicate(params.getDistrict()) +
-                "                      where vd.district_id in (select district_id from vw_user_facilities where user_id = 2   and program_id = fn_get_vaccine_program_id())  \n" +
+                "                      where vd.district_id in (select district_id from vw_user_facilities where user_id = "+params.getUserId()+"   and program_id = fn_get_vaccine_program_id())  \n" +
                 "                        group by 1, 2, 3, 4,5 ,6  \n" +
                 "                  \n" +
                 "                ) a   \n" +
@@ -197,7 +197,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "        ELSE 'N'::text    \n" +
                 "     END AS reporting_status   \n" +
                 "      from programs_supported ps    \n" +
-                "      left join vaccine_reports vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid    \n" +
+                "      left join vaccine_reports vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid and status in ('SUBMITTED','APPROVED','REJECTED')   \n" +
                 "      left outer join processing_periods pp on pp.id = vr.periodid   \n" +
                 "      join facilities f on f.id = ps.facilityId     \n" +
                 "      join geographic_zones z on z.id = f.geographicZoneId    \n" +

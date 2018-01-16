@@ -15,27 +15,33 @@ package org.openlmis.report.service.lookup;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.openlmis.core.domain.FacilityOperator;
-import org.openlmis.core.domain.ProductGroup;
-import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
-import org.openlmis.core.service.ConfigurationSettingService;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.RequisitionGroupService;
-import org.openlmis.core.service.SupervisoryNodeService;
+import org.openlmis.core.service.*;
 import org.openlmis.equipment.domain.Donor;
 import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.repository.DonorRepository;
 import org.openlmis.report.mapper.ReportRequisitionMapper;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.model.dto.*;
+import org.openlmis.report.model.dto.Facility;
+import org.openlmis.report.model.dto.FacilityType;
+import org.openlmis.report.model.dto.GeographicZone;
+import org.openlmis.report.model.dto.ProcessingPeriod;
+import org.openlmis.report.model.dto.Product;
+import org.openlmis.report.model.dto.ProductCategory;
+import org.openlmis.report.model.dto.Program;
+import org.openlmis.report.model.dto.Regimen;
+import org.openlmis.report.model.dto.RegimenCategory;
+import org.openlmis.report.model.dto.RequisitionGroup;
 import org.openlmis.report.model.params.UserSummaryParams;
 import org.openlmis.report.model.report.OrderFillRateSummaryReport;
 import org.openlmis.report.model.report.TimelinessReport;
 import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -115,6 +121,9 @@ public class ReportLookupService {
   private FacilityService facilityService;
 
   @Autowired
+  private ProgramService programService;
+
+  @Autowired
   private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired
@@ -128,6 +137,15 @@ public class ReportLookupService {
 
   @Autowired
   ConfigurationSettingService configurationSettingService;
+  @Autowired
+  private RejectionRnRReportMapper rejectionRnRReportMapper;
+
+  private Integer pageSize;
+
+  @Autowired
+  public void setPageSize(@Value("${search.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
+  }
 
   private static final String VACCINE_DATE_FORMAT = "yyyy-MM-dd";
   private static final String VACCINE_DATE_FORMAT_FOR_RANGE = "MMM-dd-yyyy";
@@ -267,33 +285,33 @@ public class ReportLookupService {
   }
 
 
-  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone, Long facilityOperator, Long userId) {
+  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone, Long facilityOperator,Long facilityOwner, Long userId) {
     // this method does not work if no program is specified
     if (program == 0L) {
       return null;
     }
 
     if (schedule == 0 && type == 0) {
-      return facilityReportMapper.getFacilitiesByProgram(program, zone, facilityOperator, userId);
+      return facilityReportMapper.getFacilitiesByProgram(program, zone, facilityOperator, facilityOwner, userId);
     }
 
     if (type == 0 && requisitionGroup == 0) {
-      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone, facilityOperator, userId);
+      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone, facilityOperator, facilityOwner, userId);
     }
 
     if (type == 0 && requisitionGroup != 0) {
-      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, facilityOperator, userId);
+      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, facilityOperator, facilityOwner, userId);
     }
 
     if (requisitionGroup == 0 && type != 0) {
-      return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, userId, type);
+      return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, facilityOwner,userId,  type);
     }
 
     if (requisitionGroup == 0) {
-      return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, facilityOperator, userId);
+      return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, facilityOperator, facilityOwner, userId);
     }
 
-    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone, facilityOperator);
+    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone, facilityOperator,facilityOwner);
   }
 
 
@@ -537,11 +555,12 @@ public class ReportLookupService {
     long zone;
     long type;
     long facilityOperator = 0;
+    long facilityOwner = 0;
     program = StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]);
     zone = StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Long.parseLong(filterCriteria.get("zoneId")[0]);
     type = StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("facilityTypeId")[0]);
 
-    facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, userId, type);
+    facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator,facilityOwner, userId, type);
 
     return facilitiesList;
   }
@@ -735,6 +754,9 @@ public class ReportLookupService {
     }
     return productMapper.getProductsForProgramWithoutDescriptions(programId);
   }
+  public List<Product> getProgramProductsWithoutDescriptionsAndSyringes(Long programId) {
+    return productMapper.getProgramProductsWithoutDescriptionsAndSyringes(programId);
+  }
 
   public AdjustmentType getAdjustmentByName(String name){
     return adjustmentTypeReportMapper.getAdjustmentByName(name);
@@ -743,4 +765,23 @@ public class ReportLookupService {
   public List<FacilityOperator> getAllFacilityOperators(){
     return facilityService.getAllOperators();
   }
+
+  public List<FacilityType> getFacilityLevelsWithoutProgram(Long userId) {
+
+    List<org.openlmis.core.domain.Program> program =  programService.getAllIvdPrograms();
+    List<org.openlmis.core.domain.Facility> facilities = facilityService.getUserSupervisedFacilities(userId, program.get(0).getId(), MANAGE_EQUIPMENT_INVENTORY);
+    facilities.add(facilityService.getHomeFacility(userId));
+    String facilityIds = StringHelper.getStringFromListIds(facilities);
+
+    return facilityTypeMapper.getLevelsWithoutProgram(program.get(0).getId(), facilityIds);
+  }
+
+  public List<HashMap<String,Object>> getRejectedRnR(String status,Long program,Long period,String zone,Integer page){
+    return rejectionRnRReportMapper.getRnRRejected(status,program,period,zone,getPagination(page));
+  }
+
+  public Pagination getPagination(Integer page) {
+    return new Pagination(page, pageSize);
+  }
+
 }

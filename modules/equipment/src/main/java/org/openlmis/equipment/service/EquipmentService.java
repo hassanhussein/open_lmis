@@ -13,11 +13,11 @@
 package org.openlmis.equipment.service;
 
 import org.openlmis.core.domain.Pagination;
-import org.openlmis.equipment.domain.ColdChainEquipment;
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.core.domain.Product;
+import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.repository.ColdChainEquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
+import org.openlmis.equipment.repository.EquipmentProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +28,9 @@ public class EquipmentService {
 
   @Autowired
   private EquipmentRepository repository;
+
+  @Autowired
+  private EquipmentProductRepository equipmentProductRepository;
 
   @Autowired
   EquipmentTypeService equipmentTypeService;
@@ -50,9 +53,9 @@ public class EquipmentService {
     return repository.getByType(equipmentTypeId, page);
   }
 
+
   public Equipment getById(Long id){
     return repository.getById(id);
-
   }
 
   public Equipment getByTypeAndId(Long id,Long equipmentTypeId) {
@@ -79,7 +82,11 @@ public class EquipmentService {
     return coldChainEquipmentRepository.getCountByType(equipmentTypeId);
   }
   public void saveEquipment(Equipment equipment){
-      repository.insert(equipment);
+    repository.insert(equipment);
+  }
+
+  public void saveEquipmentRelatedProducts(Equipment equipment){
+    saveRelatedProducts(equipment);
   }
   public void saveColdChainEquipment(ColdChainEquipment coldChainEquipment){
       coldChainEquipmentRepository.insert(coldChainEquipment);
@@ -87,6 +94,20 @@ public class EquipmentService {
 
   public void updateEquipment(Equipment equipment) {
      repository.update(equipment);
+  }
+
+  private void saveRelatedProducts(Equipment equipment) {
+    equipmentProductRepository.removeAllByEquipmentProducts(equipment.getId());
+    if(equipment.getRelatedProducts() != null && equipment.getRelatedProducts().size() > 0){
+      for(Product p: equipment.getRelatedProducts()) {
+        if(p.getActive()) {
+          EquipmentProduct eqp = new EquipmentProduct();
+          eqp.setEquipment(equipment);
+          eqp.setProduct(p);
+          equipmentProductRepository.insert(eqp);
+        }
+      }
+    }
   }
 
   public void updateColdChainEquipment(ColdChainEquipment coldChainEquipment) {
@@ -109,5 +130,18 @@ public class EquipmentService {
 
   public List<ColdChainEquipment>getEquipmenentBy(Long equipmentTypeId){
     return coldChainEquipmentRepository.getEquipmentBy(equipmentTypeId);
+  }
+
+   public List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes() {
+      return repository.getBioChemistryEquipmentTestTypes();
+   }
+
+  public List<ManualTestTypes> getManualTestTypes() {
+
+    return repository.getManualTestTypes();
+  }
+
+  public Equipment getByTypeManufacturerAndModel(Long equipmentTypeId, String manufacturer, Long modelId, String model) {
+    return repository.getByTypeManufacturerAndModel(equipmentTypeId, manufacturer, modelId, model);
   }
 }

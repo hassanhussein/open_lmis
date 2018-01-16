@@ -13,10 +13,12 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.NonReportingFacilityReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.dto.NameCount;
+import org.openlmis.report.model.dto.ProcessingPeriod;
 import org.openlmis.report.model.params.NonReportingFacilityParam;
 import org.openlmis.report.model.report.MasterReport;
 import org.openlmis.report.model.report.NonReportingFacilityDetail;
@@ -34,107 +36,115 @@ import java.util.Map;
 @NoArgsConstructor
 public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
 
-  private static final String PERCENTAGE_NON_REPORTING = "PERCENTAGE_NON_REPORTING";
-  private static final String REPORT_FILTER_PARAM_VALUES = "REPORT_FILTER_PARAM_VALUES";
-  private static final String TOTAL_NON_REPORTING = "TOTAL_NON_REPORTING";
-  private static final String TOTAL_FACILITIES = "TOTAL_FACILITIES";
-  private static final String REPORTING_FACILITIES = "REPORTING_FACILITIES";
+    private static final String REPORT_FILTER_PARAM_VALUES = "REPORT_FILTER_PARAM_VALUES";
+    private static final String TOTAL_NON_REPORTING = "TOTAL_NON_REPORTING";
+    private static final String TOTAL_FACILITIES = "TOTAL_FACILITIES";
+    private static final String REPORTING_FACILITIES = "REPORTING_FACILITIES";
+    public static final String REPORTING_STATUS = "reportingStatus";
+    public static final String PERIODS_FOR_CHART = "periodsForChart";
 
-  @Autowired
-  private NonReportingFacilityReportMapper reportMapper;
+    @Autowired
+    private NonReportingFacilityReportMapper reportMapper;
 
-  @Autowired
-  private SelectedFilterHelper filterHelper;
+    @Autowired
+    private SelectedFilterHelper filterHelper;
 
-  @Override
-  public List<? extends ResultRow> getResultSet(Map<String, String[]> filterCriteria) {
-    RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-    return reportMapper.getNonReportingFacilities(getFilterParameters(filterCriteria), rowBounds, this.getUserId());
-  }
+    List<NameCount> summary = new ArrayList<>();
 
-  @Override
-  public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    NonReportingFacilityParam nonReportingFacilityParam = getFilterParameters(filterCriteria);
-    List<MasterReport> reportList = new ArrayList<>();
-    MasterReport report = new MasterReport();
-    List<NonReportingFacilityDetail> nonReportingFacilityDetails = reportMapper.getNonReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId());
-    List<NonReportingFacilityDetail> reportingFacilities = reportMapper.getReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId());
-    nonReportingFacilityDetails.addAll(reportingFacilities);
-    report.setDetails(nonReportingFacilityDetails);
+    @Override
+    public List<? extends ResultRow> getResultSet(Map<String, String[]> filterCriteria) {
+        RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
 
-    List<NameCount> summary = reportMapper.getReportSummary(nonReportingFacilityParam, this.getUserId());
+        NonReportingFacilityParam nonReportingFacilityParam = getFilterParameters(filterCriteria);
+        String periodListString = this.getPeriodParameter(nonReportingFacilityParam, rowBounds);
+        nonReportingFacilityParam.setPeriodString(periodListString);
 
-    Double totalFacilities = reportMapper.getTotalFacilities(nonReportingFacilityParam, this.getUserId());
-    Double nonReporting = reportMapper.getNonReportingTotalFacilities(nonReportingFacilityParam, this.getUserId());
+        if (filterCriteria.get(REPORTING_STATUS) != null) {
+            List<NonReportingFacilityDetail> detail = reportMapper.getNonReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId());
+            detail.addAll(reportMapper.getReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId()));
+            return detail;
+        }
 
-    // Assume by default that the 100% of facilities didn't report
-    Long percentNonReporting = 100L;
-    Long percentReporting = 100L;
-    if (totalFacilities != 0) {
-      percentNonReporting = Math.round((nonReporting / totalFacilities) * 100);
-      percentReporting = 100 - percentNonReporting;
+        return reportMapper.getNonReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId());
     }
 
-    NameCount percentageNonReporting = new NameCount();
-    NameCount percentageReporting = new NameCount();
-
-    percentageNonReporting.setName("Percentage not-reporting");
-    percentageNonReporting.setCount(percentNonReporting.toString() + "%");
-    summary.add(1, percentageNonReporting);
-
-    percentageReporting.setName("Percentage reporting");
-    percentageReporting.setCount(percentReporting.toString() + "%");
-    summary.add(percentageReporting);
-
-    NameCount percentageNonReportingChart = new NameCount();
-    NameCount percentageReportingChart = new NameCount();
-
-    percentageNonReportingChart.setName("Percentage not-reporting");
-    percentageNonReportingChart.setCount(percentNonReporting.toString());
-    summary.add(percentageNonReportingChart);
-
-    percentageReportingChart.setName("Percentage reporting");
-    percentageReportingChart.setCount(percentReporting.toString());
-    summary.add(percentageReportingChart);
-
-    summary.add(new NameCount(TOTAL_FACILITIES, totalFacilities.toString()));
-    summary.add(new NameCount(TOTAL_NON_REPORTING, nonReporting.toString()));
-    summary.add(new NameCount(REPORTING_FACILITIES, Double.toString(totalFacilities - nonReporting)));
-
-
-    report.setSummary(summary);
-    reportList.add(report);
-
-    List<? extends ResultRow> list;
-    list = reportList;
-    return list;
-  }
-
-  private NonReportingFacilityParam getFilterParameters(Map params) {
-    return ParameterAdaptor.parse(params, NonReportingFacilityParam.class);
-  }
-
-  @Override
-  public HashMap<String, String> getExtendedHeader(Map params) {
-    NonReportingFacilityParam nonReportingFacilityParam = getFilterParameters(params);
-
-    HashMap<String, String> result = new HashMap<String, String>();
-
-    Double totalFacilities = reportMapper.getTotalFacilities(nonReportingFacilityParam, this.getUserId());
-    Double nonReporting = reportMapper.getNonReportingTotalFacilities(nonReportingFacilityParam, this.getUserId());
-
-    result.put(TOTAL_FACILITIES, totalFacilities.toString());
-    result.put(TOTAL_NON_REPORTING, nonReporting.toString());
-
-    Long percent = 100L;
-    if (totalFacilities != 0) {
-      percent = Math.round((nonReporting / totalFacilities) * 100);
+    private String getPeriodParameter(NonReportingFacilityParam nonReportingFacilityParam, RowBounds rowBounds) {
+        String periodListString = "";
+        List<ProcessingPeriod> periodList = null;
+        if (nonReportingFacilityParam.getPeriodEnd() != null && ! nonReportingFacilityParam.getPeriodEnd().isEmpty()){
+            periodList = reportMapper.getReportingPeriodList(nonReportingFacilityParam);
+        } else {
+            return "{" + nonReportingFacilityParam.getPeriod().toString() + "}";
+        }
+        if (periodList != null && !periodList.isEmpty()) {
+            for (ProcessingPeriod periodId : periodList) {
+                if (periodListString.trim().isEmpty()) {
+                    periodListString = periodId.getId().toString();
+                }
+                periodListString += "," + periodId.getId().toString();
+            }
+        }
+        periodListString = "{" + periodListString + "}";
+        return periodListString;
     }
-    result.put(PERCENTAGE_NON_REPORTING, percent.toString());
-    result.put(REPORT_FILTER_PARAM_VALUES, filterHelper.getProgramPeriodGeoZone(params));
-    return result;
-  }
+
+    @Override
+    public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+
+        NonReportingFacilityParam nonReportingFacilityParam = getFilterParameters(filterCriteria);
+        String periodListString = this.getPeriodParameter(nonReportingFacilityParam, rowBounds);
+        nonReportingFacilityParam.setPeriodString(periodListString);
+
+        List<MasterReport> reportList = new ArrayList<>();
+        MasterReport report = new MasterReport();
+
+        List<NonReportingFacilityDetail> nonReportingFacilityDetails = reportMapper.getNonReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId());
+        Double nonReporting = Double.parseDouble(String.valueOf(nonReportingFacilityDetails.size()));
+
+        List<NonReportingFacilityDetail> reportingFacilities = reportMapper.getReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId());
+        nonReportingFacilityDetails.addAll(reportingFacilities);
+
+        report.setDetails(nonReportingFacilityDetails);
+
+        Double totalFacilities = Double.parseDouble(String.valueOf(nonReportingFacilityDetails.size()));
+        summary = new ArrayList<>();
+
+        summary.add(new NameCount(TOTAL_FACILITIES, totalFacilities.toString()));
+        summary.add(new NameCount(TOTAL_NON_REPORTING, nonReporting.toString()));
+        summary.add(new NameCount(REPORTING_FACILITIES, Double.toString(totalFacilities - nonReporting)));
+
+        report.setKeyValueSummary(new HashedMap(){{
+            put(PERIODS_FOR_CHART, reportMapper.getPeriodsTicksForChart(nonReportingFacilityParam));
+            put("chartData", reportMapper.getReportingStatusChartData(nonReportingFacilityParam, rowBounds, getUserId()));
+        }});
+
+
+        report.setSummary(summary);
+        reportList.add(report);
+
+        List<? extends ResultRow> list;
+        list = reportList;
+        return list;
+    }
+
+    private NonReportingFacilityParam getFilterParameters(Map params) {
+        return ParameterAdaptor.parse(params, NonReportingFacilityParam.class);
+    }
+
+    @Override
+    public HashMap<String, String> getExtendedHeader(Map params) {
+        NonReportingFacilityParam nonReportingFacilityParam = getFilterParameters(params);
+
+        HashMap<String, String> result = new HashMap<String, String>();
+
+        for (NameCount nc : summary) {
+            result.put(nc.getName(), nc.getCount());
+        }
+
+        result.put(REPORT_FILTER_PARAM_VALUES, filterHelper.getProgramPeriodGeoZone(params));
+        return result;
+    }
 
 
 }

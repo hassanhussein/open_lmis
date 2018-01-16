@@ -37,7 +37,7 @@
 
 
 
-    <!-- Style sheet files-->
+  <!-- Style sheet files-->
   <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
   <link rel="stylesheet" href="/public/lib/select2/select2.css">
@@ -45,11 +45,12 @@
   <!-- Services -->
   <script src="/public/js/shared/services/services.js"></script>
   <script src="/public/js/shared/services/extension-services.js"></script>
-    <script src="/public/js/vaccine/services/services.js"></script>
-    <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
+  <script src="/public/js/vaccine/services/services.js"></script>
+  <script type="text/javascript" src="/public/js/shared/services/message-service.js"></script>
   <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
 
   <script src="/public/js/shared/app.js"></script>
+
 
   <!-- App directives and shared utilites -->
   <script src="/public/lib/angular/angular-combine.js"></script>
@@ -64,6 +65,15 @@
   <script src="/public/js/shared/open-lmis-dialog.js"></script>
   <script src="/public/js/shared/localStorageKeys.js"></script>
   <script src="/public/lib/tree-dropdown/tree-dropdown.js"></script>
+  <!-- Latest compiled and minified CSS -->
+<!--
+  <link rel="stylesheet" href="/public/lib/bootstrap-tree-view/css/bootstrap.3.3.7.min.css">
+-->
+
+  <!-- Latest compiled and minified JavaScript -->
+<!--
+  <script src="/public/lib/bootstrap-tree-view/js/bootstrap.3.3.7.min.js"></script>
+-->
 
   <link rel="stylesheet" href="/public/lib/tree-dropdown/tree-dropdown.css">
   <link rel="stylesheet" href="/public/css/app.css">
@@ -77,32 +87,34 @@
   <script src="/public/js/shared/controller/header-controller.js"></script>
   <script src="/public/js/shared/controller/navigation-controller.js"></script>
   <script src="/public/js/reports/shared/directives/filters.js"></script>
+  <script src="/public/js/vaccine/stock-availability/controller/notification-controller.js"></script>
 
-    <link rel="stylesheet" href="/public/css/app.css">
-    <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
-    <link rel="stylesheet" href="/public/css/report.css">
-    <link rel="stylesheet" href="/public/css/style.css">
-    <!-- Shared controller files -->
-    <script src="/public/js/shared/controller/login-controller.js"></script>
-    <script src="/public/js/shared/controller/locale-controller.js"></script>
-    <script src="/public/js/shared/controller/header-controller.js"></script>
-    <script src="/public/js/shared/controller/navigation-controller.js"></script>
+  <link rel="stylesheet" href="/public/css/app.css">
+  <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
+  <link rel="stylesheet" href="/public/css/report.css">
+  <link rel="stylesheet" href="/public/css/style.css">
+  <!-- Shared controller files -->
+  <script src="/public/js/shared/controller/login-controller.js"></script>
+  <script src="/public/js/shared/controller/locale-controller.js"></script>
+  <script src="/public/js/shared/controller/header-controller.js"></script>
+  <script src="/public/js/shared/controller/navigation-controller.js"></script>
 
 
-    <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
+  <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
 
-    <!-- Page specific files -->
-    <!--<script src="/public/lib/flot/jquery.js"></script>-->
-    <!--<script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>-->
-    <script src="/public/lib/flot/excanvas.min.js"></script>
-    <!--<script src="/public/lib/flot/jquery.min.js"></script>-->
-    <script src="/public/lib/flot/jquery.flot.js"></script>
-    <script src="/public/lib/flot/jquery.flot.pie.js"></script>
-    <script src="/public/lib/flot/jquery.flot.axislabels.js"></script>
-    <script src="/public/lib/flot/jquery.flot.orderBars.js"></script>
-    <script src="/public/lib/flot/jquery.flot.tooltip.min.js"></script>
-    <script src="/public/js/shared/directives/angular-flot.js"></script>
-    <script src="/public/lib/tableHeadFixer/tableHeadFixer.js"></script>
+  <!-- Page specific files -->
+  <!--<script src="/public/lib/flot/jquery.js"></script>-->
+  <!--<script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>-->
+  <script src="/public/lib/flot/excanvas.min.js"></script>
+  <!--<script src="/public/lib/flot/jquery.min.js"></script>-->
+  <script src="/public/lib/flot/jquery.flot.js"></script>
+  <script src="/public/lib/flot/jquery.flot.pie.js"></script>
+  <script src="/public/lib/flot/jquery.flot.axislabels.js"></script>
+  <script src="/public/lib/flot/jquery.flot.orderBars.js"></script>
+  <script src="/public/lib/flot/jquery.flot.tooltip.min.js"></script>
+  <script src="/public/lib/flot/jquery.flot.stack.js"></script>
+  <script src="/public/js/shared/directives/angular-flot.js"></script>
+  <script src="/public/lib/tableHeadFixer/tableHeadFixer.js"></script>
 
   <!-- Page specific files -->
   <script src="/public/js/reports/main/module/main-module.js"></script>
@@ -143,14 +155,17 @@
 
   <script src="/public/js/reports/main/controller/user-summary-controller.js"></script>
   <script src="/public/js/reports/main/controller/cold-chain-temperature-controller.js"></script>
+  <script src="/public/js/reports/main/controller/vaccine-received-summary-controller.js"></script>
+  <script src="/public/js/reports/main/controller/log-tag-report-controller.js"></script>
   <script src="/public/js/reports/main/controller/min-max-stock-controller.js"></script>
   <script src="/public/js/reports/main/controller/distribution-summary-controller.js"></script>
+  <script src="/public/js/vaccine/directives/angular-export.js"></script>
 
 
   <link type="text/css" rel="stylesheet" href="/public/css/app.css">
-    <script>
+  <script>
 
-    </script>
+  </script>
   <!--[if IE 9]>
   <link rel="stylesheet" href="/public/css/ie9.css"/>
   <![endif]-->

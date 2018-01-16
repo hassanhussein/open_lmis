@@ -22,6 +22,9 @@ import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.lookupapi.mapper.DosageUnitReportMapper;
 import org.openlmis.lookupapi.mapper.GeographicLevelReportMapper;
+import org.openlmis.lookupapi.mapper.ILInterfaceMapper;
+import org.openlmis.lookupapi.model.HealthFacilityDTO;
+import org.openlmis.lookupapi.model.ProgramReferenceData;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.DosageUnit;
@@ -35,6 +38,7 @@ import org.openlmis.report.model.dto.Regimen;
 import org.openlmis.report.model.dto.RegimenCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -90,6 +94,9 @@ public class LookupService {
 
   @Autowired
   private RegimenReportMapper regimenReportMapper;
+
+  @Autowired
+  private ILInterfaceMapper interfaceMapper;
 
   public List<Program> getAllPrograms() {
     return programMapper.getAll();
@@ -179,4 +186,47 @@ public class LookupService {
     return adjustmentTypeReportMapper.getAll();
   }
 
+  @Transactional
+  public void saveHFR(HealthFacilityDTO dto){
+
+    if(dto != null){
+        if(!dto.getIlIDNumber().isEmpty()) {
+            HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
+            //HealthFacilityDTO facilityDTO = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
+            if (hfr == null) {
+                //if(facilityDTO == null) {
+                interfaceMapper.insert(dto);
+        /*}else
+          interfaceMapper.update(dto);*/
+
+            } else {
+                // if (hfr.getFacIDNumber() != null){
+                interfaceMapper.update(dto);
+                // }
+            }
+        }
+
+    }
+
+  }
+
+  public ProgramReferenceData getProgramReferenceData(String code, String facilityCode) {
+    Facility facility = null;
+    Program program = null;
+    List<FacilityTypeApprovedProduct> facilityTypeApprovedProductList = null;
+    List<ProcessingPeriod> processingPeriodList = null;
+    ProgramReferenceData programReferenceData = new ProgramReferenceData();
+    program = programMapper.getProgramByCode(code);
+    facility = facilityReportMapper.getFacilityByCode(facilityCode);
+    processingPeriodList = processingPeriodMapper.getPeriodsByProgramCode(code);
+    if (facility != null && program != null) {
+      facilityTypeApprovedProductList = facilityApprovedProductMapper.getAllByFacilityAndProgramId(Long.valueOf(facility.getId()), Long.valueOf(program.getId()));
+
+      programReferenceData.setFacility(facility);
+      programReferenceData.setProgram(program);
+      programReferenceData.setFacilityTypeApprovedProductList(facilityTypeApprovedProductList);
+      programReferenceData.setProcessingPeriodList(processingPeriodList);
+    }
+    return programReferenceData;
+  }
 }

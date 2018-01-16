@@ -15,6 +15,8 @@ package org.openlmis.rnr.domain;
 import lombok.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.Product;
+import org.openlmis.equipment.domain.EquipmentOperationalStatus;
+import org.openlmis.equipment.domain.NonFunctionalTestTypes;
 
 import java.util.List;
 
@@ -46,6 +48,12 @@ public class EquipmentLineItem extends LineItem  {
   private List<Product> relatedProducts;
 
   private String remarks;
+  private Boolean isBioChemistryEquipment;
+
+  private List<EquipmentLineItemBioChemistryTests> bioChemistryTestes;
+  private Integer analytesDaysOutOfUse;
+  private Integer electrolytesDaysOutOfUse;
+  private EquipmentOperationalStatus operationalStatus;
 
   @Override
   public boolean compareCategory(LineItem lineItem) {
