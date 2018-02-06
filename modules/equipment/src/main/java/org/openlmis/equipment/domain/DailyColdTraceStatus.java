@@ -12,36 +12,42 @@
 
 package org.openlmis.equipment.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.*;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.serializer.DateDeserializer;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class DailyColdTraceStatus extends BaseModel {
 
   private String serialNumber;
 
-  @JsonIgnore
   private EquipmentInventory equipmentInventory;
 
+  @JsonDeserialize(using = DateDeserializer.class)
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date date;
 
   private Integer operationalStatusId;
 
-  private BigDecimal minEpisodeTemp;
+  private BigDecimal minTemp;
 
-  private BigDecimal maxEpisodeTemp;
+  private BigDecimal maxTemp;
 
-  private BigDecimal lowTemp;
+  private BigDecimal lowTempEpisode;
 
-  private BigDecimal highTemp;
+  private BigDecimal highTempEpisode;
 
   private String remarks;
+
 }
+
+
