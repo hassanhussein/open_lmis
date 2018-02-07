@@ -2,18 +2,17 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
     $scope.homeFacility = homeFacility;
     $scope.homePageDate = new Date();
 
-     //Lower Level Charts
-    function getVaccineStockStatusChartForLowerLevel(data) {
+    var  dataV = [];
+    var chartIds = ['myStockVaccine','myStockSyringe'];
+    var title =['Vaccines', 'Syringes'];
+    var name = ['Vaccines','Syringes'];
+    function populateTheChart(vaccineDataT, product,chartName,title,name) {
 
-        var vaccineData = data[0].dataPoints;
-        var product = _.pluck(data[0].dataPoints, 'product');
-
-        var  dataV = [];
-        vaccineData.forEach(function (data) {
+        vaccineDataT.forEach(function (data) {
             dataV.push({y:data.mos,color:data.color,soh:data.soh});
         });
 
-        Highcharts.chart('myStockVaccine', {
+        Highcharts.chart(chartName, {
             chart: {
                 type: 'column'
             },
@@ -24,7 +23,7 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
                 text: 'Current Stock Status of '  + homeFacility.facilityname
             },
             subtitle: {
-                text: 'Vaccine Stock'
+                text: title
             },
             xAxis: {
                 categories:product,
@@ -45,7 +44,7 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
             tooltip: {
                 formatter: function() {
                     var tooltip;
-                        tooltip =  '<span style="color:' + this.series.color + '">' + this.series.name + '</span>: <b>' + this.y+ '</b><br/>';
+                    tooltip =  '<span style="color:' + this.series.color + '">' + this.series.name + '</span>: <b>' + this.y+ '</b><br/>';
 
                     return tooltip;
                 }
@@ -58,7 +57,7 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
                 }
             },
             series: [{
-                name: 'Vaccine',
+                name: name,
                 data: dataV
 
             }]
@@ -67,188 +66,728 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
 
     }
 
-    FacilityInventoryStockStatusData.get({
-        facilityId: parseInt(homeFacility.facilityid, 10),
-        date: '2017-01-31'
-    }).then(function (data) {
-        if(!isUndefined(data)){
-            var byCategory = _.groupBy(data, function (p) {
-                return p.product_category;
-            });
+    //Lower Level Charts
+    function getVaccineStockStatusChartForLowerLevel(data) {
+        var vaccineDataT = [];
+        var productT =[];
 
-            var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
-                return [{"productCategory": index, "dataPoints": value}];
-            });
-            getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
+        for(var i=0;i<=1;i++){
+           vaccineDataT=data[i].dataPoints;
+           product= _.pluck(data[i].dataPoints, 'product');
+           populateTheChart(vaccineDataT,product,chartIds[i],title[i],name[i]);
         }
-    });
 
-/*    VaccineDashboardFacilityInventoryStockStatus.get({
-        facilityId: parseInt(homeFacility.facilityid, 10),
-        date: '2017-01-31'
-    }, function (data) {
+    /*    var vaccineData = data[0].dataPoints;
+        var product = _.pluck(data[0].dataPoints, 'product');
 
-        if (data.facilityStockStatus !== null) {
-            var allProducts = data.facilityStockStatus;
-            var byCategory = _.groupBy(allProducts, function (p) {
-                return p.product_category;
-            });
+        vaccineData.forEach(function (data) {
+            dataV.push({y:data.mos,color:data.color,soh:data.soh});
+        });*/
 
-            var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
-                return [{"productCategory": index, "dataPoints": value}];
-            });
-
-
-            var vaccineData = $scope.allStockDataPointsByCategory[0].dataPoints;
-            var mos = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'mos');
-            var color = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'color');
-            var product = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'product');
-
-            console.log(mos);
-            if (!isUndefined(mos)) {
-              getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
-
-            } else
-                return 'No Chart data';
-/!*
-              $scope.myStockVaccine.productCategory = $scope.allStockDataPointsByCategory[0].productCategory;
-
-            $scope.myStockSupplies.dataPoints = $scope.allStockDataPointsByCategory[1].dataPoints;*!/
-            // $scope.myStockSupplies.productCategory = $scope.allStockDataPointsByCategory[1].productCategory;
-
-
-        }*/
-   // });
-
-
-    /*$scope.facilityInventoryStockStatusCallback = function (myStock) {
-        $scope.myStockFilter=myStock;
-
-        if (!isUndefined(homeFacility.id) && !isUndefined(myStock.toDate) && $scope.stockStatus.loadData) {
-
-        }
-    };
-*/
-
-
-    var currentDate = new Date().getFullYear() - 1;
-    GetPeriodForDashboard.get(currentDate).then(function (data) {
-
-        $scope.filter.product = 2421;
-        $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
-        $scope.years = YearFilteredData.sort(function (a, b) {
-            return b - a;
-        });
-        $scope.filter.year = currentDate;
-
-        $scope.products = $scope.findProductToDisplay;
-
-        $scope.filter.period = data.id;
-        var par = {year: currentDate, product: 2421, period: parseInt(data.id, 10), dose: 3};
-        $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(2421, 10)});
-        console.log(par);
-
-        var para = angular.extend(par, currentDate, {periodName: data.name, productName: $scope.productToDisplay.name});
-        $scope.nationalVaccineCoverageFunc(para);
-        $scope.loadMap(par);
-        $scope.vaccineCoverageByRegionAndProductFunc(para);
-        $scope.getAggregatePerformanceFunc(para);
-        $scope.categorizationFunct(para);
-        $scope.fullStockAvailabilityFunc(para);
-        $scope.availableStockFunc(para);
-
-
-    });
-
-    $scope.loadDashboardData = function (filter) {
-        $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(filter.product, 10)});
-        $scope.periodToDisplay = _.findWhere($scope.periods, {id: parseInt(filter.period, 10)});
-        $scope.doseToDisplay = filter.dose;
-        var prepareParams = angular.extend(filter, {
-            productName: $scope.productToDisplay.name,
-            periodName: $scope.periodToDisplay.name
-        });
-        console.log(filter);
-
-
-        $scope.categorizationFunct(filter);
-        $scope.fullStockAvailabilityFunc(filter);
-        $scope.availableStockFunc(filter);
-        $scope.vaccineCoverageByRegionAndProductFunc(prepareParams);
-        $scope.nationalVaccineCoverageFunc(prepareParams);
-
-        $scope.loadMap(filter);
-        $scope.getAggregatePerformanceFunc(filter);
-        $scope.showfilter = false;
-    };
-
-    $scope.changeYear = function () {
-
-        $scope.periods = [];
-        //   $scope.filter.year = currentDate;
-        ReportPeriodsByYear.get({
-            year: $scope.filter.year
-        }, function (data) {
-            $scope.periods = data.periods;
-            $scope.filter.period = $scope.periods[0].id;
-
-        });
-
-    };
-
-    $scope.periodName = [];
-    $scope.filter = {};
-    $scope.mans = [{'k': 181}];
-
-    $scope.doseByProduct = function () {
-        if ($scope.filter.product !== undefined)
-            getDoseFilter($scope.filter.product);
-
-    };
-    if ($scope.filter.product === null || $scope.filter.product === undefined) {
-        $scope.filter.product = 2412;
     }
 
-
-    var date = new Date();
-    var year = date.getFullYear();
-    year = 2017;
-    var doseId = 3;
-    var params = {
-        productId: $scope.filter.product,
-        periodId: 121,
-        year: year,
-        doseId: 1
-    };
-    ReportingTarget.get({}, function (data) {
-        if (data !== null) {
-            var dataValue = data.reportingTarget;
-            reportingPerformance(dataValue);
-        }
-    });
+    if($scope.homeFacility.facilitytypecode !== 'cvs'){
 
 
-    $scope.getAggregatePerformanceFunc = function (params) {
+        FacilityInventoryStockStatusData.get({
+            facilityId: parseInt(homeFacility.facilityid, 10),
+            date: '2017-01-31'
+        }).then(function (data) {
+            if(!isUndefined(data)){
+                var byCategory = _.groupBy(data, function (p) {
+                    return p.product_category;
+                });
 
-        GetAggregateFacilityPerformanceData.get(params).then(function (data) {
-            if (!isUndefined(data) || data.length > 0) {
-                $scope.facilityPerformance = data;
-                $scope.showNoData = false;
+                var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
+                    return [{"productCategory": index, "dataPoints": value}];
+                });
+                getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
             }
-            else
-                $scope.showNoData = true;
+        });
+
+
+
+
+
+    }else {
+
+
+        /*    VaccineDashboardFacilityInventoryStockStatus.get({
+                facilityId: parseInt(homeFacility.facilityid, 10),
+                date: '2017-01-31'
+            }, function (data) {
+
+                if (data.facilityStockStatus !== null) {
+                    var allProducts = data.facilityStockStatus;
+                    var byCategory = _.groupBy(allProducts, function (p) {
+                        return p.product_category;
+                    });
+
+                    var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
+                        return [{"productCategory": index, "dataPoints": value}];
+                    });
+
+
+                    var vaccineData = $scope.allStockDataPointsByCategory[0].dataPoints;
+                    var mos = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'mos');
+                    var color = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'color');
+                    var product = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'product');
+
+                    console.log(mos);
+                    if (!isUndefined(mos)) {
+                      getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
+
+                    } else
+                        return 'No Chart data';
+        /!*
+                      $scope.myStockVaccine.productCategory = $scope.allStockDataPointsByCategory[0].productCategory;
+
+                    $scope.myStockSupplies.dataPoints = $scope.allStockDataPointsByCategory[1].dataPoints;*!/
+                    // $scope.myStockSupplies.productCategory = $scope.allStockDataPointsByCategory[1].productCategory;
+
+
+                }*/
+        // });
+
+
+        /*$scope.facilityInventoryStockStatusCallback = function (myStock) {
+            $scope.myStockFilter=myStock;
+
+            if (!isUndefined(homeFacility.id) && !isUndefined(myStock.toDate) && $scope.stockStatus.loadData) {
+
+            }
+        };
+    */
+
+
+        var currentDate = new Date().getFullYear() - 1;
+        GetPeriodForDashboard.get(currentDate).then(function (data) {
+
+            $scope.filter.product = 2421;
+            $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
+            $scope.years = YearFilteredData.sort(function (a, b) {
+                return b - a;
+            });
+            $scope.filter.year = currentDate;
+
+            $scope.products = $scope.findProductToDisplay;
+
+            $scope.filter.period = data.id;
+            var par = {year: currentDate, product: 2421, period: parseInt(data.id, 10), dose: 3};
+            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(2421, 10)});
+            console.log(par);
+
+            var para = angular.extend(par, currentDate, {
+                periodName: data.name,
+                productName: $scope.productToDisplay.name
+            });
+            $scope.nationalVaccineCoverageFunc(para);
+            $scope.loadMap(par);
+            $scope.vaccineCoverageByRegionAndProductFunc(para);
+            $scope.getAggregatePerformanceFunc(para);
+            $scope.categorizationFunct(para);
+            $scope.fullStockAvailabilityFunc(para);
+            $scope.availableStockFunc(para);
 
 
         });
 
-    };
+        $scope.loadDashboardData = function (filter) {
+            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(filter.product, 10)});
+            $scope.periodToDisplay = _.findWhere($scope.periods, {id: parseInt(filter.period, 10)});
+            $scope.doseToDisplay = filter.dose;
+            var prepareParams = angular.extend(filter, {
+                productName: $scope.productToDisplay.name,
+                periodName: $scope.periodToDisplay.name
+            });
+            console.log(filter);
 
 
-    function round(value, precision) {
-        var multiplier = Math.pow(10, precision || 0);
-        return Math.round(value * multiplier) / multiplier;
+            $scope.categorizationFunct(filter);
+            $scope.fullStockAvailabilityFunc(filter);
+            $scope.availableStockFunc(filter);
+            $scope.vaccineCoverageByRegionAndProductFunc(prepareParams);
+            $scope.nationalVaccineCoverageFunc(prepareParams);
+
+            $scope.loadMap(filter);
+            $scope.getAggregatePerformanceFunc(filter);
+            $scope.showfilter = false;
+        };
+
+        $scope.changeYear = function () {
+
+            $scope.periods = [];
+            //   $scope.filter.year = currentDate;
+            ReportPeriodsByYear.get({
+                year: $scope.filter.year
+            }, function (data) {
+                $scope.periods = data.periods;
+                $scope.filter.period = $scope.periods[0].id;
+
+            });
+
+        };
+
+        $scope.periodName = [];
+        $scope.filter = {};
+        $scope.mans = [{'k': 181}];
+
+        $scope.doseByProduct = function () {
+            if ($scope.filter.product !== undefined)
+                getDoseFilter($scope.filter.product);
+
+        };
+        if ($scope.filter.product === null || $scope.filter.product === undefined) {
+            $scope.filter.product = 2412;
+        }
+
+
+        var date = new Date();
+        var year = date.getFullYear();
+        year = 2017;
+        var doseId = 3;
+        var params = {
+            productId: $scope.filter.product,
+            periodId: 121,
+            year: year,
+            doseId: 1
+        };
+        ReportingTarget.get({}, function (data) {
+            if (data !== null) {
+                var dataValue = data.reportingTarget;
+                reportingPerformance(dataValue);
+            }
+        });
+
+
+        $scope.getAggregatePerformanceFunc = function (params) {
+
+            GetAggregateFacilityPerformanceData.get(params).then(function (data) {
+                if (!isUndefined(data) || data.length > 0) {
+                    $scope.facilityPerformance = data;
+                    $scope.showNoData = false;
+                }
+                else
+                    $scope.showNoData = true;
+
+
+            });
+
+        };
+
+
+
+
+        $scope.categorizationFunct = function (params) {
+
+            Categorization.get(params).then(function (data) {
+                if (data !== undefined || data.length > 0) {
+                    categoryFunc(data);
+                } else
+                    $scope.categorized = [];
+            });
+        };
+
+
+        $scope.fullStockAvailabilityFunc = function (params) {
+            console.log(params);
+            if (!isUndefined(params.period) && !isUndefined(params.year)) {
+
+                GetFullStockAvailability.get(params).then(function (data) {
+
+                    if (data !== undefined) {
+                        console.log(data);
+                        $scope.fullStocks = data;
+                        getFullStockAvailabilityForChart(data);
+                    } else
+                        $scope.fullStocks = [];
+                });
+            }
+        };
+
+
+        var getCategorization = function () {
+            var product = 2413,
+                doseId = 1,
+                period = 121, year = 2017;
+
+            Categorization.get(product, doseId, period).then(function (data) {
+                if (data !== undefined) {
+                    console.log(data);
+                    categoryFunc(data);
+                }
+            });
+        };
+
+
+        $scope.nationalVaccineCoverageFunc = function (params) {
+            NationalVaccineCoverageData.get(params).then(function (data) {
+
+
+                if (data !== undefined) {
+                    console.log(data);
+
+                    getNationalCoverageChart(data, params);
+                    getPerformanceMonitoringChart(data, params);
+                } else
+                    $scope.showData = false;
+            });
+        };
+
+
+
+        $scope.vaccineCoverageByRegionAndProductFunc = function (params) {
+
+            VaccineCoverageByProductData.get(params).then(function (coverage) {
+                if (!isUndefined(coverage))
+                    coverageByRegion(coverage, params);
+            });
+        };
+
+
+
+
+        // allData();
+
+
+
+
+        var product = 2413,
+            period = 121;
+        // var params = {product:2413,doseId:1,period:121,year:2017};
+
+        var loadOnStart = function () {
+            var params = {product: 2413, doseId: 1, period: 121, year: 2017};
+            $scope.fullStockAvailability(params);
+
+        };
+        //loadOnStart();
+
+        $scope.OnFilterChanged = function () {
+
+            console.log($scope.filter);
+            allData();
+            if ($scope.filter === null || $scope.filter === undefined) {
+                return;
+            } else {
+                console.log($scope.filter);
+                $scope.fullStockAvailability($scope.filter);
+
+                getDoseFilter($scope.filter);
+                $scope.categorizationFunct($scope.filter);
+            }
+
+        };
+
+        $scope.availableStockFunc = function (params) {
+
+            AvailableStockData.get(params).then(function (data) {
+                console.log(data);
+                if (!isUndefined(data) || data.length > 0) {
+                    $scope.stocks = data;
+                    getData(data);
+
+                } else
+                    $scope.stocks = [];
+            });
+
+
+        };
+
+
+
+
+        /* var chart = Highcharts.chart('container2', {
+                 chart: {
+                     type: 'pie',
+                     options3d: {
+                         enabled: true,
+                         alpha: 45
+                     },
+                     style: {
+                         fontFamily: 'helvetica'
+                     }
+                 },
+                 title: {
+                     text: '<span style="font-size: 60px;">80 %</span> <br/> <div class="clearfix"></div><span style="font-size: 12px !important;">DTP3-HepB-Hib-3 Coverage Nov, 2017</span>',align:'center',verticalAlign: 'middle'
+                 },
+
+
+                 credits: {enabled: false},
+
+                 /!* subtitle: {
+                      text: '3D donut in Highcharts'
+                  },*!/
+                 plotOptions: {
+                     pie: {
+                         /!*
+                                         innerSize:200,
+                         *!/
+                         innerSize: '80%',
+                         size: '80%',
+                         depth: 145,
+                         shadow:false,
+                         showInLegend: false,
+                         dataLabels: {
+                             enabled: false
+                         },
+                         borderWidth: 0
+                     }
+                 },
+                 legend: {
+
+                     layout: 'vertical',
+                     align: 'right',
+                     verticalAlign: 'left',
+                     floating: true,
+                     x: 0,
+                     y: 30,
+                     itemMarginTop: 10,
+                     backgroundColor: '#f3f3f3',
+                     useHTML: true,
+                     labelFormatter: function () {
+                         return '<div style="width:200px"><span style="float:left">' + this.name + '</span><span style="float:right; margin-right:1%">' + Highcharts.numberFormat(this.y, 0) + '</span></div>';
+                     }
+                     /!*
+                                     itemMarginBottom: 10
+                     *!/
+                 },
+
+                 series: [{
+                     name: 'Coverage %',
+                     data: [
+                         ['January', 8],
+                         ['February', 3],
+                         ['March', 1],
+                         ['April', 6],
+                         {
+                             name: 'May',
+                             y: 9,
+                             sliced: true,
+                             selected: true
+                         },
+                         ['June', 4],
+
+                         ['July', 4],
+                         ['August', 1],
+                         ['September', 1]
+                     ]
+                 }]
+             }
+
+
+
+         );*/
+
+        /*
+            var text = chart.renderer.text('<span style="font-size: 50px;text-align: center">89 %</span>' +
+                    '<br/><br/><Strong> Coverage</Strong>').add(),
+                textBBox = text.getBBox(),
+                x = chart.plotLeft + (chart.plotWidth *0.4) - (textBBox.width * 0.2),
+                y = chart.plotTop + (chart.plotHeight * 0.5) + (textBBox.height * 0.25);
+        // Set position and styles
+            text.attr({ x: x, y: y }).css({ fontSize: '20px', color: '#666666' }).add();*/
+
+
+
+
+        //Coverage
+
+
+        var categoryFunc = function (category) {
+
+            var cat = _.pluck(category, 'catagorization');
+            var total = _.pluck(category, 'total');
+
+            $scope.categorized = cat;
+
+            var result = [], i = -1,
+                color = {Cat_1: '#52C552', Cat_2: '#509fc5', Cat_3: '#E4E44A', Cat_4: '#FF0000'};
+
+            while (total[++i]) {
+                result.push([{color: color[cat[i]], y: total[i]}]);
+            }
+            var mergedArrays = [].concat.apply([], result);
+
+            $('#container8').highcharts({
+                chart: {
+                    type: 'bar',
+                    height: 220
+
+                },
+                title: {
+                    text: ' <span style="color:cadetblue;font-size:15px">Categorization based on DTP-HepB+Hib-1 Coverage and Dropout</span>'
+                },
+                credits: {enabled: false},
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: ['Category A', 'Category B', 'Category C', 'Category D'],
+                    title: {
+                        text: null
+                    }
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: '',
+                        align: 'high'
+                    },
+                    labels: {
+                        overflow: 'justify'
+                    },
+                    gridLineColor: '',
+                    lineColor: '#999',
+                    lineWidth: 1,
+                    tickColor: '#666',
+                    tickWidth: 1,
+                    tickLength: 3
+
+                },
+                tooltip: {
+                    valueSuffix: ' %'
+                },
+                plotOptions: {
+                    bar: {
+                        dataLabels: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: [{
+                    name: 'DTP-3 Coverage',
+                    data: mergedArrays,
+                    valueSuffix: ' %'
+
+                }]
+            });
+        };
+
+
+        var d = new Date();
+        var pastYear = d.getFullYear() - 2;
+        var periodSorter = function (value) {
+            return parseInt(value.id, 10);
+        };
+
+
+
+        $scope.popover = {
+            "title": "Title",
+            "content": "Hello Popover<br />This is a multiline message!",
+            "saved": true
+        };
+
+        $scope.prod = [{id: 2, name: 'name'}, {id: 3, name: '777'}];
+        $scope.showfilter = false;
+
+        $scope.myModal = false;
+        $scope.showFilter = function () {
+            $scope.products = ProductFilteredData;
+
+            $scope.showfilter = true;
+            $scope.myModal = true;
+        };
+        $scope.hideFilter = function () {
+            $scope.showfilter = false;
+        };
+        $(".button-collapse").sideNav();
+        $('#modal1').modal('open');
+
+
+        $scope.year_slider = {
+            value: parseInt(pastYear, 10),
+            options: {
+                floor: parseInt(pastYear, 10),
+                ceil: parseInt(d.getFullYear(), 10),
+
+                translate: function (value, sliderId, label) {
+                    return value;
+                }, onChange: function (sliderId, modelValue, highValue, pointerType) {
+                    console.log(modelValue);
+                    getPeriodByYear(modelValue);
+                    return sliderId;
+                },
+                interval: 1,
+                //ticksArray: [0, 2,3,4,5,6,7,8,9,10,11,12],
+                showSelectionBar: false,
+                //  showTicksValues: true,
+                showTicks: true
+            }
+            /* value: 1,
+             options: {
+                 floor: 1,
+                 ceil: 12,
+                 showTicksValues: true,
+                 translate: function(value) {
+                     return value;
+                 },
+                 ticksValuesTooltip: function(v) {
+                     return v;
+                 },
+                 showTicks: true
+
+             }*/
+        };
+
+
+        $scope.card = {};
+        $scope.showIcons = function (card) {
+
+            $scope.showicons = true;
+
+            /*    if(!card.displayTable && !card.displayMap && !card.displayColumn){
+                    card.showicons = true;
+                }else{
+                    card.showicons = false;
+                }*/
+        };
+        $scope.changeChart = function (data) {
+            console.log(data);
+        };
+        $scope.icons = [
+            {name: 'table', image: 'table.jpg', action: ''},
+            {name: 'column', image: 'bar.png', action: ''},
+            {name: 'line', image: 'line.png', action: ''},
+            {name: 'combined', image: 'combined.jpg', action: ''},
+            {name: 'column', image: 'column.png', action: ''},
+            {name: 'area', image: 'area.jpg', action: ''},
+            {name: 'pie', image: 'pie.png', action: ''}
+        ];
+        $scope.hideIcons = function (card) {
+            console.log("cARD");
+
+            $scope.showicons = false;
+
+
+            //card.showicons = false;
+        };
+
+        $(function () {
+            $('#container15').highcharts({
+                chart: {
+                    type: 'column'
+                },
+
+                plotOptions: {
+                    pie: {
+                        innerSize: '70%'
+                    }
+                },
+
+                title: {
+                    verticalAlign: 'top',
+                    floating: true,
+                    text: 'Home' + '200%'
+                },
+
+                series: [{
+                    data: [
+                        ['Firefox', 44.2],
+                        ['IE7', 26.6],
+                        ['IE6', 20],
+                        ['Chrome', 3.1],
+                        ['Other', 5.4]
+                    ]
+                }]
+            });
+        });
+
+
+
+        $scope.showProduct = false;
+        var getProduct = function () {
+            ProductService.get(parseInt($scope.filter.product, 10)).then(function (data) {
+                $scope.product = data;
+                $scope.showProduct = true;
+                console.log(data);
+            });
+        };
+        getProduct();
+
+
+        $scope.geojson = {};
+
+        $scope.default_indicator = "ever_over_total";
+
+        $scope.expectedFilter = function (item) {
+            return item.monthlyEstimate > 0;
+        };
+
+        $scope.style = function (feature) {
+            if (feature.monthlyEstimate > 0)
+                console.log(feature.monthlyEstimate);
+
+            if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
+                $scope.indicator_type = $scope.filter.indicator_type;
+            }
+            else {
+                $scope.indicator_type = $scope.default_indicator;
+            }
+            var color = ($scope.indicator_type === 'ever_over_total') ? interpolateCoverage(feature.vaccinated, feature.monthlyEstimate, feature.coverageClassification) : ($scope.indicator_type === 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+            return {
+                fillColor: color,
+                weight: 1,
+                opacity: 1,
+                color: 'white',
+                dashArray: '1',
+                fillOpacity: 0.7
+            };
+        };
+
+        $scope.drawMap = function (json) {
+
+            angular.extend($scope, {
+                geojson: {
+                    data: json,
+                    style: $scope.style,
+                    onEachFeature: onEachFeatureForCoverageMap,
+                    resetStyleOnMouseout: true
+                }
+            });
+            $scope.$apply();
+        };
+
+        $scope.loadMap = function (params) {
+
+            $.getJSON('/gis/vaccine-coverage.json', params, function (data) {
+                $scope.features = data.map;
+                getExportDataFunction($scope.features);
+                angular.forEach($scope.features, function (feature) {
+                    feature.geometry_text = feature.geometry;
+                    feature.geometry = JSON.parse(feature.geometry);
+                    feature.type = "Feature";
+                    feature.properties = {};
+                    feature.properties.name = feature.name;
+                    feature.properties.id = feature.id;
+                });
+                console.log($scope.features);
+
+                $scope.drawMap({
+                    "type": "FeatureCollection",
+                    "features": $scope.features
+                });
+                zoomAndCenterMap(leafletData, $scope);
+            });
+
+
+        };
+        initiateCoverageMap($scope);
+
+        $scope.onDetailClicked = function (feature) {
+            console.log(feature);
+            $scope.currentFeature = feature;
+            $scope.$broadcast('openDialogBox');
+        };
+
+        $scope.$watch('period', function (newVal, oldVal) {
+            console.log($scope.filter);
+            // $scope.onChange();
+            // $scope.$parent.OnFilterChanged();
+        });
     }
-
     function getNationalCoverageChart(data, params) {
         var nationalCoverage = _.pluck(data, 'nationalcoverage');
         var max_value = _.max(nationalCoverage, function (data) {
@@ -338,47 +877,11 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
 
     }
 
-    $scope.categorizationFunct = function (params) {
 
-        Categorization.get(params).then(function (data) {
-            if (data !== undefined || data.length > 0) {
-                categoryFunc(data);
-            } else
-                $scope.categorized = [];
-        });
-    };
-
-
-    $scope.fullStockAvailabilityFunc = function (params) {
-        console.log(params);
-        if (!isUndefined(params.period) && !isUndefined(params.year)) {
-
-            GetFullStockAvailability.get(params).then(function (data) {
-
-                if (data !== undefined) {
-                    console.log(data);
-                    $scope.fullStocks = data;
-                    getFullStockAvailabilityForChart(data);
-                } else
-                    $scope.fullStocks = [];
-            });
-        }
-    };
-
-
-    var getCategorization = function () {
-        var product = 2413,
-            doseId = 1,
-            period = 121, year = 2017;
-
-        Categorization.get(product, doseId, period).then(function (data) {
-            if (data !== undefined) {
-                console.log(data);
-                categoryFunc(data);
-            }
-        });
-    };
-
+    function round(value, precision) {
+        var multiplier = Math.pow(10, precision || 0);
+        return Math.round(value * multiplier) / multiplier;
+    }
     function getPerformanceMonitoringChart(data, params) {
 
         var vaccinated = _.pluck(data, 'cumulative_vaccinated');
@@ -532,20 +1035,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
 
     }
 
-    $scope.nationalVaccineCoverageFunc = function (params) {
-        NationalVaccineCoverageData.get(params).then(function (data) {
-
-
-            if (data !== undefined) {
-                console.log(data);
-
-                getNationalCoverageChart(data, params);
-                getPerformanceMonitoringChart(data, params);
-            } else
-                $scope.showData = false;
-        });
-    };
-
 
     function coverageByRegion(coverage, params) {
 
@@ -613,15 +1102,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
         });
 
     }
-
-    $scope.vaccineCoverageByRegionAndProductFunc = function (params) {
-
-        VaccineCoverageByProductData.get(params).then(function (coverage) {
-            if (!isUndefined(coverage))
-                coverageByRegion(coverage, params);
-        });
-    };
-
 
     function getFullStockAvailabilityForChart(data) {
 
@@ -827,9 +1307,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
 
     }
 
-
-    // allData();
-
     function showDoseSlider(dose) {
 
         var displayName = _.pluck(dose, 'displayName');
@@ -868,7 +1345,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
         };
 
     }
-
     function getDoseFilter(product) {
 
         if (!isUndefined(product)) {
@@ -887,50 +1363,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
 
     }
 
-
-    var product = 2413,
-        period = 121;
-    // var params = {product:2413,doseId:1,period:121,year:2017};
-
-    var loadOnStart = function () {
-        var params = {product: 2413, doseId: 1, period: 121, year: 2017};
-        $scope.fullStockAvailability(params);
-
-    };
-    //loadOnStart();
-
-    $scope.OnFilterChanged = function () {
-
-        console.log($scope.filter);
-        allData();
-        if ($scope.filter === null || $scope.filter === undefined) {
-            return;
-        } else {
-            console.log($scope.filter);
-            $scope.fullStockAvailability($scope.filter);
-
-            getDoseFilter($scope.filter);
-            $scope.categorizationFunct($scope.filter);
-        }
-
-    };
-
-    $scope.availableStockFunc = function (params) {
-
-        AvailableStockData.get(params).then(function (data) {
-            console.log(data);
-            if (!isUndefined(data) || data.length > 0) {
-                $scope.stocks = data;
-                getData(data);
-
-            } else
-                $scope.stocks = [];
-        });
-
-
-    };
-
-
     //More Drill Down Data for the Chart 2
     function getStockAvailabilityDataView(chart2Data) {
         if (chart2Data.y !== null) {
@@ -948,7 +1380,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
         }
 
     }
-
     var getData = function (data) {
         var periodName = _.pluck(data, 'period');
         var percentageCoverage = _.pluck(data, 'percentagecoverage');
@@ -1105,100 +1536,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
 
 
     };
-
-
-    /* var chart = Highcharts.chart('container2', {
-             chart: {
-                 type: 'pie',
-                 options3d: {
-                     enabled: true,
-                     alpha: 45
-                 },
-                 style: {
-                     fontFamily: 'helvetica'
-                 }
-             },
-             title: {
-                 text: '<span style="font-size: 60px;">80 %</span> <br/> <div class="clearfix"></div><span style="font-size: 12px !important;">DTP3-HepB-Hib-3 Coverage Nov, 2017</span>',align:'center',verticalAlign: 'middle'
-             },
-
-
-             credits: {enabled: false},
-
-             /!* subtitle: {
-                  text: '3D donut in Highcharts'
-              },*!/
-             plotOptions: {
-                 pie: {
-                     /!*
-                                     innerSize:200,
-                     *!/
-                     innerSize: '80%',
-                     size: '80%',
-                     depth: 145,
-                     shadow:false,
-                     showInLegend: false,
-                     dataLabels: {
-                         enabled: false
-                     },
-                     borderWidth: 0
-                 }
-             },
-             legend: {
-
-                 layout: 'vertical',
-                 align: 'right',
-                 verticalAlign: 'left',
-                 floating: true,
-                 x: 0,
-                 y: 30,
-                 itemMarginTop: 10,
-                 backgroundColor: '#f3f3f3',
-                 useHTML: true,
-                 labelFormatter: function () {
-                     return '<div style="width:200px"><span style="float:left">' + this.name + '</span><span style="float:right; margin-right:1%">' + Highcharts.numberFormat(this.y, 0) + '</span></div>';
-                 }
-                 /!*
-                                 itemMarginBottom: 10
-                 *!/
-             },
-
-             series: [{
-                 name: 'Coverage %',
-                 data: [
-                     ['January', 8],
-                     ['February', 3],
-                     ['March', 1],
-                     ['April', 6],
-                     {
-                         name: 'May',
-                         y: 9,
-                         sliced: true,
-                         selected: true
-                     },
-                     ['June', 4],
-
-                     ['July', 4],
-                     ['August', 1],
-                     ['September', 1]
-                 ]
-             }]
-         }
-
-
-
-     );*/
-
-    /*
-        var text = chart.renderer.text('<span style="font-size: 50px;text-align: center">89 %</span>' +
-                '<br/><br/><Strong> Coverage</Strong>').add(),
-            textBBox = text.getBBox(),
-            x = chart.plotLeft + (chart.plotWidth *0.4) - (textBBox.width * 0.2),
-            y = chart.plotTop + (chart.plotHeight * 0.5) + (textBBox.height * 0.25);
-    // Set position and styles
-        text.attr({ x: x, y: y }).css({ fontSize: '20px', color: '#666666' }).add();*/
-
-
     function reportingPerformance(reportingData) {
 
         var distribution = _.pluck(reportingData, 'distributed_rate');
@@ -1306,88 +1643,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
         });
     }
 
-
-    //Coverage
-
-
-    var categoryFunc = function (category) {
-
-        var cat = _.pluck(category, 'catagorization');
-        var total = _.pluck(category, 'total');
-
-        $scope.categorized = cat;
-
-        var result = [], i = -1,
-            color = {Cat_1: '#52C552', Cat_2: '#509fc5', Cat_3: '#E4E44A', Cat_4: '#FF0000'};
-
-        while (total[++i]) {
-            result.push([{color: color[cat[i]], y: total[i]}]);
-        }
-        var mergedArrays = [].concat.apply([], result);
-
-        $('#container8').highcharts({
-            chart: {
-                type: 'bar',
-                height: 220
-
-            },
-            title: {
-                text: ' <span style="color:cadetblue;font-size:15px">Categorization based on DTP-HepB+Hib-1 Coverage and Dropout</span>'
-            },
-            credits: {enabled: false},
-            subtitle: {
-                text: ''
-            },
-            xAxis: {
-                categories: ['Category A', 'Category B', 'Category C', 'Category D'],
-                title: {
-                    text: null
-                }
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: '',
-                    align: 'high'
-                },
-                labels: {
-                    overflow: 'justify'
-                },
-                gridLineColor: '',
-                lineColor: '#999',
-                lineWidth: 1,
-                tickColor: '#666',
-                tickWidth: 1,
-                tickLength: 3
-
-            },
-            tooltip: {
-                valueSuffix: ' %'
-            },
-            plotOptions: {
-                bar: {
-                    dataLabels: {
-                        enabled: true
-                    }
-                }
-            },
-
-            series: [{
-                name: 'DTP-3 Coverage',
-                data: mergedArrays,
-                valueSuffix: ' %'
-
-            }]
-        });
-    };
-
-
-    var d = new Date();
-    var pastYear = d.getFullYear() - 2;
-    var periodSorter = function (value) {
-        return parseInt(value.id, 10);
-    };
-
     function getPeriodSlider(data) {
 
         var sortedValues = _.sortBy(data, periodSorter);
@@ -1444,30 +1699,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
             });
         });
     }
-
-
-    $scope.popover = {
-        "title": "Title",
-        "content": "Hello Popover<br />This is a multiline message!",
-        "saved": true
-    };
-
-    $scope.prod = [{id: 2, name: 'name'}, {id: 3, name: '777'}];
-    $scope.showfilter = false;
-
-    $scope.myModal = false;
-    $scope.showFilter = function () {
-        $scope.products = ProductFilteredData;
-
-        $scope.showfilter = true;
-        $scope.myModal = true;
-    };
-    $scope.hideFilter = function () {
-        $scope.showfilter = false;
-    };
-    $(".button-collapse").sideNav();
-    $('#modal1').modal('open');
-
     function getPeriodByYear(modelValue) {
 
         ReportPeriodsByYear.get({
@@ -1476,104 +1707,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
             getPeriodSlider(data.periods);
         });
     }
-
-    $scope.year_slider = {
-        value: parseInt(pastYear, 10),
-        options: {
-            floor: parseInt(pastYear, 10),
-            ceil: parseInt(d.getFullYear(), 10),
-
-            translate: function (value, sliderId, label) {
-                return value;
-            }, onChange: function (sliderId, modelValue, highValue, pointerType) {
-                console.log(modelValue);
-                getPeriodByYear(modelValue);
-                return sliderId;
-            },
-            interval: 1,
-            //ticksArray: [0, 2,3,4,5,6,7,8,9,10,11,12],
-            showSelectionBar: false,
-            //  showTicksValues: true,
-            showTicks: true
-        }
-        /* value: 1,
-         options: {
-             floor: 1,
-             ceil: 12,
-             showTicksValues: true,
-             translate: function(value) {
-                 return value;
-             },
-             ticksValuesTooltip: function(v) {
-                 return v;
-             },
-             showTicks: true
-
-         }*/
-    };
-
-
-    $scope.card = {};
-    $scope.showIcons = function (card) {
-
-        $scope.showicons = true;
-
-        /*    if(!card.displayTable && !card.displayMap && !card.displayColumn){
-                card.showicons = true;
-            }else{
-                card.showicons = false;
-            }*/
-    };
-    $scope.changeChart = function (data) {
-        console.log(data);
-    };
-    $scope.icons = [
-        {name: 'table', image: 'table.jpg', action: ''},
-        {name: 'column', image: 'bar.png', action: ''},
-        {name: 'line', image: 'line.png', action: ''},
-        {name: 'combined', image: 'combined.jpg', action: ''},
-        {name: 'column', image: 'column.png', action: ''},
-        {name: 'area', image: 'area.jpg', action: ''},
-        {name: 'pie', image: 'pie.png', action: ''}
-    ];
-    $scope.hideIcons = function (card) {
-        console.log("cARD");
-
-        $scope.showicons = false;
-
-
-        //card.showicons = false;
-    };
-
-    $(function () {
-        $('#container15').highcharts({
-            chart: {
-                type: 'column'
-            },
-
-            plotOptions: {
-                pie: {
-                    innerSize: '70%'
-                }
-            },
-
-            title: {
-                verticalAlign: 'top',
-                floating: true,
-                text: 'Home' + '200%'
-            },
-
-            series: [{
-                data: [
-                    ['Firefox', 44.2],
-                    ['IE7', 26.6],
-                    ['IE6', 20],
-                    ['Chrome', 3.1],
-                    ['Other', 5.4]
-                ]
-            }]
-        });
-    });
 
 
     //Map
@@ -1589,97 +1722,6 @@ function StockAvailabilityControllerFunc1($scope, homeFacility, FacilityInventor
         });
         $scope.exportData = arr;
     }
-
-    $scope.showProduct = false;
-    var getProduct = function () {
-        ProductService.get(parseInt($scope.filter.product, 10)).then(function (data) {
-            $scope.product = data;
-            $scope.showProduct = true;
-            console.log(data);
-        });
-    };
-    getProduct();
-
-
-    $scope.geojson = {};
-
-    $scope.default_indicator = "ever_over_total";
-
-    $scope.expectedFilter = function (item) {
-        return item.monthlyEstimate > 0;
-    };
-
-    $scope.style = function (feature) {
-        if (feature.monthlyEstimate > 0)
-            console.log(feature.monthlyEstimate);
-
-        if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
-            $scope.indicator_type = $scope.filter.indicator_type;
-        }
-        else {
-            $scope.indicator_type = $scope.default_indicator;
-        }
-        var color = ($scope.indicator_type === 'ever_over_total') ? interpolateCoverage(feature.vaccinated, feature.monthlyEstimate, feature.coverageClassification) : ($scope.indicator_type === 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
-        return {
-            fillColor: color,
-            weight: 1,
-            opacity: 1,
-            color: 'white',
-            dashArray: '1',
-            fillOpacity: 0.7
-        };
-    };
-
-    $scope.drawMap = function (json) {
-
-        angular.extend($scope, {
-            geojson: {
-                data: json,
-                style: $scope.style,
-                onEachFeature: onEachFeatureForCoverageMap,
-                resetStyleOnMouseout: true
-            }
-        });
-        $scope.$apply();
-    };
-
-    $scope.loadMap = function (params) {
-
-        $.getJSON('/gis/vaccine-coverage.json', params, function (data) {
-            $scope.features = data.map;
-            getExportDataFunction($scope.features);
-            angular.forEach($scope.features, function (feature) {
-                feature.geometry_text = feature.geometry;
-                feature.geometry = JSON.parse(feature.geometry);
-                feature.type = "Feature";
-                feature.properties = {};
-                feature.properties.name = feature.name;
-                feature.properties.id = feature.id;
-            });
-            console.log($scope.features);
-
-            $scope.drawMap({
-                "type": "FeatureCollection",
-                "features": $scope.features
-            });
-            zoomAndCenterMap(leafletData, $scope);
-        });
-
-
-    };
-    initiateCoverageMap($scope);
-
-    $scope.onDetailClicked = function (feature) {
-        console.log(feature);
-        $scope.currentFeature = feature;
-        $scope.$broadcast('openDialogBox');
-    };
-
-    $scope.$watch('period', function (newVal, oldVal) {
-        console.log($scope.filter);
-        // $scope.onChange();
-        // $scope.$parent.OnFilterChanged();
-    });
 
 }
 
