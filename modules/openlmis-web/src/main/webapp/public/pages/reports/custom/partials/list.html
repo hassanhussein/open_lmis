@@ -16,7 +16,7 @@
       <h2>
         <i class="icon-edit"></i>
         <span class="break"></span>
-        Reports
+        <span openlmis-message="title.custom.report"></span>
       </h2>
     </div>
     <filter-container >
@@ -112,7 +112,7 @@
                   </div>
                   <table ng-show="data.length == 0">
                     <tr>
-                      <td>No data to show under selected filters</td>
+                      <td><span openlmis-message="label.report.no.data.to.show"></span></td>
                     </tr>
                   </table>
                   <div client-side-sort-pagination ng-show="data.length > 0" style=" overflow-x: auto;min-width: 100%;table-layout: fixed;">

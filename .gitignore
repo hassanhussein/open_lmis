@@ -1,5 +1,9 @@
 *.log*
 .idea/
+.project
+.settings
+.classpath
+bin/
 *.iml
 *.ipr
 *.iws

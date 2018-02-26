@@ -54,7 +54,7 @@
                     <div class="checkbox">
                       <label for="all"><input id="all" class="checkbox" type="checkbox" value="ALL"
                                               ng-change="onToggleAll()" ng-model="all">
-                        <span>All</span>
+                        <span openlmis-message="report.stock.imbalance.all"></span>
                       </label>
                     </div>
                   </div>
@@ -62,7 +62,7 @@
                     <div class="checkbox">
                       <label for="so"><input id="so" class="checkbox" type="checkbox" value="SO"
                                              ng-change="onCheckboxChanged()" ng-model="statuses.SO">
-                        <span>Stocked Out</span>
+                        <span openlmis-message="report.stock.imbalance.stock.out"></span>
                       </label>
                     </div>
                   </div>
@@ -70,7 +70,7 @@
                     <div class="checkbox">
                       <label for="us"><input id="us" class="checkbox" type="checkbox" value="US"
                                              ng-change="onCheckboxChanged()" ng-model="statuses.US">
-                        <span>Below Minimum</span>
+                        <span openlmis-message="report.stock.imbalance.below.min"></span>
                       </label>
                     </div>
                   </div>
@@ -79,7 +79,7 @@
                       <label for="sp">
                         <input id="sp" class="check-box" type="checkbox" value="SP"
                                ng-change="onCheckboxChanged()" ng-model="statuses.SP">
-                        <span>Stocked According to Plan</span>
+                        <span openlmis-message="report.stock.imbalance.stocked.to.plan"></span>
                       </label>
                     </div>
                   </div>
@@ -87,7 +87,7 @@
                     <div class="checkbox">
                       <label for="os"><input id="os" class="checkbox" type="checkbox" value="OS"
                                              ng-change="onCheckboxChanged()" ng-model="statuses.OS">
-                        <span>Over Stocked</span>
+                        <span openlmis-message="report.stock.imbalance.over.stocked"></span>
                       </label>
                     </div>
                   </div>
@@ -95,7 +95,7 @@
                     <div class="checkbox">
                       <label for="uk"><input id="uk" class="checkbox" type="checkbox" value="UK"
                                              ng-change="onCheckboxChanged()" ng-model="statuses.UK">
-                        <span>No Demand (AMC=0)</span>
+                        <span openlmis-message="report.stock.imbalance.no.demand"></span>
                       </label>
                     </div>
                   </div>
@@ -105,7 +105,7 @@
             <table client-side-sort-pagination class="table table-bordered"
                    ng-show="data == undefined || data.length == 0">
               <tr>
-                <td>No data to show under selected filters</td>
+                <td><span openlmis-message="label.report.no.data.to.show"></span></td>
               </tr>
             </table>
             <div ng-show="datarows.length > 0">

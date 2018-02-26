@@ -795,8 +795,8 @@ app.directive('vaccinePeriodTreeFilter', ['GetVaccineReportPeriodFlat', '$routeP
     }
 ]);
 
-app.directive('productMultiFilter', ['ReportProductsByProgram',
-    function (ReportProductsByProgram) {
+app.directive('productMultiFilter', ['ReportProductsByProgram', 'messageService',
+    function (ReportProductsByProgram, messageService) {
 
         var onPgCascadedVarsChanged = function ($scope) {
 
@@ -813,7 +813,7 @@ app.directive('productMultiFilter', ['ReportProductsByProgram',
                     id: -1
                 });
                 $scope.products.unshift({
-                    'name': '-- All Products --',
+                    'name': messageService.get('report.filter.all.products'),
                     id: 0
                 });
             });

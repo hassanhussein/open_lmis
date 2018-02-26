@@ -22,7 +22,7 @@
               <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
               <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
               <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
-              <a id="mailing-button" href="#facility-list" ng-click="exportReport('mailing-list')" class='btn-small btn-info'>Mailing Label</a>
+              <a id="mailing-button" href="#facility-list" ng-click="exportReport('mailing-list')" class='btn-small btn-info'><span openlmis-message="report.facility.list.mailing.label"></span></a>
             </div>
         </div>
         <div>
@@ -46,7 +46,7 @@
         </div>
         <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
             <tr>
-                <td>No data to show under selected filters</td>
+                <td><span openlmis-message="label.report.no.data.to.show"></span></td>
             </tr>
         </table>
         <div ng-show="datarows.length > 0">

@@ -40,22 +40,22 @@ function initiateMap(scope) {
     legend: {
       position: 'bottomleft',
       colors: ['#FF0000', '#FFFF00', '#5eb95e', "#000000"],
-      labels: ['Non Reporting', 'Partial Reporting ', 'Fully Reporting', 'Not expected to Report']
+      labels: ['N\'ayant soumis aucun rapport', 'Ayant soumis partiellement des rapports ', 'Ayant soumis tous les rapports', 'Ne devant pas soumettre de rapport']
     }
   });
 
   scope.indicator_types = [
     {
       code: 'ever_over_total',
-      name: 'Ever Reported / Total Facilities'
+      name: 'Nbr Ets ayant transmis au moins 1 rapport / Nbr total d\'ets'
     },
     {
       code: 'ever_over_expected',
-      name: 'Ever Reported / Expected Facilities'
+      name: 'Nbr Ets ayant transmis au moins 1 rapport / Ets devant soumettre des rapports'
     },
     {
       code: 'period_over_expected',
-      name: 'Reported during period / Expected Facilities'
+      name: 'Rapports reçus / Rapports attendus'
     }
   ];
 
@@ -70,10 +70,10 @@ function initiateMap(scope) {
 
 function popupFormat(feature) {
   return '<table class="table table-bordered" style="width: 250px"><tr><th colspan="2"><b>' + feature.properties.name + '</b></th></tr>' +
-    '<tr><td>Expected Facilities</td><td class="number">' + feature.expected + '</td></tr>' +
-    '<tr><td>Reported This Period</td><td class="number">' + feature.period + '</td></tr>' +
-    '<tr><td>Ever Reported</td><td class="number">' + feature.ever + '</td></tr>' +
-    '<tr><td class="bold">Total Facilities</b></td><td class="number bold">' + feature.total + '</td></tr>';
+    '<tr><td>Ets devant soumettre des rapports</td><td class="number">' + feature.expected + '</td></tr>' +
+    '<tr><td>Rapports reçus</td><td class="number">' + feature.period + '</td></tr>' +
+    '<tr><td>Nbr Ets ayant transmis au moins 1 rapport </td><td class="number">' + feature.ever + '</td></tr>' +
+    '<tr><td class="bold">Nbr total d\'ets</b></td><td class="number bold">' + feature.total + '</td></tr>';
 }
 
 function onEachFeature(feature, layer) {

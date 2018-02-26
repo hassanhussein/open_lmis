@@ -41,7 +41,7 @@
     </div>
     <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
       <tr>
-        <td>No data to show under selected filters</td>
+        <td><span openlmis-message="label.report.no.data.to.show"></span></td>
       </tr>
     </table>
     <div ng-show="datarows.length > 0">
@@ -56,21 +56,21 @@
               <div class="span6 offset3">
                 <div>
                   <div>
-                    <span>Expected Facilities</span> :
+                    <span openlmis-message="report.non.reporting.expected"></span> :
                     <span class="report-data pull-right number">{{summary.total | number}}</span>
                   </div>
                 </div>
 
                 <div>
                   <div>
-                    <span>Reporting</span> :
+                    <span openlmis-message="report.non.reporting.reporting"></span> :
                     <span class="report-data pull-right number">{{summary.reporting | number}}</span>
                   </div>
                 </div>
 
                 <div>
                   <div>
-                    <span>Non Reporting</span> :
+                    <span openlmis-message="report.non.reporting"></span> :
                     <span class="report-data pull-right number">{{summary.nonReporting | number}}</span>
                   </div>
                 </div>

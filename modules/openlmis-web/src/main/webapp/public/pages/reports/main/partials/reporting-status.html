@@ -87,7 +87,7 @@
             <div ng-show="!reporting">Showing facilities that <b class="red">did not</b> submit R&R</div>
             <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
               <tr>
-                <td>No data to show under selected filters</td>
+                <td><span openlmis-message="label.report.no.data.to.show"></span></td>
               </tr>
             </table>
             <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">

@@ -13,8 +13,8 @@
 <div>
   <div class="padding2px"></div>
   <div class="pull-right legend well-small">
-    Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
-    to {{ (tableParams.total > ((tableParams.page ) * tableParams.count))? ((tableParams.page ) * tableParams.count) : tableParams.total }}
+    Page: {{tableParams.page}}, <span openlmis-message="label.pagination.show.records">Showing records</span> {{ ((tableParams.page - 1) * tableParams.count) + 1 }}
+    <span openlmis-message="label.pagination.show.records.to">to</span> {{ (tableParams.total > ((tableParams.page ) * tableParams.count))? ((tableParams.page ) * tableParams.count) : tableParams.total }}
     of {{tableParams.total}}
   </div>
 </div>

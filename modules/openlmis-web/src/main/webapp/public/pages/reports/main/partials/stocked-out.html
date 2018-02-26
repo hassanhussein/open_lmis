@@ -69,7 +69,7 @@
                     <table client-side-sort-pagination class="table table-bordered"
                            ng-show="data == undefined || data.length == 0">
                         <tr>
-                            <td>No data to show under selected filters</td>
+                            <td><span openlmis-message="label.report.no.data.to.show"></span></td>
                         </tr>
                     </table>
 
@@ -113,8 +113,9 @@
                         </table>
                     </div>
                     <div style="clear: right;" class="pull-right">
-                        <a ng-href="/public/pages/reports/maps/index.html#/reporting-rate?schedule={{filter.schedule}}&year={{filter.year}}&program={{filter.program}}&period={{filter.period}}">View
-                            Reporting Rate</a>
+                        <a ng-href="/public/pages/reports/maps/index.html#/reporting-rate?schedule={{filter.schedule}}&year={{filter.year}}&program={{filter.program}}&period={{filter.period}}">
+                            <span openlmis-message="link.view.reporting.rate"></span>
+                        </a>
                     </div>
 
                 </div>
