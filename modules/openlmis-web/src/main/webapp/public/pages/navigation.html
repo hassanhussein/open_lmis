@@ -250,6 +250,36 @@
           </div>
       </li>
     <li ng-include="'/public/pages/reports/navigation.html'"></li>
+
+
+
+  <!--eLMIS GUINEE LIEN POUR MENU RAPPORTS GUINEE-->
+
+        <li>
+           <a href="">Rapports Guinee</a>
+            <div class="submenu">
+              <ul>
+                  <li class="has-children">
+                      <a >Donnees historiques 2017</a>
+                        <div class="submenu">
+                          <ul>
+                              <!--<li><a href="https://test.esigl-gn.org/public/pages/analysestockgn/index.html#/dashboard">Analyses des stocks</a></li>-->
+                              <li><a href="https://test.esigl-gn.org/public/pages/analysestockgn/index.html#/rapportage2017">Rapportages</a></li>
+                              <li><a href="https://test.esigl-gn.org/public/pages/analysestockgn/index.html#/stock2017">Stocks</a></li>
+                              <li><a href="https://test.esigl-gn.org/public/pages/analysestockgn/index.html#/consommation2017">Consommations</a></li>
+                        </ul>
+                      </div>
+                   </li>
+
+                           <!-- <li><a href="https://test.esigl-gn.org/public/pages/analysestockgn/index.html#/dashboard">Analyses des stocks</a></li>-->
+                  <li class="beak"></li>
+                </ul>
+            </div>
+        </li>
+
+  <!-- FIN eLMIS GUINEE LIEN POUR MENU RAPPORTS GUINEE-->
+
+
     <li>
       <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
 
@@ -303,9 +333,6 @@
             </div>
           </li>
 
-          <li ng-show="hasPermission('MANAGE_SETTING')">
-              <a href="/public/pages/admin/sms/index.html">Messages</a>
-          </li>
 
           <li class="has-children">
             <a id="manage-option" href="javascript: void(0);" openlmis-message="link.admin.manage"></a>

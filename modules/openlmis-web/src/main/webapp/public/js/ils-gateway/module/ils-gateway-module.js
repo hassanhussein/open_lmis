@@ -14,7 +14,10 @@ angular.module('ils-gateway', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.b
     config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/dashboard', {controller: ILSGatewayDashboardController, templateUrl: 'partials/dashboard.html'}).
-            otherwise({redirectTo: '/dashboard'});
+            when('/consommation2017', {controller: ILSGatewayDashboardController, templateUrl: 'partials/consommation2017.html'}).
+            when('/stock2017', {controller: ILSGatewayDashboardController, templateUrl: 'partials/stock2017.html'}).
+            when('/rapportage2017', {controller: ILSGatewayDashboardController, templateUrl: 'partials/rapportage2017'}).
+            otherwise({redirectTo: '/rapportage2017'});
     }]).directive('onKeyup', function () {
         return function (scope, elm, attrs) {
             elm.bind("keyup", function () {
@@ -34,5 +37,5 @@ angular.module('ils-gateway', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.b
         };
     })
     .run(function ($rootScope, AuthorizationService) {
-        AuthorizationService.preAuthorize('ACCESS_ILS_GATEWAY');
+
     });
