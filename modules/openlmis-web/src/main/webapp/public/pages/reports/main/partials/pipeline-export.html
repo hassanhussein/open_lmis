@@ -11,37 +11,39 @@
   -->
 
 <div class="row-fluid sortable ui-sortable">
-            <div class="box span12">
-                    <div class="box-header">
-                        <h2 openlmis-message="report.title.pipeline.export"><i class="icon-edit"></i><span class="break"></span></h2>
-                        <div class="box-icon">
-                            <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
-                            <a ng-click="section(1)"  ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
-                            <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
-                            <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')" class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
-                        </div>
-                    </div>
-            <div>
-                <div class="app-form">
+  <div class="box span12">
+    <div class="box-header">
+      <h2 openlmis-message="report.title.pipeline.export"><i class="icon-edit"></i><span class="break"></span></h2>
+      <div class="box-icon">
+        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+        <a ng-click="section(1)" ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+      </div>
+    </div>
+    <div>
+      <div class="app-form">
+        <form ng-submit="filterGrid()" name="filterForm" novalidate>
+          <div filter-container class="clearfix">
+            <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+            <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+            <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+            <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="content-body col-lg-6">
+      <table class="table table-bordered">
+        <tr ng-show="data == undefined || data.length == 0">
+          <td >No data to show under selected filters</td>
+        </tr>
+        <tr ng-show="data.length > 0" >
+          <td >
+            <a ng-show="filterForm.$valid" href="" ng-click="exportReport('XML')" >Download <span openlmis-message="label.xml"></span></a>
+          </td>
 
-                  <form ng-submit="filterGrid()"  name="filterForm" novalidate>
-                    <div filter-container class="clearfix">
-                      <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
-                      <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
-                      <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
-                      <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
-                    </div>
-                  </form>
-                </div>
-            </div>
-                <div class="content-body">
-                    <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
-                        <tr>
-                            <td><span openlmis-message="label.report.no.data.to.show"></span></td>
-                        </tr>
-                    </table>
-                     <pre>{{xml}}</pre>
-                </div>
+        </tr>
+      </table>
+    </div>
 
-            </div>
   </div>
+</div>

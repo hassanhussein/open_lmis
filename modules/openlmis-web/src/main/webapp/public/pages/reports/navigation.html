@@ -84,6 +84,20 @@
             <a href="/public/pages/reports/main/index.html#min-max-stock-report">
               Minimum And Maximum Report
             </a>
+          </li>
+          <li ng-show="hasPermission('VIEW_DISTRIBUTION_SUMMARY_REPORT')">
+            <a href="/public/pages/reports/main/index.html#distribution-summary-report">
+             Distribution Summary
+            </a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_DISTRIBUTION_SUMMARY_REPORT')">
+            <a href="/public/pages/reports/main/index.html#vaccine-received-summary-report">
+             Consignment Received Summary
+            </a>
+          </li>
+
+        </ul>
       </div>
     </li>
 
@@ -300,7 +314,7 @@
 
     <li class="has-children">
 
-      <div><ng-include src="'/public/pages/reports/mozambique/reports.html'"/></div>
+      <!--<div><ng-include src="'/public/pages/reports/mozambique/reports.html'"/></div>-->
 
     <li>
       <a ng-href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
@@ -314,3 +328,4 @@
 
   </ul>
 </div>
+   -->
