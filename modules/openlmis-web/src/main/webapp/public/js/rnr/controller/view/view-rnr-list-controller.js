@@ -122,6 +122,14 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
         ] : [];
     }
 
+    /**
+     * Load list of facilities based on the selected district
+     */
+
+    $scope.loadFacilitiesForSelectedDistrict = function () {
+        console.log('Load list of facilities per selected district')
+    };
+
     $scope.loadProgramsForFacility = function () {
         ProgramsToViewRequisitions.get({facilityId: $scope.selectedFacilityId},
             function (data) {
