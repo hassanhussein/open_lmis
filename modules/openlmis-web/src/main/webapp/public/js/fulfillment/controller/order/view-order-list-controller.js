@@ -31,6 +31,18 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
         });
   };
 
+  $scope.filterOrders = function () {
+        $scope.filteredOrders = [];
+        var query = $scope.query || "";
+
+        $scope.filteredOrders = $.grep($scope.orders, function (order) {
+            return order.rnr.facilityName.toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
+                order.rnr.districtName.toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
+                order.rnr.facilityCode.toLowerCase().indexOf(query.toLowerCase()) !== -1;
+        });
+
+    };
+
   function refreshGrid() {
     // do a lazy validation, none of the two parameters could be undefined
     if($scope.supplyDepot === undefined || $scope.program === undefined || $scope.period === undefined){
@@ -44,7 +56,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
         $location.search('page', 1);
         return;
       }
-      $scope.orders = data.orders || [];
+      $scope.orders = $scope.filteredOrders =  data.orders || [];
       $scope.pageSize = data.pageSize;
       $scope.numberOfPages = data.numberOfPages || 1;
     });
@@ -56,7 +68,8 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
 
   refreshGrid();
 
-  $scope.gridOptions = { data: 'orders',
+  $scope.gridOptions = {
+    data: 'filteredOrders',
     showFooter: false,
     showColumnMenu: false,
     showFilter: false,

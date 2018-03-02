@@ -64,7 +64,18 @@
         </div>
         <div class="alert alert-info" id="noOrders" ng-show="downloadMessage" openlmis-message="downloadMessage">
         </div>
-        <div ng-show="orders && orders.length" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"></div>
+        <div ng-show="orders && orders.length">
+          <div class="row-fluid">
+            <div class="span5 offset7 grid-filters">
+              <input id="searchOrders" class="search-query"
+                     style="width: auto;"
+                     ng-change="filterOrders()" type="text"
+                     ng-model="query"
+                     openlmis-message="placeholder.search.by.facilityOrDistrict"/>
+            </div>
+          </div>
+          <div id="ordersGrid" class="gridStyle" ng-grid="gridOptions"></div>
+        </div>
         <div ng-show="orders && orders.length">
             <openlmis-pagination num-pages="numberOfPages" current-page="currentPage"
                                  max-size="10"></openlmis-pagination>
