@@ -16,7 +16,7 @@ angular.module('ils-gateway', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.b
             when('/dashboard', {controller: ILSGatewayDashboardController, templateUrl: 'partials/dashboard.html'}).
             when('/consommation2017', {controller: ILSGatewayDashboardController, templateUrl: 'partials/consommation2017.html'}).
             when('/stock2017', {controller: ILSGatewayDashboardController, templateUrl: 'partials/stock2017.html'}).
-            when('/rapportage2017', {controller: ILSGatewayDashboardController, templateUrl: 'partials/rapportage2017'}).
+            when('/rapportage2017', {controller: ILSGatewayDashboardController, templateUrl: 'partials/rapportage2017.html'}).
             otherwise({redirectTo: '/rapportage2017'});
     }]).directive('onKeyup', function () {
         return function (scope, elm, attrs) {
