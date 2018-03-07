@@ -22,7 +22,9 @@
         <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
         <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
         <div class="form-cell horizontalFilters">
-          <label class="labels">Indicator</label>
+          <label class="labels">
+            <span openlmis-message="label.indicator"></span>
+          </label>
           <select style="width: 400px;" ng-model="filter.indicator_type" ng-change="OnFilterChanged()">
             <option ng-repeat="type in indicator_types" ng-selected="type.code == default_indicator"
                     value="{{type.code}}">{{type.name}}

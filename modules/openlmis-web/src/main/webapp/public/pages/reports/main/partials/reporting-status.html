@@ -49,7 +49,7 @@
               <div class="clearfix"></div>
               <div class="box">
                 <div class="box-header">
-                  Summary of Reporting
+                  <span openlmis-message="report.reporting.summary"></span>
                 </div>
                 <div class="box-content">
                   <table class="table table-bordered">
@@ -57,14 +57,14 @@
                       <tr>
                         <td>
                           <span ng-show="reporting"><i class="fa fa-check green"></i> *</span>
-                          <a ng-click="reporting=true;updateFacilityList()" href="">Facilities that Reported</a>
+                          <a ng-click="reporting=true;updateFacilityList()" href=""><span openlmis-message="report.reporting.that.reported"></span></a>
                         </td>
                         <td class="number">{{summary.reporting}}</td>
                         <td class="number">{{summary.reportingPercent | number : 2}} %</td>
                       </tr>
                       <tr>
                         <td> <span ng-show="!reporting"><i class="fa fa-check green"></i> *</span>
-                          <a ng-click="reporting=false;updateFacilityList()" href="">Facilities that <b class="red">did not</b> Report</a>
+                          <a ng-click="reporting=false;updateFacilityList()" href=""><span openlmis-message="report.reporting.that"></span> <b class="red"><span openlmis-message="report.reporting.that.did.not"></span></b> <span openlmis-message="report.reporting.that.report"></span></a>
                         </td>
                         <td class="number">{{summary.nonReporting}}</td>
                         <td class="number">{{summary.nonReportingPercent | number : 2}} %</td>

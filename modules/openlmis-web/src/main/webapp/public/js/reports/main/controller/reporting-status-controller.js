@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function ReportingStatusController($scope, NonReportingFacilities) {
+function ReportingStatusController($scope, NonReportingFacilities, messageService) {
 
   $scope.OnFilterChanged = function () {
     // clear old data if there was any
@@ -43,13 +43,13 @@ function ReportingStatusController($scope, NonReportingFacilities) {
         $scope.nonReportingFacilitiesPieChartData = [];
 
         $scope.nonReportingFacilitiesPieChartData.push({
-          label: 'Reported',
+          label: messageService.get('report.reporting.status.reported'),
           data: $scope.summary.reporting,
           color: '#A3CC29'
         });
 
         $scope.nonReportingFacilitiesPieChartData.push({
-          label: 'Did not Report',
+          label: messageService.get('report.reporting.status.non.reporting'),
           data: $scope.summary.nonReporting,
           color: '#FFB445'
         });

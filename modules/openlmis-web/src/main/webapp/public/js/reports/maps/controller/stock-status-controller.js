@@ -447,7 +447,7 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
         legend: {
             position: 'bottomleft',
             colors: [ '#FF0000', '#FFFF00', '#5eb95e',"#000000" ],
-            labels: [ 'All Stockouts', 'Some Stockedouts','No Stockouts','Not expected to Report']
+            labels: [ messageService.get('report.map.stock.status.all.stock.outs'), messageService.get('report.map.stock.status.some.stock.outs'),messageService.get('report.map.stock.status.no.stock.outs'), messageService.get('report.map.stock.status.not.expected.to.report')]
         }
     });
 

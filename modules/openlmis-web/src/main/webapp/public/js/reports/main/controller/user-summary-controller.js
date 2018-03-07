@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function UserSummaryReportController($scope, $window, ReportAllProgramsBySupervisoryNode, UserRoleAssignmentsSummary, UserSupervisoryNodes, GetAllRolesForReport) {
+function UserSummaryReportController($scope, $window, ReportAllProgramsBySupervisoryNode, UserRoleAssignmentsSummary, UserSupervisoryNodes, GetAllRolesForReport, messageService) {
 
     $scope.filterObject = {};
     $scope.filterObject.supervisoryNodeId=0;
@@ -67,7 +67,7 @@ function UserSummaryReportController($scope, $window, ReportAllProgramsBySupervi
         }
         ReportAllProgramsBySupervisoryNode.get({supervisoryNodeId: par}, function (data) {
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name': '--All Programs--','id':'0'});
+            $scope.programs.unshift({'name': messageService.get('report.filter.all.programs'),'id':'0'});
         });
 
         $scope.loadUserSummary();
@@ -129,17 +129,17 @@ function UserSummaryReportController($scope, $window, ReportAllProgramsBySupervi
 
     UserSupervisoryNodes.get(function (data) {
         $scope.supervisoryNodes = data.supervisoryNodes;
-        $scope.supervisoryNodes.unshift({'name': '-- All Supervisory Nodes --','id':'0'});
+        $scope.supervisoryNodes.unshift({'name': messageService.get('input.supervisory.node.option.all'),'id':'0'});
         ReportAllProgramsBySupervisoryNode.get({supervisoryNodeId: $scope.filterObject.supervisoryNodeId}, function (data) {
             $scope.programs = data.programs;
-            $scope.programs.unshift({'name': '--All Programs--'});
+            $scope.programs.unshift({'name': messageService.get('report.filter.all.programs')});
         });
 
     });
 
     GetAllRolesForReport.get(function (data) {
         $scope.roles = data.roles;
-        $scope.roles.unshift({'name': '-- All Roles --'});
+        $scope.roles.unshift({'name': messageService.get('report.filter.all.roles')});
 
     });
 

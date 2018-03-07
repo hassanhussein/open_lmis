@@ -139,8 +139,8 @@
     </div>
     <br><br>
     <div id="chart">
-        <p style="font-weight: bold">Note: The graph will show zero values when no report was found for a period</p>
-        <p style="font-weight: bold; text-align: left">Aggregated Data for {{ district_title }}</p>
+        <p style="font-weight: bold"><span openlmis-message="report.map.stock.status.note"></span></p>
+        <p style="font-weight: bold; text-align: left"><span openlmis-message="report.map.stock.status.aggregate.data.for"></span> {{ district_title }}</p>
         <br>
         <div ng-repeat="productStock in productstocks">
             <a-float  af-option="productStock.options" af-data="productStock.dataSeries" class="chart"> </a-float>

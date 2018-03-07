@@ -807,9 +807,10 @@ app.directive('productMultiFilter', ['ReportProductsByProgram', 'messageService'
             ReportProductsByProgram.get({
                 programId: program
             }, function (data) {
+                $scope.all_product_label = messageService.get('report.filter.all.products');
                 $scope.products = data.productList;
                 $scope.products.unshift({
-                    'name': '-- Indicator Products --',
+                    'name': messageService.get('report.filter.select.indicator.product'),
                     id: -1
                 });
                 $scope.products.unshift({
