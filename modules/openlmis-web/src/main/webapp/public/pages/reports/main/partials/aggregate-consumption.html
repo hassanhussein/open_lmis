@@ -67,12 +67,14 @@
                     <form ng-submit="filterGrid()" name="filterForm" novalidate>
                         <div filter-container class="clearfix">
                             <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                            <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                            <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                            <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+
+<!--
                             <date-range-filter perioderror="error" startdate="filter.periodStart"
                                                enddate="filter.periodEnd"
-                                               class="form-cell horizontalFilters"></date-range-filter>
-                            <zone-filter class="form-cell horizontalFilters"></zone-filter>
-                            <product-category-filter class="form-cell horizontalFilters"></product-category-filter>
-                            <product-multi-filter class="form-cell horizontalFilters"></product-multi-filter>
+                                               class="form-cell horizontalFilters"></date-range-filter>-->
 
                             <div class="form-cell horizontalFilters" style="padding-top: 20px;">
 
@@ -94,6 +96,10 @@
                                 <zone-filter class="form-cell horizontalFilters"></zone-filter>
                                 <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
                                 <facility-filter class="form-cell horizontalFilters"></facility-filter>
+
+                                <product-category-filter class="form-cell horizontalFilters"></product-category-filter>
+                                <product-multi-filter class="form-cell horizontalFilters"></product-multi-filter>
+
                                 <div class="clearfix form-cell horizontalFilters">
                                     <br/>
                                     <a class="button" href="javascript:void()" ng-click="toggleMoreFilters()">Less
@@ -109,14 +115,45 @@
                     </form>
                 </div>
             </div>
-            <div class="content-body" client-side-sort-pagination>
+            <div class="content-body">
+
+                <div class="box-header">
+
+
+                    <div class="form-cell span2">
+                        <div class="checkbox">
+                            <label for="allType"><input id="allType" class="checkbox" type="checkbox"
+                                                        value="allReportType"
+                                                        ng-change="selectAll()"
+                                                        ng-model="allReportType">
+                                <span openlmis-message="label.all"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-repeat="r in reportTypes">
+                        <div class="form-cell span2">
+                            <div class="checkbox">
+                                <label for="emergency"><input id="emergency" class="checkbox" type="checkbox" value="{{r.value}}"
+                                                              ng-change="toggleSingle()" ng-checked="r.checked"
+                                                              ng-model="r.checked">
+                                    <span>{{r.label}}</span>
+                                </label>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
                 <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
                     <tr>
                         <td>No data to show under selected filters</td>
                     </tr>
                 </table>
-                <div ng-show="datarows.length > 0">
-                    <div top-right-table-summary></div>
+                <div ng-show="datarows.length > 0" client-side-sort-pagination>
+                    <div ng-if="datarows.length > 0" top-right-table-summary></div>
+
                     <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
                            ng-table="tableParams">
 
@@ -134,7 +171,7 @@
                                 }}
                             </td>
                             <td ng-show="filter.disaggregated" data-title="getLocalMessage('label.facility.type')"
-                                style="width:100px" sortable="facilityType">{{ row.facility
+                                style="width:100px" sortable="facilityType">{{ row.facilityType
                                 }}
                             </td>
                             <td data-title="getLocalMessage('label.product.code')" style="width:100px" sortable="code">
