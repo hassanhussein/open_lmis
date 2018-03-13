@@ -60,84 +60,84 @@ task setupDB << {
   tasks.createDB.execute()
   executeSql('create schema atomfeed', true)
 
-  ext.flyway_classpath = files(configurations.flyway)
-  ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
-  ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
+    ext.flyway_classpath = files(configurations.flyway)
+    ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
 
-  tasks.migrateDB.execute()
+    tasks.migrateDB.execute()
 }
 
 task createDB << {
-  println("Creating Database..")
-  executeSql("create database $dbName")
+    println("Creating Database..")
+    executeSql("create database $dbName")
 }
 
 task dropDB << {
-  println("Dropping Database..")
-  if (!closeActiveConnections("procpid")) {
-    closeActiveConnections("pid")
-  }
-  executeSql("DROP DATABASE IF EXISTS $dbName")
+    println("Dropping Database..")
+    if (!closeActiveConnections("procpid")) {
+        closeActiveConnections("pid")
+    }
+    executeSql("DROP DATABASE IF EXISTS $dbName")
 }
 
 task dropSchemas << {
-  executeSql('drop schema public cascade ', true)
-  executeSql('drop schema atomfeed cascade ', true)
+    executeSql('drop schema public cascade ', true)
+    executeSql('drop schema atomfeed cascade ', true)
 }
 
 task createSchemas << {
-  executeSql('create schema public', true)
-  executeSql('create schema atomfeed', true)
+    executeSql('create schema public', true)
+    executeSql('create schema atomfeed', true)
 }
 
 def boolean closeActiveConnections(String pid) {
-  try {
-    executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$dbName'")
-    return true
-  } catch (Exception e) {
-    return false
-  }
+    try {
+        executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$dbName'")
+        return true
+    } catch (Exception e) {
+        return false
+    }
 }
 
 jar.doFirst {
-  tasks.migrateDB.execute()
+    tasks.migrateDB.execute()
 }
 
 task migrateDB() << {
-  println("Migrating database..")
-  ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
-  ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
-  ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword, baseDir: '_db/migration')
+    println("Migrating database..")
+    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
+    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword, baseDir: '_db/migration')
 }
 
 task testSeed(type: Exec) {
-  environment("PGPASSWORD", dbPassword)
-  commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/sql/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 task vimsSeed(type: Exec) {
-  environment("PGPASSWORD", dbPassword)
-  commandLine 'psql', '-U', dbUser, '--file', '../../test-data/vims/seed.sql', '-h', databaseHostName, '-w', dbName
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', '../../test-data/vims/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 task seed(type: Exec) {
-  environment("PGPASSWORD", dbPassword)
-  commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
+    environment("PGPASSWORD", dbPassword)
+    commandLine 'psql', '-U', dbUser, '--file', 'src/main/resources/seed/seed.sql', '-h', databaseHostName, '-w', dbName
 }
 
 def executeSql(String statement, Boolean includeDbName = false) {
-  def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/"
+    def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/"
 
-  connectionString += (includeDbName) ? "$dbName" : ""
+    connectionString += (includeDbName) ? "$dbName" : ""
 
-  connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
+    connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
 
-  configurations.classpath.each { file ->
-    gradle.class.classLoader.addURL(file.toURI().toURL())
-  }
+    configurations.classpath.each { file ->
+        gradle.class.classLoader.addURL(file.toURI().toURL())
+    }
 
-  // Class.forName(dbDriver)
+   // Class.forName(dbDriver)
 
-  Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
+    Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
 }
 
