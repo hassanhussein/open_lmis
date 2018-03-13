@@ -19,7 +19,7 @@
   <div class="toggleFullScreen">
     <div class="header row-fluid">
 
-      <div class="span9">
+      <div class="span8">
         <div class="logo clearfix">
           <img src="/public/images/logo.png"/>
 
@@ -27,7 +27,10 @@
         </div>
       </div>
       <div id="loader" class="loader-icon"></div>
-      <div class="span3" ng-show="!!user">
+      <div class="span4" ng-show="!!user">
+        <div class="pull-right">
+          <img style="padding:5px" src="/public/images/logo-right.jpg">
+        </div>
         <ng-include src="'/public/pages/user.html'"></ng-include>
       </div>
     </div>
