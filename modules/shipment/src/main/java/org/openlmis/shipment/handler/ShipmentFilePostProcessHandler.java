@@ -59,7 +59,7 @@ public class ShipmentFilePostProcessHandler {
     ObjectMapper mapper = new ObjectMapper();
     String productIssues = "";
     String exception = "";
-    String orderNumber = (!orderNumbers.isEmpty())? orderNumbers.stream().findFirst().get():"";
+    String orderNumber = (!orderNumbers.isEmpty())? orderNumbers.stream().findFirst().orElse(""):"";
 
     try {
       productIssues = mapper.writeValueAsString(skippedLineItems);
@@ -68,7 +68,7 @@ public class ShipmentFilePostProcessHandler {
       logger.warn(e.getMessage());
     }
 
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(orderNumber, shipmentFile.getName(), !success, productIssues, exception, (skippedLineItems.size() > 0));
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo(orderNumber, shipmentFile.getName(), !success, productIssues, exception, (!skippedLineItems.isEmpty()));
 
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 

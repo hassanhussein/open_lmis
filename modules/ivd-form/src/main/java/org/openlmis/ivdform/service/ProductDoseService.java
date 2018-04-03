@@ -53,7 +53,7 @@ public class ProductDoseService {
             .map(VaccineProductDose::getProductDisplayOrder)
             .collect(Collectors.toList())
             .stream().max(Comparator.naturalOrder())
-            .get();
+            .orElse(0L);
 
         productDose.setProductDisplayOrder(maxDisplayOrder);
         productDose.setProductId(p.getProduct().getId());
@@ -67,7 +67,7 @@ public class ProductDoseService {
     }
     dto.setPossibleDoses(repository.getAllDoses());
     dto.setPossibleProducts(products);
-    productDoseDTOs.sort((p1, p2) -> p1.getProductDisplayOrder().compareTo(p2.getProductDisplayOrder() ));
+    productDoseDTOs.sort(Comparator.comparing(ProductDoseDTO::getProductDisplayOrder));
     dto.setProtocols(productDoseDTOs);
 
     return dto;

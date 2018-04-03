@@ -142,10 +142,10 @@ public class IvdFormService {
       throw new DataException("error.facility.has.pending.draft");
     }
     List<ReportStatusDTO> openPeriods = this.getPeriodsFor(facilityId, programId, new Date());
-    if (openPeriods == null || openPeriods.size() == 0 || !periodId.equals(openPeriods.get(0).getPeriodId())) {
+    if (openPeriods == null || openPeriods.isEmpty() || !periodId.equals(openPeriods.get(0).getPeriodId())) {
       ProcessingPeriod period = periodService.getById(periodId);
       throw new OutOfOrderFormSubmissionException("error.ivd.form.out.of.order.ivd.not.supported"
-          , (openPeriods.size() == 0) ? "No past period " : openPeriods.get(0).getPeriodName()
+          , (openPeriods ==null || openPeriods.isEmpty()) ? "No past period " : openPeriods.get(0).getPeriodName()
           , period.getName());
     }
   }

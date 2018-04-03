@@ -22,8 +22,6 @@ import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.ivdform.domain.DiscardingReason;
 import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.domain.reports.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
@@ -57,11 +55,75 @@ public class IvdFormView extends AbstractView {
   private static final String PERIODS = "periods";
   private static final String DISTRICTS = "districts";
   private static final String FACILITIES = "facilities";
-  private static Logger logger = LoggerFactory.getLogger(IvdFormView.class);
+  private static final String PRODUCT_NAME = "productName";
+  private static final String FACILITY_ID = "facilityId";
+  private static final String FACILITY_NAME = "facilityName";
+  private static final String FACILITY_DETAILS = "facilityDetails";
+  private static final String FACILITY = "facility";
+  private static final String DEMOGRAPHICS = "demographics";
+  private static final String ESTIMATE = "estimate";
+  private static final String DISPLAY_ORDER = "displayOrder";
+  private static final String DOSE_ID = "doseId";
+  private static final String DOSE_NAME = "doseName";
+  private static final String TRACK_MALE = "trackMale";
+  private static final String TRACK_FEMALE = "trackFemale";
+  private static final String STOCK_STATUS = "stockStatus";
+  private static final String PRODUCTS = "products";
+  private static final String PRODUCT = "product";
+  private static final String EQUIPMENTS = "equipments";
+  private static final String EQUIPMENT = "equipment";
+  private static final String EQUIPMENT_INVENTORY_ID = "equipmentInventoryId";
+  private static final String ENERGY_SOURCE = "energySource";
+  private static final String EQUIPMENT_NAME = "equipmentName";
+  private static final String MODEL = "model";
+  private static final String SERIAL = "serial";
+  private static final String ESTIMATE_NAME = "estimateName";
+  private static final String ESTIMATE_VALUE = "estimateValue";
+  private static final String ID = "id";
+  private static final String NAME = "name";
+  private static final String VALUE = "value";
+  private static final String PRODUCT_CODE = "productCode";
+  private static final String PRODUCT_CATEGORY = "productCategory";
+  private static final String UNIT = "unit";
+  private static final String PRODUCT_ID = "productId";
+  private static final String DISEASES = "diseases";
+  private static final String DISEASE = "disease";
+  private static final String DISEASE_ID = "diseaseId";
+  private static final String DISEASE_NAME = "diseaseName";
+  private static final String VACCINATIONS = "vaccinations";
+  private static final String VACCINE = "vaccine";
+  private static final String SUPPLEMENTS = "supplements";
+  private static final String SUPPLEMENT = "supplement";
+  private static final String VITAMIN_ID = "vitaminId";
+  private static final String VITAMIN_NAME = "vitaminName";
+  private static final String AGE_GROUP_ID = "ageGroupId";
+  private static final String AGE_GROUP_NAME = "ageGroupName";
+  private static final String MANUFACTURERS = "manufacturers";
+  private static final String MANUFACTURER = "manufacturer";
+  private static final String MANUFACTURER_ID = "manufacturerId";
+  private static final String MANUFACTURER_NAME = "manufacturerName";
+  private static final String ADJUSTMENT_REASONS = "adjustmentReasons";
+  private static final String REASON = "reason";
+  private static final String REASON_ID = "reasonId";
+  private static final String REASON_NAME = "reasonName";
+  private static final String COLD_CHAIN_OPERATIONAL_STATUSES = "coldChainOperationalStatuses";
+  private static final String STATUS = "status";
+  private static final String STATUS_ID = "statusId";
+  private static final String STATUS_NAME = "statusName";
+  private static final String REGION_NAME = "regionName";
+  private static final String REGION_ID = "regionId";
+  private static final String REGION = "region";
+  private static final String REGIONS = "regions";
+  private static final String PERIOD_NAME = "periodName";
+  private static final String PERIOD_ID = "periodId";
+  private static final String PERIOD = "period";
+  private static final String ADJUSTMENT_REASONS_US = "adjustment_reasons";
+  private static final String OPERATIONAL_STATUS = "operational_status";
+  private static final String FACILITY_DETAILS_US = "facility_details";
 
   Document doc;
 
-  public IvdFormView(){
+  public IvdFormView() {
     setContentType("application/octet-stream");
   }
 
@@ -74,7 +136,7 @@ public class IvdFormView extends AbstractView {
 
     Element report = doc.createElement("ivdReport");
 
-    writeDetails(report, (Long)model.get("program_id"), model.get("url").toString(), model.get("year").toString(), (User) model.get("user") );
+    writeDetails(report, (Long) model.get("program_id"), model.get("url").toString(), model.get("year").toString(), (User) model.get("user"));
     VaccineReport vaccineReportTemplate = (VaccineReport) model.get("reportTemplate");
     writePeriods(report, (List<ProcessingPeriod>) model.get(PERIODS));
     writeRegions(report, (List<GeographicZone>) model.get(DISTRICTS));
@@ -84,21 +146,20 @@ public class IvdFormView extends AbstractView {
     writeVaccinations(report, vaccineReportTemplate);
     writeDiseases(report, vaccineReportTemplate);
     writeSupplements(report, vaccineReportTemplate);
-    writeManufacturers(report, (List< Manufacturer>) model.get("manufacturers") );
-    writeAdjustmentReasons(report, (List<DiscardingReason>) model.get("adjustment_reasons") );
-    writeOperationalStatuses(report, (List<EquipmentOperationalStatus>) model.get("operational_status") );
-    //writeFacilityDetails(report, (List<VaccineReport>)model.get("facility_details"));
-    writeDemographicEstimates(report, (List<VaccineReport>)model.get("facility_details"));
-    writeEquipments(report, (List<VaccineReport>)model.get("facility_details"));
+    writeManufacturers(report, (List<Manufacturer>) model.get(MANUFACTURERS));
+    writeAdjustmentReasons(report, (List<DiscardingReason>) model.get(ADJUSTMENT_REASONS_US));
+    writeOperationalStatuses(report, (List<EquipmentOperationalStatus>) model.get(OPERATIONAL_STATUS));
+    writeDemographicEstimates(report, (List<VaccineReport>) model.get(FACILITY_DETAILS_US));
+    writeEquipments(report, (List<VaccineReport>) model.get(FACILITY_DETAILS_US));
 
     data.appendChild(report);
 
     response.setHeader("Content-Transfer-Encoding", "binary");
-    response.setHeader("Content-Disposition","attachment; filename=\"" + "ivd-reporting-form.xdp\"");
+    response.setHeader("Content-Disposition", "attachment; filename=\"" + "ivd-reporting-form.xdp\"");
     writeResponse(response, doc);
   }
 
-  private void createElement(Element parent, String name, String value){
+  private void createElement(Element parent, String name, String value) {
     Element childElement = doc.createElement(name);
     childElement.setTextContent(value);
     parent.appendChild(childElement);
@@ -113,7 +174,7 @@ public class IvdFormView extends AbstractView {
     StreamResult result = new StreamResult(response.getWriter());
     try {
       transformer.transform(source, result);
-    }catch (javax.xml.transform.TransformerException exp){
+    } catch (javax.xml.transform.TransformerException exp) {
       logger.warn("Transformer Warning: ", exp);
     }
   }
@@ -126,14 +187,14 @@ public class IvdFormView extends AbstractView {
     return dBuilder.parse(stream);
   }
 
-  private void writeDetails(Element report, Long programId, String url, String year, User user){
+  private void writeDetails(Element report, Long programId, String url, String year, User user) {
 
     Element detailsElement = doc.createElement("details");
 
     createElement(detailsElement, "programId", programId.toString());
     createElement(detailsElement, "baseUrl", url);
     createElement(detailsElement, "url", String.format("%s/rest-api/ivd-from/pdf-submit", url));
-    createElement(detailsElement, "generatedDate",  new DateTime().toDate().toString());
+    createElement(detailsElement, "generatedDate", new DateTime().toDate().toString());
     createElement(detailsElement, "year", year);
     createElement(detailsElement, "username", user.getUserName());
     createElement(detailsElement, "userFirstName", user.getFirstName());
@@ -141,62 +202,63 @@ public class IvdFormView extends AbstractView {
     report.appendChild(detailsElement);
   }
 
-  private void writePeriods(Element report, List<ProcessingPeriod> periods){
+  private void writePeriods(Element report, List<ProcessingPeriod> periods) {
 
-    Element periodsElement = doc.createElement("periods");
+    Element periodsElement = doc.createElement(PERIODS);
     Collections.sort(periods, Comparator.comparing(ProcessingPeriod::getStartDate));
-    for(ProcessingPeriod period: periods){
-      Element processingPeriodElement  = doc.createElement("period");
+    for (ProcessingPeriod period : periods) {
+      Element processingPeriodElement = doc.createElement(PERIOD);
 
-      createElement(processingPeriodElement, "periodId", period.getId().toString());
-      createElement(processingPeriodElement, "periodName", period.getName());
+
+      createElement(processingPeriodElement, PERIOD_ID, period.getId().toString());
+      createElement(processingPeriodElement, PERIOD_NAME, period.getName());
 
       periodsElement.appendChild(processingPeriodElement);
     }
     report.appendChild(periodsElement);
   }
 
-  private void writeRegions(Element report, List<GeographicZone> zones){
+  private void writeRegions(Element report, List<GeographicZone> zones) {
 
-    Element periodsElement = doc.createElement("regions");
-    for(GeographicZone zone: zones){
-      Element regionElement  = doc.createElement("region");
-      createElement(regionElement, "regionId", zone.getId().toString() );
-      createElement(regionElement, "regionName", zone.getName() );
+    Element periodsElement = doc.createElement(REGIONS);
+    for (GeographicZone zone : zones) {
+      Element regionElement = doc.createElement(REGION);
+      createElement(regionElement, REGION_ID, zone.getId().toString());
+      createElement(regionElement, REGION_NAME, zone.getName());
 
       periodsElement.appendChild(regionElement);
     }
     report.appendChild(periodsElement);
   }
 
-  private void writeFacilities(Element report, List<Facility> facilities){
+  private void writeFacilities(Element report, List<Facility> facilities) {
 
-    Element periodsElement = doc.createElement("facilities");
-    for(Facility facility: facilities){
-      Element facilityElement  = doc.createElement("facility");
+    Element periodsElement = doc.createElement(FACILITIES);
+    for (Facility facility : facilities) {
+      Element facilityElement = doc.createElement(FACILITY);
 
-      createElement(facilityElement, "regionId", facility.getGeographicZone().getId().toString() );
-      createElement(facilityElement, "facilityId", facility.getId().toString() );
-      createElement(facilityElement, "facilityName", facility.getName() );
+      createElement(facilityElement, REGION_ID, facility.getGeographicZone().getId().toString());
+      createElement(facilityElement, FACILITY_ID, facility.getId().toString());
+      createElement(facilityElement, FACILITY_NAME, facility.getName());
 
       periodsElement.appendChild(facilityElement);
     }
     report.appendChild(periodsElement);
   }
 
-  private void writeEquipments(Element report, List<VaccineReport> reports){
+  private void writeEquipments(Element report, List<VaccineReport> reports) {
 
-    Element equipmentRoot = doc.createElement("equipments");
-    for(VaccineReport reportT: reports){
+    Element equipmentRoot = doc.createElement(EQUIPMENTS);
+    for (VaccineReport reportT : reports) {
 
-      for(ColdChainLineItem li : reportT.getColdChainLineItems()){
-        Element equipment = doc.createElement("equipment");
-        createElement(equipment, "facilityId", reportT.getFacility().getId().toString());
-        createElement(equipment, "equipmentInventoryId", li.getEquipmentInventoryId().toString());
-        createElement(equipment, "energySource", li.getEnergySource());
-        createElement(equipment, "equipmentName", li.getEquipmentName());
-        createElement(equipment, "model", li.getModel());
-        createElement(equipment, "serial", (li.getSerial() == null) ? "-": li.getSerial());
+      for (ColdChainLineItem li : reportT.getColdChainLineItems()) {
+        Element equipment = doc.createElement(EQUIPMENT);
+        createElement(equipment, FACILITY_ID, reportT.getFacility().getId().toString());
+        createElement(equipment, EQUIPMENT_INVENTORY_ID, li.getEquipmentInventoryId().toString());
+        createElement(equipment, ENERGY_SOURCE, li.getEnergySource());
+        createElement(equipment, EQUIPMENT_NAME, li.getEquipmentName());
+        createElement(equipment, MODEL, li.getModel());
+        createElement(equipment, SERIAL, (li.getSerial() == null) ? "-" : li.getSerial());
 
         equipmentRoot.appendChild(equipment);
       }
@@ -204,49 +266,49 @@ public class IvdFormView extends AbstractView {
     report.appendChild(equipmentRoot);
   }
 
-  private void writeDemographicEstimates(Element report, List<VaccineReport> reports){
+  private void writeDemographicEstimates(Element report, List<VaccineReport> reports) {
 
-    Element demographicEstimatesRoot = doc.createElement("demographics");
-    for(VaccineReport reportT: reports){
-      for(AnnualFacilityEstimateEntry entry: reportT.getFacilityDemographicEstimates()){
-        Element estimate = doc.createElement("estimate");
-        createElement(estimate, "facilityId", reportT.getFacility().getId().toString() );
-        createElement(estimate, "estimateName", entry.getCategory().getName());
-        createElement(estimate, "estimateValue", entry.getValue().toString());
+    Element demographicEstimatesRoot = doc.createElement(DEMOGRAPHICS);
+    for (VaccineReport reportT : reports) {
+      for (AnnualFacilityEstimateEntry entry : reportT.getFacilityDemographicEstimates()) {
+        Element estimate = doc.createElement(ESTIMATE);
+        createElement(estimate, FACILITY_ID, reportT.getFacility().getId().toString());
+        createElement(estimate, ESTIMATE_NAME, entry.getCategory().getName());
+        createElement(estimate, ESTIMATE_VALUE, entry.getValue().toString());
         demographicEstimatesRoot.appendChild(estimate);
       }
     }
     report.appendChild(demographicEstimatesRoot);
   }
 
-  private void writeFacilityDetails(Element report, List<VaccineReport> reports){
+  private void writeFacilityDetails(Element report, List<VaccineReport> reports) {
 
-    Element periodsElement = doc.createElement("facilityDetails");
-    for(VaccineReport reportT: reports){
-      Element facilityElement  = doc.createElement("facility");
+    Element periodsElement = doc.createElement(FACILITY_DETAILS);
+    for (VaccineReport reportT : reports) {
+      Element facilityElement = doc.createElement(FACILITY);
 
-      createElement(facilityElement, "facilityId", reportT.getFacility().getId().toString() );
-      createElement(facilityElement, "facilityName", reportT.getFacility().getName());
+      createElement(facilityElement, FACILITY_ID, reportT.getFacility().getId().toString());
+      createElement(facilityElement, FACILITY_NAME, reportT.getFacility().getName());
 
-      Element demographics = doc.createElement("demographics");
+      Element demographics = doc.createElement(DEMOGRAPHICS);
       facilityElement.appendChild(demographics);
-      for(AnnualFacilityEstimateEntry entry: reportT.getFacilityDemographicEstimates()){
-        Element estimate = doc.createElement("estimate");
-        createElement(estimate, "id", entry.getDemographicEstimateId().toString());
-        createElement(estimate, "name", entry.getCategory().getName());
-        createElement(estimate, "value", entry.getValue().toString());
+      for (AnnualFacilityEstimateEntry entry : reportT.getFacilityDemographicEstimates()) {
+        Element estimate = doc.createElement(ESTIMATE);
+        createElement(estimate, ID, entry.getDemographicEstimateId().toString());
+        createElement(estimate, NAME, entry.getCategory().getName());
+        createElement(estimate, VALUE, entry.getValue().toString());
         demographics.appendChild(estimate);
       }
-      Element equipments = doc.createElement("equipments");
+      Element equipments = doc.createElement(EQUIPMENTS);
       facilityElement.appendChild(equipments);
-      for(ColdChainLineItem li : reportT.getColdChainLineItems()){
-        Element equipment = doc.createElement("equipment");
+      for (ColdChainLineItem li : reportT.getColdChainLineItems()) {
+        Element equipment = doc.createElement(EQUIPMENT);
 
-        createElement(equipment, "equipmentInventoryId", li.getEquipmentInventoryId().toString());
-        createElement(equipment, "energySource", li.getEnergySource());
-        createElement(equipment, "equipmentName", li.getEquipmentName());
-        createElement(equipment, "model", li.getModel());
-        createElement(equipment, "serial", li.getSerial());
+        createElement(equipment, EQUIPMENT_INVENTORY_ID, li.getEquipmentInventoryId().toString());
+        createElement(equipment, ENERGY_SOURCE, li.getEnergySource());
+        createElement(equipment, EQUIPMENT_NAME, li.getEquipmentName());
+        createElement(equipment, MODEL, li.getModel());
+        createElement(equipment, SERIAL, li.getSerial());
 
         equipments.appendChild(equipment);
       }
@@ -257,50 +319,49 @@ public class IvdFormView extends AbstractView {
   }
 
 
-
   private void writeProducts(Element report, VaccineReport template) {
-    Element productsElement = doc.createElement("products");
+    Element productsElement = doc.createElement(PRODUCTS);
     for (LogisticsLineItem li : template.getLogisticsLineItems()) {
-      Element productElement = doc.createElement("product");
-      createElement(productElement, "productId", li.getProductId().toString());
-      createElement(productElement, "productName", li.getProductName());
+      Element productElement = doc.createElement(PRODUCT);
+      createElement(productElement, PRODUCT_ID, li.getProductId().toString());
+      createElement(productElement, PRODUCT_NAME, li.getProductName());
       productsElement.appendChild(productElement);
     }
     report.appendChild(productsElement);
   }
 
   private void writeVaccinations(Element report, VaccineReport template) {
-    Element productsElement = doc.createElement("vaccinations");
-    Integer displayOrder  = 1;
+    Element productsElement = doc.createElement(VACCINATIONS);
+    Integer displayOrder = 1;
     for (VaccineCoverageItem li : template.getCoverageLineItems()) {
-      Element productElement = doc.createElement("vaccine");
+      Element productElement = doc.createElement(VACCINE);
 
-      createElement(productElement, "productId", li.getProductId().toString());
-      createElement(productElement, "productName", li.getProductName());
-      createElement(productElement, "doseId", li.getDoseId().toString());
-      createElement(productElement, "doseName", li.getDisplayName());
-      createElement(productElement, "displayOrder", displayOrder.toString());
-      createElement(productElement, "trackMale", li.getTrackMale().toString());
-      createElement(productElement, "trackFemale", li.getTrackFemale().toString());
-      displayOrder ++;
+      createElement(productElement, PRODUCT_ID, li.getProductId().toString());
+      createElement(productElement, PRODUCT_NAME, li.getProductName());
+      createElement(productElement, DOSE_ID, li.getDoseId().toString());
+      createElement(productElement, DOSE_NAME, li.getDisplayName());
+      createElement(productElement, DISPLAY_ORDER, displayOrder.toString());
+      createElement(productElement, TRACK_MALE, li.getTrackMale().toString());
+      createElement(productElement, TRACK_FEMALE, li.getTrackFemale().toString());
+      displayOrder++;
       productsElement.appendChild(productElement);
     }
     report.appendChild(productsElement);
   }
 
   private void writeStockStatus(Element report, VaccineReport template) {
-    Element stockStatus = doc.createElement("stockStatus");
+    Element stockStatus = doc.createElement(STOCK_STATUS);
 
-    Element productsElement = doc.createElement("products");
+    Element productsElement = doc.createElement(PRODUCTS);
     for (LogisticsLineItem li : template.getLogisticsLineItems()) {
-      Element productElement = doc.createElement("product");
+      Element productElement = doc.createElement(PRODUCT);
 
-      createElement(productElement, "productId", li.getProductId().toString());
-      createElement(productElement, "productName", li.getProductName());
-      createElement(productElement, "productCode", li.getProductCode());
-      createElement(productElement, "productCategory", li.getProductCategory());
-      createElement(productElement, "displayOrder", li.getDisplayOrder().toString());
-      createElement(productElement, "unit", li.getDosageUnit());
+      createElement(productElement, PRODUCT_ID, li.getProductId().toString());
+      createElement(productElement, PRODUCT_NAME, li.getProductName());
+      createElement(productElement, PRODUCT_CODE, li.getProductCode());
+      createElement(productElement, PRODUCT_CATEGORY, li.getProductCategory());
+      createElement(productElement, DISPLAY_ORDER, li.getDisplayOrder().toString());
+      createElement(productElement, UNIT, li.getDosageUnit());
 
       productsElement.appendChild(productElement);
     }
@@ -309,13 +370,13 @@ public class IvdFormView extends AbstractView {
   }
 
   private void writeDiseases(Element report, VaccineReport template) {
-    Element diseasesElement = doc.createElement("diseases");
+    Element diseasesElement = doc.createElement(DISEASES);
 
     for (DiseaseLineItem li : template.getDiseaseLineItems()) {
-      Element diseaseElement = doc.createElement("disease");
-      createElement(diseaseElement, "diseaseId", li.getDiseaseId().toString());
-      createElement(diseaseElement, "diseaseName", li.getDiseaseName());
-      createElement(diseaseElement, "displayOrder", li.getDisplayOrder().toString());
+      Element diseaseElement = doc.createElement(DISEASE);
+      createElement(diseaseElement, DISEASE_ID, li.getDiseaseId().toString());
+      createElement(diseaseElement, DISEASE_NAME, li.getDiseaseName());
+      createElement(diseaseElement, DISPLAY_ORDER, li.getDisplayOrder().toString());
 
       diseasesElement.appendChild(diseaseElement);
     }
@@ -323,47 +384,47 @@ public class IvdFormView extends AbstractView {
   }
 
   private void writeSupplements(Element report, VaccineReport template) {
-    Element supplementsElement = doc.createElement("supplements");
+    Element supplementsElement = doc.createElement(SUPPLEMENTS);
     for (VitaminSupplementationLineItem li : template.getVitaminSupplementationLineItems()) {
-      Element supplementElement = doc.createElement("supplement");
-      createElement(supplementElement, "vitaminId", li.getVaccineVitaminId().toString());
-      createElement(supplementElement, "vitaminName", li.getVitaminName());
-      createElement(supplementElement, "ageGroupId", li.getVitaminAgeGroupId().toString());
-      createElement(supplementElement, "ageGroupName", li.getAgeGroup());
-      createElement(supplementElement, "displayOrder", li.getDisplayOrder().toString());
+      Element supplementElement = doc.createElement(SUPPLEMENT);
+      createElement(supplementElement, VITAMIN_ID, li.getVaccineVitaminId().toString());
+      createElement(supplementElement, VITAMIN_NAME, li.getVitaminName());
+      createElement(supplementElement, AGE_GROUP_ID, li.getVitaminAgeGroupId().toString());
+      createElement(supplementElement, AGE_GROUP_NAME, li.getAgeGroup());
+      createElement(supplementElement, DISPLAY_ORDER, li.getDisplayOrder().toString());
       supplementsElement.appendChild(supplementElement);
     }
     report.appendChild(supplementsElement);
   }
 
   private void writeManufacturers(Element report, List<Manufacturer> manufacturers) {
-    Element manufacturersElement = doc.createElement("manufacturers");
+    Element manufacturersElement = doc.createElement(MANUFACTURERS);
     for (Manufacturer manufacturer : manufacturers) {
-      Element manufacturerElement = doc.createElement("manufacturer");
-      createElement(manufacturerElement, "manufacturerId", manufacturer.getId().toString());
-      createElement(manufacturerElement, "manufacturerName", manufacturer.getName());
+      Element manufacturerElement = doc.createElement(MANUFACTURER);
+      createElement(manufacturerElement, MANUFACTURER_ID, manufacturer.getId().toString());
+      createElement(manufacturerElement, MANUFACTURER_NAME, manufacturer.getName());
       manufacturersElement.appendChild(manufacturerElement);
     }
     report.appendChild(manufacturersElement);
   }
 
   private void writeAdjustmentReasons(Element report, List<DiscardingReason> reasons) {
-    Element reasonsElement = doc.createElement("adjustmentReasons");
+    Element reasonsElement = doc.createElement(ADJUSTMENT_REASONS);
     for (DiscardingReason reason : reasons) {
-      Element reasonElement = doc.createElement("reason");
-      createElement(reasonElement, "reasonId", reason.getId().toString());
-      createElement(reasonElement, "reasonName", reason.getName());
+      Element reasonElement = doc.createElement(REASON);
+      createElement(reasonElement, REASON_ID, reason.getId().toString());
+      createElement(reasonElement, REASON_NAME, reason.getName());
       reasonsElement.appendChild(reasonElement);
     }
     report.appendChild(reasonsElement);
   }
 
   private void writeOperationalStatuses(Element report, List<EquipmentOperationalStatus> equipmentOperationalStatuses) {
-    Element reasonsElement = doc.createElement("coldChainOperationalStatuses");
+    Element reasonsElement = doc.createElement(COLD_CHAIN_OPERATIONAL_STATUSES);
     for (EquipmentOperationalStatus status : equipmentOperationalStatuses) {
-      Element statusElement = doc.createElement("status");
-      createElement(statusElement, "statusId", status.getId().toString());
-      createElement(statusElement, "statusName", status.getName());
+      Element statusElement = doc.createElement(STATUS);
+      createElement(statusElement, STATUS_ID, status.getId().toString());
+      createElement(statusElement, STATUS_NAME, status.getName());
       reasonsElement.appendChild(statusElement);
     }
     report.appendChild(reasonsElement);

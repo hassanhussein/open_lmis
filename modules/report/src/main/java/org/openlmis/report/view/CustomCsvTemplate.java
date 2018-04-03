@@ -34,7 +34,7 @@ public class CustomCsvTemplate extends AbstractView {
 
   @Override
   protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    Map queryModel = (Map)model.get("queryModel");
+    Map queryModel = (Map) model.get("queryModel");
     List reportContent = (List) model.get("report");
     response.setHeader("Content-Disposition", "attachment; filename=" + queryModel.get("name") + ".csv");
 
@@ -51,11 +51,13 @@ public class CustomCsvTemplate extends AbstractView {
   private void writeHeader(Map queryModel, BufferedWriter writer) throws IOException {
     JsonNode columns = getColumnDefinitions(queryModel);
     int index = 0;
-    for(JsonNode n: columns){
-      String displayName = n.get("displayName").asText();
-      writer.write(displayName);
-      if(index < columns.size() - 1){
-        writer.write(",");
+    if (columns != null) {
+      for (JsonNode n : columns) {
+        String displayName = n.get("displayName").asText();
+        writer.write(displayName);
+        if (index < columns.size() - 1) {
+          writer.write(",");
+        }
       }
     }
     writer.write("\n");
@@ -67,7 +69,7 @@ public class CustomCsvTemplate extends AbstractView {
     JsonNode actualObj = null;
     try {
       actualObj = mapper.readValue(columnModel, JsonNode.class);
-    }catch (Exception exp){
+    } catch (Exception exp) {
       LOGGER.warn("Column Definition was not populated correctly due to .... ", exp);
     }
     return actualObj;
@@ -76,19 +78,21 @@ public class CustomCsvTemplate extends AbstractView {
   private void writeReportData(Map queryModel, List reportContent, BufferedWriter writer) throws IOException {
     JsonNode columns = getColumnDefinitions(queryModel);
 
-    for(Object o: reportContent){
-      Map m = (Map)o;
+    for (Object o : reportContent) {
+      Map m = (Map) o;
       int index = 0;
 
-      for(JsonNode col: columns ){
-        if( m.containsKey(col.get("name").asText()) && m.get( col.get("name").asText() ) != null ) {
-          String colValue = m.get(col.get("name").asText()).toString();
-          writer.write( colValue );
+      if (columns != null) {
+        for (JsonNode col : columns) {
+          if (m.containsKey(col.get("name").asText()) && m.get(col.get("name").asText()) != null) {
+            String colValue = m.get(col.get("name").asText()).toString();
+            writer.write(colValue);
+          }
+          if (index < columns.size() - 1) {
+            writer.write(",");
+          }
+          index++;
         }
-        if(index < columns.size() - 1){
-          writer.write(",");
-        }
-        index++ ;
       }
       writer.write("\n");
     }

@@ -121,16 +121,13 @@ public class CustomExcelTemplate extends AbstractView {
 
     //check if the pivot settings are all correct. otherwise - do not try to pivot this.
     if (
-        columns.stream().filter(ColumnModel::getPivotColumn).findAny().isPresent()
+        columns.stream().anyMatch(ColumnModel::getPivotColumn)
             &&
-            columns.stream().filter(ColumnModel::getPivotColumn).findAny().isPresent()
-            &&
-            columns.stream().filter(ColumnModel::getPivotRow).findAny().isPresent()
+            columns.stream().anyMatch(ColumnModel::getPivotRow)
         ) {
 
       this.isPivot = true;
 
-      //TODO: implement the isPivot headers here.
       List<String> pivotColumns = getPivotColumns(columns, reportContent);
       this.pivotStartColumn = columnIndex;
       for (String head : pivotColumns) {
@@ -144,10 +141,15 @@ public class CustomExcelTemplate extends AbstractView {
 
   private List<String> getPivotColumns(List<ColumnModel> columns, List reportContent) {
 
-    ColumnModel pivotColumnModel = (ColumnModel) columns.stream()
+    ColumnModel pivotColumnModel = null;
+    Optional<ColumnModel> pivotColumnModelOptional = columns.stream()
         .filter(ColumnModel::getPivotColumn)
-        .findFirst()
-        .get();
+        .findFirst();
+    if (pivotColumnModelOptional.isPresent()) {
+      pivotColumnModel = pivotColumnModelOptional.get();
+    } else {
+      return new ArrayList<>();
+    }
     String pivotColumnName = pivotColumnModel.getName();
     distinctPivotColumns = (List<String>) reportContent
         .stream()
@@ -199,62 +201,66 @@ public class CustomExcelTemplate extends AbstractView {
 
 
     ColumnModel pivotValueColumn = null;
-
+    ColumnModel blankColumnModel = new ColumnModel();
     if (this.isPivot) {
       pivotRowFieldName = columns.stream()
           .filter(ColumnModel::getPivotRow)
           .findFirst()
-          .get().getName();
+          .orElse(blankColumnModel).getName();
 
 
-      if (this.isPivot) {
-        pivotValueColumn = columns.stream()
-            .filter(ColumnModel::getPivotValue)
-            .findFirst()
-            .get();
-        pivotValueFieldName = columns.stream()
-            .filter(ColumnModel::getPivotValue)
-            .findFirst()
-            .get().getName();
+      pivotValueColumn = columns.stream()
+          .filter(ColumnModel::getPivotValue)
+          .findFirst()
+          .orElse(blankColumnModel);
 
-        pivotColumnFieldName = columns.stream()
-            .filter(ColumnModel::getPivotColumn)
-            .findFirst()
-            .get()
-            .getName();
-      }
+      pivotValueFieldName = columns.stream()
+          .filter(ColumnModel::getPivotValue)
+          .findFirst()
+          .orElse(blankColumnModel).getName();
+
+      pivotColumnFieldName = columns.stream()
+          .filter(ColumnModel::getPivotColumn)
+          .findFirst()
+          .orElse(blankColumnModel)
+          .getName();
     }
+
     for (Object o : reportContent) {
       Map m = (Map) o;
       if (this.isPivot) {
         //check if this is something that we need to write as basic
-        if (!rowValues.containsKey(m.get(pivotRowFieldName).toString())) {
-          rowValues.put(m.get(pivotRowFieldName).toString(), rowNumber);
-          rowNumber = writeBasicRowValues(sheet, columns, rowNumber, m);
-        }
-        int rn = rowValues.get(m.get(pivotRowFieldName).toString());
-        String column = m.get(pivotColumnFieldName).toString();
-        int newColumnIndex = distinctPivotColumns.indexOf(column) + pivotStartColumn;
-        Cell cell = sheet.getRow(rn).createCell(newColumnIndex);
-        Object value = m.get(pivotValueFieldName);
-        if (NUMBER.equals(pivotValueColumn.getFormatting()) || PERCENT.equals(pivotValueColumn.getFormatting())) {
-          cell.setCellType(Cell.CELL_TYPE_NUMERIC);
-        }
-
-        if (value != null) {
-          cell.setCellValue(value.toString());
-        }
-
-
-        if (pivotValueColumn.getClassification() != null && m.get(pivotValueColumn.getClassification()) != null) {
-          String classifciation = m.get(pivotValueColumn.getClassification()).toString();
-          setConditionalCellFormat(sheet, cell, classifciation);
-        }
+        writePivotValues(sheet, columns, pivotRowFieldName, pivotValueFieldName, pivotColumnFieldName, pivotValueColumn, m);
 
       } else {
         rowNumber = writeBasicRowValues(sheet, columns, rowNumber, m);
       }
 
+    }
+  }
+
+  private void writePivotValues(XSSFSheet sheet, List<ColumnModel> columns, String pivotRowFieldName, String pivotValueFieldName, String pivotColumnFieldName, ColumnModel pivotValueColumn, Map m) {
+    if (!rowValues.containsKey(m.get(pivotRowFieldName).toString())) {
+      rowValues.put(m.get(pivotRowFieldName).toString(), rowNumber);
+      rowNumber = writeBasicRowValues(sheet, columns, rowNumber, m);
+    }
+    int rn = rowValues.get(m.get(pivotRowFieldName).toString());
+    String column = m.get(pivotColumnFieldName).toString();
+    int newColumnIndex = distinctPivotColumns.indexOf(column) + pivotStartColumn;
+    Cell cell = sheet.getRow(rn).createCell(newColumnIndex);
+    Object value = m.get(pivotValueFieldName);
+    if (NUMBER.equals(pivotValueColumn.getFormatting()) || PERCENT.equals(pivotValueColumn.getFormatting())) {
+      cell.setCellType(Cell.CELL_TYPE_NUMERIC);
+    }
+
+    if (value != null) {
+      cell.setCellValue(value.toString());
+    }
+
+
+    if (pivotValueColumn.getClassification() != null && m.get(pivotValueColumn.getClassification()) != null) {
+      String classifciation = m.get(pivotValueColumn.getClassification()).toString();
+      setConditionalCellFormat(sheet, cell, classifciation);
     }
   }
 
