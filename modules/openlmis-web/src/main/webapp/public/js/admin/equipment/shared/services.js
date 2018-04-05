@@ -352,3 +352,10 @@ services.factory('EquipmentTestItems', function ($resource) {
     return $resource('/equipmentTestItems/:id', {id: '@_id'}, {update: {method: 'PUT' }});
 });
 
+services.factory('GetDeleteLot', function ($resource) {
+    return $resource('/deleteLot/:id', {id: '@_id'}, {update: {method: 'PUT' }});
+});
+
+services.factory("SaveLotByProduct", function($resource){
+    return $resource('/lotByProduct/save.json',{},{});
+});
