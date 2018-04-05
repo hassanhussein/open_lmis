@@ -1,13 +1,26 @@
-function LotController( $scope,GetLotById,$routeParams,$location,messageService,SaveLOt){
+function LotController($scope, VaccineProducts, SaveLotByProduct, manufacturerInfo, GetLotById, $routeParams, GetDeleteLot, $location, messageService) {
+    $scope.productList = VaccineProducts;
+
+    var product;
+    $scope.changeProduct = function () {
+        product = $scope.lot.product;
+
+    };
+
+    if (manufacturerInfo !== null)
+        $scope.manufacturers = manufacturerInfo;
+
+
     $scope.lot = {};
     $scope.message = {};
 
-        if ($routeParams.id) {
-            GetLotById.get({id: $routeParams.id}, function (data) {
-                $scope.lot = data.lotsById;
-                $scope.showError = true;
-            }, {});
-        }
+    if ($routeParams.id) {
+        GetLotById.get({id: $routeParams.id}, function (data) {
+            $scope.lot = data.lotsById;
+            console.log(data.lotsById);
+            $scope.showError = true;
+        }, {});
+    }
 
 
     $scope.cancelAddEdit = function () {
@@ -17,7 +30,6 @@ function LotController( $scope,GetLotById,$routeParams,$location,messageService,
     };
 
     $scope.saveLot = function () {
-
         var successHandler = function (response) {
             $scope.lot = response.lots;
             $scope.showError = false;
@@ -34,11 +46,69 @@ function LotController( $scope,GetLotById,$routeParams,$location,messageService,
         };
 
         if (!$scope.lotForm.$invalid) {
-            SaveLOt.save($scope.lot, successHandler, errorHandler);
+            SaveLotByProduct.save($scope.lot, successHandler, errorHandler);
         }
 
         return true;
     };
 
+    $scope.delete = function (lot) {
+
+        function errorCallBack(errorResponse) {
+            $scope.showError = true;
+            $scope.errorMessage = messageService.get(errorResponse.data.error);
+        }
+
+        function successCallBack(successResponse) {
+            $scope.$parent.id = lot.id;
+            $scope.$parent.message = messageService.get(successResponse.success);
+            $location.path('#/list');
+        }
+
+        var callBack = function (result) {
+            GetDeleteLot.delete({'id': parseInt(lot.id, 10)}, successCallBack, errorCallBack);
+        };
+        var options = {
+            id: "confirmDialog",
+            header: "label.confirm.delete.lot",
+            body: "msg.question.delete.lot.confirmation"
+        };
+
+        OpenLmisDialog.newDialog(options, callBack, $dialog);
+
+    }
 
 }
+
+LotController.resolve = {
+
+    manufacturerInfo: function ($q, $timeout, $route, ManufacturerList) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+            var values = [];
+            ManufacturerList.get(function (data) {
+                values = data.manufacturers;
+                deferred.resolve(values);
+            });
+        }, 100);
+        return deferred.promise;
+    },
+    VaccineProducts: function ($q, $timeout, $route, ReportProductsByProgramWithoutDescriptions) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+            var values = [];
+            ReportProductsByProgramWithoutDescriptions.get({programId: 82}, function (data) {
+                if (data.productList.length > 0) {
+                    values = _.sortBy(data.productList, function (o) {
+                        return parseInt(o.categoryId, 10);
+                    })
+                }
+                deferred.resolve(values);
+            });
+        }, 100);
+        return deferred.promise;
+    }
+
+};
