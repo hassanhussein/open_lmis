@@ -539,3 +539,11 @@ services.factory('VaccinePendingRequisitions', function ($resource) {
 services.factory('HomeFacilityWithType', function ($resource) {
     return $resource('/user/facilityWithType.json', {}, {});
 });
+
+services.factory('RejectionReason', function ($resource) {
+    return $resource('/requisitions/rejection_reason.json', {}, {});
+});
+
+services.factory('RequisitionRejectedReason', function ($resource) {
+    return $resource('/requisitions/save_rejection_reason.json', {}, {});
+});
