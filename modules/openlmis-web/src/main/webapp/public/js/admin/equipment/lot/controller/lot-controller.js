@@ -76,7 +76,7 @@ function LotController($scope, VaccineProducts, SaveLotByProduct, manufacturerIn
 
         OpenLmisDialog.newDialog(options, callBack, $dialog);
 
-    }
+    };
 
 }
 
@@ -103,7 +103,7 @@ LotController.resolve = {
                 if (data.productList.length > 0) {
                     values = _.sortBy(data.productList, function (o) {
                         return parseInt(o.categoryId, 10);
-                    })
+                    });
                 }
                 deferred.resolve(values);
             });
