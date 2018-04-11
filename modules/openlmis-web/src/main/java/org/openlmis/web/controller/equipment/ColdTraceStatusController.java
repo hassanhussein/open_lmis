@@ -80,6 +80,11 @@ public class ColdTraceStatusController extends BaseController {
     return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.getLastSubmissionStatus(regionCode));
   }
 
+  @RequestMapping(value = "/rest-api/equipment/cold-trace/equipments", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getEquipmentList(@RequestParam("regionCode") String regionCode) {
+    return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.getEquipmentList(regionCode));
+  }
+
   @RequestMapping(value = "/rest-api/equipment/cold-trace/submissions-for-equipment", method = RequestMethod.GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getListOfSubmissions(@RequestParam("serialNumber") String serialNumber) {
     return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.getStatusSubmittedFor(serialNumber));

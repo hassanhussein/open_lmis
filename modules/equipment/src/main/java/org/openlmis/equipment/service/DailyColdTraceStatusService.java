@@ -16,6 +16,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.DailyColdTraceStatus;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.EquipmentOperationalStatus;
+import org.openlmis.equipment.dto.ColdChainEquipmentDTO;
 import org.openlmis.equipment.dto.ColdTraceSummaryDTO;
 import org.openlmis.equipment.dto.DailyColdTraceStatusDTO;
 import org.openlmis.equipment.repository.mapper.DailyColdTraceStatusMapper;
@@ -73,5 +74,8 @@ public class DailyColdTraceStatusService {
     return mapper.getDailyStatusSubmittedFor(serialNumber);
   }
 
+  public List<ColdChainEquipmentDTO> getEquipmentList(String regionCode) {
+    return mapper.getEquipmentList(regionCode);
+  }
 
 }
