@@ -4,14 +4,15 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.service.LotService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -59,5 +60,33 @@ public class LotController extends BaseController {
         return OpenLmisResponse.response("lotsById",service.getById(id));
     }
 
+    @RequestMapping(value = "/deleteLot/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteLot(@PathVariable("id") Long id) {
+
+        try {
+            service.delete(id);
+        } catch (DataIntegrityViolationException ex) {
+            return OpenLmisResponse.error("Lot.data.already.in.use",HttpStatus.BAD_REQUEST);
+        }
+
+        return OpenLmisResponse.success("Lot.deleted.successifull");
+    }
+
+    @RequestMapping(value = "lotByProduct/save", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> saveLotByProduct(@RequestBody Lot lot,HttpServletRequest request){
+        ResponseEntity<OpenLmisResponse> successResponse;
+        try {
+            Long userId= loggedInUserId(request);
+            lot.setModifiedBy(userId);
+            lot.setCreatedBy(userId);
+            service.insertLotProduct(lot);
+        }catch(DuplicateKeyException exp){
+            return OpenLmisResponse.error("Duplicate lot Name Exists in DB.", HttpStatus.BAD_REQUEST);
+        }
+
+        successResponse = success(String.format("Lot '%s' has been successfully saved", lot.getLotCode()));
+        successResponse.getBody().addData("lots", lot);
+        return  successResponse;
+    }
 
 }

@@ -4,8 +4,8 @@ angular.module('manage_lot', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bo
     config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller: LotListController, templateUrl: 'partials/list.html'}).
-            when('/create', {controller: LotController, templateUrl: 'partials/create.html',resolve:false}).
-            when('/edit/:id', {controller: LotController, templateUrl: 'partials/create.html',resolve:false}).
+            when('/create', {controller: LotController, templateUrl: 'partials/create.html',resolve:LotController.resolve}).
+            when('/edit/:id', {controller: LotController, templateUrl: 'partials/create.html',resolve:LotController.resolve}).
             otherwise({redirectTo: '/list'});
     }]).directive('onKeyup', function () {
         return function (scope, elm, attrs) {

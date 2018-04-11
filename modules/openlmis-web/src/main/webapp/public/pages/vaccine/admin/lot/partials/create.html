@@ -1,0 +1,117 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<style>
+    input.button-warning{
+        color:white;
+    }
+
+</style>
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+
+    <h2>
+        <span ng-hide="lot.id" >Add Lot</span>
+        <span ng-show="lot.id">Edit Lot</span>
+    </h2>
+
+    <form ng-submit="saveLot()" id="lotForm" name="lotForm" select2-blur>
+        <div class="app-form">
+        <div class="row-fluid">
+          <div class="span12">
+
+              <div>
+                  <label for="product" class="labels" openlmis-message="label.product"></label>
+                  <div>
+                      <select id="product" ui-select2 class="input-large" ng-model="lot.productId" ng-change="changeProduct()">
+
+                          <option  ng-repeat="option in productList" value="{{ option.id }}" ng-selected="option.id == lot.productId">{{ option.name }}
+
+
+                          </option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+            <div class="clearfix"></div>
+
+        </div>
+        <div><br/></div>
+        <div class="row-fluid ">
+        <div class="span3">
+            <label id="newLotLotCodeLabel" for="lot.lotCode">
+                <span openlmis-message="label.batchId "></span>
+                <span class="label-required">*</span>
+            </label>
+            <span class="position-relative">
+                                    <input  ng-required="true" class="span12" type="text" ng-model="lot.lotCode" value="" id="lot.lotCode" />
+                                </span>
+        </div>
+
+        <div class="span3">
+            <label id="newLotExpirationDateLabel" for="lot.expirationDate">
+                <span openlmis-message="label.expiryDate"></span>
+                <span class="label-required">*</span>
+            </label>
+            <span class="position-relative">
+                                <input ng-required="true" class="span12"
+                                       ng-required="true"
+                                       id="lot.expirationDate"
+                                       name="expirationDate"
+                                       type="text"
+                                       ui-date-format="yy-mm-dd"
+                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, minDate:'today + 1'}"
+                                       ng-model="lot.expirationDate"/>
+                                </span>
+        </div>
+        <div class="span3">
+            <label id="newLotManufacturerLabel" for="lot.manufacturerName">
+                <span openlmis-message="label.manufacturer"></span>
+                <span class="label-required">*</span>
+            </label>
+            <span class="position-relative">
+                    <select style="width:90% !important;" ui-select2 ng-required="true" class="span12"
+                            ng-model="lot.manufacturerName" id="lot.manufacturerName"
+                            ng-options="manufacturer.name as manufacturer.name for manufacturer in manufacturers">
+                        <option value="" openlmis-message="placeholder.select.manufacturer"></option>
+                    </select>
+                </span>
+        </div>
+        <div class="span3">
+            <label id="newLotManufactureDateLabel" for="lot.manufactureDate">
+                <span openlmis-message="label.manufacture.date "></span>
+            </label>
+            <span class="position-relative">
+                                <input class="span12"  id="lot.manufactureDate" name="lot.manufactureDate" type="text"
+                                       ui-date-format="yy-mm-dd"
+                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
+                                       ng-model="lot.manufactureDate"/>
+                                </span>
+        </div>
+
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input ng-disabled="lotForm.$invalid" type="submit"
+                           class="btn btn-primary save-button" value="Save"/>
+                    <input type="button" class="btn btn-cancel cancel-button" value="Cancel"
+                           ng-click="cancelAddEdit()"/>
+                    <input ng-show="lot.id" type="button" class="btn btn-danger delete-button  button-warning" value="Delete"
+                           ng-click="delete(lot)"/>
+                </div>
+                <div class="toolbar-error" id="saveErrorMsgDiv" ng-bind="errorMessage" ng-show="errorMessage"/>
+            </div>
+
+    </div>
+        </div>
+    </form>
+
+
+</div>

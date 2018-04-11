@@ -9,591 +9,604 @@
   -->
 
 
-
 <div class="navigation toggleFullScreen" ng-controller="NavigationController" ui-nav>
-  <ul class="clearfix" style="display:none">
-    <li >
-      <a  href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
-    <li>
-    <li>
-      <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
+    <ul class="clearfix" style="display:none">
+        <li>
+            <a href="" id='homeMenu' ng-click="homeLinkClicked()" openlmis-message="link.home"></a></li>
+        <li>
+        <li>
+            <a id="requisitions-menu" href="javascript: void(0)" openlmis-message="link.requisitions"></a>
 
-      <div class="submenu">
-        <ul>
-          <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
-            <a id="createRnr" href="/public/pages/logistics/rnr/index.html#/init-rnr"
-               openlmis-message="link.requisitions.create.authorize"></a>
-          </li>
-          <li ng-show="hasPermission('APPROVE_REQUISITION')">
-            <a id="approveRnr" href="/public/pages/logistics/rnr/index.html#/rnr-for-approval"
-               openlmis-message="link.requisition.approve"></a>
-          </li>
-          <li ng-show="hasPermission('CONVERT_TO_ORDER')">
-            <a id="convertToOrderRnr"
-               href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order?page=1"
-               openlmis-message="link.requisitions.convertToOrder"></a>
-          </li>
-          <li ng-show="hasPermission('VIEW_REQUISITION')">
-            <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/view-requisitions"
-               openlmis-message="link.requisition.view"></a>
-          </li>
-          <li class="beak"></li>
-        </ul>
-      </div>
+            <div class="submenu">
+                <ul>
+                    <li ng-show="hasPermission('CREATE_REQUISITION') || hasPermission('AUTHORIZE_REQUISITION')">
+                        <a id="createRnr" href="/public/pages/logistics/rnr/index.html#/init-rnr"
+                           openlmis-message="link.requisitions.create.authorize"></a>
+                    </li>
+                    <li ng-show="hasPermission('APPROVE_REQUISITION')">
+                        <a id="approveRnr" href="/public/pages/logistics/rnr/index.html#/rnr-for-approval"
+                           openlmis-message="link.requisition.approve"></a>
+                    </li>
+                    <li ng-show="hasPermission('CONVERT_TO_ORDER')">
+                        <a id="convertToOrderRnr"
+                           href="/public/pages/logistics/rnr/index.html#/requisitions-for-convert-to-order?page=1"
+                           openlmis-message="link.requisitions.convertToOrder"></a>
+                    </li>
+                    <li ng-show="hasPermission('VIEW_REQUISITION')">
+                        <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/view-requisitions"
+                           openlmis-message="link.requisition.view"></a>
+                    </li>
+                    <li class="beak"></li>
+                </ul>
+            </div>
 
-    </li>
+        </li>
 
-    <li>
-      <a id="orders-menu" href="javascript: void(0)" openlmis-message="link.orders"></a>
-      <div class="submenu">
-        <ul>
-          <li ng-show="hasPermission('VIEW_ORDER')">
-            <a id='viewOrder'
-               href="/public/pages/logistics/fulfillment/index.html#/view-orders?page=1"
-               openlmis-message="link.orders.view"></a>
-          </li>
-          <li ng-show="hasPermission('MANAGE_POD') || hasPermission('COMPLETE_POD')">
-            <a id='managePod' href="/public/pages/logistics/fulfillment/index.html#/manage-pod-orders"
-               openlmis-message="link.pod.manage"></a>
-          </li>
-            <li ng-show="hasPermission('VIEW_MSD_DASHLET_REPORT')">
-            <a id='msd_stock' href="/public/pages/logistics/stock-status/index.html#/home"
-               openlmis-message="link.msd.dashlet"></a>
-          </li>
-          <li class="beak"></li>
-        </ul>
-      </div>
+        <li>
+            <a id="orders-menu" href="javascript: void(0)" openlmis-message="link.orders"></a>
+            <div class="submenu">
+                <ul>
+                    <li ng-show="hasPermission('VIEW_ORDER')">
+                        <a id='viewOrder'
+                           href="/public/pages/logistics/fulfillment/index.html#/view-orders?page=1"
+                           openlmis-message="link.orders.view"></a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_POD') || hasPermission('COMPLETE_POD')">
+                        <a id='managePod' href="/public/pages/logistics/fulfillment/index.html#/manage-pod-orders"
+                           openlmis-message="link.pod.manage"></a>
+                    </li>
+                    <li ng-show="hasPermission('VIEW_MSD_DASHLET_REPORT')">
+                        <a id='msd_stock' href="/public/pages/logistics/stock-status/index.html#/home"
+                           openlmis-message="link.msd.dashlet"></a>
+                    </li>
+                    <li class="beak"></li>
+                </ul>
+            </div>
 
-    </li>
+        </li>
 
-    <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('APPROVE_IVD')">
-      <a id="ivd" href="" openlmis-message="link.ivd.form"></a>
-      <div class="submenu">
-        <ul>
-          <li ng-show="hasPermission('CREATE_IVD')">
-            <a href="/public/pages/ivd-form/index.html"
-               openlmis-message="link.vaccine.create"></a>
-          </li>
-          <li ng-show="hasPermission('VIEW_IVD')">
-            <a href="/public/pages/ivd-form/index.html#/view" openlmis-message="link.view.ivd"></a>
-          </li>
-          <li ng-show="hasPermission('APPROVE_IVD')">
-            <a href="/public/pages/ivd-form/index.html#/approve" openlmis-message="link.approve.ivd"></a>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li  ng-show="hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
-      <a id="vaccine" href="" openlmis-message="link.stock.management"></a>
-      <div class="submenu">
-        <ul>
-          <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
-            <a id="manage-distribution"
-               href="/public/pages/logistics/distribution/index.html#/manage"
-               openlmis-message="link.distributions"></a>
-          </li>
-            <li>
-                <a href="/public/pages/vaccine/stock-on-hand/index.html#/initiate"
-                   openlmis-message="link.stock.on.hand"></a>
+        <li ng-show="hasPermission('CREATE_IVD') || hasPermission('VIEW_IVD') || hasPermission('APPROVE_IVD')">
+            <a id="ivd" href="" openlmis-message="link.ivd.form"></a>
+            <div class="submenu">
+                <ul>
+                    <li ng-show="hasPermission('CREATE_IVD')">
+                        <a href="/public/pages/ivd-form/index.html"
+                           openlmis-message="link.vaccine.create"></a>
+                    </li>
+                    <li ng-show="hasPermission('VIEW_IVD')">
+                        <a href="/public/pages/ivd-form/index.html#/view" openlmis-message="link.view.ivd"></a>
+                    </li>
+                    <li ng-show="hasPermission('APPROVE_IVD')">
+                        <a href="/public/pages/ivd-form/index.html#/approve" openlmis-message="link.approve.ivd"></a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        <li ng-show="hasPermission('MANAGE_DISTRIBUTION') || hasPermission('VIEW_ORDER_REQUISITION') || hasPermission('VIEW_PENDING_REQUEST') || hasPermission('CREATE_ORDER_REQUISITION')">
+            <a id="vaccine" href="" openlmis-message="link.stock.management"></a>
+            <div class="submenu">
+                <ul>
+                    <li ng-show="hasPermission('MANAGE_DISTRIBUTION')">
+                        <a id="manage-distribution"
+                           href="/public/pages/logistics/distribution/index.html#/manage"
+                           openlmis-message="link.distributions"></a>
+                    </li>
+                    <li>
+                        <a href="/public/pages/vaccine/stock-on-hand/index.html#/initiate"
+                           openlmis-message="link.stock.on.hand"></a>
 
-            </li>
+                    </li>
 
-            <li>
-                <a href="/public/pages/vaccine/stock-availability/index.html#/initiate"
-                   >Stock Availability Summary</a>
+                    <li>
+                        <a href="/public/pages/vaccine/stock-availability/index.html#/initiate"
+                        >Stock Availability Summary</a>
 
-            </li>
+                    </li>
 
-            <li ng-show="hasPermission('VIEW_VIMS_MAIN_DASHBOARD')">
-                <a href="/public/pages/vaccine/dash/index3.html#/myApp"
+                    <li ng-show="hasPermission('VIEW_VIMS_MAIN_DASHBOARD')">
+                        <a href="/public/pages/vaccine/dash/index3.html#/myApp"
                         >Dash Board</a>
 
-            </li>
+                    </li>
 
-            <li ng-show="hasPermission('VIEW_STOCK_SUMMARY')">
-                <a href="/public/pages/vaccine/stock-summary/index.html#/initiate"
-                   >Stock Status</a>
+                    <li ng-show="hasPermission('VIEW_STOCK_SUMMARY')">
+                        <a href="/public/pages/vaccine/stock-summary/index.html#/initiate"
+                        >Stock Status</a>
 
-            </li>
-          <li class="beak"></li>
-            <li ng-show="hasPermission('MANAGE_VACCINE_PRODUCTS_CONFIGURATION')">
-                <a href="/public/pages/vaccine/inventory/index.html#/configuration"
-                   openlmis-message="link.vaccine.configuration"></a>
-            </li>
+                    </li>
+                    <li class="beak"></li>
+                    <li ng-show="hasPermission('MANAGE_VACCINE_PRODUCTS_CONFIGURATION')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/configuration"
+                           openlmis-message="link.vaccine.configuration"></a>
+                    </li>
 
-          <li>
-            <a href="/public/pages/vaccine/inventory/index.html#/vaccine-forecasting"
-               openlmis-message="link.vaccine.forecasting"></a>
-          </li>
+                    <li>
+                        <a href="/public/pages/vaccine/inventory/index.html#/vaccine-forecasting"
+                           openlmis-message="link.vaccine.forecasting"></a>
+                    </li>
 
-          <li  class="has-children">
+                    <li class="has-children">
 
-            <a href="javascript: void(0);"
-               openlmis-message="link.vaccine.request.form"></a>
-            <div class="submenu">
-              <ul>
-                <li ng-show="hasPermission('CREATE_ORDER_REQUISITION')">
-                  <a  href="/public/pages/vaccine/order-requisition/index.html#/initiate"
-                      openlmis-message="link.vaccine.create.requisition" ></a>
-                </li>
-                <li ng-show="hasPermission('VIEW_PENDING_REQUEST')">
-                  <a href="/public/pages/vaccine/order-requisition/index.html#/view"
-                     openlmis-message="link.vaccine.pending.orders"></a>
-                </li>
-                <li ng-show="hasPermission('VIEW_ORDER_REQUISITION')">
-                  <a href="/public/pages/vaccine/order-requisition/index.html#/search"
-                     openlmis-message="link.vaccine.requisition.view"></a>
-                </li>
-              </ul>
-            </div>
-          </li>
+                        <a href="javascript: void(0);"
+                           openlmis-message="link.vaccine.request.form"></a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('CREATE_ORDER_REQUISITION')">
+                                    <a href="/public/pages/vaccine/order-requisition/index.html#/initiate"
+                                       openlmis-message="link.vaccine.create.requisition"></a>
+                                </li>
+                                <li ng-show="hasPermission('VIEW_PENDING_REQUEST')">
+                                    <a href="/public/pages/vaccine/order-requisition/index.html#/view"
+                                       openlmis-message="link.vaccine.pending.orders"></a>
+                                </li>
+                                <li ng-show="hasPermission('VIEW_ORDER_REQUISITION')">
+                                    <a href="/public/pages/vaccine/order-requisition/index.html#/search"
+                                       openlmis-message="link.vaccine.requisition.view"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
-            <!--<li class="has-children">-->
-            <!--<a href="javascript: void(0);"-->
-            <!--openlmis-message="link.vaccine.inventory"></a>-->
-            <!--<div class="submenu">-->
-            <!--<ul>-->
-            <!--<li ng-show="hasPermission('MANAGE_VACCINE_PRODUCTS_CONFIGURATION')">-->
-            <!--<a href="/public/pages/vaccine/inventory/index.html#/configuration"-->
-            <!--openlmis-message="link.vaccine.configuration"></a>-->
-            <!--</li>-->
-            <!--<li ng-show="hasPermission('VIEW_STOCK_ON_HAND')">-->
-            <!--<a href="/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand"-->
-            <!--openlmis-message="link.vaccine.stock.on.hand"></a>-->
-            <!--</li>-->
-            <!--<li ng-show="hasPermission('MANAGE_STOCK')">-->
-            <!--<a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"-->
-            <!--openlmis-message="link.vaccine.stock.adjustment"></a>-->
-            <!--</li>-->
-            <!--<li ng-show="hasPermission('MANAGE_STOCK') ">-->
-            <!--<a href="/public/pages/vaccine/inventory/index.html#/receive"-->
-            <!--openlmis-message="link.vaccine.receive"></a>-->
-            <!--</li>-->
-            <!--<li ng-show="hasPermission('MASS_DISTRIBUTION')">-->
-            <!--<a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"-->
-            <!--openlmis-message="link.vaccine.distribute"></a>-->
-            <!--</li>-->
-            <!--<li ng-show="hasPermission('MANAGE_STOCK')">-->
-            <!--<a href="/public/pages/vaccine/inventory/index.html#/transfer-in"-->
-            <!--openlmis-message="link.vaccine.transfer.in"></a>-->
-            <!--</li>-->
-            <!--<li ng-show="hasPermission('MANAGE_STOCK')">-->
-            <!--<a href="/public/pages/vaccine/inventory/index.html#/transfer-out"-->
-            <!--openlmis-message="link.vaccine.transfer.out"></a>-->
-            <!--</li>-->
+                    <!--<li class="has-children">-->
+                    <!--<a href="javascript: void(0);"-->
+                    <!--openlmis-message="link.vaccine.inventory"></a>-->
+                    <!--<div class="submenu">-->
+                    <!--<ul>-->
+                    <!--<li ng-show="hasPermission('MANAGE_VACCINE_PRODUCTS_CONFIGURATION')">-->
+                    <!--<a href="/public/pages/vaccine/inventory/index.html#/configuration"-->
+                    <!--openlmis-message="link.vaccine.configuration"></a>-->
+                    <!--</li>-->
+                    <!--<li ng-show="hasPermission('VIEW_STOCK_ON_HAND')">-->
+                    <!--<a href="/public/pages/vaccine/inventory/dashboard/index.html#/stock-on-hand"-->
+                    <!--openlmis-message="link.vaccine.stock.on.hand"></a>-->
+                    <!--</li>-->
+                    <!--<li ng-show="hasPermission('MANAGE_STOCK')">-->
+                    <!--<a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"-->
+                    <!--openlmis-message="link.vaccine.stock.adjustment"></a>-->
+                    <!--</li>-->
+                    <!--<li ng-show="hasPermission('MANAGE_STOCK') ">-->
+                    <!--<a href="/public/pages/vaccine/inventory/index.html#/receive"-->
+                    <!--openlmis-message="link.vaccine.receive"></a>-->
+                    <!--</li>-->
+                    <!--<li ng-show="hasPermission('MASS_DISTRIBUTION')">-->
+                    <!--<a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"-->
+                    <!--openlmis-message="link.vaccine.distribute"></a>-->
+                    <!--</li>-->
+                    <!--<li ng-show="hasPermission('MANAGE_STOCK')">-->
+                    <!--<a href="/public/pages/vaccine/inventory/index.html#/transfer-in"-->
+                    <!--openlmis-message="link.vaccine.transfer.in"></a>-->
+                    <!--</li>-->
+                    <!--<li ng-show="hasPermission('MANAGE_STOCK')">-->
+                    <!--<a href="/public/pages/vaccine/inventory/index.html#/transfer-out"-->
+                    <!--openlmis-message="link.vaccine.transfer.out"></a>-->
+                    <!--</li>-->
 
-            <!--<li class="beak"></li>-->
-            <!--</ul>-->
-            <!--</div>-->
-            <!--</li>-->
-          <li class="has-children">
-            <a href="javascript: void(0);"
-               openlmis-message="link.vaccine.manage"></a>
-            <div class="submenu">
-              <ul>
-                <li ng-show="hasPermission('MANAGE_VACCINE_TARGETS')">
-                  <a href="/public/pages/vaccine/index.html#/targets"
-                     openlmis-message="link.vaccine.manage.targets"></a>
-                </li>
-                <li  ng-show="hasPermission('MANAGE_VACCINE_QUANTIFICATION')">
-                  <a href="/public/pages/vaccine/index.html#/quantification"
-                      openlmis-message="link.vaccine.manage.quantification"></a>
-                </li>
-                <li class="beak"></li>
-              </ul>
-            </div>
-          </li>
+                    <!--<li class="beak"></li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <!--</li>-->
+                    <li class="has-children">
+                        <a href="javascript: void(0);"
+                           openlmis-message="link.vaccine.manage"></a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_VACCINE_TARGETS')">
+                                    <a href="/public/pages/vaccine/index.html#/targets"
+                                       openlmis-message="link.vaccine.manage.targets"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_VACCINE_QUANTIFICATION')">
+                                    <a href="/public/pages/vaccine/index.html#/quantification"
+                                       openlmis-message="link.vaccine.manage.quantification"></a>
+                                </li>
+                                <li class="beak"></li>
+                            </ul>
+                        </div>
+                    </li>
 
-          <li ng-show="hasPermission('MANAGE_STOCK') ">
-            <a href="/public/pages/vaccine/inventory/index.html#/receive"
-               openlmis-message="link.vaccine.receive"></a>
-          </li>
-	  <li ng-show="hasPermission('USE_BARCODE_FEATURE') ">
-            <a href="/public/pages/vaccine/inventory/index.html#/receive_barcode"
-               >Receive With Barcode</a>
-          </li>
+                    <li ng-show="hasPermission('MANAGE_STOCK') ">
+                        <a href="/public/pages/vaccine/inventory/index.html#/receive"
+                           openlmis-message="link.vaccine.receive"></a>
+                    </li>
+                    <li ng-show="hasPermission('USE_BARCODE_FEATURE') ">
+                        <a href="/public/pages/vaccine/inventory/index.html#/receive_barcode"
+                        >Receive With Barcode</a>
+                    </li>
 
-            <li ng-show="hasPermission('MANAGE_STOCK') ">
-                <a href="/public/pages/vaccine/inventory/index.html#/view-issue-voucher"
-                   >Previous Issue Voucher</a>
-            </li>
+                    <li ng-show="hasPermission('MANAGE_STOCK') ">
+                        <a href="/public/pages/vaccine/inventory/index.html#/view-issue-voucher"
+                        >Previous Issue Voucher</a>
+                    </li>
 
-          <li ng-show="hasPermission('MASS_DISTRIBUTION')">
-            <a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"
-               openlmis-message="link.vaccine.distribute"></a>
-          </li>
+                    <li ng-show="hasPermission('MASS_DISTRIBUTION')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/mass-distribution"
+                           openlmis-message="link.vaccine.distribute"></a>
+                    </li>
 
-            <li ng-show="hasPermission('MANAGE_FACILITY_DISTRIBUTION')">
-            <a href="/public/pages/vaccine/inventory/index.html#/facility-distribution">Facility Distribution</a>
-          </li>
+                    <li ng-show="hasPermission('MANAGE_FACILITY_DISTRIBUTION')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/facility-distribution">Facility
+                            Distribution</a>
+                    </li>
 
-          <li ng-show="hasPermission('USE_BARCODE_FEATURE')">
-              <a href="/public/pages/vaccine/inventory/index.html#/distribute_barcode"
-              >Distribute with Barcode</a>
-          </li>
-          <li ng-show="hasPermission('MANAGE_STOCK')">
-            <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"
-               openlmis-message="link.vaccine.stock.adjustment"></a>
-          </li>
-	  <li ng-show="hasPermission('USE_BARCODE_FEATURE')">
-                  <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment-barcode"
-                     >Physical Count/Stock Adjustment</a>
-             </li>
-            <li ng-show="hasPermission('MANAGE_STOCK')">
-                <a href="/public/pages/vaccine/inventory/index.html#/transfer-in"
-                   openlmis-message="link.vaccine.transfer.in"></a>
-            </li>
-            <li ng-show="hasPermission('MANAGE_STOCK')">
-                <a href="/public/pages/vaccine/inventory/index.html#/transfer-out"
-                   openlmis-message="link.vaccine.transfer.out"></a>
-            </li>
+                    <li ng-show="hasPermission('USE_BARCODE_FEATURE')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/distribute_barcode"
+                        >Distribute with Barcode</a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_STOCK')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"
+                           openlmis-message="link.vaccine.stock.adjustment"></a>
+                    </li>
+                    <li ng-show="hasPermission('USE_BARCODE_FEATURE')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment-barcode"
+                        >Physical Count/Stock Adjustment</a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_STOCK')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/transfer-in"
+                           openlmis-message="link.vaccine.transfer.in"></a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_STOCK')">
+                        <a href="/public/pages/vaccine/inventory/index.html#/transfer-out"
+                           openlmis-message="link.vaccine.transfer.out"></a>
+                    </li>
 
-            <li ng-show="hasPermission('MANAGE_STOCK') ">
-                <a href="/public/pages/vaccine/inventory/index.html#/transfer-issue-voucher"
+                    <li ng-show="hasPermission('MANAGE_STOCK') ">
+                        <a href="/public/pages/vaccine/inventory/index.html#/transfer-issue-voucher"
                         >Transfer In/Out Issue Voucher</a>
-            </li>
+                    </li>
 
 
-            <li>
-            <a href="/public/pages/var/index.html#/">VAR</a>
-          </li>
+                    <li>
+                        <a href="/public/pages/var/index.html#/">VAR</a>
+                    </li>
 
-        </ul>
-      </div>
-    </li>
-      <li>
-          <a id="equipment-menu" href="javascript: void(0)" openlmis-message="link.equipments"></a>
-
-          <div class="submenu">
-              <ul>
-                  <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
-                      <a id='log-tag-menu' href="/public/pages/admin/upload-log-tag/index.html"
-                              >Upload Log Tag</a>
-                  </li>
-                  <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
-                      <a id="equipment-inventory"
-                         href="/public/pages/admin/equipment/inventory/index.html"
-                         openlmis-message="link.equipment.inventory"></a>
-                  </li>
-                  <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
-                      <a href="/public/pages/admin/equipment/my-requests/index.html"
-                         openlmis-message="link.equipment.maintenance.request"></a>
-                  </li>
-                  <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
-                      <a href="/public/pages/admin/equipment/my-contracts/index.html"
-                         openlmis-message="link.equipment.service.contract"></a>
-                  </li>
-                  <li class="beak"></li>
-              </ul>
-          </div>
-      </li>
-    <li ng-include="'/public/pages/reports/navigation.html'"></li>
-
-
-    <li>
-      <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
-
-      <div class="submenu">
-        <ul>
-          <li ng-show="hasPermission('UPLOADS')">
-            <a id='upload' href="/public/pages/admin/upload/index.html"
-               openlmis-message="link.admin.upload"></a>
-          </li>
-
-          <li class="has-children">
-            <a id='configure' href="javascript: void(0);" openlmis-message="link.admin.configure"></a>
-
-            <div class="submenu">
-              <ul>
-                <li ng-show="hasPermission('CONFIGURE_RNR')">
-                  <a id='configureRequisitionTemplate'
-                     href="/public/pages/admin/rnr-template/index.html"
-                     openlmis-message="link.admin.configure.requisitionTemplate"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_REGIMEN_TEMPLATE')">
-                  <a id='configureRegimenTemplate'
-                     href="/public/pages/admin/regimen-template/index.html"
-                     openlmis-message="label.admin.configure.regimenTemplate"></a>
-                </li>
-                  <li ng-show="hasPermission('MANAGE_SEASONALITY_RATIONING')">
-                      <a id='configureSeasoningRationingType'
-                         href="/public/pages/admin/seasonality-rationing/index.html#/list"
-                         openlmis-message="label.admin.menu.seasoningRationingType"></a>
-                  </li>
-                  <li ng-show="hasPermission('MANAGE_SEASONALITY_RATIONING')">
-                      <a id='configureAdjustmentBasis'
-                         href="/public/pages/admin/seasonality-rationing/index.html#/list_adustment_factor"
-                         openlmis-message="label.admin.menu.adjustmentBasisFormula"></a>
-                  </li>
-                <li ng-show="hasPermission('MANAGE_PROGRAM_PRODUCT')">
-                  <a id='configureProgramProductIsa'
-                     href="/public/pages/admin/program-product-isa/index.html"
-                     openlmis-message="link.admin.configure.programProductISA"></a>
-                </li>
-                <li ng-show="hasPermission('SYSTEM_SETTINGS')">
-                  <a id='configureEdi' href="/public/pages/admin/edi/index.html#/configure-system-settings"
-                     openlmis-message="link.admin.system.settings"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_SETTING')">
-                    <a href="/public/pages/admin/setting/index.html"
-                       openlmis-message="link.admin.configure.setting"></a>
-                </li>
-                <li class="beak"></li>
-              </ul>
-            </div>
-          </li>
-
-          <li ng-show="hasPermission('MANAGE_SETTING')">
-              <a href="/public/pages/admin/sms/index.html">Messages</a>
-          </li>
-
-          <li class="has-children">
-            <a id="manage-option" href="javascript: void(0);" openlmis-message="link.admin.manage"></a>
-
-            <div class="submenu">
-              <ul>
-                <li ng-show="hasPermission('MANAGE_FACILITY')">
-                  <a id='facilityMenu' href="/public/pages/admin/facility/index.html"
-                     openlmis-message="menu.header.facilities"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_ROLE')">
-                      <a id='rolesMenu' href="/public/pages/admin/role/index.html"
-                         openlmis-message="menu.header.roles"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_SCHEDULE')">
-                  <a id='schedulesMenu' href="/public/pages/admin/schedule/index.html"
-                     openlmis-message="menu.header.schedules"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_USER')">
-                  <a id='usersMenu' href="/public/pages/admin/user/index.html"
-                     openlmis-message="menu.header.users"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONE')">
-                  <a id='geographicZonesMenu' href="/public/pages/admin/geo-zone/index.html"
-                     openlmis-message="menu.header.geographic.zones"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')">
-                  <a id='supervisoryNodesMenu' href="/public/pages/admin/supervisory-node/index.html"
-                     openlmis-message="menu.header.supervisory.nodes"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')">
-                  <a id='requisitionGroupsMenu' href="/public/pages/admin/requisition-group/index.html"
-                     openlmis-message="menu.header.requisition.groups"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_SUPPLY_LINE')">
-                  <a id='supplyLinesMenu' href="/public/pages/admin/supply-line/index.html"
-                     openlmis-message="menu.header.supply.lines"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_FACILITY_APPROVED_PRODUCT')">
-                  <a id="facilityApprovedProductsMenu" href="/public/pages/admin/facility-approved-product/index.html"
-                     openlmis-message="header.facility.approved.products"></a>
-                </li>
-                <li ng-show="hasPermission('MANAGE_PRODUCT')">
-                  <a id="productsMenu" href="/public/pages/admin/product/index.html"
-                     openlmis-message="header.products"></a>
-                </li>
-                  <li ng-show="hasPermission('MANAGE_ELMIS_INTERFACE')">
-                      <a href="/public/pages/admin/interfaces/index.html"
-                         openlmis-message="link.admin.elmis.interface"></a>
-                  </li>
-                  <li ng-show="hasPermission('MANAGE_MANUAL_TEST_TYPES')">
-                      <a href="/public/pages/admin/manual-test-types/index.html"
-                         openlmis-message="link.admin.manage.manual.tests"></a>
-                  </li>
-                <li class="beak"></li>
-              </ul>
-            </div>
-          </li>
-            <li class="has-children">
-                <a id="manage-equipment-option"
-                   href="/public/pages/admin/equipment/manage/index.html"
-                    openlmis-message="link.manage.equipments"></a>
-                <div class="submenu">
-                    <ul>
-                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                            <a href="/public/pages/admin/equipment/type/index.html"
-                                openlmis-message="link.manage.equipment.type"></a>
-                        </li>
-                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                            <a href="/public/pages/admin/equipment/manage/index.html"
-                               openlmis-message="link.manage.equipment.list"></a>
-                        </li>
-                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                        <a href="/public/pages/admin/equipment/program-equipment-products/index.html"
-                            openlmis-message="link.manage.equipment.products"></a>
-                      </li>
-                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                        <a href="/public/pages/admin/equipment/service-type/index.html">
-                          <span id="equipment-service-type"
-                              openlmis-message="link.manage.equipment.service.types"></span>
-                        </a>
-                      </li>
-                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                        <a href="/public/pages/admin/equipment/vendor/index.html">
-                          <span id="service-vendor" openlmis-message="link.manage.equipment.vendors"></span>
-                        </a>
-                      </li>
-                      <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                        <a href="/public/pages/admin/equipment/service-contract/index.html">
-                          <span id="service-contract"
-                              openlmis-message="link.manage.equipment.contracts"></span>
-                        </a>
-                      </li>
-                      <li ng-show="hasPermission('MANAGE_DONOR')">
-                        <a href="/public/pages/admin/equipment/donors/index.html">
-                          <span id="manage-donor" openlmis-message="link.manage.equipment.donors"></span>
-                        </a>
-                      </li>
-
-                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                            <a href="/public/pages/admin/equipment/operational-status/index.html">
-                                <span id="operational-status" openlmis-message="link.manage.equipment.operational.status"></span>
-                            </a>
-                        </li>
-
-                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageDesignationSelected">
-                            <a href="/public/pages/admin/equipment/cold-chain-designations/index.html">
-                                <span id="cold-chain-resignation" openlmis-message="link.manage.equipment.resignation" ></span>
-                            </a>
-                        </li>
-
-                        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
-                            <a href="/public/pages/admin/equipment/model/index.html">
-                                <span id="equipement_model" openlmis-message="link.manage.equipment.model" ></span>
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
-            </li>
-            <li class="has-children"  >
-              <a id="vaccine-admin" href="" openlmis-message="link.manage.vaccine"></a>
-              <div class="submenu">
-                <ul>
-                  <li ng-show="hasPermission('MANAGE_VACCINE_DISEASE_LIST')">
-                    <a
-                        href="/public/pages/vaccine/admin/disease/index.html#/disease"
-                        openlmis-message="link.manage.vaccine.diseases"></a>
-                  </li>
-                  </ul>
-                </div>
-            </li>
-          <li ng-show="hasPermission('SYSTEM_SETTINGS')">
-            <a
-                href="/public/pages/admin/supply-partner/index.html"
-                ><span openlmis-message="link.manage.supply.partners"></span></a>
-          </li>
-            <li class="has-children"  >
-            <a id="demographic-admin" href="" openlmis-message="link.manage.demographic.estimates"></a>
-            <div class="submenu">
-              <ul>
-                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')" >
-                    <a
-                            href="/public/pages/demographics/index.html#/list"
-                      openlmis-message="link.manage.demographic.categories"></a>
-                  </li>
-                  <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_ESTIMATES')">
-                    <a
-                            href="/public/pages/demographics/index.html#/facility"
-                      openlmis-message="link.manage.facility.demographic"></a>
-                  </li>
-                  <li ng-show="hasPermission('MANAGE_DISTRICT_DEMOGRAPHIC_ESTIMATES')">
-                    <a
-                            href="/public/pages/demographics/index.html#/district"
-                      openlmis-message="link.manage.district.demographic"></a>
-                  </li>
                 </ul>
-              </div>
-            </li>
-            <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
-              <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
-                 openlmis-message="link.admin.manage.custom.reports"></a>
-            </li>
-            <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
-                <a id='manageLogTagTemperature' href="/public/pages/vaccine/inventory/log-tag-temperature/index.html#/list"
-                   >Manage Log Tag</a>
-            </li>
-            <li class="has-children" ng-show="hasPermission('CONFIGURE_HELP_CONTENT')">
-                <a id="manage-help-option"
-                   href="/public/pages/help/helpTopic/index.html"
-                    openlmis-message="link.manage.help"></a>
-                <div class="submenu">
-                    <ul>
-                    <li >
-                        <a href="/public/pages/help/helpTopic/index.html"
-                            openlmis-message="link.manage.help.topic"></a>
+            </div>
+        </li>
+        <li>
+            <a id="equipment-menu" href="javascript: void(0)" openlmis-message="link.equipments"></a>
+
+            <div class="submenu">
+                <ul>
+                    <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
+                        <a id='log-tag-menu' href="/public/pages/admin/upload-log-tag/index.html"
+                        >Upload Log Tag</a>
                     </li>
-                    <li >
-                        <a href="/public/pages/help/helpContent/index.html"
-                            openlmis-message="link.manage.help.content"></a>
+                    <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
+                        <a id="equipment-inventory"
+                           href="/public/pages/admin/equipment/inventory/index.html"
+                           openlmis-message="link.equipment.inventory"></a>
                     </li>
-                    </ul>
-                </div>
-            </li>
+                    <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
+                        <a href="/public/pages/admin/equipment/my-requests/index.html"
+                           openlmis-message="link.equipment.maintenance.request"></a>
+                    </li>
+                    <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
+                        <a href="/public/pages/admin/equipment/my-contracts/index.html"
+                           openlmis-message="link.equipment.service.contract"></a>
+                    </li>
+                    <li class="beak"></li>
+                </ul>
+            </div>
+        </li>
+        <li ng-include="'/public/pages/reports/navigation.html'"></li>
 
 
+        <li>
+            <a id="administration-menu" href="javascript: void(0)" openlmis-message="link.administration"></a>
 
-          <li class="beak"></li>
-        </ul>
-      </div>
+            <div class="submenu">
+                <ul>
+                    <li ng-show="hasPermission('UPLOADS')">
+                        <a id='upload' href="/public/pages/admin/upload/index.html"
+                           openlmis-message="link.admin.upload"></a>
+                    </li>
 
-    <li ng-show="hasPermission('ACCESS_ILS_GATEWAY')">
-    <!--    <a
-            href="/public/pages/ils-gateway/index.html#/dashboard"
-            openlmis-message="link.ils">
+                    <li class="has-children">
+                        <a id='configure' href="javascript: void(0);" openlmis-message="link.admin.configure"></a>
 
-        </a>-->
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('CONFIGURE_RNR')">
+                                    <a id='configureRequisitionTemplate'
+                                       href="/public/pages/admin/rnr-template/index.html"
+                                       openlmis-message="link.admin.configure.requisitionTemplate"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_REGIMEN_TEMPLATE')">
+                                    <a id='configureRegimenTemplate'
+                                       href="/public/pages/admin/regimen-template/index.html"
+                                       openlmis-message="label.admin.configure.regimenTemplate"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_SEASONALITY_RATIONING')">
+                                    <a id='configureSeasoningRationingType'
+                                       href="/public/pages/admin/seasonality-rationing/index.html#/list"
+                                       openlmis-message="label.admin.menu.seasoningRationingType"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_SEASONALITY_RATIONING')">
+                                    <a id='configureAdjustmentBasis'
+                                       href="/public/pages/admin/seasonality-rationing/index.html#/list_adustment_factor"
+                                       openlmis-message="label.admin.menu.adjustmentBasisFormula"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_PROGRAM_PRODUCT')">
+                                    <a id='configureProgramProductIsa'
+                                       href="/public/pages/admin/program-product-isa/index.html"
+                                       openlmis-message="link.admin.configure.programProductISA"></a>
+                                </li>
+                                <li ng-show="hasPermission('SYSTEM_SETTINGS')">
+                                    <a id='configureEdi'
+                                       href="/public/pages/admin/edi/index.html#/configure-system-settings"
+                                       openlmis-message="link.admin.system.settings"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_SETTING')">
+                                    <a href="/public/pages/admin/setting/index.html"
+                                       openlmis-message="link.admin.configure.setting"></a>
+                                </li>
+                                <li class="beak"></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li ng-show="hasPermission('MANAGE_SETTING')">
+                        <a href="/public/pages/admin/sms/index.html">Messages</a>
+                    </li>
+
+                    <li class="has-children">
+                        <a id="manage-option" href="javascript: void(0);" openlmis-message="link.admin.manage"></a>
+
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_FACILITY')">
+                                    <a id='facilityMenu' href="/public/pages/admin/facility/index.html"
+                                       openlmis-message="menu.header.facilities"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_ROLE')">
+                                    <a id='rolesMenu' href="/public/pages/admin/role/index.html"
+                                       openlmis-message="menu.header.roles"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_SCHEDULE')">
+                                    <a id='schedulesMenu' href="/public/pages/admin/schedule/index.html"
+                                       openlmis-message="menu.header.schedules"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_USER')">
+                                    <a id='usersMenu' href="/public/pages/admin/user/index.html"
+                                       openlmis-message="menu.header.users"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_GEOGRAPHIC_ZONE')">
+                                    <a id='geographicZonesMenu' href="/public/pages/admin/geo-zone/index.html"
+                                       openlmis-message="menu.header.geographic.zones"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_SUPERVISORY_NODE')">
+                                    <a id='supervisoryNodesMenu' href="/public/pages/admin/supervisory-node/index.html"
+                                       openlmis-message="menu.header.supervisory.nodes"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_REQUISITION_GROUP')">
+                                    <a id='requisitionGroupsMenu'
+                                       href="/public/pages/admin/requisition-group/index.html"
+                                       openlmis-message="menu.header.requisition.groups"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_SUPPLY_LINE')">
+                                    <a id='supplyLinesMenu' href="/public/pages/admin/supply-line/index.html"
+                                       openlmis-message="menu.header.supply.lines"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_FACILITY_APPROVED_PRODUCT')">
+                                    <a id="facilityApprovedProductsMenu"
+                                       href="/public/pages/admin/facility-approved-product/index.html"
+                                       openlmis-message="header.facility.approved.products"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_PRODUCT')">
+                                    <a id="productsMenu" href="/public/pages/admin/product/index.html"
+                                       openlmis-message="header.products"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_ELMIS_INTERFACE')">
+                                    <a href="/public/pages/admin/interfaces/index.html"
+                                       openlmis-message="link.admin.elmis.interface"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_MANUAL_TEST_TYPES')">
+                                    <a href="/public/pages/admin/manual-test-types/index.html"
+                                       openlmis-message="link.admin.manage.manual.tests"></a>
+                                </li>
+                                <li class="beak"></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="has-children">
+                        <a id="manage-equipment-option"
+                           href="/public/pages/admin/equipment/manage/index.html"
+                           openlmis-message="link.manage.equipments"></a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/type/index.html"
+                                       openlmis-message="link.manage.equipment.type"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/manage/index.html"
+                                       openlmis-message="link.manage.equipment.list"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/program-equipment-products/index.html"
+                                       openlmis-message="link.manage.equipment.products"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/service-type/index.html">
+                          <span id="equipment-service-type"
+                                openlmis-message="link.manage.equipment.service.types"></span>
+                                    </a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/vendor/index.html">
+                                        <span id="service-vendor"
+                                              openlmis-message="link.manage.equipment.vendors"></span>
+                                    </a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/service-contract/index.html">
+                          <span id="service-contract"
+                                openlmis-message="link.manage.equipment.contracts"></span>
+                                    </a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_DONOR')">
+                                    <a href="/public/pages/admin/equipment/donors/index.html">
+                                        <span id="manage-donor" openlmis-message="link.manage.equipment.donors"></span>
+                                    </a>
+                                </li>
+
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/operational-status/index.html">
+                                        <span id="operational-status"
+                                              openlmis-message="link.manage.equipment.operational.status"></span>
+                                    </a>
+                                </li>
+
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')"
+                                    ng-class="manageDesignationSelected">
+                                    <a href="/public/pages/admin/equipment/cold-chain-designations/index.html">
+                                        <span id="cold-chain-resignation"
+                                              openlmis-message="link.manage.equipment.resignation"></span>
+                                    </a>
+                                </li>
+
+                                <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')">
+                                    <a href="/public/pages/admin/equipment/model/index.html">
+                                        <span id="equipement_model"
+                                              openlmis-message="link.manage.equipment.model"></span>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="has-children">
+                        <a id="vaccine-admin" href="" openlmis-message="link.manage.vaccine"></a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_VACCINE_DISEASE_LIST')">
+                                    <a
+                                            href="/public/pages/vaccine/admin/disease/index.html#/disease"
+                                            openlmis-message="link.manage.vaccine.diseases"></a>
+                                </li>
+
+                                <li ng-show="hasPermission('MANAGE_VACCINE_DISEASE_LIST')">
+                                    <a
+                                            href="/public/pages/vaccine/admin/lot/index.html#/lot"
+                                            openlmis-message="link.manage.lot"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li ng-show="hasPermission('SYSTEM_SETTINGS')">
+                        <a
+                                href="/public/pages/admin/supply-partner/index.html"
+                        ><span openlmis-message="link.manage.supply.partners"></span></a>
+                    </li>
+                    <li class="has-children">
+                        <a id="demographic-admin" href="" openlmis-message="link.manage.demographic.estimates"></a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_PARAMETERS')">
+                                    <a
+                                            href="/public/pages/demographics/index.html#/list"
+                                            openlmis-message="link.manage.demographic.categories"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_DEMOGRAPHIC_ESTIMATES')">
+                                    <a
+                                            href="/public/pages/demographics/index.html#/facility"
+                                            openlmis-message="link.manage.facility.demographic"></a>
+                                </li>
+                                <li ng-show="hasPermission('MANAGE_DISTRICT_DEMOGRAPHIC_ESTIMATES')">
+                                    <a
+                                            href="/public/pages/demographics/index.html#/district"
+                                            openlmis-message="link.manage.district.demographic"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
+                        <a id='manageCustomReports' href="/public/pages/reports/custom/designer.html#/designer"
+                           openlmis-message="link.admin.manage.custom.reports"></a>
+                    </li>
+                    <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
+                        <a id='manageLogTagTemperature'
+                           href="/public/pages/vaccine/inventory/log-tag-temperature/index.html#/list"
+                        >Manage Log Tag</a>
+                    </li>
+                    <li class="has-children" ng-show="hasPermission('CONFIGURE_HELP_CONTENT')">
+                        <a id="manage-help-option"
+                           href="/public/pages/help/helpTopic/index.html"
+                           openlmis-message="link.manage.help"></a>
+                        <div class="submenu">
+                            <ul>
+                                <li>
+                                    <a href="/public/pages/help/helpTopic/index.html"
+                                       openlmis-message="link.manage.help.topic"></a>
+                                </li>
+                                <li>
+                                    <a href="/public/pages/help/helpContent/index.html"
+                                       openlmis-message="link.manage.help.content"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
 
-    </li>
+                    <li class="beak"></li>
+                </ul>
+            </div>
+
+        <li ng-show="hasPermission('ACCESS_ILS_GATEWAY')">
+            <!--    <a
+                    href="/public/pages/ils-gateway/index.html#/dashboard"
+                    openlmis-message="link.ils">
+
+                </a>-->
 
 
-<!--
-          <a href="/public/pages/vaccine/stock-availability/index.html#/dashboard">
--->
-            <!--  <a href="#">
-                  <span class="glyphicon glyphicon-envelope"></span>
-              </a>-->
+        </li>
 
-         <!-- <a>
-        <i class="flaticon-alert" style=""></i>
+
+        <!--
+                  <a href="/public/pages/vaccine/stock-availability/index.html#/dashboard">
+        -->
+        <!--  <a href="#">
+              <span class="glyphicon glyphicon-envelope"></span>
           </a>-->
 
-<!--
-          <a href="" style="height: 50% !important;"><i class="flaticon-alert"></i></a>
--->
-<!--<li>
+        <!-- <a>
+       <i class="flaticon-alert" style=""></i>
+         </a>-->
+
+        <!--
+                  <a href="" style="height: 50% !important;"><i class="flaticon-alert"></i></a>
+        -->
+        <!--<li>
 
 
-    <div id="circle"><span style="font-size: 100% !important;text-align: center !important;
-vertical-align: top !important;">
-    <strong>78</strong>
-    </span></div>
+            <div id="circle"><span style="font-size: 100% !important;text-align: center !important;
+        vertical-align: top !important;">
+            <strong>78</strong>
+            </span></div>
 
-   <a href="#" class="ico">&nbsp;&nbsp;&nbsp;
-       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alerts</a>
+           <a href="#" class="ico">&nbsp;&nbsp;&nbsp;
+               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alerts</a>
 
-</li>-->
+        </li>-->
 
 
+        <li ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
+            <a
+                    href="/public/pages/dashboard/index_new.html#/dashboard-new"
+                    openlmis-message="link.dashboard"></a>
+        </li>
+        <li ng-show="hasPermission('VIEW_ELMIS_DASHBOARD')">
+            <a
+                    href="/public/pages/dashboard/index.html#/dashboard"
+                    openlmis-message="link.dashboard"></a>
+        </li>
 
-      <li ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
-      <a
-              href="/public/pages/dashboard/index_new.html#/dashboard-new"
-              openlmis-message="link.dashboard"></a>
-    </li>
-      <li ng-show="hasPermission('VIEW_ELMIS_DASHBOARD')">
-          <a
-                  href="/public/pages/dashboard/index.html#/dashboard"
-                  openlmis-message="link.dashboard"></a>
-      </li>
+        <li ng-show="hasPermission('VIEW_VIMS_NOTIFICATION')">
+            <ng-include src="'/public/pages/notification.html'"></ng-include>
+        </li>
 
-      <li ng-show="hasPermission('VIEW_VIMS_NOTIFICATION')">
-          <ng-include src="'/public/pages/notification.html'"></ng-include>
-      </li>
-
-  </ul>
+    </ul>
 </div>
 <div class="navigation-locale-bar">
-  <ng-include src="'/public/pages/locale-list.html'"/>
+    <ng-include src="'/public/pages/locale-list.html'"/>
 </div>

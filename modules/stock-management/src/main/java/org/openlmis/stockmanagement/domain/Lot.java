@@ -37,4 +37,5 @@ public class Lot extends BaseModel
             null != manufacturerName && !manufacturerName.equals("") &&
             null != expirationDate);
     }
+    private Long productId;
 }
