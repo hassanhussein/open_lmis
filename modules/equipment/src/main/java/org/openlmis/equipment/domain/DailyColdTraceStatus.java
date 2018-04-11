@@ -36,8 +36,6 @@ public class DailyColdTraceStatus extends BaseModel {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date date;
 
-  private Integer operationalStatusId;
-
   private BigDecimal minTemp;
 
   private BigDecimal maxTemp;

@@ -27,13 +27,13 @@ public interface DailyColdTraceStatusMapper {
 
   @Insert("insert into equipment_daily_cold_trace_status " +
       "(" +
-      " serialNumber, equipmentInventoryId, date, operationalStatusId, " +
+      " serialNumber, equipmentInventoryId, date,  " +
       " minTemp, maxTemp, lowTempEpisode, highTempEpisode, " +
       " remarks, createdBy, createdDate" +
       ")" +
       "values " +
       "(" +
-      " #{serialNumber}, #{equipmentInventory.id}, #{date}, #{operationalStatusId}, " +
+      " #{serialNumber}, #{equipmentInventory.id}, #{date},  " +
       " #{minTemp}, #{maxTemp}, #{lowTempEpisode}, #{highTempEpisode} , " +
       " #{remarks}, #{createdBy}, NOW()" +
       ")")
@@ -43,7 +43,6 @@ public interface DailyColdTraceStatusMapper {
       "serialNumber = #{serialNumber}, " +
       "equipmentInventoryId = #{equipmentInventory.id}, " +
       "date = #{date}, " +
-      "operationalStatusId = #{operationalStatusId}, " +
       "minTemp = #{minTemp}, " +
       "maxTemp = #{maxTemp}, " +
       "lowTempEpisode = #{lowTempEpisode}, " +

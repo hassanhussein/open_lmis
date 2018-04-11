@@ -35,8 +35,6 @@ public class DailyColdTraceStatusDTO {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private Date date;
 
-  private Integer operationalStatusId;
-
   private BigDecimal minTemp;
 
   private BigDecimal maxTemp;
@@ -56,7 +54,6 @@ public class DailyColdTraceStatusDTO {
   public DailyColdTraceStatus buildEntity() {
     return DailyColdTraceStatus.builder()
         .date(this.date)
-        .operationalStatusId(this.operationalStatusId)
         .highTempEpisode(this.highTempEpisode)
         .lowTempEpisode(this.lowTempEpisode)
         .minTemp(this.minTemp)

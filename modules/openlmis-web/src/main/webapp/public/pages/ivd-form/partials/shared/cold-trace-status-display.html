@@ -20,9 +20,6 @@
       <th rowspan="2" class="span2"><span openlmis-message="label.vaccine.cc.serial"></span></th>
       <th rowspan="2" class="span2"><span openlmis-message="label.vaccine.cc.model"></span></th>
       <th rowspan="2" class="span2"><span openlmis-message="label.vaccine.cc.energy.source"></span></th>
-      <th rowspan="2" class="span1">
-        <span openlmis-message="label.vaccine.cc.status"></span>
-      </th>
       <th colspan="2"><span openlmis-message="label.vaccine.cc.temp"></span></th>
       <th colspan="2"><span openlmis-message="label.vaccine.cc.temp.episode"></span></th>
     </tr>
@@ -40,9 +37,6 @@
       <td class="span2 cell-input"><span class="cell-text">{{r.serialNumber}}</span></td>
       <td class="span2 cell-input"><span class="cell-text">{{r.equipmentInventory.equipment.model}}</span></td>
       <td class="span2 cell-input"><span class="cell-text">{{r.equipmentInventory.equipment.energyType.name}}</span></td>
-      <td class="span1 cell-input">
-        <span class="cell-text">{{operationalStatusIndex[r.operationalStatusId].name}}</span>
-      </td>
       <td class="span1 number cell-input"><span class="cell-text">{{r.minTemp | number: 2 }}</span></td>
       <td class="span1 number cell-input"><span class="cell-text">{{r.maxTemp | number: 2 }}</span></td>
       <td class="span1 number cell-input"><span class="cell-text">{{r.lowTempEpisode | number: 0 }}</span></td>
