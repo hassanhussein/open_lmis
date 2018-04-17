@@ -17,6 +17,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureAlarmDTO;
+import org.openlmis.equipment.dto.ColdTraceAlarmDTO;
 import org.openlmis.equipment.dto.DailyColdTraceStatusDTO;
 import org.openlmis.equipment.service.ColdChainEquipmentTemperatureAlarmService;
 import org.openlmis.equipment.service.DailyColdTraceStatusService;
@@ -34,28 +35,22 @@ import java.util.List;
 @Api(value = "Cold Trace", description = "APIs to report cold trace status")
 public class ColdTraceStatusController extends BaseController {
 
+  private static final String ALARMS = "alarms";
+
   @Autowired
   private DailyColdTraceStatusService dailyColdTraceStatusService;
 
   @Autowired
   private ColdChainEquipmentTemperatureAlarmService alarmService;
 
-  @RequestMapping(value = "/equipment/cold-trace/status", method = RequestMethod.GET)
-  public ResponseEntity<OpenLmisResponse> findStatusForPeriod(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId) {
-    return OpenLmisResponse.response("cold_trace_status", dailyColdTraceStatusService.findStatusForFacilityPeriod(facilityId, periodId));
-  }
 
-  @RequestMapping(value = "/rest-api/equipment/cold-trace", method = RequestMethod.POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody DailyColdTraceStatusDTO status, Principal principal) {
     status.validate();
     dailyColdTraceStatusService.saveDailyStatus(status.buildEntity(), loggedInUserId(principal));
     return OpenLmisResponse.success("Daily cold trace status submitted for " + status.getDate().toString());
   }
 
-  @RequestMapping(value = "/rest-api/equipment/cold-trace/operational-status-options", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> findPossibleStatuses() {
-    return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.findPossibleStatuses());
-  }
 
   @RequestMapping(value = "/rest-api/equipment/cold-trace/alarms", method = RequestMethod.POST)
   public ResponseEntity<OpenLmisResponse> submitAlarms(@RequestBody ColdChainEquipmentTemperatureAlarmDTO alarm, @AuthenticationPrincipal User user) {
@@ -66,13 +61,13 @@ public class ColdTraceStatusController extends BaseController {
   @RequestMapping(value = "/rest-api/equipment/{serial}/cold-trace/alarms", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getAlarms(@PathVariable("serial") String serial) {
     List<ColdChainEquipmentTemperatureAlarm> alarms = alarmService.getAllAlarms(serial);
-    return OpenLmisResponse.response("ALARMS", alarms);
+    return OpenLmisResponse.response(ALARMS, alarms);
   }
 
   @RequestMapping(value = "/rest-api/equipment/{serial}/{period}/cold-trace/alarms", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getAlarms(@PathVariable("serial") String serial, @PathVariable("period") Long periodId) {
     List<ColdChainEquipmentTemperatureAlarm> alarms = alarmService.getAlarmsForPeriod(serial, periodId);
-    return OpenLmisResponse.response("ALARMS", alarms);
+    return OpenLmisResponse.response(ALARMS, alarms);
   }
 
   @RequestMapping(value = "/rest-api/equipment/cold-trace/regional-submission-status", method = RequestMethod.GET, headers = ACCEPT_JSON)
@@ -90,5 +85,15 @@ public class ColdTraceStatusController extends BaseController {
     return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.getStatusSubmittedFor(serialNumber));
   }
 
+  @RequestMapping(value = "/equipment/cold-trace/status", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> findStatusForPeriod(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId) {
+    return OpenLmisResponse.response("cold_trace_status", dailyColdTraceStatusService.findStatusForFacilityPeriod(facilityId, periodId));
+  }
+
+  @RequestMapping(value = "/equipments/cold-trace/{facility}/{program}/{period}/alarms", method = RequestMethod.GET)
+  public ResponseEntity<OpenLmisResponse> getAlarmsForFacility(@PathVariable("facility") Long facilityId, @PathVariable("program") Long program, @PathVariable("period") Long periodId) {
+    List<ColdTraceAlarmDTO> alarms = alarmService.getAlarmsForFacilityPeriod(facilityId, program, periodId);
+    return OpenLmisResponse.response(ALARMS, alarms);
+  }
 
 }

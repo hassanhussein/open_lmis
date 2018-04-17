@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function CreateIvdFormController($scope, $location, operationalStatuses, $dialog, manufacturers, report, discardingReasons, VaccineReportSave, VaccineReportSubmit, ColdTraceStatus) {
+function CreateIvdFormController($scope, $location, operationalStatuses, $dialog, manufacturers, report, discardingReasons, VaccineReportSave, VaccineReportSubmit, ColdTraceStatus, ColdTraceAlarms) {
 
   // initial state of the display
   $scope.report = new VaccineReport(report);
@@ -19,6 +19,11 @@ function CreateIvdFormController($scope, $location, operationalStatuses, $dialog
   ColdTraceStatus.get({facility: $scope.report.facility.id, period: $scope.report.periodId}, function(data){
     $scope.coldTraceStatus = data.cold_trace_status;
   });
+
+  ColdTraceAlarms.get({facility: $scope.report.facility.id, program: $scope.report.programId, period: $scope.report.periodId}, function(data){
+    $scope.alarms = data.alarms;
+  });
+
   $scope.operationalStatusIndex = _.indexBy(operationalStatuses, 'id');
   //prepare tab visibility settings
   $scope.tabVisibility = {};

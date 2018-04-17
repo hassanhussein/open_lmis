@@ -13,6 +13,7 @@
 package org.openlmis.equipment.repository;
 
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
+import org.openlmis.equipment.dto.ColdTraceAlarmDTO;
 import org.openlmis.equipment.repository.mapper.ColdChainTemperatureAlarmMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -37,8 +38,12 @@ public class ColdChainEquipmentTemperatureAlarmRepository {
     return alarmMapper.getAlarmByAlarmId(id);
   }
 
-  public List<ColdChainEquipmentTemperatureAlarm> getAlarmsByEquipementInventoryPeriod(Long equipmentInventoryId, Long period) {
+  public List<ColdChainEquipmentTemperatureAlarm> getAlarmsByEquipmentInventoryPeriod(Long equipmentInventoryId, Long period) {
     return alarmMapper.getAlarmByEquipmentInventoryAndPeriod(equipmentInventoryId, period);
+  }
+
+  public List<ColdTraceAlarmDTO> getAlarmsByEquipmentInventoriesAndPeriod(String equipmentInventoryIds, Long period) {
+    return alarmMapper.getAlarmByEquipmentInventoriesAndPeriod(equipmentInventoryIds, period);
   }
 
   public List<ColdChainEquipmentTemperatureAlarm> getAllAlarmsByEquipementInventory(Long equipmentInventoryId) {

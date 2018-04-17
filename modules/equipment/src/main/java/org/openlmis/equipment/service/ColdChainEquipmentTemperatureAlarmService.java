@@ -13,15 +13,18 @@
 package org.openlmis.equipment.service;
 
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureAlarmDTO;
+import org.openlmis.equipment.dto.ColdTraceAlarmDTO;
 import org.openlmis.equipment.repository.ColdChainEquipmentTemperatureAlarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ColdChainEquipmentTemperatureAlarmService {
@@ -31,6 +34,9 @@ public class ColdChainEquipmentTemperatureAlarmService {
 
   @Autowired
   private EquipmentInventoryService inventoryService;
+
+  @Autowired
+  private CommaSeparator commaSeparator;
 
   public void save(ColdChainEquipmentTemperatureAlarmDTO alarmDto, Long userId) {
     // check if the alarmDto is already recorded
@@ -63,6 +69,7 @@ public class ColdChainEquipmentTemperatureAlarmService {
           .alarmType(alarmDto.getAlarmType())
           .startTime(alarmDto.getStartTime())
           .endTime(alarmDto.getEndTime())
+          .status(alarmDto.getStatus())
           .build();
       toPersist.setCreatedBy(userId);
       toPersist.setCreatedDate(new Date());
@@ -79,6 +86,11 @@ public class ColdChainEquipmentTemperatureAlarmService {
 
   public List<ColdChainEquipmentTemperatureAlarm> getAlarmsForPeriod(String serialNumber, Long periodId) {
     EquipmentInventory inventory = inventoryService.getInventoryBySerialNumber(serialNumber);
-    return repository.getAlarmsByEquipementInventoryPeriod(inventory.getId(), periodId);
+    return repository.getAlarmsByEquipmentInventoryPeriod(inventory.getId(), periodId);
+  }
+
+  public List<ColdTraceAlarmDTO> getAlarmsForFacilityPeriod(Long facilityId, Long programId, Long periodId) {
+    List<EquipmentInventory> inventories = inventoryService.getInventoryByFacilityAndProgram(facilityId, programId);
+    return repository.getAlarmsByEquipmentInventoriesAndPeriod(commaSeparator.commaSeparateIds(inventories), periodId);
   }
 }

@@ -22,6 +22,10 @@ services.factory('ColdTraceStatus', function ($resource) {
   return $resource('/equipment/cold-trace/status.json', {}, {});
 });
 
+services.factory('ColdTraceAlarms', function($resource){
+  return $resource('/equipments/cold-trace/:facility/:program/:period/alarms.json', {facility: '@facility', program: '@program', period: '@period'}, {});
+});
+
 services.factory('SaveVaccineDisease', function ($resource) {
     return $resource('/vaccine/disease/save.json', {}, update);
 });

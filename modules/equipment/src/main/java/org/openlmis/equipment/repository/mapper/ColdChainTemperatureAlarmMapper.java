@@ -17,6 +17,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
+import org.openlmis.equipment.dto.ColdTraceAlarmDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -57,5 +58,14 @@ public interface ColdChainTemperatureAlarmMapper {
       "where equipmentInventoryId = #{equipmentInventoryId} ")
   List<ColdChainEquipmentTemperatureAlarm> getAlarmByEquipmentInventory(@Param("equipmentInventoryId") Long equipmentInventoryId);
 
+  @Select("select ca.*, ei.serialNumber, e.model, e.name as equipmentName, eet.name as energySource  from cold_chain_equipment_temperature_alarms ca " +
+      " JOIN equipment_inventories ei on ei.id = ca.equipmentInventoryId " +
+      " JOIN equipments e on e.id = ei.equipmentId " +
+      " JOIN equipment_energy_types eet on eet.id = e.energytypeid" +
+      "   where  " +
+      " ca.alarmDate >= (select p.startDate from processing_periods p where p.id = #{period}) " +
+      " and ca.alarmDate <= (select p.endDate from processing_periods p where p.id = #{period})" +
+      " and ca.equipmentInventoryId = ANY(#{equipmentInventoryIds}::INT[])")
+  List<ColdTraceAlarmDTO> getAlarmByEquipmentInventoriesAndPeriod(@Param("equipmentInventoryIds") String equipmentInventoryIds, @Param("period") Long period);
 
 }
