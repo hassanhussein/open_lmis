@@ -26,10 +26,7 @@ import org.openlmis.core.domain.ProgramProduct;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
-import org.openlmis.ivdform.domain.VaccineDisease;
-import org.openlmis.ivdform.domain.VaccineProductDose;
-import org.openlmis.ivdform.domain.Vitamin;
-import org.openlmis.ivdform.domain.VitaminSupplementationAgeGroup;
+import org.openlmis.ivdform.domain.*;
 import org.openlmis.ivdform.domain.config.VaccineIvdTabVisibility;
 
 import java.util.*;
@@ -81,6 +78,18 @@ public class VaccineReport extends BaseModel {
   public String rejectionComment;
 
   public String source;
+
+/*
+  AdditionaL Line Items
+*/
+private List<PmtctLineItem>pmtctLineItems;
+private List<ChildVisitLineItem> childVisitLineItems;
+private List<LLINLineItem>llInLineItemLists;
+private List<TtStatusLineItem>ttStatusLineItems;
+private List<BreastFeedingLineItem>breastFeedingLineItems;
+private List<WeightAgeRatioLineItem> weightAgeRatioLineItems;
+
+
 
   public void initializeLogisticsLineItems(List<ProgramProduct> programProducts, VaccineReport previousReport, Boolean defaultFieldsToZero) {
     logisticsLineItems = new ArrayList<>();
@@ -223,4 +232,122 @@ public class VaccineReport extends BaseModel {
     this.setOutreachImmunizationSessionsCanceled(report.outreachImmunizationSessionsCanceled);
     this.setSubmissionDate(report.getSubmissionDate());
   }
+
+  public void initializePmctLineItems(List<PmtctCategory> categoryList, Boolean defaultFieldsToZero) {
+    this.pmtctLineItems = new ArrayList<>();
+
+    Long displayOrder = 1L;
+    for (PmtctCategory pmtctCategory : categoryList) {
+      PmtctLineItem item = new PmtctLineItem();
+      item.setCategoryId(pmtctCategory.getId());
+      item.setCategory(pmtctCategory.getName());
+      if (defaultFieldsToZero) {
+        item.setMaleValue(0L);
+        item.setFemaleValue(0L);
+      }
+
+      this.pmtctLineItems.add(item);
+      displayOrder++;
+
+    }
+  }
+
+    public void initializeChildVisitLineItems(List<ChildVisitAgeGroup> ageGroups, Boolean defaultFieldsToZero) {
+        this.childVisitLineItems = new ArrayList<>();
+        Long displayOrder = 1L;
+
+        for (ChildVisitAgeGroup ageGroup : ageGroups) {
+            ChildVisitLineItem item = new ChildVisitLineItem();
+            item.setChildVisitAgeGroupId(ageGroup.getId());
+            item.setChildVisitAgeGroupId(ageGroup.getId());
+            item.setAgeGroup(ageGroup.getName());
+            if (defaultFieldsToZero) {
+                item.setMaleValue(0L);
+                item.setFemaleValue(0L);
+            }
+            this.childVisitLineItems.add(item);
+            displayOrder++;
+        }
+    }
+
+    public void initializeLLINLineItems(Boolean defaultFieldsToZero) {
+        this.llInLineItemLists = new ArrayList<>();
+        LLINLineItem lineItem = new LLINLineItem();
+        if (defaultFieldsToZero) {
+            if (defaultFieldsToZero) {
+                lineItem.setMaleValue(0L);
+                lineItem.setFemaleValue(0L);
+            }
+            this.llInLineItemLists.add(lineItem);
+
+        }
+    }
+
+    public void initializeTtStatusLineItems(List<TtStatusCategory> categories,Boolean defaultFieldsToZero) {
+        this.ttStatusLineItems = new ArrayList<>();
+        Long displayOrder = 1L;
+        for(TtStatusCategory statusCategory:categories){
+
+            TtStatusLineItem item = new TtStatusLineItem();
+
+            item.setCategory(statusCategory.getName());
+            item.setCategoryId(statusCategory.getId());
+
+            if (defaultFieldsToZero) {
+                item.setMaleValue(0L);
+                item.setFemaleValue(0L);
+            }
+            this.ttStatusLineItems.add(item);
+            displayOrder++;
+
+        }
+    }
+
+  public void initializeBreastFeedingLineItems(List<BreastFeedingCategory> categoryList, List<BreastFeedingAgeGroup> ageGroups, Boolean defaultFieldsToZero) {
+    this.breastFeedingLineItems = new ArrayList<>();
+
+    Long displayOrder = 1L;
+    for (BreastFeedingCategory feedingCategory : categoryList) {
+      for (BreastFeedingAgeGroup ageGroup : ageGroups) {
+        BreastFeedingLineItem item = new BreastFeedingLineItem();
+        item.setAgeGroupId(ageGroup.getId());
+        item.setAgeGroup(ageGroup.getName());
+        item.setCategoryId(feedingCategory.getId());
+        item.setCategory(feedingCategory.getName());
+        if (defaultFieldsToZero) {
+          item.setMaleValue(0L);
+          item.setFemaleValue(0L);
+        }
+
+        this.breastFeedingLineItems.add(item);
+        displayOrder++;
+      }
+    }
+  }
+
+  public void initializeWeightAgeRatioLineItems(List<WeightAgeRatioAgeGroup> ageGroups, List<WeightCategory> weightCategories, Boolean defaultFieldsToZero) {
+    this.weightAgeRatioLineItems = new ArrayList<>();
+    Long displayOrder = 1L;
+
+    for(WeightCategory weightCategory:weightCategories){
+
+      for (WeightAgeRatioAgeGroup ageGroup : ageGroups) {
+
+        WeightAgeRatioLineItem item = new WeightAgeRatioLineItem();
+        item.setAgeGroupId(ageGroup.getId());
+        item.setAgeGroup(ageGroup.getName());
+        item.setCategory(weightCategory.getName());
+        item.setCategoryId(weightCategory.getId());
+
+        if (defaultFieldsToZero) {
+          item.setMaleValue(0L);
+          item.setFemaleValue(0L);
+        }
+        this.weightAgeRatioLineItems.add(item);
+        displayOrder++;
+      }
+    }
+  }
+
+
 }
