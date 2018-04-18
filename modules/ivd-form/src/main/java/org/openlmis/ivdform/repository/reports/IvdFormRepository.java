@@ -65,6 +65,16 @@ public class IvdFormRepository {
     else
     lineItemService.saveAdverseEffectLineItems(dbVersion, report.getAdverseEffectLineItems(), report.getId(), userId);
     lineItemService.saveCampaignLineItems(dbVersion, report.getCampaignLineItems(), report.getId(), userId);
+/*
+    Addional Line Items
+*/
+    lineItemService.savePmtctLineItems(dbVersion,report.getPmtctLineItems(),report.getId(),userId);
+    lineItemService.saveChildVisitLineItems(dbVersion,report.getChildVisitLineItems(), report.getId(),userId);
+    lineItemService.saveLLINLineItems(dbVersion,report.getLlInLineItemLists(),report.getId(),userId);
+    lineItemService.saveTtStatusLineItems(dbVersion,report.getTtStatusLineItems(),report.getId(),userId);
+    lineItemService.saveBreastFeedingLineItems(dbVersion,report.getBreastFeedingLineItems(),report.getId(),userId);
+    lineItemService.saveWeightAgeRatioLineItems(dbVersion,report.getWeightAgeRatioLineItems(),report.getId(),userId);
+
   }
 
   public void update(VaccineReport fromDb, VaccineReport report, Long userId) {
