@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ChildVisitAgeGroupMapper {
 
-    @Select("select * from vaccine_children_visit_age_groups")
+    @Select("select * from vaccine_child_visit_age_groups")
     List<ChildVisitAgeGroup> getAll();
 }
