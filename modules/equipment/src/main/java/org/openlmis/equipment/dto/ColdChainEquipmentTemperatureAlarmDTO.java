@@ -13,45 +13,48 @@
 package org.openlmis.equipment.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.Map;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@ApiModel
 public class ColdChainEquipmentTemperatureAlarmDTO {
 
   @Getter
   @Setter
-  private String serialNumber;
+  @ApiModelProperty(name = "Device ID", reference = "Unique Device Identifier", notes = "This has to be a Device ID that is already registered. ", required = true)
+  private String device_id;
 
   @Getter
   @Setter
-  private String alarmId;
+  @ApiModelProperty(name = "Alert ID", reference = "Unique Identifier for this Alert (Event)", required = true)
+  private String alert_id;
 
   @Getter
   @Setter
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-  private Date alarmDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddThh:mm:ssZ")
+  private Date start_ts;
 
   @Getter
   @Setter
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm ss")
-  private Date startTime;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddThh:mm:ssZ")
+  private Date end_ts;
 
   @Getter
   @Setter
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm ss")
-  private Date endTime;
+  private String alert_type;
 
   @Getter
   @Setter
-  private String alarmType;
-
-  @Getter
-  @Setter
+  @JsonProperty(value = "status.en-EN")
   private String status;
 }
