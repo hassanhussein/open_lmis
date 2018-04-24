@@ -10,39 +10,51 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.equipment.domain;
+package org.openlmis.equipment.dto;
 
-import lombok.*;
-import org.openlmis.core.domain.BaseModel;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ColdChainEquipmentTemperatureAlarm extends BaseModel {
+@ApiModel
+public class ColdChainTemperatureAlarmDTO {
 
   @Getter
   @Setter
-  private Long equipmentInventoryId;
+  @ApiModelProperty(name = "Device ID", notes = "Device ID that uniquely identifies the equipment.", required = true)
+  private String device_id;
 
   @Getter
   @Setter
-  private String alarmId;
+  @ApiModelProperty(name = "Alert ID", notes = "Unique Identifier for this Alert (Event)", required = true)
+  private String alert_id;
 
   @Getter
   @Setter
-  private Date startTime;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddThh:mm:ssZ")
+  private Date start_ts;
 
   @Getter
   @Setter
-  private Date endTime;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-ddThh:mm:ssZ")
+  private Date end_ts;
 
   @Getter
   @Setter
-  private String alarmType;
+  private String alert_type;
 
   @Getter
   @Setter
-  private String status;
+  private AlarmStatusDTO status;
 }
+
+

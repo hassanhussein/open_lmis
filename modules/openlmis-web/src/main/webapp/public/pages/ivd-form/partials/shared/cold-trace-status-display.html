@@ -50,11 +50,9 @@
     <table class="table table-bordered">
       <thead>
       <tr>
-        <th class="col-skipped"><span openlmis-message="label.date"></span></th>
         <th class="span3"><span openlmis-message="label.vaccine.cc.asset"></span></th>
         <th class="span2"><span openlmis-message="label.vaccine.cc.serial"></span></th>
         <th class="span2"><span openlmis-message="label.vaccine.cc.model"></span></th>
-        <th class="span2"><span openlmis-message="label.vaccine.cc.energy.source"></span></th>
         <th><span openlmis-message="label.vaccine.cc.start.time"></span></th>
         <th><span openlmis-message="label.vaccine.cc.end.time"></span></th>
         <th><span openlmis-message="label.vaccine.cc.alarm.type"></span></th>
@@ -63,11 +61,9 @@
       </thead>
       <tbody>
       <tr style="height: 30px;" ng-repeat="r in alarms">
-        <td class="span1 cell-input" ><span class="cell-text" >{{r.alarmDate | date}}</span></td>
         <td class="span3 cell-input"><span class="cell-text">{{r.equipmentName}}</span></td>
         <td class="span2 cell-input"><span class="cell-text">{{r.serialNumber}}</span></td>
         <td class="span2 cell-input"><span class="cell-text">{{r.model}}</span></td>
-        <td class="span2 cell-input"><span class="cell-text">{{r.energySource}}</span></td>
         <td class="span1 cell-input"><span class="cell-text">{{r.startTime | date}}</span></td>
         <td class="span1 cell-input"><span class="cell-text">{{r.endTime | date }}</span></td>
         <td class="span1 cell-input"><span class="cell-text">{{r.alarmType }}</span></td>

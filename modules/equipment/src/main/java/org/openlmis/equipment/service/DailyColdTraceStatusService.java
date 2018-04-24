@@ -18,7 +18,7 @@ import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.equipment.dto.ColdChainEquipmentDTO;
 import org.openlmis.equipment.dto.ColdTraceSummaryDTO;
-import org.openlmis.equipment.dto.DailyColdTraceStatusDTO;
+import org.openlmis.equipment.dto.ColdTraceMonthlyStatusDTO;
 import org.openlmis.equipment.repository.mapper.DailyColdTraceStatusMapper;
 import org.openlmis.equipment.repository.mapper.EquipmentOperationalStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ public class DailyColdTraceStatusService {
     return mapper.getLastSubmission(code);
   }
 
-  public List<DailyColdTraceStatusDTO> getStatusSubmittedFor(String serialNumber) {
+  public List<ColdTraceMonthlyStatusDTO> getStatusSubmittedFor(String serialNumber) {
     return mapper.getDailyStatusSubmittedFor(serialNumber);
   }
 

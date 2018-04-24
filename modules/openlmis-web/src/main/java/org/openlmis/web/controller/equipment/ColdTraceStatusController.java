@@ -16,7 +16,7 @@ import io.swagger.annotations.Api;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
-import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureAlarmDTO;
+import org.openlmis.equipment.dto.ColdChainTemperatureAlarmDTO;
 import org.openlmis.equipment.dto.ColdTraceAlarmDTO;
 import org.openlmis.equipment.dto.ColdTraceMonthlyStatusDTO;
 import org.openlmis.equipment.service.ColdChainEquipmentTemperatureAlarmService;
@@ -53,8 +53,8 @@ public class ColdTraceStatusController extends BaseController {
 
 
   @RequestMapping(value = "/rest-api/equipment/cold-trace/alarms", method = RequestMethod.POST, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> submitAlarms(@RequestBody ColdChainEquipmentTemperatureAlarmDTO alarm, @AuthenticationPrincipal User user) {
-    alarmService.save(alarm, user.getId());
+  public ResponseEntity<OpenLmisResponse> submitAlarms(@RequestBody ColdChainTemperatureAlarmDTO alarm, Principal principal) {
+    alarmService.save(alarm, loggedInUserId(principal));
     return OpenLmisResponse.success("Your submission has been accepted");
   }
 
