@@ -335,7 +335,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
         $scope.showDistrictInfo = false;
         $scope.coverageSummaryDataToDisplay = [];
         (event.series.userOptions.chartId === 'regionCoverageChart') ? $scope.showRegionInfo = true : $scope.showRegionInfo = false;
-        (event.series.userOptions.chartId === 'districtCoverageChart') ? $scope.showDistrictInfo = true : $scope.showDistrictInfo = false;
+        (event.series.userOptions.chartId === 'districtCoverageChart' || event.series.userOptions.chartId === 'districtCoverageChart1' ) ? $scope.showDistrictInfo = true : $scope.showDistrictInfo = false;
         (event.series.userOptions.chartId === 'facilityCoverageChart') ? $scope.showFacilityInfo = true : $scope.showFacilityInfo = false;
 
         $scope.covColor = event.color;
@@ -425,7 +425,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
                         click: function (event) {
 
                             $scope.getEventFunc(this, dataTobeFiltered);
-                            //alert(this);
+
                         }
                     }
                 }
@@ -471,6 +471,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
 
         } else {
 
+
             GetCoverageByRegionSummary.get(para).then(function (data) {
 
                 var badValue = _.where(data, {coverageclassification: 'BAD'});
@@ -495,6 +496,8 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
 
             });
 
+            $scope.regionLevel = level;
+
             GetCoverageByDistrictData.get(para).then(function (data) {
 
                 var badValue = _.where(data, {coverageclassification: 'BAD'});
@@ -504,7 +507,8 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
                 var summary3 = (goodValue.length > 0) ? goodValue.length : 0;
                 var summary2 = (normalValue.length > 0) ? normalValue.length : 0;
 
-                var title = 'District Coverage Summary',title2=null,name='District Coverage', chartId = 'districtCoverageChart', legend = 'District(s)';
+                var summary ='<span style="font-size: 15px!important;color: #0c9083">District Coverage Summary </span>';
+                var title = 'District Coverage Summary',title2=(level==='rvs')?summary:null,name='District Coverage', chartId = (level==='rvs')?'districtCoverageChart1':'districtCoverageChart', legend = 'District(s)';
                 var values = [];
                 values.push({name: 'Below 80%', y: summary1, color: 'red', opt: 'BAD', sliced: true}, {
                         name: '80% to 89%', opt: 'NORMAL',

@@ -1978,10 +1978,7 @@ public interface VaccineDashboardMapper {
 
 
     @Select("\n    SELECT * " +
-           /* "          SELECT SUM(CASE WHEN COVERAGECLASSIFICATION = 'GOOD' THEN 1 ELSE 0 END ) AS GREEN,\n" +
-            "           SUM(CASE WHEN COVERAGECLASSIFICATION = 'NORMAL' THEN 1 ELSE 0 END ) YELLOW,\n" +
-            "                      SUM(CASE WHEN COVERAGECLASSIFICATION = 'BAD' THEN 1 ELSE 0 END ) RED\n" +
-            "\n" +*/
+
             "           FROM (\n" +
             "           SELECT COVERAGE.*,\n" +
             "               CASE\n" +
@@ -2018,6 +2015,7 @@ public interface VaccineDashboardMapper {
             "        SUM (MONTHLYREGULAR) AS CUMULATIVE_VACCINATED\n" +
             "         FROM VW_VACCINE_CUMULATIVE_COVERAGE_BY_DOSE D\n" +
             "         JOIN FACILITIES F ON F.ID = D.FACILITYID\n" +
+            "         JOIN vw_user_facilities uf ON uf.facility_id =f.id and user_id = #{userId}\n    " +
             "         JOIN PRODUCTS P ON PRODUCTID = P.ID\n" +
             "         WHERE PRODUCTID = #{product}::int AND D.DOSEID = 1\n" +
             "           AND D. YEAR = #{year}::int\n" +

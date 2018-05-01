@@ -855,10 +855,8 @@
 
                             </div>
 
-                            <div id="" ng-show="region"
-                            >
+                            <div id="" ng-show="region">
                                 <div id="districtCoverageChart" style="margin: 0 auto;height: 260px !important;"></div>
-
                             </div>
                             <div class="card-reveal">
                                 <span class="card-title grey-text text-darken-4">Card Title<i
@@ -1370,9 +1368,11 @@
                     <div class="col l12 s12 m12">
                         <div class="card">
                             <div class="col s6">
-                                <div id="facilityCoverageChart" ng-class="act"
+                                <div ng-hide="regionLevel=='rvs'" id="facilityCoverageChart" ng-class="act"
                                      style="margin: 0 auto;height: 260px !important;"
                                 ></div>
+                                <div ng-show="regionLevel=='rvs'" id="districtCoverageChart1" style="margin: 0 auto;height: 260px!important;"></div>
+
                             </div>
                             <div class="col s6">
                                 <div id="performanceMonitoring1" style="margin: 0 auto;height: 300px !important;"></div>
