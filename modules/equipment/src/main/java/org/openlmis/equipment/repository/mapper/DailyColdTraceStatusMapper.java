@@ -17,7 +17,7 @@ import org.openlmis.equipment.domain.DailyColdTraceStatus;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.dto.ColdChainEquipmentDTO;
 import org.openlmis.equipment.dto.ColdTraceSummaryDTO;
-import org.openlmis.equipment.dto.DailyColdTraceStatusDTO;
+import org.openlmis.equipment.dto.ColdTraceMonthlyStatusDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -115,5 +115,5 @@ public interface DailyColdTraceStatusMapper {
       " WHERE serialNumber = #{serialNumber} " +
       " ORDER BY date desc " +
       "limit 1000")
-  List<DailyColdTraceStatusDTO> getDailyStatusSubmittedFor(@Param("serialNumber") String serialNumber);
+  List<ColdTraceMonthlyStatusDTO> getDailyStatusSubmittedFor(@Param("serialNumber") String serialNumber);
 }

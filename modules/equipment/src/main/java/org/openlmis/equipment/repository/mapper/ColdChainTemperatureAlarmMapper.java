@@ -27,15 +27,14 @@ public interface ColdChainTemperatureAlarmMapper {
 
 
   @Insert("insert into cold_chain_equipment_temperature_alarms " +
-      "(equipmentInventoryId, alarmId, alarmDate, startTime, endTime, alarmType, status , createdBy, createdDate)" +
+      "(equipmentInventoryId, alarmId, startTime, endTime, alarmType, status , createdBy, createdDate)" +
       "values" +
-      "(#{equipmentInventoryId}, #{alarmId}, #{alarmDate}, #{startTime}, #{endTime}, #{alarmType}, #{status}, #{createdBy}, #{createdDate})")
+      "(#{equipmentInventoryId}, #{alarmId}, #{startTime}, #{endTime}, #{alarmType}, #{status}, #{createdBy}, #{createdDate})")
   void insert(ColdChainEquipmentTemperatureAlarm alarm);
 
   @Update("update cold_chain_equipment_temperature_alarms set " +
       "equipmentInventoryId = #{equipmentInventoryId}, " +
       "alarmId = #{alarmId}, " +
-      "alarmDate = #{alarmDate}, " +
       "startTime = #{startTime}, " +
       "endTime = #{endTime}, " +
       "alarmType = #{alarmType}, " +
@@ -50,21 +49,20 @@ public interface ColdChainTemperatureAlarmMapper {
 
   @Select("select * from cold_chain_equipment_temperature_alarms " +
       "where equipmentInventoryId = #{equipmentInventoryId} " +
-      "and alarmDate >= (select p.startDate from processing_periods p where p.id = #{period}) " +
-      "and alarmDate <= (select p.endDate from processing_periods p where p.id = #{period})")
+      "and startTime >= (select p.startDate from processing_periods p where p.id = #{period}) " +
+      "and startTime <= (select p.endDate from processing_periods p where p.id = #{period})")
   List<ColdChainEquipmentTemperatureAlarm> getAlarmByEquipmentInventoryAndPeriod(@Param("equipmentInventoryId") Long equipmentInventoryId, @Param("period") Long periodId);
 
   @Select("select * from cold_chain_equipment_temperature_alarms " +
       "where equipmentInventoryId = #{equipmentInventoryId} ")
   List<ColdChainEquipmentTemperatureAlarm> getAlarmByEquipmentInventory(@Param("equipmentInventoryId") Long equipmentInventoryId);
 
-  @Select("select ca.*, ei.serialNumber, e.model, e.name as equipmentName, eet.name as energySource  from cold_chain_equipment_temperature_alarms ca " +
+  @Select("select ca.*, ei.serialNumber, e.model, e.name as equipmentName from cold_chain_equipment_temperature_alarms ca " +
       " JOIN equipment_inventories ei on ei.id = ca.equipmentInventoryId " +
       " JOIN equipments e on e.id = ei.equipmentId " +
-      " JOIN equipment_energy_types eet on eet.id = e.energytypeid" +
       "   where  " +
-      " ca.alarmDate >= (select p.startDate from processing_periods p where p.id = #{period}) " +
-      " and ca.alarmDate <= (select p.endDate from processing_periods p where p.id = #{period})" +
+      " ca.startTime >= (select p.startDate from processing_periods p where p.id = #{period}) " +
+      " and ca.startTime <= (select p.endDate from processing_periods p where p.id = #{period})" +
       " and ca.equipmentInventoryId = ANY(#{equipmentInventoryIds}::INT[])")
   List<ColdTraceAlarmDTO> getAlarmByEquipmentInventoriesAndPeriod(@Param("equipmentInventoryIds") String equipmentInventoryIds, @Param("period") Long period);
 

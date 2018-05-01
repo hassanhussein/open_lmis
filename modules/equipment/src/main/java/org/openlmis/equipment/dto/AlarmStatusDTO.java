@@ -12,46 +12,14 @@
 
 package org.openlmis.equipment.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+@Getter
+@Setter
+public class AlarmStatusDTO {
 
-@NoArgsConstructor
-@AllArgsConstructor
-public class ColdChainEquipmentTemperatureAlarmDTO {
-
-  @Getter
-  @Setter
-  private String serialNumber;
-
-  @Getter
-  @Setter
-  private String alarmId;
-
-  @Getter
-  @Setter
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-  private Date alarmDate;
-
-  @Getter
-  @Setter
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm ss")
-  private Date startTime;
-
-  @Getter
-  @Setter
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm ss")
-  private Date endTime;
-
-  @Getter
-  @Setter
-  private String alarmType;
-
-  @Getter
-  @Setter
-  private String status;
+  @JsonProperty("en-EN")
+  private String value;
 }

@@ -16,7 +16,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.domain.EquipmentInventory;
-import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureAlarmDTO;
+import org.openlmis.equipment.dto.ColdChainTemperatureAlarmDTO;
 import org.openlmis.equipment.dto.ColdTraceAlarmDTO;
 import org.openlmis.equipment.repository.ColdChainEquipmentTemperatureAlarmRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ColdChainEquipmentTemperatureAlarmService {
@@ -38,25 +37,24 @@ public class ColdChainEquipmentTemperatureAlarmService {
   @Autowired
   private CommaSeparator commaSeparator;
 
-  public void save(ColdChainEquipmentTemperatureAlarmDTO alarmDto, Long userId) {
+  public void save(ColdChainTemperatureAlarmDTO alarmDto, Long userId) {
     // check if the alarmDto is already recorded
 
-    ColdChainEquipmentTemperatureAlarm persistedAlarm = repository.getAlarmById(alarmDto.getAlarmId());
+    ColdChainEquipmentTemperatureAlarm persistedAlarm = repository.getAlarmById(alarmDto.getAlert_id());
     if (persistedAlarm != null) {
       // this is an update
       persistedAlarm.setModifiedBy(userId);
 
       persistedAlarm.setModifiedDate(new Date());
-      persistedAlarm.setAlarmDate(alarmDto.getAlarmDate());
-      persistedAlarm.setAlarmType(alarmDto.getAlarmType());
-      persistedAlarm.setStartTime(alarmDto.getStartTime());
-      persistedAlarm.setEndTime(alarmDto.getEndTime());
-      persistedAlarm.setStatus(alarmDto.getStatus());
+      persistedAlarm.setAlarmType(alarmDto.getAlert_type());
+      persistedAlarm.setStartTime(alarmDto.getStart_ts());
+      persistedAlarm.setEndTime(alarmDto.getEnd_ts());
+      persistedAlarm.setStatus(alarmDto.getStatus().getValue());
 
       repository.update(persistedAlarm);
     } else {
       // save new.
-      EquipmentInventory inventory = inventoryService.getInventoryBySerialNumber(alarmDto.getSerialNumber());
+      EquipmentInventory inventory = inventoryService.getInventoryBySerialNumber(alarmDto.getDevice_id());
       if (inventory == null) {
         throw new DataException("Equipment not found. Please check the serial number you provided.");
       }
@@ -64,12 +62,11 @@ public class ColdChainEquipmentTemperatureAlarmService {
       ColdChainEquipmentTemperatureAlarm toPersist = ColdChainEquipmentTemperatureAlarm
           .builder()
           .equipmentInventoryId(inventory.getId())
-          .alarmDate(alarmDto.getAlarmDate())
-          .alarmId(alarmDto.getAlarmId())
-          .alarmType(alarmDto.getAlarmType())
-          .startTime(alarmDto.getStartTime())
-          .endTime(alarmDto.getEndTime())
-          .status(alarmDto.getStatus())
+          .alarmId(alarmDto.getAlert_id())
+          .alarmType(alarmDto.getAlert_type())
+          .startTime(alarmDto.getStart_ts())
+          .endTime(alarmDto.getEnd_ts())
+          .status(alarmDto.getStatus().getValue())
           .build();
       toPersist.setCreatedBy(userId);
       toPersist.setCreatedDate(new Date());
