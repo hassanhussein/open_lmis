@@ -36,6 +36,9 @@
             <th width="150px"><span openlmis-message="label.vaccine.coverage.denominator"></span></th>
             <th><span openlmis-message="label.vaccine.coverage.track.male"></span></th>
             <th><span openlmis-message="label.vaccine.coverage.track.female"></span></th>
+            <th><span openlmis-message="label.vaccine.coverage.display.in.dashboard"></span></th>
+            <th class="number"><span openlmis-message=" label.vaccine.coverage.dashboard.display.order"></span></th>
+
             <th><span>Use for Calculation</span></th>
             <th style="width: 100px;"><span openlmis-message="label.vaccine.coverage.actions"></span></th>
           </tr>
@@ -61,6 +64,12 @@
             </td>
             <td class="col-general cell-input padding2px" style="text-align: center;"><input type="checkbox"
                                                                                              ng-model="dose.trackFemale">
+            </td>
+            <td class="col-general cell-input padding2px" style="text-align: center;"><input type="checkbox"
+                                                                                             ng-model="dose.displayInDashboard">
+            </td>
+            <td class="col-general cell-input padding2px" style="text-align: center;" >
+              <input style="width: 95px;" ng-model="dose.dashboardDisplayOrder" />
             </td>
             <td class="col-general cell-input padding2px" style="text-align: center;"><input type="checkbox" ng-model="dose.useForWastageCalculations"></td>
             <td>
