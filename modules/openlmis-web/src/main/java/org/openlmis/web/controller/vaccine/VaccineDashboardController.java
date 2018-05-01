@@ -484,12 +484,12 @@ public class VaccineDashboardController extends BaseController {
             HttpServletRequest request,
             @Param("periodId") Long periodId,
             @Param("year") Long year,
-            @Param("product")Long product
+            @Param("product") Long product
 
     ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("natioanl_coverage", service.getNationalCoverageProductAndDose(
-                loggedInUserId(request), periodId, year,product));
+                loggedInUserId(request), periodId, year, product));
         return response;
     }
 
@@ -581,6 +581,21 @@ public class VaccineDashboardController extends BaseController {
         return response;
     }
 
+    @RequestMapping(value = "GetCoverageByFacility.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getCoverageByFacility(
+            HttpServletRequest request,
+            @Param("product") Long product,
+            @Param("period") Long period,
+            @Param("year") Long year,
+            @Param("doseId") Long doseId
+
+    ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("district_coverage", service.getCoverageByFacility(
+                loggedInUserId(request), product, period, year, doseId));
+        return response;
+    }
+
     @RequestMapping(value = "GetCoverageByRegionSummary.json", method = RequestMethod.GET)
     public ResponseEntity<OpenLmisResponse> getCoverageByRegionClassification(
             HttpServletRequest request,
@@ -604,6 +619,18 @@ public class VaccineDashboardController extends BaseController {
     ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("district_categorization", service.getCategorizationByDistrict(
+                loggedInUserId(request), year));
+        return response;
+    }
+
+    @RequestMapping(value = "GetCategorizationByFacilitySummary.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getCategorizationByFacility(
+            HttpServletRequest request,
+            @Param("year") Long year
+
+    ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("facility_categorization", service.getCategorizationByFacility(
                 loggedInUserId(request), year));
         return response;
     }
@@ -634,7 +661,21 @@ public class VaccineDashboardController extends BaseController {
         return response;
     }
 
-  @RequestMapping(value = "GetDistrict_classification_drill_down.json", method = RequestMethod.GET)
+    @RequestMapping(value = "GetFacilityClassification.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getDistrictClassification(
+            HttpServletRequest request,
+            @Param("year") Long year,
+            @Param("product") Long product,
+            @Param("doseId") Long doseId
+
+    ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("facility_classification_summary", service.getFacilityClassification(
+                loggedInUserId(request),year,product,doseId));
+        return response;
+    }
+
+    @RequestMapping(value = "GetDistrict_classification_drill_down.json", method = RequestMethod.GET)
     public ResponseEntity<OpenLmisResponse> getDistrictClassificationDrillDown(
             HttpServletRequest request,
             @Param("product") Long product,
@@ -645,7 +686,22 @@ public class VaccineDashboardController extends BaseController {
     ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("district_classification_summary", service.getDistrictClassificationDrillDown(
-                loggedInUserId(request), product, year,indicator,period));
+                loggedInUserId(request), product, year, indicator, period));
+        return response;
+    }
+
+
+    @RequestMapping(value = "GetFacilityClassificationDrillDown.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getFacilityClassificationDrillDown(
+            HttpServletRequest request,
+            @Param("year") Long year,
+            @Param("indicator") String indicator,
+            @Param("period") String period
+
+    ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("district_classification_summary", service.getFacilityClassificationDrillDown(
+                loggedInUserId(request), year, indicator, period));
         return response;
     }
 
@@ -659,7 +715,7 @@ public class VaccineDashboardController extends BaseController {
     ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("distribution_per_district", service.getDistributionOfDistrictPerPerformance(
-                loggedInUserId(request), product, year,doseId));
+                loggedInUserId(request), product, year, doseId));
         return response;
     }
 
@@ -673,6 +729,17 @@ public class VaccineDashboardController extends BaseController {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("performance", service.getPerformanceMonitoring(
                 loggedInUserId(request), product, year));
+        return response;
+    }
+
+    @RequestMapping(value = "GetIVDReportingSummary.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getIVDReportingSummary(
+            HttpServletRequest request,
+            @Param("period") Long period
+    ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("reporting_summary", service.getIVDReportingSummary(
+                loggedInUserId(request), period));
         return response;
     }
 

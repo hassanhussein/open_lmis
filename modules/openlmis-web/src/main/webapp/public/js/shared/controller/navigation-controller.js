@@ -99,7 +99,9 @@ $scope.homeLinkClicked=function(){
   $scope.repairing = {};
   $scope.supplying = {};
   $scope.investigating = {};
-
+    $scope.showNo = function () {
+        $scope.showSu= true;
+    };
   function dashboardSummaryCallBack() {
 
     VaccineDashboardSummary.get({}, function (data) {

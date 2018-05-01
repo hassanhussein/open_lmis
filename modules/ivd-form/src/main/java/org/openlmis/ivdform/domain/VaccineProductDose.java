@@ -36,6 +36,9 @@ public class VaccineProductDose extends BaseModel {
 
   Boolean trackMale;
   Boolean trackFemale;
+  Boolean displayInDashboard;
+
+  Long dashboardDisplayOrder;
 
   Boolean useForWastageCalculations;
 

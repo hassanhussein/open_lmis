@@ -1179,6 +1179,31 @@ services.factory('GetCoverageByDistrictData', function ($q, $timeout, $resource,
 
 });
 
+services.factory('GetCoverageByFacilityData', function ($q, $timeout, $resource,GetCoverageByFacility) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetCoverageByFacility.get({product:parseInt(params.product,10),period:parseInt(params.period,10),year:parseInt(params.year,10),doseId:parseInt(params.dose,10)}, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    console.log(data);
+                    stocks = data.district_coverage;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 services.factory('GetCoverageByRegionSummary', function ($q, $timeout, $resource,GetCoverageByRegionSummaryData) {
     function get(params) {
 
@@ -1188,7 +1213,6 @@ services.factory('GetCoverageByRegionSummary', function ($q, $timeout, $resource
 
                 var stocks ={};
                 if (data !== undefined) {
-                    console.log(data);
                     stocks = data.region_coverage;
                 }
                 deferred.resolve(stocks);
@@ -1348,6 +1372,81 @@ services.factory('GetPerformanceMonitoringData', function ($q, $timeout, $resour
 
 });
 
+
+
+services.factory('GetCategorizationByFacilityData', function ($q, $timeout, $resource,GetCategorizationByFacilitySummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetCategorizationByFacilitySummary.get({year:parseInt(params.year,10)}, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.facility_categorization;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+services.factory('GetIVDReportingSummaryData', function ($q, $timeout, $resource,GetIVDReportingSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetIVDReportingSummary.get({period:parseInt(params.period,10)}, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.reporting_summary;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+services.factory('GetFacilityClassificationSummaryData', function ($q, $timeout, $resource,GetFacilityClassificationSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetFacilityClassificationSummary.get(params, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.facility_classification_summary;
+                    console.log(stocks);
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 services.factory('FullStockAvailableForDashboard', function ($resource) {
     return $resource('/vaccine/dashboard/fullStockAvailability.json', {}, {});
 });
@@ -1415,6 +1514,9 @@ services.factory('GetInventorySummaryByMaterialFacilityList', function ($resourc
 services.factory('GetCoverageByDistrict', function ($resource) {
     return $resource('/vaccine/dashboard/GetCoverageByDistrictSummary.json', {}, {});
 });
+services.factory('GetCoverageByFacility', function ($resource) {
+    return $resource('/vaccine/dashboard/GetCoverageByFacility.json', {}, {});
+});
 services.factory('GetCategorizationByDistrictSummary', function ($resource) {
     return $resource('/vaccine/dashboard/GetCategorizationByDistrictSummary.json', {}, {});
 });
@@ -1441,3 +1543,14 @@ services.factory('GetCoverageByRegionSummaryData', function ($resource) {
     return $resource('/vaccine/dashboard/GetCoverageByRegionSummary.json', {}, {});
 });
 
+services.factory('GetCategorizationByFacilitySummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetCategorizationByFacilitySummary.json', {}, {});
+});
+
+services.factory('GetIVDReportingSummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetIVDReportingSummary.json', {}, {});
+});
+
+services.factory('GetFacilityClassificationSummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetFacilityClassification.json', {}, {});
+});

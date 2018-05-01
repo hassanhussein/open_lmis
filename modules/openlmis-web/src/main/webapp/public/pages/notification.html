@@ -1,6 +1,124 @@
 <style>
+    .badge1 {
+        position: relative;
+        top: 12px !important;
+        left: 30%;
+        margin-right: -50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
 
+        background-color: #00818c;
+        border: 0;
+    }
 
+    .contain[data-badge]:after {
+        content: attr(data-badge);
+        position: absolute;
+        top: 100px;
+        right: -10px;
+        font-size: .7em;
+        background: green;
+        color: white;
+        width: 18px;
+        height: 18px;
+        text-align: center;
+        line-height: 18px;
+        border-radius: 50%;
+        box-shadow: 0 0 1px #333;
+    }
+
+    .badge1[data-badge]:after {
+        content: attr(data-badge);
+        position: absolute;
+        top: -9px;
+        right: -10px;
+        font-size: .7em;
+        background: red;
+        color: white;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        border-radius: 50%;
+        box-shadow: 0 0 1px #333;
+    }
+
+    .contain {
+        position: absolute;
+        top: 30%;
+        left: 30%;
+        margin-right: -50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .notification1 {
+        display: inline-block;
+        position: relative;
+        padding: 0.6em;
+        background: #3498db;
+        border-radius: 0.2em;
+        font-size: 1.3em;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .notification1 {
+        display: inline-block;
+        position: relative;
+        padding: 0.6em;
+        background: #00818c;
+        border-radius: 0.2em;
+        font-size: 1.3em;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .not::before,
+    .not::after {
+        color: #fff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .not::before {
+        display: block;
+        content: "\f0f3";
+        font-family: "FontAwesome";
+        transform-origin: top center;
+    }
+
+    .notification1::after {
+        font-family: Arial;
+        font-size: 0.7em;
+        font-weight: 700;
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        padding: 5px 8px;
+        line-height: 100%;
+        border: 2px #fff solid;
+        border-radius: 60px;
+        background: #3498db;
+        opacity: 0;
+        content: attr(data-badge);
+        -webkit-transform: scale(0.5);
+        transform: scale(0.5);
+        transition: transform, opacity;
+        transition-duration: 0.3s;
+        transition-timing-function: ease-out;
+    }
+
+    /*.notification1.notify::before {
+        -webkit-animation: ring 1.5s ease;
+        animation: ring 1.5s ease;
+    }
+
+    .notification1.show-count::after {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 1;
+    }
+*/
     .bell
 
     @include translate( -50% , -50% )
@@ -44,6 +162,8 @@
     }
 
     .dropdown-menu {
+        top: 140% !important;
+        z-index: 1 !important;
         /*
                 font-size:17 !important;
         */
@@ -68,7 +188,7 @@
     .dropdown {
         display: inline-block;
         margin-left: 20px;
-        padding: 10px;
+        padding: 20px;
     }
 
     .glyphicon-bell {
@@ -228,19 +348,21 @@
         padding-right: 18px
     }
 
-  /*  h2 {
-        font-size: 30px;
-        line-height: 20px !important;
-    }*/
+    /*  h2 {
+          font-size: 30px;
+          line-height: 20px !important;
+      }*/
 
-   /* .alert {
-        padding: 8px 5px 8px 14px !important;
-    }*/
+    /* .alert {
+         padding: 8px 5px 8px 14px !important;
+     }*/
 </style>
 
-<div ng-controller="NavigationController">
+<!--
+<div >
+-->
 
-
+<!--
     <div class="dropdown">
         <div id="circle">
          <span ng-hide="false">
@@ -254,7 +376,7 @@
          </span>
         </div>
 
-        <a id="dLabel" role="button" data-toggle="dropdown" data-target="#">
+      &lt;!&ndash;  <a id="dLabel" role="button" data-toggle="dropdown" data-target="#">
             <div id="Library"></div>
         </a>
 
@@ -262,12 +384,12 @@
         <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
 
             <div class="notification-heading"><h2 class="menu-title" style="color: #17888f !important;
-            font-size: 1.0em !important;">Notifications</h2><!--<h4
-                    class="menu-title pull-right">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4>-->
+            font-size: 1.0em !important;">Notifications</h2>&lt;!&ndash;<h4
+                    class="menu-title pull-right">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4>&ndash;&gt;
             </div>
-            <!--
+            &lt;!&ndash;
                         <li class="divider"></li>
-            -->
+            &ndash;&gt;
             <div class="notifications-wrapper">
                 <div class="content">
                     <div class="notification-item">
@@ -311,6 +433,132 @@
                         <span class="alert alert-info">
                             <a href="/public/pages/ vaccine/inventory/index.html#/stock-adjustment" style="display: inline !important;color:red !important;"> <strong>{{totalBatchToExpire}}</strong></a>
                            Batches to Expire<a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment" style="display: inline !important;color:blue !important;"><strong>Resolve</strong></a>
+                        </span>
+
+                    </div>
+
+                </div>
+                &lt;!&ndash;
+                                </a>
+                &ndash;&gt;
+                &lt;!&ndash;     <a class="content" href="#">
+                         <div class="notification-item">
+                             <h4 class="item-title">Evaluation Deadline 1 · day ago</h4>
+
+                             <p class="item-info">Marketing 101, Video Assignment</p>
+                         </div>
+                     </a>
+                     <a class="content" href="#">
+                         <div class="notification-item">
+                             <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+
+                             <p class="item-info">Marketing 101, Video Assignment</p>
+                         </div>
+                     </a>
+                     <a class="content" href="#">
+                         <div class="notification-item">
+                             <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+
+                             <p class="item-info">Marketing 101, Video Assignment</p>
+                         </div>
+
+                     </a>
+                     <a class="content" href="#">
+                         <div class="notification-item">
+                             <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+
+                             <p class="item-info">Marketing 101, Video Assignment</p>
+                         </div>
+                     </a>
+                     <a class="content" href="#">
+                         <div class="notification-item">
+                             <h4 class="item-title">Evaluation Deadline 1 • day ago</h4>
+
+                             <p class="item-info">Marketing 101, Video Assignment</p>
+                         </div>
+                     </a>&ndash;&gt;
+                &lt;!&ndash;
+                                <li class="divider"></li>
+                &ndash;&gt;
+
+            </div>
+            &lt;!&ndash;  <div class="notification-footer"><h4 class="menu-title">View all<i
+                      class="glyphicon glyphicon-circle-arrow-right"></i></h4></div>
+              <li class="beak"></li>&ndash;&gt;
+
+
+
+
+        </ul>&ndash;&gt;
+    </div>-->
+<!--</div>-->
+<div ng-controller="NavigationController" class="dropdown">
+    <div class="contain">
+        <button class="badge1 not" data-badge="{{ supplying.orders  +
+                (supplyingPendingReceive.supplyingPendingToReceive.length +
+                supplyingPendingReceive.supplyingPendingToReceiveLowerLevel.length)
+                + totalNonFunctionalEquipments + totalReceive + totalMinimumStock + investigating.count
+                + totalBatchToExpire
+                | number }}" data-toggle="dropdown"></button>
+
+        <ul class="dropdown-menu notifications" role="menu" aria-labelledby="dLabel">
+
+            <div class="notification-heading"><h2 class="menu-title" style="color: #17888f !important;
+            font-size: 1.0em !important;">Notifications</h2><!--<h4
+                    class="menu-title pull-right">View all<i class="glyphicon glyphicon-circle-arrow-right"></i></h4>-->
+            </div>
+            <!--
+                        <li class="divider"></li>
+            -->
+            <div class="notifications-wrapper" tabindex="1">
+                <div class="content">
+                    <div class="notification-item">
+                        <h2 ng-show="supplying.orders > 0" class="item-title" style="font-size: 1.0em !important;">Supplying</h2>
+
+                        <span class="alert alert-info" ng-show="supplying.orders > 0">
+                             You have <a href="/public/pages/vaccine/order-requisition/index.html#/view"
+                                         style="display: inline !important;color:red !important;"> <strong>{{supplying.orders}}</strong></a>
+                            Pending Orders. <a href="/public/pages/vaccine/order-requisition/index.html#/view"
+                                               style="display: inline !important;color:red !important;"><strong>
+                            Resolve</strong></a>
+                        </span>
+
+                        <div class="divider"></div>
+                        <span class="alert alert-info" style="padding: 8px 19px 8px 14px; !important;"
+                              ng-show="supplyingPendingReceive.supplyingPendingToReceiveLowerLevel.length >0">
+                             <a href="/public/pages/vaccine/order-requisition/index.html#/view"
+                                style="display: inline !important;color:red !important;"> <strong>
+
+                                 {{ supplyingPendingReceive.supplyingPendingToReceiveLowerLevel.length}}
+                             </strong></a>
+                           Order(s) Not Received By District(s) <a href="/public/pages/vaccine/order-requisition/index.html#/view"
+                                                    style="display: inline !important;color:red !important;"><strong>Resolve</strong></a>
+                        </span>
+
+                    </div>
+
+                    <div class="notification-item" ng-show="totalMinimumStock > 0">
+                        <h2 class="item-title" style="font-size: 1.0em !important;">Stock</h2>
+
+                        <span class="alert alert-info">
+                            <a ng-href="/public/pages/vaccine/stock-on-hand/index.html#/home"
+                               style="display: inline !important;color:red !important;"> <strong>{{totalMinimumStock}}</strong></a>
+                           Product(s) Have Extremely Low  Stock<a
+                                ng-href="/public/pages/vaccine/stock-on-hand/index.html#/home"
+                                style="display: inline !important;color:red !important;"></a>
+                        </span>
+
+                    </div>
+
+
+                    <div class="notification-item" ng-if="totalBatchToExpire >0">
+                        <h2 class="item-title" style="font-size: 1.0em !important;">Batch Expiries</h2>
+
+                        <span class="alert alert-info">
+                            <a href="/public/pages/ vaccine/inventory/index.html#/stock-adjustment"
+                               style="display: inline !important;color:red !important;"> <strong>{{totalBatchToExpire}}</strong></a>
+                           Batches to Expire<a href="/public/pages/vaccine/inventory/index.html#/stock-adjustment"
+                                               style="display: inline !important;color:blue !important;"><strong>Resolve</strong></a>
                         </span>
 
                     </div>
@@ -364,14 +612,10 @@
                       class="glyphicon glyphicon-circle-arrow-right"></i></h4></div>
               <li class="beak"></li>-->
 
+
         </ul>
+
+
     </div>
-</div>
-
-<span style="color: white" ng-hide="true">Alerts</span>
-
-<!--
-<a href="/public/pages/vaccine/stock-availability/index.html#/notification" class="ico">&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alerts</a>-->
 
 </div>

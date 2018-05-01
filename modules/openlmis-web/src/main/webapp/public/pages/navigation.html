@@ -601,7 +601,10 @@
                     openlmis-message="link.dashboard"></a>
         </li>
 
-        <li ng-show="hasPermission('VIEW_VIMS_NOTIFICATION')">
+<!--
+        ng-show="hasPermission('VIEW_VIMS_NOTIFICATION')"
+-->
+        <li>
             <ng-include src="'/public/pages/notification.html'"></ng-include>
         </li>
 

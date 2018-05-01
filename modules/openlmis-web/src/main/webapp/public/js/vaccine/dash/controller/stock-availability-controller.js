@@ -1,17 +1,21 @@
-function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetPerformanceMonitoringData, GetDistributionOfDistrictPerPerformanceData, GetClassificationDistrictDrillDownData, GetDistrictClassificationSummaryData, GetCategorizationByDistrictDrillDownData, GetCategorizationByDistrictData, GetCoverageByDistrictData, GetInventoryByMaterialFacilityListData, VaccineDashboardFacilityInventoryStockStatus, GetCoverageMapInfo, GetInventorySummaryByLocationData, GetInventorySummaryByMaterialData, StockCardsByCategory, GetDistrictInventorySummaryData, GetRegionInventorySummaryData, homeFacility, FacilityInventoryStockStatusData, GetPeriodForDashboard, YearFilteredData, ProductFilteredData, $routeParams, leafletData, ProductService, $state, VaccineProductDoseList, ReportPeriodsByYear, VimsVaccineSupervisedIvdPrograms, AvailableStockDashboard, FullStockAvailableForDashboard, GetAggregateFacilityPerformanceData, VaccineCoverageByProductData, GetCoverageByProductAndDoseData) {
-    $scope.region=true;
+function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByFacilityData, GetCoverageByRegionSummary, GetPerformanceMonitoringData,
+                                          GetDistributionOfDistrictPerPerformanceData, GetClassificationDistrictDrillDownData, GetDistrictClassificationSummaryData, GetCategorizationByDistrictDrillDownData, GetCategorizationByDistrictData,
+                                          GetCoverageByDistrictData, GetInventoryByMaterialFacilityListData, VaccineDashboardFacilityInventoryStockStatus, GetCoverageMapInfo, GetInventorySummaryByLocationData, GetInventorySummaryByMaterialData, StockCardsByCategory, GetDistrictInventorySummaryData, GetRegionInventorySummaryData, homeFacility, FacilityInventoryStockStatusData, GetPeriodForDashboard, YearFilteredData, ProductFilteredData, $routeParams, leafletData, ProductService, $state, VaccineProductDoseList, ReportPeriodsByYear, VimsVaccineSupervisedIvdPrograms, AvailableStockDashboard, FullStockAvailableForDashboard, GetAggregateFacilityPerformanceData,
+                                          VaccineCoverageByProductData, GetCoverageByProductAndDoseData, GetCoverageByFacilityData, GetIVDReportingSummaryData,GetFacilityClassificationSummaryData) {
+    $scope.region = true;
     $scope.showDistrict = function (d) {
-    if(d==='district') {
-        $scope.region = false;
-        $scope.district = true;
-    }else{$scope.region=true;
-        $scope.district = false;
-    }
+        if (d === 'district') {
+            $scope.region = false;
+            $scope.district = true;
+        } else {
+            $scope.region = true;
+            $scope.district = false;
+        }
 
-};
-      $('ul.tabs').tabs({
-        swipeable : true,
-        responsiveThreshold : 1920
+    };
+    $('ul.tabs').tabs({
+        swipeable: true,
+        responsiveThreshold: 1920
     });
     $scope.showModal = function (data) {
         var colors = {'#ffdb00': 'yellow', '#ff0d00': 'red', '#00B2EE': 'blue', '#006600': 'green'};
@@ -323,7 +327,54 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
 
     };
 
-    function loadDynamicPieChart(data, title, chartId,legend,periodName,productName,dose) {
+
+    $scope.coverageSummaryModel = false;
+
+    $scope.getEventFunc = function (event, dataTobeFiltered) {
+
+        $scope.showDistrictInfo = false;
+        $scope.coverageSummaryDataToDisplay = [];
+        (event.series.userOptions.chartId === 'regionCoverageChart') ? $scope.showRegionInfo = true : $scope.showRegionInfo = false;
+        (event.series.userOptions.chartId === 'districtCoverageChart') ? $scope.showDistrictInfo = true : $scope.showDistrictInfo = false;
+        (event.series.userOptions.chartId === 'facilityCoverageChart') ? $scope.showFacilityInfo = true : $scope.showFacilityInfo = false;
+
+        $scope.covColor = event.color;
+        $scope.coverageSummaryDataToDisplay = _.where(dataTobeFiltered, {coverageclassification: event.opt});
+
+        $scope.statusCategory = event.name;
+        var headerName =($scope.showRegionInfo)?'Region Name':($scope.showDistrictInfo)?'District Name':'Facility Name';
+        var headers = [headerName,'Coverage %'];
+        $scope.exportDataFunc(event.series.userOptions.chartId,$scope.coverageSummaryDataToDisplay,headers);
+
+        $timeout(function () {
+            $('#exampleModal').modal();
+        }, 100);
+
+    };
+
+
+    $scope.exportDataFunc = function(fileName,data,headers){
+        // Prepare Excel data:
+        $scope.fileName = fileName;
+        $scope.exportData = [];
+        // Headers:
+        $scope.exportData.push(headers);
+        // Data:
+        angular.forEach(data, function(value, key) {
+
+            if(fileName === 'facilityCoverageChart')
+            $scope.exportData.push([value.facility_name, value.coveragepercentage]);
+            if(fileName === 'districtCoverageChart')
+            $scope.exportData.push([value.district_name, value.value]);
+            if(fileName === 'regionCoverageChart')
+            $scope.exportData.push([value.region, value.coverage]);
+
+        });
+
+    };
+
+
+    function loadDynamicPieChart(data, title,title2, chartId, legend, periodName, productName, dose, dataTobeFiltered,name) {
 
         var char2 = new Highcharts.Chart({
 
@@ -338,23 +389,24 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
 
             plotOptions: {
                 pie: {
-                    // innerSize: '80%',
-                    size:'60%',
+                     innerSize: '60%',
+                    size: '80%',
                     showInLegend: true,
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+
                     dataLabels: {
                         enabled: true,
-                        format: '<span style="  text-decoration: underline !important;">{point.y}  ' +legend+ ' </span>'
-                        /*
-                                                format: '{point.name}: {point.y:.1f}%'
-                        */
+                        format: '<span style="text-decoration: underline !important;" class="activator">{point.y}  ' + legend + ' </span>'
+
                     }
                 }
             },
             title: {
-                text: '<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>'
+                text:title2
             },
             subtitle: {
-                text: '( '+productName+', '+periodName+')'
+                text: '<span style="font-size: 10px!important;color: #0c9083">( ' + productName + ',' + periodName + ' ) </span>'
             },
             tooltip: {
                 headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -363,22 +415,21 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
 
             },
 
-            /* title: {
-                 verticalAlign: 'middle',
-                 floating: true,
-                 text:''
- /!*
-                 text: '<span style="font-size: 50px;">%</span>'
- *!/
-                 /!*
-                                 '<div class="clearfix"></div><span style="font-size: 12px !important;"></span>',align:'center',verticalAlign: 'middle'
-                 *!/
-             },*/
-
             series: [{
                 colorByPoint: true,
-                name: 'national Coverage',
-                data: data
+                name: name,
+                data: data,
+                chartId: chartId,
+                point: {
+                    events: {
+                        click: function (event) {
+
+                            $scope.getEventFunc(this, dataTobeFiltered);
+                            //alert(this);
+                        }
+                    }
+                }
+
             }]
 
 
@@ -386,48 +437,85 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
 
     }
 
-    $scope.loadDistrictCoverageFunc = function (para) {
-
-        GetCoverageByRegionSummary.get(para).then(function (data) {
-
-            var badValue  = _.where(data,{coverageclassification:'BAD'});
-            var goodValue  = _.where(data,{coverageclassification:'GOOD'});
-            var normalValue  = _.where(data,{coverageclassification:'NORMAL'});
-            var summary1 =(badValue.length >0)?badValue.length:0;
-            var summary3 =(goodValue.length >0)?goodValue.length:0;
-            var summary2 =(normalValue.length >0)?normalValue.length:0;
-
-            var title = 'Region Coverage Sumary', chartId = 'regionCoverageChart',legend='Region(s)';
-            var values =[];
-            values.push({name: 'Below 80%', y: summary1, color: 'red', sliced: true},
-                {
-                    name: '80% to 89%',
-                    y:summary2,
-                    color: 'yellow'
-                },
-                {name: '90% +', y: summary3, color: 'green'}
-                );
-            loadDynamicPieChart(values, title, chartId,legend,para.periodName,para.productName,para.doseId);
+    $scope.loadDistrictCoverageFunc = function (para, level) {
 
 
-        });
+        if (level ==='dvs') {
 
-        GetCoverageByDistrictData.get(para).then(function (data) {
+            GetCoverageByFacilityData.get(para).then(function (data) {
 
-            var title = 'District Coverage Sumary', chartId = 'districtCoverageChart',legend='District(s)';
-            var values = [];
-            data.forEach(function (data) {
-                values.push({name: 'Below 80%', y: data.red, color: 'red', sliced: true}, {
-                        name: '80% to 89%',
-                        y: data.yellow,
+                var badValue = _.where(data, {coverageclassification: 'BAD'});
+                var goodValue = _.where(data, {coverageclassification: 'GOOD'});
+                var normalValue = _.where(data, {coverageclassification: 'NORMAL'});
+                var summary1 = (badValue.length > 0) ? badValue.length : 0;
+                var summary3 = (goodValue.length > 0) ? goodValue.length : 0;
+                var summary2 = (normalValue.length > 0) ? normalValue.length : 0;
+
+                var title ='<span style="font-size: 17px!important;color: #0c9083">Coverage by Facilities </span>';
+                var  chartId = 'facilityCoverageChart';
+                var legend = 'Facilities';
+                var name='Facility Coverage';
+                var values = [];
+                values.push({name: 'Below 80%', opt: 'BAD', y: summary1, color: 'red', sliced: true},
+                    {
+                        name: '80% to 89%', opt: 'NORMAL',
+                        y: summary2,
                         color: 'yellow'
                     },
-                    {name: '90% +', y: data.green, color: 'green'});
+                    {name: '90% +', opt: 'GOOD', y: summary3, color: 'green'}
+                );
+                loadDynamicPieChart(values, title,title, chartId, legend, para.periodName, para.productName, para.doseId, data,name);
+
+
             });
-            loadDynamicPieChart(values, title, chartId,legend,para.periodName,para.productName,para.dose);
-        });
+
+        } else {
+
+            GetCoverageByRegionSummary.get(para).then(function (data) {
+
+                var badValue = _.where(data, {coverageclassification: 'BAD'});
+                var goodValue = _.where(data, {coverageclassification: 'GOOD'});
+                var normalValue = _.where(data, {coverageclassification: 'NORMAL'});
+                var summary1 = (badValue.length > 0) ? badValue.length : 0;
+                var summary3 = (goodValue.length > 0) ? goodValue.length : 0;
+                var summary2 = (normalValue.length > 0) ? normalValue.length : 0;
+
+                var title = 'Region Coverage Summary',name='Regional Coverage',title2=null, chartId = 'regionCoverageChart', legend = 'Region(s)';
+                var values = [];
+                values.push({name: 'Below 80%', opt: 'BAD', y: summary1, color: 'red', sliced: true},
+                    {
+                        name: '80% to 89%', opt: 'NORMAL',
+                        y: summary2,
+                        color: 'yellow'
+                    },
+                    {name: '90% +', opt: 'GOOD', y: summary3, color: 'green'}
+                );
+                loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.doseId, data,name);
 
 
+            });
+
+            GetCoverageByDistrictData.get(para).then(function (data) {
+
+                var badValue = _.where(data, {coverageclassification: 'BAD'});
+                var goodValue = _.where(data, {coverageclassification: 'GOOD'});
+                var normalValue = _.where(data, {coverageclassification: 'NORMAL'});
+                var summary1 = (badValue.length > 0) ? badValue.length : 0;
+                var summary3 = (goodValue.length > 0) ? goodValue.length : 0;
+                var summary2 = (normalValue.length > 0) ? normalValue.length : 0;
+
+                var title = 'District Coverage Summary',title2=null,name='District Coverage', chartId = 'districtCoverageChart', legend = 'District(s)';
+                var values = [];
+                values.push({name: 'Below 80%', y: summary1, color: 'red', opt: 'BAD', sliced: true}, {
+                        name: '80% to 89%', opt: 'NORMAL',
+                        y: summary2,
+                        color: 'yellow'
+                    },
+                    {name: '90% +', y: summary3, opt: 'GOOD', color: 'green'});
+                loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.dose, data,name);
+            });
+
+        }
     };
     $scope.successModal = false;
 
@@ -535,11 +623,12 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
 
     }
 
-    $scope.districtCategorizationFunct = function (params) {
+    $scope.districtCategorizationFunct = function (params, userLevel, level) {
 
         var colors = {'Cat_3': '#ffdb00', 'Cat_4': '#ff0d00', 'Cat_2': '#ABC9AA', 'Cat_1': '#006600'};
-        GetCategorizationByDistrictData.get(params).then(function (data) {
+        var dataFunction = (userLevel === 'dvs') ? GetCategorizationByFacilityData : GetCategorizationByDistrictData;
 
+        dataFunction.get(params).then(function (data) {
             var category = _.uniq(_.pluck(data, 'period_name'));
             var groupByPeriod = _.groupBy(data, function (period) {
                 return period.catagorization;
@@ -557,23 +646,29 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
                 });
 
             }
-            var title = '<span style="color:#509fc5; font-size: 15px ">Categorization by Districts based on Coverage and Dropout ' + params.year + '</span>';
-            var chartId = 'categorizationByDistrict';
+            var joinTitle = (userLevel === 'dvs') ? 'Facilities' : 'Districts';
+            var title = '<span style="color:#509fc5; font-size: 15px ">Categorization by ' + joinTitle + ' based on Coverage and Dropout ' + params.year + '</span>';
+            var chartId = (level === null) ? 'categorizationByDistrict' : 'categorizationByFacility';
+
+            console.log(categorization);
+
             getDynamicStackedChart(categorization, chartId, title, category, null, null, null, 'Districts');
 
         });
 
     };
 
-    $scope.districtClassificationFunc = function (filter) {
+    $scope.districtClassificationFunc = function (filter, level, userLevel) {
         var colors = {'Class C': '#ffdb00', 'Class D': '#ff0d00', 'Class B': '#ABC9AA', 'Class A': '#006600'};
         var parameter = {product: parseInt(filter.product, 10), year: parseInt(filter.year, 10)};
+
         GetDistrictClassificationSummaryData.get(parameter).then(function (data) {
             var category = _.uniq(_.pluck(data, 'period'));
 
             var groupByClassification = _.groupBy(data, function (period) {
                 return period.classification;
             });
+            console.log(level);
 
             var mappedData = _.map(groupByClassification, function (value, index) {
                 return {data: value, index: index};
@@ -588,7 +683,43 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
 
             }
             var title = '<span style="color:#509fc5; font-size: 15px">Classification of Districts based On Coverage and Utilization ' + filter.year + '</span>';
-            var chartId = 'classificationByDistrict';
+
+            var chartId = (level === null) ? 'classificationByDistrict' : 'classificationByDistrictLowerLevel';
+
+            var chartCategory = ' ';
+            chartCategory = 'classification';
+
+            getDynamicStackedChart(classification, chartId, title, category, chartCategory, filter.product, filter.year, 'Districts');
+        });
+    };
+
+    $scope.facilityClassificationFunc = function (filter, level, userLevel) {
+    console.log(filter);
+        var colors = {'Class C': '#ffdb00', 'Class D': '#ff0d00', 'Class B': '#ABC9AA', 'Class A': '#006600'};
+        var parameter = {year: parseInt(filter.year, 10),product: parseInt(filter.product, 10),doseId: parseInt(filter.dose, 10)};
+        GetFacilityClassificationSummaryData.get(parameter).then(function (data) {
+            var category = _.uniq(_.pluck(data, 'period'));
+
+            var groupByClassification = _.groupBy(data, function (period) {
+                return period.classification;
+            });
+
+            var mappedData = _.map(groupByClassification, function (value, index) {
+                return {data: value, index: index};
+            });
+
+            var classification = [];
+            for (var i = 0; i < mappedData.length; i++) {
+                classification.push({
+                    name: mappedData[i].index,
+                    data: _.pluck(mappedData[i].data, 'count'),
+                    color: colors[mappedData[i].index]
+                });
+
+            }
+            var title = '<span style="color:#509fc5; font-size: 15px">Classification of Districts based On Coverage and Utilization ' + filter.year + '</span>';
+
+            var chartId = 'classificationByFacilityLowerLevel';
 
             var chartCategory = ' ';
             chartCategory = 'classification';
@@ -640,18 +771,18 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
 
     };
 
-    function populatePerformanceMonitoringChart(chartdata,estimate, monthlyVaccinated,cumulativeVaccinated,chartId,title,year) {
-       var chartValues =[];
+    function populatePerformanceMonitoringChart(chartdata, estimate, monthlyVaccinated, cumulativeVaccinated, chartId, title, year) {
+        var chartValues = [];
 
-       new Highcharts.chart(chartId, {
+        new Highcharts.chart(chartId, {
             chart: {
                 zoomType: 'xy'
             },
             title: {
                 text: title
             },
-            credits:{
-                enabled:false
+            credits: {
+                enabled: false
             },
             subtitle: {
                 text: ' '
@@ -678,7 +809,7 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
                 gridLineWidth: 1,
                 opposite: false,
                 gridLineColor: '#197F07',
-                lineWidth:1
+                lineWidth: 1
 
             }, { // Secondary yAxis
                 gridLineWidth: 1,
@@ -714,10 +845,8 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
             tooltip: {
                 shared: true
             },
-            legend: {
-
-            },
-            series:chartdata/* [{
+            legend: {},
+            series: chartdata/* [{
                 name: 'estimate',
                 type: 'line',
                 yAxis: 1,
@@ -730,27 +859,26 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
             },*/
 
 
-               /* {
-                name: 'Cumulative',
-                type: 'line',
-                yAxis: 1,
+            /* {
+             name: 'Cumulative',
+             type: 'line',
+             yAxis: 1,
 
-                zIndex: 1,
-                data:cumulativeVaccinated,
-                tooltip: {
-                    valueSuffix: ' '
-                }
-            }*///]
+             zIndex: 1,
+             data:cumulativeVaccinated,
+             tooltip: {
+                 valueSuffix: ' '
+             }
+         }*///]
         });
-
-
-
 
 
     }
 
-    $scope.performanceMonitoring = function (filter) {
-        var param = {product:parseInt(filter.product,10), year:parseInt(filter.year,10)};
+    $scope.performanceMonitoring = function (filter, level) {
+        console.log(filter);
+
+        var param = {product: parseInt(filter.product, 10), year: parseInt(filter.year, 10)};
         GetPerformanceMonitoringData.get(param).then(function (data) {
 
             var byCategory = _.groupBy(data, function (p) {
@@ -761,61 +889,314 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
             var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
                 return [{"byDose": index, "dataPoints": value}];
             });
-            var performanceData =[];
-            var period =[];
-            var estimate =[];
-            var productValue =[];
-            var monthlyVaccinated =[];
-            var cumulativeVaccinated =[];
-            chartIds = 'performanceMonitoring';
-            title = '<span style="color: #0c9083">Performance Monitoring, '+filter.year+'</span>';
+            var performanceData = [];
+            var period = [];
+            var estimate = [];
+            var productValue = [];
+            var monthlyVaccinated = [];
+            var cumulativeVaccinated = [];
+            chartIds = (level === 'cvs') ? 'performanceMonitoring' : 'performanceMonitoring1';
+            title = '<span style="color: #0c9083">Performance Monitoring, ' + filter.year + '</span>';
 
             period = _.pluck(allStockDataPointsByCategory[0].dataPoints, 'period');
 
-           // productValue.push( _.zip(period,estimate));
+            // productValue.push( _.zip(period,estimate));
 
-              console.log(allStockDataPointsByCategory);
-                estimate = _.pluck(allStockDataPointsByCategory[0].dataPoints, 'estimate');
+            console.log(allStockDataPointsByCategory);
+            estimate = _.pluck(allStockDataPointsByCategory[0].dataPoints, 'estimate');
 
-            for (var i = 0; i <= allStockDataPointsByCategory.length-1; i++) {
+            for (var i = 0; i <= allStockDataPointsByCategory.length - 1; i++) {
                 monthlyVaccinated = _.pluck(allStockDataPointsByCategory[i].dataPoints, 'monthlyvaccinated');
                 cumulativeVaccinated.push({
-                    name: filter.productName+' '+allStockDataPointsByCategory[i].byDose,
+                    name: filter.productName + ' ' + allStockDataPointsByCategory[i].byDose,
                     type: 'line',
                     yAxis: 1,
                     zIndex: 1,
-                    data:_.pluck(allStockDataPointsByCategory[i].dataPoints, 'vaccinated_cumulative'),
+                    data: _.pluck(allStockDataPointsByCategory[i].dataPoints, 'vaccinated_cumulative'),
                     tooltip: {
-                        valueSuffix: ' '}});
+                        valueSuffix: ' '
+                    }
+                });
             }
 
             var chartData = [];
             var estimateValue = [];
-          estimateValue =[{
+            estimateValue = [{
                 name: 'estimate',
-                    type: 'line',
+                type: 'line',
                 yAxis: 1,
                 zIndex: 2,
-                data:estimate,
+                data: estimate,
                 tooltip: {
-                valueSuffix: ' Target'
-            }}];
+                    valueSuffix: ' Target'
+                }
+            }];
             chartData = cumulativeVaccinated.concat(estimateValue);
 
-                populatePerformanceMonitoringChart(chartData,estimate, monthlyVaccinated,cumulativeVaccinated, chartIds, title,filter.year);
+            populatePerformanceMonitoringChart(chartData, estimate, monthlyVaccinated, cumulativeVaccinated, chartIds, title, filter.year);
 
         });
 
     };
 
+    function loadDynamicDualAxisChart(chartId, chartTitle, params, district, onTimePercentage, reportedPercentage) {
+
+        Highcharts.chart(chartId, {
+            chart: {
+                zoomType: 'xy'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: chartTitle
+            },
+
+            subtitle: {
+                text: '<span style="font-size: 10px !important;color: #0c9083;text-align: center">' + params.periodName + '</span>'
+            },
+            xAxis: {
+                categories: district,
+                crosshair: true
+
+            },
+            yAxis: [{
+                lineWidth: 1,
+                max: 100,
+                min: 0,
+                title: {
+                    text: 'Reporting Percentage'
+                },
+                tickInterval: 20,
+                labels: {
+                    format: '{value} %',
+                    style: {
+                        color: Highcharts.getOptions().colors[4]
+                    }
+                },
+                gridLineColor: ''
+            }],
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom',
+                floating: false,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+            series: [{
+                type: 'column',
+                name: '% Reported',
+                data: reportedPercentage,
+                tooltip: {
+                    valueSuffix: '%'
+                }
+            }, {
+                type: 'line',
+                name: '% On time',
+                data: onTimePercentage,
+                tooltip: {
+                    valueSuffix: '%'
+                },
+                color: 'red'
+
+            }]
+        });
+    }
+
+    function percentage(num, per) {
+        return Math.floor((num / per) * 100);
+
+    }
+
+
+    function loadDynamicDistributionChart(distributionChartId, chartTitle, params, district, distributionRate) {
+
+        Highcharts.chart(distributionChartId, {
+            chart: {
+                zoomType: 'xy'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: chartTitle
+            },
+
+            subtitle: {
+                text: '<span style="font-size: 10px !important;color: #0c9083;text-align: center">' + params.periodName + '</span>'
+            },
+            xAxis: {
+                categories: district,
+                crosshair: true
+
+            },
+            yAxis: [{
+                lineWidth: 1,
+                max: 100,
+                min: 0,
+                title: {
+                    text: 'distribution %'
+                },
+                tickInterval: 20,
+                labels: {
+                    format: '{value} %',
+                    style: {
+                        color: Highcharts.getOptions().colors[4]
+                    }
+                },
+                gridLineColor: ''
+            }],
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom',
+                floating: false,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+            series: [{
+                type: 'column',
+                name: '% distribution',
+                data: distributionRate,
+                tooltip: {
+                    valueSuffix: '%'
+                }
+            }]
+        });
+
+
+
+    }
+
+    $scope.loadIvdReportingFunc = function (para, userLevel) {
+
+        if (userLevel === 'rvs') {
+
+            GetIVDReportingSummaryData.get(para).then(function (data) {
+                var district = _.pluck(data, 'district_name');
+
+                var onTimePercentage =[],
+                 reportedPercentage =[],
+                  distributionRate = [];
+
+                angular.forEach(data, function (report) {
+                    reportedPercentage.push(percentage(parseInt(report.reported, 10), parseInt(report.expected, 10)));
+                    onTimePercentage.push(percentage(parseInt(report.ontime, 10), parseInt(report.reported, 10)));
+                    distributionRate.push(percentage(parseInt(report.distributed, 10), parseInt(report.expected, 10)));
+                });
+
+                var chartId = 'ivdReportingSummary';
+                var distributionChartId = 'distributionSummary';
+
+                var chartTitle = '<span style="font-size: 16px !important;color: #0c9083;text-align: center">Completeness and Timeliness of Immunization Reports </span> ';
+                var distributionChartTitle = '<span style="font-size: 16px !important;color: #0c9083;text-align: center"> % Distribution </span> ';
+
+                loadDynamicDualAxisChart(chartId, chartTitle, para, district, onTimePercentage, reportedPercentage);
+                loadDynamicDistributionChart(distributionChartId, distributionChartTitle, para, district,distributionRate);
+            });
+        }
+
+    };
     if ($scope.homeFacility.facilitytypecode !== 'cvs') {
         console.log($scope.homeFacility.facilityid);
 
-        var para = {
+        var userLevel = ($scope.homeFacility.facilitytypecode === 'dvs') ? 'dvs' : 'rvs';
+         $scope.userLevel = userLevel;
+        $scope.filter = {};
+        var currentDate = new Date().getFullYear() - 1;
+        GetPeriodForDashboard.get(currentDate).then(function (data) {
+
+            $scope.filter.product = 2421;
+            $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
+            $scope.years = YearFilteredData.sort(function (a, b) {
+                return b - a;
+            });
+            $scope.filter.year = currentDate;
+
+            $scope.products = $scope.findProductToDisplay;
+
+            $scope.filter.period = data.id;
+            var pa = {year: currentDate, product: 2421, period: parseInt(data.id, 10), dose: 3};
+            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(2421, 10)});
+            var para = angular.extend(pa, currentDate, {
+                periodName: data.name,
+                productName: $scope.productToDisplay.name
+            });
+
+            $scope.performanceMonitoring(para, null);
+            $scope.districtCategorizationFunct(para, userLevel, userLevel);
+            $scope.districtClassificationFunc(para, userLevel, userLevel);
+            $scope.facilityClassificationFunc(para, userLevel, userLevel);
+            $scope.loadDistrictCoverageFunc(para, userLevel);
+            $scope.loadIvdReportingFunc(para, userLevel);
+
+            $scope.showfilter = false;
+
+
+            $scope.showFilter = function () {
+                $scope.products = ProductFilteredData;
+
+                $scope.showfilter = true;
+                $scope.myModal = true;
+            };
+            $scope.hideFilter = function () {
+                $scope.showfilter = false;
+            };
+
+            // $scope.loadMap(par);
+
+
+        });
+
+        $scope.loadDashboardDataForLowerLevel = function (filter) {
+            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(filter.product, 10)});
+            $scope.periodToDisplay = _.findWhere($scope.periods, {id: parseInt(filter.period, 10)});
+            $scope.doseToDisplay = filter.dose;
+            var prepareParams = angular.extend(filter, {
+                productName: $scope.productToDisplay.name,
+                periodName: $scope.periodToDisplay.name
+            });
+
+            $scope.performanceMonitoring(filter, null);
+            $scope.districtCategorizationFunct(filter, userLevel, userLevel);
+            $scope.districtClassificationFunc(filter, userLevel, userLevel);
+            $scope.facilityClassificationFunc(filter, userLevel, userLevel);
+            $scope.loadDistrictCoverageFunc(filter, userLevel);
+            $scope.loadIvdReportingFunc(filter, userLevel);
+            $scope.showfilter = false;
+        };
+
+        $scope.changeYear = function () {
+
+            $scope.periods = [];
+            ReportPeriodsByYear.get({
+                year: $scope.filter.year
+            }, function (data) {
+                $scope.periods = data.periods;
+                $scope.filter.period = $scope.periods[0].id;
+
+            });
+
+        };
+
+        $scope.periodName = [];
+        $scope.filter = {};
+        $scope.mans = [{'k': 181}];
+
+        $scope.doseByProduct = function () {
+            if ($scope.filter.product !== undefined)
+                getDoseFilter($scope.filter.product);
+
+        };
+        if ($scope.filter.product === null || $scope.filter.product === undefined) {
+            $scope.filter.product = 2412;
+        }
+
+
+        var par = {
             facilityId: parseInt($scope.homeFacility.facilityid, 10),
             date: null
         };
-        FacilityInventoryStockStatusData.get(para).then(function (data) {
+        FacilityInventoryStockStatusData.get(par).then(function (data) {
             if (data !== null) {
                 var byCategory = _.groupBy(data, function (p) {
                     return p.product_category;
@@ -946,32 +1327,32 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
     */
 
 
-        var currentDate = new Date().getFullYear() - 1;
-        GetPeriodForDashboard.get(currentDate).then(function (data) {
+        var currentDate2 = new Date().getFullYear() - 1;
+        GetPeriodForDashboard.get(currentDate2).then(function (data) {
 
             $scope.filter.product = 2421;
             $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
             $scope.years = YearFilteredData.sort(function (a, b) {
                 return b - a;
             });
-            $scope.filter.year = currentDate;
+            $scope.filter.year = currentDate2;
 
             $scope.products = $scope.findProductToDisplay;
 
             $scope.filter.period = data.id;
-            var par = {year: currentDate, product: 2421, period: parseInt(data.id, 10), dose: 3};
+            var par = {year: currentDate2, product: 2421, period: parseInt(data.id, 10), dose: 3};
             $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(2421, 10)});
-            var para = angular.extend(par, currentDate, {
+            var para = angular.extend(par, currentDate2, {
                 periodName: data.name,
                 productName: $scope.productToDisplay.name
             });
             $scope.loadCoverageMap(para);
-            $scope.districtCategorizationFunct(para);
-            $scope.districtClassificationFunc(para);
+            $scope.districtCategorizationFunct(para, null, null);
+            $scope.districtClassificationFunc(para, null, null);
             $scope.districtPerformanceFunc(para);
-            $scope.performanceMonitoring(para);
+            $scope.performanceMonitoring(para, 'cvs');
             // $scope.loadMap(par);
-            $scope.loadDistrictCoverageFunc(para);
+            $scope.loadDistrictCoverageFunc(para, null);
             $scope.getVaccineInventorySummary();
             $scope.vaccineCoverageByRegionAndProductFunc(para);
             $scope.vaccineCoverageByProductAndDoseFunc(para);
@@ -990,11 +1371,11 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
             });
 
             $scope.loadCoverageMap(filter);
-            $scope.districtCategorizationFunct(filter);
-            $scope.districtClassificationFunc(filter);
-            $scope.loadDistrictCoverageFunc(filter);
+            $scope.districtCategorizationFunct(filter, null, null);
+            $scope.districtClassificationFunc(filter, null, null);
+            $scope.loadDistrictCoverageFunc(filter, null);
             $scope.districtPerformanceFunc(filter);
-            $scope.performanceMonitoring(filter);
+            $scope.performanceMonitoring(filter, 'cvs');
             $scope.vaccineCoverageByRegionAndProductFunc(prepareParams);
             $scope.vaccineCoverageByProductAndDoseFunc(prepareParams);
             $scope.getAggregatePerformanceFunc(filter);
@@ -1075,28 +1456,28 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
         // allData();
 
 
-      /*  var product = 2413,
-            period = 121;
-        // var params = {product:2413,doseId:1,period:121,year:2017};
+        /*  var product = 2413,
+              period = 121;
+          // var params = {product:2413,doseId:1,period:121,year:2017};
 
-        var loadOnStart = function () {
-            var params = {product: 2413, doseId: 1, period: 121, year: 2017};
-            $scope.fullStockAvailability(params);
+          var loadOnStart = function () {
+              var params = {product: 2413, doseId: 1, period: 121, year: 2017};
+              $scope.fullStockAvailability(params);
 
-        };
-        //loadOnStart();
+          };
+          //loadOnStart();
 
-        $scope.OnFilterChanged = function () {
-/!*
-            if ($scope.filter === null || $scope.filter === undefined) {
-                return;
-            } else {
-                $scope.fullStockAvailability($scope.filter);
+          $scope.OnFilterChanged = function () {
+  /!*
+              if ($scope.filter === null || $scope.filter === undefined) {
+                  return;
+              } else {
+                  $scope.fullStockAvailability($scope.filter);
 
-                getDoseFilter($scope.filter);
-            }*!/
+                  getDoseFilter($scope.filter);
+              }*!/
 
-        };*/
+          };*/
 
 
         /* var chart = Highcharts.chart('container2', {
@@ -1279,9 +1660,9 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
                {name: 'combined', image: 'combined.jpg', action: ''},
                {name: 'column', image: 'column.png', action: ''},
                {name: 'area', image: 'area.jpg', action: ''},*/
-/*
-            {name: 'pie', image: 'search.png', action: ''},
-*/
+            /*
+                        {name: 'pie', image: 'search.png', action: ''},
+            */
             {name: 'filter', image: 'si-glyph-apron.svg', action: ''}
         ];
         $scope.hideIcons = function (card) {
@@ -1552,25 +1933,119 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
         });
     }
 
+    function loadDynamicChart3(chartNameId, type, chartTitle, verticalTitle, verticalTitle2, name, product, cov, total, params) {
+
+        new Highcharts.chart(chartNameId, {
+            chart: {
+                zoomType: 'xy'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: chartTitle
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: [{
+                categories: product,
+                crosshair: true,
+                labels: {
+                    style: {
+                        'font-weight': 'bold'
+                    }
+                }
+
+            }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1],
+                        'font-weight': 'bold'
+                    }
+                },
+                title: {
+                    text: verticalTitle2,
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+            }, { // Secondary yAxis
+                title: {
+                    text: verticalTitle,
+                    style: {
+                        color: Highcharts.getOptions().colors[0],
+                        'font-weight': 'bold'
+
+                    }
+                },
+                labels: {
+                    format: '{value} %',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                // x: 120,
+                verticalAlign: 'bottom',
+                // y: 100,
+                floating: false,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+            series: [{
+                name: '# Of Children Vaccinated',
+                type: 'column',
+                data: total,
+                tooltip: {
+                    valueSuffix: ''
+                }
+
+            }, {
+                name: 'Coverage',
+                type: 'spline',
+                yAxis: 1,
+                data: cov,
+                tooltip: {
+                    valueSuffix: ' %'
+                }
+            }]
+        });
+
+
+    }
+
     function coverageByProductAndDose(coverage, params) {
         var colors = {'WARN': '#ffdb00', 'BAD': '#ff0d00', 'NORMAL': '#ABC9AA', 'GOOD': '#006600'};
-
-            var dataValues =[];
-            coverage.forEach(function (data) {
-                dataValues.push({name:'byChart',color:colors[data.coverageclassification],y:data.coverage});
-            });
-        console.log(dataValues);
+        console.log(coverage);
+        var dataValues = [];
+        var totalVaccinated = [];
+        coverage.forEach(function (data) {
+            totalVaccinated.push({name: 'vaccinated', color: 'blue', y: data.total});
+            dataValues.push({name: 'byChart', color: colors[data.coverageclassification], y: data.coverage});
+        });
+        console.log(params);
 
         var cov = _.pluck(coverage, 'coverage');
+        var total = _.pluck(coverage, 'total');
         var product = _.pluck(coverage, 'product');
 
         var chartNameId = 'productByDoseChart';
         var type = 'column';
-        var chartTitle = '<span style="font-size: 15px !important;color: #0c9083;text-align: center">National Coverage</span>';
+        var chartTitle = '<span style="font-size: 20px !important;color: #0c9083;text-align: center">Immunization Coverage, Tanzania ' + params.year + '</span> ';
         var name = 'Coverage';
-        var verticalTitle = 'Percentage';
-
-        loadDynamicChart(chartNameId, type, chartTitle, verticalTitle, name, product, dataValues,params.year,params.periodName);
+        var verticalTitle = 'Coverage(%)';
+        var verticalTitle2 = '# Of Children Vaccinated';
+        loadDynamicChart3(chartNameId, type, chartTitle, verticalTitle, verticalTitle2, name, product, cov, total, params);
+        //loadDynamicChart(chartNameId, type, chartTitle, verticalTitle, name, product, dataValues,params.year,params.periodName);
 
     }
 
@@ -1677,14 +2152,14 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
     }
 
 
-    function loadDynamicChart(chartNameId, type, chartTitle, verticalTitle, name, category, dataValue,year,period) {
+    function loadDynamicChart(chartNameId, type, chartTitle, verticalTitle, name, category, dataValue, year, period) {
 
         new Highcharts.chart(chartNameId, {
             chart: {
                 type: type
             },
             legend: {
-                enabled:false,
+                enabled: false,
                 useHTML: true,
                 symbolHeight: 14,
                 symbolWidth: 14,
@@ -1711,7 +2186,7 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
                 text: chartTitle
             },
             subtitle: {
-                text: '<span style="font-size: 11px !important; color: #0c9083">( Coverage Compararison between two Antigens '+', '+period+'</span>)'
+                text: '<span style="font-size: 11px !important; color: #0c9083">( Coverage Compararison between two Antigens ' + ', ' + period + '</span>)'
             },
             xAxis: {
                 categories: category,
@@ -1774,12 +2249,12 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
             var dataValues = [];
             Highcharts.each(data, function (code, i) {
                 var colorV;
-                if (parseInt(code.value,10) <= 0 || isNaN(code.value))
+                if (parseInt(code.value, 10) <= 0 || isNaN(code.value))
                     colorV = 'black';
 
                 dataValues.push({
                     code: code.code,
-                    value: parseInt(code.value,10),
+                    value: parseInt(code.value, 10),
                     color: colorV
                     // color:interpolateCoverage(code.cumulative_vaccinated,code.monthly_district_target,code.coverageclassification.toLowerCase())
 
@@ -1795,7 +2270,7 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
                 }, credits: {enabled: false},
 
                 title: {
-                    text: '<span style="font-size: 15px !important;color: #0c9083;text-align: center">'+params.productName +'-'+params.dose+' Coverage By Region, '+params.year+'</span>'
+                    text: '<span style="font-size: 15px !important;color: #0c9083;text-align: center">' + params.productName + '-' + params.dose + ' Coverage By Region, ' + params.year + '</span>'
                 },
 
                 subtitle: {
@@ -1808,9 +2283,7 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
                     }
                 },
 
-                legend: {
-
-                },
+                legend: {},
 
                 /*   colorAxis: {
                        min: 0,
@@ -1827,11 +2300,11 @@ function StockAvailabilityControllerFunc1($scope,GetCoverageByRegionSummary,GetP
                         from: 80,
                         to: 90,
                         color: '#ffdb00',
-                        name:'80% to 89%'
+                        name: '80% to 89%'
                     }, {
                         from: 90,
                         color: '#006600',
-                        name:'90%+'
+                        name: '90%+'
 
                     }]
                 },

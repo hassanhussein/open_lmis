@@ -605,8 +605,8 @@ public class VaccineDashboardService {
         return repository.getNationalVaccineCoverage(userId, product, doseId, periodId, year);
     }
 
-    public List<HashMap<String, Object>> getNationalCoverageProductAndDose(Long userId, Long periodId, Long year,Long product) {
-        return repository.getNationalCoverageProductAndDose(userId, periodId, year,product);
+    public List<HashMap<String, Object>> getNationalCoverageProductAndDose(Long userId, Long periodId, Long year, Long product) {
+        return repository.getNationalCoverageProductAndDose(userId, periodId, year, product);
     }
 
     public List<HashMap<String, Object>> getDistrictInventorySummary(Long userId) {
@@ -635,17 +635,24 @@ public class VaccineDashboardService {
     }
 
     public List<HashMap<String, Object>> getCoverageByDistrict(Long userId, Long product, Long period, Long year, Long doseId) {
-        System.out.println(period);
         return repository.getCoverageByDistrict(userId, product, period, year, doseId);
+
+    }
+
+    public List<HashMap<String, Object>> getCoverageByFacility(Long userId, Long product, Long period, Long year, Long doseId) {
+        return repository.getCoverageByFacility(userId, product, period, year, doseId);
     }
 
     public List<HashMap<String, Object>> getCoverageByRegionSummary(Long userId, Long product, Long period, Long year, Long doseId) {
-        System.out.println(period);
         return repository.getCoverageByRegionSummary(userId, product, period, year, doseId);
     }
 
     public List<HashMap<String, Object>> getCategorizationByDistrict(Long userId, Long year) {
         return repository.getCategorizationByDistrict(userId, year);
+    }
+
+    public List<HashMap<String, Object>> getCategorizationByFacility(Long userId, Long year) {
+        return repository.getCategorizationByFacility(userId, year);
     }
 
     public List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(Long userId, String category, String period) {
@@ -655,16 +662,27 @@ public class VaccineDashboardService {
     public List<HashMap<String, Object>> getDistrictClassification(Long userId, Long product, Long year) {
         return repository.getDistrictClassification(userId, product, year);
     }
-     public List<HashMap<String, Object>> getDistrictClassificationDrillDown(Long userId,Long product,Long year,String indicator,String period) {
-            return repository.getDistrictClassificationDrillDown(userId, product, year,indicator,period);
+    public List<HashMap<String, Object>> getFacilityClassification(Long userId,Long year,Long product,Long doseId) {
+        return repository.getFacilityClassification(userId,year,product,doseId);
     }
 
-    public List<HashMap<String, Object>> getDistributionOfDistrictPerPerformance( Long userId,  Long product, Long year,Long doseId) {
-            return repository.getDistributionOfDistrictPerPerformance(userId, product, year,doseId);
+    public List<HashMap<String, Object>> getDistrictClassificationDrillDown(Long userId, Long product, Long year, String indicator, String period) {
+        return repository.getDistrictClassificationDrillDown(userId, product, year, indicator, period);
+    }
+    public List<HashMap<String, Object>> getFacilityClassificationDrillDown(Long userId, Long year, String indicator, String period) {
+        return repository.getFacilityClassificationDrillDown(userId, year, indicator, period);
     }
 
-    public List<HashMap<String, Object>> getPerformanceMonitoring( Long userId,  Long product, Long year) {
-            return repository.getPerformanceMonitoring(userId, product, year);
+    public List<HashMap<String, Object>> getDistributionOfDistrictPerPerformance(Long userId, Long product, Long year, Long doseId) {
+        return repository.getDistributionOfDistrictPerPerformance(userId, product, year, doseId);
+    }
+
+    public List<HashMap<String, Object>> getPerformanceMonitoring(Long userId, Long product, Long year) {
+        return repository.getPerformanceMonitoring(userId, product, year);
+    }
+
+    public List<HashMap<String, Object>> getIVDReportingSummary(Long userId, Long period) {
+        return repository.getIVDReportingSummary(userId, period);
     }
 
 

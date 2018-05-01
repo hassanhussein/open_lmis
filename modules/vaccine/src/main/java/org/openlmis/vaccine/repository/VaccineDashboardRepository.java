@@ -270,8 +270,15 @@ public class VaccineDashboardRepository {
         return mapper.getCoverageByDistrict(userId, product, period, year, doseId);
     }
 
+    public List<HashMap<String, Object>> getCoverageByFacility(Long userId, Long product, Long period, Long year, Long doseId) {
+        return mapper.getCoverageByFacility(userId, product, period, year, doseId);
+    }
+
     public List<HashMap<String, Object>> getCategorizationByDistrict(Long userId,Long year) {
         return mapper.getCategorizationByDistrict(userId,year);
+    }
+ public List<HashMap<String, Object>> getCategorizationByFacility(Long userId,Long year) {
+        return mapper.getCategorizationByFacility(userId,year);
     }
 
     public List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(Long userId,String category,String period) {
@@ -282,8 +289,16 @@ public class VaccineDashboardRepository {
         return mapper.getDistrictClassification(userId,product,year);
     }
 
+    public List<HashMap<String, Object>> getFacilityClassification(Long userId,Long year,Long product,Long doseId) {
+        return mapper.getFacilityClassification(userId,year,product, doseId);
+    }
+
     public List<HashMap<String, Object>> getDistrictClassificationDrillDown(Long userId,Long product,Long year,String indicator,String period) {
         return mapper.getDistrictClassificationDrillDown(userId,product,year,indicator,period);
+    }
+
+    public List<HashMap<String, Object>> getFacilityClassificationDrillDown(Long userId,Long year,String indicator,String period) {
+        return mapper.getFacilityClassificationDrillDown(userId,year,indicator,period);
     }
     public List<HashMap<String, Object>> getDistributionOfDistrictPerPerformance( Long userId,  Long product, Long year,Long doseId) {
         return mapper.getDistributionOfDistrictPerPerformance(userId,product,year,doseId);
@@ -294,6 +309,10 @@ public class VaccineDashboardRepository {
 
     public List<HashMap<String, Object>> getPerformanceMonitoring( Long userId,  Long product, Long year) {
         return mapper.getPerformanceMonitoring(userId, product, year);
+
+
+    }  public List<HashMap<String, Object>> getIVDReportingSummary( Long userId,  Long period) {
+        return mapper.getIVDReportingSummary(userId, period);
     }
 
 
