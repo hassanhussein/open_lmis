@@ -879,6 +879,21 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
 
     }
 
+    function arrangeValuesInLinear(estimateValues) {
+        var tat =[];
+        if(estimateValues.length>0){
+
+            estimateValues.reduce(function (previous, current) {
+
+                var prev = (current > previous)?current:previous;
+                tat.push(prev);
+                return prev;
+            }, []);
+        }
+
+        return tat;
+    }
+
     $scope.performanceMonitoring = function (filter, level) {
         console.log(filter);
 
@@ -895,10 +910,10 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
             });
             var performanceData = [];
             var period = [];
-            var estimate = [];
+            var estimate = [],estimateValues=[];
             var productValue = [];
-            var monthlyVaccinated = [];
-            var cumulativeVaccinated = [];
+            var monthlyVaccinated = [],monthlyVaccinatedValues = [];
+            var cumulativeVaccinated = [],cumulativeVaccinatedValues=[];
             chartIds = (level === 'cvs') ? 'performanceMonitoring' : 'performanceMonitoring1';
             title = '<span style="color: #0c9083">Performance Monitoring, ' + filter.year + '</span>';
 
@@ -907,16 +922,23 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
             // productValue.push( _.zip(period,estimate));
 
             console.log(allStockDataPointsByCategory);
-            estimate = _.pluck(allStockDataPointsByCategory[0].dataPoints, 'estimate');
+            estimateValues = _.pluck(allStockDataPointsByCategory[0].dataPoints, 'estimate');
+
+           estimate =  arrangeValuesInLinear(estimateValues);
+
 
             for (var i = 0; i <= allStockDataPointsByCategory.length - 1; i++) {
-                monthlyVaccinated = _.pluck(allStockDataPointsByCategory[i].dataPoints, 'monthlyvaccinated');
+
+                monthlyVaccinatedValues= _.pluck(allStockDataPointsByCategory[i].dataPoints, 'monthlyvaccinated');
+                monthlyVaccinated = arrangeValuesInLinear(monthlyVaccinatedValues);
+                cumulativeVaccinatedValues= arrangeValuesInLinear( _.pluck(allStockDataPointsByCategory[i].dataPoints,'vaccinated_cumulative'));
+
                 cumulativeVaccinated.push({
                     name: filter.productName + ' ' + allStockDataPointsByCategory[i].byDose,
                     type: 'line',
                     yAxis: 1,
                     zIndex: 1,
-                    data: _.pluck(allStockDataPointsByCategory[i].dataPoints, 'vaccinated_cumulative'),
+                    data:cumulativeVaccinatedValues,
                     tooltip: {
                         valueSuffix: ' '
                     }
