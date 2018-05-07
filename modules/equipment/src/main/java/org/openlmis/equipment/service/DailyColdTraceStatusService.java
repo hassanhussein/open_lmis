@@ -75,6 +75,9 @@ public class DailyColdTraceStatusService {
   }
 
   public List<ColdChainEquipmentDTO> getEquipmentList(String regionCode) {
+    if("*".equals(regionCode)){
+      return mapper.getAllEquipments();
+    }
     return mapper.getEquipmentList(regionCode);
   }
 

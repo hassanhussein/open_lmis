@@ -13,7 +13,7 @@
 package org.openlmis.web.controller.equipment;
 
 import io.swagger.annotations.Api;
-import org.openlmis.core.domain.User;
+import io.swagger.annotations.ApiOperation;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.dto.ColdChainTemperatureAlarmDTO;
@@ -24,7 +24,6 @@ import org.openlmis.equipment.service.DailyColdTraceStatusService;
 import org.openlmis.restapi.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +35,9 @@ import java.util.List;
 public class ColdTraceStatusController extends BaseController {
 
   private static final String ALARMS = "alarms";
+  private static final String EQUIPMENTS = "equipments";
+  private static final String STATUSES = "statuses";
+  private static final String COLD_TRACE_STATUS = "cold_trace_status";
 
   @Autowired
   private DailyColdTraceStatusService dailyColdTraceStatusService;
@@ -72,22 +74,28 @@ public class ColdTraceStatusController extends BaseController {
 
   @RequestMapping(value = "/rest-api/equipment/cold-trace/regional-submission-status", method = RequestMethod.GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getLastSubmissions(@RequestParam("regionCode") String regionCode) {
-    return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.getLastSubmissionStatus(regionCode));
+    return OpenLmisResponse.response(STATUSES, dailyColdTraceStatusService.getLastSubmissionStatus(regionCode));
   }
 
+  @ApiOperation(value = "returns list of equipments in geographic zone (region, district or the whole nation)",
+      notes = "<p>accepts a region code as a parameter." +
+          "<br />Valid geographic zone code (region or district code) can be passed as a regionCode to return list of equipments in respective region/district.</p>" +
+          "<p><b>National equipment list:</b>" +
+          " to retrieve the complete national equipments list, <b>*</b> should be passed as region code."
+  )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/equipments", method = RequestMethod.GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getEquipmentList(@RequestParam("regionCode") String regionCode) {
-    return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.getEquipmentList(regionCode));
+    return OpenLmisResponse.response(EQUIPMENTS, dailyColdTraceStatusService.getEquipmentList(regionCode));
   }
 
   @RequestMapping(value = "/rest-api/equipment/cold-trace/submissions-for-equipment", method = RequestMethod.GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getListOfSubmissions(@RequestParam("serialNumber") String serialNumber) {
-    return OpenLmisResponse.response("statuses", dailyColdTraceStatusService.getStatusSubmittedFor(serialNumber));
+    return OpenLmisResponse.response(STATUSES, dailyColdTraceStatusService.getStatusSubmittedFor(serialNumber));
   }
 
   @RequestMapping(value = "/equipment/cold-trace/status", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> findStatusForPeriod(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId) {
-    return OpenLmisResponse.response("cold_trace_status", dailyColdTraceStatusService.findStatusForFacilityPeriod(facilityId, periodId));
+    return OpenLmisResponse.response(COLD_TRACE_STATUS, dailyColdTraceStatusService.findStatusForFacilityPeriod(facilityId, periodId));
   }
 
   @RequestMapping(value = "/equipments/cold-trace/{facility}/{program}/{period}/alarms", method = RequestMethod.GET)
