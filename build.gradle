@@ -14,13 +14,11 @@ apply plugin: 'idea'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'properties'
 apply plugin: 'org.sonarqube'
-apply plugin: 'nebula.lint'
 
 
 idea.project.languageLevel = '1.8'
 idea.project.jdkName = '1.8'
 
-gradleLint.rules = ['unused-dependency']
 
 
 
@@ -40,7 +38,6 @@ buildscript {
     classpath "net.saliman:gradle-cobertura-plugin:2.2.7"
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.8'
     classpath "net.saliman:gradle-properties-plugin:1.4.2"
-    classpath 'com.netflix.nebula:gradle-lint-plugin:latest.release'
   }
 }
 sonarqube {
@@ -54,9 +51,6 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'properties'
-  apply plugin: 'nebula.lint'
-
-  gradleLint.rules = ['unused-dependency']
 
   sonarqube {
     properties {
