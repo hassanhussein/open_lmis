@@ -1,0 +1,2 @@
+delete from configuration_settings where key = 'DASHBOARD_DEFAULT_YEAR';
+INSERT INTO public.configuration_settings (key, value, name, description, groupname, displayorder, valuetype, valueoptions, isconfigurable) VALUES ('DASHBOARD_DEFAULT_YEAR', extract(year from NOW()), 'Dashboard Default year', NULL, 'Dashboard', '1', 'TEXT', NULL, 't');
