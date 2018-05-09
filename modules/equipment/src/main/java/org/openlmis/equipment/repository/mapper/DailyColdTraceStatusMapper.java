@@ -111,6 +111,26 @@ public interface DailyColdTraceStatusMapper {
       "ORDER BY r.name, d.name, e.name  ")
   List<ColdChainEquipmentDTO> getEquipmentList(@Param("code") String regionCode);
 
+  @Select("SELECT " +
+      "  r.code                              regionCode, " +
+      "  r.name                              regionName, " +
+      "  d.name                              districtName, " +
+      "  d.code                              districtCode, " +
+      "  f.name AS                           facilityName, " +
+      "  f.code AS                           facilityCode, " +
+      "  e.name                              equipmentName, " +
+      "  e.model, " +
+      "  i.serialnumber " +
+      " FROM equipment_inventories i " +
+      "  JOIN equipments e ON e.id = i.equipmentid " +
+      "  JOIN facilities f ON i.facilityid = f.id " +
+      "  JOIN geographic_zones d ON f.geographiczoneid = d.id " +
+      "  JOIN geographic_zones r ON r.id = d.parentid " +
+      "  LEFT JOIN geographic_zones z ON z.id = r.parentid " +
+      "ORDER BY r.name, d.name, e.name  ")
+  List<ColdChainEquipmentDTO> getAllEquipments();
+
+
   @Select("SELECT * from equipment_daily_cold_trace_status " +
       " WHERE serialNumber = #{serialNumber} " +
       " ORDER BY date desc " +
