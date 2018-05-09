@@ -1822,7 +1822,7 @@ public interface VaccineDashboardMapper {
             "\n" +
             "\n" +
             ")\n" +
-            "select CASE WHEN PRODUCTiD =2421 then 1 else 2 end as sq,productId,cumulative_vaccinated, monthly_district_target, product ||' Dose '|| DOSEID product, monthnumber,\n" +
+            "select productId,cumulative_vaccinated, monthly_district_target, CASE WHEN PRODUCTiD =2412 then product when (PRODUCTiD=2418 and doseid =2) then product ||'2+' else product ||'-'|| DOSEID end as product, monthnumber,\n" +
             "       case when monthly_district_target > 0 then\n" +
             "         ROUND( cumulative_vaccinated/ (monthly_district_target::numeric)*100,0) end as coverage,cumulative_vaccinated * monthnumber total\n" +
             "from coverage c\n" +
@@ -2106,11 +2106,12 @@ public interface VaccineDashboardMapper {
             "                     order by P.ID, period_name,catagorization")*/
 
     @Select("    With q as (\n" +
-            "                           SELECT geographiczoneid, periodid ID, period_name,catagorization FROM categorization_view w \n" +
+            "                           SELECT geographiczoneid, periodid ID,p.name period_name,catagorization FROM categorization_view w \n" +
             "                           JOIN facilities f ON f.geographiczoneid =  w.district_id\n" +
-            "                           JOIN vw_user_facilities uf ON uf.facility_id = f.id \n" +
+            "                           JOIN vw_user_facilities uf ON uf.facility_id = f.id " +
+            "                           JOIN processing_periods p ON periodid = p.id and NUMBEROFMONTHS =1\n" +
             "                           WHERE YEAR =#{year} and user_id = #{userId}\n" +
-            "                           group by periodid,period_name,geographiczoneid,catagorization\n" +
+            "                           group by periodid,p.name,geographiczoneid,catagorization\n" +
             "                           )select ID, period_name, catagorization,count(*) total from q\n" +
             "                           group by id,period_name,catagorization\n" +
             "                           ORDER BY ID, period_name,catagorization")
@@ -2502,5 +2503,32 @@ public interface VaccineDashboardMapper {
             "                                group by 1, 2, 3, 4,5 ,6  \n")
     List<HashMap<String, Object>> getIVDReportingSummary(@Param("userId") Long userId, @Param("period") Long period);
 
-
+    @Select("\n" +
+            "select periodid,periodName,\n" +
+            "SUM(a.fixed) fixed, \n" +
+            "SUM(a.planned)planned, \n" +
+            "SUM(a.conducted)conducted, \n" +
+            "SUM(a.cancelled) cancelled,\n" +
+            "case when SUM(a.planned) > 0 then round((SUM(a.conducted) / SUM(a.planned)::float) * 100) else 0 end pconducted\n" +
+            " from (\n" +
+            "select periodid,pp.name periodName,\n" +
+            "vr.facilityid, \n" +
+            "sum(COALESCE(vr.fixedimmunizationsessions,0)) fixed,\n" +
+            "sum(COALESCE(vr.plannedoutreachimmunizationsessions,0)) planned,\n" +
+            "sum(COALESCE(vr.outreachimmunizationsessions,0)) conducted,\n" +
+            "sum(COALESCE(vr.outreachimmunizationsessionscanceled,0)) cancelled\n" +
+            "from vaccine_reports vr\n" +
+            " join processing_periods pp on pp.id = vr.periodid and numberofmonths=1\n" +
+            "where extract(year from startdate) = #{year}::INT\n" +
+            " and pp.startdate <= (select startdate from processing_periods where id = #{period}::INT)\n" +
+            "group by 1,2,3\n" +
+            "order by periodid\n" +
+            "\n" +
+            " ) a\n" +
+            " JOIN facilities f ON f.id = a.facilityid\n" +
+            "join vw_districts d on f.geographiczoneid = d.district_id\n" +
+            "JOIN vw_user_districts ud ON d.district_id = ud.district_id and ud.user_id = #{userId}\n" +
+            "group by 1,2\n" +
+            "order by 1,2 ")
+    List<HashMap<String,Object>>getImmunizationSessionSummary(@Param("userId") Long userId, @Param("period") Long period,@Param("year")Long year);
 }

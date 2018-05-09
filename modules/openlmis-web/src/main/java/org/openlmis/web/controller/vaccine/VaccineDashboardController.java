@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.equipment.dto.Log;
 import org.openlmis.vaccine.service.VaccineDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -740,6 +741,17 @@ public class VaccineDashboardController extends BaseController {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("reporting_summary", service.getIVDReportingSummary(
                 loggedInUserId(request), period));
+        return response;
+    }
+
+    @RequestMapping(value = "GetImmunizationSessionSummary.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getIVDReportingSummary(
+         HttpServletRequest request,
+         @Param("period") Long period,
+         @Param("year") Long year
+         ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("session_summary", service.getImmunizationSessionSummary(loggedInUserId(request), period,year));
         return response;
     }
 

@@ -685,5 +685,9 @@ public class VaccineDashboardService {
         return repository.getIVDReportingSummary(userId, period);
     }
 
+    public List<HashMap<String, Object>> getImmunizationSessionSummary(Long userId, Long period,Long year) {
+        return repository.getImmunizationSessionSummary(userId, period,year);
+    }
+
 
 }

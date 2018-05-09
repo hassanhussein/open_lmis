@@ -311,8 +311,13 @@ public class VaccineDashboardRepository {
         return mapper.getPerformanceMonitoring(userId, product, year);
 
 
-    }  public List<HashMap<String, Object>> getIVDReportingSummary( Long userId,  Long period) {
+    }
+    public List<HashMap<String, Object>> getIVDReportingSummary( Long userId,  Long period) {
         return mapper.getIVDReportingSummary(userId, period);
+    }
+
+    public List<HashMap<String, Object>> getImmunizationSessionSummary( Long userId,  Long period,Long year) {
+        return mapper.getImmunizationSessionSummary(userId, period,year);
     }
 
 
