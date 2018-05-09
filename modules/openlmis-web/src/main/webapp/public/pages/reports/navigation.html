@@ -46,8 +46,7 @@
                openlmis-message="link.vaccine.report.categorization.vaccine.utilization.performance"></a>
           </li>
           <li ng-show="hasPermission('VIEW_VACCINE_REPORT')">
-            <a id='reportingPeformance'
-               href="/public/pages/vaccine/report/index.html#/completeness-and-timeliness"
+            <a id='reportingPeformance' href="/public/pages/vaccine/report/index.html#/completeness-and-timeliness"
                openlmis-message="report.completeness.and.timeliness.by.district.report"   ></a>
           </li>
         </ul>
@@ -273,6 +272,10 @@
           <li ng-show="hasPermission('VIEW_TIMELINESS_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#timeliness"
                openlmis-message="menu.report.reporting.timeliness"></a>
+          </li>
+          <li ng-show="hasPermission('VIEW_TIMELINESS_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#completeness-and-timeliness"
+               openlmis-message="report.completeness.and.timeliness.report"></a>
           </li>
         </ul>
       </div>

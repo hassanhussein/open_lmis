@@ -52,6 +52,8 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
         when('/min-max-stock-report', {controller: MinMaxVaccineStockReportController, templateUrl:'partials/min-max-stock.html',reloadOnSearch:false}).
         when('/distribution-summary-report', {controller: DistributionSummaryReportController, templateUrl:'partials/distribution-summary.html',reloadOnSearch:false}).
         when('/vaccine-received-summary-report', {controller: VaccineReceivedSummaryReportController, templateUrl:'partials/received-consignment.html',reloadOnSearch:false}).
+        when('/completeness-and-timeliness', {controller: CompletenesssAndTimelinessReportingController, templateUrl:'partials/completeness-and-timeliness-report.html'}).
+
           otherwise({redirectTo:'/adjustment-summary'});
     }]).config(function(angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
