@@ -1,7 +1,9 @@
-function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByFacilityData, GetCoverageByRegionSummary, GetPerformanceMonitoringData,
+function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCategorizationByFacilityData, GetCoverageByRegionSummary, GetPerformanceMonitoringData,
                                           GetDistributionOfDistrictPerPerformanceData, GetClassificationDistrictDrillDownData, GetDistrictClassificationSummaryData, GetCategorizationByDistrictDrillDownData, GetCategorizationByDistrictData,
                                           GetCoverageByDistrictData, GetInventoryByMaterialFacilityListData, VaccineDashboardFacilityInventoryStockStatus, GetCoverageMapInfo, GetInventorySummaryByLocationData, GetInventorySummaryByMaterialData, StockCardsByCategory, GetDistrictInventorySummaryData, GetRegionInventorySummaryData, homeFacility, FacilityInventoryStockStatusData, GetPeriodForDashboard, YearFilteredData, ProductFilteredData, $routeParams, leafletData, ProductService, $state, VaccineProductDoseList, ReportPeriodsByYear, VimsVaccineSupervisedIvdPrograms, AvailableStockDashboard, FullStockAvailableForDashboard, GetAggregateFacilityPerformanceData,
-                                          VaccineCoverageByProductData, GetCoverageByProductAndDoseData, GetCoverageByFacilityData, GetIVDReportingSummaryData,GetFacilityClassificationSummaryData) {
+                                          VaccineCoverageByProductData, GetCoverageByProductAndDoseData, GetCoverageByFacilityData, GetIVDReportingSummaryData,GetFacilityClassificationSummaryData,GetImmunizationSessionSummaryData) {
+
+
     $scope.region = true;
     $scope.showDistrict = function (d) {
         if (d === 'district') {
@@ -30,7 +32,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
         GetInventoryByMaterialFacilityListData.get(params).then(function (data) {
             $scope.facilityList = data;
         });
-        $('#modal12').modal().modal('open');
+        $('#modal12').modal();
 
     };
     $scope.closeStockModal = function () {
@@ -948,7 +950,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
             var chartData = [];
             var estimateValue = [];
             estimateValue = [{
-                name: 'estimate',
+                name: 'Target',
                 type: 'line',
                 yAxis: 1,
                 zIndex: 2,
@@ -1122,13 +1124,147 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
         }
 
     };
+
+
+    function loadDynamicSessionChart(chartNameId,chartTitle, verticalTitle, verticalTitle2, periods,planned, conducted,pconducted) {
+
+        new Highcharts.chart(chartNameId, {
+            chart: {
+                zoomType: 'xy'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: chartTitle
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: [{
+                categories: periods,
+                crosshair: true,
+                labels: {
+                    style: {
+                        'font-weight': 'bold'
+                    }
+                }
+
+            }],
+            yAxis: [{ // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[1],
+                        'font-weight': 'bold'
+                    }
+                },
+                title: {
+                    text: verticalTitle,
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                }
+               // gridLineColor: '',
+                //lineWidth: 1,
+               /* max: 100,
+                min: 0*/
+
+
+
+            }, { // Secondary yAxis
+                title: {
+                    text: verticalTitle2,
+                    style: {
+                        color: Highcharts.getOptions().colors[0],
+                        'font-weight': 'bold'
+
+                    }
+                },
+                labels: {
+                    format: '{value} %',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true,gridLineColor: ''
+
+            }],
+            tooltip: {
+                shared: true
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                // x: 120,
+                verticalAlign: 'bottom',
+                // y: 100,
+                floating: false,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+            },
+            series: [{
+                name: 'Number outreach sessions planned',
+                type: 'column',
+                data: planned,
+                color:'#9FB3E6',
+                tooltip: {
+                    valueSuffix: ''
+                }
+
+            }, {
+                name: 'Number outreach sessions conducted',
+                type: 'column',
+                data: conducted,
+                color:'#23006E',
+                tooltip: {
+                    valueSuffix: ''
+                }
+
+            },{
+                name: '% RI outreach sessions conducted',
+                type: 'line',
+                yAxis: 1,
+                data: pconducted,
+                color:'red',
+                tooltip: {
+                    valueSuffix: ' %'
+                }
+            }]
+        });
+
+
+    }
+
+    $scope.loadSessionSummary = function (para, userLevel) {
+
+        GetImmunizationSessionSummaryData.get(para).then(function (data) {
+
+            var periods = _.pluck(data,'periodname');
+            var planned = _.pluck(data,'planned');
+            var conducted = _.pluck(data,'conducted');
+            var pconducted = _.pluck(data,'pconducted');
+            var chartNameId = 'sessionSummaryChart';
+            var chartTitle = '<span style="font-size: 16px !important;color: #0c9083;text-align: center"> Outreach Session Planned and Conducted, '+para.year+'</span> ';
+            var verticalTitle = '<span style="font-size: 10px !important;color: #0c9083;text-align: center">Number of sessions</span>';
+            var verticalTitle2 = '<span style="font-size: 10px !important;color: #0c9083;text-align: center">% sessions conducted</span>';
+
+            loadDynamicSessionChart(chartNameId,chartTitle,verticalTitle,verticalTitle2,periods,planned, conducted,pconducted);
+
+
+        });
+
+
+
+
+    };
     if ($scope.homeFacility.facilitytypecode !== 'cvs') {
         console.log($scope.homeFacility.facilityid);
 
         var userLevel = ($scope.homeFacility.facilitytypecode === 'dvs') ? 'dvs' : 'rvs';
          $scope.userLevel = userLevel;
         $scope.filter = {};
-        var currentDate = new Date().getFullYear() - 1;
+        var currentDate = (defaultYear === null || defaultYear === undefined)?new Date().getFullYear()-1:defaultYear;
+
         GetPeriodForDashboard.get(currentDate).then(function (data) {
 
             $scope.filter.product = 2421;
@@ -1154,6 +1290,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
             $scope.facilityClassificationFunc(para, userLevel, userLevel);
             $scope.loadDistrictCoverageFunc(para, userLevel);
             $scope.loadIvdReportingFunc(para, userLevel);
+            $scope.loadSessionSummary(para,userLevel);
 
             $scope.showfilter = false;
 
@@ -1188,6 +1325,8 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
             $scope.facilityClassificationFunc(filter, userLevel, userLevel);
             $scope.loadDistrictCoverageFunc(filter, userLevel);
             $scope.loadIvdReportingFunc(filter, userLevel);
+            $scope.loadSessionSummary(filter,userLevel);
+
             $scope.showfilter = false;
         };
 
@@ -1353,7 +1492,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
     */
 
 
-        var currentDate2 = new Date().getFullYear() - 1;
+        var currentDate2 = (defaultYear === null || defaultYear === undefined)?new Date().getFullYear()-1:defaultYear;
         GetPeriodForDashboard.get(currentDate2).then(function (data) {
 
             $scope.filter.product = 2421;
@@ -2031,6 +2170,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
                 name: '# Of Children Vaccinated',
                 type: 'column',
                 data: total,
+                color:'blue',
                 tooltip: {
                     valueSuffix: ''
                 }
@@ -2040,6 +2180,7 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
                 type: 'spline',
                 yAxis: 1,
                 data: cov,
+                color:'red',
                 tooltip: {
                     valueSuffix: ' %'
                 }
@@ -2051,14 +2192,12 @@ function StockAvailabilityControllerFunc1($scope, $timeout, GetCategorizationByF
 
     function coverageByProductAndDose(coverage, params) {
         var colors = {'WARN': '#ffdb00', 'BAD': '#ff0d00', 'NORMAL': '#ABC9AA', 'GOOD': '#006600'};
-        console.log(coverage);
         var dataValues = [];
         var totalVaccinated = [];
         coverage.forEach(function (data) {
             totalVaccinated.push({name: 'vaccinated', color: 'blue', y: data.total});
             dataValues.push({name: 'byChart', color: colors[data.coverageclassification], y: data.coverage});
         });
-        console.log(params);
 
         var cov = _.pluck(coverage, 'coverage');
         var total = _.pluck(coverage, 'total');
@@ -2633,6 +2772,15 @@ StockAvailabilityControllerFunc1.resolve = {
                 deferred.resolve(homeFacility);
             });
 
+        }, 100);
+        return deferred.promise;
+    },
+    defaultYear: function($q, $timeout, ConfigSettingsByKey){
+        var deferred = $q.defer();
+        $timeout(function () {
+            ConfigSettingsByKey.get({key: 'DASHBOARD_DEFAULT_YEAR'}, function (data){
+                deferred.resolve(data.settings.value);
+            });
         }, 100);
         return deferred.promise;
     }

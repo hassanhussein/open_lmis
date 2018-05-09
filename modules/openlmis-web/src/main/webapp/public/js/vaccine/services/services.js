@@ -1447,6 +1447,31 @@ services.factory('GetFacilityClassificationSummaryData', function ($q, $timeout,
 
 });
 
+services.factory('GetImmunizationSessionSummaryData', function ($q, $timeout, $resource,GetImmunizationSessionSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetImmunizationSessionSummary.get(params, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.session_summary;
+                    console.log(stocks);
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 services.factory('FullStockAvailableForDashboard', function ($resource) {
     return $resource('/vaccine/dashboard/fullStockAvailability.json', {}, {});
 });
@@ -1553,4 +1578,8 @@ services.factory('GetIVDReportingSummary', function ($resource) {
 
 services.factory('GetFacilityClassificationSummary', function ($resource) {
     return $resource('/vaccine/dashboard/GetFacilityClassification.json', {}, {});
+});
+
+services.factory('GetImmunizationSessionSummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetImmunizationSessionSummary.json', {}, {});
 });
