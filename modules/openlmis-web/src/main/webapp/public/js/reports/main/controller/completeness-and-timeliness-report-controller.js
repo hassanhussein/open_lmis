@@ -36,13 +36,15 @@ function CompletenesssAndTimelinessReportingController($scope, CompletenessAndTi
 
     $scope.OnFilterChanged = function () {
 
+
         // prevent first time loading
-        if (utils.isEmpty($scope.periodStartDate) || utils.isEmpty($scope.periodEnddate) || !utils.isEmpty($scope.perioderror))
-            return;
+      /// if (utils.isEmpty($scope.periodStartDate) || utils.isEmpty($scope.periodEnddate) || !utils.isEmpty($scope.perioderror))
+         //   return;
 
            $scope.timelinessReportParams =  {
-               periodStart: $scope.periodStartDate,
-               periodEnd:   $scope.periodEnddate,
+               periodStart: '2018-01-01',
+               periodEnd:   '2018-10-01',
+               program: parseInt(2,10),
                range:       $scope.range,
                district:    utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone.id
            };
@@ -51,6 +53,8 @@ function CompletenesssAndTimelinessReportingController($scope, CompletenessAndTi
              $scope.timelinessReportParams ,
 
             function (data) {
+
+                 console.log(data);
 
                     var columnKeysToBeAggregated = ["target", "expected", "reported", "late", "fixed", "sessionTotal"];
                     var districtNameKey = "districtName";

@@ -45,14 +45,26 @@
             </div>
         </div>
         <div class="app-form">
+
+
             <form ng-submit="filterGrid()" name="filterForm" novalidate>
-                <div  class="clearfix">
-                    <!--================================ filter start ====================-->
-                    <vaccine-zone-filter class="horizontalFilters form-cell" facilityid="filter.facility" faccility="false" pro="filter.program" user_geo_level="user_geo_level" zones="zones" val="filter.zone" ></vaccine-zone-filter>
+                <div filter-container class="clearfix">
+                    <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                    <zone-filter class="form-cell horizontalFilters"></zone-filter>
                     <static-year-month-filter perioderror="perioderror" year="year" startdate="periodStartDate" enddate="periodEnddate" ></static-year-month-filter>
-                    <!--======================== filter end =========================-->
                 </div>
             </form>
+
+
+          <!--  <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                <div filter-container class="clearfix">
+                    &lt;!&ndash;================================ filter start ====================&ndash;&gt;
+                    <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                    <vaccine-zone-filter class="horizontalFilters form-cell" facilityid="filter.facility" faccility="false" pro="filter.program" user_geo_level="user_geo_level" zones="zones" val="filter.zone" ></vaccine-zone-filter>
+                    <static-year-month-filter perioderror="perioderror" year="year" startdate="periodStartDate" enddate="periodEnddate" ></static-year-month-filter>
+                    &lt;!&ndash;======================== filter end =========================&ndash;&gt;
+                </div>
+            </form>-->
 
             <div style="margin:2px !important;font-size:10px;"  ng-show="periodStartDate" class="row">
                 <div class="span4">
