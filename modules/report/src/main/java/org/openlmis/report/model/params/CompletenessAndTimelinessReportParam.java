@@ -25,6 +25,7 @@ import org.openlmis.report.model.ReportParameter;
 public class CompletenessAndTimelinessReportParam extends BaseParam
         implements ReportParameter {
 
+    Long program;
     Long district;
     String periodEnd;
     String periodStart;
