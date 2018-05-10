@@ -1699,7 +1699,7 @@ app.directive('staticYearFilter', ['StaticYears', 'SettingsByKey', function (Sta
 
             $scope.periodStartdate = $scope.periodEnddate = "";
             $scope.years = [];
-            SettingsByKey.get({key: 'VACCINE_LATE_REPORTING_DAYS'}, function (data, er) {
+            SettingsByKey.get({key: 'LATE_REPORTING_DAYS'}, function (data, er) {
                 if (!utils.isNullOrUndefined(data.settings.value)) {
                     $scope.cutoffdate = data.settings.value;
                 } else {
@@ -1707,6 +1707,7 @@ app.directive('staticYearFilter', ['StaticYears', 'SettingsByKey', function (Sta
                 }
             });
             StaticYears.get({}, function (data) {
+                console.log(data);
 
                 data.years.forEach(function (value) {
                     $scope.years.push(value);

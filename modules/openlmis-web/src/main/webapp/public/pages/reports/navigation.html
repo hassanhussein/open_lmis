@@ -46,8 +46,7 @@
                openlmis-message="link.vaccine.report.categorization.vaccine.utilization.performance"></a>
           </li>
           <li ng-show="hasPermission('VIEW_VACCINE_REPORT')">
-            <a id='reportingPeformance'
-               href="/public/pages/vaccine/report/index.html#/completeness-and-timeliness"
+            <a id='reportingPeformance' href="/public/pages/vaccine/report/index.html#/completeness-and-timeliness"
                openlmis-message="report.completeness.and.timeliness.by.district.report"   ></a>
           </li>
         </ul>
@@ -274,6 +273,10 @@
             <a ng-href="/public/pages/reports/main/index.html#timeliness"
                openlmis-message="menu.report.reporting.timeliness"></a>
           </li>
+          <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#completeness-and-timeliness"
+               openlmis-message="report.completeness.and.timeliness.report"></a>
+          </li>
         </ul>
       </div>
     </li>
@@ -301,11 +304,11 @@
           <li ng-show="hasPermission('VIEW_SUPPLY_STATUS_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#supply-status" openlmis-message="menu.report.supply.status"></a>
           </li>
-          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+          <li ng-show="hasPermission('VIEW_STOCK_STATUS_LOCATION_REPORT')">
             <a ng-href="/public/pages/reports/maps/index.html#stock-status"
                openlmis-message="menu.report.stock.status.by.location"></a>
           </li>
-          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+          <li ng-show="hasPermission('VIEW_STOCK_STATUS_RMNCH_REPORT')">
             <a ng-href="/public/pages/reports/maps/index.html#mnch-status" openlmis-message="menu.report.mnch.staus"></a>
           </li>
         </ul>
