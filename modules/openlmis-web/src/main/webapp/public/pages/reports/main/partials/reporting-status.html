@@ -83,8 +83,8 @@
           <div class="span8">
             <br />
             <div top-right-table-summary></div>
-            <div ng-show="reporting">Showing facilities that submitted R&R</div>
-            <div ng-show="!reporting">Showing facilities that <b class="red">did not</b> submit R&R</div>
+            <div ng-show="reporting"><span openlmis-message="label.reporting.status.facilities.that.did.submit"></span></div>
+            <div ng-show="!reporting"><span openlmis-message="label.reporting.status.facilities.did.not.submit"></span></div>
             <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
               <tr>
                 <td><span openlmis-message="label.report.no.data.to.show"></span></td>
