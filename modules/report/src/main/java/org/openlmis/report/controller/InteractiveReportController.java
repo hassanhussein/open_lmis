@@ -693,7 +693,6 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/completenessAndTimeliness", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_VACCINE_REPORT')")
     public CompletenessAndTimelinessReport getCompletenessAndTimelinessReportData(
             HttpServletRequest request
 
