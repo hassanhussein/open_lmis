@@ -524,7 +524,7 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
           '       </tr>' +
             '<tr>' +
           '       <td><b>' + messageService.get('label.stock.status.region') + '</b></td><td>' + feature.georegion + '</td>' +
-          '       <td><b>Expected Facilities</b></td>' +
+          '       <td><b>' +messageService.get('label.stock.status.expected.facilities ')+ '</b></td>' +
           '       <td>' + feature.expected + '</td></tr>' +
             '<tr>' +
           '       <td><b>' + messageService.get('label.stock.status.zone') + '</b></td><td>' + feature.geozone + '</td>' +

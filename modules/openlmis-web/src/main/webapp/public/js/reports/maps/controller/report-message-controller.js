@@ -201,7 +201,7 @@ function ReportMessageController($scope, SendMessagesReportAttachment, GetFacili
     $scope.zoneid = feature.id;
     $scope.zoneName = feature.name;
     $scope.ReportingFacilities(feature);
-    $scope.title = 'Facilities in ' + feature.name;
+    $scope.title = messageService.get('label.facilities.in') + ' ' + feature.name;
     $scope.$parent.successModal = true;
   }
 
