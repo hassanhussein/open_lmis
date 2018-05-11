@@ -73,6 +73,7 @@ public class ProductDoseMapperIT {
     VaccineProductDose dose = new VaccineProductDose();
     dose.setDoseId(1L);
     dose.setProductDisplayOrder(1L);
+    dose.setUseForWastageCalculations(true);
     dose.setDisplayName("dose 1");
     dose.setDisplayOrder(1L);
     dose.setProgramId(program.getId());
