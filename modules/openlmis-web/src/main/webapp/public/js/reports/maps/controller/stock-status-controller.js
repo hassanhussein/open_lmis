@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function StockStatusController( $window, $scope, leafletData, StockStatusProductConsumptionGraph, StockStatusProductList, StockedOutFacilityByProductList, UnderStockedFacilityByProductList, OverStockedFacilityByProductList, AdequatelyStockedFacilityByProductList, StockedOutFacilityList, UnderStockedFacilityList, OverStockedFacilityList, AdequatelyStockedFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
+function StockStatusController( $timeout,$window, $scope, leafletData, StockStatusProductConsumptionGraph, StockStatusProductList, StockedOutFacilityByProductList, UnderStockedFacilityByProductList, OverStockedFacilityByProductList, AdequatelyStockedFacilityByProductList, StockedOutFacilityList, UnderStockedFacilityList, OverStockedFacilityList, AdequatelyStockedFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
 
     $scope.default_indicator = "stocked_out";
     $scope.district_title = "All Geographic Zones";
@@ -156,8 +156,30 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.title = 'Under Stocked Facilities in ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
+            $timeout(function() {
+                markProduct($scope.filter.product);
+            }, 100);
         });
     };
+
+    function markProduct(prod) {
+
+        var markSelectedProducts = null;
+
+        if(!isUndefined($scope.products)){
+
+            markSelectedProducts = _.map($scope.products ,function(product){
+                if(product.id == prod){
+                    product.selected = true;
+                }
+                return product;
+            });
+        }
+        $scope.products =[];
+        $scope.products = markSelectedProducts;
+        loadStockStatusConsumptionData();
+
+    }
 
     $scope.OverStockedFacilities = function(feature, element) {
         OverStockedFacilityList.get({
@@ -173,6 +195,10 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.title = 'Over Stocked Facilities in ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
+
+            $timeout(function() {
+                markProduct($scope.filter.product);
+            }, 100);
         });
     };
 
@@ -190,11 +216,15 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.title = 'Adequately Stocked Facilities in ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
+            $timeout(function() {
+                markProduct($scope.filter.product);
+            }, 100);
         });
     };
 
     // stock status by product
 
+//Check to see if it mark product works
 
      $scope.StockedOutProducts = function(feature, element) {
         StockedOutFacilityByProductList.get({
@@ -207,7 +237,11 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
             $scope.title = 'Stocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
+            getStockStatusByProduct();
 
+            $timeout(function() {
+                markProduct($scope.filter.product);
+            }, 100);
         });
     };
 
