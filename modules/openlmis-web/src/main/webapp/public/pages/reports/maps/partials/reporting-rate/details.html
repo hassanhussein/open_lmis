@@ -21,10 +21,14 @@
       <div class="tabbable">
         <ul class="nav nav-tabs">
           <li class="active">
-            <a href="#notify-facility" data-toggle="tab">Notify Facility</a>
+            <a href="#notify-facility" data-toggle="tab">
+              <span openlmis-message="label.notify.facility"></span>
+            </a>
           </li>
           <li>
-            <a href="#notify-supervisor" data-toggle="tab">Notify Supervisor</a>
+            <a href="#notify-supervisor" data-toggle="tab">
+              <span openlmis-message="label.notify.supervisor"></span>
+            </a>
           </li>
         </ul>
         <div class="tab-content">
@@ -32,7 +36,7 @@
             <div ng-show="show_sms">
               <div>
                 <p>
-                  Please use the form below to customize and send sms notifications for
+                  <span openlmis-message="label.stock.status.sms.intro"></span>
                   <strong>{{selected_facility.name}}</strong>
                 </p>
 
@@ -41,7 +45,7 @@
                     <textarea rows="4" style="width: 350px;" ng-model="sms_template"></textarea>
                   </div>
                   <div>
-                    Who receives this notification?
+                   <span openlmis-message="label.stock.status.who.receives.this"></span>
                     <div>
                       <table class="table table-bordered">
                         <tr ng-repeat="contact in contacts">
@@ -58,7 +62,7 @@
             <div ng-show="show_email">
               <div>
                 <p>
-                  Use this form to customize and send email notifications for
+                  <span openlmis-message="label.stock.status.email.for"></span>
                   <strong>{{selected_facility.name}}</strong>
                 </p>
 
@@ -67,7 +71,7 @@
                     <textarea rows="4" style="width: 350px;" ng-model="email_template"></textarea>
                   </div>
                   <div>
-                    Who receives this notification?
+                    <span openlmis-message="label.stock.status.who.receives.this"></span>
                     <div>
                       <table class="table table-bordered">
                         <tr ng-repeat="contact in contacts">
@@ -110,7 +114,7 @@
                     <a class="btn btn-mini" ng-click="showSendSms(row)" ng-show="sms_enabled">SMS</a>
                   </div>
                   <div ng-show="!row.hasContacts">
-                    No Contacts
+                    <span openlmis-message="label.no.contacts"></span>
                   </div>
                   <div class="green" ng-show="row.hasContacts && row.sent">
                     Sent
@@ -127,7 +131,7 @@
             <div ng-show="show_email_supervisor">
               <div>
                 <p>
-                  Use this form to customize and send email notifications for
+                  <span openlmis-message="label.stock.status.email.for"></span>
                   <strong>{{selected_facility.name}}</strong>
                 </p>
 
@@ -136,7 +140,7 @@
                     <textarea rows="4" style="width: 350px;" ng-model="email_template_supervisor"></textarea>
                   </div>
                   <div>
-                    Who receives this notification?
+                    <span openlmis-message="label.stock.status.who.receives.this"></span>
                     <div>
                       <table class="table table-bordered">
                         <tr ng-repeat="contact in contacts">
@@ -154,9 +158,9 @@
             <table ng-show="!show_email_supervisor" class="table table-bordered">
               <thead>
               <tr>
-                <th>Facility Name</th>
-                <th>Phone</th>
-                <th>Action</th>
+                <th><span openlmis-message="label.stock.status.facility.name"></span></th>
+                <th><span openlmis-message="label.stock.status.phone"></span></th>
+                <th><span openlmis-message="label.stock.status.action"></span></th>
               </tr>
               </thead>
               <tbody>
@@ -179,7 +183,7 @@
                     <a class="btn btn-mini" ng-click="showSendEmailSupervisor(row)">Email</a>
                   </div>
                   <div ng-show="!row.hasSupervisors">
-                    No Contacts
+                    <span openlmis-message="label.no.contacts"></span>
                   </div>
                   <div class="green" ng-show="row.hasSupervisors && row.sent">
                     Sent

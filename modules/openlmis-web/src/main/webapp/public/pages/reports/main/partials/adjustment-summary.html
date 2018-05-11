@@ -82,7 +82,7 @@
                 </td>
                 <td data-title="getLocalMessage('label.supplying.facility')" style="width:120px"
                     sortable="supplyingFacility">{{
-                  row.supplyingFacility }}
+                  row.supplyingFacility == 'Unknown'? '': row.supplyingFacility }}
                 </td>
                 <td data-title="getLocalMessage('label.product')" style="width:30%" sortable="productDescription">{{
                   row.productDescription

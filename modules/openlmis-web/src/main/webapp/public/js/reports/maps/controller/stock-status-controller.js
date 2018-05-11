@@ -133,7 +133,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.successModal = true;
             $scope.filter.zone = feature.id;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Stocked Out Facilities in ' + feature.name;
+            $scope.title = messageService.get('label.stock.status.stocked.out.under.in') + ' ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
             loadStockStatusConsumptionData();
@@ -153,7 +153,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.successModal = true;
             $scope.filter.zone = feature.id;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Under Stocked Facilities in ' + feature.name;
+            $scope.title = messageService.get('label.stock.status.under.stocked.in') + ' ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
             $timeout(function() {
@@ -192,7 +192,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.successModal = true;
             $scope.filter.zone = feature.id;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Over Stocked Facilities in ' + feature.name;
+            $scope.title = messageService.get('label.stock.status.over.stocked.in') + ' ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
 
@@ -213,7 +213,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.successModal = true;
             $scope.filter.zone = feature.id;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Adequately Stocked Facilities in ' + feature.name;
+            $scope.title =  messageService.get( 'label.stock.status.adequately.stocked.in' ) + ' ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
             $timeout(function() {
@@ -236,8 +236,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Stocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
-            getStockStatusByProduct();
+            $scope.title = messageService.get('label.stock.status.stocked.out.for') + ' ' + feature.primaryname + ' in ' + $scope.district_title;getStockStatusByProduct();
 
             $timeout(function() {
                 markProduct($scope.filter.product);
@@ -255,7 +254,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'UnderStocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
+            $scope.title = messageService.get('label.stock.status.under.stocked.for') + ' ' + feature.primaryname + ' in ' + $scope.district_title;
         });
 
     };
@@ -270,7 +269,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Over Stocked Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
+            $scope.title = messageService.get('label.stock.status.over.stocked.for') + ' ' + feature.primaryname + ' in ' + $scope.district_title;
         });
 
     };
@@ -285,7 +284,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             $scope.productPopup = data.products;
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
-            $scope.title = 'Adequately Stocked Facilities for '+ feature.primaryname + ' in ' + $scope.district_title;
+            $scope.title = messageService.get('label.stock.status.adequately.stocked.for') + ' '+ feature.primaryname + ' in ' + $scope.district_title;
         });
 
     };
@@ -343,7 +342,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             var barsOption = generateBarsOption(productId, periodSeries, productName);
 
             $scope.productstocks.push({productId: productId,options: barsOption, dataSeries: [{
-                label: "SOH",
+                label: messageService.get('label.stock.status.soh'),
                 data: quantityOnHandSeries,
                 color: "#5eb95e",
                 bars: {
@@ -354,14 +353,14 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
                     lineWidth:1
                 }
             },{
-                label: "Consumed",
+                label: messageService.get('label.stock.status.consumed'),
                 data: quantityConsumedSeries,
                  yaxis: 3,
                 color: "#4bb1cf",
                 points: { fillColor: "#4bb1cf", show: $scope.showConsumed },
                 lines: {show:$scope.showConsumed}
             },{
-                label:"AMC",
+                label:messageService.get('label.stock.status.amc'),
                 data: amcSeries,
                  yaxis: 3,
                 color: "#faa732",
@@ -394,7 +393,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
                     position: "left",
                     //max: 1070,
                     color: "#5eb95e",
-                    axisLabel: "SOH",
+                    axisLabel: messageService.get('label.stock.status.soh'),
                     axisLabelUseCanvas: true,
                     axisLabelFontSizePixels: 12,
                     axisLabelFontFamily: 'Verdana, Arial',
@@ -404,7 +403,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
                 {
                     position: "right",
                     color: "#dd514c",
-                    axisLabel: "Consumption",
+                    axisLabel: messageService.get('label.stock.status.consumption'),
                     axisLabelUseCanvas: true,
                     axisLabelFontSizePixels: 12,
                     axisLabelFontFamily: 'Verdana, Arial',
@@ -415,7 +414,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
                     position: "right",
                     //tickSize: 50,
                     color: "#faa732",
-                    axisLabel: "AMC/Consumption",
+                    axisLabel: messageService.get('label.stock.status.amc'),
                     axisLabelUseCanvas: true,
                     axisLabelFontSizePixels: 12,
                     axisLabelFontFamily: 'Verdana, Arial',
@@ -487,16 +486,16 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
 
     $scope.indicator_types = [{
         code: 'adequately_stocked',
-        name: 'Adequately Stocked'
+        name: messageService.get('label.stock.status.adequately.stocked')
     }, {
         code: 'over_stocked',
-        name: 'Over Stocked'
+        name: messageService.get('label.stock.status.over.stocked')
     }, {
         code: 'under_stocked',
-        name: 'Under Stocked'
+        name: messageService.get('label.stock.status.under.stocked')
     }, {
         code: 'stocked_out',
-        name: 'Stocked Out'
+        name: messageService.get('label.stock.status.stocked.out')
     }];
 
 
@@ -548,14 +547,49 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
 
     function popupFormat(feature) {
 
-        return '<table class="table table-bordered" style="width: 310px;"><tr><td><b>District</b></td><td>' + feature.properties.name + '</td><td><b>Total Facilities</b></td><td>' + feature.total + '</td></tr>' +
-            '<tr><td><b>Region</b></td><td>' + feature.georegion + '</td><td><b>Expected Facilities</b></td><td>' + feature.expected + '</td></tr>' +
-            '<tr><td><b>Zone</b></td><td>' + feature.geozone + '</td><td><b>Reported This Period</b></td><td>' + feature.period + '</td></tr></table>' +
-            '<table class="table table-bordered" style="width: 310px;"><tr><th class="bold">Indicator</th><th class="bold">This Period</th><th class="bold">Previous Period</th></tr>' +
-            '<tr bgcolor="#dd514c"><td class="bold">Stocked Out</td><td class="number">' + feature.stockedout + '</td><td class="number">' + feature.stockedoutprev + '</td></tr>' +
-            '<tr bgcolor="#faa732"><td class="bold">Under Stocked</td><td class="number">&nbsp;&nbsp;' + feature.understocked + '</td><td class="number">' +feature.understockedprev +'</td></tr>' +
-            '<tr bgcolor="#4bb1cf"><td>Over Stocked</td><td class="number">&nbsp;&nbsp;' + feature.overstocked + '</td><td class="number">' +feature.overstockedprev +'</td></tr>' +
-            '<tr bgcolor="#5eb95e"><td>Adequately Stocked</td><td class="number">&nbsp;&nbsp;' + feature.adequatelystocked + '</td><td class="number">' +feature.adequatelystockedprev +'</td></tr>';
+        return '<table class="table table-bordered" style="width: 310px;">' +
+                ' <tr>' +
+          '         <td><b>' + messageService.get('label.stock.status.district') + '</b>' +
+          '         </td>' +
+          '         <td>' + feature.properties.name + '</td>' +
+          '         <td><b>' + messageService.get('label.stock.status.total.facilities') + '</b></td>' +
+          '         <td>' + feature.total + '</td>' +
+          '       </tr>' +
+            '<tr>' +
+          '       <td><b>' + messageService.get('label.stock.status.region') + '</b></td><td>' + feature.georegion + '</td>' +
+          '       <td><b>' +messageService.get('label.stock.status.expected.facilities ')+ '</b></td>' +
+          '       <td>' + feature.expected + '</td></tr>' +
+            '<tr>' +
+          '       <td><b>' + messageService.get('label.stock.status.zone') + '</b></td><td>' + feature.geozone + '</td>' +
+          '       <td><b>' + messageService.get('label.stock.status.reported.this.month') + '</b></td>' +
+          '       <td>' + feature.period + '</td></tr>' +
+          '</table>' +
+          '<table class="table table-bordered" style="width: 310px;">' +
+          '     <tr>' +
+          '       <th class="bold">' + messageService.get('label.stock.status.indicator') + '</th>' +
+          '       <th class="bold">' + messageService.get('label.stock.status.this.period') + '</th>' +
+          '       <th class="bold">'  + messageService.get('label.stock.status.previous.period') + '</th>' +
+          '</tr>' +
+          '<tr bgcolor="#dd514c">' +
+          '     <td class="bold">' + messageService.get('label.stock.status.stocked.out') + '</td>' +
+          '     <td class="number">' + feature.stockedout + '</td>' +
+          '     <td class="number">' + feature.stockedoutprev + '</td>' +
+          '</tr>' +
+          '<tr bgcolor="#faa732">' +
+          '     <td class="bold">' +  messageService.get('label.stock.status.under.stocked') + '</td>' +
+          '     <td class="number">&nbsp;&nbsp;' + feature.understocked + '</td>' +
+          '     <td class="number">' +feature.understockedprev +'</td>' +
+          '</tr>' +
+          '<tr bgcolor="#4bb1cf">' +
+          '     <td>' + messageService.get('label.stock.status.over.stocked') + '</td>' +
+          '     <td class="number">&nbsp;&nbsp;' + feature.overstocked + '</td>' +
+          '     <td class="number">' +feature.overstockedprev +'</td>' +
+          '</tr>' +
+          '<tr bgcolor="#5eb95e">' +
+          '     <td>' + messageService.get('label.stock.status.adequately.stocked') + '</td>' +
+          '     <td class="number">&nbsp;&nbsp;' + feature.adequatelystocked + '</td>' +
+          '     <td class="number">' +feature.adequatelystockedprev +'</td>' +
+          '</tr>';
 
     }
 
