@@ -84,7 +84,9 @@ public interface IvdFormMapper {
                     many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.BreastFeedingLineItemMapper.getLineItems")),
 
             @Result(property = "weightAgeRatioLineItems", javaType = List.class, column = "id",
-                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.WeightAgeRatioLineItemMapper.getLineItems"))
+                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.WeightAgeRatioLineItemMapper.getLineItems")),
+            @Result(property = "coverageAgeGroupLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.CoverageLineItemAgeGroupMapper.getLineItems"))
 
 
     })

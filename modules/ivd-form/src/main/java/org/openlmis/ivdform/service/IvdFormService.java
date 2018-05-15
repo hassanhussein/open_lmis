@@ -136,6 +136,11 @@ public class IvdFormService {
 
     @Autowired
     WeightCategoryRepository categoryRepository;
+    @Autowired
+    CoverageLineItemAgeGroupRepository coverageLineItemAgeGroupRepository;
+
+    @Autowired
+    ProductDoseAgeGroupService productDoseAgeGroupService;
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
@@ -228,6 +233,7 @@ public class IvdFormService {
 
         List<WeightCategory> weightCategoryList = categoryRepository.getAll();
 
+        List<VaccineProductDoseAgeGroup>productDoseAgeGroupList = productDoseAgeGroupService.getProgramProductDoses(programId);
 
         VaccineReport previousReport = this.getPreviousReport(facilityId, programId, periodId);
 
@@ -264,7 +270,7 @@ public class IvdFormService {
 
         report.initializeWeightAgeRatioLineItems(weightAgeRatioAgeGroupList, weightCategoryList, defaultFieldsToZero);
 
-
+        report.initializeCoverageAgeGroupLineItems(dosesToCover,productDoseAgeGroupList,defaultFieldsToZero);
         return report;
     }
 

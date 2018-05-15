@@ -75,6 +75,8 @@ public class VaccineReport extends BaseModel {
   private List<ColdChainLineItem> coldChainLineItems;
   private List<ReportStatusChange> reportStatusChanges;
 
+  private List<VaccineCoverageAgeGroupLineItem> coverageAgeGroupLineItems;
+
   public String rejectionComment;
 
   public String source;
@@ -160,27 +162,32 @@ private List<WeightAgeRatioLineItem> weightAgeRatioLineItems;
   public void initializeCoverageLineItems(List<VaccineProductDose> dosesToCover, Boolean defaultFieldsToZero) {
     coverageLineItems = new ArrayList<>();
     for (VaccineProductDose dose : dosesToCover) {
-      VaccineCoverageItem item = new VaccineCoverageItem();
-      item.setReportId(id);
-      item.setDoseId(dose.getDoseId());
-      item.setTrackMale(dose.getTrackMale());
-      item.setTrackFemale(dose.getTrackFemale());
-      item.setDisplayOrder(dose.getDisplayOrder());
-      item.setDisplayName(dose.getDisplayName());
-      item.setProductName(dose.getProductName());
-      item.setProductId(dose.getProductId());
-      if(defaultFieldsToZero){
-        item.setRegularMale(0L);
-        item.setRegularFemale(0L);
-        item.setCampaignMale(0L);
-        item.setCampaignFemale(0L);
-        item.setOutreachMale(0L);
-        item.setOutreachFemale(0L);
-      }
 
-      coverageLineItems.add(item);
+        VaccineCoverageItem item = new VaccineCoverageItem();
+         item.setReportId(id);
+          item.setDoseId(dose.getDoseId());
+          item.setTrackMale(dose.getTrackMale());
+          item.setTrackFemale(dose.getTrackFemale());
+          item.setDisplayOrder(dose.getDisplayOrder());
+          item.setDisplayName(dose.getDisplayName());
+          item.setProductName(dose.getProductName());
+          item.setProductId(dose.getProductId());
+
+          if (defaultFieldsToZero) {
+            item.setRegularMale(0L);
+            item.setRegularFemale(0L);
+            item.setCampaignMale(0L);
+            item.setCampaignFemale(0L);
+            item.setOutreachMale(0L);
+            item.setOutreachFemale(0L);
+          }
+
+          coverageLineItems.add(item);
+        }
+
+
     }
-  }
+
 
   public void initializeColdChainLineItems(List<ColdChainLineItem> lineItems, Boolean defaultFieldsToZero) {
     if(defaultFieldsToZero) {
@@ -349,5 +356,43 @@ private List<WeightAgeRatioLineItem> weightAgeRatioLineItems;
     }
   }
 
+
+    public void initializeCoverageAgeGroupLineItems(List<VaccineProductDose> dosesToCover,List<VaccineProductDoseAgeGroup>ageGroups, Boolean defaultFieldsToZero) {
+        coverageAgeGroupLineItems = new ArrayList<>();
+       // for (VaccineProductDose dose : dosesToCover) {
+            for (VaccineProductDoseAgeGroup ageGroup : ageGroups) {
+                for (VaccineProductDose dose : dosesToCover) {
+                VaccineCoverageAgeGroupLineItem item = new VaccineCoverageAgeGroupLineItem();
+
+                 if(dose.getDoseId().equals(ageGroup.getDoseId()) && dose.getProductId().equals(ageGroup.getProductId())) {
+
+                item.setReportId(id);
+                item.setDoseId(ageGroup.getDoseId());
+                item.setTrackMale(true);
+                item.setTrackFemale(true);
+                item.setDisplayOrder(ageGroup.getDisplayOrder());
+                item.setDisplayName(dose.getDisplayName());
+                item.setProductName(ageGroup.getProductName());
+                item.setProductId(ageGroup.getProductId());
+                item.setAgeGroupName(ageGroup.getAgeGroupName());
+                item.setAgeGroupId(ageGroup.getAgeGroupId());
+
+                if (defaultFieldsToZero) {
+                    item.setRegularMale(0L);
+                    item.setRegularFemale(0L);
+                    item.setCampaignMale(0L);
+                    item.setCampaignFemale(0L);
+                    item.setOutreachMale(0L);
+                    item.setOutreachFemale(0L);
+                }
+
+
+                    coverageAgeGroupLineItems.add(item);
+                }
+                }
+            }
+
+      //  }
+    }
 
 }

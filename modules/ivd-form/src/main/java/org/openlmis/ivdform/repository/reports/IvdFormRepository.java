@@ -74,6 +74,7 @@ public class IvdFormRepository {
     lineItemService.saveTtStatusLineItems(dbVersion,report.getTtStatusLineItems(),report.getId(),userId);
     lineItemService.saveBreastFeedingLineItems(dbVersion,report.getBreastFeedingLineItems(),report.getId(),userId);
     lineItemService.saveWeightAgeRatioLineItems(dbVersion,report.getWeightAgeRatioLineItems(),report.getId(),userId);
+    lineItemService.saveCoverageAgeGroupLineItems(dbVersion, report.getCoverageAgeGroupLineItems(), report.getId(),userId);
 
   }
 

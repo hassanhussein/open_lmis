@@ -13,6 +13,7 @@
 package org.openlmis.ivdform.service;
 
 import org.openlmis.ivdform.domain.reports.*;
+import org.openlmis.ivdform.repository.CoverageLineItemAgeGroupRepository;
 import org.openlmis.ivdform.repository.reports.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,9 @@ public class LineItemService {
 
     @Autowired
     WeightAgeRatioLineItemRepository ratioLineItemRepository;
+
+    @Autowired
+    CoverageLineItemAgeGroupRepository lineItemAgeGroupRepository;
 
     public void saveLogisticsLineItems(VaccineReport dbVersion, List<LogisticsLineItem> lineItems, Long reportId, Long userId) {
         for (LogisticsLineItem lineItem : emptyIfNull(lineItems)) {
@@ -397,5 +401,29 @@ public class LineItemService {
 
     }
 
+
+    public void saveCoverageAgeGroupLineItems(VaccineReport dbVersion, List<VaccineCoverageAgeGroupLineItem> lineItems, Long reportId, Long userId) {
+        for (VaccineCoverageAgeGroupLineItem lineItem : emptyIfNull(lineItems)) {
+
+            if (null != dbVersion) {
+                Optional<VaccineCoverageAgeGroupLineItem> dbCoverageLineItem = dbVersion.getCoverageAgeGroupLineItems()
+                        .parallelStream()
+                        .filter(t -> t.getProductId().equals(lineItem.getProductId()) && t.getDoseId().equals(lineItem.getDoseId())
+                                && t.getAgeGroupId().equals(lineItem.getAgeGroupId()))
+                        .findFirst();
+
+                if (dbCoverageLineItem.isPresent()) {
+                    dbCoverageLineItem.get().copyValuesFrom(lineItem);
+                    dbCoverageLineItem.get().setModifiedBy(userId);
+                    lineItemAgeGroupRepository.update(dbCoverageLineItem.get());
+                    continue;
+                }
+            }
+            if (!lineItem.hasId()) {
+                lineItem.setReportId(reportId);
+                lineItemAgeGroupRepository.insert(lineItem);
+            }
+        }
+    }
 
 }

@@ -14,9 +14,12 @@ package org.openlmis.ivdform.controller;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.ivdform.domain.VaccineProductDose;
+import org.openlmis.ivdform.domain.VaccineProductDoseAgeGroup;
 import org.openlmis.ivdform.dto.VaccineServiceConfigDTO;
+import org.openlmis.ivdform.service.ProductDoseAgeGroupService;
 import org.openlmis.ivdform.service.ProductDoseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,35 +27,68 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "/vaccine/product-dose/")
 public class ProductDoseController extends BaseController {
 
-  private static final String PROTOCOL = "protocol";
-  private static final String DOSES = "doses";
+    private static final String PROTOCOL = "protocol";
+    private static final String DOSES = "doses";
+    private static final String VACCINE_PROTOCOL = "protocol";
 
-  @Autowired
-  private ProductDoseService service;
+    @Autowired
+    private ProductDoseService service;
 
-  @RequestMapping(value = "get/{programId}")
-  public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId) {
-    VaccineServiceConfigDTO dto = service.getProductDoseForProgram(programId);
-    return OpenLmisResponse.response(PROTOCOL, dto);
-  }
+    @Autowired
+    private ProductDoseAgeGroupService ageGroupService;
 
-  @RequestMapping(value = "save", headers = ACCEPT_JSON, method = RequestMethod.PUT)
-  public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceConfigDTO config) {
-    service.save(config.getProtocols());
-    return OpenLmisResponse.response(PROTOCOL, config);
-  }
+    @RequestMapping(value = "get/{programId}")
+    public ResponseEntity<OpenLmisResponse> getProgramProtocol(@PathVariable Long programId) {
+        VaccineServiceConfigDTO dto = service.getProductDoseForProgram(programId);
+        return OpenLmisResponse.response(PROTOCOL, dto);
+    }
 
-  @RequestMapping(value = "get/{programId}/{productId}")
-  public ResponseEntity<OpenLmisResponse> getDosesByProductAndProgram(@PathVariable Long programId,
-                                                                      @PathVariable Long productId) {
-    List<VaccineProductDose> doses = service.getProductDosesListByProgramProduct(programId, productId);
-    return OpenLmisResponse.response(DOSES, doses);
-  }
+    @RequestMapping(value = "save", headers = ACCEPT_JSON, method = RequestMethod.PUT)
+    public ResponseEntity<OpenLmisResponse> save(@RequestBody VaccineServiceConfigDTO config) {
+        service.save(config.getProtocols());
+        return OpenLmisResponse.response(PROTOCOL, config);
+    }
+
+    @RequestMapping(value = "get/{programId}/{productId}")
+    public ResponseEntity<OpenLmisResponse> getDosesByProductAndProgram(@PathVariable Long programId,
+                                                                        @PathVariable Long productId) {
+        List<VaccineProductDose> doses = service.getProductDosesListByProgramProduct(programId, productId);
+        return OpenLmisResponse.response(DOSES, doses);
+    }
+
+
+    @RequestMapping(value = "get_vaccine/{programId}")
+    public ResponseEntity<OpenLmisResponse> getProgramVaccineProtocol(@PathVariable Long programId) {
+        VaccineServiceConfigDTO dto = ageGroupService.getProductDoseForProgram(programId);
+        return OpenLmisResponse.response(VACCINE_PROTOCOL, dto);
+    }
+
+    @RequestMapping(value = "saveProduct", headers = ACCEPT_JSON, method = RequestMethod.PUT)
+    public ResponseEntity<OpenLmisResponse> saveProduct(@RequestBody VaccineServiceConfigDTO config, HttpServletRequest request) {
+
+        ageGroupService.save(config.getVaccineProtocols(),loggedInUserId(request));
+        return OpenLmisResponse.response(VACCINE_PROTOCOL, config);
+    }
+
+
+    @RequestMapping(value = "getVaccine/{programId}/{productId}")
+    public ResponseEntity<OpenLmisResponse> getDosesByProductAndProgramAgeGroup(@PathVariable Long programId,
+                                                                                @PathVariable Long productId) {
+        List<VaccineProductDoseAgeGroup> doses = ageGroupService.getProductDosesListByProgramProduct(programId, productId);
+        return OpenLmisResponse.response(DOSES, doses);
+    }
+
+    @RequestMapping(value = "getAllAgeGroups", headers = ACCEPT_JSON, method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getAllAgeGroups() {
+        return OpenLmisResponse.response("ageGroups", ageGroupService.getAllAgeGroups());
+    }
+
 
 }

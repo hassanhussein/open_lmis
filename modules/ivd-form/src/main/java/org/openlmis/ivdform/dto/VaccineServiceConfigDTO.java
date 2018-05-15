@@ -33,5 +33,6 @@ public class VaccineServiceConfigDTO {
   private List<ProductDoseDTO> protocols;
   private List<Product> possibleProducts;
   private List<VaccineDose> possibleDoses;
+  private List<VaccineProductDoseAgeGroupDTO>vaccineProtocols;
 
 }

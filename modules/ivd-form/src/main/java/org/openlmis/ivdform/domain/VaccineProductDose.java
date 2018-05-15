@@ -44,4 +44,6 @@ public class VaccineProductDose extends BaseModel {
 
   Long denominatorEstimateCategoryId;
 
+  Long ageCategoryId;
+
 }
