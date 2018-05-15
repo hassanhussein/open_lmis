@@ -24,9 +24,9 @@ import java.util.List;
 public interface CoverageMapper {
 
   @Insert("INSERT into vaccine_report_coverage_line_items " +
-      " (reportId, productId, doseId, displayName, displayOrder , trackMale, trackFemale, regularMale, regularFemale, outreachMale, outreachFemale, campaignMale, campaignFemale, createdBy, createdDate, modifiedBy, modifiedDate) " +
+      " (reportId, productId, doseId, displayName, displayOrder , trackMale, trackFemale, regularMale, regularFemale, outreachMale, outreachFemale, campaignMale, campaignFemale, createdBy, createdDate, modifiedBy, modifiedDate,ageGroupId,ageGroupName) " +
       " values " +
-      " (#{reportId}, #{productId}, #{doseId}, #{displayName}, #{displayOrder}, #{trackMale}, #{trackFemale}, #{regularMale}, #{regularFemale}, #{outreachMale}, #{outreachFemale}, #{campaignMale}, #{campaignFemale}, #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      " (#{reportId}, #{productId}, #{doseId}, #{displayName}, #{displayOrder}, #{trackMale}, #{trackFemale}, #{regularMale}, #{regularFemale}, #{outreachMale}, #{outreachFemale}, #{campaignMale}, #{campaignFemale}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{ageGroupId},#{ageGroupName})")
   @Options(useGeneratedKeys = true)
   Integer insert(VaccineCoverageItem item);
 
@@ -45,7 +45,9 @@ public interface CoverageMapper {
       " , outreachMale = #{outreachMale} " +
       " , outreachFemale = #{outreachFemale} " +
       " , campaignMale = #{campaignMale} " +
-      " , campaignFemale = #{campaignFemale} " +
+      " , campaignFemale = #{campaignFemale}" +
+      " ,ageGroupId = #{ageGroupId} " +
+      " ,ageGroupName = #{ageGroupName}   " +
       " , modifiedBy = #{modifiedBy} " +
       " , modifiedDate = NOW()" +
       " WHERE id = #{id} ")
