@@ -34,9 +34,15 @@ services.factory('SaveVaccineDisease', function ($resource) {
 services.factory('SaveVaccineProductDose', function ($resource) {
     return $resource('/vaccine/product-dose/save.json', {}, update);
 });
+services.factory('SaveVaccineProductDoseAgeGroup', function ($resource) {
+    return $resource('/vaccine/product-dose/saveProduct.json', {}, update);
+});
 
 services.factory('VaccineProductDose', function ($resource) {
     return $resource('/vaccine/product-dose/get/:programId.json', {productId: '@programId'}, {});
+});
+services.factory('VaccineProductDoseAgeGroup', function ($resource) {
+    return $resource('/vaccine/product-dose/get_vaccine/:programId.json', {productId: '@programId'}, {});
 });
 
 services.factory('VaccineIvdTabConfigs', function ($resource) {
@@ -1583,3 +1589,9 @@ services.factory('GetFacilityClassificationSummary', function ($resource) {
 services.factory('GetImmunizationSessionSummary', function ($resource) {
     return $resource('/vaccine/dashboard/GetImmunizationSessionSummary.json', {}, {});
 });
+
+services.factory('CoverageAgeGroups', function ($resource) {
+    return $resource('/vaccine/product-dose/getAllAgeGroups.json', {}, {});
+});
+
+
