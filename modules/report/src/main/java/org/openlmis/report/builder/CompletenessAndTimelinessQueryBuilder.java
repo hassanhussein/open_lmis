@@ -59,7 +59,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                                join vw_requisitions_submitted_status r on r.programid = ps.programid and r.facilityid = ps.facilityid  and status in ('SUBMITTED','APPROVED','REJECTED')   \n" +
                 "                                                                join processing_periods pp on pp.id = r.periodid    \n" +
                 "                                                                right join facilities f on f.id = ps.facilityId      \n" +
-                "                                                                and pp.startdate::date >= '2018-01-01'::date and pp.enddate::date <=  '2018-12-31'::date  \n" +
+                "                                                                and pp.startdate::date >='" + params.getPeriodStart() + "'::date and pp.enddate::date <=   '" + params.getPeriodEnd() +"'::date \n" +
                 "                                                                join geographic_zones z on z.id = f.geographicZoneId     \n" +
                 "                                                       )      \n" +
                 "                                                         select                                                 \n" +
@@ -75,20 +75,20 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                        from temp t    \n" +
                 "                                                            join vw_districts vd on vd.district_id = t.geographiczoneid                 \n" +
                 "                \n" +
-                "                                                        where vd.district_id in (select district_id from vw_user_facilities where user_id = 2   and program_id = 2)   \n" +
+                "                                                        where vd.district_id in (select district_id from vw_user_facilities where user_id =  '" + params.getUserId() + "'::int   and program_id =  " + params.getProgram() + "::int)   \n" +
                 "                                                        group by 1, 2, 3, 4,5 ,6   \n" +
                 "                                                   \n" +
                 "                                                ) a  ),                                                   \n" +
                 "                                                completness_with_nonreporting_periods as (  \n" +
                 "                                                      select c.geographiczoneid, periods.*,  \n" +
                 "                                                            (select count(*) from vw_facility_start_periods fsp  \n" +
-                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and uf.program_id = 2 and uf.user_id = 2    \n" +
+                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and uf.program_id =  '" + params.getProgram() + "'::int and uf.user_id =  '" + params.getUserId() + "'::int    \n" +
                 "                                                             where fsp.startdate <= periods.period_end_date  \n" +
                 "                                                         and fsp.geographiczoneid = c.geographiczoneid ) expected  \n" +
                 "                                                        from   \n" +
                 "                                                         (  \n" +
                 "                                                              select id, scheduleid,name period_name, startdate period_start_date, enddate period_end_date from processing_periods pp   \n" +
-                "                                                                where pp.startdate::date >= '2018-01-01'::date and pp.enddate::date <= '2018-12-31'::date \n" +
+                "                                                                where pp.startdate::date >=  '" + params.getPeriodStart() + "'::date and pp.enddate::date <=  '" + params.getPeriodEnd() + "'::date \n" +
                 "                                                              AND pp.numberofmonths = 1   \n" +
                 "                                                          ) periods ,   \n" +
                 "                                                          (  \n" +
@@ -168,7 +168,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                      join vw_requisitions_submitted_status vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid and status in ('SUBMITTED','APPROVED','REJECTED')    \n" +
                 "                      join processing_periods pp on pp.id = vr.periodid    \n" +
                 "                      right join facilities f on f.id = ps.facilityId      \n" +
-                "                      and pp.startdate::date >= '"+params.getPeriodStart()+"' and pp.enddate::date <= '"+params.getPeriodEnd()+"'   \n" +
+                "                      and pp.startdate::date >= '"+params.getPeriodStart()+"'::date and pp.enddate::date <= '"+params.getPeriodEnd()+"'::date   \n" +
                 "                      join geographic_zones z on z.id = f.geographicZoneId     \n" +
                 "                      )      \n" +
                 "\n" +
@@ -184,7 +184,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                      sum(case when reporting_status = 'L' then 1 else 0 end) late   \n" +
                 "                    from temp t    \n" +
                 "                        join vw_districts vd on vd.district_id = t.geographiczoneid   \n" +
-                "                       where vd.district_id in (select district_id from vw_user_facilities where user_id = 2    and program_id = 2)  \n" +
+                "                       where vd.district_id in (select district_id from vw_user_facilities where user_id =  " + params.getUserId() + "::int   and program_id =  " + params.getProgram() + "::int)  \n" +
                 "                     group by 1, 2, 3, 4,5 ,6   \n" +
                 "                  ) a    \n" +
                 "                     ),   \n" +
@@ -192,7 +192,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                completness_with_nonreporting_periods as (  \n" +
                 "                                      select c.geographiczoneid, periods.*,  \n" +
                 "                                            (select count(*) from vw_facility_start_periods fsp  \n" +
-                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and uf.program_id = 2 and uf.user_id = 2    \n" +
+                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and uf.program_id =  " + params.getProgram() + "::int and uf.user_id =  " + params.getUserId() + "::int   \n" +
                 "                                       where fsp.startdate <= periods.period_start_date  \n" +
                 "                                         and fsp.geographiczoneid = c.geographiczoneid) expected  \n" +
                 "                                        from   \n" +

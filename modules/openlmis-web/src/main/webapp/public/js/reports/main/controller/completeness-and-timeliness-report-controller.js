@@ -17,94 +17,99 @@ function CompletenesssAndTimelinessReportingController($scope, CompletenessAndTi
 
         _.each(data.settings.list, function (item) {
 
-           if (item.key === "VCP_NON_REPORTING") {
+            if (item.key === "VCP_NON_REPORTING") {
                 $scope.color_non_reporting = item.value;
             }
         });
     });
-
-    $scope.exportReport   = function (type){
+    $scope.filter = {};
+    $scope.filter.max = 10000;
+    $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.timelinessReportParams);
-        var url = '/reports/download/completeness_and_timelness/' + type +'?' + params;
+        var url = '/reports/download/completeness_and_timelness/' + type + '?' + params;
         window.open(url);
     };
 
-    $scope.timelinessReportParams ={};
-
+    $scope.timelinessReportParams = {};
 
 
     $scope.OnFilterChanged = function () {
 
 
         // prevent first time loading
-      /// if (utils.isEmpty($scope.periodStartDate) || utils.isEmpty($scope.periodEnddate) || !utils.isEmpty($scope.perioderror))
-         //   return;
-
-           $scope.timelinessReportParams =  {
-               periodStart: '2018-01-01',
-               periodEnd:   '2018-10-01',
-               program: parseInt(2,10),
-               range:       $scope.range,
-               district:    utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone.id
-           };
+        if (utils.isEmpty($scope.filter.periodStartDate) || utils.isEmpty($scope.filter.periodEnddate) || !utils.isEmpty($scope.filter.perioderror))
+            return;
+        $scope.timelinessReportParams = {
+            periodStart: $scope.filter.periodStartDate,
+            periodEnd: $scope.filter.periodEnddate,
+            program: parseInt($scope.filter.program, 10),
+            range: $scope.range,
+            district: utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone.id
+        };
 
         CompletenessAndTimeliness.get(
-             $scope.timelinessReportParams ,
+            $scope.timelinessReportParams,
 
             function (data) {
 
-                 console.log(data);
+                console.log(data);
 
-                    var columnKeysToBeAggregated = ["target", "expected", "reported", "late", "fixed", "sessionTotal"];
-                    var districtNameKey = "districtName";
-                    var includeGrandTotal = true;
+                var columnKeysToBeAggregated = ["target", "expected", "reported", "late", "fixed", "sessionTotal"];
+                var districtNameKey = "districtName";
+                var includeGrandTotal = true;
 
-                     $scope.error = "";
-                     $scope.datarows = utils.getDistrictBasedReportDataWithSubAndGrandTotal(data.completenessAndTimelinessReport.mainReport,
-                                                                                            districtNameKey,
-                                                                                            columnKeysToBeAggregated,
-                                                                                            includeGrandTotal);
-                     $scope.summary = data.completenessAndTimelinessReport.summaryReport;
-                     $scope.summaryPeriodLists = data.completenessAndTimelinessReport.summaryPeriodList;
-                     $scope.aggregateSummary = data.completenessAndTimelinessReport.aggregateSummary;
+                $scope.error = "";
+                $scope.datarows = utils.getDistrictBasedReportDataWithSubAndGrandTotal(data.completenessAndTimelinessReport.mainReport,
+                    districtNameKey,
+                    columnKeysToBeAggregated,
+                    includeGrandTotal);
+                $scope.summary = data.completenessAndTimelinessReport.summaryReport;
+                $scope.summaryPeriodLists = data.completenessAndTimelinessReport.summaryPeriodList;
+                $scope.aggregateSummary = data.completenessAndTimelinessReport.aggregateSummary;
 
-                     // Get a unique periods for the header
-                     var uniquePeriods    = _.chain($scope.summary).indexBy("period").values().value();
-                     $scope.sortedPeriods = _.sortBy(uniquePeriods, function (up) { return up.row; });
+                // Get a unique periods for the header
+                var uniquePeriods = _.chain($scope.summary).indexBy("period").values().value();
+                $scope.sortedPeriods = _.sortBy(uniquePeriods, function (up) {
+                    return up.row;
+                });
 
-                     if($scope.summary !== null) {
-                        pivotResultSet($scope.summary);
-                     }
+                if ($scope.summary !== null) {
+                    pivotResultSet($scope.summary);
+                }
             });
     };
 
-    function pivotResultSet(summary){
+    function pivotResultSet(summary) {
 
-        $scope.completeness = [] ;
-        $scope.expected = [] ; $scope.reported = [] ; $scope.ontime = [] ; $scope.timelines = [];
+        $scope.completeness = [];
+        $scope.expected = [];
+        $scope.reported = [];
+        $scope.ontime = [];
+        $scope.timelines = [];
 
-         var expected = _.map(summary, function(num){ return num.expected; })[0];
+        var expected = _.map(summary, function (num) {
+            return num.expected;
+        })[0];
 
-        _.each($scope.summaryPeriodLists, function(item, index) {
+        _.each($scope.summaryPeriodLists, function (item, index) {
 
-            for(i=0; i<summary.length; i++)
-            {
-                if(item.year === summary[i].year && item.month === summary[i].month) {
-                    $scope.expected.push     ({total:summary[i].expected});
-                    $scope.reported.push     ({total:summary[i].reported});
-                    $scope.ontime.push       ({total:summary[i].onTime});
-                    $scope.completeness.push ({total:summary[i].expected === 0 ? 0 : Math.round(((summary[i].reported/summary[i].expected) * 100)*100)/100});
-                    $scope.timelines.push    ({total:summary[i].reported === 0 ? 0 : Math.round(((summary[i].onTime/summary[i].reported) * 100)*100)/100});
+            for (i = 0; i < summary.length; i++) {
+                if (item.year === summary[i].year && item.month === summary[i].month) {
+                    $scope.expected.push({total: summary[i].expected});
+                    $scope.reported.push({total: summary[i].reported});
+                    $scope.ontime.push({total: summary[i].onTime});
+                    $scope.completeness.push({total: summary[i].expected === 0 ? 0 : Math.round(((summary[i].reported / summary[i].expected) * 100) * 100) / 100});
+                    $scope.timelines.push({total: summary[i].reported === 0 ? 0 : Math.round(((summary[i].onTime / summary[i].reported) * 100) * 100) / 100});
                     break;
                 }
                 // if no match is found add a dummy object as a place holder
-                else if(i+1 === $scope.summary.length) {
-                    $scope.expected.push    ({total:expected});
-                    $scope.reported.push    ({total:0});
-                    $scope.ontime.push      ({total:0});
-                    $scope.completeness.push({total:0});
-                    $scope.timelines.push   ({total:0});
+                else if (i + 1 === $scope.summary.length) {
+                    $scope.expected.push({total: expected});
+                    $scope.reported.push({total: 0});
+                    $scope.ontime.push({total: 0});
+                    $scope.completeness.push({total: 0});
+                    $scope.timelines.push({total: 0});
                 }
             }
         });
@@ -113,9 +118,9 @@ function CompletenesssAndTimelinessReportingController($scope, CompletenessAndTi
 
     $scope.bgColorCode = function (value) {
 
-        if ( value.reportingStatus !== 'REPORTING') {
+        if (value.reportingStatus !== 'REPORTING') {
             return $scope.color_non_reporting;
-        }else{
+        } else {
             return "white";
         }
 
