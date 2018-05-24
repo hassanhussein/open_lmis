@@ -1841,9 +1841,10 @@ app.directive('staticYearMonthFilter', ['StaticYears', 'SettingsByKey', function
                     return;
                var end=parseInt($scope.endMonth,10)+1;
                 periods = utils.getYearStartAndEnd($scope.staticYear, $scope.startMonth, end, $scope.cutoffdate,1);
-                $scope.periodStartdate = periods.startdate;
+                var periodStartDate = periods.startdate;
                 $scope.periodEnddate = periods.enddate;
-                $scope.$apply();
+
+                // $scope.$apply();
                 var datediff = differenceInDays();
                 var yearDif = yearDifference();
 
@@ -1855,7 +1856,15 @@ app.directive('staticYearMonthFilter', ['StaticYears', 'SettingsByKey', function
                 }
                 else
                     $scope.perioderror="";
-                $scope.$parent.OnFilterChanged();
+
+                $scope.$parent.filter.periodEnddate = $scope.periodEnddate;
+
+                $scope.$parent.filter.periodStartDate = periodStartDate;
+
+
+
+                    $scope.$parent.OnFilterChanged();
+
 
             });
             var differenceInDays = function () {
