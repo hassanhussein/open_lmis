@@ -636,19 +636,6 @@ public class VaccineDashboardController extends BaseController {
         return response;
     }
 
-    @RequestMapping(value = "GetCategorizationByDistrictDrillDown.json", method = RequestMethod.GET)
-    public ResponseEntity<OpenLmisResponse> getCategorizationByDistrictDrillDown(
-            HttpServletRequest request,
-            @Param("category") String category,
-            @Param("period") String period
-
-    ) {
-        ResponseEntity<OpenLmisResponse> response;
-        response = OpenLmisResponse.response("district_categorization_summary", service.getCategorizationByDistrictDrillDown(
-                loggedInUserId(request), category, period));
-        return response;
-    }
-
     @RequestMapping(value = "GetDistrict_classification_summary.json", method = RequestMethod.GET)
     public ResponseEntity<OpenLmisResponse> getDistrictClassification(
             HttpServletRequest request,
@@ -663,16 +650,15 @@ public class VaccineDashboardController extends BaseController {
     }
 
     @RequestMapping(value = "GetFacilityClassification.json", method = RequestMethod.GET)
-    public ResponseEntity<OpenLmisResponse> getDistrictClassification(
+    public ResponseEntity<OpenLmisResponse> getFacilityClassification(
             HttpServletRequest request,
             @Param("year") Long year,
-            @Param("product") Long product,
-            @Param("doseId") Long doseId
+            @Param("product") Long product
 
     ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("facility_classification_summary", service.getFacilityClassification(
-                loggedInUserId(request),year,product,doseId));
+                loggedInUserId(request),year,product));
         return response;
     }
 
@@ -697,12 +683,13 @@ public class VaccineDashboardController extends BaseController {
             HttpServletRequest request,
             @Param("year") Long year,
             @Param("indicator") String indicator,
-            @Param("period") String period
+            @Param("period") String period,
+            @Param("product")Long product
 
     ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("district_classification_summary", service.getFacilityClassificationDrillDown(
-                loggedInUserId(request), year, indicator, period));
+                loggedInUserId(request), year, indicator, period,product));
         return response;
     }
 
@@ -745,13 +732,51 @@ public class VaccineDashboardController extends BaseController {
     }
 
     @RequestMapping(value = "GetImmunizationSessionSummary.json", method = RequestMethod.GET)
-    public ResponseEntity<OpenLmisResponse> getIVDReportingSummary(
+    public ResponseEntity<OpenLmisResponse> GetImmunizationSessionSummary(
          HttpServletRequest request,
          @Param("period") Long period,
          @Param("year") Long year
          ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("session_summary", service.getImmunizationSessionSummary(loggedInUserId(request), period,year));
+        return response;
+    }
+
+
+    @RequestMapping(value = "GetClassificationByDistrictSummary.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getClassificationByDistrictSummary(
+         HttpServletRequest request,
+         @Param("product") Long product,
+         @Param("year") Long year
+         ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("classification_summary", service.getClassificationByDistrictSummary(loggedInUserId(request), product,year));
+        return response;
+    }
+
+    @RequestMapping(value = "GetClassificationByDistrictDrillDown.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> GetClassificationByDistrictDrillDown(
+         HttpServletRequest request,
+         @Param("product") Long product,
+         @Param("period") String period,
+         @Param("year") Long year,
+         @Param("indicator") String indicator
+         ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("classification_summary", service.getClassificationByDistrictDrillDown(loggedInUserId(request),product, period,year,indicator));
+        return response;
+    }
+
+
+    @RequestMapping(value = "GetCategorizationByDistrictDrillDown.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> GetCategorizationByDistrictDrillDown(
+         HttpServletRequest request,
+         @Param("period") String period,
+         @Param("year") Long year,
+         @Param("indicator") String indicator
+         ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("classification_summary", service.getCategorizationByDistrictDrillDown(loggedInUserId(request),year,indicator,period));
         return response;
     }
 

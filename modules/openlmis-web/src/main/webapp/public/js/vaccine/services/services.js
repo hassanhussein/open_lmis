@@ -19,11 +19,15 @@ services.factory('VaccineDisease', function ($resource) {
 });
 
 services.factory('ColdTraceStatus', function ($resource) {
-  return $resource('/equipment/cold-trace/status.json', {}, {});
+    return $resource('/equipment/cold-trace/status.json', {}, {});
 });
 
-services.factory('ColdTraceAlarms', function($resource){
-  return $resource('/equipments/cold-trace/:facility/:program/:period/alarms.json', {facility: '@facility', program: '@program', period: '@period'}, {});
+services.factory('ColdTraceAlarms', function ($resource) {
+    return $resource('/equipments/cold-trace/:facility/:program/:period/alarms.json', {
+        facility: '@facility',
+        program: '@program',
+        period: '@period'
+    }, {});
 });
 
 services.factory('SaveVaccineDisease', function ($resource) {
@@ -750,26 +754,30 @@ services.factory('AvailableStockDashboard', function ($resource) {
 
 //Dashboard API
 
-services.factory('NationalVaccineCoverageData', function ($q, $timeout, $resource,GetVaccineNationalCoverage) {
+services.factory('NationalVaccineCoverageData', function ($q, $timeout, $resource, GetVaccineNationalCoverage) {
 
     function get(params) {
         var deferred = $q.defer();
 
         $timeout(function () {
-            GetVaccineNationalCoverage.get({product:parseInt(params.product,10),doseId:parseInt(params.dose,10),periodId:parseInt(params.period,10),year:parseInt(params.year,10)}, function (data) {
-             console.log(data);
+            GetVaccineNationalCoverage.get({
+                product: parseInt(params.product, 10),
+                doseId: parseInt(params.dose, 10),
+                periodId: parseInt(params.period, 10),
+                year: parseInt(params.year, 10)
+            }, function (data) {
                 var coverage = [];
                 if (data !== undefined) {
                     coverage = data.natioanl_coverage;
-                    console.log(coverage);
                 }
                 deferred.resolve(coverage);
 
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
@@ -777,12 +785,17 @@ services.factory('NationalVaccineCoverageData', function ($q, $timeout, $resourc
 });
 
 
-services.factory('Categorization', function ($q, $timeout, $resource,GetDistrictCategorization) {
+services.factory('Categorization', function ($q, $timeout, $resource, GetDistrictCategorization) {
 
     function get(param) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetDistrictCategorization.get({product:parseInt(param.product,10),doseId:parseInt(param.dose,10),periodId:parseInt(param.period,10),year:parseInt(param.year,10)}, function (data) {
+            GetDistrictCategorization.get({
+                product: parseInt(param.product, 10),
+                doseId: parseInt(param.dose, 10),
+                periodId: parseInt(param.period, 10),
+                year: parseInt(param.year, 10)
+            }, function (data) {
                 var coverage = [];
                 if (data !== undefined) {
                     coverage = data.categories;
@@ -792,20 +805,21 @@ services.factory('Categorization', function ($q, $timeout, $resource,GetDistrict
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('ProductService', function ($q, $timeout, $resource,GetProductBy) {
+services.factory('ProductService', function ($q, $timeout, $resource, GetProductBy) {
 
     function get(product) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetProductBy.get({id:parseInt(product,10)}, function (data) {
+            GetProductBy.get({id: parseInt(product, 10)}, function (data) {
                 var product = [];
                 if (data !== undefined) {
                     product = data.productDTO.product.primaryName;
@@ -815,19 +829,23 @@ services.factory('ProductService', function ($q, $timeout, $resource,GetProductB
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
-services.factory('GetFullStockAvailability', function ($q, $timeout, $resource,FullStockAvailableForDashboard) {
+services.factory('GetFullStockAvailability', function ($q, $timeout, $resource, FullStockAvailableForDashboard) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            FullStockAvailableForDashboard.get({period:parseInt(params.period,10),year:parseInt(params.year,10)}, function (data) {
+            FullStockAvailableForDashboard.get({
+                period: parseInt(params.period, 10),
+                year: parseInt(params.year, 10)
+            }, function (data) {
                 var product = [];
                 if (data !== undefined) {
                     product = data.fullStocks;
@@ -837,8 +855,9 @@ services.factory('GetFullStockAvailability', function ($q, $timeout, $resource,F
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
@@ -846,12 +865,16 @@ services.factory('GetFullStockAvailability', function ($q, $timeout, $resource,F
 });
 
 
-services.factory('AvailableStockData', function ($q, $timeout, $resource,AvailableStockDashboard) {
+services.factory('AvailableStockData', function ($q, $timeout, $resource, AvailableStockDashboard) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            AvailableStockDashboard.get({product:parseInt(params.product,10),period:parseInt(params.period,10),year:parseInt(params.year,10)}, function (data) {
+            AvailableStockDashboard.get({
+                product: parseInt(params.product, 10),
+                period: parseInt(params.period, 10),
+                year: parseInt(params.year, 10)
+            }, function (data) {
                 var product = [];
                 if (data !== undefined) {
                     product = data.availableStock;
@@ -861,8 +884,9 @@ services.factory('AvailableStockData', function ($q, $timeout, $resource,Availab
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
@@ -870,12 +894,16 @@ services.factory('AvailableStockData', function ($q, $timeout, $resource,Availab
 });
 
 
-services.factory('GetAggregateFacilityPerformanceData', function ($q, $timeout, $resource,AggregateFacilityPerformance) {
+services.factory('GetAggregateFacilityPerformanceData', function ($q, $timeout, $resource, AggregateFacilityPerformance) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            AggregateFacilityPerformance.get({productId:parseInt(params.product,10),periodId:parseInt(params.period,10),year:parseInt(params.year,10)}, function (data) {
+            AggregateFacilityPerformance.get({
+                productId: parseInt(params.product, 10),
+                periodId: parseInt(params.period, 10),
+                year: parseInt(params.year, 10)
+            }, function (data) {
                 var product = [];
                 if (data !== undefined) {
                     product = data.performance;
@@ -885,8 +913,9 @@ services.factory('GetAggregateFacilityPerformanceData', function ($q, $timeout, 
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
@@ -894,13 +923,17 @@ services.factory('GetAggregateFacilityPerformanceData', function ($q, $timeout, 
 });
 
 
-services.factory('VaccineCoverageByProductData', function ($q, $timeout, $resource,GetVaccineCoverageByRegionAndProduct) {
+services.factory('VaccineCoverageByProductData', function ($q, $timeout, $resource, GetVaccineCoverageByRegionAndProduct) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetVaccineCoverageByRegionAndProduct.get({productId:parseInt(params.product,10),periodId:parseInt(params.period,10),year:parseInt(params.year,10),doseId:parseInt(params.dose,10)}, function (data) {
-                console.log(data);
+            GetVaccineCoverageByRegionAndProduct.get({
+                productId: parseInt(params.product, 10),
+                periodId: parseInt(params.period, 10),
+                year: parseInt(params.year, 10),
+                doseId: parseInt(params.dose, 10)
+            }, function (data) {
                 var coverage = [];
                 if (data !== undefined) {
                     coverage = data.coverage;
@@ -910,8 +943,9 @@ services.factory('VaccineCoverageByProductData', function ($q, $timeout, $resour
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
@@ -919,14 +953,14 @@ services.factory('VaccineCoverageByProductData', function ($q, $timeout, $resour
 });
 
 
-services.factory('GetPeriodForDashboard', function ($q, $timeout, $resource,ReportPeriodsByYear) {
+services.factory('GetPeriodForDashboard', function ($q, $timeout, $resource, ReportPeriodsByYear) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            ReportPeriodsByYear.get({year:parseInt(params,10)}, function (data) {
+            ReportPeriodsByYear.get({year: parseInt(params, 10)}, function (data) {
 
-                var period ={};
+                var period = {};
                 if (data !== undefined) {
                     period = data.periods[0];
                 }
@@ -935,22 +969,26 @@ services.factory('GetPeriodForDashboard', function ($q, $timeout, $resource,Repo
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('FacilityInventoryStockStatusData', function ($q, $timeout, $resource,VaccineDashboardFacilityInventoryStockStatus) {
+services.factory('FacilityInventoryStockStatusData', function ($q, $timeout, $resource, VaccineDashboardFacilityInventoryStockStatus) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            VaccineDashboardFacilityInventoryStockStatus.get({facilityId:parseInt(params.facilityId,10),date:params.date}, function (data) {
+            VaccineDashboardFacilityInventoryStockStatus.get({
+                facilityId: parseInt(params.facilityId, 10),
+                date: params.date
+            }, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.facilityStockStatus;
                 }
@@ -959,22 +997,27 @@ services.factory('FacilityInventoryStockStatusData', function ($q, $timeout, $re
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetCoverageByProductAndDoseData', function ($q, $timeout, $resource,GetVaccineNationalCoverageByProductAndDose) {
+services.factory('GetCoverageByProductAndDoseData', function ($q, $timeout, $resource, GetVaccineNationalCoverageByProductAndDose) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetVaccineNationalCoverageByProductAndDose.get({periodId:parseInt(params.period,10),year:params.year,product:parseInt(params.product,10)}, function (data) {
+            GetVaccineNationalCoverageByProductAndDose.get({
+                periodId: parseInt(params.period, 10),
+                year: params.year,
+                product: parseInt(params.product, 10)
+            }, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.natioanl_coverage;
                 }
@@ -983,22 +1026,23 @@ services.factory('GetCoverageByProductAndDoseData', function ($q, $timeout, $res
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetRegionInventorySummaryData', function ($q, $timeout, $resource,GetVaccineRegionInventorySummary) {
+services.factory('GetRegionInventorySummaryData', function ($q, $timeout, $resource, GetVaccineRegionInventorySummary) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
             GetVaccineRegionInventorySummary.get({}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.region_summary;
                 }
@@ -1007,22 +1051,23 @@ services.factory('GetRegionInventorySummaryData', function ($q, $timeout, $resou
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetDistrictInventorySummaryData', function ($q, $timeout, $resource,GetVaccineDistrictInventorySummary) {
+services.factory('GetDistrictInventorySummaryData', function ($q, $timeout, $resource, GetVaccineDistrictInventorySummary) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
             GetVaccineDistrictInventorySummary.get({}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.district_summary;
                 }
@@ -1031,22 +1076,23 @@ services.factory('GetDistrictInventorySummaryData', function ($q, $timeout, $res
             });
 
         }, 100);
-       return deferred.promise;
+        return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetInventorySummaryByLocationData', function ($q, $timeout, $resource,GetInventorySummaryByLocation) {
+services.factory('GetInventorySummaryByLocationData', function ($q, $timeout, $resource, GetInventorySummaryByLocation) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetInventorySummaryByLocation.get({facilityLevel:params.level,status:params.status}, function (data) {
+            GetInventorySummaryByLocation.get({facilityLevel: params.level, status: params.status}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.inventory_summary;
                 }
@@ -1057,20 +1103,21 @@ services.factory('GetInventorySummaryByLocationData', function ($q, $timeout, $r
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetInventorySummaryByMaterialData', function ($q, $timeout, $resource,GetInventorySummaryByMaterial) {
+services.factory('GetInventorySummaryByMaterialData', function ($q, $timeout, $resource, GetInventorySummaryByMaterial) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetInventorySummaryByMaterial.get({facilityLevel:params.level,status:params.status}, function (data) {
+            GetInventorySummaryByMaterial.get({facilityLevel: params.level, status: params.status}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.inventory_summary;
                 }
@@ -1081,20 +1128,21 @@ services.factory('GetInventorySummaryByMaterialData', function ($q, $timeout, $r
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetGeoMapInfo', function ($q, $timeout, $resource,GetGeoMapData) {
+services.factory('GetGeoMapInfo', function ($q, $timeout, $resource, GetGeoMapData) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
             GetGeoMapData.get({}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.geoZoneMapDTOList;
                 }
@@ -1105,6 +1153,7 @@ services.factory('GetGeoMapInfo', function ($q, $timeout, $resource,GetGeoMapDat
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
@@ -1112,14 +1161,19 @@ services.factory('GetGeoMapInfo', function ($q, $timeout, $resource,GetGeoMapDat
 });
 
 
-services.factory('GetCoverageMapInfo', function ($q, $timeout, $resource,GetCoverageForMap) {
+services.factory('GetCoverageMapInfo', function ($q, $timeout, $resource, GetCoverageForMap) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetCoverageForMap.get({product:parseInt(params.product,10),periodId:parseInt(params.period,10),year:parseInt(params.year,10),doseId:parseInt(params.dose,10)}, function (data) {
+            GetCoverageForMap.get({
+                product: parseInt(params.product, 10),
+                periodId: parseInt(params.period, 10),
+                year: parseInt(params.year, 10),
+                doseId: parseInt(params.dose, 10)
+            }, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.map_data;
                 }
@@ -1130,20 +1184,25 @@ services.factory('GetCoverageMapInfo', function ($q, $timeout, $resource,GetCove
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetInventoryByMaterialFacilityListData', function ($q, $timeout, $resource,GetInventorySummaryByMaterialFacilityList) {
+services.factory('GetInventoryByMaterialFacilityListData', function ($q, $timeout, $resource, GetInventorySummaryByMaterialFacilityList) {
 
     function get(params) {
         var deferred = $q.defer();
         $timeout(function () {
-            GetInventorySummaryByMaterialFacilityList.get({product:params.product,facilityLevel:params.level,indicator:params.color}, function (data) {
+            GetInventorySummaryByMaterialFacilityList.get({
+                product: params.product,
+                facilityLevel: params.level,
+                indicator: params.color
+            }, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.facility_list;
                 }
@@ -1154,22 +1213,27 @@ services.factory('GetInventoryByMaterialFacilityListData', function ($q, $timeou
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetCoverageByDistrictData', function ($q, $timeout, $resource,GetCoverageByDistrict) {
+services.factory('GetCoverageByDistrictData', function ($q, $timeout, $resource, GetCoverageByDistrict) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
-            GetCoverageByDistrict.get({product:parseInt(params.product,10),period:parseInt(params.period,10),year:parseInt(params.year,10),doseId:parseInt(params.dose,10)}, function (data) {
+            GetCoverageByDistrict.get({
+                product: parseInt(params.product, 10),
+                period: parseInt(params.period, 10),
+                year: parseInt(params.year, 10),
+                doseId: parseInt(params.dose, 10)
+            }, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
-                    console.log(data);
                     stocks = data.district_coverage;
                 }
                 deferred.resolve(stocks);
@@ -1179,22 +1243,27 @@ services.factory('GetCoverageByDistrictData', function ($q, $timeout, $resource,
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetCoverageByFacilityData', function ($q, $timeout, $resource,GetCoverageByFacility) {
+services.factory('GetCoverageByFacilityData', function ($q, $timeout, $resource, GetCoverageByFacility) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
-            GetCoverageByFacility.get({product:parseInt(params.product,10),period:parseInt(params.period,10),year:parseInt(params.year,10),doseId:parseInt(params.dose,10)}, function (data) {
+            GetCoverageByFacility.get({
+                product: parseInt(params.product, 10),
+                period: parseInt(params.period, 10),
+                year: parseInt(params.year, 10),
+                doseId: parseInt(params.dose, 10)
+            }, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
-                    console.log(data);
                     stocks = data.district_coverage;
                 }
                 deferred.resolve(stocks);
@@ -1204,20 +1273,26 @@ services.factory('GetCoverageByFacilityData', function ($q, $timeout, $resource,
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetCoverageByRegionSummary', function ($q, $timeout, $resource,GetCoverageByRegionSummaryData) {
+services.factory('GetCoverageByRegionSummary', function ($q, $timeout, $resource, GetCoverageByRegionSummaryData) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
-            GetCoverageByRegionSummaryData.get({period:parseInt(params.period,10),year:parseInt(params.year,10),doseId:parseInt(params.dose,10),product:parseInt(params.product,10)}, function (data) {
+            GetCoverageByRegionSummaryData.get({
+                period: parseInt(params.period, 10),
+                year: parseInt(params.year, 10),
+                doseId: parseInt(params.dose, 10),
+                product: parseInt(params.product, 10)
+            }, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.region_coverage;
                 }
@@ -1228,20 +1303,21 @@ services.factory('GetCoverageByRegionSummary', function ($q, $timeout, $resource
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetCategorizationByDistrictData', function ($q, $timeout, $resource,GetCategorizationByDistrictSummary) {
+services.factory('GetCategorizationByDistrictData', function ($q, $timeout, $resource, GetCategorizationByDistrictSummary) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
-            GetCategorizationByDistrictSummary.get({year:parseInt(params.year,10)}, function (data) {
+            GetCategorizationByDistrictSummary.get({year: parseInt(params.year, 10)}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.district_categorization;
                 }
@@ -1252,20 +1328,21 @@ services.factory('GetCategorizationByDistrictData', function ($q, $timeout, $res
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetCategorizationByDistrictDrillDownData', function ($q, $timeout, $resource,GetCategorizationByDistrictDrillDown) {
+services.factory('GetCategorizationByDistrictDrillDownData', function ($q, $timeout, $resource, GetCategorizationByDistrictDrillDown) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
             GetCategorizationByDistrictDrillDown.get(params, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.district_categorization_summary;
                 }
@@ -1276,20 +1353,21 @@ services.factory('GetCategorizationByDistrictDrillDownData', function ($q, $time
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetDistrictClassificationSummaryData', function ($q, $timeout, $resource,GetDistrictClassificationSummary) {
+services.factory('GetDistrictClassificationSummaryData', function ($q, $timeout, $resource, GetDistrictClassificationSummary) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
             GetDistrictClassificationSummary.get(params, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.district_classification_summary;
                 }
@@ -1300,20 +1378,21 @@ services.factory('GetDistrictClassificationSummaryData', function ($q, $timeout,
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetClassificationDistrictDrillDownData', function ($q, $timeout, $resource,GetDistrictClassificationDistrictDrillDown) {
+services.factory('GetClassificationDistrictDrillDownData', function ($q, $timeout, $resource, GetDistrictClassificationDistrictDrillDown) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
             GetDistrictClassificationDistrictDrillDown.get(params, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.district_classification_summary;
                 }
@@ -1324,20 +1403,21 @@ services.factory('GetClassificationDistrictDrillDownData', function ($q, $timeou
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetDistributionOfDistrictPerPerformanceData', function ($q, $timeout, $resource,GetDistributionOfDistrictPerPerformance) {
+services.factory('GetDistributionOfDistrictPerPerformanceData', function ($q, $timeout, $resource, GetDistributionOfDistrictPerPerformance) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
             GetDistributionOfDistrictPerPerformance.get(params, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.distribution_per_district;
                 }
@@ -1348,20 +1428,21 @@ services.factory('GetDistributionOfDistrictPerPerformanceData', function ($q, $t
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetPerformanceMonitoringData', function ($q, $timeout, $resource,GetPerformanceMonitoring) {
+services.factory('GetPerformanceMonitoringData', function ($q, $timeout, $resource, GetPerformanceMonitoring) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
             GetPerformanceMonitoring.get(params, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.performance;
                 }
@@ -1372,6 +1453,7 @@ services.factory('GetPerformanceMonitoringData', function ($q, $timeout, $resour
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
@@ -1379,15 +1461,14 @@ services.factory('GetPerformanceMonitoringData', function ($q, $timeout, $resour
 });
 
 
-
-services.factory('GetCategorizationByFacilityData', function ($q, $timeout, $resource,GetCategorizationByFacilitySummary) {
+services.factory('GetCategorizationByFacilityData', function ($q, $timeout, $resource, GetCategorizationByFacilitySummary) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
-            GetCategorizationByFacilitySummary.get({year:parseInt(params.year,10)}, function (data) {
+            GetCategorizationByFacilitySummary.get({year: parseInt(params.year, 10)}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.facility_categorization;
                 }
@@ -1398,20 +1479,21 @@ services.factory('GetCategorizationByFacilityData', function ($q, $timeout, $res
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetIVDReportingSummaryData', function ($q, $timeout, $resource,GetIVDReportingSummary) {
+services.factory('GetIVDReportingSummaryData', function ($q, $timeout, $resource, GetIVDReportingSummary) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
-            GetIVDReportingSummary.get({period:parseInt(params.period,10)}, function (data) {
+            GetIVDReportingSummary.get({period: parseInt(params.period, 10)}, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.reporting_summary;
                 }
@@ -1422,23 +1504,23 @@ services.factory('GetIVDReportingSummaryData', function ($q, $timeout, $resource
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetFacilityClassificationSummaryData', function ($q, $timeout, $resource,GetFacilityClassificationSummary) {
+services.factory('GetFacilityClassificationSummaryData', function ($q, $timeout, $resource, GetFacilityClassificationSummary) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
             GetFacilityClassificationSummary.get(params, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.facility_classification_summary;
-                    console.log(stocks);
                 }
                 deferred.resolve(stocks);
 
@@ -1447,23 +1529,23 @@ services.factory('GetFacilityClassificationSummaryData', function ($q, $timeout,
         }, 100);
         return deferred.promise;
     }
+
     return {
         get: get
     };
 
 });
 
-services.factory('GetImmunizationSessionSummaryData', function ($q, $timeout, $resource,GetImmunizationSessionSummary) {
+services.factory('GetFacilityClassificationDrillDownData', function ($q, $timeout, $resource, GetFacilityClassificationDrillDownSummary) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function () {
-            GetImmunizationSessionSummary.get(params, function (data) {
+            GetFacilityClassificationDrillDownSummary.get(params, function (data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
-                    stocks = data.session_summary;
-                    console.log(stocks);
+                    stocks = data.district_classification_summary;
                 }
                 deferred.resolve(stocks);
 
@@ -1472,6 +1554,80 @@ services.factory('GetImmunizationSessionSummaryData', function ($q, $timeout, $r
         }, 100);
         return deferred.promise;
     }
+
+    return {
+        get: get
+    };
+
+});
+
+services.factory('GetImmunizationSessionSummaryData', function ($q, $timeout, $resource, GetImmunizationSessionSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetImmunizationSessionSummary.get(params, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.session_summary;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+services.factory('GetClassificationByDistrictSummaryData', function ($q, $timeout, $resource, GetClassificationByDistrictSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetClassificationByDistrictSummary.get(params, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.classification_summary;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+services.factory('GetClassificationByDistrictDrillDownData', function ($q, $timeout, $resource, GetClassificationByDistrictDrillDownSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetClassificationByDistrictDrillDownSummary.get(params, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.classification_summary;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
     return {
         get: get
     };
@@ -1504,7 +1660,7 @@ services.factory('GetVaccineNationalCoverage', function ($resource) {
 });
 
 services.factory('GetProductBy', function ($resource) {
-    return $resource('/products/product/:id.json', {id:'@id'}, {});
+    return $resource('/products/product/:id.json', {id: '@id'}, {});
 });
 
 
@@ -1595,3 +1751,13 @@ services.factory('CoverageAgeGroups', function ($resource) {
 });
 
 
+services.factory('GetClassificationByDistrictSummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetClassificationByDistrictSummary.json', {}, {});
+});
+
+services.factory('GetClassificationByDistrictDrillDownSummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetClassificationByDistrictDrillDown.json', {}, {});
+});
+services.factory('GetFacilityClassificationDrillDownSummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetFacilityClassificationDrillDown.json', {}, {});
+});

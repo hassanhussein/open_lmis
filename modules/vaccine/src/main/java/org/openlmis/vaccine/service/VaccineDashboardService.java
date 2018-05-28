@@ -45,6 +45,9 @@ public class VaccineDashboardService {
     @Autowired
     private GeographicZoneService zoneService;
 
+    @Autowired
+    private ProcessingPeriodService periodService;
+
     public Map<String, Object> getReportingSummary(Long userId) {
 
         Map<String, Object> reportingSummaryList = null;
@@ -655,22 +658,19 @@ public class VaccineDashboardService {
         return repository.getCategorizationByFacility(userId, year);
     }
 
-    public List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(Long userId, String category, String period) {
-        return repository.getCategorizationByDistrictDrillDown(userId, category, period);
-    }
 
     public List<HashMap<String, Object>> getDistrictClassification(Long userId, Long product, Long year) {
         return repository.getDistrictClassification(userId, product, year);
     }
-    public List<HashMap<String, Object>> getFacilityClassification(Long userId,Long year,Long product,Long doseId) {
-        return repository.getFacilityClassification(userId,year,product,doseId);
+    public List<HashMap<String, Object>> getFacilityClassification(Long userId,Long year,Long product) {
+        return repository.getFacilityClassification(userId,year,product);
     }
 
     public List<HashMap<String, Object>> getDistrictClassificationDrillDown(Long userId, Long product, Long year, String indicator, String period) {
         return repository.getDistrictClassificationDrillDown(userId, product, year, indicator, period);
     }
-    public List<HashMap<String, Object>> getFacilityClassificationDrillDown(Long userId, Long year, String indicator, String period) {
-        return repository.getFacilityClassificationDrillDown(userId, year, indicator, period);
+    public List<HashMap<String, Object>> getFacilityClassificationDrillDown(Long userId, Long year, String indicator, String period,Long product) {
+        return repository.getFacilityClassificationDrillDown(userId, year, indicator, period,product);
     }
 
     public List<HashMap<String, Object>> getDistributionOfDistrictPerPerformance(Long userId, Long product, Long year, Long doseId) {
@@ -689,5 +689,20 @@ public class VaccineDashboardService {
         return repository.getImmunizationSessionSummary(userId, period,year);
     }
 
+    public List<HashMap<String, Object>> getClassificationByDistrictSummary(Long userId,Long product,Long year) {
+        return repository.getClassificationByDistrictSummary(userId,product,year);
+    }
 
+    public List<HashMap<String, Object>> getClassificationByDistrictDrillDown(Long userId,Long product,String period,Long year,String indicator) {
+        return repository.getClassificationByDistrictDrillDown(userId,product,period,year,indicator);
+    }
+
+
+    public List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(Long userId,Long year,String indicator,String p) {
+           ProcessingPeriod period  = periodService.getByName(p);
+           Long pp = 0L;
+            if(period != null)
+            pp = period.getId();
+        return repository.getCategorizationByDistrictDrillDown(userId,year,indicator,pp);
+    }
 }

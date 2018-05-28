@@ -22,4 +22,8 @@ public class ProcessingPeriodService {
     public List<ProcessingPeriod> getPeriodsByProgramCode(String code) {
       return repository.getPeriodsByProgramCode(code);
     }
+
+    public ProcessingPeriod getByName(String name) {
+      return repository.getByName(name);
+  }
 }

@@ -277,28 +277,28 @@ public class VaccineDashboardRepository {
     public List<HashMap<String, Object>> getCategorizationByDistrict(Long userId,Long year) {
         return mapper.getCategorizationByDistrict(userId,year);
     }
- public List<HashMap<String, Object>> getCategorizationByFacility(Long userId,Long year) {
+    public List<HashMap<String, Object>> getCategorizationByFacility(Long userId,Long year) {
         return mapper.getCategorizationByFacility(userId,year);
     }
 
     public List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(Long userId,String category,String period) {
-        return mapper.getCategorizationByDistrictDrillDown(userId,category,period);
+        return null; //mapper.getCategorizationByDistrictDrillDown(userId,category,period);
     }
 
     public List<HashMap<String, Object>> getDistrictClassification(Long userId,Long product,Long year) {
-        return mapper.getDistrictClassification(userId,product,year);
+        return null;//mapper.getDistrictClassification(userId,product,year);
     }
 
-    public List<HashMap<String, Object>> getFacilityClassification(Long userId,Long year,Long product,Long doseId) {
-        return mapper.getFacilityClassification(userId,year,product, doseId);
+    public List<HashMap<String, Object>> getFacilityClassification(Long userId,Long year,Long product) {
+        return mapper.getFacilityClassification(userId,year,product);
     }
 
     public List<HashMap<String, Object>> getDistrictClassificationDrillDown(Long userId,Long product,Long year,String indicator,String period) {
         return mapper.getDistrictClassificationDrillDown(userId,product,year,indicator,period);
     }
 
-    public List<HashMap<String, Object>> getFacilityClassificationDrillDown(Long userId,Long year,String indicator,String period) {
-        return mapper.getFacilityClassificationDrillDown(userId,year,indicator,period);
+    public List<HashMap<String, Object>> getFacilityClassificationDrillDown(Long userId,Long year,String indicator,String period,Long product) {
+        return mapper.getFacilityClassificationDrillDown(userId,year,indicator,period,product);
     }
     public List<HashMap<String, Object>> getDistributionOfDistrictPerPerformance( Long userId,  Long product, Long year,Long doseId) {
         return mapper.getDistributionOfDistrictPerPerformance(userId,product,year,doseId);
@@ -320,5 +320,15 @@ public class VaccineDashboardRepository {
         return mapper.getImmunizationSessionSummary(userId, period,year);
     }
 
+    public List<HashMap<String, Object>> getClassificationByDistrictSummary(Long userId,Long product,Long year) {
+        return mapper.getClassificationByDistrictSummary(userId,product,year);
+    }
 
+    public List<HashMap<String, Object>> getClassificationByDistrictDrillDown(Long userId,Long product,String period,Long year,String indicator) {
+        return mapper.getClassificationByDistrictDrillDown(userId,product,period,year,indicator);
+    }
+
+    public List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(Long userId,Long year,String indicator,Long period) {
+        return mapper.getCategorizationByDistrictDrillDown(userId,year,indicator,period);
+    }
 }

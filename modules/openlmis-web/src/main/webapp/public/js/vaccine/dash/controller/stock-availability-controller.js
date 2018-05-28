@@ -1,7 +1,11 @@
 function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCategorizationByFacilityData, GetCoverageByRegionSummary, GetPerformanceMonitoringData,
-                                          GetDistributionOfDistrictPerPerformanceData, GetClassificationDistrictDrillDownData, GetDistrictClassificationSummaryData, GetCategorizationByDistrictDrillDownData, GetCategorizationByDistrictData,
-                                          GetCoverageByDistrictData, GetInventoryByMaterialFacilityListData, VaccineDashboardFacilityInventoryStockStatus, GetCoverageMapInfo, GetInventorySummaryByLocationData, GetInventorySummaryByMaterialData, StockCardsByCategory, GetDistrictInventorySummaryData, GetRegionInventorySummaryData, homeFacility, FacilityInventoryStockStatusData, GetPeriodForDashboard, YearFilteredData, ProductFilteredData, $routeParams, leafletData, ProductService, $state, VaccineProductDoseList, ReportPeriodsByYear, VimsVaccineSupervisedIvdPrograms, AvailableStockDashboard, FullStockAvailableForDashboard, GetAggregateFacilityPerformanceData,
-                                          VaccineCoverageByProductData, GetCoverageByProductAndDoseData, GetCoverageByFacilityData, GetIVDReportingSummaryData,GetFacilityClassificationSummaryData,GetImmunizationSessionSummaryData) {
+                                          GetDistributionOfDistrictPerPerformanceData, GetFacilityClassificationDrillDownData, GetDistrictClassificationSummaryData, GetCategorizationByDistrictDrillDownData, GetCategorizationByDistrictData,
+                                          GetCoverageByDistrictData, GetInventoryByMaterialFacilityListData, VaccineDashboardFacilityInventoryStockStatus, GetCoverageMapInfo, GetInventorySummaryByLocationData, GetInventorySummaryByMaterialData,
+                                          StockCardsByCategory, GetDistrictInventorySummaryData, GetRegionInventorySummaryData, homeFacility, FacilityInventoryStockStatusData, GetPeriodForDashboard, YearFilteredData, ProductFilteredData,
+                                          $routeParams, leafletData, ProductService, $state, VaccineProductDoseList, ReportPeriodsByYear, VimsVaccineSupervisedIvdPrograms, AvailableStockDashboard,
+                                          FullStockAvailableForDashboard, GetAggregateFacilityPerformanceData,
+                                          VaccineCoverageByProductData, GetCoverageByProductAndDoseData, GetCoverageByFacilityData, GetIVDReportingSummaryData,GetFacilityClassificationSummaryData,GetImmunizationSessionSummaryData,
+                                          GetClassificationByDistrictSummaryData,GetClassificationByDistrictDrillDownData) {
 
 
     $scope.region = true;
@@ -525,19 +529,23 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     };
     $scope.successModal = false;
 
-    function showCategorizationPopup(events, data) {
-        $scope.parameters = {period: data.point.category, category: events.name};
+    function showCategorizationPopup(events, data,year,level) {
+        var parameters = {period: data.point.category,year: parseInt(year, 10), indicator: events.name};
+        console.log(parameters);
 
-        GetCategorizationByDistrictDrillDownData.get($scope.parameters).then(function (data) {
+
+        GetCategorizationByDistrictDrillDownData.get(parameters).then(function (data) {
+            console.log(data);
 
             if (!isUndefined(data)) {
                 $scope.classificationData = data;
-                console.log(data);
 
             }
 
         });
-        $('#exampleModalCenter').modal().modal('open');
+        $timeout(function () {
+            $('#exampleModalCenter').modal();
+        },100);
 
         $scope.successModal = true;
 
@@ -545,18 +553,34 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
     }
 
-    function showClassificationPopup(events, event, product, year) {
-        $scope.parameters = {
+    function showClassificationPopup(events, event, product, year,level) {
+
+        var parameters = {
             period: event.point.category,
             indicator: events.name,
             product: parseInt(product, 10),
             year: parseInt(year, 10)
         };
         $scope.classificationByDistrict = [];
-        GetClassificationDistrictDrillDownData.get($scope.parameters).then(function (data) {
+
+        var objectData =(level!=='dvs')?GetClassificationByDistrictDrillDownData: GetFacilityClassificationDrillDownData;
+
+        $scope.showFacilityInfo = ('dvs' === level);
+
+        objectData.get(parameters).then(function (data) {
+
             $scope.classificationByDistrict = data;
 
-            $('#classificationModal').modal().modal('open');
+            var districtLevelTitle = 'List Of Facilities with Classification'+events.name+' ('+event.point.category +') ';
+            var upperLevel    = 'List of Districts with Classification '+events.name+' ('+event.point.category +') ';
+            $scope.classificationTitle =(level==='dvs')?districtLevelTitle:upperLevel;
+
+            $scope.classificationColor ={'background-color':event.point.color};
+
+            $timeout(function () {
+                $('#classificationModal').modal();
+
+            },100);
 
 
         });
@@ -564,7 +588,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
     }
 
-    function getDynamicStackedChart(data, chartId, title, Category, chartCategory, product, year, horizontalTitle) {
+    function getDynamicStackedChart(data, chartId, title, Category, chartCategory, product, year, horizontalTitle,level) {
 
         Highcharts.chart(chartId, {
             chart: {
@@ -613,9 +637,9 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                     events: {
                         click: function (event) {
                             if (chartCategory === 'classification')
-                                showClassificationPopup(this, event, product, year);
+                                showClassificationPopup(this, event, product, year,level);
                             else
-                                showCategorizationPopup(this, event);
+                                showCategorizationPopup(this, event,year,level);
 
                         }
                     },
@@ -634,7 +658,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
         var colors = {'Cat_3': '#ffdb00', 'Cat_4': '#ff0d00', 'Cat_2': '#ABC9AA', 'Cat_1': '#006600'};
         var dataFunction = (userLevel === 'dvs') ? GetCategorizationByFacilityData : GetCategorizationByDistrictData;
 
-        dataFunction.get(params).then(function (data) {
+        GetCategorizationByDistrictData.get(params).then(function (data) {
             var category = _.uniq(_.pluck(data, 'period_name'));
             var groupByPeriod = _.groupBy(data, function (period) {
                 return period.catagorization;
@@ -652,13 +676,13 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 });
 
             }
+            console.log(userLevel);
+
             var joinTitle = (userLevel === 'dvs') ? 'Facilities' : 'Districts';
             var title = '<span style="color:#509fc5; font-size: 15px ">Categorization by ' + joinTitle + ' based on Coverage and Dropout ' + params.year + '</span>';
-            var chartId = (level === null) ? 'categorizationByDistrict' : 'categorizationByFacility';
+            var chartId = (userLevel === 'dvs') ? 'categorizationByFacility':'categorizationByFacility';
 
-            console.log(categorization);
-
-            getDynamicStackedChart(categorization, chartId, title, category, null, null, null, 'Districts');
+            getDynamicStackedChart(categorization, chartId, title, category, null, null, params.year, 'Districts');
 
         });
 
@@ -667,14 +691,14 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     $scope.districtClassificationFunc = function (filter, level, userLevel) {
         var colors = {'Class C': '#ffdb00', 'Class D': '#ff0d00', 'Class B': '#ABC9AA', 'Class A': '#006600'};
         var parameter = {product: parseInt(filter.product, 10), year: parseInt(filter.year, 10)};
+        var objectData =(level!=='dvs')?GetClassificationByDistrictSummaryData:GetDistrictClassificationSummaryData;
 
-        GetDistrictClassificationSummaryData.get(parameter).then(function (data) {
+           objectData.get(parameter).then(function (data) {
             var category = _.uniq(_.pluck(data, 'period'));
 
             var groupByClassification = _.groupBy(data, function (period) {
                 return period.classification;
             });
-            console.log(level);
 
             var mappedData = _.map(groupByClassification, function (value, index) {
                 return {data: value, index: index};
@@ -683,24 +707,25 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             for (var i = 0; i < mappedData.length; i++) {
                 classification.push({
                     name: mappedData[i].index,
-                    data: _.pluck(mappedData[i].data, 'count'),
+                    data: _.pluck(mappedData[i].data, 'total'),
                     color: colors[mappedData[i].index]
                 });
 
             }
-            var title = '<span style="color:#509fc5; font-size: 15px">Classification of Districts based On Coverage and Utilization ' + filter.year + '</span>';
+            var header = (level!=='dvs')?'Classification by District  ('+ filter.productName +') , ':'Classification by Facility';
+
+            var title = '<span style="color:#509fc5; font-size: 15px">' +header+ filter.year + '</span>';
 
             var chartId = (level === null) ? 'classificationByDistrict' : 'classificationByDistrictLowerLevel';
 
             var chartCategory = ' ';
             chartCategory = 'classification';
 
-            getDynamicStackedChart(classification, chartId, title, category, chartCategory, filter.product, filter.year, 'Districts');
+            getDynamicStackedChart(classification, chartId, title, category, chartCategory, filter.product, filter.year, 'Districts',level);
         });
     };
 
     $scope.facilityClassificationFunc = function (filter, level, userLevel) {
-    console.log(filter);
         var colors = {'Class C': '#ffdb00', 'Class D': '#ff0d00', 'Class B': '#ABC9AA', 'Class A': '#006600'};
         var parameter = {year: parseInt(filter.year, 10),product: parseInt(filter.product, 10),doseId: parseInt(filter.dose, 10)};
         GetFacilityClassificationSummaryData.get(parameter).then(function (data) {
@@ -718,19 +743,19 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             for (var i = 0; i < mappedData.length; i++) {
                 classification.push({
                     name: mappedData[i].index,
-                    data: _.pluck(mappedData[i].data, 'count'),
+                    data: _.pluck(mappedData[i].data, 'total'),
                     color: colors[mappedData[i].index]
                 });
 
             }
-            var title = '<span style="color:#509fc5; font-size: 15px">Classification of Districts based On Coverage and Utilization ' + filter.year + '</span>';
+            var title = '<span style="color:#509fc5; font-size: 15px">Classification By Facility ,' + filter.year + '</span>';
 
             var chartId = 'classificationByFacilityLowerLevel';
 
             var chartCategory = ' ';
             chartCategory = 'classification';
 
-            getDynamicStackedChart(classification, chartId, title, category, chartCategory, filter.product, filter.year, 'Districts');
+            getDynamicStackedChart(classification, chartId, title, category, chartCategory, filter.product, filter.year, 'Facilities',level);
         });
     };
 
@@ -897,7 +922,6 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     }
 
     $scope.performanceMonitoring = function (filter, level) {
-        console.log(filter);
 
         var param = {product: parseInt(filter.product, 10), year: parseInt(filter.year, 10)};
         GetPerformanceMonitoringData.get(param).then(function (data) {
@@ -923,7 +947,6 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
             // productValue.push( _.zip(period,estimate));
 
-            console.log(allStockDataPointsByCategory);
             estimateValues = _.pluck(allStockDataPointsByCategory[0].dataPoints, 'estimate');
 
            estimate =  arrangeValuesInLinear(estimateValues);
@@ -1258,7 +1281,6 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
     };
     if ($scope.homeFacility.facilitytypecode !== 'cvs') {
-        console.log($scope.homeFacility.facilityid);
 
         var userLevel = ($scope.homeFacility.facilitytypecode === 'dvs') ? 'dvs' : 'rvs';
          $scope.userLevel = userLevel;
@@ -1305,7 +1327,6 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 $scope.showfilter = false;
             };
 
-            // $scope.loadMap(par);
 
 
         });
@@ -1371,125 +1392,12 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 });
                 getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
 
-
-                /*   var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
-                       return [{"productCategory": index, "dataPoints": value}];
-                   });
-                   if (!isUndefined(mos)) {
-                       getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
-
-                   } else
-                       return 'No Chart data';*/
-
             }
 
 
         });
 
-
-        /*        VaccineDashboardFacilityInventoryStockStatus.get({
-                facilityId: parseInt($scope.homeFacility.facilityid, 10),
-                date: '2017-09-31'
-            }, function (data) {*/
-
-        /*
-                if (data.facilityStockStatus !== null) {
-                    var allProducts = data.facilityStockStatus;
-                    var byCategory = _.groupBy(allProducts, function (p) {
-                        return p.product_category;
-                    });
-
-                    var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
-                        return [{"productCategory": index, "dataPoints": value}];
-                    });
-
-                    var mos = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'mos');
-
-                    if (!isUndefined(mos)) {
-                      getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
-
-                    } else
-                        return 'No Chart data';
-
-                }
-        */
-
-
-        /* StockCardsByCategory.get(parseInt(82, 10), parseInt($scope.homeFacility.facilityid, 10)).then(function (data) {
-
-             console.log(data);
-
-         });*/
-
-
-        // })
-        /*   FacilityInventoryStockStatusData.get({
-               facilityId: parseInt(homeFacility.facilityid, 10),
-               date: new Date()
-           }).then(function (data) {
-               if (!isUndefined(data)) {
-                   console.log(data);
-                   var byCategory = _.groupBy(data, function (p) {
-                       return p.product_category;
-                   });
-
-                   var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
-                       return [{"productCategory": index, "dataPoints": value}];
-                   });
-                   //  console.log(allStockDataPointsByCategory);
-                   getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
-               }
-           });*/
-
     } else {
-
-
-        /*    VaccineDashboardFacilityInventoryStockStatus.get({
-                facilityId: parseInt(homeFacility.facilityid, 10),
-                date: '2017-01-31'
-            }, function (data) {
-
-                if (data.facilityStockStatus !== null) {
-                    var allProducts = data.facilityStockStatus;
-                    var byCategory = _.groupBy(allProducts, function (p) {
-                        return p.product_category;
-                    });
-
-                    var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
-                        return [{"productCategory": index, "dataPoints": value}];
-                    });
-
-
-                    var vaccineData = $scope.allStockDataPointsByCategory[0].dataPoints;
-                    var mos = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'mos');
-                    var color = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'color');
-                    var product = _.pluck($scope.allStockDataPointsByCategory[0].dataPoints, 'product');
-
-                    console.log(mos);
-                    if (!isUndefined(mos)) {
-                      getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
-
-                    } else
-                        return 'No Chart data';
-        /!*
-                      $scope.myStockVaccine.productCategory = $scope.allStockDataPointsByCategory[0].productCategory;
-
-                    $scope.myStockSupplies.dataPoints = $scope.allStockDataPointsByCategory[1].dataPoints;*!/
-                    // $scope.myStockSupplies.productCategory = $scope.allStockDataPointsByCategory[1].productCategory;
-
-
-                }*/
-        // });
-
-
-        /*$scope.facilityInventoryStockStatusCallback = function (myStock) {
-            $scope.myStockFilter=myStock;
-
-            if (!isUndefined(homeFacility.id) && !isUndefined(myStock.toDate) && $scope.stockStatus.loadData) {
-
-            }
-        };
-    */
 
 
         var currentDate2 = (defaultYear === null || defaultYear === undefined)?new Date().getFullYear()-1:defaultYear;
@@ -2499,196 +2407,10 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                         enabled: true,
                         format: '{point.properties.postal-code}'
                     }, shadow: false
-                }/*, {
-                    type: 'mapline',
-                    data: separators,
-                    color: 'silver',
-                    enableMouseTracking: false,
-                    animation: {
-                        duration: 500
-                    }
-                }*/]/*,
-
-                drilldown: {
-                    activeDataLabelStyle: {
-                        color: '#FFFFFF',
-                        textDecoration: 'none',
-                        textOutline: '1px #000000'
-                    },
-                    drillUpButton: {
-                        relativeTo: 'spacingBox',
-                        position: {
-                            x: 0,
-                            y: 60
-                        }
-                    }
-                }*/
+                }]
             });
 
 
-            /*console.log(dataValues);
-                        var coverage = _.pluck(data,'value');
-                        var mapCode = _.pluck(data,'code');
-                        var mapData =_.zip(mapCode,coverage);
-            mapInfo(mapData,'coverage_map');
-                        console.log(mapData);*/
-
-
-            /*
-                        var data1 = Highcharts.geojson(Highcharts.maps['countries/tz/tz-all']),
-                            separators = Highcharts.geojson(Highcharts.maps['countries/tz/tz-all'], 'mapline'),
-                            // Some responsiveness
-                            small = $('#coverage_map').width() < 400;
-
-
-                        // Set drilldown pointers
-                        $.each(data1, function (i) {
-
-                            // this.drilldown = this.properties['hc-key'];
-
-                            this.value = i;
-
-
-                            // Non-random bogus data
-                        });
-            */
-
-
-            // Initiate the chart
-            /*
-                        $('#coverage_map').highcharts('Map', {
-
-                            chart: {
-                                /!*    events: {
-                                        drilldown: function (e) {
-                                            if (!e.seriesOptions) {
-                                                var chart = this,
-                                                    mapKey = 'countries/us/' + e.point.drilldown + '-all',
-                                                    // Handle error, the timeout is cleared on success
-                                                    fail = setTimeout(function () {
-                                                        if (!Highcharts.maps[mapKey]) {
-                                                            chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
-                                                            fail = setTimeout(function () {
-                                                                chart.hideLoading();
-                                                            }, 1000);
-                                                        }
-                                                    }, 3000);
-
-                                                // Show the spinner
-                                                chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
-
-                                                // Load the drilldown map
-                                                $.getScript('https://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
-
-                                                    data = Highcharts.geojson(Highcharts.maps[mapKey]);
-
-                                                    // Set a non-random bogus value
-                                                    $.each(data, function (i) {
-                                                        this.value = i;
-                                                    });
-
-                                                    // Hide loading and add series
-                                                    chart.hideLoading();
-                                                    clearTimeout(fail);
-                                                    chart.addSeriesAsDrilldown(e.point, {
-                                                        name: e.point.name,
-                                                        data: data,
-                                                        dataLabels: {
-                                                            enabled: true,
-                                                            format: '{point.name}'
-                                                        }
-                                                    });
-                                                });
-                                            }
-
-                                            this.setTitle(null, {text: e.point.name});
-                                        },
-                                        drillup: function () {
-                                            this.setTitle(null, {text: ''});
-                                        }
-                                    }*!/
-                            },
-                            credits: {
-                                enabled: false
-                            },
-                            title: {
-                                text: 'DTP3 Coverage By Region'
-                            },
-
-                            subtitle: {
-                                text: '',
-                                floating: true,
-                                align: 'right',
-                                y: 50,
-                                style: {
-                                    fontSize: '16px'
-                                }
-                            },
-
-                            legend: small ? {} : {
-                                layout: 'vertical',
-                                align: 'right',
-                                verticalAlign: 'middle'
-                            },
-
-                            colorAxis: {
-                                min: 0,
-                                minColor: '#E6E7E8',
-                                maxColor: '#005645'
-                            },
-
-                            mapNavigation: {
-                                enabled: true,
-                                buttonOptions: {
-                                    verticalAlign: 'bottom'
-                                }
-                            },
-
-                            plotOptions: {
-                                map: {
-                                    states: {
-                                        hover: {
-                                            color: '#EEDD66'
-                                        }
-                                    }
-                                }
-                            },
-
-                            series: [{
-                                data: mapData,
-                                mapData: data1,
-                                joinBy: ['hc-key', 'mapCode'],
-                                name: 'Region',
-                                dataLabels: {
-                                    enabled: true,
-                                    format: '{point.properties.value}'
-                                }
-                            }, {
-                                type: 'mapline',
-                                data: separators,
-                                color: 'silver',
-                                enableMouseTracking: false,
-                                animation: {
-                                    duration: 500
-                                }
-                            }],
-
-                            drilldown: {
-                                activeDataLabelStyle: {
-                                    color: '#FFFFFF',
-                                    textDecoration: 'none',
-                                    textOutline: '1px #000000'
-                                },
-                                drillUpButton: {
-                                    relativeTo: 'spacingBox',
-                                    position: {
-                                        x: 0,
-                                        y: 60
-                                    }
-                                }
-                            }
-                        });
-            */
 
 
         });

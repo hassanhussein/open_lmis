@@ -152,4 +152,7 @@ public interface ProcessingPeriodMapper {
             "             join programs p on p.id = sc.programid where p.code = #{program}) " +
             "         order by name")
     List<ProcessingPeriod> getPeriodsByProgramCode(String code);
+
+    @Select("select * from processing_periods where lower(name) = lower(#{name})")
+    ProcessingPeriod getByName(@Param("name") String name);
 }

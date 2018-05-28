@@ -2123,6 +2123,7 @@ public interface VaccineDashboardMapper {
             "group by classification,period_name,periodid,classificationclass\n" +
             "ORDER BY PERIODID,classification")
     List<HashMap<String,Object>>getCategorizationByFacility(@Param("userId") Long userId, @Param("year") Long year);
+/*
 
     @Select("\n" +
             "    select * from categorization_view v\n" +
@@ -2131,8 +2132,9 @@ public interface VaccineDashboardMapper {
             "    AND period_name = #{period} AND CATaGORIZATION=#{category}\n" +
             "                     order by p.id, period_name,catagorization")
     List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(@Param("userId") Long userId, @Param("category") String category, @Param("period") String period);
+*/
 
-    @Select(
+ /*   @Select(
             " SELECT pERIOD_ID, period,classificationclass,classification,count(*) from( \n" +
             "             \n" +
             "            SELECT pERIOD_ID,period, CLASSIficationclass,district,classification,count(*) TOTAL FROM ( \n" +
@@ -2202,18 +2204,21 @@ public interface VaccineDashboardMapper {
             "             \n" +
             "                )Z \n" +
             "            group by period,CLASSIficationclass,pERIOD_ID,classification \n" +
-            "            order by pERIOD_ID\n")
+            "            order by pERIOD_ID\n")*/
+
+
+/*
+    @Select("\n" +
+            "select periodId period_id,period_name period,classificationclass, classification,count(*) total from vw_vaccine_categorization vw\n" +
+            "JOIN vw_user_facilities uf ON uf.facility_id = vw.facilityId  and uf.user_Id = #{userId} AND year = #{year} and productId=#{product} \n" +
+            "group by periodid,period_name,classification,classificationclass\n" +
+            "order by periodId,classification\n")
     List<HashMap<String, Object>> getDistrictClassification(@Param("userId") Long userId, @Param("product") Long product, @Param("year") Long year);
 
-    @Select("SELECT pERIOD_ID,period, CLASSIficationclass,district,classification,count(*) \n" +
-            "from FACILITY_CLASSIFICATION_view\n" +
-            "where year = #{year} and productid = #{product} and doseid =#{doseId} and district_id::INT in (select district_id::INT from vw_user_districts where user_id = #{userId})\n" +
-            "group by  pERIOD_ID,period, CLASSIficationclass,district,classification\n" +
-            "order by pERIOD_ID,classification")
-    List<HashMap<String, Object>> getFacilityClassification(@Param("userId") Long userId,@Param("year") Long year,
-                                                            @Param("product")Long product,@Param("doseId")Long doseId);
+                                                   @Param("product")Long product,@Param("doseId")Long doseId);
+*/
 
-    @Select("WITH Q as (\n" +
+/*    @Select("WITH Q as (\n" +
             "SELECT pERIOD_ID,period, CLASSIficationclass,district,region,classification FROM (\n" +
             "\n" +
             "SELECT\n" +
@@ -2276,22 +2281,11 @@ public interface VaccineDashboardMapper {
             "    group by period, CLASSIficationclass,district,region,classification ,period_id \n" +
             "ORDER BY pERIOD_ID\n" +
             ") select * from q \n" +
-            "WHERE CLASSIFICATION = #{indicator} and period=#{period}\n")
-    List<HashMap<String, Object>> getDistrictClassificationDrillDown(@Param("userId") Long userId, @Param("product") Long product, @Param("year") Long year,
-                                                                     @Param("indicator") String indicator, @Param("period") String period);
+            "WHERE CLASSIFICATION = #{indicator} and period=#{period}\n")*/
 
 
-    @Select("SELECT pERIODID, period_NAME,classificationclass,classification,count(*),FACILITY_NAME FROM(\n" +
-            "\n" +
-            "SELECT * FROM FACILITY__CLASSIFICATION_categorization_view C\n" +
-            "WHERE C.year = #{year} and c.district_id in(select district_id from vw_user_districts where user_id =#{userId})\n" +
-            "order by periodId,CLASSIFICATION\n" +
-            ") A\n" +
-            "WHERE PERIODID =#{period} AND classification =#{indicator}\n" +
-            "GROUP BY pERIODID, period_NAME,classificationclass,classification,facility_name\n" +
-            "ORDER BY periodid,classification")
-    List<HashMap<String, Object>> getFacilityClassificationDrillDown(@Param("userId") Long userId,  @Param("year") Long year,
-                                                                     @Param("indicator") String indicator, @Param("period") String period);
+
+
 
     @Select("\n" +
             "\n" +
@@ -2531,4 +2525,53 @@ public interface VaccineDashboardMapper {
             "group by 1,2\n" +
             "order by 1,2 ")
     List<HashMap<String,Object>>getImmunizationSessionSummary(@Param("userId") Long userId, @Param("period") Long period,@Param("year")Long year);
+
+
+    @Select(" \n" +
+           "SELECT period_id,period_name period,classificationclass,classification,COUNT(*) total\n" +
+           "FROM vw_vaccine_classification_by_districts vw\n" +
+           "JOIN vw_user_districts uf ON uf.district_id = vw.district_id  and uf.user_Id = #{userId}::int\n" +
+           "WHERE\n" +
+           " year = #{year} :: INT and productId=#{product}::int \n" +
+           "group by period_id,period_name,classificationclass,classification\n" +
+           "order by period_id,classification")
+    List<HashMap<String,Object>>getClassificationByDistrictSummary(@Param("userId") Long userId,@Param("product")Long product,@Param("year")Long year);
+
+   @Select(" SELECT period_id,period_name period,classificationclass,classification,* \n" +
+           "FROM vw_vaccine_classification_by_districts vw\n" +
+           "JOIN vw_user_districts uf ON uf.district_id = vw.district_id  and uf.user_Id = #{userId}::int\n" +
+           "WHERE\n" +
+           " year = #{year} :: INT and productId=#{product} and replace(Lower(classification),' ','') =replace(lower(#{indicator}),' ','') and period_name = #{period}\n" +
+           "order by district_name,classification ")
+   List<HashMap<String,Object>>getClassificationByDistrictDrillDown(@Param("userId") Long userId,@Param("product")Long product, @Param("period") String period,@Param("year")Long year,@Param("indicator") String indicator);
+
+    @Select("\n" +
+            "select facility_name, periodId,period_name period, classification,vw.*  from vw_vaccine_categorization vw\n" +
+            "JOIN vw_user_facilities uf ON uf.facility_id = vw.facilityId  and uf.user_Id = #{userId} AND year = #{year}::INT and productId=#{product}::INT and periodId = #{period}::INT \n" +
+            "and replace(Lower(classification),' ','')=replace(lower(#{indicator}),' ','')")
+    List<HashMap<String, Object>> getDistrictClassificationDrillDown(@Param("userId") Long userId, @Param("product") Long product, @Param("year") Long year,
+                                                                     @Param("indicator") String indicator, @Param("period") String period);
+
+    @Select(" select facility_name, periodId,period_name period, classification,vw.*  from vw_vaccine_facility_classification vw\n" +
+            "JOIN vw_user_facilities uf ON uf.facility_id = vw.facilityId  and uf.user_Id = #{userId}::int AND year = #{year}::int and productId=#{product}::int and period_name = #{period} \n" +
+            "and replace(Lower(classification),' ','') =replace(lower(#{indicator}),' ','') ")
+    List<HashMap<String, Object>> getFacilityClassificationDrillDown(@Param("userId") Long userId,  @Param("year") Long year,
+                                                                     @Param("indicator") String indicator, @Param("period") String period,@Param("product")Long product);
+
+    @Select("select periodId peiod_id,period_name period,classificationclass, classification,count(*) total from vw_vaccine_facility_classification vw\n" +
+            "JOIN vw_user_facilities uf ON uf.facility_id = vw.facilityId  and uf.user_Id = #{userId}  AND year = #{year} and productId=#{product} \n" +
+            "group by periodid,period_name,classification,classificationclass\n" +
+            "order by periodId,classification")
+    List<HashMap<String, Object>> getFacilityClassification(@Param("userId") Long userId,@Param("year") Long year,
+                                                            @Param("product")Long product);
+
+    @Select("\n" +
+            "                                       SELECT district_name, periodid ID,p.name period_name,catagorization,*  FROM categorization_view w  \n" +
+            "                                     --  JOIN facilities f ON f.geographiczoneid =  w.district_id \n" +
+            "                                       JOIN vw_user_DISTRICTS uf ON uf.district_id = w.district_id  \n" +
+            "                                       JOIN processing_periods p ON periodid = p.id and NUMBEROFMONTHS =1 and scheduleid = 45 \n" +
+            "                                       WHERE YEAR =#{year} and user_id = #{userId} and lower(catagorization) =lower(#{indicator}) and periodID =#{period}::int\n")
+    List<HashMap<String,Object>>getCategorizationByDistrictDrillDown(@Param("userId") Long userId,@Param("year") Long year,
+                                                                    @Param("indicator")String indicator, @Param("period")Long period);
+
 }
