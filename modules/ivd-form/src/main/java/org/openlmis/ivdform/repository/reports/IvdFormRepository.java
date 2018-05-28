@@ -75,7 +75,7 @@ public class IvdFormRepository {
     lineItemService.saveBreastFeedingLineItems(dbVersion,report.getBreastFeedingLineItems(),report.getId(),userId);
     lineItemService.saveWeightAgeRatioLineItems(dbVersion,report.getWeightAgeRatioLineItems(),report.getId(),userId);
     lineItemService.saveCoverageAgeGroupLineItems(dbVersion, report.getCoverageAgeGroupLineItems(), report.getId(),userId);
-
+    lineItemService.saveHEIDLineItems(dbVersion,report.getHeidLineItems(), report.getId(),userId);
   }
 
   public void update(VaccineReport fromDb, VaccineReport report, Long userId) {

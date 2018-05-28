@@ -68,6 +68,9 @@ public class LineItemService {
     @Autowired
     CoverageLineItemAgeGroupRepository lineItemAgeGroupRepository;
 
+    @Autowired
+    HEIDLineItemRepository heidLineItemRepository;
+
     public void saveLogisticsLineItems(VaccineReport dbVersion, List<LogisticsLineItem> lineItems, Long reportId, Long userId) {
         for (LogisticsLineItem lineItem : emptyIfNull(lineItems)) {
             if (null != dbVersion) {
@@ -424,6 +427,23 @@ public class LineItemService {
                 lineItemAgeGroupRepository.insert(lineItem);
             }
         }
+    }
+
+
+    public void saveHEIDLineItems(VaccineReport dbVersion, List<HEIDLineItem> lineItems, Long reportId, Long userId) {
+
+        for (HEIDLineItem item : emptyIfNull(lineItems)) {
+            item.setReportId(reportId);
+            if (!item.hasId()) {
+                item.setCreatedBy(userId);
+                heidLineItemRepository.insert(item);
+            } else {
+                item.setModifiedBy(userId);
+                heidLineItemRepository.update(item);
+            }
+        }
+
+
     }
 
 }

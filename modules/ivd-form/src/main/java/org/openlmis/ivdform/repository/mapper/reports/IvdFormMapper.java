@@ -86,7 +86,10 @@ public interface IvdFormMapper {
             @Result(property = "weightAgeRatioLineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.WeightAgeRatioLineItemMapper.getLineItems")),
             @Result(property = "coverageAgeGroupLineItems", javaType = List.class, column = "id",
-                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.CoverageLineItemAgeGroupMapper.getLineItems"))
+                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.CoverageLineItemAgeGroupMapper.getLineItems")),
+
+            @Result(property = "heidLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.HEIDLineItemMapper.getLineItems"))
 
 
     })

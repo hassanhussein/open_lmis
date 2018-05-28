@@ -271,6 +271,7 @@ public class IvdFormService {
         report.initializeWeightAgeRatioLineItems(weightAgeRatioAgeGroupList, weightCategoryList, defaultFieldsToZero);
 
         report.initializeCoverageAgeGroupLineItems(dosesToCover,productDoseAgeGroupList,defaultFieldsToZero);
+        report.initializeHEIDLineItems(defaultFieldsToZero);
         return report;
     }
 
