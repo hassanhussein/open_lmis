@@ -75,6 +75,8 @@ $scope.homeLinkClicked=function(){
 
   $scope.getCustomReportsList = function() {
       CustomReportList.get({}, function (list) {
+
+        console.log(list);
           $scope.customReports =_.groupBy(list.reports,'category');
       });
   }();

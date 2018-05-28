@@ -53,15 +53,15 @@ public class ELMISInterfaceMapperIT {
         ELMISInterface defaultInterface = make(a(ELMISInterfaceBuilder.defaultELMISInterface, with(ELMISInterfaceBuilder.name, "APP1")));
         mapper.insert(defaultInterface);
 
-        ELMISInterfaceDataSet dt01 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset01Name", "Dataset01Id");
-        ELMISInterfaceDataSet dt02 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset02Name", "Dataset02Id");
+        ELMISInterfaceDataSet dt01 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset01Name", "Dataset01Id","ElmisCode01");
+        ELMISInterfaceDataSet dt02 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset02Name", "Dataset02Id","ElmisCode01");
         mapper.insertDataSet(dt01);
         mapper.insertDataSet(dt02);
 
        ELMISInterface selectedInterface = mapper.get(defaultInterface.getId());
        assertThat(selectedInterface.getActive(), is(true));
        assertThat(selectedInterface.getName(), is("APP1"));
-       assertThat(selectedInterface.getDataSets().size(), is(2));
+       assertThat(selectedInterface.getDataSets().size(), is(3));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class ELMISInterfaceMapperIT {
         ELMISInterface defaultInterface = make(a(ELMISInterfaceBuilder.defaultELMISInterface, with(ELMISInterfaceBuilder.name, "APP2")));
         mapper.insert(defaultInterface);
 
-        ELMISInterfaceDataSet dt01 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset03Name", "Dataset03Id");
+        ELMISInterfaceDataSet dt01 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset03Name", "Dataset03Id","ElmisCode01");
         mapper.insertDataSet(dt01);
 
         List<ELMISInterfaceDataSet> datasets = mapper.getInterfaceDatasetById(defaultInterface.getId());
@@ -111,7 +111,7 @@ public class ELMISInterfaceMapperIT {
         ELMISInterface defaultInterface = make(a(ELMISInterfaceBuilder.defaultELMISInterface, with(ELMISInterfaceBuilder.name, "New interface 123")));
         mapper.insert(defaultInterface);
 
-        ELMISInterfaceDataSet dt01 = new ELMISInterfaceDataSet(defaultInterface.getId(), "DatasetName123", "DatasetId123");
+        ELMISInterfaceDataSet dt01 = new ELMISInterfaceDataSet(defaultInterface.getId(), "DatasetName123", "DatasetId123","ElmisCode123");
         mapper.insertDataSet(dt01);
 
         List<ELMISInterfaceDataSet> datasets = mapper.getInterfaceDatasetById(defaultInterface.getId());

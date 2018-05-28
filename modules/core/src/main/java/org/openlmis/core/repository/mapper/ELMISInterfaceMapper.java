@@ -55,15 +55,15 @@ public interface ELMISInterfaceMapper {
     @Update("UPDATE interface_dataset\n" +
             "   SET datasetname=#{dataSetname}, interfaceid=#{interfaceId}, datasetid=#{dataSetId}, createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW())," +
             " modifiedby= #{modifiedBy}, \n" +
-            "       modifieddate= COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) \n" +
+            "       modifieddate= COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),elmisCode = #{elmisCode}  \n" +
             " WHERE id = #{id} ")
     Integer updateDataSet(ELMISInterfaceDataSet dataSet);
 
     @Insert("INSERT INTO interface_dataset(" +
             "             interfaceid, datasetname, datasetid, " +
-            "            modifiedby, modifieddate, createdby, createddate)" +
+            "            modifiedby, modifieddate, createdby, createddate,elmisCode)" +
             "    VALUES (#{interfaceId}, #{dataSetname}, #{dataSetId}, " +
-            "     #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()))")
+            "     #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()),#{elmisCode})")
     Integer insertDataSet(ELMISInterfaceDataSet dataSet);
 
     @Delete("DELETE from interface_dataset where id = #{id}")
@@ -102,4 +102,6 @@ public interface ELMISInterfaceMapper {
             "    createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             "   WHERE id = #{id}")
     Integer updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
+
+
 }

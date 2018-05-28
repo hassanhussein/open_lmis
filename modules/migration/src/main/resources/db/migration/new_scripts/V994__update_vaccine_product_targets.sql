@@ -1,21 +1,38 @@
+ALTER TABLE vaccine_product_targets
+  DROP column if exists targetDropOutGood;
 
   ALTER TABLE vaccine_product_targets
-  ADD IF NOT EXISTS targetDropOutGood FLOAT;
-  
-  ALTER TABLE vaccine_product_targets
-  ADD IF NOT EXISTS targetDropOutWarn FLOAT;
+  ADD column targetDropOutGood FLOAT;
 
   ALTER TABLE vaccine_product_targets
-  ADD IF NOT EXISTS targetDropOutBad FLOAT;
-  
-  ALTER TABLE vaccine_product_targets
-  ADD IF NOT EXISTS targetWastageClosedVialsGood FLOAT;
+  DROP COLUMN IF EXISTS targetDropOutWarn;
 
   ALTER TABLE vaccine_product_targets
-  ADD IF NOT EXISTS targetWastageClosedVialsWarn FLOAT;
+  ADD COLUMN targetDropOutWarn FLOAT;
+
+ALTER TABLE vaccine_product_targets
+  DROP COLUMN IF EXISTS targetDropOutBad;
 
   ALTER TABLE vaccine_product_targets
-  ADD IF NOT EXISTS targetWastageClosedVialsBad FLOAT;
+  ADD COLUMN targetDropOutBad FLOAT;
+
+  ALTER TABLE vaccine_product_targets
+  DROP COLUMN IF EXISTS targetWastageClosedVialsGood;
+
+  ALTER TABLE vaccine_product_targets
+  ADD COLUMN targetWastageClosedVialsGood FLOAT;
+
+ ALTER TABLE vaccine_product_targets
+  drop COLUMN IF EXISTS targetWastageClosedVialsWarn ;
+
+  ALTER TABLE vaccine_product_targets
+  ADD COLUMN targetWastageClosedVialsWarn FLOAT;
+
+ ALTER TABLE vaccine_product_targets
+  DROP column IF EXISTS targetWastageClosedVialsBad;
+
+  ALTER TABLE vaccine_product_targets
+  ADD COLUMN targetWastageClosedVialsBad FLOAT;
 
 
 DELETE from vaccine_product_targets;

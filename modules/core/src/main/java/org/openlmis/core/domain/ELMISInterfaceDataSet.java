@@ -27,4 +27,5 @@ public class ELMISInterfaceDataSet extends BaseModel {
     private Long interfaceId;
     private String dataSetname;
     private String dataSetId;
+    private String elmisCode;
 }

@@ -62,6 +62,9 @@
                                                 <div id="datasetIdHeader" class="fluid-grid-cell" openlmis-message="label.interface.dataset.id"></div>
                                             </div>
                                             <div class="span3">
+                                                <div id="datasetIdHeader" class="fluid-grid-cell" openlmis-message="label.interface.list.elmis.code"></div>
+                                            </div>
+                                            <div class="span3">
                                                 <div id="datasetIdHeader" class="fluid-grid-cell" openlmis-message="label.action"></div>
                                             </div>
                                         </div>
@@ -83,6 +86,16 @@
                                                         <input type="text" id="interfaceDataSetId{{$index}}" ng-model="dataset.dataSetId" class="input-adjusted"  name="interfaceDataSetId{{$index}}"  ng-required="true"/>
                                                     </div>
                                                     <span id="datasetiderror{{$index}}" class="rnr-form-error" ng-show="!dataset.dataSetId && showError"
+                                                          openlmis-message="missing.value"></span>
+                                                </div>
+                                            </div>
+                                            <div class="span3">
+                                                <div class="fluid-grid-cell" ng-show="!dataset.underEdit">{{dataset.elmisCode}}</div>
+                                                <div class="span8 fluid-grid-cell"  ng-show="dataset.underEdit">
+                                                    <div class="position-relative">
+                                                        <input type="text" id="interfaceelmisCode{{$index}}" ng-model="dataset.elmisCode" class="input-adjusted"  name="interfaceDataSetId{{$index}}"  ng-required="true"/>
+                                                    </div>
+                                                    <span id="elmisCodeerror{{$index}}" class="rnr-form-error" ng-show="!dataset.dataSetId && showError"
                                                           openlmis-message="missing.value"></span>
                                                 </div>
                                             </div>
@@ -123,6 +136,15 @@
                                                         <input class="input-adjusted" type="text" id="interfaceDataSetIdEdit{{$index}}" ng-model="newDataSet.dataSetId"  name="interfaceDataSetIdEdit{{$index}}"  ng-required="true"/>
                                                     </div>
                                                     <span id="datasetidedit{{$index}}" class="rnr-form-error" ng-show="!newDataSet.dataSetId && showError"
+                                                          openlmis-message="missing.value"></span>
+                                                </div>
+                                            </div>
+                                            <div class="span3">
+                                                <div class="span12 fluid-grid-cell">
+                                                    <div class="position-relative">
+                                                        <input type="text" class="input-adjusted" id="interfaceElmisCodeEdit{{$index}}" ng-model="newDataSet.elmisCode" name="interfaceDataSetNameEdit{{$index}}"  ng-required="true"/>
+                                                    </div>
+                                                    <span id="elmisCodeEdit{{$index}}" class="rnr-form-error" ng-show="!newDataSet.elmisCode && showError"
                                                           openlmis-message="missing.value"></span>
                                                 </div>
                                             </div>
