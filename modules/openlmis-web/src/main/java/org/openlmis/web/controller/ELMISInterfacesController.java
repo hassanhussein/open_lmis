@@ -100,8 +100,8 @@ public class ELMISInterfacesController extends BaseController {
         return OpenLmisResponse.response("interfacesMapping", mapping);
     }
 
-    @RequestMapping(value = "/ELMISInterfacesMapping/getLLIN", method = GET, headers = "Accept=application/json")
+   /* @RequestMapping(value = "/ELMISInterfacesMapping/getLLIN", method = GET, headers = "Accept=application/json")
     public ResponseEntity<OpenLmisResponse> getAllMosquitoData(HttpServletRequest request) {
-        return OpenLmisResponse.response("llin", elmisInterfaceService.sendMosquitoNetData());
-    }
+        return OpenLmisResponse.response("llin", elmisInterfaceService.processMosquitoNetData());
+    }*/
 }

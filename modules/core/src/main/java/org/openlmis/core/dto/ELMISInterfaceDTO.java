@@ -13,6 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class ELMISInterfaceDTO {
-
     private List<ELMISInterfaceDataSetDTO> dataValues;
 }

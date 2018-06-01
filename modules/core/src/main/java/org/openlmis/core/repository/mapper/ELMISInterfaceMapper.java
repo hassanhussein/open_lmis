@@ -20,6 +20,8 @@ import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.dto.ELMISInterfaceDTO;
 import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
+import org.openlmis.core.dto.InterfaceResponseDTO;
+import org.openlmis.core.dto.ResponseDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.stereotype.Repository;
 
@@ -106,6 +108,17 @@ public interface ELMISInterfaceMapper {
     Integer updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
 
 
-    @Select("SELECT * FROM vw_bed_nets_data WHERE reporting_year =#{year}")
-    List<ELMISInterfaceDataSetDTO>getMosquitoNetData(@Param("year")Long year);
+    @Select("SELECT * FROM vw_bed_nets_data WHERE reporting_year >= 2017")
+    List<ELMISInterfaceDataSetDTO>getMosquitoNetData();
+
+    @Select("REFRESH MATERIALIZED VIEW  vw_bed_nets_data")
+    void refreshMaterializedView();
+
+    @Insert(" INSERT INTO public.interface_responses(\n" +
+            "            responseType, status, description, imported, updated, ignored, \n" +
+            "            deleted, affectedObject, affectedValue, datasetComplete)\n" +
+            "    VALUES (#{responseType}, #{status}, #{description}, #{imported}, #{updated}, #{ignored}, \n" +
+            "            #{deleted}, #{affectedObject}, #{affectedValue},#{dataSetComplete});\n")
+    void InsertInterfaceResponse(ResponseDTO dto);
+
 }
