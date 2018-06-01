@@ -46,7 +46,11 @@ public class ColdTraceStatusController extends BaseController {
   @Autowired
   private ColdChainEquipmentTemperatureAlarmService alarmService;
 
-  @ApiOperation(value="submit monthly status", response = MultiValueMap.class)
+  @ApiOperation(
+      value="submit monthly status",
+      response = MultiValueMap.class,
+      notes = "Accepts submission of monthly status of equipment"
+  )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody ColdTraceMonthlyStatusDTO status, Principal principal) {
     status.validate();
@@ -54,31 +58,58 @@ public class ColdTraceStatusController extends BaseController {
     return OpenLmisResponse.success("Daily cold trace status submitted for" + status.getDate().toString());
   }
 
-  @ApiOperation(value="submit temperature alarm.", response = MultiValueMap.class)
-  @RequestMapping(value = "/rest-api/equipment/cold-trace/alarms", method = RequestMethod.POST, headers = ACCEPT_JSON)
+  @ApiOperation(
+      value="submit temperature alarm.",
+      response = MultiValueMap.class,
+      notes = "Accepts submission of alarm notifications from Nexleaf RTM system."
+  )
+  @RequestMapping(
+      value = "/rest-api/equipment/cold-trace/alarms",
+      method = RequestMethod.POST,
+      headers = ACCEPT_JSON
+  )
   public ResponseEntity<OpenLmisResponse> submitAlarms(@RequestBody ColdChainTemperatureAlarmDTO alarm, Principal principal) {
     alarmService.save(alarm, loggedInUserId(principal));
     return OpenLmisResponse.success("Your submission has been accepted");
   }
 
-  @ApiOperation(value="return list of alarm submissions for a serial number.",
-      response = ColdChainEquipmentTemperatureAlarm.class, responseContainer = "List")
+  @ApiOperation(
+      value="return list of alarm submissions for a serial number.",
+      response = ColdChainEquipmentTemperatureAlarm.class,
+      responseContainer = "List",
+      notes = "Accepts an equipment serial number. " +
+          "<br />Valid serial number can be found on GET /rest-api/equipment/cold-trace/equipments. " +
+          "<br /><br />Returns a list of alarms reported for that equipment."
+  )
   @RequestMapping(value = "/rest-api/equipment/{serial}/cold-trace/alarms", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getAlarms(@PathVariable("serial") String serial) {
     List<ColdChainEquipmentTemperatureAlarm> alarms = alarmService.getAllAlarms(serial);
     return OpenLmisResponse.response(ALARMS, alarms);
   }
 
-  @ApiOperation(value="return list of alarm submissions for a serial number in period.",
-      response = ColdChainEquipmentTemperatureAlarm.class, responseContainer = "List")
+  @ApiOperation(
+      value="return list of alarm submissions for a serial number in period.",
+      response = ColdChainEquipmentTemperatureAlarm.class,
+      responseContainer = "List",
+      notes = "Accepts an equipment serial number and period id. " +
+          "<br />Valid serial number can be found on GET /rest-api/equipment/cold-trace/equipments " +
+          "and valid period id can be found on GET /rest-api/lookup/processing-periods. " +
+          "<br /><br />Returns a list of alarms reported for that equipment during the period."
+  )
   @RequestMapping(value = "/rest-api/equipment/{serial}/{period}/cold-trace/alarms", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getAlarms(@PathVariable("serial") String serial, @PathVariable("period") Long periodId) {
     List<ColdChainEquipmentTemperatureAlarm> alarms = alarmService.getAlarmsForPeriod(serial, periodId);
     return OpenLmisResponse.response(ALARMS, alarms);
   }
 
-  @ApiOperation(value="return list of cold trace summary for region",
-      response = ColdTraceSummaryDTO.class, responseContainer = "List")
+  @ApiOperation(
+      value="return list of cold trace summary for region",
+      response = ColdTraceSummaryDTO.class,
+      responseContainer = "List",
+      notes = "Accepts a region code. " +
+          "<br />Valid region code can be found on GET /rest-api/lookup/geographic-zones. " +
+          "<br />Returns a list of equipment under that region."
+  )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/regional-submission-status",
       method = RequestMethod.GET, headers = ACCEPT_JSON
   )
@@ -99,8 +130,14 @@ public class ColdTraceStatusController extends BaseController {
     return OpenLmisResponse.response(EQUIPMENTS, dailyColdTraceStatusService.getEquipmentList(regionCode));
   }
 
-  @ApiOperation(value="return list of monthly status",
-      response = ColdTraceMonthlyStatusDTO.class, responseContainer = "List")
+  @ApiOperation(
+      value="return list of monthly status",
+      response = ColdTraceMonthlyStatusDTO.class,
+      responseContainer = "List",
+      notes = "Accepts an equipment serial number. " +
+          "<br /> Valid serial number can be found on GET /rest-api/equipment/cold-trace/equipments. " +
+          "<br /> <br />Returns the monthly summary status for that equipment reported to VIMS through POST /rest-api/equipment/cold-trace/monthly-status"
+  )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/submissions-for-equipment", method = RequestMethod.GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getListOfSubmissions(@RequestParam("serial") String serialNumber) {
     return OpenLmisResponse.response(STATUSES, dailyColdTraceStatusService.getStatusSubmittedFor(serialNumber));
