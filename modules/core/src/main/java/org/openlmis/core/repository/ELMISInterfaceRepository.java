@@ -18,6 +18,8 @@ import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.dto.ELMISInterfaceDTO;
+import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ELMISInterfaceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,5 +157,9 @@ public class ELMISInterfaceRepository {
                 mapper.updateFacilityMapping(mapping);
             }
         }
+    }
+
+    public List<ELMISInterfaceDataSetDTO> getMosquitoNetData(Long year){
+        return mapper.getMosquitoNetData(year);
     }
 }

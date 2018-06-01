@@ -177,6 +177,8 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
 
+  private Boolean trackNet;
+
   public void validate() {
     if (this.packSize <= 0) {
       throw new DataException("error.invalid.pack.size");

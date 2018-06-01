@@ -18,6 +18,8 @@ import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
+import org.openlmis.core.dto.ELMISInterfaceDTO;
+import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.stereotype.Repository;
 
@@ -102,4 +104,8 @@ public interface ELMISInterfaceMapper {
             "    createddate=COALESCE(#{createdDate}, NOW()), modifiedby=#{modifiedBy}, modifieddate=COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP)\n" +
             "   WHERE id = #{id}")
     Integer updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
+
+
+    @Select("SELECT * FROM vw_bed_nets_data WHERE reporting_year =#{year}")
+    List<ELMISInterfaceDataSetDTO>getMosquitoNetData(@Param("year")Long year);
 }

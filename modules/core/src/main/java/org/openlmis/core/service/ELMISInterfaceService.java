@@ -16,10 +16,13 @@ import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.dto.ELMISInterfaceDTO;
+import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +30,8 @@ public class ELMISInterfaceService {
 
     @Autowired
     private ELMISInterfaceRepository repository;
+    @Autowired
+    private ConfigurationSettingService settingService;
 
     public ELMISInterface get(long interfaceId) {
         return repository.get(interfaceId);
@@ -61,4 +66,23 @@ public class ELMISInterfaceService {
     public void updateFacilityInterfaceMapping(Facility facility){
         repository.updateFacilityInterfaceMapping(facility);
     }
+
+    public ELMISInterfaceDTO sendMosquitoNetData(){
+
+       // String username = settingService.getByKey(IL_USERNAME).getValue();
+
+       // String password = settingService.getByKey(IL_PASSWORD).getValue();
+
+       // String il_url = settingService.getByKey(IL_URL).getValue();
+
+
+        Long year = (long) (new Date().getYear() - 1);
+
+        ELMISInterfaceDTO dto = new ELMISInterfaceDTO();
+        dto.setDataValues(repository.getMosquitoNetData(year));
+
+
+        return dto;
+    }
+
 }
