@@ -403,6 +403,15 @@
                         <property name="recordHandler" ref="geoMapMappingPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="elmis-interface">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="menu.header.elmis.interface"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.ELMISInterfaceFacilityMappingDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="interfacePersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

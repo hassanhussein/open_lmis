@@ -14,20 +14,19 @@ package org.openlmis.core.repository;
 
 
 import org.apache.commons.collections.CollectionUtils;
-import org.openlmis.core.domain.ELMISInterface;
-import org.openlmis.core.domain.ELMISInterfaceDataSet;
-import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
-import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.ELMISInterfaceFacilityMappingDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ELMISInterfaceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
+@Component
 public class ELMISInterfaceRepository {
 
     @Autowired
@@ -155,5 +154,19 @@ public class ELMISInterfaceRepository {
                 mapper.updateFacilityMapping(mapping);
             }
         }
+    }
+
+    public ELMISInterfaceFacilityMappingDTO getByDataset(String dataSetId) {
+        return mapper.getByDataset(dataSetId);
+    }
+    public void updateElmisInterFaceData(ELMISInterfaceFacilityMappingDTO dto){
+        mapper.updateElmisInterFaceData(dto);
+    }
+
+    public void save(ELMISInterfaceFacilityMappingDTO record) {
+        if(record.getId()== null){
+            mapper.insertData(record);
+        }else
+            mapper.updateElmisInterFaceData(record);
     }
 }

@@ -18,6 +18,7 @@ import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
+import org.openlmis.core.dto.ELMISInterfaceFacilityMappingDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.stereotype.Repository;
 
@@ -103,5 +104,20 @@ public interface ELMISInterfaceMapper {
             "   WHERE id = #{id}")
     Integer updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
 
+    @Update("UPDATE interface_dataset\n" +
+            "   SET datasetname=#{dataSetname}, interfaceid=#{interfaceId}, datasetid=#{dataSetId}, createdby=#{createdBy}, createddate=COALESCE(#{createdDate}, NOW())," +
+            " modifiedby= #{modifiedBy}, \n" +
+            "       modifieddate= COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),elmisCode = #{elmisCode}  \n" +
+            " WHERE id = #{id} ")
+    Integer updateElmisInterFaceData(ELMISInterfaceFacilityMappingDTO dataSet);
 
+     @Select("SELECT * FROM interface_dataset where dataSetId= #{dataSetId}")
+    ELMISInterfaceFacilityMappingDTO getByDataset(@Param("dataSetId") String dataSetId);
+
+
+    @Insert("INSERT INTO interface_dataset( interfaceid, datasetname, datasetid, " +
+            "            modifiedby, modifieddate, createdby, createddate,elmisCode)" +
+            "    VALUES (#{interfaceId}, #{dataSetname}, #{dataSetId}, " +
+            "     #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()),#{elmisCode})")
+    Integer insertData(ELMISInterfaceFacilityMappingDTO dataSet);
 }

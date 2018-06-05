@@ -12,10 +12,8 @@
 
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.ELMISInterface;
-import org.openlmis.core.domain.ELMISInterfaceDataSet;
-import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
-import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.ELMISInterfaceFacilityMappingDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,5 +58,13 @@ public class ELMISInterfaceService {
 
     public void updateFacilityInterfaceMapping(Facility facility){
         repository.updateFacilityInterfaceMapping(facility);
+    }
+
+    public void uploadELMISInterface(ELMISInterfaceFacilityMappingDTO record) {
+            repository.save(record);
+    }
+
+    public BaseModel getELMISInterface(ELMISInterfaceFacilityMappingDTO record) {
+      return repository.getByDataset(record.getDataSetId());
     }
 }
