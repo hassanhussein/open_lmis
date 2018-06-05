@@ -12,19 +12,35 @@
 
 package org.openlmis.core.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.ELMISInterfaceDTO;
 import org.openlmis.core.dto.ELMISInterfaceFacilityMappingDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 @Service
 public class ELMISInterfaceService {
+    public final String HIM_USERNAME = "HIM_USERNAME_FOR_DHIS";
+    public final String HIM_PASSWORD = "HIM_PASSWORD_FOR_DHIS";
+    public final String HIM_URL = "HIM_PASSWORD_FOR_DHIS";
 
     @Autowired
     private ELMISInterfaceRepository repository;
+
+    @Autowired
+    private ConfigurationSettingService service;
 
     public ELMISInterface get(long interfaceId) {
         return repository.get(interfaceId);
@@ -66,5 +82,70 @@ public class ELMISInterfaceService {
 
     public BaseModel getELMISInterface(ELMISInterfaceFacilityMappingDTO record) {
       return repository.getByDataset(record.getDataSetId());
+    }
+
+
+    @Scheduled(cron = "${batch.job.send.immunization.data}")
+    public void processMosquitoNetData() {
+        //Populate Data
+       // repository.refreshMaterializedView();
+        String username = service.getByKey(HIM_USERNAME).getValue();
+        String password = service.getByKey(HIM_PASSWORD).getValue();
+        String url = service.getByKey(HIM_URL).getValue();
+
+        ELMISInterfaceDTO dto = new ELMISInterfaceDTO();
+
+        if (username != null & password != null & url != null) {
+            dto.setDataValues(repository.getMosquitoNetData());
+            sendBedNetData(username, password, url, dto);
+        }
+
+    }
+
+    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data) {
+        ObjectMapper mapper = new ObjectMapper();
+        java.net.URL obj = null;
+        try {
+            obj = new URL(url);
+            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            String jsonInString = mapper.writeValueAsString(data);
+            String userCredentials = username + ":" + password;
+            String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
+            con.setRequestProperty("Authorization", basicAuth);
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            //  System.out.println("all connection" + con);
+
+            con.setDoOutput(true);
+            System.out.println("file");
+            System.out.println(jsonInString);
+            OutputStream wr = con.getOutputStream();
+            wr.write(jsonInString.getBytes("UTF-8"));
+
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            //print result
+            System.out.println(response.toString());
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
