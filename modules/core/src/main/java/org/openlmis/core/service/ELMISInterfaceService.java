@@ -81,7 +81,7 @@ public class ELMISInterfaceService {
         repository.updateFacilityInterfaceMapping(facility);
     }
 
-    @Scheduled(cron = "${batch.job.send.bed.net.data}")
+   // @Scheduled(cron = "${batch.job.send.bed.net.data}")
     public void processMosquitoNetData() {
         //Populate Data
          repository.refreshMaterializedView();

@@ -18,16 +18,22 @@
   .btn{
       color:#2bbbad !important;
       right:20px;
-      bottom: 3px!important;
+      bottom: 0px!important;
       font-size: 11px;
       height: 30px!important;
   }
+    .section {
+        padding-top: 0rem !important;
+    }
 </style>
-
 
 <div class="row">
     <div class="col s12 m12 l12">
         <div class="card">
+
+            <span class="section"><button ng-show="status='mos'" class="primary" style="border-bottom:4px !important;background-color:#2bbbad !important" ng-click="showMOS(mos)">Show MOS</button>
+            <span class="section"><button ng-show="status = 'soh'" class="primary" style="border-bottom:4px !important;background-color:#2bbbad !important" ng-click="showMOS(soh)">Show SOH</button>
+            </span><div class="clearfix"></div>
             <div class="section grey lighten-5">
 
                 <div class="col s3 green lighten-1">

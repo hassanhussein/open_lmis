@@ -2,12 +2,13 @@ function MsdStockStatusFunc($scope, GetMsdStockStatusReport, GeoZoneFilteredData
 
     GetMsdStockStatus.get({}, function (data) {
         if(!isUndefined(data)){
-
             $scope.stockStatusData = data.msd_status;
-
-
         }
     });
+
+    $scope.showMOS = function(data){
+       $scope.status =(data === 'soh')?'soh':'mos';
+    };
     $scope.cellValues = {msd_central:'MSD Central Zone', dar:'Dar Es Salaam Zone',mnz:'Mwanza Zone',
                   muleba:'Muleba Zone', tanga:'Tanga Zone',tabr:'Tabora Zone',mtr:'Mtwara Zone',
                   mosh:'Moshi Zone',mbeya:'Mbeya Zone',iringa:'Iringa Zone',doodoma:'Dodoma Zone',mwnz:'Mwanza Zone'};
@@ -39,11 +40,10 @@ $scope.getStockColor=function(mos,levelId){
         if(_.contains( $scope.cellValues,data)){
             headers.push(data);
         }
-
             console.log(data);
         return data.cellValues;
     };
-    GetMsdStockStatusReport.get({programId: 1, periodId: 121, productCode: 'ABC123'}, function (data) {
+  /*  GetMsdStockStatusReport.get({programId: 1, periodId: 121, productCode: 'ABC123'}, function (data) {
         var geo = _.pluck(GeoZoneFilteredData, 'code');
         $scope.stock = data.msd_status;
         var stockData = [];
@@ -69,7 +69,7 @@ $scope.getStockColor=function(mos,levelId){
         });
         console.log(JSON.stringify($scope.productRows));
 
-    });
+    });*/
     $scope.set_color = function (color) {
             return { 'background-color':color,'text-align':'center' };
 
