@@ -26,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -34,7 +35,7 @@ import java.util.List;
 public class ELMISInterfaceService {
     public final String HIM_USERNAME = "HIM_USERNAME_FOR_DHIS";
     public final String HIM_PASSWORD = "HIM_PASSWORD_FOR_DHIS";
-    public final String HIM_URL = "HIM_PASSWORD_FOR_DHIS";
+    public final String HIM_URL = "HIM_DHIS_URL";
 
     @Autowired
     private ELMISInterfaceRepository repository;
@@ -85,7 +86,7 @@ public class ELMISInterfaceService {
     }
 
 
-    @Scheduled(cron = "${batch.job.send.immunization.data}")
+   // @Scheduled(cron = "${batch.job.send.immunization.data}")
     public void processMosquitoNetData() {
         //Populate Data
        // repository.refreshMaterializedView();
@@ -96,18 +97,18 @@ public class ELMISInterfaceService {
         ELMISInterfaceDTO dto = new ELMISInterfaceDTO();
 
         if (username != null & password != null & url != null) {
-            dto.setDataValues(repository.getMosquitoNetData());
-            sendBedNetData(username, password, url, dto);
+            dto.setDataValues(repository.getImmunizationData());
+            sendImmunizationData(username, password, url, dto);
         }
 
     }
 
-    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data) {
+    private void sendImmunizationData(String username, String password, String url, ELMISInterfaceDTO data) {
         ObjectMapper mapper = new ObjectMapper();
         java.net.URL obj = null;
         try {
             obj = new URL(url);
-            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             String jsonInString = mapper.writeValueAsString(data);
             String userCredentials = username + ":" + password;
             String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));

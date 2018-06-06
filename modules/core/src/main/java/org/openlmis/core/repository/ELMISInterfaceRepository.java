@@ -15,7 +15,9 @@ package org.openlmis.core.repository;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
 import org.openlmis.core.dto.ELMISInterfaceFacilityMappingDTO;
+import org.openlmis.core.dto.ResponseDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ELMISInterfaceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +158,7 @@ public class ELMISInterfaceRepository {
         }
     }
 
+
     public ELMISInterfaceFacilityMappingDTO getByDataset(String dataSetId) {
         return mapper.getByDataset(dataSetId);
     }
@@ -168,5 +171,18 @@ public class ELMISInterfaceRepository {
             mapper.insertData(record);
         }else
             mapper.updateElmisInterFaceData(record);
+    }
+
+
+    public List<ELMISInterfaceDataSetDTO> getImmunizationData(){
+        return mapper.getImmunizationData();
+    }
+
+    public void refreshMaterializedView() {
+        mapper.refreshMaterializedView();
+    }
+
+    public void InsertInterfaceResponse(ResponseDTO dto) {
+        mapper.InsertInterfaceResponse(dto);
     }
 }

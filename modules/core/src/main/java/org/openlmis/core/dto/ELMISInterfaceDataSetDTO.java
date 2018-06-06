@@ -5,13 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ELMISInterfaceDTO {
-    private List<ELMISInterfaceDataSetDTO> dataValues;
+public class ELMISInterfaceDataSetDTO{
+    private String dataElement;
+    private String categoryOptionCombo;
+    private Long period;
+    private String orgUnit;
+    private Long value;
 }

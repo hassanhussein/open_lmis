@@ -18,7 +18,9 @@ import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
+import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
 import org.openlmis.core.dto.ELMISInterfaceFacilityMappingDTO;
+import org.openlmis.core.dto.ResponseDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.stereotype.Repository;
 
@@ -120,4 +122,52 @@ public interface ELMISInterfaceMapper {
             "    VALUES (#{interfaceId}, #{dataSetname}, #{dataSetId}, " +
             "     #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()),#{elmisCode})")
     Integer insertData(ELMISInterfaceFacilityMappingDTO dataSet);
+
+
+    @Select("SELECT PERIOD::int, ORGUNIT, split_part(dataSetId,'.',1) dataElement,split_part(dataSetId,'.',2) categoryOptionCombo, value from (\n" +
+            "SELECT extract(year from pp.startdate) ||''|| to_char(pp.startdate,'MM') period,f.code AS orgUnit,\n" +
+            "(select dataSetId FROM interface_dataset s\n" +
+            "JOIN INTERFACE_APPS A on s.INTERFACEID = A.ID\n" +
+            "WHERE A.NAME = 'VIMS_DHIS_DATA_ELEMENTS' AND s.elmiscode= 'FE') dataSetId, sum(femaleValue) as value\n" +
+            "from vaccine_reports r\n" +
+            "--JOIN vaccine_report_logistics_line_items li ON li.reportId=r.id \n" +
+            "--JOIN vaccine_report_coverage_line_items c ON r.id = c.reportId\n" +
+            "JOIN vaccine_report_vitamin_supplementation_line_items v ON r.id = v.reportId\n" +
+            "AND vitaminagegroupid = (SELECT ID FROM vaccine_vitamin_supplementation_age_groups where displayOrder=2 LIMIT 1)\n" +
+            "JOIN processing_periods pp ON r.periodId = PP.ID and numberofmonths =1\n" +
+            "JOIN facilities f ON f.id= r.facilityId\n" +
+            "WHERE R.STATUS in('APPROVED','RELEASED') AND PERIODid = 119\n" +
+            "group by pp.startdate,f.code)y\n" +
+            "where value >0\n" +
+            "\n" +
+            "UNION ALL \n" +
+            "\n" +
+            "SELECT PERIOD::int, ORGUNIT, split_part(dataSetId,'.',1) dataElement,split_part(dataSetId,'.',2) categoryOptionCombo, value from (\n" +
+            "\n" +
+            "SELECT extract(year from pp.startdate) ||''|| to_char(pp.startdate,'MM') period,f.code AS orgUnit,\n" +
+            "(select dataSetId FROM interface_dataset s\n" +
+            "JOIN INTERFACE_APPS A on s.INTERFACEID = A.ID\n" +
+            "WHERE A.NAME = 'VIMS_DHIS_DATA_ELEMENTS' AND s.elmiscode= 'ME') dataSetId, sum(maleValue) as value\n" +
+            "from vaccine_reports r\n" +
+            "--JOIN vaccine_report_logistics_line_items li ON li.reportId=r.id \n" +
+            "--JOIN vaccine_report_coverage_line_items c ON r.id = c.reportId\n" +
+            "JOIN vaccine_report_vitamin_supplementation_line_items v ON r.id = v.reportId\n" +
+            "AND vitaminagegroupid = (SELECT ID FROM vaccine_vitamin_supplementation_age_groups where displayOrder=2 LIMIT 1)\n" +
+            "JOIN processing_periods pp ON r.periodId = PP.ID and numberofmonths =1\n" +
+            "JOIN facilities f ON f.id= r.facilityId\n" +
+            "WHERE R.STATUS in('APPROVED','RELEASED') AND PERIODid = 119\n" +
+            "group by pp.startdate,f.code) X\n" +
+            "where value >0\n")
+    List<ELMISInterfaceDataSetDTO>getImmunizationData();
+
+    @Select("REFRESH MATERIALIZED VIEW  vw_bed_nets_data")
+    void refreshMaterializedView();
+
+    @Insert(" INSERT INTO public.interface_responses(\n" +
+            "            responseType, status, description, imported, updated, ignored, \n" +
+            "            deleted, affectedObject, affectedValue, datasetComplete)\n" +
+            "    VALUES (#{responseType}, #{status}, #{description}, #{imported}, #{updated}, #{ignored}, \n" +
+            "            #{deleted}, #{affectedObject}, #{affectedValue},#{dataSetComplete});\n")
+    void InsertInterfaceResponse(ResponseDTO dto);
+
 }
