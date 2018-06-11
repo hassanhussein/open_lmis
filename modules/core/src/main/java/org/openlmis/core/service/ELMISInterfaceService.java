@@ -85,8 +85,8 @@ public class ELMISInterfaceService {
       return repository.getByDataset(record.getDataSetId());
     }
 
-
-   // @Scheduled(cron = "${batch.job.send.immunization.data}")
+    // @Scheduled(fixedRate = 900000)
+    @Scheduled(cron = "${batch.job.send.immunization.data}")
     public void processMosquitoNetData() {
         //Populate Data
        // repository.refreshMaterializedView();

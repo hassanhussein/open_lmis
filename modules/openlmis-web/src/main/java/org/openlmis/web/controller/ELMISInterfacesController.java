@@ -100,9 +100,5 @@ public class ELMISInterfacesController extends BaseController {
         return OpenLmisResponse.response("interfacesMapping", mapping);
     }
 
-    @RequestMapping(value = "/ELMISInterfacesMapping/vims.json", method = GET, headers = "Accept=application/json")
-    public ResponseEntity<OpenLmisResponse> getVims(HttpServletRequest request) {
-        elmisInterfaceService.processMosquitoNetData();
-        return OpenLmisResponse.response("values", null);
-    }
+
 }
