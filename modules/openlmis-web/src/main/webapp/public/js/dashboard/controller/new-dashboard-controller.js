@@ -2,6 +2,13 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                                      ExtraAnalyticDataForRnRStatus,GetTrendOfEmergencyOrdersSubmittedPerMonthData,$routeParams,messageService,GetEmergencyOrderTrendsData,
                                      ngTableParams,$filter,ReportingRate,StockStatusAvailaiblity) {
 
+
+
+    $scope.onDetail= function(data){
+        console.log(data);
+        $('#modal12').modal();
+
+    };
     $scope.reportingRate={};
 
     $scope.loadRejectionChart = [];

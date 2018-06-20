@@ -63,6 +63,20 @@
         padding-bottom: 0px !important;
 
     }
+
+    .modal {
+        width: 50% !important;
+        margin-top: 10px !important;
+/*
+        margin-left: 400px !important;
+*/
+        background: 0 !important;
+        max-height: 50% !important;
+    }
+
+    .modal .modal-content {
+        padding: 30px !important;
+    }
 </style>
 <div id="tab">
 
@@ -118,11 +132,11 @@
                                         </div>
                                         <div class="progress" style="margin-bottom:0px;width:80%">
                                             <div class="bar bar-success leaflet-clickable"
-                                                 ng-click="onDetailClicked(feature, this)"
+                                                 ng-click="onDetail(feature, this)"
                                                  style="width: {{((feature.totalRnRStatus / feature.expected) * 100).toFixed(2)}}%">
                                             </div>
                                             <div class="bar bar-danger leaflet-clickable"
-                                                 ng-click="onDetailClicked(feature, this)"
+                                                 ng-click="onDetail(feature, this)"
                                                  style="width: {{(100 - ((feature.totalRnRStatus / feature.expected) * 100).toFixed(2))}}%">
                                             </div>
 
@@ -626,5 +640,40 @@
 
 
     </div>
+
+</div>
+
+<div id="modal12" class="modal" ng-if="modal12=true;">
+
+    <div class="modal-content">
+        <h2>Expected data to be shown here</h2>
+        <table class="table table-bordered striped">
+
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Column</th>
+                <th>Column</th>
+            </tr>
+            </thead>
+
+            <tbody id="tbody">
+            <tr ng-repeat="facility in facilityList">
+                <td>{{$index+1}}</td>
+                <td>{{facility.name}}</td>
+                <td>{{facility.totalquantityonhand}}</td>
+            </tr>
+
+            </tbody>
+
+
+        </table>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+        </div>
+
+    </div>
+
 
 </div>
