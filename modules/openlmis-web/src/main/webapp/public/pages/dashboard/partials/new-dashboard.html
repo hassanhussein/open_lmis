@@ -93,185 +93,11 @@
 
         <div class="tab-pane active" id="summary">
 
-            <div class="row orderFillRate" id="order" ng-show="true">
-                <div class="col s12 m6 l6">
-                    <div class="section grey lighten-5 card">
-                        <div id="rnrSummary" style="margin:0 auto"></div>
-                    </div>
-
-                </div>
-                <div class="col  s12 m6 l6">
-                    <div class="section grey lighten-5 card">
-                        <div class="section grey lighten-3" ng-show="analyticData.length > 0">
-
-
-                            <table class="striped bordered" style="height: 317px !important;">
-                                <thead>
-                                <tr>
-                                    <th>Pending at</th>
-                                    <th>Expected</th>
-                                    <th>Processed</th>
-                                    <th>% Processed</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="feature in analyticData">
-
-                                    <td style="text-align: left;" data-title="'Pending at'"><span
-                                            openlmis-message="label.rnr.status.summary.{{feature.status}}"></span></td>
-                                    <td style="font-weight: bold;text-align: left;" data-title="'Expected'">
-                                        {{feature.expected}}
-                                    </td>
-                                    <td style="font-weight: bold;text-align: left;" data-title="'Processed'">
-                                        {{feature.totalRnRStatus}}
-                                    </td>
-                                    <td style="font-weight: bold;text-align: left;" data-title="'% Processed'">
-                                        <div class="number" style="float:right;">{{((feature.totalRnRStatus /
-                                            feature.expected) *
-                                            100).toFixed(0)}} %
-                                        </div>
-                                        <div class="progress" style="margin-bottom:0px;width:80%">
-                                            <div class="bar bar-success leaflet-clickable"
-                                                 ng-click="onDetail(feature, this)"
-                                                 style="width: {{((feature.totalRnRStatus / feature.expected) * 100).toFixed(2)}}%">
-                                            </div>
-                                            <div class="bar bar-danger leaflet-clickable"
-                                                 ng-click="onDetail(feature, this)"
-                                                 style="width: {{(100 - ((feature.totalRnRStatus / feature.expected) * 100).toFixed(2))}}%">
-                                            </div>
-
-                                        </div>
-
-                                    </td>
-
-                                </tr>
-                                </tbody>
-                            </table>
-
-
-                            <!--
-                                                        <table ng-show="analyticData.length > 0"
-                                                               class="table table-striped table-scrollable pull-left"
-                                                               ng-table="tableParams">
-
-                                                            <tbody>
-                                                            <tr ng-repeat="feature in analyticData">
-
-                                                                <td style="text-align: left;" data-title="'Pending at'"><span
-                                                                        openlmis-message="label.rnr.status.summary.{{feature.status}}"></span></td>
-                                                                <td style="font-weight: bold;text-align: left;" data-title="'Expected'">
-                                                                    {{feature.expected}}
-                                                                </td>
-                                                                <td style="font-weight: bold;text-align: left;" data-title="'Processed'">
-                                                                    {{feature.totalRnRStatus}}
-                                                                </td>
-                                                                <td style="font-weight: bold;text-align: left;" data-title="'% Processed'">
-                                                                    <div class="number" style="float:right;">{{((feature.totalRnRStatus /
-                                                                        feature.expected) *
-                                                                        100).toFixed(0)}} %
-                                                                    </div>
-                                                                    <div class="progress" style="margin-bottom:0px;width:80%">
-                                                                        <div class="bar bar-success leaflet-clickable"
-                                                                             ng-click="onDetailClicked(feature, this)"
-                                                                             style="width: {{((feature.totalRnRStatus / feature.expected) * 100).toFixed(2)}}%">
-                                                                        </div>
-                                                                        <div class="bar bar-danger leaflet-clickable"
-                                                                             ng-click="onDetailClicked(feature, this)"
-                                                                             style="width: {{(100 - ((feature.totalRnRStatus / feature.expected) * 100).toFixed(2))}}%">
-                                                                        </div>
-
-                                                                    </div>
-
-                                                                </td>
-
-                                                            </tr>
-                                                            </tbody>
-                                                        </table>
-                            -->
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="row orderFillRate" ng-show="true">
-                <div class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
-                        <!--
-                                                <h2><span style="font-size: x-small"></span></h2>
-                        -->
-                        <div>
-                            <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
-                        </div>
-
-
-                    </div>
-
-                </div>
-                <div class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
-                        <div>
-                            <div id="emergencySubmittedByProgram" style="height: 300px;margin:0 auto "></div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
-                        <div>
-
-                            <div id="emergencyTrend" style="height: 300px;margin:0 auto "></div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="row orderFillRate" ng-show="true">
-                <div class="col s12 m4 l7">
-                    <div class="section grey lighten-5 card">
-                        <!--
-                                                <h2><span style="font-size: x-small"></span></h2>
-                        -->
-                        <div>
-                            <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
-                            <div id="addText" style="left:0px; top:0px;"></div>
-                        </div>
-
-
-                    </div>
-
-                </div>
-                <div class="col s12 m4 l5">
-                    <div class="section grey lighten-5 card">
-                        <div>
-                            <div id="emergencyByProgram" style="height: 300px;margin:0 auto "></div>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-            <div class="row orderFillRate">
-                <div class="col s12 m6 l12">
-                    <div class="section grey lighten-5 card">
-                        <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
-
-                    </div>
-                </div>
-
-            </div>
-
             <div class="row orderFillRate" ng-show="orderFillRateByZone.zones.length >0">
                 <div class="col s12 m4 l4">
 
                     <div class="section grey lighten-5 card">
-                        <h2><span style="font-size: x-small">National Supply Chain Indicator , June 2018</span></h2>
+                        <h2><span style="font-size: x-small">National Supply Chain Indicator , {{displayCurrentDate}}</span></h2>
 
                         <div class="col s12">
 
@@ -635,6 +461,185 @@
 
 
             </div>
+
+
+
+
+            <div class="row orderFillRate" id="order" ng-show="true">
+                <div class="col s12 m6 l6">
+                    <div class="section grey lighten-5 card">
+                        <div id="rnrSummary" style="margin:0 auto"></div>
+                    </div>
+
+                </div>
+                <div class="col  s12 m6 l6">
+                    <div class="section grey lighten-5 card">
+                        <div class="section grey lighten-3" ng-show="analyticData.length > 0">
+
+
+                            <table class="striped bordered" style="height: 317px !important;">
+                                <thead>
+                                <tr>
+                                    <th>Pending at</th>
+                                    <th>Expected</th>
+                                    <th>Processed</th>
+                                    <th>% Processed</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="feature in analyticData">
+
+                                    <td style="text-align: left;" data-title="'Pending at'"><span
+                                            openlmis-message="label.rnr.status.summary.{{feature.status}}"></span></td>
+                                    <td style="font-weight: bold;text-align: left;" data-title="'Expected'">
+                                        {{feature.expected}}
+                                    </td>
+                                    <td style="font-weight: bold;text-align: left;" data-title="'Processed'">
+                                        {{feature.totalRnRStatus}}
+                                    </td>
+                                    <td style="font-weight: bold;text-align: left;" data-title="'% Processed'">
+                                        <div class="number" style="float:right;">{{((feature.totalRnRStatus /
+                                            feature.expected) *
+                                            100).toFixed(0)}} %
+                                        </div>
+                                        <div class="progress" style="margin-bottom:0px;width:80%">
+                                            <div class="bar bar-success leaflet-clickable"
+                                                 ng-click="onDetail(feature, this)"
+                                                 style="width: {{((feature.totalRnRStatus / feature.expected) * 100).toFixed(2)}}%">
+                                            </div>
+                                            <div class="bar bar-danger leaflet-clickable"
+                                                 ng-click="onDetail(feature, this)"
+                                                 style="width: {{(100 - ((feature.totalRnRStatus / feature.expected) * 100).toFixed(2))}}%">
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+
+
+                            <!--
+                                                        <table ng-show="analyticData.length > 0"
+                                                               class="table table-striped table-scrollable pull-left"
+                                                               ng-table="tableParams">
+
+                                                            <tbody>
+                                                            <tr ng-repeat="feature in analyticData">
+
+                                                                <td style="text-align: left;" data-title="'Pending at'"><span
+                                                                        openlmis-message="label.rnr.status.summary.{{feature.status}}"></span></td>
+                                                                <td style="font-weight: bold;text-align: left;" data-title="'Expected'">
+                                                                    {{feature.expected}}
+                                                                </td>
+                                                                <td style="font-weight: bold;text-align: left;" data-title="'Processed'">
+                                                                    {{feature.totalRnRStatus}}
+                                                                </td>
+                                                                <td style="font-weight: bold;text-align: left;" data-title="'% Processed'">
+                                                                    <div class="number" style="float:right;">{{((feature.totalRnRStatus /
+                                                                        feature.expected) *
+                                                                        100).toFixed(0)}} %
+                                                                    </div>
+                                                                    <div class="progress" style="margin-bottom:0px;width:80%">
+                                                                        <div class="bar bar-success leaflet-clickable"
+                                                                             ng-click="onDetailClicked(feature, this)"
+                                                                             style="width: {{((feature.totalRnRStatus / feature.expected) * 100).toFixed(2)}}%">
+                                                                        </div>
+                                                                        <div class="bar bar-danger leaflet-clickable"
+                                                                             ng-click="onDetailClicked(feature, this)"
+                                                                             style="width: {{(100 - ((feature.totalRnRStatus / feature.expected) * 100).toFixed(2))}}%">
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                </td>
+
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                            -->
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="row orderFillRate" ng-show="true">
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+                        <!--
+                                                <h2><span style="font-size: x-small"></span></h2>
+                        -->
+                        <div>
+                            <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+                        <div>
+                            <div id="emergencySubmittedByProgram" style="height: 300px;margin:0 auto "></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+                        <div>
+
+                            <div id="emergencyTrend" style="height: 300px;margin:0 auto "></div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row orderFillRate" ng-show="true">
+                <div class="col s12 m4 l7">
+                    <div class="section grey lighten-5 card">
+                        <!--
+                                                <h2><span style="font-size: x-small"></span></h2>
+                        -->
+                        <div>
+                            <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
+                            <div id="addText" style="left:0px; top:0px;"></div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col s12 m4 l5">
+                    <div class="section grey lighten-5 card">
+                        <div>
+                            <div id="emergencyByProgram" style="height: 300px;margin:0 auto "></div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="row orderFillRate">
+                <div class="col s12 m6 l12">
+                    <div class="section grey lighten-5 card">
+                        <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
 
         </div>
 
