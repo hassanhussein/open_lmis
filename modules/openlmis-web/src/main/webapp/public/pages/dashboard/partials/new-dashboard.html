@@ -622,6 +622,50 @@
 
             </div>
 
+            <div class="row " ng-show="true">
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+
+                                                <h2><span style="font-size: x-small"> Daily Stock Status</span></h2>
+
+                        <div style="margin-left: 10px;">
+                            <table>
+                                <thead style="background-color: lightblue">
+                                <th>Facility</th>
+                                <th style="background-color: lightblue" ng-repeat="p in dailyStockStatusHeader">{{p}}</th>
+                                </thead>
+                                <tbody ng-repeat="row in dataList ">
+                                <td >{{row.name}}</td>
+                                <td ng-repeat="c in dailyStockStatusHeader">{{row[c]}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+                        <div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+                        <div>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
         </div>
 
 

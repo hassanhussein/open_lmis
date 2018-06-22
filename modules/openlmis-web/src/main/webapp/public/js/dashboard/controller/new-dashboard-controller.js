@@ -1,6 +1,6 @@
 function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatusSummary,GetNumberOfEmergencyData,GetEmergencyOrderByProgramData,GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus,GetTrendOfEmergencyOrdersSubmittedPerMonthData,$routeParams,messageService,GetEmergencyOrderTrendsData,
-                                     ngTableParams,$filter,ReportingRate,StockStatusAvailaiblity,ItemFillRate) {
+                                     ngTableParams,$filter,ReportingRate,StockStatusAvailaiblity,ItemFillRate,DailyStockStatus) {
 
     $scope.reportingRate={};
 
@@ -911,6 +911,31 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
 
 
     };
+//    new
+
+    DailyStockStatus.get({zoneId: $scope.filter.zoneId,
+            periodId: $scope.filter.period,
+            programId: $scope.filter.program
+        },
+        function (data) {
+
+            $scope.dailyStockStatusData=data.dailyStockStatus;
+            $scope.dailyStockStatusHeader=_.unique( _.pluck($scope.dailyStockStatusData,"programCode"));
+            $scope.dailyStockStatusPivot=_.groupBy($scope.dailyStockStatusData,"name");
+            $scope.dataList=[];
+            angular.forEach($scope.dailyStockStatusPivot,function (da,index) {
+                var col={name:index};
+                angular.forEach(da,function (p,i) {
+                    col[p.programCode]=p.countOfSubmissions;
+                });
+                $scope.dataList.push(col);
+            });
+
+
+
+
+        });
+
 
 }
 

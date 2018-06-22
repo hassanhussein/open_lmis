@@ -1,9 +1,11 @@
 package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.SelectProvider;
+import org.openlmis.report.builder.DashboardDailyStockStatusQueryBuilder;
 import org.openlmis.report.builder.DashboardOrderFillRateBuilder;
 import org.openlmis.report.builder.DashboardReportingRateQueryBuilder;
 import org.openlmis.report.builder.DashboardStockStatusQueryBuilder;
+import org.openlmis.report.model.dto.DashDailyStockStatus;
 import org.openlmis.report.model.dto.DashOrderFillRate;
 import org.openlmis.report.model.dto.ReportingRate;
 import org.openlmis.report.model.dto.StockStatus;
@@ -19,4 +21,6 @@ public interface NewDashboardMapper {
     List<StockStatus> getStockStaus(Long zoneId, Long periodId, Long programId);
     @SelectProvider(type = DashboardOrderFillRateBuilder.class, method = "getQuery")
     List<DashOrderFillRate> getItemFillRate(Long zoneId, Long periodId, Long programId);
+    @SelectProvider(type = DashboardDailyStockStatusQueryBuilder.class, method = "getQuery")
+    List<DashDailyStockStatus> getDailyStockStatus(Long zoneId, Long periodId, Long programId);
 }
