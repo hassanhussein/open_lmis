@@ -176,6 +176,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: DistributionSummaryReportController,
             templateUrl: 'partials/distribution-summary.html',
             reloadOnSearch: false
+        }).when('/monthly-stock-status-report', {
+            controller: MonthlyStockStatusController,
+            templateUrl: 'partials/monthly-stock-status.html',
+            reloadOnSearch: false
         }).otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
