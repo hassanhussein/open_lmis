@@ -1017,6 +1017,9 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
         title: {
             text: 'Lab Equipment Status'
         },
+        credits:{
+            enabled:false
+        },
 
         xAxis: {
             categories: ['Eq1', 'Eq2', 'Eq3', 'Eq4', 'Eq5', 'Eq6',

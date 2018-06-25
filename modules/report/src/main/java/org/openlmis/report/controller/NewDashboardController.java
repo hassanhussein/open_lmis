@@ -19,6 +19,7 @@ public class NewDashboardController extends BaseController {
 private static final String REPORTING_RATE="reportingRate";
     private static final String STOCK_STATUS="stockStatus";
     private static final String ITEM_FILL_RATE="itemFillRate";
+    private static final String DAILY_STOCK_STATUS="dailyStockStatus";
     @Autowired
 private DashboardService dashboardService;
     @RequestMapping(value = "/reporting-rate", method = GET, headers = ACCEPT_JSON)
@@ -40,5 +41,10 @@ private DashboardService dashboardService;
                                                                       @RequestParam("programId") Long programId) {
         return OpenLmisResponse.response(ITEM_FILL_RATE, this.dashboardService.getItemFillRate(zoneId, periodId, programId));
     }
-
+    @RequestMapping(value = "/daily-stock-status", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getDailyStockStatus(@RequestParam("zoneId") Long zoneId,
+                                                                @RequestParam("periodId") Long periodId,
+                                                                @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(DAILY_STOCK_STATUS, this.dashboardService.getDailyStockStatus(zoneId, periodId, programId));
+    }
 }

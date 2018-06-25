@@ -2,6 +2,7 @@ package org.openlmis.report.service;
 
 import org.openlmis.report.mapper.NewDashboardMapper;
 import org.openlmis.report.mapper.lookup.DashboardMapper;
+import org.openlmis.report.model.dto.DashDailyStockStatus;
 import org.openlmis.report.model.dto.DashOrderFillRate;
 import org.openlmis.report.model.dto.ReportingRate;
 import org.openlmis.report.model.dto.StockStatus;
@@ -23,4 +24,8 @@ public class DashboardService {
     public List<DashOrderFillRate>  getItemFillRate(Long zoneId, Long periodId, Long programId) {
         return  dashboardMapper.getItemFillRate(zoneId,periodId,programId);
     }
+    public List<DashDailyStockStatus>  getDailyStockStatus(Long zoneId, Long periodId, Long programId) {
+        return  dashboardMapper.getDailyStockStatus(zoneId,periodId,programId);
+    }
+
 }

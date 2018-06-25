@@ -1495,3 +1495,7 @@ services.factory('StockStatusAvailaiblity', function ($resource) {
 services.factory('ItemFillRate', function ($resource) {
     return $resource('/dashboard/item-fill-rate.json', {}, {});
 });
+
+services.factory('DailyStockStatus', function ($resource) {
+    return $resource('/dashboard/daily-stock-status.json', {}, {});
+});
