@@ -603,6 +603,15 @@
                     <property name="title" value="report.title.daily.consumption.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="monthly_stock"/>
+                    <property name="template" value="daily-consumption.jasper"/>
+                    <property name="reportDataProvider" ref="monthlyStockStatusReportDataProvider"/>
+                    <property name="id" value="monthly_stock"/>
+                    <property name="name" value="Monthly Stock Status Report"/>
+                    <property name="title" value="report.title.monthly.stock.status.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

@@ -860,4 +860,20 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, dailyConsumptionReportList);
     }
+
+    @RequestMapping(value = "/reportdata/monthlyStockStatus", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    public Pages getMonthlyStockOnHandData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                            HttpServletRequest request
+
+    ) {
+
+        Report report = reportManager.getReportByKey("monthly_stock");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<MonthlyStockStatusReport> monthlyStockStatusReportList =
+                (List<MonthlyStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, monthlyStockStatusReportList);
+    }
 }
