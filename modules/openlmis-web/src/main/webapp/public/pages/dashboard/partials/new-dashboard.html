@@ -96,27 +96,25 @@
             <div class="row orderFillRate" ng-show="orderFillRateByZone.zones.length >0">
                 <div class="col s12 m4 l4">
 
-                    <div class="section grey lighten-5 card">
+                    <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
                         <h2><span style="font-size: x-small">National Supply Chain Indicator , {{displayCurrentDate}}</span></h2>
 
                         <div class="col s12">
 
+                            <div class="section" style="padding-top: 0rem !important;">
 
-                            <div class="section">
-                                <!--  <span ng-show="true"><p style="font-size: x-small">Keys</p>
+                                    <span ng-show="true"><span style="font-size: x-small">Keys</span>
 
-                                   <a href="#!"><i class="tiny material-icons icon-green">lens</i></a><span
-                                              style="font-size: x-small"> Good >=80%</span>
-                                   <br><a href="#!"><i class="tiny material-icons icon-yellow">lens</i></a><span
-                                              style="font-size: x-small"> Normal >69%</span>
-                                  <br> <a href="#!"><i class="tiny material-icons icon-red">lens</i></a><span
-                                              style="font-size: x-small"> Bad <70%</span>
+                                   <a href="#!"><i class="tiny material-icons icon-green">lens</i> </a>
+                                        <span style="font-size: x-small"> Good >=80%</span>
+                                   <a href="#!"><i class="tiny material-icons icon-yellow">lens</i></a>
+                                        <span style="font-size: x-small"> Normal >69%</span>
+                                   <a href="#!"><i class="tiny material-icons icon-red">lens</i></a>
+                                        <span style="font-size: x-small"> Bad <70%</span></span>
+                                    <div id="container-order-fill-rate" style="height: 120px; margin:0 auto"></div>
 
 
 
-                                   </span>-->
-
-                                <div id="container-order-fill-rate" style="height: 120px; margin:0 auto"></div>
                                 <span style="text-align:center;font-size: smaller;font-weight:bold;"
                                       class="pull-left">National Order Fill Rate %</span>
 
@@ -124,7 +122,7 @@
 
                         </div>
                         <div class="col s12">
-                            <div style="height: 425px; overflow: scroll;" class="section grey lighten-3">
+                            <div style="height: 425px; overflow: scroll;" class="section grey lighten-3" style="padding-top: 0rem !important;">
 
                                 <table class="striped bordered">
                                     <thead>
@@ -169,7 +167,7 @@
                     </div>
                 </div>
                 <div  class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
+                    <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
                         <h2><span ng-if="true" style="font-size: x-small;">.</span></h2>
 
                         <div class="col s12">
@@ -236,7 +234,7 @@
                     </div>
                 </div>
                 <div class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
+                    <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
                         <h2><span style="font-size: x-small">.</span></h2>
 
                         <div class="col s12">
@@ -491,7 +489,7 @@
                                 <tr ng-repeat="feature in analyticData">
 
                                     <td style="text-align: left;" data-title="'Pending at'"><span
-                                            openlmis-message="label.rnr.status.summary.{{feature.status}}"></span></td>
+                                            openlmis-message="label.rnr.status.summary.zm.{{feature.status}}"></span></td>
                                     <td style="font-weight: bold;text-align: left;" data-title="'Expected'">
                                         {{feature.expected}}
                                     </td>
@@ -639,6 +637,53 @@
                 </div>
 
             </div>
+
+
+            <div class="row orderFillRate" ng-show="true">
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+
+                        <h2><span style="font-size: x-small"> Daily Stock Status</span></h2>
+
+                        <div style="margin-left: 10px;">
+                            <table>
+                                <thead style="background-color: lightblue">
+                                <th>Facility</th>
+                                <th style="background-color: lightblue" ng-repeat="p in dailyStockStatusHeader">{{p}}</th>
+                                </thead>
+                                <tbody ng-repeat="row in dataList ">
+                                <td >{{row.name}}</td>
+                                <td ng-repeat="c in dailyStockStatusHeader">{{row[c]}}</td>
+                                </tbody>
+                            </table>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+                        <div>
+                            <div id="equipmentStatusContainer" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col s12 m4 l4">
+                    <div class="section grey lighten-5 card">
+                        <div>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
 
 
 

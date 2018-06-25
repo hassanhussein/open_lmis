@@ -1,5 +1,5 @@
 function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
-                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
+                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,DailyStockStatus,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity) {
 
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -289,13 +289,13 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
                     dataValues.push({
                         sliced: true,
                         selected: true,
-                        'name': messageService.get('label.rnr.status.summary.' + d.status),
+                        'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
                         'y': d.totalStatus,
                         color: colors[d.status]
                     });
                 else
                     dataValues.push({
-                        'name': messageService.get('label.rnr.status.summary.' + d.status),
+                        'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
                         'y': d.totalStatus,
                         color: colors[d.status]
                     });
@@ -986,6 +986,86 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
 
 
     };
+
+
+    DailyStockStatus.get({zoneId: $scope.filter.zoneId,
+            periodId: $scope.filter.period,
+            programId: $scope.filter.program
+        },
+        function (data) {
+
+            $scope.dailyStockStatusData=data.dailyStockStatus;
+            $scope.dailyStockStatusHeader=_.unique( _.pluck($scope.dailyStockStatusData,"programCode"));
+            $scope.dailyStockStatusPivot=_.groupBy($scope.dailyStockStatusData,"name");
+            $scope.dataList=[];
+            angular.forEach($scope.dailyStockStatusPivot,function (da,index) {
+                var col={name:index};
+                angular.forEach(da,function (p,i) {
+                    col[p.programCode]=p.countOfSubmissions;
+                });
+                $scope.dataList.push(col);
+            });
+
+
+
+
+        });
+    Highcharts.chart('equipmentStatusContainer', {
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Lab Equipment Status'
+        },
+
+        xAxis: {
+            categories: ['Eq1', 'Eq2', 'Eq3', 'Eq4', 'Eq5', 'Eq6',
+                'Eq7', 'Eq8', 'Eq9', 'Equ10', 'Eq11', 'Eq12']
+        },
+        yAxis: {
+            title: {
+                text: 'Value'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value ;
+                }
+            }
+        },
+        tooltip: {
+            crosshairs: true,
+            shared: true
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 4,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            }
+        },
+        series: [{
+            name: 'Functional',
+            marker: {
+                symbol: 'square'
+            },
+            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, {
+                y: 26.5,
+
+            }, 23.3, 18.3, 13.9, 9.6]
+
+        }, {
+            name: 'Non-Functional',
+            marker: {
+                symbol: 'diamond'
+            },
+            data: [{
+                y: 3.9,
+
+            }, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
+        }]
+    });
 
 }
 
