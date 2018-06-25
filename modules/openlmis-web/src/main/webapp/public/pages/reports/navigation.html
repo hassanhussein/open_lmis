@@ -301,6 +301,10 @@
             <a id='msd_stock' href="/public/pages/logistics/stock-status/index.html#/home"
                openlmis-message="link.msd.dashlet"></a>
           </li>
+          <li ng-show="hasPermission('VIEW_DISTRICT_CONSUMPTION_REPORT')">
+            <a href="/public/pages/reports/main/index.html#/monthly-stock-status-report"
+               openlmis-message="label.report.monthly.stock.status"></a>
+          </li>
           <li ng-show="hasPermission('VIEW_ADJUSTMENT_SUMMARY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#adjustment-summary"
                openlmis-message="menu.report.adjustment.summary"></a>
