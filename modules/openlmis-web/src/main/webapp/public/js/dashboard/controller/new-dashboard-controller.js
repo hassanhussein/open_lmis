@@ -1,23 +1,34 @@
-function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatusSummary,GetNumberOfEmergencyData,GetEmergencyOrderByProgramData,GetPercentageOfEmergencyOrderByProgramData,
-                                     ExtraAnalyticDataForRnRStatus,GetTrendOfEmergencyOrdersSubmittedPerMonthData,$routeParams,messageService,GetEmergencyOrderTrendsData,
-                                     ngTableParams,$filter,ReportingRate,StockStatusAvailaiblity,ItemFillRate,DailyStockStatus) {
+function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
+                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,DailyStockStatus,
+                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity) {
 
-    $scope.reportingRate={};
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    $scope.displayCurrentDate = monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
+
+
+    $scope.onDetail = function (data) {
+        console.log(data);
+        $('#modal12').modal();
+
+    };
+    $scope.reportingRate = {};
 
     $scope.loadRejectionChart = [];
+
 //Provinces with Most Emergency Orders (Past 3 Months)
-    function loadPieChart(chartId,dataValues,total) {
+    function loadPieChart(chartId, dataValues, total) {
 
         var chart = new Highcharts.Chart({
             chart: {
-                renderTo:chartId,
+                renderTo: chartId,
                 type: 'pie'
 
             },
-            credits:{
-                enabled:false
-            },  title: {
-                text:'<span style="font-size:20px">'+total+' <br><span style="font-size:10px">TOTAL</span></span>',
+            credits: {
+                enabled: false
+            }, title: {
+                text: '<span style="font-size:20px">' + total + ' <br><span style="font-size:10px">TOTAL</span></span>',
                 verticalAlign: 'middle',
                 floating: true
             },
@@ -28,7 +39,8 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                 }
             },
             series: [{
-                data:dataValues}]
+                data: dataValues
+            }]
         }/*,
 
             function(chart) { // on complete
@@ -47,32 +59,33 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
             }*/);
 
 
-
     }
 
     GetNumberOfEmergencyData.get(null).then(function (data) {
         var chartId = 'emergencyByRegion';
-        var data1 = _.pluck(data,'Number Of EOs');
-        var data2 = _.pluck(data,'Province');
+        var data1 = _.pluck(data, 'Number Of EOs');
+        var data2 = _.pluck(data, 'Province');
         var total = 0;
-        total= _.reduce(data1, function(memo, num){ return memo + num; }, 0);
-        var dataValues= _.zip(data2,data1);
-        loadPieChart(chartId,dataValues,total);
+        total = _.reduce(data1, function (memo, num) {
+            return memo + num;
+        }, 0);
+        var dataValues = _.zip(data2, data1);
+        loadPieChart(chartId, dataValues, total);
     });
 
     RejectionCount.get({}, function (data) {
-        var reject = _.pluck(data.rejections,'Month');
+        var reject = _.pluck(data.rejections, 'Month');
         var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
-        loadTheChart(reject,rejectionCount,'rejectionCountId','line','Rejection Count','RnR Rejection Trends','Rejection Count');
+        loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', 'RnR Rejection Trends', 'Rejection Count');
 
     });
 
     GetPercentageOfEmergencyOrderByProgramData.get(null).then(function (data) {
 
         var chartId = 'emergencyByProgram';
-        var category = _.pluck(data,'Program Name');
-        var value = _.pluck(data,'Emergency');
-        loadTheChart(category,value,chartId,'column','Program Name','Percentage of Emergency Orders by Program (all time)','Emergency');
+        var category = _.pluck(data, 'Program Name');
+        var value = _.pluck(data, 'Emergency');
+        loadTheChart(category, value, chartId, 'column', 'Program Name', 'Percentage of Emergency Orders by Program (all time)', 'Emergency');
 
     });
 
@@ -80,48 +93,49 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
         console.log(data);
 
         var chartId = 'emergencySubmittedByProgram';
-        var category = _.pluck(data,'Program Name');
-        var value = _.pluck(data,'Emergency');
-        loadTheChart(category,value,chartId,'column','Program Name','Emergency Orders by Program (Past 1 Month)','Emergency');
+        var category = _.pluck(data, 'Program Name');
+        var value = _.pluck(data, 'Emergency');
+        loadTheChart(category, value, chartId, 'column', 'Program Name', 'Emergency Orders by Program (Past 1 Month)', 'Emergency');
 
 
     });
     GetTrendOfEmergencyOrdersSubmittedPerMonthData.get(null).then(function (data) {
 
         var chartId = 'trendOfEmergencyOrder';
-        var category = _.pluck(data,'ym');
-        var value = _.pluck(data,'Emergency Requisitions');
-        loadTheChart(category,value,chartId,'spline','Year and Month','Trend of Emergency Orders Submitted Per Month','# of requisitions');
+        var category = _.pluck(data, 'ym');
+        var value = _.pluck(data, 'Emergency Requisitions');
+        loadTheChart(category, value, chartId, 'spline', 'Year and Month', 'Trend of Emergency Orders Submitted Per Month', '# of requisitions');
 
     });
 
     GetEmergencyOrderTrendsData.get(null).then(function (data) {
         var chartId = 'emergencyTrend';
-        var category = _.pluck(data,'Month');
-        var value = _.pluck(data,'Emergency Requisitions');
-        loadTheChart(category,value,chartId,'line','Year and Month','Emergency Order Trends (past 1 year)','# of requisitions');
+        var category = _.pluck(data, 'Month');
+        var value = _.pluck(data, 'Emergency Requisitions');
+        loadTheChart(category, value, chartId, 'line', 'Year and Month', 'Emergency Order Trends (past 1 year)', '# of requisitions');
 
         console.log(data);
     });
-    function loadTheChart(category, values,chartId,type,chartName,title,verticalTitle) {
+
+    function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {
         Highcharts.chart(chartId, {
             chart: {
                 type: type
             },
             title: {
-                text:' <h2><span style="font-size: x-small;color:#0c9083">'+title+'</span></h2>'
-            }, credits:{
-                enabled:false
+                text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
+            }, credits: {
+                enabled: false
             },
             subtitle: {
                 text: ''
             },
             xAxis: {
-                categories:category,
+                categories: category,
                 crosshair: true
             },
             yAxis: {
-                lineWidth:1,
+                lineWidth: 1,
                 gridLineColor: '',
                 interval: 1,
 
@@ -130,7 +144,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
 
                 min: 0,
                 title: {
-                    text: '<span style="font-size: x-small;color:#0c9083">'+verticalTitle+'</span>'
+                    text: '<span style="font-size: x-small;color:#0c9083">' + verticalTitle + '</span>'
                 }
             },
             tooltip: {
@@ -138,7 +152,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                 */
                 headerFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.key}</b></td></tr><br/>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">'+verticalTitle+':</td>' + '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">' + verticalTitle + ':</td>' + '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
                 footerFormat: '</table>',
                 shared: true,
                 useHTML: true
@@ -158,12 +172,12 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
 
     }
 
-    $scope.filter={
+    $scope.filter = {
         period: "114",
-        program:"3",
+        program: "3",
         schedule: 1,
         year: "2017",
-        zoneId:18
+        zoneId: 18
     };
     $scope.geojson = {};
 
@@ -220,7 +234,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
 
     $scope.loadRnRStatusSummary = function (summary) {
 
-        var dataVal = [{name:'Status',  colorByPoint: false,data:summary}];
+        var dataVal = [{name: 'Status', colorByPoint: false, data: summary}];
 
         Highcharts.chart('rnrSummary', {
             chart: {
@@ -230,8 +244,8 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                 type: 'pie',
                 height: '350px'
             },
-            credits:{
-                enabled:false
+            credits: {
+                enabled: false
             },
             title: {
                 text: '<span style="font-size: x-small !important;color: #0c9083">R&R Status Summary</span>'
@@ -247,8 +261,8 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                         enabled: true
                     },
                     showInLegend: true,
-                    innerSize:"70%",
-                    size:150
+                    innerSize: "70%",
+                    size: 150
                 }
             },
             series: dataVal
@@ -256,19 +270,35 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
 
     };
     //
-    RnRStatusSummary.get({zoneId: $scope.filter.zoneId,
+    RnRStatusSummary.get({
+            zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
         },
         function (data) {
 
-            var dataValues =[];
-            var colors = {'RELEASED':'lightblue','IN_APPROVAL':'lightgreen','APPROVED':'#82A4EF','AUTHORIZED':'#FF558F'};
+            var dataValues = [];
+            var colors = {
+                'RELEASED': 'lightblue',
+                'IN_APPROVAL': 'lightgreen',
+                'APPROVED': '#82A4EF',
+                'AUTHORIZED': '#FF558F'
+            };
             data.rnrStatus.forEach(function (d) {
-                if(d.status==='AUTHORIZED')
-                    dataValues.push({sliced: true, selected: true,'name': messageService.get('label.rnr.status.summary.'+d.status),'y':d.totalStatus,color:colors[d.status]});
+                if (d.status === 'AUTHORIZED')
+                    dataValues.push({
+                        sliced: true,
+                        selected: true,
+                        'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                        'y': d.totalStatus,
+                        color: colors[d.status]
+                    });
                 else
-                    dataValues.push({'name': messageService.get('label.rnr.status.summary.'+d.status),'y':d.totalStatus,color:colors[d.status]});
+                    dataValues.push({
+                        'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                        'y': d.totalStatus,
+                        color: colors[d.status]
+                    });
             });
 
             $scope.loadRnRStatusSummary(dataValues);
@@ -318,7 +348,8 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
             $scope.paramsChanged($scope.tableParams);
         });
 
-    ExtraAnalyticDataForRnRStatus.get({zoneId: $scope.filter.zoneId,
+    ExtraAnalyticDataForRnRStatus.get({
+            zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
         },
@@ -329,7 +360,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
     var data = [
         {
             y: 300,
-            color:"#F7464A",
+            color: "#F7464A",
             name: "Red"
         },
         {
@@ -354,7 +385,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
         }
     ];
 
-    var initChart = function(data) {
+    var initChart = function (data) {
         $('.chart').highcharts({
             chart: {
                 animation: false,
@@ -380,9 +411,9 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                     dataLabels: {
                         enabled: false
                     },
-                    point:{
-                        events:{
-                            click: function(){
+                    point: {
+                        events: {
+                            click: function () {
                                 moveToPoint(this);
                             }
                         }
@@ -419,15 +450,15 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
     var moveToPoint = function (clickPoint) {
         var points = clickPoint.series.points;
         var startAngle = 0;
-        for (var i = 0; i < points.length; i++){
+        for (var i = 0; i < points.length; i++) {
             var p = points[i];
-            if (p === clickPoint){
+            if (p === clickPoint) {
                 break;
             }
-            startAngle += (p.percentage/100.0 * 360.0);
+            startAngle += (p.percentage / 100.0 * 360.0);
         }
 
-        var newAngle = -startAngle + 90 - ((clickPoint.percentage/100.0 * 360.0)/2);
+        var newAngle = -startAngle + 90 - ((clickPoint.percentage / 100.0 * 360.0) / 2);
 
         console.log(newAngle);
 
@@ -440,16 +471,16 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
             angle: 0,
             target: newAngle
         }).animate({
-            angle: newAngle-lastAngle
+            angle: newAngle - lastAngle
         }, {
             duration: 750,
             easing: 'easeOutQuad',
-            step: function() {
+            step: function () {
                 $('.chart').css({
-                    transform: 'rotateZ('+this.angle+'deg)'
+                    transform: 'rotateZ(' + this.angle + 'deg)'
                 });
             },
-            complete: function() {
+            complete: function () {
                 $('.chart').css({
                     transform: 'rotateZ(0deg)'
                 });
@@ -464,21 +495,22 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
     initChart();
 
     filter();
+
     function filter() {
 
 
         $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
             $scope.features = data.map;
             var dataValues = [];
-            var districts = _.pluck( $scope.features, 'name');
-            var  expected= _.pluck( $scope.features, 'expected');
-            var  reported= _.pluck( $scope.features, 'period');
-            var expArray=[{name:'expected',data:expected},
-                {name:'reported',data:reported}
+            var districts = _.pluck($scope.features, 'name');
+            var expected = _.pluck($scope.features, 'expected');
+            var reported = _.pluck($scope.features, 'period');
+            var expArray = [{name: 'expected', data: expected},
+                {name: 'reported', data: reported}
             ];
-            var districtMap = _.groupBy($scope.features,'name');
+            var districtMap = _.groupBy($scope.features, 'name');
             getExportDataFunction($scope.features);
-            angular.forEach(districtMap,function () {
+            angular.forEach(districtMap, function () {
 
             });
             angular.forEach($scope.features, function (feature) {
@@ -489,8 +521,8 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                 feature.properties.name = feature.name;
                 feature.properties.id = feature.id;
                 dataValues.push({
-                    name:feature.name,
-                    data:[ parseInt('200',feature.expected),parseInt('200',feature.period)]
+                    name: feature.name,
+                    data: [parseInt('200', feature.expected), parseInt('200', feature.period)]
                     // period: parseInt('200',feature.period),
                     // value:300,
                     // color: 'green'
@@ -528,7 +560,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                         stacking: 'normal'
                     }
                 },
-                series:  expArray
+                series: expArray
             });
             Highcharts.mapChart('container1', {
                 chart: {
@@ -549,9 +581,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                     }
                 },
 
-                legend: {
-
-                },
+                legend: {},
 
                 /*   colorAxis: {
                  min: 0,
@@ -568,18 +598,18 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                         from: 80,
                         to: 90,
                         color: '#ffdb00',
-                        name:'Partial Reporting'
+                        name: 'Partial Reporting'
                     }, {
                         from: 90,
                         color: '#006600',
-                        name:'Fully Reporting'
+                        name: 'Fully Reporting'
 
                     }, {
-                            from: 90,
-                            color: '#000000',
-                            name:'Not Expected To'
+                        from: 90,
+                        color: '#000000',
+                        name: 'Not Expected To'
 
-                        }]
+                    }]
                 },
 
                 mapNavigation: {
@@ -600,7 +630,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                 },
 
                 series: [{
-                    data:   dataValues ,
+                    data: dataValues,
                     keys: ['name', 'value'],
                     joinBy: 'name',
                     name: 'Coverage',
@@ -639,58 +669,103 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
 //rnr status
 
 
-
-    function calculatePercentage(data){
+    function calculatePercentage(data) {
         var total = 0;
-        angular.forEach(data,function (da,index) {
+        angular.forEach(data, function (da, index) {
             total += da.current;
         });
-        return parseInt(total/parseInt(data.length,10),10);
+        return parseInt(total / parseInt(data.length, 10), 10);
     }
 
+    $scope.orderFillRateByZone = {
+        "zones": [
+            {
+                "name": "North East",
+                "prev": 89,
+                "current": 90,
+                "status": "good"
+            },
+            {
+                "name": "Western",
+                "prev": 89,
+                "current": 89,
+                "status": "normal"
+            },
+            {
+                "name": "Southern",
+                "prev": 50,
+                "current": 69,
+                "status": "bad"
+            }, {
+                "name": "North Western",
+                "prev": 70,
+                "current": 20,
+                "status": "bad"
+            }, {
+                "name": "Northern",
+                "prev": 70,
+                "current": 60,
+                "status": "bad"
+            }, {
+                "name": "Muchinga",
+                "prev": 70,
+                "current": 90,
+                "status": "bad"
+            }, {
+                "name": "Luapula",
+                "prev": 70,
+                "current": 90,
+                "status": "bad"
+            }, {
+                "name": "Copperbelt",
+                "prev": 70,
+                "current": 20,
+                "status": "bad"
+            }, {
+                "name": "Central",
+                "prev": 70,
+                "current": 80,
+                "status": "bad"
+            }, {
+                "name": "Lusaka Province",
+                "prev": 70,
+                "current": 85,
+                "status": "bad"
+            }
+        ]
+    };
 
 
-
-
-
-    ReportingRate.get({zoneId: $scope.filter.zoneId,
+    ReportingRate.get({
+            zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
         },
         function (data) {
-            $scope.reportingRate={"zones":data.reportingRate};
+            $scope.reportingRate = {"zones": data.reportingRate};
             console.log(JSON.stringify(data.reportingRate));
-            $scope.dynamicPerformanceChart(data.reportingRate,'#reporting-rate','ReportingRate',calculatePercentage($scope.reportingRate.zones));
+            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
 
         });
 
-    StockStatusAvailaiblity.get({zoneId: $scope.filter.zoneId,
+    StockStatusAvailaiblity.get({
+            zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
         },
         function (data) {
-            $scope.stockAvailability={"zones":data.stockStatus};
+            $scope.stockAvailability = {"zones": data.stockStatus};
             console.log(JSON.stringify($scope.stockAvailability));
-            $scope.dynamicPerformanceChart($scope.stockAvailability,'#stock-availability','StockAvailability',calculatePercentage($scope.stockAvailability.zones));
+            $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
+            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
         });
-    ItemFillRate.get({zoneId: $scope.filter.zoneId,
-            periodId: $scope.filter.period,
-            programId: $scope.filter.program
-        },
-        function (data) {
-            $scope.orderFillRateByZone={"zones":data.itemFillRate};
-            console.log(JSON.stringify("item fillrate" +$scope.orderFillRateByZone));
-            $scope.dynamicPerformanceChart($scope.orderFillRateByZone,'#container-order-fill-rate','OrderFillRate',calculatePercentage($scope.orderFillRateByZone.zones));
 
-        });
-    function borderColor(data){
-        return (data >= 80)?'green':(data<80 && data>70)?'orange':'red';
+    function borderColor(data) {
+        return (data >= 80) ? 'green' : (data < 80 && data > 70) ? 'orange' : 'red';
 
     }
 
-    $scope.dynamicPerformanceChart = function(data,chartId,name,result)
-
-    {
+    $scope.dynamicPerformanceChart = function (data, chartId, name, result) {
 
         var gaugeOptions = {
 
@@ -747,7 +822,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
                 name: name,
                 data: [result],
                 dataLabels: {
-                    format: '<div style="Width: 30px;text-align:center"><span style="font-size:20px;color:"'+borderColor(data.ofr)+'"><br>{y}%</span></div>'
+                    format: '<div style="Width: 30px;text-align:center"><span style="font-size:20px;color:"' + borderColor(data.ofr) + '"><br>{y}%</span></div>'
                 }
 
             }],
@@ -911,7 +986,7 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
 
 
     };
-//    new
+
 
     DailyStockStatus.get({zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
@@ -941,6 +1016,9 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
         },
         title: {
             text: 'Lab Equipment Status'
+        },
+        credits:{
+            enabled:false
         },
 
         xAxis: {
@@ -991,7 +1069,6 @@ function DashboardControllerFunction($scope,RejectionCount, leafletData,RnRStatu
             }, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
         }]
     });
-
 
 }
 
