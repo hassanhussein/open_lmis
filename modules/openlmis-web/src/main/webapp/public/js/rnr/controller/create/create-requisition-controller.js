@@ -143,14 +143,25 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
     $scope.rnr.skipAll = false;
   });
 
-  $scope.saveRnr = function (preventMessage) {
+    function popupOtherSourceOfFund(rnr) {
+
+      if(rnr.costExceedsBudget){
+
+        $scope.showFundingSource = true;
+
+      }
+
+    }
+
+    $scope.saveRnr = function (preventMessage) {
+
     var deferred = $q.defer();
     if (!$scope.saveRnrForm || !$scope.saveRnrForm.$dirty) {
       deferred.resolve();
       return deferred.promise;
     }
     resetFlags();
-    var rnr = removeExtraDataForPostFromRnr();
+        var rnr = removeExtraDataForPostFromRnr();
     Requisitions.update({id: $scope.rnr.id, operation: "save"}, rnr, function (data) {
       deferred.resolve();
       if (preventMessage) return;
@@ -180,7 +191,10 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   }
 
   $scope.submitRnr = function () {
-    promoteRnr(submitValidatedRnr);
+      popupOtherSourceOfFund($scope.rnr);
+
+
+      promoteRnr(submitValidatedRnr);
   };
 
   $scope.authorizeRnr = function () {

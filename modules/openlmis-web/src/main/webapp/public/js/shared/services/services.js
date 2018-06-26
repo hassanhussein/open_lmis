@@ -539,3 +539,7 @@ services.factory('VaccinePendingRequisitions', function ($resource) {
 services.factory('HomeFacilityWithType', function ($resource) {
     return $resource('/user/facilityWithType.json', {}, {});
 });
+
+services.factory('FundingSource', function ($resource) {
+    return $resource('/requisitions/funding-sources.json', {}, {});
+});

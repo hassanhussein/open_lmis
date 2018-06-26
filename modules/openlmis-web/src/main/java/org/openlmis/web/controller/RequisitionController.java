@@ -24,6 +24,7 @@ import org.openlmis.rnr.domain.Comment;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.*;
 import org.slf4j.Logger;
@@ -77,6 +78,7 @@ public class RequisitionController extends BaseController {
   public static final String CAN_APPROVE_RNR = "canApproveRnr";
   private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
   public static final String LAB_REFRENCE_DATA = "lab_refrence_data";
+  public static final String FUNDING_SOURCES = "sources";
   @Autowired
   private RequisitionService requisitionService;
   @Autowired
@@ -337,4 +339,21 @@ public class RequisitionController extends BaseController {
    return response(LAB_REFRENCE_DATA, requisitionService.getLabEquipmentReferenceData());
   }
 
+  @RequestMapping(value = "/requisitions/funding-sources", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> getAllSourcesOfFund() {
+
+   return response(FUNDING_SOURCES, requisitionService.getAllSourcesOfFund());
+  }
+
+/*
+  @RequestMapping(value = "/requisitions/{id}/funding-sources", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> insertSourcesOfFund(@RequestBody SourceOfFundLineItemDTO dto,
+                                                        @PathVariable("id") Long id,
+                                                        HttpServletRequest request) {
+
+
+    return OpenLmisResponse.response("sources", requisitionService.insertSourceOfFundLineItem(dto));
+  }*/
 }

@@ -11,6 +11,8 @@ import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.dto.SourceOfFundDTO;
+import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -811,6 +813,16 @@ public class RequisitionService {
     return referenceData;
 
   }
+
+  public List<SourceOfFundDTO>getAllSourcesOfFund(){
+    return requisitionRepository.getAllSourcesOfFund();
+  }
+
+  public void insertSourceOfFundLineItem(SourceOfFundLineItemDTO dto) {
+    requisitionRepository.insertFundingSourceLineItem(dto);
+  }
+
+
 
 }
 

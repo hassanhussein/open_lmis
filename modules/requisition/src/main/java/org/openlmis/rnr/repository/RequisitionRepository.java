@@ -19,6 +19,8 @@ import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.dto.SourceOfFundDTO;
+import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -75,6 +77,12 @@ public class RequisitionRepository {
 
   @Autowired
   private EquipmentOperationalStatusService operationalStatusService;
+
+  @Autowired
+  private SourceOfFundMapper fundMapper;
+
+  @Autowired
+  private SourceOfFundLineItemMapper fundLineItemMapper;
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
@@ -426,4 +434,17 @@ public class RequisitionRepository {
   public List<Rnr> getUnreleasedPreviousRequisitions(Rnr rnr) {
     return requisitionMapper.getUnreleasedPreviousRequisitions(rnr);
   }
+
+  public List<SourceOfFundDTO>getAllSourcesOfFund(){
+    return fundMapper.getAll();
+  }
+
+  public List<SourceOfFundLineItemDTO> getFundingSourceByRnrID(Long rnrId) {
+    return fundLineItemMapper.getLineItems(rnrId);
+  }
+
+  public void insertFundingSourceLineItem(SourceOfFundLineItemDTO lineItemDTO) {
+    fundLineItemMapper.Insert(lineItemDTO);
+  }
+
 }
