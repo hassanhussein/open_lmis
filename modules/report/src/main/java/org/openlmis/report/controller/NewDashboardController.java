@@ -20,6 +20,8 @@ private static final String REPORTING_RATE="reportingRate";
     private static final String STOCK_STATUS="stockStatus";
     private static final String ITEM_FILL_RATE="itemFillRate";
     private static final String DAILY_STOCK_STATUS="dailyStockStatus";
+    private static final String COMMODITY_STATUS="commodity";
+    private static final String FACILITY_COMMODITY_STATUS="facilityCommodity";
     @Autowired
 private DashboardService dashboardService;
     @RequestMapping(value = "/reporting-rate", method = GET, headers = ACCEPT_JSON)
@@ -43,9 +45,21 @@ private DashboardService dashboardService;
     }
     @RequestMapping(value = "/daily-stock-status", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getDailyStockStatus(@RequestParam("zoneId") Long zoneId,
-                                                            @RequestParam("periodId") Long periodId,
-                                                            @RequestParam("programId") Long programId) {
+                                                                @RequestParam("periodId") Long periodId,
+                                                                @RequestParam("programId") Long programId) {
         return OpenLmisResponse.response(DAILY_STOCK_STATUS, this.dashboardService.getDailyStockStatus(zoneId, periodId, programId));
+    }
+    @RequestMapping(value = "/commodity-status", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCommodityStaus(@RequestParam("zoneId") Long zoneId,
+                                                                @RequestParam("periodId") Long periodId,
+                                                                @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(COMMODITY_STATUS, this.dashboardService.getCommodityMostOSandUSList(zoneId, periodId, programId));
+    }
+    @RequestMapping(value = "/facility-commodity-status", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilityCommodityStaus(@RequestParam("zoneId") Long zoneId,
+                                                              @RequestParam("periodId") Long periodId,
+                                                              @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(FACILITY_COMMODITY_STATUS, this.dashboardService.getFacilityCommodityMostOSandUSList(zoneId, periodId, programId));
     }
 
 }

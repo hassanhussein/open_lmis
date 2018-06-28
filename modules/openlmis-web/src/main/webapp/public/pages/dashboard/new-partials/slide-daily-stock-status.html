@@ -1,0 +1,76 @@
+<div ng-controller="DailyStockStatusController" class="row orderFillRate" ng-show="true">
+    <div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card">
+
+            <h2><span style="font-size: x-small"> Daily Stock Status</span></h2>
+
+            <div style="margin-left: 10px; height: 500px; overflow: scroll">
+                <table class="striped bordered ">
+                    <thead >
+                    <th>Facility</th>
+                    <th style="background-color: lightblue" ng-repeat="p in dailyStockStatusHeader">{{p}}</th>
+                    </thead>
+                    <tbody ng-repeat="row in dataList ">
+                    <td >{{row.name}}</td>
+                    <td ng-repeat="c in dailyStockStatusHeader">{{row[c]}}</td>
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="col s12 m8 112">
+        <div class="section grey lighten-5 card">
+            <h2><span style="font-size: x-small"> Most Stocked out and Over Stocked Products</span></h2>
+            <div style="margin-left: 10px; height: 500px; overflow: scroll">
+                <table class="striped bordered ">
+                    <thead >
+                    <tr style="text-align: center;" >
+                        <th rowspan="3" >Region </th>
+                    </tr>
+                    <tr style="text-align: center;"><th style="text-align: center" colspan="3">Stocked Out</th>
+                        <th style="text-align: center" colspan="3">Over Stocked </th>
+                    </tr>
+                    <tr>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Code</th>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="row in commodStatusList  ">
+
+                    <tr>
+                        <td style="text-align: center;" rowspan="6">{{row.name}}</td>
+                    </tr>
+                    <tr  ng-repeat="c in row.usList track by $index">
+                        <td>{{c.productCode}}</td>
+                        <td>{{c.product}}</td>
+                        <td>{{c.count}}</td>
+                        <td>{{row.osList[$index].productCode}}</td>
+                        <td>{{row.osList[$index].product}}</td>
+                        <td>{{row.osList[$index].count}}</td>
+                    </tr>
+                    <tr><td colspan="7" style="background-color: lightblue;max-height: 3px;"></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+    <!--<div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card">
+            <div>
+
+
+
+            </div>
+
+        </div>
+    </div>-->
+
+</div>

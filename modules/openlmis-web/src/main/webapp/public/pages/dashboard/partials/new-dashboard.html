@@ -77,6 +77,9 @@
     .modal .modal-content {
         padding: 30px !important;
     }
+    .odd-row{
+     background-color: lightblue;
+    }
 </style>
 <div id="tab">
 
@@ -635,6 +638,9 @@
                 </div>
 
             </div>
+
+
+
             <div class="row orderFillRate">
                 <div class="col s12 m6 l12">
                     <div class="section grey lighten-5 card">
@@ -643,55 +649,8 @@
                     </div>
                 </div>
             </div>
-           <div class="row orderFillRate" ng-show="true">
-                <div class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
-
-                        <h2><span style="font-size: x-small"> Daily Stock Status</span></h2>
-
-                        <div style="margin-left: 10px;">
-                            <table>
-                                <thead style="background-color: lightblue">
-                                <th>Facility</th>
-                                <th style="background-color: lightblue" ng-repeat="p in dailyStockStatusHeader">{{p}}</th>
-                                </thead>
-                                <tbody ng-repeat="row in dataList ">
-                                <td >{{row.name}}</td>
-                                <td ng-repeat="c in dailyStockStatusHeader">{{row[c]}}</td>
-                                </tbody>
-                            </table>
-                        </div>
-
-
-                    </div>
-
-                </div>
-                <div class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
-                        <div>
-                            <!--<div id="equipmentStatusContainer" style="min-width: 310px; height: 400px; margin: 0 auto">--></div>
-                        </div>
-
-                    </div>
-                </div>
-                <!--<div class="col s12 m4 l4">
-                    <div class="section grey lighten-5 card">
-                        <div>
-
-
-
-                        </div>
-
-                    </div>
-                </div>-->
-
-            </div>
-
-
-
-
-
-        </div>
+            <ng-include src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
+            <ng-include src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
 
 
     </div>

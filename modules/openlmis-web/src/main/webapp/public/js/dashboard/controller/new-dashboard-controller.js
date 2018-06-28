@@ -1,6 +1,6 @@
 function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
-                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,DailyStockStatus,
-                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity) {
+                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
+                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,DashboardCommodityStatus ) {
 
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -988,28 +988,6 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
     };
 
 
-    DailyStockStatus.get({zoneId: $scope.filter.zoneId,
-            periodId: $scope.filter.period,
-            programId: $scope.filter.program
-        },
-        function (data) {
-
-            $scope.dailyStockStatusData=data.dailyStockStatus;
-            $scope.dailyStockStatusHeader=_.unique( _.pluck($scope.dailyStockStatusData,"programCode"));
-            $scope.dailyStockStatusPivot=_.groupBy($scope.dailyStockStatusData,"name");
-            $scope.dataList=[];
-            angular.forEach($scope.dailyStockStatusPivot,function (da,index) {
-                var col={name:index};
-                angular.forEach(da,function (p,i) {
-                    col[p.programCode]=p.countOfSubmissions;
-                });
-                $scope.dataList.push(col);
-            });
-
-
-
-
-        });
     Highcharts.chart('equipmentStatusContainer', {
         chart: {
             type: 'spline'
@@ -1069,6 +1047,11 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
             }, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
         }]
     });
+
+//    commodities, most stocked out and understocked over regions
+
+
+
 
 }
 
