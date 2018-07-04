@@ -26,7 +26,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
             controller: DashboardControllerFunction,
             resolve: DashboardControllerFunction.resolve,
             ncyBreadcrumb: {
-                label: 'Proof Of Concept'
+                label: ' '
             }
         }
 
