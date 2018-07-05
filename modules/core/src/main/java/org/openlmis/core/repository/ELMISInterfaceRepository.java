@@ -165,11 +165,15 @@ public class ELMISInterfaceRepository {
         return mapper.getMosquitoNetData();
     }
 
+
     public void refreshMaterializedView() {
         mapper.refreshMaterializedView();
     }
 
     public void InsertInterfaceResponse(ResponseDTO dto) {
         mapper.InsertInterfaceResponse(dto);
+    }
+    public List<ELMISInterfaceDataSetDTO> getMosquitoNetReportingRateData(){
+        return mapper.getMosquitoNetReportingRateData();
     }
 }

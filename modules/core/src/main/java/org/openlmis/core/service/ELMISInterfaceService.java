@@ -43,6 +43,7 @@ public class ELMISInterfaceService {
     private ConfigurationSettingService settingService;
 
     public static final String URL = "LLIN_DHIS_URL";
+    public static final String URL2 = "LLIN_DHIS_SECOND_URL";
     public static final String USERNAME = "LLIN_USERNAME";
     public static final String PASSWORD = "LLIN_PASSWORD";
 
@@ -81,7 +82,27 @@ public class ELMISInterfaceService {
         repository.updateFacilityInterfaceMapping(facility);
     }
 
+
+
    // @Scheduled(cron = "${batch.job.send.bed.net.data}")
+    @Scheduled(fixedRate = 900000)
+    public void processMosquitoNetReportingData() {
+        //Populate Data
+        // repository.refreshMaterializedView();
+        String username = settingService.getByKey(USERNAME).getValue();
+        String password = settingService.getByKey(PASSWORD).getValue();
+        String url = settingService.getByKey(URL2).getValue();
+
+        ELMISInterfaceDTO dto = new ELMISInterfaceDTO();
+
+        if (username != null & password != null & url != null) {
+            dto.setDataValues(repository.getMosquitoNetReportingRateData());
+            sendBedNetData(username, password, url, dto);
+        }
+
+    }
+
+    // @Scheduled(cron = "${batch.job.send.bed.net.data}")
     public void processMosquitoNetData() {
         //Populate Data
          repository.refreshMaterializedView();

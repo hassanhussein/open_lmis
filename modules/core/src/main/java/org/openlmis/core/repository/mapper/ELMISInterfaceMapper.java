@@ -121,4 +121,55 @@ public interface ELMISInterfaceMapper {
             "            #{deleted}, #{affectedObject}, #{affectedValue},#{dataSetComplete});\n")
     void InsertInterfaceResponse(ResponseDTO dto);
 
+    @Select(" SELECT * FROM (\n" +
+            "      WITH Q as(\n" +
+            "    select gzz.id, gzz.name,app.datasetid,periodId, COALESCE(expected.count) expected,  COALESCE(period.count,0) as reported   \n" +
+            "     from   \n" +
+            "     geographic_zones gzz  \n" +
+            "    LEFT JOIN (\n" +
+            "      SELECT  datasetName,datasetid FROM public.interface_apps a\n" +
+            "      JOIN interface_dataset s on s.interfaceid = a.id \n" +
+            "      WHERE a.name = 'ELMIS_DHIS2_DISTRICT_MAPPING'\n" +
+            "\n" +
+            "    ) APP  ON GZz.CODE = APP.datasetName\n" +
+            "     \n" +
+            "     left join  \n" +
+            "     (select geographicZoneId,pp.id periodId, count(*) from facilities   \n" +
+            "     join programs_supported ps on ps.facilityId = facilities.id  \n" +
+            "     join geographic_zones gz on gz.id = facilities.geographicZoneId  \n" +
+            "     join requisition_group_members rgm on rgm.facilityId = facilities.id  \n" +
+            "     join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId   \n" +
+            "     join processing_periods pp on pp.scheduleId = rgps.scheduleId and pp.id = 90  \n" +
+            "     where gz.levelId = (select max(id) from geographic_levels) and ps.programId = 1 \n" +
+            "     group by geographicZoneId ,pp.id\n" +
+            "     ) expected  \n" +
+            "     on gzz.id = expected.geographicZoneId  \n" +
+            "     left join  \n" +
+            "     (select geographicZoneId, count(*) from facilities   \n" +
+            "     join programs_supported ps on ps.facilityId = facilities.id  \n" +
+            "     join geographic_zones gz on gz.id = facilities.geographicZoneId  \n" +
+            "     where  ps.programId = 1 and facilities.id in   \n" +
+            "     (select facilityId from requisitions where periodId = 90 and programId = 1 and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false )  \n" +
+            "     group by geographicZoneId \n" +
+            "     ) period \n" +
+            "     on gzz.id = period.geographicZoneId order by gzz.name\n" +
+            "     )\n" +
+            "\n" +
+            "     SELECT datasetId ORGUNIT,\n" +
+            "     (date_part('YEAR'::text, pp.startdate) || ''::text) || to_char(pp.enddate, 'MM'::text) AS period,COALESCE(q.expected, 0) AS value,\n" +
+            "      'LMISRREXPCT'::text AS dataelement FROM Q\n" +
+            "    JOIN processing_periods pp ON Q.periodId = PP.ID\n" +
+            "     where expected is not null\n" +
+            "\n" +
+            "     UNION ALL \n" +
+            "\n" +
+            "  SELECT datasetId ORGUNIT, \n" +
+            "     (date_part('YEAR'::text, pp.startdate) || ''::text) || to_char(pp.enddate, 'MM'::text) AS period,COALESCE(q.reported, 0) AS value,\n" +
+            "    'LMISRRSUBM'::text AS dataelement FROM Q\n" +
+            "    JOIN processing_periods pp ON Q.periodId = PP.ID\n" +
+            "     where expected is not null\n" +
+            "     ) Y\n")
+    List<ELMISInterfaceDataSetDTO>getMosquitoNetReportingRateData();
+
+
 }
