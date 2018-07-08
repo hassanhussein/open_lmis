@@ -85,7 +85,7 @@ public class ELMISInterfaceService {
 
 
    // @Scheduled(cron = "${batch.job.send.bed.net.data}")
-    @Scheduled(fixedRate = 900000)
+   // @Scheduled(fixedRate = 900000)
     public void processMosquitoNetReportingData() {
         //Populate Data
         // repository.refreshMaterializedView();
@@ -103,6 +103,7 @@ public class ELMISInterfaceService {
     }
 
     // @Scheduled(cron = "${batch.job.send.bed.net.data}")
+    ///@Scheduled(fixedRate = 900000)
     public void processMosquitoNetData() {
         //Populate Data
          repository.refreshMaterializedView();
