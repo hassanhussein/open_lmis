@@ -824,5 +824,8 @@ public class RequisitionService {
 
 
 
+  public List<HashMap<String, Object>> getRequisitionsByFacilityAndProgram (String facilityCode, String programCode) {
+    return requisitionRepository.getRequisitionDetailsByFacilityAndProgram(facilityCode, programCode);
+  }
 }
 

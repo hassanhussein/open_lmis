@@ -414,4 +414,16 @@ public class RestRequisitionService {
 
       return rnrs;
   }
+
+
+  public List<HashMap<String,Object>> getRequisitionsByFacilityAndProgram(String facilityCode,String programCode) {
+    Facility facility = facilityService.getFacilityByCode(facilityCode);
+    if (facility == null) {
+      throw new DataException("error.facility.unknown");
+    }
+
+   return requisitionService.getRequisitionsByFacilityAndProgram(facility.getCode(),programCode);
+
+  }
+
 }

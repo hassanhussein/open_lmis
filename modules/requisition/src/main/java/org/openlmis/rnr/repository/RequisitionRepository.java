@@ -27,6 +27,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.openlmis.rnr.domain.RnrStatus.*;
@@ -447,4 +448,8 @@ public class RequisitionRepository {
     fundLineItemMapper.Insert(lineItemDTO);
   }
 
+  public List<HashMap<String,Object>> getRequisitionDetailsByFacilityAndProgram(String facilityCode, String programCode) {
+    return requisitionMapper.getRequisitionsWithLineItemsByFacilityAndProgram(facilityCode,programCode);
+
+  }
 }

@@ -17,6 +17,7 @@ import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -285,6 +286,7 @@ public interface RequisitionMapper {
       "and r.status = 'APPROVED'"})
   List<Rnr> getUnreleasedPreviousRequisitions(@Param("rnr") Rnr rnr);
 
+
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")
@@ -350,5 +352,17 @@ public interface RequisitionMapper {
       sql.append("R.status = 'APPROVED'");
     }
   }
+
+  @Select(" WITH Req as (select r.id rnrid, * from requisitions r\n" +
+          "    JOIN FACILITIES F ON r.facilityid = f.id \n" +
+          "     JOIN processing_periods pp ON r.periodid = pp.id\n" +
+          "     JOIN programs p ON r.programId = p.id\n" +
+          " where f.code =#{facilityCode} and lower(p.code) = lower(#{programCode}) and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
+          "   order by r.createddate desc\n" +
+          "    limit 1) \n" +
+          "   SELECT * FROM Req  \n" +
+          "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
+  List<HashMap<String,Object>> getRequisitionsWithLineItemsByFacilityAndProgram(@Param("facilityCode") String facilityCode,@Param("programCode") String programCode);
+
 }
 
