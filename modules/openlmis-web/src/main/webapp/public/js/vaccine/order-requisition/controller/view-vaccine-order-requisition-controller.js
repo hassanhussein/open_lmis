@@ -178,7 +178,6 @@ function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $root
            //$scope.gridOption = true;
         } else {
             $scope.gridOpt = true ;
-            alert("reached Here");
 
         }
 
