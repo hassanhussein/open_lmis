@@ -172,9 +172,13 @@ function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $root
     SupervisoryNodeByFacilityAndRequisition.get({facilityId: parseInt(facility.id, 10)}, function (data) {
         $scope.supervisoryNode = data.supervisoryNodes;
         if (data.supervisoryNodes === null) {
-            $scope.gridOption = true;
+          $scope.gridOpt = true;
+
+            //Will be used for consolidation purposed
+           //$scope.gridOption = true;
         } else {
-            $scope.gridOpt = true;
+            $scope.gridOpt = true ;
+            alert("reached Here");
 
         }
 
