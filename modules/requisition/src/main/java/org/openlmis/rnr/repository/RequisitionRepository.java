@@ -12,20 +12,21 @@ package org.openlmis.rnr.repository;
 
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.SourceOfFundRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.SignatureMapper;
+import org.openlmis.core.repository.mapper.SourceOfFundMapper;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.rnr.dto.SourceOfFundDTO;
+import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -80,7 +81,7 @@ public class RequisitionRepository {
   private EquipmentOperationalStatusService operationalStatusService;
 
   @Autowired
-  private SourceOfFundMapper fundMapper;
+  private SourceOfFundRepository sourceOfFundRepository;
 
   @Autowired
   private SourceOfFundLineItemMapper fundLineItemMapper;
@@ -437,7 +438,7 @@ public class RequisitionRepository {
   }
 
   public List<SourceOfFundDTO>getAllSourcesOfFund(){
-    return fundMapper.getAll();
+    return sourceOfFundRepository.getAllSourcesOfFunds();
   }
 
   public List<SourceOfFundLineItemDTO> getFundingSourceByRnrID(Long rnrId) {
@@ -452,4 +453,5 @@ public class RequisitionRepository {
     return requisitionMapper.getRequisitionsWithLineItemsByFacilityAndProgram(facilityCode,programCode);
 
   }
+
 }

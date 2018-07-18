@@ -11,7 +11,7 @@ import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.rnr.dto.SourceOfFundDTO;
+import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper;
@@ -827,5 +827,6 @@ public class RequisitionService {
   public List<HashMap<String, Object>> getRequisitionsByFacilityAndProgram (String facilityCode, String programCode) {
     return requisitionRepository.getRequisitionDetailsByFacilityAndProgram(facilityCode, programCode);
   }
+
 }
 
