@@ -17,7 +17,6 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   var EQUIPMENT = 'equipment';
   
   $scope.showMaxStock = showMaxStock;
-
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, equipmentOperationalStatus);
   $scope.rnrComments = comments;
@@ -83,8 +82,8 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
 
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
       ['quantityApproved','remarks'], !$scope.rnr.period.enableOrder);
-
   $scope.programRnrColumnList = rnrColumns;
+
   $scope.requisitionRights = requisitionRights;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {'visible': true});
@@ -178,8 +177,8 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   };
 
   function promoteRnr(promoteFunction) {
-    resetFlags();
-    requisitionService.resetErrorPages($scope);
+          resetFlags();
+          requisitionService.resetErrorPages($scope);
 
     var saveRnrPromise = $scope.saveRnr(true);
 
