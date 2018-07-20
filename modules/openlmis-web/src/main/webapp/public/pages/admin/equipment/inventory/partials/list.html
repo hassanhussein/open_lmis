@@ -9,6 +9,12 @@
   ~
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<style>
+    .tree {
+        height: 200px !important;
+        overflow-y: scroll;
+    }
+</style>
 
 <div>
     <h2>
@@ -41,6 +47,19 @@
                 <strong openlmis-message="label.supervised.Facility"></strong>
             </label>
         </div>
+        <div class="span4" ng-show="showTree">
+            <div class="tree">
+                <span id="tree"></span>
+            </div>
+        </div>
+        <div class="span2" ng-show="showTree">
+            <div class="alert alert-info">
+                <strong>Info!</strong>
+                Click On Your Left to Visualize SuperVised Stores
+            </div>
+        </div>
+
+
     </div>
     <br/>
 
@@ -85,6 +104,9 @@
 
         <div ng-show="inventoryList.length == 0">
             <span openlmis-message="label.equipment.none.found"></span>
+        </div>
+        <div class="clearfix" ng-show="showFacilityLevel">
+            <span class="pull-left"><span style="color: #1b6d85;font-size:x-small">Equipment List for :{{displayLevel}}</span></span>
         </div>
         <div ng-show="inventoryList.length > 0" id="pod" class="rnr-table">
             <table ng-show="selectedEquipmentType.coldChain == true" class="table table-bordered">

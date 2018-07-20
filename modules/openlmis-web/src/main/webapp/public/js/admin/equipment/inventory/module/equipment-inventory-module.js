@@ -10,14 +10,21 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ngAnimate', 'ui.bootstrap.pagination']).config(['$routeProvider', function ($routeProvider) {
+angular.module('equipment-inventory', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ngAnimate', 'ui.bootstrap.pagination',
+    'ng-breadcrumbs','tree.dropdown'
+]).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
-      when('/', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html',resolve:EquipmentInventoryController.resolve}).
+      when('/', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html',resolve:EquipmentInventoryController.resolve, label: 'Home' }).
       when('/:from/:program/:equipmentType/:page', {controller: EquipmentInventoryController, templateUrl: 'partials/list.html',resolve:EquipmentInventoryController.resolve}).
       when('/create/:from/:program/:equipmentType/:page', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html',reloadOnSearch:false,resolve:CreateEquipmentInventoryController.resolve}).
       when('/edit/:from/:program/:equipmentType/:id/:page', {controller: CreateEquipmentInventoryController, templateUrl: 'partials/create.html',reloadOnSearch:false,resolve:CreateEquipmentInventoryController.resolve}).
       when('/log/:id', {controller: LogController, templateUrl: 'partials/log.html'}).
-      when('/request/:id', {controller: CreateServiceRequestController, templateUrl: 'partials/request.html'}).
+      when('/request/:id', {controller: CreateServiceRequestController, templateUrl: 'partials/request.html'})
+      .when('/home/:mySupervised', {
+          controller: 'SupervisedDetailController',
+          templateUrl: 'partials/list2.html',
+          label: 'More Detail'
+      }).
       otherwise({redirectTo: '/'});
 }]).run(function ($rootScope, AuthorizationService) {
   AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_INVENTORY');

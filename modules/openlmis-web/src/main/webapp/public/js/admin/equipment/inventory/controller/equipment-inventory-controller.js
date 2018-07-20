@@ -10,9 +10,80 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function EquipmentInventoryController($scope,NumberOfYears,DeleteEquipmentInventory, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory,localStorageService,$dialog) {
+function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,breadcrumbs,NumberOfYears,DeleteEquipmentInventory, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory,localStorageService,$dialog) {
 
-  $scope.loadPrograms = function (initialLoad) {
+    $scope.breadcrumbs = breadcrumbs;
+
+    function getEquipmentBySelectedId(initialLoad,district) {
+        ManageEquipmentInventoryProgramList.get({}, function (data) {
+            $scope.programs = data.programs;
+            if (initialLoad && $routeParams.program) {
+                $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
+                $scope.loadEquipmentTypes(initialLoad);
+            } else if ($scope.programs.length === 1) {
+                $scope.selectedProgram = $scope.programs[0];
+                $scope.loadEquipmentTypes();
+            }
+        }, {});
+    }
+
+    function getDataForDisplay(data) {
+       // console.log(data);
+        var district;
+        if (data.id === null) {
+            district = data.regionId;
+        } else
+            district = data.id;
+        $scope.showFacilityLevel = false;
+
+        GetByDistrict.get({districtId: parseInt(district, 10)}, function (data) {
+            $scope.displayLevel = data.facility.name;
+            $scope.showFacilityLevel = true;
+            console.log(data);
+
+           // $state.go('toState', { 'facilityId':parseInt(data.facility.id, 10), 'facilityName':facilityName, 'etc':'bluebell' });
+
+
+        });
+
+        getEquipmentBySelectedId(true,district);
+
+
+    }
+
+    GeoDistrictTree.get({}, function (data) {
+
+        var data2 = data.regionFacilityTree;
+        $('#tree').treeview({
+            data: data2,
+            levels: 2,
+            color: "#398085",
+            onhoverColor: 'lightblue',
+            // href: "#node-1",
+            //selectable: false,
+            state: {
+                //checked: true,
+                disabled: true,
+                // expanded: true,
+                selected: true
+            },
+            //silent: true,
+            onNodeSelected: function (event, data) {
+                getDataForDisplay(data);
+            }
+
+
+
+        },'disableNode',  {levels: 2, silent: true } );
+
+    });
+
+  $scope.showTree = false;
+   $scope.showTreeMenu= function showTreeMenu() {
+        $scope.showTree = true;
+    };
+
+    $scope.loadPrograms = function (initialLoad) {
     // Get home facility for user
     UserFacilityList.get({}, function (data) {
       $scope.myFacility = data.facilityList[0];
@@ -22,7 +93,9 @@ function EquipmentInventoryController($scope,NumberOfYears,DeleteEquipmentInvent
 
         // Home facility found and my facility type selected, get home facility programs
         if ($scope.selectedType === "0") {
-          ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
+            $scope.showTree = false;
+            $scope.showFacilityLevel = false;
+            ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
             if (initialLoad && $routeParams.program) {
               $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program,10)});
@@ -41,7 +114,10 @@ function EquipmentInventoryController($scope,NumberOfYears,DeleteEquipmentInvent
 
     // Supervised facility type selected, get supervised facility programs
     if ($scope.selectedType === "1") {
-      ManageEquipmentInventoryProgramList.get({}, function (data) {
+        $scope.showTree = true;
+
+     //removed to be fetched by selected items
+     /*   ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
         if (initialLoad && $routeParams.program) {
           $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
@@ -50,7 +126,7 @@ function EquipmentInventoryController($scope,NumberOfYears,DeleteEquipmentInvent
           $scope.selectedProgram = $scope.programs[0];
           $scope.loadEquipmentTypes();
         }
-      }, {});
+      }, {});*/
     }
   };
 
@@ -105,6 +181,7 @@ function EquipmentInventoryController($scope,NumberOfYears,DeleteEquipmentInvent
     $scope.selectedEquipmentType = undefined;
 
     $scope.loadPrograms();
+
   };
 
   $scope.changeProgram = function () {
