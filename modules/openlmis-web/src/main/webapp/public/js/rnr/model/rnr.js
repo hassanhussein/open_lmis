@@ -115,9 +115,8 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
         $(this.fullSupplyLineItems).each(function (i, lineItem) {
             if (lineItem.skipped)
                 return;
-            var valid = false;
-            var isReporting = (!rnr.period.enableOrder) ? valid : !validateRequiredFields(lineItem);
-            return !isReporting;
+            if (!validateRequiredFields(lineItem) && rnr.period.enableOrder )
+                return false;
             if (!validateFormula(lineItem))
                 return false;
             if (!validateEquipmentStatus(lineItem))
@@ -296,7 +295,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
         function prepareLineItems(lineItems) {
             var regularLineItems = [];
             $(lineItems).each(function (i, lineItem) {
-                var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.numberOfMonths, programRnrColumns, thisRnr.status);
+                var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.numberOfMonths, programRnrColumns, thisRnr.status,rnr.period.enableOrder);
                 regularLineItems.push(regularLineItem);
             });
             return regularLineItems;
