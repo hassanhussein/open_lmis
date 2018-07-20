@@ -102,6 +102,7 @@ public class CalculationServiceTest {
 
     rnr.setFullSupplyLineItems(asList(firstLineItem));
     rnr.setNonFullSupplyLineItems(asList(secondLineItem));
+    period.setEnableOrder(false);
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
 
@@ -146,6 +147,7 @@ public class CalculationServiceTest {
     RnrLineItem nonSkippedLineItem = mock(RnrLineItem.class);
 
     rnr.setFullSupplyLineItems(asList(skippedLineItem, nonSkippedLineItem));
+    period.setEnableOrder(false);
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
 
