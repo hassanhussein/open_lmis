@@ -200,6 +200,7 @@ public class CalculationService {
 
       lineItem.validateMandatoryFields(template);
       lineItem.calculateForFullSupply(template, requisition.getStatus(), lossesAndAdjustmentsTypes, numberOfMonths);
+      if(requisition.getPeriod().getEnableOrder())
       lineItem.validateCalculatedFields(template);
 
       requisition.addToFullSupplyCost(lineItem.calculateCost());
