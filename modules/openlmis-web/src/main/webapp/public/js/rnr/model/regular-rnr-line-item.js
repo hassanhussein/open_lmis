@@ -13,11 +13,12 @@ var RegularRnrLineItem = base2.Base.extend({
   programRnrColumnList: undefined,
   rnrStatus: undefined,
 
-  constructor: function (lineItem, numberOfMonths, programRnrColumnList, rnrStatus) {
+  constructor: function (lineItem, numberOfMonths, programRnrColumnList, rnrStatus,reportOnlyPeriod) {
     $.extend(true, this, lineItem);
     this.numberOfMonths = numberOfMonths;
     this.rnrStatus = rnrStatus;
     this.programRnrColumnList = programRnrColumnList;
+    this.reportOnlyPeriod = reportOnlyPeriod;
     this.init();
     if (this.previousNormalizedConsumptions === undefined || this.previousNormalizedConsumptions === null)
       this.previousNormalizedConsumptions = [];
@@ -51,18 +52,29 @@ var RegularRnrLineItem = base2.Base.extend({
     this.fillConsumptionOrStockInHand();
     this.calculateCost();
   },
+   resetMandatoryFields: function(){
 
+           this.quantityReceived = 0;
+           this.quantityDispensed =0;
+           this.beginningBalance = 0;
+           this.quantityApproved = 0;
+           this.stockInHand = utils.getValueFor(this.stockInHand);
+           this.totalLossesAndAdjustments = 0;
+
+   },
   fillConsumptionOrStockInHand: function () {
-    this.beginningBalance = utils.getValueFor(this.beginningBalance);
-    this.quantityReceived = utils.getValueFor(this.quantityReceived);
-    this.quantityDispensed = utils.getValueFor(this.quantityDispensed);
-    this.totalLossesAndAdjustments = utils.getValueFor(this.totalLossesAndAdjustments, 0);
-    this.stockInHand = utils.getValueFor(this.stockInHand);
 
-    this.calculateConsumption();
-    this.calculateStockInHand();
-    this.fillNormalizedConsumption();
-    this.calculateTotal();
+          this.beginningBalance = utils.getValueFor(this.beginningBalance);
+          this.quantityReceived = utils.getValueFor(this.quantityReceived);
+          this.quantityDispensed = utils.getValueFor(this.quantityDispensed);
+          this.totalLossesAndAdjustments = utils.getValueFor(this.totalLossesAndAdjustments, 0);
+          this.stockInHand = utils.getValueFor(this.stockInHand);
+          if(!this.reportOnlyPeriod)
+          this.resetMandatoryFields();
+          this.calculateConsumption();
+          this.calculateStockInHand();
+          this.fillNormalizedConsumption();
+          this.calculateTotal();
   },
 
   statusBeforeAuthorized: function () {
@@ -192,7 +204,7 @@ var RegularRnrLineItem = base2.Base.extend({
     }
     if (this.getSource('quantityDispensed') !== 'CALCULATED') return;
 
-    if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand)) {
+    if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.totalLossesAndAdjustments) && utils.isNumber(this.stockInHand) && this.reportOnlyPeriod) {
       this.quantityDispensed = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.stockInHand;
     } else {
       this.quantityDispensed = null;
@@ -205,7 +217,7 @@ var RegularRnrLineItem = base2.Base.extend({
     }
     if (this.getSource('stockInHand') !== 'CALCULATED') return;
 
-    if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed)) {
+    if (utils.isNumber(this.beginningBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityDispensed) && this.reportOnlyPeriod) {
       this.stockInHand = this.beginningBalance + this.quantityReceived + this.totalLossesAndAdjustments - this.quantityDispensed;
     } else {
       this.stockInHand = null;
@@ -364,7 +376,6 @@ var RegularRnrLineItem = base2.Base.extend({
     var valid = true;
     var rnrLineItem = this;
     var visibleColumns = _.where(this.programRnrColumnList, {"visible": true});
-    console.log(this.programRnrColumnList);
 
     $(visibleColumns).each(function (i, column) {
           var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skipped","stockInHand","stockOutDays"];
