@@ -35,7 +35,6 @@ public class ColdTraceMonthlyStatusDTO {
   @ApiModelProperty(name = "Device ID", notes = "A unique identifier that identifies the equipment", required = true)
   private String serialNumber;
 
-  @JsonDeserialize(using = DateDeserializer.class)
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   @ApiModelProperty(name = "Date", notes = "Date of reading/submission (Usually the last day of the period)", required = true)
   private Date date;
