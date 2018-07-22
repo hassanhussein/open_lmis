@@ -166,7 +166,10 @@
 
                         <th ng-repeat-start="p in facilityProduct" openlmis-message="header.status.soh"
                             class="p-column"></th>
+                        <th class="p-column">MOS</th>
+<!--
                         <th openlmis-message="header.buffer.stock" class="p-column"></th>
+-->
                         <th ng-repeat-end openlmis-message="header.status.last.update"
                             ng-hide="filter.isMOS == true" class="p-column"></th>
 
@@ -193,8 +196,11 @@
                         </td>
 
                         <td class="p-column">
-                            {{getProductQuantity(f.facilityName,p.programProduct.product.primaryName).bufferStock | number}}
+                            {{getProductQuantity(f.facilityName,p.programProduct.product.primaryName).mos | number}}
                         </td>
+                       <!-- <td class="p-column">
+                            {{getProductQuantity(f.facilityName,p.programProduct.product.primaryName).bufferStock | number}}
+                        </td>-->
 
                         <td ng-repeat-end ng-hide="filter.isMOS == true" class="p-column">
                             {{getProductQuantity(f.facilityName,p.programProduct.product.primaryName).lastUpdate}}

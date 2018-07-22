@@ -6,6 +6,7 @@ function StockOnHandControllerFunc($scope,$state,$window, homeFacilityId,$locati
     $scope.showMyFacility = facilityTypeCode === 'dvs';
 
     $scope.stockCards = [];
+    $scope.stockRequirements = [];
 
 
     $scope.$watch('facilityType', function(value) {
@@ -24,6 +25,8 @@ function StockOnHandControllerFunc($scope,$state,$window, homeFacilityId,$locati
 
     if (GetStockCards !== undefined)
         $scope.stockCards = GetStockCards.stockCards;
+   /* if(GetStockRequirements !== undefined)
+        $scope.stockRequirements = GetStockRequirements;*/
 
     var getDataForDisplay = function (data) {
         var district;
@@ -59,6 +62,8 @@ function StockOnHandControllerFunc($scope,$state,$window, homeFacilityId,$locati
         });
 
     });
+
+
 
 }
 
@@ -114,6 +119,24 @@ StockOnHandControllerFunc.resolve = {
         }, 100);
 
         return deferred.promise;
-    }
+    }/*,
+    GetStockRequirements: function ($q, $timeout, UserHomeFacility, StockRequirements) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+
+            UserHomeFacility.get({}, function (data) {
+
+                StockRequirements.get({facilityId: parseInt(data.homeFacility.id, 10),programId:parseInt(82)},
+                    function (data) {
+                    console.log(data);
+                        deferred.resolve(data);
+                    });
+            });
+
+        }, 100);
+
+        return deferred.promise;
+    }*/
 
 };

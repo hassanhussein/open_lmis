@@ -47,7 +47,7 @@
                 <strong openlmis-message="label.supervised.Facility"></strong>
             </label>
         </div>
-        <div class="span4" ng-show="showTree">
+    <!--    <div class="span4" ng-show="showTree">
             <div class="tree">
                 <span id="tree"></span>
             </div>
@@ -57,7 +57,7 @@
                 <strong>Info!</strong>
                 Click On Your Left to Visualize SuperVised Stores
             </div>
-        </div>
+        </div>-->
 
 
     </div>
@@ -108,6 +108,21 @@
         <div class="clearfix" ng-show="showFacilityLevel">
             <span class="pull-left"><span style="color: #1b6d85;font-size:x-small">Equipment List for :{{displayLevel}}</span></span>
         </div>
+        <div>
+            <input style="height: 30px!important;" id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query"
+                   placeholder="Search any visible columns"/>
+            <span class="pull-right">
+                  <h3>
+                <ng-pluralize count="resultCount"
+                              when="{ 0: 'No matches found for \'{{query}}\'',
+                        1: '1 match found for \'{{query}}\'',
+                        other: '{} matches found for \'{{query}}\''}">
+                </ng-pluralize>
+            </h3>
+            </span>
+
+
+        </div>
         <div ng-show="inventoryList.length > 0" id="pod" class="rnr-table">
             <table ng-show="selectedEquipmentType.coldChain == true" class="table table-bordered">
                 <thead>
@@ -118,6 +133,8 @@
                     <th openlmis-message="label.equipment.designation"></th>
                     <th><span openlmis-message="label.equipment.manufacturer"></span> /
                         <span openlmis-message="label.equipment.model"></span></th>
+                    <th><span openlmis-message="label.serialnumber"></span></th>
+
                     <th openlmis-message="label.equipment.fridge.freezer.capacity"></th>
                     <th openlmis-message="label.equipment.status"></th>
                     <th openlmis-message="label.equipment.energy.source"></th>
@@ -128,7 +145,7 @@
                     <th ng-show="">Temperature Status</th>
                 </tr>
                 </thead>
-                <tbody ng-repeat="(key, items) in inventoryList">
+                <tbody ng-repeat="(key, items) in inventoryList ">
 
                 <tr style="height: 31px;">
                     <td class="productCategory" id="key{{$index}}" colspan="12"
@@ -136,7 +153,7 @@
                     </td>
                 </tr>
 
-                <tr ng-repeat="item in items.inventory" style=" border-bottom:2px solid #333">
+                <tr ng-repeat="item in items.inventory | filter : query" style=" border-bottom:2px solid #333">
                     <td>{{item.facility.geographicZone.parent.name}}</td>
                     <td>{{item.facility.geographicZone.name}}</td>
                     <td>{{item.facility.name}}</td>
@@ -152,6 +169,7 @@
                             / {{item.equipment.model}}
                         </span>
                     </td>
+                    <td>{{item.serialNumber}}</td>
                     <td>{{item.equipment.refrigeratorCapacity ? item.equipment.refrigeratorCapacity : 0}} /
                         {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}
                         {{item.equipment.capacity ? item.equipment.capacity : null}}
@@ -230,6 +248,7 @@
 
         <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
                     direction-links="false" ng-show="inventory.length" class="pagination-sm"></pagination>
+
     </div>
 
 </div>

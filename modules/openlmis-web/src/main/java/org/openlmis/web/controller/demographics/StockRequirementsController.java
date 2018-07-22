@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -94,6 +95,12 @@ public class StockRequirementsController extends BaseController
     @RequestMapping(value = "/rest-api/facility/{facilityId}/program/{programId}/stockRequirementsData", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Long facilityId, @PathVariable("programId") Long programId, HttpServletRequest request) {
         return OpenLmisResponse.response("stock_requirements", stockRequirementsService.getStockRequirements(facilityId,programId));
+    }
+
+    @RequestMapping(value = "/rest-api/facility/{facilityId}/program/{programId}/productId/{productId}/stockRequirementsData", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> get(@PathVariable("facilityId") Long facilityId, @PathVariable("programId") Long programId,@PathVariable("productId") Long productId, HttpServletRequest request) {
+          int year = new Date().getYear();
+        return OpenLmisResponse.response("stock_requirements", stockRequirementsService.getByProduct(programId,facilityId,productId,year));
     }
 
 }

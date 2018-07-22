@@ -365,4 +365,7 @@ public class StockRequirementsService
         return repository.getAll(programId,facilityId,year);
     }
 
+    public StockRequirementsDTO getByProduct(Long programId, Long facilityId,Long productId,int year){
+        return repository.getByProductId(programId, facilityId, productId, year);
+    }
 }

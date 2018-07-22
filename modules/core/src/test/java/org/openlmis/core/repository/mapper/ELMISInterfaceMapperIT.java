@@ -54,9 +54,11 @@ public class ELMISInterfaceMapperIT {
         mapper.insert(defaultInterface);
 
         ELMISInterfaceDataSet dt01 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset01Name", "Dataset01Id","ElmisCode01");
-        ELMISInterfaceDataSet dt02 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset02Name", "Dataset02Id","ElmisCode01");
+        ELMISInterfaceDataSet dt02 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset02Name", "Dataset02Id","ElmisCode02");
+        ELMISInterfaceDataSet dt03 = new ELMISInterfaceDataSet(defaultInterface.getId(), "Dataset02Name", "Dataset03Id","ElmisCode03");
         mapper.insertDataSet(dt01);
         mapper.insertDataSet(dt02);
+        mapper.insertDataSet(dt03);
 
        ELMISInterface selectedInterface = mapper.get(defaultInterface.getId());
        assertThat(selectedInterface.getActive(), is(true));

@@ -14,18 +14,6 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
 
     $scope.breadcrumbs = breadcrumbs;
 
-    function getEquipmentBySelectedId(initialLoad,district) {
-        ManageEquipmentInventoryProgramList.get({}, function (data) {
-            $scope.programs = data.programs;
-            if (initialLoad && $routeParams.program) {
-                $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
-                $scope.loadEquipmentTypes(initialLoad);
-            } else if ($scope.programs.length === 1) {
-                $scope.selectedProgram = $scope.programs[0];
-                $scope.loadEquipmentTypes();
-            }
-        }, {});
-    }
 
     function getDataForDisplay(data) {
        // console.log(data);
@@ -45,8 +33,6 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
 
 
         });
-
-        getEquipmentBySelectedId(true,district);
 
 
     }
@@ -77,11 +63,6 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
         },'disableNode',  {levels: 2, silent: true } );
 
     });
-
-  $scope.showTree = false;
-   $scope.showTreeMenu= function showTreeMenu() {
-        $scope.showTree = true;
-    };
 
     $scope.loadPrograms = function (initialLoad) {
     // Get home facility for user
@@ -114,10 +95,9 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
 
     // Supervised facility type selected, get supervised facility programs
     if ($scope.selectedType === "1") {
-        $scope.showTree = true;
+        //$scope.showTree = true;
 
-     //removed to be fetched by selected items
-     /*   ManageEquipmentInventoryProgramList.get({}, function (data) {
+        ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
         if (initialLoad && $routeParams.program) {
           $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
@@ -126,7 +106,7 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
           $scope.selectedProgram = $scope.programs[0];
           $scope.loadEquipmentTypes();
         }
-      }, {});*/
+      }, {});
     }
   };
 
@@ -152,6 +132,7 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
         page: $scope.page
       }, function (data) {
         $scope.inventory = data.inventory;
+        console.log($scope.inventory);
 
         var groupedInventoryData = _.groupBy($scope.inventory,function(item){
               return (item.equipment.designation) ? item.equipment.designation.name: '-';

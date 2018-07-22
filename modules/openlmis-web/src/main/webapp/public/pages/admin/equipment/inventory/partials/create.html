@@ -333,11 +333,12 @@
            <div class="form-cell">
             <label for="serialNumber">
               <span openlmis-message="label.equipment.serial"></span>
+                <span class="label-required">*</span>
             </label>
 
             <div class="form-field">
               <input ng-model="inventory.serialNumber" name="serialNumber" id="serialNumber" type="text"
-                     maxlength="50"/>
+                     maxlength="50" ng-required="true"/>
               <span class="field-error" ng-show="inventoryForm.serialNumber.$error.required && showError"
                     openlmis-message="missing.value"></span>
             </div>
