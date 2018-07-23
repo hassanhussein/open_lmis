@@ -305,6 +305,8 @@ var RegularRnrLineItem = base2.Base.extend({
     // if not default, apply the formula
     if( maxStockColumnCalculationOption === 'CONSUMPTION_X_2'){
       this.maxStockQuantity = this.normalizedConsumption * 2;
+    }else if( maxStockColumnCalculationOption === 'CONSUMPTION_X_3'){
+      this.maxStockQuantity = this.normalizedConsumption * 3;
     }else if( maxStockColumnCalculationOption === 'DISPENSED_X_2'){
       this.maxStockQuantity = this.quantityDispensed * 2;
     }

@@ -36,4 +36,11 @@ public class ProductFormRepository {
   public ProductForm getByCode(String code) {
     return mapper.getByCode(code);
   }
+
+  public Integer insert(ProductForm form){
+    return  mapper.insert(form);
+  }
+  public void update(ProductForm productForm){
+     mapper.update(productForm);
+  }
 }

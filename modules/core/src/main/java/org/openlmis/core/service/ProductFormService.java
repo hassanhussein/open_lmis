@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.ProductForm;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductFormRepository;
@@ -45,4 +46,17 @@ public class ProductFormService {
 
     return form;
   }
+
+  public void save(ProductForm form){
+    if (form.getId() != null){
+      repository.update(form);
+      return;
+    }else
+      repository.insert(form);
+  }
+
+  public BaseModel getExisting(ProductForm productForm) {
+    return  repository.getByCode(productForm.getCode());
+  }
+
 }

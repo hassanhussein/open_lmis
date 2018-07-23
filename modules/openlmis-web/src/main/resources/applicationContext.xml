@@ -412,6 +412,15 @@
                         <property name="recordHandler" ref="sourceOfFundPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="funding-source">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="menu.header.product.forms"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ProductForm</value>
+                        </property>
+                        <property name="recordHandler" ref="productFormPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

@@ -55,6 +55,7 @@ public class RnrLineItem extends LineItem {
   public static final String DEFAULT = "DEFAULT";
   public static final String DISPENSED_X_2 = "DISPENSED_X_2";
   public static final String CONSUMPTION_X_2 = "CONSUMPTION_X_2";
+  public static final String CONSUMPTION_X_3 = "CONSUMPTION_X_3";
   private static final Logger LOGGER = LoggerFactory.getLogger(RnrLineItem.class);
   //TODO : hack to display it on UI. This is concatenated string of Product properties like name, strength, form and dosage unit
   private String product;
@@ -266,7 +267,10 @@ public class RnrLineItem extends LineItem {
     }
     if(CONSUMPTION_X_2.equalsIgnoreCase(columnOption)){
       maxStockQuantity = this.normalizedConsumption * 2;
-    }else if(DISPENSED_X_2.equalsIgnoreCase(columnOption)){
+    }else if(CONSUMPTION_X_3.equalsIgnoreCase(columnOption)){
+      maxStockQuantity = this.normalizedConsumption * 3;
+    }
+    else if(DISPENSED_X_2.equalsIgnoreCase(columnOption)){
       maxStockQuantity = this.quantityDispensed * 2;
     } else{
       // apply the default calculation if there was no other calculation that works here

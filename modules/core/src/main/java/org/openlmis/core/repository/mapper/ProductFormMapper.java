@@ -10,7 +10,11 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductForm;
 import org.springframework.stereotype.Repository;
 
@@ -32,4 +36,15 @@ public interface ProductFormMapper {
 
   @Select("SELECT * FROM product_forms WHERE LOWER(code) = LOWER(#{code})")
   ProductForm getByCode(String code);
+
+  @Insert("INSERT INTO public.product_forms(\n" +
+          "            code, displayOrder, createdDate)\n" +
+          "    VALUES (#{code}, #{displayOrder}, NOW());\n")
+  @Options(useGeneratedKeys = true)
+  Integer insert(ProductForm productForm);
+
+  @Update("UPDATE public.product_forms\n" +
+          "   SET code=#{code}, displayOrder=#{displayOrder}\n" +
+          " WHERE id = #{id};")
+  void update(ProductForm productForm);
 }

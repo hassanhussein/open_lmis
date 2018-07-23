@@ -14,6 +14,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 /**
  * ProductForm represents real world entity for product form.
@@ -22,7 +24,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ProductForm extends BaseModel {
+public class ProductForm extends BaseModel implements Importable {
+
+  @ImportField(mandatory = true, name = "Form Code")
   private String code;
+
+  @ImportField(name = "Display Order")
   private int displayOrder;
 }
