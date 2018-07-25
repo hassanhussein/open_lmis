@@ -108,7 +108,7 @@
         <div class="clearfix" ng-show="showFacilityLevel">
             <span class="pull-left"><span style="color: #1b6d85;font-size:x-small">Equipment List for :{{displayLevel}}</span></span>
         </div>
-        <div>
+       <!-- <div>
             <input style="height: 30px!important;" id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query"
                    placeholder="Search any visible columns"/>
             <span class="pull-right">
@@ -123,6 +123,20 @@
 
 
         </div>
+-->
+        <div id="searchControl" class="row-fluid">
+            <div class="span5 search-in-category">
+                <div class="input-append input-prepend">
+
+                    <input style="height: 35px!important;" id='searchFacility' type="text" class="span5" ng-model="query" maxlength="50"
+                           ng-keydown="triggerSearch($event)" autocomplete="off" placeholder="Search"/>
+                    <button class="btn" ng-click="loadFacilities(1)">
+                        <i id='searchIcon' class="icon-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <div ng-show="inventoryList.length > 0" id="pod" class="rnr-table">
             <table ng-show="selectedEquipmentType.coldChain == true" class="table table-bordered">
                 <thead>
@@ -153,7 +167,7 @@
                     </td>
                 </tr>
 
-                <tr ng-repeat="item in items.inventory | filter : query" style=" border-bottom:2px solid #333">
+                <tr ng-repeat="item in items.inventory" style=" border-bottom:2px solid #333">
                     <td>{{item.facility.geographicZone.parent.name}}</td>
                     <td>{{item.facility.geographicZone.name}}</td>
                     <td>{{item.facility.name}}</td>

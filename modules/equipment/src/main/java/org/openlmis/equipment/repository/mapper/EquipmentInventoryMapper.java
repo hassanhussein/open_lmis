@@ -130,4 +130,40 @@ public interface EquipmentInventoryMapper {
 
     @Select("select * from equipment_inventories where serialNumber = #{serialNumber}")
     EquipmentInventory findInventoryBySerialNumber(@Param("serialNumber") String serialNumber);
+
+    @Select("SELECT COUNT(ei.id)" +
+          " FROM equipment_inventories ei" +
+          " JOIN equipments e ON ei.equipmentId = e.id" +
+          " JOIN equipment_types et ON e.equipmentTypeId = et.id " +
+          " JOIN facilities f ON ei.facilityId = f.id " +
+          " WHERE ei.programId = #{programId}" +
+          " AND et.id = #{equipmentTypeId}" +
+          " AND ei.facilityId = ANY (#{facilityIds}::INT[]) AND (LOWER(f.name) LIKE '%' || LOWER(#{searchParam}) || '%')  OR" +
+            " (LOWER(e.name) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(e.model) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(ei.serialNumber) LIKE '%' || LOWER(#{searchParam}) || '%') ")
+    Integer getInventoryCountBySearch(@Param("searchParam") String searchParam,@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds);
+
+  @Select("SELECT ei.*" +
+          " FROM equipment_inventories ei" +
+          " JOIN equipments e ON ei.equipmentId = e.id" +
+          " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
+          " JOIN facilities f ON ei.facilityId = f.id " +
+          " WHERE ei.programId = #{programId}" +
+          " AND et.id = #{equipmentTypeId} " +
+          " AND ei.facilityId = ANY (#{facilityIds}::INT[]) " +
+          " AND (LOWER(f.name) LIKE '%' || LOWER(#{searchParam}) || '%')  OR  " +
+          "(LOWER(e.name) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(e.model) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(ei.serialNumber) LIKE '%' || LOWER(#{searchParam}) || '%') ")
+  @Results({
+          @Result(property = "equipmentId", column = "equipmentId"),
+          @Result(
+                  property = "equipment", column = "equipmentId", javaType = Equipment.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+          @Result(property = "facilityId", column = "facilityId"),
+          @Result(
+                  property = "facility", column = "facilityId", javaType = Facility.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+          @Result(property = "coldChainLineItems", javaType = List.class, column = "equipmentInventoryId",
+                  many = @Many(select = "getLineItemsByEquipmentInventory"))
+
+  })
+  List<EquipmentInventory> searchInventory(@Param("searchParam") String searchParam, @Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds,RowBounds rowBounds);
 }

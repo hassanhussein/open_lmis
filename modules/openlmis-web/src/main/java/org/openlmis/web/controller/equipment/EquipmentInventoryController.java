@@ -40,6 +40,7 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @RequestMapping(value="/equipment/inventory/")
@@ -80,6 +81,29 @@ public class EquipmentInventoryController extends BaseController {
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(INVENTORY, inventory);
     response.getBody().addData(PAGINATION, pagination);
     return response;
+  }
+  @RequestMapping(value = "/search", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
+  public ResponseEntity<OpenLmisResponse> getFilteredFacilities(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                                                @RequestParam(value = "typeId", required = false) Long typeId,
+                                                                @RequestParam(value = "programId", required = false) Long programId,
+                                                                @RequestParam(value = "equipmentTypeId", required = false) Long equipmentTypeId,
+                                                                @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                @Value("${search.results.limit}") String facilitySearchLimit,HttpServletRequest request) {
+    Long userId = loggedInUserId(request);
+    Pagination pagination = new Pagination(page, parseInt(facilitySearchLimit));
+    Integer count = service.getInventoryCountBySearch(searchParam,userId, typeId, programId, equipmentTypeId);
+    pagination.setTotalRecords(count);
+    if (count <= Integer.parseInt(facilitySearchLimit)) {
+
+      List<EquipmentInventory> inventory = service.searchInventory(searchParam,userId, typeId, programId, equipmentTypeId,pagination);
+      ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("inventories", inventory);
+      response.getBody().addData(PAGINATION, pagination);
+
+      return response;
+    } else {
+      return OpenLmisResponse.response("message", "too.many.results.found");
+    }
   }
 
   @RequestMapping(value= PROGRAMS, method = RequestMethod.GET)

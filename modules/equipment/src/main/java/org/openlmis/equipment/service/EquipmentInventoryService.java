@@ -150,4 +150,20 @@ public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
   public EquipmentInventory getInventoryBySerialNumber(String serialNumber) {
     return repository.findBySerialNumber(serialNumber);
   }
+
+    public Integer getInventoryCountBySearch(String searchParam, Long userId, Long typeId, Long programId, Long equipmentTypeId) {
+
+      long[] facilityIds = getFacilityIds(userId, typeId, programId);
+      Integer count = repository.getInventoryCountBySearch(searchParam,programId, equipmentTypeId, facilityIds);
+      System.out.println(count);
+
+      logger.info(count);
+      return count;
+    }
+
+  public List<EquipmentInventory> searchInventory(String searchParam, Long userId, Long typeId, Long programId, Long equipmentTypeId,Pagination pagination) {
+    long[] facilityIds = getFacilityIds(userId, typeId, programId);
+
+    return repository.searchInventory(searchParam,programId, equipmentTypeId, facilityIds,pagination);
+  }
 }

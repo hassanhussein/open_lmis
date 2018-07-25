@@ -10,7 +10,45 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,breadcrumbs,NumberOfYears,DeleteEquipmentInventory, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory,localStorageService,$dialog) {
+function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBackService,GetByDistrict,GeoDistrictTree,breadcrumbs,NumberOfYears,DeleteEquipmentInventory, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory,localStorageService,$dialog) {
+
+    $scope.currentPage = 1;
+    $scope.selectedSearchOption = navigateBackService.selectedSearchOption;// || $scope.searchOptions[0];
+
+    $scope.triggerSearch = function (event) {
+        if (event.keyCode === 13) {
+            $scope.searchInventory(1);
+            //$scope.loadFacilities(1);
+        }
+    };
+
+    $scope.$watch('currentPage', function () {
+        if ($scope.currentPage !== 0)
+            $scope.loadFacilities($scope.currentPage, $scope.searchedQuery);
+    });
+
+    $scope.loadFacilities = function (page, lastQuery) {
+        if (!($scope.query || lastQuery)) return;
+        lastQuery ? getFacilities(page, lastQuery) : getFacilities(page, $scope.query);
+    };
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.query = navigateBackService.query;
+    });
+
+    function getFacilities(page, query) {
+        $scope.searchInventory();
+        query = query.trim();
+        $scope.searchedQuery = query;
+        Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+            $scope.facilityList = data.facilities;
+            $scope.pagination = data.pagination;
+            $scope.totalItems = $scope.pagination.totalRecords;
+            $scope.currentPage = $scope.pagination.page;
+            $scope.showResults = true;
+        }, {});
+    }
+
+
 
     $scope.breadcrumbs = breadcrumbs;
 
@@ -123,6 +161,34 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
     }, {});
   };
 
+  $scope.searchInventory = function(){
+      EquipmentInventorySearch.get({searchParam:$scope.query, typeId: $scope.selectedType,
+          programId: $scope.selectedProgram.id,
+          equipmentTypeId: $scope.selectedEquipmentType.id,
+          page: $scope.page}, function (data) {
+
+          $scope.inventory = data.inventories;
+          $scope.pagination = data.pagination;
+          $scope.totalItems = $scope.pagination.totalRecords;
+          $scope.currentPage = $scope.pagination.page;
+
+          console.log($scope.pagination);
+
+
+          var groupedInventoryData = _.groupBy($scope.inventory,function(item){
+              return (item.equipment.designation) ? item.equipment.designation.name: '-';
+          });
+
+          $scope.inventoryList = $.map(groupedInventoryData, function(value, index) {
+              return {"designation":index,"inventory":value};
+          });
+
+
+
+      });
+  };
+
+
   $scope.loadInventory = function () {
     if ($scope.selectedProgram && $scope.selectedEquipmentType) {
       EquipmentInventories.get({
@@ -132,7 +198,6 @@ function EquipmentInventoryController($scope,GetByDistrict,GeoDistrictTree,bread
         page: $scope.page
       }, function (data) {
         $scope.inventory = data.inventory;
-        console.log($scope.inventory);
 
         var groupedInventoryData = _.groupBy($scope.inventory,function(item){
               return (item.equipment.designation) ? item.equipment.designation.name: '-';

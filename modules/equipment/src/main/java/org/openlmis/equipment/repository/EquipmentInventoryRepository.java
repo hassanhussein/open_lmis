@@ -165,4 +165,20 @@ public class EquipmentInventoryRepository {
   public EquipmentInventory findBySerialNumber(String serialNumber) {
     return mapper.findInventoryBySerialNumber(serialNumber);
   }
+
+    public Integer getInventoryCountBySearch(String searchParam, Long programId, Long equipmentTypeId, long[] facilityIds) {
+      String strFacilityIds = getFacilityIdString(facilityIds);
+      return mapper.getInventoryCountBySearch(searchParam,programId, equipmentTypeId, strFacilityIds);
+    }
+
+  public List<EquipmentInventory> searchInventory(String searchParam, Long programId, Long equipmentTypeId, long[] facilityIds,Pagination pagination) {
+    String strFacilityIds = getFacilityIdString(facilityIds);
+    List<EquipmentInventory> inventories = mapper.searchInventory(searchParam,programId, equipmentTypeId, strFacilityIds,pagination);
+    for (EquipmentInventory inventory : inventories) {
+      setEquipmentToInventory(inventory);
+      setStatusToInventory(inventory);
+    }
+    return inventories;
+
+  }
 }

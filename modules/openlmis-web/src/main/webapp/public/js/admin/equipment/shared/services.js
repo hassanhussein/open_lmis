@@ -359,3 +359,7 @@ services.factory('GetDeleteLot', function ($resource) {
 services.factory("SaveLotByProduct", function($resource){
     return $resource('/lotByProduct/save.json',{},{});
 });
+
+services.factory('EquipmentInventorySearch', function ($resource) {
+    return $resource('/equipment/inventory/search.json', {}, {});
+});
