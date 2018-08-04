@@ -22,10 +22,10 @@ function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBa
         }
     };
 
-    $scope.$watch('currentPage', function () {
-        if ($scope.currentPage !== 0)
+  /*  $scope.$watch('currentPage', function () {
+         if ($scope.currentPage !== 0)
             $scope.loadFacilities($scope.currentPage, $scope.searchedQuery);
-    });
+    });*/
 
     $scope.loadFacilities = function (page, lastQuery) {
         if (!($scope.query || lastQuery)) return;
@@ -39,13 +39,13 @@ function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBa
         $scope.searchInventory();
         query = query.trim();
         $scope.searchedQuery = query;
-        Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+ /*       Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
             $scope.facilityList = data.facilities;
             $scope.pagination = data.pagination;
             $scope.totalItems = $scope.pagination.totalRecords;
             $scope.currentPage = $scope.pagination.page;
             $scope.showResults = true;
-        }, {});
+        }, {});*/
     }
 
 
@@ -65,7 +65,6 @@ function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBa
         GetByDistrict.get({districtId: parseInt(district, 10)}, function (data) {
             $scope.displayLevel = data.facility.name;
             $scope.showFacilityLevel = true;
-            console.log(data);
 
            // $state.go('toState', { 'facilityId':parseInt(data.facility.id, 10), 'facilityName':facilityName, 'etc':'bluebell' });
 
@@ -149,6 +148,7 @@ function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBa
   };
 
   $scope.loadEquipmentTypes = function (initialLoad) {
+      console.log($routeParams);
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
       if (initialLoad && $routeParams.equipmentType) {

@@ -9,16 +9,34 @@ function StockOnHandControllerFunc($scope,$state,$window, homeFacilityId,$locati
     $scope.stockRequirements = [];
 
 
+    $scope.sumQuantity = function (data) {
+        var sum = 0;
+        for (var i = 0; i < data.length; i++) {
+
+            sum += data[i].quantityOnHand;
+        }
+        return sum;
+
+    };
+$scope.getTotalValues = function(data){
+    return data.quantityOnHand;
+};
     $scope.$watch('facilityType', function(value) {
         if(parseInt(value,10)===1){
             $state.go('supervisedFacility', { 'etc':'My Supervised Facilities' });
 
         }
     });
+$scope.sumStockOnHand = function(c){
+    var numbers = [];
 
+    var sum = 0;
+    for (var i = 0; i < numbers.length; i++) {
+        sum += numbers[i];
+    }
+};
 
     $scope.print = function(param){
-        console.log(param);
         var url = '/vaccine/inventory/distribution/stock-on-hand/print/'+param;
         $window.open(url, "_BLANK");
     };

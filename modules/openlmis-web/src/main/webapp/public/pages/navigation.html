@@ -98,6 +98,7 @@
 
                     </li>
 
+
                     <li ng-show="hasPermission('VIEW_VIMS_MAIN_DASHBOARD')">
                         <a href="/public/pages/vaccine/dash/index3.html#/myApp"
                         >Dash Board</a>
@@ -262,13 +263,14 @@
             <div class="submenu">
                 <ul>
                     <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
-                        <a id='log-tag-menu' href="/public/pages/admin/upload-log-tag/index.html"
-                        >Upload Log Tag</a>
-                    </li>
-                    <li ng-show="hasPermission('MANAGE_EQUIPMENT_INVENTORY')">
                         <a id="equipment-inventory"
                            href="/public/pages/admin/equipment/inventory/index.html"
-                           openlmis-message="link.equipment.inventory"></a>
+                           openlmis-message="link.manage.equipment.inventory"></a>
+                    </li>
+                    <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
+                        <a href="/public/pages/reports/main/index.html#/cold-chain-equipment-inventory"
+                           openlmis-message="link.manage.equipment.inventory.summary"></a>
+
                     </li>
                     <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
                         <a href="/public/pages/admin/equipment/my-requests/index.html"

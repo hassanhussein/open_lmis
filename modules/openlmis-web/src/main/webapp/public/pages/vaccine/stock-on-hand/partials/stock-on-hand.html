@@ -111,7 +111,7 @@
                             </td>
 
                             <td class="cell-input padding2px ">
-                                <span ng-bind="k.quantityOnHand | number" class="cell-text"></span>
+                                <span ng-bind="getTotalValues(k) | number" class="cell-text"></span>
                             </td>
 
                             <td class="col-lot cell-input  disabled"
@@ -130,7 +130,7 @@
 
                             <td ng-if="$index == 0" class="cell-input padding2px" rowspan="{{c.lotsOnHand.length * 2}}">
                   <span class="col-product cell-text">
-                    <span ng-bind="c.totalQuantityOnHand | number" class="padding2px"></span>
+                    <span ng-bind="sumQuantity(c.lotsOnHand) " class="padding2px"></span>
                   </span>
                             </td>
                             <td ng-if="$index == 0" class="cell-input padding2px" rowspan="{{c.lotsOnHand.length * 2}}">

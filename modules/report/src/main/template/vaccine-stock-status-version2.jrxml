@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vaccine stock status soh" language="groovy" printOrder="Horizontal" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1170" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="BandStyle"/>
-	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center"/>
 	<subDataset name="dataset1" uuid="091a1376-c476-4867-9ced-423695e8c98e"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -145,7 +147,7 @@ $F{total}.doubleValue()).multiply(100)).setScale(0,BigDecimal.ROUND_HALF_UP) +"%
 								<textElement textAlignment="Right" verticalAlignment="Bottom">
 									<font size="8" isBold="true"/>
 								</textElement>
-								<text><![CDATA[Buffer Stock]]></text>
+								<text><![CDATA[MOS]]></text>
 							</staticText>
 							<staticText>
 								<reportElement style="Crosstab Data Text" x="0" y="20" width="53" height="22" uuid="5067def5-8f8c-43ee-81af-8925024e7b9c"/>
@@ -164,7 +166,7 @@ $F{total}.doubleValue()).multiply(100)).setScale(0,BigDecimal.ROUND_HALF_UP) +"%
 					<measureExpression><![CDATA[$F{soh}]]></measureExpression>
 				</measure>
 				<measure name="mosMeasure" class="java.lang.Integer">
-					<measureExpression><![CDATA[$F{bufferStock}]]></measureExpression>
+					<measureExpression><![CDATA[$F{mos}]]></measureExpression>
 				</measure>
 				<measure name="lastUpdateMeasure" class="java.lang.String">
 					<measureExpression><![CDATA[$F{lastUpdate}]]></measureExpression>
@@ -180,7 +182,7 @@ $F{total}.doubleValue()).multiply(100)).setScale(0,BigDecimal.ROUND_HALF_UP) +"%
 							<textFieldExpression><![CDATA[$V{sohMeasure}]]></textFieldExpression>
 						</textField>
 						<textField>
-							<reportElement style="Crosstab Data Text" x="53" y="0" width="53" height="28" uuid="17393b35-ad46-4597-a9d8-6c9c9642335f"/>
+							<reportElement style="Crosstab Data Text" stretchType="ContainerBottom" x="53" y="0" width="53" height="28" uuid="17393b35-ad46-4597-a9d8-6c9c9642335f"/>
 							<textElement textAlignment="Right" verticalAlignment="Bottom"/>
 							<textFieldExpression><![CDATA[$V{mosMeasure}]]></textFieldExpression>
 						</textField>
