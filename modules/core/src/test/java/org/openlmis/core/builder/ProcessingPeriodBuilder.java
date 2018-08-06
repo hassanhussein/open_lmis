@@ -64,6 +64,7 @@ public class ProcessingPeriodBuilder {
       period.setModifiedBy(lookup.valueOf(modifiedBy, MODIFIED_BY));
       period.setScheduleId(lookup.valueOf(scheduleId, SCHEDULE_ID));
       period.setEnableOrder(true);
+      period.setReportingPeriod(false);
       period.setId(lookup.valueOf(id, nullLong));
       return period;
     }

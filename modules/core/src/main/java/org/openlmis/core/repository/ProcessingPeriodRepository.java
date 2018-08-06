@@ -45,6 +45,7 @@ public class ProcessingPeriodRepository {
     processingPeriod.validate();
     processingPeriod.includeEntireDuration();
     try {
+      if(!processingPeriod.getReportingPeriod())
       validateStartDateGreaterThanLastPeriodEndDate(processingPeriod);
       mapper.insert(processingPeriod);
     } catch (DuplicateKeyException e) {
