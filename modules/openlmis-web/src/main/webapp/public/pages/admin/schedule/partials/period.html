@@ -54,7 +54,7 @@
                 </div>
                 <div class="form-row clearfix">
 
-                    <div class="form-cell" ng-show="newPeriod.reportingPeriod">
+                    <div class="form-cell" ng-show="newPeriod.isReporting">
                         <label>
 
                             <span openlmis-message="period.start.date"></span>
@@ -75,7 +75,7 @@
                         </div>
                     </div>
 
-                    <div class="form-cell" ng-show="!newPeriod.reportingPeriod">
+                    <div class="form-cell" ng-show="!newPeriod.isReporting">
                         <label>
 
                             <span openlmis-message="period.start.date"></span>

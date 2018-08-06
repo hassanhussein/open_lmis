@@ -52,7 +52,7 @@ public class ProcessingPeriod extends BaseModel {
 
   private Boolean enableOrder;
 
-  private Boolean reportingPeriod;
+  private Boolean isReporting;
 
   public ProcessingPeriod(Long id) {
     this.id = id;

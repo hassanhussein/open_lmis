@@ -125,14 +125,13 @@ public class ProcessingPeriodRepositoryTest {
   @Test
   public void shouldNotInsertAPeriodIfItsStartDateIsSmallerThanEndDateOfPreviousPeriod() throws Exception {
     final ProcessingPeriod processingPeriod = make(a(defaultProcessingPeriod));
-   // if(!processingPeriod.getReportingPeriod()) {
+
 
       ProcessingPeriod lastAddedPeriod = make(a(defaultProcessingPeriod, with(ProcessingPeriodBuilder.endDate, processingPeriod.getStartDate())));
       when(mapper.getLastAddedProcessingPeriod(processingPeriod.getScheduleId())).thenReturn(lastAddedPeriod);
       doThrow(DataException.class).when(mapper).insert(processingPeriod);
 
       exException.expect(dataExceptionMatcher("error.period.start.date.less.than.last.period.end.date"));
-    //}
     repository.insert(processingPeriod);
   }
 
