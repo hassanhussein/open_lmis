@@ -748,7 +748,7 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
 
         });
 
-    StockStatusAvailaiblity.get({
+ /*   StockStatusAvailaiblity.get({
             zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
@@ -758,7 +758,7 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
             console.log(JSON.stringify($scope.stockAvailability));
             $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
             $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
-        });
+        });*/
 
     function borderColor(data) {
         return (data >= 80) ? 'green' : (data < 80 && data > 70) ? 'orange' : 'red';
@@ -937,7 +937,7 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
         period: parseInt(115, 10),
         program: parseInt(3, 10)
     };
-    $scope.loadStockStatusByLocation(defaultParam);
+   // $scope.loadStockStatusByLocation(defaultParam);
     $scope.rnrStatusPieChartOptionFunction = function () {
 
         $scope.rnRStatusPieChartOption = {
