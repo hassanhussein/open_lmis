@@ -11,6 +11,7 @@ import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
 import org.openlmis.vaccine.domain.inventory.VoucherNumberCode;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
+import org.openlmis.vaccine.dto.VaccineDistributionNotification;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -387,4 +388,17 @@ public interface VaccineInventoryDistributionMapper {
             "SELECT * FROM VACCINE_DISTRIBUTIONS WHERE STATUS= #{status} AND DISTRIBUTIONDATE=#{distributionDate}::DATE\n" +
             " AND TOFACILITYID=#{toFacilityId} AND distributionType=#{distributionType} ORDER BY CREATEDDATE DESC LIMIT 1")
     List<HashMap<String,Object>> getLastDistributionForFacility(@Param("toFacilityId") Long toFacilityId,@Param("distributionType")String distributionType,@Param("distributionDate") String distributionDate,@Param("status") String status);
+
+    @Insert(" INSERT INTO public.distribution_notifications(\n" +
+            "             distributionId, fromFacility, toFacility, geographicZoneId, \n" +
+            "            facilityId, allowedToSend, sent, createdDate, createdBy)\n" +
+            "    VALUES (#{distributionId}, #{fromFacility}, #{toFacility}, #{geographicZoneId}, \n" +
+            "            #{facilityId}, #{allowedToSend}, #{sent}, NOW(), #{createdBy});")
+    @Options(useGeneratedKeys = true)
+    Integer saveDistributionNotification(VaccineDistributionNotification notification);
+
+    @Select("select d.*, vd.*,u.firstName ||' '||  u.lastName as name from distribution_notifications d\n" +
+            "JOIN vw_districts vd ON d.geographiczoneid = vd.district_id" +
+            " JOIN users u on u.id = d.createdby")
+    List<HashMap<String,Object>>getDistributionNotificationList();
 }

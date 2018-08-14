@@ -25,6 +25,7 @@ import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
+import org.openlmis.vaccine.dto.VaccineDistributionNotification;
 import org.openlmis.vaccine.repository.inventory.VaccineDistributionStatusChangeRepository;
 import org.openlmis.vaccine.repository.inventory.VaccineInventoryDistributionRepository;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
@@ -356,5 +357,25 @@ public class VaccineInventoryDistributionService {
 
     public List<HashMap<String,Object>> getLastDistributionForFacility(Long toFacilityId, String distributionType, String distributionDate, String status) {
         return repository.getLastDistributionForFacility(toFacilityId,distributionType,distributionDate,status);
+    }
+
+    public void saveDistributionNotification(VaccineDistribution distribution,Long userId) {
+        VaccineDistributionNotification notification = new VaccineDistributionNotification();
+        Facility facility = facilityService.getById(distribution.getFromFacilityId());
+        Facility toFacility = facilityService.getById(distribution.getToFacilityId());
+
+        notification.setDistributionId(distribution.getId());
+        notification.setFacilityId(distribution.getFromFacilityId());
+        notification.setGeographicZoneId(facility.getGeographicZone().getId());
+        notification.setAllowedToSend(facility.getAllowedToSend());
+        notification.setCreatedBy(userId);
+        notification.setSent(false);
+        notification.setFromFacility(facility.getName());
+        notification.setToFacility(toFacility.getName());
+        repository.saveDistributionNotification(notification);
+    }
+
+    public List<HashMap<String, Object>>getNotificationDistributionList(){
+        return repository.getNotificationDistributionList();
     }
 }

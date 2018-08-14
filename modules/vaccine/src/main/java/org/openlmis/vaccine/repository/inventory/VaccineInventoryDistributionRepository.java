@@ -10,6 +10,7 @@ import org.openlmis.vaccine.domain.inventory.VaccineDistributionLineItemLot;
 import org.openlmis.vaccine.domain.inventory.VoucherNumberCode;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
+import org.openlmis.vaccine.dto.VaccineDistributionNotification;
 import org.openlmis.vaccine.repository.mapper.inventory.VaccineInventoryDistributionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -166,5 +167,13 @@ public class VaccineInventoryDistributionRepository {
 
     public List<HashMap<String,Object>> getLastDistributionForFacility(Long toFacilityId, String distributionType, String distributionDate, String status) {
         return mapper.getLastDistributionForFacility(toFacilityId,distributionType,distributionDate,status);
+    }
+
+    public void saveDistributionNotification(VaccineDistributionNotification notification) {
+        mapper.saveDistributionNotification(notification);
+    }
+
+    public List<HashMap<String, Object>>getNotificationDistributionList(){
+        return  mapper.getDistributionNotificationList();
     }
 }

@@ -149,6 +149,21 @@
         </span>
                         </div>
                     </div>
+
+
+                    <div class="form-cell">
+                        <label>
+                            <span>is Sending Distribution ?</span>
+                        </label>
+
+                        <div class="form-field radio-group">
+                            <input id="allowedToSendTrue" ng-model="facility.allowedToSend" type="radio" name="allowedToSend" ng-value="true" />
+                            <strong openlmis-message="button.yes"></strong> &nbsp; &nbsp; &nbsp;
+                            <input id="allowedToSendFalse" ng-model="facility.allowedToSend" type="radio" name="allowedToSend"  ng-value="false"/>
+                            <strong openlmis-message="button.no"></strong>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="form-row clearfix">

@@ -137,6 +137,7 @@ public class Facility extends BaseModel implements Importable {
   private Boolean enabled;
 
   private Boolean virtualFacility = false;
+  private Boolean allowedToSend = false;
 
   @ImportField(name = "Price Schedule", nested = "code")
   private PriceSchedule priceSchedule;

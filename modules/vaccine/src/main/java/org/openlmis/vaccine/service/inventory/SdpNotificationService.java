@@ -58,19 +58,20 @@ public class SdpNotificationService {
     VaccineInventoryDistributionService service;
 
 
-    @Async("myExecutor")
+  //  @Async("myExecutor")
     public void updateNotification(VaccineDistribution distribution, Long userId) {
         System.out.println("savae  dsierr");
         service.save(distribution, userId);
         if (distribution.getId() != null) {
-            VaccineDistribution d = service.getDistributionById(distribution.getId());
+            service.saveDistributionNotification(distribution,userId);
+     /*       VaccineDistribution d = service.getDistributionById(distribution.getId());
             String url = configurationSettingService.getByKey(TIIS_URL).getValue();
             String username = configurationSettingService.getByKey(TIIS_USERNAME).getValue();
             String password = configurationSettingService.getByKey(TIIS_PASSWORD).getValue();
             if (url != null && username != null && password != null) {
                 sendHttps(d, url, username, password);
 
-            }
+            }*/
         }
     }
 

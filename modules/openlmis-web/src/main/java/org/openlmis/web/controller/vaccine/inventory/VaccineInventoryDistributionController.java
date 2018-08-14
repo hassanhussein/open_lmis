@@ -419,4 +419,14 @@ public class VaccineInventoryDistributionController extends BaseController {
         return OpenLmisResponse.response("distribution",sdpNotificationService.getLastDistributionForFacility(toFacilityId,distributionType,distributionDate,status));
     }
 
+
+
+    @RequestMapping(value = "distribution", method = GET)
+    public ResponseEntity<OpenLmisResponse> getDistributionById(@RequestParam Long distributionId,
+                                                                            HttpServletRequest request) {
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getDistributionById(distributionId));
+            // response.getBody().addData(SUPERVISOR_ID, service.getSupervisorFacilityId(distributionId));
+            return response;
+    }
+
 }

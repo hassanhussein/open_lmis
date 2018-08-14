@@ -1634,6 +1634,31 @@ services.factory('GetClassificationByDistrictDrillDownData', function ($q, $time
 
 });
 
+services.factory('GetDistributionByIdData', function ($q, $timeout, $resource, GetDistributionById) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetDistributionById.get(params, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.distribution;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+
 services.factory('FullStockAvailableForDashboard', function ($resource) {
     return $resource('/vaccine/dashboard/fullStockAvailability.json', {}, {});
 });
@@ -1760,4 +1785,11 @@ services.factory('GetClassificationByDistrictDrillDownSummary', function ($resou
 });
 services.factory('GetFacilityClassificationDrillDownSummary', function ($resource) {
     return $resource('/vaccine/dashboard/GetFacilityClassificationDrillDown.json', {}, {});
+});
+services.factory('GetFacilityDistributionNotifications', function ($resource) {
+    return $resource('/vaccine/orderRequisition/getDistributionNotifications.json',{},{});
+});
+
+services.factory('GetDistributionById', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/distribution.json', {}, {});
 });

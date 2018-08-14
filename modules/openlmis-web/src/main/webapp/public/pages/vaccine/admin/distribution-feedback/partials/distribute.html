@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <h2><span> Distribution Summary</span></h2>
+
+</div>
+
+<div class="info-box padding2px">
+    <div class="requisition-head-block">
+        <div class="row-fluid">
+            <div class="span12" style="padding: 10px;">
+                <div class="row-fluid">
+
+                    <div class="span4">
+                        <strong for='facilityLabel' openlmis-message="label.vaccine.stock.distributed.to"> </strong>
+                        &nbsp;<span
+                            id='facilityLabel' ng-model="toFacilityName" ng-bind="distributions.toFacility.name"></span>
+                    </div>
+
+
+                    <div class="span4">
+                        <span id="visitDateContainer">
+                            <strong for="issueDate2" openlmis-message="label.vaccine.issue.date"></strong>:
+                             &nbsp;<span
+                                id='issueDate2'  ng-bind="distributions.distributionDate"></span>
+                            </span>
+
+
+                    </div>
+
+
+                    <div class="span4">
+                        <span id="visitDateContainer">
+                            <strong for="issueDate2">POD Status :</strong>
+                             &nbsp;<span
+                                id='issueDate2'  ng-bind="distributions.status"></span>
+                            </span>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="rnr-table">
+    <table id="podTable3" class="table table-bordered">
+        <thead>
+        <tr>
+            <th style="max-width:150px !important; width:150px !important" class="col-product"><span
+                    openlmis-message="label.product"></span></th>
+            <th class="col-quantity " style="max-width:70px !important; width:70px !important"><span
+                    openlmis-message="label.unit.of.measure"></span></th>
+            <th style="max-width:80px !important; width:80px !important" class="col-lot "><span
+                    openlmis-message="label.stock.batch"></span></th>
+            <th style="max-width:60px !important; width:60px !important" class="col-lot "><span
+                    openlmis-message="header.vvm.status"></span></th>
+            <th style="max-width:90px !important; width:90px !important" class="col-lot "><span
+                    openlmis-message="header.stock.in.Hand"></span></th>
+            <th style="max-width:120px !important; width:120px !important" class="col-quantity "><span
+                    openlmis-message="header.stock.quantity.issued"></span></th>
+            <th class="col-quantity "></th>
+        </tr>
+        </thead>
+        <tbody ng-repeat="category in distributions">
+        <tr ng-show="category.productsToIssue !== undefined">
+            <td class="productCategory" id="category" colspan="10">
+                {{category.productCategory}}
+            </td>
+        </tr>
+        <tr ng-class-odd="'odd'" ng-class-even="'even'" ng-init="$index%2==0?(color='odd'): (color='even')"
+            ng-repeat-start="product in category.productsToIssue" ng-if="product.isPOD">
+            <td class="cell-input disabled" rowspan="{{product.podLots.length}}">
+                <span class="cell-text" ng-bind="product.name"></span>
+            </td>
+            <td class="cell-input disabled last-row" rowspan="{{product.podLots.length}}">
+                <span class="cell-text" ng-bind="product.dosageUnit"></span>
+            </td>
+            <td class="cell-input disabled"  ng-class="{'skip':product.lots === undefined}">
+                <span class="cell-text" ng-bind="product.podLots[0].lotCode"></span>
+            </td>
+            <td class="cell-input disabled"
+                ng-class="{'skip':product.podLots[0].vvmStatus === null || (product.podLots===undefined && product.vvmStatus === undefined)}">
+                <span class="cell-text" ng-bind="product.podLots[0].vvmStatus"></span>
+            </td>
+            <td class="cell-input disabled">
+                        <span ng-if="product.podLots.length >0" class="cell-text"
+                              ng-bind="product.podLots[0].quantityOnHand"></span>
+                <span ng-if="product.podLots === undefined" class="cell-text"
+                      ng-bind="product.totalQuantityOnHand"></span>
+            </td>
+            <td class="col-general cell-input">
+                <input
+                        ng-show="product.podLots.length > 0"
+                        type="text"
+                        ng-model="product.podLots[0].quantity"
+                        divisible-by-presentation="{{product.presentation}}"
+                        numeric-validator="positiveInteger"
+                        maximum="{{product.podLots[0].maximum}}"
+                        ng-change="updateCurrentPOD(product)"
+                >
+                <input ng-show="product.podLots === undefined"
+                       type="text"
+                       ng-model="product.quantity"
+                       divisible-by-presentation="{{product.presentation}}"
+                       numeric-validator="positiveInteger"
+                       maximum="{{product.maximum}} "
+
+                />
+            </td>
+            <td rowspan="{{product.podLots.length}}"></td>
+        </tr>
+        <tr ng-repeat-end ng-repeat="lot in product.podLots" ng-show="!$first" ng-class="color">
+            <td class="col-general cell-input disabled">
+                <span class="cell-text" ng-bind="lot.lotCode"></span>
+            </td>
+            <td class="col-general cell-input disabled">
+                <span class="cell-text" ng-bind="lot.vvmStatus"></span>
+            </td>
+            <td class="cell-input disabled">
+                <span ng-if="product.podLots.length >1" class="cell-text" ng-bind="lot.quantityOnHand"></span>
+            </td>
+            <td class="col-general cell-input">
+                <input
+                        type="text"
+                        ng-model="lot.quantity"
+                        divisible-by-presentation="{{product.presentation}}"
+                        numeric-validator="positiveInteger"
+                        maximum="{{lot.maximum}}"
+                        ng-change="updateCurrentPOD(product)"
+                />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
