@@ -20,10 +20,12 @@ services.factory('StockCardsByCategory', function($resource,StockCards,$q, $time
                         VaccineProgramProducts.get({programId:pId},function(data){
                                  programProducts=data.programProductList;
                                  StockCards.get({facilityId:fId},function(data){
-                                        var stockCards=data.stockCards;
+                                     console.log(data);
+
+                                     var stockCards=data.stockCards;
                                         stockCards.forEach(function(s){
                                               var product= _.filter(programProducts, function(obj) {
-                                                  return obj.product.primaryName === s.product.primaryName;
+                                                  return (obj.product.primaryName === s.product.primaryName);
                                               });
                                                 s.displayOrder=product[0].id;
                                                 s.productCategory=product[0].productCategory;

@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('distribution_feedback', ['openlmis','ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+angular.module('distribution_feedback', ['openlmis','ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dialog', 'tree.dropdown']).
 config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.

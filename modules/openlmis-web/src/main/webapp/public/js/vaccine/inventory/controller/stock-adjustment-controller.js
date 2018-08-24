@@ -20,6 +20,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
 
     var loadStockCards=function(programId, facilityId){
             StockCardsByCategory.get(programId,facilityId).then(function(data){
+                console.log(data);
                 $scope.stockCardsToDisplay=data;
                 VaccineAdjustmentReasons.get({programId:programId},function(data){
                        $scope.adjustmentTypes=data.adjustmentReasons;
@@ -156,7 +157,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
                    {
                          $scope.message=data.success;
                          $timeout(function(){
-                           $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+                           $window.location='/public/pages/vaccine/dashboard/index3.html#/dashboard';
                          },900);
                    }
                 });
@@ -171,7 +172,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
           OpenLmisDialog.newDialog(options, callBack, $dialog);
      };
      $scope.cancel=function(){
-        $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+        $window.location='/public/pages/vaccine/dashboard/index3.html#/dashboard';
      };
 
      $scope.reasonChange=function(){

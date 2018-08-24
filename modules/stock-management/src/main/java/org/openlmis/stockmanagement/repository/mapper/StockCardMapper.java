@@ -52,7 +52,7 @@ public interface StockCardMapper {
 
   @Select("SELECT *" +
       " FROM stock_cards" +
-          " WHERE facilityid = #{facilityId} order by productId")
+          " WHERE facilityid = #{facilityId} and totalQuantityOnHand > 0 order by productId")
   @Results({
       @Result(property = "id", column = "id"),
       @Result(property = "product", column = "productId", javaType = Product.class,

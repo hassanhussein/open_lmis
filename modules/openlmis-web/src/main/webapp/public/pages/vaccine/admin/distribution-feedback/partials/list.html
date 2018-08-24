@@ -1,59 +1,100 @@
+<style>
 
+    .tree {
+        height: 200px !important;
+        overflow-y: scroll;
+    }
+
+</style>
 <div xmlns="http://www.w3.org/1999/html">
     <h2><span>VIMS - TIMR Distribution Summary</span>
     </h2>
+<div class="row-fluid">
+    <div class="span4">
+        <div class="tree">
+            <div id="tree"></div>
+        </div>
+    </div>
+    <div class="span2">
+        <div class="horizontalFilters form-cell">
+            <div>
 
-    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="id">
-        <span ng-bind="message"></span>
+
+                <div class="horizontalFilters form-cell">
+                    <label for="txtPeriodStartDate" class="labels" ><span openlmis-message="label.start.date"></span></label>
+                    <div>
+                        <input id="txtPeriodStartDate" ng-model="periodStartDate" ng-change="changeDates()" ui-date-format="yy-mm-dd" ui-date/>
+                    </div>
+                </div>
+
+                <div class="horizontalFilters form-cell">
+                    <label for="txtPeriodEnddate" class="labels" ><span openlmis-message="label.end.date"></span></label>
+                    <div>
+                        <input id="txtPeriodEnddate" ng-model="periodEndDate" ng-change="changeDates()" ui-date-format="yy-mm-dd" ui-date/>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="alert alert-error" id="equipmentSaveFailMessage" openlmis-message="equipmentErrorMessage"
-         ng-show="equipmentError">
+    <div class="span6">
 
     </div>
-    <input id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query"
-           placeholder="Enter district/Region"/>
 
-    <div class="clearfix"></div>
-    <br>
 
-    <div>
-        <h3 ng-show="query.length>0">
-            <ng-pluralize count="resultCount"
-                          when="{ 0: 'No matches found for \'{{query}}\'',
-                        1: '1 match found for \'{{query}}\'',
-                        other: '{} matches found for \'{{query}}\''}">
-            </ng-pluralize>
-        </h3>
+</div>
 
-        <table class="table table-striped table-bordered">
-            <thead>
-            <tr class="gradient-header">
-                <th class="col-row-number">#</th>
-                <th><span>Region Name</span></th>
-                <th><span>From Facility</span></th>
-                <th><span>To Facility</span></th>
-                <th><span>Is sent from VIMS</span></th>
-                <th><span>Distributed Date</span></th>
-                <th><span>Distributed By</span></th>
-                <th><span> </span></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat="distribute in distributions | filter : query">
-                <td>{{$index + 1}}</td>
-                <td>{{distribute.region_name}}</td>
-                <td>{{distribute.fromfacility}}</td>
-                <td>{{distribute.tofacility}}</td>
-                <td>{{distribute.sent}}</td>
-                <td>{{distribute.createddate | date:format('dd-mm-yyyy')}}</td>
-                <td>{{distribute.name}}</td>
-                <td><a href="" ng-click="openDistribution(distribute.distributionid,distribute.facilityid)">View Distribution</a></td>
 
-            </tr>
-            </tbody>
-        </table>
 
-    </div>
+
+
+    <!--<input id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query"
+       placeholder="Enter district/Region"/>-->
+
+<div class="clearfix"></div>
+<br>
+    <br/>
+
+<div>
+<h3 ng-show="query.length>0">
+    <ng-pluralize count="resultCount"
+                  when="{ 0: 'No matches found for \'{{query}}\'',
+                1: '1 match found for \'{{query}}\'',
+                other: '{} matches found for \'{{query}}\''}">
+    </ng-pluralize>
+</h3>
+
+<table class="table table-striped table-bordered">
+    <thead>
+    <tr class="gradient-header">
+        <th class="col-row-number">#</th>
+        <th><span>Region Name</span></th>
+        <th><span>From Facility</span></th>
+        <th><span>To Facility</span></th>
+        <th><span>Is Is Sent to TIMR</span></th>
+        <th><span>Distributed Date</span></th>
+        <th><span>Distributed By</span></th>
+        <th><span> </span></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="distribute in distributions | filter : query">
+        <td>{{$index + 1}}</td>
+        <td>{{distribute.region_name}}</td>
+        <td>{{distribute.fromfacility}}</td>
+        <td>{{distribute.tofacility}}</td>
+        <td>
+        <span ng-if="distribute.sent===false">No</span>
+        <span ng-if="distribute.sent===true">Yes</span>
+        </td>
+        <td>{{distribute.createddate | date:format('dd-mm-yyyy')}}</td>
+        <td>{{distribute.name}}</td>
+        <td><a href="" ng-click="openDistribution(distribute.distributionid,distribute.facilityid)">View Distribution</a></td>
+
+    </tr>
+    </tbody>
+</table>
+
+</div>
 
 </div>
