@@ -23,6 +23,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: FacilityConsumptionReportController,
             templateUrl: 'partials/facility-consumption.html',
             reloadOnSearch: false
+        }).when('/facility_adje_consumption', {
+            controller: FacilityConsumptionByAdjustedQuantReportController,
+            templateUrl: 'partials/facility-adje-consumption.html',
+            reloadOnSearch: false
         }).when('/daily-consumption', {
             controller: DailyConsumptionReportController,
             templateUrl: 'partials/daily-consumption.html',
