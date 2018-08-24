@@ -1,4 +1,4 @@
-function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
+function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ) {
 
@@ -73,12 +73,12 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
         loadPieChart(chartId, dataValues, total);
     });
 
-    RejectionCount.get({}, function (data) {
+ /*   RejectionCount.get({}, function (data) {
         var reject = _.pluck(data.rejections, 'Month');
         var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
         loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', 'RnR Rejection Trends', 'Rejection Count');
 
-    });
+    });*/
 
     GetPercentageOfEmergencyOrderByProgramData.get(null).then(function (data) {
 
@@ -659,12 +659,14 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
 
 // Prepare random data
 
+/*
 
     $.getJSON('https://cdn.rawgit.com/highcharts/highcharts/057b672172ccc6c08fe7dbb27fc17ebca3f5b770/samples/data/germany.geo.json', function (geojson) {
 
         // Initiate the chart
 
     });
+*/
 
 //rnr status
 
@@ -680,7 +682,23 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
     $scope.orderFillRateByZone = {
 
     };
-    ItemFillRate.get({
+
+
+    //dummy data
+     function loadChart() {
+         var dammyData= {"itemFillRate":[{"name":"Central","prev":0.0,"current":0.0,"status":"bad"},{"name":"Copperbelt","prev":0.0,"current":0.0,"status":"bad"},{"name":"Eastern","prev":0.0,"current":1.19,"status":"bad"},{"name":"Luapula","prev":0.0,"current":0.0,"status":"bad"},{"name":"Lusaka Province","prev":0.0,"current":0.0,"status":"bad"},{"name":"Muchinga","prev":0.0,"current":0.0,"status":"bad"},{"name":"Northen","prev":0.0,"current":0.0,"status":"bad"},{"name":"North Western","prev":0.0,"current":0.0,"status":"bad"},{"name":"Southern","prev":0.0,"current":0.0,"status":"bad"},{"name":"Western","prev":0.0,"current":0.0,"status":"bad"}]};
+         $scope.orderFillRateByZone = {"zones": dammyData.itemFillRate};
+         console.log(JSON.stringify(dammyData.itemFillRate));
+         $timeout( function(){
+             $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
+             }, 5000 );
+
+     }
+
+    loadChart();
+
+
+   /* ItemFillRate.get({
             zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
@@ -690,7 +708,7 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
             console.log(JSON.stringify(data.itemFillRate));
             $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
 
-        });
+        });*/
 
     ReportingRate.get({
             zoneId: $scope.filter.zoneId,
