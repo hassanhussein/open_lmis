@@ -1,5 +1,5 @@
 ALTER TABLE vaccine_product_doses
-  ADD useForWastageCalculations BOOLEAN NOT NULL DEFAULT TRUE;
+  ADD IF NOT EXISTS useForWastageCalculations BOOLEAN NOT NULL DEFAULT TRUE;
 
 ----------------   End  --------------------
 DROP TABLE IF EXISTS vaccine_product_targets;
