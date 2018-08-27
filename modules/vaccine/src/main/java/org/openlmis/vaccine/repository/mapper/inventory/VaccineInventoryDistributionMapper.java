@@ -12,6 +12,7 @@ import org.openlmis.vaccine.domain.inventory.VoucherNumberCode;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionNotification;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -399,6 +400,7 @@ public interface VaccineInventoryDistributionMapper {
 
     @Select("select d.*, vd.*,u.firstName ||' '||  u.lastName as name from distribution_notifications d\n" +
             "JOIN vw_districts vd ON d.geographiczoneid = vd.district_id" +
-            " JOIN users u on u.id = d.createdby")
-    List<HashMap<String,Object>>getDistributionNotificationList();
+            " JOIN users u on u.id = d.createdby " +
+            " where vd.district_id=#{districtId} and d.createdDate::date > #{startDate}::date and d.createdDate::date <=#{endDate}::date")
+    List<HashMap<String,Object>>getDistributionNotificationList(@Param("districtId") Long districtId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

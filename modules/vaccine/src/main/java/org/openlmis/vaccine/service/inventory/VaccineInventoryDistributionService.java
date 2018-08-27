@@ -375,7 +375,7 @@ public class VaccineInventoryDistributionService {
         repository.saveDistributionNotification(notification);
     }
 
-    public List<HashMap<String, Object>>getNotificationDistributionList(){
-        return repository.getNotificationDistributionList();
+    public List<HashMap<String, Object>>getNotificationDistributionList(Long districtId,String startDate, String endDate){
+        return repository.getNotificationDistributionList(districtId,startDate,endDate);
     }
 }

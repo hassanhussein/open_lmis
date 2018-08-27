@@ -33,11 +33,17 @@
                         <input id="txtPeriodEnddate" ng-model="periodEndDate" ng-change="changeDates()" ui-date-format="yy-mm-dd" ui-date/>
                     </div>
                 </div>
+                <div class="clearfix"></div>
+                <br/>
+                <div class="pull-right">
+                    <span ><input type="button" style="color:cadetblue" value="Search" class="btn-small" ng-click="searchData()"></span>
+                </div>
             </div>
         </div>
     </div>
 
     <div class="span6">
+        <span><i><p style="color: #abd4e8; ">Please select the district/periods then click search button to get distributions !</p></i></span>
 
     </div>
 
@@ -54,15 +60,10 @@
 <div class="clearfix"></div>
 <br>
     <br/>
+    <div ng-show="showMessage"><span><p style="color: red"><i>{{message}} !!!</i></p></span></div>
+<div ng-show="distributions.length == 0 && showMessage ==false">No data to show</div>
+<div ng-show="showMessage ==false && distributions.length >0">
 
-<div>
-<h3 ng-show="query.length>0">
-    <ng-pluralize count="resultCount"
-                  when="{ 0: 'No matches found for \'{{query}}\'',
-                1: '1 match found for \'{{query}}\'',
-                other: '{} matches found for \'{{query}}\''}">
-    </ng-pluralize>
-</h3>
 
 <table class="table table-striped table-bordered">
     <thead>
@@ -71,7 +72,7 @@
         <th><span>Region Name</span></th>
         <th><span>From Facility</span></th>
         <th><span>To Facility</span></th>
-        <th><span>Is Is Sent to TIMR</span></th>
+        <th><span>Is Sent to TIMR</span></th>
         <th><span>Distributed Date</span></th>
         <th><span>Distributed By</span></th>
         <th><span> </span></th>
@@ -89,7 +90,7 @@
         </td>
         <td>{{distribute.createddate | date:format('dd-mm-yyyy')}}</td>
         <td>{{distribute.name}}</td>
-        <td><a href="" ng-click="openDistribution(distribute.distributionid,distribute.facilityid)">View Distribution</a></td>
+        <td><a href="" ng-click="openDistribution(distribute.distributionid,distribute.facilityid)">View Proof Of Delivery</a></td>
 
     </tr>
     </tbody>

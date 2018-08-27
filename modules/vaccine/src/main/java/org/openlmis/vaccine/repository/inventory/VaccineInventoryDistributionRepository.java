@@ -173,7 +173,7 @@ public class VaccineInventoryDistributionRepository {
         mapper.saveDistributionNotification(notification);
     }
 
-    public List<HashMap<String, Object>>getNotificationDistributionList(){
-        return  mapper.getDistributionNotificationList();
+    public List<HashMap<String, Object>>getNotificationDistributionList(Long districtId,String startDate, String endDate){
+        return  mapper.getDistributionNotificationList(districtId,startDate,endDate);
     }
 }

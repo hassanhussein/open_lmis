@@ -415,9 +415,13 @@ public class VaccineOrderRequisitionController extends BaseController {
 
 
     @RequestMapping(value = "getDistributionNotifications", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getNotificationDistributionList(HttpServletRequest request
+    public ResponseEntity<OpenLmisResponse> getNotificationDistributionList(HttpServletRequest request,
+       @RequestParam(value = "districtId",required = true) Long districtId,
+       @RequestParam(value = "startDate",required = true) String startDate,
+       @RequestParam(value = "endDate", required = false) String endDate
+
     ) {
-        return response("notifications", inventoryDistributionService.getNotificationDistributionList());
+        return response("notifications", inventoryDistributionService.getNotificationDistributionList(districtId,startDate,endDate));
     }
 
 

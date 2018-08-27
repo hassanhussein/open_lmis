@@ -1,4 +1,4 @@
-function DistributionFeedbackController($scope,$window,$location,GetFacilityDistributionNotifications,GeoDistrictTree) {
+function DistributionFeedbackController($scope,$filter,$window,$location,GetFacilityDistributionNotifications,GeoDistrictTree) {
 
 
     $scope.startDate = null;
@@ -7,23 +7,39 @@ function DistributionFeedbackController($scope,$window,$location,GetFacilityDist
     $scope.changeDates = function () {
         $scope.startDate = $scope.periodStartDate;
         $scope.endDate = $scope.periodEndDate;
+        $scope.distributions = [];
+    };
+
+    $scope.searchData= function () {
+        $scope.showMessage = false;
+
+        var endDate = (null === $scope.endDate) ? $filter('date')(new Date(), 'yyyy-MM-dd'):$scope.endDate;
+       $scope.message = "Please Select District and at-least Start Date";
+        if(($scope.startDate === null || $scope.startDate === undefined) || ($scope.districtId === undefined || $scope.districtId===null ) ){
+            $scope.showMessage = true;
+            return $scope.message;
+        }else {
+            var params = {districtId:parseInt($scope.districtId,10), startDate: $scope.startDate,endDate: endDate};
+            GetFacilityDistributionNotifications.get(params, function (data) {
+                $scope.distributions =data.notifications;
+            });
+        }
+
     };
 
     function getDataForDisplay(data) {
-        if(data.regionId === null)
+        if(data.regionId === null) {
+            $scope.periodStartDate = undefined;
+            $scope.periodEndDate = undefined;
+            $scope.districtId=undefined;
+            $scope.distributions = [];
+            $scope.changeDates();
             $scope.districtId = data.id;
+        }
     }
 
     $scope.getAllData = function(){
-    if(($scope.endDate === null || $scope.endDate === undefined) && ($scope.startDate === null || $scope.startDate === undefined) && isUndefined($scope.districtId) ){
-        return null;
-    }else {
-        var params = {districtId:parseInt($scope.districtId,10), startDate: $scope.startDate,endDate: $scope.endDate};
 
-        GetFacilityDistributionNotifications.get(params, function (data) {
-            $scope.distributions =data.notifications;
-        });
-    }
 
     };
 
