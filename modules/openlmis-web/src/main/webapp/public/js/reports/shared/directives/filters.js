@@ -1836,7 +1836,7 @@ app.directive('staticYearMonthFilter', ['StaticYears', 'SettingsByKey', function
                 }
             });
 
-            $scope.$watchCollection('[startMonth,endMonth]', function (newValues, oldValues) {
+            $scope.$watchCollection('[startMonth,endMonth,staticYear]', function (newValues, oldValues) {
                 if (utils.isEmpty($scope.startMonth) || utils.isEmpty($scope.endMonth))
                     return;
                var end=parseInt($scope.endMonth,10)+1;
