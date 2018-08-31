@@ -40,12 +40,14 @@ function CompletenesssAndTimelinessReportingController($scope, CompletenessAndTi
         // prevent first time loading
         if (utils.isEmpty($scope.filter.periodStartDate) || utils.isEmpty($scope.filter.periodEnddate) || !utils.isEmpty($scope.filter.perioderror))
             return;
+            var district=utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone;
+
         $scope.timelinessReportParams = {
             periodStart: $scope.filter.periodStartDate,
             periodEnd: $scope.filter.periodEnddate,
             program: parseInt($scope.filter.program, 10),
             range: $scope.range,
-            district: utils.isEmpty($scope.filter.zone) ? 0 : $scope.filter.zone.id
+            district: district
         };
 
         CompletenessAndTimeliness.get(

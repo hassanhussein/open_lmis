@@ -76,6 +76,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                            join vw_districts vd on vd.district_id = t.geographiczoneid                 \n" +
                 "                \n" +
                 "                                                        where vd.district_id in (select district_id from vw_user_facilities where user_id =  '" + params.getUserId() + "'::int   and program_id =  " + params.getProgram() + "::int)   \n" +
+                writeDistrictPredicate(params.getDistrict())+
                 "                                                        group by 1, 2, 3, 4,5 ,6   \n" +
                 "                                                   \n" +
                 "                                                ) a  ),                                                   \n" +
@@ -185,6 +186,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                    from temp t    \n" +
                 "                        join vw_districts vd on vd.district_id = t.geographiczoneid   \n" +
                 "                       where vd.district_id in (select district_id from vw_user_facilities where user_id =  " + params.getUserId() + "::int   and program_id =  " + params.getProgram() + "::int)  \n" +
+               writeDistrictPredicate(params.getDistrict())+
                 "                     group by 1, 2, 3, 4,5 ,6   \n" +
                 "                  ) a    \n" +
                 "                     ),   \n" +
