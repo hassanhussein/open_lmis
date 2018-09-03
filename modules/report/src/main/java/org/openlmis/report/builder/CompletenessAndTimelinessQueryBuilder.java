@@ -56,7 +56,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                            ELSE 'N'::text     \n" +
                 "                                                         END AS reporting_status    \n" +
                 "                                                                from programs_supported ps     \n" +
-                "                                                                join vw_requisitions_submitted_status r on r.programid = ps.programid and r.facilityid = ps.facilityid  and status in ('SUBMITTED','APPROVED','REJECTED')   \n" +
+                "                                                                join vw_requisitions_submitted_status r on r.programid = ps.programid and r.facilityid = ps.facilityid  and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')   \n" +
                 "                                                                join processing_periods pp on pp.id = r.periodid    \n" +
                 "                                                                right join facilities f on f.id = ps.facilityId      \n" +
                 "                                                                and pp.startdate::date >='" + params.getPeriodStart() + "'::date and pp.enddate::date <=   '" + params.getPeriodEnd() +"'::date \n" +
@@ -166,7 +166,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                        ELSE 'N'::text     \n" +
                 "                     END AS reporting_status    \n" +
                 "                      from programs_supported ps     \n" +
-                "                      join vw_requisitions_submitted_status vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid and status in ('SUBMITTED','APPROVED','REJECTED')    \n" +
+                "                      join vw_requisitions_submitted_status vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')    \n" +
                 "                      join processing_periods pp on pp.id = vr.periodid    \n" +
                 "                      right join facilities f on f.id = ps.facilityId      \n" +
                 "                      and pp.startdate::date >= '"+params.getPeriodStart()+"'::date and pp.enddate::date <= '"+params.getPeriodEnd()+"'::date   \n" +
