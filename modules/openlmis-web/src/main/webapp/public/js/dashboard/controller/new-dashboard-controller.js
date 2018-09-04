@@ -73,12 +73,12 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         loadPieChart(chartId, dataValues, total);
     });
 
- /*   RejectionCount.get({}, function (data) {
+   RejectionCount.get({}, function (data) {
         var reject = _.pluck(data.rejections, 'Month');
         var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
         loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', 'RnR Rejection Trends', 'Rejection Count');
 
-    });*/
+    });
 
     GetPercentageOfEmergencyOrderByProgramData.get(null).then(function (data) {
 
@@ -684,21 +684,8 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
     };
 
 
-    //dummy data
-     function loadChart() {
-         var dammyData= {"itemFillRate":[{"name":"Central","prev":0.0,"current":0.0,"status":"bad"},{"name":"Copperbelt","prev":0.0,"current":0.0,"status":"bad"},{"name":"Eastern","prev":0.0,"current":1.19,"status":"bad"},{"name":"Luapula","prev":0.0,"current":0.0,"status":"bad"},{"name":"Lusaka Province","prev":0.0,"current":0.0,"status":"bad"},{"name":"Muchinga","prev":0.0,"current":0.0,"status":"bad"},{"name":"Northen","prev":0.0,"current":0.0,"status":"bad"},{"name":"North Western","prev":0.0,"current":0.0,"status":"bad"},{"name":"Southern","prev":0.0,"current":0.0,"status":"bad"},{"name":"Western","prev":0.0,"current":0.0,"status":"bad"}]};
-         $scope.orderFillRateByZone = {"zones": dammyData.itemFillRate};
-         console.log(JSON.stringify(dammyData.itemFillRate));
-         $timeout( function(){
-             $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
-             }, 5000 );
 
-     }
-
-    loadChart();
-
-
-   /* ItemFillRate.get({
+    ItemFillRate.get({
             zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
@@ -708,7 +695,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             console.log(JSON.stringify(data.itemFillRate));
             $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
 
-        });*/
+        });
 
     ReportingRate.get({
             zoneId: $scope.filter.zoneId,
@@ -722,7 +709,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 
         });
 
- /*   StockStatusAvailaiblity.get({
+   StockStatusAvailaiblity.get({
             zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
@@ -732,7 +719,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             console.log(JSON.stringify($scope.stockAvailability));
 
             $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
-        });*/
+        });
 
     function borderColor(data) {
         return (data >= 80) ? 'green' : (data < 80 && data > 70) ? 'orange' : 'red';
