@@ -181,6 +181,7 @@
                         <tr>
                             <th>Facility</th>
                             <th colspan="{{facilityProduct.length}}">Products</th>
+                            <th>POD Status</th>
                         </tr>
                         <tr>
                             <th></th>
@@ -191,6 +192,7 @@
                       <tr ng-repeat="f in distributedFacilities">
                           <td>{{f.facilityName}}</td>
                           <td ng-repeat="p in facilityProduct">{{getProductQuantity(f.facilityName, p.programProduct.product.primaryName)}}</td>
+                          <td>{{f.products[0].status}}</td>
                       </tr>
                     </tbody>
                 </table>

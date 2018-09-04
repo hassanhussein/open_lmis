@@ -94,7 +94,6 @@ function VaccineDistributionCompletenessReportController($scope, $routeParams, V
                 page: $scope.dPage
             },
             function (data) {
-
                 var distributedFacilities = data.distributedFacilities;
                 $scope.dPagination = data.pagination;
 
@@ -104,6 +103,7 @@ function VaccineDistributionCompletenessReportController($scope, $routeParams, V
                 var byFacility = _.groupBy(distributedFacilities, function (f) {
                     return f.tofacility;
                 });
+                console.log(byFacility);
                 $scope.distributedFacilities = $.map(byFacility, function (value, index) {
                     return [{"facilityName": index, "products": value}];
                 });

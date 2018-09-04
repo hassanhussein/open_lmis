@@ -425,7 +425,6 @@ public class VaccineInventoryDistributionController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getDistributionById(@RequestParam Long distributionId,
                                                                             HttpServletRequest request) {
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getDistributionById(distributionId));
-            // response.getBody().addData(SUPERVISOR_ID, service.getSupervisorFacilityId(distributionId));
             return response;
     }
 

@@ -398,9 +398,10 @@ public interface VaccineInventoryDistributionMapper {
     @Options(useGeneratedKeys = true)
     Integer saveDistributionNotification(VaccineDistributionNotification notification);
 
-    @Select("select d.*, vd.*,u.firstName ||' '||  u.lastName as name from distribution_notifications d\n" +
+    @Select("select  d.*, vd.*,u.firstName ||' '||  u.lastName as name,ds.* from distribution_notifications d\n" +
             "JOIN vw_districts vd ON d.geographiczoneid = vd.district_id" +
             " JOIN users u on u.id = d.createdby " +
+            " LEFT JOIN VACCINE_DISTRIBUTIONS ds ON d.distributionId = ds.id " +
             " where vd.district_id=#{districtId} and d.createdDate::date > #{startDate}::date and d.createdDate::date <=#{endDate}::date")
     List<HashMap<String,Object>>getDistributionNotificationList(@Param("districtId") Long districtId,@Param("startDate") String startDate,@Param("endDate") String endDate);
 }

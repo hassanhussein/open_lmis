@@ -84,7 +84,7 @@ function CompletenesssAndTimelinessReportController($scope, CompletenessAndTimel
 
         _.each($scope.summaryPeriodLists, function(item, index) {
 
-            for(i=0; i<summary.length; i++)
+            for(var i=0; i<summary.length; i++)
             {
                 if(item.year === summary[i].year && item.month === summary[i].month) {
                     $scope.expected.push     ({total:summary[i].expected});

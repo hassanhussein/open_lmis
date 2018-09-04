@@ -59,11 +59,14 @@ function DistributionFeedbackController($scope,$filter,$window,$location,GetFaci
         });
 
     });
-  $scope.openDistribution =  function (distributionId) {
 
-      var url = '/public/pages/vaccine/admin/distribution-feedback/index.html#/search/' +  parseInt(distributionId,10);
+    $scope.openDistribution =  function (distribution) {
+
+      var year = $filter('date')(new Date(), 'yyyy');
+      var period = parseInt(distribution.periodid,10);
+      var zone = parseInt(distribution.district_id,10);
+      var url ='/public/pages/reports/main/index.html#/distribution-completeness?zone='+zone+'&program=82&year='+year+'&period='+period;
       $window.open(url, '_blank');
 
-
-    }
+    };
 }
