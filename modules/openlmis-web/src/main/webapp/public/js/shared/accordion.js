@@ -10,6 +10,7 @@
 
 var accordion = {
   expandCollapseToggle: function(element) {
+
     $(element).parents('.accordion-section').siblings('.accordion-section').each(function () {
       $(this).find('.accordion-body').slideUp();
       $(this).find('.accordion-heading b').text('+');
@@ -45,6 +46,24 @@ var accordion = {
         $(this).find('b').text('+');
       });
     }
-  }
+  },
+  expandDetail: function(element) {
+
+      var accordion = $('.accordion');
+var elmentId= '.'+element;
+var scrollToElement= '#'+element;
+        accordion.find(elmentId).each(function () {
+          $(this).find('.accordion-body ').slideDown();
+          $(this).find('b').text('-');
+        });
+        var offsetTop = accordion.offset().top;
+        $('body, html').animate({
+          scrollTop: utils.parseIntWithBaseTen(offsetTop) + 'px'
+        });
+        $('html, body').animate({
+                            scrollTop: $(scrollToElement).offset().top
+                        }, 2000);
+
+    }
 };
 

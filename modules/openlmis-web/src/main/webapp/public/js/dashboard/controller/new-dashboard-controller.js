@@ -248,7 +248,7 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
                 enabled: false
             },
             title: {
-                text: '<span style="font-size: x-small !important;color: #0c9083">R&R Status Summary</span>'
+                text: '<span style="background-color:lightGray; font-size: x-small !important;color: #0c9083"></span>'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -1012,3 +1012,4 @@ function DashboardControllerFunction($scope, RejectionCount, leafletData, RnRSta
 }
 
 DashboardControllerFunction.resolve = {};
+
