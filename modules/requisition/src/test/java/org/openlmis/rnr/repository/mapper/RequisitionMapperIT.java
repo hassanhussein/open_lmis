@@ -832,7 +832,7 @@ public class RequisitionMapperIT {
 
     User author = new User();
     author.setId(1L);
-    Comment comment = new Comment(requisition.getId(), author, "A comment", null);
+    Comment comment = new Comment(requisition.getId(), author, "A comment", null, null);
     commentMapper.insert(comment);
 
     Rnr fetchedRequisition = mapper.getLWById(requisition.getId());
