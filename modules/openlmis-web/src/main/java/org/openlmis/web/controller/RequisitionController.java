@@ -289,7 +289,12 @@ public class RequisitionController extends BaseController {
     User author = new User();
     author.setId(loggedInUserId(request));
     comment.setAuthor(author);
-    requisitionService.insertComment(comment);
+    if(comment.getCommentId() != null){
+      comment.setId(comment.getCommentId());
+      requisitionService.updateComment(comment);
+    }else {
+      requisitionService.insertComment(comment);
+    }
     return OpenLmisResponse.response(COMMENTS, requisitionService.getCommentsByRnrId(id));
   }
 

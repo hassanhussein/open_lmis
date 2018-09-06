@@ -10,10 +10,7 @@
 
 package org.openlmis.rnr.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.Comment;
 import org.springframework.stereotype.Repository;
 
@@ -36,4 +33,8 @@ public interface CommentMapper {
     @Result(property = "author.id", column = "createdBy")
   })
   List<Comment> getByRnrId(Long rnrId);
+
+  @Update("UPDATE comments set commentText = #{commentText}, modifiedDate = NOW()" +
+      " WHERE id = #{id}")
+  void update(Comment comment);
 }

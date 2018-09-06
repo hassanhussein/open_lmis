@@ -27,6 +27,11 @@
       <div class="comment-info"><span openlmis-message="label.by"></span> <span
         ng-bind="comment.author.userName"></span> | <span class="comment-date"
                                                           ng-bind="comment.createdDate | date:'HH:mm:ss  dd/MM/yyyy'"></span>
+        <span ng-show="updatable">
+          <a href="" ng-click="startEdit(comment)">
+            <span openlmis-message="button.edit"></span>
+          </a>
+        </span>
       </div>
     </li>
   </ul>

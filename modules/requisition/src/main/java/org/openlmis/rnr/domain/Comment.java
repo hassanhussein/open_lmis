@@ -37,5 +37,6 @@ public class Comment extends BaseModel {
   private User author;
   private String commentText;
   private Date createdDate;
+  private Long commentId;
 
 }

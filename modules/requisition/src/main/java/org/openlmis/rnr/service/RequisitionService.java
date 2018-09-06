@@ -616,6 +616,10 @@ public class RequisitionService {
     requisitionRepository.insertComment(comment);
   }
 
+  public void updateComment(Comment comment){
+    requisitionRepository.updateComment(comment);
+  }
+
   public List getCommentsByRnrId(Long rnrId) {
     List<Comment> comments = requisitionRepository.getCommentsByRnrID(rnrId);
     for (Comment comment : comments) {
