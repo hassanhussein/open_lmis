@@ -1504,3 +1504,16 @@ services.factory('DashboardCommodityStatus', function ($resource) {
 services.factory('DashboardFacilityCommodityStatus', function ($resource) {
     return $resource('/dashboard/facility-commodity-status.json', {}, {});
 });
+services.factory('DashboardProductExpired', function ($resource) {
+    return $resource('/dashboard/expired_products.json', {}, {});
+});
+services.factory('DashboardRnrTypes', function ($resource) {
+    return $resource('/dashboard/rnr-emergency-regular-types.json', {}, {});
+});
+
+services.factory('ShipmentInterfaces', function ($resource) {
+    return $resource('/dashboard/shipment-interface.json', {}, {});
+});
+services.factory('VitalStates', function ($resource) {
+    return $resource('/dashboard/vital_status.json', {}, {});
+});

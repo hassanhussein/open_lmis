@@ -30,4 +30,16 @@ public class DashboardService {
     public List<OSAndUsFacilityCommodity>  getFacilityCommodityMostOSandUSList(Long zoneId, Long periodId, Long programId) {
         return  dashboardMapper.getFacilityCommodityMostOSandUSList(zoneId,periodId,programId);
     }
+    public List<ProductExpiry>  getExpiredProducts(Long zoneId, Long periodId, Long programId) {
+        return  dashboardMapper.getExpiredProducts(zoneId,periodId,programId);
+    }
+    public List<RnrRegularEmergencyType>  getRnrWithTypeCount(Long zoneId, Long periodId, Long programId) {
+        return  dashboardMapper.getRnrWithTypeCount(zoneId,periodId,programId);
+    }
+    public List<ShipmentInterface>  getInterfacesStatusReport(Long zoneId, Long periodId, Long programId) {
+        return  dashboardMapper.getInterfacesStatusReport(zoneId,periodId,programId);
+    }
+    public List<VitalStatusDto>  getVitalStatuees(Long zoneId, Long periodId, Long programId) {
+        return  dashboardMapper.getVitalStatuees(zoneId,periodId,programId);
+    }
 }

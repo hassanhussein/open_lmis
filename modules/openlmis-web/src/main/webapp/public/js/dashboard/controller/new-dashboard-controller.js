@@ -1,6 +1,7 @@
 function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
-                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ) {
+                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ,DashboardProductExpired,
+                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates) {
 
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -951,7 +952,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 
     Highcharts.chart('equipmentStatusContainer', {
         chart: {
-            type: 'spline'
+            type: 'areaspline'
         },
         title: {
             text: 'Lab Equipment Status'
@@ -1012,7 +1013,125 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 //    commodities, most stocked out and understocked over regions
 
 
+ DashboardProductExpired.get({           zoneId: $scope.filter.zoneId,
+                                         periodId: $scope.filter.period,
+                                         programId: $scope.filter.program
+                                     },function (data) {
+                                     var expiredProducts=data.expiredProducts;
+        console.log(expiredProducts);
 
+        var chartId = 'expiredProductsId';
+        var category = _.pluck(expiredProducts, 'productCode');
+        var value = _.pluck(expiredProducts, 'percentage');
+        loadTheChart(category, value, chartId, 'column', 'Products', 'products Expiry Percentage', 'Percentage');
+
+
+    });
+//
+
+DashboardRnrTypes.get({           zoneId: $scope.filter.zoneId,
+                                         periodId: $scope.filter.period,
+                                         programId: $scope.filter.program
+                                     },function (data) {
+                                     var  rnrTypes=data.rnrTypes;
+        console.log(rnrTypes);
+            var periods = _.pluck(rnrTypes, 'period');
+            var series = [];
+           var emergencyRnrs=_.pluck(rnrTypes, 'emergency');
+            var regularRnrs=_.pluck(rnrTypes, 'regular');
+             var percentages=_.pluck(rnrTypes, 'percent');
+             var emergencySeries= {
+             type:'spline',
+
+             name:'Emergency',
+             data:emergencyRnrs
+             };
+var regularSeries= {
+             type:'spline',
+
+             name:'Regular',
+             data:regularRnrs
+             };
+             var percentSeries={
+              type:'column',
+               yAxis: 1,
+                          name:'Percent',
+                          data:percentages
+             };
+
+series.push(regularSeries);
+series.push(emergencySeries);
+series.push(percentSeries);
+    Highcharts.chart('regularEmergencyType', {
+
+      chart: {
+        type: 'line',
+        zoomType: 'xy'
+      },
+      title: {
+        text: ''
+      },
+      subtitle: {
+        text: ''
+      },
+      xAxis: {
+        categories:periods
+      },
+     yAxis: [{ // Primary yAxis [{ // Primary yAxis
+          labels: {
+            format: '{value}',
+            style: {
+              color: Highcharts.getOptions().colors[2]
+            }
+          },
+          title: {
+            text: 'Quantity',
+            style: {
+              color: Highcharts.getOptions().colors[2]
+            }
+          },
+          opposite: false
+
+        }, { // Secondary yAxis
+          gridLineWidth: 0,
+          title: {
+            text: 'Percentage',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+
+          },
+          labels: {
+            format: '{value} %',
+            style: {
+              color: Highcharts.getOptions().colors[0]
+            }
+          },
+           opposite: true
+
+        }],
+        tooltip: {
+          shared: true
+        },
+      plotOptions: {
+        line: {
+          dataLabels: {
+            enabled: true
+          },
+          enableMouseTracking: false
+        }
+      },
+      series: series
+    });
+
+     });
+     VitalStates.get({           zoneId: $scope.filter.zoneId,
+                                              periodId: $scope.filter.period,
+                                              programId: $scope.filter.program
+                                          },function (data) {
+                                $scope.vitalStatuses=data.vitalStatuses;
+
+             });
 
 }
 

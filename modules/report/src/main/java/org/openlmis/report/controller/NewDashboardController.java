@@ -22,6 +22,11 @@ private static final String REPORTING_RATE="reportingRate";
     private static final String DAILY_STOCK_STATUS="dailyStockStatus";
     private static final String COMMODITY_STATUS="commodity";
     private static final String FACILITY_COMMODITY_STATUS="facilityCommodity";
+    private static final String EXPIRED_PRODUCTS="expiredProducts";
+     private static  final  String RNR_EMERGENCY_REGULAR_TYPE="rnrTypes";
+    private static  final  String SHIPMENT_INTERFACES="shipmentInterfaces";
+    private static final String VITAL_STATUSES="vitalStatuses";
+
     @Autowired
 private DashboardService dashboardService;
     @RequestMapping(value = "/reporting-rate", method = GET, headers = ACCEPT_JSON)
@@ -60,6 +65,31 @@ private DashboardService dashboardService;
                                                               @RequestParam("periodId") Long periodId,
                                                               @RequestParam("programId") Long programId) {
         return OpenLmisResponse.response(FACILITY_COMMODITY_STATUS, this.dashboardService.getFacilityCommodityMostOSandUSList(zoneId, periodId, programId));
+    }
+    @RequestMapping(value = "/expired_products", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getExpiredProducts(@RequestParam("zoneId") Long zoneId,
+                                                                      @RequestParam("periodId") Long periodId,
+                                                                      @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(EXPIRED_PRODUCTS, this.dashboardService.getExpiredProducts(zoneId, periodId, programId));
+    }
+    @RequestMapping(value = "/rnr-emergency-regular-types", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getRnrWithTypeCount(@RequestParam("zoneId") Long zoneId,
+                                                               @RequestParam("periodId") Long periodId,
+                                                               @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(RNR_EMERGENCY_REGULAR_TYPE, this.dashboardService.getRnrWithTypeCount(zoneId, periodId, programId));
+    }
+    @RequestMapping(value = "/shipment-interface", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getInterfacesStatusReport(@RequestParam("zoneId") Long zoneId,
+                                                                      @RequestParam("periodId") Long periodId,
+                                                                      @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(SHIPMENT_INTERFACES, this.dashboardService.getInterfacesStatusReport(zoneId, periodId, programId));
+    }
+
+    @RequestMapping(value = "/vital_status", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getVitalStatuees(@RequestParam("zoneId") Long zoneId,
+                                                                      @RequestParam("periodId") Long periodId,
+                                                                      @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(VITAL_STATUSES, this.dashboardService.getVitalStatuees(zoneId, periodId, programId));
     }
 
 }
