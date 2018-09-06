@@ -1,6 +1,6 @@
 -- View: public.mv_vital_states_query
 
-DROP MATERIALIZED VIEW if EXISTS public.mv_vital_states_query;
+ DROP MATERIALIZED VIEW if exists public.mv_vital_states_query;
 
 CREATE MATERIALIZED VIEW public.mv_vital_states_query
 TABLESPACE pg_default
