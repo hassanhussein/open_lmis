@@ -14,9 +14,7 @@ config(['$routeProvider', function ($routeProvider) {
 
     $routeProvider.
     when('/list', {controller:DistributionFeedbackController, templateUrl:'partials/list.html', resolve : DistributionFeedbackController.resolve }).
-    //when('/disease/add', {controller:VaccineDiseaseFormController, templateUrl:'partials/disease_form.html', resolve: VaccineDiseaseFormController.resolve }).
-    when('/search/:id', {controller:VaccineDistributionSummary, templateUrl:'partials/distribute.html', resolve: VaccineDistributionSummary.resolve }).
-    otherwise({redirectTo:'/list'});
+        otherwise({redirectTo:'/list'});
 }]).run(function ($rootScope, AuthorizationService) {
     AuthorizationService.preAuthorize('MANAGE_VACCINE_DISEASE_LIST');
 });
