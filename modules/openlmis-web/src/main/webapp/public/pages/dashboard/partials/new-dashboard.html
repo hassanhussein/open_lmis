@@ -2,7 +2,7 @@
 .material-icons.md-18 { font-size: 18px;  }
 .small-box{
 height:210px;
-width:220px;
+<!--width:300px;-->
 }
 .inner{
 height:180px;
@@ -147,7 +147,7 @@ background:#fff;
             </div>
         </div>
         <div class="modal-footer">
-            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
     <div id="modal2" class="modal">
@@ -162,7 +162,7 @@ background:#fff;
         </div>
     </div>
     <div class="modal-footer">
-        <a class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+        <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
     </div>
 </div>
     <div id="approvedRnrModal" class="modal">
@@ -177,7 +177,7 @@ background:#fff;
             </div>
         </div>
         <div class="modal-footer">
-            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
     <div id="ordersByMslModal" class="modal">
@@ -192,7 +192,7 @@ background:#fff;
             </div>
         </div>
         <div class="modal-footer">
-            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
     <div id="productsModal" class="modal">
@@ -207,7 +207,7 @@ background:#fff;
             </div>
         </div>
         <div class="modal-footer">
-            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
     <div id="usersModal" class="modal">
@@ -222,7 +222,7 @@ background:#fff;
             </div>
         </div>
         <div class="modal-footer">
-            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
     <!---->
@@ -260,11 +260,10 @@ background:#fff;
                     </div>
                     <div class="accordion-body" style="display:block">
 
-
                         <div class="row orderFillRate">
                             <div class="row">
 
-                                <div class="col-lg-2 col-xs-4">
+                                <div class="col-lg-3 col-xs-6">
                                     <!-- small box -->
                                     <div class="small-box bg-aqua">
                                         <div class="inner">
@@ -289,7 +288,7 @@ background:#fff;
                                     </div>
                                 </div>
                                 <!-- ./col -->
-                                <div class="col-lg-2 col-xs-4">
+                                <div class="col-lg-3 col-xs-6">
                                     <!-- small box -->
                                     <div class="small-box bg-green">
                                         <div class="inner">
@@ -314,11 +313,11 @@ background:#fff;
                                     </div>
                                 </div>
                                 <!-- ./col -->
-                                <div class="col-lg-2 col-xs-4">
-                                        <!-- small box -->
-                                        <div class="small-box bg-yellow">
-                                            <div class="inner">
-                                                <div ng-repeat="status in vitalStatuses ">
+                                <div class="col-lg-3 col-xs-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-yellow">
+                                        <div class="inner">
+                                            <div ng-repeat="status in vitalStatuses ">
 
                                           <span ng-if="status.model=='Number of R&R Approved'">
                                               <h3>Approved R&Rs</h3>
@@ -328,46 +327,104 @@ background:#fff;
                                               <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
                                               <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                               </span>
-                                                </div>
                                             </div>
-                                            <div class="icon">
-                                                <i class="ion ion-person-add"></i>
-                                            </div>
-                                            <a data-target="approvedRnrModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
-                                                info
-                                            </i></a></i></a>
                                         </div>
+                                        <div class="icon">
+                                            <i class="ion ion-person-add"></i>
+                                        </div>
+                                        <a data-target="approvedRnrModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                            info
+                                        </i></a></i></a>
                                     </div>
-                                        <!-- ./col -->
-                                        <div class="col-lg-2 col-xs-4">
-                                            <!-- small box -->
-                                            <div class="small-box bg-red">
-                                                <div class="inner">
-                                                    <div ng-repeat="status in vitalStatuses ">
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-3 col-xs-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-red">
+                                        <div class="inner">
+                                            <div ng-repeat="status in vitalStatuses ">
 
                                           <span ng-if="status.model=='Number of Orders Placed to MSL'">
-                                              <h3>Orders by MSL</h3>
+                                              <h3>Orders To MSL</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
                                               <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
                                               <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
                                               <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                               </span>
-                                                    </div>
-                                                </div>
-                                                <div class="icon">
-                                                    <i class="ion ion-pie-graph"></i>
-                                                </div>
-                                                <a data-target="ordersByMslModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
-                                                    info
-                                                </i></a></i></a>
                                             </div>
                                         </div>
-                                        <div class="col-lg-2 col-xs-4">
-                                            <!-- small box -->
-                                            <div class="small-box bg-fuchsia">
-                                                <div class="inner">
-                                                    <div ng-repeat="status in vitalStatuses ">
+                                        <div class="icon">
+                                            <i class="ion ion-pie-graph"></i>
+                                        </div>
+                                        <a data-target="ordersByMslModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                            info
+                                        </i></a></i></a>
+                                    </div>
+                                </div>
+
+
+                                <!-- ./col -->
+                            </div>
+                        </div>
+                        <div class="row orderFillRate">
+                        <div class="row">
+
+
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-fuchsia">
+                                    <div class="inner">
+                                        <div ng-repeat="status in vitalStatuses ">
+
+                                          <span ng-if="status.model=='Number of Shipments setn by MSL'">
+                                              <h3>Shipment By MSL</h3>
+
+                                              <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
+                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                              </span>
+                                        </div>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-person-add"></i>
+                                    </div>
+                                    <a data-target="productsModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                        info
+                                    </i></a></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-purple">
+                                    <div class="inner">
+                                        <div ng-repeat="status in vitalStatuses ">
+
+                                          <span ng-if="status.model=='Number of Facilities'">
+                                              <h3>Facilities</h3>
+
+                                              <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
+                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                              </span>
+                                        </div>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-pie-graph"></i>
+                                    </div>
+                                    <a data-target="usersModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                        info
+                                    </i></a></i></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-fuchsia">
+                                    <div class="inner">
+                                        <div ng-repeat="status in vitalStatuses ">
 
                                           <span ng-if="status.model=='Number of Products'">
                                               <h3>Products</h3>
@@ -377,22 +434,22 @@ background:#fff;
                                               <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
                                               <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                               </span>
-                                                    </div>
-                                                </div>
-                                                <div class="icon">
-                                                    <i class="ion ion-person-add"></i>
-                                                </div>
-                                                <a data-target="productsModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
-                                                    info
-                                                </i></a></i></a>
-                                            </div>
                                         </div>
-                                        <!-- ./col -->
-                                        <div class="col-lg-2 col-xs-4">
-                                            <!-- small box -->
-                                            <div class="small-box bg-purple">
-                                                <div class="inner">
-                                                    <div ng-repeat="status in vitalStatuses ">
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-person-add"></i>
+                                    </div>
+                                    <a data-target="productsModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                        info
+                                    </i></a></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="small-box bg-purple">
+                                    <div class="inner">
+                                        <div ng-repeat="status in vitalStatuses ">
 
                                           <span ng-if="status.model=='Number of Users'">
                                               <h3>Users</h3>
@@ -402,20 +459,20 @@ background:#fff;
                                               <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
                                               <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                               </span>
-                                                    </div>
-                                                </div>
-                                                <div class="icon">
-                                                    <i class="ion ion-pie-graph"></i>
-                                                </div>
-                                                <a data-target="usersModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
-                                                    info
-                                                </i></a></i></a>
-                                            </div>
                                         </div>
-
-                                <!-- ./col -->
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-pie-graph"></i>
+                                    </div>
+                                    <a data-target="usersModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                        info
+                                    </i></a></i></a>
+                                </div>
                             </div>
+
+                            <!-- ./col -->
                         </div>
+                    </div>
                         <div class="row orderFillRate" ng-show="orderFillRateByZone.zones.length >0">
                             <div  class="col s12 m4 l4">
 
