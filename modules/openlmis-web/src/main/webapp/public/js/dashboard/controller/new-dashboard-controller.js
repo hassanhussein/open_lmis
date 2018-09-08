@@ -21,7 +21,9 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 
     $scope.displayCurrentDate = monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
 
-
+   $scope.getFormatNumber= function(num) {
+        return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    };
     $scope.onDetail = function (data) {
         console.log(data);
         $('#modal12').modal();
@@ -709,6 +711,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             $scope.orderFillRateByZone = {"zones": data.itemFillRate};
             console.log(JSON.stringify(data.itemFillRate));
             $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
+            $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate-summary', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
 
         });
 
@@ -721,6 +724,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             $scope.reportingRate = {"zones": data.reportingRate};
             console.log(JSON.stringify(data.reportingRate));
             $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
+            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate-summary', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
 
         });
 
@@ -734,6 +738,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             console.log(JSON.stringify($scope.stockAvailability));
 
             $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
+            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability-summary', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
         });
 
     function borderColor(data) {
