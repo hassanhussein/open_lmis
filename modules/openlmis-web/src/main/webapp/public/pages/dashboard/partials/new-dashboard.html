@@ -1,5 +1,8 @@
 <style>
 .material-icons.md-18 { font-size: 18px;  }
+.table_column{
+text-align:right !important;
+}
 .small-box{
 height:210px;
 <!--width:300px;-->
@@ -500,8 +503,8 @@ background:#fff;
                                                  style="height: 120px; margin:0 auto"></div>
 
 
-                                            <div class="pull-right">
-                                                <a href="#">
+                                            <div onClick="accordion.expandDetail('accordion-fill-rate')" class="pull-right">
+                                                <a >
                                                     <i class="material-icons">
                                                         details
                                                     </i>
@@ -526,8 +529,8 @@ background:#fff;
 
                                             <div id="stock-availability" style="height: 120px; margin:0 auto"></div>
 
-                                            <div class="pull-right">
-                                                <a href="#">
+                                            <div onClick="accordion.expandDetail('accordion-fill-rate')" class="pull-right">
+                                                <a >
                                                     <i class="material-icons">
                                                         details
                                                     </i>
@@ -727,32 +730,32 @@ background:#fff;
                                                 <thead>
                                                 <tr>
                                                     <th>Zone</th>
-                                                    <th>Previous<br> Month</th>
-                                                    <th>Current <br>Month</th>
-                                                    <th>Status</th>
-                                                    <th>Progress</th>
+                                                    <th class="table_column">Previous<br> Month</th>
+                                                    <th class="table_column">Current <br>Month</th>
+                                                    <th class="table_column">Status</th>
+                                                    <th class="table_column">Progress</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr ng-repeat="report in orderFillRateByZone.zones">
-                                                    <td>{{report.name}}</td>
-                                                    <td>{{report.prev}}%</td>
-                                                    <td>{{report.current}}%</td>
-                                                    <td ng-show="report.current >=80"><a href="#!"><i
+                                                    <td >{{report.name}}</td>
+                                                    <td class="table_column">{{report.prev|number}}%</td>
+                                                    <td class="table_column">{{report.current|number}}%</td>
+                                                    <td class="table_column" ng-show="report.current >=80"><a href="#!"><i
                                                             class="tiny material-icons icon-green">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current >=60  && report.current <=79"><a
+                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><a
                                                             href="#!"><i
                                                             class="tiny material-icons icon-yellow">lens</i></a></td>
-                                                    <td ng-show="report.current < 60"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current < 60"><a href="#!"><i
                                                             class="tiny material-icons icon-red">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current > report.prev"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current > report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-green">trending_up</i></a>
                                                     </td>
-                                                    <td ng-show="report.current == report.prev"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current == report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-yellow">forward</i></a></td>
-                                                    <td ng-show="report.current < report.prev"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current < report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-red">trending_down</i></a>
                                                     </td>
 
@@ -795,36 +798,36 @@ background:#fff;
                                                 <thead>
                                                 <tr>
 
-                                                    <th>Zone</th>
+                                                    <th >Zone</th>
 
-                                                    <th>Previous<br> Month</th>
-                                                    <th>Current <br>Month</th>
-                                                    <th>Status</th>
-                                                    <th>Progress</th>
+                                                    <th class="table_column">Previous<br> Month</th>
+                                                    <th class="table_column">Current <br>Month</th>
+                                                    <th class="table_column">Status</th>
+                                                    <th class="table_column">Progress</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr ng-repeat="report in stockAvailability.zones">
 
-                                                    <td>{{report.name}}</td>
+                                                    <td >{{report.name}}</td>
 
-                                                    <td>{{report.prev}}%</td>
-                                                    <td>{{report.current}}%</td>
-                                                    <td ng-show="report.current >=80"><a href="#!"><i
+                                                    <td class="table_column">{{report.prev|number}}%</td>
+                                                    <td class="table_column">{{report.current|number}}%</td>
+                                                    <td class="table_column" ng-show="report.current >=80"><a href="#!"><i
                                                             class="tiny material-icons icon-green">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current >=60  && report.current <=79"><a
+                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><a
                                                             href="#!"><i
                                                             class="tiny material-icons icon-yellow">lens</i></a></td>
-                                                    <td ng-show="report.current < 60"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current < 60"><a href="#!"><i
                                                             class="tiny material-icons icon-red">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current > report.prev"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current > report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-green">trending_up</i></a>
                                                     </td>
-                                                    <td ng-show="report.current == report.prev"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current == report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-yellow">forward</i></a></td>
-                                                    <td ng-show="report.current < report.prev"><a href="#!"><i
+                                                    <td class="table_column" ng-show="report.current < report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-red">trending_down</i></a>
                                                     </td>
 
@@ -871,34 +874,34 @@ background:#fff;
                                                 <thead>
                                                 <tr>
 
-                                                    <th>Zone</th>
+                                                    <th >Zone</th>
 
-                                                    <th>Previous<br> Month</th>
-                                                    <th>Current <br>Month</th>
-                                                    <th>Status</th>
-                                                    <th>Progress</th>
+                                                    <th class="table_column">Previous<br> Month</th>
+                                                    <th class="table_column">Current <br>Month</th>
+                                                    <th class="table_column">Status</th>
+                                                    <th class="table_column">Progress</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr ng-repeat="report in reportingRate.zones">
 
-                                                    <td>{{report.name}}</td>
+                                                    <td >{{report.name}}</td>
 
-                                                    <td>{{report.prev}}%</td>
-                                                    <td>{{report.current}}%</td>
-                                                    <td ng-show="report.current >=80"><i
+                                                    <td class="table_column">{{report.prev|number}}%</td>
+                                                    <td class="table_column">{{report.current|number}}%</td>
+                                                    <td class="table_column" ng-show="report.current >=80"><i
                                                             class="tiny material-icons icon-green">lens</i>
                                                     </td>
-                                                    <td ng-show="report.current >=60  && report.current <=79"><i
+                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><i
                                                             class="tiny material-icons icon-yellow">lens</i></td>
-                                                    <td ng-show="report.current < 60"><i
+                                                    <td class="table_column" ng-show="report.current < 60"><i
                                                             class="tiny material-icons icon-red">lens</i>
                                                     </td>
-                                                    <td ng-show="report.current > report.prev"><i
+                                                    <td class="table_column" ng-show="report.current > report.prev"><i
                                                             class="tiny material-icons icon-green">trending_up</i></td>
-                                                    <td ng-show="report.current == report.prev"><i
+                                                    <td class="table_column" ng-show="report.current == report.prev"><i
                                                             class="tiny material-icons icon-yellow">forward</i></td>
-                                                    <td ng-show="report.current < report.prev"><i
+                                                    <td class="table_column" ng-show="report.current < report.prev"><i
                                                             class="tiny material-icons icon-red">trending_down</i>
                                                     </td>
 

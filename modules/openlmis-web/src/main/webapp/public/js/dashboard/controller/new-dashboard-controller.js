@@ -42,6 +42,9 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
                 type: 'pie'
 
             },
+            exporting: {
+                     enabled: false
+            },
             credits: {
                 enabled: false
             }, title: {
@@ -138,6 +141,9 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         Highcharts.chart(chartId, {
             chart: {
                 type: type
+            },
+            exporting: {
+                     enabled: false
             },
             title: {
                 text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
@@ -742,7 +748,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         });
 
     function borderColor(data) {
-        return (data >= 80) ? 'green' : (data < 80 && data > 70) ? 'orange' : 'red';
+        return (data >= 100) ? 'rgb(149,206,255)' : (data < 100 && data > 70) ? 'orange' : 'rgb(255,117,153)';
 
     }
 
@@ -753,7 +759,11 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             chart: {
                 type: 'solidgauge',
                 margin: [0, 0, 0, 0],
-                backgroundColor: 'transparent'
+                backgroundColor: 'transparent',
+                exporting:false
+            },
+            exporting: {
+                     enabled: false
             },
             title: null,
             yAxis: {
@@ -973,6 +983,9 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         chart: {
             type: 'areaspline'
         },
+        exporting: {
+                 enabled: false
+        },
         title: {
             text: 'Lab Equipment Status'
         },
@@ -1086,6 +1099,9 @@ series.push(percentSeries);
       chart: {
         type: 'line',
         zoomType: 'xy'
+      },
+      exporting: {
+               enabled: false
       },
       title: {
         text: ''
