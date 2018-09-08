@@ -103,6 +103,6 @@ function CommodityStockStatusController($scope,$routeParams, messageService,
 
     $scope.setPage = function() {
         $scope.currentPage = this.n;
-    }
+    };
 
 }

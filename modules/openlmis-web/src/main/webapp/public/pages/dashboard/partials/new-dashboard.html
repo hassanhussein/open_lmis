@@ -1,5 +1,8 @@
 <style>
-.small-box{
+    .footer-links > a > i{
+        vertical-align:middle;
+    }
+    .small-box{
 height:300px;
 }
 .inner{
@@ -509,24 +512,24 @@ background:#fff;
                                                 </thead>
                                                 <tbody>
                                                 <tr ng-repeat="report in orderFillRateByZone.zones">
-                                                    <td>{{report.name}}</td>
-                                                    <td>{{report.prev}}%</td>
-                                                    <td>{{report.current}}%</td>
+                                                    <td >{{report.name}}</td>
+                                                    <td style="text-align: right">{{getFormatNumber(report.prev)}}%</td>
+                                                    <td style="text-align: right">{{getFormatNumber(report.current)}}%</td>
                                                     <td ng-show="report.current >=80"><a href="#!"><i
                                                             class="tiny material-icons icon-green">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current >=60  && report.current <=79"><a
+                                                    <td style="text-align: center !important;" ng-show="report.current >=60  && report.current <=79"><a
                                                             href="#!"><i
                                                             class="tiny material-icons icon-yellow">lens</i></a></td>
-                                                    <td ng-show="report.current < 60"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current < 60"><a href="#!"><i
                                                             class="tiny material-icons icon-red">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current > report.prev"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  style="align-content: center !important;" ng-show="report.current > report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-green">trending_up</i></a>
                                                     </td>
-                                                    <td ng-show="report.current == report.prev"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current == report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-yellow">forward</i></a></td>
-                                                    <td ng-show="report.current < report.prev"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current < report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-red">trending_down</i></a>
                                                     </td>
 
@@ -582,23 +585,23 @@ background:#fff;
 
                                                     <td>{{report.name}}</td>
 
-                                                    <td>{{report.prev}}%</td>
-                                                    <td>{{report.current}}%</td>
-                                                    <td ng-show="report.current >=80"><a href="#!"><i
+                                                    <td style="text-align: right">{{getFormatNumber(report.prev)}}%</td>
+                                                    <td style="text-align: right">{{getFormatNumber(report.current)}}%</td>
+                                                    <td style="text-align: center !important;"  ng-show="report.current >=80"><a href="#!"><i
                                                             class="tiny material-icons icon-green">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current >=60  && report.current <=79"><a
+                                                    <td style="text-align: center !important;"  ng-show="report.current >=60  && report.current <=79"><a
                                                             href="#!"><i
                                                             class="tiny material-icons icon-yellow">lens</i></a></td>
-                                                    <td ng-show="report.current < 60"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current < 60"><a href="#!"><i
                                                             class="tiny material-icons icon-red">lens</i></a>
                                                     </td>
-                                                    <td ng-show="report.current > report.prev"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current > report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-green">trending_up</i></a>
                                                     </td>
-                                                    <td ng-show="report.current == report.prev"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current == report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-yellow">forward</i></a></td>
-                                                    <td ng-show="report.current < report.prev"><a href="#!"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current < report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-red">trending_down</i></a>
                                                     </td>
 
@@ -658,21 +661,21 @@ background:#fff;
 
                                                     <td>{{report.name}}</td>
 
-                                                    <td>{{report.prev}}%</td>
-                                                    <td>{{report.current}}%</td>
-                                                    <td ng-show="report.current >=80"><i
+                                                    <td style="text-align: right">{{getFormatNumber(report.prev)}}%</td>
+                                                    <td style="text-align: right">{{getFormatNumber(report.current)}}%</td>
+                                                    <td style="text-align: center !important;"  ng-show="report.current >=80"><i
                                                             class="tiny material-icons icon-green">lens</i>
                                                     </td>
-                                                    <td ng-show="report.current >=60  && report.current <=79"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current >=60  && report.current <=79"><i
                                                             class="tiny material-icons icon-yellow">lens</i></td>
-                                                    <td ng-show="report.current < 60"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current < 60"><i
                                                             class="tiny material-icons icon-red">lens</i>
                                                     </td>
-                                                    <td ng-show="report.current > report.prev"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current > report.prev"><i
                                                             class="tiny material-icons icon-green">trending_up</i></td>
-                                                    <td ng-show="report.current == report.prev"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current == report.prev"><i
                                                             class="tiny material-icons icon-yellow">forward</i></td>
-                                                    <td ng-show="report.current < report.prev"><i
+                                                    <td style="text-align: center !important;"  ng-show="report.current < report.prev"><i
                                                             class="tiny material-icons icon-red">trending_down</i>
                                                     </td>
 

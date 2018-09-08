@@ -7,7 +7,9 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 
     $scope.displayCurrentDate = monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
 
-
+   $scope.getFormatNumber= function(num) {
+        return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    };
     $scope.onDetail = function (data) {
         console.log(data);
         $('#modal12').modal();
