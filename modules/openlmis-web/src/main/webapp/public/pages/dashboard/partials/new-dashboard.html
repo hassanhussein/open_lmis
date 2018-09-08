@@ -1,6 +1,7 @@
 <style>
+.material-icons.md-18 { font-size: 18px;  }
 .small-box{
-height:200px;
+height:210px;
 width:220px;
 }
 .inner{
@@ -11,10 +12,12 @@ font-size:12px !important;
 margin-right:20px;
 
 }
-h2{
-background-color:#17888f;
-font-size:15px !important;
-color:#fff !important;
+h2 {
+    background-color: #17888f;
+    font-size: 15px !important;
+    color: #fff !important;
+    font-weight: bolder !important;
+    align-content: normal;
 }
 h3{
 font-size:20px !important;
@@ -280,8 +283,9 @@ background:#fff;
                                         <div class="icon">
                                             <i class="ion ion-bag"></i>
                                         </div>
-                                        <a data-target="modal1" class="small-box-footer modal-trigger">More info <i
-                                                class="fa fa-arrow-circle-right"></i></a>
+                                        <a data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                            info
+                                        </i></a>
                                     </div>
                                 </div>
                                 <!-- ./col -->
@@ -304,8 +308,9 @@ background:#fff;
                                         <div class="icon">
                                             <i class="ion ion-stats-bars"></i>
                                         </div>
-                                        <a data-target="modal2" class="small-box-footer modal-trigger">More info <i
-                                                class="fa fa-arrow-circle-right"></i></a>
+                                        <a data-target="modal2" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                            info
+                                        </i></a></i></a>
                                     </div>
                                 </div>
                                 <!-- ./col -->
@@ -328,8 +333,9 @@ background:#fff;
                                             <div class="icon">
                                                 <i class="ion ion-person-add"></i>
                                             </div>
-                                            <a data-target="approvedRnrModal" class="small-box-footer modal-trigger">More info <i
-                                                    class="fa fa-arrow-circle-right"></i></a>
+                                            <a data-target="approvedRnrModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                                info
+                                            </i></a></i></a>
                                         </div>
                                     </div>
                                         <!-- ./col -->
@@ -352,8 +358,9 @@ background:#fff;
                                                 <div class="icon">
                                                     <i class="ion ion-pie-graph"></i>
                                                 </div>
-                                                <a data-target="ordersByMslModal" class="small-box-footer modal-trigger">More info <i
-                                                        class="fa fa-arrow-circle-right"></i></a>
+                                                <a data-target="ordersByMslModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                                    info
+                                                </i></a></i></a>
                                             </div>
                                         </div>
                                         <div class="col-lg-2 col-xs-4">
@@ -375,8 +382,9 @@ background:#fff;
                                                 <div class="icon">
                                                     <i class="ion ion-person-add"></i>
                                                 </div>
-                                                <a data-target="productsModal" class="small-box-footer modal-trigger">More info <i
-                                                        class="fa fa-arrow-circle-right"></i></a>
+                                                <a data-target="productsModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                                    info
+                                                </i></a></i></a>
                                             </div>
                                         </div>
                                         <!-- ./col -->
@@ -399,8 +407,9 @@ background:#fff;
                                                 <div class="icon">
                                                     <i class="ion ion-pie-graph"></i>
                                                 </div>
-                                                <a data-target="usersModal" class="small-box-footer modal-trigger">More info <i
-                                                        class="fa fa-arrow-circle-right"></i></a>
+                                                <a data-target="usersModal" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
+                                                    info
+                                                </i></a></i></a>
                                             </div>
                                         </div>
 
@@ -408,7 +417,7 @@ background:#fff;
                             </div>
                         </div>
                         <div class="row orderFillRate" ng-show="orderFillRateByZone.zones.length >0">
-                            <div onClick="accordion.expandDetail('accordion-fill-rate')" class="col s12 m4 l4">
+                            <div  class="col s12 m4 l4">
 
                                 <div class="section grey lighten-5 card row1-height"
                                      style="padding-top: 0rem !important;">
@@ -445,7 +454,7 @@ background:#fff;
 
                                 </div>
                             </div>
-                            <div onClick="accordion.expandDetail('accordion-fill-rate')" class="col s12 m4 l4">
+                            <div  class="col s12 m4 l4">
                                 <div class="section grey lighten-5 card row1-height"
                                      style="padding-top: 0rem !important;">
                                     <h2><span ng-if="true" >Stock Availability</span></h2>
@@ -471,7 +480,7 @@ background:#fff;
 
                                 </div>
                             </div>
-                            <div onClick="accordion.expandDetail('accordion-fill-rate')" class="col s12 m4 l4">
+                            <div  class="col s12 m4 l4">
                                 <div class="section grey lighten-5 card row1-height"
                                      style="padding-top: 0rem !important;">
                                     <h2><span >Reporting Rate</span></h2>
@@ -485,8 +494,8 @@ background:#fff;
                                                   <li class="collection-item"><i class="tiny material-icons icon-red">lens</i>&nbsp;&nbsp;<span style="font-size: x-small">Bad Performance</span> </li>
                                               </ul>-->
                                             <div id="reporting-rate" style="height: 120px; margin:0 auto"></div>
-                                            <div class="pull-right">
-                                                <a href="#">
+                                            <div onClick="accordion.expandDetail('accordion-fill-rate')" class="pull-right">
+                                                <a >
                                                     <i class="material-icons">
                                                         details
                                                     </i>
