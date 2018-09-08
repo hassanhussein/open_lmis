@@ -92,7 +92,7 @@ function ProductExpiryController($scope,$routeParams, messageService,
         }
     };
 
-    $scope.setOverStockedPage = function () {
-        $scope.currentOverStockedPage = this.n;
+    $scope.setPage = function () {
+        $scope.currentPage = this.n;
     };
 }

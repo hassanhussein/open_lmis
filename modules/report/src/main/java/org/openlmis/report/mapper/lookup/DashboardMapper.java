@@ -305,7 +305,7 @@ public interface DashboardMapper {
            "         JOIN vw_districts d on d.district_id = f.geographiczoneid\n" +
            "    WHERE r.emergency = true \n" +
            "        \n" +
-           "        AND r.createdDate >= date_trunc('month', CURRENT_DATE) - INTERVAL '19 month'\n" +
+           "        AND r.createdDate >= date_trunc('month', CURRENT_DATE) - INTERVAL '3 month'\n" +
            "    GROUP BY d.region_name\n" +
            "    ORDER BY SUM(1) DESC\n" +
            "    LIMIT 100;")
