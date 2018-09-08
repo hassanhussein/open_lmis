@@ -1,0 +1,57 @@
+
+    <div ng-controller="ProductExpiryController"  class="col s12 m6 l6">
+        <div class="section grey lighten-5 card">
+            <h2><span > Expired Products</span></h2>
+            <table class="striped bordered " >
+                <thead>
+                <tr>
+                    <th style="width:170px !important;">Facility</th>
+                    <th style="width:70px !important;">Product</th>
+                    <th style="width:70px !important;">Period</th>
+                    <th style="width: 180px;">Expired Quantity</th>
+                    <th style="width: 73px !important; height: 34px !important;">Percentage</th>
+
+                </tr>
+                </thead>
+                <tfoot>
+                <td colspan="6">
+                    <div class="pagination pull-right">
+                        <ul>
+                            <li ng-class="{disabled: currentPage == 0}">
+                                <a href ng-click="prevPage()">« Prev</a>
+                            </li>
+
+                            <li ng-repeat="n in range(pagedItems.length, currentPage, currentPage + gap) "
+                                ng-class="{active: n == currentPage}"
+                                ng-click="setPage()">
+                                <a href ng-bind="n + 1">1</a>
+                            </li>
+
+                            <li ng-class="{disabled: (currentPage) == pagedItems.length - 1}">
+                                <a href ng-click="nextPage()">Next »</a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                </tfoot>
+                <tbody ng-repeat="row in pagedItems[currentPage] ">
+
+                <tr>
+                    <td style="text-align: center;" rowspan="4">{{row.name}}</td>
+                </tr>
+                <tr  ng-repeat="c in row.productList track by $index">
+                    <td>{{c.product}}</td>
+                    <td>{{c.period}}</td>
+                    <td>{{c.balance}}</td>
+                    <td>{{c.percentage|number :2}}%</td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+

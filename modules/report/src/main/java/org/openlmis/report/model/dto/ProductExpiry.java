@@ -17,4 +17,8 @@ public class ProductExpiry {
     private Long balance;
     private  Long expired;
     private  Double percentage;
+    private String product;
+    private String facility;
+    private String facilityid;
+    private String period;
 }
