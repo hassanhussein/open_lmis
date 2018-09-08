@@ -1,22 +1,24 @@
 
     <div ng-controller="ShipmentInterfaceController" class="col s12 m6 l6">
-        <div class="section grey lighten-5 card">
+        <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
 
-            <h2><span style="font-size: x-small"> Shipment Interface</span></h2>
+            <h2><span>Shipment Interface</span> </h2>
 
-            <div style="margin-left: 10px; height: 500px; overflow: scroll">
+            <div class="section grey lighten-3">
                 <table class="striped bordered ">
                     <thead >
-                    <th>Order Date</th>
-                    <th>Packed</th>
-                    <th>Released</th>
-                    <th>Failed</th>
+                    <th>Month</th>
+
+                    <th>Order Sent to MSL</th>
+                    <th>Packed By MSL</th>
+                    <th>FTP Failed</th>
                     </thead>
                     <tbody ng-repeat="row in shipmentInterfaceData ">
                     <td >{{row.orderDate}}</td>
-                    <td >{{row.packed}}</td>
-                    <td >{{row.released}}</td>
-                    <td >{{row.failed}}</td>
+
+                    <td >{{row.released| number}}</td>
+                    <td >{{row.packed| number}}</td>
+                    <td >{{row.failed| number}}</td>
                     </tbody>
                 </table>
             </div>

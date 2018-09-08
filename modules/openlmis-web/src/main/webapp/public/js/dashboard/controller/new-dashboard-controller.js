@@ -2,7 +2,21 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ,DashboardProductExpired,
                                      DashboardRnrTypes,ShipmentInterfaces,VitalStates) {
-
+ $scope.myInterval = 3000;
+ $scope.slides = [
+     {
+       image: 'http://lorempixel.com/400/200/'
+     },
+     {
+       image: 'http://lorempixel.com/400/200/food'
+     },
+     {
+       image: 'http://lorempixel.com/400/200/sports'
+     },
+     {
+       image: 'http://lorempixel.com/400/200/people'
+     }
+   ];
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     $scope.displayCurrentDate = monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
@@ -1134,6 +1148,10 @@ series.push(percentSeries);
                                 $scope.vitalStatuses=data.vitalStatuses;
 
              });
+$(document).ready(function(){
+    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+    $('.modal-trigger').leanModal();
+  });
 
 }
 
