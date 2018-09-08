@@ -1172,6 +1172,9 @@ $(document).ready(function(){
     $('.modal-trigger').leanModal();
   });
 
+    $scope.getFormatNumber= function(num) {
+        return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+    };
 }
 
 DashboardControllerFunction.resolve = {};
