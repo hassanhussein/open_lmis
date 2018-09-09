@@ -767,7 +767,7 @@ background:#fff;
                                                 <td style="width:10% !important;" class="number">{{feature.expected}}
                                                 </td>
                                                 <td style="width:10% !important;" class="number">{{feature.period}}</td>
-                                                <td style="width:30% !important;" class="number">
+                                                <td style="width:30% !important;right-margin:4px" class="number">
                                                     <div class="number" style="float:right;">{{((feature.period /
                                                         feature.expected)
                                                         * 100).toFixed(0)}} %
@@ -907,7 +907,45 @@ background:#fff;
 
 
                         </div>
+<div class="row orderFillRate">
 
+    <div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card row2-height ">
+            <h2>Trend of Regular Orders Submitted Per Month <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                info
+            </i></a> </h2>
+            <div>
+                <div id="trendOfRegualrOrder" style="height: 300px;margin:0 auto "></div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card row2-height">
+            <h2>Percentage of Regular Orders by Program (all time) <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                info
+            </i></a></h2>
+            <span style="font-size: x-small;top: 0px !important;">.</span>
+            <div>
+                <div id="regularByProgram" style="height: 300px;margin:0 auto " />
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card row2-height">
+            <h2>Regular Order By Program (Past 1 Month) <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                info
+            </i></a></h2>
+            <div>
+                <div id="regularSubmittedByProgram"
+                     style="height: 300px;margin:0 auto "></div>
+            </div>
+
+        </div>
+    </div>
+</div>
                         <div class="row orderFillRate">
                             <div class="col s12 m6 l4">
                                 <div class="section grey lighten-5 card row3-height">
@@ -940,6 +978,7 @@ background:#fff;
                             </div>
                         </div>
 <div class="row orderFillRate">
+
     <div class="col s12 m4 l4">
         <div class="section grey lighten-5 card row2-height">
             <h2>Percentage of Emergency Orders by Program (all time) <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
@@ -1012,14 +1051,23 @@ background:#fff;
                   </span>
                     </div>
                     <div class="accordion-body">
-                        <ng-include
-                                src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
+                        <div class="row orderFillRate">
+                            <ng-include
+                                    src="'/public/pages/dashboard/new-partials/slide-stockedout-commodity-stock-status.html'"></ng-include>
+                            <ng-include
+                                    src="'/public/pages/dashboard/new-partials/slide-product-expiry.html'"></ng-include>
+
+
+
+
+                        </div>
                         <!---->
                         <div class="row orderFillRate" ng-show="true">
                             <ng-include
-                                    src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
+                                    src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
                             <ng-include
-                                    src="'/public/pages/dashboard/new-partials/slide-product-expiry.html'"></ng-include>
+                                    src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
+
 
 
                         </div>

@@ -1,4 +1,4 @@
-function CommodityStockStatusController($scope,$routeParams, messageService,
+function StockedOutCommodityStatusController($scope,$routeParams, messageService,
                                         ngTableParams, $filter,DashboardFacilityCommodityStatus) {
     $scope.gap = 5;
     // DashboardFacilityCommodityStatus

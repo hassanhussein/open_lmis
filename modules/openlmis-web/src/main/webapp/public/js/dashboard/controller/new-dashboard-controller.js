@@ -103,9 +103,12 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
     GetPercentageOfEmergencyOrderByProgramData.get(null).then(function (data) {
 
         var chartId = 'emergencyByProgram';
+        var chartRegularId = 'regularByProgram';
         var category = _.pluck(data, 'Program Name');
         var value = _.pluck(data, 'Emergency');
+        var valueRegular = _.pluck(data, 'Regular');
         loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+          loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
 
     });
 
@@ -113,19 +116,24 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         console.log(data);
 
         var chartId = 'emergencySubmittedByProgram';
+        var chartRegularId = 'regularSubmittedByProgram';
         var category = _.pluck(data, 'Program Name');
         var value = _.pluck(data, 'Emergency');
-        loadTheChart(category, value, chartId, 'column', 'Program Name', 'Emergency Orders by Program (Past 1 Month)', 'Emergency');
+          var valueRegular = _.pluck(data, 'Regular');
+        loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+         loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
 
 
     });
     GetTrendOfEmergencyOrdersSubmittedPerMonthData.get(null).then(function (data) {
 
         var chartId = 'trendOfEmergencyOrder';
+         var chartRegularId = 'trendOfRegualrOrder';
         var category = _.pluck(data, 'ym');
         var value = _.pluck(data, 'Emergency Requisitions');
-        loadTheChart(category, value, chartId, 'spline', 'Year and Month', 'Trend of Emergency Orders Submitted Per Month', '# of requisitions');
-
+        var valueRegular = _.pluck(data, 'Regular Requisitions');
+        loadTheChart(category, value, chartId, 'spline', 'Year and Month', '', '# of requisitions');
+loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month', '', '# of requisitions');
     });
 
     GetEmergencyOrderTrendsData.get(null).then(function (data) {

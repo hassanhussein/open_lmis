@@ -1,5 +1,5 @@
-<div ng-controller="CommodityStockStatusController" class="row" ng-show="true">
-    <div class="col s12 m6 l6">
+
+    <div ng-controller="CommodityStockStatusController" class="col s12 m6 l6">
         <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
             <h2><span > Most Over Stocked Products</span></h2>
            <div style="padding: 4px;">
@@ -52,58 +52,6 @@
         </div>
 
     </div>
-    <div class="col s12 m6 l6">
-        <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
-            <h2><span > Most Stocked out Products</span></h2>
-            <div style="padding: 4px;">
-            <table class="striped bordered" style="height: 400px; margin: 0 auto;">
-                <thead>
-                <tr>
-                    <th class="span3">Facility</th>
-                    <th class="span6">Product</th>
-                    <th class="span1 text-right">MOS</th>
-                    <th class="span1 text-right">Quantity</th>
-                </tr>
-                </thead>
-                <tbody ng-repeat="row in pagedOverStockedItems[currentOverStockedPage] ">
 
-                <tr>
-                    <td  rowspan="{{row.usList.length+1}}">{{row.name}}</td>
-                </tr>
-                <tr  ng-repeat="c in row.usList track by $index">
-                    <td>{{c.product}}</td>
-                    <td class="text-right">{{c.mos}}</td>
-                    <td class="text-right">{{c.stockInHand}}</td>
-
-                </tr>
-
-                </tbody>
-                <tfoot>
-                <td colspan="6">
-                    <div class="pagination pull-right">
-                        <ul>
-
-                            <li ng-class="{disabled: currentOverStockedPage == 0}">
-                                <a href ng-click="prevOverStockedPage()">« Prev</a>
-                            </li>
-
-                            <li ng-repeat="n in range(pagedItems.length, currentOverStockedPage, currentOverStockedPage + gap) "
-                                ng-class="{active: n == currentOverStockedPage}"
-                                ng-click="nextOverStockedPage()">
-                                <a href ng-bind="n + 1">1</a>
-                            </li>
-
-                            <li ng-class="{disabled: (currentOverStockedPage) == pagedItems.length - 1}">
-                                <a href ng-click="nextOverStockedPage()">Next »</a>
-                            </li>
-                        </ul>
-                    </div>
-                </td>
-                </tfoot>
-            </table>
-            </div>
-        </div>
-
-    </div>
 
 </div>
