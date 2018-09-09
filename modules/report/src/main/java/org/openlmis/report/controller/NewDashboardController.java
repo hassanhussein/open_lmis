@@ -26,6 +26,7 @@ private static final String REPORTING_RATE="reportingRate";
      private static  final  String RNR_EMERGENCY_REGULAR_TYPE="rnrTypes";
     private static  final  String SHIPMENT_INTERFACES="shipmentInterfaces";
     private static final String VITAL_STATUSES="vitalStatuses";
+    private static final String PROUDCT_SUPPLY_STATUSES="supplyStatuses";
 
     @Autowired
 private DashboardService dashboardService;
@@ -91,5 +92,10 @@ private DashboardService dashboardService;
                                                                       @RequestParam("programId") Long programId) {
         return OpenLmisResponse.response(VITAL_STATUSES, this.dashboardService.getVitalStatuees(zoneId, periodId, programId));
     }
-
+    @RequestMapping(value = "/supply_status", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getProductSupplyStatus(@RequestParam("zoneId") Long zoneId,
+                                                             @RequestParam("periodId") Long periodId,
+                                                             @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(PROUDCT_SUPPLY_STATUSES, this.dashboardService.getProductSupplyStatus(zoneId, periodId, programId));
+    }
 }

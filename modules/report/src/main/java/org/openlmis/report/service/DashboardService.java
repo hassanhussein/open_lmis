@@ -42,4 +42,8 @@ public class DashboardService {
     public List<VitalStatusDto>  getVitalStatuees(Long zoneId, Long periodId, Long programId) {
         return  dashboardMapper.getVitalStatuees(zoneId,periodId,programId);
     }
+    public List<SupplyStatusDto>  getProductSupplyStatus(Long zoneId, Long periodId, Long programId) {
+        return  dashboardMapper.getProductSupplyStatus(zoneId,periodId,programId);
+    }
+
 }

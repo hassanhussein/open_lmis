@@ -39,4 +39,14 @@ public interface NewDashboardMapper {
                     @Result(property = "total", column = "total")
 })
     List<VitalStatusDto> getVitalStatuees(Long zoneId, Long periodId, Long programId);
+    @SelectProvider(type = DashboardSupplyStatusQueryBuilder.class, method = "getQuery")
+    @Results(
+            value ={ @Result(property = "productCode", column = "productcode"),
+                    @Result(property = "product", column = "product"),
+                    @Result(property = "fillZero", column = "fill_0"),
+                    @Result(property = "lessThan25", column = "less_25"),
+                    @Result(property = "lessThan50", column = "less_50"),
+                    @Result(property = "lessThan75", column = "less_75")
+            })
+    List<SupplyStatusDto> getProductSupplyStatus(Long zoneId, Long periodId, Long programId);
 }

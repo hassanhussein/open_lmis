@@ -252,4 +252,10 @@ public class HelpCateoryController extends BaseController {
         List<HelpTopic> legendContent = this.helpTopicService.getVaccineReportLegendContent();
         return OpenLmisResponse.response("vaccineLegend", legendContent);
     }
+    @RequestMapping(value = "/dashboard_legend", method = RequestMethod.GET, headers = "Accept=application/json")
+
+    public ResponseEntity<OpenLmisResponse> getDashboardLegendContent() {
+        List<HelpTopic> legendContent = this.helpTopicService.getDashboardReportLegendContent();
+        return OpenLmisResponse.response("dashboardLegend", legendContent);
+    }
 }

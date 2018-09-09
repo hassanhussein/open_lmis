@@ -1,7 +1,7 @@
 function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ,DashboardProductExpired,
-                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates) {
+                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates,dashboardSlidesHelp) {
  $scope.myInterval = 3000;
  $scope.slides = [
      {
@@ -558,111 +558,111 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
                 "features": $scope.features
             });
             zoomAndCenterMap(leafletData, $scope);
-            var separators = Highcharts.geojson(Highcharts.maps['countries/zm/zm-all'], 'mapline');
-            Highcharts.chart('container', {
-                chart: {
-                    type: 'bar'
-                },
-                title: {
-                    text: 'Reporting Rate'
-                },
-                xAxis: {
-                    categories: districts
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: 'Reporting Rate'
-                    }
-                },
-                legend: {
-                    reversed: true
-                },
-                plotOptions: {
-                    series: {
-                        stacking: 'normal'
-                    }
-                },
-                series: expArray
-            });
-            Highcharts.mapChart('container1', {
-                chart: {
-                    map: 'countries/zm/zm-all'
-                }, credits: {enabled: false},
-
-                title: {
-                    text: '<span style="font-size: 15px !important;color: #0c9083;text-align: center"> Reporting Rate, </span>'
-                },
-
-                subtitle: {
-                    text: '',
-                    floating: true,
-                    align: 'right',
-                    y: 50,
-                    style: {
-                        fontSize: '16px'
-                    }
-                },
-
-                legend: {},
-
-                /*   colorAxis: {
-                 min: 0,
-                 minColor: '#FF0000',
-                 maxColor: '#52C552'
-                 },*/
-                colorAxis: {
-                    dataClasses: [{
-                        from: 0,
-                        to: 80,
-                        color: '#ff0d00',
-                        name: 'Non Reporting'
-                    }, {
-                        from: 80,
-                        to: 90,
-                        color: '#ffdb00',
-                        name: 'Partial Reporting'
-                    }, {
-                        from: 90,
-                        color: '#006600',
-                        name: 'Fully Reporting'
-
-                    }, {
-                        from: 90,
-                        color: '#000000',
-                        name: 'Not Expected To'
-
-                    }]
-                },
-
-                mapNavigation: {
-                    enabled: true,
-                    buttonOptions: {
-                        verticalAlign: 'bottom'
-                    }
-                },
-
-                plotOptions: {
-                    map: {
-                        states: {
-                            /* hover: {
-                             color: '#EEDD66'
-                             }*/
-                        }
-                    }
-                },
-
-                series: [{
-                    data: dataValues,
-                    keys: ['name', 'value'],
-                    joinBy: 'name',
-                    name: 'Coverage',
-                    dataLabels: {
-                        enabled: true,
-                        format: '{point.properties.postal-code}'
-                    }, shadow: false
-                }]
-            });
+//            var separators = Highcharts.geojson(Highcharts.maps['countries/zm/zm-all'], 'mapline');
+//            Highcharts.chart('container', {
+//                chart: {
+//                    type: 'bar'
+//                },
+//                title: {
+//                    text: 'Reporting Rate'
+//                },
+//                xAxis: {
+//                    categories: districts
+//                },
+//                yAxis: {
+//                    min: 0,
+//                    title: {
+//                        text: 'Reporting Rate'
+//                    }
+//                },
+//                legend: {
+//                    reversed: true
+//                },
+//                plotOptions: {
+//                    series: {
+//                        stacking: 'normal'
+//                    }
+//                },
+//                series: expArray
+//            });
+//            Highcharts.mapChart('container1', {
+//                chart: {
+//                    map: 'countries/zm/zm-all'
+//                }, credits: {enabled: false},
+//
+//                title: {
+//                    text: '<span style="font-size: 15px !important;color: #0c9083;text-align: center"> Reporting Rate, </span>'
+//                },
+//
+//                subtitle: {
+//                    text: '',
+//                    floating: true,
+//                    align: 'right',
+//                    y: 50,
+//                    style: {
+//                        fontSize: '16px'
+//                    }
+//                },
+//
+//                legend: {},
+//
+//                /*   colorAxis: {
+//                 min: 0,
+//                 minColor: '#FF0000',
+//                 maxColor: '#52C552'
+//                 },*/
+//                colorAxis: {
+//                    dataClasses: [{
+//                        from: 0,
+//                        to: 80,
+//                        color: '#ff0d00',
+//                        name: 'Non Reporting'
+//                    }, {
+//                        from: 80,
+//                        to: 90,
+//                        color: '#ffdb00',
+//                        name: 'Partial Reporting'
+//                    }, {
+//                        from: 90,
+//                        color: '#006600',
+//                        name: 'Fully Reporting'
+//
+//                    }, {
+//                        from: 90,
+//                        color: '#000000',
+//                        name: 'Not Expected To'
+//
+//                    }]
+//                },
+//
+//                mapNavigation: {
+//                    enabled: true,
+//                    buttonOptions: {
+//                        verticalAlign: 'bottom'
+//                    }
+//                },
+//
+//                plotOptions: {
+//                    map: {
+//                        states: {
+//                            /* hover: {
+//                             color: '#EEDD66'
+//                             }*/
+//                        }
+//                    }
+//                },
+//
+//                series: [{
+//                    data: dataValues,
+//                    keys: ['name', 'value'],
+//                    joinBy: 'name',
+//                    name: 'Coverage',
+//                    dataLabels: {
+//                        enabled: true,
+//                        format: '{point.properties.postal-code}'
+//                    }, shadow: false
+//                }]
+//            });
 
 
         });
@@ -682,14 +682,14 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 
 // Prepare random data
 
-/*
+//
+//
+//    $.getJSON('https://cdn.rawgit.com/highcharts/highcharts/057b672172ccc6c08fe7dbb27fc17ebca3f5b770/samples/data/germany.geo.json', function (geojson) {
+//
+//        // Initiate the chart
+//
+//    });
 
-    $.getJSON('https://cdn.rawgit.com/highcharts/highcharts/057b672172ccc6c08fe7dbb27fc17ebca3f5b770/samples/data/germany.geo.json', function (geojson) {
-
-        // Initiate the chart
-
-    });
-*/
 
 //rnr status
 
@@ -729,8 +729,8 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         function (data) {
             $scope.reportingRate = {"zones": data.reportingRate};
             console.log(JSON.stringify(data.reportingRate));
-            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
-            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate-summary', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
+            $scope.dynamicGuagePerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
+            $scope.dynamicGuagePerformanceChart(data.reportingRate, '#reporting-rate-summary', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
 
         });
 
@@ -743,8 +743,8 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             $scope.stockAvailability = {"zones": data.stockStatus};
             console.log(JSON.stringify($scope.stockAvailability));
 
-            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
-            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability-summary', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
+            $scope.dynamicGuagePerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
+            $scope.dynamicGuagePerformanceChart($scope.stockAvailability, '#stock-availability-summary', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
         });
 
     function borderColor(data) {
@@ -824,7 +824,124 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         };
         $(chartId).highcharts(gaugeOptions);
     };
+$scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
 
+        var gaugeOptions = {
+
+            chart: {
+                type: 'gauge',
+                margin: [0, 0, 0, 0],
+                backgroundColor: 'transparent',
+                plotBackgroundColor: null,
+                   plotBackgroundImage: null,
+                   plotBorderWidth: 0,
+                   plotShadow: false
+            },
+            exporting: {
+                     enabled: false
+            },
+            title: null,
+
+
+  pane: {
+    startAngle: -150,
+    endAngle: 150,
+    background: [{
+      backgroundColor: {
+        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+        stops: [
+          [0, '#FFF'],
+          [1, '#333']
+        ]
+      },
+      borderWidth: 0,
+      outerRadius: '109%'
+    }, {
+      backgroundColor: {
+        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
+        stops: [
+          [0, '#333'],
+          [1, '#FFF']
+        ]
+      },
+      borderWidth: 1,
+      outerRadius: '107%'
+    }, {
+      // default background
+    }, {
+      backgroundColor: '#DDD',
+      borderWidth: 0,
+      outerRadius: '105%',
+      innerRadius: '103%'
+    }]
+  },// the value axis
+      yAxis: {
+        min: 0,
+        max: 100,
+
+        minorTickInterval: 'auto',
+        minorTickWidth: 1,
+        minorTickLength: 10,
+        minorTickPosition: 'inside',
+        minorTickColor: '#666',
+
+        tickPixelInterval: 30,
+        tickWidth: 2,
+        tickPosition: 'inside',
+        tickLength: 10,
+        tickColor: '#666',
+        labels: {
+          step: 2,
+          rotation: 'auto'
+        },
+        title: {
+          text: 'rate'
+        },
+        plotBands: [{
+          from: 0,
+          to: 50,
+          color: '#DF5353' // green
+        }, {
+          from: 50,
+          to: 90,
+          color: '#DDDF0D' // yellow
+        }, {
+          from: 90,
+          to: 100,
+          color: '#55BF3B' // red
+        }]
+      },
+            tooltip: {
+                enabled: true
+            },
+            plotOptions: {
+                solidgauge: {
+                    borderColor: borderColor(result),
+                    borderWidth: 18,
+                    radius: 75,
+                    innerRadius: '80%',
+                    dataLabels: {
+                        borderWidth: 0,
+                        useHTML: true,
+                        enable: true
+                    }
+                }
+            },
+            series: [{
+                name: name,
+                data: [result],
+                dataLabels: {
+                    format: '<div style="Width: 30px;text-align:center"><span style="font-size:20px;color:"' + borderColor(data.ofr) + '"><br>{y}%</span></div>'
+                }
+
+            }],
+
+            credits: {
+                enabled: false
+            }
+        };
+        $(chartId).highcharts(gaugeOptions);
+    };
 
     var dataValues = [
         ['zm-lp', 0],
@@ -1175,7 +1292,312 @@ $(document).ready(function(){
     $scope.getFormatNumber= function(num) {
         return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
+
+    $scope.dashboardHelps = dashboardSlidesHelp;
+    $scope.setHelpContentKey=function(keyValue){
+    $scope.helpContent=$scope.dashboardHelps[keyValue];
+
+
+    };
 }
 
-DashboardControllerFunction.resolve = {};
+DashboardControllerFunction.resolve = {
+  dashboardSlidesHelp: function ($q, $timeout, HelpContentByKey, messageService) {
+
+        var deferred = $q.defer();
+        var helps = {};
+        $timeout(function () {
+            HelpContentByKey.get({content_key: 'Submitted R&Rs'}, function (data) {
+
+
+                if (!isUndefined(data.siteContent)) {
+
+                    helps.submitterRnRHelp = data.siteContent;
+
+                } else {
+
+                    helps.submitterRnRHelp = {htmlContent: messageService.get('content.help.default')};
+
+                }
+
+            });
+            HelpContentByKey.get({content_key: 'Emergency R&Rs'}, function (data) {
+
+                if (!isUndefined(data.siteContent)) {
+
+                    helps.emergencyRnr = data.siteContent;
+
+                } else {
+
+                    helps.emergencyRnr = {htmlContent: messageService.get('content.help.default')};
+
+                }
+            });
+            HelpContentByKey.get({content_key: 'Approved R&R'}, function (data) {
+
+                if (!isUndefined(data.siteContent)) {
+
+                    helps.approvedRnrHelp = data.siteContent;
+
+                } else {
+
+                    helps.approvedRnrHelp = {htmlContent: messageService.get('content.help.default')};
+
+                }
+            });
+            HelpContentByKey.get({content_key: 'Orders send to MSL'}, function (data) {
+
+                            if (!isUndefined(data.siteContent)) {
+
+                                helps.orderSentToMslHelp = data.siteContent;
+
+                            } else {
+
+                                helps.orderSentToMslHelp = {htmlContent: messageService.get('content.help.default')};
+
+                            }
+                        });
+            HelpContentByKey.get({content_key: 'Shipment by MSL'}, function (data) {
+
+                if (!isUndefined(data.siteContent)) {
+
+                    helps.shipementbyMslHelp = data.siteContent;
+
+                } else {
+
+                    helps.shipementbyMslHelp = {htmlContent: messageService.get('content.help.default')};
+
+                }
+            });
+            HelpContentByKey.get({content_key: 'Products'}, function (data) {
+
+                if (!isUndefined(data.siteContent)) {
+
+                    helps.productsHelp = data.siteContent;
+
+                } else {
+
+                    helps.productsHelp = {htmlContent: messageService.get('content.help.default')};
+
+                }
+            });
+            HelpContentByKey.get({content_key: 'Users'}, function (data) {
+
+                if (!isUndefined(data.siteContent)) {
+
+                    helps.usersHelp = data.siteContent;
+
+                } else {
+
+                    helps.usersHelp = {htmlContent: messageService.get('content.help.default')};
+
+                }
+            });
+ HelpContentByKey.get({content_key: 'Facilities'}, function (data) {
+
+                if (!isUndefined(data.siteContent)) {
+
+                    helps.facilitiesHelp = data.siteContent;
+
+                } else {
+
+                    helps.facilitiesHelp = {htmlContent: messageService.get('content.help.default')};
+
+                }
+            });
+             HelpContentByKey.get({content_key: 'Order Fill Rate'}, function (data) {
+
+                            if (!isUndefined(data.siteContent)) {
+
+                                helps.orderFillRateHelp = data.siteContent;
+
+                            } else {
+
+                                helps.orderFillRateHelp = {htmlContent: messageService.get('content.help.default')};
+
+                            }
+                        });
+
+                                     HelpContentByKey.get({content_key: 'Stock Availability'}, function (data) {
+
+                                                    if (!isUndefined(data.siteContent)) {
+
+                                                        helps.stockAvailabilityHelp = data.siteContent;
+
+                                                    } else {
+
+                                                        helps.stockAvailabilityHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                    }
+                                                });
+                 HelpContentByKey.get({content_key: 'Expired Products'}, function (data) {
+
+                                if (!isUndefined(data.siteContent)) {
+
+                                    helps.expiredHelp = data.siteContent;
+
+                                } else {
+
+                                    helps.expiredHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                }
+                            });
+ HelpContentByKey.get({content_key: 'Transmission Failure'}, function (data) {
+
+                                if (!isUndefined(data.siteContent)) {
+
+                                    helps.transmissionHelp = data.siteContent;
+
+                                } else {
+
+                                    helps.transmissionHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                }
+                            });
+      HelpContentByKey.get({content_key: 'MOS'}, function (data) {
+
+                                     if (!isUndefined(data.siteContent)) {
+
+                                         helps.mosHelp = data.siteContent;
+
+                                     } else {
+
+                                         helps.mosHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                     }
+                                 });
+
+       HelpContentByKey.get({content_key: 'AMC'}, function (data) {
+
+                                           if (!isUndefined(data.siteContent)) {
+
+                                               helps.amcHelp = data.siteContent;
+
+                                           } else {
+
+                                               helps.amcHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                           }
+                                       });
+           HelpContentByKey.get({content_key: 'Stock on Hand'}, function (data) {
+
+                                               if (!isUndefined(data.siteContent)) {
+
+                                                   helps.stockOnHandHelp = data.siteContent;
+
+                                               } else {
+
+                                                   helps.stockOnHandHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                               }
+                                           });
+               HelpContentByKey.get({content_key: 'Over Stocked'}, function (data) {
+
+                                                              if (!isUndefined(data.siteContent)) {
+
+                                                                  helps.overStockedHelp = data.siteContent;
+
+                                                              } else {
+
+                                                                  helps.overStockedHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                              }
+                                                          });
+
+
+             HelpContentByKey.get({content_key: 'Under Stocked'}, function (data) {
+
+                                                            if (!isUndefined(data.siteContent)) {
+
+                                                                helps.underStocked = data.siteContent;
+
+                                                            } else {
+
+                                                                helps.underStocked = {htmlContent: messageService.get('content.help.default')};
+
+                                                            }
+                                                        });
+
+              HelpContentByKey.get({content_key: 'MAX Stock Level'}, function (data) {
+
+                                                             if (!isUndefined(data.siteContent)) {
+
+                                                                 helps.maxStockLevel = data.siteContent;
+
+                                                             } else {
+
+                                                                 helps.maxStockLevel = {htmlContent: messageService.get('content.help.default')};
+
+                                                             }
+                                                         });
+               HelpContentByKey.get({content_key: 'Reporting Rate'}, function (data) {
+
+                                                                          if (!isUndefined(data.siteContent)) {
+
+                                                                              helps.reportingRate = data.siteContent;
+
+                                                                          } else {
+
+                                                                              helps.reportingRate = {htmlContent: messageService.get('content.help.default')};
+
+                                                                          }
+                                                                      });
+
+ HelpContentByKey.get({content_key: 'R&R Status Summary'}, function (data) {
+
+                                                                          if (!isUndefined(data.siteContent)) {
+
+                                                                              helps.statusSummary = data.siteContent;
+
+                                                                          } else {
+
+                                                                              helps.statusSummary = {htmlContent: messageService.get('content.help.default')};
+
+                                                                          }
+                                                                      });
+//                                                                      Provinces with Most Emergency Orders (Past 3 Months)
+HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3 Months)'}, function (data) {
+
+                                                                          if (!isUndefined(data.siteContent)) {
+
+                                                                              helps.provincesWithMostEmergencyHelp = data.siteContent;
+
+                                                                          } else {
+
+                                                                              helps.provincesWithMostEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                          }
+                                                                      });
+
+ HelpContentByKey.get({content_key: 'Trend of Emergency Orders Submitted Per Month'}, function (data) {
+
+                                                                           if (!isUndefined(data.siteContent)) {
+
+                                                                               helps.trendOfEmergencyHelp = data.siteContent;
+
+                                                                           } else {
+
+                                                                               helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                           }
+                                                                       });
+
+ HelpContentByKey.get({content_key: 'Emergency Order By Program (Past 1 Month)'}, function (data) {
+
+                                                                           if (!isUndefined(data.siteContent)) {
+
+                                                                               helps.emergencyByProgramHelp = data.siteContent;
+
+                                                                           } else {
+
+                                                                               helps.emergencyByProgramHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                           }
+                                                                       });
+            deferred.resolve(helps);
+
+        }, 100);
+        return deferred.promise;
+    }
+};
 

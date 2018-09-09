@@ -83,6 +83,9 @@ public List<HelpTopic> loadChildrenOfHelpTopic(Long loggedUserId, HelpTopic pare
         return siteContent;
     }
   public List<HelpTopic> getVaccineReportLegend(){
-      return this.mapper.getVaccineReportLegendContent();
-  }
+        return this.mapper.getVaccineReportLegendContent();
+    }
+    public List<HelpTopic> getDashboardReportLegendContent(){
+        return this.mapper.getDashboardReportLegendContent();
+    }
 }

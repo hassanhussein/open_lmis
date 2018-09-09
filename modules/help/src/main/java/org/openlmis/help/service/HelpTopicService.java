@@ -195,4 +195,7 @@ public class HelpTopicService {
     public List<HelpTopic> getVaccineReportLegendContent() {
         return this.repository.getVaccineReportLegend();
     }
+    public List<HelpTopic> getDashboardReportLegendContent() {
+        return this.repository.getDashboardReportLegendContent();
+    }
 }
