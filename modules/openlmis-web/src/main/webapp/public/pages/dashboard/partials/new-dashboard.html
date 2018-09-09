@@ -728,87 +728,67 @@ background:#fff;
                         </div>
 
 
-                        <div class="row orderFillRate">
 
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height row1-height">
-                                    <h2>R&R Status Summary <a ng-click="setHelpContentKey('statusSummary')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-                                    <div id="rnrSummary" style="margin:0 auto"></div>
-                                </div>
-
-                            </div>
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height row1-height">
-                                    <h2>Provinces with Most Emergency Orders (Past 3 Months) <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-
-                                    <div>
-                                        <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
-
-                                        <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
-                                        <div id="addText" style="left:0px; top:0px;"></div>
-                                    </div>
-
-
-                                </div>
-
-                            </div>
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height row1-height">
-                                    <h2>Trend of Emergency Orders Submitted Per Month <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a> </h2>
-                                    <div>
-                                        <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
-                                    </div>
-
-
-                                </div>
-
-                            </div>
-                        </div>
                         <div class="row itemFillRate">
-                            <div class="col s12 m4 l4">
+                            <div class="col s12 m4 l6">
                                 <div class="section grey lighten-5 card row3-height">
-                                    <h2><span  class="ng-binding">Reporting Rate</span> <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                    <h2><span > Reporting Rate</span> <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
                                         info
                                     </i></a></h2>
-                                    <leaflet style="height: 300px;margin:0 auto " width="100%" height="500px" legend="legend" geojson="geojson"
+                                    <leaflet style=" padding-top: 0rem !important; height: 300px;margin:0 auto " width="100%" height="500px" legend="legend" geojson="geojson"
                                              layers="layers"></leaflet>
 
                                 </div>
 
                             </div>
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row3-height">
-                                    <h2>Emergency Order By Program (Past 1 Month) <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-                                    <div>
-                                        <div id="emergencySubmittedByProgram"
-                                             style="height: 300px;margin:0 auto "></div>
+
+                            <div class="col s12 m6 l6">
+                                <div class="section grey lighten-5 card row3-height" style="padding-top: 0rem !important;">
+                                    <h2><span  >Reporting Rate</span></h2>
+                                    <div style=" height: 500px; overflow: scroll;"
+                                         ng-show="features && (features | filter:expectedFilter).length > 0">
+
+                                        <table class="striped">
+                                            <thead>
+                                            <tr style="margin-bottom: 20px">
+                                                <th style="width:35%" openlmis-message="label.district"></th>
+                                                <th style="width:10%" class="number"
+                                                    openlmis-message="label.expected"></th>
+                                                <th style="width:10% !important;" class="number"
+                                                    openlmis-message="label.reported"></th>
+                                                <th style="width: 30%; text-align: right"
+                                                    openlmis-message="label.percent.reported"></th>
+                                            </tr>
+                                            <!--<tr><th colspan="4">&nbsp;</th></tr>-->
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="feature in features | filter:expectedFilter">
+                                                <td style="width:35% !important;">{{feature.name}}</td>
+                                                <td style="width:10% !important;" class="number">{{feature.expected}}
+                                                </td>
+                                                <td style="width:10% !important;" class="number">{{feature.period}}</td>
+                                                <td style="width:30% !important;" class="number">
+                                                    <div class="number" style="float:right;">{{((feature.period /
+                                                        feature.expected)
+                                                        * 100).toFixed(0)}} %
+                                                    </div>
+                                                    <div class="progress" style="margin-bottom:0px;width:68%">
+                                                        <div class="bar bar-success leaflet-clickable"
+                                                             ng-click="onDetailClicked(feature, this)"
+                                                             style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
+                                                        <div class="bar bar-danger leaflet-clickable"
+                                                             ng-click="onDetailClicked(feature, this)"
+                                                             style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
                                     </div>
 
                                 </div>
-                            </div>
-                            <div class="col s12 m4 l4 ">
-                                <div class="section grey lighten-5 card row3-height">
-                                    <h2>Lab Equipment Status  <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a> </h2>
-                                    <div>
-                                        <div id="equipmentStatusContainer" style="height: 300px;margin:0 auto "></div>
 
-                                        <!--
-                                                                    <div id="emergencyTrend" style="height: 300px;margin:0 auto "></div>
-                                        -->
-
-                                    </div>
-
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -927,57 +907,97 @@ background:#fff;
 
 
                         </div>
+
+                        <div class="row orderFillRate">
+                            <div class="col s12 m6 l4">
+                                <div class="section grey lighten-5 card row3-height">
+                                    <h2>RnR Rejection Trends <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                        info
+                                    </i></a></h2>
+                                    <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
+
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l4">
+
+                                <div class="section grey lighten-5 card row3-height">
+                                    <h2><span >Regular & Emergency Requisitions</span> <a ng-click="setHelpContentKey('regularEmergencyRequisitionhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                        info
+                                    </i></a></h2>
+                                    <div id="regularEmergencyType"
+                                         style="padding-top: 0rem !important;"></div>
+
+                                </div>
+                            </div>
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row3-height ">
+                                    <h2>R&R Status Summary <a ng-click="setHelpContentKey('statusSummary')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                        info
+                                    </i></a></h2>
+                                    <div id="rnrSummary" style="margin:0 auto"></div>
+                                </div>
+
+                            </div>
+                        </div>
+<div class="row orderFillRate">
+    <div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card row2-height">
+            <h2>Percentage of Emergency Orders by Program (all time) <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                info
+            </i></a></h2>
+            <span style="font-size: x-small;top: 0px !important;">.</span>
+            <div>
+                <div id="emergencyByProgram" style="height: 300px;margin:0 auto " />
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card row2-height">
+            <h2>Emergency Order By Program (Past 1 Month) <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                info
+            </i></a></h2>
+            <div>
+                <div id="emergencySubmittedByProgram"
+                     style="height: 300px;margin:0 auto "></div>
+            </div>
+
+        </div>
+    </div>
+    <div class="col s12 m4 l4">
+        <div class="section grey lighten-5 card row2-height ">
+            <h2>Trend of Emergency Orders Submitted Per Month <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                info
+            </i></a> </h2>
+            <div>
+                <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
                         <div class="row orderFillRate">
 
-                            <div class="col s12 m6 l6">
-                                <div class="section grey lighten-5 card">
-                                    <h2><span  class="ng-binding">Reporting Rate</span></h2>
-                                    <div style="height: 500px; overflow: scroll;"
-                                         ng-show="features && (features | filter:expectedFilter).length > 0">
 
-                                        <table class="striped">
-                                            <thead>
-                                            <tr style="margin-bottom: 20px">
-                                                <th style="width:35%" openlmis-message="label.district"></th>
-                                                <th style="width:10%" class="number"
-                                                    openlmis-message="label.expected"></th>
-                                                <th style="width:10% !important;" class="number"
-                                                    openlmis-message="label.reported"></th>
-                                                <th style="width: 30%; text-align: right"
-                                                    openlmis-message="label.percent.reported"></th>
-                                            </tr>
-                                            <!--<tr><th colspan="4">&nbsp;</th></tr>-->
-                                            </thead>
-                                            <tbody>
-                                            <tr ng-repeat="feature in features | filter:expectedFilter">
-                                                <td style="width:35% !important;">{{feature.name}}</td>
-                                                <td style="width:10% !important;" class="number">{{feature.expected}}
-                                                </td>
-                                                <td style="width:10% !important;" class="number">{{feature.period}}</td>
-                                                <td style="width:30% !important;" class="number">
-                                                    <div class="number" style="float:right;">{{((feature.period /
-                                                        feature.expected)
-                                                        * 100).toFixed(0)}} %
-                                                    </div>
-                                                    <div class="progress" style="margin-bottom:0px;width:68%">
-                                                        <div class="bar bar-success leaflet-clickable"
-                                                             ng-click="onDetailClicked(feature, this)"
-                                                             style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
-                                                        <div class="bar bar-danger leaflet-clickable"
-                                                             ng-click="onDetailClicked(feature, this)"
-                                                             style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height row1-height">
+                                    <h2>Provinces with Most Emergency Orders (Past 3 Months) <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                        info
+                                    </i></a></h2>
 
+                                    <div>
+                                        <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
+
+                                        <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
+                                        <div id="addText" style="left:0px; top:0px;"></div>
                                     </div>
+
 
                                 </div>
 
                             </div>
-
 
                         </div>
                     </div>
@@ -992,53 +1012,42 @@ background:#fff;
                   </span>
                     </div>
                     <div class="accordion-body">
-
+                        <ng-include
+                                src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
                         <!---->
                         <div class="row orderFillRate" ng-show="true">
                             <ng-include
+                                    src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
+                            <ng-include
                                     src="'/public/pages/dashboard/new-partials/slide-product-expiry.html'"></ng-include>
-                            <div class="col s12 m4 l5">
-                                <div class="section grey lighten-5 card">
-                                    <span style="font-size: x-small;top: 0px !important;">.</span>
+
+
+                        </div>
+
+
+
+                        <div ng-controller="ShipmentInterfaceController" class="row orderFillRate" ng-show="true">
+
+                            <ng-include
+                                    src="'/public/pages/dashboard/new-partials/shipment-interface-status.html'"></ng-include>
+                            <div class="col s12 m4 l4 ">
+                                <div class="section grey lighten-5 card row3-height">
+                                    <h2>Lab Equipment Status  <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                        info
+                                    </i></a> </h2>
                                     <div>
-                                        <div id="emergencyByProgram" style="height: 300px;margin:0 auto "></div>
+                                        <div id="equipmentStatusContainer" style="height: 300px;margin:0 auto "></div>
+
+                                        <!--
+                                                                    <div id="emergencyTrend" style="height: 300px;margin:0 auto "></div>
+                                        -->
+
                                     </div>
 
                                 </div>
                             </div>
-
                         </div>
 
-
-                        <div class="row orderFillRate">
-                            <div class="col s12 m6 l12">
-                                <div class="section grey lighten-5 card">
-                                    <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
-
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <div class="row orderFillRate">
-                            <div class="col s12 m6 l12">
-                                <h2><span >Regular & Emergency Requisitions</span></h2>
-                                <div class="section grey lighten-5 card">
-                                    <div id="regularEmergencyType"
-                                         style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div ng-controller="ShipmentInterfaceController" class="row orderFillRate" ng-show="true">
-                            <ng-include
-                                    src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
-                            <ng-include
-                                    src="'/public/pages/dashboard/new-partials/shipment-interface-status.html'"></ng-include>
-                        </div>
-                        <ng-include
-                                src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
                     </div>
                 </div>
             </div>

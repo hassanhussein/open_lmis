@@ -96,7 +96,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
    RejectionCount.get({}, function (data) {
         var reject = _.pluck(data.rejections, 'Month');
         var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
-        loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', 'RnR Rejection Trends', 'Rejection Count');
+        loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
 
     });
 
@@ -105,7 +105,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         var chartId = 'emergencyByProgram';
         var category = _.pluck(data, 'Program Name');
         var value = _.pluck(data, 'Emergency');
-        loadTheChart(category, value, chartId, 'column', 'Program Name', 'Percentage of Emergency Orders by Program (all time)', 'Emergency');
+        loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
 
     });
 
@@ -1393,7 +1393,7 @@ DashboardControllerFunction.resolve = {
 
                 }
             });
- HelpContentByKey.get({content_key: 'Facilities'}, function (data) {
+            HelpContentByKey.get({content_key: 'Facilities'}, function (data) {
 
                 if (!isUndefined(data.siteContent)) {
 
@@ -1405,7 +1405,7 @@ DashboardControllerFunction.resolve = {
 
                 }
             });
-             HelpContentByKey.get({content_key: 'Order Fill Rate'}, function (data) {
+            HelpContentByKey.get({content_key: 'Order Fill Rate'}, function (data) {
 
                             if (!isUndefined(data.siteContent)) {
 
@@ -1418,7 +1418,7 @@ DashboardControllerFunction.resolve = {
                             }
                         });
 
-                                     HelpContentByKey.get({content_key: 'Stock Availability'}, function (data) {
+            HelpContentByKey.get({content_key: 'Stock Availability'}, function (data) {
 
                                                     if (!isUndefined(data.siteContent)) {
 
@@ -1430,7 +1430,7 @@ DashboardControllerFunction.resolve = {
 
                                                     }
                                                 });
-                 HelpContentByKey.get({content_key: 'Expired Products'}, function (data) {
+            HelpContentByKey.get({content_key: 'Expired Products'}, function (data) {
 
                                 if (!isUndefined(data.siteContent)) {
 
@@ -1442,7 +1442,7 @@ DashboardControllerFunction.resolve = {
 
                                 }
                             });
- HelpContentByKey.get({content_key: 'Transmission Failure'}, function (data) {
+            HelpContentByKey.get({content_key: 'Transmission Failure'}, function (data) {
 
                                 if (!isUndefined(data.siteContent)) {
 
@@ -1454,7 +1454,7 @@ DashboardControllerFunction.resolve = {
 
                                 }
                             });
-      HelpContentByKey.get({content_key: 'MOS'}, function (data) {
+            HelpContentByKey.get({content_key: 'MOS'}, function (data) {
 
                                      if (!isUndefined(data.siteContent)) {
 
@@ -1467,7 +1467,7 @@ DashboardControllerFunction.resolve = {
                                      }
                                  });
 
-       HelpContentByKey.get({content_key: 'AMC'}, function (data) {
+           HelpContentByKey.get({content_key: 'AMC'}, function (data) {
 
                                            if (!isUndefined(data.siteContent)) {
 
@@ -1491,7 +1491,7 @@ DashboardControllerFunction.resolve = {
 
                                                }
                                            });
-               HelpContentByKey.get({content_key: 'Over Stocked'}, function (data) {
+           HelpContentByKey.get({content_key: 'Over Stocked'}, function (data) {
 
                                                               if (!isUndefined(data.siteContent)) {
 
@@ -1505,7 +1505,7 @@ DashboardControllerFunction.resolve = {
                                                           });
 
 
-             HelpContentByKey.get({content_key: 'Under Stocked'}, function (data) {
+          HelpContentByKey.get({content_key: 'Under Stocked'}, function (data) {
 
                                                             if (!isUndefined(data.siteContent)) {
 
@@ -1518,7 +1518,7 @@ DashboardControllerFunction.resolve = {
                                                             }
                                                         });
 
-              HelpContentByKey.get({content_key: 'MAX Stock Level'}, function (data) {
+          HelpContentByKey.get({content_key: 'MAX Stock Level'}, function (data) {
 
                                                              if (!isUndefined(data.siteContent)) {
 
@@ -1530,7 +1530,7 @@ DashboardControllerFunction.resolve = {
 
                                                              }
                                                          });
-               HelpContentByKey.get({content_key: 'Reporting Rate'}, function (data) {
+           HelpContentByKey.get({content_key: 'Reporting Rate'}, function (data) {
 
                                                                           if (!isUndefined(data.siteContent)) {
 
@@ -1543,7 +1543,7 @@ DashboardControllerFunction.resolve = {
                                                                           }
                                                                       });
 
- HelpContentByKey.get({content_key: 'R&R Status Summary'}, function (data) {
+          HelpContentByKey.get({content_key: 'R&R Status Summary'}, function (data) {
 
                                                                           if (!isUndefined(data.siteContent)) {
 
@@ -1556,7 +1556,7 @@ DashboardControllerFunction.resolve = {
                                                                           }
                                                                       });
 //                                                                      Provinces with Most Emergency Orders (Past 3 Months)
-HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3 Months)'}, function (data) {
+          HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3 Months)'}, function (data) {
 
                                                                           if (!isUndefined(data.siteContent)) {
 
@@ -1569,7 +1569,7 @@ HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3
                                                                           }
                                                                       });
 
- HelpContentByKey.get({content_key: 'Trend of Emergency Orders Submitted Per Month'}, function (data) {
+          HelpContentByKey.get({content_key: 'Trend of Emergency Orders Submitted Per Month'}, function (data) {
 
                                                                            if (!isUndefined(data.siteContent)) {
 
@@ -1582,7 +1582,7 @@ HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3
                                                                            }
                                                                        });
 
- HelpContentByKey.get({content_key: 'Emergency Order By Program (Past 1 Month)'}, function (data) {
+          HelpContentByKey.get({content_key: 'Emergency Order By Program (Past 1 Month)'}, function (data) {
 
                                                                            if (!isUndefined(data.siteContent)) {
 
@@ -1594,6 +1594,46 @@ HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3
 
                                                                            }
                                                                        });
+          HelpContentByKey.get({content_key: 'RnR Rejection Trends'}, function (data) {
+
+                                                                                                                                                                         if (!isUndefined(data.siteContent)) {
+
+                                                                                                                                                                             helps.rnrRejectionTrenhelp = data.siteContent;
+
+                                                                                                                                                                         } else {
+
+                                                                                                                                                                             helps.rnrRejectionTrenhelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                                                                                                                         }
+                                                                                                                                                                     });
+            HelpContentByKey.get({content_key: 'Regular & Emergency Requisitions'}, function (data) {
+
+                                                                                                if (!isUndefined(data.siteContent)) {
+
+                                                                                                    helps.regularEmergencyRequisitionhelp = data.siteContent;
+
+                                                                                                } else {
+
+                                                                                                    helps.rnrRejectionTrendelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                                                }
+                                                                                            });
+
+              HelpContentByKey.get({content_key: 'Percentage of Emergency Orders by Program (all time)'}, function (data) {
+                                                                                                                                                                                          if (!isUndefined(data.siteContent)) {
+
+                                                                                                                                                                                                helps.percentageOfEmergencyByProgramhelp = data.siteContent;
+
+                                                                                                                                                                                            } else {
+
+                                                                                                                                                                                                helps.percentageOfEmergencyByProgramhelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                                                                                                                                            }
+                                                                                                                                                                                        });
+
+
+
+
             deferred.resolve(helps);
 
         }, 100);
