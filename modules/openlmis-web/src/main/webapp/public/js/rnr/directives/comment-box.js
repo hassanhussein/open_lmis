@@ -35,6 +35,7 @@ app.directive('commentBox',function (RequisitionComment, $routeParams) {
       };
 
       scope.$watch("show", function () {
+        scope.commentId = '';
         if (scope.show) {
           angular.element(document).bind("keyup", commentEscapeKeyHandler);
         } else {
@@ -47,9 +48,17 @@ app.directive('commentBox',function (RequisitionComment, $routeParams) {
         scope.comment = scope.comment.substring(0, 250);
       });
 
+      scope.startEdit = function(comment){
+        scope.comment = comment.commentText;
+        scope.commentId = comment.id;
+      };
+
       scope.addComments = function () {
         if (isUndefined(scope.comment)) return;
         var comment = {"commentText":scope.comment };
+        if(scope.commentId !== ''){
+          comment.commentId = scope.commentId;
+        }
 
         var successHandler = function (data) {
           scope.comment = "";
