@@ -1639,7 +1639,44 @@ DashboardControllerFunction.resolve = {
                                                                                                                                                                                             }
                                                                                                                                                                                         });
 
+ HelpContentByKey.get({content_key: 'Percentage of Regular Orders by Program (all time)'}, function (data) {
 
+                                                                          if (!isUndefined(data.siteContent)) {
+
+                                                                              helps.percentageofRegularOrdersHelp = data.siteContent;
+
+                                                                          } else {
+
+                                                                              helps.percentageofRegularOrdersHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                          }
+                                                                      });
+
+          HelpContentByKey.get({content_key: 'Trend of Regular Orders Submitted Per Month'}, function (data) {
+
+                                                                           if (!isUndefined(data.siteContent)) {
+
+                                                                               helps.trendOfReHelp = data.siteContent;
+
+                                                                           } else {
+
+                                                                               helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                           }
+                                                                       });
+
+          HelpContentByKey.get({content_key: 'Regular Order By Program (Past 1 Month)'}, function (data) {
+
+                                                                           if (!isUndefined(data.siteContent)) {
+
+                                                                               helps.regularByProgramHelp = data.siteContent;
+
+                                                                           } else {
+
+                                                                               helps.regularByProgramHelp = {htmlContent: messageService.get('content.help.default')};
+
+                                                                           }
+                                                                       });
 
 
             deferred.resolve(helps);
