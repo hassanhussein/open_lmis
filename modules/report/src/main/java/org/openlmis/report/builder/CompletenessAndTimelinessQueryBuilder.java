@@ -84,7 +84,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                completness_with_nonreporting_periods as (  \n" +
                 "                                                      select c.geographiczoneid, periods.*,  \n" +
                 "                                                            (select count(*) from vw_facility_start_periods fsp  \n" +
-                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and uf.program_id =  '" + params.getProgram() + "'::int and uf.user_id =  '" + params.getUserId() + "'::int    \n" +
+                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and  fsp.programid=uf.program_id and uf.program_id =  '" + params.getProgram() + "'::int and uf.user_id =  '" + params.getUserId() + "'::int    \n" +
                 "                                                             where fsp.startdate <= periods.period_end_date  \n" +
                 "                                                         and fsp.geographiczoneid = c.geographiczoneid ) expected  \n" +
                 "                                                        from   \n" +
@@ -200,7 +200,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                completness_with_nonreporting_periods as (  \n" +
                 "                                      select c.geographiczoneid, periods.*,  \n" +
                 "                                            (select count(*) from vw_facility_start_periods fsp  \n" +
-                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and uf.program_id =  " + params.getProgram() + "::int and uf.user_id =  " + params.getUserId() + "::int   \n" +
+                "                        join vw_user_facilities uf on uf.facility_id = fsp.facilityid and  fsp.programid=uf.program_id and uf.program_id =  " + params.getProgram() + "::int and uf.user_id =  " + params.getUserId() + "::int   \n" +
                 "                                       where fsp.startdate <= periods.period_start_date  \n" +
                 "                                         and fsp.geographiczoneid = c.geographiczoneid) expected  \n" +
                 "                                        from   \n" +
