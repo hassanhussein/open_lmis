@@ -142,8 +142,15 @@ public class RequisitionService {
     program = programService.getById(program.getId());
     ProcessingPeriod period = findPeriod(facility, program, emergency);
 
-    if (proposedPeriod != null && proposedPeriod.getId() != period.getId()) {
+   /* if (proposedPeriod != null && proposedPeriod.getId() != period.getId()) {
         period = proposedPeriod;
+    }*/
+    if (proposedPeriod != null) {
+      if (proposedPeriod.getId() != period.getId()) {
+        // take caution in this case.
+        // todo: log a warning here.
+        period = proposedPeriod;
+      }
     }
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
@@ -510,6 +517,9 @@ public class RequisitionService {
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
+
+
+
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
 
     Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(facilityId, programId);
@@ -517,7 +527,14 @@ public class RequisitionService {
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
 
 
-    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+    List<ProcessingPeriod> periods;
+
+    //Get program from Monthly reporting
+    Program program = programService.getMonthlyEnabledProgram();
+    if(null != program)
+       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+    else
+       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
     List<ProcessingPeriod> rejected = processingScheduleService.getOpenPeriods(facilityId, programId, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
@@ -533,7 +550,8 @@ public class RequisitionService {
     Set<ProcessingPeriod> finalList = new HashSet<>(periods);
     periods = new ArrayList<>(finalList);
     // sort the list of periods by start date
-    Collections.sort(periods, Comparator.comparing(ProcessingPeriod::getStartDate));
+    //need to change
+    Collections.sort(periods, Comparator.comparing(ProcessingPeriod::getId));
 
     return periods;
   }

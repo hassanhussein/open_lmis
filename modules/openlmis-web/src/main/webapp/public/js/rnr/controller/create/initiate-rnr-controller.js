@@ -205,6 +205,7 @@ function InitiateRnrController($scope, $location, Requisitions, AuthorizationSer
     }
     PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, emergency: $scope.selectedRnrType.emergency},
       function (data) {
+      console.log(data);
         $scope.error = "";
         $scope.isEmergency = data.is_emergency;
         createPeriodWithRnrStatus(data.periods, data.rnr_list);

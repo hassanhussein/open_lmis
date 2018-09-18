@@ -128,4 +128,8 @@ public class ProgramRepository {
     return mapper.getAllIvdPrograms();
 
   }
+
+    public Program getMonthlyEnabledProgram() {
+       return mapper.getMonthlyEnabledProgram();
+    }
 }

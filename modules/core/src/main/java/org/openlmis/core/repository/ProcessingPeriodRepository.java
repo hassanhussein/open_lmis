@@ -127,4 +127,11 @@ public class ProcessingPeriodRepository {
     public List<ProcessingPeriod> getPeriodsByProgramCode(String code) {
       return mapper.getPeriodsByProgramCode(code);
     }
+
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriodForMonthlyReporting(Long scheduleId, Long startPeriodId, Date afterDate, Date beforeDate) {
+    return startPeriodId == null ?
+            mapper.getAllPeriodsAfterDate(scheduleId, afterDate, beforeDate) :
+            mapper.getAllPeriodsAfterDateAndPeriodForByMonthlyReporting(scheduleId, startPeriodId, afterDate, beforeDate);
+  }
+
 }

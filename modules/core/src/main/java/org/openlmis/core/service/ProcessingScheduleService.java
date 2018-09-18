@@ -157,4 +157,12 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsByYear(Long year) {
         return periodRepository.getAllPeriodsByYear(year);
     }
+
+
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriodForMonthlyReporting(Long facilityId, Long programId, Date programStartDate, Long startingPeriodId) {
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
+    return periodRepository.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
+            startingPeriodId, programStartDate, new Date());
+  }
+
 }

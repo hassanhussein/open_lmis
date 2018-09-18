@@ -24,8 +24,8 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-  @Insert({"INSERT INTO programs(code, name, description, active, push, templateConfigured, regimenTemplateConfigured)",
-    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push}, #{templateConfigured}, #{regimenTemplateConfigured})"})
+  @Insert({"INSERT INTO programs(code, name, description, active, push, templateConfigured, regimenTemplateConfigured,enableMonthlyReporting)",
+    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push}, #{templateConfigured}, #{regimenTemplateConfigured},#{enableMonthlyReporting})"})
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
 
@@ -176,7 +176,8 @@ public interface ProgramMapper {
     "enableSkipPeriod = #{enableSkipPeriod}," +
     "enableIvdForm = #{enableIvdForm},  " +
     "budgetingApplies = #{budgetingApplies}, " +
-    "usepriceschedule = #{usePriceSchedule}" +
+    "usepriceschedule = #{usePriceSchedule}," +
+    " enableMonthlyReporting = #{enableMonthlyReporting} " +
     "WHERE id = #{id}")
   void update(Program program);
 
@@ -184,4 +185,7 @@ public interface ProgramMapper {
     " where enableIvdForm = true " +
     " order by name")
   List<Program> getAllIvdPrograms();
+
+  @Select("select * from programs where enableMonthlyReporting = true")
+  Program getMonthlyEnabledProgram();
 }

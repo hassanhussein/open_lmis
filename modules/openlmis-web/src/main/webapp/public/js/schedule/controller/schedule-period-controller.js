@@ -23,10 +23,10 @@ function SchedulePeriodController($scope, $routeParams, Periods, schedule, Perio
 
   function prepareNewPeriod() {
     if ($scope.periodList.length === 0) {
-      $scope.newPeriod = { enableOrder: true};
+      $scope.newPeriod = { enableOrder: true,isReporting:false};
       return;
     }
-    $scope.newPeriod = {startDate: $scope.nextStartDate, enableOrder: true};
+    $scope.newPeriod = {startDate: $scope.nextStartDate, enableOrder: true,isReporting:false};
     $scope.refreshEndDateOffset($scope.newPeriod.startDate);
   }
 

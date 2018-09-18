@@ -42,6 +42,7 @@ public class Program extends BaseModel {
   private Boolean enableIvdForm;
   private Boolean push;
   private Boolean usePriceSchedule;
+  private Boolean enableMonthlyReporting;
 
   public Program(Long id) {
     this.id = id;

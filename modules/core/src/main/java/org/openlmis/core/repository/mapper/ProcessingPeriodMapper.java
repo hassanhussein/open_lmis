@@ -152,4 +152,16 @@ public interface ProcessingPeriodMapper {
             "             join programs p on p.id = sc.programid where p.code = #{program}) " +
             "         order by name")
     List<ProcessingPeriod> getPeriodsByProgramCode(String code);
+
+
+    @Select("SELECT * FROM processing_periods " +
+            "WHERE scheduleId = #{scheduleId} " +
+            "AND endDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id = #{startingPeriodId}) " +
+            "AND startDate <= #{beforeDate} " +
+            "AND endDate >= #{afterDate}" +
+            "ORDER BY startDate")
+    List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriodForByMonthlyReporting(@Param(value = "scheduleId") Long scheduleId,
+                                                           @Param(value = "startingPeriodId") Long startingPeriodId,
+                                                           @Param(value = "afterDate") Date afterDate,
+                                                           @Param(value = "beforeDate") Date beforeDate);
 }

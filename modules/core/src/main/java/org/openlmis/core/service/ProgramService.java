@@ -137,4 +137,8 @@ public class ProgramService {
   public List<Program> getProgramsForUserByRights(Long userId, String rightName) {
     return programRepository.getActiveProgramsForUserWithRights(userId, rightName);
   }
+
+    public Program getMonthlyEnabledProgram() {
+    return  programRepository.getMonthlyEnabledProgram();
+    }
 }
