@@ -59,8 +59,9 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                                join vw_requisitions_submitted_status r on r.programid = ps.programid and r.facilityid = ps.facilityid  and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')   \n" +
                 "                                                                join processing_periods pp on pp.id = r.periodid    \n" +
                 "                                                                right join facilities f on f.id = ps.facilityId      \n" +
-                "                                                                and pp.startdate::date >='" + params.getPeriodStart() + "'::date and pp.enddate::date <=   '" + params.getPeriodEnd() +"'::date \n" +
-                "                                                                join geographic_zones z on z.id = f.geographicZoneId     \n" +
+                "                                                                join geographic_zones z on z.id = f.geographicZoneId    " +
+                " where   pp.startdate::date >='" + params.getPeriodStart() + "'::date and pp.enddate::date <=   '" + params.getPeriodEnd() +"'::date " +
+                " and ps.programid= " +params.getProgram() +" \n" +
                 "                                                       )      \n" +
                 "                                                         select                                                 \n" +
                 "                                                                vd.region_name,    \n" +
@@ -87,11 +88,12 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                             where fsp.startdate <= periods.period_end_date  \n" +
                 "                                                         and fsp.geographiczoneid = c.geographiczoneid ) expected  \n" +
                 "                                                        from   \n" +
-                "                                                         (  \n" +
-                "                                                              select id, scheduleid,name period_name, startdate period_start_date, enddate period_end_date from processing_periods pp   \n" +
-                "                                                                where pp.startdate::date >=  '" + params.getPeriodStart() + "'::date and pp.enddate::date <=  '" + params.getPeriodEnd() + "'::date \n" +
+                " (   \n" +
+                "                                                              select pp.id,pp.scheduleid, pp.name period_name, pp.startdate period_start_date , pp.enddate period_end_date from processing_periods pp  \n" +
+                "                where pp.scheduleid in (select scheduleid from  requisition_group_program_schedules rgps where  rgps.programid= "+ params.getProgram() +"::int)  " +
+                " and  pp.startdate::date >= '"+params.getPeriodStart()+"' and pp.enddate::date <= '"+params.getPeriodEnd()+"'   \n" +
                 "                                                              AND pp.numberofmonths = 1   \n" +
-                "                                                          ) periods ,   \n" +
+                "                                                          ) periods , " +
                 "                                                          (  \n" +
                 "                                                              select distinct geographiczoneid from   \n" +
                 "                                                              completeness_with_reporting_periods c  \n" +
@@ -109,7 +111,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                    c.ontime,     \n" +
                 "                                                    c.late,   \n" +
                 "                                                    case when nonreporting.expected > 0 then trunc((c.reported::numeric/nonreporting.expected::numeric)*100,2) else 0 end percentReported,   \n" +
-                "                                                    case when nonreporting.expected > 0 then trunc((c.late::numeric/nonreporting.expected::numeric)*100,2) else 0 end percentLate,  \n" +
+                "                                                    case when c.reported > 0 then trunc((c.late::numeric/c.reported::numeric)*100,2) else 0 end percentLate,  \n" +
                 "                                                    CASE WHEN c.geographiczoneid is null then 'NONREPORTING' else 'REPORTING' end as reportingStatus  \n" +
                 "                                                FROM completness_with_nonreporting_periods nonreporting   \n" +
                 "                                                    join geographic_zones z on z.id = nonreporting.geographiczoneid    \n" +
@@ -169,8 +171,10 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                      join vw_requisitions_submitted_status vr on vr.programid = ps.programid and vr.facilityid = ps.facilityid and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')    \n" +
                 "                      join processing_periods pp on pp.id = vr.periodid    \n" +
                 "                      right join facilities f on f.id = ps.facilityId      \n" +
-                "                      and pp.startdate::date >= '"+params.getPeriodStart()+"'::date and pp.enddate::date <= '"+params.getPeriodEnd()+"'::date   \n" +
                 "                      join geographic_zones z on z.id = f.geographicZoneId     \n" +
+                "                      where pp.startdate::date >= '"+params.getPeriodStart()+"'::date and pp.enddate::date <= '"+params.getPeriodEnd()+"'::date  " +
+                "  and   ps.programid=  '" +params.getProgram() +"'" +
+
                 "                      )      \n" +
                 "\n" +
                 "                      select     \n" +
@@ -185,7 +189,9 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                      sum(case when reporting_status = 'L' then 1 else 0 end) late   \n" +
                 "                    from temp t    \n" +
                 "                        join vw_districts vd on vd.district_id = t.geographiczoneid   \n" +
-                "                       where vd.district_id in (select district_id from vw_user_facilities where user_id =  " + params.getUserId() + "::int   and program_id =  " + params.getProgram() + "::int)  \n" +
+                "                       where vd.district_id in (select district_id" +
+                "                    from vw_user_facilities" +
+                "                              where user_id =  " + params.getUserId() + "::int   and program_id =  " + params.getProgram() + "::int)  \n" +
                writeDistrictPredicate(params.getDistrict())+
                 "                     group by 1, 2, 3, 4,5 ,6   \n" +
                 "                  ) a    \n" +
@@ -199,8 +205,9 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                         and fsp.geographiczoneid = c.geographiczoneid) expected  \n" +
                 "                                        from   \n" +
                 "                                         (  \n" +
-                "                                              select id, name period_name, startdate period_start_date from processing_periods pp   \n" +
-                "                                                where pp.startdate::date >= '"+params.getPeriodStart()+"' and pp.enddate::date <= '"+params.getPeriodEnd()+"'  \n" +
+                "                                              select pp.id, pp.name period_name, pp.startdate period_start_date from processing_periods pp \n" +
+                "where pp.scheduleid in (select scheduleid from  requisition_group_program_schedules rgps where  rgps.programid= "+params.getProgram()+"::int)" +
+                "                                                and  pp.startdate::date >= '"+params.getPeriodStart()+"' and pp.enddate::date <= '"+params.getPeriodEnd()+"'  \n" +
                 "                                              AND pp.numberofmonths = 1  \n" +
                 "                                          ) periods ,   \n" +
                 "                                          (  \n" +
