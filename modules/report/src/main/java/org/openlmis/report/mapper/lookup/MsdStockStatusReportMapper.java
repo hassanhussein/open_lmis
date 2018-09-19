@@ -39,7 +39,8 @@ public interface MsdStockStatusReportMapper {
             "            FROM msd_stock_statuses s \n" +
             "            JOIN fACILITIES F ON s.facilityCode::text = f.code::text\n" +
             "            JOIN geographic_Zones gz ON F.geographiczoneid = gz.id AND levelid = 2\n" +
-            "            JOIN products p On p.CODE::text =s.productCode \n" +
+            "            JOIN products p On p.CODE::text =s.productCode" +
+            "     where s.createddate > current_timestamp - interval '1 day' \n" +
             "            group by p.CODE,productCode,productname\n")
     List<HashMap<String,Object>>getStockStatus();
 

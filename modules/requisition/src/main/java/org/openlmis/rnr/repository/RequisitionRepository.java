@@ -30,6 +30,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.openlmis.rnr.domain.RnrStatus.*;
 
@@ -85,6 +86,9 @@ public class RequisitionRepository {
 
   @Autowired
   private SourceOfFundLineItemMapper fundLineItemMapper;
+
+  @Autowired
+  private RejectionReasonMapper rejectionReasonMapper;
 
   public void insert(Rnr requisition) {
     requisition.setStatus(INITIATED);
@@ -454,4 +458,15 @@ public class RequisitionRepository {
 
   }
 
+  public List<RejectionReason> getRejectionsByRnrID(Long rnrId) {
+    return rejectionReasonMapper.getByRnrId(rnrId);
+  }
+
+  public void insertRejectionReason(RejectionReason reason) {
+    rejectionReasonMapper.insert(reason);
+  }
+
+  public List<Map<String,Object>>getAllRejections(){
+    return rejectionReasonMapper.getAllRejections();
+  }
 }

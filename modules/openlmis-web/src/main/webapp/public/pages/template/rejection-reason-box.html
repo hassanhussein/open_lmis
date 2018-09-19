@@ -1,0 +1,72 @@
+<div ng-hide="!show" class="reason-popup comments-popup" ng-class="{'view': !updatable}">
+
+    <!--
+      ~ This program is part of the OpenLMIS logistics management information system platform software.
+      ~ Copyright © 2013 VillageReach
+      ~
+      ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+      ~  
+      ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+      ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+     -->
+
+
+    <h4>
+        <span>Add Reasons For Rejection</span>
+        <a href="" ng-click="show=false; comment=''" class="link-minimize">
+            <i id="commentClose" class="icon-remove"></i>
+        </a>
+    </h4>
+
+    <!--<div ng-hide="rnrComments.length" class="note" openlmis-message="messages.commentBox.noComment">
+    </div>-->
+    <div class="row-fluid">
+
+        <div class="span12">
+
+            <div id="checkboxes">
+                <br/>
+                <ul ng-repeat="res in  rejectionReasons" id="comments-list" style="list-style: none;">
+                    <li class="comment">
+                        <span>{{res.name}}</span>
+                        <span>
+                            <input type="checkbox" ng-model="selectedItems" ng-value="res" class="pull-right"/>
+                        </span>
+
+                    </li>
+                </ul>
+            </div>
+      <!--  <div>
+            <label for="reason" class="labels">Reasons</label>
+            <div>
+                <select id="reason" ui-select2 class="input-medium" ng-model="reason" ng-change="">
+                    <option ng-repeat="option in rejectionReasons" value="{{ option.id }}" ng-selected="reason == option.id">{{option.name}}</option>
+                </select>
+            </div>
+
+        </div>-->
+        </div>
+      <!--  <div class="span4">
+            <br/>
+            <input style="top: 1px !important;" type="button" openlmis-message="button.add" ng-click="addReasons()"
+                   ng-disabled="!reason"
+                   class="btn btn-primary"/>
+
+        </div>-->
+
+
+    </div>
+
+<br/><br/>
+
+
+    <div ng-show="updatable">
+
+        <div>
+            <input id="addButton" type="button" openlmis-message="button.reject" ng-click="rejectRN()" ng-disabled="!selectedItems"
+                   class="btn btn-primary pull-right"/>
+        </div>
+
+    </div>
+    <span class="beak-down"></span>
+</div>

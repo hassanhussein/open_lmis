@@ -32,9 +32,15 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
 
   requisitionService.populateScope($scope, $location, $routeParams);
 
+  $scope.openCommentBox = false;
+  $scope.showReject =function(){
+      $scope.openCommentBox = true;
+      $scope.disable = true;
+  };
 
-  $scope.rejectRnR = function( ){
-    var callBack = function (result) {
+  $scope.$parent.rejectRnR = function( ){
+
+      var callBack = function (result) {
 
       if (result) {
         // reject
@@ -57,7 +63,16 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
       body: "label.rnr.confirm.return"
     };
 
-    OpenLmisDialog.newDialog(options, callBack, $dialog);
+      var callBefore = function () {
+        $scope.openCommentBox = true;
+        $scope.disable = true;
+          OpenLmisDialog.newDialog(options, callBack, $dialog);
+
+      };
+      $scope.openCommentBox = false;
+      callBefore();
+
+
   };
 
   $scope.saveRnr = function (preventMessage) {

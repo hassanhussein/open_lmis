@@ -852,5 +852,23 @@ public class RequisitionService {
     return requisitionRepository.getRequisitionDetailsByFacilityAndProgram(facilityCode, programCode);
   }
 
+  public List getRejectionsByRnrId(Long rnrId) {
+
+    List<RejectionReason> rejectionReasons = requisitionRepository.getRejectionsByRnrID(rnrId);
+    for (RejectionReason rejectionReason : rejectionReasons) {
+      User user = userService.getById(rejectionReason.getAuthor().getId());
+      rejectionReason.setAuthor(user.basicInformation());
+    }
+    return rejectionReasons;
+  }
+
+  public void insertRejectionReason(RejectionReason reason) {
+    requisitionRepository.insertRejectionReason(reason);
+  }
+
+  public List<Map<String,Object>>getAllRejections(){
+    return requisitionRepository.getAllRejections();
+  }
+
 }
 

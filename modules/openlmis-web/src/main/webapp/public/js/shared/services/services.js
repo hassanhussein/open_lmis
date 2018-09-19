@@ -543,3 +543,10 @@ services.factory('HomeFacilityWithType', function ($resource) {
 services.factory('FundingSource', function ($resource) {
     return $resource('/requisitions/funding-sources.json', {}, {});
 });
+
+services.factory('RequisitionRejection', function ($resource) {
+    return $resource('/requisitions/:id/rejections.json', {}, {});
+});
+services.factory('AllRejections', function ($resource) {
+    return $resource('/requisitions/get-rejections.json', {}, {});
+});

@@ -64,10 +64,10 @@
   <br><br>
 
   <div form-toolbar id="action_buttons" class="action-buttons">
-    <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+      <span ng-if="rnr.period.enableOrder"> <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include></span>
 
         <div class="form-cell button-row">
-          <input ng-show="rnr.status != 'SKIPPED' && rnr.status != 'RELEASED'" type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();" openlmis-message="button.rnr.reject" />
+          <input ng-show="rnr.status != 'SKIPPED' && rnr.status != 'RELEASED'" type="button" class="btn btn-primary submit-button" ng-click="showReject(); showCommentBox=!showCommentBox" openlmis-message="button.rnr.reject" />
 
             <input id="saveButton" type="button" openlmis-message="button.save" ng-click="saveRnr()"
                    class="btn btn-primary save-button"
@@ -77,10 +77,15 @@
                  ng-disabled="!canApproveRnr"/>
 
 
+          <span ng-if="openCommentBox"> <input style="float: right;margin-left: 15px;margin-top: 4px;" ng-class="{'btn-warning': rnrComments.length}" id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn reasons-button"
+                                                  openlmis-message="reasons.header"/>
+            <reason-box updatable="true" show="showCommentBox"></reason-box>
+         </span>
 
-          <input ng-class="{'btn-warning': rnrComments.length}" id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+            <span ng-if="!openCommentBox"> <input ng-class="{'btn-warning': rnrComments.length}" id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
                    openlmis-message="comments.header"/>
             <comment-box updatable="true" show="showCommentBox"></comment-box>
+         </span>
         </div>
         <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
         <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" fade-out="3000"

@@ -21,6 +21,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.rnr.domain.Comment;
+import org.openlmis.rnr.domain.RejectionReason;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -356,4 +357,28 @@ public class RequisitionController extends BaseController {
 
     return OpenLmisResponse.response("sources", requisitionService.insertSourceOfFundLineItem(dto));
   }*/
+
+  @RequestMapping(value = "/requisitions/{id}/rejections", method = POST, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
+  public ResponseEntity<OpenLmisResponse> insertRejection(@RequestBody RejectionReason comment,
+                                                        @PathVariable("id") Long id,
+                                                        HttpServletRequest request) {
+    comment.setRnrId(id);
+    User author = new User();
+    author.setId(loggedInUserId(request));
+    comment.setAuthor(author);
+    requisitionService.insertRejectionReason(comment);
+    return OpenLmisResponse.response("rejections", requisitionService.getRejectionsByRnrId(id));
+  }
+
+  @RequestMapping(value = "/requisitions/{id}/rejections", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getRejectionsForARnr(@PathVariable Long id) {
+    return response("rejections", requisitionService.getRejectionsByRnrId(id));
+  }
+
+  @RequestMapping(value = "/requisitions/get-rejections", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getAllRejections() {
+    return response("rejections", requisitionService.getAllRejections());
+  }
+
 }
