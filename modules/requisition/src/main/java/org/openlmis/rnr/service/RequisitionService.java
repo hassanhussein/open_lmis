@@ -507,8 +507,16 @@ public class RequisitionService {
       }
       periodIdForLastRequisition = lastRegularRequisition.getPeriod().getId();
     }
+     //Original Settings
+    List<ProcessingPeriod> periods;
 
-    List<ProcessingPeriod> periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
+    //Get program from Monthly reporting
+    Program enabledProgram = programService.getMonthlyEnabledProgram();
+
+    if(null != enabledProgram)
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
+    else
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
 
     if (periods.isEmpty()) {
       throw new DataException("error.program.configuration.missing");
@@ -517,8 +525,6 @@ public class RequisitionService {
   }
 
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
-
-
 
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
 
