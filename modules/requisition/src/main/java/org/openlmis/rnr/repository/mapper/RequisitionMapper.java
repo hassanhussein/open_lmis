@@ -364,5 +364,28 @@ public interface RequisitionMapper {
           "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
   List<HashMap<String,Object>> getRequisitionsWithLineItemsByFacilityAndProgram(@Param("facilityCode") String facilityCode,@Param("programCode") String programCode);
 
+  @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
+  @Results(value = {
+          @Result(property = "id", column = "id"),
+          @Result(property = "program.id", column = "programId"),
+          @Result(property = "facility.id", column = "facilityId"),
+          @Result(property = "period.id", column = "periodId"),
+          @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsWithoutSkippedItemsByRnrId")),
+          @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsWithoutSkippedItemsByRnrId")),
+          @Result(property = "regimenLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsWithoutSkippedItemsByRnrId")),
+          @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
+          @Result(property = "patientQuantifications", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
+          @Result(property = "rnrSignatures", column = "id", javaType = List.class,
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
+          @Result(property = "manualTestLineItems", column = "id", javaType = List.class,
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId"))
+  })
+  Rnr getAllWithoutSkippedItemsById(Long rnrId);
+
 }
 

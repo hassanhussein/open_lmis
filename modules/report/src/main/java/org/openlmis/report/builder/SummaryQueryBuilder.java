@@ -100,7 +100,7 @@ public class SummaryQueryBuilder {
 
     private static void writePredicates(SummaryReportParam filter) {
 
-        WHERE(rnrStatusFilteredBy("r.status", "'APPROVED', 'RELEASED'"));
+        WHERE(rnrStatusFilteredBy("r.status", "'AUTHORIZED','APPROVED', 'RELEASED'"));
         WHERE(periodIsFilteredBy("r.periodId"));
         WHERE(programIsFilteredBy("r.programId"));
 

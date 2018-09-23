@@ -110,8 +110,11 @@ public interface GeographicZoneReportMapper {
             " INNER JOIN programs_supported ps on ps.facilityid = f.id\n" +
             " INNER JOIN requisition_group_program_schedules rgps on rgps.requisitiongroupid =\n" +
             " rgm.requisitiongroupid and ps.programid = rgps.programid\n" +
-             " WHERE (f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{programId}) \n" +
-            " AND f.id not in (\n" +
+/*
+             " WHERE (f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{programId}) and \n" +
+*/
+             " WHERE ( \n" +
+            "  f.id not in (\n" +
             " select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')  and r.periodid =  #{periodId} and r.programid =#{programId} )" +
             " AND  (gz.district_id =  #{geographicZoneId} or gz.zone_id = #{geographicZoneId} or gz.region_id = #{geographicZoneId}\n" +
             " or gz.parent = #{geographicZoneId} ) AND ps.programId = #{programId} AND rgps.scheduleId = #{schedule})\n" +

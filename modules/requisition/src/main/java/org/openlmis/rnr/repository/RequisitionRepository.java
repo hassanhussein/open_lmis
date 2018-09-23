@@ -469,4 +469,11 @@ public class RequisitionRepository {
   public List<Map<String,Object>>getAllRejections(){
     return rejectionReasonMapper.getAllRejections();
   }
+
+  public Rnr getAllWithoutSkippedItemsById(Long rnrId) {
+    Rnr requisition = requisitionMapper.getAllWithoutSkippedItemsById(rnrId);
+    if (requisition == null) throw new DataException("error.rnr.not.found");
+    return requisition;
+  }
+
 }

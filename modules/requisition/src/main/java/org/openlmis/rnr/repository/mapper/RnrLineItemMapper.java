@@ -181,4 +181,24 @@ public interface RnrLineItemMapper {
       "WHERE rnrId = #{rnrId} and fullSupply = FALSE",
       "AND skipped = FALSE"})
   List<RnrLineItem> getNonSkippedNonFullSupplyRnrLineItemsByRnrId(Long rnrId);
+
+
+  @Select({"SELECT requisition_line_items.*, products.strength, products.primaryname ",
+          "FROM requisition_line_items, products ",
+          "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true and requisition_line_items.skipped = false ",
+          "and requisition_line_items.productcode = products.code ",
+          "order by productDisplayOrder;"})
+  @Results(value = {
+          @Result(property = "id", column = "id"),
+          @Result(property = "productStrength", column = "strength"),
+          @Result(property = "productPrimaryName", column = "primaryname"),
+          @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
+          @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
+  })
+  public List<RnrLineItem> getRnrLineItemsWithoutSkippedItemsByRnrId(Long rnrId);
+
+  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false and skipped = false")
+  public List<RnrLineItem> getNonFullSupplyRnrLineItemsWithoutSkippedItemsByRnrId(Long rnrId);
+
 }

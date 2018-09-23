@@ -870,5 +870,12 @@ public class RequisitionService {
     return requisitionRepository.getAllRejections();
   }
 
+  public Rnr getAllWithoutSkippedItemsById(Long id) {
+    Rnr savedRnr = requisitionRepository.getAllWithoutSkippedItemsById(id);
+    fillSupportingInfo(savedRnr);
+    fillSupplyingDepot(savedRnr);
+    savedRnr.setSubmittedDate(getOperationDateFor(savedRnr.getId(), RnrStatus.SUBMITTED.toString()));
+    return savedRnr;
+  }
 }
 

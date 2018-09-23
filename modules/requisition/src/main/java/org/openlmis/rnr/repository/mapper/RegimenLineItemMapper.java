@@ -69,4 +69,31 @@ public interface RegimenLineItemMapper {
 
     "remarks = #{remarks},modifiedBy = #{modifiedBy}, modifiedDate =CURRENT_TIMESTAMP where id=#{id}")
   void update(RegimenLineItem regimenLineItem);
+
+
+    @Select("SELECT * FROM regimen_line_items WHERE rnrId = #{rnrId} AND skipped = FALSE ORDER BY regimenCategoryDisplayOrder, regimenDisplayOrder")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "code", column = "code"),
+            @Result(property = "name", column = "name"),
+            @Result(property = "patientsOnTreatment", column = "patientsOnTreatment"),
+
+            @Result(property = "patientsToInitiateTreatment", column = "patientsToInitiateTreatment"),
+            @Result(property = "remarks", column = "remarks"),
+            @Result(property = "patientsStoppedTreatment", column = "patientsStoppedTreatment"),
+
+            @Result(property = "patientsOnTreatmentAdult", column = "patientsOnTreatmentAdult"),
+            @Result(property = "patientsToInitiateTreatmentAdult", column = "patientsToInitiateTreatmentAdult"),
+            @Result(property = "patientsStoppedTreatmentAdult", column = "patientsStoppedTreatmentAdult"),
+
+            @Result(property = "patientsOnTreatmentChildren", column = "patientsOnTreatmentChildren"),
+            @Result(property = "patientsToInitiateTreatmentChildren", column = "patientsToInitiateTreatmentChildren"),
+            @Result(property = "patientsStoppedTreatmentChildren", column = "patientsStoppedTreatmentChildren"),
+
+            @Result(property = "regimenDisplayOrder", column = "regimenDisplayOrder"),
+            @Result(property = "category.name", column = "regimenCategory"),
+            @Result(property = "category.displayOrder", column = "regimenCategoryDisplayOrder"),
+    })
+    List<RegimenLineItem> getRegimenLineItemsWithoutSkippedItemsByRnrId(Long rnrId);
+
 }
