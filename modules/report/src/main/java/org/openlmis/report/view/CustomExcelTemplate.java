@@ -185,26 +185,26 @@ public class CustomExcelTemplate extends AbstractView {
   private void writeReportData(XSSFSheet sheet, Map queryModel, List reportContent) throws IOException {
     List<ColumnModel> columns = getColumnDefinitions(queryModel);
 
-    String pivotRowFieldName = columns.stream()
+    String pivotRowFieldName = (this.isPivot)? columns.stream()
         .filter(ColumnModel::getPivotRow)
         .findFirst()
-        .get().getName();
+        .get().getName() : null;
 
 
-    ColumnModel pivotValueColumn = columns.stream()
+    ColumnModel pivotValueColumn = (this.isPivot)? columns.stream()
         .filter(ColumnModel::getPivotValue)
         .findFirst()
-        .get();
-    String pivotValueFieldName = columns.stream()
+        .get() : null;
+    String pivotValueFieldName =(this.isPivot)? columns.stream()
         .filter(ColumnModel::getPivotValue)
         .findFirst()
-        .get().getName();
+        .get().getName(): null;
 
-    String pivotColumnFieldName = columns.stream()
+    String pivotColumnFieldName = (this.isPivot)? columns.stream()
         .filter(ColumnModel::getPivotColumn)
         .findFirst()
         .get()
-        .getName();
+        .getName(): null;
 
     for (Object o : reportContent) {
       Map m = (Map) o;
