@@ -12,8 +12,15 @@
 
 <div class="app-form">
   <div class="row-fluid">
-  <div class="pull-right">
 
+
+
+  <div class="pull-right">
+    <div class="pull-left" ng-show="orders != undefined">
+      <label for="search">Search</label>
+      <input id="search" class="pull-right" ng-change="filterOrders()" type="text"
+             ng-model="query" openlmis-message="placeholder.search.order"/>
+    </div>
     <div class="pull-left">
       <label for="program" openlmis-message="label.program"> <span class="label-required"> *</span></label>
       <select id="program" ng-change="OnProgramChanged();OnFilterChanged()" ng-model="program">

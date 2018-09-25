@@ -31,6 +31,15 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
         });
   };
 
+
+    $scope.filterOrders = function () {
+       $scope.orders=[];
+        var query = $scope.query || "";
+        $scope.orders = $.grep($scope.search_orders.orders , function (order) {
+            return (order.orderNumber.toLowerCase().indexOf(query.toLowerCase()) != -1) || (order.rnr.districtName.toLowerCase().indexOf(query.toLowerCase()) != -1) || (order.rnr.facilityName.toLowerCase().indexOf(query.toLowerCase()) != -1);
+        });
+    };
+
   function refreshGrid() {
     // do a lazy validation, none of the two parameters could be undefined
     if($scope.supplyDepot === undefined || $scope.program === undefined || $scope.period === undefined){
@@ -44,9 +53,10 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
         $location.search('page', 1);
         return;
       }
-      $scope.orders = data.orders || [];
-      $scope.pageSize = data.pageSize;
-      $scope.numberOfPages = data.numberOfPages || 1;
+      $scope.orders = data.orders || [];$scope.search_orders = data || [];
+
+
+
     });
   }
 

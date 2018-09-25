@@ -27,7 +27,7 @@ public class FacilityReportQueryBuilder {
         String reportType = filter.getStatusList() != null && !filter.getStatusList().isEmpty() ?
                 filter.getStatusList().replaceAll(",", "','").replaceAll("AC", "t").replaceAll("IN", "f") : "f";
         BEGIN();
-        SELECT("DISTINCT F.id, F.code, F.name, F.active as active, " +
+        SELECT("DISTINCT F.id, F.code, F.name, F.active as active, U.firstName || ' '|| U.lastName as userName, " +
                 "FT.name as facilityType, GZ.district_name as district, GZ.region_name as province," +
                 "FO.code as owner," +
                 "F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates," +
@@ -41,6 +41,7 @@ public class FacilityReportQueryBuilder {
         LEFT_OUTER_JOIN("vw_districts GZ on GZ.district_id = F.geographiczoneid");
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
         LEFT_OUTER_JOIN("facility_owners FS on FS.facilityid = F.id");
+        JOIN("USERS U ON U.facilityId = f.id");
         WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId + " )");
         WHERE(facilityStatusFilteredBy("F.active", reportType));
         if (filter.getZone() != 0) {
@@ -75,13 +76,14 @@ public class FacilityReportQueryBuilder {
     String reportType = filter1.getStatusList() != null && !filter1.getStatusList().isEmpty() ?
             filter1.getStatusList().replaceAll(",", "','").replaceAll("AC", "t").replaceAll("IN", "f") : "f";
     BEGIN();
-    SELECT("DISTINCT F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.district_name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,F.mainphone as phoneNumber, F.fax as fax ");
+    SELECT("DISTINCT F.id, F.code, F.name, F.active as active, FT.name as facilityType, GZ.district_name as region, FO.code as owner,F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates,U.firstName::text || ''|| U.lastName::text as userName,F.mainphone as phoneNumber, F.fax as fax ");
     FROM("facilities F");
     JOIN("facility_types FT on FT.id = F.typeid");
     LEFT_OUTER_JOIN("programs_supported ps on ps.facilityid = F.id");
     LEFT_OUTER_JOIN("vw_districts GZ on GZ.district_id = F.geographiczoneid");
     LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
     LEFT_OUTER_JOIN("facility_owners FS on FS.facilityid = F.id");
+    JOIN("Users u on u.facilityId = f.id ");
     WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId + " )");
     WHERE(facilityStatusFilteredBy("F.active", reportType));
     if (filter1.getZone() != 0) {
@@ -119,7 +121,7 @@ where ps.facilityid=#{filterCriteria.facilityId} and ps.active=true
         FacilityReportParam filter = (FacilityReportParam) params.get("filterCriteria");
         Long userId = (Long) params.get("userId");
         BEGIN();
-        SELECT("ps.id,ps.active,ps.startdate,  p.id programid, p.code, p.name");
+        SELECT("DISTINCT ps.id,ps.active,ps.startdate,  p.id programid, p.code, p.name");
         FROM("programs_supported ps");
         INNER_JOIN("programs p on ps.programid=p.id");
         WHERE("ps.active=true");
