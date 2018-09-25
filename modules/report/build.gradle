@@ -44,7 +44,7 @@ dependencies {
         exclude group: 'org.apache.lucene'
         exclude group: 'org.olap4j'
     }
-    runtime 'org.codehaus.groovy:groovy-all:2.4.7'
+    runtime 'org.codehaus.groovy:groovy-all:2.3.9'
 
     testCompile project(path : ':modules:core', configuration: 'testFixtures')
 
