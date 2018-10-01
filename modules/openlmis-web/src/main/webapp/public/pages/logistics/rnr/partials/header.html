@@ -13,12 +13,12 @@
     ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span>
 
     <span class="pull-right" ng-show="!skipped">
-      <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/null/print.pdf"
+      <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
          target="_blank" openlmis-message="button.print"></a>
     </span>
 
     <span class="pull-right" ng-show="skipped">
-      <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/APPROVED/print.pdf"
+      <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
          openlmis-message="button.print"
          target="_blank"></a>
     </span>

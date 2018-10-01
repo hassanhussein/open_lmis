@@ -31,13 +31,28 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
         });
   };
 
+    $scope.filterCheckedOrders = {
+        emergency : true,
+        regular : true
+    };
 
     $scope.filterOrders = function () {
+      console.log($scope.filterCheckedOrders);
        $scope.orders=[];
         var query = $scope.query || "";
         $scope.orders = $.grep($scope.search_orders.orders , function (order) {
             return (order.orderNumber.toLowerCase().indexOf(query.toLowerCase()) != -1) || (order.rnr.districtName.toLowerCase().indexOf(query.toLowerCase()) != -1) || (order.rnr.facilityName.toLowerCase().indexOf(query.toLowerCase()) != -1);
         });
+
+        $scope.totalEmergency =  _.filter( $scope.orders, function (rnr) {
+            return (rnr.rnr.emergency === true);
+        });
+
+        $scope.totalRegular =  _.filter( $scope.orders, function (rnr) {
+            return (rnr.rnr.emergency === false);
+        });
+
+
     };
 
   function refreshGrid() {
@@ -53,9 +68,15 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
         $location.search('page', 1);
         return;
       }
-      $scope.orders = data.orders || [];$scope.search_orders = data || [];
+        $scope.totalEmergency =  _.filter(data.orders, function (rnr) {
+            return (rnr.rnr.emergency === true);
+        });
 
+      $scope.totalRegular =  _.filter(data.orders, function (rnr) {
+            return (rnr.rnr.emergency === false);
+        });
 
+        $scope.orders = data.orders || [];$scope.search_orders = data || [];
 
     });
   }

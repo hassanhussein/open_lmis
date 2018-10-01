@@ -61,11 +61,20 @@
   </div>
 </div>
   <div class="clear-both"></div>
+  <div ng-if="orders.length > 0">
+    <span class="pull-right" style="color: #008F98">
+      <span>Filter By
+    <input type="checkbox" ng-model="filterCheckedOrders.emergency" ng-change="filterOrders()"> Emergency</span>&nbsp;&nbsp;
+        <span>
+    <input type="checkbox" ng-model="filterCheckedOrders.regular" ng-change="filterOrders()" > Regular</span>&nbsp;&nbsp;
+
+      Total orders : <span style="font-style: italic;font-weight: bold">{{orders.length}}</span> &nbsp;&nbsp;Total emergency:<span style="font-style: italic;font-weight: bold">{{totalEmergency.length}}</span> &nbsp;&nbsp;Total Regular:<span style="font-style: italic;font-weight: bold">{{totalRegular.length}}</span></span></div>
     <div class="form-group">
         <h3 ng-show="orders != undefined" openlmis-message="label.order.list"></h3>
       <div id="noFilterSelected" ng-show="orders == undefined" >
         <span>Please select value in all required filters above</span>
       </div>
+
         <div class="alert alert-info" id="noOrdersPresent" ng-show="orders != undefined && orders.length == 0" >
             <span openlmis-message="message.no.order"></span>
         </div>
