@@ -1,3 +1,7 @@
+/* This view is giving headache to the server need to be improved
+
+
+
 DROP VIEW IF EXISTS vw_rnr_feedback;
 DROP INDEX IF EXISTS i_previous_rnr_id;
 DROP MATERIALIZED VIEW IF EXISTS vw_previous_rnr;
@@ -17,3 +21,4 @@ CREATE INDEX i_previous_rnr_id
   ON vw_previous_rnr (id);
 -- end of vw_previous_rnr
 
+*/
