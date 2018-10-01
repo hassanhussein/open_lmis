@@ -31,6 +31,7 @@
             <form ng-submit="filterGrid()" name="filterForm" novalidate>
               <div filter-container>
                 <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                <zone-filter class="form-cell horizontalFilters"></zone-filter>
                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
@@ -41,7 +42,6 @@
                 </div>
                 <div ng-hide="!showMoreFilters">
 
-                <zone-filter class="form-cell horizontalFilters"></zone-filter>
                 <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
                   <facility-owner-filter class="form-cell horizontalFilters"></facility-owner-filter>
                 <facility-filter class="form-cell horizontalFilters"></facility-filter>

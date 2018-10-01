@@ -12,10 +12,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.core.domain.FacilityOperator;
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.PriceSchedule;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.*;
 import org.springframework.stereotype.Repository;
 
@@ -612,6 +609,11 @@ Integer insertHfrMapping(HfrMappingDTO dto);
 
     @Select(" select * from vims_hfr_facility_types_mappings where hfrFacilityType =#{hfrFacilityType}  ")
     HfrFacilityTypeDTO geAllFacilityTypeMappingByCode(HfrFacilityTypeDTO record);
+
+    @Select(" select * from interface_apps app\n" +
+            " JOIN interface_dataset da ON da.interfaceid = app.id\n" +
+            " WHERE NAME = 'GoTHOMIS-FACILITIES' AND DATASETiD = #{agentCode}")
+  FacilityInterfaceDTO getByAgentCode(@Param("agentCode") String agentCode);
 
 
 }

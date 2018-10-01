@@ -12,6 +12,7 @@
 
 package org.openlmis.report.mapper.lookup;
 
+import jdk.nashorn.internal.objects.annotations.Setter;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -95,7 +96,7 @@ public interface GeographicZoneReportMapper {
 
 
 
-    @Select("select   f.id, f.name, f.mainPhone, f.longitude, f.latitude,false reported ,\n" +
+  /*  @Select("select   f.id, f.name, f.mainPhone, f.longitude, f.latitude,false reported ,\n" +
             "   (select count(*) > 0 from users where users.active = true and users.facilityId = f.id) as hasContacts,  \n" +
             "                         ( SELECT count(*) >0   \n" +
             "                          FROM role_assignments  \n" +
@@ -110,16 +111,48 @@ public interface GeographicZoneReportMapper {
             " INNER JOIN programs_supported ps on ps.facilityid = f.id\n" +
             " INNER JOIN requisition_group_program_schedules rgps on rgps.requisitiongroupid =\n" +
             " rgm.requisitiongroupid and ps.programid = rgps.programid\n" +
-/*
+*//*
              " WHERE (f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{programId}) and \n" +
-*/
+*//*
              " WHERE ( \n" +
             "  f.id not in (\n" +
             " select r.facilityid from requisitions r where r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED')  and r.periodid =  #{periodId} and r.programid =#{programId} )" +
             " AND  (gz.district_id =  #{geographicZoneId} or gz.zone_id = #{geographicZoneId} or gz.region_id = #{geographicZoneId}\n" +
             " or gz.parent = #{geographicZoneId} ) AND ps.programId = #{programId} AND rgps.scheduleId = #{schedule})\n" +
-            " ORDER BY name")
-    List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId, @Param("geographicZoneId") Long geographicZoneId,
+            " ORDER BY name")*/
+
+
+
+    @Select("    SELECT DISTINCT\n" +
+            "             facilities.id, facilities.name, facilities.mainPhone, facilities.longitude, facilities.latitude,false reported ,\n" +
+            "             (select count(*) > 0 from users where users.active = true and users.facilityId = facilities.id) as hasContacts,\n" +
+            "                                    ( SELECT count(*) >0   \n" +
+            "                                      FROM role_assignments  \n" +
+            "                                      JOIN supervisory_nodes on supervisory_nodes.id = role_assignments.supervisorynodeid  \n" +
+            "                                      JOIN users on users.id = role_assignments.userid AND users.active = true  \n" +
+            "                                      WHERE supervisory_nodes.facilityid = facilities.id  \n" +
+            "                                     ) as hasSupervisors\n" +
+            "\n" +
+            "        FROM facilities\n" +
+            "        INNER JOIN requisition_group_members rgm on rgm.facilityid = facilities.id\n" +
+            "        INNER JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid\n" +
+            "        INNER JOIN facility_types ft on ft.id = facilities.typeid\n" +
+            "        INNER JOIN programs_supported ps on ps.facilityId = facilities.id and ps.programId = #{programId}\n" +
+            "        INNER JOIN programs p on p.id = ps.programId\n" +
+            "        INNER JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programId = rgps.programId\n" +
+            "        INNER JOIN processing_periods period on period.scheduleid = rgps.scheduleid \n" +
+            "        LEFT OUTER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.programId and r.periodId = period.id \n" +
+            "                and r.emergency = false AND r.status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') \n" +
+            "        WHERE facilities.active = true and ps.active = true and \n" +
+            "         facilities.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{programId} )\n" +
+            "       AND  period.id = #{periodId} and  rgps.scheduleId = #{schedule}\n" +
+            "        AND r.id is null and (gz.district_id =  #{geographicZoneId} or gz.zone_id = #{geographicZoneId} or gz.region_id = #{geographicZoneId}  \n" +
+            "             or gz.parent = #{geographicZoneId} )\n" +
+            "        ORDER BY name\n" +
+            "       ")
+
+    List<GeoFacilityIndicator> getNonReportingFacilities(@Param("programId") Long programId,
+                                                         @Param("geographicZoneId") Long geographicZoneId,
                                                          @Param("periodId") Long processingPeriodId,
                                                          @Param("schedule") Long schedule,
                                                          @Param("userId") Long userId);

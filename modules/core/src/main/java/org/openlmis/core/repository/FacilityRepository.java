@@ -334,4 +334,8 @@ public class FacilityRepository {
   public HfrFacilityTypeDTO geAllFacilityTypeMappingByCode(HfrFacilityTypeDTO record) {
     return mapper.geAllFacilityTypeMappingByCode(record);
   }
+
+  public FacilityInterfaceDTO getByAgentCode(String agentCode){
+    return mapper.getByAgentCode(agentCode);
+  }
 }

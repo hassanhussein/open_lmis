@@ -43,6 +43,7 @@
                         <form ng-submit="filterGrid()" name="filterForm" novalidate>
                             <div filter-container class="clearfix">
                                 <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                                <zone-filter class="form-cell horizontalFilters"></zone-filter>
                                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
@@ -61,7 +62,6 @@
                                 </div>
 
                                 <div ng-hide="!showMoreFilters">
-                                    <zone-filter class="form-cell horizontalFilters"></zone-filter>
                                     <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
                                     <facility-filter class="form-cell horizontalFilters"></facility-filter>
                                     <product-category-filter
@@ -194,6 +194,18 @@
                         </table>
 
                     </div>
+                   <!-- <div>
+                        <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="pageLineItems()">
+                            <option value="10">10 per page</option>
+                            <option value="20">20 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+
+                        <openlmis-pagination num-pages="pageCount" current-page="currentPage" max-size="10"
+                                             check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
+                        <div class="clear-top"></div>
+                    </div>-->
                     <div class="pull-right">
                         <a ng-href="/public/pages/reports/maps/index.html#/reporting-rate?schedule={{filter.schedule}}&year={{filter.year}}&program={{filter.program}}&period={{filter.period}}">
                             View Reporting Rate

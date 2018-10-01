@@ -12,6 +12,20 @@
 
 function SummaryReportController($scope, SummaryReport) {
 
+    $scope.currentPage = 1;
+    $scope.pageSize = 50;
+
+    $scope.$watch('currentPage', function () {
+        console.log($scope.pageSize);
+        if (angular.isDefined($scope.lineItems)) {
+            $scope.pageLineItems();
+        }
+    });
+
+
+    //$.extend(this, new BaseReportController($scope, SummaryReport, $scope.filter));
+
+
     $scope.exportReport = function (type, par) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param(par);
@@ -71,13 +85,27 @@ function SummaryReportController($scope, SummaryReport) {
 
     $scope.params = {};
 
-    $scope.OnFilterChanged = function () {
-        // clear old data if there was any
+    $scope.pageLineItems = function(){
 
+       $scope.filter.max= $scope.pageSize;
+    };
+
+    $scope.OnFilterChanged = function () {
+
+        if (angular.isUndefined($scope.getSanitizedParameter().program) || $scope.getSanitizedParameter().program === null || angular.isUndefined($scope.getSanitizedParameter().year) || $scope.getSanitizedParameter().year === null ||  angular.isUndefined($scope.getSanitizedParameter().period) || $scope.getSanitizedParameter().period === null || angular.isUndefined($scope.getSanitizedParameter().schedule) || $scope.getSanitizedParameter().schedule === null) {
+            return;
+        }
+
+        // clear old data if there was any
+        $scope.tableParams.count = 10;
         $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
+        $scope.filter.max = 100;
+      //  $scope.filter.page = 10;
+
+        $scope.numberOfPages = [{id:1,value:10,name:'10 Pages'},{id:2,value:100,name:'100 Pages'},{id:3, value:10000,name:'All Pages'}];
 
         $scope.params = angular.extend({}, $scope.getSanitizedParameter(), $scope.filter);
+        console.log($scope.filter);
 
         SummaryReport.get($scope.params, function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
