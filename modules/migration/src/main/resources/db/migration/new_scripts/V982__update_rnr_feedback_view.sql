@@ -1,5 +1,5 @@
-/* This view is giving headache to the server need to be improved
-
+/*
+With a materialized view on 43 million records, it takes time to create is expected.
 
 
 DROP VIEW IF EXISTS vw_rnr_feedback;
