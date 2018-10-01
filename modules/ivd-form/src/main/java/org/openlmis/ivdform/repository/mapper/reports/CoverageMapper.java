@@ -24,9 +24,9 @@ import java.util.List;
 public interface CoverageMapper {
 
   @Insert("INSERT into vaccine_report_coverage_line_items " +
-      " (reportId, productId, doseId, displayName, displayOrder , trackMale, trackFemale, regularMale, regularFemale, outreachMale, outreachFemale, campaignMale, campaignFemale, createdBy, createdDate, modifiedBy, modifiedDate,ageGroupId,ageGroupName,withinFacilityMale,withinFacilityFemale) " +
+      " (reportId, productId, doseId, displayName, displayOrder , trackMale, trackFemale, regularMale, regularFemale, outreachMale, outreachFemale, campaignMale, campaignFemale, createdBy, createdDate, modifiedBy, modifiedDate,ageGroupId,ageGroupName,regularOutReachMale,regularOutReachFeMale) " +
       " values " +
-      " (#{reportId}, #{productId}, #{doseId}, #{displayName}, #{displayOrder}, #{trackMale}, #{trackFemale}, #{regularMale}, #{regularFemale}, #{outreachMale}, #{outreachFemale}, #{campaignMale}, #{campaignFemale}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{ageGroupId},#{ageGroupName},#{withinFacilityMale},#{withinFacilityFemale})")
+      " (#{reportId}, #{productId}, #{doseId}, #{displayName}, #{displayOrder}, #{trackMale}, #{trackFemale}, #{regularMale}, #{regularFemale}, #{outreachMale}, #{outreachFemale}, #{campaignMale}, #{campaignFemale}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{ageGroupId},#{ageGroupName},#{regularOutReachMale},#{regularOutReachFeMale})")
   @Options(useGeneratedKeys = true)
   Integer insert(VaccineCoverageItem item);
 
@@ -50,8 +50,8 @@ public interface CoverageMapper {
       " ,ageGroupName = #{ageGroupName}   " +
       " , modifiedBy = #{modifiedBy} " +
       " , modifiedDate = NOW() " +
-      ", withinFacilityFemale = #{withinFacilityFemale}" +
-      ", withinFacilityMale = #{withinFacilityMale}" +
+      ", regularOutReachFeMale = #{regularOutReachFeMale}" +
+      ", regularOutReachMale = #{regularOutReachMale}" +
       " WHERE id = #{id} ")
   void update(VaccineCoverageItem item);
 
@@ -83,7 +83,7 @@ public interface CoverageMapper {
 
   @Select("SELECT " +
       "li.*, " +
-      "(select sum(regularMale + regularFemale + withinFacilityFemale + withinFacilityMale) from vaccine_report_coverage_line_items ili join vaccine_reports ir on ir.id = ili.reportId join processing_periods ipps on ipps.id = ir.periodId where ir.facilityId = r.facilityId and ili.productId = li.productId and li.doseId = ili.doseId and pps.startDate > ipps.startDate and extract(year from ipps.startDate) = extract(year from pps.startDate) ) as previousRegular , " +
+      "(select sum(regularMale + regularFemale + regularOutReachMale + regularOutReachFeMale) from vaccine_report_coverage_line_items ili join vaccine_reports ir on ir.id = ili.reportId join processing_periods ipps on ipps.id = ir.periodId where ir.facilityId = r.facilityId and ili.productId = li.productId and li.doseId = ili.doseId and pps.startDate > ipps.startDate and extract(year from ipps.startDate) = extract(year from pps.startDate) ) as previousRegular , " +
       "(select sum(outreachMale + outreachFemale) from vaccine_report_coverage_line_items ili join vaccine_reports ir on ir.id = ili.reportId join processing_periods ipps on ipps.id = ir.periodId where ir.facilityId = r.facilityId and ili.productId = li.productId and li.doseId = ili.doseId and pps.startDate > ipps.startDate and extract(year from ipps.startDate) = extract(year from pps.startDate) ) as previousOutreach " +
       " from " +
       "   vaccine_report_coverage_line_items li join vaccine_reports r on r.id = li.reportId " +

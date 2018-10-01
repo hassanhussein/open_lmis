@@ -180,6 +180,8 @@ public class VaccineReport extends BaseModel {
                 item.setCampaignFemale(0L);
                 item.setOutreachMale(0L);
                 item.setOutreachFemale(0L);
+                item.setRegularOutReachFeMale(0L);
+                item.setRegularOutReachMale(0L);
             }
 
             coverageLineItems.add(item);
