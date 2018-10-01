@@ -265,16 +265,13 @@ public class RequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/requisitions/{id}/{status}/print", method = GET, headers = ACCEPT_PDF)
+  @RequestMapping(value = "/requisitions/{id}/print", method = GET, headers = ACCEPT_PDF)
   @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.model.get(\"rnr\"), 'VIEW_REQUISITION')")
-  public ModelAndView printRequisition(@PathVariable Long id, @PathVariable String status) {
+  public ModelAndView printRequisition(@PathVariable Long id) {
     ModelAndView modelAndView = new ModelAndView("requisitionPDF");
-    Rnr requisition;
-    if (!status.equals("all")) {
-      requisition = requisitionService.getAllWithoutSkippedItemsById(id);
-    } else {
-      requisition = requisitionService.getFullRequisitionById(id);
-    }
+
+    Rnr requisition = requisitionService.getFullRequisitionById(id);
+
     modelAndView.addObject(RNR, requisition);
     modelAndView.addObject(LOSSES_AND_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
 

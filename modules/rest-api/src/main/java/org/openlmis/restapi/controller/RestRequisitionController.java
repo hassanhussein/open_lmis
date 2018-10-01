@@ -18,6 +18,7 @@ import org.openlmis.restapi.request.RequisitionSearchRequest;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.RnRFeedbackDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -140,4 +141,21 @@ public class RestRequisitionController extends BaseController {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
   }
+
+  @RequestMapping(value = "/rest-api/tz-sdp-requisitions", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> submitTzSDPRequisition(@RequestBody Report report, Principal principal) {
+    Rnr requisition;
+    RnRFeedbackDTO rnRFeedbackDTO = new RnRFeedbackDTO();
+    try {
+      requisition = restRequisitionService.submitFacilityReport(report, loggedInUserId(principal));
+      rnRFeedbackDTO.setMessage("RnR Saved Successfully");
+      rnRFeedbackDTO.setSourceOrderId(report.getSourceOrderId());
+      rnRFeedbackDTO.setRequisitionId(requisition.getId());
+
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+    return response(RNR, rnRFeedbackDTO, CREATED);
+  }
+
 }

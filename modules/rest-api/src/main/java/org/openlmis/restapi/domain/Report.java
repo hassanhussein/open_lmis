@@ -61,6 +61,9 @@ public class Report {
   private String clientSubmittedNotes;
   private String sourceApplication = null;
 
+  //Added only for GotHOMIS integration
+  private String sourceOrderId;
+
   private Date periodStartDate;
 
   private List<Signature> rnrSignatures;
