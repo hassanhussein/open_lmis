@@ -94,10 +94,10 @@ app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'mess
 
             $scope.filterChanged = function () {
                 $scope.$parent.applyUrl();
+                $scope.$parent.filter = $scope.filter;
                 if (!isValid()) {
                     return;
                 }
-                $scope.$parent.filter = $scope.filter;
                 // call on Filter Changed
                 $scope.$parent.OnFilterChanged();
             };
