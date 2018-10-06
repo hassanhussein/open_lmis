@@ -41,7 +41,7 @@ public class VaccineColumnTemplateMapperIT {
   @Test
   public void testGetAll() throws Exception {
     List<LogisticsColumn> columns = mapper.getAllMasterColumns();
-    assertEquals(15, columns.size());
+    assertEquals(16, columns.size());
   }
 
   @Test
