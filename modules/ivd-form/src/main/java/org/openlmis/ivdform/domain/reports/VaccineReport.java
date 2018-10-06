@@ -134,6 +134,9 @@ public class VaccineReport extends BaseModel {
                 item.setQuantityDiscardedUnopened(0L);
                 item.setQuantityWastedOther(0L);
                 item.setDaysStockedOut(0L);
+                item.setTotalAdjustedQuantity(0L);
+                item.setTransferInQuantity(0L);
+                item.setTransferOutQuantity(0L);
             }
 
             logisticsLineItems.add(item);

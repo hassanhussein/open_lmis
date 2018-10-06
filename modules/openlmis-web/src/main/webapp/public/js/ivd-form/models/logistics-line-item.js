@@ -57,8 +57,7 @@ var LogisticsLineItem = function(lineItem, report) {
       }else{
         this.quantityDiscardedUnopened = 0;
       }
-      this.closingBalance = (utils.parseIntWithBaseTen(this.openingBalance) + utils.parseIntWithBaseTen(this.quantityReceived) - utils.parseIntWithBaseTen(this.quantityIssued)) - utils.parseIntWithBaseTen(discarded);
+      this.closingBalance = (utils.parseIntWithBaseTen(this.openingBalance) + utils.parseIntWithBaseTen(this.quantityReceived) - utils.parseIntWithBaseTen(this.quantityIssued) + utils.parseIntWithBaseTen(this.totalAdjustedQuantity)) - utils.parseIntWithBaseTen(discarded);
     }
   };
-
 };

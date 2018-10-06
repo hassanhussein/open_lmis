@@ -251,7 +251,7 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th colspan="2" rowspan="2"><span openlmis-message="label.vaccine.vitamin.age.group"></th>
+                    <th colspan="2" rowspan="2"><span openlmis-message="label.vaccine.vitamin.age.group"></span></th>
                     <th colspan="3" openlmis-message="label.vitamin.supplementation"></th>
                 </tr>
                 <tr>
@@ -287,7 +287,7 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th colspan="11" openlmis-message="label.vaccine.stock.doses"></th>
+                    <th colspan="12" openlmis-message="label.vaccine.stock.doses"></th>
                 </tr>
                 <tr>
                     <th openlmis-message="label.type.of.antigen"></th>
@@ -296,6 +296,7 @@
                     <th openlmis-message="label.doses.of.vaccine.used.during.vaccination" style="text-align: center;max-width: 100px;"> </th>
                     <th openlmis-message="label.doses.discarded.unopened" style="text-align: center;max-width: 100px;" ></th>
                     <th openlmis-message="label.reasons.for.discarding.unopened.vial" style="text-align: center;max-width: 100px;"></th>
+                    <th style="text-align: center;max-width: 100px;">Adjusted Quantity</th>
                     <th openlmis-message="label.doses.of.vaccine.stock.on.hand" style="text-align: center;max-width: 100px;"></th>
                     <th openlmis-message="label.no.of.days.stocked.out" style="text-align: center;max-width: 100px;"></th>
                     <th openlmis-message="label.children.immunized" style="text-align: center;max-width: 100px;"></th>
@@ -311,6 +312,7 @@
                         <td class="number"><span class="cell-text number">{{product.quantityIssued | number}}</span></td>
                         <td class="number"><span class="cell-text number">{{product.quantityDiscardedUnopened | number}}</span></td>
                         <td><span class="cell-text">{{getDiscardingReasonName(product.discardingReasonId)}}</span></td>
+                        <td class="number"><span class="cell-text number">{{product.totalAdjustedQuantity | number}}</span></td>
                         <td class="number"><span class="cell-text number">{{product.closingBalance | number}}</span></td>
                         <td class="number"><span class="cell-text number">{{product.daysStockedOut | number}}</span></td>
                         <td class="number">{{product.childrenImmunized() | number : 0}}</td>

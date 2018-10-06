@@ -13,6 +13,7 @@ function CreateIvdFormController($scope, $location, operationalStatuses, $dialog
 
   // initial state of the display
   $scope.report = new VaccineReport(report);
+  console.log($scope.report);
   $scope.manufacturers = manufacturers;
   $scope.discardingReasons = discardingReasons;
 
@@ -167,6 +168,25 @@ function CreateIvdFormController($scope, $location, operationalStatuses, $dialog
     }
     return false;
   };
+
+    $scope.$parent.getTotalAdjustment = function(product){
+        product.totalAdjustedQuantity = parseInt(product.transferInQuantity,10) + parseInt(product.transferOutQuantity,10) * -1;
+    };
+
+  $scope.myModal = false;
+  $scope.showProductAdjustments = function (product) {
+    if(product.transferInQuantity === null || product.transferOutQuantity === null ){
+        product.transferInQuantity = 0;
+        product.transferOutQuantity = 0;
+    }
+    $scope.showModal = true;
+    $scope.adjustedQuantity = true;
+    $scope.product = product;
+  };
+
+    $scope.closeModal=function(){
+        $scope.adjustedQuantity = false;
+    };
 
 }
 

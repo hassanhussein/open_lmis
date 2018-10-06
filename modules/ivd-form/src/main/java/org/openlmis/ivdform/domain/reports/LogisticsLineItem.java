@@ -20,6 +20,8 @@ import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -57,6 +59,17 @@ public class LogisticsLineItem extends BaseModel {
 
   private String remarks;
 
+  private Long totalAdjustedQuantity;
+  private Long quantityTransferredId;
+  private List<FacilityVaccineTransfer> vaccineTransfer;
+
+/*
+  Additional Adjustment column
+*/
+
+  private Long transferInQuantity;
+  private Long transferOutQuantity;
+
   public void copyValuesFrom(LogisticsLineItem source){
     this.openingBalance = source.getOpeningBalance();
     this.quantityReceived = source.getQuantityReceived();
@@ -71,5 +84,8 @@ public class LogisticsLineItem extends BaseModel {
     this.daysStockedOut = source.getDaysStockedOut();
     this.discardingReasonId  = source.getDiscardingReasonId();
     this.remarks = source.getRemarks();
+    this.totalAdjustedQuantity = source.getTotalAdjustedQuantity();
+    this.transferInQuantity = source.getTransferInQuantity();
+    this.transferOutQuantity = source.getTransferOutQuantity();
   }
 }

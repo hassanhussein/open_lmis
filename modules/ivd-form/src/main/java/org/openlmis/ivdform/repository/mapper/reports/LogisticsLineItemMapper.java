@@ -14,6 +14,7 @@ package org.openlmis.ivdform.repository.mapper.reports;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.ivdform.domain.reports.FacilityVaccineTransfer;
 import org.openlmis.ivdform.domain.reports.LogisticsLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -23,9 +24,9 @@ import java.util.List;
 public interface LogisticsLineItemMapper {
 
   @Insert({"INSERT INTO vaccine_report_logistics_line_items " ,
-      " (reportId, productId, productCode, productName, productCategory, displayOrder, openingBalance, quantityReceived, quantityIssued, closingBalance, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, daysStockedOut , discardingReasonId, discardingReasonExplanation, remarks, openingBalanceFromPreviousPeriod, createdBy, createdDate, modifiedBy, modifiedDate)" ,
+      " (reportId, productId, productCode, productName, productCategory, displayOrder, openingBalance, quantityReceived, quantityIssued, closingBalance, quantityVvmAlerted, quantityFreezed, quantityExpired, quantityDiscardedUnopened, quantityDiscardedOpened, quantityWastedOther, daysStockedOut , discardingReasonId, discardingReasonExplanation, remarks, openingBalanceFromPreviousPeriod, createdBy, createdDate, modifiedBy, modifiedDate,totalAdjustedQuantity,quantityTransferredId,transferOutQuantity,transferInQuantity)" ,
       " values ",
-      " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{productCategory} , #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{closingBalance}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther},  #{daysStockedOut} , #{discardingReasonId}, #{discardingReasonExplanation}, #{remarks}, #{openingBalanceFromPreviousPeriod}, #{createdBy}, NOW(), #{modifiedBy}, NOW())" })
+      " (#{reportId}, #{productId}, #{productCode}, #{productName}, #{productCategory} , #{displayOrder}, #{openingBalance}, #{quantityReceived}, #{quantityIssued}, #{closingBalance}, #{quantityVvmAlerted}, #{quantityFreezed}, #{quantityExpired}, #{quantityDiscardedUnopened}, #{quantityDiscardedOpened}, #{quantityWastedOther},  #{daysStockedOut} , #{discardingReasonId}, #{discardingReasonExplanation}, #{remarks}, #{openingBalanceFromPreviousPeriod}, #{createdBy}, NOW(), #{modifiedBy}, NOW(),#{totalAdjustedQuantity},#{quantityTransferredId},#{transferOutQuantity},#{transferInQuantity})" })
   @Options(useGeneratedKeys = true)
   Integer insert(LogisticsLineItem lineItem);
 
@@ -55,6 +56,10 @@ public interface LogisticsLineItemMapper {
       ", quantityWastedOther = #{quantityWastedOther} " +
       ", modifiedBy = #{modifiedBy} " +
       ", modifiedDate = NOW()" +
+      ", totalAdjustedQuantity = #{totalAdjustedQuantity}" +
+      ", quantityTransferredId = #{quantityTransferredId} " +
+      ", transferOutQuantity = #{transferOutQuantity} " +
+      ", transferInQuantity = #{transferInQuantity} " +
       "WHERE id = #{id} ")
   void update(LogisticsLineItem lineItem);
 
@@ -62,7 +67,9 @@ public interface LogisticsLineItemMapper {
   @Results(value = {
       @Result(property = "productId", column = "productId"),
       @Result(property = "product", column = "productId", javaType = Product.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getLWProduct"))
+          one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getLWProduct")),
+      @Result(property = "product", column = "productId", javaType = Product.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getLWProduct"))
   })
   List<LogisticsLineItem> getLineItems(@Param("reportId") Long reportId);
 
