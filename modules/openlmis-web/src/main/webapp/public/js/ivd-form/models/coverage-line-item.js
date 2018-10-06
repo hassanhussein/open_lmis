@@ -5,7 +5,7 @@ var CoverageLineItem = function (lineItem, report) {
   this.enableCalculations = true;
 
   CoverageLineItem.prototype.getTotalRegular = function () {
-    return Number(this.regularMale) + Number(this.regularFemale);
+    return Number(this.regularMale) + Number(this.regularFemale) + Number(this.regularOutReachMale) + Number(this.regularOutReachFeMale);
   };
 
   CoverageLineItem.prototype.getRegularCoveragePercentage = function () {
