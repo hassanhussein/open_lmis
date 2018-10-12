@@ -12,28 +12,27 @@
   <h2><span id='requisitionHeaderLabel' openlmis-message="label.requisition"></span>&nbsp;<span
     ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span>
 
-    <span class="pull-right" ng-show="!skipped">
+    <span class="pull-right" ng-show="checked">
       <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
          target="_blank" openlmis-message="button.print"></a>
     </span>
 
-    <span class="pull-right" ng-show="skipped">
-      <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
+    <span class="pull-right" ng-show="!checked">
+      <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/excludeSkipped/print.pdf"
          openlmis-message="button.print"
          target="_blank"></a>
     </span>
 
     <ul style="list-style: none;" class="pull-right">
       <li>
-        <span style="font-size: 12px">Print Options</span>
         <span style="font-size: 10px">
-          <input type="radio" id="all"
-                 name="all" value="all" />
-          All </span>&nbsp;&nbsp;
-        <span style="font-size: 10px;left:10px !important;">
-           <input type="radio" id="skipped"
-                  name="skipped" value="skipped" checked/>
-          Exclude Skipped</span>&nbsp;&nbsp;
+          <span>
+    <input type="checkbox" ng-model="checked" checked>
+            <span>Include Skipped Items</span>
+
+          </span>
+          &nbsp;&nbsp;&nbsp;
+        </span>
       </li>
     </ul>
 
