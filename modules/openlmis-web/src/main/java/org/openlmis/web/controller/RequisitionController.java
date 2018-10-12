@@ -381,4 +381,27 @@ public class RequisitionController extends BaseController {
     return response("rejections", requisitionService.getAllRejections());
   }
 
+
+  @RequestMapping(value = "/requisitions/{id}/{status}/print", method = GET, headers = ACCEPT_PDF)
+  @PostAuthorize("@requisitionPermissionService.hasPermission(principal, returnObject.model.get(\"rnr\"), 'VIEW_REQUISITION')")
+  public ModelAndView printRequisition(@PathVariable Long id, @PathVariable String status) {
+    ModelAndView modelAndView = new ModelAndView("requisitionPDF");
+    Rnr requisition;
+    if (!status.equals("all")) {
+      requisition = requisitionService.getAllWithoutSkippedItemsById(id);
+    } else {
+      requisition = requisitionService.getFullRequisitionById(id);
+    }
+    modelAndView.addObject(RNR, requisition);
+    modelAndView.addObject(LOSSES_AND_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
+
+    Long programId = requisition.getProgram().getId();
+    modelAndView.addObject(RNR_TEMPLATE, rnrTemplateService.fetchColumnsForRequisition(programId));
+    modelAndView.addObject(REGIMEN_TEMPLATE, regimenColumnService.getRegimenColumnsForPrintByProgramId(programId));
+    modelAndView.addObject(STATUS_CHANGES, requisitionStatusChangeService.getByRnrId(id));
+    modelAndView.addObject(NUMBER_OF_MONTHS, requisitionService.findM(requisition.getPeriod()));
+
+    return modelAndView;
+  }
+
 }

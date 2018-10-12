@@ -550,3 +550,8 @@ services.factory('RequisitionRejection', function ($resource) {
 services.factory('AllRejections', function ($resource) {
     return $resource('/requisitions/get-rejections.json', {}, {});
 });
+
+services.factory('AllOrders', function ($resource) {
+    return $resource('/all-orders.json', {}, {});
+});
+

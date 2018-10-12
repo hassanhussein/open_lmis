@@ -167,4 +167,20 @@ public class OrderController extends BaseController {
       asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),program, facility);
     return response(ORDERS_FOR_POD, getOrdersForView(ordersForPOD));
   }
+
+  @RequestMapping(value = "/all-orders", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
+  public ResponseEntity<OpenLmisResponse> getOrdersByDepotWithoutPagination(@RequestParam(value = "page",
+          required = true,
+          defaultValue = "1") Integer page,
+                                                           @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
+                                                           @RequestParam(value="period", defaultValue = "0") Long period,
+                                                           @RequestParam(value="program", defaultValue = "0") Long program,
+                                                           HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+      response = response(ORDERS,
+              getOrdersForView(orderService.getOrdersByDepotWithoutPagination(loggedInUserId(request), VIEW_ORDER, supplyDepot, program, period)));
+    return response;
+  }
+
 }

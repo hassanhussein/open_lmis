@@ -100,4 +100,10 @@ public class OrderRepository {
   public Order getByOrderNumber(String orderNumber) {
     return orderMapper.getByOrderNumber(orderNumber);
   }
+
+  public List<Order> getOrdersByDepotWithoutPagination(Long userId, String right, Long supplyDepot, Long program, Long period) {
+    return orderMapper.getOrdersByDepotWithoutPagination(userId, right, supplyDepot, program, period);
+  }
+
+
 }

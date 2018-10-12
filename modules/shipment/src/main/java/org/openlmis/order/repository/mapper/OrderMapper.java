@@ -142,4 +142,28 @@ public interface OrderMapper {
           one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   Order getByOrderNumber(String orderNumber);
+
+
+  @Select({"SELECT DISTINCT O.*, f.name FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
+          "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId",
+          "INNER JOIN requisitions r on r.id = O.id ",
+          "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ",
+          " INNER JOIN facilities f on f.id = r.facilityid ",
+          "WHERE FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
+                  "ORDER BY f.name ASC "})
+  @Results({
+          @Result(property = "id", column = "id"),
+          @Result(property = "rnr.id", column = "id"),
+          @Result(property = "shipmentFileInfo", javaType = ShipmentFileInfo.class, column = "shipmentId",
+                  one = @One(select = "org.openlmis.shipment.repository.mapper.ShipmentMapper.getShipmentFileInfo")),
+          @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+                  one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  List<Order> getOrdersByDepotWithoutPagination(@Param("userId") Long userId, @Param("rightName") String rightName, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
+
+
+
+
+
+
 }

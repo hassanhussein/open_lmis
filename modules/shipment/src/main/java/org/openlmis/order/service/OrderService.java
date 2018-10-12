@@ -314,4 +314,9 @@ public class OrderService {
       requisitionService.releaseWithoutOrder(rnr, user);
     }
   }
+
+  public List<Order> getOrdersByDepotWithoutPagination(Long userId, String right, Long supplyDepot, Long program, Long period) {
+    List<Order> orders = orderRepository.getOrdersByDepotWithoutPagination(userId, right, supplyDepot, program, period);
+    return fillOrders(orders);
+  }
 }

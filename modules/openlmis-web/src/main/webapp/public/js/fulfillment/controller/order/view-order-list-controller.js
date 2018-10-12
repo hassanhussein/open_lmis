@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewOrderListController($scope, Orders, messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear, ReportProgramSchedules) {
+function ViewOrderListController($scope,AllOrders,messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear, ReportProgramSchedules) {
 
   $scope.supplylines = supplylines;
   $scope.programs = programs;
@@ -37,9 +37,9 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
     };
 
     $scope.filterOrders = function () {
-      console.log($scope.filterCheckedOrders);
        $scope.orders=[];
         var query = $scope.query || "";
+
         $scope.orders = $.grep($scope.search_orders.orders , function (order) {
             return (order.orderNumber.toLowerCase().indexOf(query.toLowerCase()) != -1) || (order.rnr.districtName.toLowerCase().indexOf(query.toLowerCase()) != -1) || (order.rnr.facilityName.toLowerCase().indexOf(query.toLowerCase()) != -1);
         });
@@ -63,7 +63,7 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
 
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
 
-    Orders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
+   /* Orders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
       if ((!data.orders || data.orders.length === 0) && $routeParams.page != 1) {
         $location.search('page', 1);
         return;
@@ -78,7 +78,23 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
 
         $scope.orders = data.orders || [];$scope.search_orders = data || [];
 
-    });
+    });*/
+
+    AllOrders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
+
+        $scope.totalEmergency =  _.filter(data.orders, function (rnr) {
+            return (rnr.rnr.emergency === true);
+        });
+
+        $scope.totalRegular =  _.filter(data.orders, function (rnr) {
+            return (rnr.rnr.emergency === false);
+        });
+
+        $scope.orders = data.orders || [];$scope.search_orders = data || [];
+
+      });
+
+
   }
 
   $scope.OnFilterChanged = refreshGrid;
@@ -94,13 +110,13 @@ function ViewOrderListController($scope, Orders, messageService, $location, $rou
     enableColumnResize: true,
     enableSorting: false,
     columnDefs: [
-      {field: 'orderNumber', displayName: messageService.get("label.order.no"), width: 150, cellTemplate: "<div class='ngCellText'><span id = 'order{{row.rowIndex}}' class='orderNumber'>{{row.entity.orderNumber}}</span></div>"},
-      {field: 'facilityCode', displayName: messageService.get("label.facility.code.name"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
+      {field: 'orderNumber', displayName: messageService.get("label.order.no"), width: 95, cellTemplate: "<div class='ngCellText'><span id = 'order{{row.rowIndex}}' class='orderNumber'>{{row.entity.orderNumber}}</span></div>"},
+      {field: 'facilityCode', displayName: messageService.get("label.facility.code.name"),width:180, cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.facilityCode}} - {{row.entity.rnr.facilityName}}</span></div>"},
       {field: 'rnr.districtName', displayName: messageService.get("option.value.facility.district")},
       {field: 'rnr.programName', displayName: messageService.get("label.program")},
       {field: 'periodName', displayName: messageService.get("label.period"), cellTemplate: "<div class='ngCellText'><span ng-cell-text>{{row.entity.rnr.periodName}} ({{row.entity.rnr.stringPeriodStartDate}} - {{row.entity.rnr.stringPeriodEndDate}})</span></div>"},
       {field: 'supplyLine.supplyingFacility.name', displayName: messageService.get("label.supplying.depot")},
-      {field: 'stringCreatedDate', displayName: messageService.get("label.order.date.time")},
+      {field: 'stringCreatedDate',width:120, displayName: messageService.get("label.order.date.time")},
       {field: 'status', displayName: messageService.get("label.order.status"),
         cellTemplate: "<div class='ngCellText orderStatusCellText'><span ng-cell-text><div id=\"orderStatus\"><a href='' class='custom-tooltip shipment-error'><i class='icon-warning-sign' ng-show='row.entity.shipmentError'></i><span class='custom-tooltip-msg' openlmis-message='error.shipment.file'></span></a>  <span ng-bind=\"getStatus(row.entity.status)\"></span></div> "},
       {field: 'ftpComment', displayName: messageService.get("label.comment"),
