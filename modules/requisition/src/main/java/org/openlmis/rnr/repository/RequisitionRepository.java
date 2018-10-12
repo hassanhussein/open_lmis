@@ -476,4 +476,7 @@ public class RequisitionRepository {
     return requisition;
   }
 
+  public List<HashMap<String,Object>> getSupervisionCheckListReport(String facilityCode, String programCode) {
+   return requisitionMapper.getSupervisionCheckListReport(facilityCode,programCode);
+  }
 }

@@ -877,5 +877,9 @@ public class RequisitionService {
     savedRnr.setSubmittedDate(getOperationDateFor(savedRnr.getId(), RnrStatus.SUBMITTED.toString()));
     return savedRnr;
   }
+
+  public List<HashMap<String,Object>> getSupervisionCheckListReport(String facilityCode, String programCode) {
+    return requisitionRepository.getSupervisionCheckListReport(facilityCode,programCode);
+  }
 }
 

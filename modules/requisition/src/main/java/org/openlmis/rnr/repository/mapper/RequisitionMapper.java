@@ -286,7 +286,6 @@ public interface RequisitionMapper {
       "and r.status = 'APPROVED'"})
   List<Rnr> getUnreleasedPreviousRequisitions(@Param("rnr") Rnr rnr);
 
-
   public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")
@@ -386,6 +385,18 @@ public interface RequisitionMapper {
                   many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId"))
   })
   Rnr getAllWithoutSkippedItemsById(Long rnrId);
+
+  @Select("\n" +
+          " WITH Req as (select r.id rnrid, * from requisitions r\n" +
+          "    JOIN FACILITIES F ON r.facilityid = f.id \n" +
+          "     JOIN processing_periods pp ON r.periodid = pp.id\n" +
+          "     JOIN programs p ON r.programId = p.id" +
+          " where f.code =#{facility} and p.code = #{programCode} and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
+          "   order by r.createddate desc\n" +
+          "    limit 1) \n" +
+          "   SELECT * FROM Req  \n" +
+          "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
+  List<HashMap<String,Object>> getSupervisionCheckListReport(@Param("facilityCode") String facilityCode,@Param("programCode") String programCode);
 
 }
 

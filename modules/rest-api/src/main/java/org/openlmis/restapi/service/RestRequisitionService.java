@@ -518,5 +518,7 @@ public class RestRequisitionService {
   }
 
 
-
+    public List<HashMap<String,Object>> getSupervisionCheckListReport(String facilityCode, String programCode) {
+     return requisitionService.getSupervisionCheckListReport(facilityCode,programCode);
+    }
 }

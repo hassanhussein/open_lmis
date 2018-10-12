@@ -158,4 +158,17 @@ public class RestRequisitionController extends BaseController {
     return response(RNR, rnRFeedbackDTO, CREATED);
   }
 
+
+  @RequestMapping(value = "/rest-api/supervision-checklist-report", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> getSupervisionCheckListReport(
+                                                                    @RequestParam(value="facilityCode") String facilityCode,
+                                                                    @RequestParam(value="programCode") String programCode
+                                                                    ) {
+    try {
+      return response("requisitions", restRequisitionService.getSupervisionCheckListReport(facilityCode,programCode), OK);
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+  }
+
 }
