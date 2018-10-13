@@ -391,7 +391,7 @@ public interface RequisitionMapper {
           "    JOIN FACILITIES F ON r.facilityid = f.id \n" +
           "     JOIN processing_periods pp ON r.periodid = pp.id\n" +
           "     JOIN programs p ON r.programId = p.id" +
-          " where f.code =#{facility} and p.code = #{programCode} and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
+          " where f.code =#{facilityCode} and p.code = #{programCode} and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
           "   order by r.createddate desc\n" +
           "    limit 1) \n" +
           "   SELECT * FROM Req  \n" +
