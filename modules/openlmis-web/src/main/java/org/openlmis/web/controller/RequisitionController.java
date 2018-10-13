@@ -341,7 +341,6 @@ public class RequisitionController extends BaseController {
   }
 
   @RequestMapping(value = "/requisitions/funding-sources", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
   public ResponseEntity<OpenLmisResponse> getAllSourcesOfFund() {
 
    return response(FUNDING_SOURCES, requisitionService.getAllSourcesOfFund());
