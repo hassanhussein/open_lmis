@@ -401,7 +401,9 @@ services.factory('StockCardByFacility', function ($resource,StockCards, $q, $tim
             });
 
 
-        })
+        },100);
+        return deferred.promise;
+
     }
     return {
         get: get
@@ -581,4 +583,8 @@ services.factory('StockRequirements', function ($resource) {
 services.factory('GetLastDistributionForFacility', function ($resource) {
     return $resource('/vaccine/inventory/distribution/GetLastDistributionForFacility.json',{},{});
 });
+services.factory('updateTotalStockOnHand', function ($resource) {
+    return $resource('/api/v2/stockCard/:id/:total/stockCards.json',{id: '@id', total: '@total'},update);
+});
+
 

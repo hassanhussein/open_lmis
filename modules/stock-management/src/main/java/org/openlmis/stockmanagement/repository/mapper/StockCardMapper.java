@@ -196,4 +196,8 @@ public interface StockCardMapper {
       "ORDER BY modifieddate DESC LIMIT 1"
   )
   Date getLastUpdatedTimeforStockDataByFacility(Long facilityId);
+  @Update("UPDATE stock_cards " +
+          "SET totalQuantityOnHand = #{totalQuantityOnHand} " +
+          " WHERE id = #{id}")
+  void updateTotalStockOnHand(@Param("id") Long id, @Param("totalQuantityOnHand") Long total);
 }

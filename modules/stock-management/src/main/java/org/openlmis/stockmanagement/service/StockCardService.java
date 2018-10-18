@@ -127,4 +127,8 @@ public class StockCardService {
       addStockCardEntry(entry);
     }
   }
+
+  public void updateTotalStockOnHand(Long id, Long total) {
+    repository.updateTotalStockOnHand(id,total);
+  }
 }

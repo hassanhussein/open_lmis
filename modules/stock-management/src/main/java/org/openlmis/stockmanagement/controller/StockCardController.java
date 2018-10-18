@@ -45,6 +45,7 @@ import static com.google.common.collect.Iterables.any;
 import static org.openlmis.core.utils.RightUtil.with;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 /**
  * This controller provides GET, POST, and DELETE endpoints related to stock cards.
@@ -382,7 +383,8 @@ public class StockCardController extends BaseController
                     break;
                 default: break;
             }
-            Long onHand = (null != lotObj) ? lotOnHand.getQuantityOnHand() : card.getTotalQuantityOnHand();
+           // Long onHand = (null != lotObj) ? lotOnHand.getQuantityOnHand() : card.getTotalQuantityOnHand();
+            Long onHand = lotOnHand.getQuantityOnHand();
             if (!event.isValidIssueQuantity(onHand)) {
                 return OpenLmisResponse.error(messageService.message("error.stock.quantity.invalid"), HttpStatus.INTERNAL_SERVER_ERROR);
             }
@@ -458,4 +460,17 @@ public class StockCardController extends BaseController
         //...and associate it with our StockCard
         stockCard.setLotsOnHand(nonEmptyLots);
     }
+
+
+    @RequestMapping(value = "stockCard/{id}/{total}/stockCards", method = PUT, headers = ACCEPT_JSON)
+    public OpenLmisResponse update(@PathVariable("id") Long id,
+                                   @PathVariable("total") Long total,
+                                   HttpServletRequest request) {
+                        service.updateTotalStockOnHand(id,total);
+        return new OpenLmisResponse("id", id);
+
+
+
+    }
+
 }

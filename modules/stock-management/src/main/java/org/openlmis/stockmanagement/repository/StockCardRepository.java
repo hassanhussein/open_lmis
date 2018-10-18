@@ -87,4 +87,8 @@ public class StockCardRepository {
   public Product getProductByStockCardId(Long stockCardId) {
     return mapper.getProductByStockCardId(stockCardId);
   }
+
+    public void updateTotalStockOnHand(Long id, Long total) {
+       mapper.updateTotalStockOnHand(id,total);
+    }
 }
