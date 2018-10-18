@@ -201,7 +201,9 @@ function StockMovementViewController($scope,verifyDistribution,SaveSupervisoryDi
                     });
 
                 });
-              StockEvent.save({facilityId:homeFacility.id},events,function(data){
+                console.log(events);
+
+                StockEvent.save({facilityId:homeFacility.id},events,function(data){
                   SaveSupervisoryDistribution.save(distribution,function(d) {
                        $scope.message = "label.form.Submitted.Successfully";
                        var url = '/vaccine/orderRequisition/issue/print/'+d.distributionId;

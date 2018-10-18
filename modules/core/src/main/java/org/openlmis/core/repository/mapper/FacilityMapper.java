@@ -614,4 +614,12 @@ Integer insertHfrMapping(HfrMappingDTO dto);
     HfrFacilityTypeDTO geAllFacilityTypeMappingByCode(HfrFacilityTypeDTO record);
 
 
+  @Select(" SELECT * FROM FACILITIES F " +
+          " JOIN facility_types ft ON f.typeid = ft.id " +
+          " JOIN geographic_zones gz on f.geographiczoneid = gz.id" +
+          " WHERE ft.code in('cvs','rvs','dvs') and (LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') ")
+  List<Facility> searchVaccineStores(@Param(value = "searchParam") String searchParam);
+
+
+
 }

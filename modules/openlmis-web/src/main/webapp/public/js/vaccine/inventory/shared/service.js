@@ -334,6 +334,81 @@ services.factory('StockCardsByCategoryAndRequisition', function ($resource, Stoc
     };
 });
 
+services.factory('StockCardByFacility', function ($resource,StockCards, $q, $timeout) {
+
+    function get(fId) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            StockCards.get({facilityId: fId}, function (data) {
+                var stockCards = data.stockCards;
+                console.log(stockCards);
+ /*               stockCards.forEach(function (s) {
+
+                    var lotsAscExpiration=s.lotsOnHand.sort(function(a,b){
+                        return (a.lot.expirationDate > b.lot.expirationDate) ? 1 : ((b.lot.expirationDate > a.lot.expirationDate) ? -1 : 0);
+                    });
+                    var lotsDescVvmStatus=lotsAscExpiration.sort(function(a,b){
+                        return (a.customProps.vvmstatus > b.customProps.vvmstatus) ? -1 : ((b.customProps.vvmstatus > a.customProps.vvmstatus) ? 1 : 0);
+                    });
+
+                    var lotsHasExpired=lotsDescVvmStatus.sort(function(a,b){
+                        var lotAExpirationTime=new Date(a.lot.expirationDate).getTime();
+                        var lotBExpirationTime=new Date(b.lot.expirationDate).getTime();
+                        var toDayTime=new Date().getTime();
+                        a.hasExpired=(lotAExpirationTime <=toDayTime)?true:false;
+                        b.hasExpired=(lotBExpirationTime <=toDayTime)?true:false;
+                        return (a.hasExpired && !b.hasExpired) ? -1 : ((b.hasExpired && !a.hasExpired) ? 1 : 0);
+                    });
+
+                    s.lotsOnHand=lotsHasExpired;
+
+                    if (s.product.id !== undefined && quantityRequested !==undefined) {
+
+                        var product = _.filter(programProducts, function (obj) {
+                            if (s.product.primaryName !== undefined) {
+                                return obj.product.primaryName === s.product.primaryName;
+                            }
+                        });
+
+                        var quantityToRequest = _.filter(quantityRequested, function (obj) {
+                            if (obj.productId !== undefined) {
+                                return obj.productId === s.product.id;
+                            }
+                        });
+
+                        //console.log(product[0]);
+
+                        if (quantityToRequest.length > 0 && product[0].productCategory !==undefined) {
+                            s.productCategory = product[0].productCategory;
+                            s.presentation = product[0].product.dosesPerDispensingUnit;
+                            s.quantityRequested = quantityToRequest[0].quantityRequested;
+                            console.log(s.quantityRequested);
+
+                        }
+                    }
+                });
+
+                var byCategory = _.groupBy(stockCards, function (s) {
+                    if(!isUndefined(s.productCategory))
+                        return s.productCategory.name;
+                });
+
+                var stockCardsToDisplay = $.map(byCategory, function (value, index) {
+                    if (index !== 'undefined')
+                        return [{"productCategory": index, "stockCards": value}];
+                });*/
+                deferred.resolve(stockCards);
+            });
+
+
+        })
+    }
+    return {
+        get: get
+    };
+});
+
+
 services.factory('StockCardsForProgramByCategory', function ($resource,StockCards, VaccineOrderRequisitionReport, RequisitionForFacility, $q, $timeout, VaccineOrderRequisitionProgramProduct) {
 
     var programProducts = [];

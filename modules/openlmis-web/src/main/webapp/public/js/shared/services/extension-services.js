@@ -1342,3 +1342,7 @@ services.factory('FacilityConsumptionReport', function ($resource) {
 services.factory('DailyConsumption', function ($resource) {
     return $resource('/reports/reportdata/dailyConsumption.json', {}, {});
 });
+
+services.factory('SearchVaccineStore', function ($resource) {
+    return $resource('/searchVaccineStores/:searchParam.json', {searchParam:'@searchParam'}, {});
+});

@@ -413,4 +413,8 @@ public class FacilityService {
     public HfrFacilityTypeDTO getAllByFacilityType(HfrFacilityTypeDTO record) {
         return facilityRepository.geAllFacilityTypeMappingByCode(record);
     }
+
+    public List<Facility>searchVaccineStores(String searchParam){
+        return facilityRepository.searchVaccineStores(searchParam);
+    }
 }

@@ -334,4 +334,8 @@ public class FacilityRepository {
   public HfrFacilityTypeDTO geAllFacilityTypeMappingByCode(HfrFacilityTypeDTO record) {
     return mapper.geAllFacilityTypeMappingByCode(record);
   }
+  public List<Facility>searchVaccineStores(String searchParam){
+    return mapper.searchVaccineStores(searchParam);
+  }
+
 }

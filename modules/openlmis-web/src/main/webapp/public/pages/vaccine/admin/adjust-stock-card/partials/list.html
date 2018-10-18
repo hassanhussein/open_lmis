@@ -1,0 +1,139 @@
+
+<div xmlns="http://www.w3.org/1999/html">
+    <h2><span>Adjust Stock Card</span>
+    </h2>
+
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="id">
+        <span ng-bind="message"></span>
+    </div>
+
+    <div class="alert alert-error" id="equipmentSaveFailMessage" openlmis-message="equipmentErrorMessage"
+         ng-show="equipmentError">
+
+    </div>
+
+
+    <div id="searchControl" class="row-fluid">
+        <div class="span5 search-in-category">
+            <div class="input-append input-prepend">
+
+                <input  placeholder="Enter Store Name" id='searchFacility' type="text" class="span5" ng-model="query" maxlength="50"
+                       ng-keydown="triggerSearch($event)" autocomplete="off"/>
+                <button class="btn" ng-click="searchFacility()"  data-toggle="collapse"  data-target="#demo">
+                    <i id='searchIcon' class="icon-search"></i>
+                </button>
+            </div>
+        </div>
+
+
+<!--
+        <div class="row" ng-show="facilities.length > 0">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Facility Name</th>
+
+                </tr>
+                </thead>
+                <tbody ng-repeat="facility in facilities">
+                <tr>
+                    <td>{{facility.name}}</td>
+
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+-->
+
+    </div>
+    <div class="row-fluid">
+        <div class="span6">
+            <div id="demo" class="collapse">
+                <div ng-show="facilities.length == 0">No Facility</div>
+                <div ng-show="facilities.length > 0">
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>Select Store</th>
+
+                        </tr>
+                        </thead>
+                        <tbody ng-repeat="facility in facilities">
+                        <tr>
+                            <td>{{facility.name}}</td>
+                            <td> <button class="btn primary pull-right" ng-click="searchStock(facility)" >
+                                Search Stock
+                            </button> </td>
+
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+        <div class="span6"></div>
+    </div>
+
+
+
+
+
+    <!--   <input id="txtFilterDonors" class="search-query input-xlarge" type="text" ng-model="query"
+              placeholder="Enter Store Name (DVS/RVS)"/>
+
+       <span>
+
+
+           <a href="#/create" class="btn btn-primary"><span id="resignation-add-new"
+                                                                       openlmis-message="button.add.new"></span></a>
+
+
+       </span>-->
+
+    <div class="clearfix"></div>
+    <br>
+
+    <div>
+        <h3 ng-show="query.length>0">
+            <ng-pluralize count="resultCount"
+                          when="{ 0: 'No matches found for \'{{query}}\'',
+                        1: '1 match found for \'{{query}}\'',
+                        other: '{} matches found for \'{{query}}\''}">
+            </ng-pluralize>
+        </h3>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr class="gradient-header">
+                <th class="col-row-number">#</th>
+                <th><span>Product</span></th>
+                <th><span>Lot Code</span></th>
+                <th><span>Manufacture</span></th>
+                <th><span>Expiration Date</span></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="lot in lots | filter : query">
+                <td>{{$index + 1}}</td>
+                <td>{{lot.product.primaryName}}</td>
+                <td><a href="" ng-click="editLot(lot.id)">{{lot.lotCode}}</a></td>
+                <td>{{lot.product.manufacturer}}</td>
+                <td>{{lot.expirationDate}}</td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
