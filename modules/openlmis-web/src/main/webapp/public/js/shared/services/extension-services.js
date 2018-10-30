@@ -1517,3 +1517,9 @@ services.factory('ShipmentInterfaces', function ($resource) {
 services.factory('VitalStates', function ($resource) {
     return $resource('/dashboard/vital_status.json', {}, {});
 });
+services.factory('RnRTimeLines', function ($resource) {
+    return $resource('/dashboard/rnr_status_change_timeline.json', {}, {});
+});
+services.factory('UserInThreeMonths', function ($resource) {
+    return $resource('/dashboard/user_in_three_months.json', {}, {});
+});

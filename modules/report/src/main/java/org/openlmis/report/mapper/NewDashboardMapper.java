@@ -49,4 +49,11 @@ public interface NewDashboardMapper {
                     @Result(property = "lessThan75", column = "less_75")
             })
     List<SupplyStatusDto> getProductSupplyStatus(Long zoneId, Long periodId, Long programId);
+
+    @SelectProvider(type = RnRtimeLineDashletQueryBuilder.class, method = "getQuery")
+    List<RnRTimeLine> getRnrTimeLine(Long zoneId, Long periodId, Long programId);
+
+    @SelectProvider(type = DashboardVitalStatusQueryBuilder.class, method = "getUserInLastThreeMonths")
+    List<UserDto> getUsersInThreeMonths();
+
 }

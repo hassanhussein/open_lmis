@@ -27,7 +27,8 @@ private static final String REPORTING_RATE="reportingRate";
     private static  final  String SHIPMENT_INTERFACES="shipmentInterfaces";
     private static final String VITAL_STATUSES="vitalStatuses";
     private static final String PROUDCT_SUPPLY_STATUSES="supplyStatuses";
-
+    private static final String RNR_STAUS_CHANGE_TIMELINE="rnrStatusTimeLine";
+    private static final String USERS="users";
     @Autowired
 private DashboardService dashboardService;
     @RequestMapping(value = "/reporting-rate", method = GET, headers = ACCEPT_JSON)
@@ -97,5 +98,19 @@ private DashboardService dashboardService;
                                                              @RequestParam("periodId") Long periodId,
                                                              @RequestParam("programId") Long programId) {
         return OpenLmisResponse.response(PROUDCT_SUPPLY_STATUSES, this.dashboardService.getProductSupplyStatus(zoneId, periodId, programId));
+    }
+    @RequestMapping(value = "/rnr_status_change_timeline", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getRnrStatusChangeTimeLine(@RequestParam("zoneId") Long zoneId,
+                                                                   @RequestParam("periodId") Long periodId,
+                                                                   @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(RNR_STAUS_CHANGE_TIMELINE, this.dashboardService.getRnrTimeLine(zoneId, periodId, programId));
+    }
+
+
+    @RequestMapping(value = "/user_in_three_months", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getUsersInThreeMonths(@RequestParam("zoneId") Long zoneId,
+                                                                       @RequestParam("periodId") Long periodId,
+                                                                       @RequestParam("programId") Long programId) {
+        return OpenLmisResponse.response(USERS, this.dashboardService.getUsersInThreeMonths());
     }
 }

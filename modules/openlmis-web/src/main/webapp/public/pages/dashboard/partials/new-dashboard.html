@@ -117,7 +117,11 @@ background:#fff;
         margin-left: 400px !important;
 */
         background: 0 !important;
-        max-height: 50% !important;
+        /*max-height: 50% !important;*/
+        min-height: 600px !important;
+    }
+    th td{
+        padding-left: 2px;
     }
 
     .modal .modal-content {
@@ -162,7 +166,50 @@ background:#fff;
             <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
+    <div id="mdUsersInLast" class="modal">
 
+        <div class="modal-content">
+            <div class="modal-header"> <h3>Users Created In Last Three Months</h3></div>
+            <div class="modal-body">
+            <div class="row">
+                <form class="col s12">
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Email Address</th>
+                            <th>Phone</th>
+                            <th>Facility Name</th>
+                            <th>District</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="row in usersThreeMonths">
+                            <td>
+
+
+                    {{ row.username }}
+
+
+                            </td>
+
+                            <td>{{ row.email }}</td>
+                            <td>{{ row.cellphone }}</td>
+                            <td>{{ row.facility }}</td>
+                            <td>{{ row.district }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
     <!---->
 
     <ul class="nav nav-pills">
@@ -694,7 +741,7 @@ background:#fff;
                                             </div>
                                             <a ng-click="setHelpContentKey('productsHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
-                                            </i></a></i></a>
+                                            </i></a>
                                         </div>
 
                                     </div>
@@ -712,12 +759,19 @@ background:#fff;
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
                                               <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
                                               <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                              <a data-target="mdUsersInLast" class="small-box-footer modal-trigger ">
+                                                  Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </a>
+
                                               </span>
+
                                             </div>
+                                            <a  data-target="mdUsersInLast" class="small-box-footer modal-trigger pull-left"><i class="material-icons md-18">
+                                                info
+                                            </i></a>
                                             <a ng-click="setHelpContentKey('usersHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
-                                            </i></a></i></a>
+                                            </i></a>
+
                                         </div>
 
                                     </div>
@@ -1094,6 +1148,15 @@ background:#fff;
 
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="row orderFillRate" ng-show="true">
+                            <ng-include
+                                    src="'/public/pages/dashboard/new-partials/rnr-status-time-line.html'"></ng-include>
+
+
+
+
                         </div>
 
                     </div>

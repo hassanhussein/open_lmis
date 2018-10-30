@@ -1,7 +1,7 @@
 function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ,DashboardProductExpired,
-                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates,dashboardSlidesHelp) {
+                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates,dashboardSlidesHelp,UserInThreeMonths) {
  $scope.myInterval = 3000;
  $scope.slides = [
      {
@@ -1292,6 +1292,17 @@ series.push(percentSeries);
                                 $scope.vitalStatuses=data.vitalStatuses;
 
              });
+
+//     userInThreeMonths
+
+    UserInThreeMonths.get({           zoneId: $scope.filter.zoneId,
+        periodId: $scope.filter.period,
+        programId: $scope.filter.program
+    },function (data) {
+        $scope.usersThreeMonths=data.users;
+
+
+    });
 $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal-trigger').leanModal();

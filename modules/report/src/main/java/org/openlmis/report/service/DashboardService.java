@@ -45,5 +45,10 @@ public class DashboardService {
     public List<SupplyStatusDto>  getProductSupplyStatus(Long zoneId, Long periodId, Long programId) {
         return  dashboardMapper.getProductSupplyStatus(zoneId,periodId,programId);
     }
-
+    public List<RnRTimeLine>  getRnrTimeLine(Long zoneId, Long periodId, Long programId) {
+        return  dashboardMapper.getRnrTimeLine(zoneId,periodId,programId);
+    }
+    public List<UserDto>  getUsersInThreeMonths() {
+        return  dashboardMapper.getUsersInThreeMonths();
+    }
 }
