@@ -126,8 +126,9 @@ public class ColdTraceStatusController extends BaseController {
 
   )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/equipments", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getEquipmentList(@RequestParam("regionCode") String regionCode) {
-    return OpenLmisResponse.response(EQUIPMENTS, dailyColdTraceStatusService.getEquipmentList(regionCode));
+  public ResponseEntity<OpenLmisResponse> getEquipmentList(@RequestParam("regionCode") String regionCode,
+                                                           @RequestParam(value = "verified",defaultValue = "") Boolean verified ) {
+    return OpenLmisResponse.response(EQUIPMENTS, dailyColdTraceStatusService.getEquipmentList(regionCode, verified));
   }
 
   @ApiOperation(

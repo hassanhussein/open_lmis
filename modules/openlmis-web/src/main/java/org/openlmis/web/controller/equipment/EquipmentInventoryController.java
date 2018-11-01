@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -25,6 +26,7 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -142,7 +144,11 @@ public class EquipmentInventoryController extends BaseController {
     Long userId = loggedInUserId(request);
     inventory.setCreatedBy(userId);
     inventory.setModifiedBy(userId);
-    service.save(inventory);
+    try {
+      service.save(inventory);
+    }catch(DuplicateKeyException exception){
+      return OpenLmisResponse.error("Validated serial numbers have to be Unique.", HttpStatus.BAD_REQUEST);
+    }
     service.updateNonFunctionalEquipments();
     response = OpenLmisResponse.success(messageService.message("message.equipment.inventory.saved"));
     response.getBody().addData(INVENTORY, inventory);

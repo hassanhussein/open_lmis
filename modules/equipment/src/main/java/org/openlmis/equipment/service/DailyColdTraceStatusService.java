@@ -17,8 +17,8 @@ import org.openlmis.equipment.domain.DailyColdTraceStatus;
 import org.openlmis.equipment.domain.EquipmentInventory;
 import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.equipment.dto.ColdChainEquipmentDTO;
-import org.openlmis.equipment.dto.ColdTraceSummaryDTO;
 import org.openlmis.equipment.dto.ColdTraceMonthlyStatusDTO;
+import org.openlmis.equipment.dto.ColdTraceSummaryDTO;
 import org.openlmis.equipment.repository.mapper.DailyColdTraceStatusMapper;
 import org.openlmis.equipment.repository.mapper.EquipmentOperationalStatusMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +74,16 @@ public class DailyColdTraceStatusService {
     return mapper.getDailyStatusSubmittedFor(serialNumber);
   }
 
-  public List<ColdChainEquipmentDTO> getEquipmentList(String regionCode) {
-    if("*".equals(regionCode)){
+  public List<ColdChainEquipmentDTO> getEquipmentList(String regionCode, Boolean verified) {
+    if ("*".equals(regionCode)) {
+      if (verified != null) {
+        return mapper.getAllEquipmentsWithVerifiedParam(verified);
+      }
       return mapper.getAllEquipments();
+    }
+    if (verified != null) {
+
+      return mapper.getEquipmentListWithVerifiedParam(regionCode, verified);
     }
     return mapper.getEquipmentList(regionCode);
   }

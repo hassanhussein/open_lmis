@@ -41,4 +41,5 @@ public class ColdChainEquipmentDTO {
 
   private String model;
 
+  private Boolean isSerialNumberVerified;
 }

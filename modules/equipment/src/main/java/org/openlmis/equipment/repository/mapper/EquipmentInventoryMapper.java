@@ -79,12 +79,12 @@ public interface EquipmentInventoryMapper {
   EquipmentInventory getInventoryById(@Param("id") Long id);
 
   @Insert("INSERT into equipment_inventories " +
-      " ( facilityId, equipmentId, programId, serialNumber" +
+      " ( facilityId, equipmentId, programId, serialNumber, isSerialNumberVerified" +
       ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
       ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasStabilizer" +
       ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate,nameOfSparePart, remark) " +
       "values " +
-      " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}" +
+      " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}, #{isSerialNumberVerified}" +
       ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
       ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasStabilizer}" +
       ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{nameOfSparePart}, #{remark})")
@@ -94,7 +94,9 @@ public interface EquipmentInventoryMapper {
   @Update("UPDATE equipment_inventories " +
       "SET " +
       " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, " +
-      " serialNumber = #{serialNumber}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, " +
+      " serialNumber = #{serialNumber}, " +
+      " isSerialNumberVerified = #{isSerialNumberVerified}, " +
+      " yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, " +
       " sourceOfFund = #{sourceOfFund}, replacementRecommended = #{replacementRecommended}, " +
       " reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, " +
       " dateLastAssessed = #{dateLastAssessed}, hasStabilizer = #{hasStabilizer} " +

@@ -206,8 +206,8 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams,GetE
         //console.info($scope.$parent.selectedProgram);
         $location.path('/' + $routeParams.from + '/' + $scope.inventory.programId + '/' + $routeParams.equipmentType + '/' +
             $routeParams.page);
-      }, function (data) {
-        $scope.error = data.error;
+      }, function (response) {
+        $scope.error = messageService.get(response.data.error);
       });
     }else{
       $scope.submitted = true;

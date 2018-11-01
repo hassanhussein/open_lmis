@@ -120,7 +120,29 @@ public interface DailyColdTraceStatusMapper {
       "  f.code AS                           facilityCode, " +
       "  e.name                              equipmentName, " +
       "  e.model, " +
-      "  i.serialnumber " +
+      "  i.serialnumber, " +
+      "  i.isSerialNumberVerified " +
+      " FROM equipment_inventories i " +
+      "  JOIN equipments e ON e.id = i.equipmentid " +
+      "  JOIN facilities f ON i.facilityid = f.id " +
+      "  JOIN geographic_zones d ON f.geographiczoneid = d.id " +
+      "  JOIN geographic_zones r ON r.id = d.parentid " +
+      "  LEFT JOIN geographic_zones z ON z.id = r.parentid " +
+      "WHERE (z.code = #{code} OR r.code = #{code} OR d.code = #{code}) and i.isSerialNumberVerified = #{verified} " +
+      "ORDER BY r.name, d.name, e.name  ")
+  List<ColdChainEquipmentDTO> getEquipmentListWithVerifiedParam(@Param("code") String regionCode, @Param("verified") Boolean verified);
+
+  @Select("SELECT " +
+      "  r.code                              regionCode, " +
+      "  r.name                              regionName, " +
+      "  d.name                              districtName, " +
+      "  d.code                              districtCode, " +
+      "  f.name AS                           facilityName, " +
+      "  f.code AS                           facilityCode, " +
+      "  e.name                              equipmentName, " +
+      "  e.model, " +
+      "  i.serialnumber," +
+      "  i.isSerialNumberVerified " +
       " FROM equipment_inventories i " +
       "  JOIN equipments e ON e.id = i.equipmentid " +
       "  JOIN facilities f ON i.facilityid = f.id " +
@@ -129,6 +151,27 @@ public interface DailyColdTraceStatusMapper {
       "  LEFT JOIN geographic_zones z ON z.id = r.parentid " +
       "ORDER BY r.name, d.name, e.name  ")
   List<ColdChainEquipmentDTO> getAllEquipments();
+
+  @Select("SELECT " +
+      "  r.code                              regionCode, " +
+      "  r.name                              regionName, " +
+      "  d.name                              districtName, " +
+      "  d.code                              districtCode, " +
+      "  f.name AS                           facilityName, " +
+      "  f.code AS                           facilityCode, " +
+      "  e.name                              equipmentName, " +
+      "  e.model, " +
+      "  i.serialnumber, " +
+      "  i.isSerialNumberVerified " +
+      " FROM equipment_inventories i " +
+      "  JOIN equipments e ON e.id = i.equipmentid " +
+      "  JOIN facilities f ON i.facilityid = f.id " +
+      "  JOIN geographic_zones d ON f.geographiczoneid = d.id " +
+      "  JOIN geographic_zones r ON r.id = d.parentid " +
+      "  LEFT JOIN geographic_zones z ON z.id = r.parentid " +
+      " WHERE i.isSerialNumberVerified = #{verified}" +
+      "ORDER BY r.name, d.name, e.name  ")
+  List<ColdChainEquipmentDTO> getAllEquipmentsWithVerifiedParam(@Param("verified") Boolean verified);
 
 
   @Select("SELECT * from equipment_daily_cold_trace_status " +

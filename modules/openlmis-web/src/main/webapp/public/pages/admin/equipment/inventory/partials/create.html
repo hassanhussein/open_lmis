@@ -181,6 +181,18 @@
               </div>
             </div>
 
+            <div class="form-cell">
+              <label for="isSerialNumberVerified">
+                <span openlmis-message="label.equipment.serial.verified"></span>
+              </label>
+              <div class="form-field">
+                <input ng-model="inventory.isSerialNumberVerified" name="isSerialNumberVerified"
+                       id="isSerialNumberVerified" type="checkbox" />
+                <span class="field-error" ng-show="inventoryForm.isSerialNumberVerified.$error.required && showError"
+                      openlmis-message="missing.value"></span>
+              </div>
+            </div>
+
           </div>
         </div>
 
