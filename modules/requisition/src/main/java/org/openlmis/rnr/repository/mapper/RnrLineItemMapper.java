@@ -42,10 +42,13 @@ public interface RnrLineItemMapper {
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
   @Select({"SELECT requisition_line_items.*, products.strength, products.primaryname ",
-          "FROM requisition_line_items, products ",
-          "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true ",
+          "FROM requisition_line_items, products ,requisitions, program_products pmp, product_categories c ",
+          "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true " +
+                  "and requisitions.id= requisition_line_items.rnrid" +
+                  " and pmp.programid=requisitions.programid and pmp.productid=products.id " +
+                  " and c.id=pmp.productcategoryid",
           "and requisition_line_items.productcode = products.code ",
-          "order by productDisplayOrder;"})
+          "order by c.displayorder,products.primaryname ;"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "productStrength", column = "strength"),
