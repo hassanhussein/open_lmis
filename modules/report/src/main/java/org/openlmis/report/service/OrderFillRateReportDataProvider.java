@@ -14,6 +14,7 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.OrderFillRateReportMapper;
 import org.openlmis.report.mapper.RnRFeedbackReportMapper;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @NoArgsConstructor
@@ -63,7 +65,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-
+List<Long> rnrIds;
     OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
     parameter.setUserId(this.getUserId());
 
@@ -71,6 +73,9 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     MasterReport report = new MasterReport();
 
     parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
+    rnrIds=reportMapper.getRequisitionsForPeriod(parameter);
+    String rnrIdsParam=  rnrIds.toString().replace("[", "{").replace("]", "}");
+    parameter.setRnrIdsPar(rnrIdsParam);
     List<OrderFillRateReport> detail = reportMapper.getReport(parameter, rowBounds, this.getUserId());
     report.setDetails(detail);
 

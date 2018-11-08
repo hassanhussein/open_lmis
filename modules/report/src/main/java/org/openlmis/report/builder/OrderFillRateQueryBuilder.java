@@ -90,13 +90,13 @@ public class OrderFillRateQueryBuilder {
             "                ) AS substitutes\n" +
             "              ORDER BY productcode, substitutedproductcode DESC\n" +
             "            ) sli on sli.productcode = li.productcode");
-        WHERE(" li.rnrid = #{filterCriteria.rnrId}");
+        WHERE(" li.rnrid = ANY(#{filterCriteria.rnrIdsPar}::INTEGER[]) ");
         WHERE(" status = 'RELEASED'");
         WHERE(" li.quantityapproved > 0");
 
-        //facility type is not necessary at this point since the report is facility based report
-        //if(param.getFacilityType() != 0)
-         // WHERE(facilityTypeIsFilteredBy("f.type"));
+//        facility type is not necessary at this point since the report is facility based report
+//        if(param.getFacilityType() != 0)
+//          WHERE(facilityTypeIsFilteredBy("f.type"));
 
         //We alredy have the rnrid at this point so no need to filter by facility
        // if(param.getFacility() != 0)
@@ -106,7 +106,7 @@ public class OrderFillRateQueryBuilder {
           WHERE(productCategoryIsFilteredBy("pp.productcategoryid"));
         if (multiProductFilterBy(param.getProducts(), "p.id", "tracer") != null)
           WHERE(multiProductFilterBy(param.getProducts(), "p.id", "tracer"));
-      ORDER_BY(" productCode ");
+      ORDER_BY(" f.name, productCode ");
     String query=SQL();
     return query;
   }
@@ -185,6 +185,38 @@ public class OrderFillRateQueryBuilder {
     WHERE("status in ('RELEASED') and totalproductsapproved > 0 and periodId= #{filterCriteria.period} and programId= #{filterCriteria.program} and facilityId= #{filterCriteria.facility}");
     writePredicates(queryParam);
     query += " UNION " + SQL();
+    return query;
+  }
+
+  public static String getRequisitionsForPeriod(Map params){
+    OrderFillRateReportParam queryParam = (OrderFillRateReportParam) params.get("filterCriteria");
+    String query="";
+    if(queryParam.getFacility() != 0){
+query="SELECT id from requisitions where facilityId =" + queryParam.getFacility()+
+        " and programId ="+ queryParam.getProgram() +
+        " and periodId = " +queryParam.getPeriod() +
+        " and emergency = false limit 1";
+    }else {
+      query = "with recursive districts as(\n" +
+              "select id, name,parentid,levelid from geographic_zones gz\n" +
+              "\t\n" +
+              "\twhere id =" + queryParam.getZone() +
+              "\tunion select gz.id, gz.name,gz.parentid,gz.levelid from geographic_zones gz\n" +
+              "\tinner join  districts d on gz.parentid=d.id\n" +
+              "),\n" +
+              "geo_districts as (\n" +
+              "select d.id from districts d\n" +
+              "inner join geographic_levels gl on d.levelid=gl.id \n" +
+              "where gl.name='District'\n" +
+              ")\n" +
+              " select r.id from requisitions r \n" +
+              " inner join facilities f on r.facilityid=f.id\n" +
+              " inner join geo_districts gd on f.geographiczoneid=gd.id \n" +
+              " where programid= " + queryParam.getProgram() +
+              " and periodid=" + queryParam.getPeriod() +
+              " order by r.id\n";
+    }
+
     return query;
   }
 }

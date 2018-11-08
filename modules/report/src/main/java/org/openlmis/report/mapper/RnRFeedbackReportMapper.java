@@ -103,5 +103,7 @@ public interface RnRFeedbackReportMapper {
 
   @Select("SELECT id from requisitions where facilityId = #{facilityId} and programId = #{programId} and periodId = #{periodId} and emergency = false limit 1")
   Long getRnrId(@Param("programId") Long programId, @Param("facilityId") Long facilityId, @Param("periodId") Long periodId);
+  @Select("SELECT distinct id from requisitions where  programId = #{programId} and periodId = #{periodId} and emergency = false ")
+  List<Long> getRnrIds(@Param("programId") Long programId, @Param("periodId") Long periodId);
 
 }

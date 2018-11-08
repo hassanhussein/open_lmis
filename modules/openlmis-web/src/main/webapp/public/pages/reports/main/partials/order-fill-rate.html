@@ -39,7 +39,7 @@
                                 <zone-filter class="form-cell horizontalFilters"></zone-filter>
                                 <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
                                 <facility-filter class="form-cell horizontalFilters"
-                                                 required="true"></facility-filter>
+                                                 required="false"></facility-filter>
                                 <product-category-filter
                                         class="form-cell horizontalFilters"></product-category-filter>
                                 <product-multi-filter class="form-cell horizontalFilters"></product-multi-filter>
@@ -74,7 +74,8 @@
                                ng-table="tableParams">
                             <tbody>
                             <tr ng-repeat-start="row in datarows" ng-class="{'substitutes' : row.substitutes.length > 0}">
-
+                                <td data-title="getLocalMessage('label.facility.name')" style="width:30%" sortable="facility">{{ row.facility }}
+                                </td>
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
                                 <td data-title="getLocalMessage('label.product.code')" style="width:80px" sortable="productcode">{{row.substitutes.length}}{{
                                     row.productcode }}

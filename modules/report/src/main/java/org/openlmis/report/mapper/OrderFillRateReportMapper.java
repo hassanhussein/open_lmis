@@ -60,4 +60,7 @@ public interface OrderFillRateReportMapper {
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getFillRateReportRequisitionStatus")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
     String getFillRateReportRequisitionStatus(@Param("filterCriteria") OrderFillRateReportParam params);
+    @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getRequisitionsForPeriod")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    List<Long> getRequisitionsForPeriod(@Param("filterCriteria") OrderFillRateReportParam params);
 }

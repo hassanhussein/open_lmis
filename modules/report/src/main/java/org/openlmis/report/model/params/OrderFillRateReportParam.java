@@ -16,6 +16,8 @@ import lombok.*;
 import org.openlmis.report.annotations.RequiredParam;
 import org.openlmis.report.model.ReportParameter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -36,7 +38,8 @@ public class OrderFillRateReportParam extends BaseParam {
   private Long productCategory;
   private Long requisitionGroup;
   private Long rnrId;
-
+  private List<Long> rnrIds;
+private String rnrIdsPar;
   @RequiredParam
   private Long facility;
 
