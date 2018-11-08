@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class DashOrderFillRate {
     private String name;
+    private float pastprev;
     private float prev;
     private float current;
     private String status;

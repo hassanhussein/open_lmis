@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class StockStatus {
     private String name;
+    private float prevprev;
     private float prev;
     private float current;
     private String status;
