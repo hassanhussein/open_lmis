@@ -40,7 +40,7 @@ public class OrderFillRateReportParam extends BaseParam {
   private Long rnrId;
   private List<Long> rnrIds;
 private String rnrIdsPar;
-  @RequiredParam
+
   private Long facility;
 
 

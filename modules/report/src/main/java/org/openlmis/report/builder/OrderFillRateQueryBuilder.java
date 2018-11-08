@@ -191,6 +191,7 @@ public class OrderFillRateQueryBuilder {
   public static String getRequisitionsForPeriod(Map params){
     OrderFillRateReportParam queryParam = (OrderFillRateReportParam) params.get("filterCriteria");
     String query="";
+
     if(queryParam.getFacility() != 0){
 query="SELECT id from requisitions where facilityId =" + queryParam.getFacility()+
         " and programId ="+ queryParam.getProgram() +
