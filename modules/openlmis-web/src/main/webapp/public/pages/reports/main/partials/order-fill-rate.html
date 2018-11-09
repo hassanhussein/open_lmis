@@ -98,6 +98,8 @@
                             </tr>
                             <tr  class="substitutes" ng-repeat="r in row.substitutes">
                                 <td ng-show="$index === 0" rowspan="{{row.substitutes.length}}"></td>
+                                <td >{{ row.facility }}
+                                </td>
                                 <td >{{r.substitutedProductCode}}</td>
                                 <td>{{r.substitutedProductName}}</td>
                                 <td ></td>
@@ -105,7 +107,7 @@
                                 <td ></td>
                             </tr>
                             <tr class="total" ng-repeat-end ng-if="row.substitutes.length > 0">
-                                <td colspan="4"></td>
+                                <td colspan="5"></td>
                                 <td class="number">{{row.totalQuantityShipped | number}}</td>
                                 <td class="number "><span class="{{(row.total_item_rate == 100) ? 'black' : 'red'}}">{{row.total_item_rate | number : 2}} %</span></td>
                             </tr>

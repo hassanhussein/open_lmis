@@ -14,7 +14,6 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
     $scope.OnFilterChanged = function () {
         // clear old data if there was any
-        alert("here i am");
         $scope.pusheditems = $scope.data = $scope.datarows = $scope.summaries = [];
         $scope.filter.max = 10000;
         OrderFillRateReport.get($scope.getSanitizedParameter(), function (data) {
