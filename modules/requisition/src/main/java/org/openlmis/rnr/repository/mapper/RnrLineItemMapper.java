@@ -48,7 +48,7 @@ public interface RnrLineItemMapper {
           "          left outer join program_products pmp on pmp.programid=r.programid and pmp.productid=p.id  " ,
           "          left outer join  product_categories c on  c.id=pmp.productcategoryid " ,
           "          WHERE rnrId = #{rnrId} and rli.fullSupply = true                   " ,
-          "          order by c.displayorder,p.primaryname ;"})
+          "          order by c.displayorder,rli.productdisplayorder ;"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "productStrength", column = "strength"),
