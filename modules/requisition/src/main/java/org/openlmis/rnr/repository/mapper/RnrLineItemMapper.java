@@ -41,14 +41,14 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select({"SELECT requisition_line_items.*, products.strength, products.primaryname ",
-          "FROM requisition_line_items, products ,requisitions, program_products pmp, product_categories c ",
-          "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true " +
-                  "and requisitions.id= requisition_line_items.rnrid" +
-                  " and pmp.programid=requisitions.programid and pmp.productid=products.id " +
-                  " and c.id=pmp.productcategoryid",
-          "and requisition_line_items.productcode = products.code ",
-          "order by c.displayorder,products.primaryname ;"})
+  @Select({"SELECT rli.*, p.strength, p.primaryname " ,
+          "          FROM requisition_line_items rli " ,
+          " inner join  requisitions r on r.id=rli.rnrid " ,
+          "  inner join products p on p.code=rli.productcode " ,
+          "          left outer join program_products pmp on pmp.programid=r.programid and pmp.productid=p.id  " ,
+          "          left outer join  product_categories c on  c.id=pmp.productcategoryid " ,
+          "          WHERE rnrId = #{rnrId} and rli.fullSupply = true                   " ,
+          "          order by c.displayorder,p.primaryname ;"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "productStrength", column = "strength"),
