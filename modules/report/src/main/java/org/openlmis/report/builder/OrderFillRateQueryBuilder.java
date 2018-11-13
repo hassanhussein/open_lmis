@@ -74,22 +74,22 @@ public class OrderFillRateQueryBuilder {
     if(param.getProductCategory() != 0)// gives a overhead on a query performance. Unless category is selected don't do the join
     JOIN(" (SELECT * FROM program_products where programid =  #{filterCriteria.program}) pp ON p.id = pp.productid");
 
-    LEFT_OUTER_JOIN(  " ( SELECT DISTINCT  productcode, quantityshipped, substitutedproductcode,  substitutedproductname, substitutedproductquantityshipped\n" +
+    LEFT_OUTER_JOIN(  " ( SELECT DISTINCT  productcode, orderid,quantityshipped, substitutedproductcode,  substitutedproductname, substitutedproductquantityshipped\n" +
             "              FROM\n" +
             "                (\n" +
             "                  SELECT NULL as orderid, NULL AS quantityshipped, productcode, substitutedproductcode, substitutedproductname, \n" +
             "                    substitutedproductquantityshipped\n" +
             "                  FROM shipment_line_items li\n" +
-            "                  WHERE li.substitutedproductcode IS NOT NULL AND orderid = #{filterCriteria.rnrId}\n" +
+            "                  WHERE li.substitutedproductcode IS NOT NULL AND orderid =  ANY(#{filterCriteria.rnrIdsPar}::INTEGER[])\n" +
             "                    UNION\n" +
             "                  SELECT orderid, sum(quantityshipped) quantityshipped, productcode, NULL substitutedproductcode, NULL AS substitutedproductname, \n" +
             "                    NULL AS substitutedproductquantityshipped\n" +
             "                  FROM shipment_line_items\n" +
-            "                  WHERE orderid = #{filterCriteria.rnrId}\n" +
+            "                  WHERE orderid =  ANY(#{filterCriteria.rnrIdsPar}::INTEGER[])\n" +
             "                  GROUP BY orderid, productcode\n" +
             "                ) AS substitutes\n" +
             "              ORDER BY productcode, substitutedproductcode DESC\n" +
-            "            ) sli on sli.productcode = li.productcode");
+            "            ) sli on sli.productcode = li.productcode and li.rnrid=sli.orderid ");
         WHERE(" li.rnrid = ANY(#{filterCriteria.rnrIdsPar}::INTEGER[]) ");
         WHERE(" status = 'RELEASED'");
         WHERE(" li.quantityapproved > 0");
@@ -108,6 +108,7 @@ public class OrderFillRateQueryBuilder {
           WHERE(multiProductFilterBy(param.getProducts(), "p.id", "tracer"));
       ORDER_BY(" f.name, productCode ");
     String query=SQL();
+
     return query;
   }
 
@@ -192,7 +193,7 @@ public class OrderFillRateQueryBuilder {
     OrderFillRateReportParam queryParam = (OrderFillRateReportParam) params.get("filterCriteria");
     String query="";
 
-    if(queryParam.getFacility() != 0){
+    if(queryParam.getFacility()!=null && queryParam.getFacility() != 0){
 query="SELECT id from requisitions where facilityId =" + queryParam.getFacility()+
         " and programId ="+ queryParam.getProgram() +
         " and periodId = " +queryParam.getPeriod() +
@@ -217,7 +218,6 @@ query="SELECT id from requisitions where facilityId =" + queryParam.getFacility(
               " and periodid=" + queryParam.getPeriod() +
               " order by r.id\n";
     }
-
     return query;
   }
 }
