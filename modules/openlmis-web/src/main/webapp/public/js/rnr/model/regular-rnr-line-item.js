@@ -13,12 +13,13 @@ var RegularRnrLineItem = base2.Base.extend({
   programRnrColumnList: undefined,
   rnrStatus: undefined,
 
-  constructor: function (lineItem, numberOfMonths, programRnrColumnList, rnrStatus,reportOnlyPeriod) {
+  constructor: function (lineItem, numberOfMonths, programRnrColumnList, rnrStatus,reportOnlyPeriod,period) {
     $.extend(true, this, lineItem);
     this.numberOfMonths = numberOfMonths;
     this.rnrStatus = rnrStatus;
     this.programRnrColumnList = programRnrColumnList;
     this.reportOnlyPeriod = reportOnlyPeriod;
+    this.period = period;
     this.init();
     if (this.previousNormalizedConsumptions === undefined || this.previousNormalizedConsumptions === null)
       this.previousNormalizedConsumptions = [];
@@ -63,18 +64,18 @@ var RegularRnrLineItem = base2.Base.extend({
 
    },
   fillConsumptionOrStockInHand: function () {
-
-          this.beginningBalance = utils.getValueFor(this.beginningBalance);
-          this.quantityReceived = utils.getValueFor(this.quantityReceived);
-          this.quantityDispensed = utils.getValueFor(this.quantityDispensed);
-          this.totalLossesAndAdjustments = utils.getValueFor(this.totalLossesAndAdjustments, 0);
-          this.stockInHand = utils.getValueFor(this.stockInHand);
-          if(!this.reportOnlyPeriod)
-          this.resetMandatoryFields();
-          this.calculateConsumption();
-          this.calculateStockInHand();
-          this.fillNormalizedConsumption();
-          this.calculateTotal();
+         if(this.reportOnlyPeriod) {
+             this.beginningBalance = utils.getValueFor(this.beginningBalance);
+             this.quantityReceived = utils.getValueFor(this.quantityReceived);
+             this.quantityDispensed = utils.getValueFor(this.quantityDispensed);
+             this.totalLossesAndAdjustments = utils.getValueFor(this.totalLossesAndAdjustments, 0);
+             this.stockInHand = utils.getValueFor(this.stockInHand);
+            // this.resetMandatoryFields();
+             this.calculateConsumption();
+             this.calculateStockInHand();
+             this.fillNormalizedConsumption();
+             this.calculateTotal();
+         }
   },
 
   statusBeforeAuthorized: function () {
@@ -122,8 +123,14 @@ var RegularRnrLineItem = base2.Base.extend({
     this.fillPacksToShip();
   },
 
+  isStockoutDaysInvalid: function(){
+    if(this.reportOnlyPeriod){
+      return (this.stockOutDays > utils.NumberOfDaysInOrderingPeriod(this.period));
+    }
+  },
+
   arithmeticallyInvalid: function () {
-    if (this.programRnrColumnList !== undefined && this.programRnrColumnList[0].formulaValidationRequired) {
+    if (this.programRnrColumnList !== undefined && this.programRnrColumnList[0].formulaValidationRequired && this.reportOnlyPeriod) {
       var beginningBalance = utils.parseIntWithBaseTen(this.beginningBalance);
       var quantityReceived = utils.parseIntWithBaseTen(this.quantityReceived);
       var quantityDispensed = utils.parseIntWithBaseTen(this.quantityDispensed);
@@ -132,7 +139,11 @@ var RegularRnrLineItem = base2.Base.extend({
       return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
           utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
           quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
+    }else if (!this.reportOnlyPeriod)
+    {
+       return (this.stockOutDays > utils.isNumberOfDaysInReportingPeriod(this.period));
     }
+
     return false;
   },
 
@@ -254,7 +265,18 @@ var RegularRnrLineItem = base2.Base.extend({
       }else{
         this.normalizedConsumption = Math.round(90 * this.quantityDispensed);
       }
-    } else {
+    }
+/*
+    Added to accommodate Bimonthly reporting
+*/
+    else if(normalizedConsumptionCalcOption === "DISPENSED_X_60"){
+        if(this.stockOutDays < 60){
+            this.normalizedConsumption = Math.round((60 * this.quantityDispensed) / (60 - this.stockOutDays));
+        }else{
+            this.normalizedConsumption = Math.round(60 * this.quantityDispensed);
+        }
+    }
+    else {
       // this is the default behavior
       if (!utils.isNumber(this.quantityDispensed) || !utils.isNumber(this.stockOutDays) || !utils.isNumber(this.newPatientCount)) {
         this.normalizedConsumption = null;
@@ -369,9 +391,9 @@ var RegularRnrLineItem = base2.Base.extend({
 
   validateRequiredFieldsForNonFullSupply: function () {
     if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
-      return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity));
+      return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity) ||!this.reportOnlyPeriod);
     }
-    return false;
+      return false;
   },
 
   validateRequiredFieldsForFullSupply: function () {
@@ -381,7 +403,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
     $(visibleColumns).each(function (i, column) {
           var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skipped","stockInHand","stockOutDays"];
-          if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name)) return;
+          if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name) || !this.reportOnlyPeriod) return;
           if (column.name === 'quantityRequested') {
             valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
           } else if (column.name == 'expirationDate') {
@@ -392,7 +414,6 @@ var RegularRnrLineItem = base2.Base.extend({
           return valid;
         }
     );
-
     return valid;
   },
 
@@ -401,6 +422,7 @@ var RegularRnrLineItem = base2.Base.extend({
     if (this.stockInHand < 0) return "error.stock.on.hand.negative";
     if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
     if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
+   // if(this.isStockoutDaysInvalid()) return "error.stock.out.days.not.valid";
 
     return "";
   },
