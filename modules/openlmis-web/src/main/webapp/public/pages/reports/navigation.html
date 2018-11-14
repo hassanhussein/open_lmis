@@ -296,6 +296,10 @@
 
       <div class="submenu">
         <ul>
+          <li ng-show="hasPermission('VIEW_REDESIGNED_STOCK_STATUS_REPORT')">
+            <a id='redesigned_stock_status' href="/public/pages/reports/stock/index.html#/home"
+               openlmis-message="link.redesigned.stock.status"></a>
+          </li>
 
           <li ng-show="hasPermission('VIEW_MSD_DASHLET_REPORT')">
             <a id='msd_stock' href="/public/pages/logistics/stock-status/index.html#/home"
