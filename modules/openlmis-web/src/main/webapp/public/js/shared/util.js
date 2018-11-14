@@ -356,6 +356,17 @@ var utils = {
         return _.chain(reportData).pluck(columnToBeAgregated).reduce(function (memo, num) {
             return memo + num;
         }, 0).value();
+    },
+    isNumberOfDaysInReportingPeriod: function(period){
+        var year = new Date(period.stringStartDate).getFullYear();
+        var month = new Date(period.stringStartDate).getMonth();
+        return new Date(year, month+1,0).getDate();
+    } ,
+    NumberOfDaysInOrderingPeriod: function(period){
+        console.log(period);
+        var year = new Date(period.stringStartDate).getFullYear();
+        var month = new Date(period.stringStartDate).getMonth();
+        return new Date(year, month+1,0).getDate();
     }
 
 };
