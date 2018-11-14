@@ -186,6 +186,6 @@ public interface ProgramMapper {
     " order by name")
   List<Program> getAllIvdPrograms();
 
-  @Select("select * from programs where enableMonthlyReporting = true")
-  Program getMonthlyEnabledProgram();
+  @Select("select * from programs where enableMonthlyReporting = true and id = #{programId}")
+  Program getMonthlyEnabledProgram(@Param("programId") Long programId);
 }

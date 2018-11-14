@@ -129,7 +129,7 @@ public class ProgramRepository {
 
   }
 
-    public Program getMonthlyEnabledProgram() {
-       return mapper.getMonthlyEnabledProgram();
+    public Program getMonthlyEnabledProgram(Long programId) {
+       return mapper.getMonthlyEnabledProgram(programId);
     }
 }
