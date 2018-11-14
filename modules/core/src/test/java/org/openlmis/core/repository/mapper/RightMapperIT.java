@@ -96,7 +96,7 @@ public class RightMapperIT {
 
     List<Right> rights = rightMapper.getAll();
 
-    assertThat(rights.size(), is(120));
+    assertThat(rights.size(), is(121));
 
     assertThat(rights.get(0).getDisplayOrder(),is(1));
   }

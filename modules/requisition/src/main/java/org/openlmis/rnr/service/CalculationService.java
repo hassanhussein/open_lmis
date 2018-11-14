@@ -13,7 +13,9 @@ package org.openlmis.rnr.service;
 import org.apache.commons.collections.Transformer;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.service.ProcessingScheduleService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class CalculationService {
 
   @Autowired
   ProcessingScheduleService processingScheduleService;
+
+  @Autowired
+  ProgramService programService;
 
   public void perform(Rnr requisition, ProgramRnrTemplate template) {
     requisition.setFullSupplyItemsSubmittedCost(new Money("0"));
@@ -70,10 +75,12 @@ public class CalculationService {
 
   public void fillFieldsForInitiatedRequisition(Rnr requisition, ProgramRnrTemplate rnrTemplate, RegimenTemplate regimenTemplate) {
     List<ProcessingPeriod> fivePreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), MAX_NUMBER_OF_PERIODS_TO_TRACK);
-
-
-    Rnr previousRequisition = requisitionRepository
-        .getLastRegularRequisitionToEnterThePostSubmitFlow(requisition.getFacility().getId(), requisition.getProgram().getId());
+    Program program = programService.getMonthlyEnabledProgram(requisition.getProgram().getId());
+    Rnr previousRequisition;
+     if(program == null)
+     previousRequisition = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(requisition.getFacility().getId(), requisition.getProgram().getId());
+     else
+      previousRequisition = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlowForOrderEnabled(requisition.getFacility().getId(),requisition.getProgram().getId());
 
     if (fivePreviousPeriods.size() == 0 || previousRequisition == null) {
       requisition.setFieldsAccordingToTemplateFrom(null, rnrTemplate, regimenTemplate);
@@ -200,8 +207,9 @@ public class CalculationService {
 
       lineItem.validateMandatoryFields(template);
       lineItem.calculateForFullSupply(template, requisition.getStatus(), lossesAndAdjustmentsTypes, numberOfMonths);
-      if(requisition.getPeriod().getEnableOrder())
-      lineItem.validateCalculatedFields(template);
+      if(requisition.getPeriod().getEnableOrder()) {
+        lineItem.validateCalculatedFields(template);
+      }
 
       requisition.addToFullSupplyCost(lineItem.calculateCost());
     }

@@ -876,4 +876,20 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, monthlyStockStatusReportList);
     }
+
+    @RequestMapping(value = "/reportdata/aggregateStockStatusReport", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
+    public Pages getAggregateStockStatusReport(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                            HttpServletRequest request
+
+    ) {
+
+        Report report = reportManager.getReportByKey("aggregate_stock_status_report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<AggregateStockStatusReport> aggregateStockStatusReportList =
+                (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, aggregateStockStatusReportList);
+    }
 }

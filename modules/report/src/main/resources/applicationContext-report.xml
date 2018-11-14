@@ -612,6 +612,16 @@
                     <property name="title" value="report.title.monthly.stock.status.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="aggregate_stock_status_report"/>
+                    <property name="template" value="aggregate-stock-status-report.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
+                    <property name="id" value="aggregate_stock_status_report"/>
+                    <property name="name" value="Aggregate Stock Status Report"/>
+                    <property name="title" value="report.title.monthly.stock.status.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

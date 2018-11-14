@@ -2456,7 +2456,7 @@ app.directive('periodByYearFilter', ['ReportPeriods', 'ReportPeriodsByYear', '$r
                 }
 
                 // scope.subscribeOnChanged('period', 'program', onParentChanged, false);
-                scope.subscribeOnChanged('period', 'year', onParentChanged, false);
+                scope.subscribeOnChanged('period', 'year', onParentChanged, true);
                 //scope.subscribeOnChanged('period', 'schedule', onParentChanged, true);
             },
             templateUrl: 'filter-period-template'
