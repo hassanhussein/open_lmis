@@ -414,7 +414,12 @@ public class FacilityService {
         return facilityRepository.geAllFacilityTypeMappingByCode(record);
     }
 
-    public FacilityInterfaceDTO getByAgentCode(String agentCode){
-        return facilityRepository.getByAgentCode(agentCode);
+    public FacilityMappingDTO getByAgentCode(String agentCode,String appCode){
+       return facilityRepository.getByAgentCode(agentCode,appCode);
+    }
+
+
+    public Facility getFacilityByAgentCode(String code) {
+        return facilityRepository.getByCode(code);
     }
 }

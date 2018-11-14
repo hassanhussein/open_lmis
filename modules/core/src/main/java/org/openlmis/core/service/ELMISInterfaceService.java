@@ -13,12 +13,13 @@
 package org.openlmis.core.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.openlmis.core.domain.ELMISInterface;
-import org.openlmis.core.domain.ELMISInterfaceDataSet;
-import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
-import org.openlmis.core.domain.Facility;
+import com.sun.org.apache.regexp.internal.RE;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.ELMISInterfaceDTO;
 import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
+import org.openlmis.core.dto.ELMISResponseMessageDTO;
+import org.openlmis.core.dto.FacilityMappingDTO;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,10 +38,13 @@ import java.util.List;
 @Service
 public class ELMISInterfaceService {
 
+    private static final String FACILITY_MAPPING_KEY = "GOTHOMIS-ELMIS-INTERFACE";
     @Autowired
     private ELMISInterfaceRepository repository;
     @Autowired
     private ConfigurationSettingService settingService;
+    @Autowired
+    private FacilityService facilityService;
 
     public static final String URL = "LLIN_DHIS_URL";
     public static final String URL2 = "LLIN_DHIS_SECOND_URL";
@@ -83,9 +87,8 @@ public class ELMISInterfaceService {
     }
 
 
-
-   // @Scheduled(cron = "${batch.job.send.bed.net.data}")
-   // @Scheduled(fixedRate = 900000)
+    // @Scheduled(cron = "${batch.job.send.bed.net.data}")
+    // @Scheduled(fixedRate = 900000)
     public void processMosquitoNetReportingData() {
         //Populate Data
         // repository.refreshMaterializedView();
@@ -106,7 +109,7 @@ public class ELMISInterfaceService {
     ///@Scheduled(fixedRate = 900000)
     public void processMosquitoNetData() {
         //Populate Data
-         repository.refreshMaterializedView();
+        repository.refreshMaterializedView();
         String username = settingService.getByKey(USERNAME).getValue();
         String password = settingService.getByKey(PASSWORD).getValue();
         String url = settingService.getByKey(URL).getValue();
@@ -132,7 +135,7 @@ public class ELMISInterfaceService {
             con.setRequestProperty("Authorization", basicAuth);
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
-          //  System.out.println("all connection" + con);
+            //  System.out.println("all connection" + con);
 
             con.setDoOutput(true);
             System.out.println("file");
@@ -165,6 +168,39 @@ public class ELMISInterfaceService {
         }
 
 
+    }
+
+    public ELMISResponseMessageDTO getResponseMessageByCode(String code) {
+        return repository.getResponseMessageByCode(code);
+    }
+
+
+    public FacilityMappingDTO getFacilityMappingByCode(FacilityMappingDTO facility) {
+        return repository.getByMappedCode(facility.getMappedId());
+    }
+
+    public void insertFacility(FacilityMappingDTO facility) {
+
+        FacilityMappingDTO dto = repository.getByMappedCode(facility.getMappedId());
+        String interFaceKey = settingService.getByKey(FACILITY_MAPPING_KEY).getValue();
+
+        if (interFaceKey == null)
+            throw new DataException("Facility Mapping Interface Key Missing");
+        else {
+            facility.setInterfaceId(repository.getByName(interFaceKey).getId());
+        }
+
+        if (null == dto) {
+            facility.setFacilityId(facilityService.getByCodeFor(facility.getFacilityCode()).getId());
+            facility.setCreatedBy(2L);
+            facility.setModifiedBy(2L);
+            facility.setActive(true);
+            repository.insertFacility(facility);
+        } else {
+            facility.setFacilityId(facilityService.getByCodeFor(facility.getFacilityCode()).getId());
+            facility.setActive(true);
+            repository.updateFacility(facility);
+        }
     }
 
 }

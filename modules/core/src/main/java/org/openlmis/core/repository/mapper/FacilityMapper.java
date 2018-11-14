@@ -610,10 +610,11 @@ Integer insertHfrMapping(HfrMappingDTO dto);
     @Select(" select * from vims_hfr_facility_types_mappings where hfrFacilityType =#{hfrFacilityType}  ")
     HfrFacilityTypeDTO geAllFacilityTypeMappingByCode(HfrFacilityTypeDTO record);
 
-    @Select(" select * from interface_apps app\n" +
-            " JOIN interface_dataset da ON da.interfaceid = app.id\n" +
-            " WHERE NAME = 'GoTHOMIS-FACILITIES' AND DATASETiD = #{agentCode}")
-  FacilityInterfaceDTO getByAgentCode(@Param("agentCode") String agentCode);
+    @Select(" select *, f.code facilityCode from interface_apps app\n" +
+            " JOIN facility_mappings M on M.interfaceId = app.id " +
+            "  JOIN facilities f ON M.facilityId = F.id"+
+            " WHERE m.mappedId = #{agentCode} AND app.name = (SELECT value FROM configuration_settings WHERE LOWER(key) = LOWER(#{appCode}) LIMIT 1) ")
+  FacilityMappingDTO getByAgentCode(@Param("agentCode") String agentCode, @Param("appCode") String appCode);
 
 
 }

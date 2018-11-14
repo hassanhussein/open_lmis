@@ -18,10 +18,7 @@ import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
-import org.openlmis.core.dto.ELMISInterfaceDTO;
-import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
-import org.openlmis.core.dto.InterfaceResponseDTO;
-import org.openlmis.core.dto.ResponseDTO;
+import org.openlmis.core.dto.*;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.stereotype.Repository;
 
@@ -171,5 +168,28 @@ public interface ELMISInterfaceMapper {
             "     ) Y\n")
     List<ELMISInterfaceDataSetDTO>getMosquitoNetReportingRateData();
 
+     @Select("select * from  elmis_response_messages where code = #{code}")
+     ELMISResponseMessageDTO getResponseMessageByCode(@Param("code") String code);
 
+
+
+    @Insert("INSERT INTO public.facility_mappings(\n" +
+            "            interfaceid, facilityId, mappedId, active, createdby, createddate, \n" +
+            "            modifiedby, modifieddate)\n" +
+            "    VALUES (#{interfaceId}, #{facilityId}, #{mappedId}, #{active}, #{createdBy}, NOW(), \n" +
+            "            #{modifiedBy}, NOW());")
+    @Options(useGeneratedKeys = true)
+    Integer insertFacility(FacilityMappingDTO mapping);
+
+    @Update(" UPDATE public.facility_mappings\n" +
+            "   SET  interfaceId=#{interfaceId}, facilityId=#{facilityId}, mappedId= #{mappedId}, active=#{active}, \n" +
+            "       modifiedBy=#{modifiedBy}, modifiedDate=NOW()\n" +
+            " WHERE id = #{id};\n ")
+    void updateFacility(FacilityMappingDTO mapping);
+
+    @Select(" SELECT * FROM facility_mappings where  mappedId= #{mappedId} ")
+    FacilityMappingDTO getByMappedId(@Param("mappedId") String mappedId);
+
+    @Select("select * from interface_apps where name = #{name}")
+    ELMISInterface getByName(@Param("name") String name);
 }

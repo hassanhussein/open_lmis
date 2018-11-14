@@ -335,7 +335,7 @@ public class FacilityRepository {
     return mapper.geAllFacilityTypeMappingByCode(record);
   }
 
-  public FacilityInterfaceDTO getByAgentCode(String agentCode){
-    return mapper.getByAgentCode(agentCode);
+  public FacilityMappingDTO getByAgentCode(String agentCode, String appCode){
+    return mapper.getByAgentCode(agentCode,appCode);
   }
 }

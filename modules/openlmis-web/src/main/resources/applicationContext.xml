@@ -421,6 +421,17 @@
                         <property name="recordHandler" ref="productFormPersistenceHandler"/>
                     </bean>
                 </entry>
+
+                <entry key="funding-source">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Facility Level Mapping"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.FacilityMappingDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityInterfaceMappingHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>

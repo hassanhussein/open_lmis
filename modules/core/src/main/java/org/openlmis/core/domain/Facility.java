@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.openlmis.core.dto.ELMISResponseMessageDTO;
 import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
@@ -142,6 +143,8 @@ public class Facility extends BaseModel implements Importable {
   private PriceSchedule priceSchedule;
 
   private List<ELMISInterfaceFacilityMapping> interfaceMappings = new ArrayList<>();
+
+  private ELMISResponseMessageDTO messageDTO;
 
   //TODO : change supportedPrograms to programsSupported
   List<ProgramSupported> supportedPrograms = new ArrayList<>();

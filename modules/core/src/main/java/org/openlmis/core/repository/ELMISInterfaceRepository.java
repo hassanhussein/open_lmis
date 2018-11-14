@@ -18,10 +18,7 @@ import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.domain.Facility;
-import org.openlmis.core.dto.ELMISInterfaceDTO;
-import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
-import org.openlmis.core.dto.InterfaceResponseDTO;
-import org.openlmis.core.dto.ResponseDTO;
+import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ELMISInterfaceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -175,5 +172,22 @@ public class ELMISInterfaceRepository {
     }
     public List<ELMISInterfaceDataSetDTO> getMosquitoNetReportingRateData(){
         return mapper.getMosquitoNetReportingRateData();
+    }
+    public ELMISResponseMessageDTO getResponseMessageByCode(String code){
+        return mapper.getResponseMessageByCode(code);
+    }
+
+    public void insertFacility(FacilityMappingDTO dto){
+        mapper.insertFacility(dto);
+    }
+    public void updateFacility(FacilityMappingDTO dto){
+        mapper.updateFacility(dto);
+    }
+    public FacilityMappingDTO getByMappedCode(String code){
+        return mapper.getByMappedId(code);
+    }
+
+    public ELMISInterface getByName(String name){
+        return mapper.getByName(name);
     }
 }
