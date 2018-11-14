@@ -17,13 +17,18 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 /**
  * RestResponse encapsulates ResponseEntity, HttpStatus in order to consistently return responses.
@@ -91,6 +96,18 @@ public class RestResponse {
     return new ResponseEntity<>(response, status);
   }
 
+  public static ResponseEntity<RestResponse> restResponse(Map<String, String> messages, HttpStatus status,String extraArg) {
+    return response(messages, status, APPLICATION_JSON_VALUE,extraArg);
+  }
+  public static ResponseEntity<RestResponse> response(Map<String, String> messages, HttpStatus status, String contentType,String extraValue) {
+    MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+    headers.add("Content-Type", contentType);
+    RestResponse response = new RestResponse();
+    response.setData(messages,null);
+    return new ResponseEntity<>(response, headers, status);
+  }
+
+
   @JsonAnyGetter
   @SuppressWarnings("unused")
   public Map<String, Object> getData() {
@@ -100,6 +117,12 @@ public class RestResponse {
   private void setData(Map<String, OpenLmisMessage> errors) {
     for (String key : errors.keySet()) {
       addData(key, messageService.message(errors.get(key)));
+    }
+  }
+
+  private void setData(Map<String, String> errors,String unusedVar) {
+    for (String key : errors.keySet()) {
+      addData(key, errors.get(key));
     }
   }
 

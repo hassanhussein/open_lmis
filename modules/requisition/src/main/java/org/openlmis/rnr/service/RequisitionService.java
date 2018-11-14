@@ -1,6 +1,7 @@
 package org.openlmis.rnr.service;
 
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.RequisitionStatusDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
@@ -291,7 +292,8 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-    calculationService.perform(savedRnr, template);
+      if(savedRnr.getPeriod().getEnableOrder())
+      calculationService.perform(savedRnr, template);
 
     return update(savedRnr);
   }
@@ -312,8 +314,9 @@ public class RequisitionService {
     savedRnr.setSupervisoryNodeId(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram()).getId());
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
-
-    calculationService.perform(savedRnr, template);
+    if(savedRnr.getPeriod().getEnableOrder()) {
+      calculationService.perform(savedRnr, template);
+    }
     savedRnr.setFieldsForApproval();
 
     return update(savedRnr);
@@ -499,7 +502,15 @@ public class RequisitionService {
 
   public ProcessingPeriod getPeriodForInitiating(Facility facility, Program program) {
     Date programStartDate = programService.getProgramStartDate(facility.getId(), program.getId());
-    Rnr lastRegularRequisition = requisitionRepository.getLastRegularRequisition(facility, program);
+    //Get program from Monthly reporting
+    Program enabledProgram = programService.getMonthlyEnabledProgram(program.getId());
+    Rnr lastRegularRequisition;
+    if(null == enabledProgram) {
+      lastRegularRequisition= requisitionRepository.getLastRegularRequisition(facility, program);
+    } else {
+      lastRegularRequisition =requisitionRepository.getLastRegularRequisitionForBiMonthlyReporting(facility,program);
+    }
+
     Long periodIdForLastRequisition = null;
     if (lastRegularRequisition != null) {
       if (lastRegularRequisition.preAuthorize()) {
@@ -509,9 +520,6 @@ public class RequisitionService {
     }
      //Original Settings
     List<ProcessingPeriod> periods;
-
-    //Get program from Monthly reporting
-    Program enabledProgram = programService.getMonthlyEnabledProgram();
 
     if(null != enabledProgram)
       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
@@ -527,16 +535,21 @@ public class RequisitionService {
   public List<ProcessingPeriod> getAllPeriodsForInitiatingRequisition(Long facilityId, Long programId) {
 
     Date programStartDate = programService.getProgramStartDate(facilityId, programId);
+    //Get program from Monthly reporting
+    Program program = programService.getMonthlyEnabledProgram(programId);
+    Rnr lastRequisitionToEnterThePostSubmitFlow = null;
 
-    Rnr lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(facilityId, programId);
+    if(null != program) {
+      lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlowForBiMonthlyReporting(facilityId, programId);
+    } else {
+      lastRequisitionToEnterThePostSubmitFlow = requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(facilityId, programId);
+    }
 
     Long periodIdOfLastRequisitionToEnterPostSubmitFlow = lastRequisitionToEnterThePostSubmitFlow == null ? null : lastRequisitionToEnterThePostSubmitFlow.getPeriod().getId();
 
-
     List<ProcessingPeriod> periods;
 
-    //Get program from Monthly reporting
-    Program program = programService.getMonthlyEnabledProgram();
+
     if(null != program)
        periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
     else
@@ -880,6 +893,10 @@ public class RequisitionService {
 
   public List<HashMap<String,Object>> getSupervisionCheckListReport(String facilityCode, String programCode) {
     return requisitionRepository.getSupervisionCheckListReport(facilityCode,programCode);
+  }
+
+  public RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId) {
+    return requisitionRepository.getRequisitionStatusByRnRId(rnrId);
   }
 }
 

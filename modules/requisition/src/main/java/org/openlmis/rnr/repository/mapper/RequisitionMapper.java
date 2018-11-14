@@ -12,6 +12,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.RequisitionStatusDTO;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
@@ -155,6 +156,19 @@ public interface RequisitionMapper {
       @Result(property = "period.id", column = "periodId")
   })
   Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
+
+  @Select({"SELECT * FROM requisitions R",
+      "WHERE facilityId = #{facilityId}",
+      "AND programId = #{programId} ",
+      "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+      "AND emergency = false",
+      "ORDER BY (select endDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
+  @Results(value = {
+      @Result(property = "facility.id", column = "facilityId"),
+      @Result(property = "program.id", column = "programId"),
+      @Result(property = "period.id", column = "periodId")
+  })
+  Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForBiMonthlyReporting(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
   @Select({"SELECT * FROM requisitions WHERE",
       "facilityId = #{facility.id} AND",
@@ -397,6 +411,36 @@ public interface RequisitionMapper {
           "   SELECT * FROM Req  \n" +
           "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
   List<HashMap<String,Object>> getSupervisionCheckListReport(@Param("facilityCode") String facilityCode,@Param("programCode") String programCode);
+
+  @Select({"SELECT * FROM requisitions R",
+          "WHERE facilityId = #{facilityId}",
+          "AND programId = #{programId} ",
+          "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+          "AND emergency = false",
+          "ORDER BY (select endDate from processing_periods where id=R.periodId and enableOrder=false ) DESC LIMIT 1"})
+
+  @Results(value = {
+          @Result(property = "facility.id", column = "facilityId"),
+          @Result(property = "program.id", column = "programId"),
+          @Result(property = "period.id", column = "periodId")
+  })
+  Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForOrderEnabled(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+  @Select({"SELECT r.* FROM requisitions r join processing_periods pr on pr.id = r.periodId WHERE r.facilityId = #{facility.id} AND r.programId = #{program.id} AND r.emergency = false",
+          "ORDER BY pr.endDate DESC LIMIT 1"})
+  @Results(value = {
+          @Result(property = "facility.id", column = "facilityId"),
+          @Result(property = "program.id", column = "programId"),
+          @Result(property = "period.id", column = "periodId")
+  })
+  Rnr getLastRegularRequisitionForBiMonthlyReporting(@Param("facility") Facility facility,@Param("program") Program program);
+
+  @Select("select rnrId, u.firstName ||' '|| lastName as author, TO_CHAR(rch.modifiedDate, 'dd-MM-yyyy')as date " +
+          " , (SELECT value FROM configuration_settings WHERE LOWER(key) = LOWER(rch.status) LIMIT 1) as status  " +
+          " from requisition_status_changes rch  " +
+          "LEFT JOIN users U on rch.modifiedBy = U.id  " +
+          " where rnrId=#{rnrId}  order by rch.modifiedDate desc limit 1")
+  RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId);
 
 }
 

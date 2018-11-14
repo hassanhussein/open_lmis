@@ -13,6 +13,7 @@ package org.openlmis.restapi.controller;
 import io.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.request.RequisitionSearchRequest;
 import org.openlmis.restapi.response.RestResponse;
@@ -20,6 +21,7 @@ import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnRFeedbackDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +30,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.openlmis.restapi.response.RestResponse.*;
 import static org.springframework.http.HttpStatus.*;
@@ -142,7 +147,7 @@ public class RestRequisitionController extends BaseController {
     }
   }
 
-  @RequestMapping(value = "/rest-api/tz-sdp-requisitions", method = POST, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/tz-sdp-requisition", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> submitTzSDPRequisition(@RequestBody Report report, Principal principal) {
     Rnr requisition;
     RnRFeedbackDTO rnRFeedbackDTO = new RnRFeedbackDTO();
@@ -170,5 +175,44 @@ public class RestRequisitionController extends BaseController {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
   }
+
+
+  @RequestMapping(value = "/rest-api/tz-sdp-requisitions", method = POST, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> saveSDPReport(@RequestBody Report report, Principal principal){
+    Rnr requisition;
+    RnRFeedbackDTO rnRFeedbackDTO = new RnRFeedbackDTO();
+    Map<String, OpenLmisMessage> validationErrors  = restRequisitionService.saveSDPReport(report, loggedInUserId(principal));
+    rnRFeedbackDTO.setMessage("RnR Saved Successfully");
+    ResponseEntity<RestResponse> responseEntity;
+    if (!validationErrors.isEmpty()) {
+      responseEntity = restResponse(getMessages(validationErrors), HttpStatus.BAD_REQUEST,null);
+      responseEntity.getBody().addData("sourceOrderId",report.getSourceOrderId());
+      responseEntity.getBody().addData("rnrId", report.getRnrId());
+    } else {
+      responseEntity = success(rnRFeedbackDTO.getMessage());
+        responseEntity.getBody().addData("sourceOrderId",report.getSourceOrderId());
+        responseEntity.getBody().addData("rnrId", report.getRnrId());
+    }
+    return responseEntity;
+  }
+
+  private Map<String, String> getMessages(Map<String, OpenLmisMessage> validationErrors) {
+    Map<String, String> validationErrorMessages = new HashMap<>();
+    for (Map.Entry<String, OpenLmisMessage> entry : validationErrors.entrySet()) {
+      String fieldName = entry.getKey();
+      validationErrorMessages.put(fieldName, messageService.message(entry.getValue().getCode(), (Object) entry.getValue().getParams()));
+    }
+    return validationErrorMessages;
+  }
+
+  @RequestMapping(value="/rest-api/tz-sdp-requisitions/status", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> getRequisitionStatusByRnRId(@RequestParam(value="rnrId") Long rnrId) {
+    try {
+      return response("requisitionStatus", restRequisitionService.getRequisitionStatusByRnRId(rnrId), OK);
+    } catch (DataException e) {
+      return error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+  }
+
 
 }

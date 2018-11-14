@@ -28,6 +28,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.builder.ReportBuilder;
+import org.openlmis.restapi.domain.Agent;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.rnr.builder.PatientQuantificationsBuilder;
@@ -222,7 +223,7 @@ public class RestRequisitionServiceTest {
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
     report.setRegimens(asList(reportRegimenLineItem));
-    report.setPeriodId(1L);
+    report.setPeriodId(String.valueOf(1L));
     report.setEmergency(false);
 
     Long facility_id = 5L;
@@ -266,7 +267,7 @@ public class RestRequisitionServiceTest {
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
     report.setRegimens(asList(reportRegimenLineItem));
-    report.setPeriodId(1L);
+    report.setPeriodId(String.valueOf(1L));
     report.setEmergency(false);
 
     Long facility_id = 5L;
@@ -306,7 +307,7 @@ public class RestRequisitionServiceTest {
   public void sdpShouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
-    report.setPeriodId(2L);
+    report.setPeriodId(String.valueOf(2L));
     when(programService.getValidatedProgramByCode(anyString())).thenReturn(new Program());
     when(facilityService.getOperativeFacilityByCode(anyString())).thenReturn(new Facility());
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
@@ -697,4 +698,13 @@ public class RestRequisitionServiceTest {
     stockInHandColumn.setSource(source);
     return stockInHandColumn;
   }
+
+  public void shouldReturnErrorCodeIfAgentCodeIsInvalid(){
+    Agent agent = new Agent();
+    agent.setAgentCode(DEFAULT_AGENT_CODE);
+    facility.setId(120L);
+    when(facilityService.getFacilityByAgentCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+
+  }
+
 }

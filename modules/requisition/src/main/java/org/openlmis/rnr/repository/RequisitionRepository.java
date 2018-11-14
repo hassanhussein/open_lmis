@@ -11,6 +11,7 @@
 package org.openlmis.rnr.repository;
 
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.RequisitionStatusDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SourceOfFundRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
@@ -350,6 +351,10 @@ public class RequisitionRepository {
     return requisitionMapper.getLastRegularRequisitionToEnterThePostSubmitFlow(facilityId, programId);
   }
 
+  public Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForBiMonthlyReporting(Long facilityId, Long programId) {
+    return requisitionMapper.getLastRegularRequisitionToEnterThePostSubmitFlowForBiMonthlyReporting(facilityId, programId);
+  }
+
   public List<Rnr> getPostSubmitRequisitions(Facility facility, Program program, List<ProcessingPeriod> periods) {
     return requisitionMapper.getPostSubmitRequisitions(facility, program, commaSeparator.commaSeparateIds(periods));
   }
@@ -478,5 +483,17 @@ public class RequisitionRepository {
 
   public List<HashMap<String,Object>> getSupervisionCheckListReport(String facilityCode, String programCode) {
    return requisitionMapper.getSupervisionCheckListReport(facilityCode,programCode);
+  }
+
+  public Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForOrderEnabled(Long facilityId, Long programId) {
+    return requisitionMapper.getLastRegularRequisitionToEnterThePostSubmitFlowForOrderEnabled(facilityId,programId);
+  }
+
+    public Rnr getLastRegularRequisitionForBiMonthlyReporting(Facility facility, Program program) {
+      return requisitionMapper.getLastRegularRequisitionForBiMonthlyReporting(facility,program);
+    }
+
+  public RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId) {
+    return requisitionMapper.getRequisitionStatusByRnRId(rnrId);
   }
 }

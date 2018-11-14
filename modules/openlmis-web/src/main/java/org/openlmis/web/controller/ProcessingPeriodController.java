@@ -46,7 +46,7 @@ public class ProcessingPeriodController extends BaseController {
   private ProcessingScheduleService processingScheduleService;
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE, VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
   public ResponseEntity<OpenLmisResponse> getAll(@PathVariable("scheduleId") Long scheduleId) {
     List<ProcessingPeriod> periodList = processingScheduleService.getAllPeriods(scheduleId);
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(PERIODS, periodList);

@@ -52,6 +52,7 @@ public class RnrLineItem extends LineItem {
   public static final MathContext MATH_CONTEXT = new MathContext(12, HALF_UP);
   public static final String DISPENSED_PLUS_NEW_PATIENTS = "DISPENSED_PLUS_NEW_PATIENTS";
   public static final String DISPENSED_X_90 = "DISPENSED_X_90";
+  public static final String DISPENSED_X_60 = "DISPENSED_X_60";
   public static final String DEFAULT = "DEFAULT";
   public static final String DISPENSED_X_2 = "DISPENSED_X_2";
   public static final String CONSUMPTION_X_2 = "CONSUMPTION_X_2";
@@ -304,7 +305,23 @@ public class RnrLineItem extends LineItem {
       } else {
         normalizedConsumption = (90 * quantityDispensed);
       }
-    } else {
+    }
+/*
+    Added to accommodate for Bimonthly reporting
+*/
+    else if(DISPENSED_X_60.equalsIgnoreCase(selectedColumnOption)){
+      if (stockOutDays < 60) {
+        normalizedConsumption = (new BigDecimal(60 * quantityDispensed)
+                .divide(
+                        new BigDecimal(60 - stockOutDays)
+                        , MATH_CONTEXT)
+        ).intValue();
+      } else {
+        normalizedConsumption = (60 * quantityDispensed);
+      }
+
+    }
+    else {
       BigDecimal dosesPerDispensingUnit = new BigDecimal(Math.max(1, this.dosesPerDispensingUnit));
 
       normalizedConsumption = calculateNormalizedConsumption(
