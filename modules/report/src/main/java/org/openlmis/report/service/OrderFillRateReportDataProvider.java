@@ -54,9 +54,12 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ResultRow> getResultSet(Map<String, String[]> filterCriteria) {
     RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-
+      List<Long> rnrIds;
     OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
     parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
+      rnrIds=reportMapper.getRequisitionsForPeriod(parameter);
+      String rnrIdsParam=  rnrIds.toString().replace("[", "{").replace("]", "}");
+      parameter.setRnrIdsPar(rnrIdsParam);
     parameter.setUserId(this.getUserId());
 
     return reportMapper.getReport(parameter, rowBounds, this.getUserId());

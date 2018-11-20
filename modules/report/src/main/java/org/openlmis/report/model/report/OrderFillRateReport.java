@@ -23,6 +23,7 @@ import org.openlmis.report.model.ResultRow;
 public class OrderFillRateReport implements ResultRow {
 
     private String facility;
+    private String facilitycode;
     private Integer approved;
     private Integer receipts;
     private String productcode;

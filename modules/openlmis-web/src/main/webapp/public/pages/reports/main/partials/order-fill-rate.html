@@ -75,6 +75,8 @@
                             <tbody>
                             <tr ng-repeat-start="row in datarows" ng-class="{'substitutes' : row.substitutes.length > 0}">
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
+                                <td data-title="getLocalMessage('label.facility.code')" style="width:30%" sortable="facilitycode">{{ row.facilitycode }}
+                                </td>
                                 <td data-title="getLocalMessage('label.facility.name')" style="width:30%" sortable="facility">{{ row.facility }}
                                 </td>
 

@@ -6,7 +6,7 @@ configurations {
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.4.4',
+    compile 'org.codehaus.groovy:groovy-all:2.5.0',
             'com.googlecode.flyway:flyway-core:1.7',
             'com.googlecode.flyway:flyway-ant:1.7',
             project(':modules:db')

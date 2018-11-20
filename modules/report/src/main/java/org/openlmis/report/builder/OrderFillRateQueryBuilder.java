@@ -55,7 +55,8 @@ public class OrderFillRateQueryBuilder {
 
   private static String getQueryStringV2(OrderFillRateReportParam param, Long userId) {
     BEGIN();
-    SELECT("f.name as facility,\n" +
+    SELECT("f.name as facility," +
+            "f.code as facilitycode,\n" +
             "  li.productCode,\n" +
             "  li.product,\n" +
             "  li.quantityrequested                                                                  AS order,\n" +
