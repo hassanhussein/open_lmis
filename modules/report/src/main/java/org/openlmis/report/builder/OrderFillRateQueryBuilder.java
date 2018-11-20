@@ -217,7 +217,7 @@ query="SELECT id from requisitions where facilityId =" + queryParam.getFacility(
               " inner join geo_districts gd on f.geographiczoneid=gd.id \n" +
               " where programid= " + queryParam.getProgram() +
               " and periodid=" + queryParam.getPeriod() +
-              " order by r.id\n";
+              " and emergency = false order by r.id\n";
     }
     return query;
   }
