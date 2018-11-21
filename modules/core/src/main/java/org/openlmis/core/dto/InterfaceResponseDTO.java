@@ -15,5 +15,8 @@ public class InterfaceResponseDTO extends BaseModel {
     List<ConflictDTO> conflicts;
     Boolean dataSetComplete;
 
+    String sourceOrderId;
+    String code;
+    Long rnrId;
 
 }

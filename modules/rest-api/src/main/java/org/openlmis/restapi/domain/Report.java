@@ -206,4 +206,7 @@ public class Report {
         return Integer.toString(dayInt);
     }
 
+    public void addSuccessMessage() {
+        returnNullOrEmptyErrorMessage();
+    }
 }

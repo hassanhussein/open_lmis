@@ -11,6 +11,7 @@
 package org.openlmis.rnr.repository;
 
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.InterfaceResponseDTO;
 import org.openlmis.core.dto.RequisitionStatusDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SourceOfFundRepository;
@@ -496,4 +497,27 @@ public class RequisitionRepository {
   public RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId) {
     return requisitionMapper.getRequisitionStatusByRnRId(rnrId);
   }
+  public List<HashMap<String,Object>> getSavedRnrStatus(){
+    return requisitionMapper.getSavedRnrStatus();
+  }
+
+  public void insertResponseMessage(InterfaceResponseDTO dto){
+      requisitionMapper.insertResponseMessage(dto);
+  }
+
+  public void updateResponseMessage(InterfaceResponseDTO dto){
+      requisitionMapper.updateResponseMessage(dto);
+  }
+
+  public InterfaceResponseDTO getResponseMessageBy(String sourceId){
+      return requisitionMapper.getResponseMessageBy(sourceId);
+  }
+
+  public List<HashMap<String,Object>> getAllResponseByStatus(){
+      return requisitionMapper.getAllResponseByStatus();
+  }
+  public void updateBySourceId(String sourceId){
+      requisitionMapper.updateBySourceId(sourceId);
+  }
+
 }

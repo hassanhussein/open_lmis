@@ -21,11 +21,11 @@ import org.apache.log4j.Logger;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.ELMISResponseMessageDTO;
 import org.openlmis.core.dto.FacilityMappingDTO;
+import org.openlmis.core.dto.InterfaceResponseDTO;
 import org.openlmis.core.dto.RequisitionStatusDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
-import org.openlmis.core.utils.DateUtil;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
@@ -40,7 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,6 +63,8 @@ public class RestRequisitionService {
     public static final String ENTITY_NOT_MATCHED = "7003";
     public static final String ERROR_MISSED_VALUE = "7002";
     public static final String APP_SETTING_CODE = "GOTHOMIS-ELMIS-INTERFACE";
+    public static final String INPUT_STATUS = "RECEIVED";
+    public static final String SUCCESS_MESSAGE = "7000";
 
 
     private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
@@ -449,6 +450,10 @@ public class RestRequisitionService {
 
     @Transactional
     public Map<String, OpenLmisMessage> saveSDPReport(Report report, Long userId)  {
+         if(report != null){
+             saveReceivedRnrBeforeProcessing(report);
+         }
+
         Map<String, OpenLmisMessage> errors = null;
 
             report.setResponseMessage(getResponseMessage(ERROR_MISSED_VALUE));
@@ -531,9 +536,21 @@ public class RestRequisitionService {
         // but then this is what zambia specifically asked.
           rnr = requisitionService.save(rnr);
           report.setRnrId(rnr.getId());
+          report.setResponseMessage(getResponseMessage(SUCCESS_MESSAGE));
+          report.addSuccessMessage();
          //requisitionService.submit(rnr);
 
         return errors;
+    }
+
+    private void saveReceivedRnrBeforeProcessing(Report report) {
+        InterfaceResponseDTO responseDTO = new InterfaceResponseDTO();
+        responseDTO.setSourceOrderId(report.getSourceOrderId());
+        responseDTO.setStatus(INPUT_STATUS);
+        if(requisitionService.getResponseMessageBy(report.getSourceOrderId()) == null)
+            requisitionService.insertResponseMessage(responseDTO);
+        else
+            requisitionService.updateResponseMessage(responseDTO);
     }
 
 
@@ -556,4 +573,23 @@ public class RestRequisitionService {
     public RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId) {
         return requisitionService.getRequisitionStatusByRnRId(rnrId);
     }
+    public List<HashMap<String,Object>> getSavedRnrStatus(){
+        return requisitionService.getSavedRnrStatus();
+    }
+
+    public void updateProcessedResponseMessage(InterfaceResponseDTO dto) {
+        dto.setStatus("PROCESSED");
+        requisitionService.updateResponseMessage(dto);
+
+    }
+
+    public List<HashMap<String,Object>> getAllResponseByStatus(){
+        return requisitionService.getAllResponseByStatus();
+    }
+
+    public void updateBySourceId(String sourceId){
+        System.out.println(sourceId);
+        requisitionService.updateBySourceId(sourceId);
+    }
+
 }

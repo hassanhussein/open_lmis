@@ -13,15 +13,13 @@
 package org.openlmis.core.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.regexp.internal.RE;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.ELMISInterfaceDTO;
-import org.openlmis.core.dto.ELMISInterfaceDataSetDTO;
-import org.openlmis.core.dto.ELMISResponseMessageDTO;
-import org.openlmis.core.dto.FacilityMappingDTO;
+import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +30,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
 import java.util.List;
 
 @Service
+@EnableScheduling
 public class ELMISInterfaceService {
 
     private static final String FACILITY_MAPPING_KEY = "GOTHOMIS-ELMIS-INTERFACE";
@@ -47,9 +45,14 @@ public class ELMISInterfaceService {
     private FacilityService facilityService;
 
     public static final String URL = "LLIN_DHIS_URL";
-    public static final String URL2 = "LLIN_DHIS_SECOND_URL";
-    public static final String USERNAME = "LLIN_USERNAME";
-    public static final String PASSWORD = "LLIN_PASSWORD";
+    private static final String URL2 = "LLIN_DHIS_SECOND_URL";
+    private static final String ELMIS_SDP_URL = "ELMIS_SDP_URL";
+    private static final String ELMIS_SDP_USERNAME = "ELMIS_SDP_USERNAME";
+    private static final String ELMIS_SDP_PASS_WORD = "ELMIS_SDP_PASSWORD";
+    private static final String USERNAME = "LLIN_USERNAME";
+    private static final String PASSWORD = "LLIN_PASSWORD";
+
+
 
 
     public ELMISInterface get(long interfaceId) {
@@ -100,7 +103,7 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetReportingRateData());
-            sendBedNetData(username, password, url, dto);
+            sendBedNetData(username, password, url, dto,null);
         }
 
     }
@@ -118,18 +121,18 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetData());
-            sendBedNetData(username, password, url, dto);
+            sendBedNetData(username, password, url, dto,null);
         }
 
     }
 
-    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data) {
+    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data,InterfaceResponseDTO sdp) {
         ObjectMapper mapper = new ObjectMapper();
         java.net.URL obj = null;
         try {
             obj = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-            String jsonInString = mapper.writeValueAsString(data);
+            String jsonInString = mapper.writeValueAsString((sdp==null)?data:sdp);
             String userCredentials = username + ":" + password;
             String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
             con.setRequestProperty("Authorization", basicAuth);
@@ -202,5 +205,6 @@ public class ELMISInterfaceService {
             repository.updateFacility(facility);
         }
     }
+
 
 }

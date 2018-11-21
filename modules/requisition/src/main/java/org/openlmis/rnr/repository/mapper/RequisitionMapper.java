@@ -12,6 +12,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.InterfaceResponseDTO;
 import org.openlmis.core.dto.RequisitionStatusDTO;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
@@ -412,13 +413,13 @@ public interface RequisitionMapper {
           "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
   List<HashMap<String,Object>> getSupervisionCheckListReport(@Param("facilityCode") String facilityCode,@Param("programCode") String programCode);
 
-  @Select({"SELECT * FROM requisitions R",
-          "WHERE facilityId = #{facilityId}",
-          "AND programId = #{programId} ",
-          "AND status NOT IN ('INITIATED', 'SUBMITTED')",
-          "AND emergency = false",
-          "ORDER BY (select endDate from processing_periods where id=R.periodId and enableOrder=false ) DESC LIMIT 1"})
-
+  @Select({"\n" +
+          "SELECT * FROM requisitions R\n" +
+          "          WHERE facilityId = #{facilityId}\n" +
+          "          AND programId = #{programId}  and periodId IN (SELECT ID FROM PROCESSING_PERIODS WHERE ID = R.periodId AND enableOrder = TRUE)\n" +
+          "          AND status NOT IN ('INITIATED', 'SUBMITTED')\n" +
+          "          AND emergency = false\n" +
+          "          ORDER BY (select endDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
   @Results(value = {
           @Result(property = "facility.id", column = "facilityId"),
           @Result(property = "program.id", column = "programId"),
@@ -441,6 +442,27 @@ public interface RequisitionMapper {
           "LEFT JOIN users U on rch.modifiedBy = U.id  " +
           " where rnrId=#{rnrId}  order by rch.modifiedDate desc limit 1")
   RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId);
+
+  @Select(" select id rnrId, 'Successfully Saved' as status from requisitions where sourceApplication <> 'WEB_UI' and issent = false ")
+  List<HashMap<String, Object>> getSavedRnrStatus();
+
+  @Insert("INSERT INTO public.interface_response_messages(\n" +
+          "            status, rnrId, sourceOrderId, code, description, createdDate, \n" +
+          "            modifiedDate)\n" +
+          "    VALUES ( #{status}, #{rnrId}, #{sourceOrderId}, #{code}, #{description}, NOW(),NOW());")
+  void insertResponseMessage(InterfaceResponseDTO dto);
+
+  @Update(" UPDATE interface_response_messages set status = #{status},rnrId= #{rnrId},description=#{description} , code=#{code}, modifiedDate = NOW() where sourceOrderId = #{sourceOrderId}")
+  void  updateResponseMessage(InterfaceResponseDTO dto);
+
+  @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId}  ")
+  InterfaceResponseDTO getResponseMessageBy(@Param("sourceOrderId") String sourceOrderId);
+
+  @Select("SELECT sourceOrderId,code,description,rnrId,status FROM interface_response_messages where  status = 'PROCESSED'")
+  List<HashMap<String,Object>>getAllResponseByStatus();
+
+  @Update(" UPDATE interface_response_messages set status = 'SENT' where sourceOrderId = #{sourceOrderId} ")
+  void updateBySourceId(@Param("sourceOrderId") String sourceOrderId);
 
 }
 
