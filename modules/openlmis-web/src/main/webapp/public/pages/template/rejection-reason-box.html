@@ -30,7 +30,8 @@
                     <li class="comment">
                         <span>{{res.name}}</span>
                         <span>
-                            <input type="checkbox" ng-model="selectedItems" ng-value="res" class="pull-right"/>
+                            <input type="checkbox"
+                                   ng-change="sync(bool, res)" ng-model="bool" ng-checked="isChecked(res.id)" class="pull-right"/>
                         </span>
 
                     </li>
@@ -63,7 +64,7 @@
     <div ng-show="updatable">
 
         <div>
-            <input id="addButton" type="button" openlmis-message="button.reject" ng-click="rejectRN()" ng-disabled="!selectedItems"
+            <input id="addButton" type="button" openlmis-message="button.reject" ng-click="rejectRN()" ng-disabled="bool"
                    class="btn btn-primary pull-right"/>
         </div>
 

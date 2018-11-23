@@ -10,7 +10,6 @@
     ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
    -->
 
-
   <h4>
     <span>Add Supplimental Funds</span>
     <a href="" ng-click="show=false; comment=''" class="link-minimize">
@@ -19,27 +18,29 @@
   </h4>
   <div class="clearfix"></div>
   <br/>
-  <div class="adjustment-field" ng-hide="showSource">
 
-    <div class="row-fluid">
-      <div class="span5">
-        <select style="width: 150px !important;"
-                ng-model="sourceOfFund.name"
-                ng-options="i as i.name for i in fundingSources">
-          <option value="">Select Source</option>
-        </select>
-      </div>
-      <div class="span3">
-        <input style="width: 150px !important;" ng-disabled="formDisabled || sourceOfFund.skipped" ng-trim="false"
-               type="text" name="quantity{{currentRnrLineItem.id}}" ng-model="sourceOfFund.quantity"
-               numeric-validator="positiveInteger" maxlength="8" openlmis-message="placeholder.quantity"/>
 
-        <div class="rnr-form-error"
-             id="quantity{{currentRnrLineItem.id}}"
-             style="display:none;" openlmis-message="error.number.only">
+    <div class="adjustment-field" ng-hide="showSource">
+
+      <div class="row-fluid">
+        <div class="span5">
+          <select style="width: 150px !important;"
+                  ng-model="sourceOfFund.name"
+                  ng-options="i as i.name for i in fundingSources">
+            <option value="">Select Source</option>
+          </select>
         </div>
-      </div>
-      <div class="span4">
+        <div class="span3">
+          <input style="width: 116px !important;" ng-disabled="formDisabled || sourceOfFund.skipped" ng-trim="false"
+                 type="text" name="quantity{{currentRnrLineItem.id}}" ng-model="sourceOfFund.quantity"
+                 numeric-validator="positiveInteger" maxlength="8" openlmis-message="placeholder.quantity"/>
+
+          <div class="rnr-form-error"
+               id="quantity{{currentRnrLineItem.id}}"
+               style="display:none;" openlmis-message="error.number.only">
+          </div>
+        </div>
+        <div class="span4">
         <span class="pull-right">
            <input type="button" id="addLossesAndAdjustment1"
                   ng-click="addAdFundingSource(sourceOfFund)"
@@ -49,24 +50,24 @@
 
         </span>
 
+        </div>
       </div>
-    </div>
 
 
-    <hr ng-show="sourceOfFunds.length > 0"/>
-    <div class="adjustment-list"
-         ng-show="sourceOfFunds.length > 0">
-      <ul>
-        <li ng-repeat="adjustment in sourceOfFunds"
-            class="clearfix">
+      <hr ng-show="sourceOfFunds.length > 0"/>
+      <div class="adjustment-list"
+           ng-show="sourceOfFunds.length > 0">
+        <ul>
+          <li ng-repeat="adjustment in sourceOfFunds"
+              class="clearfix">
           <span class="tpl-adjustment-type"
-              >{{adjustment.name}}</span>
-          <span class="tpl-adjustment-delete">
+          >{{adjustment.name}}</span>
+            <span class="tpl-adjustment-delete">
             <a href="" class="close"
                ng-hide="formDisabled || currentRnrLineItem.skipped"
                ng-click="removeSourceOfFund(adjustment)">&times;</a>
           </span>
-          <span class="tpl-adjustment-qty">
+            <span class="tpl-adjustment-qty">
             <input ng-required="true"
                    ng-disabled="formDisabled || currentRnrLineItem.skipped"
                    name="{{adjustment.quantity}}"
@@ -85,29 +86,30 @@
                  style="display:none;" openlmis-message="error.number.only">
             </div>
           </span>
-        </li>
-      </ul>
+          </li>
+        </ul>
+      </div>
+
+
+      <div class="adjustment-total clearfix alert alert-warning"
+           ng-show="sourceOfFunds.length > 0">
+        <span class="pull-left" openlmis-message="label.losses.total"></span><span
+      >{{totalLossesAndAdjustments}}</span>
+      </div>
+
+      <div class="modal-footer">
+        <input type="button" id="lossesAndAdjustmentsDone1" class="btn btn-primary save-button"
+               ng-click="saveSourceOfFundLineItem()"
+               openlmis-message="button.done"/>
+        <!--   <input type="button"
+                  ng-click="closeModal();"
+                  class="btn btn-cancel"
+                  openlmis-message="button.cancel"/>-->
+
+      </div>
+
+
     </div>
 
-
-    <div class="adjustment-total clearfix alert alert-warning"
-         ng-show="sourceOfFunds.length > 0">
-      <span class="pull-left" openlmis-message="label.losses.total"></span><span
-            >{{totalLossesAndAdjustments}}</span>
-    </div>
-
-    <div class="modal-footer">
-      <input type="button" id="lossesAndAdjustmentsDone1" class="btn btn-primary save-button"
-             ng-click="saveSourceOfFundLineItem()"
-             openlmis-message="button.done"/>
-   <!--   <input type="button"
-             ng-click="closeModal();"
-             class="btn btn-cancel"
-             openlmis-message="button.cancel"/>-->
-
-    </div>
-
-
-  </div>
   <span class="beak-down"></span>
 </div>

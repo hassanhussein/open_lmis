@@ -56,21 +56,18 @@ app.directive('fundingSource',function (RequisitionComment,FundingSource, $route
         scope.sourceOfFunds=[];
 
       scope.addSourceOfFund = function(data){
-          console.log(JSON.stringify(data.quantity));
-
 
           scope.sourceOfFunds.push( {
               name: data.name.name,
               quantity: data.quantity
           });
           reEvaluateTotalSourceOfFund();
-
-          console.log( scope.sourceOfFunds);
-      };
+          };
 
       scope.saveSourceOfFundLineItem = function(){
         scope.$parent.rnr.allocatedBudget = scope.totalLossesAndAdjustments;
           scope.showSource = true;
+          $scope.submitRnr();
       };
 
         scope.removeSourceOfFund=function(adjustment)

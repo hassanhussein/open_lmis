@@ -23,7 +23,7 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
             var commentContainer = document.getElementById('comments-list');
 
 
-            scope.selectedReasons =scope.rejectionReasons=[];
+            scope.selectedReasons = scope.nowR = scope.rejectionReasons=[];
 
             AllRejections.get({}, function (data) {
                 scope.rejectionReasons =  data.rejections;
@@ -35,7 +35,50 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
 
 
             }, {});
+            scope.disableRejectionBtn = true;
 
+            scope.selectedItems = {
+                selectedItem:null
+            };
+
+            scope.showSelected = function(data) {
+                var selected;
+                selected = [];
+                scope.disableRejectionBtn = false;
+                console.log(data);
+                selected.push(data);
+                scope.selectedItems.selectedItem = selected;
+                console.log(scope.selectedItems);
+            };
+
+            scope.isChecked = function(id){
+                var match = false;
+                for(var i=0 ; i < scope.rejectionReasons.length; i++) {
+                    if(scope.rejectionReasons[i].id === id){
+                        match = true;
+                    }
+                }
+                return match;
+            };
+
+
+            scope.sync = function(bool, item){
+                if(bool){
+                    // add item
+                   // scope.rejectionReasons.push(item);
+                    scope.nowR.push(item);
+                } else {
+                    // remove item
+                    for(var i=0 ; i < scope.nowR.length; i++) {
+                        if(scope.nowR[i].id === item.id){
+                            // var remV = scope.rejectionReasons[i];
+                               scope.nowR = scope.nowR.splice(i,0);
+                            //scope.rejectionReasons.splice(i,1);
+                        }
+                    }
+                }
+
+            };
 
           /*  scope.addReasons = function(){
 
@@ -78,11 +121,15 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
             };*/
 
             scope.rejectRN = function () {
+                if (scope.nowR.length <= 0) {
+                    return;
+                }
                 scope.$parent.rejectRnR();
             };
 
             // remove the selected row
             scope.removeReason = function(index){
+
                 // remove the row specified in index
                 scope.selectedReasons.splice( index, 1);
                 // if no rows left in the array create a blank array
