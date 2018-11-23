@@ -131,18 +131,26 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
     var saveRnrPromise = $scope.saveRnr(true);
 
     saveRnrPromise.then(function () {
-      if (!setError()) confirm();
+        if ($scope.rnr.period.enableOrder !== false) {
+            if (!setError()) confirm();
+        }
+        else {
+            confirm();
+        }
+
     });
   };
 
   function setError() {
     var fullSupplyError = $scope.rnr.validateFullSupplyForApproval();
     var nonFullSupplyError = $scope.rnr.validateNonFullSupplyForApproval();
-    $scope.fullSupplyTabError = !!fullSupplyError;
+
+      $scope.fullSupplyTabError = !!fullSupplyError;
     $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
 
     var error = fullSupplyError || nonFullSupplyError;
+
 
     if (error) {
       requisitionService.setErrorPages($scope);

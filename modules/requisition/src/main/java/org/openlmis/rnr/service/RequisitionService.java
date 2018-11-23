@@ -332,8 +332,9 @@ public class RequisitionService {
     if (!requisitionPermissionService.hasPermission(requisition.getModifiedBy(), savedRnr, APPROVE_REQUISITION)) {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
-
-    savedRnr.validateForApproval();
+    if(savedRnr.getPeriod().getEnableOrder()) {
+        savedRnr.validateForApproval();
+    }
 
     savedRnr.calculateForApproval();
 
