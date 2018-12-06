@@ -22,7 +22,11 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DistrictConsumptionReport implements ResultRow {
-
+  private String facilityCode;
+  private String facility;
+  private String facilityType;
+  private Long facilityId;
+  private String facProdCode;
   private String product;
   private String code;
   private String level;
@@ -33,12 +37,8 @@ public class DistrictConsumptionReport implements ResultRow {
   private Double dispensed;
   private Double totalPercentage;
   private Double district_id;
-
-  private String facilityCode;
-  private String facility;
-  private String facilityType;
-  private Long facilityId;
   private String periodName;
   private Date periodStart;
+
 
 }

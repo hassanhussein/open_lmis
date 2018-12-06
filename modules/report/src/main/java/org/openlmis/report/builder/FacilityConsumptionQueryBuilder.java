@@ -56,8 +56,10 @@ public class FacilityConsumptionQueryBuilder {
         SELECT("pp.name periodName");
         SELECT("pp.startdate periodStart");
         SELECT("f.id facilityId");
+        SELECT("f.code facilityCode");
         SELECT("f.name facility");
         SELECT("ft.name facilityType ");
+        SELECT("f.code||p.code facProdCode");
         SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
         SELECT("sum(li.quantityDispensed) dispensed");
         SELECT("sum(li.normalizedConsumption) consumption");
@@ -76,7 +78,7 @@ public class FacilityConsumptionQueryBuilder {
 
         writePredicates(filter);
 
-        GROUP_BY("f.id,f.name, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate");
+        GROUP_BY("f.id,f.name,f.code, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate");
         ORDER_BY("f.name,p.primaryName,pp.startdate");
         return SQL();
 

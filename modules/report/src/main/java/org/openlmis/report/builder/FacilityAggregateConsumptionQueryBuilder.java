@@ -57,7 +57,9 @@ public class FacilityAggregateConsumptionQueryBuilder {
         SELECT("pp.startdate periodStart");
         SELECT("f.id facilityId");
         SELECT("f.name facility");
+        SELECT("f.code facilityCode");
         SELECT("ft.name facilityType ");
+        SELECT("f.code||'_'||p.code facProdCode");
         SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
         SELECT("sum(li.quantityDispensed) dispensed");
         SELECT("sum(li.normalizedConsumption) consumption");

@@ -36,6 +36,7 @@ public interface FacilityAggregateConsumptionReportMapper {
             @Result(property = "adjustedConsumptionInPacks", column = "adjustedConsumptionInPacks"),
             @Result(property = "dispensed", column = "dispensed"),
             @Result(property = "facilityCode", column = "facilityCode"),
+            @Result(property = "facProdCode", column = "facProdCode"),
             @Result(property = "facility", column = "facility"),
             @Result(property = "facilityType", column = "facilityType"),
             @Result(property = "facilityId", column = "facilityId"),
