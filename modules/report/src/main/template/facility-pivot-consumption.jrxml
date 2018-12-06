@@ -250,7 +250,7 @@
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="38" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="39" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
 							<box leftPadding="2" bottomPadding="2">
 								<topPen lineWidth="0.25"/>
 								<leftPen lineWidth="0.25"/>
