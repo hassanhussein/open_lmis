@@ -168,6 +168,7 @@
 							</box>
 							<textField isStretchWithOverflow="true">
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="21" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
+								<box leftPadding="2" bottomPadding="2"/>
 								<textElement textAlignment="Left" verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
@@ -291,6 +292,7 @@
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="31" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
+							<box leftPadding="3" bottomPadding="2"/>
 							<textElement textAlignment="Left" verticalAlignment="Bottom">
 								<font size="8"/>
 							</textElement>

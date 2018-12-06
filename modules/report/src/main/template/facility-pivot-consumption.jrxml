@@ -97,7 +97,7 @@
 				<crosstabHeaderCell>
 					<cellContents backcolor="#3D9297" mode="Opaque">
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="35" y="0" width="60" height="30" uuid="1eae139e-95d6-4f01-a331-4684721b8cbe"/>
+							<reportElement style="Crosstab Data Text" x="35" y="0" width="41" height="30" uuid="1eae139e-95d6-4f01-a331-4684721b8cbe"/>
 							<box>
 								<topPen lineWidth="0.75"/>
 								<leftPen lineWidth="0.75"/>
@@ -110,7 +110,7 @@
 							<text><![CDATA[Code]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="95" y="0" width="138" height="30" uuid="8cad589c-36c0-4a64-9b66-e27f115fb23e"/>
+							<reportElement style="Crosstab Data Text" x="76" y="0" width="151" height="30" uuid="8cad589c-36c0-4a64-9b66-e27f115fb23e"/>
 							<box>
 								<topPen lineWidth="0.75"/>
 								<leftPen lineWidth="0.75"/>
@@ -148,13 +148,15 @@
 							</box>
 							<textField isStretchWithOverflow="true">
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="35" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
-								<box leftPadding="2">
+								<box leftPadding="2" bottomPadding="2">
 									<topPen lineWidth="0.25"/>
 									<leftPen lineWidth="0.25"/>
 									<bottomPen lineWidth="0.25"/>
 									<rightPen lineWidth="0.25"/>
 								</box>
-								<textElement textAlignment="Left" verticalAlignment="Middle"/>
+								<textElement textAlignment="Left" verticalAlignment="Bottom">
+									<font size="7"/>
+								</textElement>
 								<textFieldExpression><![CDATA[$V{ROW_COUNT}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -163,21 +165,23 @@
 						<cellContents/>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="product" width="60">
+				<rowGroup name="product" width="41">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{product}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="41" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
 								<box leftPadding="2">
 									<topPen lineWidth="0.25"/>
 									<leftPen lineWidth="0.25"/>
 									<bottomPen lineWidth="0.25"/>
 									<rightPen lineWidth="0.25"/>
 								</box>
-								<textElement textAlignment="Left" verticalAlignment="Middle"/>
+								<textElement textAlignment="Left" verticalAlignment="Bottom">
+									<font size="7"/>
+								</textElement>
 								<textFieldExpression><![CDATA[$V{code}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -186,21 +190,23 @@
 						<cellContents/>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="count" width="138" totalPosition="End">
+				<rowGroup name="count" width="151" totalPosition="End">
 					<bucket class="java.lang.Integer">
 						<bucketExpression><![CDATA[0]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="25" uuid="d1e519de-efda-40f0-8804-07cf53952981"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="151" height="25" uuid="d1e519de-efda-40f0-8804-07cf53952981"/>
 								<box leftPadding="2">
 									<topPen lineWidth="0.25"/>
 									<leftPen lineWidth="0.25"/>
 									<bottomPen lineWidth="0.25"/>
 									<rightPen lineWidth="0.25"/>
 								</box>
-								<textElement verticalAlignment="Middle"/>
+								<textElement verticalAlignment="Bottom">
+									<font size="8"/>
+								</textElement>
 								<textFieldExpression><![CDATA[$V{product}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -219,7 +225,7 @@
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="41" height="30" uuid="e2d51561-a0ed-45ec-89f5-fad831b1ef2e"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="38" height="30" uuid="e2d51561-a0ed-45ec-89f5-fad831b1ef2e"/>
 								<box>
 									<topPen lineWidth="0.75"/>
 									<leftPen lineWidth="0.75"/>
@@ -238,20 +244,22 @@
 				<measure name="consumptionMeasure" class="java.lang.Double">
 					<measureExpression><![CDATA[$F{consumption}]]></measureExpression>
 				</measure>
-				<crosstabCell width="41" height="25">
+				<crosstabCell width="39" height="25">
 					<cellContents>
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="41" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
-							<box leftPadding="2">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="38" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
+							<box leftPadding="2" bottomPadding="2">
 								<topPen lineWidth="0.25"/>
 								<leftPen lineWidth="0.25"/>
 								<bottomPen lineWidth="0.25"/>
 								<rightPen lineWidth="0.25"/>
 							</box>
-							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<textElement textAlignment="Left" verticalAlignment="Bottom">
+								<font size="7"/>
+							</textElement>
 							<textFieldExpression><![CDATA[$V{consumptionMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
@@ -295,7 +303,7 @@
 				<crosstabCell rowTotalGroup="product" columnTotalGroup="periodName">
 					<cellContents/>
 				</crosstabCell>
-				<crosstabCell width="41" height="0" rowTotalGroup="count">
+				<crosstabCell width="39" height="0" rowTotalGroup="count">
 					<cellContents/>
 				</crosstabCell>
 				<crosstabCell rowTotalGroup="count" columnTotalGroup="periodName">
