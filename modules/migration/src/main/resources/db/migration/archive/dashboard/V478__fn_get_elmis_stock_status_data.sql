@@ -103,7 +103,7 @@ FOR rec IN SELECT DISTINCT
 		AND ID <= in_periodid
 		ORDER BY
 			ID DESC
-		LIMIT 4
+		LIMIT 6
 	) s
 	ORDER BY
 		ss.productid,
