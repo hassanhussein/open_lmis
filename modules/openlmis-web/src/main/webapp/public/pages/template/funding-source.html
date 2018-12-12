@@ -54,19 +54,15 @@
       </div>
 
 
+<!--
       <hr ng-show="sourceOfFunds.length > 0"/>
-      <div class="adjustment-list"
-           ng-show="sourceOfFunds.length > 0">
-        <ul>
+-->
+      <div class="adjustment-list" ng-show="sourceOfFunds.length > 0" style="max-height: 140px !important;">
+          <ul>
           <li ng-repeat="adjustment in sourceOfFunds"
               class="clearfix">
-          <span class="tpl-adjustment-type"
-          >{{adjustment.name}}</span>
-            <span class="tpl-adjustment-delete">
-            <a href="" class="close"
-               ng-hide="formDisabled || currentRnrLineItem.skipped"
-               ng-click="removeSourceOfFund(adjustment)">&times;</a>
-          </span>
+          <span class="tpl-adjustment-type">{{adjustment.name}}</span>
+
             <span class="tpl-adjustment-qty">
             <input ng-required="true"
                    ng-disabled="formDisabled || currentRnrLineItem.skipped"
@@ -80,12 +76,14 @@
                    ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
                    keyboard="true"
             />
-
-            <div class="rnr-form-error"
-                 id="{{adjustment.displayOrder}}"
-                 style="display:none;" openlmis-message="error.number.only">
-            </div>
           </span>
+
+            <span class="pull-right">
+            <a href="" class="close"
+               ng-hide="formDisabled || currentRnrLineItem.skipped"
+               ng-click="removeSourceOfFund(adjustment)">&times;</a>
+          </span>
+
           </li>
         </ul>
       </div>
