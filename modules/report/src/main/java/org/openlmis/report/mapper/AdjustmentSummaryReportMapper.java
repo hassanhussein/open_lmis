@@ -37,4 +37,11 @@ public interface AdjustmentSummaryReportMapper {
             @Param("userId")Long userId
     );
 
+    @SelectProvider(type=AdjustmentSummaryQueryBuilder.class, method="getTotalNumberOfRowsQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    AdjustmentSummaryReport getTotalFilteredSortedPagedAdjustmentSummaryReport(
+            @Param("filterCriteria") AdjustmentSummaryReportParam filterCriteria,
+            @Param("SortCriteria") Map<String, String[]> sortCriteria ,
+            @Param("userId")Long userId
+    );
 }

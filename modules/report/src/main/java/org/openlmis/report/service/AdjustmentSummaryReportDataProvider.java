@@ -14,9 +14,11 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.report.mapper.AdjustmentSummaryReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.AdjustmentSummaryReportParam;
+import org.openlmis.report.model.report.AdjustmentSummaryReport;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,13 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
+    Pagination pagination = new Pagination(page,pageSize);
+    pagination.setTotalRecords(reportMapper.getTotalFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), sortCriteria ,this.getUserId()).getTotalRecords());
+    AdjustmentSummaryReport report = new AdjustmentSummaryReport();
+    report.setPagination(pagination);
+    List<AdjustmentSummaryReport> all = reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
+    all.add(report);
+    return all;
   }
 
   private AdjustmentSummaryReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

@@ -13,6 +13,7 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.Report;
@@ -34,6 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Integer.parseInt;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
@@ -129,17 +131,18 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/adjustmentSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ADJUSTMENT_SUMMARY_REPORT')")
-    public Pages getAdjustmentSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                          @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                          HttpServletRequest request
+    public OpenLmisResponse getAdjustmentSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                     @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
+                                                     HttpServletRequest request
 
     ) {
 
         Report report = reportManager.getReportByKey("adjustment_summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<AdjustmentSummaryReport> adjustmentSummaryReportList = (List<AdjustmentSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
-
-        return new Pages(page, max, adjustmentSummaryReportList);
+        List<AdjustmentSummaryReport> adjustmentSummaryReportList = (List<AdjustmentSummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        OpenLmisResponse pages = new OpenLmisResponse("rows",adjustmentSummaryReportList);
+        return pages;
     }
 
     @RequestMapping(value = "/reportdata/districtConsumption", method = GET, headers = BaseController.ACCEPT_JSON)

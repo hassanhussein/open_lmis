@@ -13,6 +13,7 @@
 package org.openlmis.report.model.report;
 
 import lombok.*;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.report.model.ResultRow;
 
 @Getter
@@ -38,7 +39,8 @@ public class AdjustmentSummaryReport implements ResultRow {
     private int year;
     private String month;
     private int price;
-
+    private int totalRecords;
+    private Pagination pagination;
 
 
 }

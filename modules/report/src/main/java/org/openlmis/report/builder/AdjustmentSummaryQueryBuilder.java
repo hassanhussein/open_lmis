@@ -32,44 +32,65 @@ public class AdjustmentSummaryQueryBuilder {
     SELECT("adjutment_qty adjustment, processing_periods_name as period, product_category_name category, adjustment_type");
     SELECT("adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment ");
     SELECT("adjutment_qty * pp.currentPrice as price");
-    FROM("vw_requisition_adjustment ");
-      JOIN(" facilities f on f.id = vw_requisition_adjustment.facility_id ");
+    FROM(" mv_requisition_adjustment ");
+      JOIN(" facilities f on f.id = mv_requisition_adjustment.facility_id ");
       JOIN(" vw_districts d on f.geographicZoneId = d.district_id ");
-      JOIN(" losses_adjustments_types t on t.name = vw_requisition_adjustment.adjustment_type AND t.isdefault = TRUE ");
-      JOIN(" products p on p.id = vw_requisition_adjustment.product_id");
+      JOIN(" losses_adjustments_types t on t.name = mv_requisition_adjustment.adjustment_type AND t.isdefault = TRUE ");
+      JOIN(" products p on p.id = mv_requisition_adjustment.product_id");
       JOIN(" program_products pp on p.id = pp.productId and pp.programId = program_id");
-    WHERE(rnrStatusFilteredBy("req_status", filter.getAcceptedRnrStatuses()));
-    WHERE(programIsFilteredBy("program_id"));
-    WHERE(userHasPermissionOnFacilityBy("f.id"));
-    WHERE(periodIsFilteredBy("processing_periods_id"));
-
-    if (filter.getFacilityType() != 0) {
-      WHERE(facilityTypeIsFilteredBy("facility_type_id"));
-    }
-
-    if (filter.getZone() != 0) {
-      WHERE(geoZoneIsFilteredBy("d"));
-    }
-    if (filter.getFacility() != 0) {
-      WHERE(facilityIsFilteredBy("vw_requisition_adjustment.facility_id"));
-    }
-
-    if (filter.getProductCategory() != 0L ) {
-      WHERE(productCategoryIsFilteredBy("product_category_id"));
-    }
-
-    if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null) {
-      WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
-    }
-
-    if (filter.getAdjustmentType() != null && !"0".equals(filter.getAdjustmentType()) && !filter.getAdjustmentType().isEmpty()) {
-      WHERE("adjustment_type = #{filterCriteria.adjustmentType}");
-    }
-    if(filter.getFacilityOperator() != 0L){
-      WHERE("f.operatedById = " + filter.getFacilityOperator().toString());
-    }
+    writePredicates(filter);
     ORDER_BY(QueryHelpers.getSortOrder(params, " product, adjustment_type, facility_type_name,facility_name, supplying_facility_name, product_category_name "));
     return SQL();
   }
 
+
+
+  public static String getTotalNumberOfRowsQuery(Map params) {
+
+    AdjustmentSummaryReportParam filter = (AdjustmentSummaryReportParam) params.get("filterCriteria");
+    BEGIN();
+    SELECT(" count(*) totalRecords");
+    FROM(" mv_requisition_adjustment ");
+    JOIN(" facilities f on f.id = mv_requisition_adjustment.facility_id ");
+    JOIN(" vw_districts d on f.geographicZoneId = d.district_id ");
+    JOIN(" losses_adjustments_types t on t.name = mv_requisition_adjustment.adjustment_type AND t.isdefault = TRUE ");
+    JOIN(" products p on p.id = mv_requisition_adjustment.product_id");
+    JOIN(" program_products pp on p.id = pp.productId and pp.programId = program_id");
+    writePredicates(filter);
+    return SQL();
+  }
+
+   public static void writePredicates(AdjustmentSummaryReportParam filter){
+
+     WHERE(rnrStatusFilteredBy("req_status", filter.getAcceptedRnrStatuses()));
+     WHERE(programIsFilteredBy("program_id"));
+     WHERE(userHasPermissionOnFacilityBy("f.id"));
+     WHERE(periodIsFilteredBy("processing_periods_id"));
+
+     if (filter.getFacilityType() != 0) {
+       WHERE(facilityTypeIsFilteredBy("facility_type_id"));
+     }
+
+     if (filter.getZone() != 0) {
+       WHERE(geoZoneIsFilteredBy("d"));
+     }
+     if (filter.getFacility() != 0) {
+       WHERE(facilityIsFilteredBy("mv_requisition_adjustment.facility_id"));
+     }
+
+     if (filter.getProductCategory() != 0L ) {
+       WHERE(productCategoryIsFilteredBy("product_category_id"));
+     }
+
+     if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null) {
+       WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
+     }
+
+     if (filter.getAdjustmentType() != null && !"0".equals(filter.getAdjustmentType()) && !filter.getAdjustmentType().isEmpty()) {
+       WHERE("adjustment_type = #{filterCriteria.adjustmentType}");
+     }
+     if(filter.getFacilityOperator() != 0L){
+       WHERE("f.operatedById = " + filter.getFacilityOperator().toString());
+     }
+   }
 }
