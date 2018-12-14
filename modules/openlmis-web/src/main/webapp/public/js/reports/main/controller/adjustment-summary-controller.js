@@ -20,16 +20,35 @@ function AdjustmentSummaryReportController($scope, $window , AdjustmentSummaryRe
     $window.open(url, '_blank');
   };
 
+  $scope.currentPage = 1;
+  $scope.pageSize = 10;
   $scope.OnFilterChanged = function() {
     // clear old data if there was any
     $scope.data = $scope.datarows = [];
     $scope.filter.max = 10000;
+    $scope.filter.limit = $scope.pageSize;
+    $scope.filter.page = $scope.page;
     AdjustmentSummaryReport.get($scope.getSanitizedParameter(), function(data) {
-      if (data.pages !== undefined && data.pages.rows !== undefined) {
-        $scope.data = data.pages.rows;
+
+        if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+        var adjustments = data.openLmisResponse.rows;
+        $scope.data =_.where(adjustments,{pagination:null});
+        $scope.pagination = adjustments[adjustments.length-1].pagination;
+        $scope.totalItems = $scope.pagination.totalRecords;
+        $scope.currentPage = $scope.pagination.page;
+        $scope.tableParams.total = $scope.totalItems;
         $scope.paramsChanged($scope.tableParams);
       }
     });
   };
+
+
+    $scope.$watch('currentPage', function () {
+        if ($scope.currentPage > 0) {
+            $scope.page = $scope.currentPage;
+            $scope.OnFilterChanged();
+        }
+    });
+
 
 }

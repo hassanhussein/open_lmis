@@ -130,15 +130,22 @@
                     <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                     <zone-filter class="form-cell horizontalFilters"></zone-filter>
                     <year-filter class="form-cell horizontalFilters"></year-filter>
+<!--
                     <period-session-by-year-filter class="form-cell horizontalFilters"></period-session-by-year-filter>
-
-
+-->
+                    <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
+                                       enddate="filter.periodEnd"
+                                       class="form-cell horizontalFilters"></date-range-filter>
+                    <div class="form-cell horizontalFilters" style="padding-top: 30px;">
+                       &nbsp; &nbsp; <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn" style="background-color: #348991">Search</a></span>
+                    </div>
                 <!--    <div class="form-cell horizontalFilters">
                         <label for="startTime" class="labels">
                             <span>Date</span>
                             <span class="label-required"> *&nbsp;</span>
 
                         </label>
+
 
                         <div class="form-field">
                             <input name="startTime" id="startTime" type="text"

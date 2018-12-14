@@ -76,6 +76,10 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
         }
     });
 
+    $scope.OnFilterChanged = function() {
+        console.log('changed');
+    };
+
 
 }
 
