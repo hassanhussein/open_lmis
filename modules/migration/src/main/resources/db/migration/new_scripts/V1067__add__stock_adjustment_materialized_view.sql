@@ -59,7 +59,7 @@ CREATE MATERIALIZED VIEW  mv_requisition_adjustment AS
      JOIN geographic_zones ON facilities.geographiczoneid = geographic_zones.id
      JOIN requisition_line_item_losses_adjustments ON requisition_line_items.id = requisition_line_item_losses_adjustments.requisitionlineitemid
      JOIN losses_adjustments_types ON requisition_line_item_losses_adjustments.type::text = losses_adjustments_types.name::text
-WITH DATA;
+WITH NO DATA;
 
 
 
