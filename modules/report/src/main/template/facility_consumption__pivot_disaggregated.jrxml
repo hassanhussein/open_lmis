@@ -101,51 +101,72 @@
 				<crosstabHeaderCell>
 					<cellContents backcolor="#3D9297" mode="Opaque">
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="222" y="0" width="73" height="30" uuid="1eae139e-95d6-4f01-a331-4684721b8cbe"/>
-							<box>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="22" height="30" uuid="bd9769fe-d71a-40e4-b046-a57011b58561"/>
+							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
 								<leftPen lineWidth="0.75"/>
 								<bottomPen lineWidth="0.75"/>
 								<rightPen lineWidth="0.75"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Middle"/>
-							<text><![CDATA[Facility_prod Code]]></text>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font size="8" isBold="true"/>
+							</textElement>
+							<text><![CDATA[#S.No]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="295" y="0" width="138" height="30" uuid="8cad589c-36c0-4a64-9b66-e27f115fb23e"/>
-							<box>
+							<reportElement style="Crosstab Data Text" x="147" y="0" width="100" height="30" uuid="1eae139e-95d6-4f01-a331-4684721b8cbe"/>
+							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
 								<leftPen lineWidth="0.75"/>
 								<bottomPen lineWidth="0.75"/>
 								<rightPen lineWidth="0.75"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Middle"/>
-							<text><![CDATA[Product Name]]></text>
-						</staticText>
-						<staticText>
-							<reportElement style="Crosstab Data Text" x="122" y="0" width="100" height="30" uuid="06bcb29f-27b8-4419-8f37-8e0e13eb5f09"/>
-							<box>
-								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
-								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
-							</box>
-							<textElement textAlignment="Center" verticalAlignment="Middle"/>
-							<text><![CDATA[Facility Type]]></text>
-						</staticText>
-						<staticText>
-							<reportElement style="Crosstab Data Text" x="21" y="0" width="100" height="30" uuid="268fd7a2-7132-4b93-9410-1928228c5eec"/>
-							<box>
-								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
-								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
-							</box>
-							<textElement textAlignment="Center" verticalAlignment="Middle"/>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font size="8" isBold="true"/>
+							</textElement>
 							<text><![CDATA[Facility]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="21" height="30" uuid="bd9769fe-d71a-40e4-b046-a57011b58561"/>
+							<reportElement style="Crosstab Data Text" x="247" y="0" width="47" height="30" uuid="8cad589c-36c0-4a64-9b66-e27f115fb23e"/>
+							<box leftPadding="2" bottomPadding="3">
+								<topPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.75"/>
+								<bottomPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.75"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font size="8" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Product Code]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="83" y="0" width="64" height="30" uuid="06bcb29f-27b8-4419-8f37-8e0e13eb5f09"/>
+							<box leftPadding="2" bottomPadding="3">
+								<topPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.75"/>
+								<bottomPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.75"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font size="8" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Facility Type]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="22" y="0" width="61" height="30" uuid="268fd7a2-7132-4b93-9410-1928228c5eec"/>
+							<box leftPadding="2" bottomPadding="3">
+								<topPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.75"/>
+								<bottomPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.75"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font size="8" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Facility Code]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="0" y="20" width="0" height="4" uuid="acabf965-79d4-4673-ae51-ec05312dda3f"/>
 							<box>
 								<topPen lineWidth="0.75"/>
 								<leftPen lineWidth="0.75"/>
@@ -153,7 +174,20 @@
 								<rightPen lineWidth="0.75"/>
 							</box>
 							<textElement textAlignment="Center" verticalAlignment="Middle"/>
-							<text><![CDATA[#S.No]]></text>
+							<text><![CDATA[]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="Crosstab Data Text" x="294" y="0" width="76" height="30" uuid="783810cb-f3a3-4c94-80f2-7800c0f7ea06"/>
+							<box leftPadding="2" bottomPadding="3">
+								<topPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.75"/>
+								<bottomPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.75"/>
+							</box>
+							<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<font size="8" isBold="true"/>
+							</textElement>
+							<text><![CDATA[Product ]]></text>
 						</staticText>
 					</cellContents>
 				</crosstabHeaderCell>
@@ -168,11 +202,71 @@
 							</box>
 							<textField isStretchWithOverflow="true">
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="21" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
-								<box leftPadding="2" bottomPadding="2"/>
+								<box leftPadding="2" bottomPadding="3"/>
 								<textElement textAlignment="Left" verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{ROW_COUNT}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="count" width="0" totalPosition="End">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[0]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="0" height="25" uuid="d1e519de-efda-40f0-8804-07cf53952981"/>
+								<box leftPadding="2" bottomPadding="3"/>
+								<textElement verticalAlignment="Bottom">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{facilityCode}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="facilityCode" width="60">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{facilityCode}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="25" forecolor="#000000" uuid="9e875326-4e43-451a-8164-9763d462124e"/>
+								<box leftPadding="3" bottomPadding="2"/>
+								<textElement verticalAlignment="Bottom">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{facilityCode}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="facilityType" width="65">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{facilityType}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="25" uuid="e79cd276-4e5e-4318-9467-f526d303bee3"/>
+								<box leftPadding="2" bottomPadding="3"/>
+								<textElement verticalAlignment="Bottom">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$V{facilityType}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabRowHeader>
@@ -188,6 +282,7 @@
 						<cellContents>
 							<textField>
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="25" uuid="a642a497-5bf8-44cd-ae5b-bd04c08b16ea"/>
+								<box leftPadding="2" bottomPadding="3"/>
 								<textElement verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
@@ -199,18 +294,19 @@
 						<cellContents/>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="facilityType" width="100">
+				<rowGroup name="prodCode" width="47">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{facilityType}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{code}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
 							<textField>
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="25" uuid="e79cd276-4e5e-4318-9467-f526d303bee3"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="47" height="25" uuid="694df33a-015e-432c-8e6e-36af53308263"/>
+								<box leftPadding="2" bottomPadding="3"/>
 								<textElement verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
-								<textFieldExpression><![CDATA[$V{facilityType}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$V{prodCode}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabRowHeader>
@@ -218,34 +314,16 @@
 						<cellContents/>
 					</crosstabTotalRowHeader>
 				</rowGroup>
-				<rowGroup name="product" width="73">
+				<rowGroup name="product" width="76">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{product}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="73" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="76" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
+								<box leftPadding="2" bottomPadding="3"/>
 								<textElement textAlignment="Left" verticalAlignment="Bottom">
-									<font size="8"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{code}]]></textFieldExpression>
-							</textField>
-						</cellContents>
-					</crosstabRowHeader>
-					<crosstabTotalRowHeader>
-						<cellContents/>
-					</crosstabTotalRowHeader>
-				</rowGroup>
-				<rowGroup name="count" width="138" totalPosition="End">
-					<bucket class="java.lang.Integer">
-						<bucketExpression><![CDATA[0]]></bucketExpression>
-					</bucket>
-					<crosstabRowHeader>
-						<cellContents>
-							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="138" height="25" uuid="d1e519de-efda-40f0-8804-07cf53952981"/>
-								<textElement verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{product}]]></textFieldExpression>
@@ -266,14 +344,16 @@
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="31" height="30" uuid="e2d51561-a0ed-45ec-89f5-fad831b1ef2e"/>
-								<box>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="31" height="29" uuid="e2d51561-a0ed-45ec-89f5-fad831b1ef2e"/>
+								<box leftPadding="2" bottomPadding="3">
 									<topPen lineWidth="0.75"/>
 									<leftPen lineWidth="0.75"/>
 									<bottomPen lineWidth="0.75"/>
 									<rightPen lineWidth="0.75"/>
 								</box>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font size="8" isBold="true"/>
+								</textElement>
 								<textFieldExpression><![CDATA[$V{periodName}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -292,7 +372,7 @@
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="31" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
-							<box leftPadding="3" bottomPadding="2"/>
+							<box leftPadding="2" bottomPadding="3"/>
 							<textElement textAlignment="Left" verticalAlignment="Bottom">
 								<font size="8"/>
 							</textElement>
@@ -355,6 +435,18 @@
 					<cellContents/>
 				</crosstabCell>
 				<crosstabCell rowTotalGroup="facility" columnTotalGroup="periodName">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="facilityCode">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="facilityCode" columnTotalGroup="periodName">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="prodCode">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="prodCode" columnTotalGroup="periodName">
 					<cellContents/>
 				</crosstabCell>
 			</crosstab>
