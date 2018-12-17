@@ -55,7 +55,16 @@ public class OrderFillRateQueryBuilder {
 
   private static String getQueryStringV2(OrderFillRateReportParam param, Long userId) {
     BEGIN();
-    SELECT("f.name as facility," +
+    SELECT("" +
+            "d.district_name as district," +
+            "d.district_id as  districtid," +
+            "d.region_id as provinceid," +
+            "d.region_name  as province," +
+            "f.name as facility," +
+            " pr.name as program, " +
+            " pr.id as programid," +
+            "  pp.id as periodid," +
+            "  pp.name as period, " +
             "f.code as facilitycode,\n" +
             "  li.productCode,\n" +
             "  li.product,\n" +
@@ -67,10 +76,13 @@ public class OrderFillRateQueryBuilder {
             "  sli.substitutedproductquantityshipped,\n" +
             "  CASE WHEN COALESCE(li.quantityapproved, 0 :: NUMERIC) = 0 :: NUMERIC  THEN 0 :: NUMERIC\n" +
             "   ELSE round((COALESCE(sli.quantityshipped, 0)::numeric / COALESCE(li.quantityapproved, 0)) * 100, 2)  END  AS item_fill_rate ");
-    FROM("requisitions r JOIN\n" +
-            "  requisition_line_items li ON r.id = li.rnrid\n" +
+    FROM("requisitions r " +
+            " JOIN  requisition_line_items li ON r.id = li.rnrid\n" +
+            "  inner join processing_periods pp on r.periodid=pp.id " +
+            " inner join programs pr on pr.id=r.programid" +
             "  JOIN products p on li.productcode = p.code\n" +
-            "  JOIN facilities f on f.id = r.facilityid ");
+            "  JOIN facilities f on f.id = r.facilityid" +
+            "   inner join vw_districts d on f.geographiczoneid= d.district_id");
 
     if(param.getProductCategory() != 0)// gives a overhead on a query performance. Unless category is selected don't do the join
     JOIN(" (SELECT * FROM program_products where programid =  #{filterCriteria.program}) pp ON p.id = pp.productid");

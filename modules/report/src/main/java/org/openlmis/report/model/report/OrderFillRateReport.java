@@ -42,5 +42,13 @@ public class OrderFillRateReport implements ResultRow {
     private String substitutedProductName;
     private Double substitutedProductQuantityShipped;
     private Double order;
+    private String province;
+    private String provinceid;
+    private String district;
+    private String districtid;
+    private String programid;
+    private String program;
+    private String periodid;
+    private String period;
 
 }

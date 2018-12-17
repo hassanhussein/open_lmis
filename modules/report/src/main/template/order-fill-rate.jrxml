@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_fill_rate_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
-	<property name="ireport.zoom" value="1.5026296018031562"/>
-	<property name="ireport.x" value="93"/>
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="ColorField">
 		<conditionalStyle>
@@ -101,6 +101,10 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 	<field name="substitutedProductName" class="java.lang.String"/>
 	<field name="substitutedProductQuantityShipped" class="java.lang.Long"/>
 	<field name="facilitycode" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<field name="district" class="java.lang.String"/>
+	<field name="program" class="java.lang.String"/>
+	<field name="period" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -139,50 +143,50 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 						<property name="com.jaspersoft.studio.unit.height" value="px"/>
 					</reportElement>
 					<textElement>
-						<font fontName="SansSerif" isBold="false"/>
+						<font fontName="SansSerif" size="8" isBold="false"/>
 						<paragraph leftIndent="2"/>
 					</textElement>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<textField>
-					<reportElement x="0" y="73" width="40" height="20" uuid="cf7de1a4-f163-46be-a8b3-57531443a519"/>
+					<reportElement x="0" y="73" width="23" height="20" uuid="cf7de1a4-f163-46be-a8b3-57531443a519"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="223" y="73" width="105" height="20" uuid="99f26edd-b7cc-4872-ad39-9004ad414586"/>
+					<reportElement x="186" y="73" width="66" height="20" uuid="99f26edd-b7cc-4872-ad39-9004ad414586"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.product.code}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="328" y="73" width="141" height="20" uuid="5ea010f3-0813-46f9-8f86-61778a7f2b22"/>
+					<reportElement x="252" y="73" width="91" height="20" uuid="5ea010f3-0813-46f9-8f86-61778a7f2b22"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.product.name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="469" y="73" width="114" height="20" uuid="8ef52573-0395-4d69-982a-a0e21c9a92fe"/>
+					<reportElement x="612" y="74" width="62" height="20" uuid="8ef52573-0395-4d69-982a-a0e21c9a92fe"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{header.quantity.ordered}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="583" y="73" width="109" height="20" uuid="da8653cd-9249-4321-bf01-639501fcb65f"/>
+					<reportElement x="674" y="74" width="66" height="20" uuid="da8653cd-9249-4321-bf01-639501fcb65f"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.qty.shipped}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="692" y="73" width="110" height="20" uuid="965e210b-7d8e-448f-b43a-208337557650"/>
+					<reportElement x="740" y="73" width="62" height="20" uuid="965e210b-7d8e-448f-b43a-208337557650"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.item.fill.rate}]]></textFieldExpression>
 				</textField>
@@ -217,18 +221,46 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$V{orderFillRate}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="34" y="74" width="81" height="20" uuid="49e36ac5-2274-4caf-9760-0f2818d78c7f"/>
+					<reportElement x="23" y="74" width="71" height="20" uuid="49e36ac5-2274-4caf-9760-0f2818d78c7f"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="115" y="74" width="108" height="20" uuid="36f9c362-4823-4e72-aa06-27bb74609cf2"/>
+					<reportElement x="94" y="73" width="92" height="20" uuid="36f9c362-4823-4e72-aa06-27bb74609cf2"/>
 					<textElement verticalAlignment="Middle">
-						<font size="12"/>
+						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.facility.name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="343" y="74" width="62" height="20" uuid="5ea25219-e36e-47a9-a204-03af129926d5"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.province}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="405" y="73" width="67" height="20" uuid="0136ebd3-cf83-41c3-8954-c6f296652fea"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="472" y="73" width="60" height="20" uuid="105576d0-aae5-465a-b287-b73706c25f47"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.program}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="532" y="73" width="80" height="20" uuid="31e176bf-0800-45ef-bdbe-e4bdc7430001"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.period}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -242,7 +274,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 						<printWhenExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA} != null]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Center" verticalAlignment="Top">
-						<font size="14" isBold="true"/>
+						<font size="8" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 				</textField>
@@ -252,71 +284,114 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 					</reportElement>
+					<textElement>
+						<font size="8"/>
+					</textElement>
 					<text><![CDATA[]]></text>
 				</staticText>
-				<textField pattern="#,##0" isBlankWhenNull="true">
-					<reportElement x="469" y="0" width="114" height="20" uuid="d8596805-00b4-4490-9ede-7ac22f213601">
-						<property name="local_mesure_unitx" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="local_mesure_unitwidth" value="pixel"/>
-					</reportElement>
-					<textElement textAlignment="Right" verticalAlignment="Middle">
-						<paragraph leftIndent="5" rightIndent="5"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{approved}]]></textFieldExpression>
-				</textField>
 				<textField>
-					<reportElement x="0" y="0" width="40" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
+					<reportElement x="0" y="0" width="23" height="20" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
 					<textElement verticalAlignment="Middle">
+						<font size="8"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{REPORT_COUNT}+1]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Auto" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement style="item_fill_rate_style" x="692" y="0" width="110" height="20" uuid="7fa33077-7077-4fe4-8f1c-3c3e864ed87b">
+					<reportElement style="item_fill_rate_style" x="740" y="0" width="59" height="20" uuid="7fa33077-7077-4fe4-8f1c-3c3e864ed87b">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
 						<printWhenExpression><![CDATA[!($V{ProductCodeGroup_COUNT}>1)]]></printWhenExpression>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
 						<paragraph leftIndent="5" rightIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{item_fill_rate}+" %"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="583" y="0" width="109" height="20" uuid="4369c371-9e2d-4dba-a3be-5a5d1001e6ba"/>
+					<reportElement x="674" y="0" width="66" height="20" uuid="4369c371-9e2d-4dba-a3be-5a5d1001e6ba"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
 						<paragraph leftIndent="5" rightIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{receipts} == null ? 0 : $F{receipts}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="223" y="0" width="105" height="20" uuid="59787138-53b0-463e-9f84-2e9ce5a14990"/>
+					<reportElement x="23" y="0" width="71" height="20" uuid="897f7c10-8a1d-4c17-a735-55a9af7c9a4e"/>
 					<textElement verticalAlignment="Middle">
-						<paragraph leftIndent="5"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
-				</textField>
-				<textField>
-					<reportElement x="328" y="0" width="141" height="20" uuid="a286a183-289b-4fc8-a14c-e600a5023660"/>
-					<textElement verticalAlignment="Middle">
-						<paragraph leftIndent="5"/>
-					</textElement>
-					<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
-				</textField>
-				<textField isBlankWhenNull="true">
-					<reportElement x="34" y="0" width="81" height="20" uuid="897f7c10-8a1d-4c17-a735-55a9af7c9a4e"/>
-					<textElement verticalAlignment="Middle">
+						<font size="8"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="115" y="0" width="108" height="20" uuid="2df22652-32cf-4012-9679-9c96b1bf138d"/>
+					<reportElement x="94" y="0" width="92" height="20" uuid="2df22652-32cf-4012-9679-9c96b1bf138d"/>
 					<textElement verticalAlignment="Middle">
+						<font size="8"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="186" y="0" width="66" height="20" uuid="59787138-53b0-463e-9f84-2e9ce5a14990"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="252" y="0" width="91" height="20" uuid="a286a183-289b-4fc8-a14c-e600a5023660"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0" isBlankWhenNull="true">
+					<reportElement x="612" y="0" width="62" height="20" uuid="d8596805-00b4-4490-9ede-7ac22f213601">
+						<property name="local_mesure_unitx" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="local_mesure_unitwidth" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5" rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{approved}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="343" y="0" width="62" height="20" uuid="8bb8ba1e-7f8a-4eff-82fa-52fc24a4f6a4"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{province}=="NULL"?" ":$F{province})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="405" y="0" width="67" height="20" uuid="06da213b-8835-4d46-8662-154730589276"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{district}=="NULL"?" ":$F{district})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="472" y="0" width="60" height="20" uuid="a2a4f329-a9c9-47cf-9514-a92d4455d702"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{program}=="NULL"?" ":$F{program})]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="532" y="0" width="80" height="20" uuid="610aba67-e8aa-41d3-ab3c-748012dd3aa9"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{period}=="NULL"?" ":$F{period})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -324,15 +399,18 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 			<band height="25">
 				<printWhenExpression><![CDATA[$V{substitutedProductQuantityShipped_1} != null]]></printWhenExpression>
 				<textField pattern="#,##0">
-					<reportElement x="583" y="0" width="109" height="25" uuid="7503fc95-4fee-493b-8e0a-01c0c63fd661"/>
+					<reportElement x="599" y="0" width="75" height="25" uuid="7503fc95-4fee-493b-8e0a-01c0c63fd661"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
 						<paragraph leftIndent="5" rightIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{substitutedProductQuantityShipped_1} + $V{receipts_1}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="ProductCodeGroup" pattern="#,##0.00 %">
 					<reportElement style="total_item_fill_rate_style" x="692" y="0" width="107" height="25" uuid="03e865bb-1eb3-41cc-b7e7-fa90c84a7ab9"/>
-					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
 					<textFieldExpression><![CDATA[(($V{substitutedProductQuantityShipped_1} + $V{receipts_1})/$V{approved_1})]]></textFieldExpression>
 				</textField>
 			</band>
@@ -379,20 +457,6 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 	<detail>
 		<band height="20" splitType="Stretch">
 			<printWhenExpression><![CDATA[$F{substitutedProductCode} != null]]></printWhenExpression>
-			<textField>
-				<reportElement x="223" y="0" width="105" height="20" uuid="3eacc4e5-487e-40da-9b04-e8f85eb96977"/>
-				<textElement verticalAlignment="Middle">
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{substitutedProductCode}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="328" y="0" width="141" height="20" uuid="a967f4b6-988b-4c75-b18f-4c45d2ae3f1f"/>
-				<textElement verticalAlignment="Middle">
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{substitutedProductName}]]></textFieldExpression>
-			</textField>
 			<line>
 				<reportElement x="0" y="19" width="802" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
@@ -401,9 +465,26 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="186" y="0" width="66" height="20" uuid="3eacc4e5-487e-40da-9b04-e8f85eb96977"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{substitutedProductCode}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="252" y="0" width="91" height="20" uuid="a967f4b6-988b-4c75-b18f-4c45d2ae3f1f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{substitutedProductName}]]></textFieldExpression>
+			</textField>
 			<textField pattern="">
-				<reportElement x="583" y="0" width="109" height="20" uuid="7a36c83c-ef73-4b49-9606-b1e36b17795f"/>
+				<reportElement x="612" y="0" width="62" height="20" uuid="7a36c83c-ef73-4b49-9606-b1e36b17795f"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
 					<paragraph leftIndent="5" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{substitutedProductQuantityShipped}]]></textFieldExpression>
