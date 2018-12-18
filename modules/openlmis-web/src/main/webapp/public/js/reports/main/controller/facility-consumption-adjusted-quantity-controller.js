@@ -128,6 +128,7 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
             }
             if (pivotRow === null || pivotRow === undefined) {
                 pivotRow = {
+                    "facilityCode": dataArray[i].facilityCode,
                     "facility": dataArray[i].facility,
                     "facilityType": dataArray[i].facilityType,
                     "facilityId": dataArray[i].facilityId,

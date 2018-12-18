@@ -114,6 +114,7 @@
                            ng-table="tableParams">
 <thead>
 <tr>
+    <th ng-if="filter.disaggregated==true">Facility Code</th>
     <th ng-if="filter.disaggregated==true">Facility</th>
     <th ng-if="filter.disaggregated==true">Facility Type</th>
     <th>Product Code</th>
@@ -124,6 +125,7 @@
 </thead>
                         <tbody>
                         <tr ng-repeat="row in data">
+                            <td ng-if="filter.disaggregated==true"  ng-bind="row.facilityCode"></td>
                             <td ng-if="filter.disaggregated==true"  ng-bind="row.facility"></td>
                             <td  ng-if="filter.disaggregated==true" ng-bind="row.facilityType"></td>
 <td ng-bind="row.code"></td>
