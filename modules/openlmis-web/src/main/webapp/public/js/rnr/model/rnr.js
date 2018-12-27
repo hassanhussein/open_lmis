@@ -301,6 +301,11 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
 
     this.fullSupplyLineItems = prepareLineItems(this.fullSupplyLineItems);
     this.nonFullSupplyLineItems = prepareLineItems(this.nonFullSupplyLineItems);
+      this.fullSupplyLineItems.sort(function (lineItem1, lineItem2) {
+          if (isUndefined(lineItem1))
+              return 1;
+          return lineItem1.compareTo(lineItem2);
+      });
     this.nonFullSupplyLineItems.sort(function (lineItem1, lineItem2) {
       if (isUndefined(lineItem1))
         return 1;
