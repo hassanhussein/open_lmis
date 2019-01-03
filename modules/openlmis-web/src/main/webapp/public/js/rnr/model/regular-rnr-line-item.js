@@ -310,6 +310,9 @@ var RegularRnrLineItem = base2.Base.extend({
     }else if( maxStockColumnCalculationOption === 'DISPENSED_X_2'){
       this.maxStockQuantity = this.quantityDispensed * 2;
     }
+    else if( maxStockColumnCalculationOption === 'MAXIMUM_REQUIREMENT'){
+        this.maxStockQuantity = this.maxMonthsOfStock;
+    }
     else {
       // if default, do what you used to do
       this.maxStockQuantity = this.amc * this.maxMonthsOfStock;
