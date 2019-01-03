@@ -80,7 +80,7 @@ public class BudgetFileProcessor {
 
   public void process(Message message) throws Exception {
     File budgetFile = (File) message.getPayload();
-
+    System.out.println("Process file");
     logger.debug("processing Budget File " + budgetFile.getName());
 
     BudgetFileInfo budgetFileInfo = saveBudgetFile(budgetFile, false);
@@ -112,6 +112,7 @@ public class BudgetFileProcessor {
       BudgetLineItemDTO budgetLineItemDTO = populate(csvRow, includedColumns);
       try {
 
+        budgetLineItemDTO.setProgramCode("ils");
         budgetLineItemDTO.checkMandatoryFields();
         rowNumber = listReader.getRowNumber() - budgetFileTemplate.getRowOffset();
 

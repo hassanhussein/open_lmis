@@ -48,7 +48,7 @@ public class BudgetFileTemplateController extends BaseController {
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'SYSTEM_SETTINGS')")
   public ResponseEntity<OpenLmisResponse> update(@RequestBody EDIFileTemplate ediFileTemplate,
                                                  HttpServletRequest request) {
-    ediFileTemplate.validateAndSetModifiedBy(loggedInUserId(request), asList("facilityCode", "programCode", "periodStartDate", "allocatedBudget"));
+    ediFileTemplate.validateAndSetModifiedBy(loggedInUserId(request), asList("facilityCode", "periodStartDate", "allocatedBudget"));
     service.update(ediFileTemplate);
 
     return success("budget.file.configuration.success");
