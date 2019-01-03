@@ -53,7 +53,7 @@ UNION ALL
     q.schedulename,
     q.reporting_year
    FROM q
-WITH DATA;
+WITH NO DATA;
 
 ALTER TABLE public.vw_bed_nets_data
   OWNER TO postgres;
