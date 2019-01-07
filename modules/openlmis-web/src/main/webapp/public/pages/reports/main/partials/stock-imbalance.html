@@ -43,7 +43,6 @@
                 <div ng-hide="!showMoreFilters">
 
                 <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
-                  <facility-owner-filter class="form-cell horizontalFilters"></facility-owner-filter>
                 <facility-filter class="form-cell horizontalFilters"></facility-filter>
                 <product-category-filter class="form-cell horizontalFilters"></product-category-filter>
                 <product-multi-filter class="form-cell horizontalFilters"></product-multi-filter>
@@ -152,12 +151,16 @@
               </tr>
             </table>
             <div ng-show="datarows.length > 0">
-              <div top-right-table-summary></div>
+
+              <div class="pull-right legend">Page: {{currentPage}}, Showing records {{ countFactor + 1 }} to {{ countFactor + pageSize }} of
+                {{totalItems}}
+                <br/>
+              </div>
               <div ng-show="datarows.length > 0" class="report-table-container">
-                <table class="table-bordered table table-striped" ng-table="tableParams">
+                <table class="table-bordered table table-striped" ng-table="tableParams" >
                   <tbody>
                   <tr ng-repeat="row in datarows">
-                    <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
+                    <td data-title="'#'" class="number" style="width:20px">{{ row.no + countFactor}}</td>
                     <td data-title="getLocalMessage('label.facility.type')" style="width:150px" sortable="facilityType">
                       {{
                       row.facilityType }}
@@ -207,6 +210,25 @@
                   </tr>
                   </tbody>
                 </table>
+                <div class="clear-both"></div>
+                <br />
+                <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="OnFilterChanged()">
+                  <option value="10">10 per page</option>
+                  <option value="20">20 per page</option>
+                  <option value="50">50 per page</option>
+                  <option value="100">100 per page</option>
+                </select>
+
+                <pagination total-items="totalItems" page="currentPage" max-size="10"
+                            items-per-page="pagination.limit"
+                            direction-links="false" class="pagination-sm"></pagination>
+
+                <!--
+                                    <openlmis-pagination num-pages="pageCount" current-page="currentPage" max-size="10"></openlmis-pagination>
+                -->
+
+                <br />
+                <div class="clear-top"></div>
               </div>
             </div>
           </div>
