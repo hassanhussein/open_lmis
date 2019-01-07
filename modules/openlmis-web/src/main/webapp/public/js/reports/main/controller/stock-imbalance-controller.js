@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function StockImbalanceController($scope, $window, $routeParams, StockImbalanceReport) {
+function StockImbalanceController($scope, $window, $routeParams, StockImbalanceReport, $filter, ngTableParams) {
   ( function init(){
     $routeParams.reportType="RE";
     $routeParams.status="SO";
@@ -91,24 +91,43 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
     $scope.OnFilterChanged();
   };
 
+ $scope.currentPage = 1;
+  $scope.pageSize = 10;
   $scope.OnFilterChanged = function () {
     $scope.data = $scope.datarows = [];
     $scope.filter.max = 10000;
-    $scope.filter.page = 1;
+    $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
+    $scope.filter.limit = $scope.pageSize;
+    $scope.filter.page = $scope.page;
     if($scope.filter.status === undefined){
       //By Default, show stocked out
       $scope.statuses = { 'SO' : true };
       $scope.filter.status = 'SO';
       $scope.applyUrl();
     }
-    StockImbalanceReport.get($scope.getSanitizedParameter(), function (data) {
-      $scope.data = data.pages.rows;
-      $scope.paramsChanged($scope.tableParams);
-    });
+
+     StockImbalanceReport.get($scope.getSanitizedParameter(), function(data) {
+            if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+            var adjustments = data.openLmisResponse.rows;
+            $scope.data =_.where(adjustments,{pagination:null});
+            $scope.pagination = adjustments[adjustments.length-1].pagination;
+            $scope.totalItems = $scope.pagination.totalRecords;
+            $scope.currentPage = $scope.pagination.page;
+            $scope.tableParams.total = $scope.totalItems;
+            $scope.paramsChanged($scope.tableParams);
+          }
+        });
   };
 
   $scope.formatNumber = function (value, format) {
     return utils.formatNumber(value, format);
   };
 
+
+  $scope.$watch('currentPage', function () {
+        if ($scope.currentPage > 0) {
+            $scope.page = $scope.currentPage;
+            $scope.OnFilterChanged();
+        }
+    });
 }

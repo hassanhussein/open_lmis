@@ -226,18 +226,18 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/stockImbalance", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCK_IMBALANCE_REPORT')")
-    public Pages getStockImbalanceData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+    public OpenLmisResponse  getStockImbalanceData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                        @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
                                        HttpServletRequest request
-
-    ) {
+    )  {
 
 
         Report report = reportManager.getReportByKey("stock_imbalance");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<StockImbalanceReport> stockImbalanceReportList =
-                (List<StockImbalanceReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
-        return new Pages(page, max, stockImbalanceReportList);
+        List<StockImbalanceReport> stockImbalanceReportList = (List<StockImbalanceReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        OpenLmisResponse pages = new OpenLmisResponse("rows",stockImbalanceReportList);
+        return pages;
     }
 
 
