@@ -19,6 +19,7 @@ import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.StockImbalanceQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
+import org.openlmis.report.model.params.StockImbalanceReportParam;
 import org.openlmis.report.model.report.StockImbalanceReport;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +35,13 @@ public interface StockImbalanceReportMapper {
                                                  @Param("SortCriteria") Map<String, String[]> sortCriteria ,
                                                  @Param("RowBounds")RowBounds rowBounds,
                                                  @Param("userId") Long userId );
+
+    @SelectProvider(type= StockImbalanceQueryBuilder.class, method="getTotalNumberOfRowsQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    StockImbalanceReport getTotalFilteredSortedPagedStockImbalanceReport(
+            @Param("filterCriteria") StockImbalanceReportParam filterCriteria,
+            @Param("SortCriteria") Map<String, String[]> sortCriteria ,
+            @Param("userId")Long userId
+    );
 
 }

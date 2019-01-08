@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.report.model.ResultRow;
+import org.openlmis.core.domain.Pagination;
 
 @Getter
 @Setter
@@ -55,4 +56,8 @@ public class StockImbalanceReport implements ResultRow {
     private String supplyingFacility;
 
     private String period;
+
+    private int totalRecords;
+
+    private Pagination pagination;
 }
