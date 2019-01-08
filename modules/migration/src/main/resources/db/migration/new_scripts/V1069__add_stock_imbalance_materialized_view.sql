@@ -1,4 +1,5 @@
---DROP MATERIALIZED VIEW public.mv_stock_imbalance_by_facility_report;
+DROP MATERIALIZED VIEW IF EXISTS  public.mv_stock_imbalance_by_facility_report;
+
 CREATE MATERIALIZED VIEW public.mv_stock_imbalance_by_facility_report AS
  SELECT gz.region_name AS supplyingfacility,
     gz.region_name,
