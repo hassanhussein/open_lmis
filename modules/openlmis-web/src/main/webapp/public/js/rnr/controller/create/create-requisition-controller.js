@@ -21,6 +21,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, equipmentOperationalStatus);
   $scope.rnrComments = comments;
 
+
   $scope.deleteRnR = function( ){
 
     var callBack = function (result) {
