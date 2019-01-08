@@ -1,8 +1,11 @@
 package org.openlmis.report.builder;
 
+
 import org.openlmis.report.model.params.AggregateStockStatusReportParam;
 
 import java.util.Map;
+
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class AggregateStockStatusReportQueryBuilder {
 
@@ -21,10 +24,31 @@ public class AggregateStockStatusReportQueryBuilder {
                 "\n" +
                 "facility_id facilityId,facility,facilitytypename,location district,periodId period, processing_period_name periodName, stockInHand soh, mos,amc   \n" +
                 "from vw_stock_status \n" +
-                "where programid = 8 and productId = 2496 and gz_id =504 and req_status NOT IN('INITIATED','SUBMITTED')\n" +
-                " order by periodid asc\n" +
+                " inner JOIN vw_districts gz on gz.district_id = gz_id \n" +
+                " WHERE " + writePredicates(filter, userId) +
+                " order by periodId asc\n" +
                 ")x\n" +
                 ")Y");
+    }
+
+
+    private static String writePredicates(AggregateStockStatusReportParam filter, Long userId) {
+
+        String predicate = "";
+        predicate += " req_status NOT IN('INITIATED','SUBMITTED') AND " + programIsFilteredBy("programId") +
+        " AND " + periodStartDateRangeFilteredBy("startdate", filter.getPeriodStart().trim()) +
+        " AND " + periodEndDateRangeFilteredBy("enddate", filter.getPeriodEnd().trim());
+
+        if (filter.getProduct() != 0) {
+            predicate += " AND " + productFilteredBy("productId");
+        }
+        if (filter.getZone() != 0) {
+            predicate += " AND " + geoZoneIsFilteredBy("gz");
+        }
+        if (filter.getSchedule() != 0) {
+            predicate += " AND " + scheduleFilteredBy("psid");
+        }
+        return predicate;
     }
 
 

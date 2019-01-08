@@ -100,20 +100,20 @@
 
 </style>
 
-<div>
+<!--<div>
     <breadcrumbs item-display-name-resolver="myResolver(defaultResolver, state, isCurrent)"></breadcrumbs>
-</div>
+</div>-->
 
 <div class="row-fluid">
     <div class="box span12">
         <div class="box-header">
-            <h2>Stock Status Summary<i class="icon-edit">
+            <h2>Monthly Stock Status Summary<i class="icon-edit">
 
             </i><!--<span
                     class="break"></span>-->
 
 
-                <div class="box-icon pull-right">
+                <div class="box-icon pull-right" ng-show="false">
                 <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
                 <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
                    class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
@@ -129,15 +129,21 @@
                     <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
                     <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                     <zone-filter class="form-cell horizontalFilters"></zone-filter>
-                    <year-filter class="form-cell horizontalFilters"></year-filter>
+                    <product-filter class="form-cell horizontalFilters"></product-filter>
 <!--
                     <period-session-by-year-filter class="form-cell horizontalFilters"></period-session-by-year-filter>
 -->
-                    <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
+                   <!-- <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
                                        enddate="filter.periodEnd"
-                                       class="form-cell horizontalFilters"></date-range-filter>
-                    <div class="form-cell horizontalFilters" style="padding-top: 30px;">
-                       &nbsp; &nbsp; <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn" style="background-color: #348991">Search</a></span>
+                                       class="form-cell horizontalFilters"></date-range-filter>-->
+
+                <!--    <static-year-month-filter perioderror="error" startdate="filter.periodStart"  enddate="filter.periodEnd"
+                                       class="form-cell horizontalFilters"></static-year-month-filter>-->
+                    <static-year-monthly-filter perioderror="perioderror" year="year" startdate="filter.periodStart" enddate="filter.periodEnd" ></static-year-monthly-filter>
+
+
+                    <div class="form-cell horizontalFilters" style="padding-top: 30px;margin-left: 0px !important; width: 1px !important;">
+                       &nbsp; &nbsp; <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn" style="background-color: #348991;">Search</a></span>
                     </div>
                 <!--    <div class="form-cell horizontalFilters">
                         <label for="startTime" class="labels">
@@ -156,7 +162,7 @@
                         </div>
                     </div>-->
 
-                    <div class="form-cell">
+                    <div class="form-cell" ng-show="stockStatuses.length > 0 ">
 
                         <label class="labels" style="float:right;">
                             <span style="font-size: medium"><Strong>Indicators</Strong></span><br/>
@@ -203,9 +209,18 @@
 
                 <div class="clearfix"></div>
 
-                <div class="form-cell">
-                    <Strong class="labels"><span>Toggle SOH Only</span> </Strong>
-                    <input type="checkbox" ng-model="filter.isMOS" ng-change="filterChanged()"/>
+                <div class="form-cell" ng-show="false">
+                    <input type="checkbox" ng-model="filter.isSOH" ng-change="searchReport()"/>
+
+                    <Strong class="labels"><span  data-toggle="tooltip"
+                                                  title="Checked to see SOH columns only"> <i aria-hidden="true"></i>Checked to see SOH Only</span> </Strong>
+
+                    <input type="checkbox" ng-model="filter.isMOS" ng-change="searchReport()"/>
+
+                    <Strong class="labels"><span  data-toggle="tooltip"
+                                                  title="Checked to see MOS columns only"> <i aria-hidden="true"></i>Checked to see MOS Only</span> </Strong>
+
+
 
                 </div>
 
@@ -223,7 +238,7 @@
                         </th>
 -->
                         <th ng-repeat="p in periodHeaders"  colspan="{{p.enableOrder ? '2' : '1'}}"  style="text-align: center;"
-                             class="p-column" id="p-column-r1">
+                            class="p-column" id="p-column-r1">
                             {{(p.month != null)?p.month:p.name}}
                         </th>
                     </tr>

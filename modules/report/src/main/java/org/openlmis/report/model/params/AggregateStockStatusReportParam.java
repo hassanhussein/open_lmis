@@ -17,5 +17,12 @@ public class AggregateStockStatusReportParam extends BaseParam implements Report
     private Long program;
     private Long product;
     private Long period;
+    private Long zone;
+    private Long schedule;
+
+    @RequiredParam
+    private String periodStart;
+    @RequiredParam
+    private String periodEnd;
 
 }

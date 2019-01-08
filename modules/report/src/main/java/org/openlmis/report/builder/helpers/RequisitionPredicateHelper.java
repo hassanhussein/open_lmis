@@ -123,4 +123,8 @@ public class RequisitionPredicateHelper {
   public static String dateFilteredBy(String field, String date) {
     return String.format("%1$s = '%2$s'::DATE ", field, date);
   }
+  public static String scheduleFilteredBy(String field) {
+    return String.format("%s = #{filterCriteria.schedule}", field);
+  }
+
 }

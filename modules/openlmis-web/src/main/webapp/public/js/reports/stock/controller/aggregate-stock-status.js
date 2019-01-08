@@ -5,15 +5,16 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
         var dateToday = new Date(periodListElement.endDate);
         definedObject = periodListElement;
         var locale = "en-us";
-        definedObject.month = dateToday.toLocaleString(locale, {month: "long"}) +' '+ periodListElement.stringYear;
+        definedObject.month = dateToday.toLocaleString(locale, {month: "long"}) + ' ' + periodListElement.stringYear;
         console.log(definedObject);
         return definedObject;
     }
 
     var headerCellData = function (periodToDisplay) {
 
+        console.log(periodToDisplay);
 
-        Periods.get({scheduleId: parseInt(56, 10)}, function (data) {
+        Periods.get({scheduleId: $scope.paramToBeUpdated.schedule}, function (data) {
             var periodList = data.periods;
 
             var filteredPeriods = [];
@@ -49,37 +50,46 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
         }
         else
             return null;
-
-
-        //return;
     };
-    AggregateStockStatusReport.get({program: parseInt(1, 10)}, function (data) {
 
-        if (data.pages.rows.length > 0 || null !== data) {
-            $scope.facilityStocks = data.pages.rows;
-            var groupByFacility = _.groupBy(data.pages.rows, function (f) {
-                return f.facility;
-            });
+    $scope.searchReport = function () {
+        $scope.stockStatuses = [];
+        AggregateStockStatusReport.get($scope.paramToBeUpdated, function (data) {
+            if (data.pages.rows !== undefined || null !== data.pages) {
+                $scope.facilityStocks = data.pages.rows;
+                var groupByFacility = _.groupBy(data.pages.rows, function (f) {
+                    return f.facility;
+                });
 
-            var periodData = _.pluck(data.pages.rows, 'periodName');
+                var periodData = _.pluck(data.pages.rows, 'periodName');
 
-            var periodToDisplay = _.uniq(periodData);
-            headerCellData(periodToDisplay);
+                var periodToDisplay = _.uniq(periodData);
+                headerCellData(periodToDisplay);
 
-            $scope.stockStatuses = $.map(groupByFacility, function (value, index) {
-                return [{"facilityName": index, "stocks": value}];
-            });
+                $scope.stockStatuses = $.map(groupByFacility, function (value, index) {
+                    return [{"facilityName": index, "stocks": value}];
+                });
+            }
+        });
+    };
+    $scope.OnFilterChanged = function () {
 
+        if ($scope.filter !== undefined) {
 
-            console.log($scope.stockStatuses);
+            if ($scope.filter.zone === undefined)
+                $scope.filter.zone = 0;
 
+            $scope.paramToBeUpdated = {
+                program: parseInt($scope.filter.program, 10),
+                schedule: parseInt($scope.filter.schedule, 10),
+                product: parseInt($scope.filter.product, 10),
+                zone: parseInt($scope.filter.zone, 10),
+                periodStart: $scope.filter.periodStart,
+                periodEnd: $scope.filter.periodEnd
+            };
         }
-    });
 
-    $scope.OnFilterChanged = function() {
-        console.log('changed');
     };
-
 
 }
 
