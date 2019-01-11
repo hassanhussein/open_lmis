@@ -1,0 +1,57 @@
+
+    <div class="col s12 m6 l6" ng-controller="AggregateProductExpiryController">
+        <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
+            <h2><span> Aggregate Product Expiry</span></h2>
+            <div filter-container><program-filter class="form-cell horizontalFilters" required="true"></program-filter></div>
+            <h5 ng-hide="aggregateExpiry" style="float: left;clear: both;text-align: center;width: 100%;">No data available to show</h5>
+            <table class="striped bordered " ng-show="aggregateExpiry">
+                <thead>
+                <tr>
+                    <th class="span2">Facility</th>
+                    <th class="span4">Total Expired</th>
+                </tr>
+                </thead>
+                <tbody >
+                <tr  ng-repeat-start="row in aggregateExpiry" ng-click="show=!show">
+                    <td>
+                        <span style="font-size: 17px;padding-right: 3px;padding-left: 2px;">
+                            <a href="" ng-show="!show"><b>+</b></a><a href="" ng-show="show"><b>-</b></a>
+                        </span>
+
+                        {{row.facility}}</td>
+                    <td>{{row.totalexpired | number}} </td>
+                </tr>
+                <tr ng-repeat-end ng-show="show">
+                    <td colspan="2">
+                        <div style="height: 300px; overflow: scroll;" class="section grey lighten-3"
+                             style="padding-top: 0rem !important;">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Product name</th>
+                                <th>Product Code</th>
+                                <th>Period</th>
+                                <th>Expired amount</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="detail in row.detail">
+                                <td>{{detail.product}}</td>
+                                <td>{{detail.productcode}}</td>
+                                <td>{{detail.period}}</td>
+                                <td style="padding-left: 37px !important;">{{detail.expired_quantity}}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+

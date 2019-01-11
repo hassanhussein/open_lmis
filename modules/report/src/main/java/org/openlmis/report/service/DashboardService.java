@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DashboardService {
@@ -50,5 +51,9 @@ public class DashboardService {
     }
     public List<UserDto>  getUsersInThreeMonths() {
         return  dashboardMapper.getUsersInThreeMonths();
+    }
+
+    public List<Map<String, Object>> getAggregateExpiry(Long program) {
+        return dashboardMapper.getAggregateExpiry(program);
     }
 }

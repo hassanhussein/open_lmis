@@ -1523,3 +1523,14 @@ services.factory('RnRTimeLines', function ($resource) {
 services.factory('UserInThreeMonths', function ($resource) {
     return $resource('/dashboard/user_in_three_months.json', {}, {});
 });
+
+services.factory('EmergencyOrderFrequentAppearingProducts', function($resource){
+    return $resource('/dashboard/getEmergencyOrderFrequentAppearingProducts.json',{}, {});
+});
+
+services.factory('FacilitiesReportingThroughFEAndCE', function($resource){
+    return $resource('/dashboard/getFacilitiesReportingThroughFEAndCE.json',{}, {});
+});
+services.factory('DashboardAggregateProductExpired', function ($resource) {
+    return $resource('/dashboard/aggregateExpiry', {}, {});
+});

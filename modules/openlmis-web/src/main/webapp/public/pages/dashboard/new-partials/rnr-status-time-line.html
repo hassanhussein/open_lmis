@@ -2,30 +2,31 @@
     <div ng-controller="RnrStatusChangeTimeLineController" class="col s12 m6 l6">
         <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
 
-            <h2><span>R&R Status Line</span> </h2>
+            <h2><span>Requisition to Fulfilment Timeline</span> </h2>
 
-            <div class="section grey lighten-3">
+            <div style="height: 467px; overflow: scroll;" class="section grey lighten-3"
+                 style="padding-top: 0rem !important;">
                 <table class="striped bordered ">
                     <thead >
-                    <th>R&R#</th>
-                    <th style="min-width:30px;">Fac-Id</th>
+
+                    <!-- th style="min-width:30px;">Fac-Id</th -->
                     <th>Facility</th>
+                    <th>R&R</th>
                     <th>Submitted</th>
                     <th>Approved</th>
                     <th>Converted</th>
                     <th>Shipped</th>
-                    <th>  Order Turn Around (Days)</th>
+                    <th style="width: 47px;">  Order Turn Around Days</th>
                     </thead>
                     <tbody ng-repeat="row in rnrStatusTimeLines ">
+                    <!-- td >{{row.facilityId}}</td -->
+                    <td style="">{{row.facility}}</td>
                     <td >{{row.rnrId}}</td>
-
-                    <td >{{row.facilityId}}</td>
-                    <td >{{row.facility}}</td>
-                    <td >{{row.submitted| date : "MMM d, y"}}</td>
-                    <td >{{row.approved | date : " MMM d, y"}}</td>
-                    <td >{{row.converted | date : "MMM d, y"}}</td>
-                    <td >{{row.shipped | date : "MMM d, y"}}</td>
-                    <td >{{row.turnRoundDays}}</td>
+                    <td >{{row.submitted| date : "d-MMM-yy"}}</td>
+                    <td >{{row.approved | date : "d-MMM-yy"}}</td>
+                    <td >{{row.converted | date : "d-MMM-yy"}}</td>
+                    <td >{{row.shipped | date : "d-MMM-yy"}}</td>
+                    <td class="right">{{row.turnRoundDays}}</td>
                     </tbody>
                 </table>
             </div>

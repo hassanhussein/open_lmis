@@ -345,4 +345,16 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response("emergency", this.lookupService.emergencyOrderTrends());
     }
 
+    @RequestMapping(value = "/getEmergencyOrderFrequentAppearingProducts.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getEmergencyOrderFrequentAppearingProducts() {
+        return OpenLmisResponse.response("products", this.lookupService.getEmergencyOrderFrequentAppearingProducts());
+    }
+
+    @RequestMapping(value = "/getFacilitiesReportingThroughFEAndCE.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFacilitiesReportingThroughFEAndCE() {
+        return OpenLmisResponse.response("facilities", this.lookupService.getFacilitiesReportingThroughFEAndCE());
+    }
+
+
+
 }

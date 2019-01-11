@@ -12,31 +12,49 @@ function StockedOutCommodityStatusController($scope,$routeParams, messageService
     $scope.itemsPerPage = 1;
     $scope.pagedOverStockedItems = [];
     $scope.currentOverStockedPage = 0;
+    $scope.stockedFacilities = [];
+
     DashboardFacilityCommodityStatus.get({zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
         },
         function (data) {
+            // available facilities for the dropdown filter
+            $scope.stockedFacilities = _.chain(data.facilityCommodity)
+                            .groupBy(function(commodity){ return commodity.facilityId;})
+                            .map(function(groupedCommodity){ return groupedCommodity[0]; })
+                            .sortBy(function(uniqueFacility){ return uniqueFacility.facility;}).value();
 
             $scope.facilityCommoditiesStausData=data.facilityCommodity;
-            $scope.facilityCommoditiesStausPivot=_.groupBy($scope.facilityCommoditiesStausData,"facility");
-            $scope.faCommodStatusList=[];
-            angular.forEach($scope.facilityCommoditiesStausPivot,function (da,index) {
-                var col= {
-                    name: index,
-                    osList: _.filter(da, function (row) {
-                        return row.status != "US";
-                    }),
-                    usList: _.filter(da, function (row) {
-                        return row.status != "OS";
-                    })
-                };
-
-                $scope.faCommodStatusList.push(col);
-            });
-            $scope.filteredItems=$scope.faCommodStatusList;
-            $scope.groupToPages();
+            $scope.filterAndPaginateFacilityCommodityStatus();
         });
+
+    $scope.filterAndPaginateFacilityCommodityStatus = function(){
+        $scope.facilityCommoditiesStausPivot= $scope.facilityFilter === undefined || $scope.facilityFilter === ''?
+            _.groupBy($scope.facilityCommoditiesStausData,"facility") :
+            _.groupBy(_.filter($scope.facilityCommoditiesStausData,function(data){
+                        return data.facilityId === parseInt($scope.facilityFilter,10);
+                    }),"facility");
+
+
+        $scope.faCommodStatusList=[];
+        angular.forEach($scope.facilityCommoditiesStausPivot,function (da,index) {
+            var col= {
+                name: index,
+                osList: _.filter(da, function (row) {
+                    return row.status != "US";
+                }),
+                usList: _.filter(da, function (row) {
+                    return row.status != "OS";
+                })
+            };
+
+            $scope.faCommodStatusList.push(col);
+        });
+        $scope.filteredItems = $scope.faCommodStatusList;
+        $scope.currentOverStockedPage = 0;
+        $scope.groupToPages();
+    };
 
     // calculate page in place
     $scope.groupToPages = function () {
@@ -53,6 +71,7 @@ function StockedOutCommodityStatusController($scope,$routeParams, messageService
             }
         }
     };
+
 
     $scope.range = function (size,start, end) {
         var ret = [];

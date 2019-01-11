@@ -113,4 +113,9 @@ private DashboardService dashboardService;
                                                                        @RequestParam("programId") Long programId) {
         return OpenLmisResponse.response(USERS, this.dashboardService.getUsersInThreeMonths());
     }
+
+    @RequestMapping(value= "/aggregateExpiry", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getaggregateExpiry(@RequestParam("program") Long program) {
+        return OpenLmisResponse.response("aggregateExpiry", dashboardService.getAggregateExpiry(program));
+    }
 }

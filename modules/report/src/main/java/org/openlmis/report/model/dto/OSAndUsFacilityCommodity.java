@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OSAndUsFacilityCommodity {
     private String facility;
+    private Long facilityId;
     private String product;
     private String productCode;
     private Long mos;

@@ -40,7 +40,7 @@ public class RnRtimeLineDashletQueryBuilder {
                 "inner join approved a on  r.id=a.rnrid\n" +
                 "inner join convert c on  r.id=c.rnrid\n" +
                 "inner join ship sh on r.id =sh.rnrid\n" +
-                "order by r.facilityid, r.id\n" +
+                "order by r.facility, r.id\n" +
                 " ;";
         return query;
     }

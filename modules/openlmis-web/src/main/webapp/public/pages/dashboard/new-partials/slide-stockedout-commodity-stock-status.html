@@ -3,8 +3,12 @@
     <div ng-controller="StockedOutCommodityStatusController" class="col s12 m6 l6">
         <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
             <h2><span > Most Stocked out Products</span></h2>
+            Select Facility : <select ng-model="facilityFilter" ng-change="filterAndPaginateFacilityCommodityStatus()">
+                <option value="">--Select Facility--</option>
+                <option ng-repeat="f in stockedFacilities" ng-value="f.facilityId">{{f.facility}}</option>
+            </select>
             <div style="padding: 4px;">
-            <table class="striped bordered" style="height: 400px; margin: 0 auto;">
+            <table class="table striped bordered" style="margin: 0 auto;">
                 <thead>
                 <tr>
                     <th class="span3">Facility</th>
@@ -13,13 +17,13 @@
                     <th class="span1 text-right">Quantity</th>
                 </tr>
                 </thead>
-                <tbody ng-repeat="row in pagedOverStockedItems[currentOverStockedPage] ">
+                <tbody ng-repeat="row in pagedOverStockedItems[currentOverStockedPage]" >
 
                 <tr>
-                    <td  rowspan="{{row.usList.length+1}}">{{row.name}}</td>
+                    <td  rowspan="{{row.usList.length+1}}" style="border-right: 1px solid #dadada;">{{row.name}}</td>
                 </tr>
                 <tr  ng-repeat="c in row.usList track by $index">
-                    <td>{{c.product}}</td>
+                    <td class="offset-1">{{c.product}}</td>
                     <td class="text-right">{{c.mos}}</td>
                     <td class="text-right">{{c.stockInHand}}</td>
 
@@ -28,7 +32,7 @@
                 </tbody>
                 <tfoot>
                 <td colspan="6">
-                    <div class="pagination pull-right">
+                    <div class="pagination pull-right" ng-hide="facilityFilter">
                         <ul>
 
                             <li ng-class="{disabled: currentOverStockedPage == 0}">

@@ -112,6 +112,7 @@ public class DashboardCommodityStatusQueryBuilder {
                 "                                       f.code AS facilitycode,  \n" +
                 "                                       li.productcode,  \n" +
                 "                                       f.NAME           AS facility,  \n" +
+                "                                       f.id             AS facilityId, \n" +
                 "                                       li.product       AS product,  \n" +
                 "                                       ft.NAME             facilitytypename,  \n" +
                 "                                       gz.district_name AS location,  \n" +
@@ -174,6 +175,7 @@ public class DashboardCommodityStatusQueryBuilder {
                 "                 \n" +
                 "                SELECT   \n" +
                 "                        a.facility   AS facility,  \n" +
+                "                        a.facilityId AS facilityId, \n" +
                 "                        row_number() over (partition by a.facility order by  mos desc) as rownu, \n" +
                 "                         product,  \n" +
                 "                         productcode, \n" +
@@ -188,6 +190,7 @@ public class DashboardCommodityStatusQueryBuilder {
                 "                 \n" +
                 "                SELECT   \n" +
                 "                        a.facility   AS facility,  \n" +
+                "                        a.facilityId AS facilityId, \n"+
                 "                        row_number() over (partition by a.facility order by  mos asc) as rownu, \n" +
                 "                         product,  \n" +
                 "                         productcode, \n" +
@@ -201,7 +204,7 @@ public class DashboardCommodityStatusQueryBuilder {
                 "                compiled as( \n" +
                 "                 \n" +
                 "                (select  \n" +
-                "                us.facility,us.product,us.productcode,us.mos ,stockinhand, 'US' as status, \n" +
+                "                us.facility,us.facilityId,us.product,us.productcode,us.mos ,stockinhand, 'US' as status, \n" +
                 "                 rownu \n" +
                 "                 \n" +
                 "                from under_stocked us  \n" +
@@ -210,7 +213,7 @@ public class DashboardCommodityStatusQueryBuilder {
                 "                union  \n" +
                 "                ( \n" +
                 "                select  \n" +
-                "                os.facility,os.product,os.productcode,os.mos ,stockinhand, 'OS' as status, \n" +
+                "                os.facility,os.facilityId,os.product,os.productcode,os.mos ,stockinhand, 'OS' as status, \n" +
                 "                rownu \n" +
                 "                 \n" +
                 "                from over_stocked os  \n" +
@@ -218,10 +221,8 @@ public class DashboardCommodityStatusQueryBuilder {
                 "                order by os.facility, os.rownu,os.productcode \n" +
                 "                ) \n" +
                 "                ) \n" +
-                "                select c.facility,c.product,c.productcode,c.mos , c.status,stockinhand, \n" +
+                "                select c.facility,c.facilityId,c.product,c.productcode,c.mos , c.status,stockinhand, \n" +
                 "                c.rownu from compiled c order by c.facility,c.status,rownu, c.productcode \n" +
-                "                 \n" +
-                "                 \n" +
                 "                        ; ";
         return query;
     }

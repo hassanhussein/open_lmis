@@ -1,7 +1,8 @@
 function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ,DashboardProductExpired,
-                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates,dashboardSlidesHelp,UserInThreeMonths) {
+                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates,dashboardSlidesHelp,UserInThreeMonths,
+                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE) {
  $scope.myInterval = 3000;
  $scope.slides = [
      {
@@ -133,7 +134,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         var value = _.pluck(data, 'Emergency Requisitions');
         var valueRegular = _.pluck(data, 'Regular Requisitions');
         loadTheChart(category, value, chartId, 'spline', 'Year and Month', '', '# of requisitions');
-loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month', '', '# of requisitions');
+        loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month', '', '# of requisitions');
     });
 
     GetEmergencyOrderTrendsData.get(null).then(function (data) {
@@ -143,6 +144,14 @@ loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month',
         loadTheChart(category, value, chartId, 'line', 'Year and Month', 'Emergency Order Trends (past 1 year)', '# of requisitions');
 
         console.log(data);
+    });
+
+    EmergencyOrderFrequentAppearingProducts.get(function(data){
+        $scope.emergencyOrderFrequentAppearingProducts = data.products;
+    });
+
+    FacilitiesReportingThroughFEAndCE.get(function(data){
+        $scope.facilitiesReportingViaCEAndFE = data.facilities;
     });
 
     function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {

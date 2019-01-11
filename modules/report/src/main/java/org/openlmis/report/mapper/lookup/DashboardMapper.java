@@ -360,6 +360,73 @@ public interface DashboardMapper {
             "    order by ym asc")
     List<HashMap<String,Object>> emergencyOrderTrends();
 
+    @Select("SELECT  ln.productcode, ln.product, count(ln.productcode) order_frequency\n" +
+            "from requisitions  r\n" +
+            "join requisition_line_items ln on r.id = ln.rnrid\n" +
+            " WHERE r.status != 'INITIATED' and r.createdDate >=  date_trunc('month', CURRENT_DATE) - 2 * INTERVAL '1 year'  and r.emergency = true\n" +
+            " group by ln.productcode, ln.product\n" +
+            " order by  1,2\n" +
+            " limit 10")
+    List<HashMap<String, Object>> getEmergencyOrderFrequentAppearingProducts();
+
+    /*@Select("SELECT fe.facility FROM   " +
+            "(  " +
+            "     SELECT distinct f.id, f.name facility, sourceapplication   " +
+            "     FROM requisitions r  " +
+            "     JOIN facilities f on f.id = r.facilityid  " +
+            "     JOIN processing_periods p on p.id = r.periodid  " +
+            "     WHERE   " +
+            "     r.status != 'INITIATED' AND   " +
+            "     r.createdDate >=  date_trunc('month', CURRENT_DATE) - 2 * INTERVAL '1 year' AND sourceapplication = 'ELMIS_FE'  " +
+            ") AS fe " +
+            "JOIN " +
+            "( " +
+            "     SELECT distinct f.id, f.name facility,  sourceapplication   " +
+            "     FROM requisitions r  " +
+            "     JOIN f    acilities f on f.id = r.facilityid  " +
+            "     JOIN processing_periods p on p.id = r.periodid  " +
+            "     WHERE   " +
+            "     r.status != 'INITIATED' AND   " +
+            "     r.createdDate >=  date_trunc('month', CURRENT_DATE) - 2 * INTERVAL '1 year' AND sourceapplication = 'WEB_UI'  " +
+            ") AS ce  " +
+            "ON fe.id = ce.id  " +
+            "ORDER BY fe.facility")
+            */
+    @Select(" SELECT   facility,  " +
+            "         CASE  " +
+            "                  WHEN previousperiod = 'WEB_UI' THEN 'CE'  " +
+            "                  WHEN previousperiod = 'ELMIS_FE' THEN 'FE'  " +
+            "         END AS previousperiod,  " +
+            "         CASE  " +
+            "                  WHEN lastperiod = 'WEB_UI' THEN 'CE'  " +
+            "                  WHEN lastperiod = 'ELMIS_FE' THEN 'FE'  " +
+            "         END AS lastperiod,  " +
+            "         CASE  " +
+            "                  WHEN threeperiodsago = 'WEB_UI' THEN 'CE'  " +
+            "                  WHEN threeperiodsago = 'ELMIS_FE' THEN 'FE'  " +
+            "         END AS threeperiodsago " +
+            "FROM     crosstab( 'SELECT facility,  " +
+            "            case when rank = 1 then ''previousperiod'' " +
+            "            when rank = 2 then ''lastperiod''  " +
+            "            when rank = 3 then ''threeperiodsago'' end as period, sourceapplication " +
+            "           FROM (  " +
+            "             SELECT  f.name facility, p.startdate, ROW_NUMBER  () OVER ( PARTITION BY f.name ORDER BY p.startdate)  as rank, " +
+            "                   sourceapplication       " +
+            "                   FROM requisitions r  " +
+            "                   JOIN facilities f on f.id = r.facilityid       " +
+            "                   JOIN processing_periods p on p.id = r.periodid  " +
+            "                   WHERE   r.status != ''INITIATED'' AND p.id in (select id from processing_periods  " +
+            "                                                                   where enddate < current_date     " +
+            "                                                                   order by startdate desc limit 3)        " +
+            "                  AND r.createdDate >=  date_trunc(''month'', CURRENT_DATE) - 2 * INTERVAL ''1 year'' " +
+            "                   order by f.name ) as dt where rank < 4' )  AS ct " +
+            "        (\"facility\" character VARYING(50), \"previousperiod\" character VARYING(50), \"lastperiod\" character VARYING(50), \"threeperiodsago\" character VARYING(50)) " +
+            "WHERE    (  " +
+            "                  previousperiod = lastperiod  " +
+            "         AND      lastperiod = threeperiodsago  " +
+            "         AND      previousperiod = threeperiodsago) = false  " +
+            "ORDER BY facility ASC")
+    List<HashMap<String, Object>> getFacilitiesReportingThroughFEAndCE();
 
 
 }
