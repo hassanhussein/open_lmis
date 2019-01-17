@@ -163,9 +163,11 @@
         <p style="font-weight: bold; text-align: left"><span openlmis-message="report.map.stock.status.aggregate.data.for"></span> {{ district_title }}</p>
         <br>
         <div class="container" ng-repeat="productStock in productstocks">
+            <div class="stock-status-chart-container">
             <a-float  af-option="productStock.options" af-data="productStock.dataSeries"
                       class="chart container"
                       style="width:80%; height: 350px"> </a-float>
+            </div>
         </div>
         <div class="clear-both"></div>
     </div>
