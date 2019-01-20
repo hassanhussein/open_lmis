@@ -895,4 +895,20 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, aggregateStockStatusReportList);
     }
+
+
+    @RequestMapping(value = "/reportdata/quantification-extract", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    public OpenLmisResponse getQuantificationReportSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                     @RequestParam(value = "limit", defaultValue="100") String limit,
+                                                     HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("quantification_extract");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<QuantificationExtractReport> quantificationExtractReportList = (List<QuantificationExtractReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        OpenLmisResponse pages = new OpenLmisResponse("rows",quantificationExtractReportList);
+        return pages;
+    }
 }
