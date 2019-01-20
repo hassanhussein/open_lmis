@@ -622,6 +622,15 @@
                     <property name="title" value="report.title.monthly.stock.status.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="quantification_extract"/>
+                    <property name="template" value="aggregate-consumption_extract.jasper"/>
+                    <property name="reportDataProvider" ref="quantificationExtractReportServiceDataProvider"/>
+                    <property name="id" value="quantification_extract_report"/>
+                    <property name="name" value="Quantification Extract Report"/>
+                    <property name="title" value="report.title.quantification.extract.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

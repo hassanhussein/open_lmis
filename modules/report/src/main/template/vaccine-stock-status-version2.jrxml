@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vaccine stock status soh" language="groovy" printOrder="Horizontal" pageWidth="1190" pageHeight="842" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="1170" leftMargin="10" rightMargin="10" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="0.75"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="BandStyle"/>
-	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center"/>
 	<subDataset name="dataset1" uuid="091a1376-c476-4867-9ced-423695e8c98e"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -60,7 +62,7 @@
 				<reportElement x="4" y="0" width="1165" height="1" forecolor="#FFFFFF" backcolor="#3D9297" uuid="b5f5ecc6-d086-489a-9136-efbc39c82ada"/>
 			</line>
 			<crosstab>
-				<reportElement x="-1" y="11" width="1170" height="229" uuid="af041fa3-3295-4441-a89b-76193657feb8"/>
+				<reportElement x="-1" y="11" width="1230" height="229" uuid="af041fa3-3295-4441-a89b-76193657feb8"/>
 				<rowGroup name="region" width="70">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{region}]]></bucketExpression>
@@ -127,33 +129,12 @@ $F{total}.doubleValue()).multiply(100)).setScale(0,BigDecimal.ROUND_HALF_UP) +"%
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 							</box>
 							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="180" height="20" uuid="2154b315-bcaa-4cff-96b1-4c4057f75dde"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="180" height="42" uuid="2154b315-bcaa-4cff-96b1-4c4057f75dde"/>
 								<textElement verticalAlignment="Middle">
 									<font size="10" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{product}]]></textFieldExpression>
 							</textField>
-							<staticText>
-								<reportElement style="Crosstab Data Text" x="106" y="20" width="74" height="22" uuid="8270bc0f-c73f-4ec8-ae94-4c2f7cdec67a"/>
-								<textElement textAlignment="Right" verticalAlignment="Bottom">
-									<font size="8" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Last Updated]]></text>
-							</staticText>
-							<staticText>
-								<reportElement style="Crosstab Data Text" x="53" y="20" width="53" height="22" uuid="a1521dd3-7d8f-4e02-89d7-cb6061e95c68"/>
-								<textElement textAlignment="Right" verticalAlignment="Bottom">
-									<font size="8" isBold="true"/>
-								</textElement>
-								<text><![CDATA[Buffer Stock]]></text>
-							</staticText>
-							<staticText>
-								<reportElement style="Crosstab Data Text" x="0" y="20" width="53" height="22" uuid="5067def5-8f8c-43ee-81af-8925024e7b9c"/>
-								<textElement textAlignment="Right" verticalAlignment="Bottom">
-									<font size="8" isBold="true"/>
-								</textElement>
-								<text><![CDATA[SOH]]></text>
-							</staticText>
 						</cellContents>
 					</crosstabColumnHeader>
 					<crosstabTotalColumnHeader>
@@ -174,21 +155,6 @@ $F{total}.doubleValue()).multiply(100)).setScale(0,BigDecimal.ROUND_HALF_UP) +"%
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
-						<textField isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="53" height="28" uuid="842a49b6-d52f-47bc-bd73-c80869bc7cef"/>
-							<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-							<textFieldExpression><![CDATA[$V{sohMeasure}]]></textFieldExpression>
-						</textField>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="53" y="0" width="53" height="28" uuid="17393b35-ad46-4597-a9d8-6c9c9642335f"/>
-							<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-							<textFieldExpression><![CDATA[$V{mosMeasure}]]></textFieldExpression>
-						</textField>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="106" y="0" width="74" height="28" uuid="bceae7b8-e2ff-4041-b8f5-4c78763ebec2"/>
-							<textElement textAlignment="Right" verticalAlignment="Bottom"/>
-							<textFieldExpression><![CDATA[$V{lastUpdateMeasure}]]></textFieldExpression>
-						</textField>
 					</cellContents>
 				</crosstabCell>
 				<crosstabCell height="25" rowTotalGroup="region">
