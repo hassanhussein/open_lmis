@@ -9,8 +9,12 @@
   -->
 
 <div id="requisition-header" class="toggleFullScreen">
-  <h2><span id='requisitionHeaderLabel' openlmis-message="label.requisition"></span>&nbsp;<span
-    ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span>
+  <h2>
+    <span ng-show="rnr.period.enableOrder"><span id='requisitionHeaderLabel' openlmis-message="label.requisition"></span>&nbsp;<span
+    ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span></span>
+
+    <span ng-show="!rnr.period.enableOrder"><span id='requisitionHeaderLabel' openlmis-message="label.requisition.report"></span>&nbsp;<span
+            ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span></span>
 
     <span class="pull-right" ng-show="checked">
       <a id="printButtonOnHeader" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"

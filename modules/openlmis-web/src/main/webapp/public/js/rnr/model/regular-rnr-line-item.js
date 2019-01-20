@@ -141,7 +141,9 @@ var RegularRnrLineItem = base2.Base.extend({
           quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }else if (!this.reportOnlyPeriod)
     {
-       return (this.stockOutDays > utils.isNumberOfDaysInReportingPeriod(this.period));
+    //Needs more verification to check this period
+     if(this.period !== undefined)
+     return (this.stockOutDays > utils.isNumberOfDaysInReportingPeriod(this.period));
     }
 
     return false;
