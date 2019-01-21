@@ -1,6 +1,6 @@
 -- Materialized View: public.mv_logistics_summary_report
 
-DROP MATERIALIZED VIEW public.mv_logistics_summary_report;
+DROP MATERIALIZED VIEW IF EXISTS public.mv_logistics_summary_report;
 
 CREATE MATERIALIZED VIEW public.mv_logistics_summary_report AS
  SELECT li.productcode AS code,
