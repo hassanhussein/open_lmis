@@ -56,7 +56,7 @@ app.directive('fundingSource',function (RequisitionComment,FundingSource, $route
      reEvaluateTotalSourceOfFund();
       scope.$parent.rnr.allocatedBudget = originBudgetValue + scope.totalLossesAndAdjustments;
 
-     }
+     };
 
       scope.sourceOfFund={};
         scope.sourceOfFunds=[];
