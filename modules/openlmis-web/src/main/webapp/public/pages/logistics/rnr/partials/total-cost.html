@@ -10,7 +10,14 @@
 
 <div class="total-cost-container">
     <div class="cost-values">
-    <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget && rnr.allocatedBudget"
+           <span id="supplemental-fund" class="pull-left" style="margin:10px!important" >
+     <strong></strong>
+               <funding-source updatable="!formDisabled" show="rnr.costExceedsBudget"></funding-source>
+                &nbsp;
+    </span>
+
+
+        <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget && rnr.allocatedBudget"
           class="budget-exceeds-detailed">
       <strong>
           <span class="icon-warning-sign budget-exceeded-icon"></span>
@@ -26,7 +33,10 @@
                 ng-hide="rnr.allocatedBudget"></span>
                 &nbsp;|&nbsp;
             </strong>
-    <span id="budgetWarningIcon" ng-show="rnr.costExceedsBudget" class="icon-warning-sign budget-exceeded-icon">
+
+
+
+        <span id="budgetWarningIcon" ng-show="rnr.costExceedsBudget" class="icon-warning-sign budget-exceeded-icon">
       <div class="rnr-form-error warning-popup" id="budgetWarningMessage"
            openlmis-message="msg.cost.exceeds.budget"></div>
     </span>

@@ -22,7 +22,7 @@ public class QuantificationExtractQueryBuilder {
                 "   from mv_quantification_extraction\n" +
                      writePredicates(returnParams(map)) +
                 "   group by periodName,period,facilityCode,facility,facilityType,code,product,category,unit" +
-                " order by periodName ";
+                " order by periodName limit 2000 ";
 
 
     }

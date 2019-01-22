@@ -70,7 +70,7 @@
                    type="text"
                    ng-model="adjustment.quantity"
                    openlmis-message="placeholder.quantity"
-                   ng-change="reEvaluateTotalSourceOfFund(); resetModalErrorAndSetFormDirty()"
+                   ng-change="updateTotal();reEvaluateTotalSourceOfFund(); resetModalErrorAndSetFormDirty()"
                    numeric-validator="positiveInteger"
                    maxlength="8"
                    ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
@@ -92,7 +92,7 @@
       <div class="adjustment-total clearfix alert alert-warning"
            ng-show="sourceOfFunds.length > 0">
         <span class="pull-left" openlmis-message="label.losses.total"></span><span
-      >{{totalLossesAndAdjustments}}</span>
+      ng-bind="totalLossesAndAdjustments"></span>
       </div>
 
       <div class="modal-footer">

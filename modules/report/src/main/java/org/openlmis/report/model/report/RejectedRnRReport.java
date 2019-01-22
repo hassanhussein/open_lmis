@@ -12,9 +12,10 @@ import org.openlmis.report.model.ResultRow;
 @NoArgsConstructor
 public class RejectedRnRReport implements ResultRow {
 
-    private Integer rejectedCount;
+    private Integer rejectionCount;
     private String districtName;
     private String regionName;
     private String zoneName;
-    private String month;
+    private String month_name;
+
 }
