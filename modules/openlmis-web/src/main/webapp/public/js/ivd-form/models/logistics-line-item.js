@@ -6,10 +6,11 @@ var LogisticsLineItem = function(lineItem, report) {
   };
 
   LogisticsLineItem.prototype.isClosingBalanceValid = function(){
+   this.calculateClosingBalance();
     if(utils.parseIntWithBaseTen(this.closingBalance) < 0){
       return false;
     }
-    return (this.skipped || utils.parseIntWithBaseTen( this.closingBalance ) === (utils.parseIntWithBaseTen(this.openingBalance) + utils.parseIntWithBaseTen(this.quantityReceived) - utils.parseIntWithBaseTen(this.quantityIssued)) - utils.parseIntWithBaseTen(this.quantityDiscardedUnopened));
+    return (this.skipped || utils.parseIntWithBaseTen( this.closingBalance ) === (utils.parseIntWithBaseTen(this.openingBalance) + utils.parseIntWithBaseTen(this.quantityReceived) + utils.parseIntWithBaseTen(this.totalAdjustedQuantity) - utils.parseIntWithBaseTen(this.quantityIssued)) - utils.parseIntWithBaseTen(this.quantityDiscardedUnopened));
   };
 
   LogisticsLineItem.prototype.childrenImmunized = function(){
@@ -51,13 +52,15 @@ var LogisticsLineItem = function(lineItem, report) {
 
   LogisticsLineItem.prototype.calculateClosingBalance = function(){
     if(utils.isNumber(this.openingBalance) && utils.isNumber(this.quantityReceived) && utils.isNumber(this.quantityIssued)){
-      var discarded = 0;
-      if(utils.isNumber(this.quantityDiscardedUnopened)){
+      var discarded = 0, quantityAdjusted = 0;
+      if(utils.isNumber(this.quantityDiscardedUnopened) && utils.isNumber(this.totalAdjustedQuantity) ){
         discarded = this.quantityDiscardedUnopened;
+        quantityAdjusted = this.totalAdjustedQuantity;
       }else{
         this.quantityDiscardedUnopened = 0;
+        this.totalAdjustedQuantity = 0;
       }
-      this.closingBalance = (utils.parseIntWithBaseTen(this.openingBalance) + utils.parseIntWithBaseTen(this.quantityReceived) - utils.parseIntWithBaseTen(this.quantityIssued) + utils.parseIntWithBaseTen(this.totalAdjustedQuantity)) - utils.parseIntWithBaseTen(discarded);
+      this.closingBalance = (utils.parseIntWithBaseTen(this.openingBalance) + utils.parseIntWithBaseTen(this.quantityReceived) + utils.parseIntWithBaseTen(quantityAdjusted) - utils.parseIntWithBaseTen(this.quantityIssued)) - utils.parseIntWithBaseTen(discarded);
     }
   };
 };
