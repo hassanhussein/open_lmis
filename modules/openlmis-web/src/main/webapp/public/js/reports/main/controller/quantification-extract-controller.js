@@ -11,7 +11,7 @@ function QuantificationExtractController($scope, $window , QuantificationExtract
     $scope.currentPage = 1;
     $scope.pageSize = 10;
 
-
+    var reportParams = {};
     $scope.OnFilterChanged = function() {
         console.log($scope.filter);
 
@@ -21,9 +21,15 @@ function QuantificationExtractController($scope, $window , QuantificationExtract
 
         // clear old data if there was any
         $scope.data  = $scope.xml = $scope.datarows = [];
-        $scope.filter.max = 10000;
+        $scope.filter.max = 2000;
         $scope.filter.limit = 100;
-        QuantificationExtractReport.get($scope.getSanitizedParameter(), function(data) {
+        reportParams = $scope.getSanitizedParameter();
+
+    };
+
+$scope.searchQuantificationReport = function(){
+
+        QuantificationExtractReport.get(reportParams, function(data) {
             $scope.data = data.rows;
          if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
 
@@ -39,9 +45,7 @@ function QuantificationExtractController($scope, $window , QuantificationExtract
          }
         });
         $scope.applyUrl();
-
-    };
-
+}
 
     $scope.$watch('currentPage', function () {
         if ($scope.currentPage > 0) {

@@ -42,10 +42,6 @@ public class QuantificationExtractQueryBuilder {
                 " AND " + periodStartDateRangeFilteredBy("startdate", filter.getPeriodStart().trim()) +
                 " AND " + periodEndDateRangeFilteredBy("enddate", filter.getPeriodEnd().trim());
 
-        /*if (filter.getProduct() != 0) {
-            predicate += " AND " + productFilteredBy("productId");
-        }*/
-
             predicate +=   " and (mv_quantification_extraction.parent = " + filter.getZone() + "::INT or  mv_quantification_extraction.region_id = " +  filter.getZone() + "::INT " +
                     " or  mv_quantification_extraction.district_id = " +  filter.getZone() + "::INT " +
                     " or  mv_quantification_extraction.zone_id = " +  filter.getZone() + "::INT " +
