@@ -10,7 +10,7 @@ INSERT INTO public.vaccine_program_logistics_columns(
 WITH Q as (
 select * from vaccine_logistics_master_columns where name = 'totalAdjustedQuantity'
 )
-select (select id from programs where lower(code) = lower('VACCINE')  limit 1) programId,id mastercolumnid,label,displayOrder, true visible, 1 createdby, NOW() createddate, 1 modifiedby, NOW() modifieddate FROM Q;
+select (select id from programs where enableivdform = true  limit 1) programId,id mastercolumnid,label,displayOrder, true visible, 1 createdby, NOW() createddate, 1 modifiedby, NOW() modifieddate FROM Q;
  */
 
 --Additional Column in vaccine_logistics line Items
