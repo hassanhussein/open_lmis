@@ -111,8 +111,7 @@ public class BudgetFileProcessor {
 
       BudgetLineItemDTO budgetLineItemDTO = populate(csvRow, includedColumns);
       try {
-
-        budgetLineItemDTO.setProgramCode("ils");
+        budgetLineItemDTO.setProgramCode("ilshosp");
         budgetLineItemDTO.checkMandatoryFields();
         rowNumber = listReader.getRowNumber() - budgetFileTemplate.getRowOffset();
 
