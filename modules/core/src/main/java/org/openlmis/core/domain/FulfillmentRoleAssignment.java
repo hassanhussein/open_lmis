@@ -49,7 +49,10 @@ public class FulfillmentRoleAssignment extends BaseModel {
     roleIds = roleIds.replace("{", "").replace("}", "");
     String[] roleIdsArray = roleIds.split(",");
     for (String roleId : roleIdsArray) {
-      this.roleIds.add(Long.parseLong(roleId));
+      roleId = roleId.replaceAll("[^\\d.]", "");
+      if (roleId.matches("[0-9]+") && roleId.length() > 0) {
+        this.roleIds.add(Long.parseLong(roleId));
+      }
     }
   }
 }
