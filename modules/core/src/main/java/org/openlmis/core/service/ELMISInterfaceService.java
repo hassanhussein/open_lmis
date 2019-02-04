@@ -206,5 +206,9 @@ public class ELMISInterfaceService {
         }
     }
 
+    public ELMISInterface getByName(String name){
+        return repository.getByName(name);
+    }
+
 
 }

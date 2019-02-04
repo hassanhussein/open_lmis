@@ -1,6 +1,7 @@
 package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.repository.mapper.FacilityTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,4 +19,12 @@ public class FacilityTypeRepository {
     }
 
 
+    public FacilityType getFacilityTypeByMappedCode(String code, Long interfaceId) {
+        return mapper.getFacilityTypeByMappedCode(code,interfaceId);
+    }
+
+    public FacilityOperator getFacilityTypeByMappedOwner(String code, Long interfaceId) {
+        return mapper.getFacilityTypeByMappedOwner(code,interfaceId);
+
+    }
 }

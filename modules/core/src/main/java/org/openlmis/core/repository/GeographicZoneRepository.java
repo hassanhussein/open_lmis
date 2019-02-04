@@ -131,4 +131,7 @@ public class GeographicZoneRepository {
   public List<GeoZoneMapDTO>getAllGeoMapData(){
     return mapper.getAllGeoMapData();
   }
+  public GeographicZone getGeoZoneByMappedCode(String mapCode){
+    return mapper.getGeoZoneByMappedCode(mapCode);
+  }
 }

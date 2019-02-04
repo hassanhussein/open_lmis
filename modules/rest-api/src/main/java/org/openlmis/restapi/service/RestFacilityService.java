@@ -15,10 +15,18 @@
 package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityOperator;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.dto.FacilityFeedDTO;
+import org.openlmis.core.dto.HFRFacilityDTO;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.FacilityTypeService;
+import org.openlmis.core.service.GeographicZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 /**
  * This service exposes methods for get facility details accepting facility code as input.
@@ -28,6 +36,10 @@ import org.springframework.stereotype.Service;
 public class RestFacilityService {
   @Autowired
   FacilityService facilityService;
+  @Autowired
+  GeographicZoneService geographicZoneService;
+  @Autowired
+  FacilityTypeService facilityTypeService;
 
   public FacilityFeedDTO getFacilityByCode(String facilityCode) {
     Facility facility = facilityService.getFacilityByCode(facilityCode);
@@ -35,7 +47,41 @@ public class RestFacilityService {
     if (facility.getParentFacilityId() != null) {
       parentFacility = facilityService.getById(facility.getParentFacilityId());
     }
-
     return new FacilityFeedDTO(facility, parentFacility);
+  }
+
+  public HFRFacilityDTO saveInterfaceFacilityInfo(HFRFacilityDTO dto) {
+   if(dto != null){
+     GeographicZone geographicZone = geographicZoneService.getGeoZoneByMappedCode(dto.getDistrictCode());
+     if (geographicZone != null){
+       FacilityType facilityType = facilityTypeService.getFacilityTypeByMappedCode(dto.getFacilityTypeCode());
+       FacilityOperator facilityOperator = facilityTypeService.getFacilityTypeByMappedOwner(dto.getOwnershipCode());
+
+       Facility facility1 = facilityService.getFacilityByCode(dto.getCode());
+       Facility newFac = new Facility();
+       newFac.setName(dto.getName());
+       newFac.setActive(true);
+       newFac.setCode(dto.getCode());
+       newFac.setDescription(dto.getDescription());
+       newFac.setLongitude(dto.getLongitude());
+       newFac.setLongitude(dto.getLatitude());
+       newFac.setGoLiveDate(new Date());
+       newFac.setGoDownDate(new Date());
+       newFac.setGeographicZone(geographicZone);
+       newFac.setFacilityType(facilityType);
+       newFac.setOperatedBy(facilityOperator);
+       newFac.setEnabled(true);
+       newFac.setSdp(true);
+
+       if(facility1 != null){
+         newFac.setId(facility1.getId());
+         facilityService.update(newFac);
+       }else {
+         facilityService.save(newFac);
+       }
+
+     }
+   }
+    return dto;
   }
 }

@@ -156,4 +156,8 @@ public class GeographicZoneService {
   public List<GeoZoneMapDTO>getAllGeoMapData(){
     return repository.getAllGeoMapData();
   }
+
+  public GeographicZone getGeoZoneByMappedCode(String mapCode){
+    return repository.getGeoZoneByMappedCode(mapCode);
+  }
 }

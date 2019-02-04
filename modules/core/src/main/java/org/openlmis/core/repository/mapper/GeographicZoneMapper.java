@@ -164,5 +164,9 @@ public interface GeographicZoneMapper {
             "JOIN geographic_zones gz ON m.geographiczoneid = gz.id")
     List<GeoZoneMapDTO>getAllGeoMapData();
 
+    @Select(" SELECT * FROM geographic_zones gz " +
+            " JOIN geographic_zone_map_mappings mp on GZ.id = mp.geographicZoneId  WHERE LOWER(mp.mapCode) = LOWER(#{mapCode}) ")
+    GeographicZone getGeoZoneByMappedCode(@Param("mapCode") String mapCode);
+
 
 }
