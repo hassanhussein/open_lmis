@@ -36,7 +36,7 @@ import java.util.List;
 @EnableScheduling
 public class ELMISInterfaceService {
 
-    private static final String FACILITY_MAPPING_KEY = "GOTHOMIS-ELMIS-INTERFACE";
+    private static final String FACILITY_MAPPING_KEY = "FACILITY_ELMIS_MAPPING";
     @Autowired
     private ELMISInterfaceRepository repository;
     @Autowired

@@ -424,7 +424,7 @@
 
                 <entry key="funding-source">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Facility Level Mapping"/>
+                        <property name="displayName" value="menu.header.elmis.facility.mapping"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.core.dto.FacilityMappingDTO</value>
                         </property>
