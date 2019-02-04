@@ -45,7 +45,7 @@ $scope.searchQuantificationReport = function(){
          }
         });
         $scope.applyUrl();
-}
+};
 
     $scope.$watch('currentPage', function () {
         if ($scope.currentPage > 0) {
