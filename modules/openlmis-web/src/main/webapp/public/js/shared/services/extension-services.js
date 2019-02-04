@@ -1350,3 +1350,7 @@ services.factory('MonthlyStockStatus', function ($resource) {
 services.factory('AggregateStockStatusReport', function ($resource) {
     return $resource('/reports/reportdata/aggregateStockStatusReport.json', {}, {});
 });
+
+services.factory('QuantificationExtractReport', function ($resource) {
+    return $resource('/reports/reportdata/quantification-extract.json', {}, {});
+});

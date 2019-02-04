@@ -48,9 +48,15 @@ app.directive('fundingSource',function (RequisitionComment,FundingSource, $route
             reEvaluateTotalSourceOfFund();
             newSource.name.name= undefined;
             newSource.quantity = undefined;
-
-
+            scope.updateTotal();
         };
+     var originBudgetValue = scope.$parent.rnr.allocatedBudget;
+
+     scope.updateTotal = function(){
+     reEvaluateTotalSourceOfFund();
+      scope.$parent.rnr.allocatedBudget = originBudgetValue + scope.totalLossesAndAdjustments;
+
+     };
 
       scope.sourceOfFund={};
         scope.sourceOfFunds=[];

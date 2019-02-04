@@ -16,5 +16,7 @@ public class RejectedRnRReportParam  extends BaseParam implements ReportParamete
 private Long program;
 private String status;
 private Long zone;
-public Long period;
+private Long period;
+private Long schedule;
+
 }

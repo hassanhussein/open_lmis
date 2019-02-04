@@ -180,6 +180,14 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: MonthlyStockStatusController,
             templateUrl: 'partials/monthly-stock-status.html',
             reloadOnSearch: false
+        }).when('/quantification-extract-report', {
+            controller: QuantificationExtractController,
+            templateUrl: 'partials/quantification-extract-2.html',
+            reloadOnSearch: false
+        }).when('/rejected-rnr', {
+            controller: RejectedRnRController,
+            templateUrl: 'partials/rejected.html',
+            reloadOnSearch: false
         }).otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
