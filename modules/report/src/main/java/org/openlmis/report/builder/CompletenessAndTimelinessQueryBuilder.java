@@ -120,7 +120,8 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                                AND nonreporting.id = c.priod_id  \n" +
                 "                                                                order by 1,2,4; ";
 
-
+System.out.println(" the quer "+ sql
+);
         return sql;
     }
 
