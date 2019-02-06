@@ -417,7 +417,7 @@ public interface DashboardMapper {
             "                   JOIN processing_periods p on p.id = r.periodid  " +
             "                   WHERE   r.status != ''INITIATED'' AND p.id in (select id from processing_periods  " +
             "                                                                   where enddate < current_date     " +
-            "                                                                   order by startdate desc limit 3)        " +
+            "                                                                   order by startdate desc limit 8)        " +
             "                  AND r.createdDate >=  date_trunc(''month'', CURRENT_DATE) - 2 * INTERVAL ''1 year'' " +
             "                   order by f.name ) as dt where rank < 4' )  AS ct " +
             "        (\"facility\" character VARYING(50), \"previousperiod\" character VARYING(50), \"lastperiod\" character VARYING(50), \"threeperiodsago\" character VARYING(50)) " +

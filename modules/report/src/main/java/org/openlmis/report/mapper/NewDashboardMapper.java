@@ -68,7 +68,7 @@ public interface NewDashboardMapper {
     @Select("select facilityid, facility, sum(expired_quantity) totalexpired from  mv_expired_tracer_products\n" +
             "where programid = #{program} and  periodid in (select id from processing_periods \n" +
             "                                                 where enddate < current_date \n" +
-            "                                                   order by startdate desc limit 3) " +
+            "                                                   order by startdate desc limit 15) " +
             "group by facility,facilityid  " +
             "order by totalexpired desc limit 10 ")
     @Results(value = {
@@ -81,7 +81,7 @@ public interface NewDashboardMapper {
             "join processing_periods p on p.id = m.periodid " +
             " where facilityid =#{facilityId}  and periodid in (select id from processing_periods \n" +
             "                                                   where enddate < current_date \n" +
-            "                                                   order by startdate desc limit 3) " +
+            "                                                   order by startdate desc limit 15) " +
             " order by p.startdate desc ")
     List<Map<String, Object>> selectProductExpiryDetail(Long facilityId);
 }
