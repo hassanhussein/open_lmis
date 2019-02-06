@@ -781,7 +781,7 @@ function DashboardControllerFunction($scope, $timeout, RejectionCount, leafletDa
     }
 
     $scope.dynamicPerformanceChart = function (data, chartId, name, result) {
-        alert(JSON.stringify(result))
+
         var gaugeOptions =
             {
                 chart: {
