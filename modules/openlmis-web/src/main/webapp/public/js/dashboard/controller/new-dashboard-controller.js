@@ -1,28 +1,28 @@
-function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
+function DashboardControllerFunction($scope, $timeout, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
-                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity,ItemFillRate,DashboardCommodityStatus ,DashboardProductExpired,
-                                     DashboardRnrTypes,ShipmentInterfaces,VitalStates,dashboardSlidesHelp,UserInThreeMonths,
+                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity, ItemFillRate, DashboardCommodityStatus, DashboardProductExpired,
+                                     DashboardRnrTypes, ShipmentInterfaces, VitalStates, dashboardSlidesHelp, UserInThreeMonths,
                                      EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE) {
- $scope.myInterval = 3000;
- $scope.slides = [
-     {
-       image: 'http://lorempixel.com/400/200/'
-     },
-     {
-       image: 'http://lorempixel.com/400/200/food'
-     },
-     {
-       image: 'http://lorempixel.com/400/200/sports'
-     },
-     {
-       image: 'http://lorempixel.com/400/200/people'
-     }
-   ];
+    $scope.myInterval = 3000;
+    $scope.slides = [
+        {
+            image: 'http://lorempixel.com/400/200/'
+        },
+        {
+            image: 'http://lorempixel.com/400/200/food'
+        },
+        {
+            image: 'http://lorempixel.com/400/200/sports'
+        },
+        {
+            image: 'http://lorempixel.com/400/200/people'
+        }
+    ];
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     $scope.displayCurrentDate = monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
 
-   $scope.getFormatNumber= function(num) {
+    $scope.getFormatNumber = function (num) {
         return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
     $scope.onDetail = function (data) {
@@ -44,7 +44,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 
             },
             exporting: {
-                     enabled: false
+                enabled: false
             },
             credits: {
                 enabled: false
@@ -64,20 +64,20 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             }]
         }/*,
 
-            function(chart) { // on complete
-                var textX = chart.plotLeft + (chart.plotWidth  * 0.5);
-                var textY = chart.plotTop  + (chart.plotHeight * 0.5);
+         function(chart) { // on complete
+         var textX = chart.plotLeft + (chart.plotWidth  * 0.5);
+         var textY = chart.plotTop  + (chart.plotHeight * 0.5);
 
-                var span = '<span id="pieChartInfoText" style="position:absolute; text-align:center;">';
-                span += '<span style="font-size: 32px">Upper</span><br>';
-                span += '<span style="font-size: 16px">Lower</span>';
-                span += '</span>';
+         var span = '<span id="pieChartInfoText" style="position:absolute; text-align:center;">';
+         span += '<span style="font-size: 32px">Upper</span><br>';
+         span += '<span style="font-size: 16px">Lower</span>';
+         span += '</span>';
 
-                $("#addText").append(span);
-                span = $('#pieChartInfoText');
-                span.css('left', textX + (span.width() * -0.5));
-                span.css('top', textY + (span.height() * -0.5));
-            }*/);
+         $("#addText").append(span);
+         span = $('#pieChartInfoText');
+         span.css('left', textX + (span.width() * -0.5));
+         span.css('top', textY + (span.height() * -0.5));
+         }*/);
 
 
     }
@@ -94,7 +94,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         loadPieChart(chartId, dataValues, total);
     });
 
-   RejectionCount.get({}, function (data) {
+    RejectionCount.get({}, function (data) {
         var reject = _.pluck(data.rejections, 'Month');
         var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
         loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
@@ -109,7 +109,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         var value = _.pluck(data, 'Emergency');
         var valueRegular = _.pluck(data, 'Regular');
         loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
-          loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
 
     });
 
@@ -120,16 +120,16 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         var chartRegularId = 'regularSubmittedByProgram';
         var category = _.pluck(data, 'Program Name');
         var value = _.pluck(data, 'Emergency');
-          var valueRegular = _.pluck(data, 'Regular');
+        var valueRegular = _.pluck(data, 'Regular');
         loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
-         loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
 
 
     });
     GetTrendOfEmergencyOrdersSubmittedPerMonthData.get(null).then(function (data) {
 
         var chartId = 'trendOfEmergencyOrder';
-         var chartRegularId = 'trendOfRegualrOrder';
+        var chartRegularId = 'trendOfRegualrOrder';
         var category = _.pluck(data, 'ym');
         var value = _.pluck(data, 'Emergency Requisitions');
         var valueRegular = _.pluck(data, 'Regular Requisitions');
@@ -146,11 +146,11 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         console.log(data);
     });
 
-    EmergencyOrderFrequentAppearingProducts.get(function(data){
+    EmergencyOrderFrequentAppearingProducts.get(function (data) {
         $scope.emergencyOrderFrequentAppearingProducts = data.products;
     });
 
-    FacilitiesReportingThroughFEAndCE.get(function(data){
+    FacilitiesReportingThroughFEAndCE.get(function (data) {
         $scope.facilitiesReportingViaCEAndFE = data.facilities;
     });
 
@@ -160,7 +160,7 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
                 type: type
             },
             exporting: {
-                     enabled: false
+                enabled: false
             },
             title: {
                 text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
@@ -189,8 +189,8 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             },
             tooltip: {
                 /*
-                                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                */
+                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                 */
                 headerFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.key}</b></td></tr><br/>',
                 pointFormat: '<tr><td style="color:{series.color};padding:0">' + verticalTitle + ':</td>' + '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
                 footerFormat: '</table>',
@@ -713,16 +713,27 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
 
     function calculatePercentage(data) {
         var total = 0;
+        var prevTot = 0;
+        var prev2Tot = 0;
+        var pastPrevTot=0;
         angular.forEach(data, function (da, index) {
             total += da.current;
+            prevTot += da.prev;
+            prev2Tot += !utils.isNullOrUndefined(da.prevprev)?da.prevprev:da.pastprev!==null?da.pastprev:0 ;
+
         });
-        return parseInt(total / parseInt(data.length, 10), 10);
+        var average = (total + prevTot + prev2Tot) / 3;
+        var result= [
+            {name:"Three Months Ago", data:[ parseInt(prev2Tot / parseInt(data.length, 10), 10)]},
+            { name:"Previous Month", data:[(prevTot / parseInt(data.length, 10), 10)]},
+            {name:"Current Month", data:[ parseInt(total / parseInt(data.length, 10), 10)]},
+            {name:"Average", data:[ parseInt(average / parseInt(data.length, 10), 10)]}
+        ];
+
+        return result;
     }
 
-    $scope.orderFillRateByZone = {
-
-    };
-
+    $scope.orderFillRateByZone = {};
 
 
     ItemFillRate.get({
@@ -746,12 +757,12 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
         function (data) {
             $scope.reportingRate = {"zones": data.reportingRate};
             console.log(JSON.stringify(data.reportingRate));
-            $scope.dynamicGuagePerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
-            $scope.dynamicGuagePerformanceChart(data.reportingRate, '#reporting-rate-summary', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
+            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
+            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate-summary', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
 
         });
 
-   StockStatusAvailaiblity.get({
+    StockStatusAvailaiblity.get({
             zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program
@@ -760,8 +771,8 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
             $scope.stockAvailability = {"zones": data.stockStatus};
             console.log(JSON.stringify($scope.stockAvailability));
 
-            $scope.dynamicGuagePerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
-            $scope.dynamicGuagePerformanceChart($scope.stockAvailability, '#stock-availability-summary', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
+            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
+            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability-summary', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
         });
 
     function borderColor(data) {
@@ -770,78 +781,52 @@ function DashboardControllerFunction($scope,$timeout, RejectionCount, leafletDat
     }
 
     $scope.dynamicPerformanceChart = function (data, chartId, name, result) {
-
-        var gaugeOptions = {
-
-            chart: {
-                type: 'solidgauge',
-                margin: [0, 0, 0, 0],
-                backgroundColor: 'transparent',
-                exporting:false
-            },
-            exporting: {
-                     enabled: false
-            },
-            title: null,
-            yAxis: {
-                min: 0,
-                max: 100,
-                minColor: borderColor(result),
-                maxColor: borderColor(result),
-                lineWidth: 0,
-                tickWidth: 0,
-                minorTickLength: 0,
-                // minTickInterval: 500,
-                labels: {
-                    enabled: false
-                }
-            },
-            pane: {
-                size: '100%',
-                center: ['50%', '50%'],
-                startAngle: 0,
-                endAngle: 360,
-                background: {
-                    borderWidth: 20,
-                    backgroundColor: '#DBDBDB',
-                    shape: 'arch',
-                    borderColor: '#DBDBDB',
-                    outerRadius: '80%',
-                    innerRadius: '80%'
-                }
-            },
-            tooltip: {
-                enabled: true
-            },
-            plotOptions: {
-                solidgauge: {
-                    borderColor: borderColor(result),
-                    borderWidth: 18,
-                    radius: 75,
-                    innerRadius: '80%',
-                    dataLabels: {
-                        borderWidth: 0,
-                        useHTML: true,
-                        enable: true
+        alert(JSON.stringify(result))
+        var gaugeOptions =
+            {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    // categories: [
+                    //     'Three Month Ago',
+                    //     'Previous Month',
+                    //     'Current Month',
+                    //     'Average'
+                    // ],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: ''
                     }
-                }
-            },
-            series: [{
-                name: name,
-                data: [result],
-                dataLabels: {
-                    format: '<div style="Width: 30px;text-align:center"><span style="font-size:20px;color:"' + borderColor(data.ofr) + '"><br>{y}%</span></div>'
-                }
-
-            }],
-
-            credits: {
-                enabled: false
-            }
-        };
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: result
+            };
         $(chartId).highcharts(gaugeOptions);
     };
-$scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
+    $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
 
         var gaugeOptions = {
 
@@ -850,84 +835,84 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
                 margin: [0, 0, 0, 0],
                 backgroundColor: 'transparent',
                 plotBackgroundColor: null,
-                   plotBackgroundImage: null,
-                   plotBorderWidth: 0,
-                   plotShadow: false
+                plotBackgroundImage: null,
+                plotBorderWidth: 0,
+                plotShadow: false
             },
             exporting: {
-                     enabled: false
+                enabled: false
             },
             title: null,
 
 
-  pane: {
-    startAngle: -150,
-    endAngle: 150,
-    background: [{
-      backgroundColor: {
-        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-        stops: [
-          [0, '#FFF'],
-          [1, '#333']
-        ]
-      },
-      borderWidth: 0,
-      outerRadius: '109%'
-    }, {
-      backgroundColor: {
-        linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
-        stops: [
-          [0, '#333'],
-          [1, '#FFF']
-        ]
-      },
-      borderWidth: 1,
-      outerRadius: '107%'
-    }, {
-      // default background
-    }, {
-      backgroundColor: '#DDD',
-      borderWidth: 0,
-      outerRadius: '105%',
-      innerRadius: '103%'
-    }]
-  },// the value axis
-      yAxis: {
-        min: 0,
-        max: 100,
+            pane: {
+                startAngle: -150,
+                endAngle: 150,
+                background: [{
+                    backgroundColor: {
+                        linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, '#FFF'],
+                            [1, '#333']
+                        ]
+                    },
+                    borderWidth: 0,
+                    outerRadius: '109%'
+                }, {
+                    backgroundColor: {
+                        linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
+                        stops: [
+                            [0, '#333'],
+                            [1, '#FFF']
+                        ]
+                    },
+                    borderWidth: 1,
+                    outerRadius: '107%'
+                }, {
+                    // default background
+                }, {
+                    backgroundColor: '#DDD',
+                    borderWidth: 0,
+                    outerRadius: '105%',
+                    innerRadius: '103%'
+                }]
+            },// the value axis
+            yAxis: {
+                min: 0,
+                max: 100,
 
-        minorTickInterval: 'auto',
-        minorTickWidth: 1,
-        minorTickLength: 10,
-        minorTickPosition: 'inside',
-        minorTickColor: '#666',
+                minorTickInterval: 'auto',
+                minorTickWidth: 1,
+                minorTickLength: 10,
+                minorTickPosition: 'inside',
+                minorTickColor: '#666',
 
-        tickPixelInterval: 30,
-        tickWidth: 2,
-        tickPosition: 'inside',
-        tickLength: 10,
-        tickColor: '#666',
-        labels: {
-          step: 2,
-          rotation: 'auto'
-        },
-        title: {
-          text: 'rate'
-        },
-        plotBands: [{
-          from: 0,
-          to: 50,
-          color: '#DF5353' // green
-        }, {
-          from: 50,
-          to: 90,
-          color: '#DDDF0D' // yellow
-        }, {
-          from: 90,
-          to: 100,
-          color: '#55BF3B' // red
-        }]
-      },
+                tickPixelInterval: 30,
+                tickWidth: 2,
+                tickPosition: 'inside',
+                tickLength: 10,
+                tickColor: '#666',
+                labels: {
+                    step: 2,
+                    rotation: 'auto'
+                },
+                title: {
+                    text: 'rate'
+                },
+                plotBands: [{
+                    from: 0,
+                    to: 50,
+                    color: '#DF5353' // green
+                }, {
+                    from: 50,
+                    to: 90,
+                    color: '#DDDF0D' // yellow
+                }, {
+                    from: 90,
+                    to: 100,
+                    color: '#55BF3B' // red
+                }]
+            },
             tooltip: {
                 enabled: true
             },
@@ -1002,10 +987,10 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
             legend: {},
 
             /*   colorAxis: {
-                   min: 0,
-                   minColor: '#FF0000',
-                   maxColor: '#52C552'
-               },*/
+             min: 0,
+             minColor: '#FF0000',
+             maxColor: '#52C552'
+             },*/
             colorAxis: {
                 dataClasses: [{
                     from: 0,
@@ -1036,7 +1021,7 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
                 map: {
                     states: {
                         /* hover: {
-                             color: '#EEDD66'
+                         color: '#EEDD66'
                          }*/
                     }
                 }
@@ -1062,7 +1047,7 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
         period: parseInt(115, 10),
         program: parseInt(3, 10)
     };
-   // $scope.loadStockStatusByLocation(defaultParam);
+    // $scope.loadStockStatusByLocation(defaultParam);
     $scope.rnrStatusPieChartOptionFunction = function () {
 
         $scope.rnRStatusPieChartOption = {
@@ -1118,13 +1103,13 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
             type: 'areaspline'
         },
         exporting: {
-                 enabled: false
+            enabled: false
         },
         title: {
             text: 'Lab Equipment Status'
         },
-        credits:{
-            enabled:false
+        credits: {
+            enabled: false
         },
 
         xAxis: {
@@ -1137,7 +1122,7 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
             },
             labels: {
                 formatter: function () {
-                    return this.value ;
+                    return this.value;
                 }
             }
         },
@@ -1179,11 +1164,12 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
 //    commodities, most stocked out and understocked over regions
 
 
- DashboardProductExpired.get({           zoneId: $scope.filter.zoneId,
-                                         periodId: $scope.filter.period,
-                                         programId: $scope.filter.program
-                                     },function (data) {
-                                     var expiredProducts=data.expiredProducts;
+    DashboardProductExpired.get({
+        zoneId: $scope.filter.zoneId,
+        periodId: $scope.filter.period,
+        programId: $scope.filter.program
+    }, function (data) {
+        var expiredProducts = data.expiredProducts;
         console.log(expiredProducts);
 
         var chartId = 'expiredProductsId';
@@ -1195,142 +1181,145 @@ $scope.dynamicGuagePerformanceChart = function (data, chartId, name, result) {
     });
 //
 
-DashboardRnrTypes.get({           zoneId: $scope.filter.zoneId,
-                                         periodId: $scope.filter.period,
-                                         programId: $scope.filter.program
-                                     },function (data) {
-                                     var  rnrTypes=data.rnrTypes;
+    DashboardRnrTypes.get({
+        zoneId: $scope.filter.zoneId,
+        periodId: $scope.filter.period,
+        programId: $scope.filter.program
+    }, function (data) {
+        var rnrTypes = data.rnrTypes;
         console.log(rnrTypes);
-            var periods = _.pluck(rnrTypes, 'period');
-            var series = [];
-           var emergencyRnrs=_.pluck(rnrTypes, 'emergency');
-            var regularRnrs=_.pluck(rnrTypes, 'regular');
-             var percentages=_.pluck(rnrTypes, 'percent');
-             var emergencySeries= {
-             type:'spline',
+        var periods = _.pluck(rnrTypes, 'period');
+        var series = [];
+        var emergencyRnrs = _.pluck(rnrTypes, 'emergency');
+        var regularRnrs = _.pluck(rnrTypes, 'regular');
+        var percentages = _.pluck(rnrTypes, 'percent');
+        var emergencySeries = {
+            type: 'spline',
 
-             name:'Emergency',
-             data:emergencyRnrs
-             };
-var regularSeries= {
-             type:'spline',
+            name: 'Emergency',
+            data: emergencyRnrs
+        };
+        var regularSeries = {
+            type: 'spline',
 
-             name:'Regular',
-             data:regularRnrs
-             };
-             var percentSeries={
-              type:'column',
-               yAxis: 1,
-                          name:'Percent',
-                          data:percentages
-             };
+            name: 'Regular',
+            data: regularRnrs
+        };
+        var percentSeries = {
+            type: 'column',
+            yAxis: 1,
+            name: 'Percent',
+            data: percentages
+        };
 
-series.push(regularSeries);
-series.push(emergencySeries);
-series.push(percentSeries);
-    Highcharts.chart('regularEmergencyType', {
+        series.push(regularSeries);
+        series.push(emergencySeries);
+        series.push(percentSeries);
+        Highcharts.chart('regularEmergencyType', {
 
-      chart: {
-        type: 'line',
-        zoomType: 'xy'
-      },
-      exporting: {
-               enabled: false
-      },
-      title: {
-        text: ''
-      },
-      subtitle: {
-        text: ''
-      },
-      xAxis: {
-        categories:periods
-      },
-     yAxis: [{ // Primary yAxis [{ // Primary yAxis
-          labels: {
-            format: '{value}',
-            style: {
-              color: Highcharts.getOptions().colors[2]
-            }
-          },
-          title: {
-            text: 'Quantity',
-            style: {
-              color: Highcharts.getOptions().colors[2]
-            }
-          },
-          opposite: false
+            chart: {
+                type: 'line',
+                zoomType: 'xy'
+            },
+            exporting: {
+                enabled: false
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: periods
+            },
+            yAxis: [{ // Primary yAxis [{ // Primary yAxis
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: Highcharts.getOptions().colors[2]
+                    }
+                },
+                title: {
+                    text: 'Quantity',
+                    style: {
+                        color: Highcharts.getOptions().colors[2]
+                    }
+                },
+                opposite: false
 
-        }, { // Secondary yAxis
-          gridLineWidth: 0,
-          title: {
-            text: 'Percentage',
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
+            }, { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Percentage',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
 
-          },
-          labels: {
-            format: '{value} %',
-            style: {
-              color: Highcharts.getOptions().colors[0]
-            }
-          },
-           opposite: true
+                },
+                labels: {
+                    format: '{value} %',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                opposite: true
 
-        }],
-        tooltip: {
-          shared: true
-        },
-      plotOptions: {
-        line: {
-          dataLabels: {
-            enabled: true
-          },
-          enableMouseTracking: false
-        }
-      },
-      series: series
+            }],
+            tooltip: {
+                shared: true
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: series
+        });
+
     });
+    VitalStates.get({
+        zoneId: $scope.filter.zoneId,
+        periodId: $scope.filter.period,
+        programId: $scope.filter.program
+    }, function (data) {
+        $scope.vitalStatuses = data.vitalStatuses;
 
-     });
-     VitalStates.get({           zoneId: $scope.filter.zoneId,
-                                              periodId: $scope.filter.period,
-                                              programId: $scope.filter.program
-                                          },function (data) {
-                                $scope.vitalStatuses=data.vitalStatuses;
-
-             });
+    });
 
 //     userInThreeMonths
 
-    UserInThreeMonths.get({           zoneId: $scope.filter.zoneId,
+    UserInThreeMonths.get({
+        zoneId: $scope.filter.zoneId,
         periodId: $scope.filter.period,
         programId: $scope.filter.program
-    },function (data) {
-        $scope.usersThreeMonths=data.users;
+    }, function (data) {
+        $scope.usersThreeMonths = data.users;
 
 
     });
-$(document).ready(function(){
-    // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-    $('.modal-trigger').leanModal();
-  });
+    $(document).ready(function () {
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal-trigger').leanModal();
+    });
 
-    $scope.getFormatNumber= function(num) {
+    $scope.getFormatNumber = function (num) {
         return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
 
     $scope.dashboardHelps = dashboardSlidesHelp;
-    $scope.setHelpContentKey=function(keyValue){
-    $scope.helpContent=$scope.dashboardHelps[keyValue];
+    $scope.setHelpContentKey = function (keyValue) {
+        $scope.helpContent = $scope.dashboardHelps[keyValue];
 
 
     };
 }
 
 DashboardControllerFunction.resolve = {
-  dashboardSlidesHelp: function ($q, $timeout, HelpContentByKey, messageService) {
+    dashboardSlidesHelp: function ($q, $timeout, HelpContentByKey, messageService) {
 
         var deferred = $q.defer();
         var helps = {};
@@ -1375,16 +1364,16 @@ DashboardControllerFunction.resolve = {
             });
             HelpContentByKey.get({content_key: 'Orders send to MSL'}, function (data) {
 
-                            if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                helps.orderSentToMslHelp = data.siteContent;
+                    helps.orderSentToMslHelp = data.siteContent;
 
-                            } else {
+                } else {
 
-                                helps.orderSentToMslHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.orderSentToMslHelp = {htmlContent: messageService.get('content.help.default')};
 
-                            }
-                        });
+                }
+            });
             HelpContentByKey.get({content_key: 'Shipment by MSL'}, function (data) {
 
                 if (!isUndefined(data.siteContent)) {
@@ -1435,268 +1424,268 @@ DashboardControllerFunction.resolve = {
             });
             HelpContentByKey.get({content_key: 'Order Fill Rate'}, function (data) {
 
-                            if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                helps.orderFillRateHelp = data.siteContent;
+                    helps.orderFillRateHelp = data.siteContent;
 
-                            } else {
+                } else {
 
-                                helps.orderFillRateHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.orderFillRateHelp = {htmlContent: messageService.get('content.help.default')};
 
-                            }
-                        });
+                }
+            });
 
             HelpContentByKey.get({content_key: 'Stock Availability'}, function (data) {
 
-                                                    if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                        helps.stockAvailabilityHelp = data.siteContent;
+                    helps.stockAvailabilityHelp = data.siteContent;
 
-                                                    } else {
+                } else {
 
-                                                        helps.stockAvailabilityHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.stockAvailabilityHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                    }
-                                                });
+                }
+            });
             HelpContentByKey.get({content_key: 'Expired Products'}, function (data) {
 
-                                if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                    helps.expiredHelp = data.siteContent;
+                    helps.expiredHelp = data.siteContent;
 
-                                } else {
+                } else {
 
-                                    helps.expiredHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.expiredHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                }
-                            });
+                }
+            });
             HelpContentByKey.get({content_key: 'Transmission Failure'}, function (data) {
 
-                                if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                    helps.transmissionHelp = data.siteContent;
+                    helps.transmissionHelp = data.siteContent;
 
-                                } else {
+                } else {
 
-                                    helps.transmissionHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.transmissionHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                }
-                            });
+                }
+            });
             HelpContentByKey.get({content_key: 'MOS'}, function (data) {
 
-                                     if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                         helps.mosHelp = data.siteContent;
+                    helps.mosHelp = data.siteContent;
 
-                                     } else {
+                } else {
 
-                                         helps.mosHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.mosHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                     }
-                                 });
+                }
+            });
 
-           HelpContentByKey.get({content_key: 'AMC'}, function (data) {
+            HelpContentByKey.get({content_key: 'AMC'}, function (data) {
 
-                                           if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                               helps.amcHelp = data.siteContent;
+                    helps.amcHelp = data.siteContent;
 
-                                           } else {
+                } else {
 
-                                               helps.amcHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.amcHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                           }
-                                       });
-           HelpContentByKey.get({content_key: 'Stock on Hand'}, function (data) {
+                }
+            });
+            HelpContentByKey.get({content_key: 'Stock on Hand'}, function (data) {
 
-                                               if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                   helps.stockOnHandHelp = data.siteContent;
+                    helps.stockOnHandHelp = data.siteContent;
 
-                                               } else {
+                } else {
 
-                                                   helps.stockOnHandHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.stockOnHandHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                               }
-                                           });
-           HelpContentByKey.get({content_key: 'Over Stocked'}, function (data) {
+                }
+            });
+            HelpContentByKey.get({content_key: 'Over Stocked'}, function (data) {
 
-                                                              if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                  helps.overStockedHelp = data.siteContent;
+                    helps.overStockedHelp = data.siteContent;
 
-                                                              } else {
+                } else {
 
-                                                                  helps.overStockedHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.overStockedHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                              }
-                                                          });
+                }
+            });
 
 
-          HelpContentByKey.get({content_key: 'Under Stocked'}, function (data) {
+            HelpContentByKey.get({content_key: 'Under Stocked'}, function (data) {
 
-                                                            if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                helps.underStocked = data.siteContent;
+                    helps.underStocked = data.siteContent;
 
-                                                            } else {
+                } else {
 
-                                                                helps.underStocked = {htmlContent: messageService.get('content.help.default')};
+                    helps.underStocked = {htmlContent: messageService.get('content.help.default')};
 
-                                                            }
-                                                        });
+                }
+            });
 
-          HelpContentByKey.get({content_key: 'MAX Stock Level'}, function (data) {
+            HelpContentByKey.get({content_key: 'MAX Stock Level'}, function (data) {
 
-                                                             if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                 helps.maxStockLevel = data.siteContent;
+                    helps.maxStockLevel = data.siteContent;
 
-                                                             } else {
+                } else {
 
-                                                                 helps.maxStockLevel = {htmlContent: messageService.get('content.help.default')};
+                    helps.maxStockLevel = {htmlContent: messageService.get('content.help.default')};
 
-                                                             }
-                                                         });
-           HelpContentByKey.get({content_key: 'Reporting Rate'}, function (data) {
+                }
+            });
+            HelpContentByKey.get({content_key: 'Reporting Rate'}, function (data) {
 
-                                                                          if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                              helps.reportingRate = data.siteContent;
+                    helps.reportingRate = data.siteContent;
 
-                                                                          } else {
+                } else {
 
-                                                                              helps.reportingRate = {htmlContent: messageService.get('content.help.default')};
+                    helps.reportingRate = {htmlContent: messageService.get('content.help.default')};
 
-                                                                          }
-                                                                      });
+                }
+            });
 
-          HelpContentByKey.get({content_key: 'R&R Status Summary'}, function (data) {
+            HelpContentByKey.get({content_key: 'R&R Status Summary'}, function (data) {
 
-                                                                          if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                              helps.statusSummary = data.siteContent;
+                    helps.statusSummary = data.siteContent;
 
-                                                                          } else {
+                } else {
 
-                                                                              helps.statusSummary = {htmlContent: messageService.get('content.help.default')};
+                    helps.statusSummary = {htmlContent: messageService.get('content.help.default')};
 
-                                                                          }
-                                                                      });
+                }
+            });
 //                                                                      Provinces with Most Emergency Orders (Past 3 Months)
-          HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3 Months)'}, function (data) {
+            HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3 Months)'}, function (data) {
 
-                                                                          if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                              helps.provincesWithMostEmergencyHelp = data.siteContent;
+                    helps.provincesWithMostEmergencyHelp = data.siteContent;
 
-                                                                          } else {
+                } else {
 
-                                                                              helps.provincesWithMostEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.provincesWithMostEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                          }
-                                                                      });
+                }
+            });
 
-          HelpContentByKey.get({content_key: 'Trend of Emergency Orders Submitted Per Month'}, function (data) {
+            HelpContentByKey.get({content_key: 'Trend of Emergency Orders Submitted Per Month'}, function (data) {
 
-                                                                           if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                               helps.trendOfEmergencyHelp = data.siteContent;
+                    helps.trendOfEmergencyHelp = data.siteContent;
 
-                                                                           } else {
+                } else {
 
-                                                                               helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                           }
-                                                                       });
+                }
+            });
 
-          HelpContentByKey.get({content_key: 'Emergency Order By Program (Past 1 Month)'}, function (data) {
+            HelpContentByKey.get({content_key: 'Emergency Order By Program (Past 1 Month)'}, function (data) {
 
-                                                                           if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                               helps.emergencyByProgramHelp = data.siteContent;
+                    helps.emergencyByProgramHelp = data.siteContent;
 
-                                                                           } else {
+                } else {
 
-                                                                               helps.emergencyByProgramHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.emergencyByProgramHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                           }
-                                                                       });
-          HelpContentByKey.get({content_key: 'RnR Rejection Trends'}, function (data) {
+                }
+            });
+            HelpContentByKey.get({content_key: 'RnR Rejection Trends'}, function (data) {
 
-                                                                                                                                                                         if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                                                                                                                             helps.rnrRejectionTrenhelp = data.siteContent;
+                    helps.rnrRejectionTrenhelp = data.siteContent;
 
-                                                                                                                                                                         } else {
+                } else {
 
-                                                                                                                                                                             helps.rnrRejectionTrenhelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.rnrRejectionTrenhelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                                                                                                                         }
-                                                                                                                                                                     });
+                }
+            });
             HelpContentByKey.get({content_key: 'Regular & Emergency Requisitions'}, function (data) {
 
-                                                                                                if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                                                    helps.regularEmergencyRequisitionhelp = data.siteContent;
+                    helps.regularEmergencyRequisitionhelp = data.siteContent;
 
-                                                                                                } else {
+                } else {
 
-                                                                                                    helps.rnrRejectionTrendelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.rnrRejectionTrendelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                                                }
-                                                                                            });
+                }
+            });
 
-              HelpContentByKey.get({content_key: 'Percentage of Emergency Orders by Program (all time)'}, function (data) {
-                                                                                                                                                                                          if (!isUndefined(data.siteContent)) {
+            HelpContentByKey.get({content_key: 'Percentage of Emergency Orders by Program (all time)'}, function (data) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                                                                                                                                                helps.percentageOfEmergencyByProgramhelp = data.siteContent;
+                    helps.percentageOfEmergencyByProgramhelp = data.siteContent;
 
-                                                                                                                                                                                            } else {
+                } else {
 
-                                                                                                                                                                                                helps.percentageOfEmergencyByProgramhelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.percentageOfEmergencyByProgramhelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                                                                                                                                            }
-                                                                                                                                                                                        });
+                }
+            });
 
- HelpContentByKey.get({content_key: 'Percentage of Regular Orders by Program (all time)'}, function (data) {
+            HelpContentByKey.get({content_key: 'Percentage of Regular Orders by Program (all time)'}, function (data) {
 
-                                                                          if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                              helps.percentageofRegularOrdersHelp = data.siteContent;
+                    helps.percentageofRegularOrdersHelp = data.siteContent;
 
-                                                                          } else {
+                } else {
 
-                                                                              helps.percentageofRegularOrdersHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.percentageofRegularOrdersHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                          }
-                                                                      });
+                }
+            });
 
-          HelpContentByKey.get({content_key: 'Trend of Regular Orders Submitted Per Month'}, function (data) {
+            HelpContentByKey.get({content_key: 'Trend of Regular Orders Submitted Per Month'}, function (data) {
 
-                                                                           if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                               helps.trendOfReHelp = data.siteContent;
+                    helps.trendOfReHelp = data.siteContent;
 
-                                                                           } else {
+                } else {
 
-                                                                               helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                           }
-                                                                       });
+                }
+            });
 
-          HelpContentByKey.get({content_key: 'Regular Order By Program (Past 1 Month)'}, function (data) {
+            HelpContentByKey.get({content_key: 'Regular Order By Program (Past 1 Month)'}, function (data) {
 
-                                                                           if (!isUndefined(data.siteContent)) {
+                if (!isUndefined(data.siteContent)) {
 
-                                                                               helps.regularByProgramHelp = data.siteContent;
+                    helps.regularByProgramHelp = data.siteContent;
 
-                                                                           } else {
+                } else {
 
-                                                                               helps.regularByProgramHelp = {htmlContent: messageService.get('content.help.default')};
+                    helps.regularByProgramHelp = {htmlContent: messageService.get('content.help.default')};
 
-                                                                           }
-                                                                       });
+                }
+            });
 
 
             deferred.resolve(helps);
