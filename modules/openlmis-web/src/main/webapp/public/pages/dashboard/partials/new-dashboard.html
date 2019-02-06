@@ -1108,9 +1108,9 @@ background:#fff;
                                                 <tbody>
                                                 <tr ng-repeat="facilities in facilitiesReportingViaCEAndFE">
                                                     <td>{{facilities.facility}}</td>
-                                                    <td style="text-align : center;">{{facilities.previousperiod}}</td>
-                                                    <td style="text-align : center;">{{facilities.lastperiod}}</td>
-                                                    <td style="text-align : center;">{{facilities.threeperiodsago}}</td>
+                                                    <td style="text-align : center;">{{facilities.previousperiod || '-'}}</td>
+                                                    <td style="text-align : center;">{{facilities.lastperiod || '-'}}</td>
+                                                    <td style="text-align : center;">{{facilities.threeperiodsago || '-'}}</td>
                                                 </tr>
                                                 </tbody>
                                             </table>
