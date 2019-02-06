@@ -22,17 +22,16 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class StockImbalanceQueryBuilder {
     public static String getQuery(Map params) {
-
-
+        String sql = "";
         StockImbalanceReportParam filter = (StockImbalanceReportParam) params.get("filterCriteria");
         Map sortCriteria = (Map) params.get("SortCriteria");
         BEGIN();
         SELECT("distinct supplyingFacility, facilityTypeName facilityType,  facility, facilityCode, d.district_name districtName, d.region_name as regionName, d.zone_name zoneName, product, productCode,  stockInHand as physicalCount,  amc,  mos months,  required, ordered as orderQuantity, " +
                 "status");
         FROM("  vw_stock_status " +
-                        " join facilities f on f.id = facility_id " +
-                        " join vw_districts d on d.district_id = f.geographicZoneId " +
-                        "join facility_types ft on f.typeid=ft.id "
+                " join facilities f on f.id = facility_id " +
+                " join vw_districts d on d.district_id = f.geographicZoneId " +
+                "join facility_types ft on f.typeid=ft.id "
         );
         WHERE("status in ('" + filter.getStatus().replaceAll(",", "','") + "')");
         WHERE(rnrStatusFilteredBy("req_status", filter.getAcceptedRnrStatuses()));
@@ -59,7 +58,8 @@ public class StockImbalanceQueryBuilder {
             WHERE(geoZoneIsFilteredBy("d"));
         }
         ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockImbalanceReport.class, "supplyingFacility asc, facility asc, product asc"));
-        return SQL() + " limit 20000";
+        sql=SQL() + " limit 20000";
+        return sql;
     }
 
     public static String getReportQuery(Map params) {
@@ -79,7 +79,7 @@ public class StockImbalanceQueryBuilder {
                 "product, productCode,  \n" +
                 "a.stockInHand as physicalCount,\n" +
                 "a.amc,  \n" +
-                "a.processing_period_name as period, \n"+
+                "a.processing_period_name as period, \n" +
                 "a.mos months,  \n" +
                 "a.required, \n" +
                 "a.ordered as orderQuantity, \n" +
