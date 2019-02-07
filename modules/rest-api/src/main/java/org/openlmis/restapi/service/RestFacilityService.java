@@ -57,7 +57,7 @@ public class RestFacilityService {
        FacilityType facilityType = facilityTypeService.getFacilityTypeByMappedCode(dto.getFacilityTypeCode());
        FacilityOperator facilityOperator = facilityTypeService.getFacilityTypeByMappedOwner(dto.getOwnershipCode());
 
-       Facility facility1 = facilityService.getFacilityByCode(dto.getCode());
+       Facility facility1 = facilityService.getByCodeFor(dto.getCode());
        Facility newFac = new Facility();
        newFac.setName(dto.getName());
        newFac.setActive(true);
