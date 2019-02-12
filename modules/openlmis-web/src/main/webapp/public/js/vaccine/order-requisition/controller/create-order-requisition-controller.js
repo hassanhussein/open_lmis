@@ -126,7 +126,7 @@ function CreateVaccineOrderRequisition($scope, $dialog,$routeParams, $window, re
                         var url = '/vaccine/orderRequisition/' + data.report.id + '/print';
                         printWindow.location.href=url;
                         $scope.disableButton = true;
-                        $window.location = '/public/pages/vaccine/dashboard/index.html#/dashboard';
+                        $window.location = '/public/pages/vaccine/dash/index3.html#/home';
                     });
                     printWindow= $window.open('about:blank','_blank');
                     $scope.message = "label.form.Submitted.Successfully";
@@ -154,7 +154,7 @@ function CreateVaccineOrderRequisition($scope, $dialog,$routeParams, $window, re
             var url = '/vaccine/orderRequisition/' + data.report.id + '/print';
             printWindow.location.href=url;
             $scope.message = "label.form.Submitted.Successfully";
-            $window.location = '/public/pages/vaccine/dashboard/index.html#/dashboard';
+            $window.location = '/public/pages/vaccine/dash/index3.html#/home';
         });
         printWindow= $window.open('about:blank','_blank');
 
@@ -162,7 +162,7 @@ function CreateVaccineOrderRequisition($scope, $dialog,$routeParams, $window, re
     };
 
     $scope.cancel = function () {
-        $window.location = '/public/pages/vaccine/dashboard/index.html#/dashboard';
+        $window.location = '/public/pages/vaccine/dash/index3.html#/home';
     };
 
     $scope.viewOrderPrint = function () {

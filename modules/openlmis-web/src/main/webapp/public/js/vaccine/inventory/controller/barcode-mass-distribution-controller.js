@@ -772,7 +772,7 @@ function BarcodeMassDistributionController($scope,$location, $document,$window, 
     };
 
     $scope.cancel=function(){
-        $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+        $window.location='/public/pages/vaccine/dash/index3.html#/home';
     };
 
     $scope.setSelectedFacility=function(facility)
