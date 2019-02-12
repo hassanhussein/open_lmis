@@ -57,6 +57,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
                 pagesWithErrors.push(Math.ceil((lineItem + 1) / pageSize));
             });
             return _.uniq(pagesWithErrors, true);
+
         }
 
         function getFullSupplyPagesWithError() {
