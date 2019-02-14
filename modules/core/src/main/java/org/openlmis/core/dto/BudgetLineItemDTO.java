@@ -42,6 +42,8 @@ public class BudgetLineItemDTO {
   private String periodStartDate;
   private String allocatedBudget;
   private String notes;
+  private String fundSourceCode;
+  private Boolean additive;
 
   private static Logger logger = LoggerFactory.getLogger(BudgetLineItemDTO.class);
 
@@ -66,4 +68,6 @@ public class BudgetLineItemDTO {
     if (isBlank(this.facilityCode) || isBlank(this.programCode) || isBlank(this.allocatedBudget) || isBlank(this.periodStartDate))
       throw new DataException(new OpenLmisMessage("error.mandatory.fields.missing"));
   }
+
+
 }
