@@ -11,10 +11,9 @@
 
 package org.openlmis.core.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.*;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -22,18 +21,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  * BudgetLineItemDTO is Data transfer object for BudgetLineItems, consolidates user provided information like
  * facilityCode, programCode etc., to be later referenced using Ids in BudgetLineItem.
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonSerialize(include = NON_NULL)
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 public class BudgetLineItemDTO {
 
@@ -44,6 +49,13 @@ public class BudgetLineItemDTO {
   private String notes;
   private String fundSourceCode;
   private Boolean additive;
+  private String periodDate;
+  private Long periodId;
+  private Long facilityId;
+  private Long budgetFileId;
+  private Long budgetId;
+
+  private Long programId;
 
   private static Logger logger = LoggerFactory.getLogger(BudgetLineItemDTO.class);
 
@@ -68,6 +80,5 @@ public class BudgetLineItemDTO {
     if (isBlank(this.facilityCode) || isBlank(this.programCode) || isBlank(this.allocatedBudget) || isBlank(this.periodStartDate))
       throw new DataException(new OpenLmisMessage("error.mandatory.fields.missing"));
   }
-
 
 }

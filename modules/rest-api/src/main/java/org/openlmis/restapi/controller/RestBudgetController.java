@@ -3,11 +3,11 @@ package org.openlmis.restapi.controller;
 import io.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.dto.BudgetDTO;
+import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.pod.domain.OrderPOD;
+import org.openlmis.core.service.SourceOfFundService;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestBudgetService;
-import org.openlmis.restapi.service.RestPODService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,15 +34,36 @@ public class RestBudgetController extends BaseController{
     @Autowired
     private RestBudgetService restBudgetService;
 
+    @Autowired
+    private SourceOfFundService fundService;
+
 
     @RequestMapping(value = "/rest-api/budget/{facilityCode}/budget", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> saveBudget(@RequestBody BudgetDTO budgetDTO, @PathVariable String facilityCode, Principal principal) {
         try {
-            restBudgetService.updateBudget(budgetDTO, loggedInUserId(principal),facilityCode);
+            restBudgetService.saveBudget(budgetDTO, loggedInUserId(principal),facilityCode);
             return RestResponse.success("message.success.budget.updated");
         } catch (DataException e) {
             return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
     }
+
+    @RequestMapping(value = "/rest-api/budget/service-delivery-point", method = POST, headers = ACCEPT_JSON)
+    public BudgetDTO saveBudgetReport(@RequestBody BudgetDTO budget, Principal principal) {
+        restBudgetService.updateBudget(budget, loggedInUserId(principal));
+        return budget;
+    }
+
+    @RequestMapping(value = "/rest-api/sdp/fund-sources", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> fundSource(@RequestBody SourceOfFundDTO fund, Principal principal) {
+        try {
+            fundService.saveSDPFund(fund, loggedInUserId(principal));
+            return RestResponse.success("message.success.budget.updated");
+        } catch (DataException e) {
+            return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+    }
+
+
 
 }

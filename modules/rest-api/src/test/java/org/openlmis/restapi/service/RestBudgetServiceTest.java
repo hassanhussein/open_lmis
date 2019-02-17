@@ -42,7 +42,8 @@ public class RestBudgetServiceTest {
         String facilityCode = "100L";
 
 
-        BudgetLineItemDTO lineItemDTO = new BudgetLineItemDTO("", "P10", "10-12-2013", "32.67", "Notes","Test12",true);
+        BudgetLineItemDTO lineItemDTO = new BudgetLineItemDTO("", "P10", "10-12-2013", "32.67", "Notes","Test12",true,
+                "123",1L,2L,3L,4L,5L);
 
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("error.mandatory.fields.missing");

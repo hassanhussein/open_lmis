@@ -10,10 +10,18 @@
 package org.openlmis.core.repository;
 
 import org.openlmis.core.domain.BudgetLineItem;
+import org.openlmis.core.dto.BudgetDTO;
+import org.openlmis.core.dto.BudgetLineItemDTO;
+import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.BudgetLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
+
+import java.math.BigDecimal;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * BudgetLineItemRepository is Repository class for BudgetLineItem related database operations.
@@ -22,8 +30,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class BudgetLineItemRepository {
 
+  private static final String ERROR_MISSED_FIELD_VALUE = "0";
   @Autowired
   BudgetLineItemMapper mapper;
+
+  @Autowired
+  ELMISInterfaceRepository interfaceRepository;
+  Map<String, OpenLmisMessage> errors = null;
 
   public void save(BudgetLineItem budgetLineItem) {
     try {
@@ -35,5 +48,39 @@ public class BudgetLineItemRepository {
 
   public BudgetLineItem get(Long facilityId, Long programId, Long periodId) {
     return mapper.get(facilityId, programId, periodId);
+  }
+
+    public BudgetDTO getExistingBudget(Long facilityId) {
+    return mapper.getExistingBudget(facilityId);
+    }
+
+  public void insertBudget(BudgetDTO budgetDTO) {
+      mapper.insertBudget(budgetDTO);
+      mapper.deleteBudgetLineItems(budgetDTO.getId());
+      saveLineItem(budgetDTO);
+  }
+
+  private void saveLineItem(BudgetDTO budgetDTO) {
+
+      for (BudgetLineItemDTO lineItem  : budgetDTO.getLineItem()) {
+        int leftLimit = 1;
+        int rightLimit = 3;
+        int generatedInteger = leftLimit + (int) (new Random().nextFloat() * (rightLimit - leftLimit));
+
+        lineItem.setProgramId(1L);
+        lineItem.setPeriodId((long) generatedInteger);
+        lineItem.setBudgetFileId(1018L);
+        lineItem.setPeriodDate(budgetDTO.getReceivedDate());
+        lineItem.setBudgetId(budgetDTO.getId());
+        lineItem.setFacilityId(budgetDTO.getFacilityId());
+        mapper.insertBudgetLineItem(lineItem);
+      }
+
+  }
+
+  public void updateBudget(BudgetDTO budgetDTO) {
+    mapper.updateBudget(budgetDTO);
+    mapper.deleteBudgetLineItems(budgetDTO.getId());
+    saveLineItem(budgetDTO);
   }
 }
