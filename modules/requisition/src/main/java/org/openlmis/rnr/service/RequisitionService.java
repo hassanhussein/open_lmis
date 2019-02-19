@@ -12,6 +12,7 @@ import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.core.dto.RejectionReasonDTO;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
@@ -920,6 +921,14 @@ public class RequisitionService {
   }
   public void updateBySourceId(String sourceId){
         requisitionRepository.updateBySourceId(sourceId);
+  }
+
+  public void saveUploadedReason(RejectionReasonDTO dto){
+     if (dto.getId() == null){
+       requisitionRepository.insertUploaded(dto);
+     }else
+       requisitionRepository.updateUploaded(dto);
+
   }
 
 }
