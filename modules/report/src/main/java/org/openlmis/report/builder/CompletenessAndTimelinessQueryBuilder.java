@@ -129,8 +129,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                                AND nonreporting.id = c.priod_id  \n" +
                 "                                                                order by 1,2,4; ";
 
-System.out.println(" the quer "+ sql
-);
+
         return sql;
     }
 
@@ -155,7 +154,7 @@ System.out.println(" the quer "+ sql
                 "\twhere   ps.startdate::date <='" + params.getPeriodStart() + "'::date and  ps.programid= "+ params.getProgram() +"::int  " +
                 "\tand pp.startdate::date >='" + params.getPeriodStart() + "'::date and pp.enddate::date <=   '" + params.getPeriodEnd() + "'::date" +
                 ")," +
-                "with completeness_with_reporting_periods as ( \n" +
+                " completeness_with_reporting_periods as ( \n" +
                 "                  select     \n" +
                 "                  a.region_name,    \n" +
                 "                  a.district_name,   \n" +
