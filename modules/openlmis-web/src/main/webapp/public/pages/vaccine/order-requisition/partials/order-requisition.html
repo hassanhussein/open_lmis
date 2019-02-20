@@ -52,8 +52,14 @@
 </style>
 
 
-<h2 id="podPageTitle"><span openlmis-message="label.title.order.requisition"></span> <span
-        ng-bind="order.programName"></span></h2>
+<h2 id="podPageTitle"><span openlmis-message="label.title.order.requisition"></span><span
+        ng-bind="order.programName"></span>
+<span class="pull-right">
+    <input id="printButton" type="button" class="btn btn-primary submit-button"
+           ng-click="print(report.id)" openlmis-message="button.print"/>
+
+</span>
+</h2>
 
 <ng-include src="'/public/pages/vaccine/order-requisition/partials/header.html'"></ng-include>
 <div class="clearfix"></div>
@@ -150,7 +156,7 @@
                     <span ng-hide="viewOrder">
                           <input id="submitButton" type="button" class="btn btn-primary submit-button"
                                  ng-click="submit()"
-                                 openlmis-message="button.save.and.print" ng-disabled="selectedType==1"/>
+                                 openlmis-message="button.submit" ng-disabled="selectedType==1"/>
                     </span>
 
                      <span ng-show="viewOrder">

@@ -237,6 +237,7 @@ function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $root
     };
 
     $scope.distributeToFacility = function (row) {
+    console.log(row);
 
         $window.location = '/public/pages/vaccine/inventory/stock-movement/index.html#/stock-movement-view/' + row.programId + '/' + row.periodId + '/' + row.facilityId + '/' + row.facilityName + '/' + row.id;
 

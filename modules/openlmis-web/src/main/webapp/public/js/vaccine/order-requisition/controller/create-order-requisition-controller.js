@@ -113,7 +113,6 @@ function CreateVaccineOrderRequisition($scope, $dialog,$routeParams, $window, re
     };
 
     $scope.submit = function () {
-        var printWindow;
         if ($scope.report.emergency === true) {
             $scope.orderModal = true;
         } else {
@@ -123,12 +122,9 @@ function CreateVaccineOrderRequisition($scope, $dialog,$routeParams, $window, re
                 if (result) {
 
                     VaccineOrderRequisitionSubmit.update($scope.report, function (data) {
-                        var url = '/vaccine/orderRequisition/' + data.report.id + '/print';
-                        printWindow.location.href=url;
                         $scope.disableButton = true;
                         $window.location = '/public/pages/vaccine/dash/index3.html#/home';
                     });
-                    printWindow= $window.open('about:blank','_blank');
                     $scope.message = "label.form.Submitted.Successfully";
 
                 }

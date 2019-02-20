@@ -129,6 +129,7 @@ function newVaccineOrderRequisitionController($scope,StockCards,$rootScope,setti
 
 
                     if(facilityTypeCode === rFacilityTypeCode){
+                    console.log(rFacilityTypeCode);
                             $scope.showMessage = true;
 
                             $scope.message = "Your Previous Requisition Submitted On " + lastReport.orderDate + "" +

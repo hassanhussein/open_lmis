@@ -9,7 +9,7 @@
  */
 
 function StockMovementViewController($scope,verifyDistribution,SaveSupervisoryDistribution, $window,$timeout,SaveDistribution,StockEvent,configurations, UpdateOrderRequisitionStatus,VaccineLastStockMovement, StockCardsByCategoryAndRequisition, StockCardsForProgramByCategory, $dialog, homeFacility, programs, $routeParams, $location,SendIssueNotification) {
-
+console.log($routeParams);
     var orderId = parseInt($routeParams.id, 10);
     var programId = parseInt($routeParams.programId, 10);
     var periodId = parseInt($routeParams.periodId, 10);
@@ -78,7 +78,18 @@ function StockMovementViewController($scope,verifyDistribution,SaveSupervisoryDi
         $scope.message = 'Saved Successfully';
         return $scope.message;
     };
-    var printTest = false;
+          var printTest = false;
+
+
+        $scope.print_distribution = function (reportId) {
+
+            VaccineOrderRequisitionSubmit.update($scope.report, function (data) {
+                $scope.$parent.print = data.report;
+            });
+            var url = '/vaccine/orderRequisition/issue/print/'+d.distributionId;
+
+            $window.open(url, '_blank');
+        };
 
     $scope.submit = function () {
         $scope.allProductsZero=true;
@@ -206,21 +217,18 @@ function StockMovementViewController($scope,verifyDistribution,SaveSupervisoryDi
                 StockEvent.save({facilityId:homeFacility.id},events,function(data){
                   SaveSupervisoryDistribution.save(distribution,function(d) {
                        $scope.message = "label.form.Submitted.Successfully";
-                       var url = '/vaccine/orderRequisition/issue/print/'+d.distributionId;
-                       printWindow.location.href=url;
-
                        SendIssueNotification.get({distributionId:d.distributionId},function(data){
                        });
                        verifyDistribution.update({orderId:orderId}, function(){
 
                        });
                        $timeout(function(){
-                           $window.location = '/public/pages/vaccine/dashboard/index.html#/dashboard';
+                           $window.location = '/public/pages/vaccine/dash/index3.html#/home';
 
                        },900);
                    });
                });
-               printWindow= $window.open('about:blank','_blank');
+
 
             }
         };
