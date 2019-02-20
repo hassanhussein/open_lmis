@@ -161,7 +161,7 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
                                  });
                             }
                             $timeout(function(){
-                                $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+                                $window.location='/public/pages/vaccine/dash/index3.html#/home';
                             },900);
                          });
 
@@ -248,7 +248,7 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
                          }
                          $scope.message=true;
                          $timeout(function(){
-                              $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+                              $window.location='/public/pages/vaccine/dash/index3.html#/home';
                           },900);
                     });
 
@@ -266,7 +266,7 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
 
 
     $scope.cancel=function(){
-       $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+       $window.location='/public/pages/vaccine/dash/index3.html#/home';
     };
     if($scope.userPrograms.length > 1)
     {

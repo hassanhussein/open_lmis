@@ -80,17 +80,6 @@ console.log($routeParams);
     };
           var printTest = false;
 
-
-        $scope.print_distribution = function (reportId) {
-
-            VaccineOrderRequisitionSubmit.update($scope.report, function (data) {
-                $scope.$parent.print = data.report;
-            });
-            var url = '/vaccine/orderRequisition/issue/print/'+d.distributionId;
-
-            $window.open(url, '_blank');
-        };
-
     $scope.submit = function () {
         $scope.allProductsZero=true;
         var printWindow;

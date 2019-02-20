@@ -48,8 +48,6 @@
     <div>
 
     <ng-include src="'/public/pages/vaccine/inventory/stock-movement/partials/header.html'"></ng-include>
-
-        {{pageLineItems}}
         <div class="alert alert-danger" ng-show="showNoProductErrorMessage" openlmis-message="error.message.no.product.to.issue"></div>
         <div class="alert alert-danger" ng-show="issueForm.$dirty && issueForm.$invalid">
             <ul ng-show="issueForm.$error.divisibleByPresentationValidator.length >0 || issueForm.$error.maximumValidator.length >0">

@@ -157,6 +157,7 @@ public class VaccineNotificationService {
                 String period = (orderRequisition != null) ? orderRequisition.getPeriod().getName() : "-";
                 emailMessage = emailMessage.replaceAll("\\{date_submitted\\}", orderDate);
                 emailMessage = emailMessage.replaceAll("\\{period\\}", period);
+                emailMessage = emailMessage.replaceAll("\\{voucher_number\\}", distribution.getVoucherNumber());
 
                 message.setText(emailMessage);
                 message.setSubject(configService.getByKey(ConfigurationSettingKey.EMAIL_SUBJECT_FOR_ISSUE_VOUCHER).getValue());
