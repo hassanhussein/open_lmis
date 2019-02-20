@@ -27,6 +27,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -114,6 +117,9 @@ public class RequisitionService {
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
   @Autowired
+  CustomerStatementService statementService;
+
+  @Autowired
   private ProductPriceScheduleService priceScheduleService;
 
   @Autowired
@@ -129,6 +135,8 @@ public class RequisitionService {
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
   }
+
+  DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
   @Transactional
   public Rnr initiate(Facility facility, Program program, Long modifiedBy, Boolean emergency, ProcessingPeriod proposedPeriod, String sourceApplication) {
@@ -168,7 +176,12 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
-    populateAllocatedBudget(requisition);
+    System.out.println("Facility Code");
+
+    statementService.getFacilityBalance(requisition.getFacility().getId(), "2018-01-06", dateFormat.format(new Date()));
+
+    System.out.println("skipped");
+   // populateAllocatedBudget(requisition);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);

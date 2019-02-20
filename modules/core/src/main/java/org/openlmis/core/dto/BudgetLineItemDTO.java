@@ -12,6 +12,7 @@
 package org.openlmis.core.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.openlmis.core.domain.EDIFileColumn;
@@ -42,9 +43,12 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @AllArgsConstructor
 public class BudgetLineItemDTO {
 
+  @JsonProperty("CustID")
   private String facilityCode;
   private String programCode;
   private String periodStartDate;
+
+  @JsonProperty("Balance")
   private String allocatedBudget;
   private String notes;
   private String fundSourceCode;
