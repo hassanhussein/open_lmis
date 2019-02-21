@@ -83,4 +83,10 @@ public class BudgetLineItemRepository {
     mapper.deleteBudgetLineItems(budgetDTO.getId());
     saveLineItem(budgetDTO);
   }
+
+  public void saveLineItemDTO(BudgetLineItemDTO dtos) {
+    mapper.deleteBudgetLineItemByFacility(dtos.getFacilityId());
+    mapper.insertBudgetLineItem(dtos);
+
+  }
 }

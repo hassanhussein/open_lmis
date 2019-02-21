@@ -53,6 +53,7 @@ public class BudgetLineItemDTO {
   private String notes;
   private String fundSourceCode;
   private Boolean additive;
+  @JsonProperty("TranDate")
   private String periodDate;
   private Long periodId;
   private Long facilityId;

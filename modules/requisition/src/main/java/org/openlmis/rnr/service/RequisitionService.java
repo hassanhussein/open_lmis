@@ -28,8 +28,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -176,12 +176,17 @@ public class RequisitionService {
 
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
-    System.out.println("Facility Code");
 
-    statementService.getFacilityBalance(requisition.getFacility().getId(), "2018-01-06", dateFormat.format(new Date()));
+    Runnable backGroundRunnable = new Runnable() {
+      public void run(){
+        statementService.getFacilityBalance(facility.getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+      }};
+    Thread sampleThread = new Thread(backGroundRunnable);
+    sampleThread.start();
 
-    System.out.println("skipped");
-   // populateAllocatedBudget(requisition);
+      System.out.println("Running");
+
+    // populateAllocatedBudget(requisition);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
@@ -942,6 +947,12 @@ public class RequisitionService {
      }else
        requisitionRepository.updateUploaded(dto);
 
+  }
+
+  public Date getLastSixMonthsFromCurrentDate(){
+    Calendar cal = Calendar.getInstance();
+    cal.add(Calendar.MONTH, -5);
+    return cal.getTime();
   }
 
 }

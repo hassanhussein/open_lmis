@@ -52,10 +52,10 @@ public interface BudgetLineItemMapper {
   Integer insertBudget(BudgetDTO budgetDTO);
 
   @Insert({
-          "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes,budgetId) ",
+          "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes,budgetId,additive) ",
           "VALUES (#{facilityId}, #{programId}, #{budgetFileId}, #{periodId}, #{periodDate}::date,  " +
                   " CAST (#{allocatedBudget} AS DOUBLE PRECISION) " +
-                  " , #{notes},#{budgetId})"
+                  " , #{notes},#{budgetId},#{additive})"
   })
   @Options(useGeneratedKeys = true)
     void insertBudgetLineItem(BudgetLineItemDTO lineItem);
@@ -67,4 +67,7 @@ public interface BudgetLineItemMapper {
           "   SET createdBy=#{createdBy}, createdDate=NOW(), modifiedBy= #{modifiedBy}, modifiedDate=NOW(), sourceApplication=#{sourceApplication}, receivedDate=#{receivedDate}::date\n" +
           " WHERE id = #{id}; ")
   void updateBudget(BudgetDTO budgetDTO);
+
+  @Delete("delete from budget_line_items where facilityId = #{facilityId}")
+    void deleteBudgetLineItemByFacility(@Param("facilityId") Long facilityId);
 }
