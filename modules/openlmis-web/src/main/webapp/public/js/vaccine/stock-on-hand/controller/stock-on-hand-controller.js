@@ -1,4 +1,4 @@
-function StockOnHandControllerFunc($scope,$state,$window, homeFacilityId,$location, StockCards, GetStockCards, GetByDistrict, facilityTypeCode, GeoDistrictTree) {
+function StockOnHandControllerFunc($scope,$state,$window,StockRequirements, homeFacilityId,$location, StockCards, GetStockCards, GetByDistrict, facilityTypeCode, GeoDistrictTree) {
     "use strict";
     $scope.homeFacility = homeFacilityId;
     $scope.facilityCode = facilityTypeCode;
@@ -43,6 +43,8 @@ $scope.sumStockOnHand = function(c){
 
     if (GetStockCards !== undefined)
         $scope.stockCards = GetStockCards.stockCards;
+
+
    /* if(GetStockRequirements !== undefined)
         $scope.stockRequirements = GetStockRequirements;*/
 

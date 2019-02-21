@@ -88,6 +88,9 @@ public class VaccineOrderRequisition extends BaseModel {
                 lineItem.setMinimumStock(stockRequirements.getMinimumStock());
                 lineItem.setAnnualNeed(stockRequirements.getAnnualNeed());
                 lineItem.setBufferStock(stockRequirements.getBufferStock());
+                if(lineItem.getMaximumStock() != null){
+                 lineItem.setQuantityRequested(lineItem.getMaximumStock() - lineItem.getStockOnHand());
+                }
 
                 lineItems.add(lineItem);
             }
