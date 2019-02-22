@@ -191,7 +191,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   }
 
   $scope.submitRnr = function () {
-      popupOtherSourceOfFund($scope.rnr);
+     // popupOtherSourceOfFund($scope.rnr);
       promoteRnr(submitValidatedRnr);
   };
 

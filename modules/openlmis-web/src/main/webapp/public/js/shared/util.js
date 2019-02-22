@@ -361,12 +361,12 @@ var utils = {
         var year = new Date(period.stringStartDate).getFullYear();
         var month = new Date(period.stringStartDate).getMonth();
         return new Date(year, month+1,0).getDate();
-    } ,
-    NumberOfDaysInOrderingPeriod: function(period){
-        console.log(period);
-        var year = new Date(period.stringStartDate).getFullYear();
-        var month = new Date(period.stringStartDate).getMonth();
-        return new Date(year, month+1,0).getDate();
+    },
+    isNumberOfDaysInOrderingPeriod: function(period){
+        var oneDay = 24*60*60*1000;
+        var startDate = new Date(period.startDate);
+        var endDate = new Date(period.endDate);
+        return (Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay))));
     }
 
 };

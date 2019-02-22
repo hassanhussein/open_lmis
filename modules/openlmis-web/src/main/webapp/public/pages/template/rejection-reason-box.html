@@ -12,7 +12,7 @@
 
 
     <h4>
-        <span>Add Reasons For Rejection</span>
+        <span>Add Reasons For Rejections</span>
         <a href="" ng-click="show=false; comment=''" class="link-minimize">
             <i id="commentClose" class="icon-remove"></i>
         </a>
@@ -31,7 +31,7 @@
                         <span>{{res.name}}</span>
                         <span>
                             <input type="checkbox"
-                                   ng-change="sync(bool, res)" ng-model="bool" ng-checked="isChecked(res.id)" class="pull-right"/>
+                                   ng-change="sync(bool, res)" ng-model="bool" ng-init="bool=false" class="pull-right"/>
                         </span>
 
                     </li>

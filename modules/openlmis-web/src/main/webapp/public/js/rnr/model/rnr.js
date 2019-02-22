@@ -116,7 +116,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
         $(this.fullSupplyLineItems).each(function (i, lineItem) {
             if (lineItem.skipped)
                 return;
-            if (!validateRequiredFields(lineItem) && rnr.period.enableOrder )
+            if (!validateRequiredFields(lineItem))
                 return false;
             if (!validateFormula(lineItem))
                 return false;

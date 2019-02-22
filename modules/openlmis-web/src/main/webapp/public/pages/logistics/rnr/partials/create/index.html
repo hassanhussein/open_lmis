@@ -90,8 +90,12 @@
                        openlmis-message="comments.header"/>
 
                 <comment-box updatable="!formDisabled" show="showCommentBox"></comment-box>
-
-                <funding-source updatable="!formDisabled" show="showFundingSource"></funding-source>
+<!--
+Add fund souce
+-->
+<!--
+                <funding-source updatable="!formDisabled" show="false"></funding-source>
+-->
             </div>
             <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
             <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError"

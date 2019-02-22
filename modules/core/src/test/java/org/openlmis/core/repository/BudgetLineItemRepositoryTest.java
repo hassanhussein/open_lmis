@@ -35,7 +35,7 @@ public class BudgetLineItemRepositoryTest {
   @Test
   public void shouldInsertBudgetLineItemIfDoesNotExistsAlready() throws Exception {
 
-    BudgetLineItem budgetLineItem = new BudgetLineItem(1L, 2L, 1L, 1L, new Date(), BigDecimal.valueOf(345.45), "My good notes");
+    BudgetLineItem budgetLineItem = new BudgetLineItem(1L, 2L, 1L, 1L, new Date(), BigDecimal.valueOf(345.45), "My good notes",true);
 
     repository.save(budgetLineItem);
 
@@ -45,7 +45,7 @@ public class BudgetLineItemRepositoryTest {
   @Test
   public void shouldUpdateBudgetLineItemIfAlreadyExists() throws Exception {
     Long periodId = 1l;
-    BudgetLineItem budgetLineItem = new BudgetLineItem(1L, 2L, periodId, 1L, new Date(), BigDecimal.valueOf(345.45), "My good notes");
+    BudgetLineItem budgetLineItem = new BudgetLineItem(1L, 2L, periodId, 1L, new Date(), BigDecimal.valueOf(345.45), "My good notes",true);
 
     doThrow(DuplicateKeyException.class).when(mapper).insert(budgetLineItem);
 

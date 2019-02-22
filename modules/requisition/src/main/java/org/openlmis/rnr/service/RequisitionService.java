@@ -177,16 +177,7 @@ public class RequisitionService {
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
 
-    Runnable backGroundRunnable = new Runnable() {
-      public void run(){
-        statementService.getFacilityBalance(facility.getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
-      }};
-    Thread sampleThread = new Thread(backGroundRunnable);
-    sampleThread.start();
-
-      System.out.println("Running");
-
-    // populateAllocatedBudget(requisition);
+    populateAllocatedBudget(requisition);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
     calculationService.fillReportingDays(requisition);
