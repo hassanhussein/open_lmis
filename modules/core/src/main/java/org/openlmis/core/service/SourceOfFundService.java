@@ -22,4 +22,18 @@ public class SourceOfFundService {
         }
         repository.insert(fundDTO);
     }
+
+    public void saveSDPFund(SourceOfFundDTO fundDTO, Long userId){
+
+        SourceOfFundDTO fundDTO1 = repository.getByCode(fundDTO.getCode());
+        if(fundDTO1 == null){
+            repository.insert(fundDTO);
+        }else {
+            fundDTO.setId(fundDTO1.getId());
+            repository.update(fundDTO);
+        }
+    }
+
+
+
 }

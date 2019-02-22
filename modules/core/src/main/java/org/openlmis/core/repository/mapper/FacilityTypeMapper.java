@@ -14,6 +14,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.openlmis.core.domain.FacilityOperator;
 import org.openlmis.core.domain.FacilityType;
 import org.springframework.stereotype.Repository;
 
@@ -27,4 +28,13 @@ public interface FacilityTypeMapper {
 
     @Select("select * from facility_types where code =#{code}")
     FacilityType getByFacilityCode(@Param("code") String code);
+
+    @Select(" select * from facility_types ft " +
+            " JOIN interface_dataSet d ON LOWER(ft.code) = LOWER(d.dataSetId) and d.interfaceId = #{interfaceId} ")
+    FacilityType getFacilityTypeByMappedCode(@Param("code") String code, @Param("interfaceId") Long interfaceId);
+
+    @Select(" select * from facility_operators ft " +
+            " JOIN interface_dataSet d ON LOWER(ft.code) = LOWER(d.dataSetId) and d.interfaceId = #{interfaceId} ")
+    FacilityOperator getFacilityTypeByMappedOwner(@Param("code") String code, @Param("interfaceId") Long interfaceId);
+
 }

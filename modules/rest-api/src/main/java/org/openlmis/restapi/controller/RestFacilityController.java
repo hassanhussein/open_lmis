@@ -14,7 +14,11 @@
 
 package org.openlmis.restapi.controller;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.openlmis.core.dto.FacilityFeedDTO;
+import org.openlmis.core.dto.HFRFacilityDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestFacilityService;
@@ -22,8 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+
+import static javax.security.auth.callback.ConfirmationCallback.OK;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -48,4 +57,27 @@ public class RestFacilityController extends BaseController {
     }
     return RestResponse.response(FACILITY, facilityFeedDTO);
   }
+
+
+  @ApiOperation(value = "FacilityList", notes = "Post Facility List from Interoperability Layer", response = HFRFacilityDTO.class)
+  @ApiResponses(value = {
+          @ApiResponse(code = 200, message = "Successful request", response = HFRFacilityDTO.class),
+          @ApiResponse(code = 500, message = "Internal server error")}
+  )
+
+  @RequestMapping(value = "/rest-api/health-facility-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> saveInterfaceFacilityInfo(@RequestBody HFRFacilityDTO dto, HttpServletRequest request){
+    HFRFacilityDTO hfrFacilityDTO;
+
+    try {
+      hfrFacilityDTO = restFacilityService.saveInterfaceFacilityInfo(dto);
+    } catch (DataException e) {
+      return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+    return RestResponse.response(FACILITY, hfrFacilityDTO);
+  }
+
+
+
+
 }

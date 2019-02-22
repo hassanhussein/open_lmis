@@ -17,11 +17,11 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SourceOfFundRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.SignatureMapper;
-import org.openlmis.core.repository.mapper.SourceOfFundMapper;
 import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.core.dto.RejectionReasonDTO;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
@@ -518,6 +518,14 @@ public class RequisitionRepository {
   }
   public void updateBySourceId(String sourceId){
       requisitionMapper.updateBySourceId(sourceId);
+  }
+
+  public Integer insertUploaded(RejectionReasonDTO rejectionReason){
+    return rejectionReasonMapper.insertUploaded(rejectionReason);
+  }
+
+  public void updateUploaded(RejectionReasonDTO rejectionReason){
+      rejectionReasonMapper.update(rejectionReason);
   }
 
 }

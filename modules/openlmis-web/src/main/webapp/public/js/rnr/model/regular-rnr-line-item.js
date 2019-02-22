@@ -396,19 +396,20 @@ var RegularRnrLineItem = base2.Base.extend({
 
   validateRequiredFieldsForNonFullSupply: function () {
     if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
-      return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity) ||!this.reportOnlyPeriod);
+      return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity) || !this.reportOnlyPeriod);
     }
       return false;
   },
 
   validateRequiredFieldsForFullSupply: function () {
+
     var valid = true;
     var rnrLineItem = this;
     var visibleColumns = _.where(this.programRnrColumnList, {"visible": true});
 
     $(visibleColumns).each(function (i, column) {
           var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skipped","stockInHand","stockOutDays"];
-          if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name) || !this.reportOnlyPeriod) return;
+          if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name) || this.reportOnlyPeriod) return;
           if (column.name === 'quantityRequested') {
             valid = isUndefined(rnrLineItem.quantityRequested) || !isUndefined(rnrLineItem.reasonForRequestedQuantity);
           } else if (column.name == 'expirationDate') {

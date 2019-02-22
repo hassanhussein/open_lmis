@@ -2,6 +2,7 @@ package org.openlmis.rnr.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.RejectionReason;
+import org.openlmis.core.dto.RejectionReasonDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,5 +26,14 @@ public interface RejectionReasonMapper {
 
     @Select("select * from rejections ")
     List<Map<String,Object>>getAllRejections();
+
+    @Insert("INSERT INTO public.rejection_reasons(\n" +
+            "            rnrid, name, code, createdBy, createdDate, modifiedBy, modifiedDate)\n" +
+            "    VALUES ( #{rnrId}, #{name}, #{code}, #{createdBy},NOW(), #{modifiedBy}, NOW());")
+    @Options(useGeneratedKeys = true)
+    int insertUploaded(RejectionReasonDTO rejectionReason);
+
+    @Update("update rejection_reasons set name = #{name}, code = #{code} where id = #{id}")
+    void update(RejectionReasonDTO rejectionReasonDTO);
 
 }
