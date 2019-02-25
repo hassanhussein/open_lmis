@@ -12,6 +12,7 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
@@ -143,4 +144,11 @@ public interface UserMapper {
     "   join role_assignments ras on ras.roleid = rr.roleId " +
     "where r.righttype = 'REQUISITION' and ras.userId = #{userId}")
   List<String> getSupervisoryRights(@Param("userId") Long userId);
+
+  @Select(" SELECT * FROM facility_types ft JOIN facilities f ON f.typeId = ft.id " +
+          " join users U on U.facilityId = f.id " +
+          " where u.id = #{userId} and ft.code in('cvs','rvs','dvs') limit 1 ")
+  FacilityType facilityTypeForUser(@Param("userId") Long userId);
+
+
 }

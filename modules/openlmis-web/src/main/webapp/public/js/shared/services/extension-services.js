@@ -1346,3 +1346,7 @@ services.factory('DailyConsumption', function ($resource) {
 services.factory('SearchVaccineStore', function ($resource) {
     return $resource('/searchVaccineStores/:searchParam.json', {searchParam:'@searchParam'}, {});
 });
+
+services.factory('FacilityTypeByUserId', function ($resource) {
+    return $resource('/users/facility-type-for-user.json', {}, {});
+});

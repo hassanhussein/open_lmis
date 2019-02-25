@@ -337,12 +337,16 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
     }
 ]);
 
-app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService',
-    function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService) {
+app.directive('zoneFilter', ['FacilityTypeByUserId','TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService',
+    function (FacilityTypeByUserId,TreeGeographicZoneList, TreeGeographicZoneListByProgram, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService) {
 
         var onCascadedVarsChanged = function ($scope, attr) {
-            if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
 
+             FacilityTypeByUserId.get({}, function(data){
+              $scope.userLevel = data.levels.code;
+              });
+
+            if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
                 var service = TreeGeographicZoneListByProgram;
                 if (attr.nozone) {
                     service = TreeGeographicTreeByProgramNoZones;
@@ -351,17 +355,32 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
                 service.get({
                     program: $scope.filter.program
                 }, function (data) {
-                    $scope.zones = [data.zone];
-                    if ($scope.selectedZone === undefined || $scope.selectedZone === null) {
+
+                  if( $scope.userLevel === 'rvs'){
+                                $scope.zones = data.zone.children;
+                                }else if( $scope.userLevel === 'dvs'){
+                                $scope.zones = [data.zone.children[0].children[0]];
+                                }else{
+                                $scope.zones = [data.zone];
+                                }
+                 /*   if ($scope.selectedZone === undefined || $scope.selectedZone === null) {
                         $scope.selectedZone = data.zone;
-                    }
+                    }*/
                 });
             } else {
                 TreeGeographicZoneList.get(function (data) {
-                    $scope.zones = [data.zone];
+                   // $scope.zones = [data.zone];
+
+                    if( $scope.userLevel === 'rvs'){
+                                                    $scope.zones = data.zone.children;
+                            }else if( $scope.userLevel === 'dvs'){
+                                                    $scope.zones = [data.zone.children[0].children[0]];
+                                                    }else{
+                                                    $scope.zones = [data.zone];
+                 /*
                     if ($scope.selectedZone === undefined) {
                         $scope.selectedZone = data.zone;
-                    }
+                    }*/
                 });
             }
         };
@@ -1174,8 +1193,10 @@ app.directive('vaccineFacilityLevelFilter', ['FacilitiesByLevel', 'VaccineInvent
         }]
 );
 
-app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographicZoneList', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService', 'VimsVaccineSupervisedIvdPrograms',
-    function (FacilitiesByGeographicZone, TreeGeographicZoneList, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService, VimsVaccineSupervisedIvdPrograms) {
+app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographicZoneList', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService', 'VimsVaccineSupervisedIvdPrograms','FacilityTypeByUserId',
+    function (FacilitiesByGeographicZone, TreeGeographicZoneList, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService, VimsVaccineSupervisedIvdPrograms,FacilityTypeByUserId) {
+
+
         var onPgCascadedVarsChanged1 = function ($scope) {
             var zone = ( angular.isDefined($scope.filterZone)) ? $scope.filterZone : 0;
             FacilitiesByGeographicZone.get({
@@ -1193,6 +1214,11 @@ app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographi
 
         var onCascadedVarsChanged = function ($scope) {
 
+          FacilityTypeByUserId.get({}, function(data){
+          $scope.userLevel = data.levels.code;
+
+          });
+
 
             VimsVaccineSupervisedIvdPrograms.get({}, function (data) {
 
@@ -1200,10 +1226,17 @@ app.directive('vaccineZoneFilter', ['FacilitiesByGeographicZone', 'TreeGeographi
                 TreeGeographicTreeByProgramNoZones.get({
                     program: $scope.program
                 }, function (data) {
-                    $scope.zones = [data.zone];
-                    if ($scope.selectedZone === undefined || $scope.selectedZone === null) {
+                if( $scope.userLevel === 'rvs'){
+                $scope.zones = data.zone.children;
+                }else if( $scope.userLevel === 'dvs'){
+                $scope.zones = [data.zone.children[0].children[0]];
+                }else{
+                $scope.zones = [data.zone];
+                }
+               if ($scope.selectedZone === undefined || $scope.selectedZone === null) {
                         $scope.selectedZone = data.zone;
                         $scope.filterZone = $scope.zones [0];
+                        console.log($scope.zones [0]);
 
                     }
 

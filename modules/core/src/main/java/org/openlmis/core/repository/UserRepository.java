@@ -167,4 +167,8 @@ public class UserRepository {
   public List<String> getSupervisoryRights(Long userId) {
     return userMapper.getSupervisoryRights(userId);
   }
+
+  public FacilityType facilityTypeForUser(Long userId){
+    return userMapper.facilityTypeForUser(userId);
+  }
 }

@@ -239,4 +239,8 @@ public class UserService {
   public List<String> getSupervisoryRights(Long userId) {
     return userRepository.getSupervisoryRights(userId);
   }
+
+  public FacilityType facilityTypeForUser(Long userId){
+    return userRepository.facilityTypeForUser(userId);
+  }
 }

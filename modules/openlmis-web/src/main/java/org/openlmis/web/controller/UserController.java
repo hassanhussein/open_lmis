@@ -285,4 +285,9 @@ public class UserController extends BaseController {
     return response("facilities", facilityService.getUserSupervisedFacilities(loggedInUserId(request), programId,
         RightName.CREATE_IVD, RightName.VIEW_IVD, RightName.APPROVE_IVD, RightName.CREATE_REQUISITION, RightName.VIEW_REQUISITION, RightName.APPROVE_REQUISITION ));
   }
+
+  @RequestMapping(value = "/users/facility-type-for-user.json")
+  public ResponseEntity<OpenLmisResponse> facilityTypeForUser(HttpServletRequest request){
+    return response("levels", userService.facilityTypeForUser(loggedInUserId(request)));
+  }
 }
