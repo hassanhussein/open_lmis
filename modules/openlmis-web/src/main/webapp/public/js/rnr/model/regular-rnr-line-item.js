@@ -132,23 +132,21 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   arithmeticallyInvalid: function () {
-      var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
+    var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
     if (this.programRnrColumnList !== undefined && this.programRnrColumnList[0].formulaValidationRequired && this.reportOnlyPeriod) {
       var beginningBalance = utils.parseIntWithBaseTen(this.beginningBalance);
       var quantityReceived = utils.parseIntWithBaseTen(this.quantityReceived);
       var quantityDispensed = utils.parseIntWithBaseTen(this.quantityDispensed);
       var totalLossesAndAdjustments = utils.parseIntWithBaseTen(this.totalLossesAndAdjustments);
-
-      return (((utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
+      return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
           utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
-          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null) || (this.stockOutDays > utils.isNumberOfDaysInOrderingPeriod(this.period)));
+          quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
     }
     else if (!this.reportOnlyPeriod)
     {
-    //var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
      if(this.period !== undefined)
      //return (this.stockOutDays > utils.isNumberOfDaysInReportingPeriod(this.period));
-     return (utils.isNumber(stockInHand)?false:true) || (this.stockOutDays > utils.isNumberOfDaysInReportingPeriod(this.period));
+     return utils.isNumber(stockInHand)?false:true;
     }
 
     return false;
@@ -438,7 +436,7 @@ var RegularRnrLineItem = base2.Base.extend({
     if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
     //if (isUndefined(this.stockInHand) && !this.reportOnlyPeriod) return "error.quantity.consumed.negative";
     if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
-    //if(this.isStockoutDaysInvalid()) return "error.stock.out.days.not.valid";
+    if(this.isStockoutDaysInvalid()) return "error.stock.out.days.not.valid";
     return "";
   },
 
