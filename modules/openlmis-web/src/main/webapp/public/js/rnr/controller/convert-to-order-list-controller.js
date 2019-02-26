@@ -104,7 +104,7 @@ function ConvertToOrderListController($scope, Orders, ReleaseWithoutOrders, Requ
         displayName: messageService.get("label.supplying.depot"),
         width: 220,
         cellTemplate: "<div><select ng-model='row.entity.supplyingDepotId'><option ng-repeat='t in depots' ng-selected='t.id == row.entity.supplyingDepotId' value='{{t.id}}'>{{t.name}}</option></select></div>"},
-      {field: 'emergency', sortable:false, displayName: messageService.get("requisition.type.emergency"),
+      {field: 'emergency', displayName: messageService.get("requisition.type.emergency"),
         cellTemplate: "<div id=\"orderCheckbox{{ $parent.$index }}\" class='ngCellText checked'><i ng-class='{\"icon-ok\": row.entity.emergency}'></i></div>",
         width: 110 }
     ]
