@@ -48,13 +48,13 @@ public interface OrderMapper {
   List<Order> getOrders(@Param("limit") int limit, @Param("offset") int offset, @Param("userId") Long userId, @Param("right") String rightName);
 
 
-  @Select({"SELECT DISTINCT O.*, f.name FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
+  @Select({"SELECT DISTINCT O.*, f.name,r.emergency FROM orders O INNER JOIN supply_lines S ON O.supplyLineId = S.id ",
       "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId",
       "INNER JOIN requisitions r on r.id = O.id ",
       "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ",
       " INNER JOIN facilities f on f.id = r.facilityid ",
       "WHERE FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
-          "ORDER BY f.name ASC LIMIT #{limit} OFFSET #{offset}"})
+          "ORDER BY r.emergency, f.name ASC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
       @Result(property = "id", column = "id"),
       @Result(property = "rnr.id", column = "id"),
