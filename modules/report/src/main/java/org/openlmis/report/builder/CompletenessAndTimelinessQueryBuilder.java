@@ -29,11 +29,11 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "facilities_expected as (\n" +
                 "select distinct z.*,pp.id periodid from facilities f\n" +
                 "\tjoin programs_supported ps on f.id = ps.facilityId        \n" +
-                "     join geographic_zones z on z.id = f.geographicZoneId   \n" +
+                "     join vw_districts z on z.district_id = f.geographicZoneId   \n" +
                 "\t, processing_periods pp\n" +
                 "\twhere   ps.startdate::date <='" + params.getPeriodStart() + "'::date and  ps.programid= "+ params.getProgram() +"::int  " +
                 "\tand pp.startdate::date >='" + params.getPeriodStart() + "'::date and pp.enddate::date <=   '" + params.getPeriodEnd() + "'::date" +
-                ")," +
+                "  and (z.district_id ="+params.getDistrict()+"or z.region_id="+params.getDistrict()+" or z.zone_id="+params.getDistrict()+") )," +
                 "completeness_with_reporting_periods as (select    \n" +
                 "                                                  a.region_name,    \n" +
                 "                                                  a.district_name,   \n" +
@@ -104,7 +104,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                              AND pp.numberofmonths = 1   \n" +
                 "                                                          ) periods , " +
                 "                                                          (  \n" +
-                "                                                              select distinct c.id geographiczoneid from   \n" +
+                "                                                              select distinct c.district_id geographiczoneid from   \n" +
                 "                                                              facilities_expected c  \n" +
                 "                                                          ) c  \n" +
                 "                                                )  \n" +
@@ -149,11 +149,11 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "facilities_expected as (\n" +
                 "select distinct z.*,pp.id periodid from facilities f\n" +
                 "\tjoin programs_supported ps on f.id = ps.facilityId        \n" +
-                "     join geographic_zones z on z.id = f.geographicZoneId   \n" +
+                "     join vw_districts z on z.district_id = f.geographicZoneId   \n" +
                 "\t, processing_periods pp\n" +
                 "\twhere   ps.startdate::date <='" + params.getPeriodStart() + "'::date and  ps.programid= "+ params.getProgram() +"::int  " +
                 "\tand pp.startdate::date >='" + params.getPeriodStart() + "'::date and pp.enddate::date <=   '" + params.getPeriodEnd() + "'::date" +
-                ")," +
+                "  and (z.district_id ="+params.getDistrict()+"or z.region_id="+params.getDistrict()+" or z.zone_id="+params.getDistrict()+") )," +
                 " completeness_with_reporting_periods as ( \n" +
                 "                  select     \n" +
                 "                  a.region_name,    \n" +
@@ -228,7 +228,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                              AND pp.numberofmonths = 1  \n" +
                 "                                          ) periods ,   \n" +
                 "                                          (  \n" +
-                "                                              select distinct c.id geographiczoneid from   \n" +
+                "                                              select distinct c.district_id geographiczoneid from   \n" +
                 "                                              facilities_expected c  \n" +
                 "                                          ) c  \n" +
                 "                                    )  \n" +
@@ -247,6 +247,7 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                      join vw_districts vd on vd.district_id = nonreporting.geographiczoneid  \n" +
                 "                      left outer join completeness_with_reporting_periods c  On c.geographiczoneid = nonreporting.geographiczoneid AND nonreporting.id = c.priod_id  \n" +
                 "                      group by 1,2 order by 2; ";
+
         return sql;
     }
 
