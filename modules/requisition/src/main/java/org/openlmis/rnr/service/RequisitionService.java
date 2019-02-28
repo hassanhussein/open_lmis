@@ -177,6 +177,7 @@ public class RequisitionService {
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
 
+    statementService.fetchBudgetData(facility.getId(),program.getId(),period.getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
     populateAllocatedBudget(requisition);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
@@ -196,7 +197,6 @@ public class RequisitionService {
     requisition.setSourceApplication(sourceApplication);
     insert(requisition);
     requisition = requisitionRepository.getById(requisition.getId());
-
     return fillSupportingInfo(requisition);
   }
 

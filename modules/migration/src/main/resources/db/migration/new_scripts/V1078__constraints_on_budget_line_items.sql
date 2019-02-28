@@ -1,0 +1,1 @@
+alter table budget_line_items alter column budgetfileid drop not null;

@@ -69,5 +69,14 @@ public interface BudgetLineItemMapper {
   void updateBudget(BudgetDTO budgetDTO);
 
   @Delete("delete from budget_line_items where facilityId = #{facilityId}")
-    void deleteBudgetLineItemByFacility(@Param("facilityId") Long facilityId);
+    void deleteBudgetLineItemByFacility(@Param("facilityId") Long facilityId,
+                                        @Param("programId") Long programId,
+                                        @Param("periodId") Long periodId);
+
+  @Update("update requisitions set allocatedBudget = CAST (#{allocatedBudget} AS DOUBLE PRECISION) where facilityId = #{facilityId} and " +
+          " programId = #{programId} and periodId = #{periodId} ")
+  void updateBudgetInRequisition(@Param("facilityId") Long facilityId,
+                                 @Param("programId") Long programId,
+                                 @Param("periodId") Long periodId,
+                                 @Param("allocatedBudget") String allocatedBudget);
 }

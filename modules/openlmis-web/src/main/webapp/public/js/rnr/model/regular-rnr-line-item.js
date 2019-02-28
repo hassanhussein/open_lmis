@@ -124,10 +124,14 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   isStockoutDaysInvalid: function(){
-    if(!this.reportOnlyPeriod){
+  if(this.period !== undefined){
+
+    if(!this.reportOnlyPeriod ){
       return (this.stockOutDays > utils.isNumberOfDaysInReportingPeriod(this.period));
     }else{
       return (this.stockOutDays > utils.isNumberOfDaysInOrderingPeriod(this.period));
+    }
+
     }
   },
 
@@ -144,9 +148,17 @@ var RegularRnrLineItem = base2.Base.extend({
     }
     else if (!this.reportOnlyPeriod)
     {
-     if(this.period !== undefined)
-     //return (this.stockOutDays > utils.isNumberOfDaysInReportingPeriod(this.period));
-     return utils.isNumber(stockInHand)?false:true;
+
+     if(this.period !== undefined){
+     console.log(utils.getValueFor(this.stockInHand));
+    return ( utils.getValueFor(this.stockInHand) === null)?false:(utils.isNumber(stockInHand))?false:((this.stockInHand === 0) && (this.stockOutDays === 0))?true:false;
+
+    /*if((this.stockInHand === 0) && this.stockOutDays === 0){
+    console.log(this.stockOutDays);
+     return true;
+     }*/
+    // return utils.isNumber(stockInHand)?false:true;
+     }
     }
 
     return false;

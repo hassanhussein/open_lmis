@@ -15,7 +15,6 @@ function ListFacilitiesController($scope, FacilityList, $routeParams) {
     $scope.OnFilterChanged = function () {
         FacilityList.get($scope.getSanitizedParameter(), function (data) {
             $scope.data = generateParentChildReport(data.pages.rows);
-            console.log($scope.data);
             $scope.paramsChanged($scope.tableParams);
         });
     };

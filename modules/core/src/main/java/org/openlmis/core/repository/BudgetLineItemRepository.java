@@ -85,8 +85,12 @@ public class BudgetLineItemRepository {
   }
 
   public void saveLineItemDTO(BudgetLineItemDTO dtos) {
-    mapper.deleteBudgetLineItemByFacility(dtos.getFacilityId());
+    mapper.deleteBudgetLineItemByFacility(dtos.getFacilityId(),dtos.getProgramId(),dtos.getPeriodId());
     mapper.insertBudgetLineItem(dtos);
 
+  }
+
+  public void updateBudgetInRequisition(Long facilityId, Long programId, Long periodId,String allocatedBudget) {
+    mapper.updateBudgetInRequisition(facilityId,programId,periodId,allocatedBudget);
   }
 }

@@ -45,7 +45,7 @@ public class CustomerStatementService {
 
     private static final Log log = LogFactory.getLog(CustomerStatementService.class);
 
-    public void getFacilityBalance(Long facilityId, String fromDate, String toDate) {
+    private void getFacilityBalance(Long facilityId,Long programId,Long periodId, String fromDate, String toDate) {
         System.out.println("Running second");
 
         String jsonData = "";
@@ -62,7 +62,7 @@ public class CustomerStatementService {
                     "    \"toDate\":\"" + toDate + "\"\n" +
                     "}";
             if (url != null && username != null && password != null) {
-                getCustomData(jsonData, url, username, password, facility);
+                getCustomData(jsonData, url, username, password, facility,programId,periodId);
             }
 
         }
@@ -70,7 +70,7 @@ public class CustomerStatementService {
 
     }
 
-    private void getCustomData(String jsonInString, String url, String username, String password,Facility facility) {
+    private void getCustomData(String jsonInString, String url, String username, String password,Facility facility,Long programId,Long periodId) {
 
         HttpURLConnection urlConnection;
         String result = null;
@@ -109,19 +109,26 @@ public class CustomerStatementService {
 
                 bufferedReader.close();
                 result = sb.toString();
-                System.out.println(result);
 
                 ObjectMapper mapper = new ObjectMapper();
                 BudgetLineItemDTO[] budget = mapper.readValue(result,BudgetLineItemDTO[].class);
                 BudgetLineItemDTO dtos = budget[budget.length-1];
                 dtos.setFacilityId(facility.getId());
-                dtos.setProgramId(1L);
-                if(0 > Long.valueOf(dtos.getAllocatedBudget())){
+                dtos.setProgramId(programId);
+                dtos.setPeriodId(periodId);
+
+                float allocatedBudget = Math.round(Float.valueOf(dtos.getAllocatedBudget()));
+                System.out.println(allocatedBudget);
+
+                if(0 > allocatedBudget){
+
                     dtos.setAdditive(false);
-                    dtos.setAllocatedBudget(String.valueOf(Long.valueOf(Long.valueOf(dtos.getAllocatedBudget()) * -1L)));
+                    dtos.setAllocatedBudget(String.valueOf(Long.valueOf((long) (allocatedBudget * -1L))));
                 }
-                dtos.setAdditive(-1 != Long.valueOf(dtos.getAllocatedBudget()));
+                dtos.setAdditive(-1 != (long) allocatedBudget);
                 repository.saveLineItemDTO(dtos);
+                repository.updateBudgetInRequisition(dtos.getFacilityId(),programId,periodId,dtos.getAllocatedBudget());
+
                 log.debug("Results  "+budget[0].getAllocatedBudget());
             } else {
 
@@ -140,5 +147,13 @@ public class CustomerStatementService {
 
     }
 
+  public void fetchBudgetData(Long facilityId,Long programId, Long periodId, String fromDate, String toDate) {
 
+    Runnable runnable2 = () -> {
+        getFacilityBalance(facilityId,programId,periodId,fromDate,toDate);
+    };
+
+      Thread thread2 = new Thread(runnable2);
+      thread2.start();
+   }
 }
