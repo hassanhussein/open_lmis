@@ -136,6 +136,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   arithmeticallyInvalid: function () {
+
     var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
     if (this.programRnrColumnList !== undefined && this.programRnrColumnList[0].formulaValidationRequired && this.reportOnlyPeriod) {
       var beginningBalance = utils.parseIntWithBaseTen(this.beginningBalance);
@@ -150,7 +151,7 @@ var RegularRnrLineItem = base2.Base.extend({
     {
 
      if(this.period !== undefined){
-     console.log(utils.getValueFor(this.stockInHand));
+
     return ( utils.getValueFor(this.stockInHand) === null)?false:(utils.isNumber(stockInHand))?false:((this.stockInHand === 0) && (this.stockOutDays === 0))?true:false;
 
     /*if((this.stockInHand === 0) && this.stockOutDays === 0){
@@ -410,10 +411,12 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   validateRequiredFieldsForNonFullSupply: function () {
-    if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
-      return !(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity) || this.reportOnlyPeriod);
+   if (_.findWhere(this.programRnrColumnList, {name: 'quantityRequested'}).visible) {
+      return true;
+      //Should return the validation
+      //!(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity) || this.reportOnlyPeriod);
     }
-      return false;
+      return true;
   },
 
   validateRequiredFieldsForFullSupply: function () {
@@ -462,10 +465,11 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   valid: function () {
+  console.log(this.validateRequiredFieldsForNonFullSupply());
     if (this.skipped) return true;
     if (this.rnrStatus == 'IN_APPROVAL' || this.rnrStatus == 'AUTHORIZED') return this.validateForApproval();
     if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();
-    return this.validateRequiredFieldsForNonFullSupply();
+    //return this.validateRequiredFieldsForNonFullSupply();
   },
 
   validateLossesAndAdjustments: function () {
