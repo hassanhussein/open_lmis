@@ -120,7 +120,8 @@ public class CompletenessAndTimelinessQueryBuilder {
                 "                                                    c.ontime,     \n" +
                 "                                                    c.late,   \n" +
                 "                                                    case when nonreporting.expected > 0 then trunc((c.reported::numeric/nonreporting.expected::numeric)*100,2) else 0 end percentReported,   \n" +
-                "                                                    case when c.reported > 0 then trunc((c.late::numeric/c.reported::numeric)*100,2) else 0 end percentLate,  \n" +
+                "                                                    case when nonreporting.expected > 0 then trunc((c.late::numeric/nonreporting.expected::numeric)*100,2) else 0 end percentLate,  \n" +
+                "                                                    case when nonreporting.expected > 0 then trunc((c.ontime::numeric/nonreporting.expected::numeric)*100,2) else 0 end percentOnTime,  \n" +
                 "                                                    CASE WHEN c.geographiczoneid is null then 'NONREPORTING' else 'REPORTING' end as reportingStatus  \n" +
                 "                                                FROM completness_with_nonreporting_periods nonreporting   \n" +
                 "                                                    join geographic_zones z on z.id = nonreporting.geographiczoneid    \n" +

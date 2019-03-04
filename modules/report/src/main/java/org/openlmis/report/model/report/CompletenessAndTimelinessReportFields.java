@@ -39,6 +39,7 @@ public class CompletenessAndTimelinessReportFields implements ResultRow {
     Long late;
     Double percentReported;
     Double percentLate;
+    Double percentOnTime;
     String reportingStatus;
     Long year;
     Long month;

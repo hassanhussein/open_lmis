@@ -57,7 +57,7 @@ function CompletenesssAndTimelinessReportingController($scope, CompletenessAndTi
 
                 console.log(data);
 
-                var columnKeysToBeAggregated = ["target", "expected", "reported", "late", "fixed", "sessionTotal"];
+                var columnKeysToBeAggregated = ["target", "expected", "reported","onTime", "late", "fixed", "sessionTotal"];
                 var districtNameKey = "districtName";
                 var includeGrandTotal = true;
 
@@ -102,7 +102,7 @@ function CompletenesssAndTimelinessReportingController($scope, CompletenessAndTi
                     $scope.reported.push({total: summary[i].reported});
                     $scope.ontime.push({total: summary[i].onTime});
                     $scope.completeness.push({total: summary[i].expected === 0 ? 0 : Math.round(((summary[i].reported / summary[i].expected) * 100) * 100) / 100});
-                    $scope.timelines.push({total: summary[i].reported === 0 ? 0 : Math.round(((summary[i].onTime / summary[i].reported) * 100) * 100) / 100});
+                    $scope.timelines.push({total: summary[i].expected === 0 ? 0 : Math.round(((summary[i].onTime / summary[i].expected) * 100) * 100) / 100});
                     break;
                 }
                 // if no match is found add a dummy object as a place holder
