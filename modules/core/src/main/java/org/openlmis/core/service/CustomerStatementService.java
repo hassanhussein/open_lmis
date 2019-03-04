@@ -123,9 +123,12 @@ public class CustomerStatementService {
                 if(0 > allocatedBudget){
 
                     dtos.setAdditive(false);
-                    dtos.setAllocatedBudget(String.valueOf(Long.valueOf((long) (allocatedBudget * -1L))));
+                    dtos.setAllocatedBudget("0");
+                }else{
+                    dtos.setAdditive(true);
+                    dtos.setAllocatedBudget(String.valueOf(allocatedBudget));
+
                 }
-                dtos.setAdditive(-1 != (long) allocatedBudget);
                 repository.saveLineItemDTO(dtos);
                 repository.updateBudgetInRequisition(dtos.getFacilityId(),programId,periodId,dtos.getAllocatedBudget());
 

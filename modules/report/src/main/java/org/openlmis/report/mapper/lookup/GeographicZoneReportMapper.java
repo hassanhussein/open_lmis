@@ -64,7 +64,9 @@ public interface GeographicZoneReportMapper {
     " join requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and rgps.programId = ps.programId  " +
     " join processing_periods pp on pp.scheduleId = rgps.scheduleId and pp.id = #{processingPeriodId}  " +
     " where gz.levelId = (select max(id) from geographic_levels) and ps.programId = #{programId}" +
+/*
     " and ps.startdate <= (SELECT startDate from processing_periods where id =#{processingPeriodId})  " +
+*/
     " group by geographicZoneId" +
     " ) expected " +
     " on gzz.id = expected.geographicZoneId " +
