@@ -381,9 +381,10 @@ app.directive('zoneFilter', ['FacilityTypeByUserId','TreeGeographicZoneList', 'T
                     if ($scope.selectedZone === undefined) {
                         $scope.selectedZone = data.zone;
                     }*/
-                });
-            }
-        };
+                }
+
+            });
+        }
 
         var categoriseZoneBySupervisoryNode = function ($scope) {
             GetUserUnassignedSupervisoryNode.get({
@@ -438,8 +439,9 @@ app.directive('zoneFilter', ['FacilityTypeByUserId','TreeGeographicZoneList', 'T
             },
             templateUrl: 'filter-zone-template'
         };
+    };
     }
-]);
+    ]);
 
 app.directive('periodFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear', '$routeParams',
     function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
