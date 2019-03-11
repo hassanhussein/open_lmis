@@ -28,9 +28,9 @@ public interface PODMapper {
 
   @Insert(
     {"INSERT INTO pod_line_items (podId, productCode, quantityReceived, quantityShipped, quantityReturned, productName, dispensingUnit, packsToShip, fullSupply,",
-      "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy, replacedProductCode, createdDate, modifiedDate) VALUES ",
+      "productCategory, productCategoryDisplayOrder, productDisplayOrder, createdBy, modifiedBy, replacedProductCode, createdDate, modifiedDate,invoiceNumber,description,comment,uom) VALUES ",
       "(#{podId}, #{productCode}, #{quantityReceived}, #{quantityShipped}, #{quantityReturned}, #{productName}, #{dispensingUnit}, #{packsToShip}, #{fullSupply},",
-      "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy}, #{replacedProductCode}, DEFAULT, DEFAULT)"})
+      "#{productCategory}, #{productCategoryDisplayOrder}, #{productDisplayOrder}, #{createdBy}, #{modifiedBy}, #{replacedProductCode}, DEFAULT, DEFAULT,#{invoiceNumber},#{description},#{comment},#{uom})"})
   @Options(useGeneratedKeys = true)
   void insertPODLineItem(OrderPODLineItem orderPodLineItem);
 
@@ -40,8 +40,11 @@ public interface PODMapper {
   List<OrderPODLineItem> getPODLineItemsByPODId(Long podId);
 
   @Insert(
-    {"INSERT INTO pod (orderId, orderNumber, facilityId, programId, periodId, receivedDate, deliveredBy, receivedBy, createdBy, modifiedBy) VALUES ",
-      "(#{orderId}, #{orderNumber}, #{facilityId}, #{programId}, #{periodId}, #{receivedDate}, #{deliveredBy}, #{receivedBy}, #{createdBy}, #{modifiedBy} )"})
+    {"INSERT INTO pod (orderId, orderNumber, facilityId, programId, periodId, receivedDate, deliveredBy, receivedBy, sourceApplication, msdOrderNumber, deliveredDate, \n" +
+            "            orderDate, invoiceNumber, invoiceDate, deliveryStatus, numberOfItemsReceived, \n" +
+            "            comment, totalInvoiceItem ,createdBy, modifiedBy) VALUES ",
+      "(#{orderId}, #{orderNumber}, #{facilityId}, #{programId}, #{periodId}, #{receivedDate}, #{deliveredBy}, #{receivedBy}, #{sourceApplication}, #{msdOrderNumber}, #{deliveredDate}::date, " +
+      " #{orderDate}::date, #{invoiceNumber}, #{invoiceDate}::date, #{deliveryStatus}, #{numberOfItemsReceived},#{comment},#{totalInvoiceItem},#{createdBy}, #{modifiedBy} )"})
   @Options(useGeneratedKeys = true)
   void insertPOD(OrderPOD orderPod);
 

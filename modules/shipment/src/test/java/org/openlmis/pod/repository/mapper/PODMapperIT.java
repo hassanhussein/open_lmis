@@ -102,7 +102,7 @@ public class PODMapperIT extends ShipmentTestContext {
     Integer quantityReturned = 55;
     OrderPODLineItem orderPodLineItem = new OrderPODLineItem(orderPod.getId(), productCode, productCategory,
       productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, quantityShipped, quantityReturned, true, "P98",
-      "notes");
+      "notes","reason","descrpy","1209ABC","My comment","123ANC");
     mapper.insertPODLineItem(orderPodLineItem);
 
     List<OrderPODLineItem> orderPodLineItems = mapper.getPODLineItemsByPODId(orderPod.getId());
@@ -207,7 +207,7 @@ public class PODMapperIT extends ShipmentTestContext {
     mapper.insertPOD(expectedOrderPod);
 
     OrderPODLineItem lineItem1 = new OrderPODLineItem(expectedOrderPod.getId(), productCode, productCategory,
-      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, null, true, null, null);
+      productCategoryDisplayOrder, productDisplayOrder, 100, productName, dispensingUnit, 10, null, null, true, null, null,null,"100","100","Needed",null);
     mapper.insertPODLineItem(lineItem1);
 
     OrderPOD orderPOD = mapper.getPODById(expectedOrderPod.getId());

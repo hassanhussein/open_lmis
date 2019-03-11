@@ -10,6 +10,8 @@
 
 package org.openlmis.pod.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -44,7 +46,38 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 public class OrderPOD extends BaseModel {
 
   private Long orderId;
+
   private String orderNumber;
+  /*
+  Start MSD POD
+  */
+  private String msdOrderNumber;
+
+  private String deliveredDate;
+
+  private String orderDate;
+
+  @JsonProperty("customerId")
+  private String facilityCode;
+
+  private String invoiceNumber;
+
+  private String invoiceDate;
+
+  private String deliveryStatus;
+
+  private Long numberOfItemsReceived;
+
+  private String sourceApplication;
+
+  private String comment;
+
+  private Long totalInvoiceItem;
+
+  /*
+    End MSD POD
+  */
+
   private Long facilityId;
   private Long programId;
   private Long periodId;

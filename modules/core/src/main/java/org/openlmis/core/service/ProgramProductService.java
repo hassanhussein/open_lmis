@@ -11,6 +11,7 @@
 package org.openlmis.core.service;
 
 import com.google.common.base.Predicate;
+import com.mchange.io.impl.LazyReadOnlyMemoryFileImpl;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
@@ -229,4 +230,8 @@ public class ProgramProductService {
       programProductRepository.updateISA(isa);
     }
 
+    public List<FacilityTypeApprovedProduct> getFacilityTypeApprovedProducts(Long facilityId, Long programId){
+
+    return facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(facilityId, programId);
+    }
 }

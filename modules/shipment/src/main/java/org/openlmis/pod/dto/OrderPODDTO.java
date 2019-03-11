@@ -10,6 +10,8 @@
 
 package org.openlmis.pod.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,12 +29,64 @@ import java.text.SimpleDateFormat;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonPropertyOrder({
+        "OrderNumber",
+        "MSDOrderNumber",
+        "DeliveredDate",
+        "OrderDate",
+        "ReceivedBy",
+        "DeliveredBy",
+        "InvoiceNumber",
+        "InvoiceDate",
+        "DeliveryStatus",
+        "NumberOfItemsReceived",
+        "Comment",
+        "SourceApplication",
+        "CustomerId"
+
+})
 public class OrderPODDTO {
 
   private Long id;
+  @JsonProperty("OrderNumber")
   private String orderNumber;
+  @JsonProperty("MSDOrderNumber")
+  private String msdOrderNumber;
+  @JsonProperty("DeliveredDate")
+  private String receivedDate;
+  @JsonProperty("OrderDate")
+  private String orderDate;
   private String stringCreatedDate;
+
+  @JsonProperty("CustomerId")
   private String facilityCode;
+
+  @JsonProperty("ReceivedBy")
+  public String receivedBy;
+
+  @JsonProperty("DeliveredBy")
+  public String deliveredBy;
+
+  @JsonProperty("InvoiceNumber")
+  public String invoiceNumber;
+  @JsonProperty("InvoiceDate")
+  public String invoiceDate;
+
+  @JsonProperty("DeliveryStatus")
+  public String deliveryStatus;
+
+  @JsonProperty("NumberOfItemsReceived")
+  public String numberOfItemsReceived;
+
+  @JsonProperty("SourceApplication")
+  public String sourceApplication;
+
+  @JsonProperty("Comment")
+  public String comment;
+
+  @JsonProperty("customerId")
+  public String customerId;
+
   private String facilityName;
   private String supplyingDepot;
   private String periodStartDate;

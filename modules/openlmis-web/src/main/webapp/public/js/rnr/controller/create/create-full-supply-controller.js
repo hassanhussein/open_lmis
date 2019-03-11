@@ -68,12 +68,16 @@ function CreateFullSupplyController($scope, messageService) {
   };
 
   $scope.showAddSkippedProductsModal = function(){
+    console.log($scope.$parent.$parent.rnr.skippedLineItems);
     $scope.addSkippedProductsModal = true;
   };
 
   $scope.unskipProducts = function(rnr){
 
+
     var selected = _.where(rnr.skippedLineItems, {unskip: true});
+      console.log(rnr.skippedLineItems);
+
     angular.forEach(selected, function(lineItem){
       lineItem.skipped = false;
       $scope.$parent.page[$scope.$parent.visibleTab].push( new RegularRnrLineItem(lineItem, rnr.numberOfMonths, rnr.programRnrColumnList, rnr.status));

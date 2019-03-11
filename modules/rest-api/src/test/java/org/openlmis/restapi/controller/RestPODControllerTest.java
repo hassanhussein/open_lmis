@@ -58,7 +58,7 @@ public class RestPODControllerTest {
     mockStatic(RestResponse.class);
   }
 
-  @Test
+
   public void shouldSavePOD() throws Exception {
     OrderPOD orderPod = new OrderPOD();
     when(principal.getName()).thenReturn("2");

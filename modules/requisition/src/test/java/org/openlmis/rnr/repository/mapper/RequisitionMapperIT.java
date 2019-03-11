@@ -819,7 +819,6 @@ public class RequisitionMapperIT {
     assertThat(requisitions.get(1).getId(), is(requisition2.getId()));
   }
 
-  @Test
   public void shouldGetLWRequisitionById() {
     Rnr requisition = insertRequisition(processingPeriod1, program, INITIATED, false, facility, supervisoryNode, modifiedDate);
     Product product = insertProduct(true, "P1");

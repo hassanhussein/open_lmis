@@ -202,7 +202,9 @@ public interface RequisitionMapper {
       @Result(property = "program.id", column = "programId"),
       @Result(property = "facility.id", column = "facilityId"),
       @Result(property = "period.id", column = "periodId"),
-      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
+      @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId"))
   })
   Rnr getLWById(Long rnrId);
 

@@ -3,6 +3,7 @@ package org.openlmis.restapi.controller;
 import io.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.pod.domain.OrderPOD;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestPODService;
@@ -31,12 +32,15 @@ public class RestPODController extends BaseController {
   @Autowired
   private RestPODService restPODService;
 
+  @Autowired
+  public MessageService messageService;
+
   @RequestMapping(value = "/rest-api/orders/{orderNumber}/pod", method = POST, headers = ACCEPT_JSON)
   public ResponseEntity<RestResponse> savePOD(@RequestBody OrderPOD orderPod, @PathVariable String orderNumber, Principal principal) {
     try {
       orderPod.setOrderNumber(orderNumber);
       restPODService.updatePOD(orderPod, loggedInUserId(principal));
-      return RestResponse.success("message.success.pod.updated");
+      return RestResponse.success(messageService.message("message.success.pod.updated"),orderPod);
     } catch (DataException e) {
       return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
     }

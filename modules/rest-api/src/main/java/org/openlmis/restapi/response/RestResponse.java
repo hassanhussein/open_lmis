@@ -18,6 +18,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.pod.domain.OrderPOD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,6 +42,11 @@ public class RestResponse {
   public static final String SUCCESS = "success";
 
   private static MessageService messageService;
+
+  public static ResponseEntity<RestResponse> success(String key, Object value) {
+    return new ResponseEntity<>(new RestResponse(key, value), HttpStatus.OK);
+
+  }
 
   @Autowired(required = true)
   public void setMessageService(MessageService messageService){

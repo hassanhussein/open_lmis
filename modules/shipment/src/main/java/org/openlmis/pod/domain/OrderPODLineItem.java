@@ -51,6 +51,15 @@ public class OrderPODLineItem extends BaseModel {
   private String replacedProductCode;
   private String notes;
 
+  //Added line items for POD
+  private String reason;
+  private String description;
+  private String invoiceNumber;
+  private String comment;
+  private String uom;
+
+
+
   public OrderPODLineItem(Long podId, String productCode, Integer quantityReceived) {
     this.podId = podId;
     this.productCode = productCode;

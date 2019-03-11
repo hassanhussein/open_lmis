@@ -96,5 +96,12 @@ public class ProgramProductController extends BaseController {
       programProductISA.setModifiedBy(loggedInUserId(request));
       service.updateISA(programProductISA);
     }
+
+  @RequestMapping(value = "/productList", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFacilityByType(@PathVariable Long facilityId,
+                                                            @PathVariable Long programId
+                                                            ) {
+    return response("facilities", service.getFacilityTypeApprovedProducts(facilityId,programId));
+  }
 }
 
