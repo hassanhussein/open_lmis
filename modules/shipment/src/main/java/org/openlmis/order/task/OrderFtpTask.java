@@ -3,9 +3,9 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 
@@ -25,6 +25,7 @@ import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
@@ -44,33 +45,8 @@ import static org.openlmis.order.domain.OrderStatus.TRANSFER_FAILED;
 @Component
 public class OrderFtpTask {
 
-  @Autowired
-  private ConfigurationSettingService configurationSettingService;
-
-  @Autowired
-  private SupplyLineService supplyLineService;
-
-  @Autowired
-  private FacilityFtpDetailsService facilityFtpDetailsService;
-
-  @Autowired
-  private OrderService orderService;
-
-  @Autowired
-  private OrderCsvHelper orderCsvHelper;
-
-  @Autowired
-  private OrderFtpSender ftpSender;
-
-
-  Boolean sendFtp;
-
-  private void initiateSettings(){
-    sendFtp = configurationSettingService.getBoolValue("USE_FTP_TO_SEND_ORDERS");
-  }
-
+  public static String FTP_CREDENTIAL_MISSING_COMMENT = "order.ftpComment.ftpcredential.missing";
   private static Logger logger = Logger.getLogger(OrderFtpTask.class);
-
   private static String CONNECTION_REFUSED = "Connection refused";
   private static String CONNECTION_REFUSED_TIMEOUT = "connect timed out";
   private static String LOGIN_INCORRECT = "Login incorrect";
@@ -78,9 +54,33 @@ public class OrderFtpTask {
   private static String CONNECTION_REFUSED_COMMENT = "order.ftpComment.connection.refused";
   private static String LOGIN_INCORRECT_COMMENT = "order.ftpComment.incorrect.login";
   private static String PERMISSION_DENIED_COMMENT = "order.ftpComment.permission.denied";
-  public static String FTP_CREDENTIAL_MISSING_COMMENT = "order.ftpComment.ftpcredential.missing";
+
+  @Value("order.uses.api.for.transport")
+  Boolean useApisForOrderTransport = false;
+
+  Boolean sendFtp;
+  @Autowired
+  private ConfigurationSettingService configurationSettingService;
+  @Autowired
+  private SupplyLineService supplyLineService;
+  @Autowired
+  private FacilityFtpDetailsService facilityFtpDetailsService;
+  @Autowired
+  private OrderService orderService;
+  @Autowired
+  private OrderCsvHelper orderCsvHelper;
+  @Autowired
+  private OrderFtpSender ftpSender;
+
+  private void initiateSettings() {
+    sendFtp = configurationSettingService.getBoolValue("USE_FTP_TO_SEND_ORDERS");
+  }
 
   public void processOrder(@Payload List<Order> orders) {
+
+    if (useApisForOrderTransport) {
+      return;
+    }
 
     initiateSettings();
 
@@ -106,7 +106,7 @@ public class OrderFtpTask {
       try (FileWriter fileWriter = new FileWriter(file)) {
         orderCsvHelper.writeCsvFile(order, orderFileTemplateDTO, fileWriter);
         fileWriter.flush();
-        if(sendFtp) {
+        if (sendFtp) {
           ftpSender.sendFile(supplyingFacilityFtpDetails, file);
         }
         updateOrder(order, RELEASED, null);
@@ -124,9 +124,9 @@ public class OrderFtpTask {
   private void handleException(CamelExecutionException camelException, Order order) {
     logger.error("Error in ftp of order file", camelException);
     if (!(updateOrderForException(CONNECTION_REFUSED_TIMEOUT, camelException, order, CONNECTION_REFUSED_COMMENT) ||
-      updateOrderForException(CONNECTION_REFUSED, camelException, order, CONNECTION_REFUSED_COMMENT) ||
-      updateOrderForException(LOGIN_INCORRECT, camelException, order, LOGIN_INCORRECT_COMMENT) ||
-      updateOrderForException(PERMISSION_DENIED, camelException, order, PERMISSION_DENIED_COMMENT))) {
+        updateOrderForException(CONNECTION_REFUSED, camelException, order, CONNECTION_REFUSED_COMMENT) ||
+        updateOrderForException(LOGIN_INCORRECT, camelException, order, LOGIN_INCORRECT_COMMENT) ||
+        updateOrderForException(PERMISSION_DENIED, camelException, order, PERMISSION_DENIED_COMMENT))) {
       order.setStatus(TRANSFER_FAILED);
       order.setFtpComment(null);
     }
