@@ -71,8 +71,8 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
 
     OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
-
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, []);
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
+       ['quantityApproved','remarks'], !$scope.rnr.period.enableOrder);
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
   $scope.manualTestCount = $scope.rnr.manualTestLineItems.length;
