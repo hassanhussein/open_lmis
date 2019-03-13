@@ -32,7 +32,7 @@ public class Template {
   protected List<? extends Column> columns;
 
   @JsonIgnore
-  public List<? extends Column> getPrintableColumns(Boolean fullSupply) {
+  public List<? extends Column> getPrintableColumns(Boolean fullSupply, Boolean reportOnlyFlag) {
     return null;
   }
 

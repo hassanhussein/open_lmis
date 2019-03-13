@@ -59,6 +59,7 @@ public class RequisitionPdfModel {
   private Rnr requisition;
   private List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes;
   private MessageService messageService;
+  private boolean reportOnlyFlag;
 
   private ConfigurationSettingService configService;
 
@@ -71,6 +72,7 @@ public class RequisitionPdfModel {
     this.numberOfMonths = (Integer) model.get(NUMBER_OF_MONTHS);
     this.messageService = messageService;
     this.configService = configService;
+    this.reportOnlyFlag = (boolean)model.get(REPORT_ONLY_FLAG);
   }
 
   public Paragraph getFullSupplyHeader() {
@@ -96,7 +98,7 @@ public class RequisitionPdfModel {
                                 Boolean fullSupply,
                                 List<? extends Column> columnList) throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {
     Template template = Template.getInstance(columnList);
-    List<? extends Column> visibleColumns = template.getPrintableColumns(fullSupply);
+    List<? extends Column> visibleColumns = template.getPrintableColumns(fullSupply, reportOnlyFlag);
 
     PdfPTable table = prepareTable(visibleColumns);
 
