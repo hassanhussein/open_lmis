@@ -273,6 +273,19 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
     return rnr;
   };
 
+  Rnr.prototype.numberOfProductsOrdered = function() {
+   //  var rnr = this;
+    return rnr.allSupplyLineItems.filter(function(lineItem) {
+        return !lineItem.skipped && lineItem.calculatedOrderQuantity;
+     }).length;
+  };
+
+  Rnr.prototype.percentageOfProductsOrdered = function() {
+   //var rnr = this;
+    return rnr.allSupplyLineItems.length &&
+     ((this.numberOfProductsOrdered() / rnr.allSupplyLineItems.length) * 100).toFixed(1);
+  };
+
   Rnr.prototype.initEquipments = function(){
     var rnr = this;
     angular.forEach(this.equipmentLineItems, function(eLineItem){

@@ -10,6 +10,16 @@
 
 <div class="total-cost-container">
     <div class="cost-values">
+        <strong ng-show="rnr.status !== 'INITIATED'">
+            <span id="orderQuantity" class="order-quantity cell-text">
+              <span openlmis-message="rnr.number.of.product.ordered"></span>
+             <span ng-bind="rnr.numberOfProductsOrdered()"></span>
+             <span openlmis-message="rnr.number.of.product.ordered.out.of"></span>
+             <span ng-bind="rnr.allSupplyLineItems.length"></span>
+             <span>( {{rnr.percentageOfProductsOrdered() }}%)</span>
+            </span>
+        </strong>
+
     <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget && rnr.allocatedBudget"
           class="budget-exceeds-detailed">
       <strong>
