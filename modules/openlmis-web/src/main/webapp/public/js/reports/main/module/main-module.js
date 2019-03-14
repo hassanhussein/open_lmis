@@ -176,7 +176,11 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: DistributionSummaryReportController,
             templateUrl: 'partials/distribution-summary.html',
             reloadOnSearch: false
-        }).otherwise({redirectTo: '/adjustment-summary'});
+        }).when('/item-summary-report', {
+                      controller: ItemFillRateSummaryFunction,
+                      templateUrl: 'partials/item-fill-rate-summary.html',
+                      reloadOnSearch: false
+                  }).otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
 }).filter('positive', function () {

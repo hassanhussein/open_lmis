@@ -291,6 +291,24 @@ public interface DashboardMapper {
             "order by 1,3,2")
     List<HashMap<String, Object>> getFacilityStockSummary(@Param("programId") Long programId, @Param("periodId") Long periodId, @Param("userId") Long userId);
 
-
+   @Select("\n" +
+           "\n" +
+           "select zone_name zoneName,region_name region, district_name district,f.name facilityName,item.productCode, item.product,\n" +
+           "to_char(R.modifieddate,'dd-MM-yyyy') orderedDate,to_char(pod.INVOICEDATE,'dd-MM-yyyy') shippeddate, \n" +
+           "\n" +
+           "to_char(receiveddate ,'dd-MM-yyyy') receiveddate, coalesce(item.quantityApproved,0) OrderedQuantity, li.quantityShipped quantityReceived, \n" +
+           "\n" +
+           "CASE WHEN coalesce(item.quantityApproved,0) > 0 THEN ROUND((LI.quantityShipped *100/ item.quantityApproved ) ,0)  else 0 end as itemFillRate\n" +
+           "\n" +
+           "from pod\n" +
+           "JOIN pod_line_items li ON pod.id = li.podid\n" +
+           "JOIN facilities f on f.id = pod.facilityid \n" +
+           "JOIN vw_districts d ON d.district_ID = F.GEOGRAPHICZONEID\n" +
+           "join REQUISITIONS R on R.ID = POD.ORDERID\n" +
+           "JOIN requisition_line_items item on item.rnrid = R.ID\n" +
+           "where li.QUANTITYRECEIVED > 0 AND R.periodid = 30 and POD.facilityId = 19506 \n" +
+           "and POD.programId = 1 AND R.STATUS IN('RELEASED') and item.quantityApproved > 0\n" +
+           "\n")
+   List<HashMap<String,Object>>getItemFillRateSummary();
 }
 

@@ -1350,3 +1350,7 @@ services.factory('SearchVaccineStore', function ($resource) {
 services.factory('FacilityTypeByUserId', function ($resource) {
     return $resource('/users/facility-type-for-user.json', {}, {});
 });
+
+services.factory('GetItemFillRateSummary', function ($resource) {
+    return $resource('/dashboard/get-item-fill-rate-summary.json', {}, {});
+});

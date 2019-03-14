@@ -319,4 +319,9 @@ public class DashboardController extends BaseController {
         return OpenLmisResponse.response("colors", this.lookupService.getStockColor(mos,levelId));
     }
 
+ @RequestMapping(value = "/get-item-fill-rate-summary.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getItemFillRateSummary() {
+        return OpenLmisResponse.response("colors", this.lookupService.getItemFillRateSummary());
+    }
+
 }
