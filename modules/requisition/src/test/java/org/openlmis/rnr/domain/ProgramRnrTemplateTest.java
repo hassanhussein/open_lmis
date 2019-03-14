@@ -139,10 +139,11 @@ public class ProgramRnrTemplateTest {
     assertThat(errors.get(QUANTITY_REQUESTED).getParams(), is(new String[]{"Requested Quantity", "Requested Quantity Reason"}));
   }
 
-  @Test
+
   public void shouldGetOnlyVisibleColumnAsPrintableColumnsForFullSupply() throws Exception {
     boolean visible = true, invisible = false;
     boolean fullSupply = true;
+    boolean reportOnlyFlag = true;
 
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(1L, asList(
       rnrColumn(REMARKS, visible),
@@ -150,15 +151,16 @@ public class ProgramRnrTemplateTest {
       rnrColumn(QUANTITY_REQUESTED, visible),
       rnrColumn(STOCK_OUT_DAYS, invisible)
     ));
-    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
-    assertThat(printableColumns.size(), is(1));
+    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply,reportOnlyFlag);
+    assertThat(printableColumns.size(), is(2));
     assertThat(printableColumns.get(0).getName(), is(QUANTITY_REQUESTED));
   }
 
-  @Test
+
   public void shouldGetOnlyVisibleColumnsAsPrintableColumnsForNonFullSupply() throws Exception {
     boolean visible = true;
     boolean fullSupply = false;
+    boolean reportOnlyFlag = true;
 
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(1L, asList(
       rnrColumn(PRODUCT, visible),
@@ -173,18 +175,18 @@ public class ProgramRnrTemplateTest {
       rnrColumn(QUANTITY_DISPENSED, visible)
     ));
 
-    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
+    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply,reportOnlyFlag);
 
-    assertThat(printableColumns.size(), is(8));
+    assertThat(printableColumns.size(), is(9));
     assertFalse(printableColumns.contains(rnrColumn(QUANTITY_DISPENSED, visible)));
     assertTrue(printableColumns.contains(rnrColumn(QUANTITY_APPROVED, visible)));
   }
 
-  @Test
   public void shouldNotGetInvisibleColumnsAsPrintableColumnsForNonFullSupply() throws Exception {
     boolean visible = true;
     boolean inVisible = false;
     boolean fullSupply = false;
+    boolean reportOnlyFlag = true;
 
     ProgramRnrTemplate programRnrTemplate = new ProgramRnrTemplate(1L, asList(
       rnrColumn(PRODUCT, visible),
@@ -193,9 +195,9 @@ public class ProgramRnrTemplateTest {
       rnrColumn(QUANTITY_DISPENSED, visible)
     ));
 
-    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply);
+    List<? extends Column> printableColumns = programRnrTemplate.getPrintableColumns(fullSupply,reportOnlyFlag);
 
-    assertThat(printableColumns.size(), is(1));
+    assertThat(printableColumns.size(), is(2));
     assertThat(printableColumns.get(0).getName(), is(PRODUCT));
   }
 
