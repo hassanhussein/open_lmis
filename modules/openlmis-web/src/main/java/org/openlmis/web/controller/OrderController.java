@@ -45,8 +45,7 @@ import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.order.domain.OrderStatus.*;
 import static org.openlmis.order.dto.OrderDTO.getOrdersForView;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This controller handles endpoint related to create, get details for an Order.
@@ -175,13 +174,13 @@ public class OrderController extends BaseController {
 
   @ApiOperation(value = "Orders pending shipment", notes = "Returns list of order identifiers that are yet to be fulfilled.", response = OrderIdentifierDto.class)
   @ApiResponses(value = {
-      @ApiResponse(code = 200, message = "Successful. retrives orders pending fulfillment. ", response = OrderIdentifierDto.class),
+      @ApiResponse(code = 200, message = "Successful. retrives orders pending fulfillment. ", response = String.class),
       @ApiResponse(code = 500, message = "Internal server error")}
   )
   @RequestMapping(value = "/rest-api/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
   public ResponseEntity<OpenLmisResponse> getPendingOrders() {
-    List<OrderIdentifierDto> orderIdentifiers = orderService.getOrdersByStatus("IN_ROUTE");
+    List<String> orderIdentifiers = orderService.getOrdersByStatus("IN_ROUTE");
     return response(ORDERS, orderIdentifiers);
   }
 
@@ -195,6 +194,19 @@ public class OrderController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getOrderDetail(@PathVariable("orderNumber") String orderNumber) {
     Order order = orderService.getByOrderNumber(orderNumber);
     return response(ORDER, FullOrderDto.generateDto(orderService.getOrder(order.getId())));
+  }
+
+
+  @ApiOperation(value = "Get Order Detail", notes = "Returns detail of an order", response = String.class)
+  @ApiResponses(value = {
+      @ApiResponse(code = 200, message = "Successful. Returns detail of an order ", response = String.class),
+      @ApiResponse(code = 500, message = "Internal server error")}
+  )
+  @RequestMapping(value = "/rest-api/orders/mark-as-processed", method = PUT)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
+  public ResponseEntity<OpenLmisResponse> markAsProcessed(@RequestBody List<String> orderNumbers) {
+    List<String> processedOrders = orderService.markAsProcessed(orderNumbers);
+    return response(ORDERS, processedOrders);
   }
 
 

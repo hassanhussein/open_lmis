@@ -316,7 +316,20 @@ public class OrderService {
     }
   }
 
-  public List<OrderIdentifierDto> getOrdersByStatus(String status){
+  public List<String> getOrdersByStatus(String status){
     return orderRepository.getOrdersByStatus(status);
+  }
+
+  public List<String> markAsProcessed(List<String> orderIdentifierDtos) {
+    List<String> processedIdentifiers = new ArrayList<>();
+    orderIdentifierDtos.forEach(identifer -> {
+      Order order = orderRepository.getByOrderNumber(identifer);
+      if (order != null && order.getStatus() == IN_ROUTE) {
+        order.setStatus(READY_TO_PACK);
+        orderRepository.updateOrderStatus(order);
+        processedIdentifiers.add(identifer);
+      }
+    });
+    return processedIdentifiers;
   }
 }

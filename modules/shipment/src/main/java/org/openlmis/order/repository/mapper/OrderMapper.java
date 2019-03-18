@@ -145,5 +145,5 @@ public interface OrderMapper {
   Order getByOrderNumber(String orderNumber);
 
   @Select("SELECT orderNumber FROM orders WHERE status = #{status}")
-  List<OrderIdentifierDto> getOrdersByStatus(@Param("status") String status);
+  List<String> getOrdersByStatus(@Param("status") String status);
 }
