@@ -13,6 +13,7 @@ import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.order.dto.OrderIdentifierDto;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -99,5 +100,9 @@ public class OrderRepository {
 
   public Order getByOrderNumber(String orderNumber) {
     return orderMapper.getByOrderNumber(orderNumber);
+  }
+
+  public List<OrderIdentifierDto> getOrdersByStatus(String status) {
+    return orderMapper.getOrdersByStatus(status);
   }
 }

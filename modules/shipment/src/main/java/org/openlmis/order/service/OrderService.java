@@ -21,6 +21,7 @@ import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
+import org.openlmis.order.dto.OrderIdentifierDto;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -313,5 +314,9 @@ public class OrderService {
     for(Rnr rnr: rnrList){
       requisitionService.releaseWithoutOrder(rnr, user);
     }
+  }
+
+  public List<OrderIdentifierDto> getOrdersByStatus(String status){
+    return orderRepository.getOrdersByStatus(status);
   }
 }

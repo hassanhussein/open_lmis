@@ -55,10 +55,11 @@ public class OrderFtpTask {
   private static String LOGIN_INCORRECT_COMMENT = "order.ftpComment.incorrect.login";
   private static String PERMISSION_DENIED_COMMENT = "order.ftpComment.permission.denied";
 
-  @Value("order.uses.api.for.transport")
+  @Value("${order.uses.api.for.transport}")
   Boolean useApisForOrderTransport = false;
 
   Boolean sendFtp;
+
   @Autowired
   private ConfigurationSettingService configurationSettingService;
   @Autowired

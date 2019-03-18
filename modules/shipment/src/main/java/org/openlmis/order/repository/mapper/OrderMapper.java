@@ -17,6 +17,7 @@ import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.order.dto.OrderIdentifierDto;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
@@ -142,4 +143,7 @@ public interface OrderMapper {
           one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   Order getByOrderNumber(String orderNumber);
+
+  @Select("SELECT orderNumber FROM orders WHERE status = #{status}")
+  List<OrderIdentifierDto> getOrdersByStatus(@Param("status") String status);
 }
