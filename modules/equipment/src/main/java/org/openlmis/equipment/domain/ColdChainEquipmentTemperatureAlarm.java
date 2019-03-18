@@ -24,6 +24,10 @@ public class ColdChainEquipmentTemperatureAlarm extends BaseModel {
 
   @Getter
   @Setter
+  private Long id;
+
+  @Getter
+  @Setter
   private Long equipmentInventoryId;
 
   @Getter

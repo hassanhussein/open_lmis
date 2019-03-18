@@ -92,6 +92,7 @@ public interface DailyColdTraceStatusMapper {
   List<ColdTraceSummaryDTO> getLastSubmission(@Param("code") String regionCode);
 
   @Select("SELECT " +
+      "  i.id, " +
       "  r.code                              regionCode, " +
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
@@ -112,6 +113,7 @@ public interface DailyColdTraceStatusMapper {
   List<ColdChainEquipmentDTO> getEquipmentList(@Param("code") String regionCode);
 
   @Select("SELECT " +
+      "  i.id," +
       "  r.code                              regionCode, " +
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
@@ -133,6 +135,7 @@ public interface DailyColdTraceStatusMapper {
   List<ColdChainEquipmentDTO> getEquipmentListWithVerifiedParam(@Param("code") String regionCode, @Param("verified") Boolean verified);
 
   @Select("SELECT " +
+      "  i.id," +
       "  r.code                              regionCode, " +
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
@@ -153,6 +156,7 @@ public interface DailyColdTraceStatusMapper {
   List<ColdChainEquipmentDTO> getAllEquipments();
 
   @Select("SELECT " +
+      "  i.id," +
       "  r.code                              regionCode, " +
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
@@ -179,4 +183,7 @@ public interface DailyColdTraceStatusMapper {
       " ORDER BY date desc " +
       "limit 1000")
   List<ColdTraceMonthlyStatusDTO> getDailyStatusSubmittedFor(@Param("serialNumber") String serialNumber);
+
+  @Delete("DELETE from equipment_daily_cold_trace_status WHERE id = #{id}")
+  void deleteColdTraceStatus(@Param("id") Long id);
 }

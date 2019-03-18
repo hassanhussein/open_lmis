@@ -12,10 +12,7 @@
 
 package org.openlmis.equipment.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.dto.ColdTraceAlarmDTO;
 import org.springframework.stereotype.Repository;
@@ -66,4 +63,6 @@ public interface ColdChainTemperatureAlarmMapper {
       " and ca.equipmentInventoryId = ANY(#{equipmentInventoryIds}::INT[])")
   List<ColdTraceAlarmDTO> getAlarmByEquipmentInventoriesAndPeriod(@Param("equipmentInventoryIds") String equipmentInventoryIds, @Param("period") Long period);
 
+  @Delete("delete from cold_chain_equipment_temperature_alarms where alarmId = #{alarmId}")
+  void deleteAlert(@Param("alarmId") String alarmId);
 }

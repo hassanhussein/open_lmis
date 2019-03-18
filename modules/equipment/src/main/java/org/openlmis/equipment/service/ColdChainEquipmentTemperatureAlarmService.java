@@ -90,4 +90,8 @@ public class ColdChainEquipmentTemperatureAlarmService {
     List<EquipmentInventory> inventories = inventoryService.getInventoryByFacilityAndProgram(facilityId, programId);
     return repository.getAlarmsByEquipmentInventoriesAndPeriod(commaSeparator.commaSeparateIds(inventories), periodId);
   }
+
+  public void deleteByAlertId(String alert_id) {
+    repository.deleteAlert(alert_id);
+  }
 }

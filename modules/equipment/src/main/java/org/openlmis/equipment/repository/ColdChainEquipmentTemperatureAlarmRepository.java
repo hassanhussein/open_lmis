@@ -50,4 +50,7 @@ public class ColdChainEquipmentTemperatureAlarmRepository {
     return alarmMapper.getAlarmByEquipmentInventory(equipmentInventoryId);
   }
 
+  public void deleteAlert(String alert_id) {
+    alarmMapper.deleteAlert(alert_id);
+  }
 }

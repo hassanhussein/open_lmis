@@ -32,6 +32,9 @@ import java.util.Date;
 @ApiModel
 public class ColdTraceMonthlyStatusDTO {
 
+  @ApiModelProperty(name="ID", notes = "An internal ID for persisted monthly status.")
+  private Long id;
+
   @ApiModelProperty(name = "Device ID", notes = "A unique identifier that identifies the equipment", required = true)
   private String serialNumber;
 

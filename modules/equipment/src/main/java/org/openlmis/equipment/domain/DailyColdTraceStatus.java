@@ -28,6 +28,8 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class DailyColdTraceStatus extends BaseModel {
 
+  private Long id;
+
   private String serialNumber;
 
   private EquipmentInventory equipmentInventory;

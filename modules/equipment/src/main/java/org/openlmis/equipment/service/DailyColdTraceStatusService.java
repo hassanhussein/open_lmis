@@ -74,6 +74,10 @@ public class DailyColdTraceStatusService {
     return mapper.getDailyStatusSubmittedFor(serialNumber);
   }
 
+  public void deleteDailyStatus(Long id) {
+    mapper.deleteColdTraceStatus(id);
+  }
+
   public List<ColdChainEquipmentDTO> getEquipmentList(String regionCode, Boolean verified) {
     if ("*".equals(regionCode)) {
       if (verified != null) {

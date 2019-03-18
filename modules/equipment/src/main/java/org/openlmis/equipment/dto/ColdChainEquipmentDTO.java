@@ -23,6 +23,8 @@ import lombok.Setter;
 @Setter
 public class ColdChainEquipmentDTO {
 
+  private Long id;
+
   private String regionCode;
 
   private String regionName;
