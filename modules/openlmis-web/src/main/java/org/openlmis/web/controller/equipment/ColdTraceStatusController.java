@@ -14,7 +14,6 @@ package org.openlmis.web.controller.equipment;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.omg.CORBA.NameValuePair;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.dto.*;
@@ -29,7 +28,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @Api(value = "Cold Trace", description = "APIs to report cold trace status")
@@ -47,7 +45,7 @@ public class ColdTraceStatusController extends BaseController {
   private ColdChainEquipmentTemperatureAlarmService alarmService;
 
   @ApiOperation(
-      value="submit monthly status",
+      value = "submit monthly status",
       response = MultiValueMap.class,
       notes = "Accepts submission of monthly status of equipment"
   )
@@ -59,7 +57,21 @@ public class ColdTraceStatusController extends BaseController {
   }
 
   @ApiOperation(
-      value="submit temperature alarm.",
+      value = "Deletes monthly status that was previously submitted",
+      response = MultiValueMap.class,
+      notes = "Accepts submission of monthly status of equipment"
+  )
+  @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status", method = RequestMethod.DELETE, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> delete(@RequestBody ColdTraceMonthlyStatusDTO status, Principal principal) {
+    status.validate();
+    if (status.getId() != null) {
+      dailyColdTraceStatusService.deleteDailyStatus(status.getId());
+    }
+    return OpenLmisResponse.success("Daily cold trace status deleted for" + status.getDate().toString());
+  }
+
+  @ApiOperation(
+      value = "submit temperature alarm.",
       response = MultiValueMap.class,
       notes = "Accepts submission of alarm notifications from Nexleaf RTM system."
   )
@@ -74,7 +86,24 @@ public class ColdTraceStatusController extends BaseController {
   }
 
   @ApiOperation(
-      value="return list of alarm submissions for a serial number.",
+      value = "Deletes temperature alarm.",
+      response = MultiValueMap.class,
+      notes = "Deletes submission of alarm notifications from Nexleaf RTM system."
+  )
+  @RequestMapping(
+      value = "/rest-api/equipment/cold-trace/alarms",
+      method = RequestMethod.DELETE,
+      headers = ACCEPT_JSON
+  )
+  public ResponseEntity<OpenLmisResponse> deleteAlarms(@RequestBody ColdChainTemperatureAlarmDTO alarm) {
+    if(alarm.getAlert_id() != null) {
+      alarmService.deleteByAlertId(alarm.getAlert_id());
+    }
+    return OpenLmisResponse.success("Alert has been deleted");
+  }
+
+  @ApiOperation(
+      value = "return list of alarm submissions for a serial number.",
       response = ColdChainEquipmentTemperatureAlarm.class,
       responseContainer = "List",
       notes = "Accepts an equipment serial number. " +
@@ -88,7 +117,7 @@ public class ColdTraceStatusController extends BaseController {
   }
 
   @ApiOperation(
-      value="return list of alarm submissions for a serial number in period.",
+      value = "return list of alarm submissions for a serial number in period.",
       response = ColdChainEquipmentTemperatureAlarm.class,
       responseContainer = "List",
       notes = "Accepts an equipment serial number and period id. " +
@@ -103,7 +132,7 @@ public class ColdTraceStatusController extends BaseController {
   }
 
   @ApiOperation(
-      value="return list of cold trace summary for region",
+      value = "return list of cold trace summary for region",
       response = ColdTraceSummaryDTO.class,
       responseContainer = "List",
       notes = "Accepts a region code. " +
@@ -127,12 +156,12 @@ public class ColdTraceStatusController extends BaseController {
   )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/equipments", method = RequestMethod.GET, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getEquipmentList(@RequestParam("regionCode") String regionCode,
-                                                           @RequestParam(value = "verified",defaultValue = "") Boolean verified ) {
+                                                           @RequestParam(value = "verified", defaultValue = "") Boolean verified) {
     return OpenLmisResponse.response(EQUIPMENTS, dailyColdTraceStatusService.getEquipmentList(regionCode, verified));
   }
 
   @ApiOperation(
-      value="return list of monthly status",
+      value = "return list of monthly status",
       response = ColdTraceMonthlyStatusDTO.class,
       responseContainer = "List",
       notes = "Accepts an equipment serial number. " +
@@ -144,14 +173,14 @@ public class ColdTraceStatusController extends BaseController {
     return OpenLmisResponse.response(STATUSES, dailyColdTraceStatusService.getStatusSubmittedFor(serialNumber));
   }
 
-  @ApiOperation(value="return list of monthly status",
+  @ApiOperation(value = "return list of monthly status",
       response = ColdTraceMonthlyStatusDTO.class, responseContainer = "List")
   @RequestMapping(value = "/equipment/cold-trace/status", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> findStatusForPeriod(@RequestParam("facility") Long facilityId, @RequestParam("period") Long periodId) {
     return OpenLmisResponse.response(COLD_TRACE_STATUS, dailyColdTraceStatusService.findStatusForFacilityPeriod(facilityId, periodId));
   }
 
-  @ApiOperation(value="return list of monthly status",
+  @ApiOperation(value = "return list of monthly status",
       response = ColdTraceMonthlyStatusDTO.class, responseContainer = "List")
   @RequestMapping(value = "/equipments/cold-trace/{facility}/{program}/{period}/alarms", method = RequestMethod.GET)
   public ResponseEntity<OpenLmisResponse> getAlarmsForFacility(@PathVariable("facility") Long facilityId, @PathVariable("program") Long program, @PathVariable("period") Long periodId) {
