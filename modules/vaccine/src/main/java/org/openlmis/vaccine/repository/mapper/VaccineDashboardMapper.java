@@ -1822,12 +1822,14 @@ public interface VaccineDashboardMapper {
             "\n" +
             "\n" +
             ")\n" +
-            "select productId,cumulative_vaccinated, monthly_district_target, CASE WHEN PRODUCTiD =2412 then product when (PRODUCTiD=2418 and doseid =2) then product ||'2+' else product ||'-'|| DOSEID end as product, monthnumber,\n" +
+            "select dashboardDisplayOrder, productId,cumulative_vaccinated, monthly_district_target, CASE WHEN PRODUCTiD =2412 then product when (PRODUCTiD=2418 and doseid =2) then product ||'2+' else product ||'-'|| DOSEID end as product, monthnumber,\n" +
             "       case when monthly_district_target > 0 then\n" +
             "         ROUND( cumulative_vaccinated/ (monthly_district_target::numeric)*100,0) end as coverage,cumulative_vaccinated * monthnumber total\n" +
             "from coverage c\n" +
+            "  order by dashboardDisplayOrder   " +
             ") COVERAGE\n" +
-            "LEFT JOIN VACCINE_PRODUCT_TARGETS X ON COVERAGE.PRODUCTID = X.PRODUCTID\n")
+            "LEFT JOIN VACCINE_PRODUCT_TARGETS X ON COVERAGE.PRODUCTID = X.PRODUCTID" +
+            "  order by COVERAGE.dashboardDisplayOrder \n")
     List<HashMap<String, Object>> getNationalCoverageProductAndDose(@Param("userId") Long userId, @Param("periodId") Long periodId,
                                                                     @Param("year") Long year,@Param("product") Long product);
 

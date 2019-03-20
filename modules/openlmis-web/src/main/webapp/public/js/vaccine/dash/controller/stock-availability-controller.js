@@ -120,13 +120,13 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     }
 
     //Lower Level Charts
-    function getVaccineStockStatusChartForLowerLevel(dataV) {
+    function getVaccineStockStatusChartForLowerLevel(dataV, charts) {
         var vaccineDataT = [];
         var productT = [];
         for (var i = 0; i <= 1; i++) {
             vaccineDataT = dataV[i].dataPoints;
             productT = _.pluck(vaccineDataT, 'product');
-            populateTheChart(vaccineDataT, productT, chartIds[i], title[i], name[i]);
+            populateTheChart(vaccineDataT, productT, charts[i], title[i], name[i]);
 
         }
 
@@ -1280,6 +1280,31 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
 
     };
+
+    function openStockStatusForAllLevels(charts){
+
+        var par = {
+                facilityId: parseInt($scope.homeFacility.facilityid, 10),
+                date: null
+            };
+            FacilityInventoryStockStatusData.get(par).then(function (data) {
+                if (data !== null) {
+                    var byCategory = _.groupBy(data, function (p) {
+                        return p.product_category;
+                    });
+                    var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
+                        return [{"productCategory": index, "dataPoints": value}];
+                    });
+                    getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory,charts);
+
+                }
+
+
+            });
+
+
+    }
+
     if ($scope.homeFacility.facilitytypecode !== 'cvs') {
 
         var userLevel = ($scope.homeFacility.facilitytypecode === 'dvs') ? 'dvs' : 'rvs';
@@ -1332,6 +1357,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
         });
 
         $scope.loadDashboardDataForLowerLevel = function (filter) {
+
             $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(filter.product, 10)});
             $scope.periodToDisplay = _.findWhere($scope.periods, {id: parseInt(filter.period, 10)});
             $scope.doseToDisplay = filter.dose;
@@ -1376,29 +1402,12 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
         if ($scope.filter.product === null || $scope.filter.product === undefined) {
             $scope.filter.product = 2412;
         }
+        openStockStatusForAllLevels(['myStockVaccine', 'myStockSyringe']);
 
-
-        var par = {
-            facilityId: parseInt($scope.homeFacility.facilityid, 10),
-            date: null
-        };
-        FacilityInventoryStockStatusData.get(par).then(function (data) {
-            if (data !== null) {
-                var byCategory = _.groupBy(data, function (p) {
-                    return p.product_category;
-                });
-                var allStockDataPointsByCategory = $.map(byCategory, function (value, index) {
-                    return [{"productCategory": index, "dataPoints": value}];
-                });
-                getVaccineStockStatusChartForLowerLevel(allStockDataPointsByCategory);
-
-            }
-
-
-        });
+    //Removed data here
 
     } else {
-
+       var charts = ['myStockVaccine1', 'myStockSyringe1'];
 
         var currentDate2 = (defaultYear === null || defaultYear === undefined)?new Date().getFullYear()-1:defaultYear;
         GetPeriodForDashboard.get(currentDate2).then(function (data) {
@@ -1419,6 +1428,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 periodName: data.name,
                 productName: $scope.productToDisplay.name
             });
+            openStockStatusForAllLevels(charts);
             $scope.loadCoverageMap(para);
             $scope.districtCategorizationFunct(para, null, null);
             $scope.districtClassificationFunc(para, null, null);
