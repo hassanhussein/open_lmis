@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.order.domain.Order;
 
 import java.util.ArrayList;
@@ -40,6 +41,14 @@ public class FullOrderDto {
 
   @Getter
   @Setter
+  private ProcessingPeriod processingPeriod;
+
+  @Getter
+  @Setter
+  private Boolean isEmergency;
+
+  @Getter
+  @Setter
   private String supplyingFacilityCode;
 
   @Getter
@@ -51,6 +60,9 @@ public class FullOrderDto {
     dto.setFacilityCode(order.getRnr().getFacility().getCode());
     dto.setFacilityName(order.getRnr().getFacility().getName());
     dto.setOrderNumber(order.getOrderNumber());
+    dto.setProcessingPeriod(order.getRnr().getPeriod());
+    dto.setIsEmergency(order.getRnr().isEmergency());
+
     dto.setSupplyingFacilityCode(order.getSupplyingFacility().getCode());
 
     List<OrderLineItemDto> items = order.getRnr()

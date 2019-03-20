@@ -178,9 +178,9 @@ public class OrderController extends BaseController {
       @ApiResponse(code = 500, message = "Internal server error")}
   )
   @RequestMapping(value = "/rest-api/orders", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
-  public ResponseEntity<OpenLmisResponse> getPendingOrders() {
-    List<String> orderIdentifiers = orderService.getOrdersByStatus("IN_ROUTE");
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'FACILITY_FILL_SHIPMENT')")
+  public ResponseEntity<OpenLmisResponse> getPendingOrders(HttpServletRequest request) {
+    List<String> orderIdentifiers = orderService.getOrdersByStatus( loggedInUserId(request), "IN_ROUTE");
     return response(ORDERS, orderIdentifiers);
   }
 
@@ -190,7 +190,7 @@ public class OrderController extends BaseController {
       @ApiResponse(code = 500, message = "Internal server error")}
   )
   @RequestMapping(value = "/rest-api/orders/{orderNumber}", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'FACILITY_FILL_SHIPMENT')")
   public ResponseEntity<OpenLmisResponse> getOrderDetail(@PathVariable("orderNumber") String orderNumber) {
     Order order = orderService.getByOrderNumber(orderNumber);
     return response(ORDER, FullOrderDto.generateDto(orderService.getOrder(order.getId())));
@@ -203,7 +203,7 @@ public class OrderController extends BaseController {
       @ApiResponse(code = 500, message = "Internal server error")}
   )
   @RequestMapping(value = "/rest-api/orders/mark-as-processed", method = PUT)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'FACILITY_FILL_SHIPMENT')")
   public ResponseEntity<OpenLmisResponse> markAsProcessed(@RequestBody List<String> orderNumbers) {
     List<String> processedOrders = orderService.markAsProcessed(orderNumbers);
     return response(ORDERS, processedOrders);

@@ -102,7 +102,7 @@ public class OrderRepository {
     return orderMapper.getByOrderNumber(orderNumber);
   }
 
-  public List<String> getOrdersByStatus(String status) {
-    return orderMapper.getOrdersByStatus(status);
+  public List<String> getOrdersByStatus(Long userId, String status) {
+    return orderMapper.getOrdersByStatus(userId, status);
   }
 }

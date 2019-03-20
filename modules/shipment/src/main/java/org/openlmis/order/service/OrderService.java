@@ -3,9 +3,9 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.order.service;
@@ -21,7 +21,6 @@ import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
-import org.openlmis.order.dto.OrderIdentifierDto;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
@@ -58,31 +57,22 @@ public class OrderService {
   private static final String RELEASE_PREVIOUS_RANDRS_WITHOUT_ORDER = "AUTO_RELEASE_PREVIOUS_REQUISITIONS_WITHOUT_ORDER";
 
   private static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
-
-  @Autowired
-  private OrderConfigurationRepository orderConfigurationRepository;
-
-  @Autowired
-  private OrderRepository orderRepository;
-
-  @Autowired
-  private ConfigurationSettingService configurationSettingService;
-
-  @Autowired
-  private RequisitionService requisitionService;
-
-  @Autowired
-  private SupplyLineService supplyLineService;
-
-  @Autowired
-  private OrderEventService orderEventService;
-
   @Autowired
   RoleAssignmentService roleAssignmentService;
-
   @Autowired
   FulfillmentPermissionService fulfillmentPermissionService;
-
+  @Autowired
+  private OrderConfigurationRepository orderConfigurationRepository;
+  @Autowired
+  private OrderRepository orderRepository;
+  @Autowired
+  private ConfigurationSettingService configurationSettingService;
+  @Autowired
+  private RequisitionService requisitionService;
+  @Autowired
+  private SupplyLineService supplyLineService;
+  @Autowired
+  private OrderEventService orderEventService;
   @Autowired
   private ProgramService programService;
 
@@ -99,11 +89,6 @@ public class OrderService {
   private CommaSeparator commaSeparator;
 
   private Integer pageSize;
-
-  @Autowired
-  public void setPageSize(@Value("${order.page.size}") String pageSize) {
-    this.pageSize = Integer.parseInt(pageSize);
-  }
 
   @Transactional
   public void convertToOrder(List<Rnr> rnrList, Long userId) {
@@ -142,9 +127,9 @@ public class OrderService {
 
   private void checkAndReleaseWithoutForOrder(Rnr rnr, Long userId) {
     Boolean releasePreviousRandRs = configurationSettingService.getBoolValue(RELEASE_PREVIOUS_RANDRS_WITHOUT_ORDER);
-    if(releasePreviousRandRs) {
+    if (releasePreviousRandRs) {
       List<Rnr> releasableRnrs = requisitionService.getUnreleasedRequisitionsFor(rnr);
-      if(!releasableRnrs.isEmpty()){
+      if (!releasableRnrs.isEmpty()) {
         releaseWithoutOrder(releasableRnrs, userId);
       }
     }
@@ -163,7 +148,7 @@ public class OrderService {
 
     ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(usersWithRight);
     statusChangeEventService.notifyUsers(activeUsersWithRight, null, requisition.getFacility(),
-      requisition.getProgram(), requisition.getPeriod(), order.getStatus().toString());
+        requisition.getProgram(), requisition.getPeriod(), order.getStatus().toString());
   }
 
   public List<Order> getOrdersForPage(int page, Long userId, String rightName) {
@@ -257,6 +242,11 @@ public class OrderService {
     return pageSize;
   }
 
+  @Autowired
+  public void setPageSize(@Value("${order.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
+  }
+
   public List<Order> searchByStatusAndRight(Long userId, List<OrderStatus> statuses, Long programId, Long facilityId) {
     List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, RightName.MANAGE_POD);
 
@@ -311,13 +301,13 @@ public class OrderService {
 
   public void releaseWithoutOrder(List<Rnr> rnrList, Long userId) {
     User user = userService.getById(userId);
-    for(Rnr rnr: rnrList){
+    for (Rnr rnr : rnrList) {
       requisitionService.releaseWithoutOrder(rnr, user);
     }
   }
 
-  public List<String> getOrdersByStatus(String status){
-    return orderRepository.getOrdersByStatus(status);
+  public List<String> getOrdersByStatus(Long userId, String status) {
+    return orderRepository.getOrdersByStatus(userId, status);
   }
 
   public List<String> markAsProcessed(List<String> orderIdentifierDtos) {
