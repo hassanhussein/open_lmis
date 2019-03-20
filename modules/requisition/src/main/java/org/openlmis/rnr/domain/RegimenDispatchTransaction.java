@@ -13,15 +13,14 @@
 package org.openlmis.rnr.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 
 import java.util.Date;
 
-// TODO: support the following attributes.
-
-
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegimenDispatchTransaction extends BaseModel {
