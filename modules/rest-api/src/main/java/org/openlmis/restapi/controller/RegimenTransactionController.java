@@ -12,6 +12,7 @@
 
 package org.openlmis.restapi.controller;
 
+import io.swagger.annotations.ApiOperation;
 import org.openlmis.rnr.domain.RegimenDispatchTransaction;
 import org.openlmis.rnr.repository.RegimenDispatchTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ public class RegimenTransactionController extends BaseController {
   @Autowired
   RegimenDispatchTransactionRepository repository;
 
+  @ApiOperation(value = "Accepts regimen dispatch transactions!", httpMethod = "POST")
   @RequestMapping(value = "/rest-api/regimen-dispatch-transactions", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public @ResponseBody
   List<RegimenDispatchTransaction>
