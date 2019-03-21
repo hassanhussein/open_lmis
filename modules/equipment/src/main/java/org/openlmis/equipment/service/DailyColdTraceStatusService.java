@@ -24,6 +24,7 @@ import org.openlmis.equipment.repository.mapper.EquipmentOperationalStatusMapper
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -74,8 +75,17 @@ public class DailyColdTraceStatusService {
     return mapper.getDailyStatusSubmittedFor(serialNumber);
   }
 
-  public void deleteDailyStatus(Long id) {
-    mapper.deleteColdTraceStatus(id);
+
+  public void deleteDailyStatus(String serialNumber, Date date) {
+    EquipmentInventory inventory = equipmentInventoryService.getInventoryBySerialNumber(serialNumber);
+    if (inventory == null) {
+      throw new DataException("Serial Number was not found. Please ensure that the equipment is registered as an equipment inventory at the facility.");
+    }
+    DailyColdTraceStatus persistedStatus = mapper.getForEquipmentForDate(inventory.getId(), date);
+    if(persistedStatus == null) {
+      throw new DataException("No status records found matching the date and serial number provided");
+    }
+    mapper.deleteColdTraceStatus(persistedStatus.getId());
   }
 
   public List<ColdChainEquipmentDTO> getEquipmentList(String regionCode, Boolean verified) {

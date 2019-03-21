@@ -62,11 +62,8 @@ public class ColdTraceStatusController extends BaseController {
       notes = "Accepts submission of monthly status of equipment"
   )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status", method = RequestMethod.DELETE, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> delete(@RequestBody ColdTraceMonthlyStatusDTO status, Principal principal) {
-    status.validate();
-    if (status.getId() != null) {
-      dailyColdTraceStatusService.deleteDailyStatus(status.getId());
-    }
+  public ResponseEntity<OpenLmisResponse> delete(@RequestBody ColdTraceMonthlyStatusIdDto status) {
+    dailyColdTraceStatusService.deleteDailyStatus(status.getSerialNumber(), status.getDate());
     return OpenLmisResponse.success("Daily cold trace status deleted for" + status.getDate().toString());
   }
 
@@ -96,7 +93,7 @@ public class ColdTraceStatusController extends BaseController {
       headers = ACCEPT_JSON
   )
   public ResponseEntity<OpenLmisResponse> deleteAlarms(@RequestBody ColdChainTemperatureAlarmDTO alarm) {
-    if(alarm.getAlert_id() != null) {
+    if (alarm.getAlert_id() != null) {
       alarmService.deleteByAlertId(alarm.getAlert_id());
     }
     return OpenLmisResponse.success("Alert has been deleted");
@@ -168,8 +165,8 @@ public class ColdTraceStatusController extends BaseController {
           "<br /> Valid serial number can be found on GET /rest-api/equipment/cold-trace/equipments. " +
           "<br /> <br />Returns the monthly summary status for that equipment reported to VIMS through POST /rest-api/equipment/cold-trace/monthly-status"
   )
-  @RequestMapping(value = "/rest-api/equipment/cold-trace/submissions-for-equipment", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getListOfSubmissions(@RequestParam("serial") String serialNumber) {
+  @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getListOfSubmissions(@RequestParam("serialNumber") String serialNumber) {
     return OpenLmisResponse.response(STATUSES, dailyColdTraceStatusService.getStatusSubmittedFor(serialNumber));
   }
 
