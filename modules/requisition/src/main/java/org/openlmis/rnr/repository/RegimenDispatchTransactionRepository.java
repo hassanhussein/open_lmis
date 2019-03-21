@@ -24,6 +24,11 @@ public class RegimenDispatchTransactionRepository {
   private RegimenDispatchTransactionMapper mapper;
 
   public void insert(RegimenDispatchTransaction transaction) {
+    RegimenDispatchTransaction persistedTransaction = mapper.getByFacilityTransactionId(transaction.getFaciltiyId(),
+        transaction.getFacilityTransactionId());
+    if (persistedTransaction != null) {
+      mapper.delete(persistedTransaction.getId());
+    }
     mapper.insert(transaction);
   }
 }

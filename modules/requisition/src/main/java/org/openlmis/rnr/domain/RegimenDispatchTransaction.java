@@ -12,20 +12,22 @@
 
 package org.openlmis.rnr.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.exception.DataException;
 
 import java.util.Date;
+import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegimenDispatchTransaction extends BaseModel {
 
-  private String clientId;
+  private UUID clientId;
+
+  private Long facilityTransactionId;
 
   private Long faciltiyId;
 

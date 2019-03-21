@@ -12,7 +12,10 @@
 
 package org.openlmis.rnr.repository.mapper;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.openlmis.rnr.domain.RegimenDispatchTransaction;
 import org.springframework.stereotype.Repository;
 
@@ -25,4 +28,12 @@ public interface RegimenDispatchTransactionMapper {
       " (#{clientId}, #{facilityId}, #{regimenId}, #{days}, #{transactionDate}, #{quantity}, #{createdBy}, NOW())")
   Long insert(RegimenDispatchTransaction transaction);
 
+  @Select("select * from regimen_dispatch_transaction WHERE " +
+      " facilityId = #{facilityId} " +
+      " and facilityTransactionId = #{facilityTransactionId}")
+  RegimenDispatchTransaction getByFacilityTransactionId(@Param("facilityId") Long facilityId,
+                                                        @Param("facilityTransactionId") Long facilityTransactionId);
+
+  @Delete("delete from regimen_dispatch_transaction where id = #{id}")
+  void delete(@Param("id") Long id);
 }
