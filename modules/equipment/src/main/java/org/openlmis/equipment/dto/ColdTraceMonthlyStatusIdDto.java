@@ -12,6 +12,8 @@
 
 package org.openlmis.equipment.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +25,10 @@ import java.util.Date;
 @AllArgsConstructor
 public class ColdTraceMonthlyStatusIdDto {
 
+  @ApiModelProperty(name = "Device ID", notes = "A unique identifier that identifies the equipment", required = true)
   private String serialNumber;
 
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  @ApiModelProperty(name = "Date", notes = "Date of reading/submission (Usually the last day of the period). format: yyyy-MM-dd", required = true)
   private Date date;
 }

@@ -36,7 +36,7 @@ public class ColdTraceMonthlyStatusDTO {
   private String serialNumber;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-  @ApiModelProperty(name = "Date", notes = "Date of reading/submission (Usually the last day of the period)", required = true)
+  @ApiModelProperty(name = "Date", notes = "Date of reading/submission (Usually the last day of the period). format: yyyy-MM-dd", required = true)
   private Date date;
 
   @ApiModelProperty(name = "Min Temperature", notes = "The Minimum Temperature observed on equipment within this current period (month)", required = true)
