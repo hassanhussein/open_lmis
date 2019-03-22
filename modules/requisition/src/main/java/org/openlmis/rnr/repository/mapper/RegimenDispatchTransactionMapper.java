@@ -22,9 +22,9 @@ import java.util.UUID;
 public interface RegimenDispatchTransactionMapper {
 
   @Insert("insert into regimen_dispatch_transaction " +
-      " (clientId, facilityId, regimenId, days, transactionDate, quantity, createdBy, createdDate)" +
+      " (clientId, facilityId, facilityTransactionId, regimenId, days, transactionDate, quantity, createdBy, createdDate)" +
       " values " +
-      " (#{clientId, typeHandler=org.openlmis.rnr.utils.UUIDTypeHandler}::UUID, #{facilityId}, #{regimenId}, #{days}, #{transactionDate}, #{quantity}, #{createdBy}, NOW())")
+      " (#{clientId, typeHandler=org.openlmis.rnr.utils.UUIDTypeHandler}::UUID, #{facilityId}, #{facilityTransactionId}, #{regimenId}, #{days}, #{transactionDate}, #{quantity}, #{createdBy}, NOW())")
   Long insert(RegimenDispatchTransaction transaction);
 
   @Select("select * from regimen_dispatch_transaction WHERE " +
