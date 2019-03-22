@@ -12,12 +12,11 @@
 
 package org.openlmis.rnr.repository.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.rnr.domain.RegimenDispatchTransaction;
 import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
 
 @Repository
 public interface RegimenDispatchTransactionMapper {
@@ -25,12 +24,17 @@ public interface RegimenDispatchTransactionMapper {
   @Insert("insert into regimen_dispatch_transaction " +
       " (clientId, facilityId, regimenId, days, transactionDate, quantity, createdBy, createdDate)" +
       " values " +
-      " (#{clientId}, #{facilityId}, #{regimenId}, #{days}, #{transactionDate}, #{quantity}, #{createdBy}, NOW())")
+      " (#{clientId, typeHandler=org.openlmis.rnr.utils.UUIDTypeHandler}, #{facilityId}, #{regimenId}, #{days}, #{transactionDate}, #{quantity}, #{createdBy}, NOW())")
   Long insert(RegimenDispatchTransaction transaction);
 
   @Select("select * from regimen_dispatch_transaction WHERE " +
       " facilityId = #{facilityId} " +
       " and facilityTransactionId = #{facilityTransactionId}")
+  @Results(
+      value = {
+          @Result(column = "clientId", javaType = UUID.class, typeHandler = org.openlmis.rnr.utils.UUIDTypeHandler.class)
+      }
+  )
   RegimenDispatchTransaction getByFacilityTransactionId(@Param("facilityId") Long facilityId,
                                                         @Param("facilityTransactionId") Long facilityTransactionId);
 
