@@ -29,7 +29,7 @@ public class RegimenDispatchTransaction extends BaseModel {
 
   private Long facilityTransactionId;
 
-  private Long faciltiyId;
+  private Long facilityId;
 
   private Long regimenId;
 
