@@ -36,6 +36,17 @@
                     openlmis-message="missing.value"></span>
             </div>
           </div>
+          <div class="form-cell">
+            <label id="skipPeriodLabel" for="skipApproval">
+              <span openlmis-message="header.skip.second.approval"></span>
+            </label>
+            <div class="form-field">
+              <input ng-model="supervisoryNode.skipApproval" name="skipApproval" id="skipApproval" type="checkbox" maxlength="50"
+                     ng-required="false"/>
+            </div>
+
+          </div>
+
         </div>
 
         <div class="form-row clearfix">

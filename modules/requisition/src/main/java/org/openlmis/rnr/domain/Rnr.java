@@ -376,5 +376,10 @@ public class Rnr extends BaseModel {
   public boolean isBudgetingApplicable() {
     return !this.emergency && this.program.getBudgetingApplies();
   }
+
+  public void prepareForFinalApprovalAndAssignToParentSupervisoryNode(SupervisoryNode parent) {
+    status = APPROVED;
+    supervisoryNodeId = parent.getId();
+  }
 }
 

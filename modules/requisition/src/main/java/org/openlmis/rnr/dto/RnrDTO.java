@@ -14,6 +14,7 @@ package org.openlmis.rnr.dto;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.rnr.domain.Rnr;
 
@@ -57,6 +58,7 @@ public class RnrDTO {
   private List<RnrLineItemDTO> products;
   private String requisitionStatus;
   private Long modifiedBy;
+  private Program program;
 
   @Deprecated
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
@@ -88,6 +90,7 @@ public class RnrDTO {
   public static RnrDTO prepareForOrderView(Rnr requisition) {
     RnrDTO rnrDTO = prepareDTOWithSupplyingDepot(requisition);
     rnrDTO.setPeriodName(requisition.getPeriod().getName());
+    rnrDTO.setProgram(requisition.getProgram());
     return rnrDTO;
   }
 

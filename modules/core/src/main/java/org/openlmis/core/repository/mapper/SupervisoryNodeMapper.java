@@ -39,8 +39,8 @@ public interface SupervisoryNodeMapper {
   SupervisoryNode getById(Long id);
 
   @Insert("INSERT INTO supervisory_nodes " +
-    "(code, name, parentId, facilityId, description, createdBy, modifiedBy, modifiedDate)" +
-    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    "(code, name, parentId, facilityId, description, createdBy, modifiedBy, modifiedDate,skipApproval)" +
+    " VALUES (#{code}, #{name}, #{parent.id}, #{facility.id}, #{description}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),#{skipApproval})")
   @Options(useGeneratedKeys = true)
   Integer insert(SupervisoryNode supervisoryNode);
 
@@ -152,7 +152,7 @@ public interface SupervisoryNodeMapper {
   SupervisoryNode getByCode(SupervisoryNode supervisoryNode);
 
   @Update("UPDATE supervisory_nodes " +
-    "SET code = #{code}, name = #{name}, parentId = #{parent.id}, facilityId = #{facility.id}, " +
+    "SET skipApproval= #{skipApproval}, code = #{code}, name = #{name}, parentId = #{parent.id}, facilityId = #{facility.id}, " +
     "description = #{description}, modifiedBy = #{modifiedBy}, modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) " +
     "WHERE id = #{id}")
   void update(SupervisoryNode supervisoryNode);

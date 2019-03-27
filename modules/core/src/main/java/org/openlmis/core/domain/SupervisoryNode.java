@@ -46,6 +46,8 @@ public class SupervisoryNode extends BaseModel implements Importable {
 
   public Integer supervisorCount;
 
+  private Boolean skipApproval;
+
   public SupervisoryNode(Long id) {
     this.id = id;
   }

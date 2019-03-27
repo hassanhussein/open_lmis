@@ -335,6 +335,7 @@ public class RequisitionService {
 
   @Transactional
   public Rnr approve(Rnr requisition, String name) {
+    System.out.println("Reached here");
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
     if (!savedRnr.isApprovable())
       throw new DataException(APPROVAL_NOT_ALLOWED);
@@ -351,16 +352,31 @@ public class RequisitionService {
     if (requiresSplitting(savedRnr)) {
       splitRequisition(savedRnr, requisition.getModifiedBy());
     }
+    SupervisoryNode supervisoryNode = supervisoryNodeService.getSupervisoryNode(savedRnr.getSupervisoryNodeId());
     final SupervisoryNode parent = supervisoryNodeService.getParent(savedRnr.getSupervisoryNodeId());
 
     boolean notifyStatusChange = true;
     if (parent == null) {
+
       if (savedRnr.getPeriod().getEnableOrder() || savedRnr.isEmergency()) {
         savedRnr.prepareForFinalApproval();
       } else {
         savedRnr.setStatus(RnrStatus.RELEASED_NO_ORDER);
       }
-    } else {
+    } else if(supervisoryNode.getSkipApproval()){
+
+      if (savedRnr.getPeriod().getEnableOrder() || savedRnr.isEmergency()) {
+        System.out.println("went for Approval");
+        System.out.println(savedRnr.getSupervisoryNodeId());
+        System.out.println(notifyStatusChange);
+        savedRnr.prepareForFinalApprovalAndAssignToParentSupervisoryNode(parent);
+      } else {
+        savedRnr.setStatus(RnrStatus.RELEASED_NO_ORDER);
+      }
+
+    } else{
+      System.out.println("passed here");
+      System.out.println(supervisoryNode.getSkipApproval());
       if (savedRnr.getStatus() == IN_APPROVAL) {
         notifyStatusChange = false;
       }

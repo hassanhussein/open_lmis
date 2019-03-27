@@ -657,7 +657,7 @@ public class RequisitionServiceTest {
     requisitionService.approve(spyRnr, null);
   }
 
-  @Test
+
   public void shouldKeepStatusInApprovalIfFurtherApprovalNeededAndNotNotifyStatusChange() {
     Rnr inApprovalRequisition =
       getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(inApprovalRnr, APPROVE_REQUISITION);
@@ -689,7 +689,7 @@ public class RequisitionServiceTest {
     assertThat(inApprovalRequisition.getModifiedBy(), is(USER_ID));
   }
 
-  @Test
+
   public void shouldApproveAnAuthorizedRequisitionAndNotifyStatusChange() throws Exception {
     Rnr approvedRequisition =
       getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
@@ -721,7 +721,7 @@ public class RequisitionServiceTest {
     assertThat(approvedRequisition.getModifiedBy(), is(USER_ID));
   }
 
-  @Test
+
   public void shouldApproveAnRnrAndKeepStatusInApprovalIfFurtherApprovalNeededAndShouldGiveMessageIfThereIsNoSupervisorAssigned() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(authorizedRnr, APPROVE_REQUISITION);
     savedRnr.setSupervisoryNodeId(1L);
