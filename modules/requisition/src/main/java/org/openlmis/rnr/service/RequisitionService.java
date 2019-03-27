@@ -1,8 +1,7 @@
 package org.openlmis.rnr.service;
 
 import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.InterfaceResponseDTO;
-import org.openlmis.core.dto.RequisitionStatusDTO;
+import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
@@ -12,9 +11,7 @@ import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.core.dto.RejectionReasonDTO;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper;
@@ -335,7 +332,6 @@ public class RequisitionService {
 
   @Transactional
   public Rnr approve(Rnr requisition, String name) {
-    System.out.println("Reached here");
     Rnr savedRnr = getFullRequisitionById(requisition.getId());
     if (!savedRnr.isApprovable())
       throw new DataException(APPROVAL_NOT_ALLOWED);
@@ -366,17 +362,13 @@ public class RequisitionService {
     } else if(supervisoryNode.getSkipApproval()){
 
       if (savedRnr.getPeriod().getEnableOrder() || savedRnr.isEmergency()) {
-        System.out.println("went for Approval");
-        System.out.println(savedRnr.getSupervisoryNodeId());
-        System.out.println(notifyStatusChange);
         savedRnr.prepareForFinalApprovalAndAssignToParentSupervisoryNode(parent);
       } else {
         savedRnr.setStatus(RnrStatus.RELEASED_NO_ORDER);
       }
 
     } else{
-      System.out.println("passed here");
-      System.out.println(supervisoryNode.getSkipApproval());
+
       if (savedRnr.getStatus() == IN_APPROVAL) {
         notifyStatusChange = false;
       }
@@ -960,6 +952,10 @@ public class RequisitionService {
     Calendar cal = Calendar.getInstance();
     cal.add(Calendar.MONTH, -5);
     return cal.getTime();
+  }
+
+  public ResponseExtDTO getAllResponseByStatusBySourceID(String sourceOrderId) {
+    return requisitionRepository.getAllResponseByStatusBySourceID(sourceOrderId);
   }
 
 }

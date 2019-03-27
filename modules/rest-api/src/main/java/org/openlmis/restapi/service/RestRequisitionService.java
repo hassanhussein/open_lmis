@@ -19,10 +19,7 @@ import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.Transformer;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.ELMISResponseMessageDTO;
-import org.openlmis.core.dto.FacilityMappingDTO;
-import org.openlmis.core.dto.InterfaceResponseDTO;
-import org.openlmis.core.dto.RequisitionStatusDTO;
+import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.*;
@@ -538,7 +535,7 @@ public class RestRequisitionService {
           report.setRnrId(rnr.getId());
           report.setResponseMessage(getResponseMessage(SUCCESS_MESSAGE));
           report.addSuccessMessage();
-         //requisitionService.submit(rnr);
+          requisitionService.submit(rnr);
 
         return errors;
     }
@@ -588,8 +585,13 @@ public class RestRequisitionService {
     }
 
     public void updateBySourceId(String sourceId){
-        System.out.println(sourceId);
         requisitionService.updateBySourceId(sourceId);
     }
+
+    public void postFeedbackNotification(String sourceOrderId){
+       ResponseExtDTO dto = requisitionService.getAllResponseByStatusBySourceID(sourceOrderId);
+
+    }
+
 
 }

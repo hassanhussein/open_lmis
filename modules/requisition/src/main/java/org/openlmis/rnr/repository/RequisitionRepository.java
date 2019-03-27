@@ -11,8 +11,7 @@
 package org.openlmis.rnr.repository;
 
 import org.openlmis.core.domain.*;
-import org.openlmis.core.dto.InterfaceResponseDTO;
-import org.openlmis.core.dto.RequisitionStatusDTO;
+import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.SourceOfFundRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
@@ -21,9 +20,7 @@ import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryStatusMapper;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.core.dto.RejectionReasonDTO;
 import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -528,4 +525,7 @@ public class RequisitionRepository {
       rejectionReasonMapper.update(rejectionReason);
   }
 
+  public ResponseExtDTO getAllResponseByStatusBySourceID(String sourceOrderId) {
+    return requisitionMapper.getAllResponseByStatusBySourceID(sourceOrderId);
+  }
 }

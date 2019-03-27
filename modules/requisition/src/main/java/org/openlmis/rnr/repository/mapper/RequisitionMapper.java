@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.InterfaceResponseDTO;
 import org.openlmis.core.dto.RequisitionStatusDTO;
+import org.openlmis.core.dto.ResponseExtDTO;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
@@ -465,6 +466,9 @@ public interface RequisitionMapper {
 
   @Update(" UPDATE interface_response_messages set status = 'SENT' where sourceOrderId = #{sourceOrderId} ")
   void updateBySourceId(@Param("sourceOrderId") String sourceOrderId);
+
+  @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId} and status = 'PROCESSED' ")
+  ResponseExtDTO getAllResponseByStatusBySourceID(@Param("sourceOrderId") String sourceOrderId);
 
 }
 
