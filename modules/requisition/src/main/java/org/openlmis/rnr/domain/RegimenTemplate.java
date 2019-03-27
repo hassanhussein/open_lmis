@@ -46,7 +46,7 @@ public class RegimenTemplate extends Template {
     return column != null && ((RegimenColumn) column).getVisible();
   }
 
-  public List<? extends Column> getPrintableColumns(Boolean fullSupply) {
+  public List<? extends Column> getPrintableColumns(Boolean fullSupply, Boolean reportOnlyFlag) {
     List<Column> printableRegimenColumns = new ArrayList<>();
 
     for (Column regimenColumn : columns) {

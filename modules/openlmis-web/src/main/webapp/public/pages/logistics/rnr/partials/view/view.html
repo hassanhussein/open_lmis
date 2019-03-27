@@ -10,29 +10,31 @@
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs clearfix">
-  <ul class="clearfix">
-    <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined)}">
-      <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
-         openlmis-message="label.full.supply.products"></a></li>
-    <li  ng-show="rnr.program.showNonFullSupplyTab" ng-class="{'selected': visibleTab == 'nonFullSupply'}">
-      <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
-         openlmis-message="label.non.full.supply.products"></a></li>
-    <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">
-      <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a>
-    </li>
-    <li ng-class="{'selected': visibleTab == 'equipment'}" ng-show="equipmentCount">
-      <a href="" ng-click="switchSupplyType('equipment')" id="equipmentTab" openlmis-message="label.equipments"></a>
-    </li>
-    <li ng-class="{'selected': visibleTab == 'manualTest'}" ng-show="manualTestCount">
-      <a href="" ng-click="switchSupplyType('manualTest')" id="manualTestTab" openlmis-message="label.manual.tests"></a>
-    </li>
-  </ul>
-  <span class="pull-right">
+    <ul class="clearfix">
+        <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined)}">
+            <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+               openlmis-message="label.full.supply.products"></a></li>
+        <li ng-show="rnr.program.showNonFullSupplyTab" ng-class="{'selected': visibleTab == 'nonFullSupply'}">
+            <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
+               openlmis-message="label.non.full.supply.products"></a></li>
+        <li ng-class="{'selected': visibleTab == 'regimen'}" ng-show="regimenCount">
+            <a href="" ng-click="switchSupplyType('regimen')" id="regimenTab" openlmis-message="label.regimens"></a>
+        </li>
+        <li ng-class="{'selected': visibleTab == 'equipment'}" ng-show="equipmentCount">
+            <a href="" ng-click="switchSupplyType('equipment')" id="equipmentTab"
+               openlmis-message="label.equipments"></a>
+        </li>
+        <li ng-class="{'selected': visibleTab == 'manualTest'}" ng-show="manualTestCount">
+            <a href="" ng-click="switchSupplyType('manualTest')" id="manualTestTab"
+               openlmis-message="label.manual.tests"></a>
+        </li>
+    </ul>
+    <span class="pull-right">
     <a id="resizeViewButton" full-screen href="" class="btn">
       <i class="icon-resize-full"></i>
     </a>
   </span>
-  <span class="pull-right print-button">
+    <span class="pull-right print-button">
     <a id="printButton" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
        openlmis-message="button.print"
        target="_blank"></a>
@@ -62,21 +64,22 @@
 <br><br>
 
 <div form-toolbar id="action_buttons" class="action-buttons">
-  <ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
 
-  <div class="form-cell button-row">
-    <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
-           openlmis-message="comments.header"/>
+  <ng-include ng-show="rnr.period.enableOrder" src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include>
+    <div class="form-cell button-row">
+        <input id="comments" type="button" ng-click="showCommentBox=!showCommentBox" class="btn comments-button"
+               openlmis-message="comments.header"/>
 
-    <input ng-show="rnr.status == 'SKIPPED'" type="button" class="btn btn-primary submit-button" ng-click="reOpenRnR();" openlmis-message="button.reopen.period" />
-    <input ng-show="rnr.status != 'SKIPPED' && rnr.status != 'RELEASED' && hasPermission('APPROVE_REQUISITION')"
-           type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();"
-           openlmis-message="button.rnr.undo.approvals"/>
-    <comment-box updatable="false" show="showCommentBox"></comment-box>
-    <div class="toolbar-message">
-      <div ng-if="!rnr.period.enableOrder && !rnr.emergency">
-        NOTE: This is a report only period. This report was <b>NOT</b> converted to order.
-      </div>
+        <input ng-show="rnr.status == 'SKIPPED'" type="button" class="btn btn-primary submit-button"
+               ng-click="reOpenRnR();" openlmis-message="button.reopen.period"/>
+        <input ng-show="rnr.status != 'SKIPPED' && rnr.status != 'RELEASED' && hasPermission('APPROVE_REQUISITION')"
+               type="button" class="btn btn-primary submit-button" ng-click="rejectRnR();"
+               openlmis-message="button.rnr.undo.approvals"/>
+        <comment-box updatable="false" show="showCommentBox"></comment-box>
+        <div class="toolbar-message">
+            <div ng-if="!rnr.period.enableOrder && !rnr.emergency">
+                NOTE: This is a report only period. This report was <b>NOT</b> converted to order.
+            </div>
+        </div>
     </div>
-  </div>
 </div>
