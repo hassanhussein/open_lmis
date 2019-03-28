@@ -12,7 +12,10 @@
 
 package org.openlmis.core.service;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
@@ -28,9 +31,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
+
+import static org.springframework.http.HttpHeaders.USER_AGENT;
 
 @Service
 @EnableScheduling
@@ -51,8 +58,6 @@ public class ELMISInterfaceService {
     private static final String ELMIS_SDP_PASS_WORD = "ELMIS_SDP_PASSWORD";
     private static final String USERNAME = "LLIN_USERNAME";
     private static final String PASSWORD = "LLIN_PASSWORD";
-
-
 
 
     public ELMISInterface get(long interfaceId) {
@@ -103,7 +108,7 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetReportingRateData());
-            sendBedNetData(username, password, url, dto,null);
+            sendBedNetData(username, password, url, dto, null,null);
         }
 
     }
@@ -121,18 +126,18 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetData());
-            sendBedNetData(username, password, url, dto,null);
+            sendBedNetData(username, password, url, dto, null,null);
         }
 
     }
 
-    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data,InterfaceResponseDTO sdp) {
+    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data, InterfaceResponseDTO sdp,ResponseExtDTO dto) {
         ObjectMapper mapper = new ObjectMapper();
         java.net.URL obj = null;
         try {
             obj = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-            String jsonInString = mapper.writeValueAsString((sdp==null)?data:sdp);
+            String jsonInString = mapper.writeValueAsString((sdp == null) ? data : dto);
             String userCredentials = username + ":" + password;
             String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
             con.setRequestProperty("Authorization", basicAuth);
@@ -206,8 +211,90 @@ public class ELMISInterfaceService {
         }
     }
 
-    public ELMISInterface getByName(String name){
+    public ELMISInterface getByName(String name) {
         return repository.getByName(name);
+    }
+
+
+    //@Scheduled(fixedRate = 200000)
+    public void sendFeedback() {
+
+        String url = "https://uat.tz.elmis-dev.org/rest-api/tz-sdp-requisitions/feedback-status";
+
+        URL obj = null;
+        try {
+            obj = new URL(url);
+
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // optional default is GET
+
+            String userCredentials = "hassan:8819rukia";
+            String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
+            con.setRequestProperty("Authorization", basicAuth);
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Content-Type", "application/json");
+
+            //add request header
+            con.setRequestProperty("User-Agent", USER_AGENT);
+
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            //print result
+           // System.out.println(response.toString());
+
+
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JSONObject jsonObj= new JSONObject(response.toString());
+            JSONArray jsonArray= jsonObj.getJSONArray("requisitionStatus");
+          /*  System.out.println(jsonArray.toString());
+            for(int x =0;x<jsonArray.length();x++)
+            {
+                String jsonObject = jsonArray.getJSONObject(x).toString();
+
+            }*/
+
+            ResponseExtDTO[] data = objectMapper.readValue(jsonArray.toString(), ResponseExtDTO[].class);
+            System.out.println(data);
+
+            for(ResponseExtDTO dto : data){
+                sendDataToHIM(dto);
+
+            }
+
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+    private void sendDataToHIM(ResponseExtDTO dto){
+
+        String username = "elmisack";
+        String password = "eLMI$pwd2@18";
+        String url = "https://him-dev.moh.go.tz/rest.api/post/JSON/eLMIS_dailyStock_ACK";
+        sendBedNetData(username, password, url, null, null,dto);
+
     }
 
 
