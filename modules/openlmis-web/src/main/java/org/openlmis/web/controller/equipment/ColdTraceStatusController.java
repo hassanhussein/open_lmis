@@ -14,6 +14,7 @@ package org.openlmis.web.controller.equipment;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.dto.*;
@@ -21,13 +22,16 @@ import org.openlmis.equipment.service.ColdChainEquipmentTemperatureAlarmService;
 import org.openlmis.equipment.service.DailyColdTraceStatusService;
 import org.openlmis.restapi.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @Api(value = "Cold Trace", description = "APIs to report cold trace status")
@@ -52,8 +56,14 @@ public class ColdTraceStatusController extends BaseController {
   @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status", method = RequestMethod.POST, headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> submit(@RequestBody ColdTraceMonthlyStatusDTO status, Principal principal) {
     status.validate();
-    dailyColdTraceStatusService.saveDailyStatus(status.buildEntity(), loggedInUserId(principal));
-    return OpenLmisResponse.success("Daily cold trace status submitted for" + status.getDate().toString());
+    try {
+      dailyColdTraceStatusService.saveDailyStatus(status.buildEntity(), loggedInUserId(principal));
+    } catch (DataException exception) {
+      Map<String, String> map = new HashMap<>();
+      map.put("error", exception.getLocalizedMessage());
+      return OpenLmisResponse.response(map, HttpStatus.NOT_FOUND);
+    }
+    return OpenLmisResponse.success("Daily cold trace status submitted for " + status.getDate().toString());
   }
 
   @ApiOperation(
@@ -61,9 +71,17 @@ public class ColdTraceStatusController extends BaseController {
       response = MultiValueMap.class,
       notes = "Accepts submission of monthly status of equipment"
   )
-  @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status", method = RequestMethod.DELETE, headers = ACCEPT_JSON)
+  @RequestMapping(value = "/rest-api/equipment/cold-trace/monthly-status",
+      method = RequestMethod.DELETE,
+      headers = ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> delete(@RequestBody ColdTraceMonthlyStatusIdDto status) {
-    dailyColdTraceStatusService.deleteDailyStatus(status.getSerialNumber(), status.getDate());
+    try {
+      dailyColdTraceStatusService.deleteDailyStatus(status.getSerialNumber(), status.getDate());
+    } catch (DataException exception) {
+      Map<String, String> map = new HashMap<>();
+      map.put("error", exception.getLocalizedMessage());
+      return OpenLmisResponse.response(map, HttpStatus.NOT_FOUND);
+    }
     return OpenLmisResponse.success("Daily cold trace status deleted for" + status.getDate().toString());
   }
 
@@ -95,6 +113,8 @@ public class ColdTraceStatusController extends BaseController {
   public ResponseEntity<OpenLmisResponse> deleteAlarms(@RequestBody ColdChainTemperatureAlarmDTO alarm) {
     if (alarm.getAlert_id() != null) {
       alarmService.deleteByAlertId(alarm.getAlert_id());
+    } else {
+      return OpenLmisResponse.response("Alert ID not found", HttpStatus.NOT_FOUND);
     }
     return OpenLmisResponse.success("Alert has been deleted");
   }
