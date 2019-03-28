@@ -54,7 +54,7 @@ public interface DailyColdTraceStatusMapper {
       " WHERE id = #{id}")
   int update(DailyColdTraceStatus status);
 
-  @Select("select * from equipment_daily_cold_trace_status where equipmentInventoryId = #{equipmentId} and date = #{date}")
+  @Select("select * from equipment_daily_cold_trace_status where equipmentInventoryId = #{equipmentId} and date = #{date} limit 1")
   DailyColdTraceStatus getForEquipmentForDate(@Param("equipmentId") Long equipmentId, @Param("date") Date date);
 
   @Select("select s.* from equipment_daily_cold_trace_status s " +
