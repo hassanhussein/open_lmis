@@ -143,11 +143,7 @@ public class ELMISInterfaceService {
             con.setRequestProperty("Authorization", basicAuth);
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");
-            //  System.out.println("all connection" + con);
-
             con.setDoOutput(true);
-            System.out.println("file");
-            System.out.println(jsonInString);
             OutputStream wr = con.getOutputStream();
             wr.write(jsonInString.getBytes("UTF-8"));
 
@@ -167,7 +163,6 @@ public class ELMISInterfaceService {
             in.close();
 
             //print result
-            System.out.println(response.toString());
 
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -213,88 +208,6 @@ public class ELMISInterfaceService {
 
     public ELMISInterface getByName(String name) {
         return repository.getByName(name);
-    }
-
-
-    //@Scheduled(fixedRate = 200000)
-    public void sendFeedback() {
-
-        String url = "https://uat.tz.elmis-dev.org/rest-api/tz-sdp-requisitions/feedback-status";
-
-        URL obj = null;
-        try {
-            obj = new URL(url);
-
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-            // optional default is GET
-
-            String userCredentials = "hassan:8819rukia";
-            String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
-            con.setRequestProperty("Authorization", basicAuth);
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Content-Type", "application/json");
-
-            //add request header
-            con.setRequestProperty("User-Agent", USER_AGENT);
-
-            int responseCode = con.getResponseCode();
-            System.out.println("\nSending 'GET' request to URL : " + url);
-            System.out.println("Response Code : " + responseCode);
-
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            //print result
-           // System.out.println(response.toString());
-
-
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JSONObject jsonObj= new JSONObject(response.toString());
-            JSONArray jsonArray= jsonObj.getJSONArray("requisitionStatus");
-          /*  System.out.println(jsonArray.toString());
-            for(int x =0;x<jsonArray.length();x++)
-            {
-                String jsonObject = jsonArray.getJSONObject(x).toString();
-
-            }*/
-
-            ResponseExtDTO[] data = objectMapper.readValue(jsonArray.toString(), ResponseExtDTO[].class);
-            System.out.println(data);
-
-            for(ResponseExtDTO dto : data){
-                sendDataToHIM(dto);
-
-            }
-
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-
-    private void sendDataToHIM(ResponseExtDTO dto){
-
-        String username = "elmisack";
-        String password = "eLMI$pwd2@18";
-        String url = "https://him-dev.moh.go.tz/rest.api/post/JSON/eLMIS_dailyStock_ACK";
-        sendBedNetData(username, password, url, null, null,dto);
-
     }
 
 
