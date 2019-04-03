@@ -31,4 +31,6 @@ public class InterfaceResponseDTO extends BaseModel {
 
     BudgetDTO budgetDTO;
 
+    String message;
+
 }

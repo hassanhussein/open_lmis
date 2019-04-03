@@ -189,6 +189,9 @@ public class RestRequisitionController extends BaseController {
         dto.setDescription(validationErrors.get(RESPONSE_DESCRIPTION).toString());
         dto.setSourceOrderId(report.getSourceOrderId());
         dto.setRnrId(report.getRnrId());
+        if(report.getRnrId() != null ) {
+            dto.setDescription("Success");
+        }
         restRequisitionService.updateProcessedResponseMessage(dto);
         return null;
     }

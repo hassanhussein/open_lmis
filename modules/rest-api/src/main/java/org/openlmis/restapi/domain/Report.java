@@ -135,7 +135,13 @@ public class Report {
 
     private void returnNullOrEmptyErrorMessage() {
         errorMap.put("code", new OpenLmisMessage(responseMessage.getCode()));
-        errorMap.put("description", new OpenLmisMessage(responseMessage.getDescription()));
+        errorMap.put("description", new OpenLmisMessage("Missing Mandatory Fields"));
+
+    }
+
+    private void returnMissMatchErrorMessage() {
+        errorMap.put("code", new OpenLmisMessage(responseMessage.getCode()));
+        errorMap.put("description", new OpenLmisMessage("Either PeriodId length or Program Code or Agent Code do not match"));
 
     }
 
@@ -170,7 +176,7 @@ public class Report {
     }
 
     public Map<String, OpenLmisMessage> validateMappedReportFields() {
-        returnNullOrEmptyErrorMessage();
+        returnMissMatchErrorMessage();
         return errorMap;
     }
 

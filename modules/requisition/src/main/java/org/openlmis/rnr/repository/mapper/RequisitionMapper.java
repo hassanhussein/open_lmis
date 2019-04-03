@@ -451,11 +451,11 @@ public interface RequisitionMapper {
 
   @Insert("INSERT INTO public.interface_response_messages(\n" +
           "            status, rnrId, sourceOrderId, code, description, createdDate, \n" +
-          "            modifiedDate)\n" +
-          "    VALUES ( #{status}, #{rnrId}, #{sourceOrderId}, #{code}, #{description}, NOW(),NOW());")
+          "            modifiedDate,message)\n" +
+          "    VALUES ( #{status}, #{rnrId}, #{sourceOrderId}, #{code}, #{description}, NOW(),NOW(),#{message});")
   void insertResponseMessage(InterfaceResponseDTO dto);
 
-  @Update(" UPDATE interface_response_messages set status = #{status},rnrId= #{rnrId},description=#{description} , code=#{code}, modifiedDate = NOW() where sourceOrderId = #{sourceOrderId}")
+  @Update(" UPDATE interface_response_messages set message = #{message}, status = #{status},rnrId= #{rnrId},description=#{description} , code=#{code}, modifiedDate = NOW() where sourceOrderId = #{sourceOrderId}")
   void  updateResponseMessage(InterfaceResponseDTO dto);
 
   @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId}  ")

@@ -468,12 +468,8 @@ public class RestRequisitionService {
         Date reportingDate = report.getDateFromPeriod(report.getPeriodId());
 
         Facility reportingFacility = facilityService.getFacilityById(facility.getFacilityId());
-        System.out.println(reportingDate);
-
 
         ProcessingPeriod period = processingScheduleService.getPeriodForDate(reportingFacility,reportingProgram,reportingDate);
-        System.out.println(period);
-
 
         Rnr rnr;
         List<Rnr> rnrs = null;
