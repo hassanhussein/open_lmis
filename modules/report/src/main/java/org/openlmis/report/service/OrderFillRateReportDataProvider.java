@@ -77,7 +77,8 @@ List<Long> rnrIds;
 
     parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
     rnrIds=reportMapper.getRequisitionsForPeriod(parameter);
-    String rnrIdsParam=  rnrIds.toString().replace("[", "{").replace("]", "}");
+    String rnrIdsParam= "values "+ rnrIds.toString().replace("[", "(").replace("]", ")").
+            replace(",","),(");
     parameter.setRnrIdsPar(rnrIdsParam);
     List<OrderFillRateReport> detail = reportMapper.getReport(parameter, rowBounds, this.getUserId());
     report.setDetails(detail);
