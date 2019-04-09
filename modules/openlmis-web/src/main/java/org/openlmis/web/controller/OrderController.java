@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
@@ -179,8 +180,9 @@ public class OrderController extends BaseController {
   )
   @RequestMapping(value = "/rest-api/orders", method = GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'FACILITY_FILL_SHIPMENT')")
-  public ResponseEntity<OpenLmisResponse> getPendingOrders(HttpServletRequest request) {
-    List<String> orderIdentifiers = orderService.getOrdersByStatus( loggedInUserId(request), "IN_ROUTE");
+  public ResponseEntity<OpenLmisResponse> getPendingOrders(Principal principal) {
+    //CAN YOU BELIEVE THAT IS HOW THE REST AUTHENTICATION WORKS?
+    List<String> orderIdentifiers = orderService.getOrdersByStatus( Long.valueOf(principal.getName()), "IN_ROUTE");
     return response(ORDERS, orderIdentifiers);
   }
 
