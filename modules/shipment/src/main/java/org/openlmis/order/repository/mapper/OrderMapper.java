@@ -150,7 +150,7 @@ public interface OrderMapper {
       " JOIN fulfillment_role_assignments FRA ON s.supplyingFacilityId = FRA.facilityId " +
       " JOIN role_rights RR ON FRA.roleId = RR.roleId" +
       " AND FRA.userid = #{userId} AND RR.rightName = 'FACILITY_FILL_SHIPMENT' " +
-      " WHERE status = #{status} " +
+      " WHERE o.status = #{status} " +
       " ORDER BY o.createdDate")
   List<String> getOrdersByStatus(@Param("userId") Long userId, @Param("status") String status);
 }
