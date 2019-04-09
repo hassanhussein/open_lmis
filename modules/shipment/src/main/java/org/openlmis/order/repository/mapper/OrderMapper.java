@@ -17,6 +17,7 @@ import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.order.dto.OrderIdentifierDto;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
@@ -142,4 +143,14 @@ public interface OrderMapper {
           one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   Order getByOrderNumber(String orderNumber);
+
+  @Select("SELECT distinct(o.orderNumber) orderNumber FROM orders o " +
+      " JOIN supply_lines s ON o.supplyLineId = S.id" +
+      " JOIN requisitions r on r.id = o.rnrid " +
+      " JOIN fulfillment_role_assignments FRA ON s.supplyingFacilityId = FRA.facilityId " +
+      " JOIN role_rights RR ON FRA.roleId = RR.roleId" +
+      " FRA.userid = #{userId} AND RR.rightName = 'FACILITY_FILL_SHIPMENT' " +
+      " WHERE status = #{status} " +
+      " ORDER BY o.createdDate")
+  List<String> getOrdersByStatus(@Param("userId") Long userId, @Param("status") String status);
 }
