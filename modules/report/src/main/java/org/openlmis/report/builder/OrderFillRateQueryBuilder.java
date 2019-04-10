@@ -78,14 +78,11 @@ public class OrderFillRateQueryBuilder {
                 " from mv_order_fill_report_products sli  " +
                 " where  sli.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
 
-        WHERE(facilityIsFilteredBy("f.id"));
-
         if (param.getProductCategory() != 0)
             query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
         if (multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer") != null)
             query = query + " and " + multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer");
         query = query + " order by facility, productCode ";
-
 
         return query;
     }
