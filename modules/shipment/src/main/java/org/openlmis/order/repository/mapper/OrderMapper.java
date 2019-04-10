@@ -146,11 +146,10 @@ public interface OrderMapper {
 
   @Select("SELECT distinct(o.orderNumber) orderNumber FROM orders o " +
       " JOIN supply_lines s ON o.supplyLineId = S.id" +
-      " JOIN requisitions r on r.id = o.rnrid " +
+      " JOIN requisitions r on r.id = o.id " +
       " JOIN fulfillment_role_assignments FRA ON s.supplyingFacilityId = FRA.facilityId " +
       " JOIN role_rights RR ON FRA.roleId = RR.roleId" +
-      " FRA.userid = #{userId} AND RR.rightName = 'FACILITY_FILL_SHIPMENT' " +
-      " WHERE status = #{status} " +
-      " ORDER BY o.createdDate")
+      " AND FRA.userid = #{userId} AND RR.rightName = 'FACILITY_FILL_SHIPMENT' " +
+      " WHERE o.status = #{status} ")
   List<String> getOrdersByStatus(@Param("userId") Long userId, @Param("status") String status);
 }
