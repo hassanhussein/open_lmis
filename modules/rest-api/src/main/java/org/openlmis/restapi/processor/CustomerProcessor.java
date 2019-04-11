@@ -10,54 +10,29 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.restapi.dtos.sage;
+package org.openlmis.restapi.processor;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.restapi.dtos.sage.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.Date;
+@Component
+public class CustomerProcessor {
 
-@Getter
-@Setter
-public class Customer {
+  @Autowired
+  FacilityService facilityService;
 
-  private String CustomerId;
+  public void process(Customer customer) {
+    Facility facility = facilityService.getByCodeFor(customer.getCustomerId());
+    if (facility == null) {
+      facility = customer.createNewFacility();
+      facilityService.save(facility);
+    } else {
+      customer.updateFacility(facility);
+      facilityService.update(facility);
+    }
 
-  private Date CustomerUpdatedDate;
-
-  private String CustomerDescription;
-
-  private String CustomerAddr1;
-
-  private String CustomerAddr2;
-
-  private String CustomerAddr3;
-
-  private String CustomerAddr4;
-
-  private String CustomerCity;
-
-  private String CustomerPhone;
-
-  private String CustomerEmail;
-
-  public Facility createNewFacility() {
-    Facility facility = new Facility();
-    updateFacility(facility);
-    return facility;
-  }
-
-  public void updateFacility(Facility facility) {
-    facility.setCode(getCustomerId());
-    facility.setName(getCustomerDescription());
-    facility.setEnabled(true);
-    facility.setActive(true);
-    facility.setAddress1(getCustomerAddr1());
-    facility.setAddress2(getCustomerAddr2());
-    facility.setMainPhone(getCustomerPhone());
-
-    //facility.setFacilityType();
-    //facility.setGeographicZone();
   }
 }

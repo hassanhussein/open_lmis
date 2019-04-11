@@ -13,6 +13,7 @@
 package org.openlmis.restapi.processor;
 
 import org.openlmis.restapi.dtos.sage.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -25,13 +26,13 @@ import java.util.List;
 @Component
 public class SageProcessor {
 
+  @Autowired
+  CustomerProcessor customerProcessor;
   @Value("${integration.sage.base.url}")
   private String BASE_URL;
-
   @Value("${integration.sage.user.name}")
   private String USER_NAME;
-
-  @Value("${integration.sage.user.name}")
+  @Value("${integration.sage.user.password}")
   private String PASSWORD;
 
   public void process() {
@@ -42,11 +43,11 @@ public class SageProcessor {
     RestTemplate template = new RestTemplate();
 
     ResponseEntity<List<Customer>> response = template
-        .exchange(BASE_URL + "/api/Customer/Get", HttpMethod.GET, null, new ParameterizedTypeReference<List<Customer>>() {
+        .exchange(BASE_URL + "/Customer/Get", HttpMethod.GET, null, new ParameterizedTypeReference<List<Customer>>() {
         });
     List<Customer> customers = response.getBody();
 
-    customers.stream();
+    customers.stream().forEach(c -> customerProcessor.process(c));
 
   }
 }
