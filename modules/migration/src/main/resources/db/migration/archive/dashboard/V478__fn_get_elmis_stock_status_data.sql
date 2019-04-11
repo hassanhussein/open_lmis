@@ -60,7 +60,7 @@ BEGIN
 		program_id = ' || in_programid || '
 		AND (geographic_zone_id = ' || in_geographiczoneid || ' OR ' || in_geographiczoneid || ' = 0)
 		AND product_id IN (' || in_productid || ')
-		AND period_id IN (select id from processing_periods where scheduleid = ' || v_scheduleid || ' AND id <= ' || in_periodid || ' order by id desc limit 4)
+		AND period_id IN (select id from processing_periods where scheduleid = ' || v_scheduleid || ' AND id <= ' || in_periodid || ' order by id desc limit 6)
 		GROUP BY
 		product_id,
 		product_primaryname,

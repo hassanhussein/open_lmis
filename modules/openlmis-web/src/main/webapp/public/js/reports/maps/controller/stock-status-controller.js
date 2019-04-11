@@ -337,7 +337,7 @@ function StockStatusController( $timeout,$window, $scope, leafletData, StockStat
             var quantityConsumedSeries =  _.pairs(_.object(_.range(productStock.productData.length), _.map(_.pluck(productStock.productData,'quantityConsumed'),function(stat){ return  stat;})));
             var amcSeries =  _.pairs(_.object(_.range(productStock.productData.length), _.map(_.pluck(productStock.productData,'amc'),function(stat){ return  stat;})));
 
-            var periodSeries = _.pairs(_.object(_.range(productStock.productData.length), _.map(productStock.productData ,function(stat){ return  stat.periodName +' '+stat.periodYear;})));
+            var periodSeries = _.pairs(_.object(_.range(productStock.productData.length), _.map(productStock.productData ,function(stat){ return  stat.periodName ;})));
 
             var barsOption = generateBarsOption(productId, periodSeries, productName);
 
