@@ -58,7 +58,8 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
     parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
       rnrIds=reportMapper.getRequisitionsForPeriod(parameter);
-      String rnrIdsParam=  rnrIds.toString().replace("[", "{").replace("]", "}");
+      String rnrIdsParam= "values "+ rnrIds.toString().replace("[", "(").replace("]", ")").
+              replace(",","),(");
       parameter.setRnrIdsPar(rnrIdsParam);
     parameter.setUserId(this.getUserId());
 

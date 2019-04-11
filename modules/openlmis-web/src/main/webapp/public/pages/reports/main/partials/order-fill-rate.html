@@ -75,32 +75,32 @@
                             <tbody>
                             <tr ng-repeat-start="row in datarows" ng-class="{'substitutes' : row.substitutes.length > 0}">
                                 <td data-title="'#'" class="number" style="width:20px">{{ row.no }}</td>
-                                <td data-title="getLocalMessage('label.facility.code')" style="width:30%" sortable="facilitycode">{{ row.facilitycode }}
+                                <td data-title="getLocalMessage('label.facility.code')" style="width:20px" sortable="facilitycode">{{ row.facilitycode }}
                                 </td>
-                                <td data-title="getLocalMessage('label.facility.name')" style="width:30%" sortable="facility">{{ row.facility }}
+                                <td data-title="getLocalMessage('label.facility.name')" style="max-width:70px" sortable="facility">{{ row.facility }}
                                 </td>
 
-                                <td data-title="getLocalMessage('label.product.code')" style="width:80px" sortable="productcode">{{row.substitutes.length}}{{
+                                <td data-title="getLocalMessage('label.product.code')" style="max-width:40px" sortable="productcode">{{row.substitutes.length}}{{
                                     row.productcode }}
                                 </td>
-                                <td data-title="getLocalMessage('label.product.name')" style="width:30%" sortable="product">{{ row.product }}
+                                <td data-title="getLocalMessage('label.product.name')" style="max-width:70px" sortable="product">{{ row.product }}
                                 </td>
-                                <td data-title="getLocalMessage('label.province')" style="width:30%" sortable="product">{{ row.province }}
+                                <td data-title="getLocalMessage('label.province')" style="max-width:50px" sortable="product">{{ row.province }}
                                 </td>
-                                <td data-title="getLocalMessage('label.district')" style="width:30%" sortable="product">{{ row.district }}
+                                <td data-title="getLocalMessage('label.district')" style="max-width:40px" sortable="product">{{ row.district }}
                                 </td>
-                                <td data-title="getLocalMessage('label.program')" style="width:30%" sortable="product">{{ row.program }}
+                                <td data-title="getLocalMessage('label.program')" style="max-width:40px" sortable="product">{{ row.program }}
                                 </td>
-                                <td data-title="getLocalMessage('label.period')" style="width:30%" sortable="product">{{ row.period }}
+                                <td data-title="getLocalMessage('label.period')" style="max-width:40px" sortable="product">{{ row.period }}
                                 </td>
-                                <td data-title="getLocalMessage('header.quantity.ordered')" class="number" style="width:80px"
+                                <td  data-title="getLocalMessage('header.quantity.ordered')" class="number" style="width:40px !important;"
                                     sortable="approved">{{ row.approved | number }}
                                 </td>
-                                <td data-title="getLocalMessage('label.qty.shipped')" class="number" style="width:80px"
+                                <td data-title="getLocalMessage('label.qty.shipped')" class="number" style="width:40px !important;"
                                     sortable="receipts">{{ row.receipts | number }}
                                 </td>
                                 <td data-title="getLocalMessage('label.item.fill.rate')" class="number" ng-class="{ red:'Item Fill Rate'}"
-                                    style="width:120px" sortable="item_fill_rate">
+                                    style="width:40px !important;" sortable="item_fill_rate">
                                     <div class="{{(row.item_fill_rate == 100) ?  'black' : 'red'}}" ng-hide="row.substitutes.length > 0">
                                         {{ row.item_fill_rate | number}} %
                                     </div>

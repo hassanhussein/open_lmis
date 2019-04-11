@@ -81,7 +81,7 @@ public class OrderFillRateQueryBuilder {
         if (param.getProductCategory() != 0)
             query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
         if (multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer") != null)
-            query = query + " and " + multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer");
+            query = query + " and " + multiProductFilterBy(param.getProducts(), "sli.productid", "sli.tracer");
         query = query + " order by facility, productCode ";
 
         return query;
