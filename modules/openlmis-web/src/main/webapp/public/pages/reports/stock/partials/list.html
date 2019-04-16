@@ -199,13 +199,13 @@
         <div class="content-body">
 
             <table client-side-sort-pagination class="table table-bordered"
-                   ng-show="stockStatuses == undefined || stockStatuses.length == 0">
+                   ng-show="data == undefined || data.length == 0">
                 <tr>
                     <td>No data to show under selected filters</td>
                 </tr>
             </table>
 
-            <div class="row-fluid rnr-table" scrollable ng-show="stockStatuses.length > 0 ">
+            <div class="row-fluid rnr-table" scrollable ng-show="datarows.length > 0 ">
 
                 <div class="clearfix"></div>
 
@@ -259,7 +259,7 @@
 
                     <tbody>
 
-                    <tr ng-repeat="f in stockStatuses">
+                    <tr ng-repeat="f in datarows">
 
 
                         <td>

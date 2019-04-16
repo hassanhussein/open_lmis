@@ -6,13 +6,11 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
         definedObject = periodListElement;
         var locale = "en-us";
         definedObject.month = dateToday.toLocaleString(locale, {month: "long"}) + ' ' + periodListElement.stringYear;
-        console.log(definedObject);
         return definedObject;
     }
 
     var headerCellData = function (periodToDisplay) {
 
-        console.log(periodToDisplay);
 
         Periods.get({scheduleId: $scope.paramToBeUpdated.schedule}, function (data) {
             var periodList = data.periods;
@@ -39,7 +37,7 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
     };
 
     $scope.getFacilityStock = function (facility, period) {
-        var f = _.findWhere($scope.stockStatuses, {facilityName: facility});
+        var f = _.findWhere($scope.data, {facilityName: facility});
 
         if (f !== undefined)
             p = _.findWhere(f.stocks, {periodName: period});
@@ -53,7 +51,7 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
     };
 
     $scope.searchReport = function () {
-        $scope.stockStatuses = [];
+        $scope.stockStatuses =  $scope.data = $scope.datarows = [];
         AggregateStockStatusReport.get($scope.paramToBeUpdated, function (data) {
             if (data.pages.rows !== undefined || null !== data.pages) {
                 $scope.facilityStocks = data.pages.rows;
@@ -66,9 +64,10 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
                 var periodToDisplay = _.uniq(periodData);
                 headerCellData(periodToDisplay);
 
-                $scope.stockStatuses = $.map(groupByFacility, function (value, index) {
+                $scope.data = $.map(groupByFacility, function (value, index) {
                     return [{"facilityName": index, "stocks": value}];
                 });
+                $scope.paramsChanged($scope.tableParams);
             }
         });
     };
@@ -78,6 +77,8 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
 
             if ($scope.filter.zone === undefined)
                 $scope.filter.zone = 0;
+            $scope.filter.max = 1000;
+
 
             $scope.paramToBeUpdated = {
                 program: parseInt($scope.filter.program, 10),
@@ -85,7 +86,8 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
                 product: parseInt($scope.filter.product, 10),
                 zone: parseInt($scope.filter.zone, 10),
                 periodStart: $scope.filter.periodStart,
-                periodEnd: $scope.filter.periodEnd
+                periodEnd: $scope.filter.periodEnd,
+                max: $scope.filter.max
             };
         }
 
