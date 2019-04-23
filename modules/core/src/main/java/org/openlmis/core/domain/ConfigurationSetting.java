@@ -31,7 +31,8 @@ public class ConfigurationSetting extends BaseModel {
   private String description;
   private String valueType;
   private String valueOptions;
-  private String displayOrder;
+  private Integer displayOrder;
   private String groupName;
+  private boolean isConfigurable;
 
 }

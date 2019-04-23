@@ -10,31 +10,30 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.restapi.dtos.sage;
+package org.openlmis.restapi.processor;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
-import java.math.BigDecimal;
-import java.util.Date;
+@Configuration
+public class UrlFactory {
 
-@Getter
-@Setter
-public class ItemPrice {
+  @Value("${integration.sage.base.url}")
+  private String BASE_URL;
 
-  @JsonProperty("ItemNum")
-  private String itemCode;
+  public String customer() {
+    return BASE_URL + "/Customer/Get";
+  }
 
-  @JsonProperty("ItemUpdatedDate")
-  private Date itemUpdateDate;
+  public String itemStock() {
+    return BASE_URL + "/ItemStock/Get";
+  }
 
-  @JsonProperty("ItemDescription")
-  private String itemDescription;
+  public String itemPrice() {
+    return BASE_URL + "/ItemPrice/Get";
+  }
 
-  @JsonProperty("ItemCategory")
-  private String itemCategory;
-
-  @JsonProperty("Price")
-  private BigDecimal price;
+  public String shipment() {
+    return BASE_URL + "/Shipment/Get";
+  }
 }

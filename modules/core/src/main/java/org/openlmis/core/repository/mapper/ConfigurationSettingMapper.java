@@ -12,6 +12,7 @@
 
 package org.openlmis.core.repository.mapper;
 
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -32,11 +33,16 @@ public interface ConfigurationSettingMapper {
 
 
   @Select("SELECT * FROM configuration_settings where key like #{searchString} order by groupName, displayOrder, name")
-  List<ConfigurationSetting> getSearchResults(@Param("searchString")String searchString);
+  List<ConfigurationSetting> getSearchResults(@Param("searchString") String searchString);
 
   @Update("UPDATE configuration_settings set value = #{value} where KEY = #{key} ")
-  void updateValue(ConfigurationSetting config );
-  
+  void updateValue(ConfigurationSetting config);
+
+  @Insert("insert into configuration_settings " +
+      "(key, isConfigurable, groupName, displayOrder, name, valueType, valueOptions, value ) " +
+      "values" +
+      "(#{key}, #{isConfigurable}, #{groupName}, #{displayOrder}, #{name}, #{valueType}, #{valueOptions}, #{value})")
+  void create(ConfigurationSetting config);
 }
 
 

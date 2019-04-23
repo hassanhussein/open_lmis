@@ -12,42 +12,131 @@
 
 package org.openlmis.restapi.processor;
 
+import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.restapi.dtos.sage.Customer;
+import org.openlmis.restapi.dtos.sage.ItemPrice;
+import org.openlmis.restapi.dtos.sage.ItemStock;
+import org.openlmis.restapi.dtos.sage.Shipment;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 
 @Component
 public class SageProcessor {
 
+  private static final String LAST_CUSTOMER_UPDATE_TIME = "LAST_CUSTOMER_UPDATE_TIME";
+  private static final String LAST_ITEM_STOCK_UPDATE_TIME = "LAST_ITEM_STOCK_UPDATE_TIME";
+  private static final String LAST_ITEM_PRICE_UPDATE_TIME = "LAST_ITEM_PRICE_UPDATE_TIME";
+  private static final String LAST_SHIPMENT_UPDATE_TIME = "LAST_SHIPMENT_UPDATE_TIME";
+  private static final String INTEGRATION = "INTEGRATION";
+
   @Autowired
   CustomerProcessor customerProcessor;
-  @Value("${integration.sage.base.url}")
-  private String BASE_URL;
-  @Value("${integration.sage.user.name}")
-  private String USER_NAME;
-  @Value("${integration.sage.user.password}")
-  private String PASSWORD;
+
+  @Autowired
+  ItemStockProcessor itemStockProcessor;
+
+  @Autowired
+  ItemPriceProcessor itemPriceProcessor;
+
+  @Autowired
+  ShipmentProcessor shipmentProcessor;
+
+  @Autowired
+  ConfigurationSettingService configurationSettingService;
+
+  @Autowired
+  UrlFactory urlFactory;
+
+  @Autowired
+  SageRestClient restClient;
+
 
   public void process() {
-    getCustomers();
+    processCustomers();
+    processItems();
+    processItemPrices();
+    processItemStocks();
+    processShipments();
   }
 
-  private void getCustomers() {
-    RestTemplate template = new RestTemplate();
+  public Map<String, String> processShipments() {
+    Date startTime = new Date();
+    ConfigurationSetting lastUpdateConfiguration = getOrCreateLastUpdateTime(LAST_SHIPMENT_UPDATE_TIME);
 
-    ResponseEntity<List<Customer>> response = template
-        .exchange(BASE_URL + "/Customer/Get", HttpMethod.GET, null, new ParameterizedTypeReference<List<Customer>>() {
-        });
-    List<Customer> customers = response.getBody();
+    List<Shipment> items = restClient.callGetShipment(lastUpdateConfiguration.getValue());
+    items.parallelStream().forEach(c -> shipmentProcessor.process(c));
 
-    customers.stream().forEach(c -> customerProcessor.process(c));
+    return updateStoreAndReturnSummary(startTime, lastUpdateConfiguration, items);
 
+  }
+
+  public Map<String, String> processItemStocks() {
+    Date startTime = new Date();
+    ConfigurationSetting lastUpdateConfiguration = getOrCreateLastUpdateTime(LAST_ITEM_STOCK_UPDATE_TIME);
+
+    List<ItemStock> itemStocks = restClient.callGetItemStock(lastUpdateConfiguration.getValue());
+    itemStocks.parallelStream().forEach(c -> itemStockProcessor.process(c));
+
+    return updateStoreAndReturnSummary(startTime, lastUpdateConfiguration, itemStocks);
+  }
+
+  private Map<String, String> updateStoreAndReturnSummary(Date updateTime, ConfigurationSetting lastUpdateTime, List items) {
+    Map<String, String> result = new HashMap<>();
+    result.put("PreviousDateProcessed", lastUpdateTime.getValue());
+
+    // update last updated time.
+    lastUpdateTime.setValue(getDateString(updateTime));
+    configurationSettingService.update(asList(lastUpdateTime));
+
+    result.put("RecordsProcessedToday", String.valueOf(items.size()));
+    result.put("ProcessedOn", lastUpdateTime.getValue());
+    return result;
+  }
+
+  public Map<String, String> processItemPrices() {
+    Date startTime = new Date();
+    ConfigurationSetting lastUpdateConfiguration = getOrCreateLastUpdateTime(LAST_ITEM_PRICE_UPDATE_TIME);
+
+    List<ItemPrice> items = restClient.callGetItemPrice(lastUpdateConfiguration.getValue());
+    items.parallelStream().forEach(c -> itemPriceProcessor.process(c));
+
+    return updateStoreAndReturnSummary(startTime, lastUpdateConfiguration, items);
+  }
+
+  public void processItems() {
+
+  }
+
+  public Map<String, String> processCustomers() {
+
+    Date startTime = new Date();
+    ConfigurationSetting lastUpdateConfiguration = getOrCreateLastUpdateTime(LAST_CUSTOMER_UPDATE_TIME);
+
+    List<Customer> items = restClient.callGetCustomers(lastUpdateConfiguration.getValue());
+    items.parallelStream().forEach(c -> customerProcessor.process(c));
+
+    return updateStoreAndReturnSummary(startTime, lastUpdateConfiguration, items);
+  }
+
+  private ConfigurationSetting getOrCreateLastUpdateTime(String key) {
+    ConfigurationSetting lastUpdateTime = configurationSettingService.getByKey(key);
+    if (lastUpdateTime == null) {
+      lastUpdateTime = configurationSettingService.create(key, key, INTEGRATION, "");
+    }
+    return lastUpdateTime;
+  }
+
+  private String getDateString(Date date) {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
+    return format.format(date);
   }
 }

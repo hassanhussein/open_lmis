@@ -10,44 +10,24 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.core.repository;
+package org.openlmis.restapi.processor;
 
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ConfigurationSetting;
-import org.openlmis.core.repository.mapper.ConfigurationSettingMapper;
+import org.openlmis.restapi.dtos.sage.ItemStock;
+import org.openlmis.restapi.processor.mappers.LogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-@Component
-@NoArgsConstructor
-public class ConfigurationSettingRepository {
-
-  private ConfigurationSettingMapper mapper;
+@Service
+public class ItemStockProcessor {
 
   @Autowired
-  public ConfigurationSettingRepository(ConfigurationSettingMapper configurationSettingMapper) {
-    this.mapper = configurationSettingMapper;
-  }
+  LogMapper logMapper;
 
-  public ConfigurationSetting getByKey(String key) {
-    return mapper.getByKey(key);
-  }
-
-  public List<ConfigurationSetting> getAll() {
-    return mapper.getAll();
-  }
-
-  public void setValue(ConfigurationSetting config) {
-    mapper.updateValue(config);
-  }
-
-  public List<ConfigurationSetting> getSearchResults(String s) {
-    return mapper.getSearchResults(s);
-  }
-
-  public void create(ConfigurationSetting setting) {
-    mapper.create(setting);
+  public void process(ItemStock stock) {
+    //check if this has already been logged.
+    ItemStock persistedStock = logMapper.getStock(stock);
+    if (persistedStock == null) {
+      logMapper.insertStockLog(stock);
+    }
   }
 }

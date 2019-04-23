@@ -12,6 +12,7 @@
 
 package org.openlmis.restapi.dtos.sage;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,13 +22,18 @@ import java.util.Date;
 @Setter
 public class ItemStock {
 
-  private String ItemNum;
+  @JsonProperty("ItemNum")
+  private String itemCode;
 
-  private Date ItemUpdatedDate;
+  @JsonProperty("ItemUpdatedDate")
+  private Date itemUpdateDate;
 
-  private String ItemDescription;
+  @JsonProperty("ItemDescription")
+  private String itemDescription;
 
-  private String ItemLocation;
+  @JsonProperty("ItemLocation")
+  private String itemLocation;
 
-  private Long ItemQty;
+  @JsonProperty("ItemQty")
+  private Long itemQty;
 }

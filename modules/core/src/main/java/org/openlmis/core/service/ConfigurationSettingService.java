@@ -13,8 +13,8 @@
 package org.openlmis.core.service;
 
 
-import org.openlmis.core.domain.*;
-import org.openlmis.core.repository.*;
+import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.repository.ConfigurationSettingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,5 +88,18 @@ public class ConfigurationSettingService {
 
   public List<ConfigurationSetting> getSearchResults(String s) {
     return configurationSettingRepository.getSearchResults(s);
+  }
+
+  public ConfigurationSetting create(String key, String name, String groupName, String value) {
+    ConfigurationSetting setting = new ConfigurationSetting();
+    setting.setKey(key);
+    setting.setValue(value);
+    setting.setName(name);
+    setting.setGroupName(groupName);
+    setting.setConfigurable(false);
+    setting.setDisplayOrder(1);
+    setting.setValueType("TEXT");
+    configurationSettingRepository.create(setting);
+    return setting;
   }
 }

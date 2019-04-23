@@ -12,6 +12,7 @@
 
 package org.openlmis.restapi.dtos.sage;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,12 +20,19 @@ import lombok.Setter;
 @Setter
 public class ShipmentDetail {
 
-  private int ShipmentDetailLineNum;
+  @JsonProperty("ShipmentDetailLineNum")
+  private int shipmentDetailLineNum;
 
-  private String ShipmentDetailItemNum;
+  @JsonProperty("ShipmentDetailItemNum")
+  private String shipmentDetailItemNum;
 
-  private String ShipmentDetailItemDescription;
+  @JsonProperty("ShipmentDetailItemDescription")
+  private String shipmentDetailItemDescription;
 
-  private String ShipmentDetailLocation;
+  @JsonProperty("ShipmentDetailLocation")
+  private String shipmentDetailLocation;
+
+  @JsonProperty("ShipmentDetailQty")
+  private Integer shipmentDetailQty;
 
 }

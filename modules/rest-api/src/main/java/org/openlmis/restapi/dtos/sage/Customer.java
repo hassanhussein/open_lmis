@@ -12,9 +12,12 @@
 
 package org.openlmis.restapi.dtos.sage;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.FacilityType;
+import org.openlmis.core.domain.GeographicZone;
 
 import java.util.Date;
 
@@ -22,28 +25,42 @@ import java.util.Date;
 @Setter
 public class Customer {
 
-  private String CustomerId;
+  @JsonProperty("CustomerId")
+  private String customerId;
 
-  private Date CustomerUpdatedDate;
+  @JsonProperty("CustomerUpdatedDate")
+  private Date customerUpdatedDate;
 
-  private String CustomerDescription;
+  @JsonProperty("CustomerDescription")
+  private String customerDescription;
 
-  private String CustomerAddr1;
+  @JsonProperty("CustomerAddr1")
+  private String customerAddr1;
 
-  private String CustomerAddr2;
+  @JsonProperty("CustomerAddr2")
+  private String customerAddr2;
 
-  private String CustomerAddr3;
+  @JsonProperty("CustomerAddr3")
+  private String customerAddr3;
 
-  private String CustomerAddr4;
+  @JsonProperty("CustomerAddr4")
+  private String customerAddr4;
 
-  private String CustomerCity;
+  @JsonProperty("CustomerCity")
+  private String customerCity;
 
-  private String CustomerPhone;
+  @JsonProperty("CustomerPhone")
+  private String customerPhone;
 
-  private String CustomerEmail;
+  @JsonProperty("CustomerEmail")
+  private String customerEmail;
 
   public Facility createNewFacility() {
     Facility facility = new Facility();
+//    facility.setFacilityType(new FacilityType());
+//    facility.getFacilityType().setId(1L);
+//    facility.setGeographicZone(new GeographicZone());
+//    facility.getGeographicZone().setId(1L);
     updateFacility(facility);
     return facility;
   }
