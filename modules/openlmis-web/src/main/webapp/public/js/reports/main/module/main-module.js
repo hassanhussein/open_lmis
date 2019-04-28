@@ -188,7 +188,12 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: RejectedRnRController,
             templateUrl: 'partials/rejected.html',
             reloadOnSearch: false
-        }).otherwise({redirectTo: '/adjustment-summary'});
+        }).when('/item-fill-rate-report', {
+             controller: ItemFillRateSummaryController,
+             templateUrl: 'partials/item-fill-rate-summary.html',
+             reloadOnSearch: false
+         })
+        .otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
 }).filter('positive', function () {

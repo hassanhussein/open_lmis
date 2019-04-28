@@ -1354,3 +1354,7 @@ services.factory('AggregateStockStatusReport', function ($resource) {
 services.factory('QuantificationExtractReport', function ($resource) {
     return $resource('/reports/reportdata/quantification-extract.json', {}, {});
 });
+
+services.factory('GetItemFillRateSummary', function ($resource) {
+    return $resource('/reports/reportdata/item-fill-rate-summary.json', {}, {});
+});

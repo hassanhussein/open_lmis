@@ -911,4 +911,18 @@ public class InteractiveReportController extends BaseController {
         OpenLmisResponse pages = new OpenLmisResponse("rows",quantificationExtractReportList);
         return pages;
     }
+
+    @RequestMapping(value = "/reportdata/item-fill-rate-summary", method = GET, headers = BaseController.ACCEPT_JSON)
+    public OpenLmisResponse getItemFillRateSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                     @RequestParam(value = "limit", defaultValue="100") String limit,
+                                                     HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("item_fill_rate_report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<ItemFillRateReport> itemFillRateReportList = (List<ItemFillRateReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        OpenLmisResponse pages = new OpenLmisResponse("rows",itemFillRateReportList);
+        return pages;
+    }
 }
