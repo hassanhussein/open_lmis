@@ -36,6 +36,8 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
 
     };
 
+    $scope.isMOS = false;
+
     $scope.getFacilityStock = function (facility, period) {
         var f = _.findWhere($scope.data, {facilityName: facility});
 
@@ -71,6 +73,8 @@ function AggregateStockStatusReportFunction($scope, AggregateStockStatusReport, 
             }
         });
     };
+
+
     $scope.OnFilterChanged = function () {
 
         if ($scope.filter !== undefined) {

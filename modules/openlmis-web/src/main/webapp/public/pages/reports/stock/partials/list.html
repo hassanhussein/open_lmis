@@ -215,7 +215,7 @@
                     <Strong class="labels"><span  data-toggle="tooltip"
                                                   title="Checked to see SOH columns only"> <i aria-hidden="true"></i>Checked to see SOH Only</span> </Strong>
 
-                    <input type="checkbox" ng-model="filter.isMOS" ng-change="searchReport()"/>
+                    <input type="checkbox" ng-model="isMOS" ng-change="searchReport()"/>
 
                     <Strong class="labels"><span  data-toggle="tooltip"
                                                   title="Checked to see MOS columns only"> <i aria-hidden="true"></i>Checked to see MOS Only</span> </Strong>
@@ -237,7 +237,7 @@
                             {{p.name}}
                         </th>
 -->
-                        <th ng-repeat="p in periodHeaders"  colspan="{{p.enableOrder ? '2' : '1'}}"  style="text-align: center;"
+                        <th ng-repeat="p in periodHeaders"  colspan="2"  style="text-align: center;"
                             class="p-column" id="p-column-r1">
                             {{(p.month != null)?p.month:p.name}}
                         </th>
