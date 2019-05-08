@@ -183,7 +183,14 @@
                             / {{item.equipment.model}}
                         </span>
                     </td>
-                    <td>{{item.serialNumber}}</td>
+                    <td>
+                        <span ng-show="item.isSerialNumberVerified">
+                            <a tooltip="Coldtrace dashboard for this Equipment" target="_blank" href="https://tz.coldtrace.org/api/integrations/5b187c5461b32000017a67ae/cce/{{item.serialNumber}}/days/">
+                                <i class="icon icon-anchor"></i>
+                            </a>
+                        </span>
+                        {{item.serialNumber}}
+                    </td>
                     <td>{{item.equipment.refrigeratorCapacity ? item.equipment.refrigeratorCapacity : 0}} /
                         {{item.equipment.freezerCapacity ? item.equipment.freezerCapacity : 0}}
                         {{item.equipment.capacity ? item.equipment.capacity : null}}
