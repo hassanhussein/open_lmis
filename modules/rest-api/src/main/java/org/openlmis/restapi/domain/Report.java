@@ -24,10 +24,8 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.order.domain.DateFormat;
-import org.openlmis.rnr.domain.PatientQuantificationLineItem;
-import org.openlmis.rnr.domain.RegimenLineItem;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
+import org.postgresql.largeobject.LargeObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,7 +60,7 @@ public class Report {
     private String approverName;
 
     // added for the sdp version
-    private String periodId;
+    private Long periodId;
     private Boolean emergency;
 
     private String clientSubmittedTime;
@@ -82,7 +80,7 @@ public class Report {
         Report report = new Report();
         report.setAgentCode(rnr.getFacility().getCode());
         report.setProgramCode(rnr.getProgram().getCode());
-
+        report.setRnrId(rnr.getId());
         ArrayList<RnrLineItem> nonFullSupplyProducts = new ArrayList<RnrLineItem>() {{
             addAll(rnr.getNonFullSupplyLineItems());
         }};
@@ -112,7 +110,9 @@ public class Report {
         report.setClientSubmittedNotes(rnr.getClientSubmittedNotes());
         report.setPeriodStartDate(rnr.getPeriod().getStartDate());
         report.setRnrSignatures(rnr.getRnrSignatures());
-
+        report.setPeriodId(rnr.getPeriod().getId());
+        report.setSourceOrderId(null);
+        report.setStatus(String.valueOf(rnr.getStatus()));
         return report;
     }
 
@@ -124,9 +124,8 @@ public class Report {
 
     private void validateMandatoryFields() {
 
-        if ((!isNumeric(periodId)) || (agentCode == null || agentCode.trim().equals("")) || (programCode == null || programCode.trim().equals("") || periodId == null)
-                || (sourceApplication == null || sourceApplication.trim().equals("") || status == null || status.trim().equals("") || !status.equals("SUBMITTED")  || (nonFullSupplyProducts.isEmpty() && products.isEmpty())
-        )) {
+        if ((agentCode == null || agentCode.trim().equals("")) || (programCode == null || programCode.trim().equals("") || periodId == null)
+               ) {
             returnNullOrEmptyErrorMessage();
             return;
         }

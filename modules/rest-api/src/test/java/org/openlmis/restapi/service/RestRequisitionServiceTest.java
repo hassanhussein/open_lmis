@@ -223,7 +223,7 @@ public class RestRequisitionServiceTest {
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
     report.setRegimens(asList(reportRegimenLineItem));
-    report.setPeriodId(String.valueOf(1L));
+    report.setPeriodId(1L);
     report.setEmergency(false);
 
     Long facility_id = 5L;
@@ -267,7 +267,7 @@ public class RestRequisitionServiceTest {
     report.setProducts(products);
     RegimenLineItem reportRegimenLineItem = make(a(defaultRegimenLineItem, with(patientsOnTreatment, 10), with(patientsStoppedTreatment, 5)));
     report.setRegimens(asList(reportRegimenLineItem));
-    report.setPeriodId(String.valueOf(1L));
+    report.setPeriodId(1L);
     report.setEmergency(false);
 
     Long facility_id = 5L;
@@ -307,7 +307,7 @@ public class RestRequisitionServiceTest {
   public void sdpShouldThrowErrorIfPeriodValidationFails() throws Exception {
     expectedException.expect(DataException.class);
     expectedException.expectMessage("rnr.error");
-    report.setPeriodId(String.valueOf(2L));
+    report.setPeriodId(2L);
     when(programService.getValidatedProgramByCode(anyString())).thenReturn(new Program());
     when(facilityService.getOperativeFacilityByCode(anyString())).thenReturn(new Facility());
     doThrow(new DataException("rnr.error")).when(restRequisitionCalculator).validateCustomPeriod(any(Facility.class), any(Program.class), any(ProcessingPeriod.class), any(Long.class));
@@ -704,6 +704,43 @@ public class RestRequisitionServiceTest {
     agent.setAgentCode(DEFAULT_AGENT_CODE);
     facility.setId(120L);
     when(facilityService.getFacilityByAgentCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+
+  }
+
+  @Test
+  public void shouldReturnErrorIfFacilityCodeDoNotMatchWithExistingElmisCode(){
+
+    Facility facility = new Facility();
+    facility.setCode(FACILITY_CODE);
+    facility.setId(120L);
+    when(facilityService.getReportingFacilityByCode(DEFAULT_AGENT_CODE)).thenReturn(facility);
+
+  }
+
+  @Test
+  public void shouldInitiateSDPReport(){
+
+    String programCode = "program";
+    String facilityCode = "agent";
+
+    Facility facility = new Facility(1L);
+
+    Program program = new Program(1L);
+
+    when(facilityService.getOperativeSdpFacilityByCode(facilityCode)).thenReturn(facility);
+    when(programService.getValidatedProgramByCode(programCode)).thenReturn(program);
+
+    facility.setCode(DEFAULT_AGENT_CODE);
+    program.setCode(DEFAULT_PROGRAM_CODE);
+    Long userId = 12345L;
+    facility.setVirtualFacility(true);
+
+    Long reportRequisitionId = 1L;
+    Rnr requisitionFromReport = new Rnr(reportRequisitionId);
+
+    Report spyReport = spy(report);
+    when(spyReport.getRequisition(reportRequisitionId, userId)).thenReturn(requisitionFromReport);
+    doThrow(new DataException("rnr not found")).when(requisitionService).getFullRequisitionById(requisitionFromReport.getId());
 
   }
 

@@ -44,7 +44,9 @@ import java.util.stream.Collectors;
 import static java.lang.Long.valueOf;
 import static java.util.Arrays.asList;
 import static org.apache.commons.collections.CollectionUtils.find;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.openlmis.restapi.domain.ReplenishmentDTO.prepareForREST;
+import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 
 /**
  * This service exposes methods for creating, approving a requisition.
@@ -446,73 +448,74 @@ public class RestRequisitionService {
     }
 
     @Transactional
-    public Map<String, OpenLmisMessage> saveSDPReport(Report report, Long userId)  {
-         if(report != null){
-             saveReceivedRnrBeforeProcessing(report);
-         }
+    public Map<String, OpenLmisMessage> saveSDPReport(Report report, Long userId) {
+        if (report != null) {
+            saveReceivedRnrBeforeProcessing(report);
+        }
 
         Map<String, OpenLmisMessage> errors = null;
 
-            report.setResponseMessage(getResponseMessage(ERROR_MISSED_VALUE));
-            errors = report.validateReportFields();
-            if(!errors.isEmpty()) return errors;
+        report.setResponseMessage(getResponseMessage(ERROR_MISSED_VALUE));
+        errors = report.validateReportFields();
+        if (!errors.isEmpty()) return errors;
 
-            FacilityMappingDTO facility = facilityService.getByAgentCode(report.getAgentCode(), APP_SETTING_CODE);
-            Program reportingProgram = programService.getByCode(report.getProgramCode().toLowerCase());
-            if (facility == null || reportingProgram == null || report.getPeriodId().length() != 6) {
-                report.setResponseMessage(getResponseMessage(ENTITY_NOT_MATCHED));
-                errors = report.validateMappedReportFields();
-                if (!errors.isEmpty()) return errors;
+        //FacilityMappingDTO facility = facilityService.getByAgentCode(report.getAgentCode(), APP_SETTING_CODE);
 
-            }
-        Date reportingDate = report.getDateFromPeriod(report.getPeriodId());
+        Facility facility = facilityService.getByCodeFor(report.getAgentCode());
+        Program reportingProgram = programService.getByCode(report.getProgramCode().toLowerCase());
+        ProcessingPeriod reportingPeriod = processingPeriodService.getById(report.getPeriodId());
 
-        Facility reportingFacility = facilityService.getFacilityById(facility.getFacilityId());
+        if (facility == null || reportingProgram == null || reportingPeriod == null || report.getRnrId() == null) {
+            report.setResponseMessage(getResponseMessage(ENTITY_NOT_MATCHED));
+            errors = report.validateMappedReportFields();
+            if (!errors.isEmpty()) return errors;
 
-        ProcessingPeriod period = processingScheduleService.getPeriodForDate(reportingFacility,reportingProgram,reportingDate);
+        }
+       // Date reportingDate = report.getDateFromPeriod(report.getPeriodId());
+
+        Facility reportingFacility = facilityService.getFacilityById(facility.getId());
+
+        ProcessingPeriod period = processingScheduleService.getPeriodForDate(reportingFacility, reportingProgram, reportingPeriod.getStartDate());
 
         Rnr rnr;
         List<Rnr> rnrs = null;
 
         RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
         searchCriteria.setProgramId(reportingProgram.getId());
-        searchCriteria.setFacilityId(facility.getFacilityId());
+        searchCriteria.setFacilityId(facility.getId());
         searchCriteria.setWithoutLineItems(true);
         searchCriteria.setUserId(userId);
 
-        if(period != null) {
-            //check if the requisition has already been initiated / submitted / authorized.
-            restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
-            rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+
+        rnr = requisitionService.getFullRequisitionById(report.getRnrId());
+        // check if the requisition has already been initiated / submitted / authorized.
+        if(SUBMITTED.equals(rnr.getStatus())) {
+                throw new DataException("error.rnr.already.submitted.for.this.period");
         }
-
-        if(rnrs != null && !rnrs.isEmpty()){
-            rnr = requisitionService.getFullRequisitionById( rnrs.get(0).getId() );
-
-        }else{
+     /*   else {
             //by default, this API is being called from ELMIS_FE
             //if not, the application would have specified it's name.
-            String sourceApplication = Strings.isNullOrEmpty( report.getSourceApplication()) ? SOURCE_APPLICATION_ELMIS_FE : report.getSourceApplication();
+            String sourceApplication = Strings.isNullOrEmpty(report.getSourceApplication()) ? SOURCE_APPLICATION_ELMIS_FE : report.getSourceApplication();
             rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period, sourceApplication);
-        }
+        }*/
         List<RnrLineItem> fullSupplyProducts = new ArrayList<>();
         List<RnrLineItem> nonFullSupplyProducts = new ArrayList<>();
 
-        fullSupplyFacilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram( reportingFacility.getId(), reportingProgram.getId() );
-        nonFullSupplyFacilityApprovedProducts = facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram( reportingFacility.getId(), reportingProgram.getId() );
+        fullSupplyFacilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(reportingFacility.getId(), reportingProgram.getId());
+        nonFullSupplyFacilityApprovedProducts = facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(reportingFacility.getId(), reportingProgram.getId());
 
-        Collection<String> fullSupplyProductCodes = ( Collection<String> ) CollectionUtils.collect(fullSupplyFacilityTypeApprovedProducts, input -> ((FacilityTypeApprovedProduct) input).getProgramProduct().getProduct().getCode());
-        Collection<String> nonFullSupplyProductCodes = ( Collection<String> ) CollectionUtils.collect(nonFullSupplyFacilityApprovedProducts, input -> ((FacilityTypeApprovedProduct) input).getProgramProduct().getProduct().getCode());
+        Collection<String> fullSupplyProductCodes = (Collection<String>) CollectionUtils.collect(fullSupplyFacilityTypeApprovedProducts, input -> ((FacilityTypeApprovedProduct) input).getProgramProduct().getProduct().getCode());
+        Collection<String> nonFullSupplyProductCodes = (Collection<String>) CollectionUtils.collect(nonFullSupplyFacilityApprovedProducts, input -> ((FacilityTypeApprovedProduct) input).getProgramProduct().getProduct().getCode());
 
         fullSupplyProducts = report.getProducts().stream()
-                .filter(p-> fullSupplyProductCodes.contains(p.getProductCode()) )
+                .filter(p -> fullSupplyProductCodes.contains(p.getProductCode()))
                 .collect(Collectors.toList());
 
         nonFullSupplyProducts = report.getProducts().stream()
-                .filter(p-> nonFullSupplyProductCodes.contains(p.getProductCode()) )
+                .filter(p -> nonFullSupplyProductCodes.contains(p.getProductCode()))
                 .collect(Collectors.toList());
 
-        for(RnrLineItem li : nonFullSupplyProducts){
+        for (RnrLineItem li : nonFullSupplyProducts) {
             setNonFullSupplyCreatorFields(li);
         }
 
@@ -527,11 +530,11 @@ public class RestRequisitionService {
         // if you have come this far, then do it, it is your day. make the submission.
         // i cannot believe we do all of these three at the same time.
         // but then this is what zambia specifically asked.
-          rnr = requisitionService.save(rnr);
-          report.setRnrId(rnr.getId());
-          report.setResponseMessage(getResponseMessage(SUCCESS_MESSAGE));
-          report.addSuccessMessage();
-          requisitionService.submit(rnr);
+        rnr = requisitionService.save(rnr);
+        report.setRnrId(rnr.getId());
+        report.setResponseMessage(getResponseMessage(SUCCESS_MESSAGE));
+        report.addSuccessMessage();
+        requisitionService.submit(rnr);
 
         return errors;
     }
@@ -540,7 +543,7 @@ public class RestRequisitionService {
         InterfaceResponseDTO responseDTO = new InterfaceResponseDTO();
         responseDTO.setSourceOrderId(report.getSourceOrderId());
         responseDTO.setStatus(INPUT_STATUS);
-        if(requisitionService.getResponseMessageBy(report.getSourceOrderId()) == null)
+        if (requisitionService.getResponseMessageBy(report.getSourceOrderId()) == null)
             requisitionService.insertResponseMessage(responseDTO);
         else
             requisitionService.updateResponseMessage(responseDTO);
@@ -566,7 +569,8 @@ public class RestRequisitionService {
     public RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId) {
         return requisitionService.getRequisitionStatusByRnRId(rnrId);
     }
-    public List<HashMap<String,Object>> getSavedRnrStatus(){
+
+    public List<HashMap<String, Object>> getSavedRnrStatus() {
         return requisitionService.getSavedRnrStatus();
     }
 
@@ -576,18 +580,40 @@ public class RestRequisitionService {
 
     }
 
-    public List<HashMap<String,Object>> getAllResponseByStatus(){
+    public List<HashMap<String, Object>> getAllResponseByStatus() {
         return requisitionService.getAllResponseByStatus();
     }
 
-    public void updateBySourceId(String sourceId){
+    public void updateBySourceId(String sourceId) {
         requisitionService.updateBySourceId(sourceId);
     }
 
-    public void postFeedbackNotification(String sourceOrderId){
-       ResponseExtDTO dto = requisitionService.getAllResponseByStatusBySourceID(sourceOrderId);
+    public void postFeedbackNotification(String sourceOrderId) {
+        ResponseExtDTO dto = requisitionService.getAllResponseByStatusBySourceID(sourceOrderId);
 
     }
 
+    public Report initiateSDPReport(String facilityCode, String programCode, Long userId, Boolean emergence, String sourceApplication) {
 
+        if (isEmpty(facilityCode) || isEmpty(programCode)) {
+            throw new DataException("error.mandatory.fields.missing");
+        }
+
+        //Check if Facility Code Exists
+        Facility reportingFacility = facilityService.getOperativeSdpFacilityByCode(facilityCode);
+
+        Program reportingProgram = programService.getValidatedProgramByCode(programCode);
+        if (reportingFacility != null) {
+            reportingFacility.setVirtualFacility(true);
+
+        restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
+        }
+        String sourceApp = (sourceApplication == null)?SOURCE_APPLICATION_OTHER:sourceApplication;
+
+        Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, emergence, null, sourceApp);
+
+
+        return Report.prepareForREST(rnr);
+
+    }
 }

@@ -45,6 +45,8 @@ public class FacilityService {
     public static final String ERROR_FACILITY_CODE_INVALID = "error.facility.code.invalid";
     public static final String SMS = "SMS";
     public static final String EMAIL = "EMAIL";
+    public static final String APP_SETTING_CODE = "GOTHOMIS-ELMIS-INTERFACE";
+    public static final String ERROR_FACILITY_CODE_NOT_MATCH = "error.facility.code.not.match";
 
     @Autowired
     private FacilityRepository facilityRepository;
@@ -378,7 +380,7 @@ public class FacilityService {
 
     @Transactional
     public void insertHfrMapping(HfrMappingDTO dto) {
-       GeographicZone zone = geographicZoneService.getByCodeFor(dto.getZoneCode());
+        GeographicZone zone = geographicZoneService.getByCodeFor(dto.getZoneCode());
         dto.setVimsDistrict(zone.getId());
         if (dto.getId() == null) {
             facilityRepository.insertHfrMapping(dto);
@@ -399,27 +401,59 @@ public class FacilityService {
     }
 
     @Transactional
-    public void insertHfrFacilityTypeMapping(HfrFacilityTypeDTO dto){
-         if(dto !=null){
-             FacilityType facilityType = facilityTypeService.getFacilityTypeByCode(dto.getVimsCode());
-             dto.setVimsCode(facilityType.getCode());
-             if(dto.getId()==null)
-             facilityRepository.insertHfrFacilityTypeMapping(dto);
-             else
-             facilityRepository.updateHfrFacilityTypeMapping(dto);
-         }
+    public void insertHfrFacilityTypeMapping(HfrFacilityTypeDTO dto) {
+        if (dto != null) {
+            FacilityType facilityType = facilityTypeService.getFacilityTypeByCode(dto.getVimsCode());
+            dto.setVimsCode(facilityType.getCode());
+            if (dto.getId() == null)
+                facilityRepository.insertHfrFacilityTypeMapping(dto);
+            else
+                facilityRepository.updateHfrFacilityTypeMapping(dto);
+        }
     }
 
     public HfrFacilityTypeDTO getAllByFacilityType(HfrFacilityTypeDTO record) {
         return facilityRepository.geAllFacilityTypeMappingByCode(record);
     }
 
-    public FacilityMappingDTO getByAgentCode(String agentCode,String appCode){
-       return facilityRepository.getByAgentCode(agentCode,appCode);
+    public FacilityMappingDTO getByAgentCode(String agentCode, String appCode) {
+        return facilityRepository.getByAgentCode(agentCode, appCode);
     }
 
 
     public Facility getFacilityByAgentCode(String code) {
         return facilityRepository.getByCode(code);
     }
+
+    public Facility getReportingFacilityByCode(String agentCode) {
+
+        FacilityMappingDTO facility = facilityRepository.getByAgentCode(agentCode, APP_SETTING_CODE);
+        if (facility == null) {
+            throw new DataException(ERROR_FACILITY_CODE_NOT_MATCH);
+        }
+        return facilityRepository.getByCode(facility.getFacilityCode());
+    }
+
+
+    public Facility getOperativeSdpFacilityByCode(String facilityCode) {
+
+        Facility facility = getReportingFacilityByCode(facilityCode);
+
+        if (facility == null) {
+            throw new DataException("ERROR_FACILITY_CODE_NOT_MATCH");
+        }
+
+
+        Facility parentFacility = null;
+        if (facility.getVirtualFacility()) {
+            parentFacility = facilityRepository.getById(facility.getParentFacilityId());
+        }
+
+        if (!facility.isValid(parentFacility)) {
+            throw new DataException("error.facility.inoperative");
+        }
+
+        return facility;
+    }
+
 }

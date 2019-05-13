@@ -233,5 +233,22 @@ public class RestRequisitionController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/rest-api/initiate-tz-sdp-requisitions", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> InitiateRequisition(@RequestParam("agentCode") String facilityCode,
+                                                            @RequestParam("programCode") String programCode,
+                                                            @RequestParam("sourceApplication") String sourceApplication,
+                                                            Principal principal,
+                                                            @RequestParam("emergence") boolean emergence) {
+        Report requisition;
+
+        try {
+            requisition = restRequisitionService.initiateSDPReport(facilityCode,programCode, loggedInUserId(principal),emergence,sourceApplication);
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+        return response(RNR, requisition, CREATED);
+    }
+
+
 
 }
