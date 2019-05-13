@@ -10,7 +10,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBackService,GetByDistrict,GeoDistrictTree,breadcrumbs,NumberOfYears,DeleteEquipmentInventory, UserFacilityList, EquipmentInventories, ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList, EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService, UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory,localStorageService,$dialog) {
+function EquipmentInventoryController($scope, EquipmentInventorySearch, navigateBackService, GetByDistrict, GeoDistrictTree,
+                                      breadcrumbs, NumberOfYears, DeleteEquipmentInventory, UserFacilityList, EquipmentInventories,
+                                      ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList,
+                                      EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService,
+                                      UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory, localStorageService, $dialog,
+                                      ToggleVerifiedEquipmentInventory, MoveEquipmentInventory) {
 
     $scope.currentPage = 1;
     $scope.selectedSearchOption = navigateBackService.selectedSearchOption;// || $scope.searchOptions[0];
@@ -336,6 +341,26 @@ function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBa
     }
   };
 
+  $scope.toggleVerifySerialNumber = function(item) {
+    //return
+    // show a confirmation dialog box
+    var callBack=function(result){
+      if(result){
+        ToggleVerifiedEquipmentInventory.put({id:item.id},function(data){
+          $scope.loadInventory();
+        });
+      }else{
+        $scope.loadInventory();
+      }
+    };
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.toggle.equipment.inventory",
+      body: "msg.question.toggle.equipment.inventory.confirmation"
+    };
+    // display that confirmation dialog box.
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
 
   $scope.updateTemperatureStatusModal = function (equipment){
     if(!isUndefined(equipment)){
@@ -382,6 +407,30 @@ function EquipmentInventoryController($scope,EquipmentInventorySearch,navigateBa
                            body: "msg.question.delete.equipment.inventory.confirmation"
                        };
       OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
+
+  $scope.moveInventory = function (item) {
+    $scope.moveToFacility = undefined;
+    $scope.inventoryToMove = item;
+    $scope.showMoveFacilityModal = true;
+  };
+
+  $scope.associate = function (facility) {
+    $scope.moveToFacility = facility;
+    $scope.showSlider = !$scope.showSlider;
+  };
+
+  $scope.toggleSlider = function () {
+    $scope.showSlider = !$scope.showSlider;
+    $scope.extraParams = {"virtualFacility": null, "enabled": true};
+  };
+
+  $scope.moveToFacilityClicked = function () {
+    console.log('move to facility called.');
+    MoveEquipmentInventory.put({id: $scope.inventoryToMove.id, facilityId: $scope.moveToFacility.id}, function (data) {
+      $scope.loadInventory();
+      $scope.showMoveFacilityModal = false;
+    });
   };
 
   $scope.loadRights = function () {
