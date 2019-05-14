@@ -33,6 +33,10 @@ public abstract class ReportDataProvider {
 
   public abstract List<? extends ResultRow> getReportBody(Map<String, String[]> filter, Map<String, String[]> sorter, int page, int pageSize);
 
+  public  int getReportTotalCount(Map<String, String[]> filter){
+    return 0;
+  }
+
   public Map<String,String> getExtendedHeader(Map params){
       return Collections.emptyMap();
   }

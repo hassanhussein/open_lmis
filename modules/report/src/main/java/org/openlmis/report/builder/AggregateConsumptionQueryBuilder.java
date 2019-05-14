@@ -21,98 +21,131 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class AggregateConsumptionQueryBuilder {
+    public static String getAggregateSelectCount(AggregateConsumptionReportParam filter) {
 
-  public static String getAggregateSelect(AggregateConsumptionReportParam filter) {
+        BEGIN();
+        SELECT("count (*)");
+        writeCommonJoinStatment();
+        writePredicates(filter);
+        String query = SQL();
+        return query;
 
-    BEGIN();
-    SELECT("p.code");
-    SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
-    SELECT("sum(li.quantityDispensed) dispensed");
-    SELECT("sum(li.normalizedConsumption) consumption");
-    SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
-    SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
-    FROM("requisition_line_items li");
-    INNER_JOIN("requisitions r on r.id = li.rnrid");
-    INNER_JOIN("facilities f on r.facilityId = f.id ");
-    INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
-    INNER_JOIN("processing_periods pp on pp.id = r.periodId");
-    INNER_JOIN("products p on p.code::text = li.productCode::text");
-    INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
-    INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
+    }
 
-    writePredicates(filter);
+    public static String getDisAggregateSelectCount(AggregateConsumptionReportParam filter) {
 
-    GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code");
-    ORDER_BY("p.primaryName");
-    return SQL();
+        BEGIN();
+        SELECT("count(*)");
+        writeCommonJoinStatment();
+        INNER_JOIN("facility_types ft ON ft.id =f.typeId");
+        writePredicates(filter);
+        String query = SQL();
+        return query;
 
-  }
+    }
+
+    public static void writeCommonJoinStatment() {
+        FROM("requisition_line_items li");
+        INNER_JOIN("requisitions r on r.id = li.rnrid");
+        INNER_JOIN("facilities f on r.facilityId = f.id ");
+        INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
+        INNER_JOIN("processing_periods pp on pp.id = r.periodId");
+        INNER_JOIN("products p on p.code::text = li.productCode::text");
+        INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
+        INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
+    }
+
+    public static void writeCommonSelect() {
+        SELECT("p.code");
+        SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
+        SELECT("sum(li.quantityDispensed) dispensed");
+        SELECT("sum(li.normalizedConsumption) consumption");
+        SELECT("ceil(sum(li.quantityDispensed /li.packsize)) consumptionInPacks");
+        SELECT("ceil(sum(li.normalizedConsumption/ li.packsize)) adjustedConsumptionInPacks ");
+        writeCommonJoinStatment();
+    }
 
 
-  public static String getDisAggregateSelect(AggregateConsumptionReportParam filter) {
+    public static String getAggregateSelect(AggregateConsumptionReportParam filter) {
+        BEGIN();
+        writeCommonSelect();
+        writePredicates(filter);
+        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
+        String query = SQL();
+        query = query + " order by " + getOrderString(filter) + " " +
+                "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
+        return query;
+    }
 
-    BEGIN();
-    SELECT("f.code facilityCode");
-    SELECT("f.name facility");
-    SELECT("ft.name facilityType ");
-    SELECT("p.code");
-    SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
-    SELECT("sum(li.quantityDispensed) dispensed");
-    SELECT("sum(li.normalizedConsumption) consumption");
-    SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
-    SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");// FROM("vw_materialized_aggregate_consumption vw");
-    FROM("requisition_line_items li");
-    INNER_JOIN("requisitions r on r.id = li.rnrid");
-    INNER_JOIN("facilities f on r.facilityId = f.id ");
-    INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
-    INNER_JOIN("processing_periods pp on pp.id = r.periodId");
-    INNER_JOIN("products p on p.code::text = li.productCode::text");
-    INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
-    INNER_JOIN("facility_types ft ON ft.id =f.typeId");
-    INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
-    writePredicates(filter);
-    GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name ");
-    ORDER_BY("p.primaryName");
-    return SQL();
+    public static String getOrderString(AggregateConsumptionReportParam filter) {
+        String sortString = "";
+        sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " p.primaryName ";
+        sortString = sortString+" " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
+        return sortString;
+    }
 
-  }
+    public static String getDisAggregateSelect(AggregateConsumptionReportParam filter) {
 
-  private static void writePredicates(AggregateConsumptionReportParam filter) {
+        BEGIN();
+        SELECT("f.code facilityCode");
+        SELECT("f.name facility");
+        writeCommonSelect();
+        INNER_JOIN("facility_types ft ON ft.id =f.typeId");
+        writePredicates(filter);
+        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name , li.packsize");
+        String query = SQL();
+        query = query + " order by " + getOrderString(filter) + " " +
+                "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
+        return query;
 
-    WHERE(programIsFilteredBy("r.programId"));
-    WHERE(periodIsFilteredBy("r.periodId"));
-    WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
-    WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));/*
+    }
+
+    private static void writePredicates(AggregateConsumptionReportParam filter) {
+
+        WHERE(programIsFilteredBy("r.programId"));
+        WHERE(periodIsFilteredBy("r.periodId"));
+        WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+        WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));/*
     WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
     WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));*/
 
-    if(filter.getProductCategory() != 0){
-      WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
+        if (filter.getProductCategory() != 0) {
+            WHERE(productCategoryIsFilteredBy("ppg.productCategoryId"));
+        }
+
+        if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null) {
+            WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
+        }
+
+        if (filter.getZone() != 0) {
+            WHERE(geoZoneIsFilteredBy("d"));
+        }
+
+        if (filter.getAllReportType()) {
+            WHERE("r.emergency in (true,false)");
+        } else {
+            WHERE(reportTypeFilteredBy("r.emergency"));
+        }
     }
 
-    if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null) {
-      WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
+    public static String getQuery(Map params) {
+
+        AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
+        if (filter.getDisaggregated())
+            return getDisAggregateSelect(filter);
+        else
+            return getAggregateSelect(filter);
+
     }
 
-    if (filter.getZone() != 0) {
-      WHERE( geoZoneIsFilteredBy("d") );
+    public static String getCountQuery(Map params) {
+
+        AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
+        if (filter.getDisaggregated())
+            return getDisAggregateSelectCount(filter);
+        else
+            return getAggregateSelectCount(filter);
+
     }
-
-    if (filter.getAllReportType()) {
-      WHERE("r.emergency in (true,false)");
-    } else {
-      WHERE(reportTypeFilteredBy("r.emergency"));
-    }
-  }
-
-  public static String getQuery(Map params){
-
-    AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
-    if (filter.getDisaggregated())
-    return getDisAggregateSelect(filter);
-    else
-     return getAggregateSelect(filter);
-
-  }
 
 }

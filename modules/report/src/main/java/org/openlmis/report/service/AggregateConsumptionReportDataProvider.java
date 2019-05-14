@@ -44,15 +44,21 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
+    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria,(long)page,(long)pageSize),   this.getUserId());
   }
 
-  public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
+  public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria, Long page, Long pagSize) {
     AggregateConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, AggregateConsumptionReportParam.class);
     param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+    param.setPage(page);
+    param.setPageSize(pagSize);
     return param;
   }
+  @Override
+  public int getReportTotalCount(Map<String, String[]> filterCriteria) {
 
+    return reportMapper.getAggregateConsumptionCountReport(getReportFilterData(filterCriteria,0l,0l), this.getUserId());
+  }
   @Override
   public String getFilterSummary(Map<String, String[]> params) {
 

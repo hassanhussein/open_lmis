@@ -32,9 +32,14 @@ public interface AggregateConsumptionReportMapper {
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
   public List<DistrictConsumptionReport> getAggregateConsumptionReport(
       @Param("filterCriteria") ReportParameter filterCriteria,
-      @Param("SortCriteria") Map<String, String[]> sortCriteria,
-      @Param("RowBounds") RowBounds rowBounds,
       @Param("userId") Long userId
+  );
+
+  @SelectProvider(type = AggregateConsumptionQueryBuilder.class, method = "getCountQuery")
+  @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  public int getAggregateConsumptionCountReport(
+          @Param("filterCriteria") ReportParameter filterCriteria,
+          @Param("userId") Long userId
   );
 
 }

@@ -145,22 +145,22 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/districtConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Map<String, Pages> getDistrictConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                            HttpServletRequest request
+                                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                         HttpServletRequest request
 
     ) {
 
         Report report = reportManager.getReportByKey("district_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
 
-        DistrictConsumptionReportDataProvider provider = (DistrictConsumptionReportDataProvider)report.getReportDataProvider();
+        DistrictConsumptionReportDataProvider provider = (DistrictConsumptionReportDataProvider) report.getReportDataProvider();
 
         List<DistrictConsumptionReport> districtConsumptionReportList =
-                (List<DistrictConsumptionReport>)provider.getDistrictConsumptionReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<DistrictConsumptionReport>) provider.getDistrictConsumptionReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         List<DistrictConsumptionByFacilityReport> facilityConsumptionReportList =
-                (List<DistrictConsumptionByFacilityReport>)provider.getFacilityConsumption(request.getParameterMap(),
-                request.getParameterMap(), page, max);
+                (List<DistrictConsumptionByFacilityReport>) provider.getFacilityConsumption(request.getParameterMap(),
+                        request.getParameterMap(), page, max);
 
         Map<String, Pages> multiPages = new HashMap<String, Pages>();
         multiPages.put(DISTRICT_CONSUMPTION, new Pages(page, max, districtConsumptionReportList));
@@ -172,6 +172,7 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/aggregateConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getAggregateConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                             @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                                              @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                              HttpServletRequest request
 
@@ -180,9 +181,10 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("aggregate_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<DistrictConsumptionReport> districtConsumptionReportList =
-                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page,  pageSize);
+        int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
 
-        return new Pages(page, max, districtConsumptionReportList);
+        return new Pages(page, totalCount, districtConsumptionReportList);
     }
 
     @RequestMapping(value = "/reportdata/viewOrders", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -381,32 +383,32 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/pipelineExport", method = GET)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_PIPELINE_EXPORT')")
     public ResponseEntity<OpenLmisResponse> getPipelineExportData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                              @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                              HttpServletRequest request) {
+                                                                  @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                                  HttpServletRequest request) {
         Report report = reportManager.getReportByKey("pipeline_export");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         PipelineExportReportProvider provider = (PipelineExportReportProvider) report.getReportDataProvider();
         Map<String, String[]> map = request.getParameterMap();
-        List<PipelineConsumptionLineItem> pipelineExportData = (List<PipelineConsumptionLineItem>)provider.getReportBody(map, map, page, max);
-       return OpenLmisResponse.response("rows", pipelineExportData);
+        List<PipelineConsumptionLineItem> pipelineExportData = (List<PipelineConsumptionLineItem>) provider.getReportBody(map, map, page, max);
+        return OpenLmisResponse.response("rows", pipelineExportData);
     }
 
-  @RequestMapping(value = "/pipeline-export.xml", method = GET)
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_PIPELINE_EXPORT')")
-  public ModelAndView getPipelineExportDataXml(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                            HttpServletRequest request) {
-    ModelAndView pipelineXml = new ModelAndView("pipelineXml");
-    Report report = reportManager.getReportByKey("pipeline_export");
-    report.getReportDataProvider().setUserId(loggedInUserId(request));
-    PipelineExportReportProvider provider = (PipelineExportReportProvider) report.getReportDataProvider();
-    Map<String, String[]> map = request.getParameterMap();
-    List<PipelineConsumptionLineItem> pipelineExportData = (List<PipelineConsumptionLineItem>)provider.getReportBody(map, map, page, max);
-    pipelineXml.addObject("consumptions", pipelineExportData);
-    pipelineXml.addObject("products", provider.getProducts(map));
-    pipelineXml.addObject("period", provider.getPeriod(map));
-    return pipelineXml;
-  }
+    @RequestMapping(value = "/pipeline-export.xml", method = GET)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_PIPELINE_EXPORT')")
+    public ModelAndView getPipelineExportDataXml(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                 @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                 HttpServletRequest request) {
+        ModelAndView pipelineXml = new ModelAndView("pipelineXml");
+        Report report = reportManager.getReportByKey("pipeline_export");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        PipelineExportReportProvider provider = (PipelineExportReportProvider) report.getReportDataProvider();
+        Map<String, String[]> map = request.getParameterMap();
+        List<PipelineConsumptionLineItem> pipelineExportData = (List<PipelineConsumptionLineItem>) provider.getReportBody(map, map, page, max);
+        pipelineXml.addObject("consumptions", pipelineExportData);
+        pipelineXml.addObject("products", provider.getProducts(map));
+        pipelineXml.addObject("period", provider.getPeriod(map));
+        return pipelineXml;
+    }
 
 
     @RequestMapping(value = "/reportdata/labEquipmentList", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -778,7 +780,7 @@ public class InteractiveReportController extends BaseController {
 
         report.getReportDataProvider().setUserId(loggedInUserId(request));
 
-         DistributionSummaryReport reportData = (DistributionSummaryReport) dataProvider.
+        DistributionSummaryReport reportData = (DistributionSummaryReport) dataProvider.
                 getVaccineReceivedSummaryReportData(request.getParameterMap());
 
         return reportData;
@@ -787,8 +789,8 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/stock-event", method = GET, headers = BaseController.ACCEPT_JSON)
     public Pages getStockEvent(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                  @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                  HttpServletRequest request
+                               @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                               HttpServletRequest request
 
     ) {
         Report report = reportManager.getReportByKey("stock_event");
@@ -805,8 +807,8 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/log-tag", method = GET, headers = BaseController.ACCEPT_JSON)
     public Pages getLogTag(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                  @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                  HttpServletRequest request
+                           @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                           HttpServletRequest request
 
     ) {
         Report report = reportManager.getReportByKey("log_tag");
@@ -818,8 +820,8 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/rejectedRnR", method = GET, headers = BaseController.ACCEPT_JSON)
     public Pages getRejected(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                  @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                  HttpServletRequest request
+                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                             HttpServletRequest request
 
     ) {
         Report report = reportManager.getReportByKey("rejected_rnr");
@@ -832,8 +834,8 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/facilityConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getFacilityConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                             HttpServletRequest request
+                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                            HttpServletRequest request
 
     ) {
 
@@ -848,8 +850,8 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/dailyConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getDailyConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                            HttpServletRequest request
+                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                         HttpServletRequest request
 
     ) {
 

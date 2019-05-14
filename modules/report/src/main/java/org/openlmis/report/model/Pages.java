@@ -30,13 +30,18 @@ public class Pages {
 
     private List<? extends ResultRow> rows;
     private int page;
+    @Deprecated
     private int max;
     private int total;
+    private int count;
 
-    public Pages(int page,int max,List<? extends ResultRow> rows) {
+    public Pages(int page, int total, List<? extends ResultRow> rows) {
         this.rows = rows;
         this.page = page;
-        this.max = max;
-        this.total = rows.size();
+        this.max = total;
+        this.count = rows.size();
+        this.total = total;
+
     }
+
 }
