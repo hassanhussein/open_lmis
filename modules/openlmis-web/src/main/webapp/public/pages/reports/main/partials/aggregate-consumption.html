@@ -108,7 +108,7 @@
                             </div>
                             <div class="clearfix padding2px"></div>
                             <div>
-    <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
+    <span class="pull-right"><a ng-click="onSearchClicked()" class="waves-effect waves-light btn">Search</a>
  </span></div>
 
                         </div>
@@ -151,7 +151,7 @@
                         <td>No data to show under selected filters</td>
                     </tr>
                 </table>
-                <div ng-show="datarows.length > 0" client-side-sort-pagination>
+                <div ng-show="datarows.length > 0" client-side-sort-pagination='searchReport'>
                     <div ng-if="datarows.length > 0" top-right-table-summary></div>
 
                     <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"

@@ -958,13 +958,25 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                 scope.tableParams = new ngTableParams({
                     page: 1,
                     total: 0,
-                    count: 100
+                    count: 100,
+                    counts: [10, 50, 100, 1000, 5000, 10000]
                 });
 
                 scope.paramsChanged = function (params) {
+                    if(params.paginationCallBack !== undefined) {
+                        var sortBy = Object.keys(params.sorting).pop();
+                        var sortDirection = Object.values(params.sorting).pop()
 
-                    // slice array data on pages
-                    if (scope.data === undefined) {
+                        params.paginationCallBack(params.count, params.page, sortBy, sortDirection)
+                            .then(function() {
+                                spliceAndPageData(scope, params);
+                            });
+                    }
+                };
+
+                var spliceAndPageData = function(scope, params) {
+                   // slice array data on pages
+                    if (scope.data === undefined || scope.data.rows === undefined) {
                         scope.datarows = [];
                         params.total = 0;
                         params.page = 1;
@@ -973,12 +985,12 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                             // reset the page number to 1.
                             params.page = 1;
                         }
-                        var data = scope.data;
+                        var data = scope.data.rows;
                         var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
                         orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
 
-                        params.total = orderedData.length;
-                        scope.datarows = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+                        params.total = scope.data.max;
+                        scope.datarows = orderedData;
                         var i = 0;
                         var baseIndex = params.count * (params.page - 1) + 1;
                         while (i < scope.datarows.length) {
@@ -987,8 +999,12 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                         }
                     }
                 };
+
                 // watch for changes of parameters
-                scope.$watch('tableParams', scope.paramsChanged, true);
+                scope.$watch('tableParams', function(oldValue, newValue, scope){
+                    if(oldValue.page !== newValue.page || oldValue.count !== newValue.count)
+                        scope.paramsChanged(scope.tableParams);
+                }, true);
             }
         };
     }
