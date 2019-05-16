@@ -14,20 +14,29 @@ package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 
-import javax.naming.SizeLimitExceededException;
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
-public class AggregateConsumptionQueryBuilder {
+public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
+
+    public static String getOrderString(AggregateConsumptionReportParam filter) {
+        String sortString = "";
+        sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " p.primaryName ";
+        sortString = sortString+" " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
+        return sortString;
+    }
+
     public static String getAggregateSelectCount(AggregateConsumptionReportParam filter) {
 
         BEGIN();
         SELECT("count (*)");
         writeCommonJoinStatment();
         writePredicates(filter);
+        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
         String query = SQL();
+        query = "select count(*) from ( " +query+ " ) as c";
         return query;
 
     }
@@ -39,20 +48,11 @@ public class AggregateConsumptionQueryBuilder {
         writeCommonJoinStatment();
         INNER_JOIN("facility_types ft ON ft.id =f.typeId");
         writePredicates(filter);
+        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
         String query = SQL();
+        query = "select count(*) from ( " +query+ " ) as c";
         return query;
 
-    }
-
-    public static void writeCommonJoinStatment() {
-        FROM("requisition_line_items li");
-        INNER_JOIN("requisitions r on r.id = li.rnrid");
-        INNER_JOIN("facilities f on r.facilityId = f.id ");
-        INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
-        INNER_JOIN("processing_periods pp on pp.id = r.periodId");
-        INNER_JOIN("products p on p.code::text = li.productCode::text");
-        INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
-        INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
     }
 
     public static void writeCommonSelect() {
@@ -77,13 +77,6 @@ public class AggregateConsumptionQueryBuilder {
         return query;
     }
 
-    public static String getOrderString(AggregateConsumptionReportParam filter) {
-        String sortString = "";
-        sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " p.primaryName ";
-        sortString = sortString+" " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
-        return sortString;
-    }
-
     public static String getDisAggregateSelect(AggregateConsumptionReportParam filter) {
 
         BEGIN();
@@ -104,11 +97,7 @@ public class AggregateConsumptionQueryBuilder {
 
         WHERE(programIsFilteredBy("r.programId"));
         WHERE(periodIsFilteredBy("r.periodId"));
-        WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
-        WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));/*
-    WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
-    WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));*/
-
+        WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
         if (filter.getProductCategory() != 0) {
             WHERE(productCategoryIsFilteredBy("ppg.productCategoryId"));
         }
