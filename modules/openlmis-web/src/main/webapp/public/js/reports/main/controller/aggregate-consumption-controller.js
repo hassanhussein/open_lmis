@@ -40,7 +40,6 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
             $scope.allReportType = true;
             $scope.filter = {};
             $scope.filter.allReportType = true;
-            console.log($scope.filter);
             $scope.OnFilterChanged();
         }
         else {
@@ -75,8 +74,6 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
     $scope.searchReport = function (pageSize, page, sortBy, sortDirection) {
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
 
-        $scope.data = $scope.datarows = [];
-
         $scope.filter.max = 10000;
         if (allParams.period !== '' &&
             allParams.schedule !== '' &&
@@ -91,6 +88,7 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
             var deferred = $q.defer();
 
             AggregateConsumptionReport.get(allParams, function (data) {
+                $scope.data = [];
                 if (data.pages !== undefined) {
                     $scope.data = data.pages;
                     deferred.resolve(data);

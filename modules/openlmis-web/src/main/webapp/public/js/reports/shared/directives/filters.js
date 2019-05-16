@@ -985,12 +985,10 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                             // reset the page number to 1.
                             params.page = 1;
                         }
-                        var data = scope.data.rows;
-                        var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
-                        orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
 
                         params.total = scope.data.max;
-                        scope.datarows = orderedData;
+                        scope.datarows = scope.data.rows;
+
                         var i = 0;
                         var baseIndex = params.count * (params.page - 1) + 1;
                         while (i < scope.datarows.length) {
@@ -1002,7 +1000,8 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
 
                 // watch for changes of parameters
                 scope.$watch('tableParams', function(oldValue, newValue, scope){
-                    if(oldValue.page !== newValue.page || oldValue.count !== newValue.count)
+                    if(oldValue.page !== newValue.page || oldValue.count !== newValue.count ||
+                        JSON.stringify(newValue.sorting) !== JSON.stringify(oldValue.sorting))
                         scope.paramsChanged(scope.tableParams);
                 }, true);
             }
