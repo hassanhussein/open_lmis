@@ -965,7 +965,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                 scope.paramsChanged = function (params) {
                     if(params.paginationCallBack !== undefined) {
                         var sortBy = Object.keys(params.sorting).pop();
-                        var sortDirection = Object.values(params.sorting).pop()
+                        var sortDirection = Object.values(params.sorting).pop();
 
                         params.paginationCallBack(params.count, params.page, sortBy, sortDirection)
                             .then(function() {

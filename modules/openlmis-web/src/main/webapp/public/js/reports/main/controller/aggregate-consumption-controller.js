@@ -70,7 +70,7 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
     $scope.onSearchClicked = function() {
         $scope.tableParams.paginationCallBack = $scope.searchReport;
         $scope.paramsChanged($scope.tableParams);
-    }
+    };
 
     $scope.searchReport = function (pageSize, page, sortBy, sortDirection) {
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
