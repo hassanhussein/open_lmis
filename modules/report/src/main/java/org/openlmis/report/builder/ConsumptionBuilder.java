@@ -12,9 +12,7 @@
 package org.openlmis.report.builder;
 
 
-import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.model.params.FacilityConsumptionReportParam;
-
 import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
 import static org.apache.ibatis.jdbc.SqlBuilder.INNER_JOIN;
 import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;

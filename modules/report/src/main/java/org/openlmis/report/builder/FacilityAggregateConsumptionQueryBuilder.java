@@ -20,21 +20,30 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 
 public class FacilityAggregateConsumptionQueryBuilder extends ConsumptionBuilder {
 
-
-
-
-
     public static String getAggregateSelect(FacilityConsumptionReportParam filter) {
 
         BEGIN();
-       FacilityConsumptionQueryBuilder.writeBasicQuery();
+        FacilityConsumptionQueryBuilder.writeBasicQuery();
         writeCommonJoinStatment();
         writePredicates(filter);
-
         GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate ,li.packsize");
         String query = SQL();
         query = query + " order by " + getOrderString(filter) + " " +
                 "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
+        return query;
+
+    }
+
+    public static String getAggregateTotalcount(FacilityConsumptionReportParam filter) {
+
+        BEGIN();
+
+        SELECT(" p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate ,li.packsize ");
+        writeCommonJoinStatment();
+        writePredicates(filter);
+        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate ,li.packsize");
+        String query = SQL();
+        query = "select count(*) from (" + query + ") as query";
         return query;
 
     }
@@ -60,6 +69,20 @@ public class FacilityAggregateConsumptionQueryBuilder extends ConsumptionBuilder
 
     }
 
+    public static String getDisAggregateTotalcount(FacilityConsumptionReportParam filter) {
+
+        BEGIN();
+        SELECT(" f.id,f.name, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate,  li.packsize ");
+        writeCommonJoinStatment();
+        INNER_JOIN("facility_types ft ON ft.id =f.typeId");
+        writePredicates(filter);
+        GROUP_BY("f.id,f.name, ft.name,p.code, p.primaryName, p.dispensigUnit, p.strength, ds.code,pp.name,pp.startdate,  li.packsize");
+        String query = SQL();
+        query = "select count(*) from (" + query + ") as query";
+        return query;
+
+    }
+
     public static String getQuery(Map params) {
 
         FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
@@ -67,6 +90,16 @@ public class FacilityAggregateConsumptionQueryBuilder extends ConsumptionBuilder
             return getDisAggregateSelect(filter);
         else
             return getAggregateSelect(filter);
+
+    }
+
+    public static String getTotalCountQuery(Map params) {
+
+        FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
+        if (filter.getDisaggregated())
+            return getDisAggregateTotalcount(filter);
+        else
+            return getAggregateTotalcount(filter);
 
     }
 

@@ -29,8 +29,8 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
         SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
         SELECT("sum(li.quantityDispensed) dispensed");
         SELECT("sum(li.normalizedConsumption) consumption");
-        SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
-        SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
+        SELECT("ceil(sum(li.quantityDispensed / li.packsize)::float) consumptionInPacks");
+        SELECT("ceil(sum(li.normalizedConsumption / li.packsize)::float) adjustedConsumptionInPacks ");
     }
 
     public static String getAggregateSelect(FacilityConsumptionReportParam filter) {
@@ -58,10 +58,7 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
         writeBasicQuery();
         writeCommonJoinStatment();
         INNER_JOIN("facility_types ft ON ft.id =f.typeId");
-
-
         writePredicates(filter);
-
         GROUP_BY("f.id,f.name,f.code, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate");
         String query = SQL();
         query = query + " order by " + getOrderString(filter) + " " +

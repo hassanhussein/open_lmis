@@ -31,10 +31,10 @@ public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
     public static String getAggregateSelectCount(AggregateConsumptionReportParam filter) {
 
         BEGIN();
-        SELECT("count (*)");
+        SELECT(" p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name , li.packsize ");
         writeCommonJoinStatment();
         writePredicates(filter);
-        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
+        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name , li.packsize");
         String query = SQL();
         query = "select count(*) from ( " +query+ " ) as c";
         return query;
@@ -44,7 +44,7 @@ public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
     public static String getDisAggregateSelectCount(AggregateConsumptionReportParam filter) {
 
         BEGIN();
-        SELECT("count(*)");
+        SELECT("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
         writeCommonJoinStatment();
         INNER_JOIN("facility_types ft ON ft.id =f.typeId");
         writePredicates(filter);

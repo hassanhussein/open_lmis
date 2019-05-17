@@ -834,7 +834,7 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/facilityConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getFacilityConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                                             HttpServletRequest request
 
     ) {
@@ -842,9 +842,9 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("facility_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<DistrictConsumptionReport> districtConsumptionReportList =
-                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
-
-        return new Pages(page, max, districtConsumptionReportList);
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
+        int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
+        return new Pages(page, totalCount, districtConsumptionReportList);
     }
 
     @RequestMapping(value = "/reportdata/dailyConsumption", method = GET, headers = BaseController.ACCEPT_JSON)

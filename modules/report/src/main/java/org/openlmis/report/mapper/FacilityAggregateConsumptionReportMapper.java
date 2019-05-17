@@ -50,5 +50,13 @@ public interface FacilityAggregateConsumptionReportMapper {
             @Param("RowBounds") RowBounds rowBounds,
             @Param("userId") Long userId
     );
+    @SelectProvider(type = FacilityAggregateConsumptionQueryBuilder.class, method = "getTotalCountQuery")
+
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    int getAggregateConsumptionReportTotalcount(
+            @Param("filterCriteria") ReportParameter filterCriteria,
+            @Param("userId") Long userId
+    );
+
 
 }

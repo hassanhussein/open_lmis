@@ -33,34 +33,40 @@ import java.util.Map;
 public class FacilityConsumptionReportDataProvider extends ReportDataProvider {
 
 
-  @Value("${report.status.considered.accepted}")
-  private String configuredAcceptedRnrStatuses;
+    @Value("${report.status.considered.accepted}")
+    private String configuredAcceptedRnrStatuses;
 
-  @Autowired
-  private SelectedFilterHelper filterHelper;
+    @Autowired
+    private SelectedFilterHelper filterHelper;
 
-  @Autowired
-  private FacilityAggregateConsumptionReportMapper reportMapper;
+    @Autowired
+    private FacilityAggregateConsumptionReportMapper reportMapper;
 
-  @Override
-  public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
-  }
+    @Override
+    public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+        return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria, (long) page, (long) pageSize), sortCriteria, rowBounds, this.getUserId());
+    }
 
-  public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
-    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
-    return param;
-  }
+    public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria, Long page, Long pagSize) {
+        FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
+        param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+        param.setPage(page);
+        param.setPageSize(pagSize);
+        return param;
+    }
 
-  @Override
-  public String getFilterSummary(Map<String, String[]> params) {
+    @Override
+    public String getFilterSummary(Map<String, String[]> params) {
 
-      Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
-      modifiableParams.putAll(params);
-      modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
-      return filterHelper.getProgramPeriodGeoZone(modifiableParams);
-  }
+        Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
+        modifiableParams.putAll(params);
+        modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
+        return filterHelper.getProgramPeriodGeoZone(modifiableParams);
+    }
 
+    @Override
+    public int getReportTotalCount(Map<String, String[]> filter) {
+        return reportMapper.getAggregateConsumptionReportTotalcount(getReportFilterData(filter, 0L, 0L),this.getUserId());
+    }
 }
