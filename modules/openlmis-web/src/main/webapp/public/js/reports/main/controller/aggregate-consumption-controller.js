@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function AggregateConsumptionReportController($scope, $filter, $window, AggregateConsumptionReport) {
+function AggregateConsumptionReportController($scope, $filter, $window, AggregateConsumptionReport, ngTableParams, $q) {
 
     $scope.reportTypes = [{name: 'EM', value: 'EM', label: 'Emergency'}, {name: 'RE', value: 'RE', label: 'Regular'}];
     $scope.isAll = false;
@@ -67,8 +67,12 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
 
     };
 
-    $scope.searchReport = function () {
+    $scope.onSearchClicked = function() {
+        $scope.tableParams.paginationCallBack = $scope.searchReport;
+        $scope.paramsChanged($scope.tableParams);
+    };
 
+    $scope.searchReport = function (pageSize, page, sortBy, sortDirection) {
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
 
         $scope.data = $scope.datarows = [];
@@ -79,13 +83,21 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
             allParams.products !== null &&
             allParams.program !== null
         ) {
+            allParams.page = page;
+            allParams.pageSize = pageSize;
+            allParams.sortBy = sortBy;
+            allParams.sortDirection = sortDirection;
+
+            var deferred = $q.defer();
+
             AggregateConsumptionReport.get(allParams, function (data) {
                 if (data.pages !== undefined) {
-                    $scope.data = data.pages.rows;
-                    $scope.paramsChanged($scope.tableParams);
+                    $scope.data = data.pages;
+                    deferred.resolve(data);
                 }
             });
 
+            return deferred.promise;
         }
     };
     $scope.exportReport = function (type) {
@@ -98,5 +110,4 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
     $scope.toggleMoreFilters = function () {
         $scope.showMoreFilters = true;
     };
-
 }
