@@ -403,7 +403,7 @@
                         <property name="recordHandler" ref="geoMapMappingPersistenceHandler"/>
                     </bean>
                 </entry>
-                <entry key="funding-source">
+                <entry key="facility-funding-source">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="menu.header.funding.source"/>
                         <property name="importableClass">
@@ -412,7 +412,7 @@
                         <property name="recordHandler" ref="sourceOfFundPersistenceHandler"/>
                     </bean>
                 </entry>
-                <entry key="funding-source">
+                <entry key="product-form">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="menu.header.product.forms"/>
                         <property name="importableClass">
@@ -421,7 +421,7 @@
                         <property name="recordHandler" ref="productFormPersistenceHandler"/>
                     </bean>
                 </entry>
-                <entry key="facility-funding-source">
+                <entry key="facility-interface-key">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="menu.header.elmis.facility.mapping"/>
                         <property name="importableClass">
@@ -430,7 +430,7 @@
                         <property name="recordHandler" ref="facilityInterfaceMappingHandler"/>
                     </bean>
                 </entry>
-                <entry key="facility-funding-source">
+                <entry key="reason-for-rejection">
                     <bean class="org.openlmis.web.model.UploadBean">
                         <property name="displayName" value="menu.header.rejection.reason.upload"/>
                         <property name="importableClass">
