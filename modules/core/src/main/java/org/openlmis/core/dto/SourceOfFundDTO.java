@@ -21,4 +21,9 @@ public class SourceOfFundDTO extends BaseModel implements Importable {
     @ImportField(name = "Display Order")
     private Integer displayOrder;
 
+    @ImportField(name = "Program Code")
+    private String programCode;
+
+    private Long programId;
+
 }

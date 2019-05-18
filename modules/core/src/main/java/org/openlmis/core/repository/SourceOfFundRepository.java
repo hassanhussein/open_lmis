@@ -1,5 +1,6 @@
 package org.openlmis.core.repository;
 
+import org.apache.ibatis.annotations.Param;
 import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.core.repository.mapper.SourceOfFundMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +14,12 @@ public class SourceOfFundRepository {
     @Autowired
     private SourceOfFundMapper mapper;
 
-    public List<SourceOfFundDTO> getAllSourcesOfFunds() {
-        return mapper.getAll();
+    public List<SourceOfFundDTO> getAllSourcesOfFunds(Long program) {
+        return mapper.getAll(program);
     }
 
-    public SourceOfFundDTO getByCode(String code) {
-        return mapper.getByCode(code);
+    public SourceOfFundDTO getByCode(String code,String name) {
+        return mapper.getByCode(code,name);
     }
 
     public void update(SourceOfFundDTO fundDTO) {

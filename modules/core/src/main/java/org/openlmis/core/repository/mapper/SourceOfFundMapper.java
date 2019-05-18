@@ -10,19 +10,20 @@ import java.util.List;
 public interface SourceOfFundMapper {
 
     @Insert("INSERT INTO public.source_of_funds(\n" +
-            "            name, displayOrder, createddate, code)\n" +
-            "    VALUES (#{name},#{displayOrder}, NOW(),#{code});")
+            "            name, displayOrder, createddate, code,programId)\n" +
+            "    VALUES (#{name},#{displayOrder}, NOW(),#{code}, #{programId});")
     @Options(useGeneratedKeys = true)
     Integer Insert(SourceOfFundDTO dto);
 
-    @Select(" SELECT * FROM source_of_funds ")
-    List<SourceOfFundDTO> getAll();
+    @Select(" SELECT * FROM source_of_funds where programId = #{program} order by displayOrder")
+    List<SourceOfFundDTO> getAll(@Param("program") Long program);
 
-    @Update("update source_of_funds set code=#{code}, name = #{name}, displayOrder = #{displayOrder} where id = #{id}")
+    @Update("update source_of_funds set code=#{code}, name = #{name}, displayOrder = #{displayOrder} " +
+            " , programId = #{programId} where id = #{id}")
     void update(SourceOfFundDTO dto);
 
-    @Select(" SELECT * FROM source_of_funds where code = #{code} ")
-    SourceOfFundDTO getByCode(@Param("code")String code);
+    @Select(" SELECT * FROM source_of_funds where lower(code) = lower(#{code}) and lower(name) = lower(#{name})")
+    SourceOfFundDTO getByCode(@Param("code")String code,@Param("name")String name);
 
 
 }

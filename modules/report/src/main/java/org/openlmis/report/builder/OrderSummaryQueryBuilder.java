@@ -27,9 +27,11 @@ public class OrderSummaryQueryBuilder {
     OrderReportParam filter = (OrderReportParam) params.get("filterCriteria");
     BEGIN();
 
-    SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product AS description, packstoship ,  packsize");
+    SELECT("distinct facility_name AS facilityName, facility_code AS facilityCode, region, product_code AS productCode, product AS description, packstoship ,  packsize, " +
+            " F.NAME AS fundSourceName, f.quantity ");
     FROM("vw_requisition_detail");
     INNER_JOIN("orders ON orders.id = vw_requisition_detail.req_id ");
+    LEFT_OUTER_JOIN(" requisition_source_of_funds f on f.rnrid = vw_requisition_detail.req_id  ");
     writePredicates(filter);
     ORDER_BY("description asc");
     return SQL();

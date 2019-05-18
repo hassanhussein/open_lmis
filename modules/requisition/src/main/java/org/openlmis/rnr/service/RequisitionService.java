@@ -11,6 +11,7 @@ import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.FundSourceDTO;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -871,8 +872,8 @@ public class RequisitionService {
 
   }
 
-  public List<SourceOfFundDTO>getAllSourcesOfFund(){
-    return requisitionRepository.getAllSourcesOfFund();
+  public List<SourceOfFundDTO>getAllSourcesOfFund(Long program){
+    return requisitionRepository.getAllSourcesOfFund(program);
   }
 
   public void insertSourceOfFundLineItem(SourceOfFundLineItemDTO dto) {
@@ -957,6 +958,36 @@ public class RequisitionService {
   public ResponseExtDTO getAllResponseByStatusBySourceID(String sourceOrderId) {
     return requisitionRepository.getAllResponseByStatusBySourceID(sourceOrderId);
   }
+
+  public void insertFacilityFundSource(FundSourceDTO funds, Long loggedInUserId) {
+
+    funds.setCreatedBy(loggedInUserId);
+    funds.setModifiedBy(loggedInUserId);
+    requisitionRepository.deleteFundSourceByRrnrAndName(funds.getSourceOfFunds().get(0).getName(), funds.getSourceOfFunds().get(0).getRnrId());
+
+    for(SourceOfFunds sourceOfFunds : funds.getSourceOfFunds()) {
+      requisitionRepository.insertFacilitySourceOfFund(sourceOfFunds);
+    }
+
+  }
+
+  public List<SourceOfFunds> getSourceOfFundsBy(Long rnrId) {
+    return requisitionRepository.getFacilitySourceOfFundBy(rnrId);
+  }
+
+  public List getFacilityFundSourceByRnrId(Long rnrId) {
+
+    List<SourceOfFunds> funds = requisitionRepository.getFacilitySourceOfFundBy(rnrId);
+
+    for (SourceOfFunds sourceOfFunds : funds) {
+
+      SourceOfFundDTO dto = requisitionRepository.getSourceOfFundsByName(sourceOfFunds.getName());
+      sourceOfFunds.setFund(dto);
+    }
+    return funds;
+  }
+
+
 
 }
 

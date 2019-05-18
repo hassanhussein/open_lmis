@@ -3,9 +3,9 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.rnr.repository.mapper;
@@ -31,444 +31,448 @@ import java.util.Map;
 @Repository
 public interface RequisitionMapper {
 
-  @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, sourceApplication, emergency, allocatedBudget, modifiedBy, createdBy) " +
-      "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy})")
-  @Options(useGeneratedKeys = true)
-  void insert(Rnr requisition);
+    @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, sourceApplication, emergency, allocatedBudget, modifiedBy, createdBy,totalSources) " +
+            "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy},#{totalSources})")
+    @Options(useGeneratedKeys = true)
+    void insert(Rnr requisition);
 
-  @Update({"UPDATE requisitions SET",
-      "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP, status = #{status},",
-      "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
-      "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
-      "supervisoryNodeId = #{supervisoryNodeId}",
-      "WHERE id = #{id}"})
-  void update(Rnr requisition);
+    @Update({"UPDATE requisitions SET",
+            "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP, status = #{status},",
+            "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
+            "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
+            "supervisoryNodeId = #{supervisoryNodeId}, totalSources = #{totalSources} ",
+            "WHERE id = #{id}"})
+    void update(Rnr requisition);
 
-  @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
-  @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
-      @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
-      @Result(property = "regimenLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
-      @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
-      @Result(property = "patientQuantifications", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
-      @Result(property = "rnrSignatures", column = "id", javaType = List.class,
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
-      @Result(property = "manualTestLineItems", column = "id", javaType = List.class,
-              many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId"))
-  })
-  Rnr getById(Long rnrId);
+    @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
+            @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
+            @Result(property = "regimenLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
+            @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
+            @Result(property = "patientQuantifications", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
+            @Result(property = "rnrSignatures", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
+            @Result(property = "manualTestLineItems", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId")),
+            @Result(property = "sourceOfFunds", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.FacilitySourceOfFundMapper.getByRnrId"))
+    })
+    Rnr getById(Long rnrId);
 
-  @Deprecated
-  @Select({"SELECT id, emergency, programId, facilityId, periodId, modifiedDate",
-      "FROM requisitions ",
-      "WHERE programId =  #{programId}",
-      "AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')"})
-  @Results({@Result(property = "program.id", column = "programId"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "period.id", column = "periodId")})
-  List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment);
+    @Deprecated
+    @Select({"SELECT id, emergency, programId, facilityId, periodId, modifiedDate",
+            "FROM requisitions ",
+            "WHERE programId =  #{programId}",
+            "AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')"})
+    @Results({@Result(property = "program.id", column = "programId"),
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "period.id", column = "periodId")})
+    List<Rnr> getAuthorizedRequisitions(RoleAssignment roleAssignment);
 
-  @Select({"SELECT r.id, r.emergency, r.programId, r.facilityId, r.periodId, r.modifiedDate\n" +
-      "           , p.id as programId, p.code as programCode, p.name as programName  \n" +
-      "           , f.id as facilityId, f.code as facilityCode, f.name as facilityName  \n" +
-      "           , ft.name as facilityType  \n" +
-      "           , gz.name as districtName  \n" +
-      "           , pr.StartDate as periodStartDate, pr.endDate as periodEndDate, pr.name as periodName\n" +
-      "           , (select max(createdDate) from requisition_status_changes rsc where rsc.rnrId = r.id and rsc.status = 'SUBMITTED') as submittedDate\n" +
-      "       FROM requisitions r  \n" +
-      "           join programs p on p.id = r.programId  \n" +
-      "           join facilities f on f.id = r.facilityId  \n" +
-      "           join processing_periods pr on pr.id = r.periodId  \n" +
-      "           join facility_types ft on ft.id = f.typeId  \n" +
-      "           join geographic_zones gz on gz.id = f.geographicZoneId\n" +
-      "          join (SELECT   r.emergency, r.programId, r.facilityId, max(r.periodId) periodId\n" +
-      "             from requisitions r\n" +
-      "             WHERE programId =   #{programId}\n" +
-      "             AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')\n" +
-      "             GROUP BY 1,2,3 ORDER BY r.facilityid) t\n" +
-      "           on t.programid =r.programid and t.periodId=r.periodid and t.facilityid=r.facilityid and t.emergency=r.emergency\n" +
-      "      WHERE r.programId =   #{programId}\n" +
-      "      AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')\n" +
-      "order by r.facilityid"})
-  List<RnrDTO> getAuthorizedRequisitionsDTO(RoleAssignment roleAssignment);
+    @Select({"SELECT r.id, r.emergency, r.programId, r.facilityId, r.periodId, r.modifiedDate\n" +
+            "           , p.id as programId, p.code as programCode, p.name as programName  \n" +
+            "           , f.id as facilityId, f.code as facilityCode, f.name as facilityName  \n" +
+            "           , ft.name as facilityType  \n" +
+            "           , gz.name as districtName  \n" +
+            "           , pr.StartDate as periodStartDate, pr.endDate as periodEndDate, pr.name as periodName\n" +
+            "           , (select max(createdDate) from requisition_status_changes rsc where rsc.rnrId = r.id and rsc.status = 'SUBMITTED') as submittedDate\n" +
+            "       FROM requisitions r  \n" +
+            "           join programs p on p.id = r.programId  \n" +
+            "           join facilities f on f.id = r.facilityId  \n" +
+            "           join processing_periods pr on pr.id = r.periodId  \n" +
+            "           join facility_types ft on ft.id = f.typeId  \n" +
+            "           join geographic_zones gz on gz.id = f.geographicZoneId\n" +
+            "          join (SELECT   r.emergency, r.programId, r.facilityId, max(r.periodId) periodId\n" +
+            "             from requisitions r\n" +
+            "             WHERE programId =   #{programId}\n" +
+            "             AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')\n" +
+            "             GROUP BY 1,2,3 ORDER BY r.facilityid) t\n" +
+            "           on t.programid =r.programid and t.periodId=r.periodid and t.facilityid=r.facilityid and t.emergency=r.emergency\n" +
+            "      WHERE r.programId =   #{programId}\n" +
+            "      AND supervisoryNodeId =  #{supervisoryNode.id} AND status IN ('AUTHORIZED', 'IN_APPROVAL')\n" +
+            "order by r.facilityid"})
+    List<RnrDTO> getAuthorizedRequisitionsDTO(RoleAssignment roleAssignment);
 
-  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id}")
-  @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
-      @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
-      @Result(property = "regimenLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
-      @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
-  })
-  Rnr getRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
+    @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id}")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
+            @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsByRnrId")),
+            @Result(property = "regimenLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
+            @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
+    })
+    Rnr getRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
 
-  @Select({"SELECT * FROM requisitions r",
-      "WHERE facilityId = #{facility.id}"}
-  )
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program", javaType = Program.class, column = "programId",
-          one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedRnrLineItemsByRnrId")),
-      @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedNonFullSupplyRnrLineItemsByRnrId")),
-      @Result(property = "regimenLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
-      @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
-      @Result(property = "patientQuantifications", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
-      @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
-      @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
-      @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
-      @Result(property = "rnrSignatures", column = "id", javaType = List.class,
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
-      )
-  })
-  List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
+    @Select({"SELECT * FROM requisitions r",
+            "WHERE facilityId = #{facility.id}"}
+    )
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program", javaType = Program.class, column = "programId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedRnrLineItemsByRnrId")),
+            @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedNonFullSupplyRnrLineItemsByRnrId")),
+            @Result(property = "regimenLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
+            @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
+            @Result(property = "patientQuantifications", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
+            @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+            @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
+            @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
+            @Result(property = "rnrSignatures", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
+            )
+    })
+    List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
 
-  @Select({"SELECT * FROM requisitions R",
-      "WHERE facilityId = #{facilityId}",
-      "AND programId = #{programId} ",
-      "AND status NOT IN ('INITIATED', 'SUBMITTED')",
-      "AND emergency = false",
-      "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId")
-  })
-  Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
+    @Select({"SELECT * FROM requisitions R",
+            "WHERE facilityId = #{facilityId}",
+            "AND programId = #{programId} ",
+            "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+            "AND emergency = false",
+            "ORDER BY (select startDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    Rnr getLastRegularRequisitionToEnterThePostSubmitFlow(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
-  @Select({"SELECT * FROM requisitions R",
-      "WHERE facilityId = #{facilityId}",
-      "AND programId = #{programId} ",
-      "AND status NOT IN ('INITIATED', 'SUBMITTED')",
-      "AND emergency = false",
-      "ORDER BY (select endDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId")
-  })
-  Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForBiMonthlyReporting(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
+    @Select({"SELECT * FROM requisitions R",
+            "WHERE facilityId = #{facilityId}",
+            "AND programId = #{programId} ",
+            "AND status NOT IN ('INITIATED', 'SUBMITTED')",
+            "AND emergency = false",
+            "ORDER BY (select endDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForBiMonthlyReporting(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
-  @Select({"SELECT * FROM requisitions WHERE",
-      "facilityId = #{facility.id} AND",
-      "programId = #{program.id} AND ",
-      "periodId = ANY (#{periods}::INTEGER[]) AND ",
-      "status NOT IN ('INITIATED', 'SUBMITTED')"})
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId")
-  })
-  List<Rnr> getPostSubmitRequisitions(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
+    @Select({"SELECT * FROM requisitions WHERE",
+            "facilityId = #{facility.id} AND",
+            "programId = #{program.id} AND ",
+            "periodId = ANY (#{periods}::INTEGER[]) AND ",
+            "status NOT IN ('INITIATED', 'SUBMITTED')"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    List<Rnr> getPostSubmitRequisitions(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
-  @Select({"SELECT * FROM requisitions WHERE",
-      "facilityId = #{facilityId} AND",
-      "programId = #{programId} AND ",
-      "periodId = #{periodId} AND ",
-      "emergency = false"
-  })
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId")
-  })
-  Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("periodId") Long periodId);
+    @Select({"SELECT * FROM requisitions WHERE",
+            "facilityId = #{facilityId} AND",
+            "programId = #{programId} AND ",
+            "periodId = #{periodId} AND ",
+            "emergency = false"
+    })
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    Rnr getRequisitionWithoutLineItems(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("periodId") Long periodId);
 
-  @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
-  @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
-      @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId"))
-  })
-  Rnr getLWById(Long rnrId);
+    @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "supplyingFacility.id", column = "supplyingFacilityId"),
+            @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
+            @Result(property = "sourceOfFunds", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.FacilitySourceOfFundMapper.getByRnrId"))
+    })
+    Rnr getLWById(Long rnrId);
 
-  @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id} AND emergency = FALSE")
-  @Results(value = {
-      @Result(property = "id", column = "id"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
-          many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
-  })
-  Rnr getRegularRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
+    @Select("SELECT * FROM requisitions WHERE facilityId = #{facility.id} AND programId= #{program.id} AND periodId = #{period.id} AND emergency = FALSE")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
+    })
+    Rnr getRegularRequisitionWithLineItems(@Param("facility") Facility facility, @Param("program") Program program, @Param("period") ProcessingPeriod period);
 
-  @Select({"SELECT * FROM requisitions WHERE",
-      "facilityId = #{facilityId} AND",
-      "programId = #{programId} AND",
-      "emergency = TRUE AND",
-      "status IN ('INITIATED', 'SUBMITTED') ORDER BY createdDate DESC"
-  })
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById"))
-  })
-  List<Rnr> getInitiatedOrSubmittedEmergencyRequisitions(@Param("facilityId") Long facilityId,
-                                                         @Param("programId") Long programId);
+    @Select({"SELECT * FROM requisitions WHERE",
+            "facilityId = #{facilityId} AND",
+            "programId = #{programId} AND",
+            "emergency = TRUE AND",
+            "status IN ('INITIATED', 'SUBMITTED') ORDER BY createdDate DESC"
+    })
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById"))
+    })
+    List<Rnr> getInitiatedOrSubmittedEmergencyRequisitions(@Param("facilityId") Long facilityId,
+                                                           @Param("programId") Long programId);
 
-  @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getApprovedRequisitionsByCriteria")
-  @Results(value = {
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "period.id", column = "periodId"),
-      @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
-  })
-  List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
-                                                            @Param("pageNumber") Integer pageNumber, @Param("pageSize") Integer pageSize,
-                                                            @Param("userId") Long userId, @Param("right") String rightName,
-                                                            @Param("sortBy") String sortBy, @Param("sortDirection") String sortDirection);
+    @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getApprovedRequisitionsByCriteria")
+    @Results(value = {
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "supplyingFacility.id", column = "supplyingFacilityId")
+    })
+    List<Rnr> getApprovedRequisitionsForCriteriaAndPageNumber(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
+                                                              @Param("pageNumber") Integer pageNumber, @Param("pageSize") Integer pageSize,
+                                                              @Param("userId") Long userId, @Param("right") String rightName,
+                                                              @Param("sortBy") String sortBy, @Param("sortDirection") String sortDirection);
 
-  @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getCountOfApprovedRequisitionsForCriteria")
-  Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
-                                                    @Param("userId") Long userId, @Param("right") String rightName);
+    @SelectProvider(type = ApprovedRequisitionSearch.class, method = "getCountOfApprovedRequisitionsForCriteria")
+    Integer getCountOfApprovedRequisitionsForCriteria(@Param("searchType") String searchType, @Param("searchVal") String searchVal,
+                                                      @Param("userId") Long userId, @Param("right") String rightName);
 
-  @Select({"SELECT facilityId FROM requisitions WHERE id = #{id}"})
-  Long getFacilityId(Long id);
+    @Select({"SELECT facilityId FROM requisitions WHERE id = #{id}"})
+    Long getFacilityId(Long id);
 
-  @Select({"SELECT r.* FROM requisitions r join processing_periods pr on pr.id = r.periodId WHERE r.facilityId = #{facility.id} AND r.programId = #{program.id} AND r.emergency = false",
-      "ORDER BY pr.startDate DESC LIMIT 1"})
-  @Results(value = {
-      @Result(property = "facility.id", column = "facilityId"),
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "period.id", column = "periodId")
-  })
-  Rnr getLastRegularRequisition(@Param("facility") Facility facility, @Param("program") Program program);
+    @Select({"SELECT r.* FROM requisitions r join processing_periods pr on pr.id = r.periodId WHERE r.facilityId = #{facility.id} AND r.programId = #{program.id} AND r.emergency = false",
+            "ORDER BY pr.startDate DESC LIMIT 1"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    Rnr getLastRegularRequisition(@Param("facility") Facility facility, @Param("program") Program program);
 
-  @Select("SELECT programId FROM requisitions WHERE id = #{rnrId}")
-  Long getProgramId(Long rnrId);
+    @Select("SELECT programId FROM requisitions WHERE id = #{rnrId}")
+    Long getProgramId(Long rnrId);
 
-  @Select("select * from fn_delete_rnr( #{rnrId} )")
-  String deleteRnR(@Param("rnrId") Integer rnrId);
+    @Select("select * from fn_delete_rnr( #{rnrId} )")
+    String deleteRnR(@Param("rnrId") Integer rnrId);
 
-  @Update({"UPDATE requisitions SET",
-      "clientSubmittedNotes = COALESCE(#{clientSubmittedNotes}, clientSubmittedNotes),",
-      "clientSubmittedTime = COALESCE(#{clientSubmittedTime}, clientSubmittedTime)",
-      "WHERE id = #{id}"})
-  void updateClientFields(Rnr rnr);
+    @Update({"UPDATE requisitions SET",
+            "clientSubmittedNotes = COALESCE(#{clientSubmittedNotes}, clientSubmittedNotes),",
+            "clientSubmittedTime = COALESCE(#{clientSubmittedTime}, clientSubmittedTime) ",
+            " WHERE id = #{id}"})
+    void updateClientFields(Rnr rnr);
 
-  @Insert("INSERT INTO requisition_signatures(signatureId, rnrId) VALUES " +
-      "(#{signature.id}, #{rnr.id})")
-  void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);
+    @Insert("INSERT INTO requisition_signatures(signatureId, rnrId) VALUES " +
+            "(#{signature.id}, #{rnr.id})")
+    void insertRnrSignature(@Param("rnr") Rnr rnr, @Param("signature") Signature signature);
 
-  @Select("SELECT * FROM requisition_signatures " +
-      "JOIN signatures " +
-      "ON signatures.id = requisition_signatures.signatureId " +
-      "WHERE requisition_signatures.rnrId = #{rnrId} ")
-  List<Signature> getRnrSignaturesByRnrId(Long rnrId);
+    @Select("SELECT * FROM requisition_signatures " +
+            "JOIN signatures " +
+            "ON signatures.id = requisition_signatures.signatureId " +
+            "WHERE requisition_signatures.rnrId = #{rnrId} ")
+    List<Signature> getRnrSignaturesByRnrId(Long rnrId);
 
-  @Select("SELECT * FROM requisitions " +
-      "WHERE " +
-      " facilityId = #{facilityId} " +
-      "and periodId = #{periodId} " +
-      "and programId = #{programId} " +
-      "and emergency = #{emergency}")
-  Rnr getRnrBy(@Param("facilityId") Long facilityId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("emergency") boolean emergency);
+    @Select("SELECT * FROM requisitions " +
+            "WHERE " +
+            " facilityId = #{facilityId} " +
+            "and periodId = #{periodId} " +
+            "and programId = #{programId} " +
+            "and emergency = #{emergency}")
+    Rnr getRnrBy(@Param("facilityId") Long facilityId, @Param("periodId") Long periodId, @Param("programId") Long programId, @Param("emergency") boolean emergency);
 
-  @Select({"SELECT r.* from requisitions r",
-      "JOIN processing_periods p " +
-          "on p.id = r.periodid " +
-          "and p.startDate < (select max(pp.startDate) from processing_periods pp where pp.id = #{rnr.period.id})",
-      "where ",
-      "r.facilityid = #{rnr.facility.id} ",
-      "and r.programid = #{rnr.program.id} ",
-      "and r.emergency = false " ,
-      "and r.status = 'APPROVED'"})
-  List<Rnr> getUnreleasedPreviousRequisitions(@Param("rnr") Rnr rnr);
+    @Select({"SELECT r.* from requisitions r",
+            "JOIN processing_periods p " +
+                    "on p.id = r.periodid " +
+                    "and p.startDate < (select max(pp.startDate) from processing_periods pp where pp.id = #{rnr.period.id})",
+            "where ",
+            "r.facilityid = #{rnr.facility.id} ",
+            "and r.programid = #{rnr.program.id} ",
+            "and r.emergency = false ",
+            "and r.status = 'APPROVED'"})
+    List<Rnr> getUnreleasedPreviousRequisitions(@Param("rnr") Rnr rnr);
 
-  public class ApprovedRequisitionSearch {
+    public class ApprovedRequisitionSearch {
 
-    @SuppressWarnings("UnusedDeclaration")
-    public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
-      StringBuilder sql = new StringBuilder();
-      sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId," +
-          " R.modifiedDate as modifiedDate, RSC.createdDate as submittedDate, P.name AS programName, F.name AS facilityName," +
-          " F.code AS facilityCode, SF.name AS supplyingDepotName, PP.startDate as periodStartDate, PP.endDate as periodEndDate" +
-          " FROM Requisitions R INNER JOIN  (select status, rnrId, max(createdDate) createdDate from requisition_status_changes group by rnrId, status) RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' " +
-          " INNER JOIN processing_periods PP ON PP.id = R.periodId ");
+        @SuppressWarnings("UnusedDeclaration")
+        public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT DISTINCT R.id, R.emergency, R.programId, R.facilityId, R.periodId, R.status, R.supervisoryNodeId," +
+                    " R.modifiedDate as modifiedDate, RSC.createdDate as submittedDate, P.name AS programName, F.name AS facilityName," +
+                    " F.code AS facilityCode, SF.name AS supplyingDepotName, PP.startDate as periodStartDate, PP.endDate as periodEndDate" +
+                    " FROM Requisitions R INNER JOIN  (select status, rnrId, max(createdDate) createdDate from requisition_status_changes group by rnrId, status) RSC ON R.id = RSC.rnrId AND RSC.status = 'SUBMITTED' " +
+                    " INNER JOIN processing_periods PP ON PP.id = R.periodId ");
 
-      appendQueryClausesBySearchType(sql, params);
+            appendQueryClausesBySearchType(sql, params);
 
-      Integer pageNumber = (Integer) params.get("pageNumber");
-      Integer pageSize = (Integer) params.get("pageSize");
-      String sortBy = (String) params.get("sortBy");
-      String sortDirection = (String) params.get("sortDirection");
+            Integer pageNumber = (Integer) params.get("pageNumber");
+            Integer pageSize = (Integer) params.get("pageSize");
+            String sortBy = (String) params.get("sortBy");
+            String sortDirection = (String) params.get("sortDirection");
 
-      return sql.append("ORDER BY " + sortBy + " " + sortDirection).append(" LIMIT ").append(pageSize)
-          .append(" OFFSET ").append((pageNumber - 1) * pageSize).toString();
+            return sql.append("ORDER BY " + sortBy + " " + sortDirection).append(" LIMIT ").append(pageSize)
+                    .append(" OFFSET ").append((pageNumber - 1) * pageSize).toString();
+        }
+
+        @SuppressWarnings("UnusedDeclaration")
+        public static String getCountOfApprovedRequisitionsForCriteria(Map params) {
+            StringBuilder sql = new StringBuilder();
+            sql.append("SELECT COUNT(DISTINCT R.id) FROM Requisitions R ");
+
+            appendQueryClausesBySearchType(sql, params);
+            return sql.toString();
+        }
+
+        private static void appendQueryClausesBySearchType(StringBuilder sql, Map<String, Object> params) {
+            String searchType = (String) params.get("searchType");
+            String searchVal = ((String) params.get("searchVal")).toLowerCase();
+            Long userId = (Long) params.get("userId");
+            String right = (String) params.get("right");
+
+            if (userId != null && right != null) {
+                sql.append("INNER JOIN supply_lines S ON R.supervisoryNodeId = S.supervisoryNodeId " +
+                        "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId " +
+                        "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId " +
+                        "INNER JOIN Programs P ON P.id = R.programId " +
+                        "INNER JOIN Facilities F ON F.id = R.facilityId " +
+                        "LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) " +
+                        "LEFT JOIN Facilities SF ON SL.supplyingFacilityId = SF.id ");
+            }
+
+            if (searchVal.isEmpty()) {
+                sql.append("WHERE ");
+            } else if (searchType.isEmpty() || searchType.equalsIgnoreCase(RequisitionService.SEARCH_ALL)) {
+                sql.append("WHERE (LOWER(P.name) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" +
+                        searchVal + "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' OR LOWER(SF.name) LIKE '%" + searchVal + "%') AND ");
+            } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
+                sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
+            } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_NAME)) {
+                sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
+            } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_PROGRAM_NAME)) {
+                sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' AND ");
+            } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME)) {
+                sql.append("WHERE LOWER(SF.name) LIKE '%" + searchVal + "%' AND ");
+            }
+            sql.append("FRA.userId = " + userId + " AND RR.rightName = '" + right + "' AND ");
+            sql.append("R.status = 'APPROVED'");
+        }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public static String getCountOfApprovedRequisitionsForCriteria(Map params) {
-      StringBuilder sql = new StringBuilder();
-      sql.append("SELECT COUNT(DISTINCT R.id) FROM Requisitions R ");
+    @Select(" WITH Req as (select r.id rnrid, * from requisitions r\n" +
+            "    JOIN FACILITIES F ON r.facilityid = f.id \n" +
+            "     JOIN processing_periods pp ON r.periodid = pp.id\n" +
+            "     JOIN programs p ON r.programId = p.id\n" +
+            " where f.code =#{facilityCode} and lower(p.code) = lower(#{programCode}) and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
+            "   order by r.createddate desc\n" +
+            "    limit 1) \n" +
+            "   SELECT * FROM Req  \n" +
+            "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
+    List<HashMap<String, Object>> getRequisitionsWithLineItemsByFacilityAndProgram(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
 
-      appendQueryClausesBySearchType(sql, params);
-      return sql.toString();
-    }
+    @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
+    @Results(value = {
+            @Result(property = "id", column = "id"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsWithoutSkippedItemsByRnrId")),
+            @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsWithoutSkippedItemsByRnrId")),
+            @Result(property = "regimenLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsWithoutSkippedItemsByRnrId")),
+            @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
+            @Result(property = "patientQuantifications", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
+            @Result(property = "rnrSignatures", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
+            @Result(property = "manualTestLineItems", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId"))
+    })
+    Rnr getAllWithoutSkippedItemsById(Long rnrId);
 
-    private static void appendQueryClausesBySearchType(StringBuilder sql, Map<String, Object> params) {
-      String searchType = (String) params.get("searchType");
-      String searchVal = ((String) params.get("searchVal")).toLowerCase();
-      Long userId = (Long) params.get("userId");
-      String right = (String) params.get("right");
+    @Select("\n" +
+            " WITH Req as (select r.id rnrid, * from requisitions r\n" +
+            "    JOIN FACILITIES F ON r.facilityid = f.id \n" +
+            "     JOIN processing_periods pp ON r.periodid = pp.id\n" +
+            "     JOIN programs p ON r.programId = p.id" +
+            " where f.code =#{facilityCode} and p.code = #{programCode} and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
+            "   order by r.createddate desc\n" +
+            "    limit 1) \n" +
+            "   SELECT * FROM Req  \n" +
+            "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
+    List<HashMap<String, Object>> getSupervisionCheckListReport(@Param("facilityCode") String facilityCode, @Param("programCode") String programCode);
 
-      if (userId != null && right != null) {
-        sql.append("INNER JOIN supply_lines S ON R.supervisoryNodeId = S.supervisoryNodeId " +
-            "INNER JOIN fulfillment_role_assignments FRA ON S.supplyingFacilityId = FRA.facilityId " +
-            "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId " +
-            "INNER JOIN Programs P ON P.id = R.programId " +
-            "INNER JOIN Facilities F ON F.id = R.facilityId " +
-            "LEFT JOIN Supply_lines SL ON (SL.supervisoryNodeId = R.supervisoryNodeId AND SL.programId = R.programId) " +
-            "LEFT JOIN Facilities SF ON SL.supplyingFacilityId = SF.id ");
-      }
+    @Select({"\n" +
+            "SELECT * FROM requisitions R\n" +
+            "          WHERE facilityId = #{facilityId}\n" +
+            "          AND programId = #{programId}  and periodId IN (SELECT ID FROM PROCESSING_PERIODS WHERE ID = R.periodId AND enableOrder = TRUE)\n" +
+            "          AND status NOT IN ('INITIATED', 'SUBMITTED')\n" +
+            "          AND emergency = false\n" +
+            "          ORDER BY (select endDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForOrderEnabled(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
-      if (searchVal.isEmpty()) {
-        sql.append("WHERE ");
-      } else if (searchType.isEmpty() || searchType.equalsIgnoreCase(RequisitionService.SEARCH_ALL)) {
-        sql.append("WHERE (LOWER(P.name) LIKE '%" + searchVal + "%' OR LOWER(F.name) LIKE '%" +
-            searchVal + "%' OR LOWER(F.code) LIKE '%" + searchVal + "%' OR LOWER(SF.name) LIKE '%" + searchVal + "%') AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_CODE)) {
-        sql.append("WHERE LOWER(F.code) LIKE '%" + searchVal + "%' AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_FACILITY_NAME)) {
-        sql.append("WHERE LOWER(F.name) LIKE '%" + searchVal + "%' AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_PROGRAM_NAME)) {
-        sql.append("WHERE LOWER(P.name) LIKE '%" + searchVal + "%' AND ");
-      } else if (searchType.equalsIgnoreCase(RequisitionService.SEARCH_SUPPLYING_DEPOT_NAME)) {
-        sql.append("WHERE LOWER(SF.name) LIKE '%" + searchVal + "%' AND ");
-      }
-      sql.append("FRA.userId = " + userId + " AND RR.rightName = '" + right + "' AND ");
-      sql.append("R.status = 'APPROVED'");
-    }
-  }
+    @Select({"SELECT r.* FROM requisitions r join processing_periods pr on pr.id = r.periodId WHERE r.facilityId = #{facility.id} AND r.programId = #{program.id} AND r.emergency = false",
+            "ORDER BY pr.endDate DESC LIMIT 1"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    Rnr getLastRegularRequisitionForBiMonthlyReporting(@Param("facility") Facility facility, @Param("program") Program program);
 
-  @Select(" WITH Req as (select r.id rnrid, * from requisitions r\n" +
-          "    JOIN FACILITIES F ON r.facilityid = f.id \n" +
-          "     JOIN processing_periods pp ON r.periodid = pp.id\n" +
-          "     JOIN programs p ON r.programId = p.id\n" +
-          " where f.code =#{facilityCode} and lower(p.code) = lower(#{programCode}) and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
-          "   order by r.createddate desc\n" +
-          "    limit 1) \n" +
-          "   SELECT * FROM Req  \n" +
-          "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
-  List<HashMap<String,Object>> getRequisitionsWithLineItemsByFacilityAndProgram(@Param("facilityCode") String facilityCode,@Param("programCode") String programCode);
+    @Select("select rnrId, u.firstName ||' '|| lastName as author, TO_CHAR(rch.modifiedDate, 'dd-MM-yyyy')as date " +
+            " , (SELECT value FROM configuration_settings WHERE LOWER(key) = LOWER(rch.status) LIMIT 1) as status  " +
+            " from requisition_status_changes rch  " +
+            "LEFT JOIN users U on rch.modifiedBy = U.id  " +
+            " where rnrId=#{rnrId}  order by rch.modifiedDate desc limit 1")
+    RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId);
 
-  @Select("SELECT * FROM requisitions WHERE id = #{rnrId}")
-  @Results(value = {
-          @Result(property = "id", column = "id"),
-          @Result(property = "program.id", column = "programId"),
-          @Result(property = "facility.id", column = "facilityId"),
-          @Result(property = "period.id", column = "periodId"),
-          @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsWithoutSkippedItemsByRnrId")),
-          @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonFullSupplyRnrLineItemsWithoutSkippedItemsByRnrId")),
-          @Result(property = "regimenLineItems", javaType = List.class, column = "id",
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsWithoutSkippedItemsByRnrId")),
-          @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
-          @Result(property = "patientQuantifications", javaType = List.class, column = "id",
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
-          @Result(property = "rnrSignatures", column = "id", javaType = List.class,
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")),
-          @Result(property = "manualTestLineItems", column = "id", javaType = List.class,
-                  many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId"))
-  })
-  Rnr getAllWithoutSkippedItemsById(Long rnrId);
+    @Select(" select id rnrId, 'Successfully Saved' as status from requisitions where sourceApplication <> 'WEB_UI' and issent = false ")
+    List<HashMap<String, Object>> getSavedRnrStatus();
 
-  @Select("\n" +
-          " WITH Req as (select r.id rnrid, * from requisitions r\n" +
-          "    JOIN FACILITIES F ON r.facilityid = f.id \n" +
-          "     JOIN processing_periods pp ON r.periodid = pp.id\n" +
-          "     JOIN programs p ON r.programId = p.id" +
-          " where f.code =#{facilityCode} and p.code = #{programCode} and status in( 'RELEASED','APPROVED','IN_APPROVAL') and emergency is false\n" +
-          "   order by r.createddate desc\n" +
-          "    limit 1) \n" +
-          "   SELECT * FROM Req  \n" +
-          "    JOIN requisItion_line_iteMs li ON Req.rnrid = li.rNRid")
-  List<HashMap<String,Object>> getSupervisionCheckListReport(@Param("facilityCode") String facilityCode,@Param("programCode") String programCode);
+    @Insert("INSERT INTO public.interface_response_messages(\n" +
+            "            status, rnrId, sourceOrderId, code, description, createdDate, \n" +
+            "            modifiedDate,message)\n" +
+            "    VALUES ( #{status}, #{rnrId}, #{sourceOrderId}, #{code}, #{description}, NOW(),NOW(),#{message});")
+    void insertResponseMessage(InterfaceResponseDTO dto);
 
-  @Select({"\n" +
-          "SELECT * FROM requisitions R\n" +
-          "          WHERE facilityId = #{facilityId}\n" +
-          "          AND programId = #{programId}  and periodId IN (SELECT ID FROM PROCESSING_PERIODS WHERE ID = R.periodId AND enableOrder = TRUE)\n" +
-          "          AND status NOT IN ('INITIATED', 'SUBMITTED')\n" +
-          "          AND emergency = false\n" +
-          "          ORDER BY (select endDate from processing_periods where id=R.periodId) DESC LIMIT 1"})
-  @Results(value = {
-          @Result(property = "facility.id", column = "facilityId"),
-          @Result(property = "program.id", column = "programId"),
-          @Result(property = "period.id", column = "periodId")
-  })
-  Rnr getLastRegularRequisitionToEnterThePostSubmitFlowForOrderEnabled(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+    @Update(" UPDATE interface_response_messages set message = #{message}, status = #{status},rnrId= #{rnrId},description=#{description} , code=#{code}, modifiedDate = NOW() where sourceOrderId = #{sourceOrderId}")
+    void updateResponseMessage(InterfaceResponseDTO dto);
 
-  @Select({"SELECT r.* FROM requisitions r join processing_periods pr on pr.id = r.periodId WHERE r.facilityId = #{facility.id} AND r.programId = #{program.id} AND r.emergency = false",
-          "ORDER BY pr.endDate DESC LIMIT 1"})
-  @Results(value = {
-          @Result(property = "facility.id", column = "facilityId"),
-          @Result(property = "program.id", column = "programId"),
-          @Result(property = "period.id", column = "periodId")
-  })
-  Rnr getLastRegularRequisitionForBiMonthlyReporting(@Param("facility") Facility facility,@Param("program") Program program);
+    @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId}  ")
+    InterfaceResponseDTO getResponseMessageBy(@Param("sourceOrderId") String sourceOrderId);
 
-  @Select("select rnrId, u.firstName ||' '|| lastName as author, TO_CHAR(rch.modifiedDate, 'dd-MM-yyyy')as date " +
-          " , (SELECT value FROM configuration_settings WHERE LOWER(key) = LOWER(rch.status) LIMIT 1) as status  " +
-          " from requisition_status_changes rch  " +
-          "LEFT JOIN users U on rch.modifiedBy = U.id  " +
-          " where rnrId=#{rnrId}  order by rch.modifiedDate desc limit 1")
-  RequisitionStatusDTO getRequisitionStatusByRnRId(Long rnrId);
+    @Select("SELECT sourceOrderId,code,description,rnrId,status FROM interface_response_messages where  status = 'PROCESSED'")
+    List<HashMap<String, Object>> getAllResponseByStatus();
 
-  @Select(" select id rnrId, 'Successfully Saved' as status from requisitions where sourceApplication <> 'WEB_UI' and issent = false ")
-  List<HashMap<String, Object>> getSavedRnrStatus();
+    @Update(" UPDATE interface_response_messages set status = 'SENT' where sourceOrderId = #{sourceOrderId} ")
+    void updateBySourceId(@Param("sourceOrderId") String sourceOrderId);
 
-  @Insert("INSERT INTO public.interface_response_messages(\n" +
-          "            status, rnrId, sourceOrderId, code, description, createdDate, \n" +
-          "            modifiedDate,message)\n" +
-          "    VALUES ( #{status}, #{rnrId}, #{sourceOrderId}, #{code}, #{description}, NOW(),NOW(),#{message});")
-  void insertResponseMessage(InterfaceResponseDTO dto);
-
-  @Update(" UPDATE interface_response_messages set message = #{message}, status = #{status},rnrId= #{rnrId},description=#{description} , code=#{code}, modifiedDate = NOW() where sourceOrderId = #{sourceOrderId}")
-  void  updateResponseMessage(InterfaceResponseDTO dto);
-
-  @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId}  ")
-  InterfaceResponseDTO getResponseMessageBy(@Param("sourceOrderId") String sourceOrderId);
-
-  @Select("SELECT sourceOrderId,code,description,rnrId,status FROM interface_response_messages where  status = 'PROCESSED'")
-  List<HashMap<String,Object>>getAllResponseByStatus();
-
-  @Update(" UPDATE interface_response_messages set status = 'SENT' where sourceOrderId = #{sourceOrderId} ")
-  void updateBySourceId(@Param("sourceOrderId") String sourceOrderId);
-
-  @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId} and status = 'PROCESSED' ")
-  ResponseExtDTO getAllResponseByStatusBySourceID(@Param("sourceOrderId") String sourceOrderId);
+    @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId} and status = 'PROCESSED' ")
+    ResponseExtDTO getAllResponseByStatusBySourceID(@Param("sourceOrderId") String sourceOrderId);
 
 }
 

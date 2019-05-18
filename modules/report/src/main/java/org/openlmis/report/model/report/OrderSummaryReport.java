@@ -17,8 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.report.model.ResultRow;
+import org.openlmis.rnr.domain.SourceOfFunds;
 
 import javax.persistence.Column;
+import java.util.List;
 
 @Getter
 @Setter
@@ -48,5 +50,10 @@ public class OrderSummaryReport implements ResultRow {
 
   private String region;
 
+  private String fundSourceName;
+
+  private Integer quantity;
+
+  private List<SourceOfFunds> sourceOfFundList;
 
 }

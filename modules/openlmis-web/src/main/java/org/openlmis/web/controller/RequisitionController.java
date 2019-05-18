@@ -20,10 +20,8 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.rnr.domain.Comment;
-import org.openlmis.rnr.domain.RejectionReason;
-import org.openlmis.rnr.domain.Rnr;
-import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.FundSourceDTO;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -341,10 +339,10 @@ public class RequisitionController extends BaseController {
         return response(LAB_REFRENCE_DATA, requisitionService.getLabEquipmentReferenceData());
     }
 
-    @RequestMapping(value = "/requisitions/funding-sources", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getAllSourcesOfFund() {
+    @RequestMapping(value = "/requisitions/{program}/funding-sources-list", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllSourcesOfFund(@PathVariable("program") Long program) {
 
-        return response(FUNDING_SOURCES, requisitionService.getAllSourcesOfFund());
+        return response(FUNDING_SOURCES, requisitionService.getAllSourcesOfFund(program));
     }
 
 /*
@@ -407,5 +405,21 @@ public class RequisitionController extends BaseController {
 
         return modelAndView;
     }
+
+    @RequestMapping(value = "/requisitions/{id}/facilityFundSources", method = POST, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> insertFacilityFundSource(@RequestBody FundSourceDTO funds,
+                                                          @PathVariable("id") Long id,
+                                                          HttpServletRequest request) {
+
+        requisitionService.insertFacilityFundSource(funds,loggedInUserId(request));
+        return OpenLmisResponse.response("sourceOfFunds", requisitionService.getFacilityFundSourceByRnrId(id));
+    }
+
+    @RequestMapping(value = "/requisitions/{id}/facilityFundSources", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFundSourceForARnr(@PathVariable Long id) {
+        return response("sourceOfFunds", requisitionService.getFacilityFundSourceByRnrId(id));
+    }
+
 
 }

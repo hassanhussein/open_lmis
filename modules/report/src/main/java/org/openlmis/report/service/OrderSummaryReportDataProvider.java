@@ -15,28 +15,30 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.core.service.*;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.report.mapper.OrderSummaryReportMapper;
 import org.openlmis.report.model.ResultRow;
-import org.openlmis.report.model.dto.Schedule;
+
 import org.openlmis.report.model.params.OrderReportParam;
+import org.openlmis.report.model.report.OrderSummaryReport;
+import org.openlmis.report.model.report.SummaryReport;
 import org.openlmis.report.service.lookup.ReportLookupService;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.StringHelper;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
+import org.openlmis.rnr.domain.SourceOfFunds;
+
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.lang.model.element.NestingKind;
+
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
@@ -98,7 +100,20 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         OrderReportParam orderReportParam = getReportFilterData(filterCriteria);
         orderReportParam.setTitle(getTitle(orderReportParam));
 
-        return reportMapper.getOrderSummaryReport(orderReportParam, sortCriteria, rowBounds);
+        List<SourceOfFunds> sourceOfFundsList = this.requistionService.getSourceOfFundsBy(orderReportParam.getOrderId());
+
+        List<OrderSummaryReport> summaryReport = new ArrayList<>();
+
+        List<OrderSummaryReport> summaryReport1 = reportMapper.getOrderSummaryReport(orderReportParam, sortCriteria, rowBounds);
+
+        for(OrderSummaryReport report: summaryReport1){
+            if(!sourceOfFundsList.isEmpty()) {
+                report.setSourceOfFundList(sourceOfFundsList);
+            }
+            summaryReport.add(report);
+        }
+
+        return summaryReport;
     }
 
     private String getTitle(OrderReportParam orderReportParam) {
@@ -144,6 +159,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
 
         Rnr rnr = requistionService.getLWById(orderReportParam.getOrderId());
+
         Program program = programService.getById(rnr.getProgram().getId());
         ProcessingPeriod period = this.periodService.getById(rnr.getPeriod().getId());
         ProcessingSchedule schedule = this.scheduleSerive.get(period.getScheduleId());
@@ -173,7 +189,7 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mm a");
         TimeZone timeZone = TimeZone.getTimeZone("UTC");
         dateFormat.setTimeZone(timeZone);
-        System.out.println(dateFormat);
+
         List<RequisitionStatusChange> changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.AUTHORIZED.name());
         if (!changes.isEmpty()) {
             result.put(AUTHORIZED_BY, changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName());

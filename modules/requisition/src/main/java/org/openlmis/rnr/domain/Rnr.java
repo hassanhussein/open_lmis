@@ -70,6 +70,8 @@ public class Rnr extends BaseModel {
   private String clientSubmittedNotes;
   private String sourceApplication = "WEB_UI";
   private List<Comment> comments = new ArrayList<>();
+  private List<SourceOfFunds> sourceOfFunds = new ArrayList<>();
+  private Integer totalSources = 0;
 
   private List<Signature> rnrSignatures;
   private List<ManualTestesLineItem> manualTestLineItems = new ArrayList<>();
