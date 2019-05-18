@@ -541,7 +541,7 @@ services.factory('HomeFacilityWithType', function ($resource) {
 });
 
 services.factory('FundingSource', function ($resource) {
-    return $resource('/requisitions/funding-sources.json', {}, {});
+    return $resource('/requisitions/:program/funding-sources-list.json', {}, {});
 });
 
 services.factory('RequisitionRejection', function ($resource) {
@@ -555,3 +555,6 @@ services.factory('AllOrders', function ($resource) {
     return $resource('/all-orders.json', {}, {});
 });
 
+services.factory('RequisitionFacilitySourceOfFund', function ($resource) {
+    return $resource('/requisitions/:id/facilityFundSources.json', {}, {});
+});

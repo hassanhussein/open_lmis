@@ -102,7 +102,7 @@ app.directive('fundingSource',function (RequisitionComment,FundingSource, $route
             reEvaluateTotalSourceOfFund();
         };
 
-        FundingSource.get({}, function (data) {
+        FundingSource.get({program:parseInt(2,10)}, function (data) {
             scope.fundingSources = data.sources;
         });
 

@@ -11,13 +11,169 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('displayCost', function () {
+app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacilitySourceOfFund,$timeout) {
   return {
     scope: {
       show: '=',
       fullSupplyCost: '=',
-      nonFullSupplyCost: '='
+      nonFullSupplyCost: '=',
+      facilitySourceOfFund: '='
     },
+    link:function (scope,rootScope) {
+
+       scope.sourceOfFund = {};
+
+       var parameter = {
+
+       'program':scope.$parent.$parent.$parent.rnr.program.id
+
+       };
+
+
+
+       FundingSource.get(parameter, function (data) {
+
+            scope.fundingSources = data.sources;
+
+        });
+
+       $rootScope.$on('loadSourceOfFunds', function (event,data) {
+
+         scope.showFacilitySourceOfFund((event.targetScope.rnr === undefined)?scope.fundingSources:event.targetScope.rnr);
+
+         scope.sourceOfFund.rnrId = event.targetScope.rnr.id;
+         scope.$parent.sourceOfFunds = event.targetScope.rnr.sourceOfFunds;
+
+
+      });
+
+
+    scope.showFacilitySourceOfFund = function(source)
+    {
+
+        scope.oldAdjustmentReason = angular.copy(source.sourceOfFunds);
+        console.log(scope.oldAdjustmentReason);
+
+        scope.sourceOfFund = source;
+
+        scope.sourceOfFund.sourceOfFunds=((source.sourceOfFunds === undefined)?[]:source.sourceOfFunds);
+        //Remove reason already exist from drop down
+         scope.reEvaluateTotalSourceOfFund();
+         updateFundingSource(source.sourceOfFunds);
+
+
+    };
+
+
+   scope.sourceOfFunds = [];
+
+   scope.addRow = function(fund) {
+
+       var newRow = {};
+       newRow.name = fund.name.name;
+
+       newRow.id = fund.name.id;
+       newRow.rnrId = fund.rnrId;
+       newRow.quantity = parseInt(fund.quantity,10);
+       scope.sourceOfFund.sourceOfFunds.push(newRow);
+       updateFundingSource(scope.sourceOfFund.sourceOfFunds);
+       scope.reEvaluateTotalSourceOfFund();
+       fund.quantity = undefined;
+       fund.name = undefined;
+
+       };
+
+
+      scope.saveFacilityFundingSources = function (sourceOfFunds) {
+
+                if(scope.sourceOfFundForm.$invalid)
+                        {
+                            scope.showFormError=true;
+                            scope.messageToDisplay = 'Please fill all required Amount';
+                            return;
+                        }
+
+
+            if (isUndefined(sourceOfFunds)) return;
+
+            var jsonData = {"sourceOfFunds":sourceOfFunds};
+
+            var successHandler = function (data) {
+
+             $timeout( function(){
+              scope.displayLimit = false;
+             }, 3000);
+             scope.displayLimit = true;
+             scope.messageToDisplay = 'Saved successfully';
+             scope.rnrFund = data.sourceOfFunds;
+
+              scope.updateTotal();
+
+
+            };
+
+            var errorHandler = function (data) {
+              scope.error = data.error;
+            };
+
+            RequisitionFacilitySourceOfFund.save({id:parseInt(sourceOfFunds[0].rnrId,10)}, jsonData, successHandler, errorHandler);
+
+          };
+
+       var originBudgetValue = scope.$parent.rnr.allocatedBudget;
+
+       scope.updateTotal = function() {
+
+          /*scope.$parent.rnr.allocatedBudget = originBudgetValue + scope.totalSources;
+          scope.$parent.rnr.totalSources = scope.totalSources;
+          scope.$parent.rnr.sourceOfFunds = scope.rnrFund;
+          console.log(scope.$parent.rnr.totalSources);*/
+
+         // scope.reEvaluateTotalSourceOfFund();
+
+         };
+
+     scope.removeSourceOfFund = function(fundingSource)
+
+       {
+
+           scope.sourceOfFund.sourceOfFunds =  $.grep(scope.sourceOfFund.sourceOfFunds, function (reasonObj) {
+                   return (fundingSource !== reasonObj);
+               });
+
+            updateFundingSource(scope.sourceOfFund.sourceOfFunds);
+            scope.reEvaluateTotalSourceOfFund();
+
+      };
+
+
+   function reEvaluateTotalSourceOfFund()
+        {
+            var totalAdjustments = 0;
+
+            $(scope.sourceOfFund.sourceOfFunds).each(function (index, sourceObject) {
+             totalAdjustments = totalAdjustments + parseInt(sourceObject.quantity,10);
+            });
+            scope.totalSources = totalAdjustments;
+            scope.$parent.rnr.allocatedBudget = originBudgetValue + scope.totalSources;
+            scope.$parent.rnr.totalSources = scope.totalSources;
+           /* scope.$parent.rnr.sourceOfFunds = scope.rnrFund*/
+        }
+
+     scope.reEvaluateTotalSourceOfFund = function() {reEvaluateTotalSourceOfFund();};
+
+    function updateFundingSource(funds)
+        {
+            var adjustmentReasonsForLot =  _.pluck(funds, 'name');
+
+             scope.fundsToDisplay = $.grep(scope.fundingSources, function (adjustmentTypeObject) {
+                          return $.inArray(adjustmentTypeObject.name, adjustmentReasonsForLot) == -1;
+                      });
+
+        }
+
+
+      },
     restrict: 'E',
     templateUrl: '/public/pages/template/display-cost.html',
     replace: true

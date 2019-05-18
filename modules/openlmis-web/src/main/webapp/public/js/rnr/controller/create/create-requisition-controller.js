@@ -8,8 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus ,
-                                     regimenTemplate, showMaxStock, $location, DeleteRequisition, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope,$rootScope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus ,
+                                     regimenTemplate, showMaxStock, $location, DeleteRequisition, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q,facilityFundSources) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
   var FULL_SUPPLY = 'fullSupply';
@@ -20,7 +20,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, equipmentOperationalStatus);
   $scope.rnrComments = comments;
-
+  $scope.rnrFacilityFundSources = facilityFundSources;
 
   $scope.deleteRnR = function( ){
 
@@ -136,6 +136,14 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
         $scope.visibleTab === FULL_SUPPLY ? _.contains($scope.errorPages.fullSupply, page) :
         $scope.visibleTab === REGIMEN ? _.contains($scope.errorPages.regimen, page) :
         $scope.visibleTab === EQUIPMENT ? _.contains($scope.errorPages.equipment, page) : [];
+  };
+
+
+
+ $scope.showData = function () {
+
+    $scope.$emit('loadSourceOfFunds');
+
   };
 
   $scope.$watch("currentPage", function () {
@@ -453,6 +461,18 @@ CreateRequisitionController.resolve = {
       }, {});
     }, 100);
     return deferred.promise;
-  }
+  },
+
+   facilityFundSources: function($q, $timeout, RequisitionFacilitySourceOfFund, $route){
+      var deferred = $q.defer();
+      $timeout(function () {
+        RequisitionFacilitySourceOfFund.get({id: $route.current.params.rnr}, function (data) {
+          deferred.resolve(data.sourceOfFunds);
+        }, {});
+      }, 100);
+      return deferred.promise;
+    }
+
+
 };
 

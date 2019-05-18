@@ -50,11 +50,13 @@
           <span ng-bind="rnr.calculateTotalLineItemCost() | currency: ''"></span>
       </span>
         </strong>
-    <span id="dividedCost" ng-click="showCost=!showCost" class="list-icon-container"
+
+    <span id="dividedCost" ng-click="showCost=!showCost; showData()" class="list-icon-container"
           ng-class="{'is-icon-ul-selected': showCost}">
       <i class="icon-list-ul"></i>
     </span>
-        <display-cost show="showCost" full-supply-cost="rnr.fullSupplyItemsSubmittedCost"
+        <display-cost ng-show="showFundingSource" show="showCost" full-supply-cost="rnr.fullSupplyItemsSubmittedCost"
                       non-full-supply-cost="rnr.nonFullSupplyItemsSubmittedCost"></display-cost>
-    </div>
+
+   </div>
 </div>
