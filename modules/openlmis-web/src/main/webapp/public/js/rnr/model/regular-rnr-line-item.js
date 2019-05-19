@@ -465,7 +465,6 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   valid: function () {
-  console.log(this.validateRequiredFieldsForNonFullSupply());
     if (this.skipped) return true;
     if (this.rnrStatus == 'IN_APPROVAL' || this.rnrStatus == 'AUTHORIZED') return this.validateForApproval();
     if (this.fullSupply) return this.validateRequiredFieldsForFullSupply() && this.formulaValid();

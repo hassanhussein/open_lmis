@@ -11,13 +11,14 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacilitySourceOfFund,$timeout) {
+app.directive('displayCost', function (FundingSource,$interval,$rootScope,RequisitionFacilitySourceOfFund,$timeout) {
   return {
     scope: {
       show: '=',
       fullSupplyCost: '=',
       nonFullSupplyCost: '=',
-      facilitySourceOfFund: '='
+      facilitySourceOfFund: '=',
+      costExceedsBudget: '='
     },
     link:function (scope,rootScope) {
 
@@ -29,13 +30,16 @@ app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacil
 
        };
 
-
+      scope.$parent.$parent.$parent.rnr.allowSubmissionIfNoSourceOfFundDefined = false;
 
        FundingSource.get(parameter, function (data) {
 
-            scope.fundingSources = data.sources;
-
+           scope.fundingSources = data.sources;
+           if(data.sources.length > 0){
+          scope.$parent.$parent.$parent.rnr.allowSubmissionIfNoSourceOfFundDefined = true;
+           }
         });
+
 
        $rootScope.$on('loadSourceOfFunds', function (event,data) {
 
@@ -43,7 +47,7 @@ app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacil
 
          scope.sourceOfFund.rnrId = event.targetScope.rnr.id;
          scope.$parent.sourceOfFunds = event.targetScope.rnr.sourceOfFunds;
-
+         scope.showData = showData();
 
       });
 
@@ -52,7 +56,6 @@ app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacil
     {
 
         scope.oldAdjustmentReason = angular.copy(source.sourceOfFunds);
-        console.log(scope.oldAdjustmentReason);
 
         scope.sourceOfFund = source;
 
@@ -83,6 +86,7 @@ app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacil
 
        };
 
+      scope.$parent.$parent.$parent.rnr.continueWithSubmission = false;
 
       scope.saveFacilityFundingSources = function (sourceOfFunds) {
 
@@ -107,8 +111,10 @@ app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacil
              scope.messageToDisplay = 'Saved successfully';
              scope.rnrFund = data.sourceOfFunds;
 
-              scope.updateTotal();
+             scope.updateTotal();
 
+
+             scope.$parent.$parent.$parent.rnr.continueWithSubmission = true;
 
             };
 
@@ -127,7 +133,7 @@ app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacil
           /*scope.$parent.rnr.allocatedBudget = originBudgetValue + scope.totalSources;
           scope.$parent.rnr.totalSources = scope.totalSources;
           scope.$parent.rnr.sourceOfFunds = scope.rnrFund;
-          console.log(scope.$parent.rnr.totalSources);*/
+          */
 
          // scope.reEvaluateTotalSourceOfFund();
 
@@ -172,6 +178,22 @@ app.directive('displayCost', function (FundingSource,$rootScope,RequisitionFacil
 
         }
 
+       var count = 0;
+       function showData() {
+
+        $timeout(function(){
+
+         count++;
+
+         if(count === 1) {
+
+         angular.element('#dividedCost').triggerHandler('click');
+
+         }
+
+        },2000);
+
+        }
 
       },
     restrict: 'E',

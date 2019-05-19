@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope,$rootScope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus ,
+function CreateRequisitionController($timeout,$scope,$rootScope, requisitionData, comments , pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus ,
                                      regimenTemplate, showMaxStock, $location, DeleteRequisition, SkipRequisition,Requisitions, $routeParams, $dialog, requisitionService, $q,facilityFundSources) {
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
@@ -146,18 +146,43 @@ function CreateRequisitionController($scope,$rootScope, requisitionData, comment
 
   };
 
-  $scope.$watch("currentPage", function () {
-    $location.search("page", $scope.currentPage);
-    $scope.rnr.skipAll = false;
-  });
+    $scope.$watch("currentPage", function () {
+      $location.search("page", $scope.currentPage);
+      $scope.rnr.skipAll = false;
+    });
 
-    function popupOtherSourceOfFund(rnr) {
 
-      if(rnr.costExceedsBudget){
+    function popupOtherSourceOfFund(rnr,preventMessage) {
 
-        $scope.showFundingSource = true;
+        if (!rnr.costExceedsBudget) {
 
-      }
+        promoteRnr(submitValidatedRnr);
+
+        } else {
+
+         $scope.$emit('loadSourceOfFunds');
+
+         var allowSubmissionOfRnr;
+
+        $scope.$watch("rnr.continueWithSubmission", function () {
+
+               if($scope.rnr.continueWithSubmission){
+
+                allowSubmissionOfRnr = true;
+
+                promoteRnr(submitValidatedRnr);
+
+                }else if(!$scope.rnr.allowSubmissionIfNoSourceOfFundDefined){
+                promoteRnr(submitValidatedRnr);
+                } else {
+                if(allowSubmissionOfRnr) return;
+
+               }
+
+          });
+
+
+        }
 
     }
 
@@ -199,8 +224,7 @@ function CreateRequisitionController($scope,$rootScope, requisitionData, comment
   }
 
   $scope.submitRnr = function () {
-     // popupOtherSourceOfFund($scope.rnr);
-      promoteRnr(submitValidatedRnr);
+      popupOtherSourceOfFund($scope.rnr,true);
   };
 
   $scope.authorizeRnr = function () {
