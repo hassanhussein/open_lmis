@@ -16,13 +16,14 @@ public class AggregateStockStatusReport implements ResultRow {
     private Float mos;
     private Integer amc;
     private String status;
-    private String productCode;
+    private String code;
     private String product;
     private String facility;
-    private String facilityTypeName;
+    private String facilityType;
     private String color;
     private String periodName;
     private String district;
     private String requisitionStatus;
+    private Long facilityId;
 
 }

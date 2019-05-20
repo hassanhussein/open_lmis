@@ -24,5 +24,6 @@ public class AggregateStockStatusReportParam extends BaseParam implements Report
     private String periodStart;
     @RequiredParam
     private String periodEnd;
+    private Boolean disaggregated;
 
 }

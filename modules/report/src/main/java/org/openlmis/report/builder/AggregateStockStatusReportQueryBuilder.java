@@ -2,54 +2,131 @@ package org.openlmis.report.builder;
 
 
 import org.openlmis.report.model.params.AggregateStockStatusReportParam;
+import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 
 import java.util.Map;
 
+import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class AggregateStockStatusReportQueryBuilder {
 
+    public static String getAggregateSelect(AggregateStockStatusReportParam filter) {
+
+        BEGIN();
+        SELECT("p.code");
+        SELECT("pp.name periodName");
+        SELECT("pp.startdate periodStart");
+        SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
+        SELECT("sum(li.quantityDispensed) dispensed");
+        SELECT("sum(li.stockInhand) soh");
+        SELECT("sum(li.normalizedConsumption) consumption");
+        SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
+        SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
+        SELECT(" CASE WHEN COALESCE(SUM(li.amc), 0) = 0 THEN 0::numeric ELSE round((SUM(li.stockInhand::double precision) / SUM(li.amc::double precision))::numeric, 1) END AS mos");
+
+        FROM("requisition_line_items li");
+        INNER_JOIN("requisitions r on r.id = li.rnrid");
+        INNER_JOIN("facilities f on r.facilityId = f.id ");
+        INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
+        INNER_JOIN("processing_periods pp on pp.id = r.periodId");
+        INNER_JOIN("products p on p.code::text = li.productCode::text");
+        INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
+        INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
+
+        writePredicates(filter);
+
+        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate,pp.id");
+        ORDER_BY("p.primaryName,pp.id");
+        return SQL();
+    }
+
+
+    public static String getDisAggregateSelect(AggregateStockStatusReportParam filter) {
+
+        BEGIN();
+        SELECT("d.region_name region");
+        SELECT("d.district_name district");
+        SELECT("p.code");
+        SELECT("pp.name periodName");
+        SELECT("pp.startdate periodStart");
+        SELECT("f.id facilityId");
+        SELECT("f.name facility");
+        SELECT("ft.name facilityType ");
+        SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
+        SELECT("sum(li.quantityDispensed) dispensed");
+        SELECT("sum(li.normalizedConsumption) consumption");
+        SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
+        SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
+        SELECT(" CASE WHEN COALESCE(SUM(li.amc), 0) = 0 THEN 0::numeric ELSE round((SUM(li.stockInhand::double precision) / SUM(li.amc::double precision))::numeric, 1) END AS mos");
+        SELECT("sum(li.stockInhand) soh");
+        FROM("requisition_line_items li");
+        INNER_JOIN("requisitions r on r.id = li.rnrid");
+        INNER_JOIN("facilities f on r.facilityId = f.id ");
+        INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
+        INNER_JOIN("processing_periods pp on pp.id = r.periodId");
+        INNER_JOIN("products p on p.code::text = li.productCode::text");
+        INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
+        INNER_JOIN("facility_types ft ON ft.id =f.typeId");
+        INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
+
+        writePredicates(filter);
+
+        GROUP_BY("f.id,f.name, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate,pp.id,d.district_name,d.region_name");
+        ORDER_BY("f.name,p.primaryName,pp.id");
+        return SQL();
+
+    }
+
+
+
+
+    private static void writePredicates(AggregateStockStatusReportParam filter) {
+
+        WHERE(programIsFilteredBy("r.programId"));
+//        WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+        WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
+        WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
+        WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));
+        WHERE("li.skipped = false ");
+        /*  if(filter.getFacility()!=null&&filter.getFacility()!=0) {
+            WHERE(facilityIsFilteredBy("f.id"));
+        }*/
+
+        if (filter.getZone() != 0) {
+            WHERE(geoZoneIsFilteredBy("d"));
+        }
+        if(filter.getProduct() != 0){
+            WHERE(productFilteredBy("p.id"));
+        }
+
+        if(filter.getSchedule() != 0){
+
+            WHERE(scheduleFilteredBy("scheduleId"));
+        }
+
+      /*  if (filter.getAllReportType()) {
+            WHERE("r.emergency in (true,false)");
+        } else {
+            WHERE(reportTypeFilteredBy("r.emergency"));
+        }*/
+    }
+
+
+
     public static String getQuery(Map params) {
 
         AggregateStockStatusReportParam filter = (AggregateStockStatusReportParam) params.get("filterCriteria");
-        Long userId = (Long) params.get("userId");
+        if (filter.getDisaggregated())
+            return getDisAggregateSelect(filter);
+        else
+            return getAggregateSelect(filter);
 
-        return ("SELECT \n" +
-                "(SELECT fn_get_stock_color(y.status)) as color, *\n" +
-                " FROM (\n" +
-                "\n" +
-                "SELECT ROW_NUMBER() OVER (PARTITION BY facilityId,period ORDER BY period asc) AS r,x.* from \n" +
-                "(\n" +
-                "select *,req_status requisitionStatus,\n" +
-                "\n" +
-                "facility_id facilityId,facility,facilitytypename,location district,periodId period, processing_period_name periodName, stockInHand soh, mos,amc   \n" +
-                "from vw_stock_status \n" +
-                " inner JOIN vw_districts gz on gz.district_id = gz_id \n" +
-                " WHERE " + writePredicates(filter, userId) +
-                " order by periodId asc\n" +
-                ")x\n" +
-                ")Y");
     }
 
 
-    private static String writePredicates(AggregateStockStatusReportParam filter, Long userId) {
 
-        String predicate = "";
-        predicate += " req_status NOT IN('INITIATED','SUBMITTED') AND " + programIsFilteredBy("programId") +
-        " AND " + periodStartDateRangeFilteredBy("startdate", filter.getPeriodStart().trim()) +
-        " AND " + periodEndDateRangeFilteredBy("enddate", filter.getPeriodEnd().trim());
 
-        if (filter.getProduct() != 0) {
-            predicate += " AND " + productFilteredBy("productId");
-        }
-        if (filter.getZone() != 0) {
-            predicate += " AND " + geoZoneIsFilteredBy("gz");
-        }
-        if (filter.getSchedule() != 0) {
-            predicate += " AND " + scheduleFilteredBy("psid");
-        }
-        return predicate;
-    }
 
 
 }
