@@ -626,7 +626,7 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="aggregate_stock_status_report"/>
-                    <property name="template" value="aggregate-stock-status-report.jasper"/>
+                    <property name="template" value="facility_stockInhand_pivot_aggregate.jasper"/>
                     <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
                     <property name="id" value="aggregate_stock_status_report"/>
                     <property name="name" value="Aggregate Stock Status Report"/>

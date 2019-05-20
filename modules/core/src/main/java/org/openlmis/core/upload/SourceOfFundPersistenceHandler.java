@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SourceOfFundPersistenceHandler  extends AbstractModelPersistenceHandler{
-   @Autowired
 
-   SourceOfFundService sourceOfFundService;
+
+    private SourceOfFundService sourceOfFundService;
 
     @Autowired
     public SourceOfFundPersistenceHandler(SourceOfFundService sourceOfFundService) {
@@ -23,13 +23,13 @@ public class SourceOfFundPersistenceHandler  extends AbstractModelPersistenceHan
     }
 
     @Override
-    protected void save(BaseModel modelClass) {
-        sourceOfFundService.save((SourceOfFundDTO) modelClass);
+    protected void save(BaseModel record) {
+        sourceOfFundService.save((SourceOfFundDTO) record);
     }
 
     @Override
     public String getMessageKey() {
-        return "error.duplicate.product.category";
+        return "error.duplicate.source.name";
     }
 
 

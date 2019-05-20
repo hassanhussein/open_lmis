@@ -18,10 +18,10 @@ public class SourceOfFundDTO extends BaseModel implements Importable {
     @ImportField(mandatory = true, name = "Source Name")
     private String name;
 
-    @ImportField(name = "Display Order")
+    @ImportField(mandatory = true, name = "Display Order")
     private Integer displayOrder;
 
-    @ImportField(name = "Program Code")
+    @ImportField(mandatory = true, name = "Program Code")
     private String programCode;
 
     private Long programId;
