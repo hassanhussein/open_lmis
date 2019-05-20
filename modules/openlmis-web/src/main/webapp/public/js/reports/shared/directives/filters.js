@@ -9,7 +9,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'messageService', function ($routeParams, $location, $timeout, messageService) {
+app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'messageService', '$compile',
+function ($routeParams, $location, $timeout, messageService, $compile) {
     return {
         restrict: 'EA',
         scope: true,
@@ -18,6 +19,7 @@ app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'mess
             $scope.requiredFilters = [];
 
             $scope.notifyFilterChanged = function (event) {
+
                 $scope.$broadcast(event);
                 $scope.$broadcast('filter-changed');
             };
@@ -73,10 +75,10 @@ app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'mess
                 if ($scope.noRequiredParameter) {
                     return true;
                 }
-                var all_required_fields_set = false;
+                $scope.all_required_fields_set = false;
                 // check if all of the required parameters have been specified
                 if (!angular.isUndefined($scope.requiredFilters)) {
-                    all_required_fields_set = true;
+                    $scope.all_required_fields_set = true;
                     var requiredFilters = _.values($scope.requiredFilters);
                     if (requiredFilters.length === 0) {
                         all_required_fields_set = false;
@@ -84,24 +86,41 @@ app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'mess
                     for (var i = 0; i < requiredFilters.length; i++) {
                         var field = requiredFilters[i];
                         if (isUndefined($scope.filter[field]) || $scope.filter[field] === '' || $scope.filter[field] === 0 || $scope.filter[field] === -1) {
-                            all_required_fields_set = false;
+                            $scope.all_required_fields_set = false;
+                            highlightInvalidRequiredField(field);
                             break;
+                        }
+                        else {
+                            clearHighlightedField(field);
                         }
                     }
                 }
-                return all_required_fields_set;
+                return $scope.all_required_fields_set;
             }
 
             $scope.filterChanged = function () {
+                $scope.fetchReport(false);
+            };
+
+            highlightInvalidRequiredField = function(field) {
+                $(field+"-filter").css("color", "red");
+            };
+
+            clearHighlightedField = function(field) {
+                $(field+"-filter").css("color", "black");
+            };
+
+            $scope.fetchReport = function(doPostBack) {
                 $scope.$parent.applyUrl();
                 if (!isValid()) {
                     return;
                 }
-                $scope.$parent.filter = $scope.filter;
-                // call on Filter Changed
-                $scope.$parent.OnFilterChanged();
+                else if(doPostBack) {
+                    $scope.$parent.filter = $scope.filter;
+                    // call on Filter Changed
+                    $scope.$parent.OnFilterChanged();
+                }
             };
-
 
             $scope.$on('filter-changed', $scope.filterChanged);
             $timeout($scope.filterChanged, 100);
@@ -125,6 +144,12 @@ app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'mess
                     scope.showMoreFilters = !scope.showMoreFilters;
                 }
             });
+
+            var el = angular.element('<div></div>');
+            el.append('<div class="form-cell horizontalFilters alert alert-error report-filter-error-msg" ng-if="!all_required_fields_set" style="">{{getLocalMessage(\'report.select.all.required.fields\')}}</div>');
+            el.append('<div class="form-cell horizontalFilters search-report report-search-button span10 offset2"><button ng-click="fetchReport(true)">{{getLocalMessage(\'run.report\')}}</button></div>');
+            $compile(el)(scope);
+            elm.append(el);
         }
     };
 }]);
@@ -953,7 +978,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
         return {
             restrict: 'A',
             link: function (scope) {
-
+                var serverSidePagination = false;
                 // the grid options
                 scope.tableParams = new ngTableParams({
                     page: 1,
@@ -966,17 +991,20 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                     if(params.paginationCallBack !== undefined) {
                         var sortBy = Object.keys(params.sorting).pop();
                         var sortDirection = Object.values(params.sorting).pop();
+                        serverSidePagination = true;
 
                         params.paginationCallBack(params.count, params.page, sortBy, sortDirection)
                             .then(function() {
                                 spliceAndPageData(scope, params);
                             });
+                    } else {
+                        spliceAndPageData(scope, params);
                     }
                 };
 
                 var spliceAndPageData = function(scope, params) {
                    // slice array data on pages
-                    if (scope.data === undefined || scope.data.rows === undefined) {
+                    if (scope.data === undefined) {
                         scope.datarows = [];
                         params.total = 0;
                         params.page = 1;
@@ -986,8 +1014,17 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                             params.page = 1;
                         }
 
-                        params.total = scope.data.max;
-                        scope.datarows = scope.data.rows;
+                        if(serverSidePagination) {
+                            scope.datarows = scope.data.rows;
+                            params.total = scope.data.max;
+                        } else {
+                            var data = scope.data;
+                            var orderedData = params.filter ? $filter('filter')(data, params.filter) : data;
+                            orderedData = params.sorting ? $filter('orderBy')(orderedData, params.orderBy()) : data;
+
+                            scope.datarows = orderedData.slice((params.page - 1) * params.count, params.page * params.count);
+                            params.total = orderedData.length;
+                        }
 
                         var i = 0;
                         var baseIndex = params.count * (params.page - 1) + 1;

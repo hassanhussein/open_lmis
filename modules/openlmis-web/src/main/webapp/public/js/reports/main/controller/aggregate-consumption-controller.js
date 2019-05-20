@@ -62,16 +62,12 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
     };
 
 
-    $scope.OnFilterChanged = function () {
-
-    };
-
-    $scope.onSearchClicked = function() {
-        $scope.tableParams.paginationCallBack = $scope.searchReport;
+    $scope.OnFilterChanged = function() {
+        $scope.tableParams.paginationCallBack = $scope.runReport;
         $scope.paramsChanged($scope.tableParams);
     };
 
-    $scope.searchReport = function (pageSize, page, sortBy, sortDirection) {
+    $scope.runReport = function (pageSize, page, sortBy, sortDirection) {
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
 
         $scope.filter.max = 10000;
