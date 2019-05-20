@@ -33,7 +33,11 @@ public interface OrderFillRateReportMapper {
                                                       @Param("RowBounds") RowBounds rowBounds,
                                                       @Param("userId") Long userId
     );
-
+    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getQueryCount")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    int getReportTotalCount(@Param("filterCriteria") OrderFillRateReportParam params,
+                                        @Param("userId") Long userId
+    );
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getSummaryQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
      List<OrderFillRateReport> getReportSummary(

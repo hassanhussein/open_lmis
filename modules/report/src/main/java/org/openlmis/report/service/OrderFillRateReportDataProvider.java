@@ -20,6 +20,7 @@ import org.openlmis.report.mapper.OrderFillRateReportMapper;
 import org.openlmis.report.mapper.RnRFeedbackReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
+import org.openlmis.report.model.params.OrderReportParam;
 import org.openlmis.report.model.report.MasterReport;
 import org.openlmis.report.model.report.OrderFillRateReport;
 import org.openlmis.report.util.ParameterAdaptor;
@@ -37,84 +38,73 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
-  public static final String ORDER_FILL_RATE = "ORDER_FILL_RATE";
-  public static final String TOTAL_PRODUCTS_APPROVED = "TOTAL_PRODUCTS_APPROVED";
-  public static final String TOTAL_PRODUCT_SHIPPED = "TOTAL_PRODUCT_SHIPPED";
-  public static final String REPORT_STATUS = "REPORT_STATUS";
-  @Autowired
-  private OrderFillRateReportMapper reportMapper;
+    public static final String ORDER_FILL_RATE = "ORDER_FILL_RATE";
+    public static final String TOTAL_PRODUCTS_APPROVED = "TOTAL_PRODUCTS_APPROVED";
+    public static final String TOTAL_PRODUCT_SHIPPED = "TOTAL_PRODUCT_SHIPPED";
+    public static final String REPORT_STATUS = "REPORT_STATUS";
+    @Autowired
+    private OrderFillRateReportMapper reportMapper;
 
-  @Autowired
-  private SelectedFilterHelper selectedFilterHelper;
+    @Autowired
+    private SelectedFilterHelper selectedFilterHelper;
 
-  @Autowired
-  private RnRFeedbackReportMapper feedbackReportMapper;
+    @Autowired
+    private RnRFeedbackReportMapper feedbackReportMapper;
 
 
-  @Override
-  public List<? extends ResultRow> getResultSet(Map<String, String[]> filterCriteria) {
-    RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-      List<Long> rnrIds;
-    OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
-    parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
-      rnrIds=reportMapper.getRequisitionsForPeriod(parameter);
-      String rnrIdsParam= "values "+ rnrIds.toString().replace("[", "(").replace("]", ")").
-              replace(",","),(");
-      parameter.setRnrIdsPar(rnrIdsParam);
-    parameter.setUserId(this.getUserId());
+    @Override
+    public List<? extends ResultRow> getResultSet(Map<String, String[]> filterCriteria) {
+        RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+        return reportMapper.getReport(this.getFilterParam(filterCriteria, 0l, 0l), rowBounds, this.getUserId());
+    }
 
-    return reportMapper.getReport(parameter, rowBounds, this.getUserId());
-  }
+    public OrderFillRateReportParam getFilterParam(Map<String, String[]> filterCriteria, long page, long pageSize) {
+        List<Long> rnrIds;
+        OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
+        parameter.setUserId(this.getUserId());
+        parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
+        rnrIds = reportMapper.getRequisitionsForPeriod(parameter);
+        String rnrIdsParam = "values " + rnrIds.toString().replace("[", "(").replace("]", ")").
+                replace(",", "),(");
+        parameter.setRnrIdsPar(rnrIdsParam);
+        parameter.setPage(page);
+        parameter.setPageSize(pageSize);
+        return parameter;
+    }
 
-  @Override
-  public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-List<Long> rnrIds;
-    OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
-    parameter.setUserId(this.getUserId());
+    @Override
+    public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+        List<MasterReport> reportList = new ArrayList<>();
+        MasterReport report = new MasterReport();
+        List<OrderFillRateReport> detail = reportMapper.getReport(this.getFilterParam(filterCriteria, page, pageSize), rowBounds, this.getUserId());
+        report.setDetails(detail);
+        Long approved = detail.stream().filter(row -> row.getApproved() != null && row.getApproved() > 0).count();
+        Long shipped = detail.stream().filter(row -> (row.getReceipts() != null && row.getReceipts() > 0)
+                || (row.getSubstitutedProductQuantityShipped() != null && row.getSubstitutedProductQuantityShipped() > 0)).count();
+        Float orderFillRate = ((approved == 0L || approved == null) ? 0L : ((float) shipped / approved) * 100);
+        String requistionStatus = reportMapper.getFillRateReportRequisitionStatus(this.getFilterParam(filterCriteria, page, pageSize));
 
-    List<MasterReport> reportList = new ArrayList<MasterReport>();
-    MasterReport report = new MasterReport();
+        Map<String, Object> keyValues = new HashMap();
+        keyValues.put(ORDER_FILL_RATE, orderFillRate);
+        keyValues.put(TOTAL_PRODUCTS_APPROVED, approved);
+        keyValues.put(TOTAL_PRODUCT_SHIPPED, shipped);
+        keyValues.put(REPORT_STATUS, detail.size() == 0 ? requistionStatus : null);
+        report.setKeyValueSummary(keyValues);
+        reportList.add(report);
+        return reportList;
+    }
 
-    parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
-    rnrIds=reportMapper.getRequisitionsForPeriod(parameter);
-    String rnrIdsParam= "values "+ rnrIds.toString().replace("[", "(").replace("]", ")").
-            replace(",","),(");
-    parameter.setRnrIdsPar(rnrIdsParam);
-    List<OrderFillRateReport> detail = reportMapper.getReport(parameter, rowBounds, this.getUserId());
-    report.setDetails(detail);
+    @Override
+    public HashMap<String, String> getExtendedHeader(Map params) {
+        HashMap<String, String> result = new HashMap<String, String>();
+        OrderFillRateReportParam parameter = ParameterAdaptor.parse(params, OrderFillRateReportParam.class);
+        result.put("REPORT_FILTER_PARAM_VALUES", selectedFilterHelper.getProgramGeoZoneFacility(params));
+        return result;
 
-    // stateless lambdas doesn't create an overhead on memory
-    Long approved = detail.stream().filter(row -> row.getApproved()!= null && row.getApproved() > 0).count();
-    Long shipped = detail.stream().filter(row -> (row.getReceipts() != null && row.getReceipts() > 0)
-            || (row.getSubstitutedProductQuantityShipped() != null && row.getSubstitutedProductQuantityShipped() > 0)).count();
-    Float orderFillRate = ((approved == 0L || approved == null) ? 0L : ((float)shipped/approved)*100);
+    }
 
-    report.setKeyValueSummary(new HashedMap(){{
-      put(ORDER_FILL_RATE, orderFillRate);
-      put(TOTAL_PRODUCTS_APPROVED, approved);
-      put(TOTAL_PRODUCT_SHIPPED, shipped);
-      //for the report to show data, the rnr status needs to be 'SUBMITED'.
-      //If the report data is empty and the rnr is already there, lets show the status of the requisition.
-      put(REPORT_STATUS, detail.size() == 0 ? reportMapper.getFillRateReportRequisitionStatus(parameter) : null);
-    }});
-
-    reportList.add(report);
-
-    return reportList;
-  }
-
-  @Override
-  public HashMap<String, String> getExtendedHeader(Map params) {
-    HashMap<String, String> result = new HashMap<String, String>();
-    OrderFillRateReportParam parameter = ParameterAdaptor.parse(params, OrderFillRateReportParam.class);
-
-    /*result.put("TOTAL_PRODUCTS_RECEIVED", totalProductsReceived);
-    result.put("TOTAL_PRODUCTS_APPROVED", totalProductsOrdered);
-    result.put("PERCENTAGE_ORDER_FILL_RATE", percent.toString());
-    */
-    result.put("REPORT_FILTER_PARAM_VALUES", selectedFilterHelper.getProgramGeoZoneFacility(params));
-    return result;
-
-  }
+    public int getReportTotalCount(Map<String, String[]> filter) {
+        return reportMapper.getReportTotalCount(this.getFilterParam(filter, 0l, 0l), this.getUserId());
+    }
 }

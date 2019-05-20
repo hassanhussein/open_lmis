@@ -13,6 +13,7 @@
 
 package org.openlmis.report.builder;
 
+import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
 
 import java.util.Map;
@@ -82,9 +83,31 @@ public class OrderFillRateQueryBuilder {
             query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
         if (multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer") != null)
             query = query + " and " + multiProductFilterBy(param.getProducts(), "sli.productid", "sli.tracer");
-        query = query + " order by facility, productCode ";
+        query = query + " order by " + getOrderString(param) + " " +
+                "   OFFSET " + (param.getPage() - 1) * param.getPageSize() + " LIMIT " + param.getPageSize();
 
         return query;
+    }
+
+    public static String getQueryCount(Map params) {
+
+        OrderFillRateReportParam param = (OrderFillRateReportParam) params.get("filterCriteria");
+        String query = " select count(*) " +
+                " from mv_order_fill_report_products sli  " +
+                " where  sli.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
+        if (param.getProductCategory() != 0)
+            query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
+        if (multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer") != null)
+            query = query + " and " + multiProductFilterBy(param.getProducts(), "sli.productid", "sli.tracer");
+
+        return query;
+    }
+
+    public static String getOrderString(OrderFillRateReportParam filter) {
+        String sortString = "";
+        sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " facility, productCode ";
+        sortString = sortString + " " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
+        return sortString;
     }
 
     public static String getFillRateReportRequisitionStatus(Map params) {

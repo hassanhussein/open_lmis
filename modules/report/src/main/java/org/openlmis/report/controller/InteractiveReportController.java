@@ -181,7 +181,7 @@ public class InteractiveReportController extends BaseController {
         Report report = reportManager.getReportByKey("aggregate_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<DistrictConsumptionReport> districtConsumptionReportList =
-                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page,  pageSize);
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
         int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
 
         return new Pages(page, totalCount, districtConsumptionReportList);
@@ -278,17 +278,24 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/orderFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_FILL_RATE_REPORT')")
     public Pages getOrderFillRateData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                      @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                                       HttpServletRequest request
 
     ) {
 
-
+        Pages pages = null;
         Report report = reportManager.getReportByKey("order_fill_rate");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<MasterReport> orderFillRateReportList =
-                (List<MasterReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
-        return new Pages(page, max, orderFillRateReportList);
+                (List<MasterReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
+        int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
+        MasterReport masterReport = null;
+        if (orderFillRateReportList != null && !orderFillRateReportList.isEmpty()) {
+            masterReport = orderFillRateReportList.get(0);
+            pages = new Pages(page, totalCount, orderFillRateReportList);
+            pages.setCount(masterReport.getDetails().size());
+        }
+        return pages;
     }
 
     @RequestMapping(value = "/reportdata/regimenSummary", method = GET, headers = BaseController.ACCEPT_JSON)

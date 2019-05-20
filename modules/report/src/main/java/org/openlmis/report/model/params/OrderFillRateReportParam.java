@@ -24,24 +24,25 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderFillRateReportParam extends BaseParam {
 
-  @RequiredParam
-  private Long program;
+    @RequiredParam
+    private Long program;
 
-  @RequiredParam
-  private Long schedule;
+    @RequiredParam
+    private Long schedule;
 
-  @RequiredParam
-  private Long period;
-  private Long zone;
-  private Long facilityType;
-  private String products;
-  private Long productCategory;
-  private Long requisitionGroup;
-  private Long rnrId;
-  private List<Long> rnrIds;
-private String rnrIdsPar;
-
-  private Long facility;
+    @RequiredParam
+    private Long period;
+    private Long zone;
+    private Long facilityType;
+    private String products;
+    private Long productCategory;
+    private Long requisitionGroup;
+    private Long rnrId;
+    private List<Long> rnrIds;
+    private String rnrIdsPar;
+    private Long facility;
+    private String sortBy;
+    private String sortDirection;
 
 
 }
