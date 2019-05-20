@@ -278,7 +278,7 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/orderFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_FILL_RATE_REPORT')")
     public Pages getOrderFillRateData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                      @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                      @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
                                       HttpServletRequest request
 
     ) {
@@ -841,7 +841,7 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/facilityConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getFacilityConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                            @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
                                             HttpServletRequest request
 
     ) {
