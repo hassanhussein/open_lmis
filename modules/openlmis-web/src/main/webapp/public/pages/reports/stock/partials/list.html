@@ -98,6 +98,7 @@
 
 
 
+
 </style>
 
 <!--<div>
@@ -113,56 +114,60 @@
                     class="break"></span>-->
 
 
-                <div class="box-icon pull-right" ng-show="false">
-                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
-                <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
-                   class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
-            </div>
+             <!--   <div class="box-icon pull-right" ng-show="false">
+                    <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                    <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+                       class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
+                </div>-->
             </h2>
         </div>
         <div class="app-form">
             <form ng-submit="filterGrid()" name="filterForm" novalidate>
                 <div filter-container class="clearfix">
-<!--
-                   Additional Filters
--->
+                    <!--
+                                       Additional Filters
+                    -->
                     <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
                     <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                     <zone-filter class="form-cell horizontalFilters"></zone-filter>
                     <product-filter class="form-cell horizontalFilters"></product-filter>
-<!--
-                    <period-session-by-year-filter class="form-cell horizontalFilters"></period-session-by-year-filter>
--->
-                   <!-- <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
-                                       enddate="filter.periodEnd"
-                                       class="form-cell horizontalFilters"></date-range-filter>-->
+                    <!--
+                                        <period-session-by-year-filter class="form-cell horizontalFilters"></period-session-by-year-filter>
+                    -->
+                    <!-- <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
+                                        enddate="filter.periodEnd"
+                                        class="form-cell horizontalFilters"></date-range-filter>-->
 
-                <!--    <static-year-month-filter perioderror="error" startdate="filter.periodStart"  enddate="filter.periodEnd"
-                                       class="form-cell horizontalFilters"></static-year-month-filter>-->
-                    <static-year-monthly-filter perioderror="perioderror" year="year" startdate="filter.periodStart" enddate="filter.periodEnd" ></static-year-monthly-filter>
+                    <!--    <static-year-month-filter perioderror="error" startdate="filter.periodStart"  enddate="filter.periodEnd"
+                                           class="form-cell horizontalFilters"></static-year-month-filter>-->
+                    <static-year-monthly-filter perioderror="perioderror" year="year" startdate="filter.periodStart"
+                                                enddate="filter.periodEnd"></static-year-monthly-filter>
 
 
-                    <div class="form-cell horizontalFilters" style="padding-top: 30px;margin-left: 0px !important; width: 1px !important;">
-                       &nbsp; &nbsp; <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn" style="background-color: #348991;">Search</a></span>
+                    <div class="form-cell horizontalFilters"
+                         style="padding-top: 30px;margin-left: 0px !important; width: 1px !important;">
+                        &nbsp; &nbsp; <span class="pull-right"><a ng-click="searchReport()"
+                                                                  class="waves-effect waves-light btn"
+                                                                  style="background-color: #348991;">Search</a></span>
                     </div>
-                <!--    <div class="form-cell horizontalFilters">
-                        <label for="startTime" class="labels">
-                            <span>Date</span>
-                            <span class="label-required"> *&nbsp;</span>
+                    <!--    <div class="form-cell horizontalFilters">
+                            <label for="startTime" class="labels">
+                                <span>Date</span>
+                                <span class="label-required"> *&nbsp;</span>
 
-                        </label>
+                            </label>
 
 
-                        <div class="form-field">
-                            <input name="startTime" id="startTime" type="text"
-                                   ui-date="{dateFormat: 'dd/mm/yy',changeYear: true,maxDate:'today'}"
-                                   ng-model="filter.dateStatus"
-                                   ng-change="OnFilterChanged()"/>
+                            <div class="form-field">
+                                <input name="startTime" id="startTime" type="text"
+                                       ui-date="{dateFormat: 'dd/mm/yy',changeYear: true,maxDate:'today'}"
+                                       ng-model="filter.dateStatus"
+                                       ng-change="OnFilterChanged()"/>
 
-                        </div>
-                    </div>-->
+                            </div>
+                        </div>-->
 
-                    <div class="form-cell" ng-show="datarows.length > 0 ">
+                    <div class="form-cell" ng-show="datarows.length > 0 && showIndicators">
 
                         <label class="labels" style="float:right;">
                             <span style="font-size: medium"><Strong>Indicators</Strong></span><br/>
@@ -182,7 +187,7 @@
                             &nbsp;&nbsp;&nbsp;&nbsp;
 
                             <span data-toggle="tooltip"
-                                  title="Indicate that you have more than your have supposed to have."> <i
+                                  title="Indicate that you have more than supposed to have."> <i
                                     class="icon-stop blue fa-lg" aria-hidden="true"></i>  Over Stocked</span>
 
                         </label>
@@ -198,87 +203,176 @@
 
         <div class="content-body">
 
-            <table client-side-sort-pagination class="table table-bordered"
-                   ng-show="data == undefined || data.length == 0">
-                <tr>
-                    <td>No data to show under selected filters</td>
-                </tr>
-            </table>
+            <ul class="nav nav-tabs">
+                <li class="active" ><a href="#soh" data-toggle="tab" ng-click="tabToggle('soh')"><span openlmis-message="label.stock.on.hand"></span></a></li>
+                <li><a href="#mos" data-toggle="tab"><span openlmis-message="label.mos" ng-click="tabToggle('mos')"></span></a></li>
+                <li><a href="#graph" data-toggle="tab" ng-click="tabToggle('graphs')"  ng-show="false"><span openlmis-message="label.graphs"></span></a></li>
+            </ul>
 
-            <div class="row-fluid rnr-table" scrollable ng-show="datarows.length > 0 ">
 
-                <div class="clearfix"></div>
+            <div class="tab-content clearfix">
+                <div class="tab-pane active clearboth" id="soh" style="background-color:lightgray">
 
-                <div class="form-cell" ng-show="true">
-                    <input type="checkbox" ng-model="filter.isSOH" ng-change="searchReport()"/>
+                    <div class="box-icon pull-right " ng-show="datarows.length > 0 && !showIndicators" style="padding-top: 20px;margin-right:5px">
+                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                        <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+                           class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
+                    </div>
 
-                    <Strong class="labels"><span  data-toggle="tooltip"
-                                                  title="Checked to see SOH columns only"> <i aria-hidden="true"></i>Checked to see SOH Only</span> </Strong>
+                    <div class="box-icon pull-right " ng-show="datarows.length > 0 && showIndicators" style="padding-top: 20px;margin-right:5px">
+                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                        <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+                           class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
+                    </div>
 
-                    <input type="checkbox" ng-model="isMOS" ng-change="searchReport()"/>
 
-                    <Strong class="labels"><span  data-toggle="tooltip"
-                                                  title="Checked to see MOS columns only"> <i aria-hidden="true"></i>Checked to see MOS Only</span> </Strong>
+                    <div style="max-height:2px !important;" class="row-fluid clearboth" ng-show="datarows.length > 0">
+                        <strong>
 
+                            <span style=" float:left;margin:10px 10px 0 0; padding:5px 10px display:block;margin-left:10px">
+                         <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
+                                   ng-change="searchReport()"/>
+                        </span><span  style="color:#078f97; float:left;margin:10px 10px 0 0; padding:5px 10px display:block;" openlmis-message="label.report.view.disaggregated"></span>
+
+                        </strong>
+                    </div>
+                    <br/>
+
+                    <table client-side-sort-pagination class="table table-bordered"
+                           ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+
+                    <div class="row-fluid rnr-table scrollable" ng-show="datarows.length > 0 ">
+
+                        <div class="clearfix"></div>
+
+                        <table class="table table-bordered table-striped scrollable" ng-table="tableParams">
+                            <thead>
+                            <tr>
+                                <th ng-if="filter.disaggregated==true"></th>
+                                <th ng-if="filter.disaggregated==true"></th>
+
+                                <th></th>
+                                <th></th>
+
+                                <th ng-repeat="period in periods" ng-bind="period"></th>
+
+                            </tr>
+                            <tr>
+                                <th ng-if="filter.disaggregated==true">Facility</th>
+                                <th ng-if="filter.disaggregated==true">Facility Type</th>
+
+                                <th openlmis-message="label.code" style="text-align: left"></th>
+                                <th openlmis-message="label.product.name" style="text-align: left"></th>
+                                <th ng-repeat="period in periods" openlmis-message="header.status.soh"
+                                    class="p-column"></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr ng-repeat="row in data">
+                                <td ng-if="filter.disaggregated==true"  ng-bind="row.facility"></td>
+                                <td  ng-if="filter.disaggregated==true" ng-bind="row.facilityType"></td>
+                                <td ng-bind="row.code"></td>
+
+                                <td ng-bind="row.product">
+                                </td>
+                                <td  ng-repeat="period in periods" ng-bind="row[period]">{{ row.no }}</td>
+
+                            </tr>
+                            </tbody>
+
+                        </table>
+                        <div class="clearfix"></div>
+
+                    </div>
 
 
                 </div>
 
-                <div class="clearfix"></div>
 
-                <table class="table table-bordered" table-striped scrollable ng-table="tableParams">
-                    <thead>
-                    <tr>
+                <div class="tab-pane  clearboth" id="mos" style="background-color:lightgray">
 
-                        <th></th>
-                        <th></th>
-                        <!--<th ng-repeat="p in periodHeaders" colspan="2" style="text-align: center;"
-                            ng-show="filter.isMOS == true" class="p-column" id="p-column-r">
-                            {{p.name}}
-                        </th>
--->
-                        <th ng-repeat="p in periodHeaders"  colspan="2"  style="text-align: center;"
-                            class="p-column" id="p-column-r1">
-                            {{(p.month != null)?p.month:p.name}}
-                        </th>
-                    </tr>
+                        <div class="box-icon pull-right " ng-show="datarows.length > 0" style="padding-top: 20px;margin-right:5px">
+                            <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                            <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+                               class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
+                        </div>
 
-                    <tr>
-                        <th openlmis-message="label.facility" style="text-align: left"></th>
-                        <th openlmis-message="label.district" style="text-align: left"></th>
-                        <!--
-                                                <th style="width:10%;!important;  text-align: left;">Adequacy</th>
-                        -->
+                        <div style="max-height:2px !important;" class="row-fluid clearboth" ng-show="datarows.length > 0">
+                            <strong>
 
-                        <th ng-repeat-start="p in periodHeaders" openlmis-message="header.status.soh"
-                            class="p-column"></th>
-                        <th  ng-repeat-end  class="p-column" ng-show="p.enableOrder == true">MOS</th>
+                            <span style=" float:left;margin:10px 10px 0 0; padding:5px 10px display:block;margin-left:10px">
+                         <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
+                                ng-change="searchReport()"/>
+                        </span><span  style="color:#078f97; float:left;margin:10px 10px 0 0; padding:5px 10px display:block;" openlmis-message="label.report.view.disaggregated"></span>
 
-                    </tr>
-                    </thead>
+                            </strong>
+                        </div>
+                        <br/>
 
-                    <tbody>
+                        <table client-side-sort-pagination class="table table-bordered"
+                               ng-show="data == undefined || data.length == 0">
+                            <tr>
+                                <td>No data to show under selected filters</td>
+                            </tr>
+                        </table>
 
-                    <tr ng-repeat="f in datarows">
+                        <div class="row-fluid rnr-table scrollable" ng-show="datarows.length > 0 ">
+
+                            <div class="clearfix"></div>
+
+                            <table class="table table-bordered table-striped scrollable" ng-table="tableParams">
+                                <thead>
+                                <tr>
+                                    <th ng-if="filter.disaggregated==true"></th>
+                                    <th ng-if="filter.disaggregated==true"></th>
+
+                                    <th></th>
+                                    <th></th>
+
+                                    <th ng-repeat="period in periods" ng-bind="period"></th>
+
+                                </tr>
+                                <tr>
+                                    <th ng-if="filter.disaggregated==true">Facility</th>
+                                    <th ng-if="filter.disaggregated==true">Facility Type</th>
+
+                                    <th openlmis-message="label.code" style="text-align: left"></th>
+                                    <th openlmis-message="label.product.name" style="text-align: left"></th>
+                                    <th ng-repeat="period in periods" openlmis-message="header.status.soh"
+                                        class="p-column"></th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <tr ng-repeat="row in data">
+                                    <td ng-if="filter.disaggregated==true"  ng-bind="row.facility"></td>
+                                    <td  ng-if="filter.disaggregated==true" ng-bind="row.facilityType"></td>
+                                    <td ng-bind="row.code"></td>
+
+                                    <td ng-bind="row.product">
+                                    </td>
+                                    <td  ng-repeat="period in periods" ng-bind="row[period]">{{ row.no }}</td>
+
+                                </tr>
+                                </tbody>
+
+                            </table>
+                            <div class="clearfix"></div>
+
+                        </div>
 
 
-                        <td>
-                            {{f.facilityName}}
-                        </td>
-                        <td>{{f.stocks[0].district}}</td>
-
-                        <td ng-repeat-start="p in periodHeaders" class="p-column"> {{getFacilityStock(f.facilityName,p.name).soh | number}}</td>
-
-                        <td ng-show="p.enableOrder == true" ng-repeat-end="" class="p-column" ng-style="{'background-color':getFacilityStock(f.facilityName,p.name).color}">
-                            {{getFacilityStock(f.facilityName,p.name).mos | number}}
-                        </td>
+                    </div>
 
 
-                    </tr>
-                    </tbody>
-
-                </table>
-
+                <div class="tab-pane" id="graph">Graphs Goes Here</div>
             </div>
 
 
