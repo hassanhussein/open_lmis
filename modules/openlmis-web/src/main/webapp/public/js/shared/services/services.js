@@ -558,3 +558,11 @@ services.factory('AllOrders', function ($resource) {
 services.factory('RequisitionFacilitySourceOfFund', function ($resource) {
     return $resource('/requisitions/:id/facilityFundSources.json', {}, {});
 });
+
+services.factory('searchSDArticles', function ($resource) {
+  return $resource('/rest-api/support-desk/getArticlesBySearchKeyword.json', {}, {});
+});
+
+services.factory('reportIssueOnSD', function ($resource) {
+  return $resource('/rest-api/support-desk/reportIssueOnSD.json', {summary: '@summary', description: '@description', reporterId: '@reporterId' }, {});
+});
