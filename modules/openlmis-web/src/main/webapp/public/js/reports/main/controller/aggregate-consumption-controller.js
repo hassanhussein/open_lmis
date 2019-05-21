@@ -68,7 +68,7 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
     };
 
     $scope.runReport = function (pageSize, page, sortBy, sortDirection) {
-        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
+        var allParams = $scope.getSanitizedParameter();
 
         $scope.filter.max = 10000;
         if (allParams.period !== '' &&

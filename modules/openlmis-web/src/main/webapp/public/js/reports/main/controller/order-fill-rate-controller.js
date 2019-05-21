@@ -9,13 +9,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushedProductList) {
+function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushedProductList, $q) {
     //to minimize and maximize the filter section
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
-    $scope.OnFilterChanged = function () {
+
+    $scope.OnFilterChanged = function() {
+        $scope.tableParams.paginationCallBack = $scope.runReport;
+        $scope.paramsChanged($scope.tableParams);
+    };
+
+    $scope.runReport = function (pageSize, page, sortBy, sortDirection) {
         // clear old data if there was any
         $scope.pusheditems = $scope.data = $scope.datarows = $scope.summaries = [];
         $scope.filter.max = 10000;
+
+        var deferred = $q.defer();
         OrderFillRateReport.get($scope.getSanitizedParameter(), function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.summaries = data.pages.rows[0].keyValueSummary;
@@ -44,13 +52,20 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
                     });
                 }
 
-                $scope.data = allOrders;
+                $scope.data =// allOrders;
+                {
+                    count: data.count,
+                    max: data.max,
+                    rows: allOrders,
+                    page: data.page,
+                    total: data.total
+                };
 
-                $scope.paramsChanged($scope.tableParams);
             }
+             deferred.resolve();
         });
 
-
+        return deferred.promise;
         // GetPushedProductList.get($scope.getSanitizedParameter(),function (data) {
         //         if (data.pages !== undefined && data.pages.rows !== undefined) {
         //             $scope.pusheditems = data.pages.rows;

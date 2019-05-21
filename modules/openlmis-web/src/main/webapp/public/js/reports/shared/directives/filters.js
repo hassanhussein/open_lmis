@@ -147,7 +147,7 @@ function ($routeParams, $location, $timeout, messageService, $compile) {
 
             var el = angular.element('<div></div>');
             el.append('<div class="form-cell horizontalFilters alert alert-error report-filter-error-msg" ng-if="!all_required_fields_set" style="">{{getLocalMessage(\'report.select.all.required.fields\')}}</div>');
-            el.append('<div class="form-cell horizontalFilters search-report report-search-button span10 offset2"><button ng-click="fetchReport(true)">{{getLocalMessage(\'run.report\')}}</button></div>');
+            el.append('<div class="form-cell horizontalFilters search-report report-search-button span10 offset2"><input type="button" ng-click="fetchReport(true)" class="btn btn-primary" openlmis-message="run.report"/></div>');
             $compile(el)(scope);
             elm.append(el);
         }
