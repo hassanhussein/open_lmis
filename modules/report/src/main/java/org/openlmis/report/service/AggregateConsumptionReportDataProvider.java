@@ -50,8 +50,6 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
   public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria, Long page, Long pagSize) {
     AggregateConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, AggregateConsumptionReportParam.class);
     param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
-    param.setPage(page);
-    param.setPageSize(pagSize);
     return param;
   }
   @Override
