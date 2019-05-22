@@ -56,33 +56,39 @@ public class OrderFillRateQueryBuilder {
 
     private static String getQueryStringV2(OrderFillRateReportParam param, Long userId) {
 
-        String query = " SELECT " +
-                "sli. district," +
-                "sli. districtid," +
-                "sli. provinceid," +
-                "sli. province," +
-                "sli.facility," +
-                " sli. program, " +
-                " sli.programid," +
-                "  sli. periodid," +
-                "  sli. period, " +
-                "sli.facilitycode,\n" +
-                "  sli.productCode,\n" +
-                "  sli.product,\n" +
-                "  sli. order,\n" +
-                "  sli.approved,\n" +
-                "  sli.receipts,\n" +
-                "  sli.substitutedproductcode,\n" +
-                "  sli.substitutedproductname,\n" +
-                "  sli.substitutedproductquantityshipped,\n" +
-                "   sli.item_fill_rate " +
-                " from mv_order_fill_report_products sli  " +
-                " where  sli.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
+        String query = " SELECT r.district AS district,\n" +
+                "    r.districtid AS districtid,\n" +
+                "    r.provinceid AS provinceid,\n" +
+                "    r.province AS province,\n" +
+                "    r.facility AS facility,\n" +
+                "    r.program AS program,\n" +
+                "    r.programid AS programid,\n" +
+                "    r.periodid AS periodid,\n" +
+                "    r.period AS period,\n" +
+                "    r.facilitycode AS facilitycode,\n" +
+                "    r.productid AS productid,\n" +
+                "    r.tracer,\n" +
+                "    r.productcode,\n" +
+                "    r.product,\n" +
+                "    r.order AS \"order\",\n" +
+                "    r.approved AS approved,\n" +
+                "    r.rnrid,\n" +
+                "    o.quantityshipped AS receipts,    \n" +
+                "    0.substitutedquantityshipped,\n" +
+                "\t0.shippeddate,\n" +
+                "        CASE\n" +
+                "            WHEN COALESCE(r.approved::numeric, 0::numeric) = 0::numeric THEN 0::numeric\n" +
+                "            ELSE round(COALESCE(o.quantityshipped, 0::bigint)::numeric / COALESCE(r.approved, 0)::numeric * 100::numeric, 2)\n" +
+                "        END AS item_fill_rate\n" +
+                "   FROM mv_requisition r \n" +
+                "     LEFT JOIN mv_order_fulfillment o on o.orderid= r.rnrid and  o.productcode = r.productcode \n" +
+                "  WHERE r.status::text = 'RELEASED'::text AND r.approved > 0\n" +
+                " and  r.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
 
-        if (param.getProductCategory() != 0)
-            query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
-        if (multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer") != null)
-            query = query + " and " + multiProductFilterBy(param.getProducts(), "sli.productid", "sli.tracer");
+//        if (param.getProductCategory() != 0)
+//            query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
+        if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null)
+            query = query + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
         query = query + " order by " + getOrderString(param) + " " +
                 "   OFFSET " + (param.getPage() - 1) * param.getPageSize() + " LIMIT " + param.getPageSize();
 
@@ -93,8 +99,9 @@ public class OrderFillRateQueryBuilder {
 
         OrderFillRateReportParam param = (OrderFillRateReportParam) params.get("filterCriteria");
         String query = " select count(*) " +
-                " from mv_order_fill_report_products sli  " +
-                " where  sli.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
+                "   FROM mv_requisition r \n" +
+                "     LEFT JOIN mv_order_fulfillment o on o.orderid= r.rnrid and  o.productcode = r.productcode \n" +
+                " where  r.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
         if (param.getProductCategory() != 0)
             query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
         if (multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer") != null)
