@@ -32,12 +32,14 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
         var disaggregationWrongProductSelection = (disaggregatedSelectedProductCount > disaggregationProductsMaxCount ||
             disaggregatedSelectedProductCount < disaggregationProductsMinCount);
 
+        var disaggregated  = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
+
         //During disaggregating, at least 1 and at most 5 products needs to be selected
-        if(($scope.filter.disaggregated || $scope.filter.disaggregated === 'true') && disaggregationWrongProductSelection) {
-            $scope.filter.error = 'During disaggregation at lease '+disaggregationProductsMinCount+' or at most '+
+        if(disaggregated && disaggregationWrongProductSelection) {
+            $scope.filter.error = 'During disaggregation at least '+disaggregationProductsMinCount+' or at most '+
                 disaggregationProductsMaxCount+' products should be selected';
             return;
-         }
+        }
 
         var deferred = $q.defer();
 
