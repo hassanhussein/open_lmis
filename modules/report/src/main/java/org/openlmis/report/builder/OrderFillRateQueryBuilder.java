@@ -85,8 +85,7 @@ public class OrderFillRateQueryBuilder {
                 "  WHERE r.status::text = 'RELEASED'::text AND r.approved > 0\n" +
                 " and  r.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
 
-//        if (param.getProductCategory() != 0)
-//            query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
+
         if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null)
             query = query + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
         query = query + " order by " + getOrderString(param) + " " +
@@ -102,10 +101,9 @@ public class OrderFillRateQueryBuilder {
                 "   FROM mv_requisition r \n" +
                 "     LEFT JOIN mv_order_fulfillment o on o.orderid= r.rnrid and  o.productcode = r.productcode \n" +
                 " where  r.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
-        if (param.getProductCategory() != 0)
-            query = query + " and " + productCategoryIsFilteredBy("sli.productcategoryid");
-        if (multiProductFilterBy(param.getProducts(), "sli.id", "sli.tracer") != null)
-            query = query + " and " + multiProductFilterBy(param.getProducts(), "sli.productid", "sli.tracer");
+
+        if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null)
+            query = query + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
 
         return query;
     }
