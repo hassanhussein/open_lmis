@@ -18,59 +18,22 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
         $scope.paramsChanged($scope.tableParams);
     };
 
-    $scope.runReport = function (pageSize, page, sortBy, sortDirection) {
-        // clear old data if there was any
-        $scope.pusheditems = $scope.data = $scope.datarows = $scope.summaries = [];
-        $scope.filter.max = 10000;
-
+    $scope.runReport = function () {
         var deferred = $q.defer();
         OrderFillRateReport.get($scope.getSanitizedParameter(), function (data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.summaries = data.pages.rows[0].keyValueSummary;
-
-                //all orders
-                allOrders      =  _.where(data.pages.rows[0].details, {substitutedProductName: null});
-                //all substituted orders
-                allSubstitutes =  _.difference(data.pages.rows[0].details, allOrders);
-
-                // create primary-substitute product tree relationship
-                if(allSubstitutes.length > 0) {
-                    _.each(allOrders, function (row) {
-                        row.substitutes = _.chain(allSubstitutes).where({productcode: row.productcode}).map(function (row) {
-                            return row;
-                        }).value();
-                        if (row.substitutes.length > 0) {
-                            // substitutedProductsReceivedTotal =  _.chain(row.substitutes).pluck('substitutedProductQuantityShipped').reduce(function(memo, amt){ return memo + amt; }, 0).value();
-                            row.totalQuantityShipped = row.receipts + _.chain(row.substitutes).pluck('substitutedProductQuantityShipped').reduce(function (memo, amt) {
-                                    return memo + amt;
-                                }, 0).value();
-                            if (row.approved === 0)
-                                row.total_item_rate = 0;
-                            else
-                                row.total_item_rate = (row.totalQuantityShipped / row.approved)*100;
-                        }
-                    });
-                }
-
-                $scope.data =// allOrders;
-                {
-                    count: data.count,
-                    max: data.max,
-                    rows: allOrders,
-                    page: data.page,
-                    total: data.total
-                };
-
-            }
-             deferred.resolve();
+            $scope.summaries = data.pages.rows[0].keyValueSummary;
+            $scope.data =
+            {
+                 count: data.pages.count,
+                 max: data.pages.max,
+                 rows: data.pages.rows[0].details,
+                 page: data.pages.page,
+                 total: data.pages.total
+            };
+            deferred.resolve();
         });
 
         return deferred.promise;
-        // GetPushedProductList.get($scope.getSanitizedParameter(),function (data) {
-        //         if (data.pages !== undefined && data.pages.rows !== undefined) {
-        //             $scope.pusheditems = data.pages.rows;
-        //         }
-        //     });
     };
 
     $scope.exportReport = function (type) {
