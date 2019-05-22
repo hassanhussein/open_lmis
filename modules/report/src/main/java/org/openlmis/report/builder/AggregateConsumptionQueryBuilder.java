@@ -84,7 +84,7 @@ public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
         SELECT("f.code facilityCode");
         SELECT("f.name facility");
         SELECT("ft.name facilityType");
-        SELECT("f.code+'_'+p.code as facProdCode");
+        SELECT("f.code||'_'||p.code as facProdCode");
         writeCommonSelect();
         INNER_JOIN("facility_types ft ON ft.id =f.typeId");
         writePredicates(filter);
@@ -113,10 +113,10 @@ public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
             WHERE(geoZoneIsFilteredBy("d"));
         }
 
-        if (filter.getAllReportType()) {
-            WHERE("r.emergency in (true,false)");
-        } else {
-            WHERE(reportTypeFilteredBy("r.emergency"));
+        if (filter.getReportType()!=null && filter.getReportType().equalsIgnoreCase("EM")) {
+            WHERE("r.emergency =true");
+        } else if(filter.getReportType()!=null && filter.getReportType().equalsIgnoreCase("RG")) {
+            WHERE("r.emergency =false");
         }
     }
 
