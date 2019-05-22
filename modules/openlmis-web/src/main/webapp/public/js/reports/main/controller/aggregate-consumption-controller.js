@@ -11,56 +11,15 @@
  */
 function AggregateConsumptionReportController($scope, $filter, $window, AggregateConsumptionReport, ngTableParams, $q) {
 
-    $scope.reportTypes = [{name: 'EM', value: 'EM', label: 'Emergency'}, {name: 'RE', value: 'RE', label: 'Regular'}];
-    $scope.isAll = false;
-    $scope.selectAll = function () {
+    var disaggregationProductsMinCount = 1;
+    var disaggregationProductsMaxCount = 5;
+    $scope.reportTypes = [
+        {name: 'All', value: 'ALL', label: 'All', checked: true},
+        {name: 'EM', value: 'EM', label: 'Emergency'},
+        {name: 'RE', value: 'RE', label: 'Regular'}
+    ];
 
-        if ($scope.isAll === false) {
-            angular.forEach($scope.reportTypes, function (type) {
-                type.checked = true;
-            });
-            $scope.isAll = true;
-        } else {
-            angular.forEach($scope.reportTypes, function (type) {
-                type.checked = false;
-            });
-            $scope.isAll = false;
-        }
-        $scope.filter = {};
-        $scope.filter.allReportType = true;
-        $scope.OnFilterChanged();
-
-    };
-
-
-    $scope.toggleSingle = function () {
-        var param = [];
-        param = _.where($scope.reportTypes, {checked: true});
-        if (parseInt(param.length, 10) === 2 || parseInt(param.length, 10) === 0) {
-            $scope.allReportType = true;
-            $scope.filter = {};
-            $scope.filter.allReportType = true;
-            $scope.OnFilterChanged();
-        }
-        else {
-            $scope.filter = {};
-            var param2 = _.findWhere($scope.reportTypes, {checked: true});
-            if (param2.name === 'RE') {
-                $scope.filter.isEmergency = false;
-                $scope.allReportType = false;
-                $scope.filter.allReportType = false;
-
-            } else {
-                $scope.filter.isEmergency = true;
-                $scope.allReportType = false;
-                $scope.filter.allReportType = false;
-
-                // $scope.filter.allReportType = true;
-            }
-            $scope.OnFilterChanged();
-        }
-    };
-
+    $scope.showDisaggregatedColumns= false;
 
     $scope.OnFilterChanged = function() {
         $scope.tableParams.paginationCallBack = $scope.runReport;
@@ -68,39 +27,40 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
     };
 
     $scope.runReport = function (pageSize, page, sortBy, sortDirection) {
-        var allParams = $scope.getSanitizedParameter();
+        $scope.filter.error = undefined;
+        var disaggregatedSelectedProductCount = $scope.filter.products.filter(function(item){ return item !=="0" && item!=="-1"; }).length;
+        var disaggregationWrongProductSelection = (disaggregatedSelectedProductCount > disaggregationProductsMaxCount ||
+            disaggregatedSelectedProductCount < disaggregationProductsMinCount);
 
-        $scope.filter.max = 10000;
-        if (allParams.period !== '' &&
-            allParams.schedule !== '' &&
-            allParams.products !== null &&
-            allParams.program !== null
-        ) {
-            allParams.page = page;
-            allParams.pageSize = pageSize;
-            allParams.sortBy = sortBy;
-            allParams.sortDirection = sortDirection;
+        var disaggregated  = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
 
-            var deferred = $q.defer();
-
-            AggregateConsumptionReport.get(allParams, function (data) {
-                $scope.data = [];
-                if (data.pages !== undefined) {
-                    $scope.data = data.pages;
-                    deferred.resolve(data);
-                }
-            });
-
-            return deferred.promise;
+        //During disaggregating, at least 1 and at most 5 products needs to be selected
+        if(disaggregated && disaggregationWrongProductSelection) {
+            $scope.filter.error = 'During disaggregation at least '+disaggregationProductsMinCount+' or at most '+
+                disaggregationProductsMaxCount+' products should be selected';
+            return;
         }
+
+        var deferred = $q.defer();
+
+        AggregateConsumptionReport.get($scope.getSanitizedParameter(), function (data) {
+            $scope.data = [];
+            if (data.pages !== undefined) {
+                $scope.data = data.pages;
+                $scope.showDisaggregatedColumns = $scope.filter.disaggregated ? true : false;
+                deferred.resolve(data);
+            }
+        });
+        return deferred.promise;
     };
+
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
         $window.open(url, '_blank');
     };
-    $scope.showMoreFilters = false;
 
+    $scope.showMoreFilters = false;
     $scope.toggleMoreFilters = function () {
         $scope.showMoreFilters = true;
     };
