@@ -146,6 +146,7 @@ function ($routeParams, $location, $timeout, messageService, $compile) {
             });
 
             var el = angular.element('<div></div>');
+            el.append('<div class="form-cell horizontalFilters alert alert-error report-filter-error-msg" ng-if="$parent.filter.error" style="">{{$parent.filter.error}}</div>');
             el.append('<div class="form-cell horizontalFilters alert alert-error report-filter-error-msg" ng-if="!all_required_fields_set" style="">{{getLocalMessage(\'report.select.all.required.fields\')}}</div>');
             el.append('<div class="form-cell horizontalFilters search-report report-search-button span10 offset2"><input type="button" ng-click="fetchReport(true)" class="btn btn-primary" openlmis-message="run.report"/></div>');
             $compile(el)(scope);
@@ -991,6 +992,12 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                     if(params.paginationCallBack !== undefined) {
                         var sortBy = Object.keys(params.sorting).pop();
                         var sortDirection = Object.values(params.sorting).pop();
+
+                        scope.filter.page = params.page;
+                        scope.filter.pageSize = params.count;
+                        scope.filter.sortBy = sortBy;
+                        scope.filter.sortDirection = sortDirection;
+
                         serverSidePagination = true;
 
                         params.paginationCallBack(params.count, params.page, sortBy, sortDirection)
@@ -1015,7 +1022,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                         }
 
                         if(serverSidePagination) {
-                            scope.datarows = scope.data.rows;
+                            scope.datarows = scope.data.rows || [];
                             params.total = scope.data.max;
                         } else {
                             var data = scope.data;

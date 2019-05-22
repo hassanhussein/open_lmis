@@ -80,8 +80,6 @@ function FacilityConsumptionReportController($scope, $filter, $window, FacilityC
             allParams.program !== null
         ) {
            FacilityConsumptionReport.get(allParams, function (data) {
-
-
                 if (data.pages !== undefined) {
                     var output = getPivotData(data.pages.rows, "periodName", "code", selectDisggregate);
                     $scope.data = output.pivotData;
