@@ -83,6 +83,8 @@ public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
         BEGIN();
         SELECT("f.code facilityCode");
         SELECT("f.name facility");
+        SELECT("ft.name facilityType");
+        SELECT("f.code+'_'+p.code as facProdCode");
         writeCommonSelect();
         INNER_JOIN("facility_types ft ON ft.id =f.typeId");
         writePredicates(filter);

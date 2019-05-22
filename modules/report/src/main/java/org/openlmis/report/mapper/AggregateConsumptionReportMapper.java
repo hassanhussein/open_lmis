@@ -12,9 +12,7 @@
 
 package org.openlmis.report.mapper;
 
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.AggregateConsumptionQueryBuilder;
@@ -27,9 +25,29 @@ import java.util.Map;
 
 @Repository
 public interface AggregateConsumptionReportMapper {
-
+  /**
+   *
+   * @param filterCriteria
+   * @param userId
+   * @return
+   *
+   *  p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name as facilityType, li.packsize
+   *
+   */
   @SelectProvider(type = AggregateConsumptionQueryBuilder.class, method = "getQuery")
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+  @Results({
+          @Result(property = "facilityCode", column = "Code"),
+          @Result(property = "facility", column = "name"),
+          @Result(property = "facilityType", column = "facilityType"),
+          @Result(property = "facProdCode", column = "facProdCode"),
+          @Result(property = "product", column = "primaryName"),
+          @Result(property = "code", column = "code"),
+          @Result(property = "consumption", column = "consumption"),
+          @Result(property = "consumptionInPacks", column = "consumptionInPacks"),
+          @Result(property = "adjustedConsumptionInPacks", column = "adjustedConsumptionInPacks"),
+          @Result(property = "dispensed", column = "dispensed")
+  })
   public List<DistrictConsumptionReport> getAggregateConsumptionReport(
       @Param("filterCriteria") ReportParameter filterCriteria,
       @Param("userId") Long userId
