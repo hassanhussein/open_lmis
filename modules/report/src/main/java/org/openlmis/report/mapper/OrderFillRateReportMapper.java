@@ -30,7 +30,6 @@ public interface OrderFillRateReportMapper {
     @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
      List<OrderFillRateReport> getReport(@Param("filterCriteria") OrderFillRateReportParam params,
-                                                      @Param("RowBounds") RowBounds rowBounds,
                                                       @Param("userId") Long userId
     );
     @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getQueryCount")

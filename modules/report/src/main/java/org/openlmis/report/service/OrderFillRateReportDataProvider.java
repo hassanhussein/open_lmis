@@ -56,7 +56,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     public List<? extends ResultRow> getResultSet(Map<String, String[]> filterCriteria) {
         RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
 
-        return reportMapper.getReport(this.getFilterParam(filterCriteria, 0l, 0l), rowBounds, this.getUserId());
+        return reportMapper.getReport(this.getFilterParam(filterCriteria, 0l, 0l),  this.getUserId());
     }
 
     public OrderFillRateReportParam getFilterParam(Map<String, String[]> filterCriteria, long page, long pageSize) {
@@ -84,7 +84,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         }
         List<MasterReport> reportList = new ArrayList<>();
         MasterReport report = new MasterReport();
-        List<OrderFillRateReport> detail = reportMapper.getReport(reportParam, rowBounds, this.getUserId());
+        List<OrderFillRateReport> detail = reportMapper.getReport(reportParam, this.getUserId());
         report.setDetails(detail);
         Long approved = detail.stream().filter(row -> row.getApproved() != null && row.getApproved() > 0).count();
         Long shipped = detail.stream().filter(row -> (row.getReceipts() != null && row.getReceipts() > 0)

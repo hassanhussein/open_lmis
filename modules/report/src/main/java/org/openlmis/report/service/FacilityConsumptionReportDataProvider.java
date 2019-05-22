@@ -51,8 +51,6 @@ public class FacilityConsumptionReportDataProvider extends ReportDataProvider {
     public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria, Long page, Long pagSize) {
         FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
         param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
-        param.setPage(page);
-        param.setPageSize(pagSize);
         return param;
     }
 
