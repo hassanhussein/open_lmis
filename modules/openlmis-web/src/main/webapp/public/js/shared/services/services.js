@@ -562,3 +562,12 @@ services.factory('RequisitionFacilitySourceOfFund', function ($resource) {
 services.factory('BudgetFeatureService', function ($resource) {
     return $resource('/requisitions/get-msd-buget-through-api.json', {}, {});
 });
+
+services.factory('searchSDArticles', function ($resource) {
+  return $resource('/rest-api/support-desk/getArticlesBySearchKeyword.json', {}, {});
+});
+
+services.factory('reportIssueOnSD', function ($resource) {
+  return $resource('/rest-api/support-desk/reportIssueOnSD.json', {summary: '@summary', description: '@description', reporterId: '@reporterId' }, {});
+});
+
