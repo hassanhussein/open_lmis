@@ -1358,3 +1358,5 @@ services.factory('QuantificationExtractReport', function ($resource) {
 services.factory('GetItemFillRateSummary', function ($resource) {
     return $resource('/reports/reportdata/item-fill-rate-summary.json', {}, {});
 });
+
+

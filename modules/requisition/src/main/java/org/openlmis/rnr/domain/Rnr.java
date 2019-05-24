@@ -71,7 +71,7 @@ public class Rnr extends BaseModel {
   private String sourceApplication = "WEB_UI";
   private List<Comment> comments = new ArrayList<>();
   private List<SourceOfFunds> sourceOfFunds = new ArrayList<>();
-  private Integer totalSources = 0;
+  private Money totalSources = new Money("0");
 
   private List<Signature> rnrSignatures;
   private List<ManualTestesLineItem> manualTestLineItems = new ArrayList<>();
@@ -140,6 +140,7 @@ public class Rnr extends BaseModel {
     }
     return totalFullSupplyCost;
   }
+
 
   public void fillLineItems(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
     for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
@@ -346,6 +347,10 @@ public class Rnr extends BaseModel {
 
   public void addToFullSupplyCost(Money cost) {
     this.fullSupplyItemsSubmittedCost = this.fullSupplyItemsSubmittedCost.add(cost);
+  }
+  public void addTotalSources(String totalSources) {
+    Money m = new Money(totalSources);
+    this.totalSources = this.totalSources.add(m);
   }
 
   public boolean isForVirtualFacility() {

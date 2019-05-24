@@ -8,7 +8,19 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function InitiateRnrController($scope, $location, Requisitions, AuthorizationService, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService, $timeout) {
+function InitiateRnrController($scope,$q,$location, Requisitions, AuthorizationService, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService, $timeout,BudgetFeatureService) {
+
+ var updateBudget =  function(selectedFacilityId, selectedProgram) {
+     var deferred = $q.defer();
+     BudgetFeatureService.get({facilityId:parseInt(selectedFacilityId,10), programId:parseInt(selectedProgram,10)}, function(data){
+           deferred.resolve();
+
+     });
+      return deferred.promise;
+   };
+
+
+
   var isNavigatedBack;
 
   $scope.selectedRnrType = {"name": "Regular", "emergency": false};
@@ -203,6 +215,16 @@ function InitiateRnrController($scope, $location, Requisitions, AuthorizationSer
       $scope.error = "";
       return;
     }
+
+   $timeout(function(){
+
+   updateBudget($scope.selectedFacilityId,$scope.selectedProgram.id).then(function(data) {
+
+     });
+
+  },100);
+
+
     PeriodsForFacilityAndProgram.get({facilityId: $scope.selectedFacilityId, programId: $scope.selectedProgram.id, emergency: $scope.selectedRnrType.emergency},
       function (data) {
         $scope.error = "";

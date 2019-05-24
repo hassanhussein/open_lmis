@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="source-of-fund-subreport" language="groovy" pageWidth="500" pageHeight="595" orientation="Landscape" columnWidth="460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="source-of-fund-subreport" language="groovy" pageWidth="600" pageHeight="200" orientation="Landscape" columnWidth="580" leftMargin="0" rightMargin="20" topMargin="2" bottomMargin="20" whenResourceMissingType="Empty" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.366026910730141"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -59,8 +60,9 @@ inner join "public"."vaccine_reports"  vr ON i.report_id = vr.ID
 	</variable>
 	<columnHeader>
 		<band height="26">
+			<property name="com.jaspersoft.studio.layout"/>
 			<staticText>
-				<reportElement mode="Opaque" x="-1" y="0" width="450" height="26" forecolor="#FFFFFF" backcolor="#3D9297" uuid="d28eb1aa-5ce3-4073-8f47-4d16cb4774c8">
+				<reportElement mode="Opaque" x="0" y="0" width="400" height="26" forecolor="#FFFFFF" backcolor="#3D9297" uuid="d28eb1aa-5ce3-4073-8f47-4d16cb4774c8">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 				</reportElement>
 				<text><![CDATA[]]></text>
@@ -71,7 +73,7 @@ inner join "public"."vaccine_reports"  vr ON i.report_id = vr.ID
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{label.source.of.fund.name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{label.name}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement mode="Transparent" x="-1" y="0" width="40" height="26" forecolor="#000000" backcolor="#003333" uuid="19084a12-8739-40c9-9fe7-0ea6c1393a6e"/>
@@ -87,7 +89,7 @@ inner join "public"."vaccine_reports"  vr ON i.report_id = vr.ID
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{label.amount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{label.quantity}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -96,7 +98,7 @@ inner join "public"."vaccine_reports"  vr ON i.report_id = vr.ID
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 			<staticText>
-				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="450" height="20" backcolor="#F4F4F4" uuid="02df148d-9dc0-49e9-b8cb-0ad28657078b">
+				<reportElement stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="400" height="20" backcolor="#F4F4F4" uuid="02df148d-9dc0-49e9-b8cb-0ad28657078b">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 1]]></printWhenExpression>
 				</reportElement>
 				<text><![CDATA[]]></text>

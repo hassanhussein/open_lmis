@@ -11,43 +11,70 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('displayCost', function (FundingSource,$interval,$rootScope,RequisitionFacilitySourceOfFund,$timeout) {
+app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,RequisitionFacilitySourceOfFund,$timeout) {
   return {
     scope: {
       show: '=',
       fullSupplyCost: '=',
       nonFullSupplyCost: '=',
-      facilitySourceOfFund: '=',
-      costExceedsBudget: '='
+      facilitySourceOfFund: '='
     },
     link:function (scope,rootScope) {
 
        scope.sourceOfFund = {};
 
-       var parameter = {
 
-       'program':scope.$parent.$parent.$parent.rnr.program.id
-
-       };
 
       scope.$parent.$parent.$parent.rnr.allowSubmissionIfNoSourceOfFundDefined = false;
 
-       FundingSource.get(parameter, function (data) {
 
-           scope.fundingSources = data.sources;
-           if(data.sources.length > 0){
-          scope.$parent.$parent.$parent.rnr.allowSubmissionIfNoSourceOfFundDefined = true;
-           }
-        });
+
+     scope.loadOtherSource = function(){
+
+                 var deferred = $q.defer();
+                   var parameter = {
+
+                        'program':scope.$parent.$parent.$parent.rnr.program.id
+
+                        };
+
+                   FundingSource.get(parameter, function (data) {
+
+                            scope.fundingSources = data.sources;
+
+                            if(data.sources.length > 0){
+
+                              deferred.resolve();
+
+                            }
+                    });
+
+
+          return deferred.promise;
+
+     };
 
 
        $rootScope.$on('loadSourceOfFunds', function (event,data) {
+           var loadOther = scope.loadOtherSource();
 
-         scope.showFacilitySourceOfFund((event.targetScope.rnr === undefined)?scope.fundingSources:event.targetScope.rnr);
+           var openPopupMenu = scope.$parent.$parent.$parent.rnr.openPopupMenu;
 
-         scope.sourceOfFund.rnrId = event.targetScope.rnr.id;
-         scope.$parent.sourceOfFunds = event.targetScope.rnr.sourceOfFunds;
-         scope.showData = showData();
+           loadOther.then(function(){
+
+           if(scope.fundingSources.length > 0){
+
+                   scope.showFacilitySourceOfFund((event.targetScope.rnr === undefined)?scope.fundingSources:event.targetScope.rnr);
+
+                    scope.sourceOfFund.rnrId = event.targetScope.rnr.id;
+                    scope.$parent.sourceOfFunds = event.targetScope.rnr.sourceOfFunds;
+
+                    if(!isUndefined(openPopupMenu) || openPopupMenu){
+
+                    scope.showData = showClickedFundSourcesData();
+                    }
+
+           }});
 
       });
 
@@ -126,7 +153,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,Requis
 
           };
 
-       var originBudgetValue = scope.$parent.rnr.allocatedBudget;
+       var originTotalFundValue = scope.$parent.rnr.totalSources;
 
        scope.updateTotal = function() {
 
@@ -161,9 +188,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,Requis
              totalAdjustments = totalAdjustments + parseInt(sourceObject.quantity,10);
             });
             scope.totalSources = totalAdjustments;
-            scope.$parent.rnr.allocatedBudget = originBudgetValue + scope.totalSources;
-            scope.$parent.rnr.totalSources = scope.totalSources;
-           /* scope.$parent.rnr.sourceOfFunds = scope.rnrFund*/
+            scope.$parent.$parent.$parent.rnr.totalSources = scope.totalSources;
         }
 
      scope.reEvaluateTotalSourceOfFund = function() {reEvaluateTotalSourceOfFund();};
@@ -179,7 +204,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,Requis
         }
 
        var count = 0;
-       function showData() {
+       function showClickedFundSourcesData() {
 
         $timeout(function(){
 
@@ -191,7 +216,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,Requis
 
          }
 
-        },2000);
+        },200);
 
         }
 

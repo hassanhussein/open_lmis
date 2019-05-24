@@ -232,8 +232,8 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
 
     Rnr.prototype.calculateTotalLineItemCost = function () {
         var cost = parseFloat(parseFloat(this.fullSupplyItemsSubmittedCost) + parseFloat(this.nonFullSupplyItemsSubmittedCost)).toFixed(2);
-        if (this.allocatedBudget && this.program.budgetingApplies) {
-            this.costExceedsBudget = this.allocatedBudget < cost;
+        if (this.allocatedBudget > -1 && this.program.budgetingApplies) {
+            this.costExceedsBudget = this.allocatedBudget + this.totalSources < cost;
         }
         return cost;
     };

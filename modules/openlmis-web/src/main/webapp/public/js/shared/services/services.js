@@ -558,3 +558,7 @@ services.factory('AllOrders', function ($resource) {
 services.factory('RequisitionFacilitySourceOfFund', function ($resource) {
     return $resource('/requisitions/:id/facilityFundSources.json', {}, {});
 });
+
+services.factory('BudgetFeatureService', function ($resource) {
+    return $resource('/requisitions/get-msd-buget-through-api.json', {}, {});
+});

@@ -150,7 +150,7 @@ public class CustomerStatementService {
 
     }
 
-  public void fetchBudgetData(Long facilityId,Long programId, Long periodId, String fromDate, String toDate) {
+ /* public void fetchBudgetData(Long facilityId,Long programId, Long periodId, String fromDate, String toDate) {
 
     Runnable runnable2 = () -> {
         getFacilityBalance(facilityId,programId,periodId,fromDate,toDate);
@@ -158,5 +158,10 @@ public class CustomerStatementService {
 
       Thread thread2 = new Thread(runnable2);
       thread2.start();
-   }
+   }*/
+
+    public void fetchBudgetData(Long facilityId,Long programId, Long periodId, String fromDate, String toDate) {
+        getFacilityBalance(facilityId,programId,periodId,fromDate,toDate);
+    }
+
 }

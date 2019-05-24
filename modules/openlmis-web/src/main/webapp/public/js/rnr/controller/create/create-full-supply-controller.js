@@ -76,7 +76,6 @@ function CreateFullSupplyController($scope, messageService) {
 
 
     var selected = _.where(rnr.skippedLineItems, {unskip: true});
-      console.log(rnr.skippedLineItems);
 
     angular.forEach(selected, function(lineItem){
       lineItem.skipped = false;

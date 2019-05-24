@@ -1,0 +1,2 @@
+
+ALTER TABLE requisitions ALTER COLUMN totalsources SET DATA TYPE NUMERIC(15, 2);

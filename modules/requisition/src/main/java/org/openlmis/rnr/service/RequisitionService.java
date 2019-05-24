@@ -175,7 +175,7 @@ public class RequisitionService {
     Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
 
-    statementService.fetchBudgetData(facility.getId(),program.getId(),period.getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+   // statementService.fetchBudgetData(facility.getId(),program.getId(),period.getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
     populateAllocatedBudget(requisition);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
@@ -298,11 +298,13 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), SUBMITTED);
+    savedRnr.setTotalSources(rnr.getTotalSources());
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-      if(savedRnr.getPeriod().getEnableOrder())
-      calculationService.perform(savedRnr, template);
+      if(savedRnr.getPeriod().getEnableOrder()) {
+        calculationService.perform(savedRnr, template);
+      }
 
     return update(savedRnr);
   }
@@ -987,6 +989,18 @@ public class RequisitionService {
     return funds;
   }
 
+  public Boolean saveBudgetFromMSDApi(Long facilityId,Long programId) {
+
+     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+     criteria.setFacilityId(facilityId);
+     criteria.setProgramId(programId);
+     criteria.setEmergency(false);
+     List<ProcessingPeriod> processingPeriods  = getProcessingPeriods(criteria);
+     if(!processingPeriods.isEmpty()) {
+       statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+     }
+    return true;
+  }
 
 
 }

@@ -151,41 +151,6 @@ function CreateRequisitionController($timeout,$scope,$rootScope, requisitionData
       $scope.rnr.skipAll = false;
     });
 
-
-    function popupOtherSourceOfFund(rnr,preventMessage) {
-
-        if (!rnr.costExceedsBudget) {
-
-        promoteRnr(submitValidatedRnr);
-
-        } else {
-
-         $scope.$emit('loadSourceOfFunds');
-
-         var allowSubmissionOfRnr;
-
-        $scope.$watch("rnr.continueWithSubmission", function () {
-
-               if($scope.rnr.continueWithSubmission){
-
-                allowSubmissionOfRnr = true;
-
-                promoteRnr(submitValidatedRnr);
-
-                }else if(!$scope.rnr.allowSubmissionIfNoSourceOfFundDefined){
-                promoteRnr(submitValidatedRnr);
-                } else {
-                if(allowSubmissionOfRnr) return;
-
-               }
-
-          });
-
-
-        }
-
-    }
-
     $scope.saveRnr = function (preventMessage) {
 
     var deferred = $q.defer();
@@ -223,8 +188,61 @@ function CreateRequisitionController($timeout,$scope,$rootScope, requisitionData
     });
   }
 
+  $scope.checkForOtherSource = function(rnr,preventMessage) {
+
+            var deferred = $q.defer();
+
+            if(!rnr.costExceedsBudget) {
+
+              $scope.erMessage = preventMessage;
+              deferred.resolve();
+
+            }else if(rnr.costExceedsBudget && preventMessage){
+
+             $scope.erMessage = true;
+              deferred.resolve();
+            } else {
+                 $scope.erMessage = false;
+                          deferred.resolve();
+
+            }
+
+           return deferred.promise;
+
+  };
+
+    function checkForFacilitySourcedOfFund(rnr,message) {
+
+              var checkForOtherSourceOfFund = $scope.checkForOtherSource(rnr,message);
+               checkForOtherSourceOfFund.then(function () {
+
+              if ($scope.erMessage) {
+
+               promoteRnr(submitValidatedRnr);
+               $scope.rnr.openPopupMenu = false;
+
+               }else {
+               $scope.rnr.openPopupMenu = true;
+               $scope.showData();
+               $scope.rnr.preventFromSubmitting = true;
+               return;
+               }
+           });
+
+    }
+
+  $scope.rnr.displayOtherSources = true;
+
   $scope.submitRnr = function () {
-      popupOtherSourceOfFund($scope.rnr,true);
+
+      if($scope.rnr.period.enableOrder && $scope.rnr.program.enableMonthlyReporting) {
+
+      checkForFacilitySourcedOfFund($scope.rnr,$scope.rnr.preventFromSubmitting);
+
+      }else {
+          promoteRnr(submitValidatedRnr);
+      }
+
   };
 
   $scope.authorizeRnr = function () {

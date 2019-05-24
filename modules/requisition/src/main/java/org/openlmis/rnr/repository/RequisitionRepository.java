@@ -556,9 +556,9 @@ public class RequisitionRepository {
         return facilitySourceOfFundMapper.getSourceOfFunds();
     }
 
-    public Integer insertFacilitySourceOfFund(SourceOfFunds sourceOfFunds) {
+    public void insertFacilitySourceOfFund(SourceOfFunds sourceOfFunds) {
 
-        return facilitySourceOfFundMapper.insertFacilitySourceOfFund(sourceOfFunds);
+         facilitySourceOfFundMapper.insertFacilitySourceOfFund(sourceOfFunds);
 
     }
 

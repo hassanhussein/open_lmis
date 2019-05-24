@@ -27,6 +27,7 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
   $scope.errorPages = {};
   $scope.shownErrorPages = [];
   $scope.rnrComments = comments;
+  $scope.rnr.displayOtherSources = true;
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
 

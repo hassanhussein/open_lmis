@@ -421,5 +421,14 @@ public class RequisitionController extends BaseController {
         return response("sourceOfFunds", requisitionService.getFacilityFundSourceByRnrId(id));
     }
 
+    @RequestMapping(value = "/requisitions/get-msd-buget-through-api", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getMSDBudgetFromAPI(@RequestParam("facilityId") Long facilityId,
+                                                                @RequestParam("programId") Long programId,
+
+                                                                HttpServletRequest request) {
+        return response("data", requisitionService.saveBudgetFromMSDApi(facilityId,programId));
+    }
+
+
 
 }

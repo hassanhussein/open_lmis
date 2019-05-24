@@ -17,13 +17,24 @@
     </span>
 
 
-        <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget && rnr.allocatedBudget"
+        <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget"
           class="budget-exceeds-detailed">
       <strong>
           <span class="icon-warning-sign budget-exceeded-icon"></span>
           <span id="budgetWarningExtra" openlmis-message="msg.cost.exceeds.budget"></span>
       </strong>
     </span>
+
+        <strong>
+            <span>Total Supplemental Fund(s):</span>
+
+            <span id="totalCost" class="cell-text">
+          <span openlmis-message="label.currency.symbol"></span>
+          <span ng-bind="rnr.totalSources | currency: ''"></span>
+      </span>&nbsp;|&nbsp;
+        </strong>
+
+
         <strong ng-show="rnr.program.budgetingApplies && !rnr.emergency">
             <span id="allocatedBudgetLabel" openlmis-message="label.allocated.budget"></span><span>:</span>
           <span openlmis-message="label.currency.symbol"></span>
@@ -36,9 +47,9 @@
 
 
 
-        <span id="budgetWarningIcon" ng-show="rnr.costExceedsBudget" class="icon-warning-sign budget-exceeded-icon">
+        <span id="budgetWarningIcon" ng-show="rnr.costExceedsBudget " class="icon-warning-sign budget-exceeded-icon">
       <div class="rnr-form-error warning-popup" id="budgetWarningMessage"
-           openlmis-message="msg.cost.exceeds.budget"></div>
+           openlmis-message="msg.cost.exceeds.budget">{{rnr.allocatedBudget}}</div>
     </span>
 
 

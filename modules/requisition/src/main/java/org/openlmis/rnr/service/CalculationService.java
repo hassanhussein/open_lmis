@@ -53,6 +53,7 @@ public class CalculationService {
 
     calculateForFullSupply(requisition, template);
     calculateForNonFullSupply(requisition);
+    calculateTotalOtherSourcesOfFund(requisition);
   }
 
   public void fillReportingDays(Rnr requisition) {
@@ -214,6 +215,17 @@ public class CalculationService {
       requisition.addToFullSupplyCost(lineItem.calculateCost());
     }
   }
+
+  private void calculateTotalOtherSourcesOfFund(Rnr requisition) {
+    Integer value = 0;
+    if(!requisition.getSourceOfFunds().isEmpty()) {
+      for (SourceOfFunds funds : requisition.getSourceOfFunds()) {
+        value = value + funds.getQuantity();
+      }
+    }
+   requisition.addTotalSources(String.valueOf(value));
+  }
+
 
   public void skipAllLineItems(Rnr requisition) {
     for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
