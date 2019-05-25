@@ -25,5 +25,8 @@ public class AggregateStockStatusReport implements ResultRow {
     private String district;
     private String requisitionStatus;
     private Long facilityId;
+    private Integer minMonthsOfStock;
+    private Integer maxMonthsOfStock;
+
 
 }

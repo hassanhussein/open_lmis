@@ -135,11 +135,12 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
               scope.displayLimit = false;
              }, 3000);
              scope.displayLimit = true;
-             scope.messageToDisplay = 'Saved successfully';
+             scope.$parent.$parent.$parent.message = 'Supplemental Fund(s) Saved successfully';
              scope.rnrFund = data.sourceOfFunds;
 
-             scope.updateTotal();
-
+             $timeout(function(){
+               angular.element('#dividedCost').triggerHandler('click');
+             },10);
 
              scope.$parent.$parent.$parent.rnr.continueWithSubmission = true;
 
@@ -152,19 +153,6 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
             RequisitionFacilitySourceOfFund.save({id:parseInt(sourceOfFunds[0].rnrId,10)}, jsonData, successHandler, errorHandler);
 
           };
-
-       var originTotalFundValue = scope.$parent.rnr.totalSources;
-
-       scope.updateTotal = function() {
-
-          /*scope.$parent.rnr.allocatedBudget = originBudgetValue + scope.totalSources;
-          scope.$parent.rnr.totalSources = scope.totalSources;
-          scope.$parent.rnr.sourceOfFunds = scope.rnrFund;
-          */
-
-         // scope.reEvaluateTotalSourceOfFund();
-
-         };
 
      scope.removeSourceOfFund = function(fundingSource)
 

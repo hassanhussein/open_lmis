@@ -87,6 +87,7 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
         AggregateStockStatusReport.get(allParams, function (data) {
 
             if (data.pages.rows !== undefined || null !== data.pages) {
+            console.log(data);
 
            /*   $scope.facilityStocks = data.pages.rows;
               var groupByFacility = _.groupBy(data.pages.rows, function (f) {
@@ -164,31 +165,6 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
         return {"periods": newCols, "pivotData": pivotData};
     }
-
-
-
-/*    $scope.OnFilterChanged = function () {
-
-        if ($scope.filter !== undefined) {
-
-            if ($scope.filter.zone === undefined)
-                $scope.filter.zone = 0;
-                $scope.filter.max = 1000;
-
-
-            $scope.paramToBeUpdated = {
-                program: parseInt($scope.filter.program, 10),
-                schedule: parseInt($scope.filter.schedule, 10),
-                product: parseInt($scope.filter.product, 10),
-                zone: parseInt($scope.filter.zone, 10),
-                periodStart: $scope.filter.periodStart,
-                periodEnd: $scope.filter.periodEnd,
-                max: $scope.filter.max,
-                disaggregated:$scope.filter.disaggregated
-            };
-        }
-
-    };*/
 
 
   $scope.exportReport = function(type) {

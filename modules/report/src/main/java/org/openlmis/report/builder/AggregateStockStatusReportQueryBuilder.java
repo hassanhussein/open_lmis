@@ -45,6 +45,8 @@ public class AggregateStockStatusReportQueryBuilder {
     public static String getDisAggregateSelect(AggregateStockStatusReportParam filter) {
 
         BEGIN();
+        SELECT(" SUM(facility_approved_products.minmonthsofstock) minMonthsOfStock");
+        SELECT(" SUM(facility_approved_products.maxmonthsofstock) maxMonthsOfStock");
         SELECT("d.region_name region");
         SELECT("d.district_name district");
         SELECT("p.code");
@@ -60,6 +62,7 @@ public class AggregateStockStatusReportQueryBuilder {
         SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
         SELECT(" CASE WHEN COALESCE(SUM(li.amc), 0) = 0 THEN 0::numeric ELSE round((SUM(li.stockInhand::double precision) / SUM(li.amc::double precision))::numeric, 1) END AS mos");
         SELECT("sum(li.stockInhand) soh");
+        SELECT("COALESCE(sum(li.amc),0) amc");
         FROM("requisition_line_items li");
         INNER_JOIN("requisitions r on r.id = li.rnrid");
         INNER_JOIN("facilities f on r.facilityId = f.id ");
@@ -69,10 +72,11 @@ public class AggregateStockStatusReportQueryBuilder {
         INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
         INNER_JOIN("facility_types ft ON ft.id =f.typeId");
         INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
+        LEFT_OUTER_JOIN(" facility_approved_products ON ft.Id = facility_approved_products.facilitytypeid AND ppg.id = facility_approved_products.programproductid ");
 
         writePredicates(filter);
 
-        GROUP_BY("f.id,f.name, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate,pp.id,d.district_name,d.region_name");
+        GROUP_BY("f.id,f.name, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate,pp.id,d.district_name,d.region_name ");
         ORDER_BY("f.name,p.primaryName,pp.id");
         return SQL();
 
