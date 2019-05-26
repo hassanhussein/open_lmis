@@ -9,6 +9,30 @@
 *
 -->
 <style>
+
+progress[value] {
+  -webkit-appearance: none;
+   appearance: none;
+   height:100%;
+}
+
+progress[value]::-webkit-progress-bar {
+  background-color: lightblue;
+  display: inline-block;
+
+}
+
+progress[value]::-webkit-progress-value {
+    background-color: red;
+}
+
+progress[value]::-webkit-progress-value::before {
+  content: '80%';
+  position: absolute;
+  right: 0;
+  top: -125%;
+}
+
     th {
 
         padding-top: 0px !important;
@@ -71,6 +95,12 @@
                                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
                               <facility-filter class="form-cell horizontalFilters"
                                                  required="true"></facility-filter>
+                                <div style="padding-top: 35px !important" class="form-cell horizontalFilters clearboth"
+                                   >
+                                    &nbsp;  <span class="pull-right"><a ng-click="searchReport()"
+                                                                              class="waves-effect waves-light btn"
+                                                                              style="color: #348991;">Search</a></span>
+                                </div>
 
 
 
@@ -158,13 +188,23 @@
                                         sortable=" ">{{row.quantityReceived  }}
                                     </td>
 
-                                    <td class="number" data-title="'Item Fill Rate'" style="width:20% !important;"
-                                        sortable=" ">{{row.itemFillRate }} %
+                                    <td class="number" data-title="'Item Fill Rate'" style="width:20% !important; height:2px !important"
+                                        sortable=" ">
+
+
+                                        <div class="progress" style="margin-bottom:0px;width:90%">
+                                            <div class="bar bar-success" style="width: {{row.itemFillRate}}%">{{row.itemFillRate}}%</div>
+                                        </div>
+
+
                                     </td>
 
                                 </tr>
                                 </tbody>
                             </table>
+
+                            <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
+                                        direction-links="false" ng-show="datarows.length" class="pagination-sm"></pagination>
 
                         </div>
 

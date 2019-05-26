@@ -1,4 +1,4 @@
-function ItemFillRateSummaryController($scope,$window,GetItemFillRateSummary){
+function ItemFillRateSummaryController($scope,$timeout,$window,GetItemFillRateSummary){
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
@@ -7,20 +7,47 @@ function ItemFillRateSummaryController($scope,$window,GetItemFillRateSummary){
         $window.open(url, "_BLANK");
     };
 
+          $scope.currentPage = 1;
 
- $scope.OnFilterChanged = function () {
-        // clear old data if there was any
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
+         $scope.OnFilterChanged = function () { };
 
-        GetItemFillRateSummary.get($scope.getSanitizedParameter(), function (data) {
-        console.log(data);
-            if (data.openLmisResponse.rows !== undefined) {
-                $scope.data = data.openLmisResponse.rows;
-                $scope.paramsChanged($scope.tableParams);
-            }
-        });
+
+         $scope.searchReport = function() {
+
+             // clear old data if there was any
+                 $scope.data = $scope.datarows = [];
+                 $scope.filter.page = $scope.page;
+                 console.log($scope.getSanitizedParameter());
+
+                 GetItemFillRateSummary.get($scope.getSanitizedParameter(), function (data) {
+
+                     if (data.openLmisResponse.rows !== undefined) {
+                                  console.log(data);
+                          $scope.pagination = data.openLmisResponse.pagination;
+                          $scope.totalItems = 100;
+                          $scope.currentPage = $scope.pagination.page;
+
+
+
+                         $scope.data = data.openLmisResponse.rows;
+                         $scope.paramsChanged($scope.tableParams);
+                     }
+                 });
+
+
+
 
     };
+
+
+          $scope.$watch('currentPage', function () {
+             if ($scope.currentPage > 0) {
+               $scope.page = $scope.currentPage;
+               $timeout(function(){
+               $scope.searchReport();
+               },100);
+             }
+           });
+
 
 }

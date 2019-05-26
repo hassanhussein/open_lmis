@@ -22,6 +22,7 @@ import org.openlmis.report.model.Pages;
 import org.openlmis.report.model.report.*;
 import org.openlmis.report.model.report.vaccine.ReplacementPlanSummary;
 import org.openlmis.report.service.*;
+import org.openlmis.report.util.ReportPaginationHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +46,9 @@ public class InteractiveReportController extends BaseController {
     public static final String FACILITY_CONSUMPTION = "facilityData";
     @Autowired
     public ReportManager reportManager;
+
+    @Autowired
+    private ReportPaginationHelper helper;
 
 
     @RequestMapping(value = "/reportdata/facilitylist", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -911,15 +915,17 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/item-fill-rate-summary", method = GET, headers = BaseController.ACCEPT_JSON)
     public OpenLmisResponse getItemFillRateSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                     @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                     @RequestParam(value = "limit", defaultValue="100") String limit,
+                                                     //@RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                     //@RequestParam(value = "limit", defaultValue="100") String limit,
                                                      HttpServletRequest request
 
     ) {
         Report report = reportManager.getReportByKey("item_fill_rate_report");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<ItemFillRateReport> itemFillRateReportList = (List<ItemFillRateReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        List<ItemFillRateReport> itemFillRateReportList = (List<ItemFillRateReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page,0);
+        Pagination pagination = helper.getPagination(page);
         OpenLmisResponse pages = new OpenLmisResponse("rows",itemFillRateReportList);
+        pages.addData("pagination", pagination);
         return pages;
     }
 
