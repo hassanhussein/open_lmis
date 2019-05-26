@@ -95,7 +95,9 @@
     th.col-product {
         min-width: 40px !important;
     }
-
+.myOwnBg {
+   background-color: yellow;
+}
 
 
 
@@ -358,7 +360,7 @@
 
                                     <td ng-bind="row.product">
                                     </td>
-                                    <td  ng-repeat="period in periods" ng-bind="row[period]">{{ row.no }}</td>
+                                    <td  ng-repeat="period in periods" ng-bind="row[period]" ng-style="ChangeColor(row[period])">{{ row.no }}</td>
 
                                 </tr>
                                 </tbody>

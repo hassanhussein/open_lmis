@@ -1,4 +1,6 @@
-function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatusReport, $state, Periods) {
+function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatusReport, $state, Periods
+
+) {
     var definedObject = {};
 
     function getRenamedDate(periodListElement) {
@@ -67,11 +69,7 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
   }else if(data === 'soh'){
       $scope.showIndicators = false;
-          $scope.searchReport();
-  }else{
-
-      $scope.showIndicators = false;
-
+      $scope.searchReport();
   }
 
   };
@@ -113,6 +111,32 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
             }
         });
     };
+      $scope.ChangeColor = function(data){
+
+                if(2<=data && data <= 4) {
+
+                    return {'background-color':'#009F48','name':'SP'};
+
+                }else if(data > 4) {
+
+                    return {'background-color':'#00AFEE','name':'OS'};
+
+                }else if(data >0 && data < 20) {
+
+                  return {'background-color':'#F1C30E','name':'US'};
+
+                }else if(data === 0) {
+
+                  return {'background-color':'#FE0000','name':'SO'};
+
+                }else {
+
+                  return {'background-color':'#E3E3E3','name':'UK'};
+
+                }
+
+
+      };
 
     function getPivotData(dataArray, colName, dataIndex, disaggregated,showIndicators) {
 
@@ -143,8 +167,9 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
                     "product": dataArray[i].product,
                     "code": dataArray[i].code,
                     "level": dataArray[i].level,
-                    "district": dataArray[i].district
-
+                    "district": dataArray[i].district,
+                    "minMonthsOfStock": dataArray[i].minMonthsOfStock,
+                    "maxMonthsOfStock": dataArray[i].maxMonthsOfStock
                 };
 
                 pivotData.push(pivotRow);
@@ -153,16 +178,13 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
             pivotRow[dataArray[i][colName]] = dataArray[i].soh;
 
-            }
-            else {
+            }else {
 
             pivotRow[dataArray[i][colName]] = dataArray[i].mos;
 
             }
 
-
         }
-
         return {"periods": newCols, "pivotData": pivotData};
     }
 
@@ -171,8 +193,15 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
     $scope.filter.pdformat = 1;
     var params = jQuery.param($scope.getSanitizedParameter());
-    var url = '/reports/download/aggregate_stock_status_report/' + type + '?' + params;
-    $window.open(url, '_blank');
+     var url = '/reports/download/status';
+    if($scope.showIndicators !== true){
+         url = url + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + params;
+         console.log(url);
+    }else{
+         url = url + (($scope.filter.disaggregated === true) ? '_mos_disaggregated' :'_mos')+'/' + type + '?' + params;
+    }
+    window.open(url, '_blank');
+
   };
 
 }

@@ -31,9 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -887,8 +885,7 @@ public class InteractiveReportController extends BaseController {
                                             HttpServletRequest request
 
     ) {
-
-        Report report = reportManager.getReportByKey("aggregate_stock_status_report");
+        Report report = reportManager.getReportByKey("status");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<AggregateStockStatusReport> aggregateStockStatusReportList =
                 (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
@@ -925,4 +922,67 @@ public class InteractiveReportController extends BaseController {
         OpenLmisResponse pages = new OpenLmisResponse("rows",itemFillRateReportList);
         return pages;
     }
+
+
+    @RequestMapping(value = "/reportdata/aggregateStockStatusReport/disaggregated", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
+    public Pages getAggregateStockStatusReportDisaggregated(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                               @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                               HttpServletRequest request
+
+    ) {
+
+        //String key = ()?'status':'status_aggregate';
+
+        Report report = reportManager.getReportByKey("status_disaggregated");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<AggregateStockStatusReport> aggregateStockStatusReportList =
+                (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, aggregateStockStatusReportList);
+    }
+
+
+
+    @RequestMapping(value = "/reportdata/aggregateStockStatusReport/mos", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
+    public Pages getAggregateStockStatusReportMos(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                            HttpServletRequest request
+
+    ) {
+
+        //String key = ()?'status':'status_aggregate';
+
+        Report report = reportManager.getReportByKey("mos_status");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<AggregateStockStatusReport> aggregateStockStatusReportList =
+                (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, aggregateStockStatusReportList);
+    }
+
+
+    @RequestMapping(value = "/reportdata/aggregateStockStatusReport/mos_disaggregated", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
+    public Pages getAggregateStockStatusReportMosDisaggregated(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                            HttpServletRequest request
+
+    ) {
+
+        //String key = ()?'status':'status_aggregate';
+
+        Report report = reportManager.getReportByKey("mos_status_disaggregated");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<AggregateStockStatusReport> aggregateStockStatusReportList =
+                (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, aggregateStockStatusReportList);
+    }
+
+
+
+
+
 }

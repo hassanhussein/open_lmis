@@ -13,6 +13,14 @@ function InitiateRnrController($scope,$q,$location, Requisitions, AuthorizationS
  var updateBudget =  function(selectedFacilityId, selectedProgram) {
      var deferred = $q.defer();
      BudgetFeatureService.get({facilityId:parseInt(selectedFacilityId,10), programId:parseInt(selectedProgram,10)}, function(data){
+          if(isUndefined(data)) {
+
+            $timeout(function(){
+             $scope.message = 'Failed to Fetch allocated Budget';
+             $scope.rnr.allocatedBudget = 0;
+            },100);
+
+          }
            deferred.resolve();
 
      });

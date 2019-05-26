@@ -587,6 +587,7 @@
                     <property name="title" value="report.title.disaggregate.consumption.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="facility_consumption"/>
                     <property name="template" value="facility-pivot-consumption.jasper"/>
@@ -625,14 +626,25 @@
                 </bean>
 
                 <bean class="org.openlmis.report.Report">
-                    <property name="reportKey" value="aggregate_stock_status_report"/>
-                    <property name="template" value="facility_stockInhand_pivot_aggregate.jasper"/>
+                    <property name="reportKey" value="status"/>
+                    <property name="template" value="facility_stockInHand_pivot.jasper"/>
                     <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
-                    <property name="id" value="aggregate_stock_status_report"/>
+                    <property name="id" value="RP_aggregate_stock_status_report"/>
                     <property name="name" value="Aggregate Stock Status Report"/>
                     <property name="title" value="report.title.monthly.stock.status.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="status_disaggregated"/>
+                    <property name="template" value="facility_stockInHand_pivot_disaggregated.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
+                    <property name="id" value="RP_disaggregated Stock Status Report"/>
+                    <property name="name" value="RP_disaggregated Stock Status Report"/>
+                    <property name="title" value="report.title.monthly.stock.status.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="quantification_extract"/>
                     <property name="template" value="aggregate-consumption_extract.jasper"/>
@@ -642,6 +654,7 @@
                     <property name="title" value="report.title.quantification.extract.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="item_fill_rate_report"/>
                     <property name="template" value="order-and-item-fill-rate.jasper"/>
@@ -651,6 +664,27 @@
                     <property name="title" value="Item Fill Rate Report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="status_mos_disaggregated"/>
+                    <property name="template" value="facility_mos__pivot_disaggregated.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
+                    <property name="id" value="mos_disaggregated_stock_status_report"/>
+                    <property name="name" value="Aggregate Stock Status Report"/>
+                    <property name="title" value="report.title.monthly.stock.status.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="status_mos"/>
+                    <property name="template" value="facility_stockInHand_pivot_mos.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
+                    <property name="id" value="mos_aggregate_stock_status_report"/>
+                    <property name="name" value="Aggregate Stock Status Report"/>
+                    <property name="title" value="report.title.monthly.stock.status.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
             </list>
         </constructor-arg>
     </bean>
