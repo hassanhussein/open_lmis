@@ -290,17 +290,19 @@ public class InteractiveReportController extends BaseController {
                 (List<MasterReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
         int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
         MasterReport masterReport = null;
-        if (totalCount>0 && orderFillRateReportList != null && !orderFillRateReportList.isEmpty()) {
+        pages = new Pages(page, totalCount, orderFillRateReportList);
+        if (totalCount > 0 && orderFillRateReportList != null && !orderFillRateReportList.isEmpty()) {
             masterReport = orderFillRateReportList.get(0);
-            pages = new Pages(page, totalCount, orderFillRateReportList);
             pages.setCount(masterReport.getDetails().size());
         }
+
         return pages;
     }
 
     @RequestMapping(value = "/reportdata/regimenSummary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REGIMEN_SUMMARY_REPORT')")
     public Pages getRegimenSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                       @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
                                        @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                        HttpServletRequest request
 
@@ -848,9 +850,10 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("facility_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<DistrictConsumptionReport> districtConsumptionReportList =
-                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
         int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
+        List<DistrictConsumptionReport> districtConsumptionReportList =
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(),
+                        request.getParameterMap(), page, pageSize);
         return new Pages(page, totalCount, districtConsumptionReportList);
     }
 

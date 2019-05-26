@@ -72,32 +72,39 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
         var selectDisggregate = $scope.filter.disaggregated;
         $scope.data = $scope.datarows = [];
-
+        $scope.filter.page = 1;
+        $scope.filter.pageSize = 100;
         $scope.filter.max = 10000;
+        $scope.filter.adjustedConsumption='true';
         if (
             allParams.periodStart !== null &&
             allParams.periodEnd !== null &&
             allParams.program !== null
         ) {
-           FacilityConsumptionReport.get(allParams, function (data) {
-
-
+            FacilityConsumptionReport.get(allParams, function (data) {
                 if (data.pages !== undefined) {
-                    var output = getPivotData(data.pages.rows, "periodName", "code", selectDisggregate);
-                    $scope.data = output.pivotData;
-                    $scope.periods = output.periods;
+                    $scope.data = data.pages.rows;
+                    $scope.periods = $scope.data[0].headerPeriods;
 
                     $scope.paramsChanged($scope.tableParams);
                 }
-           });
+            });
 
         }
 
 
     };
+    $scope.consumptionForPeriod = function (row, period) {
+        var consumption=0;
+        if (!utils.isNullOrUndefined(row)) {
+            consumption = _.findWhere(row.consumptionColumnList, {header: period.name}).valeu;
+        }
+        return consumption;
+    };
+
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
-        var url = '/reports/download/facility_adje_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+        var url = '/reports/download/facility_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
         $window.open(url, '_blank');
     };
     $scope.showMoreFilters = false;
@@ -106,45 +113,5 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
         $scope.showMoreFilters = true;
     };
 
-
-    function getPivotData(dataArray, colName, dataIndex, disaggregated) {
-
-        var newCols = [];
-        var pivotData = [];
-        for (var i = 0; i < dataArray.length; i++) {
-            if (newCols.indexOf(dataArray[i][colName]) < 0) {
-
-                newCols.push(dataArray[i][colName]);
-            }
-            var pivotRow = {};
-            if (utils.isNullOrUndefined(disaggregated) || disaggregated === false || disaggregated === 'false') {
-                pivotRow = _.findWhere(pivotData, {code: dataArray[i][dataIndex]});
-            } else {
-
-                pivotRow = _.findWhere(pivotData, {
-                    facilityId: dataArray[i].facilityId,
-                    code: dataArray[i][dataIndex]
-                });
-            }
-            if (pivotRow === null || pivotRow === undefined) {
-                pivotRow = {
-                    "facilityCode": dataArray[i].facilityCode,
-                    "facility": dataArray[i].facility,
-                    "facilityType": dataArray[i].facilityType,
-                    "facilityId": dataArray[i].facilityId,
-                    "product": dataArray[i].product,
-                    "code": dataArray[i].code,
-                    "level": dataArray[i].level,
-                    "district": dataArray[i].district
-
-                };
-
-                pivotData.push(pivotRow);
-            }
-            pivotRow[dataArray[i][colName]] = dataArray[i].consumption;
-        }
-
-        return {"periods": newCols, "pivotData": pivotData};
-    }
 
 }

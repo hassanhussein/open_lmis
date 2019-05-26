@@ -29,6 +29,8 @@ public class FacilityConsumptionReportParam
     @RequiredParam
     private Long program;
     private Long zone;
+    private Long period;
+    private Long schedule;
     private Long facility;
     private String products;
     private Long product;
@@ -40,6 +42,7 @@ public class FacilityConsumptionReportParam
     private Boolean isEmergency;
     private String reportType;
     private Boolean allReportType;
-    private String sortBy;
-    private String sortDirection;
+    private String crossTabColumn;
+    private String crossColumnHeader;
+    private Boolean adjustedConsumption;
 }

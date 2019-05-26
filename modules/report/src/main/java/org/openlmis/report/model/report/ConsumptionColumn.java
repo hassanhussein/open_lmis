@@ -9,39 +9,20 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.openlmis.report.model.report;
 
-package org.openlmis.report.model;
-
-import lombok.*;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-
-import java.util.List;
-
-import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
-@EqualsAndHashCode
-@JsonSerialize(include = NON_EMPTY)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class Pages {
-
-    private List<? extends ResultRow> rows;
-    private int page;
-    @Deprecated
-    private int max;
-    private int total;
-    private int count;
-
-    public Pages(int page, int total, List<? extends ResultRow> rows) {
-        this.rows = rows;
-        this.page = page;
-        this.max = total;
-        this.count =rows!=null &&!rows.isEmpty()? rows.size():0;
-        this.total = total;
-
-    }
+@NoArgsConstructor
+@AllArgsConstructor
+public class ConsumptionColumn {
+    private Long id;
+    private String header;
+    private Object valeu;
 
 }

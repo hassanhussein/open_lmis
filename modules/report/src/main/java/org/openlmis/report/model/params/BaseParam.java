@@ -36,5 +36,8 @@ public abstract class BaseParam implements ReportParameter{
 
   @Getter @Setter
   private String acceptedRnrStatuses;
-
+  @Getter @Setter
+  private String sortBy;
+  @Getter @Setter
+  private String sortDirection;
 }

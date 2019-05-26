@@ -13,58 +13,14 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.mapper.FacilityAggregateConsumptionReportMapper;
-import org.openlmis.report.model.ResultRow;
-import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
-import org.openlmis.report.util.SelectedFilterHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @NoArgsConstructor
-public class FacilityConsumptionReportDataProvider extends ReportDataProvider {
+public class FacilityConsumptionReportDataProvider extends ConsumptionReportDataProvider {
 
 
-    @Value("${report.status.considered.accepted}")
-    private String configuredAcceptedRnrStatuses;
-
-    @Autowired
-    private SelectedFilterHelper filterHelper;
-
-    @Autowired
-    private FacilityAggregateConsumptionReportMapper reportMapper;
-
-    @Override
-    public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria, (long) page, (long) pageSize), sortCriteria, rowBounds, this.getUserId());
-    }
-
-    public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria, Long page, Long pagSize) {
-        FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
-        param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
-        return param;
-    }
-
-    @Override
-    public String getFilterSummary(Map<String, String[]> params) {
-
-        Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
-        modifiableParams.putAll(params);
-        modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
-        return filterHelper.getProgramPeriodGeoZone(modifiableParams);
-    }
-
-    @Override
-    public int getReportTotalCount(Map<String, String[]> filter) {
-        return reportMapper.getAggregateConsumptionReportTotalcount(getReportFilterData(filter, 0L, 0L),this.getUserId());
-    }
 }

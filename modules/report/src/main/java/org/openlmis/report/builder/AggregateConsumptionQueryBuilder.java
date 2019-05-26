@@ -13,6 +13,7 @@
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.AggregateConsumptionReportParam;
+import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 
 import java.util.Map;
 
@@ -21,74 +22,13 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
 
-    public static String getOrderString(AggregateConsumptionReportParam filter) {
-        String sortString = "";
-        sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " p.primaryName ";
-        sortString = sortString+" " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
-        return sortString;
-    }
-
-    public static String getAggregateSelectCount(AggregateConsumptionReportParam filter) {
+    public static String getAggregateSelect(FacilityConsumptionReportParam filter) {
 
         BEGIN();
-        SELECT("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
+        writeBasicQuery();
         writeCommonJoinStatment();
         writePredicates(filter);
-        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
-        String query = SQL();
-        query = "select count(*) from ( " +query+ " ) as c";
-        return query;
-
-    }
-
-    public static String getDisAggregateSelectCount(AggregateConsumptionReportParam filter) {
-
-        BEGIN();
-        SELECT(" p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name , li.packsize ");
-
-        writeCommonJoinStatment();
-        INNER_JOIN("facility_types ft ON ft.id =f.typeId");
-        writePredicates(filter);
-        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name , li.packsize");
-        String query = SQL();
-        query = "select count(*) from ( " +query+ " ) as c";
-        return query;
-
-    }
-
-    public static void writeCommonSelect() {
-        SELECT("p.code");
-        SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
-        SELECT("sum(li.quantityDispensed) dispensed");
-        SELECT("sum(li.normalizedConsumption) consumption");
-        SELECT("ceil(sum(li.quantityDispensed /li.packsize)) consumptionInPacks");
-        SELECT("ceil(sum(li.normalizedConsumption/ li.packsize)) adjustedConsumptionInPacks ");
-        writeCommonJoinStatment();
-    }
-
-
-    public static String getAggregateSelect(AggregateConsumptionReportParam filter) {
-        BEGIN();
-        writeCommonSelect();
-        writePredicates(filter);
-        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code, li.packsize");
-        String query = SQL();
-        query = query + " order by " + getOrderString(filter) + " " +
-                "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
-        return query;
-    }
-
-    public static String getDisAggregateSelect(AggregateConsumptionReportParam filter) {
-
-        BEGIN();
-        SELECT("f.code facilityCode");
-        SELECT("f.name facility");
-        SELECT("ft.name facilityType");
-        SELECT("f.code||'_'||p.code as facProdCode");
-        writeCommonSelect();
-        INNER_JOIN("facility_types ft ON ft.id =f.typeId");
-        writePredicates(filter);
-        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name , li.packsize");
+        GROUP_BY("r.productcode, r.productdispalayname,r.period,r.startdate,  r.packsize");
         String query = SQL();
         query = query + " order by " + getOrderString(filter) + " " +
                 "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
@@ -96,33 +36,58 @@ public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
 
     }
 
-    private static void writePredicates(AggregateConsumptionReportParam filter) {
+    public static String getAggregateTotalcount(FacilityConsumptionReportParam filter) {
 
-        WHERE(programIsFilteredBy("r.programId"));
-        WHERE(periodIsFilteredBy("r.periodId"));
-        WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
-        if (filter.getProductCategory() != 0) {
-            WHERE(productCategoryIsFilteredBy("ppg.productCategoryId"));
-        }
+        BEGIN();
 
-        if (multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer") != null) {
-            WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
-        }
+        SELECT(" r.productcode, r.productdispalayname,r.period,r.startdate,  r.packsize ");
+        writeCommonJoinStatment();
+        writePredicates(filter);
+        GROUP_BY("r.productcode, r.productdispalayname,r.period,r.startdate,  r.packsize");
+        String query = SQL();
+        query = "select count(*) from (" + query + ") as query";
+        return query;
 
-        if (filter.getZone() != 0) {
-            WHERE(geoZoneIsFilteredBy("d"));
-        }
+    }
 
-        if (filter.getReportType()!=null && filter.getReportType().equalsIgnoreCase("EM")) {
-            WHERE("r.emergency =true");
-        } else if(filter.getReportType()!=null && filter.getReportType().equalsIgnoreCase("RG")) {
-            WHERE("r.emergency =false");
-        }
+    public static String getDisAggregateSelect(FacilityConsumptionReportParam filter) {
+
+        BEGIN();
+        writeBasicQuery();
+        SELECT("r.facilityid facilityId");
+        SELECT("r.facility facility");
+        SELECT("r.facilitycode facilityCode");
+        SELECT("r.facilitytype facilityType ");
+        SELECT("r.facprodcode facProdCode");
+        writeCommonJoinStatment();
+        writePredicates(filter);
+        GROUP_BY("r.facilityid,r.facility,r.facilityCode, r.facilitytype,r.productcode, " +
+                "r.productdispalayname,r.period,r.startdate,  r.packsize,facprodcode");
+        String query = SQL();
+        query = query + " order by " + getOrderString(filter) + " " +
+                "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
+        return query;
+
+    }
+
+    public static String getDisAggregateTotalcount(FacilityConsumptionReportParam filter) {
+
+        BEGIN();
+        SELECT(" r.facilityid,r.facility,r.facilityCode, r.facilitytype," +
+                "r.productcode, r.productdispalayname,r.period,r.startdate,  r.packsize");
+        writeCommonJoinStatment();
+        writePredicates(filter);
+        GROUP_BY("r.facilityid,r.facility,r.facilityCode, r.facilitytype," +
+                "r.productcode, r.productdispalayname,r.period,r.startdate,  r.packsize");
+        String query = SQL();
+        query = "select count(*) from (" + query + ") as query";
+        return query;
+
     }
 
     public static String getQuery(Map params) {
 
-        AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
+        FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
         if (filter.getDisaggregated())
             return getDisAggregateSelect(filter);
         else
@@ -130,13 +95,13 @@ public class AggregateConsumptionQueryBuilder extends ConsumptionBuilder{
 
     }
 
-    public static String getCountQuery(Map params) {
+    public static String getTotalCountQuery(Map params) {
 
-        AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
+        FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
         if (filter.getDisaggregated())
-            return getDisAggregateSelectCount(filter);
+            return getDisAggregateTotalcount(filter);
         else
-            return getAggregateSelectCount(filter);
+            return getAggregateTotalcount(filter);
 
     }
 

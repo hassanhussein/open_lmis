@@ -14,10 +14,8 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
-import org.openlmis.report.mapper.FacilityAggregateConsumptionReportMapper;
 import org.openlmis.report.mapper.FacilityConsumptionReportMapper;
 import org.openlmis.report.model.ResultRow;
-import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
@@ -31,37 +29,9 @@ import java.util.Map;
 
 @Component
 @NoArgsConstructor
-public class FacilityConsumptionByAdjustedConsumptionReportDataProvider extends ReportDataProvider {
+public class FacilityConsumptionByAdjustedConsumptionReportDataProvider extends ConsumptionReportDataProvider {
 
 
-  @Value("${report.status.considered.accepted}")
-  private String configuredAcceptedRnrStatuses;
 
-  @Autowired
-  private SelectedFilterHelper filterHelper;
-
-  @Autowired
-  private FacilityConsumptionReportMapper reportMapper;
-
-  @Override
-  public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
-  }
-
-  public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
-    FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
-    param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
-    return param;
-  }
-
-  @Override
-  public String getFilterSummary(Map<String, String[]> params) {
-
-      Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
-      modifiableParams.putAll(params);
-      modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
-      return filterHelper.getProgramPeriodGeoZone(modifiableParams);
-  }
 
 }

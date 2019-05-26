@@ -53,7 +53,7 @@ public interface AggregateConsumptionReportMapper {
       @Param("userId") Long userId
   );
 
-  @SelectProvider(type = AggregateConsumptionQueryBuilder.class, method = "getCountQuery")
+  @SelectProvider(type = AggregateConsumptionQueryBuilder.class, method = "getTotalCountQuery")
   @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
   public int getAggregateConsumptionCountReport(
           @Param("filterCriteria") ReportParameter filterCriteria,

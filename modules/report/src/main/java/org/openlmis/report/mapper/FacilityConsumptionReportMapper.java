@@ -20,6 +20,7 @@ import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.report.DistrictConsumptionReport;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,26 +28,17 @@ import java.util.Map;
 public interface FacilityConsumptionReportMapper {
 
     @SelectProvider(type = FacilityConsumptionQueryBuilder.class, method = "getQuery")
-    @Results(value = {
 
-            @Result(property = "product", column = "product"),
-            @Result(property = "code", column = "code"),
-            @Result(property = "consumption", column = "dispensed"),
-            @Result(property = "consumptionInPacks", column = "consumptionInPacks"),
-            @Result(property = "adjustedConsumptionInPacks", column = "adjustedConsumptionInPacks"),
-            @Result(property = "dispensed", column = "dispensed"),
-            @Result(property = "facilityCode", column = "facilityCode"),
-            @Result(property = "facility", column = "facility"),
-            @Result(property = "facilityType", column = "facilityType"),
-            @Result(property = "facilityId", column = "facilityId"),
-            @Result(property = "periodName", column = "periodName"),
-            @Result(property = "periodStart", column = "periodStart")
-    })
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-    List<DistrictConsumptionReport> getAggregateConsumptionReport(
+    List<Map<String, Object>> getAggregateConsumptionReport(
             @Param("filterCriteria") ReportParameter filterCriteria,
-            @Param("SortCriteria") Map<String, String[]> sortCriteria,
-            @Param("RowBounds") RowBounds rowBounds,
+            @Param("userId") Long userId
+    );
+    @SelectProvider(type = FacilityConsumptionQueryBuilder.class, method = "getTotalCountQuery")
+
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+   int getAggregateConsumptionReportTotalCount(
+            @Param("filterCriteria") ReportParameter filterCriteria,
             @Param("userId") Long userId
     );
 

@@ -21,25 +21,74 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
+    private static final String CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT=  " sum(r.dispensed)::integer dispensed\n" ;
+    private static final String CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT=  " sum(r.consumption)::integer dispensed\n" ;
 
-    public static void writeBasicQuery() {
-        SELECT("p.code");
-        SELECT("pp.name periodName");
-        SELECT("pp.startdate periodStart");
-        SELECT("p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
-        SELECT("sum(li.quantityDispensed) dispensed");
-        SELECT("sum(li.normalizedConsumption) consumption");
-        SELECT("ceil(sum(li.quantityDispensed / li.packsize)::float) consumptionInPacks");
-        SELECT("ceil(sum(li.normalizedConsumption / li.packsize)::float) adjustedConsumptionInPacks ");
+    public static String aggregateCrossTabQuery(FacilityConsumptionReportParam filter) {
+        String query = " ( select code[1] as product , code[2] as productCode " +
+                filter.getCrossColumnHeader()+
+                " from CROSSTAB\n" +
+                "('SELECT ARRAY[r.productDispalayName,r.productcode::text] code,  \n" +
+                "  r.period::text periodName,\n" +
+                (filter.getAdjustedConsumption()?CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT:CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT)+
+                " FROM mv_requisition r\n" +
+                writePredicateString(filter) +
+                " GROUP BY r.productcode, r.productDispalayName,r.period ,\n" +
+                "r.startdate ')  \n" +
+                "As facilit_consumption" +
+                filter.getCrossTabColumn() +
+                " )\n";
+        return query;
+
+    }
+
+    public static String aggregateTotalCountQuery(FacilityConsumptionReportParam filter) {
+        String query = "";
+        BEGIN();
+        SELECT(" count(*)");
+        FROM(aggregateCrossTabQuery(filter) +" req");
+        query = SQL();
+        return query;
+    }
+
+    public static String disAggregateCrossTabQuery(FacilityConsumptionReportParam filter) {
+        String query = " ( select code[1] as facilityid, code[2] as facilitycode, code[3] as facility ,\n" +
+                "code[4]  as facilitytype , code[5] as  facProdCode,\n" +
+                "code[6] as product , code[7] as productCode " +
+                filter.getCrossColumnHeader()+
+                "  from\n" +
+                "CROSSTAB\n" +
+                "('SELECT ARRAY[r.facilityid::text, r.facilitycode,r.facility,\n" +
+                "r.facilitytype,r.facprodcode,\n" +
+                "r.productDispalayName::text,r.productcode::text] code, \n" +
+                "  r.period::text periodName,\n" +
+                (filter.getAdjustedConsumption()?CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT:CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT)+
+                " FROM mv_requisition r\n" +
+                writePredicateString(filter) +
+                " GROUP BY r.facilityid::text, r.facilitycode,r.facility,\n" +
+                "r.facilitytype,r.facprodcode,\n" +
+                "r.productDispalayName,r.productcode ,r.period ')  \n" +
+                "As facilit_consumption" +
+                filter.getCrossTabColumn() +
+                " )\n";
+        return query;
+
+    }
+
+    public static String disAggregateTotalCountQuery(FacilityConsumptionReportParam filter) {
+        String query = "";
+        BEGIN();
+        SELECT(" count(*)");
+        FROM(disAggregateCrossTabQuery(filter) +"  req");
+        query = SQL();
+        return query;
     }
 
     public static String getAggregateSelect(FacilityConsumptionReportParam filter) {
 
         BEGIN();
-        writeBasicQuery();
-        writeCommonJoinStatment();
-        writePredicates(filter);
-        GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate");
+        SELECT("cr.*");
+        FROM(aggregateCrossTabQuery(filter) + " cr ");
         String query = SQL();
         query = query + " order by " + getOrderString(filter) + " " +
                 "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
@@ -50,17 +99,11 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
     public static String getDisAggregateSelect(FacilityConsumptionReportParam filter) {
 
         BEGIN();
-        SELECT("f.id facilityId");
-        SELECT("f.code facilityCode");
-        SELECT("f.name facility");
-        SELECT("ft.name facilityType ");
-        SELECT("f.code||p.code facProdCode");
-        writeBasicQuery();
-        writeCommonJoinStatment();
-        INNER_JOIN("facility_types ft ON ft.id =f.typeId");
-        writePredicates(filter);
-        GROUP_BY("f.id,f.name,f.code, ft.name,p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,pp.name,pp.startdate");
+
+        SELECT("cr.*");
+        FROM(disAggregateCrossTabQuery(filter) + " cr ");
         String query = SQL();
+        //writePredicates(filter);
         query = query + " order by " + getOrderString(filter) + " " +
                 "   OFFSET " + (filter.getPage() - 1) * filter.getPageSize() + " LIMIT " + filter.getPageSize();
         return query;
@@ -75,6 +118,15 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
             return getDisAggregateSelect(filter);
         else
             return getAggregateSelect(filter);
+
+    }
+    public static String getTotalCountQuery(Map params) {
+
+        FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
+        if (filter.getDisaggregated())
+            return disAggregateTotalCountQuery(filter);
+        else
+            return aggregateTotalCountQuery(filter);
 
     }
 

@@ -17,6 +17,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.AggregateConsumptionReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.AggregateConsumptionReportParam;
+import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,8 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
     return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria,(long)page,(long)pageSize),   this.getUserId());
   }
 
-  public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria, Long page, Long pagSize) {
-    AggregateConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, AggregateConsumptionReportParam.class);
+  public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria, Long page, Long pagSize) {
+    FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
     param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
     return param;
   }

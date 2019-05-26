@@ -12,36 +12,43 @@
 package org.openlmis.report.builder;
 
 
+import org.openlmis.report.model.params.BaseParam;
 import org.openlmis.report.model.params.FacilityConsumptionReportParam;
-import static org.apache.ibatis.jdbc.SqlBuilder.FROM;
-import static org.apache.ibatis.jdbc.SqlBuilder.INNER_JOIN;
-import static org.apache.ibatis.jdbc.SqlBuilder.WHERE;
+
+import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
-public class ConsumptionBuilder{
+public class ConsumptionBuilder {
 
+    public static void writeBasicQuery() {
+        SELECT("r.productcode code");
+        SELECT("r.period periodName");
+        SELECT("r.startdate periodStart");
+        SELECT("r.productdispalayname as product");
+        SELECT("sum(r.dispensed) dispensed");
+        SELECT("sum(r.consumption) consumption");
+        SELECT("ceil(sum(r.dispensed/r.packsize)::float) consumptionInPacks");
+        SELECT("ceil(sum(r.consumption/r.packsize)::float) adjustedConsumptionInPacks ");
+    }
     public static void writeCommonJoinStatment() {
-        FROM("requisition_line_items li");
-        INNER_JOIN("requisitions r on r.id = li.rnrid");
-        INNER_JOIN("facilities f on r.facilityId = f.id ");
-        INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
-        INNER_JOIN("processing_periods pp on pp.id = r.periodId");
-        INNER_JOIN("products p on p.code::text = li.productCode::text");
-        INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
-        INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
+        FROM("mv_requisition r");
     }
 
     protected static void writePredicates(FacilityConsumptionReportParam filter) {
 
-        WHERE(programIsFilteredBy("r.programId"));
+        WHERE(programIsFilteredBy("r.programid"));
         WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
-        WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
-        WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));
+        if( filter.getPeriodStart()!=null)
+        WHERE(periodStartDateRangeFilteredBy("r.startdate", filter.getPeriodStart().trim()));
+        if( filter.getPeriodEnd()!=null)
+        WHERE(periodEndDateRangeFilteredBy("r.enddate", filter.getPeriodEnd().trim()));
+        if( filter.getPeriod()!=null)
+            WHERE(periodIsFilteredBy("r.periodid"));
         if (filter.getFacility() != null && filter.getFacility() != 0) {
-            WHERE(facilityIsFilteredBy("f.id"));
+            WHERE(facilityIsFilteredBy("r.facilityid"));
         }
         if (filter.getZone() != 0) {
-            WHERE(geoZoneIsFilteredBy("d"));
+            WHERE(geoZoneIsFilteredBy("r"));
         }
 
         if (filter.getAllReportType()) {
@@ -51,10 +58,33 @@ public class ConsumptionBuilder{
         }
     }
 
+    public static String writePredicateString(FacilityConsumptionReportParam filter) {
 
-    public static String getOrderString(FacilityConsumptionReportParam filter) {
+        StringBuilder predicate = new StringBuilder();
+        predicate.append(" where r.programid=" + filter.getProgram());
+        predicate.append(" and r.status in (" +  filter.getAcceptedRnrStatuses().replaceAll("'","''") + ")");
+        predicate.append(" and r.startdate>=''" + filter.getPeriodStart() + "''::date");
+        predicate.append(" and  r.enddate<=''" + filter.getPeriodEnd() + "''::date");
+        if (filter.getFacility() != null && filter.getFacility() != 0) {
+            predicate.append(" and r.facilityid =" + filter.getFacility());
+        }
+        if (filter.getZone() != 0) {
+//            WHERE(geoZoneIsFilteredBy("d"));
+            predicate.append(" and (r.zoneid=" + filter.getZone() + " or r.provinceid=" +
+                    filter.getZone() + " or r.districtid=" + filter.getZone() + ")");
+        }
+
+        if (filter.getAllReportType()) {
+            predicate.append(" and r.emergency in (true,false)");
+        } else {
+            predicate.append(" and r.emergency =" + filter.getIsEmergency());
+        }
+        return predicate.toString();
+    }
+
+    public static String getOrderString(BaseParam filter) {
         String sortString = "";
-        sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " p.primaryName ";
+        sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " productcode ";
         sortString = sortString+" " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
         return sortString;
     }

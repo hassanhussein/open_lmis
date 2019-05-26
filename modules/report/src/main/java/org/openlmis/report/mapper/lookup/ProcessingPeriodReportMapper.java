@@ -54,7 +54,6 @@ public interface ProcessingPeriodReportMapper {
     Long getCurrentPeriodIdForVaccine();
 
 
-
     @Select("select distinct on (pp.startdate) pp.id, pp.scheduleId, \n" +
             "pp.startdate::date startdate, \n" +
             "psn.name as name\n" +
@@ -65,7 +64,8 @@ public interface ProcessingPeriodReportMapper {
             "and r.programid =  #{programId}\n" +
             "order by pp.startdate desc\n" +
             "limit (select COALESCE(value::integer, 4) from configuration_settings where key ='PROGRAM_VIEWABLE_MAX_LAST_PERIODS')\n")
-    List<ProcessingPeriod> getLastPeriods(@Param("programId")Long programId);
+    List<ProcessingPeriod> getLastPeriods(@Param("programId") Long programId);
+
     @Select("SELECT pp.* " +
             "       FROM " +
             "           processing_schedules s " +
@@ -73,7 +73,19 @@ public interface ProcessingPeriodReportMapper {
             "       where s.id in " +
             "             (select scheduleId from requisition_group_program_schedules sc " +
             "             join programs p on p.id = sc.programid where p.code = #{program}) " +
-            "         order by name")
+            "         order by startdate")
     List<ProcessingPeriod> getPeriodsByProgramCode(String code);
+
+    @Select("SELECT pp.* " +
+            "       FROM " +
+            "           processing_schedules s " +
+            "         inner join processing_periods pp ON pp.scheduleid = s.id " +
+            "       where s.id in " +
+            "             (select scheduleId from requisition_group_program_schedules sc " +
+            "             join programs p on p.id = sc.programid where p.id = #{program}" +
+            " and pp.startdate::date >=#{startdate}::date and pp.enddate<=#{enddate}::date) " +
+            "         order by pp.startdate")
+    List<ProcessingPeriod> getPeriodsForProgramBeetweeDates(@Param("program") Long program, @Param("startdate") String startDate,
+                                                            @Param("enddate") String endDate);
 }
 
