@@ -10,10 +10,7 @@
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-
 <style>
-
-
     #report-head {
         margin-top: -28px !important;
     }
@@ -50,8 +47,6 @@
                    class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
             </div>
         </div>
-
-
         <div class="row-fluid">
             <!--  <div class="row">
                 <div class="col s12"></div>
@@ -67,17 +62,13 @@
                     <form ng-submit="filterGrid()" name="filterForm" novalidate>
                         <div filter-container class="clearfix">
                             <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
-
                             <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
                                                enddate="filter.periodEnd"
                                                class="form-cell horizontalFilters"></date-range-filter>
                             <zone-filter class="form-cell horizontalFilters"></zone-filter>
                             <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
                             <facility-filter class="form-cell horizontalFilters"></facility-filter>
-
-
                             <div class="form-cell horizontalFilters" style="padding-top: 20px;">
-
                                 <label class="checkbox">
                                     <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
                                            ng-change="searchReport()"/>
@@ -85,23 +76,18 @@
                                     <span  style="color:#078f97;" openlmis-message="label.report.view.disaggregated"></span>
                                 </label>
                             </div>
-
                             <div class="clearfix padding2px"></div>
-
-
                             <div class="clearfix padding2px"></div>
                             <div>
-    <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
- </span></div>
-
+                            <span class="pull-right">
+                                <a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
+                             </span>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="content-body">
-
-
-
                 <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
                     <tr>
                         <td>No data to show under selected filters</td>
@@ -109,7 +95,6 @@
                 </table>
                 <div ng-show="data.length > 0" client-side-sort-pagination>
                     <div ng-if="data.length > 0" top-right-table-summary></div>
-
                     <table ng-show="data.length > 0" class="table-bordered table table-striped pull-right"
                            ng-table="tableParams">
                         <thead>
@@ -131,19 +116,12 @@
                             <td ng-bind="row.productCode"></td>
                             <td ng-bind="row.product"></td>
                             <td  ng-repeat="period in periods">{{ consumptionForPeriod(row,period) }}</td>
-
-
-
                         </tr>
                         </tbody>
                     </table>
                     <div class="clearfix"></div>
-
                 </div>
-
             </div>
-
-
         </div>
     </div>
 </div>
