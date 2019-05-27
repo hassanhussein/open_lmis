@@ -171,6 +171,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
    function reEvaluateTotalSourceOfFund()
         {
             var totalAdjustments = 0;
+            scope.totalSources = 0;
 
             $(scope.sourceOfFund.sourceOfFunds).each(function (index, sourceObject) {
              totalAdjustments = totalAdjustments + parseInt(sourceObject.quantity,10);
