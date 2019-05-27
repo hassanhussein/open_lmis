@@ -21,6 +21,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
     $scope.runReport = function () {
         var deferred = $q.defer();
         OrderFillRateReport.get($scope.getSanitizedParameter(), function (data) {
+            $scope.data = [];
             $scope.summaries = data.pages.rows[0].keyValueSummary;
             $scope.data =
             {
@@ -32,7 +33,6 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
             };
             deferred.resolve();
         });
-
         return deferred.promise;
     };
 
