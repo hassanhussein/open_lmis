@@ -23,25 +23,29 @@ import java.util.Map;
 
 public abstract class ReportDataProvider {
 
-  @Getter
-  @Setter
-  private Long userId;
+    @Getter
+    @Setter
+    private Long userId;
 
-  public List<? extends ResultRow> getResultSet(Map<String, String[]> params){
-    return getReportBody(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-  }
+    public List<? extends ResultRow> getResultSet(Map<String, String[]> params) {
+        return getReportBody(params, null, RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
+    }
 
-  public abstract List<? extends ResultRow> getReportBody(Map<String, String[]> filter, Map<String, String[]> sorter, int page, int pageSize);
+    public abstract List<? extends ResultRow> getReportBody(Map<String, String[]> filter, Map<String, String[]> sorter, int page, int pageSize);
 
-  public  int getReportTotalCount(Map<String, String[]> filter){
-    return 0;
-  }
+    public List<? extends ResultRow> getReportHtmlBody(Map<String, String[]> filter, Map<String, String[]> sorter, int page, int pageSize) {
+        return null;
+    }
 
-  public Map<String,String> getExtendedHeader(Map params){
-      return Collections.emptyMap();
-  }
+    public int getReportTotalCount(Map<String, String[]> filter) {
+        return 0;
+    }
 
-  public String getFilterSummary(Map<String, String[]> params){
-    return "";
-  }
+    public Map<String, String> getExtendedHeader(Map params) {
+        return Collections.emptyMap();
+    }
+
+    public String getFilterSummary(Map<String, String[]> params) {
+        return "";
+    }
 }

@@ -42,11 +42,13 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     @Autowired
     protected FacilityConsumptionReportMapper reportMapper;
     protected List<ProcessingPeriod> periods;
+    protected List<ConsumptionColumn> flatConsumptionList;
     @Autowired
     ProcessingPeriodReportMapper processingPeriodReportMapper;
 
     public List<FacilityConsumptionRow> convertToFacilityConsumptionRow(List<Map<String, Object>> consumptionHashMapList) {
         List<FacilityConsumptionRow> facilityConsumptionRows = null;
+        flatConsumptionList = new ArrayList<>();
         if (consumptionHashMapList != null && !consumptionHashMapList.isEmpty()) {
             facilityConsumptionRows = new ArrayList<>();
             for (Map<String, Object> objectHashMap : consumptionHashMapList) {
@@ -63,6 +65,13 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
                 List<ConsumptionColumn> consumptionColumns = new ArrayList<>();
                 for (ProcessingPeriod period : this.periods) {
                     ConsumptionColumn consumptionColumn = new ConsumptionColumn();
+                    consumptionColumn.setProductCode(String.valueOf(objectHashMap.get("productcode")));
+                    consumptionColumn.setProduct(String.valueOf(objectHashMap.get("product")));
+                    consumptionColumn.setFacilityId(facilityId);
+                    consumptionColumn.setType(String.valueOf(objectHashMap.get("facilitytype")));
+                    consumptionColumn.setFacility(String.valueOf(objectHashMap.get("facility")));
+                    consumptionColumn.setFacilityCode(String.valueOf(objectHashMap.get("facilitycode")));
+                    consumptionColumn.setFacProdCode(String.valueOf(objectHashMap.get("facprodcode")));
                     consumptionColumn.setHeader(period.getName());
                     Object objectValue = objectHashMap.get(period.getName());
                     if (objectValue != null) {
@@ -72,6 +81,7 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
                     }
                     consumptionColumns.add(consumptionColumn);
                 }
+                flatConsumptionList.addAll(consumptionColumns);
                 consumptionRow.setConsumptionColumnList(consumptionColumns);
                 facilityConsumptionRows.add(consumptionRow);
 
@@ -81,12 +91,13 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     }
 
     public String constructTabColumnHeader(Long programId, String startDate, String endDate) {
-        String tableColumnHeader="";
+        String tableColumnHeader = "";
         List<ProcessingPeriod> periods = processingPeriodReportMapper.getPeriodsForProgramBeetweeDates(programId, startDate, endDate);
         this.periods = periods;
         if (periods != null && !periods.isEmpty()) {
             for (ProcessingPeriod period : periods) {
-                tableColumnHeader=tableColumnHeader+", \"" + period.getName()+"\"";            }
+                tableColumnHeader = tableColumnHeader + ", \"" + period.getName() + "\"";
+            }
 
 
         } else {
@@ -125,6 +136,14 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
 
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+        FacilityConsumptionReportParam reportParam = getReportFilterData(filterCriteria);
+        List<Map<String, Object>> objectList = reportMapper.getAggregateConsumptionReport(reportParam, this.getUserId());
+        List<FacilityConsumptionRow> facilityConsumptionRowList = this.convertToFacilityConsumptionRow(objectList);
+        return flatConsumptionList;
+    }
+
+    @Override
+    public List<? extends ResultRow> getReportHtmlBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
         FacilityConsumptionReportParam reportParam = getReportFilterData(filterCriteria);
         List<Map<String, Object>> objectList = reportMapper.getAggregateConsumptionReport(reportParam, this.getUserId());
         List<FacilityConsumptionRow> facilityConsumptionRowList = this.convertToFacilityConsumptionRow(objectList);

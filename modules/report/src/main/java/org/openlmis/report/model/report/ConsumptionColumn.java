@@ -15,13 +15,23 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openlmis.report.model.ResultRow;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConsumptionColumn {
+public class ConsumptionColumn implements ResultRow {
     private Long id;
+    private Long facilityId;
+    private String facilityCode;
+    private String facility;
+    private Long productId;
+    private String productCode;
+    private String product;
+    private String facProdCode;
+    private long facilityTypeId;
+    private String type;
     private String header;
     private Object valeu;
 

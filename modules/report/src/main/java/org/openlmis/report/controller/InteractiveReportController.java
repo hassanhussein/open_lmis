@@ -852,11 +852,26 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
         List<DistrictConsumptionReport> districtConsumptionReportList =
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportHtmlBody(request.getParameterMap(),
+                        request.getParameterMap(), page, pageSize);
+        return new Pages(page, totalCount, districtConsumptionReportList);
+    }
+    @RequestMapping(value = "/reportdata/facilityConsumption-pdfJson", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    public Pages getFacilityConsumptionDataPdfJson(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                            @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
+                                            HttpServletRequest request
+
+    ) {
+
+        Report report = reportManager.getReportByKey("facility_consumption");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
+        List<DistrictConsumptionReport> districtConsumptionReportList =
                 (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(),
                         request.getParameterMap(), page, pageSize);
         return new Pages(page, totalCount, districtConsumptionReportList);
     }
-
     @RequestMapping(value = "/reportdata/dailyConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getDailyConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,

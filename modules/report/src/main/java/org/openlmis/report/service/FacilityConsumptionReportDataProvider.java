@@ -13,10 +13,8 @@
 package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.report.model.params.FacilityConsumptionReportParam;
-import org.openlmis.report.util.ParameterAdaptor;
 import org.springframework.stereotype.Component;
-import java.util.*;
+
 
 @Component
 @NoArgsConstructor
