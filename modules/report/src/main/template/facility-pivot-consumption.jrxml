@@ -34,22 +34,17 @@
 		<![CDATA[]]>
 	</queryString>
 	<field name="product" class="java.lang.String"/>
-	<field name="district" class="java.lang.String"/>
-	<field name="consumption" class="java.lang.Double"/>
-	<field name="totalPercentage" class="java.lang.Number"/>
-	<field name="dispensed" class="java.lang.Long"/>
-	<field name="code" class="java.lang.String"/>
-	<field name="consumptionInPacks" class="java.lang.Double"/>
-	<field name="adjustedConsumptionInPacks" class="java.lang.Double"/>
-	<field name="periodName" class="java.lang.String"/>
+	<field name="valeu" class="java.lang.Double"/>
+	<field name="productCode" class="java.lang.String"/>
+	<field name="header" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
 	<variable name="consumption_1" class="java.lang.Long" resetType="Group" resetGroup="GroupByProduct" calculation="Sum">
-		<variableExpression><![CDATA[($F{consumptionInPacks} != null)?$F{consumptionInPacks}:0]]></variableExpression>
+		<variableExpression><![CDATA[($F{valeu} != null)?$F{valeu}:0]]></variableExpression>
 	</variable>
 	<group name="GroupByProduct" isStartNewPage="true" isReprintHeaderOnEachPage="true">
-		<groupExpression><![CDATA[$F{district}]]></groupExpression>
+		<groupExpression><![CDATA[]]></groupExpression>
 	</group>
 	<background>
 		<band splitType="Stretch"/>
@@ -139,7 +134,7 @@
 				</crosstabHeaderCell>
 				<rowGroup name="code" width="35">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{code}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{productCode}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents backcolor="#FFFFFF" mode="Opaque">
@@ -217,7 +212,7 @@
 				</rowGroup>
 				<columnGroup name="periodName" height="30">
 					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{periodName}]]></bucketExpression>
+						<bucketExpression><![CDATA[$F{header}]]></bucketExpression>
 					</bucket>
 					<crosstabColumnHeader>
 						<cellContents backcolor="#3D9297" mode="Opaque">
@@ -242,7 +237,7 @@
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<measure name="consumptionMeasure" class="java.lang.Double">
-					<measureExpression><![CDATA[$F{consumption}]]></measureExpression>
+					<measureExpression><![CDATA[$F{valeu}]]></measureExpression>
 				</measure>
 				<crosstabCell width="39" height="25">
 					<cellContents>
