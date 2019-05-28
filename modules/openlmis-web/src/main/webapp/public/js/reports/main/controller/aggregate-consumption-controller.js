@@ -22,12 +22,10 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
     $scope.showDisaggregatedColumns= false;
 
     $scope.OnFilterChanged = function() {
-        $scope.tableParams.paginationCallBack = $scope.runReport;
-        $scope.paramsChanged($scope.tableParams);
+        $scope.registerServerSidePagination($scope.tableParams, $scope.runReport);
     };
 
     $scope.runReport = function (pageSize, page, sortBy, sortDirection) {
-        $scope.filter.error = undefined;
         var disaggregatedSelectedProductCount = $scope.filter.products.filter(function(item){ return item !=="0" && item!=="-1"; }).length;
         var disaggregationWrongProductSelection = (disaggregatedSelectedProductCount > disaggregationProductsMaxCount ||
             disaggregatedSelectedProductCount < disaggregationProductsMinCount);
@@ -36,8 +34,7 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
 
         //During disaggregating, at least 1 and at most 5 products needs to be selected
         if(disaggregated && disaggregationWrongProductSelection) {
-            $scope.filter.error = 'During disaggregation at least '+disaggregationProductsMinCount+' or at most '+
-                disaggregationProductsMaxCount+' products should be selected';
+            $scope.filter.error = 'During disaggregation at least 1 or at most 5 products should be selected';
             return;
         }
 

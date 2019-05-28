@@ -14,8 +14,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
 
     $scope.OnFilterChanged = function() {
-        $scope.tableParams.paginationCallBack = $scope.runReport;
-        $scope.paramsChanged($scope.tableParams);
+        $scope.registerServerSidePagination($scope.tableParams, $scope.runReport);
     };
 
     $scope.runReport = function () {
