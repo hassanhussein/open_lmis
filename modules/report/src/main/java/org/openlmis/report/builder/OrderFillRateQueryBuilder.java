@@ -33,30 +33,22 @@ public class OrderFillRateQueryBuilder {
         return getQuerySubstituteProduct(queryParam, queryParam.getUserId());
     }
 
-    private static void writePredicates(OrderFillRateReportParam param) {
-
-        WHERE(programIsFilteredBy("programid"));
-        WHERE(periodIsFilteredBy("periodid"));
-
-        if (param.getZone() != 0) {
-            WHERE(geoZoneIsFilteredBy("gz"));
+    private static String writePredicates(OrderFillRateReportParam param) {
+        String predicate = " and  r.programId=" +param.getProgram()+
+                " and r.periodid = " + param.getPeriod() + " " +
+                " and (r.zoneid = " + param.getZone() + " or r.districtid = " + param.getZone() + " or r.parent = " + param.getZone() + " " +
+                " or r.provinceid = " + param.getZone() + ") and r.emergency=false ";
+        if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null) {
+            predicate = predicate + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
         }
 
-        if (param.getFacilityType() != 0) {
-            WHERE(facilityTypeIsFilteredBy("facilityTypeId"));
-        }
 
         if (param.getFacility() != 0) {
-            WHERE(facilityIsFilteredBy("facilityId"));
+         predicate= predicate+ " and r.facilityId="+param.getFacility();
         }
 
-        if (param.getProductCategory() != 0) {
-            WHERE(productCategoryIsFilteredBy("productCategoryId"));
-        }
 
-        if (multiProductFilterBy(param.getProducts(), "productId", "tracer") != null) {
-            WHERE(multiProductFilterBy(param.getProducts(), "productId", "tracer"));
-        }
+        return predicate;
     }
 
     private static String getQueryStringV2(OrderFillRateReportParam param, Long userId) {
@@ -89,11 +81,7 @@ public class OrderFillRateQueryBuilder {
                 "   FROM mv_requisition r \n" +
                 "     LEFT JOIN mv_order_fulfillment o on o.orderid= r.rnrid and  o.productcode = r.productcode \n" +
                 "  WHERE r.status::text = 'RELEASED'::text AND r.approved > 0\n" +
-                " and  r.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
-
-
-        if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null)
-            query = query + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
+                writePredicates(param);
         query = query + " order by " + getOrderString(param) + " " +
                 "   OFFSET " + (param.getPage() - 1) * param.getPageSize() + " LIMIT " + param.getPageSize();
 
@@ -214,35 +202,5 @@ public class OrderFillRateQueryBuilder {
         return query;
     }
 
-    public static String getRequisitionsForPeriod(Map params) {
-        OrderFillRateReportParam queryParam = (OrderFillRateReportParam) params.get("filterCriteria");
-        String query = "";
 
-        if (queryParam.getFacility() != null && queryParam.getFacility() != 0) {
-            query = "SELECT id from requisitions where facilityId =" + queryParam.getFacility() +
-                    " and programId =" + queryParam.getProgram() +
-                    " and periodId = " + queryParam.getPeriod() +
-                    " and emergency = false limit 1";
-        } else {
-            query = "with recursive districts as(\n" +
-                    "select id, name,parentid,levelid from geographic_zones gz\n" +
-                    "\t\n" +
-                    "\twhere id =" + queryParam.getZone() +
-                    "\tunion select gz.id, gz.name,gz.parentid,gz.levelid from geographic_zones gz\n" +
-                    "\tinner join  districts d on gz.parentid=d.id\n" +
-                    "),\n" +
-                    "geo_districts as (\n" +
-                    "select d.id from districts d\n" +
-                    "inner join geographic_levels gl on d.levelid=gl.id \n" +
-                    "where gl.name='District'\n" +
-                    ")\n" +
-                    " select r.id from requisitions r \n" +
-                    " inner join facilities f on r.facilityid=f.id\n" +
-                    " inner join geo_districts gd on f.geographiczoneid=gd.id \n" +
-                    " where programid= " + queryParam.getProgram() +
-                    " and periodid=" + queryParam.getPeriod() +
-                    " and emergency = false order by f.name , r.id\n";
-        }
-        return query;
-    }
 }

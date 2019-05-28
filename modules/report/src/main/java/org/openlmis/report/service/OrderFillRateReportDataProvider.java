@@ -60,15 +60,9 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     }
 
     public OrderFillRateReportParam getFilterParam(Map<String, String[]> filterCriteria) {
-        List<Long> rnrIds;
+
         OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
         parameter.setUserId(this.getUserId());
-        parameter.setRnrId(feedbackReportMapper.getRnrId(parameter.getProgram(), parameter.getFacility(), parameter.getPeriod()));
-        rnrIds = reportMapper.getRequisitionsForPeriod(parameter);
-        String rnrIdsParam = "values " + rnrIds.toString().replace("[", "(").replace("]", ")").
-                replace(",", "),(");
-        parameter.setRnrIdsPar(rnrIdsParam);
-        parameter.setRnrIds(rnrIds);
         return parameter;
     }
 
@@ -76,9 +70,6 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
 
         final OrderFillRateReportParam reportParam = this.getFilterParam(filterCriteria);
-        if (!hasRnrIds(reportParam)) {
-            return null;
-        }
         List<MasterReport> reportList = new ArrayList<>();
         MasterReport report = new MasterReport();
         List<OrderFillRateReport> detail = this.getReport(reportParam);
@@ -120,16 +111,9 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
     }
 
-    private boolean hasRnrIds(OrderFillRateReportParam param) {
-        return param.getRnrIds() != null && !param.getRnrIds().isEmpty();
-    }
-
     public int getReportTotalCount(Map<String, String[]> filter) {
         OrderFillRateReportParam reportParam = null;
         reportParam = this.getFilterParam(filter);
-        if (!hasRnrIds(reportParam)) {
-            return 0;
-        }
         return reportMapper.getReportTotalCount(reportParam, this.getUserId());
     }
 }
