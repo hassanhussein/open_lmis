@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_fill_rate_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.8181818181818181"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="582"/>
 	<property name="ireport.y" value="0"/>
 	<style name="ColorField">
 		<conditionalStyle>
@@ -106,6 +106,8 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 	<field name="program" class="java.lang.String"/>
 	<field name="period" class="java.lang.String"/>
 	<field name="substituteProductList" class="java.util.List"/>
+	<field name="packeddate" class="java.util.Date"/>
+	<field name="receipts" class="java.lang.Double"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -157,28 +159,28 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="186" y="73" width="66" height="20" uuid="99f26edd-b7cc-4872-ad39-9004ad414586"/>
+					<reportElement x="165" y="73" width="56" height="20" uuid="99f26edd-b7cc-4872-ad39-9004ad414586"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.product.code}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="252" y="73" width="91" height="20" uuid="5ea010f3-0813-46f9-8f86-61778a7f2b22"/>
+					<reportElement x="221" y="73" width="75" height="20" uuid="5ea010f3-0813-46f9-8f86-61778a7f2b22"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.product.name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="612" y="74" width="62" height="20" uuid="8ef52573-0395-4d69-982a-a0e21c9a92fe"/>
+					<reportElement x="553" y="74" width="59" height="20" uuid="8ef52573-0395-4d69-982a-a0e21c9a92fe"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{header.quantity.ordered}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="674" y="74" width="66" height="20" uuid="da8653cd-9249-4321-bf01-639501fcb65f"/>
+					<reportElement x="612" y="74" width="63" height="20" uuid="da8653cd-9249-4321-bf01-639501fcb65f"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
@@ -222,46 +224,53 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$V{orderFillRate}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="23" y="74" width="71" height="20" uuid="49e36ac5-2274-4caf-9760-0f2818d78c7f"/>
+					<reportElement x="23" y="74" width="60" height="20" uuid="49e36ac5-2274-4caf-9760-0f2818d78c7f"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="94" y="73" width="92" height="20" uuid="36f9c362-4823-4e72-aa06-27bb74609cf2"/>
+					<reportElement x="83" y="73" width="82" height="20" uuid="36f9c362-4823-4e72-aa06-27bb74609cf2"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.facility.name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="343" y="74" width="62" height="20" uuid="5ea25219-e36e-47a9-a204-03af129926d5"/>
+					<reportElement x="296" y="74" width="59" height="20" uuid="5ea25219-e36e-47a9-a204-03af129926d5"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.province}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="405" y="73" width="67" height="20" uuid="0136ebd3-cf83-41c3-8954-c6f296652fea"/>
+					<reportElement x="355" y="73" width="64" height="20" uuid="0136ebd3-cf83-41c3-8954-c6f296652fea"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="472" y="73" width="60" height="20" uuid="105576d0-aae5-465a-b287-b73706c25f47"/>
+					<reportElement x="419" y="73" width="57" height="20" uuid="105576d0-aae5-465a-b287-b73706c25f47"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.program}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="532" y="73" width="80" height="20" uuid="31e176bf-0800-45ef-bdbe-e4bdc7430001"/>
+					<reportElement x="476" y="73" width="77" height="20" uuid="31e176bf-0800-45ef-bdbe-e4bdc7430001"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.period}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="675" y="73" width="65" height="20" uuid="37e7a88e-e3d5-42e2-97ef-76efce3a85f0"/>
+					<textElement verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{label.qty.packed.date}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -311,15 +320,15 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$F{item_fill_rate}+" %"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="674" y="0" width="66" height="20" uuid="4369c371-9e2d-4dba-a3be-5a5d1001e6ba"/>
+					<reportElement x="612" y="0" width="63" height="20" uuid="4369c371-9e2d-4dba-a3be-5a5d1001e6ba"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5" rightIndent="5"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{totalproductsreceived} == null ? 0 : $F{totalproductsreceived}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{receipts} == null ? 0 : $F{receipts}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="23" y="0" width="71" height="20" uuid="897f7c10-8a1d-4c17-a735-55a9af7c9a4e"/>
+					<reportElement x="23" y="0" width="60" height="20" uuid="897f7c10-8a1d-4c17-a735-55a9af7c9a4e"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
@@ -327,7 +336,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="94" y="0" width="92" height="20" uuid="2df22652-32cf-4012-9679-9c96b1bf138d"/>
+					<reportElement x="83" y="0" width="82" height="20" uuid="2df22652-32cf-4012-9679-9c96b1bf138d"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
@@ -335,7 +344,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="186" y="0" width="66" height="20" uuid="59787138-53b0-463e-9f84-2e9ce5a14990"/>
+					<reportElement x="165" y="0" width="56" height="20" uuid="59787138-53b0-463e-9f84-2e9ce5a14990"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
@@ -343,7 +352,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="252" y="0" width="91" height="20" uuid="a286a183-289b-4fc8-a14c-e600a5023660"/>
+					<reportElement x="221" y="0" width="75" height="20" uuid="a286a183-289b-4fc8-a14c-e600a5023660"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
@@ -351,7 +360,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[($F{product}=="NULL"?" ":$F{product})]]></textFieldExpression>
 				</textField>
 				<textField pattern="#,##0" isBlankWhenNull="true">
-					<reportElement x="612" y="0" width="62" height="20" uuid="d8596805-00b4-4490-9ede-7ac22f213601">
+					<reportElement x="553" y="0" width="59" height="20" uuid="d8596805-00b4-4490-9ede-7ac22f213601">
 						<property name="local_mesure_unitx" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="local_mesure_unitwidth" value="pixel"/>
@@ -363,7 +372,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[$F{approved}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="343" y="0" width="62" height="20" uuid="8bb8ba1e-7f8a-4eff-82fa-52fc24a4f6a4"/>
+					<reportElement x="296" y="0" width="59" height="20" uuid="8bb8ba1e-7f8a-4eff-82fa-52fc24a4f6a4"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
@@ -371,7 +380,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[($F{province}=="NULL"?" ":$F{province})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="405" y="0" width="67" height="20" uuid="06da213b-8835-4d46-8662-154730589276"/>
+					<reportElement x="355" y="0" width="64" height="20" uuid="06da213b-8835-4d46-8662-154730589276"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
@@ -379,7 +388,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[($F{district}=="NULL"?" ":$F{district})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="472" y="0" width="60" height="20" uuid="a2a4f329-a9c9-47cf-9514-a92d4455d702"/>
+					<reportElement x="419" y="0" width="57" height="20" uuid="a2a4f329-a9c9-47cf-9514-a92d4455d702"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
@@ -387,12 +396,20 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					<textFieldExpression><![CDATA[($F{program}=="NULL"?" ":$F{program})]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="532" y="0" width="80" height="20" uuid="610aba67-e8aa-41d3-ab3c-748012dd3aa9"/>
+					<reportElement x="476" y="0" width="77" height="20" uuid="610aba67-e8aa-41d3-ab3c-748012dd3aa9"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA[($F{period}=="NULL"?" ":$F{period})]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMMMM dd, yyyy">
+					<reportElement x="675" y="0" width="65" height="20" uuid="eec7cd34-49cf-410c-83d0-a5ab742e0260"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+						<paragraph leftIndent="5" rightIndent="5"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{packeddate}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>

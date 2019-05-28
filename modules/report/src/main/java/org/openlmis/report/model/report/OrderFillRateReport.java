@@ -16,6 +16,7 @@ import lombok.*;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.dto.OrderFillRate;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -54,6 +55,8 @@ public class OrderFillRateReport implements ResultRow {
     private String program;
     private String periodid;
     private String period;
+    private Date shippeddate;
+    private Date packeddate;
     private List<OrderFillRateReport> substituteProductList;
 
 }
