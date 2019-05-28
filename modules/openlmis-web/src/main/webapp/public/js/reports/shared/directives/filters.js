@@ -990,6 +990,13 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                     counts: [10, 50, 100, 1000, 5000, 10000]
                 });
 
+                scope.registerServerSidePagination = function(params, callBack) {
+                    params.paginationCallBack = callBack;
+                    params.page = 1;
+                    scope.filter.error = '';
+                    scope.paramsChanged(params);
+                };
+
                 scope.paramsChanged = function (params) {
                     if(params.paginationCallBack !== undefined &&
                         (scope.filter.error === '' || scope.filter.error === undefined)) {
@@ -1007,7 +1014,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                         params.paginationCallBack(params.count, params.page, sortBy, sortDirection)
                             .then(function() {
                                 spliceAndPageData(scope, params);
-                            });
+                        });
                     } else {
                         spliceAndPageData(scope, params);
                     }

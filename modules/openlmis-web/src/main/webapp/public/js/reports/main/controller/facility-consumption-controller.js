@@ -12,8 +12,7 @@
 function FacilityConsumptionReportController($scope, $filter, $window, FacilityConsumptionReport, $q) {
     $scope.showDisaggregatedColumns= false;
     $scope.OnFilterChanged = function() {
-            $scope.tableParams.paginationCallBack = $scope.runReport;
-            $scope.paramsChanged($scope.tableParams);
+        $scope.registerServerSidePagination($scope.tableParams, $scope.runReport);
     };
 
     $scope.runReport = function () {
