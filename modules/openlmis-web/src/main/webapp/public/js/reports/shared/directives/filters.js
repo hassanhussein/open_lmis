@@ -103,11 +103,13 @@ function ($routeParams, $location, $timeout, messageService, $compile) {
             };
 
             highlightInvalidRequiredField = function(field) {
-                $(field+"-filter").css("color", "red");
+                $(field.toLocaleLowerCase()+"-filter").css("color", "red");
+                $("."+field.toLocaleLowerCase()+"-sub-filter").css("color", "red");
             };
 
             clearHighlightedField = function(field) {
-                $(field+"-filter").css("color", "black");
+                $(field.toLocaleLowerCase()+"-filter").css("color", "black");
+                $("."+field.toLocaleLowerCase()+"-sub-filter").css("color", "black");
             };
 
             $scope.fetchReport = function(doPostBack) {
@@ -989,7 +991,9 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                 });
 
                 scope.paramsChanged = function (params) {
-                    if(params.paginationCallBack !== undefined) {
+                    if(params.paginationCallBack !== undefined &&
+                        (scope.filter.error === '' || scope.filter.error === undefined)) {
+
                         var sortBy = Object.keys(params.sorting).pop();
                         var sortDirection = Object.values(params.sorting).pop();
 
@@ -1498,10 +1502,7 @@ app.directive('dateRangeFilter', [function () {
             }
 
             $scope.$watch('periodRange', function (newValues, oldValues) {
-
-
                 $scope.showCustomeDateInputs = true;
-
                 $scope.perioderror = "";
             });
 
@@ -1513,6 +1514,7 @@ app.directive('dateRangeFilter', [function () {
                 else if (!((angular.isUndefined(newValues[0]) || newValues[0] === null) ||
                     (angular.isUndefined(newValues[1]) || newValues[1] === null))) {
 
+
                     var datediff = differenceInDays();
 
                     if (!angular.isUndefined($scope.periodRangeMax) && datediff < 0)
@@ -1521,10 +1523,12 @@ app.directive('dateRangeFilter', [function () {
                     else if (!angular.isUndefined($scope.periodRangeMax) && datediff > $scope.periodRangeMax)
                         $scope.perioderror = 'Period start and end date selection are out of range';
 
-                    else {
+                    /*else {
                         $scope.perioderror = "";
                         $scope.$parent.OnFilterChanged();
                     }
+                    */
+                    $scope.$parent.filter.error = $scope.perioderror;
                 }
             });
 
@@ -1542,6 +1546,8 @@ app.directive('dateRangeFilter', [function () {
         },
 
         link: function (scope, elm, attr) {
+            scope.$parent.registerRequired('periodStart', attr);
+            scope.$parent.registerRequired('periodEnd', attr);
             scope.periods = [
                 {key: 1, value: 'Current Period'},
                 {key: 2, value: 'Last 3 Months'},

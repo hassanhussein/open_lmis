@@ -474,17 +474,19 @@
 </script>
 <script type="text/ng-template" id="filter-date-range">
     <div>
-
-
-        <div class="horizontalFilters form-cell" ng-show="showCustomeDateInputs">
-            <label for="txtPeriodStartDate" class="labels" ><span openlmis-message="label.start.date"></span></label>
+        <div class="horizontalFilters form-cell periodstart-sub-filter" ng-show="showCustomeDateInputs">
+            <label for="txtPeriodStartDate" class="labels" ><span openlmis-message="label.start.date">
+                <span ng-show="$parent.requiredFilters.periodStart" class="label-required">*</span></span></label>
             <div>
                 <input id="txtPeriodStartDate" ng-model="periodStartdate" ui-date-format="yy-mm-dd" ui-date/>
             </div>
         </div>
 
-        <div class="horizontalFilters form-cell" ng-show="showCustomeDateInputs">
-            <label for="txtPeriodEnddate" class="labels" ><span openlmis-message="label.end.date"></span></label>
+        <div class="horizontalFilters form-cell periodend-sub-filter" ng-show="showCustomeDateInputs">
+            <label for="txtPeriodEnddate" class="labels" ><span openlmis-message="label.end.date">
+                <span ng-show="$parent.requiredFilters.periodEnd" class="label-required">*</span>
+            </span>
+            </label>
             <div>
                 <input id="txtPeriodEnddate" ng-model="periodEnddate" ui-date-format="yy-mm-dd" ui-date/>
             </div>
