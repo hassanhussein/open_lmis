@@ -32,6 +32,11 @@ public interface OrderFillRateReportMapper {
      List<OrderFillRateReport> getReport(@Param("filterCriteria") OrderFillRateReportParam params,
                                                       @Param("userId") Long userId
     );
+    @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getSubProdQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<OrderFillRateReport> getSubStitutProductReport(@Param("filterCriteria") OrderFillRateReportParam params,
+                                        @Param("userId") Long userId
+    );
     @SelectProvider(type=OrderFillRateQueryBuilder.class, method="getQueryCount")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     int getReportTotalCount(@Param("filterCriteria") OrderFillRateReportParam params,

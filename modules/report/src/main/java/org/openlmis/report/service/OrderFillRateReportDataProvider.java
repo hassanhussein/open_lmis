@@ -54,12 +54,12 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
     @Override
     public List<? extends ResultRow> getResultSet(Map<String, String[]> filterCriteria) {
-        RowBounds rowBounds = new RowBounds(RowBounds.NO_ROW_OFFSET, RowBounds.NO_ROW_LIMIT);
-
-        return reportMapper.getReport(this.getFilterParam(filterCriteria, 0l, 0l),  this.getUserId());
+        OrderFillRateReportParam reportParam = this.getFilterParam(filterCriteria);
+        List<OrderFillRateReport> detail = this.getReport(reportParam);
+        return detail;
     }
 
-    public OrderFillRateReportParam getFilterParam(Map<String, String[]> filterCriteria, long page, long pageSize) {
+    public OrderFillRateReportParam getFilterParam(Map<String, String[]> filterCriteria) {
         List<Long> rnrIds;
         OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
         parameter.setUserId(this.getUserId());
@@ -69,30 +69,25 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
                 replace(",", "),(");
         parameter.setRnrIdsPar(rnrIdsParam);
         parameter.setRnrIds(rnrIds);
-        parameter.setPage(page);
-        parameter.setPageSize(pageSize);
         return parameter;
     }
 
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        OrderFillRateReportParam reportParam = null;
-        reportParam = this.getFilterParam(filterCriteria, page, pageSize);
+
+        final OrderFillRateReportParam reportParam = this.getFilterParam(filterCriteria);
         if (!hasRnrIds(reportParam)) {
             return null;
         }
         List<MasterReport> reportList = new ArrayList<>();
         MasterReport report = new MasterReport();
-        List<OrderFillRateReport> detail = reportMapper.getReport(reportParam, this.getUserId());
+        List<OrderFillRateReport> detail = this.getReport(reportParam);
         report.setDetails(detail);
         Long approved = detail.stream().filter(row -> row.getApproved() != null && row.getApproved() > 0).count();
         Long shipped = detail.stream().filter(row -> (row.getReceipts() != null && row.getReceipts() > 0)
                 || (row.getSubstitutedProductQuantityShipped() != null && row.getSubstitutedProductQuantityShipped() > 0)).count();
         Float orderFillRate = ((approved == 0L || approved == null) ? 0L : ((float) shipped / approved) * 100);
-
         String requistionStatus = reportMapper.getFillRateReportRequisitionStatus(reportParam);
-
         Map<String, Object> keyValues = new HashMap();
         keyValues.put(ORDER_FILL_RATE, orderFillRate);
         keyValues.put(TOTAL_PRODUCTS_APPROVED, approved);
@@ -101,6 +96,19 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         report.setKeyValueSummary(keyValues);
         reportList.add(report);
         return reportList;
+    }
+
+    private List<OrderFillRateReport> getReport(OrderFillRateReportParam reportParam) {
+        List<OrderFillRateReport> detailList = reportMapper.getReport(reportParam, this.getUserId());
+        detailList.stream().filter(row -> row.getSubstitutedquantityshipped()!=null && row.getSubstitutedquantityshipped() > 0).
+                forEach((order) -> {
+            List<OrderFillRateReport> substituteProReportList = null;
+            reportParam.setProductCode(order.getProductcode());
+            reportParam.setRnrId(order.getRnrid());
+            substituteProReportList = reportMapper.getSubStitutProductReport(reportParam, this.getUserId());
+            order.setSubstituteProductList(substituteProReportList);
+        });
+        return detailList;
     }
 
     @Override
@@ -118,7 +126,7 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
     public int getReportTotalCount(Map<String, String[]> filter) {
         OrderFillRateReportParam reportParam = null;
-        reportParam = this.getFilterParam(filter, 0l, 0l);
+        reportParam = this.getFilterParam(filter);
         if (!hasRnrIds(reportParam)) {
             return 0;
         }

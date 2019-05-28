@@ -28,6 +28,11 @@ public class OrderFillRateQueryBuilder {
         return getQueryStringV2(queryParam, queryParam.getUserId());
     }
 
+    public static String getSubProdQuery(Map params) {
+        OrderFillRateReportParam queryParam = (OrderFillRateReportParam) params.get("filterCriteria");
+        return getQuerySubstituteProduct(queryParam, queryParam.getUserId());
+    }
+
     private static void writePredicates(OrderFillRateReportParam param) {
 
         WHERE(programIsFilteredBy("programid"));
@@ -74,8 +79,9 @@ public class OrderFillRateQueryBuilder {
                 "    r.approved AS approved,\n" +
                 "    r.rnrid,\n" +
                 "    o.quantityshipped AS receipts,    \n" +
-                "    0.substitutedquantityshipped,\n" +
-                "\t0.shippeddate,\n" +
+                "    o.substitutedquantityshipped,\n" +
+                "\to.shippeddate,\n" +
+                "\t o.packeddate,\n" +
                 "        CASE\n" +
                 "            WHEN COALESCE(r.approved::numeric, 0::numeric) = 0::numeric THEN 0::numeric\n" +
                 "            ELSE round(COALESCE(o.quantityshipped, 0::bigint)::numeric / COALESCE(r.approved, 0)::numeric * 100::numeric, 2)\n" +
@@ -90,6 +96,22 @@ public class OrderFillRateQueryBuilder {
             query = query + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
         query = query + " order by " + getOrderString(param) + " " +
                 "   OFFSET " + (param.getPage() - 1) * param.getPageSize() + " LIMIT " + param.getPageSize();
+
+        return query;
+    }
+
+    private static String getQuerySubstituteProduct(OrderFillRateReportParam param, Long userId) {
+
+        String query = " select sli.id ,\n" +
+                "sli.orderid as rnrid,\n" +
+                "sli.productcode,\n" +
+                "sli.substitutedproductcode as substitutedProductCode,\n" +
+                "sli.substitutedproductname as substitutedProductName,\n" +
+                "sli.substitutedproductquantityshipped as substitutedProductQuantityShipped,\n" +
+                "sli.packsize\n" +
+                "from shipment_line_items sli\n" +
+                "where sli.substitutedproductquantityshipped>0 \n" +
+                "and sli.productcode ='" + param.getProductCode() + "' and sli.orderid=" + param.getRnrId();
 
         return query;
     }

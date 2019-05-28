@@ -35,6 +35,7 @@ public class OrderFillRateReportParam extends BaseParam {
     private Long zone;
     private Long facilityType;
     private String products;
+    private String productCode;
     private Long productCategory;
     private Long requisitionGroup;
     private Long rnrId;

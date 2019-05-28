@@ -14,6 +14,9 @@ package org.openlmis.report.model.report;
 
 import lombok.*;
 import org.openlmis.report.model.ResultRow;
+import org.openlmis.report.model.dto.OrderFillRate;
+
+import java.util.List;
 
 
 @Getter
@@ -21,7 +24,7 @@ import org.openlmis.report.model.ResultRow;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderFillRateReport implements ResultRow {
-
+    private Long rnrid;
     private String facility;
     private String facilitycode;
     private Integer approved;
@@ -31,7 +34,7 @@ public class OrderFillRateReport implements ResultRow {
     private Integer item_fill_rate;
     private String ORDER_FILL_RATE;
     private String facilityType;
-    private String supplyingFacility ;
+    private String supplyingFacility;
     private String category;
     private Integer totalproductsreceived;
     private Integer totalproductsapproved;
@@ -41,6 +44,7 @@ public class OrderFillRateReport implements ResultRow {
     private String substitutedProductCode;
     private String substitutedProductName;
     private Double substitutedProductQuantityShipped;
+    private Double substitutedquantityshipped;
     private Double order;
     private String province;
     private String provinceid;
@@ -50,5 +54,6 @@ public class OrderFillRateReport implements ResultRow {
     private String program;
     private String periodid;
     private String period;
+    private List<OrderFillRateReport> substituteProductList;
 
 }
