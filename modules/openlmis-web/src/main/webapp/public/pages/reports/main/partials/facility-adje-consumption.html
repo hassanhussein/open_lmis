@@ -63,7 +63,7 @@
                         <div filter-container class="clearfix">
                             <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
                             <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
-                                               enddate="filter.periodEnd"
+                                               enddate="filter.periodEnd" required="true" rangemax="365"
                                                class="form-cell horizontalFilters"></date-range-filter>
                             <zone-filter class="form-cell horizontalFilters"></zone-filter>
                             <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
@@ -71,37 +71,31 @@
                             <div class="form-cell horizontalFilters" style="padding-top: 20px;">
                                 <label class="checkbox">
                                     <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
-                                           ng-change="searchReport()"/>
-
+                                           ng-checked="filter.disaggregated === 'true'"/>
                                     <span  style="color:#078f97;" openlmis-message="label.report.view.disaggregated"></span>
                                 </label>
                             </div>
                             <div class="clearfix padding2px"></div>
-                            <div class="clearfix padding2px"></div>
-                            <div>
-                            <span class="pull-right">
-                                <a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
-                             </span>
-                            </div>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="content-body">
-                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                <table class="table table-bordered" ng-show="datarows == undefined || datarows.length == 0" client-side-sort-pagination>
                     <tr>
                         <td>No data to show under selected filters</td>
                     </tr>
                 </table>
-                <div ng-show="data.length > 0" client-side-sort-pagination>
-                    <div ng-if="data.length > 0" top-right-table-summary></div>
-                    <table ng-show="data.length > 0" class="table-bordered table table-striped pull-right"
+                <div ng-show="datarows.length > 0" client-side-sort-pagination>
+                    <div ng-if="datarows.length > 0" top-right-table-summary></div>
+                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
                            ng-table="tableParams">
                         <thead>
                         <tr>
-                            <th ng-if="filter.disaggregated==true">Facility Code</th>
-                            <th ng-if="filter.disaggregated==true">Facility</th>
-                            <th ng-if="filter.disaggregated==true">Facility Type</th>
+                            <th>#</th>
+                            <th ng-if="showDisaggregatedColumns">Facility Code</th>
+                            <th ng-if="showDisaggregatedColumns">Facility</th>
+                            <th ng-if="showDisaggregatedColumns">Facility Type</th>
                             <th>Product Code</th>
                             <th>Product Name</th>
 
@@ -109,10 +103,11 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr ng-repeat="row in data">
-                            <td ng-if="filter.disaggregated==true"  ng-bind="row.facilityCode"></td>
-                            <td ng-if="filter.disaggregated==true"  ng-bind="row.facility"></td>
-                            <td  ng-if="filter.disaggregated==true" ng-bind="row.type"></td>
+                        <tr ng-repeat="row in datarows">
+                            <td class="number" style="width:20px">{{ row.no }}</td>
+                            <td ng-if="showDisaggregatedColumns"  ng-bind="row.facilityCode"></td>
+                            <td ng-if="showDisaggregatedColumns"  ng-bind="row.facility"></td>
+                            <td  ng-if="showDisaggregatedColumns" ng-bind="row.type"></td>
                             <td ng-bind="row.productCode"></td>
                             <td ng-bind="row.product"></td>
                             <td  ng-repeat="period in periods">{{ consumptionForPeriod(row,period) }}</td>

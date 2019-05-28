@@ -9,91 +9,30 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $window, FacilityConsumptionReport) {
-    $scope.filter = {};
-    $scope.reportTypes = [{name: 'EM', value: 'EM', label: 'Emergency'}, {name: 'RE', value: 'RE', label: 'Regular'}];
-    $scope.isAll = false;
-    $scope.selectAll = function () {
-
-        if ($scope.isAll === false) {
-            angular.forEach($scope.reportTypes, function (type) {
-                type.checked = true;
-            });
-            $scope.isAll = true;
-        } else {
-            angular.forEach($scope.reportTypes, function (type) {
-                type.checked = false;
-            });
-            $scope.isAll = false;
-        }
-        $scope.filter = {};
-        $scope.filter.allReportType = true;
-        $scope.OnFilterChanged();
-
+function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $window, FacilityConsumptionReport, $q) {
+    $scope.showDisaggregatedColumns= false;
+    $scope.OnFilterChanged = function() {
+        $scope.tableParams.paginationCallBack = $scope.runReport;
+        $scope.paramsChanged($scope.tableParams);
     };
 
-
-    $scope.toggleSingle = function () {
-        var param = [];
-        param = _.where($scope.reportTypes, {checked: true});
-        if (parseInt(param.length, 10) === 2 || parseInt(param.length, 10) === 0) {
-            $scope.allReportType = true;
-            $scope.filter = {};
-            $scope.filter.allReportType = true;
-
-            $scope.OnFilterChanged();
-        }
-        else {
-            $scope.filter = {};
-            var param2 = _.findWhere($scope.reportTypes, {checked: true});
-            if (param2.name === 'RE') {
-                $scope.filter.isEmergency = false;
-                $scope.allReportType = false;
-                $scope.filter.allReportType = false;
-
-            } else {
-                $scope.filter.isEmergency = true;
-                $scope.allReportType = false;
-                $scope.filter.allReportType = false;
-
-                // $scope.filter.allReportType = true;
-            }
-            $scope.OnFilterChanged();
-        }
-    };
-
-
-    $scope.OnFilterChanged = function () {
-
-    };
-
-    $scope.searchReport = function () {
-
-        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
-        var selectDisggregate = $scope.filter.disaggregated;
-        $scope.data = $scope.datarows = [];
-        $scope.filter.page = 1;
-        $scope.filter.pageSize = 100;
-        $scope.filter.max = 10000;
+    $scope.runReport = function () {
+        var deferred = $q.defer();
         $scope.filter.adjustedConsumption='true';
-        if (
-            allParams.periodStart !== null &&
-            allParams.periodEnd !== null &&
-            allParams.program !== null
-        ) {
-            FacilityConsumptionReport.get(allParams, function (data) {
-                if (data.pages !== undefined) {
-                    $scope.data = data.pages.rows;
-                    $scope.periods = $scope.data[0].headerPeriods;
+        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
 
-                    $scope.paramsChanged($scope.tableParams);
-                }
-            });
-
-        }
-
-
+        FacilityConsumptionReport.get($scope.getSanitizedParameter(), function (data) {
+            $scope.data = [];
+            if (data.pages !== undefined) {
+                $scope.data = data.pages;
+                $scope.periods = $scope.data.rows[0].headerPeriods;
+                $scope.showDisaggregatedColumns  = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
+            }
+            deferred.resolve();
+        });
+        return deferred.promise;
     };
+
     $scope.consumptionForPeriod = function (row, period) {
         var consumption=0;
         if (!utils.isNullOrUndefined(row)) {
