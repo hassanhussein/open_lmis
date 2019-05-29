@@ -298,7 +298,6 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
 
     savedRnr.setAuditFieldsForRequisition(rnr.getModifiedBy(), SUBMITTED);
-    savedRnr.setTotalSources(rnr.getTotalSources());
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 

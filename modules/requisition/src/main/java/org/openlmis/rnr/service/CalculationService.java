@@ -50,6 +50,7 @@ public class CalculationService {
   public void perform(Rnr requisition, ProgramRnrTemplate template) {
     requisition.setFullSupplyItemsSubmittedCost(new Money("0"));
     requisition.setNonFullSupplyItemsSubmittedCost(new Money("0"));
+    requisition.setTotalSources(new Money("0"));
 
     calculateForFullSupply(requisition, template);
     calculateForNonFullSupply(requisition);
