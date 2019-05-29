@@ -50,6 +50,4 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
     $scope.toggleMoreFilters = function () {
         $scope.showMoreFilters = true;
     };
-
-
 }
