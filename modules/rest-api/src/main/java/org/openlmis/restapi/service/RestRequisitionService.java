@@ -57,15 +57,13 @@ import static org.openlmis.rnr.domain.RnrStatus.SUBMITTED;
 public class RestRequisitionService {
 
     public static final boolean EMERGENCY = false;
-    private static final String SOURCE_APPLICATION_ELMIS_FE = "ELMIS_FE";
-    private static final String SOURCE_APPLICATION_OTHER = "OTHER";
     public static final String ENTITY_NOT_MATCHED = "7003";
     public static final String ERROR_MISSED_VALUE = "7002";
     public static final String APP_SETTING_CODE = "GOTHOMIS-ELMIS-INTERFACE";
     public static final String INPUT_STATUS = "RECEIVED";
     public static final String SUCCESS_MESSAGE = "7000";
-
-
+    private static final String SOURCE_APPLICATION_ELMIS_FE = "ELMIS_FE";
+    private static final String SOURCE_APPLICATION_OTHER = "OTHER";
     private static final Logger logger = Logger.getLogger(RestRequisitionService.class);
 
     @Autowired
@@ -614,6 +612,13 @@ public class RestRequisitionService {
 
 
         return Report.prepareForREST(rnr);
+
+    }
+
+
+    public void deleteRnR(Long rnrId) {
+
+        requisitionService.deleteRnR(rnrId);
 
     }
 }
