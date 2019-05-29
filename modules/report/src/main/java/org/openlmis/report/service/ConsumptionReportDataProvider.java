@@ -12,6 +12,7 @@
  */
 package org.openlmis.report.service;
 
+import org.apache.log4j.Logger;
 import org.openlmis.report.mapper.FacilityConsumptionReportMapper;
 import org.openlmis.report.mapper.lookup.ProcessingPeriodReportMapper;
 import org.openlmis.report.model.ResultRow;
@@ -45,6 +46,7 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     protected List<ConsumptionColumn> flatConsumptionList;
     @Autowired
     ProcessingPeriodReportMapper processingPeriodReportMapper;
+    private static final Logger logger = Logger.getLogger(ConsumptionReportDataProvider.class);
 
     public List<FacilityConsumptionRow> convertToFacilityConsumptionRow(List<Map<String, Object>> consumptionHashMapList) {
         List<FacilityConsumptionRow> facilityConsumptionRows = null;
@@ -129,7 +131,12 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     public int getReportTotalCount(Map<String, String[]> param) {
 
         FacilityConsumptionReportParam filter = this.getReportFilterData(param);
-        int totalcount = reportMapper.getAggregateConsumptionReportTotalCount(filter, this.getUserId());
+        int totalcount = 0;
+        try {
+            totalcount = reportMapper.getAggregateConsumptionReportTotalCount(filter, this.getUserId());
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
         return totalcount;
 
     }
@@ -137,16 +144,26 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
         FacilityConsumptionReportParam reportParam = getReportFilterData(filterCriteria);
-        List<Map<String, Object>> objectList = reportMapper.getAggregateConsumptionReport(reportParam, this.getUserId());
-        List<FacilityConsumptionRow> facilityConsumptionRowList = this.convertToFacilityConsumptionRow(objectList);
+        try {
+            List<Map<String, Object>> objectList = reportMapper.getAggregateConsumptionReport(reportParam, this.getUserId());
+            this.convertToFacilityConsumptionRow(objectList);
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
         return flatConsumptionList;
     }
 
     @Override
     public List<? extends ResultRow> getReportHtmlBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
         FacilityConsumptionReportParam reportParam = getReportFilterData(filterCriteria);
-        List<Map<String, Object>> objectList = reportMapper.getAggregateConsumptionReport(reportParam, this.getUserId());
-        List<FacilityConsumptionRow> facilityConsumptionRowList = this.convertToFacilityConsumptionRow(objectList);
+        List<FacilityConsumptionRow> facilityConsumptionRowList = null;
+        try {
+            List<Map<String, Object>> objectList = reportMapper.getAggregateConsumptionReport(reportParam, this.getUserId());
+            facilityConsumptionRowList = this.convertToFacilityConsumptionRow(objectList);
+        } catch (Exception ex) {
+            logger.error(ex);
+        }
+
         return facilityConsumptionRowList;
     }
 
