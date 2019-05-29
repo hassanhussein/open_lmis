@@ -219,7 +219,8 @@ dependencies {
       project(':modules:ivd-form'),
       project(':modules:vaccine'),
       project(':modules:help'),
-      project(':modules:stock-management')
+      project(':modules:stock-management'),
+      project(':modules:analytics')
 
   testCompile project(path: ':modules:core', configuration: 'testFixtures'),
       project(path: ':modules:rest-api', configuration: 'testFixtures'),

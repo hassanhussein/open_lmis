@@ -604,7 +604,7 @@ public class RestRequisitionService {
 
         Program reportingProgram = programService.getValidatedProgramByCode(programCode);
         if (reportingFacility != null) {
-            reportingFacility.setVirtualFacility(true);
+            reportingFacility.setVirtualFacility(false);
 
         restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
         }

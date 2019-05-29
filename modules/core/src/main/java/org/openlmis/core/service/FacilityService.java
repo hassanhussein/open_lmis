@@ -45,7 +45,8 @@ public class FacilityService {
     public static final String ERROR_FACILITY_CODE_INVALID = "error.facility.code.invalid";
     public static final String SMS = "SMS";
     public static final String EMAIL = "EMAIL";
-    public static final String APP_SETTING_CODE = "GOTHOMIS-ELMIS-INTERFACE";
+    //public static final String APP_SETTING_CODE = "GOTHOMIS-ELMIS-INTERFACE";
+    public static final String APP_SETTING_CODE = "FACILITY_ELMIS_MAPPING";
     public static final String ERROR_FACILITY_CODE_NOT_MATCH = "error.facility.code.not.match";
 
     @Autowired

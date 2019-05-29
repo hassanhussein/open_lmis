@@ -193,17 +193,27 @@ public class ELMISInterfaceService {
             facility.setInterfaceId(repository.getByName(interFaceKey).getId());
         }
 
-        if (null == dto) {
-            facility.setFacilityId(facilityService.getByCodeFor(facility.getFacilityCode()).getId());
-            facility.setCreatedBy(2L);
-            facility.setModifiedBy(2L);
-            facility.setActive(true);
-            repository.insertFacility(facility);
-        } else {
-            facility.setFacilityId(facilityService.getByCodeFor(facility.getFacilityCode()).getId());
-            facility.setActive(true);
-            repository.updateFacility(facility);
-        }
+        Facility f = facilityService.getByCodeFor(facility.getFacilityCode());
+
+         if(f != null) {
+
+             if (null == dto) {
+
+
+                 facility.setFacilityId(facilityService.getByCodeFor(facility.getFacilityCode()).getId());
+                 facility.setCreatedBy(2L);
+                 facility.setModifiedBy(2L);
+                 facility.setActive(true);
+                 repository.insertFacility(facility);
+             } else {
+                 facility.setFacilityId(facilityService.getByCodeFor(facility.getFacilityCode()).getId());
+                 facility.setActive(true);
+                 repository.updateFacility(facility);
+             }
+
+
+         }
+
     }
 
     public ELMISInterface getByName(String name) {
