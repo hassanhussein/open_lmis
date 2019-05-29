@@ -48,4 +48,7 @@ public abstract class ReportDataProvider {
     public String getFilterSummary(Map<String, String[]> params) {
         return "";
     }
+    public void refresh(){
+
+    }
 }

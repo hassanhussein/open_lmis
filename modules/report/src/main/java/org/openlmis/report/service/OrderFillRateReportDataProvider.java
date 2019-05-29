@@ -116,4 +116,8 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         reportParam = this.getFilterParam(filter);
         return reportMapper.getReportTotalCount(reportParam, this.getUserId());
     }
+
+    public void refresh(){
+        reportMapper.refresh();
+    }
 }

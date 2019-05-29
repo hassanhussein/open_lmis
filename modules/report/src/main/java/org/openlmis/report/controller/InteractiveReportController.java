@@ -275,6 +275,21 @@ public class InteractiveReportController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/reportdata/orderFillRate/refresh-materialized-view", method = GET, headers = BaseController.ACCEPT_JSON)
+
+    public Pages refreshMaterialized( HttpServletRequest request
+
+    ) {
+
+        Pages pages = null;
+        Report report = reportManager.getReportByKey("order_fill_rate");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        report.getReportDataProvider().refresh();
+
+
+        return pages;
+    }
+
     @RequestMapping(value = "/reportdata/orderFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_FILL_RATE_REPORT')")
     public Pages getOrderFillRateData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -856,11 +871,12 @@ public class InteractiveReportController extends BaseController {
                         request.getParameterMap(), page, pageSize);
         return new Pages(page, totalCount, districtConsumptionReportList);
     }
+
     @RequestMapping(value = "/reportdata/facilityConsumption-pdfJson", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getFacilityConsumptionDataPdfJson(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                            @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
-                                            HttpServletRequest request
+                                                   @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
+                                                   HttpServletRequest request
 
     ) {
 
@@ -872,6 +888,7 @@ public class InteractiveReportController extends BaseController {
                         request.getParameterMap(), page, pageSize);
         return new Pages(page, totalCount, districtConsumptionReportList);
     }
+
     @RequestMapping(value = "/reportdata/dailyConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getDailyConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
