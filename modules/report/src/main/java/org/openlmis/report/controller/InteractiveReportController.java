@@ -274,22 +274,6 @@ public class InteractiveReportController extends BaseController {
         return new Pages(page, max, rnRFeedbackReports);
     }
 
-
-    @RequestMapping(value = "/reportdata/orderFillRate/refresh-materialized-view", method = GET, headers = BaseController.ACCEPT_JSON)
-
-    public Pages refreshMaterialized( HttpServletRequest request
-
-    ) {
-
-        Pages pages = null;
-        Report report = reportManager.getReportByKey("order_fill_rate");
-        report.getReportDataProvider().setUserId(loggedInUserId(request));
-        report.getReportDataProvider().refresh();
-
-
-        return pages;
-    }
-
     @RequestMapping(value = "/reportdata/orderFillRate", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_ORDER_FILL_RATE_REPORT')")
     public Pages getOrderFillRateData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
