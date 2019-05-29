@@ -73,6 +73,7 @@ public interface OrderFillRateReportMapper {
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getFillRateReportRequisitionStatus")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
     String getFillRateReportRequisitionStatus(@Param("filterCriteria") OrderFillRateReportParam params);
-@Select(" REFRESH MATERIALIZED VIEW CONCURRENTLY mv_order_fulfillment;")
+@Select(" REFRESH MATERIALIZED VIEW  mv_order_fulfillment\n" +
+        "with data;")
     public void refresh();
 }
