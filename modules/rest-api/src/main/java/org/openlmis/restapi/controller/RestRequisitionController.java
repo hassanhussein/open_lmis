@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.dto.InterfaceResponseDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.restapi.domain.Report;
 import org.openlmis.restapi.request.RequisitionSearchRequest;
 import org.openlmis.restapi.response.RestResponse;
@@ -24,6 +25,7 @@ import org.openlmis.rnr.dto.RnRFeedbackDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -238,17 +240,27 @@ public class RestRequisitionController extends BaseController {
                                                             @RequestParam("programCode") String programCode,
                                                             @RequestParam("sourceApplication") String sourceApplication,
                                                             Principal principal,
-                                                            @RequestParam("emergence") boolean emergence) {
+                                                            @RequestParam("emergence") boolean emergence,
+                                                            @RequestParam("del") boolean delete,
+                                                            @RequestParam(value = "rnrId", defaultValue = "null") Long rnrId
+
+
+                                                            ) {
         Report requisition;
 
         try {
-            requisition = restRequisitionService.initiateSDPReport(facilityCode,programCode, loggedInUserId(principal),emergence,sourceApplication);
+            if(delete && rnrId != null){
+                restRequisitionService.deleteRnR(rnrId);
+                return response("rnr","deleted Successfully");
+            }else {
+                requisition = restRequisitionService.initiateSDPReport(facilityCode,programCode, loggedInUserId(principal),emergence,sourceApplication);
+                return response(RNR, requisition, CREATED);
+            }
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
-        return response(RNR, requisition, CREATED);
-    }
 
+    }
 
 
 }
