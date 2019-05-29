@@ -10,25 +10,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function SummaryReportController($scope, SummaryReport) {
+function SummaryReportController($scope, SummaryReport, $timeout) {
 
     $scope.currentPage = 1;
-    $scope.pageSize = 50;
+    $scope.pageSize = 10;
+    $scope.params = {};
 
-    $scope.$watch('currentPage', function () {
-        console.log($scope.pageSize);
-        if (angular.isDefined($scope.lineItems)) {
-            $scope.pageLineItems();
-        }
-    });
-
-
-    //$.extend(this, new BaseReportController($scope, SummaryReport, $scope.filter));
-
-
-    $scope.exportReport = function (type, par) {
+    $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
-        var params = jQuery.param(par);
+        var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/summary' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + params;
         window.open(url, "_BLANK");
     };
@@ -83,36 +73,47 @@ function SummaryReportController($scope, SummaryReport) {
         $scope.OnFilterChanged();
     };
 
-    $scope.params = {};
 
-    $scope.pageLineItems = function(){
-
-       $scope.filter.max= $scope.pageSize;
-    };
-
+    //triggered everytime parameter change
     $scope.OnFilterChanged = function () {
 
-        if (angular.isUndefined($scope.getSanitizedParameter().program) || $scope.getSanitizedParameter().program === null || angular.isUndefined($scope.getSanitizedParameter().year) || $scope.getSanitizedParameter().year === null ||  angular.isUndefined($scope.getSanitizedParameter().period) || $scope.getSanitizedParameter().period === null || angular.isUndefined($scope.getSanitizedParameter().schedule) || $scope.getSanitizedParameter().schedule === null) {
+       if (angular.isUndefined($scope.getSanitizedParameter().program) || $scope.getSanitizedParameter().program === null || angular.isUndefined($scope.getSanitizedParameter().year) || $scope.getSanitizedParameter().year === null ||  angular.isUndefined($scope.getSanitizedParameter().period) || $scope.getSanitizedParameter().period === null || angular.isUndefined($scope.getSanitizedParameter().schedule) || $scope.getSanitizedParameter().schedule === null) {
             return;
         }
 
-        // clear old data if there was any
-        $scope.tableParams.count = 10;
+        // clear old data and set new
+        $scope.tableParams.count = 100;
         $scope.data = $scope.datarows = [];
-        $scope.filter.max = 100;
-      //  $scope.filter.page = 10;
-
-        $scope.numberOfPages = [{id:1,value:10,name:'10 Pages'},{id:2,value:100,name:'100 Pages'},{id:3, value:10000,name:'All Pages'}];
-
+        $scope.filter.page = $scope.page;
+        $scope.filter.limit = $scope.pageSize;
         $scope.params = angular.extend({}, $scope.getSanitizedParameter(), $scope.filter);
-        console.log($scope.filter);
 
-        SummaryReport.get($scope.params, function (data) {
-            if (data.pages !== undefined && data.pages.rows !== undefined) {
-                $scope.data = data.pages.rows;
-                $scope.paramsChanged($scope.tableParams);
-            }
+
+        //a variable to do manage rows count on UI
+        $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
+
+        //fetch data by passing selected params
+        SummaryReport.get($scope.params , function (data) {
+            if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+                    $scope.pagination = data.openLmisResponse.pagination;
+                    $scope.totalItems = 1000;
+                    $scope.currentPage = $scope.pagination.page;
+                    $scope.tableParams.total = $scope.totalItems;
+                    $scope.data = data.openLmisResponse.rows;
+                    $scope.paramsChanged($scope.tableParams);
+                  }
         });
     };
+
+
+    //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
+     $scope.$watch('currentPage', function () {
+                if ($scope.currentPage > 0) {
+                  $scope.page = $scope.currentPage;
+                  $timeout(function(){
+                  $scope.OnFilterChanged();
+                  },100);
+                }
+              });
 
 }

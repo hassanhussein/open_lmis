@@ -98,19 +98,23 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/summary", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_SUMMARY_REPORT')")
-    public Pages getSummaryData(
+    public OpenLmisResponse getSummaryData(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+            @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
             HttpServletRequest request
     ) {
 
 
         Report report = reportManager.getReportByKey("summary");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<SummaryReport> reportList =
-                (List<SummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+        helper.setPageSize(limit);
+        List<SummaryReport> reportList =(List<SummaryReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page,Integer.parseInt(limit));
 
-        return new Pages(page, max, reportList);
+        Pagination pagination = helper.getPagination(page);
+        OpenLmisResponse pages = new OpenLmisResponse("rows",reportList);
+        pages.addData("pagination", pagination);
+        return pages;
     }
 
     @RequestMapping(value = "/reportdata/non_reporting", method = GET, headers = BaseController.ACCEPT_JSON)
