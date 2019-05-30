@@ -403,7 +403,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 					</textElement>
 					<textFieldExpression><![CDATA[($F{period}=="NULL"?" ":$F{period})]]></textFieldExpression>
 				</textField>
-				<textField pattern="MMMMM dd, yyyy">
+				<textField pattern="MMMMM dd, yyyy" isBlankWhenNull="true">
 					<reportElement x="675" y="0" width="65" height="20" uuid="eec7cd34-49cf-410c-83d0-a5ab742e0260"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="8"/>
