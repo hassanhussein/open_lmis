@@ -1,17 +1,23 @@
 package org.openlmis.restapi.service;
 
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.BudgetDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.BudgetLineItemRepository;
-import org.openlmis.core.service.BudgetLineItemService;
-import org.openlmis.core.service.ELMISInterfaceService;
-import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.*;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
+import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -26,7 +32,22 @@ public class RestBudgetService {
     private BudgetLineItemRepository lineItemRepository;
 
     @Autowired
+    private ProcessingPeriodService periodService;
+
+    @Autowired
+    private ProgramService programService;
+
+    @Autowired
+    private ProgramSupportedService supportedService;
+
+    @Autowired
     private ELMISInterfaceService interfaceService;
+
+    @Autowired
+    private RequisitionService requisitionService;
+
+    @Autowired
+    private ProcessingScheduleService processingScheduleService;
 
     private void setResponseMessage(BudgetDTO dto,String message){
         dto.setResponseMessage(interfaceService.getResponseMessageByCode(message));
@@ -40,36 +61,62 @@ public class RestBudgetService {
         if(!errors.isEmpty()) return errors;
 
         Facility facility = facilityService.getByCodeFor(budgetDTO.getFacilityCode());
+
+
         if (facility != null) {
 
-        BudgetDTO budget = lineItemRepository.getExistingBudget(facility.getId());
-        try{
+            BudgetDTO budget = lineItemRepository.getExistingBudget(facility.getId());
 
-        if(budget == null){
-            budgetDTO.setCreatedBy(userId);
-            budgetDTO.setModifiedBy(userId);
-            budgetDTO.setFacilityId(facility.getId());
-            lineItemRepository.insertBudget(budgetDTO);
-            setResponseMessage(budgetDTO,SUCCESS_FIELD_VALUE);
-            budgetDTO.setSuccess();
+            List<ProgramSupported> programs = supportedService.getAllByFacilityId(facility.getId());
 
-        }else {
+            if(!programs.isEmpty()){
 
-            budgetDTO.setCreatedBy(userId);
-            budgetDTO.setModifiedBy(userId);
-            budgetDTO.setFacilityId(facility.getId());
-            budgetDTO.setId(budget.getId());
-            lineItemRepository.updateBudget(budgetDTO);
-            setResponseMessage(budgetDTO,SUCCESS_FIELD_VALUE);
-            errors = budgetDTO.setSuccess();
+            for (ProgramSupported supported : programs) {
+                Program p  = programService.getById(supported.getProgram().getId());
+
+                ProcessingPeriod period = processingScheduleService.getPeriodForDate(facility,p,supported.getStartDate());
+
+                if(period != null){
+
+                    try {
+
+                        if (budget == null) {
+
+                            budgetDTO.setProgramId(supported.getProgram().getId());
+                            budgetDTO.setPeriodId(period.getId());
+                            budgetDTO.setCreatedBy(userId);
+                            budgetDTO.setModifiedBy(userId);
+                            budgetDTO.setFacilityId(facility.getId());
+                            lineItemRepository.insertBudget(budgetDTO);
+                            setResponseMessage(budgetDTO, SUCCESS_FIELD_VALUE);
+                            budgetDTO.setSuccess();
+
+                        } else {
+
+                            budgetDTO.setProgramId(supported.getProgram().getId());
+                            budgetDTO.setPeriodId(period.getId());
+                            budgetDTO.setCreatedBy(userId);
+                            budgetDTO.setModifiedBy(userId);
+                            budgetDTO.setFacilityId(facility.getId());
+                            budgetDTO.setId(budget.getId());
+                            lineItemRepository.updateBudget(budgetDTO);
+                            setResponseMessage(budgetDTO, SUCCESS_FIELD_VALUE);
+                            errors = budgetDTO.setSuccess();
+                        }
+
+                    } catch (DataException e) {
+                        setResponseMessage(budgetDTO, ERROR_MISSED_FIELD_VALUE);
+                        errors = budgetDTO.setFailure();
+                        //Catch an Exception
+                    }
+
+                } else {
+                    errors = budgetDTO.setFailure();
+                }
+
+
+            }
         }
-
-        } catch (DataException e){
-            setResponseMessage(budgetDTO,ERROR_MISSED_FIELD_VALUE);
-           errors = budgetDTO.setFailure();
-            //Catch an Exception
-        }
-
 
         }else {
             errors = budgetDTO.validateNull(null);

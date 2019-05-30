@@ -37,6 +37,9 @@ public class BudgetDTO extends BaseModel {
     private Long facilityId;
     private String receivedDate;
     private String UID;
+    private Long programId;
+    private Long periodId;
+
 
     private List<BudgetLineItemDTO> lineItem = new ArrayList<>();
 

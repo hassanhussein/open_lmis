@@ -63,6 +63,12 @@ public interface BudgetLineItemMapper {
   @Delete(" delete from budget_line_items where budgetid = #{budgetId} ")
    void deleteBudgetLineItems(@Param("budgetId")Long budgetId);
 
+  @Delete("delete from budget_line_items where programId = #{programId} and periodid =#{periodId} and facilityId = #{facilityId} ")
+  void deleteBy(@Param("facilityId")Long facilityId,
+                @Param("programId")Long programId,
+                @Param("periodId")Long periodId);
+
+
   @Update("UPDATE public.budgets\n" +
           "   SET createdBy=#{createdBy}, createdDate=NOW(), modifiedBy= #{modifiedBy}, modifiedDate=NOW(), sourceApplication=#{sourceApplication}, receivedDate=#{receivedDate}::date\n" +
           " WHERE id = #{id}; ")

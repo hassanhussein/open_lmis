@@ -63,16 +63,14 @@ public class BudgetLineItemRepository {
   private void saveLineItem(BudgetDTO budgetDTO) {
 
       for (BudgetLineItemDTO lineItem  : budgetDTO.getLineItem()) {
-        int leftLimit = 1;
-        int rightLimit = 3;
-        int generatedInteger = leftLimit + (int) (new Random().nextFloat() * (rightLimit - leftLimit));
 
-        lineItem.setProgramId(1L);
-        lineItem.setPeriodId((long) generatedInteger);
+        lineItem.setProgramId(budgetDTO.getProgramId());
+        lineItem.setPeriodId(budgetDTO.getPeriodId());
         lineItem.setBudgetFileId(1018L);
         lineItem.setPeriodDate(budgetDTO.getReceivedDate());
         lineItem.setBudgetId(budgetDTO.getId());
         lineItem.setFacilityId(budgetDTO.getFacilityId());
+        mapper.deleteBy(budgetDTO.getFacilityId(),budgetDTO.getProgramId(),budgetDTO.getPeriodId());
         mapper.insertBudgetLineItem(lineItem);
       }
 

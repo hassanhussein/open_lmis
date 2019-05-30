@@ -50,7 +50,9 @@ public class RestBudgetController extends BaseController{
 
     @RequestMapping(value = "/rest-api/budget/service-delivery-point", method = POST, headers = ACCEPT_JSON)
     public BudgetDTO saveBudgetReport(@RequestBody BudgetDTO budget, Principal principal) {
+
         restBudgetService.updateBudget(budget, loggedInUserId(principal));
+        budget.setErrorMap(null);
         return budget;
     }
 
