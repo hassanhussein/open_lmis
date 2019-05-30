@@ -31,6 +31,8 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
                  total: data.pages.total
             };
             deferred.resolve();
+        }, function(error){
+                      deferred.reject(error);
         });
         return deferred.promise;
     };

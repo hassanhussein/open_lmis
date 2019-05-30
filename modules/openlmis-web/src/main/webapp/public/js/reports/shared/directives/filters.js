@@ -993,6 +993,7 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                 scope.registerServerSidePagination = function(params, callBack) {
                     params.paginationCallBack = callBack;
                     params.page = 1;
+                    scope.filter.error = '';
                     scope.paramsChanged(params);
                 };
 
@@ -1011,9 +1012,15 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                         serverSidePagination = true;
 
                         params.paginationCallBack(params.count, params.page, sortBy, sortDirection)
-                            .then(function() {
+                            .catch(function(error) {
+                                scope.data = undefined;
+                                console.log('Report api returned server error');
+                                if(error){
+                                    console.log(error.status, error.data);
+                                }
+                            }).finally(function() {
                                 spliceAndPageData(scope, params);
-                        });
+                            });
                     } else {
                         spliceAndPageData(scope, params);
                     }
