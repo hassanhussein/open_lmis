@@ -1379,10 +1379,13 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         $scope.changeYear = function () {
 
+        console.log($scope.filter.year);
+
             $scope.periods = [];
             ReportPeriodsByYear.get({
                 year: $scope.filter.year
             }, function (data) {
+                 console.log(data);
                 $scope.periods = data.periods;
                 $scope.filter.period = $scope.periods[0].id;
 
