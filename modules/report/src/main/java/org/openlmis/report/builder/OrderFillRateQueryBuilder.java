@@ -34,17 +34,21 @@ public class OrderFillRateQueryBuilder {
     }
 
     private static String writePredicates(OrderFillRateReportParam param) {
-        String predicate = " and  r.programId=" +param.getProgram()+
-                " and r.periodid = " + param.getPeriod() + " " +
-                " and (r.zoneid = " + param.getZone() + " or r.districtid = " + param.getZone() + " or r.parent = " + param.getZone() + " " +
-                " or r.provinceid = " + param.getZone() + ") and r.emergency=false ";
+        String predicate = " and  r.programId=" + param.getProgram() +
+                " and r.periodid = " + param.getPeriod() + " ";
+        if (param.getZone() != null && param.getZone() != 0) {
+            predicate = predicate + " and (r.zoneid = " + param.getZone() + " or r.districtid = " + param.getZone() + " or r.parent = " + param.getZone() + " " +
+
+                    " or r.provinceid = " + param.getZone() + ")";
+        }
+        predicate = predicate + " and r.emergency=false ";
         if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null) {
             predicate = predicate + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
         }
 
 
         if (param.getFacility() != 0) {
-         predicate= predicate+ " and r.facilityId="+param.getFacility();
+            predicate = predicate + " and r.facilityId=" + param.getFacility();
         }
 
 
