@@ -48,7 +48,7 @@ public class ConsumptionBuilder {
             WHERE(facilityIsFilteredBy("r.facilityid"));
         }
         if (filter.getZone() != 0) {
-            WHERE(geoZoneIsFilteredBy("r"));
+            WHERE(geoZoneIsFilteredBy("r.provinceid","r.parent","r.zoneid","r.districtid"));
         }
 
         if (filter.getAllReportType()) {
