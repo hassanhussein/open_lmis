@@ -84,7 +84,7 @@ public class EquipmentInventoryService {
     // First, may need to save equipment into equipment list
     // Only need to do this for non-CCE
     Equipment equipment = inventory.getEquipment();
-    if (!equipment.getEquipmentType().isColdChain()) {
+    if (!equipment.getEquipmentType().getIsColdChain()) {
       //Boolean equipmentFound = false;
       Long equipmentTypeId = equipment.getEquipmentTypeId();
 

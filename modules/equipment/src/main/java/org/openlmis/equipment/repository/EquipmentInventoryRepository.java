@@ -95,7 +95,7 @@ public class EquipmentInventoryRepository {
     Long equipmentId = inventory.getEquipmentId();
     Equipment equipment = equipmentMapper.getById(equipmentId);
     EquipmentType equipmentType = equipmentTypeMapper.getEquipmentTypeById(equipment.getEquipmentTypeId());
-    if (equipmentType.isColdChain()) {
+    if (equipmentType.getIsColdChain()) {
       equipment = coldChainEquipmentMapper.getById(equipmentId);
     }
     inventory.setEquipment(equipment);

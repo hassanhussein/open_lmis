@@ -31,14 +31,19 @@ public interface EquipmentTypeMapper {
   @Select("select * from equipment_types order by name")
   List<EquipmentType> getAll();
 
-  @Insert("insert into equipment_types (code, name, createdBy, createdDate, modifiedBy, modifiedDate, isColdChain, IsBioChemistry) " +
+  @Insert("insert into equipment_types (code, name, createdBy, createdDate, modifiedBy, modifiedDate, isColdChain, IsBioChemistry, categoryId) " +
       " values " +
-      " (#{code}, #{name}, #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW(), #{isColdChain}, #{isBioChemistry})")
+      " (#{code}, #{name}, #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW(), #{isColdChain}, #{isBioChemistry}," +
+          "#{category.id})")
   @Options(useGeneratedKeys = true)
   void insert(EquipmentType type);
 
   @Update("UPDATE equipment_types SET " +
-      "name = #{name}, code = #{code}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(),isColdChain = #{isColdChain}, IsBioChemistry = #{isBioChemistry} " +
+      "name = #{name}, code = #{code}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(),isColdChain = #{isColdChain}" +
+          " , IsBioChemistry = #{isBioChemistry}, categoryId = #{category.id} " +
       " WHERE id = #{id}")
   void update(EquipmentType type);
+
+  @Select("select * from equipment_types where code = #{code}")
+  EquipmentType getByCode(String code);
 }

@@ -403,6 +403,24 @@
                         <property name="recordHandler" ref="geoMapMappingPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="equipment-type">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.equipment.type"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.equipment.domain.EquipmentType</value>
+                        </property>
+                        <property name="recordHandler" ref="equipmentTypePersistenceHandler"/>
+                    </bean>
+                </entry>
+                <entry key="equipment-category">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="label.equipment.category"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.equipment.domain.EquipmentCategory</value>
+                        </property>
+                        <property name="recordHandler" ref="equipmentCategoryPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

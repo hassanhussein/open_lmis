@@ -12,19 +12,16 @@
 
 package org.openlmis.report.model;
 
+
 import lombok.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
+import java.util.Optional;
 
 @Getter
 @Setter
 @EqualsAndHashCode
-@JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pages {
 
@@ -36,7 +33,7 @@ public class Pages {
     private int count;
 
     public Pages(int page, int total, List<? extends ResultRow> rows) {
-        this.rows = rows;
+        this.rows = Optional.ofNullable(rows).orElse(new ArrayList<>());
         this.page = page;
         this.max = total;
         this.count =rows!=null &&!rows.isEmpty()? rows.size():0;

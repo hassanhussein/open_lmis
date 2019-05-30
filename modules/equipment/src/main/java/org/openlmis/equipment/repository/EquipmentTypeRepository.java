@@ -41,4 +41,5 @@ public class EquipmentTypeRepository {
     equipmentTypeMapper.update(type);
   }
 
+  public EquipmentType getByCode(String code) { return equipmentTypeMapper.getByCode(code); }
 }

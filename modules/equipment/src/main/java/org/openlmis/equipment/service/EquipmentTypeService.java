@@ -12,7 +12,10 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.exception.DataException;
+import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.repository.EquipmentCategoryRepository;
 import org.openlmis.equipment.repository.EquipmentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,6 +28,9 @@ public class EquipmentTypeService {
   @Autowired
   private EquipmentTypeRepository repository;
 
+  @Autowired
+  private EquipmentCategoryRepository equipmentCategoryRepository;
+
   public List<EquipmentType> getAll(){
     return repository.getAll();
   }
@@ -33,7 +39,14 @@ public class EquipmentTypeService {
     return repository.getEquipmentTypeById(id);
   }
 
-  public void save(EquipmentType type){
+  public void save(EquipmentType type) {
+    if(type.getCategory().getId() == null && type.getCategory().getCode() != null) {
+      EquipmentCategory category = equipmentCategoryRepository.getByCode(type.getCategory().getCode());
+        if(category == null)
+          throw new DataException("error.equipment.type.category.data.missing");
+      type.setCategory(category);
+    }
+
     if(type.getId() == null){
       repository.insert(type);
     } else {
@@ -41,4 +54,7 @@ public class EquipmentTypeService {
     }
   }
 
+    public EquipmentType getByCode(EquipmentType type) {
+      return repository.getByCode(type.getCode());
+    }
 }
