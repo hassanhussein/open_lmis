@@ -32,7 +32,7 @@ function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushed
             };
             deferred.resolve();
         }, function(error){
-                      deferred.reject(error);
+            deferred.reject(error);
         });
         return deferred.promise;
     };

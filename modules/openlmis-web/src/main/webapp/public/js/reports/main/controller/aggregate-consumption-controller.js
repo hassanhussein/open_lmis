@@ -47,6 +47,8 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
                 $scope.showDisaggregatedColumns = $scope.filter.disaggregated ? true : false;
                 deferred.resolve(data);
             }
+        }, function(error){
+           deferred.reject(error);
         });
         return deferred.promise;
     };

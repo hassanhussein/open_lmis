@@ -27,6 +27,8 @@ function FacilityConsumptionReportController($scope, $filter, $window, FacilityC
                 $scope.showDisaggregatedColumns  = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
             }
             deferred.resolve();
+        }, function(error){
+           deferred.reject(error);
         });
         return deferred.promise;
     };
