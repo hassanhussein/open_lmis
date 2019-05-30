@@ -18,6 +18,7 @@ import org.openlmis.report.mapper.SummaryReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.SummaryReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.ReportPaginationHelper;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,14 +36,16 @@ public class SummaryReportDataProvider extends ReportDataProvider {
   @Autowired
   private SelectedFilterHelper filterHelper;
 
+  @Autowired
+  private ReportPaginationHelper helper;
+
   private SummaryReportParam getParameter(Map params) {
     return ParameterAdaptor.parse(params, SummaryReportParam.class);
   }
 
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getReport(getParameter(filterCriteria), rowBounds);
+    return reportMapper.getReport(getParameter(filterCriteria), helper.getPagination(page));
   }
 
   @Override

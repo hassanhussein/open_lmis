@@ -30,9 +30,9 @@
                 <span openlmis-message="label.report.aggregate.summary"></span>
             </h2>
             <div class="box-icon">
-                <a id="pdf-button" target="_blank" href="" ng-click="exportReport('PDF',params)"
+                <a id="pdf-button" target="_blank" href="" ng-click="exportReport('PDF')"
                    class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
-                <a id="xls-button" target="_blank" href="" ng-click="exportReport('XLS',params)"
+                <a id="xls-button" target="_blank" href="" ng-click="exportReport('XLS')"
                    class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
             </div>
         </div>
@@ -122,11 +122,17 @@
                         </tr>
                     </table>
                     <div client-side-sort-pagination ng-show="datarows.length > 0">
-                        <div ng-if="datarows.length > 0" top-right-table-summary></div>
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped"
-                               ng-table="tableParams" style="overflow-x: auto;min-width: 100%;table-layout: fixed;">
+                        <div class="pull-right legend">Page: {{currentPage}}, Showing records {{ countFactor + 1 }} to {{ countFactor + pageSize }} of
+                            {{totalItems}}
+                            <br/>
+                        </div>
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped scrollable"
+                               ng-table="" style="overflow-x: auto;min-width: 100%;table-layout: fixed;">
                             <thead>
                             <tr class="gradient-header">
+                                <th style="width:20px">
+                                    <span>#</span>
+                                </th>
                                 <th ng-show="filter.disaggregated" sortable="facilityCode">
                                     <span openlmis-message="label.facility.code"></span>
                                 </th>
@@ -164,6 +170,7 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="row in datarows">
+                                <td data-title="'#'" class="number" style="width:20px">{{ row.no + countFactor}}</td>
                                 <td ng-show="filter.disaggregated">
                                     {{ row.facilityCode}}
                                 </td>
@@ -194,18 +201,19 @@
                         </table>
 
                     </div>
-                   <!-- <div>
-                        <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="pageLineItems()">
-                            <option value="10">10 per page</option>
-                            <option value="20">20 per page</option>
-                            <option value="50">50 per page</option>
-                            <option value="100">100 per page</option>
-                        </select>
 
-                        <openlmis-pagination num-pages="pageCount" current-page="currentPage" max-size="10"
-                                             check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
-                        <div class="clear-top"></div>
-                    </div>-->
+
+                    <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="OnFilterChanged()">
+                        <option value="10">10 per page</option>
+                        <option value="20">20 per page</option>
+                        <option value="50">50 per page</option>
+                        <option value="100">100 per page</option>
+                    </select>
+
+
+                    <pagination total-items="totalItems" page="currentPage" max-size="10"
+                                items-per-page="pagination.limit"
+                                direction-links="false" class="pagination-sm"></pagination>
                     <div class="pull-right">
                         <a ng-href="/public/pages/reports/maps/index.html#/reporting-rate?schedule={{filter.schedule}}&year={{filter.year}}&program={{filter.program}}&period={{filter.period}}">
                             View Reporting Rate
