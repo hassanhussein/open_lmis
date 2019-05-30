@@ -110,10 +110,8 @@ public class OrderFillRateQueryBuilder {
         String query = " select count(*) " +
                 "   FROM mv_requisition r \n" +
                 "     LEFT JOIN mv_order_fulfillment o on o.orderid= r.rnrid and  o.productcode = r.productcode \n" +
-                " where  r.rnrid = ANY(" + param.getRnrIdsPar() + ") ";
-
-        if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null)
-            query = query + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
+                "  WHERE r.status::text = 'RELEASED'::text AND r.approved > 0\n" +
+                writePredicates(param);
 
         return query;
     }
