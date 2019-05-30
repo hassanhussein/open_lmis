@@ -108,9 +108,9 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
 
      StockImbalanceReport.get($scope.getSanitizedParameter(), function(data) {
             if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
-            var adjustments = data.openLmisResponse.rows;
-            $scope.data =_.where(adjustments,{pagination:null});
-            $scope.pagination = adjustments[adjustments.length-1].pagination;
+            var imbalance = data.openLmisResponse.rows;
+            $scope.data =_.where(imbalance,{pagination:null});
+            $scope.pagination = imbalance[imbalance.length-1].pagination;
             $scope.totalItems = $scope.pagination.totalRecords;
             $scope.currentPage = $scope.pagination.page;
             $scope.tableParams.total = $scope.totalItems;

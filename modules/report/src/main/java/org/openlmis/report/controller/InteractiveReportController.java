@@ -180,18 +180,24 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/aggregateConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
-    public Pages getAggregateConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                             HttpServletRequest request
+    public OpenLmisResponse getAggregateConsumptionData(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+            @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
+            HttpServletRequest request
 
     ) {
 
         Report report = reportManager.getReportByKey("aggregate_consumption");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
+        helper.setPageSize(limit);
         List<DistrictConsumptionReport> districtConsumptionReportList =
                 (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
-        return new Pages(page, max, districtConsumptionReportList);
+        Pagination pagination = helper.getPagination(page);
+        OpenLmisResponse pages = new OpenLmisResponse("rows", districtConsumptionReportList);
+        pages.addData("pagination", pagination);
+        return pages;
     }
 
     @RequestMapping(value = "/reportdata/viewOrders", method = GET, headers = BaseController.ACCEPT_JSON)

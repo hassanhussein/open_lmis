@@ -18,6 +18,7 @@ import org.openlmis.report.mapper.AggregateConsumptionReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.ReportPaginationHelper;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,10 +42,12 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
   @Autowired
   private AggregateConsumptionReportMapper reportMapper;
 
+  @Autowired
+  private ReportPaginationHelper paginationHelper;
+
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
+    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
   }
 
   public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

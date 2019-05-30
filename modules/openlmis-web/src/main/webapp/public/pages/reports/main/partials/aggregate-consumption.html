@@ -153,15 +153,19 @@
                     </tr>
                 </table>
                 <div ng-show="datarows.length > 0" client-side-sort-pagination>
-                    <div ng-if="datarows.length > 0" top-right-table-summary></div>
+                    <div class="pull-right legend">Page: {{currentPage}}, Showing records {{ countFactor + 1 }} to {{ countFactor + pageSize }} of
+                        {{totalItems}}
+                                                  <br/>
+                    </div>
 
                     <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
-                           ng-table="tableParams">
+                           ng-table="">
 
                         <tbody>
                         <tr ng-repeat="row in datarows">
 
-                            <td data-title="'#'" class="number" style="width:50px;">{{ row.no }}</td>
+                            <td data-title="'#'" class="number" style="width:50px;">{{ row.no + countFactor}}</td>
+
 
                            <!-- <td ng-hide="true" data-title="getLocalMessage('label.facility.code')"
                                 style="width:20% !important; padding: 0px !important;" sortable="facilityCode">{{ row.facilityCode
@@ -200,12 +204,24 @@
                         </tr>
                         </tbody>
                     </table>
+                    <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="searchReport()">
+                        <option value="10">10 per page</option>
+                        <option value="20">20 per page</option>
+                        <option value="50">50 per page</option>
+                        <option value="100">100 per page</option>
+                    </select>
+
+
+                    <pagination total-items="totalItems" page="currentPage" max-size="10"
+                                items-per-page="pagination.limit"
+                                direction-links="false" class="pagination-sm"></pagination>
                     <div class="clearfix"></div>
                     <div ng-show="datarows.length > 0" class="box">
                         <div class="box-content">
                             <span openlmis-message="report.message.aggregate.consumption"></span>
                         </div>
                     </div>
+
                 </div>
 
             </div>
