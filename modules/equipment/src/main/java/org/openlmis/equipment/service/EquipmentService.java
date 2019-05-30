@@ -62,7 +62,7 @@ public class EquipmentService {
 
     EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
 
-    if (equipmentType.isColdChain()) {
+    if (equipmentType.getIsColdChain()) {
       return coldChainEquipmentRepository.getById(id);
     } else {
       return repository.getById(id);

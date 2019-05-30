@@ -77,7 +77,7 @@ public class EquipmentController extends BaseController {
 
       Pagination pagination = new Pagination(page, parseInt(limit));
       EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
-      if(equipmentType.isColdChain())
+      if(equipmentType.getIsColdChain())
       {
           List<ColdChainEquipment> equipments=service.getAllCCE(equipmentTypeId,pagination);
           pagination.setTotalRecords(service.getCCECountByType(equipmentTypeId));
@@ -129,7 +129,7 @@ public class EquipmentController extends BaseController {
         try{
             if(equipment.getId()==null) {
 
-                if(equipmentType.isColdChain()) {
+                if(equipmentType.getIsColdChain()) {
                     service.saveEquipment(equipment);
                     coldChainEquipment = (ColdChainEquipment) equipment;
                     service.saveColdChainEquipment(coldChainEquipment);
@@ -139,7 +139,7 @@ public class EquipmentController extends BaseController {
                 }
             }
             else{
-                if(equipmentType.isColdChain()) {
+                if(equipmentType.getIsColdChain()) {
                     service.updateEquipment(equipment);
                     coldChainEquipment = (ColdChainEquipment) equipment;
                     service.updateColdChainEquipment(coldChainEquipment);
@@ -163,7 +163,7 @@ public class EquipmentController extends BaseController {
         ResponseEntity<OpenLmisResponse> successResponse;
         EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
         try{
-            if(equipmentType.isColdChain()) {
+            if(equipmentType.getIsColdChain()) {
                 //remove Cold Chain first
                 service.removeCCE(id);
                 //then  remove equipment

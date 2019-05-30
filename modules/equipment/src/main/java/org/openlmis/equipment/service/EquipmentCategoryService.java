@@ -4,6 +4,7 @@ package org.openlmis.equipment.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.EquipmentFunctionalTestTypes;
 import org.openlmis.equipment.repository.EquipmentCategoryRepository;
@@ -40,4 +41,15 @@ public class EquipmentCategoryService {
     public void associateEquipmentTypes(List<EquipmentCategory> categoryList) { repository.associateEquipmentTypes(categoryList);
     }
 
+    public EquipmentCategory getByCode(EquipmentCategory category) {
+        return repository.getByCode(category.getCode());
+    }
+
+    public void save(EquipmentCategory category) {
+        if(category.getId() == null){
+            repository.insert(category);
+        } else {
+            repository.update(category);
+        }
+    }
 }

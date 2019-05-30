@@ -58,4 +58,15 @@ public class EquipmentCategoryRepository {
                 });
     }
 
+    public EquipmentCategory getByCode(String code) {
+        return mapper.getByCode(code);
+    }
+
+    public void insert(EquipmentCategory category) {
+        mapper.insert(category);
+    }
+
+    public void update(EquipmentCategory category) {
+        mapper.update(category);
+    }
 }

@@ -48,4 +48,17 @@ public interface EquipmentCategoryMapper {
 
     @Update("update equipment_functional_test_types set  equipmentcategoryid = #{equipmentCategoryId} where id = #{functionalTestTypeId}")
     void associateFunctionalTestTypes(@Param("equipmentCategoryId") Long equipmentCategoryId, @Param("functionalTestTypeId") Long functionalTestTypeId);
+
+    @Select("select * from equipment_category where code = #{code}")
+    EquipmentCategory getByCode(String code);
+
+    @Update("UPDATE equipment_category SET " +
+            "name = #{name}, code = #{code}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
+            " WHERE id = #{id}")
+    void update(EquipmentCategory category);
+
+    @Insert("insert into equipment_category (code, name, createdBy, createdDate, modifiedBy, modifiedDate) " +
+            " values " +
+            " (#{code}, #{name}, #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW())")
+    void insert(EquipmentCategory category);
 }
