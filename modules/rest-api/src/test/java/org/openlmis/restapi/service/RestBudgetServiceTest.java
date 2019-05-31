@@ -55,7 +55,7 @@ public class RestBudgetServiceTest {
         budgetDTO.setFacilityCode("F19");
         budgetDTO.setPeriodStartDate("2018-02-01");
         budgetDTO.setProgramCode("ILS");
-        budgetDTO.setLineItem(asList(lineItemDTO));
+        budgetDTO.setLineItems(asList(lineItemDTO));
 
         BudgetDTO spyBudgetDTO = spy(budgetDTO);
 
