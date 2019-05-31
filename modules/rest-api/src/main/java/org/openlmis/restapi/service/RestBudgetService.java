@@ -5,6 +5,7 @@ import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.BudgetDTO;
+import org.openlmis.core.dto.ELMISResponseMessageDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.BudgetLineItemRepository;
@@ -62,6 +63,7 @@ public class RestBudgetService {
 
         Facility facility = facilityService.getByCodeFor(budgetDTO.getFacilityCode());
 
+        ELMISResponseMessageDTO msg = new ELMISResponseMessageDTO();
 
         if (facility != null) {
 
@@ -74,7 +76,7 @@ public class RestBudgetService {
             for (ProgramSupported supported : programs) {
                 Program p  = programService.getById(supported.getProgram().getId());
 
-                ProcessingPeriod period = processingScheduleService.getPeriodForDate(facility,p,supported.getStartDate());
+                ProcessingPeriod period = processingScheduleService.getCurrentPeriodBySchedule(facility,p,supported.getStartDate());
 
                 if(period != null){
 
@@ -111,6 +113,8 @@ public class RestBudgetService {
                     }
 
                 } else {
+
+                    msg.setDescription("Facility Code have does not have current period");
                     errors = budgetDTO.setFailure();
                 }
 

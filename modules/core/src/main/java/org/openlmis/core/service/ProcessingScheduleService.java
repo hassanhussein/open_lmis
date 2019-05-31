@@ -165,4 +165,9 @@ public class ProcessingScheduleService {
             startingPeriodId, programStartDate, new Date());
   }
 
+  public ProcessingPeriod getCurrentPeriodBySchedule(Facility facility, Program program, Date date) {
+    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
+    return periodRepository.getCurrentPeriodBySchedule(requisitionGroupProgramSchedule.getProcessingSchedule().getId());
+  }
+
 }

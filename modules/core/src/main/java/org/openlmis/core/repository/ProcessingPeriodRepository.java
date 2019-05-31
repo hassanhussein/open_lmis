@@ -134,4 +134,7 @@ public class ProcessingPeriodRepository {
             mapper.getAllPeriodsAfterDateAndPeriodForByMonthlyReporting(scheduleId, startPeriodId, afterDate, beforeDate);
   }
 
+  public ProcessingPeriod getCurrentPeriodBySchedule(Long scheduleId){
+    return mapper.getCurrentPeriodBySchedule(scheduleId);
+  }
 }

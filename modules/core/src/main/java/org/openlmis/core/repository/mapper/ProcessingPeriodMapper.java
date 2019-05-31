@@ -164,4 +164,11 @@ public interface ProcessingPeriodMapper {
                                                            @Param(value = "startingPeriodId") Long startingPeriodId,
                                                            @Param(value = "afterDate") Date afterDate,
                                                            @Param(value = "beforeDate") Date beforeDate);
+
+
+    @Select("SELECT * FROM processing_periods where scheduleId = #{scheduleId} and \n" +
+            "date_trunc('month',startdate)::date <= date_trunc('month',CURRENT_DATE)::date ORDER BY ID DESC limit 1")
+    ProcessingPeriod getCurrentPeriodBySchedule(@Param("scheduleId") Long scheduleId);
+
+
 }
