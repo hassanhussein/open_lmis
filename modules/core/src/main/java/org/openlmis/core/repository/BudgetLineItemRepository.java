@@ -62,7 +62,7 @@ public class BudgetLineItemRepository {
 
   private void saveLineItem(BudgetDTO budgetDTO) {
 
-      for (BudgetLineItemDTO lineItem  : budgetDTO.getLineItem()) {
+      for (BudgetLineItemDTO lineItem  : budgetDTO.getLineItems()) {
 
         lineItem.setProgramId(budgetDTO.getProgramId());
         lineItem.setPeriodId(budgetDTO.getPeriodId());
