@@ -41,19 +41,19 @@ public class BudgetDTO extends BaseModel {
     private Long periodId;
 
 
-    private List<BudgetLineItemDTO> lineItems = new ArrayList<>();
+    private List<BudgetLineItemDTO> lineItem = new ArrayList<>();
 
     private ELMISResponseMessageDTO responseMessage;
 
     public void validate() {
-        if (isBlank(this.facilityCode) || isBlank(this.periodStartDate) || this.getLineItems().isEmpty()) {
+        if (isBlank(this.facilityCode) || isBlank(this.periodStartDate) || this.getLineItem().isEmpty()) {
             return;
         }
     }
 
     public void validateLineItem(){
 
-        for (BudgetLineItemDTO lineItemDTO : this.getLineItems()){
+        for (BudgetLineItemDTO lineItemDTO : this.getLineItem()){
             if(isBlank(lineItemDTO.getAllocatedBudget()) ||
               (Long.valueOf(lineItemDTO.getAllocatedBudget()) < 0L) || isBlank(lineItemDTO.getFundSourceCode())){
                 return;

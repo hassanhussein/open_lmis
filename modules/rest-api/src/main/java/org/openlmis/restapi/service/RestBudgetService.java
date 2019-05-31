@@ -134,4 +134,9 @@ public class RestBudgetService {
 
         return budgetDTO;
     }
+
+    public void sendResponse(BudgetDTO dto) {
+        interfaceService.postBudgetToHIM(dto);
+
+    }
 }

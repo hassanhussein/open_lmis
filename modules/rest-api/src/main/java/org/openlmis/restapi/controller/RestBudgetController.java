@@ -52,6 +52,7 @@ public class RestBudgetController extends BaseController{
     public BudgetDTO saveBudgetReport(@RequestBody BudgetDTO budget, Principal principal) {
 
         restBudgetService.updateBudget(budget, loggedInUserId(principal));
+        restBudgetService.sendResponse(budget);
         budget.setErrorMap(null);
         return budget;
     }

@@ -58,6 +58,10 @@ public class ELMISInterfaceService {
     private static final String ELMIS_SDP_PASS_WORD = "ELMIS_SDP_PASSWORD";
     private static final String USERNAME = "LLIN_USERNAME";
     private static final String PASSWORD = "LLIN_PASSWORD";
+    private static final String IL_BUDGET_USERNAME = "IL_BUDGET_USERNAME";
+    private static final String IL_BUDGET_PASSWORD = "IL_BUDGET_PASSWORD";
+    private static final String IL_BUDGET_URL = "IL_BUDGET_URL";
+
 
 
     public ELMISInterface get(long interfaceId) {
@@ -108,7 +112,7 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetReportingRateData());
-            sendBedNetData(username, password, url, dto, null,null);
+            sendBedNetData(username, password, url, dto, null,null,null);
         }
 
     }
@@ -126,18 +130,28 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetData());
-            sendBedNetData(username, password, url, dto, null,null);
+            sendBedNetData(username, password, url, dto, null,null,null);
         }
 
     }
 
-    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data, InterfaceResponseDTO sdp,ResponseExtDTO dto) {
+    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data, InterfaceResponseDTO sdp,ResponseExtDTO dto,BudgetDTO budget) {
         ObjectMapper mapper = new ObjectMapper();
         java.net.URL obj = null;
         try {
             obj = new URL(url);
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
-            String jsonInString = mapper.writeValueAsString((sdp == null) ? data : dto);
+            String jsonInString ="";
+
+            if(budget == null){
+             jsonInString = mapper.writeValueAsString((sdp == null) ? data : dto);
+            }else {
+            jsonInString = mapper.writeValueAsString(budget);
+
+            }
+
+            System.out.println(jsonInString);
+
             String userCredentials = username + ":" + password;
             String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
             con.setRequestProperty("Authorization", basicAuth);
@@ -161,7 +175,7 @@ public class ELMISInterfaceService {
                 response.append(inputLine);
             }
             in.close();
-
+            System.out.println(response);
             //print result
 
         } catch (MalformedURLException e) {
@@ -221,4 +235,19 @@ public class ELMISInterfaceService {
     }
 
 
+    public void postBudgetToHIM(BudgetDTO dto) {
+        processBudgetResponseData(dto);
+    }
+
+    private void processBudgetResponseData(BudgetDTO dto) {
+
+        String username = settingService.getByKey(IL_BUDGET_USERNAME).getValue();
+        String password = settingService.getByKey(IL_BUDGET_PASSWORD).getValue();
+        String url = settingService.getByKey(IL_BUDGET_URL).getValue();
+
+        if (username != null && password != null && url != null) {
+            sendBedNetData(username, password, url, null, null,null,dto);
+        }
+
+    }
 }
