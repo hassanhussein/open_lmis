@@ -95,7 +95,7 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
                     $scope.currentPage = $scope.pagination.page;
                     $scope.tableParams.total = $scope.totalItems;
                     $scope.data = data.openLmisResponse.rows;
-                    $scope.paramsChanged($scope.tableParams)
+                    $scope.paramsChanged($scope.tableParams);
                 }
             });
 
