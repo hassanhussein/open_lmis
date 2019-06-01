@@ -240,22 +240,19 @@ public class RestRequisitionController extends BaseController {
                                                             @RequestParam("programCode") String programCode,
                                                             @RequestParam("sourceApplication") String sourceApplication,
                                                             Principal principal,
-                                                            @RequestParam("emergence") boolean emergence,
-                                                            @RequestParam("del") boolean delete,
-                                                            @RequestParam(value = "rnrId", defaultValue = "null") Long rnrId
-
+                                                            @RequestParam("emergence") boolean emergence
 
                                                             ) {
         Report requisition;
 
         try {
-            if(delete && rnrId != null){
+          /*  if(delete && rnrId != null){
                 restRequisitionService.deleteRnR(rnrId);
                 return response("rnr","deleted Successfully");
-            }else {
+            }else {*/
                 requisition = restRequisitionService.initiateSDPReport(facilityCode,programCode, loggedInUserId(principal),emergence,sourceApplication);
                 return response(RNR, requisition, CREATED);
-            }
+            //}
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
