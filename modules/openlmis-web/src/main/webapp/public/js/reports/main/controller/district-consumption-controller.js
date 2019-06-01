@@ -10,18 +10,37 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DistrictConsumptionReportController($scope,  DistrictConsumptionReport) {
+function DistrictConsumptionReportController($scope,  DistrictConsumptionReport, $timeout) {
 
     //filter form data section
 
+    $scope.page = 1;
+    $scope.pageSize = 10;
+
     $scope.OnFilterChanged = function(){
       $scope.data = $scope.datarows = [];
-      $scope.filter.page = 1;
       $scope.filter.max = 10000;
+      $scope.filter.limit = $scope.pageSize;
+      $scope.filter.page = $scope.page;
+      $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
+
+
+
       DistrictConsumptionReport.get($scope.getSanitizedParameter(), function(data) {
-        if(data.districtData.page !== undefined){
+      console.log(data);
+        if(data.districtData !== undefined && data.districtData.rows !== undefined){
           $scope.data = chainParentChildReport(data);//.districtData.rows;
-            console.log($scope.data);
+          $scope.pagination = data.districtData.pagination;
+          console.log($scope.pagination);
+          $scope.totalItems = 1000;
+          $scope.currentPage = $scope.pagination.page;
+          $scope.tableParams.total = $scope.totalItems
+
+          //check if this is last page and reduce totalItemSize so user can not go to next page
+          if(data.districtData.rows.length !== $scope.pageSize)
+          {
+          $scope.totalItems = $scope.pageSize * $scope.page;
+          }
           $scope.paramsChanged($scope.tableParams);
         }
       });
@@ -51,5 +70,14 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport)
     };
 
 
+     //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
+     $scope.$watch('currentPage', function () {
+                    if ($scope.currentPage > 0) {
+                      $scope.page = $scope.currentPage;
+                      $timeout(function(){
+                      $scope.OnFilterChanged();
+                      },100);
+                    }
+      });
 
 }

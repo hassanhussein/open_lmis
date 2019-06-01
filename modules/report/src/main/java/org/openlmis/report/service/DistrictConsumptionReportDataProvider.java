@@ -18,6 +18,7 @@ import org.openlmis.report.mapper.DistrictConsumptionReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.DistrictConsumptionReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.ReportPaginationHelper;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,19 +40,22 @@ public class DistrictConsumptionReportDataProvider extends ReportDataProvider {
   @Autowired
   private DistrictConsumptionReportMapper reportMapper;
 
+  @Autowired
+  private ReportPaginationHelper paginationHelper;
+
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     return getFacilityConsumption(filterCriteria, sortCriteria, page, pageSize);
   }
 
   public List<? extends ResultRow> getFacilityConsumption(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getFacilityConsumption(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
+    //RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+    return reportMapper.getFacilityConsumption(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
   }
 
   public List<? extends ResultRow> getDistrictConsumptionReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    return reportMapper.getDistrictConsumption(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
+    //RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+    return reportMapper.getDistrictConsumption(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
   }
 
   public DistrictConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
