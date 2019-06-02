@@ -193,7 +193,7 @@ public class EquipmentInventoryServiceTest {
   public void shouldSaveNewCCEInventory() throws Exception {
     // Set up variables
     EquipmentType equipmentType = new EquipmentType();
-    equipmentType.setColdChain(true);
+    equipmentType.setIsColdChain(true);
     Equipment equipment = new Equipment();
     equipment.setEquipmentType(equipmentType);
     EquipmentInventory inventory = new EquipmentInventory();
@@ -212,7 +212,7 @@ public class EquipmentInventoryServiceTest {
   public void shouldSaveChangesInExistingCCEInventory() throws Exception {
     // Set up variables
     EquipmentType equipmentType = new EquipmentType();
-    equipmentType.setColdChain(true);
+    equipmentType.setIsColdChain(true);
     Equipment equipment = new Equipment();
     equipment.setEquipmentType(equipmentType);
     EquipmentInventory inventory = new EquipmentInventory();
@@ -233,7 +233,7 @@ public class EquipmentInventoryServiceTest {
     // Set up variables
     EquipmentType equipmentType = new EquipmentType();
     EquipmentModel model = new EquipmentModel();
-    equipmentType.setColdChain(false);
+    equipmentType.setIsColdChain(false);
     equipmentType.setId(1L);
     Equipment equipment = new Equipment();
     equipment.setEquipmentType(equipmentType);
@@ -269,7 +269,7 @@ public class EquipmentInventoryServiceTest {
     EquipmentType equipmentType = new EquipmentType();
     EquipmentModel model = new EquipmentModel();
     model.setId(1L);
-    equipmentType.setColdChain(false);
+    equipmentType.setIsColdChain(false);
     equipmentType.setId(1L);
     Equipment equipment = new Equipment();
     equipment.setEquipmentType(equipmentType);

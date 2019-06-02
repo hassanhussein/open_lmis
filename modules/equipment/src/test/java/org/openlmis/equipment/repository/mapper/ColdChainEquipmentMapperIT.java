@@ -71,7 +71,7 @@ public class ColdChainEquipmentMapperIT {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
     type.setName("Type");
-    type.setColdChain(true);
+    type.setIsColdChain(true);
     typeMapper.insert(type);
 
     ColdChainEquipmentDesignation designation=new ColdChainEquipmentDesignation();

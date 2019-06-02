@@ -66,7 +66,7 @@ public class EquipmentMapperIT {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
     type.setName("Type");
-    type.setColdChain(false);
+    type.setIsColdChain(false);
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -93,7 +93,7 @@ public class EquipmentMapperIT {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
     type.setName("Type");
-    type.setColdChain(false);
+    type.setIsColdChain(false);
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
@@ -118,7 +118,7 @@ public class EquipmentMapperIT {
     EquipmentType type = new EquipmentType();
     type.setCode("1");
     type.setName("Type");
-    type.setColdChain(false);
+    type.setIsColdChain(false);
     typeMapper.insert(type);
 
     EquipmentEnergyType energyType=new EquipmentEnergyType();
