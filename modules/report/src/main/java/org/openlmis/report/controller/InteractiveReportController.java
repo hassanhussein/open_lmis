@@ -886,18 +886,23 @@ public class InteractiveReportController extends BaseController {
 
     @RequestMapping(value = "/reportdata/monthlyStockStatus", method = GET, headers = BaseController.ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
-    public Pages getMonthlyStockOnHandData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+    public OpenLmisResponse getMonthlyStockOnHandData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                           @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
                                             HttpServletRequest request
 
     ) {
 
         Report report = reportManager.getReportByKey("monthly_stock");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
+        helper.setPageSize(limit);
         List<MonthlyStockStatusReport> monthlyStockStatusReportList =
                 (List<MonthlyStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
-        return new Pages(page, max, monthlyStockStatusReportList);
+        Pagination pagination = helper.getPagination(page);
+        OpenLmisResponse pages = new OpenLmisResponse("rows", monthlyStockStatusReportList);
+        pages.addData("pagination", pagination);
+        return pages;
     }
 
     @RequestMapping(value = "/reportdata/aggregateStockStatusReport", method = GET, headers = BaseController.ACCEPT_JSON)
