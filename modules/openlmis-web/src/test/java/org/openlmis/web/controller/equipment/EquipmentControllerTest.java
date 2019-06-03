@@ -72,7 +72,7 @@ public class EquipmentControllerTest {
   }
   private EquipmentType makeAnEquipmentType() {
     EquipmentType equipmentType=new EquipmentType();
-    equipmentType.setColdChain(false);
+    equipmentType.setIsColdChain(false);
     equipmentType.setId(1L);
     equipmentType.setName("LAB");
     return equipmentType;
@@ -109,7 +109,7 @@ public class EquipmentControllerTest {
     Pagination page=new Pagination(1,2);
     Equipment equipment = makeAnEquipment();
     EquipmentType equipmentType=new EquipmentType();
-    equipmentType.setColdChain(false);
+    equipmentType.setIsColdChain(false);
     when(service.getEquipmentsCountByType(1L)).thenReturn(2);
     when(service.getByType(1L,page)).thenReturn(asList(equipment));
     when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);
@@ -123,7 +123,7 @@ public class EquipmentControllerTest {
     Pagination page=new Pagination(1,2);
     ColdChainEquipment coldChainEquipment=makeAnColdChainEquipment();
     EquipmentType equipmentType=new EquipmentType();
-    equipmentType.setColdChain(true);
+    equipmentType.setIsColdChain(true);
     when(service.getCCECountByType(1L)).thenReturn(2);
     when(service.getAllCCE(1L,page)).thenReturn(asList(coldChainEquipment));
     when(equipmentTypeService.getTypeById(1L)).thenReturn(equipmentType);

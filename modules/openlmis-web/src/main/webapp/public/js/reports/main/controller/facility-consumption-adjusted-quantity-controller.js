@@ -16,6 +16,8 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
     };
 
     $scope.runReport = function () {
+        if($scope.filter.error) return;
+
         var deferred = $q.defer();
         $scope.filter.adjustedConsumption='true';
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());

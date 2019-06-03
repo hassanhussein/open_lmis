@@ -32,6 +32,8 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
 
         var disaggregated  = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
 
+        $scope.filter.error = '';
+
         //During disaggregating, at least 1 and at most 5 products needs to be selected
         if(disaggregated && disaggregationWrongProductSelection) {
             $scope.filter.error = 'During disaggregation at least 1 or at most 5 products should be selected';
@@ -47,6 +49,8 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
                 $scope.showDisaggregatedColumns = $scope.filter.disaggregated ? true : false;
                 deferred.resolve(data);
             }
+        }, function(error){
+           deferred.reject(error);
         });
         return deferred.promise;
     };

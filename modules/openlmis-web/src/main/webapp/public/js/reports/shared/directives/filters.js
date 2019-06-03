@@ -993,13 +993,12 @@ app.directive('clientSideSortPagination', ['$filter', 'ngTableParams',
                 scope.registerServerSidePagination = function(params, callBack) {
                     params.paginationCallBack = callBack;
                     params.page = 1;
-                    scope.filter.error = '';
+                    //scope.filter.error = '';
                     scope.paramsChanged(params);
                 };
 
                 scope.paramsChanged = function (params) {
-                    if(params.paginationCallBack !== undefined &&
-                        (scope.filter.error === '' || scope.filter.error === undefined)) {
+                    if(params.paginationCallBack !== undefined) {
 
                         var sortBy = Object.keys(params.sorting).pop();
                         var sortDirection = Object.values(params.sorting).pop();

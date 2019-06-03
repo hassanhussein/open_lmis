@@ -103,7 +103,7 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldGetFacilityInventory() throws Exception {
     // Set up variables
-    equipmentType.setColdChain(false);
+    equipmentType.setIsColdChain(false);
     inventory.setEquipment(equipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
     inventories.add(inventory);
@@ -128,7 +128,7 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldGetCCEInventory() throws Exception {
     // Set up variables
-    equipmentType.setColdChain(true);
+    equipmentType.setIsColdChain(true);
     inventory.setEquipment(coldChainEquipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
     inventories.add(inventory);
@@ -158,7 +158,7 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldGetNonCCEInventory() throws Exception {
     // Set up variables
-    equipmentType.setColdChain(false);
+    equipmentType.setIsColdChain(false);
     inventory.setEquipment(equipment);
     List<EquipmentInventory> inventories = new ArrayList<>();
     inventories.add(inventory);
@@ -203,7 +203,7 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldGetCCEInventoryById() throws Exception {
     // Set up variables
-    equipmentType.setColdChain(true);
+    equipmentType.setIsColdChain(true);
     inventory.setEquipment(coldChainEquipment);
 
     // Set up mock calls
@@ -228,7 +228,7 @@ public class EquipmentInventoryRepositoryTest {
   @Test
   public void shouldGetNonCCEInventoryById() throws Exception {
     // Set up variables
-    equipmentType.setColdChain(false);
+    equipmentType.setIsColdChain(false);
     inventory.setEquipment(equipment);
 
     // Set up mock calls

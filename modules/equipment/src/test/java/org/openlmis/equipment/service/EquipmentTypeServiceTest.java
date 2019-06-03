@@ -19,7 +19,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openlmis.db.categories.UnitTests;
+import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.repository.EquipmentCategoryRepository;
 import org.openlmis.equipment.repository.EquipmentTypeRepository;
 
 import static org.mockito.Mockito.never;
@@ -34,6 +36,9 @@ public class EquipmentTypeServiceTest {
 
   @InjectMocks
   EquipmentTypeService service;
+
+  @InjectMocks
+  EquipmentCategoryRepository equipmentCategoryRepository;
 
   @Test
   public void shouldGetAll() throws Exception {
@@ -51,8 +56,13 @@ public class EquipmentTypeServiceTest {
   @Test
   public void shouldSaveNewType() throws Exception {
     EquipmentType type = new EquipmentType();
+    EquipmentCategory category = new EquipmentCategory();
+    category.setCode("cat1");
+    category.setId(1L);
+
     type.setName("Test");
     type.setCode("Test");
+    type.setCategory(category);
 
     service.save(type);
 
@@ -63,9 +73,14 @@ public class EquipmentTypeServiceTest {
   @Test
   public void shouldSaveAnUpdate() throws Exception{
     EquipmentType type = new EquipmentType();
+    EquipmentCategory category = new EquipmentCategory();
+    category.setCode("cat1");
+    category.setId(1L);
+
     type.setId(1L);
     type.setName("Test");
     type.setCode("Test");
+    type.setCategory(category);
 
     service.save(type);
 

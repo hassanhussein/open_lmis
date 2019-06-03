@@ -16,6 +16,8 @@ function FacilityConsumptionReportController($scope, $filter, $window, FacilityC
     };
 
     $scope.runReport = function () {
+        if($scope.filter.error) return;
+
         var deferred = $q.defer();
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
 
@@ -23,10 +25,12 @@ function FacilityConsumptionReportController($scope, $filter, $window, FacilityC
             $scope.data = [];
             if (data.pages !== undefined) {
                 $scope.data = data.pages;
-                $scope.periods = $scope.data.rows[0].headerPeriods;
+                $scope.periods = $scope.data.rows.length > 0 ? $scope.data.rows[0].headerPeriods : [];
                 $scope.showDisaggregatedColumns  = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
             }
             deferred.resolve();
+        }, function(error){
+           deferred.reject(error);
         });
         return deferred.promise;
     };

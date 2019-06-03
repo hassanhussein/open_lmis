@@ -40,12 +40,9 @@ public class EquipmentTypeService {
   }
 
   public void save(EquipmentType type) {
-    if(type.getCategory().getId() == null && type.getCategory().getCode() != null) {
-      EquipmentCategory category = equipmentCategoryRepository.getByCode(type.getCategory().getCode());
-        if(category == null)
-          throw new DataException("error.equipment.type.category.data.missing");
-      type.setCategory(category);
-    }
+    if(type.getCategory() == null) type.setCategory(new EquipmentCategory());
+
+    populateEquipmentCategory(type);
 
     if(type.getId() == null){
       repository.insert(type);
@@ -54,7 +51,17 @@ public class EquipmentTypeService {
     }
   }
 
-    public EquipmentType getByCode(EquipmentType type) {
+  public EquipmentType getByCode(EquipmentType type) {
       return repository.getByCode(type.getCode());
     }
+
+  /** used mainly for equipment type upload */
+  private void populateEquipmentCategory(EquipmentType type) {
+      if(type.getCategory().getId() == null && type.getCategory().getCode() != null) {
+        EquipmentCategory category = equipmentCategoryRepository.getByCode(type.getCategory().getCode());
+        if(category == null)
+          throw new DataException("error.equipment.type.category.data.missing");
+        type.setCategory(category);
+      }
+  }
 }
