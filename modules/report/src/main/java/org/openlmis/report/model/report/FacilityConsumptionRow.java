@@ -34,6 +34,6 @@ public class FacilityConsumptionRow implements ResultRow {
     private String facProdCode;
     private long facilityTypeId;
     private String type;
-    private List<ProcessingPeriod> headerPeriods;
+    private List<String> headerPeriods;
     private List<ConsumptionColumn> consumptionColumnList;
 }

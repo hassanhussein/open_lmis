@@ -42,11 +42,12 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
 
     @Autowired
     protected FacilityConsumptionReportMapper reportMapper;
-    protected List<ProcessingPeriod> periods;
+
     protected List<ConsumptionColumn> flatConsumptionList;
     @Autowired
     ProcessingPeriodReportMapper processingPeriodReportMapper;
     private static final Logger logger = Logger.getLogger(ConsumptionReportDataProvider.class);
+    private List<String> periodList;
 
     public List<FacilityConsumptionRow> convertToFacilityConsumptionRow(List<Map<String, Object>> consumptionHashMapList) {
         List<FacilityConsumptionRow> facilityConsumptionRows = null;
@@ -56,7 +57,7 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
             for (Map<String, Object> objectHashMap : consumptionHashMapList) {
                 FacilityConsumptionRow consumptionRow = new FacilityConsumptionRow();
                 Long facilityId = objectHashMap.get("facilityid") != null ? Long.parseLong(String.valueOf(objectHashMap.get("facilityid"))) : null;
-                consumptionRow.setHeaderPeriods(this.periods);
+                consumptionRow.setHeaderPeriods(this.periodList);
                 consumptionRow.setProductCode(String.valueOf(objectHashMap.get("productcode")));
                 consumptionRow.setProduct(String.valueOf(objectHashMap.get("product")));
                 consumptionRow.setFacilityId(facilityId);
@@ -65,7 +66,7 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
                 consumptionRow.setFacilityCode(String.valueOf(objectHashMap.get("facilitycode")));
                 consumptionRow.setFacProdCode(String.valueOf(objectHashMap.get("facprodcode")));
                 List<ConsumptionColumn> consumptionColumns = new ArrayList<>();
-                for (ProcessingPeriod period : this.periods) {
+                for (String period : this.periodList) {
                     ConsumptionColumn consumptionColumn = new ConsumptionColumn();
                     consumptionColumn.setProductCode(String.valueOf(objectHashMap.get("productcode")));
                     consumptionColumn.setProduct(String.valueOf(objectHashMap.get("product")));
@@ -74,8 +75,8 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
                     consumptionColumn.setFacility(String.valueOf(objectHashMap.get("facility")));
                     consumptionColumn.setFacilityCode(String.valueOf(objectHashMap.get("facilitycode")));
                     consumptionColumn.setFacProdCode(String.valueOf(objectHashMap.get("facprodcode")));
-                    consumptionColumn.setHeader(period.getName());
-                    Object objectValue = objectHashMap.get(period.getName());
+                    consumptionColumn.setHeader(period);
+                    Object objectValue = objectHashMap.get(period);
                     if (objectValue != null) {
                         consumptionColumn.setValeu(objectValue);
                     } else {
@@ -92,31 +93,25 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
         return facilityConsumptionRows;
     }
 
-    public String constructTabColumnHeader(Long programId, String startDate, String endDate) {
+    public String constructTabColumnHeader() {
         String tableColumnHeader = "";
-        List<ProcessingPeriod> periods = processingPeriodReportMapper.getPeriodsForProgramBeetweeDates(programId, startDate, endDate);
-        this.periods = periods;
-        if (periods != null && !periods.isEmpty()) {
-            for (ProcessingPeriod period : periods) {
-                tableColumnHeader = tableColumnHeader + ", \"" + period.getName() + "\"";
+
+        if (this.periodList != null && !this.periodList.isEmpty()) {
+            for (String period : periodList) {
+                tableColumnHeader = tableColumnHeader + ", \"" + period + "\"";
             }
-
-
         } else {
             return null;
         }
         return tableColumnHeader;
-
     }
 
-    public String constructCrossTabColumnSection(Long programId, String startDate, String endDate) {
+    public String constructCrossTabColumnSection() {
         String crossTabColumn = " ( code text[]";
 
-        List<ProcessingPeriod> periods = processingPeriodReportMapper.getPeriodsForProgramBeetweeDates(programId, startDate, endDate);
-        this.periods = periods;
-        if (periods != null && !periods.isEmpty()) {
-            for (ProcessingPeriod period : periods) {
-                crossTabColumn = crossTabColumn + ", \"" + period.getName() + "\" integer";
+        if (this.periodList != null && !periodList.isEmpty()) {
+            for (String period : periodList) {
+                crossTabColumn = crossTabColumn + ", \"" + period+ "\" integer";
             }
             crossTabColumn = crossTabColumn + ")";
 
@@ -169,11 +164,14 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
 
     public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
         FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
-        String crossTabColumn = this.constructCrossTabColumnSection(param.getProgram(), param.getPeriodStart(), param.getPeriodEnd());
-        String crossColumnHeader = this.constructTabColumnHeader(param.getProgram(), param.getPeriodStart(), param.getPeriodEnd());
+        param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+        this.periodList = reportMapper.getPeriods(param,this.getUserId());
+        String crossTabColumn = this.constructCrossTabColumnSection();
+        String crossColumnHeader = this.constructTabColumnHeader();
         param.setCrossTabColumn(crossTabColumn);
         param.setCrossColumnHeader(crossColumnHeader);
-        param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
+
+
         return param;
     }
 

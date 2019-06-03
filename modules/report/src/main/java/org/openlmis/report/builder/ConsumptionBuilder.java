@@ -62,14 +62,13 @@ public class ConsumptionBuilder {
 
         StringBuilder predicate = new StringBuilder();
         predicate.append(" where r.programid=" + filter.getProgram());
-        predicate.append(" and r.status in (" +  filter.getAcceptedRnrStatuses().replaceAll("'","''") + ")");
-        predicate.append(" and r.startdate>=''" + filter.getPeriodStart() + "''::date");
-        predicate.append(" and  r.enddate<=''" + filter.getPeriodEnd() + "''::date");
+        predicate.append(" and r.status in (" +  filter.getAcceptedRnrStatuses() + ")");
+        predicate.append(" and r.startdate>='" + filter.getPeriodStart() + "'::date");
+        predicate.append(" and  r.enddate<='" + filter.getPeriodEnd() + "'::date");
         if (filter.getFacility() != null && filter.getFacility() != 0) {
             predicate.append(" and r.facilityid =" + filter.getFacility());
         }
         if (filter.getZone() != null &&filter.getZone() != 0) {
-//            WHERE(geoZoneIsFilteredBy("d"));
             predicate.append(" and (r.zoneid=" + filter.getZone() + " or r.provinceid=" +
                     filter.getZone() + " or r.districtid=" + filter.getZone() + ")");
         }

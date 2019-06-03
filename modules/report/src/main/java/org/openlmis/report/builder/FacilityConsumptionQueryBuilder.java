@@ -21,20 +21,25 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
-    private static final String CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT=  " sum(r.dispensed)::integer dispensed\n" ;
-    private static final String CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT=  " sum(r.consumption)::integer dispensed\n" ;
+    private static final String CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT = " sum(r.dispensed)::integer dispensed\n";
+    private static final String CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT = " sum(r.consumption)::integer dispensed\n";
 
     public static String aggregateCrossTabQuery(FacilityConsumptionReportParam filter) {
         String query = " ( select code[1] as product , code[2] as productCode " +
-                filter.getCrossColumnHeader()+
+                filter.getCrossColumnHeader() +
                 " from CROSSTAB\n" +
-                "('SELECT ARRAY[r.productDispalayName,r.productcode::text] code,  \n" +
-                "  r.period::text periodName,\n" +
-                (filter.getAdjustedConsumption()?CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT:CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT)+
+                "($$SELECT ARRAY[r.productDispalayName,r.productcode::text] code,  \n" +
+                " TO_CHAR(r.startdate, 'Mon YYYY') periodName,\n" +
+                (filter.getAdjustedConsumption() ? CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT : CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT) +
                 " FROM mv_requisition r\n" +
                 writePredicateString(filter) +
-                " GROUP BY r.productcode, r.productDispalayName,r.period ,\n" +
-                "r.startdate ')  \n" +
+                " GROUP BY r.productcode, r.productDispalayName,\n" +
+                "r.startdate  order by r.productcode,r.startdate $$" +
+                "," +
+                "$$ " +
+                getPeriods(filter)+
+                "$$" +
+                ")  \n" +
                 "As facilit_consumption" +
                 filter.getCrossTabColumn() +
                 " )\n";
@@ -46,7 +51,7 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
         String query = "";
         BEGIN();
         SELECT(" count(*)");
-        FROM(aggregateCrossTabQuery(filter) +" req");
+        FROM(aggregateCrossTabQuery(filter) + " req");
         query = SQL();
         return query;
     }
@@ -55,19 +60,23 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
         String query = " ( select code[1] as facilityid, code[2] as facilitycode, code[3] as facility ,\n" +
                 "code[4]  as facilitytype , code[5] as  facProdCode,\n" +
                 "code[6] as product , code[7] as productCode " +
-                filter.getCrossColumnHeader()+
+                filter.getCrossColumnHeader() +
                 "  from\n" +
                 "CROSSTAB\n" +
-                "('SELECT ARRAY[r.facilityid::text, r.facilitycode,r.facility,\n" +
+                "($$ SELECT ARRAY[r.facilityid::text, r.facilitycode,r.facility,\n" +
                 "r.facilitytype,r.facprodcode,\n" +
                 "r.productDispalayName::text,r.productcode::text] code, \n" +
-                "  r.period::text periodName,\n" +
-                (filter.getAdjustedConsumption()?CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT:CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT)+
+                " TO_CHAR(r.startdate, 'Mon YYYY') periodName,\n" +
+                (filter.getAdjustedConsumption() ? CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT : CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT) +
                 " FROM mv_requisition r\n" +
                 writePredicateString(filter) +
                 " GROUP BY r.facilityid::text, r.facilitycode,r.facility,\n" +
                 "r.facilitytype,r.facprodcode,\n" +
-                "r.productDispalayName,r.productcode ,r.period ')  \n" +
+                "r.productDispalayName,r.productcode ,r.period,r.startdate " +
+                " order by r.facprodcode,r.startdate $$," +
+                "$$ " +
+                getPeriods(filter)+
+        "$$)  \n" +
                 "As facilit_consumption" +
                 filter.getCrossTabColumn() +
                 " )\n";
@@ -79,7 +88,7 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
         String query = "";
         BEGIN();
         SELECT(" count(*)");
-        FROM(disAggregateCrossTabQuery(filter) +"  req");
+        FROM(disAggregateCrossTabQuery(filter) + "  req");
         query = SQL();
         return query;
     }
@@ -120,6 +129,7 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
             return getAggregateSelect(filter);
 
     }
+
     public static String getTotalCountQuery(Map params) {
 
         FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
@@ -130,4 +140,15 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
 
     }
 
+    public static String getPeriods(FacilityConsumptionReportParam filter) {
+
+        String query = " select period from mv_requisition r\n" +
+                writePredicateString(filter) +
+                " group by 1,startdate order by startdate";
+        return query;
+    }
+    public static String getPeriodsQuery(Map params){
+        FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
+        return getPeriods(filter);
+    }
 }

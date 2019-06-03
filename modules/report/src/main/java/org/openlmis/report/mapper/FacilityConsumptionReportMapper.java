@@ -34,10 +34,18 @@ public interface FacilityConsumptionReportMapper {
             @Param("filterCriteria") ReportParameter filterCriteria,
             @Param("userId") Long userId
     );
+
     @SelectProvider(type = FacilityConsumptionQueryBuilder.class, method = "getTotalCountQuery")
 
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-   int getAggregateConsumptionReportTotalCount(
+    int getAggregateConsumptionReportTotalCount(
+            @Param("filterCriteria") ReportParameter filterCriteria,
+            @Param("userId") Long userId
+    );
+
+    @SelectProvider(type = FacilityConsumptionQueryBuilder.class, method = "getPeriodsQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    List<String> getPeriods(
             @Param("filterCriteria") ReportParameter filterCriteria,
             @Param("userId") Long userId
     );
