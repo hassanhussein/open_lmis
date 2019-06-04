@@ -258,8 +258,11 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("stock_imbalance");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
+        helper.setPageSize(limit);
         List<StockImbalanceReport> stockImbalanceReportList = (List<StockImbalanceReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        Pagination pagination = helper.getPagination(page);
         OpenLmisResponse pages = new OpenLmisResponse("rows",stockImbalanceReportList);
+        pages.addData("pagination", pagination);
         return pages;
     }
 
