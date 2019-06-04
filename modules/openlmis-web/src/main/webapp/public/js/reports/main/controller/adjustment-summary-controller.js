@@ -9,87 +9,86 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 function AdjustmentSummaryReportController($scope, $window, $q, AdjustmentSummaryReport) {
 
- 	$scope.currentPage = 1;
- 	$scope.pageSize = 10;
+    $scope.currentPage = 1;
+    $scope.pageSize = 10;
 
 
-	 $scope.exportReport = function (type) {
+    $scope.exportReport = function(type) {
 
-             $scope.filter.limit = 100000;
-             $scope.filter.page  = 1;
+        $scope.filter.limit = 100000;
+        $scope.filter.page = 1;
 
-             var allow = $scope.allPrinting($scope.getSanitizedParameter());
+        var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
-             allow.then(function(){
+        allow.then(function() {
 
-                $scope.filter.pdformat = 1;
-                     var url = '/reports/download/adjustment_summary/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-                     //var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-                     $window.open(url, '_blank');
-             });
-
-
-     };
+            $scope.filter.pdformat = 1;
+            var url = '/reports/download/adjustment_summary/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+            //var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+            $window.open(url, '_blank');
+        });
 
 
-     $scope.allPrinting = function(params){
-
-                 var deferred = $q.defer();
-
-                   AdjustmentSummaryReport.get(params, function (data) {
-
-                   if(data.openLmisResponse.rows.length  > 0){
-
-                        deferred.resolve();
-                   }
-
-                   });
+    };
 
 
-          return deferred.promise;
+    $scope.allPrinting = function(params) {
 
-     };
+        var deferred = $q.defer();
 
+        AdjustmentSummaryReport.get(params, function(data) {
 
-	$scope.OnFilterChanged = function () {
-		// clear old data if there was any
-		$scope.data = $scope.datarows = [];
-		$scope.filter.max = 10000;
-		$scope.filter.limit = $scope.pageSize;
-		$scope.filter.page = $scope.page;
+            if (data.openLmisResponse.rows.length > 0) {
 
-		//variable to manage counts on pagination
-		$scope.countFactor = $scope.pageSize * ($scope.page - 1);
+                deferred.resolve();
+            }
+
+        });
 
 
+        return deferred.promise;
+
+    };
 
 
-		AdjustmentSummaryReport.get($scope.getSanitizedParameter(), function (data) {
-			if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
-				$scope.data = data.openLmisResponse.rows;
-				$scope.pagination = data.openLmisResponse.pagination;
-				$scope.totalItems = 1000;
-				//check if this is last page and reduce totalItemSize so user can not go to next page
-				if (data.openLmisResponse.rows.length !== $scope.pageSize) {
-					$scope.totalItems = $scope.pageSize * $scope.page;
-				}
-				$scope.currentPage = $scope.pagination.page;
-				$scope.tableParams.total = $scope.totalItems;
-				$scope.paramsChanged($scope.tableParams);
-			}
-		});
-	};
+    $scope.OnFilterChanged = function() {
+        // clear old data if there was any
+        $scope.data = $scope.datarows = [];
+        $scope.filter.max = 10000;
+        $scope.filter.limit = $scope.pageSize;
+        $scope.filter.page = $scope.page;
+
+        //variable to manage counts on pagination
+        $scope.countFactor = $scope.pageSize * ($scope.page - 1);
 
 
-	$scope.$watch('currentPage', function () {
-		if ($scope.currentPage > 0) {
-			$scope.page = $scope.currentPage;
-			$scope.OnFilterChanged();
-		}
-	});
+
+
+        AdjustmentSummaryReport.get($scope.getSanitizedParameter(), function(data) {
+            if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+                $scope.data = data.openLmisResponse.rows;
+                $scope.pagination = data.openLmisResponse.pagination;
+                $scope.totalItems = 1000;
+                //check if this is last page and reduce totalItemSize so user can not go to next page
+                if (data.openLmisResponse.rows.length !== $scope.pageSize) {
+                    $scope.totalItems = $scope.pageSize * $scope.page;
+                }
+                $scope.currentPage = $scope.pagination.page;
+                $scope.tableParams.total = $scope.totalItems;
+                $scope.paramsChanged($scope.tableParams);
+            }
+        });
+    };
+
+
+    $scope.$watch('currentPage', function() {
+        if ($scope.currentPage > 0) {
+            $scope.page = $scope.currentPage;
+            $scope.OnFilterChanged();
+        }
+    });
 
 
 }
