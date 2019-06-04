@@ -481,6 +481,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             GetCoverageByRegionSummary.get(para).then(function (data) {
 
                 var badValue = _.where(data, {coverageclassification: 'BAD'});
+                console.log(data);
                 var goodValue = _.where(data, {coverageclassification: 'GOOD'});
                 var normalValue = _.where(data, {coverageclassification: 'NORMAL'});
                 var summary1 = (badValue.length > 0) ? badValue.length : 0;
@@ -1366,6 +1367,8 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 periodName: $scope.periodToDisplay.name
             });
 
+            $scope.changeYear();
+
             $scope.performanceMonitoring(filter, null);
             $scope.districtCategorizationFunct(filter, userLevel, userLevel);
             $scope.districtClassificationFunc(filter, userLevel, userLevel);
@@ -1379,13 +1382,10 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         $scope.changeYear = function () {
 
-        console.log($scope.filter.year);
-
             $scope.periods = [];
             ReportPeriodsByYear.get({
                 year: $scope.filter.year
             }, function (data) {
-                 console.log(data);
                 $scope.periods = data.periods;
                 $scope.filter.period = $scope.periods[0].id;
 
@@ -1414,7 +1414,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         var currentDate2 = (defaultYear === null || defaultYear === undefined)?new Date().getFullYear()-1:defaultYear;
         GetPeriodForDashboard.get(currentDate2).then(function (data) {
-
+               console.log(data);
             $scope.filter.product = 2421;
             $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
             $scope.years = YearFilteredData.sort(function (a, b) {
@@ -1431,6 +1431,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 periodName: data.name,
                 productName: $scope.productToDisplay.name
             });
+            $scope.changeYear();
             openStockStatusForAllLevels(charts);
             $scope.loadCoverageMap(para);
             $scope.districtCategorizationFunct(para, null, null);
@@ -2332,6 +2333,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     $scope.loadCoverageMap = function (params) {
 
         GetCoverageMapInfo.get(params).then(function (data) {
+        console.log(data);
             var dataValues = [];
             Highcharts.each(data, function (code, i) {
                 var colorV;
