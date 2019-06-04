@@ -247,11 +247,11 @@
                         </tr>
                     </table>
 
-                    <div class="row-fluid rnr-table scrollable" ng-show="datarows.length > 0 ">
+                    <div class="row-fluid rnr-table scrollable" ng-show="datarows.length > 0 " client-side-sort-pagination>
 
                         <div class="clearfix"></div>
 
-                        <table class="table table-bordered table-striped scrollable" ng-table="tableParams">
+                        <table class="table table-bordered table-striped scrollable" ng-table="">
                             <thead>
                             <tr>
                                 <th ng-if="filter.disaggregated==true"></th>
@@ -289,6 +289,20 @@
                             </tbody>
 
                         </table>
+
+                        <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="searchReport()">
+                            <option value="10">10 per page</option>
+                            <option value="20">20 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+
+                        <div class="pull-right">
+                            <pagination total-items="totalItems" page="currentPage" max-size="10"
+                                        items-per-page="pagination.limit"
+                                        direction-links="false" class="pagination-sm"></pagination>
+                        </div>
+
                         <div class="clearfix"></div>
 
                     </div>
@@ -366,6 +380,22 @@
                                 </tbody>
 
                             </table>
+
+
+                            <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="searchReport()">
+                                <option value="10">10 per page</option>
+                                <option value="20">20 per page</option>
+                                <option value="50">50 per page</option>
+                                <option value="100">100 per page</option>
+                            </select>
+
+                            <div class="pull-right">
+                                <pagination total-items="totalItems" page="currentPage" max-size="10"
+                                            items-per-page="pagination.limit"
+                                            direction-links="false" class="pagination-sm"></pagination>
+                            </div>
+
+
                             <div class="clearfix"></div>
 
                         </div>

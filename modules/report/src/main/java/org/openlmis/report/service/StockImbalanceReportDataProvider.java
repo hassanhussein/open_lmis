@@ -20,6 +20,7 @@ import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.StockImbalanceReportParam;
 import org.openlmis.report.model.report.StockImbalanceReport;
 import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.ReportPaginationHelper;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,18 +40,15 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   @Autowired
   private StockImbalanceReportMapper reportMapper;
 
+  @Autowired
+  private ReportPaginationHelper paginationHelper;
+
   @Value("${report.status.considered.accepted}")
   private String configuredAcceptedRnrStatuses;
 
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-    Pagination pagination = new Pagination(page,pageSize);  pagination.setTotalRecords(reportMapper.getTotalFilteredSortedPagedStockImbalanceReport(getReportFilterData(filterCriteria), sortCriteria ,this.getUserId()).getTotalRecords());
-    StockImbalanceReport report = new StockImbalanceReport();
-    report.setPagination(pagination);
-    List<StockImbalanceReport> all = reportMapper.getReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
-    all.add(report);
-    return all;
+    return  reportMapper.getReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
   }
 
   public StockImbalanceReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
