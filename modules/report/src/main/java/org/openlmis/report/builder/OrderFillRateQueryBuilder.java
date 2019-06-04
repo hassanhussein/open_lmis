@@ -111,11 +111,20 @@ public class OrderFillRateQueryBuilder {
     public static String getQueryCount(Map params) {
 
         OrderFillRateReportParam param = (OrderFillRateReportParam) params.get("filterCriteria");
-        String query = " select count(*) " +
-                "   FROM mv_requisition r \n" +
+        String query = "  with query as (select count(*) AS totalcount,\n" +
+                "    count(*) FILTER (WHERE r.approved>0) AS approved,\n" +
+                "\tcount(*) FILTER (WHERE o.quantityshipped>0) AS shipped FROM mv_requisition r \n" +
                 "     LEFT JOIN mv_order_fulfillment o on o.orderid= r.rnrid and  o.productcode = r.productcode \n" +
                 "  WHERE r.status::text = 'RELEASED'::text AND r.approved > 0\n" +
-                writePredicates(param);
+                writePredicates(param)+
+                ")\n" +
+                " select q.totalcount as totalcount," +
+                "q.approved as approved , q.shipped as shipped , \n" +
+                "  CASE\n" +
+                "  WHEN COALESCE(q.approved::numeric, 0::numeric) = 0::numeric THEN 0::numeric\n" +
+                "  ELSE round(COALESCE(q.shipped, 0::bigint)::numeric / COALESCE(q.approved, 0)::numeric * 100::numeric, 2)\n" +
+                "    END AS itemfillrate" +
+                " from query q" ;
 
         return query;
     }

@@ -21,6 +21,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.OrderFillRateQueryBuilder;
 import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.model.report.OrderFillRateReport;
+import org.openlmis.report.model.report.OrderFillRateReportInfo;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,8 +44,8 @@ public interface OrderFillRateReportMapper {
 
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getQueryCount")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-    int getReportTotalCount(@Param("filterCriteria") OrderFillRateReportParam params,
-                            @Param("userId") Long userId
+    OrderFillRateReportInfo getReportTotalCount(@Param("filterCriteria") OrderFillRateReportParam params,
+                                                @Param("userId") Long userId
     );
 
     @SelectProvider(type = OrderFillRateQueryBuilder.class, method = "getSummaryQuery")

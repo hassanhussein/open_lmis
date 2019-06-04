@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_fill_rate_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order_fill_rate_report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.8181818181818181"/>
-	<property name="ireport.x" value="582"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="order_fillrate_json"/>
 	<style name="ColorField">
 		<conditionalStyle>
 			<conditionExpression><![CDATA[Boolean.valueOf($F{item_fill_rate} < 50)]]></conditionExpression>
@@ -105,7 +107,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 	<field name="district" class="java.lang.String"/>
 	<field name="program" class="java.lang.String"/>
 	<field name="period" class="java.lang.String"/>
-	<field name="substituteProductList" class="java.util.List"/>
+	<field name="substituteProductList" class="java.lang.Object"/>
 	<field name="packeddate" class="java.util.Date"/>
 	<field name="receipts" class="java.lang.Double"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
@@ -473,7 +475,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 		</band>
 	</title>
 	<detail>
-		<band height="19" splitType="Stretch">
+		<band height="53" splitType="Stretch">
 			<printWhenExpression><![CDATA[$F{substitutedProductCode} != null]]></printWhenExpression>
 			<line>
 				<reportElement x="0" y="18" width="802" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
@@ -484,10 +486,16 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 				</graphicElement>
 			</line>
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="19" uuid="4e9437a6-cb86-47d3-af5c-83155d65e5dc"/>
-				<dataSourceExpression><![CDATA[$F{substituteProductList}]]></dataSourceExpression>
+				<reportElement positionType="FixRelativeToBottom" stretchType="ContainerBottom" x="110" y="18" width="691" height="19" isRemoveLineWhenBlank="true" uuid="4e9437a6-cb86-47d3-af5c-83155d65e5dc"/>
+				<dataSourceExpression><![CDATA[(net.sf.jasperreports.engine.data.JsonDataSource)($F{substituteProductList})
+]]></dataSourceExpression>
 				<subreportExpression><![CDATA["order_fill_rate_substitute_sub_report.jasper"]]></subreportExpression>
 			</subreport>
+			<staticText>
+				<reportElement x="4" y="23" width="100" height="30" uuid="5a842157-ca06-4f6b-b320-71148363571c"/>
+				<text><![CDATA[some text]]></text>
+			</staticText>
 		</band>
+		<band height="50"/>
 	</detail>
 </jasperReport>

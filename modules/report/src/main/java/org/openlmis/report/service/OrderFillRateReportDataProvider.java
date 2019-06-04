@@ -23,6 +23,7 @@ import org.openlmis.report.model.params.OrderFillRateReportParam;
 import org.openlmis.report.model.params.OrderReportParam;
 import org.openlmis.report.model.report.MasterReport;
 import org.openlmis.report.model.report.OrderFillRateReport;
+import org.openlmis.report.model.report.OrderFillRateReportInfo;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,10 +80,11 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
                 || (row.getSubstitutedProductQuantityShipped() != null && row.getSubstitutedProductQuantityShipped() > 0)).count();
         Float orderFillRate = ((approved == 0L || approved == null) ? 0L : ((float) shipped / approved) * 100);
         String requistionStatus = reportMapper.getFillRateReportRequisitionStatus(reportParam);
+        OrderFillRateReportInfo fillRateReportInfo = this.getReportInfo(reportParam);
         Map<String, Object> keyValues = new HashMap();
-        keyValues.put(ORDER_FILL_RATE, orderFillRate);
-        keyValues.put(TOTAL_PRODUCTS_APPROVED, approved);
-        keyValues.put(TOTAL_PRODUCT_SHIPPED, shipped);
+        keyValues.put(ORDER_FILL_RATE, fillRateReportInfo.getItemfillrate());
+        keyValues.put(TOTAL_PRODUCTS_APPROVED, fillRateReportInfo.getApproved());
+        keyValues.put(TOTAL_PRODUCT_SHIPPED, fillRateReportInfo.getShipped());
         keyValues.put(REPORT_STATUS, detail.size() == 0 ? requistionStatus : null);
         report.setKeyValueSummary(keyValues);
         reportList.add(report);
@@ -91,14 +93,14 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
 
     private List<OrderFillRateReport> getReport(OrderFillRateReportParam reportParam) {
         List<OrderFillRateReport> detailList = reportMapper.getReport(reportParam, this.getUserId());
-        detailList.stream().filter(row -> row.getSubstitutedquantityshipped()!=null && row.getSubstitutedquantityshipped() > 0).
+        detailList.stream().filter(row -> row.getSubstitutedquantityshipped() != null && row.getSubstitutedquantityshipped() > 0).
                 forEach((order) -> {
-            List<OrderFillRateReport> substituteProReportList = null;
-            reportParam.setProductCode(order.getProductcode());
-            reportParam.setRnrId(order.getRnrid());
-            substituteProReportList = reportMapper.getSubStitutProductReport(reportParam, this.getUserId());
-            order.setSubstituteProductList(substituteProReportList);
-        });
+                    List<OrderFillRateReport> substituteProReportList = null;
+                    reportParam.setProductCode(order.getProductcode());
+                    reportParam.setRnrId(order.getRnrid());
+                    substituteProReportList = reportMapper.getSubStitutProductReport(reportParam, this.getUserId());
+                    order.setSubstituteProductList(substituteProReportList);
+                });
         return detailList;
     }
 
@@ -114,7 +116,14 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     public int getReportTotalCount(Map<String, String[]> filter) {
         OrderFillRateReportParam reportParam = null;
         reportParam = this.getFilterParam(filter);
-        return reportMapper.getReportTotalCount(reportParam, this.getUserId());
+        OrderFillRateReportInfo fillRateReportInfo = this.getReportInfo(reportParam);
+        return fillRateReportInfo != null && fillRateReportInfo.getTotalcount() != null ? fillRateReportInfo.getTotalcount() : 0;
+    }
+    private OrderFillRateReportInfo getReportInfo(OrderFillRateReportParam reportParam){
+
+        OrderFillRateReportInfo fillRateReportInfo = reportMapper.getReportTotalCount(reportParam, this.getUserId());
+        return fillRateReportInfo;
+
     }
 
 
