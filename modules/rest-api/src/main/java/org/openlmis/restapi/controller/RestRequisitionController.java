@@ -12,6 +12,7 @@ package org.openlmis.restapi.controller;
 
 import io.swagger.annotations.Api;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.dto.InterfaceResponseDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -22,6 +23,7 @@ import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestRequisitionService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnRFeedbackDTO;
+import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.openlmis.restapi.controller.RestProgramsController.PERIODS;
 import static org.openlmis.restapi.response.RestResponse.*;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -257,6 +260,24 @@ public class RestRequisitionController extends BaseController {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
 
+    }
+
+    @RequestMapping(value = "/rest-api/logistics/periods", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> getAllPeriodsForInitiatingRequisitionWithRequisitionStatus(
+            @RequestBody RequisitionSearchCriteria criteria, Principal principal) {
+
+        criteria.setUserId(loggedInUserId(principal));
+
+        try {
+            List<ProcessingPeriod> periodList = restRequisitionService.getProcessingPeriods(criteria);
+            List<Rnr> requisitions = restRequisitionService.getRequisitionsFor(criteria, periodList);
+            RestResponse response = new RestResponse(PERIODS, periodList);
+            response.addData(RNRS, requisitions);
+            response.addData("isEmergency", criteria.isEmergency());
+            return new ResponseEntity<>(response, OK);
+        } catch (DataException e) {
+            return error(e, CONFLICT);
+        }
     }
 
 
