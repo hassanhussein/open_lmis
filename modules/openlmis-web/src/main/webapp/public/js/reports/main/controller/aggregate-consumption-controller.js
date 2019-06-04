@@ -9,7 +9,28 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function AggregateConsumptionReportController($scope, $filter, $window, AggregateConsumptionReport, $timeout) {
+function AggregateConsumptionReportController($scope,$q, $filter, $window, AggregateConsumptionReport, $timeout) {
+
+        $scope.allPrinting = function(params){
+
+                 var deferred = $q.defer();
+
+                   AggregateConsumptionReport.get(params, function (data) {
+
+                   if(data.openLmisResponse.rows.length  > 0){
+
+                        deferred.resolve();
+                   }
+
+                   });
+
+
+          return deferred.promise;
+
+     };
+
+
+
 
     $scope.reportTypes = [{name: 'EM', value: 'EM', label: 'Emergency'}, {name: 'RE', value: 'RE', label: 'Regular'}];
     $scope.isAll = false;
@@ -78,7 +99,6 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
 
         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
 
-
         //a variable to do manage rows count on UI
         $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
 
@@ -101,10 +121,21 @@ function AggregateConsumptionReportController($scope, $filter, $window, Aggregat
 
         }
     };
+
     $scope.exportReport = function (type) {
-        $scope.filter.pdformat = 1;
-        var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-        $window.open(url, '_blank');
+
+         $scope.filter.limit = 100000;
+
+         var allow = $scope.allPrinting($scope.getSanitizedParameter());
+
+         allow.then(function(){
+
+            $scope.filter.pdformat = 1;
+                 var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+                 $window.open(url, '_blank');
+         });
+
+
     };
     $scope.showMoreFilters = false;
 
