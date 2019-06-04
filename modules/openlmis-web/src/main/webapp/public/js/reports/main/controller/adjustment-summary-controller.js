@@ -10,45 +10,85 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AdjustmentSummaryReportController($scope, $window , AdjustmentSummaryReport) {
+function AdjustmentSummaryReportController($scope, $window, $q, AdjustmentSummaryReport) {
 
-  $scope.exportReport = function(type) {
-
-    $scope.filter.pdformat = 1;
-    var params = jQuery.param($scope.getSanitizedParameter());
-    var url = '/reports/download/adjustment_summary/' + type + '?' + params;
-    $window.open(url, '_blank');
-  };
-
-  $scope.currentPage = 1;
-  $scope.pageSize = 10;
-  $scope.OnFilterChanged = function() {
-    // clear old data if there was any
-    $scope.data = $scope.datarows = [];
-    $scope.filter.max = 10000;
-    $scope.filter.limit = $scope.pageSize;
-    $scope.filter.page = $scope.page;
-    AdjustmentSummaryReport.get($scope.getSanitizedParameter(), function(data) {
-
-        if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
-        var adjustments = data.openLmisResponse.rows;
-        $scope.data =_.where(adjustments,{pagination:null});
-        $scope.pagination = adjustments[adjustments.length-1].pagination;
-        $scope.totalItems = $scope.pagination.totalRecords;
-        $scope.currentPage = $scope.pagination.page;
-        $scope.tableParams.total = $scope.totalItems;
-        $scope.paramsChanged($scope.tableParams);
-      }
-    });
-  };
+ 	$scope.currentPage = 1;
+ 	$scope.pageSize = 10;
 
 
-    $scope.$watch('currentPage', function () {
-        if ($scope.currentPage > 0) {
-            $scope.page = $scope.currentPage;
-            $scope.OnFilterChanged();
-        }
-    });
+	 $scope.exportReport = function (type) {
+
+             $scope.filter.limit = 100000;
+
+             var allow = $scope.allPrinting($scope.getSanitizedParameter());
+
+             allow.then(function(){
+
+                $scope.filter.pdformat = 1;
+                     var url = '/reports/download/adjustment_summary/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+                     //var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+                     $window.open(url, '_blank');
+             });
+
+
+     };
+
+
+     $scope.allPrinting = function(params){
+
+                 var deferred = $q.defer();
+
+                   AdjustmentSummaryReport.get(params, function (data) {
+
+                   if(data.openLmisResponse.rows.length  > 0){
+
+                        deferred.resolve();
+                   }
+
+                   });
+
+
+          return deferred.promise;
+
+     };
+
+
+	$scope.OnFilterChanged = function () {
+		// clear old data if there was any
+		$scope.data = $scope.datarows = [];
+		$scope.filter.max = 10000;
+		$scope.filter.limit = $scope.pageSize;
+		$scope.filter.page = $scope.page;
+
+		//variable to manage counts on pagination
+		$scope.countFactor = $scope.pageSize * ($scope.page - 1);
+
+
+
+
+		AdjustmentSummaryReport.get($scope.getSanitizedParameter(), function (data) {
+			if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+				$scope.data = data.openLmisResponse.rows;
+				$scope.pagination = data.openLmisResponse.pagination;
+				$scope.totalItems = 1000;
+				//check if this is last page and reduce totalItemSize so user can not go to next page
+				if (data.openLmisResponse.rows.length !== $scope.pageSize) {
+					$scope.totalItems = $scope.pageSize * $scope.page;
+				}
+				$scope.currentPage = $scope.pagination.page;
+				$scope.tableParams.total = $scope.totalItems;
+				$scope.paramsChanged($scope.tableParams);
+			}
+		});
+	};
+
+
+	$scope.$watch('currentPage', function () {
+		if ($scope.currentPage > 0) {
+			$scope.page = $scope.currentPage;
+			$scope.OnFilterChanged();
+		}
+	});
 
 
 }
