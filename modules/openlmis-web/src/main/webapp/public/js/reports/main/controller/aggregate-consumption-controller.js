@@ -144,14 +144,16 @@ function AggregateConsumptionReportController($scope,$q, $filter, $window, Aggre
         $scope.showMoreFilters = true;
     };
 
-     //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
-     $scope.$watch('currentPage', function () {
-                    if ($scope.currentPage > 0) {
-                      $scope.page = $scope.currentPage;
-                      $timeout(function(){
-                      $scope.searchReport();
-                      },100);
-                    }
-      });
+    //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
+    $scope.$watch('currentPage', function() {
+    if($scope.page !== $scope.currentPage)
+    {
+        if ($scope.currentPage > 0) {
+            $scope.page = $scope.currentPage;
+            $timeout(function() {
+                $scope.searchReport();
+            }, 100);
+        }
+    }});
 
 }

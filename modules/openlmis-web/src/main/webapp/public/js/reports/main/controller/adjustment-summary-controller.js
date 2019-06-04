@@ -83,12 +83,17 @@ function AdjustmentSummaryReportController($scope, $window, $q, AdjustmentSummar
     };
 
 
+    //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
     $scope.$watch('currentPage', function() {
+    if($scope.page !== $scope.currentPage)
+    {
         if ($scope.currentPage > 0) {
             $scope.page = $scope.currentPage;
-            $scope.OnFilterChanged();
+            $timeout(function() {
+                $scope.OnFilterChanged();
+            }, 100);
         }
-    });
+    }});
 
 
 }

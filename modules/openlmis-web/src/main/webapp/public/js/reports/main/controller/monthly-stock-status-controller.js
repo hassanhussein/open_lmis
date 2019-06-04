@@ -39,12 +39,14 @@ function MonthlyStockStatusController($scope, MonthlyStockStatus, $timeout) {
 
     //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
     $scope.$watch('currentPage', function() {
+    if($scope.page !== $scope.currentPage)
+    {
         if ($scope.currentPage > 0) {
             $scope.page = $scope.currentPage;
             $timeout(function() {
                 $scope.OnFilterChanged();
             }, 100);
         }
-    });
+    }});
 
 }
