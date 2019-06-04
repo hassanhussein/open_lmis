@@ -122,9 +122,12 @@
                         </tr>
                     </table>
                     <div client-side-sort-pagination ng-show="datarows.length > 0">
-                        <div ng-if="datarows.length > 0" top-right-table-summary></div>
+                        <div class="pull-right legend">Page: {{currentPage}}, Showing records {{ countFactor + 1 }} to {{ countFactor + pageSize }} of
+                            {{totalItems}}
+                            <br/>
+                        </div>
                         <table ng-show="datarows.length > 0" class="table-bordered table table-striped"
-                               ng-table="tableParams" style="overflow-x: auto;min-width: 100%;table-layout: fixed;">
+                               ng-table="" style="overflow-x: auto;min-width: 100%;table-layout: fixed;">
                             <thead>
                             <tr class="gradient-header">
                                 <th ng-show="filter.disaggregated" sortable="facilityCode">
@@ -192,7 +195,18 @@
                             </tr>
                             </tbody>
                         </table>
+                        <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="OnFilterChanged()">
+                            <option value="10">10 per page</option>
+                            <option value="20">20 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
 
+
+                        <pagination total-items="totalItems" page="currentPage" max-size="10"
+                                    items-per-page="pagination.limit"
+                                    direction-links="false" class="pagination-sm"></pagination>
+                        <div class="pull-right">
                     </div>
 
                 </div>
