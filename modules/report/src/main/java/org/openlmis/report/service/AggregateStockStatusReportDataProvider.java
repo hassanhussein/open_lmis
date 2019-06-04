@@ -7,6 +7,7 @@ import org.openlmis.report.mapper.AggregateStockStatusReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.AggregateStockStatusReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.ReportPaginationHelper;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,11 +31,12 @@ public class AggregateStockStatusReportDataProvider extends ReportDataProvider {
 
     @Autowired
     private AggregateStockStatusReportMapper reportMapper;
+    @Autowired
+    private ReportPaginationHelper helper;
 
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return reportMapper.getAggregateStockStatusReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
+        return reportMapper.getAggregateStockStatusReport(getReportFilterData(filterCriteria), sortCriteria, helper.getPagination(page), this.getUserId());
     }
 
     public AggregateStockStatusReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

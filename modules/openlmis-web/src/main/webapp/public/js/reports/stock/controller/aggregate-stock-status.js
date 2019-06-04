@@ -2,6 +2,8 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
 ) {
     var definedObject = {};
+      $scope.page = 1;
+      $scope.pageSize = 10;
 
     function getRenamedDate(periodListElement) {
         var dateToday = new Date(periodListElement.endDate);
@@ -77,12 +79,28 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
     $scope.searchReport = function () {
 
-       var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
+
         var selectDisggregate = $scope.filter.disaggregated;
         var showIndicators = $scope.showIndicators;
+
+        //Added pagination
+          $scope.filter.page = $scope.page;
+          $scope.filter.limit = $scope.pageSize;
+         var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
         $scope.stockStatuses =  $scope.data = $scope.datarows = [];
+
         $scope.filter.max = 10000;
+
+         //a variable to do manage rows count on UI
+         $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
+
+         if(allParams.period !== '' &&
+                        allParams.schedule !== '' &&
+                        allParams.program !== null){
+
         AggregateStockStatusReport.get(allParams, function (data) {
+
+
 
             if (data.pages.rows !== undefined || null !== data.pages) {
             console.log(data);
@@ -110,6 +128,8 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
                 $scope.paramsChanged($scope.tableParams);
             }
         });
+
+        }
     };
       $scope.ChangeColor = function(data){
 
@@ -203,6 +223,17 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
     window.open(url, '_blank');
 
   };
+
+       $scope.$watch('currentPage', function () {
+                      if ($scope.currentPage > 0) {
+                        $scope.page = $scope.currentPage;
+                        $timeout(function(){
+                        $scope.searchReport();
+                        },100);
+                      }
+        });
+
+
 
 }
 
