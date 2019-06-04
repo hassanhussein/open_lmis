@@ -570,10 +570,32 @@ vertical-align: top !important;">
               href="/public/pages/dashboard/dashboard-index.html#/dashboard"
               openlmis-message="link.dashboard"></a>
     </li>
-      <li ng-show="hasPermission('VIEW_ELMIS_DASHBOARD')">
-          <a
-                  href="/public/pages/analytics/index.html#/home"
-                  openlmis-message="link.dashboard"></a>
+      <li ng-show="hasPermission('VIEW_ELMIS_DASHBOARD')" class="has-children">
+
+          <a id="analytics-menu" href="javascript: void(0)">Analytics</a>
+
+          <ul>
+              <li>
+                  <div class="sub-menu">
+
+                      <a
+                              href="/public/pages/analytics/index.html#/home"
+                              openlmis-message="link.dashboard"></a>
+
+                  </div>
+
+
+
+              </li>
+
+
+          </ul>
+
+
+
+
+
+
       </li>
 
       <li ng-show="hasPermission('VIEW_VIMS_NOTIFICATION')">
