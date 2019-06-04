@@ -19,6 +19,7 @@ function AdjustmentSummaryReportController($scope, $window, $q, AdjustmentSummar
 	 $scope.exportReport = function (type) {
 
              $scope.filter.limit = 100000;
+             $scope.filter.page  = 1;
 
              var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
