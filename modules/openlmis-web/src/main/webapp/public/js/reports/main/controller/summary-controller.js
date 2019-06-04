@@ -10,19 +10,47 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function SummaryReportController($scope, SummaryReport, $timeout) {
+function SummaryReportController($scope, SummaryReport, $timeout, $q, $window) {
 
     $scope.currentPage = 1;
     $scope.pageSize = 10;
     $scope.params = {};
 
-    $scope.exportReport = function (type) {
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.getSanitizedParameter());
-        var url = '/reports/download/summary' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + params;
-        window.open(url, "_BLANK");
+    $scope.exportReport = function(type) {
+
+        $scope.filter.limit = 100000;
+        $scope.filter.page  = 1;
+
+        var allow = $scope.allPrinting($scope.getSanitizedParameter());
+
+        allow.then(function() {
+
+            $scope.filter.pdformat = 1;
+            var url = '/reports/download/summary' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+            $window.open(url, '_blank');
+        });
+
+
     };
 
+
+    $scope.allPrinting = function(params) {
+
+        var deferred = $q.defer();
+
+        SummaryReport.get(params, function(data) {
+
+            if (data.openLmisResponse.rows.length > 0) {
+
+                deferred.resolve();
+            }
+
+        });
+
+
+        return deferred.promise;
+
+    };
     $scope.onToggleReportTypeAll = function () {
         if ($scope.reportTypes === undefined) {
             $scope.reportTypes = {};
