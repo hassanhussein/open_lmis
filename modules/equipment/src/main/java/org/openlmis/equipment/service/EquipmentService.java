@@ -12,8 +12,10 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.repository.ColdChainEquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
@@ -22,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class EquipmentService {
@@ -36,7 +39,13 @@ public class EquipmentService {
   EquipmentTypeService equipmentTypeService;
 
   @Autowired
+  EquipmentModelService equipmentModelService;
+
+  @Autowired
   ColdChainEquipmentRepository coldChainEquipmentRepository;
+
+  @Autowired
+  EquipmentEnergyTypeService equipmentEnergyTypeService;
 
   public List<Equipment> getAll(){
       return repository.getAll();
@@ -143,5 +152,46 @@ public class EquipmentService {
 
   public Equipment getByTypeManufacturerAndModel(Long equipmentTypeId, String manufacturer, Long modelId, String model) {
     return repository.getByTypeManufacturerAndModel(equipmentTypeId, manufacturer, modelId, model);
+  }
+
+  public Equipment getExistingEquipmentForUpload(Equipment equipment) {
+    Equipment validatedEquipment = validateAndLoadEquipmentUploadAttributes(equipment);
+    return getByTypeManufacturerAndModel(validatedEquipment.getEquipmentType().getId(), validatedEquipment.getManufacturer(),
+            validatedEquipment.getEquipmentModel().getId(), null);
+  }
+
+  public Equipment validateAndLoadEquipmentUploadAttributes(Equipment equipment) {
+    EquipmentModel model = equipmentModelService.getByCode(equipment.getEquipmentModel());
+    if(model == null)
+      throw new DataException("equipment.model.missing.data");
+
+    EquipmentType type = equipmentTypeService.getByCode(equipment.getEquipmentType());
+    if(type == null)
+      throw new DataException("equipment.type.missing.data");
+
+    if(equipment.getEnergyType().getName() != null) {
+      EquipmentEnergyType equipmentEnergyType = equipmentEnergyTypeService.getByName(equipment.getEnergyType().getName());
+      if (equipmentEnergyType == null)
+        throw new DataException("equipment.energy.type.missing.data");
+      equipment.setEnergyTypeId(equipmentEnergyType.getId());
+    }
+
+    equipment.setEquipmentType(type);
+    equipment.setEquipmentModel(model);
+
+    return equipment;
+  }
+
+  public void saveUpdateEquipment(Equipment equipment) {
+    validateAndLoadEquipmentUploadAttributes(equipment);
+
+    if(equipment.getId() == null)
+      saveEquipment(equipment);
+    else
+      updateEquipment(equipment);
+  }
+
+  public Equipment getEquipmentByNameAndModelCode(String equipmentName, String equipmentModelCode) {
+    return repository.getEquipmentByNameAndModelCode(equipmentName, equipmentModelCode);
   }
 }

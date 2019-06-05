@@ -194,4 +194,9 @@ public interface EquipmentMapper {
 
   @Select("select * from manual_test_types")
   List<ManualTestTypes> getManualTestTypes();
+
+  @Select("select * from equipments e inner join " +
+          "equipment_model em on e.modelid = em.id " +
+          "where trim(e.name) = trim(#{equipmentName}) and trim(em.code) = trim(#{equipmentModelCode}) limit 1")
+  Equipment getEquipmentByNameAndModelCode(@Param("equipmentName") String equipmentName, @Param("equipmentModelCode") String equipmentModelCode);
 }

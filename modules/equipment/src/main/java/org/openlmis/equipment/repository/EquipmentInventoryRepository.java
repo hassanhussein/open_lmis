@@ -165,4 +165,11 @@ public class EquipmentInventoryRepository {
   public EquipmentInventory findBySerialNumber(String serialNumber) {
     return mapper.findInventoryBySerialNumber(serialNumber);
   }
+
+  public EquipmentInventory getInventoryByFacilityProgramEquipmentSerialNumber(Long facilityId,
+                                                                               Long programId,
+                                                                               Long equipmentId,
+                                                                               String serialNumber) {
+    return mapper.getInventoryByFacilityProgramEquipmentSerialNumber(facilityId, programId, equipmentId, serialNumber);
+  }
 }

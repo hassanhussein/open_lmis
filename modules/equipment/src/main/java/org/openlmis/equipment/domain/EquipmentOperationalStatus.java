@@ -32,5 +32,6 @@ public class EquipmentOperationalStatus extends BaseModel {
   private Boolean isBad;
   private Boolean needSparePart;
   private Boolean isObsolete;
+  private String code;
 
 }

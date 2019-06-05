@@ -9,11 +9,16 @@
  */
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.EquipmentModel;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentModelRepository;
+import org.openlmis.equipment.repository.EquipmentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -22,6 +27,9 @@ public class EquipmentModelService {
 
     @Autowired
     EquipmentModelRepository repository;
+
+    @Autowired
+    EquipmentTypeService equipmentTypeService;
 
     public List<EquipmentModel> getAll() {
         return repository.getAll();
@@ -45,5 +53,24 @@ public class EquipmentModelService {
 
     public List<EquipmentModel> getByEquipmentTypeId(Long equipmentTypeId){
         return repository.getByEquipmentTypeId(equipmentTypeId);
+    }
+
+    public EquipmentModel getByCode(EquipmentModel model) {
+        return repository.getByCode(model.getCode());
+    }
+
+    public void uploadEquipmentModel(EquipmentModel model) {
+        EquipmentType equipmentType = equipmentTypeService.getByCode(model.getEquipmentType());
+
+        if(equipmentType == null)
+            throw new DataException("equipment.type.missing.data");
+
+        model.setEquipmentTypeId(equipmentType.getId());
+        model.setCreatedDate(new Date());
+
+        if(model.getId() != null)
+            updateEquipmentModel(model);
+        else
+            insertEquipmentModel(model);
     }
 }

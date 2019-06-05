@@ -20,6 +20,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 import java.util.List;
 
@@ -31,18 +33,22 @@ import java.util.List;
 @JsonSubTypes({@JsonSubTypes.Type(value = ColdChainEquipment.class, name = "coldChainEquipment"),
     @JsonSubTypes.Type(value = Equipment.class, name = "equipment")
 })
-public class Equipment extends BaseModel {
+public class Equipment extends BaseModel implements Importable{
 
+  @ImportField(mandatory = true, name = "Equipment Name")
   private String name;
 
+  @ImportField(mandatory = true, name = "Equipment Type", nested = "code")
   private EquipmentType equipmentType;
 
   private Long equipmentTypeId;
 
+  @ImportField(mandatory = true, name = "Manufacturer")
   private String manufacturer;
 
   private String model;
 
+  @ImportField(mandatory = true, name = "Energy Type", nested = "name")
   private EquipmentEnergyType energyType;
 
   private Long energyTypeId;
@@ -64,5 +70,6 @@ public class Equipment extends BaseModel {
 
   private Long designationId;
 
+  @ImportField(mandatory = true, name = "Equipment Model", nested = "code")
   private EquipmentModel equipmentModel;
 }
