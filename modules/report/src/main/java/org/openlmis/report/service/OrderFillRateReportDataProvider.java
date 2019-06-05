@@ -60,6 +60,8 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         return detail;
     }
 
+    OrderFillRateReportInfo fillRateReportInfo;
+
     public OrderFillRateReportParam getFilterParam(Map<String, String[]> filterCriteria) {
 
         OrderFillRateReportParam parameter = ParameterAdaptor.parse(filterCriteria, OrderFillRateReportParam.class);
@@ -80,15 +82,23 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
                 || (row.getSubstitutedProductQuantityShipped() != null && row.getSubstitutedProductQuantityShipped() > 0)).count();
         Float orderFillRate = ((approved == 0L || approved == null) ? 0L : ((float) shipped / approved) * 100);
         String requistionStatus = reportMapper.getFillRateReportRequisitionStatus(reportParam);
-        OrderFillRateReportInfo fillRateReportInfo = this.getReportInfo(reportParam);
-        Map<String, Object> keyValues = new HashMap();
-        keyValues.put(ORDER_FILL_RATE, fillRateReportInfo.getItemfillrate());
-        keyValues.put(TOTAL_PRODUCTS_APPROVED, fillRateReportInfo.getApproved());
-        keyValues.put(TOTAL_PRODUCT_SHIPPED, fillRateReportInfo.getShipped());
+        fillRateReportInfo = this.getReportInfo(reportParam);
+        Map<String, String> keyValues =getReportProperty(reportParam);
         keyValues.put(REPORT_STATUS, detail.size() == 0 ? requistionStatus : null);
         report.setKeyValueSummary(keyValues);
         reportList.add(report);
         return reportList;
+    }
+
+    private HashMap<String, String> getReportProperty(OrderFillRateReportParam reportParam) {
+        fillRateReportInfo = this.getReportInfo(reportParam);
+        HashMap<String, String> keyValues = new HashMap();
+        keyValues.put(ORDER_FILL_RATE, String.valueOf(fillRateReportInfo.getItemfillrate()));
+        keyValues.put(TOTAL_PRODUCTS_APPROVED, String.valueOf(fillRateReportInfo.getApproved()));
+        keyValues.put(TOTAL_PRODUCT_SHIPPED, String.valueOf(fillRateReportInfo.getShipped()));
+
+        return keyValues;
+
     }
 
     private List<OrderFillRateReport> getReport(OrderFillRateReportParam reportParam) {
@@ -108,7 +118,9 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
     public HashMap<String, String> getExtendedHeader(Map params) {
         HashMap<String, String> result = new HashMap<String, String>();
         OrderFillRateReportParam parameter = ParameterAdaptor.parse(params, OrderFillRateReportParam.class);
+        HashMap<String,String> parKey=this.getReportProperty(parameter);
         result.put("REPORT_FILTER_PARAM_VALUES", selectedFilterHelper.getProgramGeoZoneFacility(params));
+        result.putAll(parKey);
         return result;
 
     }
@@ -119,7 +131,8 @@ public class OrderFillRateReportDataProvider extends ReportDataProvider {
         OrderFillRateReportInfo fillRateReportInfo = this.getReportInfo(reportParam);
         return fillRateReportInfo != null && fillRateReportInfo.getTotalcount() != null ? fillRateReportInfo.getTotalcount() : 0;
     }
-    private OrderFillRateReportInfo getReportInfo(OrderFillRateReportParam reportParam){
+
+    private OrderFillRateReportInfo getReportInfo(OrderFillRateReportParam reportParam) {
 
         OrderFillRateReportInfo fillRateReportInfo = reportMapper.getReportTotalCount(reportParam, this.getUserId());
         return fillRateReportInfo;

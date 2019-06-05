@@ -27,6 +27,6 @@ public class MasterReport implements ResultRow {
 
   private List<? extends ResultRow> summary;
 
-  private Map<String, Object> keyValueSummary;
+  private Map<String, String> keyValueSummary;
 
 }
