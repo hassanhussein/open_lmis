@@ -13,14 +13,19 @@
 package org.openlmis.equipment.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureStatusDTO;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 import java.util.Date;
 import java.util.List;
@@ -30,34 +35,72 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EquipmentInventory extends BaseModel {
+public class EquipmentInventory extends BaseModel implements Importable{
 
   private Long facilityId;
   private Long programId;
   private Long equipmentId;
 
+  @ImportField(mandatory = true, name = "Equipment Name", nested = "name")
   private Equipment equipment;
+
+  @ImportField(mandatory = true, name = "Facility Code", nested = "code")
   private Facility facility;
 
   private Long operationalStatusId;
   private Long notFunctionalStatusId;
+
+  @ImportField(name = "Serial Number")
   private String serialNumber;
+
+  @ImportField(name = "Year Of Installation")
   private Integer yearOfInstallation;
+
+    @ImportField(name = "Purchase Price")
   private Float purchasePrice;
+
+  @ImportField(name = "Source of Fund")
   private String sourceOfFund;
+
+  @ImportField( name = "Replacement Recommended", type = "boolean")
   private Boolean replacementRecommended;
+
+  @ImportField( name = "Reason For Replacement")
   private String reasonForReplacement;
+
+  @ImportField(name = "Name of Assessor")
   private String nameOfAssessor;
+
   private Long primaryDonorId;
+
+  @ImportField(name = "Active", type = "boolean")
   private Boolean isActive;
+
+  @ImportField(name = "Date Decommissioned", type = "Date")
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date dateDecommissioned;
+
+  @ImportField(name = "Date Last Assessed", type = "Date")
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date dateLastAssessed;
+
   private Boolean hasStabilizer;
+  @ImportField(name = "Name of SparePart")
   private String nameOfSparePart;
   private Long equipmentInventoryId;
   private Long isObsolete;
+
+  @ImportField(name = "Remark")
   private String remark;
 
+  @ImportField(mandatory = true, name = "Program Code", nested = "code")
+  private Program program;
+
+  @ImportField(mandatory = true, name = "Equipment Model", nested = "code")
+  private EquipmentModel equipmentModel;
+
+  @ImportField(mandatory = true, name = "Equipment Operational Status", nested = "code")
+  private EquipmentOperationalStatus  equipmentOperationalStatus;
 
   public String getDateLastAssessedString() {
     return DateUtil.getFormattedDate(this.dateLastAssessed, "yyyy-MM-dd");

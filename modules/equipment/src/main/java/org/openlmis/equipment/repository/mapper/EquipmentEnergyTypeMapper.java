@@ -37,4 +37,6 @@ public interface EquipmentEnergyTypeMapper {
   void update(EquipmentEnergyType equipmentEnergyType);
 
 
+  @Select("select * from equipment_energy_types where name = #{name} limit 1")
+  EquipmentEnergyType getByName(String name);
 }

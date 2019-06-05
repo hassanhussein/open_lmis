@@ -80,4 +80,8 @@ public class EquipmentRepository {
   public Equipment getByTypeManufacturerAndModel(Long equipmentTypeId, String manufacturer, Long modelId, String model) {
     return mapper.getByTypeManufacturerAndModel(equipmentTypeId, manufacturer, modelId, model);
   }
+
+  public Equipment getEquipmentByNameAndModelCode(String equipmentName, String equipmentModelCode) {
+    return mapper.getEquipmentByNameAndModelCode(equipmentName, equipmentModelCode);
+  }
 }

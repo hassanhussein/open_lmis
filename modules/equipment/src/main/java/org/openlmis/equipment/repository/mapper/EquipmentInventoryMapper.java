@@ -130,4 +130,12 @@ public interface EquipmentInventoryMapper {
 
     @Select("select * from equipment_inventories where serialNumber = #{serialNumber}")
     EquipmentInventory findInventoryBySerialNumber(@Param("serialNumber") String serialNumber);
+
+    @Select("select * from equipment_inventories where facilityid = #{facilityId} and " +
+            "programid = #{programId} and equipmentid = #{equipmentId} and (serialnumber = #{serialNumber} or #{serialNumber} = '')" +
+            " order by createdDate asc limit 1")
+    EquipmentInventory getInventoryByFacilityProgramEquipmentSerialNumber(@Param("facilityId") Long facilityId,
+                                                                          @Param("programId") Long programId,
+                                                                          @Param("equipmentId") Long equipmentId,
+                                                                          @Param("serialNumber") String serialNumber);
 }

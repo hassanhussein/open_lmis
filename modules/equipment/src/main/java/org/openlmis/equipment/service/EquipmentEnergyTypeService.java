@@ -39,4 +39,6 @@ public class EquipmentEnergyTypeService {
     }
   }
 
+  public EquipmentEnergyType getByName(String name) { return repository.getByName(name); }
+
 }

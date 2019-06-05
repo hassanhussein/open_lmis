@@ -13,11 +13,16 @@
 package org.openlmis.equipment.service;
 
 import org.apache.log4j.Logger;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureStatusDTO;
+import org.openlmis.equipment.dto.EquipmentInventoryUploadDto;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +38,12 @@ public class EquipmentInventoryService {
 
   @Autowired
   EquipmentInventoryRepository repository;
+
   Logger logger = Logger.getLogger(EquipmentInventoryService.class);
+
   @Autowired
   private FacilityService facilityService;
-  @Autowired
-  private EquipmentService equipmentService;
+
   @Autowired
   private EquipmentRepository equipmentRepository;
 
@@ -149,5 +155,61 @@ public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
 
   public EquipmentInventory getInventoryBySerialNumber(String serialNumber) {
     return repository.findBySerialNumber(serialNumber);
+  }
+
+  public EquipmentInventory getExistingInventoryForUpload
+          (EquipmentInventory equipmentInventory) {
+    EquipmentInventory inventory = validateAndLoadEquipmentInventory(equipmentInventory);
+    return repository.getInventoryByFacilityProgramEquipmentSerialNumber(
+            equipmentInventory.getFacilityId(),
+            equipmentInventory.getProgramId(),
+            equipmentInventory.getEquipmentId(),
+            equipmentInventory.getSerialNumber());
+  }
+
+  @Autowired EquipmentOperationalStatusService equipmentOperationalStatusService;
+  @Autowired EquipmentService equipmentService;
+  @Autowired ProgramService programService;
+
+  private EquipmentInventory validateAndLoadEquipmentInventory
+          (EquipmentInventory equipmentInventory) {
+
+     EquipmentOperationalStatus status =  equipmentOperationalStatusService
+              .getByCode(equipmentInventory.getEquipmentOperationalStatus().getCode());
+     if(status == null)
+       throw new DataException("equipment.operational.status.missing.data");
+
+     Equipment equipment = equipmentService.getEquipmentByNameAndModelCode(
+             equipmentInventory.getEquipment().getName(),
+             equipmentInventory.getEquipmentModel().getCode());
+     if(equipment == null)
+       throw new DataException("equipment.missing.data");
+
+    Program program = programService.getByCode(equipmentInventory.getProgram().getCode());
+    if(program == null)
+      throw new DataException("program.missing.data");
+
+    Facility facility = facilityService.getFacilityByCode(equipmentInventory.getFacility().getCode());
+    if(facility == null)
+      throw new DataException("facility.missing.data");
+
+    //EquipmentInventory equipmentInventory = equipmentInventoryUploadDto;
+
+    equipmentInventory.setProgramId(program.getId());
+    equipmentInventory.setEquipmentId(equipment.getId());
+    equipmentInventory.setFacilityId(facility.getId());
+    equipmentInventory.setOperationalStatusId(status.getId());
+
+    return equipmentInventory;
+  }
+
+  public void uploadEquipmentInventory(EquipmentInventory equipmentInventory) {
+    EquipmentInventory inventory = validateAndLoadEquipmentInventory(equipmentInventory);
+
+    if(inventory.getId() == null){
+      repository.insert(inventory);
+    } else {
+      repository.update(inventory);
+    }
   }
 }

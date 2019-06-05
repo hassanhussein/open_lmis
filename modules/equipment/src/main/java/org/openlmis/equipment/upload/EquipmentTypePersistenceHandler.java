@@ -29,6 +29,6 @@ public class EquipmentTypePersistenceHandler extends AbstractModelPersistenceHan
 
     @Override
     public String getMessageKey() {
-        return "error.duplicate.equipment.type";
+        return "error.duplicate.equipment.model";
     }
 }

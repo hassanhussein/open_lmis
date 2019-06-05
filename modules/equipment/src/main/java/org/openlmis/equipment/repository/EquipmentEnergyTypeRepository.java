@@ -39,4 +39,5 @@ public class EquipmentEnergyTypeRepository {
     energyTypeMapper.update(energyType);
   }
 
+  public EquipmentEnergyType getByName(String name) { return energyTypeMapper.getByName(name); }
 }

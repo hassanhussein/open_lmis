@@ -46,4 +46,8 @@ public class EquipmentModelRepository {
     public List<EquipmentModel> getByEquipmentTypeId(Long equipmentTypeId) {
         return mapper.getByEquipmentTypeId(equipmentTypeId);
     }
+
+    public EquipmentModel getByCode(String code) {
+        return mapper.getByCode(code);
+    }
 }
