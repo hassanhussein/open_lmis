@@ -39,7 +39,7 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
     $scope.consumptionForPeriod = function (row, period) {
         var consumption=0;
         if (!utils.isNullOrUndefined(row)) {
-            consumption = _.findWhere(row.consumptionColumnList, {header: period.name}).valeu;
+            consumption = _.findWhere(row.consumptionColumnList, {header: period}).valeu;
         }
         return consumption;
     };
