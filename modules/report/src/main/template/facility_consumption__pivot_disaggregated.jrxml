@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility_consumption__pivot_disaggregated" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -198,7 +197,12 @@
 							</box>
 							<textField isStretchWithOverflow="true">
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="21" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
-								<box leftPadding="2" bottomPadding="3"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
 								<textElement textAlignment="Left" verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
@@ -238,7 +242,12 @@
 						<cellContents>
 							<textField>
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="25" forecolor="#000000" uuid="9e875326-4e43-451a-8164-9763d462124e"/>
-								<box leftPadding="3" bottomPadding="2"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
 								<textElement verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
@@ -258,10 +267,11 @@
 						<cellContents>
 							<textField>
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="25" uuid="e79cd276-4e5e-4318-9467-f526d303bee3"/>
-								<box leftPadding="2" bottomPadding="3">
+								<box>
+									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
 									<bottomPen lineWidth="1.0"/>
-									<rightPen lineWidth="0.5"/>
+									<rightPen lineWidth="1.0"/>
 								</box>
 								<textElement verticalAlignment="Bottom">
 									<font size="8"/>
@@ -282,10 +292,11 @@
 						<cellContents>
 							<textField>
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="25" uuid="a642a497-5bf8-44cd-ae5b-bd04c08b16ea"/>
-								<box leftPadding="2" bottomPadding="3">
+								<box>
+									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
 									<bottomPen lineWidth="1.0"/>
-									<rightPen lineWidth="0.5"/>
+									<rightPen lineWidth="1.0"/>
 								</box>
 								<textElement verticalAlignment="Bottom">
 									<font size="8"/>
@@ -306,10 +317,11 @@
 						<cellContents>
 							<textField>
 								<reportElement style="Crosstab Data Text" x="0" y="0" width="47" height="25" uuid="694df33a-015e-432c-8e6e-36af53308263"/>
-								<box leftPadding="2" bottomPadding="3">
+								<box>
+									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
 									<bottomPen lineWidth="1.0"/>
-									<rightPen lineWidth="0.5"/>
+									<rightPen lineWidth="1.0"/>
 								</box>
 								<textElement verticalAlignment="Bottom">
 									<font size="8"/>
@@ -330,7 +342,12 @@
 						<cellContents>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="76" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
-								<box leftPadding="2" bottomPadding="3"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
 								<textElement textAlignment="Left" verticalAlignment="Bottom">
 									<font size="8"/>
 								</textElement>
@@ -380,7 +397,12 @@
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="31" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
-							<box leftPadding="2" bottomPadding="3"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
 							<textElement textAlignment="Left" verticalAlignment="Bottom">
 								<font size="8"/>
 							</textElement>

@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
-<!-- 2016-12-05T15:36:54 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="openlmis-report-header-landscape" language="groovy" pageWidth="842" pageHeight="200" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="720" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="b1774485-8c52-493d-8b62-63c6cd58f66d">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -55,7 +53,7 @@
 				<textFieldExpression><![CDATA[($P{REPORT_FILTER_PARAM_VALUES} != 0)?$P{REPORT_FILTER_PARAM_VALUES}:""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="207" y="45" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="8e7e49a1-6c5e-4a50-ba77-935008c82741"/>
+				<reportElement x="158" y="45" width="509" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="8e7e49a1-6c5e-4a50-ba77-935008c82741"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
 					<font size="16" isBold="true"/>
 					<paragraph leftIndent="0"/>
@@ -63,7 +61,7 @@
 				<textFieldExpression><![CDATA[($P{CUSTOM_REPORT_TITLE} != null)?$P{CUSTOM_REPORT_TITLE}:$P{REPORT_TITLE}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement x="207" y="13" width="348" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="4e714469-2ec7-46c4-ab1a-c1a75cb2f71f"/>
+				<reportElement x="158" y="13" width="509" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="4e714469-2ec7-46c4-ab1a-c1a75cb2f71f"/>
 				<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
 					<font size="16" isBold="true"/>
 					<paragraph leftIndent="0"/>
