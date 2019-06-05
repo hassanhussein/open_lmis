@@ -22,6 +22,20 @@ import static org.apache.ibatis.jdbc.SqlBuilder.*;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class OrderFillRateQueryBuilder {
+    public static final String EMERGENCY = "EM";
+    public static final String REGULAR = "RE";
+
+    private static String getEmergencyPredictate(OrderFillRateReportParam param) {
+        String predicate = "";
+        if (param.getReportType() != null) {
+            if (EMERGENCY.equalsIgnoreCase(param.getReportType())) {
+                predicate += " and r.emergency =true ";
+            } else if (REGULAR.equalsIgnoreCase(param.getReportType())) {
+                predicate += "and r.emergency = false ";
+            }
+        }
+        return predicate;
+    }
 
     public static String getQuery(Map params) {
         OrderFillRateReportParam queryParam = (OrderFillRateReportParam) params.get("filterCriteria");
@@ -34,6 +48,7 @@ public class OrderFillRateQueryBuilder {
     }
 
     private static String writePredicates(OrderFillRateReportParam param) {
+
         String predicate = " and  r.programId=" + param.getProgram() +
                 " and r.periodid = " + param.getPeriod() + " ";
         if (param.getZone() != null && param.getZone() != 0) {
@@ -41,7 +56,7 @@ public class OrderFillRateQueryBuilder {
 
                     " or r.provinceid = " + param.getZone() + ")";
         }
-        predicate = predicate + " and r.emergency=false ";
+        predicate = predicate + getEmergencyPredictate(param);
         if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null) {
             predicate = predicate + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
         }
@@ -116,7 +131,7 @@ public class OrderFillRateQueryBuilder {
                 "\tcount(*) FILTER (WHERE o.quantityshipped>0) AS shipped FROM mv_requisition r \n" +
                 "     LEFT JOIN mv_order_fulfillment o on o.orderid= r.rnrid and  o.productcode = r.productcode \n" +
                 "  WHERE r.status::text = 'RELEASED'::text AND r.approved > 0\n" +
-                writePredicates(param)+
+                writePredicates(param) +
                 ")\n" +
                 " select q.totalcount as totalcount," +
                 "q.approved as approved , q.shipped as shipped , \n" +
@@ -124,7 +139,7 @@ public class OrderFillRateQueryBuilder {
                 "  WHEN COALESCE(q.approved::numeric, 0::numeric) = 0::numeric THEN 0::numeric\n" +
                 "  ELSE round(COALESCE(q.shipped, 0::bigint)::numeric / COALESCE(q.approved, 0)::numeric * 100::numeric, 2)\n" +
                 "    END AS itemfillrate" +
-                " from query q" ;
+                " from query q";
 
         return query;
     }

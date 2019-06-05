@@ -11,6 +11,11 @@
  */
 function OrderFillRateController($scope, $window, OrderFillRateReport, GetPushedProductList, $q) {
     //to minimize and maximize the filter section
+    $scope.reportTypes = [
+        {name: 'All', value: 'ALL', label: 'All', checked: true},
+        {name: 'EM', value: 'EM', label: 'Emergency'},
+        {name: 'RE', value: 'RE', label: 'Regular'}
+    ];
     $scope.wideOption = {'multiple': true, dropdownCss: { 'min-width': '500px' }};
 
     $scope.OnFilterChanged = function() {

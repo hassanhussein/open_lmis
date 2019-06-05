@@ -9,7 +9,23 @@
   ~
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<style>
+    #report-head {
+        margin-top: -28px !important;
+    }
 
+    .container-fluid {
+        padding-right: 0px !important;
+        padding-left: 0px !important;
+    }
+    .button{
+        color: #078f97 !important;
+    }
+    btn-checkbox{
+        visibility: visible !important;
+        color: #0c9083;
+    }
+</style>
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
 <div class="container-fluid">
     <div class="box row-fluid">
@@ -48,7 +64,19 @@
                     </div>
                 </div>
                 <div class="content-body">
-
+                    <div class="box-header">
+                        <div ng-repeat="r in reportTypes">
+                            <div class="form-cell span2">
+                                <div class="checkbox">
+                                    <label for="{{r.name}}">
+                                        <input id="{{r.name}}" class="checkbox" type="radio" value="{{r.value}}" name="reportType"
+                                               ng-checked="r.checked" ng-model="filter.reportType" checked="r.checked">
+                                        <span>{{r.label}}</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <table client-side-sort-pagination class="table table-bordered"
                            ng-show="data == undefined || data.length == 0">
                         <tr>

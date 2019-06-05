@@ -44,6 +44,9 @@ public class OrderFillRateReportParam extends BaseParam {
     private Long facility;
     private String sortBy;
     private String sortDirection;
+    private String reportType;
+    private Boolean allReportType;
+    private Boolean isEmergency;
 
 
 }
