@@ -46,7 +46,7 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
-        var url = '/reports/download/facility_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
+        var url = '/reports/download/facility_adj_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
         $window.open(url, '_blank');
     };
     $scope.showMoreFilters = false;
