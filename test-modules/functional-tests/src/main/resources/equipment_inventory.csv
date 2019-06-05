@@ -1,0 +1,2 @@
+Facility Code, Program Code, Equipment Model, Equipment Name, Serial Number, Year Of Installation, Purchase Price, Source of Fund, Replacement Recommended, Reason For Replacement, Date Last Assessed,Name of Assessor, Active,Date Decommissioned, Name of SparePart, Remark,Equipment Operational Status
+103000, LAB, MODELCODE123, test equipmenet, FakeSerial Number,,,,,,,,TRUE,,,,FUNCTIONAL
