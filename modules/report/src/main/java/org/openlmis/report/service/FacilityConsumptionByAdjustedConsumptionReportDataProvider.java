@@ -31,7 +31,13 @@ import java.util.Map;
 @NoArgsConstructor
 public class FacilityConsumptionByAdjustedConsumptionReportDataProvider extends ConsumptionReportDataProvider {
 
+    @Override
+    public HashMap<String, String> getExtendedHeader(Map params) {
+        HashMap<String, String> result = new HashMap<String, String>();
+        result.put("title", "Facility Consumption Report(Adjusted Consumption)");
+        return result;
 
+    }
 
 
 }

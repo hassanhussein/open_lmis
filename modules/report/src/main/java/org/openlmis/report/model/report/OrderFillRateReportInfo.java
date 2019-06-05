@@ -12,7 +12,7 @@ import org.openlmis.report.model.ResultRow;
 @NoArgsConstructor
 public class OrderFillRateReportInfo implements ResultRow {
     Integer totalcount;
-    Integer approved;
-    Integer shipped;
+    Long approved;
+    Long shipped;
     Float   itemfillrate;
 }
