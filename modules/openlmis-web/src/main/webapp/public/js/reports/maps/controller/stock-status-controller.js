@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function StockStatusController( $window, $scope, leafletData, StockStatusProductConsumptionGraph, StockStatusProductList, StockedOutFacilityByProductList, UnderStockedFacilityByProductList, OverStockedFacilityByProductList, AdequatelyStockedFacilityByProductList, StockedOutFacilityList, UnderStockedFacilityList, OverStockedFacilityList, AdequatelyStockedFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
+function StockStatusController( $scope, leafletData, StockStatusProductConsumptionGraph, StockStatusProductList, StockedOutFacilityByProductList, UnderStockedFacilityByProductList, OverStockedFacilityByProductList, AdequatelyStockedFacilityByProductList, StockedOutFacilityList, UnderStockedFacilityList, OverStockedFacilityList, AdequatelyStockedFacilityList, SettingsByKey, ContactList, SendMessages, $filter, $dialog, messageService) {
 
     $scope.default_indicator = "stocked_out";
     $scope.district_title = "All Geographic Zones";
@@ -100,6 +100,8 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
 
     $scope.sendSms = function(){
 
+
+
         // construct the messages that go out
         var messages  = [];
         for(var i = 0; i < $scope.contacts.length; i++){
@@ -136,9 +138,12 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.title = 'Stocked Out Facilities in ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
+            //getStockStatusProductConsumption();
             loadStockStatusConsumptionData();
 
         });
+        //alert("fail:" +  JSON.stringify($scope.filter));
+        $scope.zoomToSelectedFeature(feature);
     };
 
 
@@ -157,6 +162,7 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.district_title = feature.name;
             getStockStatusByProduct();
         });
+        $scope.zoomToSelectedFeature(feature);
     };
 
     $scope.OverStockedFacilities = function(feature, element) {
@@ -174,6 +180,7 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.district_title = feature.name;
             getStockStatusByProduct();
         });
+        $scope.zoomToSelectedFeature(feature);
     };
 
     $scope.AdequatelyStockedFacilities = function(feature, element) {
@@ -190,13 +197,16 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.title = 'Adequately Stocked Facilities in ' + feature.name;
             $scope.district_title = feature.name;
             getStockStatusByProduct();
+            // alert("fail:" + JSON.stringify($scope.facilities));
         });
+
+        $scope.zoomToSelectedFeature(feature);
     };
 
     // stock status by product
 
 
-     $scope.StockedOutProducts = function(feature, element) {
+    $scope.StockedOutProducts = function(feature, element) {
         StockedOutFacilityByProductList.get({
             program: $scope.filter.program,
             period: $scope.filter.period,
@@ -204,11 +214,13 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             geo_zone: $scope.filter.zone
         }, function(data) {
             $scope.productPopup = data.products;
+            //alert("fail:" + JSON.stringify($scope.productPopup));
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
             $scope.title = 'Stocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
 
         });
+        $scope.zoomToSelectedFeature(feature);
     };
 
     $scope.UnderStockedProducts = function(feature, element) {
@@ -222,8 +234,10 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
             $scope.title = 'UnderStocked Out Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
+            // alert("fail:" + JSON.stringify($scope.facilities));
         });
 
+        $scope.zoomToSelectedFeature(feature);
     };
 
     $scope.OverStockedProducts = function(feature, element) {
@@ -237,8 +251,10 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
             $scope.title = 'Over Stocked Facilities for ' + feature.primaryname + ' in ' + $scope.district_title;
+            //alert("fail:" + JSON.stringify(feature));
         });
 
+        $scope.zoomToSelectedFeature(feature);
     };
 
     $scope.AdequatelyStockedProducts = function(feature, element) {
@@ -252,8 +268,10 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             $scope.successModal2 = true;
             $scope.show_email = $scope.show_sms = false;
             $scope.title = 'Adequately Stocked Facilities for '+ feature.primaryname + ' in ' + $scope.district_title;
+            // alert("fail:" + JSON.stringify($scope.facilities));
         });
 
+        $scope.zoomToSelectedFeature(feature);
     };
 
 
@@ -273,7 +291,9 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             geo_zone: $scope.filter.zone
         },function (data){
             $scope.consumptionData =  data.consumption;
+            //alert("fail5:" +  JSON.stringify($scope.consumptionData));
             adjustDataForChart($scope.consumptionData);
+
 
         });
     };
@@ -322,14 +342,14 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
             },{
                 label: "Consumed",
                 data: quantityConsumedSeries,
-                 yaxis: 3,
+                yaxis: 3,
                 color: "#4bb1cf",
                 points: { fillColor: "#4bb1cf", show: $scope.showConsumed },
                 lines: {show:$scope.showConsumed}
             },{
                 label:"AMC",
                 data: amcSeries,
-                 yaxis: 3,
+                yaxis: 3,
                 color: "#faa732",
                 points: { fillColor: "#faa732", show: true },
                 lines: {show:true}
@@ -339,12 +359,12 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
     };
 
     function generateBarsOption(id, tickLabel, xaxisLabel){
-               return {
+        return {
             legend: {
                 position:"nw",
                 noColumns: 1,
                 labelBoxBorderColor: "none"
-           },
+            },
             xaxis: {
                 tickLength: 0, // hide gridlines
                 axisLabel: xaxisLabel,
@@ -412,6 +432,10 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
     $scope.productSelectChange = function(selected, product){
         loadStockStatusConsumptionData();
     };
+
+//////////////////////
+
+
 
     $scope.expectedFilter = function(item) {
         return (item.period > 0 && item.stockedout >= 0 && item.understocked >= 0 && item.overstocked >= 0 && item.adequatelystocked >= 0);
@@ -493,6 +517,38 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
         };
     };
 
+    $scope.centerJSON = function() {
+
+        leafletData.getMap().then(function(map) {
+            var latlngs = [];
+            for (var c = 0; c < $scope.features.length; c++) {
+                if ($scope.features[c].geometry === null || angular.isUndefined($scope.features[c].geometry))
+                    continue;
+                if ($scope.features[c].geometry.coordinates === null || angular.isUndefined($scope.features[c].geometry.coordinates))
+                    continue;
+                for (var i = 0; i < $scope.features[c].geometry.coordinates.length; i++) {
+                    var coord = $scope.features[c].geometry.coordinates[i];
+                    for (var j in coord) {
+                        var points = coord[j];
+                        var latlng = L.GeoJSON.coordsToLatLng(points);
+
+                        //this is a hack to make the tz shape files to work
+                        //sadly the shapefiles for tz and zm have some areas that are in europe,
+                        //which indicates that the quality of the shapes is not good,
+                        //however the zoom neeeds to show the correct country boundaries.
+                        if(latlng.lat < 0 && latlng.lng > 0){
+                            latlngs.push(latlng);
+                        }
+                    }
+                }
+            }
+
+            thevar = latlngs;
+            theMap = map;
+            map.fitBounds(latlngs);
+        });
+    };
+
 
     $scope.drawMap = function(json) {
         angular.extend($scope, {
@@ -508,6 +564,11 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
     };
 
     function onEachFeature(feature, layer) {
+
+        layer.on({
+            click: zoomToFeature
+        });
+
         layer.bindPopup(popupFormat(feature));
     }
 
@@ -525,6 +586,10 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
 
     }
 
+    // <a href="my.html" onclick="return getValue()">Go</a>
+    function zoomToFeature(e) {
+        //todo: complete this
+    }
 
     getStockStatusByProduct = function() {
         $.getJSON('/gis/stock-status-products.json', $scope.filter, function(data) {
@@ -558,7 +623,7 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
                 "type": "FeatureCollection",
                 "features": $scope.features
             });
-            zoomAndCenterMap(leafletData, $scope);
+            $scope.centerJSON();
         });
 
         $.getJSON('/gis/stock-status-products.json', $scope.filter, function(data) {
@@ -580,10 +645,5 @@ function StockStatusController( $window, $scope, leafletData, StockStatusProduct
         });
 
     };
-    $scope.exportReport = function(type) {
-        $scope.filter.pdformat = 1;
-        var params = jQuery.param($scope.filter);
-        var url = '/reports/download/stock_status/' + type + '?' + params;
-        $window.open(url, '_blank');
-    };
+
 }
