@@ -125,6 +125,7 @@ function AggregateConsumptionReportController($scope,$q, $filter, $window, Aggre
     $scope.exportReport = function (type) {
 
          $scope.filter.limit = 100000;
+         $scope.filter.page  = 1;
 
          var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
