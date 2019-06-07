@@ -621,4 +621,12 @@ public class RestRequisitionService {
         requisitionService.deleteRnR(rnrId);
 
     }
+
+    public List<Rnr> getRequisitionsFor(RequisitionSearchCriteria criteria, List<ProcessingPeriod> periodList) {
+        return  requisitionService.getRequisitionsFor(criteria,periodList);
+    }
+
+    public List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
+        return requisitionService.getProcessingPeriods(criteria);
+    }
 }
