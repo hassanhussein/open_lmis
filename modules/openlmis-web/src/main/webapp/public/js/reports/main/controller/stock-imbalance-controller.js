@@ -32,7 +32,7 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
     $scope.exportReport = function(type) {
 
         $scope.filter.limit = 100000;
-        $scope.filter.page = 1;
+        $scope.filter.page  = 1;
 
         var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
@@ -129,55 +129,49 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
     $scope.pageSize = 10;
     $scope.OnFilterChanged = function() {
 
-        // clear old data if there was any
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        $scope.filter.limit = $scope.pageSize;
-        $scope.filter.page = $scope.page;
+//clear old data if there was any
+$scope.data = $scope.datarows = [];
+$scope.filter.max = 10000;
+$scope.filter.limit = $scope.pageSize;
+$scope.filter.page = $scope.page;
 
-        //variable to manage counts on pagination
-        $scope.countFactor = $scope.pageSize * ($scope.page - 1);
+//variable to manage counts on pagination
+$scope.countFactor = $scope.pageSize * ($scope.page - 1);
 
-        if ($scope.filter.status === undefined) {
-            //By Default, show stocked out
-            $scope.statuses = {
-                'SO': true
-            };
-            $scope.filter.status = 'SO';
-            $scope.applyUrl();
-        }
+if ($scope.filter.status === undefined) {
+//By Default, show stocked out
+$scope.statuses = {
+    'SO': true
+};
+$scope.filter.status = 'SO';
+$scope.applyUrl();
+}
 
-        StockImbalanceReport.get($scope.getSanitizedParameter(), function(data) {
-            if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+StockImbalanceReport.get($scope.getSanitizedParameter(), function(data) {
+if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
 
-                $scope.pagination = data.openLmisResponse.pagination;
-                $scope.totalItems = 1000;
-                $scope.currentPage = $scope.pagination.page;
-                $scope.tableParams.total = $scope.totalItems;
-                //check if this is last page and reduce totalItemSize so user can not go to next page
-                if (data.openLmisResponse.rows.length !== $scope.pageSize) {
-                    $scope.totalItems = $scope.pageSize * $scope.page;
-                }
-                $scope.data = data.openLmisResponse.rows;
-                $scope.paramsChanged($scope.tableParams);
-            }
-        });
-    };
+$scope.pagination = data.openLmisResponse.pagination;
+$scope.totalItems = 1000;
+$scope.currentPage = $scope.pagination.page;
+$scope.tableParams.total = $scope.totalItems;
+//check if this is last page and reduce totalItemSize so user can not go to next page
+if (data.openLmisResponse.rows.length !== $scope.pageSize) {
+$scope.totalItems = $scope.pageSize * $scope.page;
+}
+$scope.data = data.openLmisResponse.rows;
+$scope.paramsChanged($scope.tableParams);
+}
+});
 
-    $scope.formatNumber = function(value, format) {
-        return utils.formatNumber(value, format);
-    };
+};
+$scope.formatNumber = function(value, format) {
+return utils.formatNumber(value, format);
+};
 
-
-    //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
-    $scope.$watch('currentPage', function() {
-    if($scope.page !== $scope.currentPage)
-    {
+$scope.$watch('currentPage', function() {
         if ($scope.currentPage > 0) {
             $scope.page = $scope.currentPage;
-            $timeout(function() {
-                $scope.OnFilterChanged();
-            }, 100);
+            $scope.OnFilterChanged();
         }
-    }});
+    });
 }

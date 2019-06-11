@@ -9,102 +9,75 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function DistrictConsumptionReportController($scope, DistrictConsumptionReport, $timeout, $q, $window) {
+
+function DistrictConsumptionReportController($scope,  DistrictConsumptionReport, $timeout) {
 
     //filter form data section
 
     $scope.page = 1;
     $scope.pageSize = 10;
 
-    $scope.OnFilterChanged = function() {
-        $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        $scope.filter.limit = $scope.pageSize;
-        $scope.filter.page = $scope.page;
-        $scope.countFactor = $scope.pageSize * ($scope.page - 1);
+    $scope.OnFilterChanged = function(){
+      $scope.data = $scope.datarows = [];
+      $scope.filter.max = 10000;
+      $scope.filter.limit = $scope.pageSize;
+      $scope.filter.page = $scope.page;
+      $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
 
 
 
-        DistrictConsumptionReport.get($scope.getSanitizedParameter(), function(data) {
-            if (data.districtData !== undefined && data.districtData.rows !== undefined) {
-                $scope.data = chainParentChildReport(data); //.districtData.rows;
-                $scope.pagination = data.districtData.pagination;
-                $scope.totalItems = 1000;
-                $scope.currentPage = $scope.pagination.page;
-                $scope.tableParams.total = $scope.totalItems;
+      DistrictConsumptionReport.get($scope.getSanitizedParameter(), function(data) {
+      console.log(data);
+        if(data.districtData !== undefined && data.districtData.rows !== undefined){
+          $scope.data = chainParentChildReport(data);//.districtData.rows;
+          $scope.pagination = data.districtData.pagination;
+          console.log($scope.pagination);
+          $scope.totalItems = 1000;
+          $scope.currentPage = $scope.pagination.page;
+          $scope.tableParams.total = $scope.totalItems;
 
-                //check if this is last page and reduce totalItemSize so user can not go to next page
-                if (data.districtData.rows.length !== $scope.pageSize) {
-                    $scope.totalItems = $scope.pageSize * $scope.page;
-                }
-                $scope.paramsChanged($scope.tableParams);
-            }
-        });
+          //check if this is last page and reduce totalItemSize so user can not go to next page
+          if(data.districtData.rows.length !== $scope.pageSize)
+          {
+          $scope.totalItems = $scope.pageSize * $scope.page;
+          }
+          $scope.paramsChanged($scope.tableParams);
+        }
+      });
     };
 
-    var chainParentChildReport = function(data) {
+    var chainParentChildReport = function(data){
 
-        _.each(data.districtData.rows, function(row) {
-            row.facilityConsumption = _.where(data.facilityData.rows, {
-                district_id: row.district_id
-            });
+        _.each(data.districtData.rows, function(row){
+            row.facilityConsumption = _.where(data.facilityData.rows, {district_id: row.district_id});
         });
         return data.districtData.rows;
     };
 
-    var removeRowsWithNoPercentage = function(data) {
+    var removeRowsWithNoPercentage = function (data){
         return data
-            .filter(function(el) {
+            .filter(function (el) {
                 return el.totalPercentage !== null && el.totalPercentage !== 0;
             });
     };
 
-    $scope.exportReport = function(type) {
+   $scope.exportReport   = function (type){
 
-        $scope.filter.limit = 100000;
-        $scope.filter.page = 1;
-
-        var allow = $scope.allPrinting($scope.getSanitizedParameter());
-
-        allow.then(function() {
-
-            $scope.filter.pdformat = 1;
-            var url = '/reports/download/district_consumption/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-            $window.open(url, '_blank');
-        });
-
-
+        $scope.filter.pdformat =1;
+        var params = jQuery.param($scope.getSanitizedParameter());
+        var url = '/reports/download/district_consumption/' + type +'?' + params;
+        window.open(url, '_BLANK');
     };
 
 
-    $scope.allPrinting = function(params) {
-
-        var deferred = $q.defer();
-
-        DistrictConsumptionReport.get(params, function(data) {
-
-            if (data.districtData.rows.length > 0) {
-
-                deferred.resolve();
-            }
-
-        });
-
-
-        return deferred.promise;
-
-    };
-
-    //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
-    $scope.$watch('currentPage', function() {
-    if($scope.page !== $scope.currentPage)
-    {
-        if ($scope.currentPage > 0) {
-            $scope.page = $scope.currentPage;
-            $timeout(function() {
-                $scope.OnFilterChanged();
-            }, 100);
-        }
-    }});
+     //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
+     $scope.$watch('currentPage', function () {
+                    if ($scope.currentPage > 0) {
+                      $scope.page = $scope.currentPage;
+                      $timeout(function(){
+                      $scope.OnFilterChanged();
+                      },100);
+                    }
+      });
 
 }
