@@ -481,7 +481,6 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             GetCoverageByRegionSummary.get(para).then(function (data) {
 
                 var badValue = _.where(data, {coverageclassification: 'BAD'});
-                console.log(data);
                 var goodValue = _.where(data, {coverageclassification: 'GOOD'});
                 var normalValue = _.where(data, {coverageclassification: 'NORMAL'});
                 var summary1 = (badValue.length > 0) ? badValue.length : 0;
@@ -532,11 +531,11 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
     function showCategorizationPopup(events, data,year,level) {
         var parameters = {period: data.point.category,year: parseInt(year, 10), indicator: events.name};
-        console.log(parameters);
+
 
 
         GetCategorizationByDistrictDrillDownData.get(parameters).then(function (data) {
-            console.log(data);
+
 
             if (!isUndefined(data)) {
                 $scope.classificationData = data;
@@ -677,7 +676,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 });
 
             }
-            console.log(userLevel);
+
 
             var joinTitle = (userLevel === 'dvs') ? 'Facilities' : 'Districts';
             var title = '<span style="color:#509fc5; font-size: 15px ">Categorization by ' + joinTitle + ' based on Coverage and Dropout ' + params.year + '</span>';
@@ -1414,7 +1413,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         var currentDate2 = (defaultYear === null || defaultYear === undefined)?new Date().getFullYear()-1:defaultYear;
         GetPeriodForDashboard.get(currentDate2).then(function (data) {
-               console.log(data);
+
             $scope.filter.product = 2421;
             $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
             $scope.years = YearFilteredData.sort(function (a, b) {
@@ -1534,6 +1533,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         $scope.vaccineCoverageByProductAndDoseFunc = function (params) {
             GetCoverageByProductAndDoseData.get(params).then(function (coverage) {
+               console.log(coverage);
                 if (!isUndefined(coverage))
                     coverageByProductAndDose(coverage, params);
             });
@@ -2113,10 +2113,12 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     }
 
     function coverageByProductAndDose(coverage, params) {
+            console.log(coverage);
         var colors = {'WARN': '#ffdb00', 'BAD': '#ff0d00', 'NORMAL': '#ABC9AA', 'GOOD': '#006600'};
         var dataValues = [];
         var totalVaccinated = [];
         coverage.forEach(function (data) {
+        console.log(data);
             totalVaccinated.push({name: 'vaccinated', color: 'blue', y: data.total});
             dataValues.push({name: 'byChart', color: colors[data.coverageclassification], y: data.coverage});
         });
@@ -2333,7 +2335,6 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     $scope.loadCoverageMap = function (params) {
 
         GetCoverageMapInfo.get(params).then(function (data) {
-        console.log(data);
             var dataValues = [];
             Highcharts.each(data, function (code, i) {
                 var colorV;
