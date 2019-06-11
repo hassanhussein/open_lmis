@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 
@@ -46,6 +47,10 @@ public class EquipmentInventoryService {
 
   @Autowired
   private EquipmentRepository equipmentRepository;
+
+  @Autowired EquipmentOperationalStatusService equipmentOperationalStatusService;
+  @Autowired EquipmentService equipmentService;
+  @Autowired ProgramService programService;
 
   public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
     return repository.getFacilityInventory(facilityId, programId);
@@ -159,57 +164,64 @@ public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
 
   public EquipmentInventory getExistingInventoryForUpload
           (EquipmentInventory equipmentInventory) {
-    EquipmentInventory inventory = validateAndLoadEquipmentInventory(equipmentInventory);
+    EquipmentInventory inventory = loadEquipmentInventoryUploadFields(equipmentInventory);
     return repository.getInventoryByFacilityProgramEquipmentSerialNumber(
-            equipmentInventory.getFacilityId(),
-            equipmentInventory.getProgramId(),
-            equipmentInventory.getEquipmentId(),
-            equipmentInventory.getSerialNumber());
-  }
-
-  @Autowired EquipmentOperationalStatusService equipmentOperationalStatusService;
-  @Autowired EquipmentService equipmentService;
-  @Autowired ProgramService programService;
-
-  private EquipmentInventory validateAndLoadEquipmentInventory
-          (EquipmentInventory equipmentInventory) {
-
-     EquipmentOperationalStatus status =  equipmentOperationalStatusService
-              .getByCode(equipmentInventory.getEquipmentOperationalStatus().getCode());
-     if(status == null)
-       throw new DataException("equipment.operational.status.missing.data");
-
-     Equipment equipment = equipmentService.getEquipmentByNameAndModelCode(
-             equipmentInventory.getEquipment().getName(),
-             equipmentInventory.getEquipmentModel().getCode());
-     if(equipment == null)
-       throw new DataException("equipment.missing.data");
-
-    Program program = programService.getByCode(equipmentInventory.getProgram().getCode());
-    if(program == null)
-      throw new DataException("program.missing.data");
-
-    Facility facility = facilityService.getFacilityByCode(equipmentInventory.getFacility().getCode());
-    if(facility == null)
-      throw new DataException("facility.missing.data");
-
-    //EquipmentInventory equipmentInventory = equipmentInventoryUploadDto;
-
-    equipmentInventory.setProgramId(program.getId());
-    equipmentInventory.setEquipmentId(equipment.getId());
-    equipmentInventory.setFacilityId(facility.getId());
-    equipmentInventory.setOperationalStatusId(status.getId());
-
-    return equipmentInventory;
+            inventory.getFacilityId(),
+            inventory.getProgramId(),
+            inventory.getEquipmentId(),
+            inventory.getSerialNumber());
   }
 
   public void uploadEquipmentInventory(EquipmentInventory equipmentInventory) {
-    EquipmentInventory inventory = validateAndLoadEquipmentInventory(equipmentInventory);
+    EquipmentInventory inventory = loadEquipmentInventoryUploadFields(equipmentInventory);
+    validateEquipmentInventoryUploadFields(inventory);
 
     if(inventory.getId() == null){
       repository.insert(inventory);
     } else {
       repository.update(inventory);
     }
+  }
+
+  private void validateEquipmentInventoryUploadFields
+          (EquipmentInventory equipmentInventory) {
+
+     if(equipmentInventory.getOperationalStatusId() == null)
+       throw new DataException("equipment.operational.status.missing.data");
+
+     if(equipmentInventory.getEquipmentId() == null)
+       throw new DataException("equipment.missing.data");
+
+    if(equipmentInventory.getProgramId() == null)
+      throw new DataException("program.missing.data");
+
+    if(equipmentInventory.getFacilityId() == null)
+      throw new DataException("facility.missing.data");
+  }
+
+  private EquipmentInventory loadEquipmentInventoryUploadFields(EquipmentInventory equipmentInventory) {
+    EquipmentOperationalStatus status =  equipmentOperationalStatusService
+            .getByCode(equipmentInventory.getEquipmentOperationalStatus().getCode());
+
+    Equipment equipment = equipmentService.getEquipmentByNameAndModelCode(
+            equipmentInventory.getEquipment().getName(),
+            equipmentInventory.getEquipmentModel().getCode());
+
+    Program program = programService.getByCode(equipmentInventory.getProgram().getCode());
+
+    Facility facility = facilityService.getFacilityByCode(equipmentInventory.getFacility().getCode());
+
+    /*equipmentInventory.setProgramId(Optional.ofNullable(program.getId()).orElse(null));
+    equipmentInventory.setEquipmentId(Optional.ofNullable(equipment.getId()).orElse(null));
+    equipmentInventory.setFacilityId(Optional.ofNullable(facility.getId()).orElse(null));
+    equipmentInventory.setOperationalStatusId(Optional.ofNullable(status.getId()).orElse(null));
+    */
+
+    Optional.ofNullable(equipment).ifPresent(e -> equipmentInventory.setEquipmentId(e.getId()));
+    Optional.ofNullable(program).ifPresent(p -> equipmentInventory.setProgramId(p.getId()));
+    Optional.ofNullable(facility).ifPresent(f -> equipmentInventory.setFacilityId(f.getId()));
+    Optional.ofNullable(status).ifPresent(s -> equipmentInventory.setOperationalStatusId(s.getId()));
+
+    return equipmentInventory;
   }
 }
