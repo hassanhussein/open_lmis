@@ -20,7 +20,7 @@ function MonthlyStockStatusController($scope,MonthlyStockStatus, $timeout) {
 
 
         MonthlyStockStatus.get($scope.getSanitizedParameter(), function (data) {
-            if (data.openLmisResponse !== undefined || data.openLmisResponse.rows !== undefined || data.openLmisResponse.rows.length == 0) {
+            if (data.openLmisResponse !== undefined || data.openLmisResponse.rows !== undefined || data.openLmisResponse.rows.length === 0) {
                 $scope.pagination = data.openLmisResponse.pagination;
                 $scope.totalItems = 1000;
                 $scope.currentPage = $scope.pagination.page;

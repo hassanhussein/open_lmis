@@ -12,11 +12,10 @@
 
 function AdjustmentSummaryReportController($scope, $window, $q, AdjustmentSummaryReport) {
 
- 	$scope.currentPage = 1;
- 	$scope.pageSize = 10;
+$scope.pageSize = 10;
+$scope.currentPage = 1;
 
-
-	 $scope.exportReport = function (type) {
+$scope.exportReport = function (type) {
 
              $scope.filter.limit = 100000;
              $scope.filter.page  = 1;
@@ -90,6 +89,5 @@ function AdjustmentSummaryReportController($scope, $window, $q, AdjustmentSummar
 			$scope.OnFilterChanged();
 		}
 	});
-
 
 }

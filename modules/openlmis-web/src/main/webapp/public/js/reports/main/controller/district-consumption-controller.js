@@ -34,7 +34,7 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport,
           console.log($scope.pagination);
           $scope.totalItems = 1000;
           $scope.currentPage = $scope.pagination.page;
-          $scope.tableParams.total = $scope.totalItems
+          $scope.tableParams.total = $scope.totalItems;
 
           //check if this is last page and reduce totalItemSize so user can not go to next page
           if(data.districtData.rows.length !== $scope.pageSize)
