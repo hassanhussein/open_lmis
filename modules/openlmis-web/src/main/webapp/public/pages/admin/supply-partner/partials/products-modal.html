@@ -10,7 +10,8 @@
       <table class="table table-bordered ">
         <thead>
         <tr>
-          <th></th>
+          <th><input type="checkbox" id="toggleAllProducts" ng-model="toggleProducts"
+                     ng-change="toggleProductsChanged()" /></th>
           <th><span openlmis-message="label.code"></span></th>
           <th><span openlmis-message="label.product"></span></th>
           <th><span openlmis-message="label.action"></span></th>
