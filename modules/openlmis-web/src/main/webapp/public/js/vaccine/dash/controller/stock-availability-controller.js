@@ -54,7 +54,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     var title = ['Vaccines', 'Syringes'];
     var name = ['Vaccines', 'Syringes'];
 
-    $scope.getFacilityStockStatusSummary = function (params) {
+    var getFacilityStockStatusSummary = function (params) {
 
      var stockSummary = [];
 
@@ -63,105 +63,29 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
        if(!isUndefined(data)){
         stockSummary = data;
-               var category = _.uniq(_.pluck(stockSummary, 'period_name'));
-
-             var sortedByData =  _.sortBy(stockSummary, function(sortedBy){
-                 return sortedBy.periodid;
-               });
 
 
+               var period = _.uniq(_.pluck(stockSummary, 'period_name'));
 
-                var groupByPeriod1 = _.groupBy(sortedByData, function(data) {
-                    return data.period_name;
-                });
+               var so = _.pluck(stockSummary, 'so');
+               var os = _.pluck(stockSummary, 'os');
+               var sap = _.pluck(stockSummary, 'sap');
+               var us = _.pluck(stockSummary, 'us');
+               var undefined = _.pluck(stockSummary, 'undefined');
 
-                var summaries = [];
-                var mappedData = _.map(groupByPeriod1, function(value,index) {
+               var summaries = [];
 
-                  console.log(JSON.stringify(index));
+               summaries = [
+                            {name:'Stock Out', data:so, color:'#ff0d00'},
+                            {name:'Out Of Stock', data:os, color:'#ABC9AA'},
+                            {name:'Stock According To Plan', data:sap, color:'#006600'},
+                            {name:'Under Stock', data:us, color:'#ffdb00'}
 
-                  return summaries.push({name:index, data:value, color:colors[]})
+                            ];
 
-                });
-
-
-                /*var groupByPeriod = _.groupBy(stockSummary, function(data) {
-                    return data.classification;
-                });
-
-                 var mappedData = _.map(groupByPeriod, function (value, index) {
-
-
-                 var groupedData = _.groupBy(value, function(data){
-
-                       return  data.period_name;
-
-                  });
-
-
-
-                     var summaries = displayData = [];
-                     var d = _.map(groupedData, function(value, index) {
-
-                      return summaries.push({name:index, data:value.length});
-                      });
-
-                      var data1 = _.pluck(summaries, 'data');
-                    //  console.log(summaries);
-
-                   //  console.log({data:data1, name:index, color: _.pluck(summaries, 'name')});
-
-
-
-              /*        var summaries = [];
-                     _.each(d, function(data,index){
-
-
-                     summaries.push({name:data.length});
-
-                     });
-
-                   console.log(summaries);
-
-                    var summaries = [];*/
-
-
-   //color: _.pluck(summaries, 'name');
-
-            /*  return {data:data1, color:colors[index],period:_.uniq(_.pluck(summaries, 'name'))};
-
-
-            });*/
-
-
-
-
-
-
-
-        /*   var summaries = [];
-          for (var i = 0; i < mappedData.length; i++) {
-                summaries.push({
-                    name: mappedData[i].index,
-                    data: mappedData[i].data
-                    *//*,
-                    color: colors[mappedData[i].index]*//*
-                });
-
-            }*/
-
-                   //console.log(mappedData);
-
-
+                  showFacilityStockStatusChart(period, summaries);
 
        }
-
-
-
-
-
-                 showFacilityStockStatusChart(_.uniq(mappedData[0].period), mappedData);
-
 
 
       });
@@ -190,7 +114,13 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 min: 0,
                 title: {
                     text: 'Facility Count'
-                }
+                },
+                  lineColor: '#999',
+                                lineWidth: 1,
+                                tickColor: '#666',
+                                tickWidth: 1,
+                                tickLength: 3,
+                                gridLineColor: ''
             },
             tooltip: {
 
@@ -1616,7 +1546,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             $scope.vaccineCoverageByRegionAndProductFunc(para);
             $scope.vaccineCoverageByProductAndDoseFunc(para);
             $scope.getAggregatePerformanceFunc(para);
-            $scope.getFacilityStockStatusSummary(para);
+             $scope.getFacilityStockStatusSummary(para);
 
 
 
@@ -1641,6 +1571,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             $scope.vaccineCoverageByProductAndDoseFunc(prepareParams);
             $scope.getAggregatePerformanceFunc(filter);
             $scope.showfilter = false;
+             $scope.getFacilityStockStatusSummary(filter);
         };
 
         $scope.changeYear = function () {

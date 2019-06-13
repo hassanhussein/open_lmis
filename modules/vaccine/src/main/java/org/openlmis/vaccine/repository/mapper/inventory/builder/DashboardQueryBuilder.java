@@ -10,7 +10,15 @@ public class DashboardQueryBuilder {
         Long year = (Long)params.get("year");
         Long userId = (Long)params.get("userId");
 
-        return " \n" +
+        return " select PERIODID,PERIOD_NAME,\n" +
+                "\n" +
+                "sum(total) total, sum(SAP) SAP,\n" +
+                " SUM(OS) OS, SUM(US) US, SUM(UNDEFINED)UNDEFINED, SUM(SO)SO \n" +
+                "\n" +
+                " FROM (\n" +
+                "\n" +
+                "\n" +
+                "\n" +
                 "SELECT \n" +
                 "\n" +
                 "DISTRICT_ID,PERIODID,PERIOD_NAME,\n" +
@@ -54,7 +62,7 @@ public class DashboardQueryBuilder {
                 "join processing_periods pr on pr.id = r.periodid and pr.numberofmonths = 1\n" +
                 "JOIN vw_user_facilities uf ON r.facilityId = uf.facility_id\n" +
                 "where uf.user_id = '"+userId+"' and startdate::date  >= ('"+year+"'::text||'-01-01')::date - interval '3 months' and enddate::date <= ('"+year+"'::text||'-12-31')::date\n" +
-                "and productId = '"+product+"'::INT\n" +
+                "and productid = '"+product+"'::INT\n" +
                 "and status <> 'DRAFT'\n" +
                 ") \n" +
                 "SELECT facilityid, periodid, period_name, startdate,  consumption, soh, \n" +
@@ -67,6 +75,7 @@ public class DashboardQueryBuilder {
                 "\n" +
                 " ) a\n" +
                 "join facilities f on f.id = a.facilityid\n" +
+                "\n" +
                 "join vw_districts d on f.geographiczoneid = d.district_id\n" +
                 "join processing_periods pr on pr.id = a.periodid\n" +
                 ") b \n" +
@@ -77,7 +86,11 @@ public class DashboardQueryBuilder {
                 ")X \n" +
                 "\n" +
                 "GROUP BY X.DISTRICT_ID,PERIODID,PERIOD_NAME\n" +
+                "ORDER BY PERIODID \n" +
+                "\n" +
+                ") Z GROUP BY PERIODID,PERIOD_NAME\n" +
                 "ORDER BY PERIODID \n" ;
+
 
     }
 
