@@ -84,14 +84,14 @@ function SupplyPartnerController($scope, $routeParams, $location, programs, supe
     $scope.toggleProducts = !$scope.toggleProducts;
    $scope.currentProgramSubscription.products.forEach(function(item){
      item.active = $scope.toggleProducts;
-   })
+   });
   };
 
   $scope.toggleFacilitiesChanged = function(){
     $scope.toggleFacilities = !$scope.toggleFacilities;
     $scope.currentProgramSubscription.facilities.forEach(function(item){
       item.active = $scope.toggleFacilities;
-    })
+    });
   };
 
   $scope.showFacilitiesModal = function (currentSubscription) {
