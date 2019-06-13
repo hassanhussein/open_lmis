@@ -84,10 +84,12 @@ $scope.exportReport = function (type) {
 
 
 	$scope.$watch('currentPage', function () {
+
+   if($scope.page !== $scope.currentPage) {
 		if ($scope.currentPage > 0) {
 			$scope.page = $scope.currentPage;
 			$scope.OnFilterChanged();
 		}
-	});
+	}});
 
 }
