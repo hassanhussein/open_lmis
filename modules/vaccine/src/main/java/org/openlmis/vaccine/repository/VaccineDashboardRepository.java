@@ -331,4 +331,8 @@ public class VaccineDashboardRepository {
     public List<HashMap<String, Object>> getCategorizationByDistrictDrillDown(Long userId,Long year,String indicator,Long period) {
         return mapper.getCategorizationByDistrictDrillDown(userId,year,indicator,period);
     }
+
+    public List<HashMap<String, Object>> getFacilityStockStatusSummary(Long year,Long product,Long userId) {
+        return mapper.getFacilityStockStatusSummary(year,product,userId);
+    }
 }

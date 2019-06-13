@@ -705,4 +705,8 @@ public class VaccineDashboardService {
             pp = period.getId();
         return repository.getCategorizationByDistrictDrillDown(userId,year,indicator,pp);
     }
+
+    public List<HashMap<String, Object>> getFacilityStockStatusSummary(Long year,Long product,Long userId) {
+        return repository.getFacilityStockStatusSummary(year,product,userId);
+    }
 }

@@ -5,7 +5,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                                           $routeParams, leafletData, ProductService, $state, VaccineProductDoseList, ReportPeriodsByYear, VimsVaccineSupervisedIvdPrograms, AvailableStockDashboard,
                                           FullStockAvailableForDashboard, GetAggregateFacilityPerformanceData,
                                           VaccineCoverageByProductData, GetCoverageByProductAndDoseData, GetCoverageByFacilityData, GetIVDReportingSummaryData,GetFacilityClassificationSummaryData,GetImmunizationSessionSummaryData,
-                                          GetClassificationByDistrictSummaryData,GetClassificationByDistrictDrillDownData) {
+                                          GetClassificationByDistrictSummaryData,GetClassificationByDistrictDrillDownData, GetFacilityStockStatusSummaryData ) {
 
 
     $scope.region = true;
@@ -53,6 +53,178 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     var chartIds = ['myStockVaccine', 'myStockSyringe'];
     var title = ['Vaccines', 'Syringes'];
     var name = ['Vaccines', 'Syringes'];
+
+    $scope.getFacilityStockStatusSummary = function (params) {
+
+     var stockSummary = [];
+
+      GetFacilityStockStatusSummaryData.get(params).then( function (data) {
+       var colors = {'us': '#ffdb00', 'so': '#ff0d00', 'os': '#ABC9AA', 'sap': '#006600','undefined':'#000000'};
+
+       if(!isUndefined(data)){
+        stockSummary = data;
+               var category = _.uniq(_.pluck(stockSummary, 'period_name'));
+
+             var sortedByData =  _.sortBy(stockSummary, function(sortedBy){
+                 return sortedBy.periodid;
+               });
+
+
+
+                var groupByPeriod1 = _.groupBy(sortedByData, function(data) {
+                    return data.period_name;
+                });
+
+                var summaries = [];
+                var mappedData = _.map(groupByPeriod1, function(value,index) {
+
+                  console.log(JSON.stringify(index));
+
+                  return summaries.push({name:index, data:value, color:colors[]})
+
+                });
+
+
+                /*var groupByPeriod = _.groupBy(stockSummary, function(data) {
+                    return data.classification;
+                });
+
+                 var mappedData = _.map(groupByPeriod, function (value, index) {
+
+
+                 var groupedData = _.groupBy(value, function(data){
+
+                       return  data.period_name;
+
+                  });
+
+
+
+                     var summaries = displayData = [];
+                     var d = _.map(groupedData, function(value, index) {
+
+                      return summaries.push({name:index, data:value.length});
+                      });
+
+                      var data1 = _.pluck(summaries, 'data');
+                    //  console.log(summaries);
+
+                   //  console.log({data:data1, name:index, color: _.pluck(summaries, 'name')});
+
+
+
+              /*        var summaries = [];
+                     _.each(d, function(data,index){
+
+
+                     summaries.push({name:data.length});
+
+                     });
+
+                   console.log(summaries);
+
+                    var summaries = [];*/
+
+
+   //color: _.pluck(summaries, 'name');
+
+            /*  return {data:data1, color:colors[index],period:_.uniq(_.pluck(summaries, 'name'))};
+
+
+            });*/
+
+
+
+
+
+
+
+        /*   var summaries = [];
+          for (var i = 0; i < mappedData.length; i++) {
+                summaries.push({
+                    name: mappedData[i].index,
+                    data: mappedData[i].data
+                    *//*,
+                    color: colors[mappedData[i].index]*//*
+                });
+
+            }*/
+
+                   //console.log(mappedData);
+
+
+
+       }
+
+
+
+
+
+                 showFacilityStockStatusChart(_.uniq(mappedData[0].period), mappedData);
+
+
+
+      });
+
+    };
+
+
+
+
+
+    function showFacilityStockStatusChart (category, dataV){
+
+    new Highcharts.chart('facilityStockStatusChart', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Facility Stock Status'
+        },
+
+            xAxis: {
+                categories:category,
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Facility Count'
+                }
+            },
+            tooltip: {
+
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            x: -40,
+            y: 80,
+            floating: true,
+            borderWidth: 1,
+            backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+            shadow: true
+        },
+        credits: {
+            enabled: false
+        },
+
+        series:dataV
+    });
+
+
+
+    }
+
+
+
 
     function populateTheChart(vaccineDataT, product, chartName, title, name) {
         dataV = [];
@@ -1339,6 +1511,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             $scope.loadIvdReportingFunc(para, userLevel);
             $scope.loadSessionSummary(para,userLevel);
 
+
             $scope.showfilter = false;
 
 
@@ -1443,6 +1616,8 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             $scope.vaccineCoverageByRegionAndProductFunc(para);
             $scope.vaccineCoverageByProductAndDoseFunc(para);
             $scope.getAggregatePerformanceFunc(para);
+            $scope.getFacilityStockStatusSummary(para);
+
 
 
         });

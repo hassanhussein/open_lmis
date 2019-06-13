@@ -11,9 +11,11 @@
  */
 package org.openlmis.vaccine.repository.mapper;
 
-import net.sf.jasperreports.engine.json.expression.member.ObjectKeyExpression;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.apache.ibatis.session.RowBounds;
+import org.openlmis.vaccine.repository.mapper.inventory.builder.DashboardQueryBuilder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -23,6 +25,14 @@ import java.util.Map;
 
 @Repository
 public interface VaccineDashboardMapper {
+
+    @SelectProvider(type = DashboardQueryBuilder.class, method = "getQuery")
+    List<HashMap<String, Object>> getFacilityStockStatusSummary(
+            @Param("year") Long year,
+            @Param("product") Long product,
+            @Param("userId") Long userId
+    );
+
 
     String vaccineDistrictCoverageDenominatorSql = "fn_get_vaccine_coverage_district_denominator(" +
             "       (select value from user_preferences up where up.userid = #{user} and up.userpreferencekey = 'DEFAULT_GEOGRAPHIC_ZONE' limit 1)::int," +
