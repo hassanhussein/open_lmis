@@ -54,7 +54,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     var title = ['Vaccines', 'Syringes'];
     var name = ['Vaccines', 'Syringes'];
 
-    var getFacilityStockStatusSummary = function (params) {
+    $scope.getFacilityStockStatusSummary = function (params) {
 
      var stockSummary = [];
 
@@ -129,7 +129,17 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 column: {
                     pointPadding: 0.2,
                     borderWidth: 0
-                }
+                },
+
+                series: {
+                            dataLabels: {
+                                enabled: true,
+                                formatter:function() {
+                                console.log(this.point);
+                                    return this.point.options.y;
+                                }
+                            }
+                        }
             },
         legend: {
             layout: 'vertical',
