@@ -157,4 +157,8 @@ public class ProcessingScheduleService {
   public List<ProcessingPeriod> getAllPeriodsByYear(Long year) {
         return periodRepository.getAllPeriodsByYear(year);
     }
+
+  public List<ProcessingPeriod> getPeriodsForDateRange(Date rangeStart, Date rangeEnd) {
+    return periodRepository.getPeriodsForDateRange(rangeStart, rangeEnd);
+  }
 }
