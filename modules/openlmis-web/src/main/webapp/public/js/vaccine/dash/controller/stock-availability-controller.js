@@ -104,9 +104,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                             {name:'sufficient stock', data:totalSufficientStock, color:'#006600'}
 
                            ];
-
-                  showFacilityStockStatusChart(period, summaries,'Facility Stock Status for '+params.productName +', '+ params.year);
-
+                  showFacilityStockStatusChart(period, summaries,'Facility Stock Status for '+params.productName +', '+ params.periodName);
        }
 
 
@@ -221,7 +219,24 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             enabled: false
         },
 
-        series:dataV
+        series:dataV,
+
+        exporting: {
+            buttons: {
+                customButton: {
+                    text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Definitions</span>',
+
+                    symbolStroke: "red",
+                                        theme: {
+                                fill:"#28A2F3"
+                            },
+                    onclick: function () {
+                        alert('You pressed the button!');
+                    }
+                }
+            }
+        }
+
     });
 
 
@@ -261,7 +276,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'MOS'
+                    text: 'Months of Stock'
                 },
                 lineColor: '#999',
                 lineWidth: 1,
