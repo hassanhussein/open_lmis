@@ -899,7 +899,7 @@ public interface VaccineDashboardMapper {
             "    gz.parentid AS geographic_zone_parent_id,\n" +
             "    p.primaryname AS product,\n" +
             "        CASE\n" +
-            "            WHEN sr.isavalue > 0 THEN round(sc.totalquantityonhand::numeric(10,2) / sr.isavalue::numeric(10,2), 2)\n" +
+            "            WHEN sr.isavalue > 0 THEN round(sc.totalquantityonhand::numeric(10,2) / sr.isavalue::numeric(10,2), 1)\n" +
             "            ELSE 0::numeric\n" +
             "        END AS mos,\n" +
             "    sr.isavalue AS monthly_stock,\n" +

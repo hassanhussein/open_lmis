@@ -54,16 +54,23 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     var title = ['Vaccines', 'Syringes'];
     var name = ['Vaccines', 'Syringes'];
 
+ /*   var compareArray = function(arra1, array2){
+      var newArray = [];
+      _.each(function(){
+
+      });
+
+    }*/
+
     $scope.getFacilityStockStatusSummary = function (params) {
 
      var stockSummary = [];
 
       GetFacilityStockStatusSummaryData.get(params).then( function (data) {
-       var colors = {'us': '#ffdb00', 'so': '#ff0d00', 'os': '#ABC9AA', 'sap': '#006600','undefined':'#000000'};
 
        if(!isUndefined(data)){
-        stockSummary = data;
 
+        stockSummary = data;
 
                var period = _.uniq(_.pluck(stockSummary, 'period_name'));
 
@@ -71,19 +78,34 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                var os = _.pluck(stockSummary, 'os');
                var sap = _.pluck(stockSummary, 'sap');
                var us = _.pluck(stockSummary, 'us');
-               var undefined = _.pluck(stockSummary, 'undefined');
+               var total = _.pluck(stockSummary, 'total');
 
                var summaries = [];
 
+               var totalZeroStock = [];
+               var totalLowStock = [];
+               var totalOverStock = [];
+               var totalSufficientStock = [];
+
+               _.map(total,function(data, index){
+
+               totalZeroStock.push({y:so[index],total:data});
+               totalLowStock.push({y:us[index],total:data});
+               totalOverStock.push({y:os[index],total:data});
+               totalSufficientStock.push({y:sap[index],total:data});
+                 return null;
+
+               });
+
                summaries = [
-                            {name:'Stock Out', data:so, color:'#ff0d00'},
-                            {name:'Out Of Stock', data:os, color:'#ABC9AA'},
-                            {name:'Stock According To Plan', data:sap, color:'#006600'},
-                            {name:'Under Stock', data:us, color:'#ffdb00'}
+                            {name:'zero stock', data:totalZeroStock, color:'#ff0d00'},
+                            {name:'low stock', data:totalLowStock, color:'#ffdb00'},
+                            {name:'overStock', data:totalOverStock, color:'#00B2EE'},
+                            {name:'sufficient stock', data:totalSufficientStock, color:'#006600'}
 
-                            ];
+                           ];
 
-                  showFacilityStockStatusChart(period, summaries);
+                  showFacilityStockStatusChart(period, summaries,'Facility Stock Status for '+params.productName +', '+ params.year);
 
        }
 
@@ -92,18 +114,42 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
     };
 
+    function asyncFacilityStocks(list) {
+      // perform some asynchronous operation, resolve or reject the promise when appropriate.
+      return $q(function(resolve, reject) {
+        setTimeout(function() {
+          if (okToGreet(name)) {
+            resolve('Hello, ' + name + '!');
+          } else {
+            reject('Greeting ' + name + ' is not allowed.');
+          }
+        }, 1000);
+      });
+    }
+
+
+
+     $scope.showFacilityStockList = function(data) {
+
+        var facilityList = asyncFacilityStocks();
+
+        facilityList.then();
 
 
 
 
-    function showFacilityStockStatusChart (category, dataV){
+     };
+
+
+
+    function showFacilityStockStatusChart (category, dataV, title){
 
     new Highcharts.chart('facilityStockStatusChart', {
         chart: {
             type: 'column'
         },
         title: {
-            text: 'Facility Stock Status'
+            text: title
         },
 
             xAxis: {
@@ -113,7 +159,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Facility Count'
+                    text: 'Number of Facilities'
                 },
                   lineColor: '#999',
                                 lineWidth: 1,
@@ -124,18 +170,37 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             },
             tooltip: {
 
+               formatter: function () {
+
+                                var tooltip;
+                                tooltip = '<span style="color:' + this.series.color + '">' + this.point.category + '<hr/><br/> <span>Percentage of Facilities </span> :' + Highcharts.numberFormat(this.y/this.total * 100,0) + ' % </span><br/>';
+                                return tooltip;
+                            }
+
             },
             plotOptions: {
                 column: {
                     pointPadding: 0.2,
-                    borderWidth: 0
+                    borderWidth: 0,
+
+                      cursor: 'pointer',
+                        point: {
+                         events: {
+                           click: function () {
+                           $scope.showFacilityStockList(this);
+                           console.log(this);
+                                 }
+                                  }
+
+                                  }
                 },
 
                 series: {
                             dataLabels: {
                                 enabled: true,
                                 formatter:function() {
-                                console.log(this.point);
+                                               console.log(this);
+
                                     return this.point.options.y;
                                 }
                             }
@@ -146,7 +211,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             align: 'right',
             verticalAlign: 'top',
             x: -40,
-            y: 80,
+            y: 50,
             floating: true,
             borderWidth: 1,
             backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
@@ -217,10 +282,14 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             plotOptions: {
                 column: {
                     pointPadding: 0.2,
-                    borderWidth: 0
+                    borderWidth: 0,
+                    dataLabels: {
+                    enabled:true
+                    }
 
                 }, showLegend: false
             },
+
             series: [{
                 name: name,
                 data: dataV
