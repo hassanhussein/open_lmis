@@ -33,6 +33,7 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
 
         $scope.filter.limit = 100000;
         $scope.filter.page  = 1;
+        var printWindow;
 
         var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
@@ -40,9 +41,9 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
 
             $scope.filter.pdformat = 1;
             var url = '/reports/download/stock_imbalance/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-            $window.open(url, '_blank');
+            printWindow.location.href = url;
         });
-
+            printWindow = $window.open('about:blank','_blank');
 
     };
 
