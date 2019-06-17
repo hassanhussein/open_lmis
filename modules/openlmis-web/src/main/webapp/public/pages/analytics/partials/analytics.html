@@ -181,11 +181,22 @@ background:#fff;
               <!--  <div class="pull-left "><span style="font-size: 12px">National Supply Chain Indicator , {{displayCurrentDate}}</span>
                 </div>-->
                 <div class="pull-right control-accordion">
-                    <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
-                       openlmis-message="label.expand.all"></a> / <a
-                        id="collapseAll"
-                        href="javascript:void(0);"
-                        onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
+                    <span style="height:2px !important">
+                            <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
+                            >
+                        <i class="material-icons md-18" style="color:#0E5B76">
+                            add_circle_outline
+                        </i>
+
+                    </a>  <a
+                            id="collapseAll"
+                            href="javascript:void(0);"
+                            onClick="accordion.expandCollapse('collapse')"><i class="material-icons md-18" style="color:#0E5B76">
+                   remove_circle_outline
+                </i></a>
+
+                    </span>
+
                 </div>
                 <div class="clearfix"></div>
                 <div class="accordion-section">
