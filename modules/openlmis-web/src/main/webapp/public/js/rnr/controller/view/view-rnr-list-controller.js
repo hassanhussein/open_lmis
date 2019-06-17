@@ -38,6 +38,10 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
         });
     };
 
+    $scope.showEmergencyOnly = function() {
+        $scope.selectedProgramId = $scope.selectedFacilityId = undefined;
+    };
+
     $scope.selectedFacilityId = navigateBackService.facilityId;
     $scope.startDate = navigateBackService.dateRangeStart;
     $scope.endDate = navigateBackService.dateRangeEnd;
