@@ -29,7 +29,7 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider){
             controller:AnalyticsFunction,
             resolve:AnalyticsFunction.resolve,
             ncyBreadcrumb: {
-                label: 'Stock Chart'
+                label: 'Un-published Dashboard'
             }
         },
 
