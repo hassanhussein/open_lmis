@@ -10,13 +10,34 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function DistrictConsumptionReportController($scope,  DistrictConsumptionReport, $timeout) {
+function DistrictConsumptionReportController($scope,$window,$q,  DistrictConsumptionReport, $timeout) {
+
+        $scope.allPrinting = function(params){
+
+                 var deferred = $q.defer();
+
+                   DistrictConsumptionReport.get(params, function (data) {
+
+                   if(data.openLmisResponse.rows.length  > 0){
+
+                        deferred.resolve();
+                   }
+
+                   });
+
+
+          return deferred.promise;
+
+     };
+
+
+
 
     //filter form data section
 
     $scope.page = 1;
     $scope.pageSize = 10;
-
+    $scope.filter = {};
     $scope.OnFilterChanged = function(){
       $scope.data = $scope.datarows = [];
       $scope.filter.max = 10000;
@@ -27,11 +48,10 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport,
 
 
       DistrictConsumptionReport.get($scope.getSanitizedParameter(), function(data) {
-      console.log(data);
+
         if(data.districtData !== undefined && data.districtData.rows !== undefined){
           $scope.data = chainParentChildReport(data);//.districtData.rows;
           $scope.pagination = data.districtData.pagination;
-          console.log($scope.pagination);
           $scope.totalItems = 1000;
           $scope.currentPage = $scope.pagination.page;
           $scope.tableParams.total = $scope.totalItems;
@@ -63,11 +83,23 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport,
 
    $scope.exportReport   = function (type){
 
-        $scope.filter.pdformat =1;
-        var params = jQuery.param($scope.getSanitizedParameter());
-        var url = '/reports/download/district_consumption/' + type +'?' + params;
-        window.open(url, '_BLANK');
+       $scope.filter.limit = 100000;
+       $scope.filter.page  = 1;
+       var printWindow;
+       var allow = $scope.allPrinting($scope.getSanitizedParameter());
+
+       allow.then(function(){
+
+             $scope.filter.pdformat =1;
+             var params = jQuery.param($scope.getSanitizedParameter());
+             var url = '/reports/download/district_consumption/' + type +'?' + params;
+             printWindow.location.href = url;
+       });
+
+            printWindow = $window.open('about:blank','_BLANK');
+
     };
+
 
 
      //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data

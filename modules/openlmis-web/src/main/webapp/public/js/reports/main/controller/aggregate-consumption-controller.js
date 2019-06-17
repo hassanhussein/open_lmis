@@ -126,16 +126,17 @@ function AggregateConsumptionReportController($scope,$q, $filter, $window, Aggre
 
          $scope.filter.limit = 100000;
          $scope.filter.page  = 1;
-
+         var printWindow;
          var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
          allow.then(function(){
 
             $scope.filter.pdformat = 1;
                  var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-                 $window.open(url, '_blank');
+                 printWindow.location.href = url;
          });
 
+          printWindow = $window.open('about:blank','_blank');
 
     };
     $scope.showMoreFilters = false;

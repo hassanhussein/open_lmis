@@ -20,6 +20,7 @@ function SummaryReportController($scope, SummaryReport, $timeout, $q, $window) {
 
         $scope.filter.limit = 100000;
         $scope.filter.page  = 1;
+        var printWindow;
 
         var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
@@ -27,9 +28,9 @@ function SummaryReportController($scope, SummaryReport, $timeout, $q, $window) {
 
             $scope.filter.pdformat = 1;
             var url = '/reports/download/summary' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-            $window.open(url, '_blank');
+            printWindow.location.href = url;
         });
-
+            printWindow = $window.open('about:blank','_blank');
 
     };
 

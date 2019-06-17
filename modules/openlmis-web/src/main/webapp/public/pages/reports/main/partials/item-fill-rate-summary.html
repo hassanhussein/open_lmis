@@ -113,7 +113,7 @@ progress[value]::-webkit-progress-value::before {
                         <br>
                     </div>
 
-                    <div class="row-fluid">
+                    <div class="row-fluid" ng-show="datarows.length > 0" >
 
 
 
@@ -125,10 +125,9 @@ progress[value]::-webkit-progress-value::before {
 
                             </div>
 
-
-
-                        <div class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
-                            tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
+                        <div class="pull-right legend">Page: {{currentPage}}, Showing records {{ countFactor + 1 }} to {{ countFactor + pageSize }} of
+                            {{totalItems}}
+                            <br/>
                         </div>
 
 
@@ -146,10 +145,10 @@ progress[value]::-webkit-progress-value::before {
                             </table>
 
                             <table ng-show="datarows.length > 0" class="table-bordered table table-striped scrollable" id="podTable"
-                                   ng-table="tableParams" >
+                                   ng-table="" >
                                 <tbody>
                                 <tr ng-repeat="row in datarows">
-                                    <td data-title="'#'" class="number" style="width:2% !important; text-align: left !important;">{{ row.no }}</td>
+                                    <td data-title="'#'" class="number" style="width:50px;">{{ row.no + countFactor}}</td>
                                    <!-- <td data-title="'Zone '" style="width:30%" sortable="">
                                         <span ng-bind="row.zonename"></span>
                                     </td>
@@ -203,8 +202,18 @@ progress[value]::-webkit-progress-value::before {
                                 </tbody>
                             </table>
 
-                            <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
-                                        direction-links="false" ng-show="datarows.length" class="pagination-sm"></pagination>
+                            <select ng-show="datarows.length > 0" ui-select2 class="pull-left" ng-model="pageSize" ng-change="searchReport()">
+                                <option value="10">10 per page</option>
+                                <option value="20">20 per page</option>
+                                <option value="50">50 per page</option>
+                                <option value="100">100 per page</option>
+                            </select>
+
+
+                            <pagination ng-show="datarows.length > 0" total-items="totalItems" page="currentPage" max-size="10"
+                                        items-per-page="pagination.limit"
+                                        direction-links="true" class="pagination-sm"></pagination>
+                            <div class="clearfix"></div>
 
                         </div>
 
