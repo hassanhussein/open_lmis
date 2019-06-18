@@ -33,6 +33,43 @@ public interface VaccineDashboardMapper {
             @Param("userId") Long userId
     );
 
+    @Select("select region_name || ' - ' || district_name district_name,district_ID, f.name facility_name,\n" +
+            "                periodID,facilityid facility_id, soh, consumption, amc, case when COALESCE(amc,0) > 0 then round(COALESCE(soh,0)/amc::numeric,2) else null end mos,\n" +
+            "                EXTRACT (YEAR FROM A .startdate) _year,\n" +
+            "               EXTRACT (MONTH FROM A .startdate) _month,\n" +
+            "                        a.period_name\n" +
+            "                from (\n" +
+            "                \n" +
+            "                with t as \n" +
+            "                (select pr.startdate::date, pr.name period_name, r.periodid, r.programid, r.facilityid, l.closingbalance soh, l.quantityissued consumption  \n" +
+            "                from vaccine_reports r \n" +
+            "                join vaccine_report_logistics_line_items l on r.id = l.reportid\n" +
+            "                join processing_periods pr on pr.id = r.periodid and pr.numberofmonths = 1\n" +
+            "                JOIN vw_user_facilities uf ON r.facilityId = uf.facility_id\n" +
+            "                where uf.user_id = #{userId} and startdate::date  >= (#{year}::text||'-01-01')::date - interval '3 months' and enddate::date <= (#{year}::text||'-12-31')::date\n" +
+            "                and productid = #{product}::INT and pr.name = #{periodName}\n" +
+            "                and status <> 'DRAFT'\n" +
+            "                ) \n" +
+            "                SELECT facilityid, periodid, period_name, startdate,  consumption, soh, \n" +
+            "                    extract(month from startdate) AS dow,\n" +
+            "                    CASE WHEN count(consumption) OVER w = 3 THEN avg(consumption) OVER w END AS amc             \n" +
+            "                FROM t\n" +
+            "                WHERE extract(month from startdate) between 1 and 12 \n" +
+            "                WINDOW w AS (ORDER BY facilityid, startdate desc ROWS BETWEEN 0 FOLLOWING AND 2 FOLLOWING)\n" +
+            "                \n" +
+            "                \n" +
+            "                 ) a\n" +
+            "                join facilities f on f.id = a.facilityid\n" +
+            "                \n" +
+            "                join vw_districts d on f.geographiczoneid = d.district_id\n" +
+            "                join processing_periods pr on pr.id = a.periodId\n")
+
+    List<HashMap<String,Object>> getFacilityStockStatusSummaryData( @Param("year") Long year,
+                                                                    @Param("product") Long product,
+                                                                    @Param("userId") Long userId,
+                                                                    @Param("periodName")  String periodName
+                                                                    );
+
 
     String vaccineDistrictCoverageDenominatorSql = "fn_get_vaccine_coverage_district_denominator(" +
             "       (select value from user_preferences up where up.userid = #{user} and up.userpreferencekey = 'DEFAULT_GEOGRAPHIC_ZONE' limit 1)::int," +
@@ -2581,9 +2618,9 @@ public interface VaccineDashboardMapper {
             "                                       SELECT district_name, periodid ID,p.name period_name,catagorization,*  FROM categorization_view w  \n" +
             "                                     --  JOIN facilities f ON f.geographiczoneid =  w.district_id \n" +
             "                                       JOIN vw_user_DISTRICTS uf ON uf.district_id = w.district_id  \n" +
-            "                                       JOIN processing_periods p ON periodid = p.id and NUMBEROFMONTHS =1 and scheduleid = 45 \n" +
+            "                                       JOIN processing_periods p ON periodid = p.id and NUMBEROFMONTHS =1 and scheduleid = #{schedule} \n" +
             "                                       WHERE YEAR =#{year} and user_id = #{userId} and lower(catagorization) =lower(#{indicator}) and periodID =#{period}::int\n")
     List<HashMap<String,Object>>getCategorizationByDistrictDrillDown(@Param("userId") Long userId,@Param("year") Long year,
-                                                                    @Param("indicator")String indicator, @Param("period")Long period);
+                                                                    @Param("indicator")String indicator, @Param("period")Long period, @Param("schedule") Long schedule);
 
 }

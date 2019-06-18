@@ -1,4 +1,13 @@
 <style>
+.modal-open .modal {
+
+overflow-y: hidden !important;
+}
+
+
+.select2-chosen, .select2-choice > span:first-child{
+padding: 0px 0px !important;
+}
     .modal-header{
         padding: 0px 0px !important;
     }
@@ -1470,6 +1479,25 @@
 
                 </div>
 
+
+                <div class="row">
+                    <div class="col s12 m12 l12">
+                        <div class="card">
+                            <div class="card-content">
+
+                                <div id="facilityStockStatusChartForLowerLevel" style="margin: 0 auto;height: 360px !important;"></div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+
                 <div class="row">
                     <div class="col l12 s12 m12">
                         <div class="card">
@@ -1851,4 +1879,60 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="facilityStockModal" style="top: 10px !important;" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+<!--
+            <span  excel-export export-data="exportData" file-name="{{fileName}}"></span>
+-->
+
+            <span class="modal-header">
+                <h2 class="modal-title" id="exampleModalLongTitle">{{stockStatusTitle}} </h2>
+            </span>
+            <div class="modal-body">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                 </button>-->
+                <div class="row" style="height: 200px !important;">
+                    <table class="table table-bordered striped" style="height: 200px !important;">
+
+                        <thead ng-style="facilityColor">
+                        <tr>
+                            <th>#</th>
+                            <th>Facility Name</th>
+                            <th>District Name</th>
+                            <th>AMC</th>
+                            <th>MOS</th>
+                            <th>SOH</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="value in facilityLists">
+                            <td>{{$index+1}}</td>
+                            <td>{{value.facility_name}}</td>
+                            <td>{{value.district_name}}</td>
+                            <td>{{value.amc.toFixed(0)}}</td>
+                            <td>{{value.mos.toFixed(1)}}</td>
+                            <td>{{value.soh.toFixed(0)}}</td>
+
+                        </tr>
+
+                        </tbody>
+
+
+                    </table>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 

@@ -1684,6 +1684,31 @@ services.factory('GetFacilityStockStatusSummaryData', function ($q, $timeout, $r
 
 });
 
+services.factory('GetFacilityStockStatusSummaryDataByPeriod', function ($q, $timeout, $resource, GetFacilityStockStatusSummaryByPeriodData) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetFacilityStockStatusSummaryByPeriodData.get(params, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+
 services.factory('FullStockAvailableForDashboard', function ($resource) {
     return $resource('/vaccine/dashboard/fullStockAvailability.json', {}, {});
 });
@@ -1821,4 +1846,8 @@ services.factory('GetDistributionById', function ($resource) {
 
 services.factory('GetFacilityStockStatusSummary', function ($resource) {
     return $resource('/vaccine/dashboard/GetFacilityStockStatusSummary.json', {}, {});
+});
+
+services.factory('GetFacilityStockStatusSummaryByPeriodData', function ($resource) {
+    return $resource('/vaccine/dashboard/GetFacilityStockStatusSummaryData.json', {}, {});
 });

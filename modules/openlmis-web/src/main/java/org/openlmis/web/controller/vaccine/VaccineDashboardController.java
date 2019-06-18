@@ -790,6 +790,18 @@ public class VaccineDashboardController extends BaseController {
         response = OpenLmisResponse.response("stocks", service.getFacilityStockStatusSummary(year,product,loggedInUserId(request)));
         return response;
     }
+   @RequestMapping(value = "GetFacilityStockStatusSummaryData.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getFacilityStockStatusSummaryData (
+         HttpServletRequest request,
+         @Param("year") Long year,
+         @Param("product") Long product,
+         @Param("periodName") String periodName
+
+   ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("stocks", service.getFacilityStockStatusSummaryData(year,product,loggedInUserId(request),periodName));
+        return response;
+    }
 
 
 }
