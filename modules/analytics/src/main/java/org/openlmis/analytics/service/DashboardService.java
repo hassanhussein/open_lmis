@@ -6,6 +6,7 @@ import org.openlmis.analytics.domain.Dashboard;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -17,6 +18,10 @@ public class DashboardService{
 
     public List<Dashboard> getAllUsers() {
         return repository.getUsers();
+    }
+
+    public List<HashMap<String,Object>> getStockStatusSummary(Long userId, Long product, Long program, Long year){
+        return repository.getStockStatusSummary(userId,product,program,year);
     }
 
 }
