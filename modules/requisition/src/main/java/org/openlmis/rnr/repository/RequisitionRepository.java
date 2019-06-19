@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -425,5 +426,12 @@ public class RequisitionRepository {
 
   public List<Rnr> getUnreleasedPreviousRequisitions(Rnr rnr) {
     return requisitionMapper.getUnreleasedPreviousRequisitions(rnr);
+  }
+
+  public List<Rnr> getPostSubmitEmergencyOnlyRequisitions(List<Facility> facilities, List<Program> programs,
+                                                             List<ProcessingPeriod> periods) {
+    return requisitionMapper.getPostSubmitEmergencyOnlyRequisitions(commaSeparator.commaSeparateIds(facilities),
+            commaSeparator.commaSeparateIds(programs),
+            commaSeparator.commaSeparateIds(periods));
   }
 }

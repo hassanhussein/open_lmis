@@ -17,6 +17,7 @@ import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -284,6 +285,22 @@ public interface RequisitionMapper {
       "and r.emergency = false " ,
       "and r.status = 'APPROVED'"})
   List<Rnr> getUnreleasedPreviousRequisitions(@Param("rnr") Rnr rnr);
+
+  @Select({"SELECT * FROM requisitions WHERE ",
+          "facilityId = ANY (#{commaSeparatedFacilityIds}::INTEGER[]) AND ",
+          "programId = ANY (#{commaSeparatedProgramIds}::INTEGER[]) AND ",
+          "periodId = ANY (#{commaSeparatedPeriodIds}::INTEGER[]) AND ",
+          "status NOT IN ('INITIATED', 'SUBMITTED') " +
+          "AND emergency = true "})
+  @Results(value = {
+          @Result(property = "facility.id", column = "facilityId"),
+          @Result(property = "program.id", column = "programId"),
+          @Result(property = "period.id", column = "periodId")
+  })
+  List<Rnr> getPostSubmitEmergencyOnlyRequisitions(@Param("commaSeparatedFacilityIds") String commaSeparatedFacilityIds,
+                                                   @Param("commaSeparatedProgramIds") String commaSeparatedProgramIds,
+                                                   @Param("commaSeparatedPeriodIds") String commaSeparatedPeriodIds);
+
 
   public class ApprovedRequisitionSearch {
 

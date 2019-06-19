@@ -159,10 +159,9 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
                 "features": $scope.features
             });
             $scope.centerJSON();
-
+            addressPointsToMarkers2();
         });
 
-        addressPointsToMarkers2();
         $scope.urlParams = $.param($scope.filter);
 
 
@@ -200,7 +199,11 @@ function LabEquipmentStatusByLocationController($scope, $window, leafletData, $f
         $.getJSON('/gis/facilitiesEquipments.json', $scope.filter, function (data) {
 
                 angular.extend($scope, {
-                    markers: $scope.facilityEquipmentStatuses.map(function (facility) {
+                    markers: $scope.facilityEquipmentStatuses
+                    .filter(function(facility){
+                        return facility.latitude !== null && facility.longitude !== null;
+                    })
+                    .map(function (facility) {
                         return {
                             lat: parseFloat(facility.latitude),
                             lng: parseFloat(facility.longitude),

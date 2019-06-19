@@ -17,7 +17,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static lombok.AccessLevel.NONE;
@@ -40,11 +42,16 @@ public class RequisitionSearchCriteria {
   String dateRangeEnd;
 
   @Getter(NONE)
+  Boolean emergencyOnly;
+
+  @Getter(NONE)
   Boolean emergency = FALSE;
 
   public Boolean isEmergency() {
     return emergency;
   }
+
+  public Boolean isEmergencyOnly() { return Optional.ofNullable(emergencyOnly).orElse(false); }
 
   public Date getRangeStart() {
     Date rangeStartDate;

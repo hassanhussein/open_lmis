@@ -14,7 +14,8 @@ function SupplyPartnerController($scope, $routeParams, $location, programs, supe
   $scope.supervisoryNodes = supervisoryNodes;
   $scope.programs = programs;
   $scope.requisitionGroups = requisitionGroups;
-
+  $scope.toggleProducts = false;
+  $scope.toggleFacilities = false;
   $scope.supplyPartner = {subscribedPrograms: [], isActive: true};
 
   if ($routeParams.id !== undefined) {
@@ -77,6 +78,20 @@ function SupplyPartnerController($scope, $routeParams, $location, programs, supe
         }
       });
     }
+  };
+
+  $scope.toggleProductsChanged = function(){
+    $scope.toggleProducts = !$scope.toggleProducts;
+   $scope.currentProgramSubscription.products.forEach(function(item){
+     item.active = $scope.toggleProducts;
+   });
+  };
+
+  $scope.toggleFacilitiesChanged = function(){
+    $scope.toggleFacilities = !$scope.toggleFacilities;
+    $scope.currentProgramSubscription.facilities.forEach(function(item){
+      item.active = $scope.toggleFacilities;
+    });
   };
 
   $scope.showFacilitiesModal = function (currentSubscription) {

@@ -11,6 +11,7 @@
 package org.openlmis.rnr.search.factory;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.rnr.repository.RequisitionRepository;
@@ -41,16 +42,22 @@ public class RequisitionSearchStrategyFactory {
   @Autowired
   private RequisitionPermissionService permissionService;
 
+  @Autowired
+  private FacilityService facilityService;
+
 
   public RequisitionSearchStrategy getSearchStrategy(RequisitionSearchCriteria criteria) {
 
     if (criteria.isEmergency()) {
       return new EmergencyRequisitionSearch(criteria, permissionService, repository);
+    } else if(criteria.isEmergencyOnly()) {
+      return new EmergencyOnlyRequisitionSearch(criteria, scheduleService, repository, programService, facilityService);
     } else if (criteria.isWithoutLineItems()) {
       return new RequisitionOnlySearch(criteria, permissionService, repository);
     } else if (criteria.getProgramId() == null) {
       return new FacilityDateRangeSearch(criteria, permissionService, scheduleService, repository, programService);
-    } else {
+    }
+    else {
       return new FacilityProgramDateRangeSearch(criteria, permissionService, scheduleService, repository);
     }
   }

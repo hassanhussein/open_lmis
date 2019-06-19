@@ -197,6 +197,6 @@ public interface EquipmentMapper {
 
   @Select("select * from equipments e inner join " +
           "equipment_model em on e.modelid = em.id " +
-          "where trim(e.name) = trim(#{equipmentName}) and trim(em.code) = trim(#{equipmentModelCode}) limit 1")
+          "where LOWER(trim(e.name)) = LOWER(trim(#{equipmentName})) and LOWER(trim(em.code)) = LOWER(trim(#{equipmentModelCode})) limit 1")
   Equipment getEquipmentByNameAndModelCode(@Param("equipmentName") String equipmentName, @Param("equipmentModelCode") String equipmentModelCode);
 }

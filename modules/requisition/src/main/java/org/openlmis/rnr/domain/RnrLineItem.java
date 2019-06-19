@@ -237,6 +237,9 @@ public class RnrLineItem extends LineItem {
   }
 
   public void calculatePeriodNormalizedConsumption(Integer numberOfMonths) {
+    if(normalizedConsumption == null){
+      normalizedConsumption = 0;
+    }
     periodNormalizedConsumption = normalizedConsumption * numberOfMonths;
   }
 
@@ -482,10 +485,10 @@ public class RnrLineItem extends LineItem {
       return this.getTotalLossesAndAdjustments().toString();
     }
     if (columnName.equals("cost")) {
-      return this.calculateCost().toString();
+      return this.calculateCost() != null ? this.calculateCost().toString() : "0.00";
     }
     if (columnName.equals("price")) {
-      return this.getPrice().toString();
+      return this.getPrice() != null ? this.getPrice().toString() : "0.00";
     }
 
     if (columnName.equals("total") && this.getBeginningBalance() != null && this.getQuantityReceived() != null) {

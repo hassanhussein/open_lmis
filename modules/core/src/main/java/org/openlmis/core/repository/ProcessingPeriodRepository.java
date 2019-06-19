@@ -126,4 +126,8 @@ public class ProcessingPeriodRepository {
     public List<ProcessingPeriod> getPeriodsByProgramCode(String code) {
       return mapper.getPeriodsByProgramCode(code);
     }
+
+  public List<ProcessingPeriod> getPeriodsForDateRange(Date rangeStart, Date rangeEnd) {
+    return mapper.getPeriodsForDateRange(rangeStart, rangeEnd);
+  }
 }
