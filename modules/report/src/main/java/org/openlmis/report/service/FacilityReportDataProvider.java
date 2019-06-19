@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.report.mapper.FacilityReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.FacilityReportParam;
+import org.openlmis.report.model.params.PerformanceCoverageReportParam;
 import org.openlmis.report.model.report.FacilityProgramReport;
 import org.openlmis.report.model.report.FacilityReport;
 import org.openlmis.report.util.ParameterAdaptor;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +42,8 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ResultRow> getResultSet  (Map<String, String[]> filterCriteria) {
         FacilityReportParam facilityReportParam = getReportFilterData(filterCriteria);
-        return facilityReportMapper.SelectFilteredSortedPagedFacilities(facilityReportParam, this.getUserId());
+        List<FacilityReport> facilityReportList=facilityReportMapper.SelectFilteredSortedPagedFacilities(facilityReportParam, this.getUserId());
+        return facilityReportList;
     }
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria,
@@ -59,5 +62,11 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
         return filterHelper.getProgramPeriodGeoZone(params);
+    }
+    public Map<String,String> getExtendedHeader(Map filterCriteria) {
+        Map<String, String> parameterMap = new HashMap<>();
+        FacilityReportParam facilityReportParam = getReportFilterData(filterCriteria);
+        parameterMap.put("REPORT_FILTER_PARAM_VALUES", facilityReportParam.getPeriodStart() + "  to "+ facilityReportParam.getPeriodEnd());
+        return parameterMap;
     }
 }

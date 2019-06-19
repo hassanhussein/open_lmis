@@ -1,0 +1,545 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility_list" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="REPORT_NAME" class="java.lang.String"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String"/>
+	<parameter name="COUNTRY_NAME" class="java.lang.String"/>
+	<parameter name="GENERATED_BY" class="java.lang.String"/>
+	<parameter name="REPORT_VERSION" class="java.lang.String"/>
+	<parameter name="REPORT_ID" class="java.lang.String"/>
+	<parameter name="LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_OUTPUT_OPTION" class="java.lang.String"/>
+	<parameter name="OPERATOR_LOGO" class="java.io.InputStream"/>
+	<parameter name="REPORT_SUB_TITLE" class="java.lang.String"/>
+	<parameter name="REPORT_FILTER_PARAM_VALUES" class="java.lang.String"/>
+	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
+	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT DISTINCT
+  F.id,
+  F.code,
+  F.name as facilityName,
+  F.active         AS                                                            active,
+  FT.name          AS                                                            facilityType,
+  GZ.district_name AS                                                            district,
+GZ.region_name as province,
+'aa' as address1,
+'asdas' as email,
+  FO.code          AS                                                            owner,
+  F.latitude :: TEXT || ',' || F.longitude :: TEXT || ', ' || F.altitude :: TEXT gpsCoordinates,
+  F.mainphone      AS                                                            phoneNumber,
+  F.fax            AS                                                            fax,
+  ps.id                                                                          supportprogramid,
+  ps.active                                                                      activeprogram,
+  ps.startdate,
+  p.id                                                                           programid,
+  p.code                                                                         programcode,
+  p.name as                                                                        name
+FROM facilities F
+  JOIN facility_types FT ON FT.id = F.typeid
+  LEFT OUTER JOIN programs_supported ps ON ps.facilityid = F.id
+  LEFT OUTER JOIN programs p ON ps.programid = p.id
+  LEFT OUTER JOIN vw_districts GZ ON GZ.district_id = F.geographiczoneid
+  LEFT OUTER JOIN facility_operators FO ON FO.id = F.operatedbyid
+  LEFT OUTER JOIN facility_owners FS ON FS.facilityid = F.id
+WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
+                              FROM vw_user_facilities
+                              WHERE user_id = 98) AND F.active IN ('t', 'f') AND (
+         F.geographicZoneId = 17 OR GZ.region_id = 17 OR
+         GZ.zone_id = 17 OR GZ.parent = 17) AND
+            F.id IN (SELECT facility_id
+                                                             FROM vw_user_facilities
+                                                             WHERE user_id = cast(53 AS INT4) AND
+                                                                   program_id = cast(3 AS INT4))
+       AND F.id IN (SELECT m.facilityid
+                    FROM requisition_group_members m
+                    WHERE m.requisitionGroupId IN (SELECT rpgs.requisitionGroupId
+                                                   FROM requisition_group_program_schedules rpgs
+                                                   WHERE rpgs.programId = 3)) AND
+       ps.active = TRUE)]]>
+	</queryString>
+	<field name="code" class="java.lang.String"/>
+	<field name="facilityName" class="java.lang.String"/>
+	<field name="active" class="java.lang.Boolean"/>
+	<field name="address1" class="java.lang.String"/>
+	<field name="facilityType" class="java.lang.String"/>
+	<field name="district" class="java.lang.String"/>
+	<field name="owner" class="java.lang.String"/>
+	<field name="gpsCoordinates" class="java.lang.String"/>
+	<field name="phoneNumber" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="fax" class="java.lang.String"/>
+	<field name="startDate" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="province" class="java.lang.String"/>
+	<variable name="TOTAL_PAGES" class="java.lang.Integer">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "PDF"]]></printWhenExpression>
+				</reportElement>
+				<subreportParameter name="PAGE_NO">
+					<subreportParameterExpression><![CDATA[$V{PAGE_NUMBER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="LOGO">
+					<subreportParameterExpression><![CDATA[$P{LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_NAME">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_SUB_TITLE">
+					<subreportParameterExpression><![CDATA[$P{REPORT_SUB_TITLE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_NAME">
+					<subreportParameterExpression><![CDATA[$P{REPORT_NAME}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REPORT_FILTER_PARAM_VALUES">
+					<subreportParameterExpression><![CDATA[$P{REPORT_FILTER_PARAM_VALUES}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OPERATOR_LOGO">
+					<subreportParameterExpression><![CDATA[$P{OPERATOR_LOGO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
+				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<summary>
+		<band height="50">
+			<crosstab>
+				<reportElement x="0" y="0" width="802" height="50" uuid="31f91566-0534-40c0-9b8c-7fb04462fb26"/>
+				<crosstabHeaderCell>
+					<cellContents>
+						<rectangle>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="475" height="30" backcolor="#3D9297" uuid="764411a6-9f5a-497f-9463-4024f619e02b"/>
+						</rectangle>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="57" height="30" uuid="5097db61-5084-419b-905b-8bfff901a75b"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="57" y="0" width="61" height="30" uuid="e408f6ef-9218-4864-9988-7c5bbbd9b49c"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.facility}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="118" y="0" width="61" height="30" uuid="077c94a9-d6fb-49ae-b561-d963d6dd1ad8"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.facility.type}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="179" y="0" width="66" height="30" uuid="35dfa729-0578-4558-8282-b18d3ca6bfd9"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.province}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="245" y="0" width="51" height="30" uuid="abdd597d-415e-4a61-bfa4-ee245f9424be"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="296" y="0" width="29" height="30" uuid="46db3e7b-ec99-4ec3-95c2-03456b1772cc"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.ownership}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="325" y="0" width="52" height="30" uuid="ccfc53e1-e1ce-4a07-9dad-5f743c988cb1"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.address}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="377" y="0" width="49" height="30" uuid="649af1fd-528e-4b6d-aeef-c6ce61e50cf3"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.phone}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement style="Crosstab Data Text" x="426" y="0" width="49" height="30" uuid="34b75211-28c1-429e-8a5f-9a32fb42f47d"/>
+							<box leftPadding="0">
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$R{label.fax}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="code" width="57">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{code}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#3D9297" mode="Opaque">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="57" height="25" forecolor="#000000" uuid="91ff0db1-7243-4afc-9e6b-ce1eebde1ef9"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{code}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="facilityName" width="61">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{facilityName}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents backcolor="#3D9297" mode="Opaque">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" mode="Opaque" x="0" y="0" width="61" height="25" forecolor="#000000" uuid="32bf35c3-80cc-4b92-8bd7-de6fc41fb64a"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{facilityName}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="facilityType" width="61">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{facilityType}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="61" height="25" uuid="bcb83f1b-cb5b-4eab-9d3e-e3f8d14c590f"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{facilityType}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="province" width="66">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{province}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="66" height="25" uuid="5ef1839b-d579-4f12-846c-c175d76bd84e"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{province}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="district" width="51">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{district}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="51" height="25" uuid="3f98382f-daac-4a16-90e7-935a61add657"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{district}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="owner" width="29">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{owner}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="29" height="25" uuid="3297f401-7158-4c21-bcf8-c606803216e1"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{owner}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="address" width="52">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{address1}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="52" height="25" uuid="a6ab9b67-3ed0-4554-aaab-281ae8ce3c9d"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{address}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="phone" width="49">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{phoneNumber}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="49" height="25" uuid="d15e4da3-10a8-4059-bc13-7605dd6bab14"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{phone}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="fax" width="49">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{fax}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="49" height="25" uuid="fe4398b6-f185-4e3f-b1ce-bac6fabebba1"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{fax}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="name" height="30">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents backcolor="#3D9297" mode="Opaque">
+							<textField>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="30" forecolor="#000000" uuid="3033c469-7bbc-4f1c-b73e-dd03d21f7cdd"/>
+								<box>
+									<topPen lineWidth="0.5"/>
+									<leftPen lineWidth="0.5"/>
+									<bottomPen lineWidth="0.5"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{name}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="nameMeasure" class="java.lang.Integer" calculation="Count">
+					<measureExpression><![CDATA[$F{name}]]></measureExpression>
+				</measure>
+				<crosstabCell width="50" height="25">
+					<cellContents>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="50" height="25" uuid="183488f4-91f9-45af-8286-7656ea556f8d"/>
+							<box>
+								<topPen lineWidth="0.5"/>
+								<leftPen lineWidth="0.5"/>
+								<bottomPen lineWidth="0.5"/>
+								<rightPen lineWidth="0.5"/>
+							</box>
+							<textFieldExpression><![CDATA[$V{nameMeasure}>0?"yes":"No"]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="code">
+					<cellContents backcolor="#005A00" mode="Opaque">
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="dc0693a6-11a7-467a-834b-059868b08616"/>
+							<textFieldExpression><![CDATA[$V{nameMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell width="50" columnTotalGroup="name">
+					<cellContents backcolor="#BFFFBF" mode="Opaque">
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="6e72c419-530b-44fe-a6f2-441fb86796dc"/>
+							<textFieldExpression><![CDATA[$V{nameMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="code" columnTotalGroup="name">
+					<cellContents backcolor="#005A00" mode="Opaque">
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="7cca5231-8b52-4e3b-8e6d-773b6f60122a"/>
+							<textFieldExpression><![CDATA[$V{nameMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell height="25" rowTotalGroup="facilityName">
+					<cellContents backcolor="#BFFFBF" mode="Opaque">
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="69242b41-e7ef-4aac-862a-6fc4e6469b1a"/>
+							<textFieldExpression><![CDATA[$V{nameMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="facilityName" columnTotalGroup="name">
+					<cellContents backcolor="#BFFFBF" mode="Opaque">
+						<textField>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="560baf0e-f7f6-4352-bad7-7795674b0dc0"/>
+							<textFieldExpression><![CDATA[$V{nameMeasure}]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="facilityType">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="facilityType" columnTotalGroup="name">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="province">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="province" columnTotalGroup="name">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="district">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="district" columnTotalGroup="name">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="owner">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="owner" columnTotalGroup="name">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="address">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="address" columnTotalGroup="name">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="phone">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="phone" columnTotalGroup="name">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="fax">
+					<cellContents/>
+				</crosstabCell>
+				<crosstabCell rowTotalGroup="fax" columnTotalGroup="name">
+					<cellContents/>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

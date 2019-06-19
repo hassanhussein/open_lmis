@@ -26,6 +26,7 @@ public class FacilityProgramReport implements ResultRow {
     private String code;
     private String name;
     private boolean active;
+    private boolean member;
     private Date startDate;
 
 }

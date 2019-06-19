@@ -47,7 +47,7 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="facility-list"/>
-                    <property name="template" value="facilities-listings.jasper"/>
+                    <property name="template" value="facilities-listings-pivot.jasper"/>
                     <property name="reportDataProvider" ref="facilityReportDataProvider"/>
                     <property name="id" value="RP-MAL-LAB"/>
                     <property name="name" value="List of facilities with contact addresses"/>
