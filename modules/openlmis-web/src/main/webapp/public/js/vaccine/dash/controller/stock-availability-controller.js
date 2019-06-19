@@ -159,7 +159,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                     $timeout(function () {
                        $('#facilityStockModal').modal();
 
-                    },100);
+                    },1000);
 
 
                  } else if(indicator.color === '#ffdb00' && data.length > 0) {
@@ -175,7 +175,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                      $timeout(function () {
                         $('#facilityStockModal').modal();
 
-                     },100);
+                     },1000);
 
 
                  } else if(indicator.color === '#00B2EE' && data.length > 0) {
@@ -192,7 +192,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                       $timeout(function () {
                          $('#facilityStockModal').modal();
 
-                      },100);
+                      },1000);
 
 
                  } else {
@@ -213,7 +213,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
                          $('#facilityStockModal').modal();
 
-                     },100);
+                     },1000);
 
                  }
 
