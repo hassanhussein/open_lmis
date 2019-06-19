@@ -1,0 +1,1 @@
+update equipment_types set iscoldchain = false where iscoldchain is null;
