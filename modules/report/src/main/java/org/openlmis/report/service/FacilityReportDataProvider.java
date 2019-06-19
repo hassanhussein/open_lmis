@@ -66,7 +66,7 @@ public class FacilityReportDataProvider extends ReportDataProvider {
     public Map<String,String> getExtendedHeader(Map filterCriteria) {
         Map<String, String> parameterMap = new HashMap<>();
         FacilityReportParam facilityReportParam = getReportFilterData(filterCriteria);
-        parameterMap.put("REPORT_FILTER_PARAM_VALUES", facilityReportParam.getPeriodStart() + "  to "+ facilityReportParam.getPeriodEnd());
+        parameterMap.put("REPORT_FILTER_PARAM_VALUES", " Period From: "+facilityReportParam.getPeriodStart() + "  to "+ facilityReportParam.getPeriodEnd());
         return parameterMap;
     }
 }
