@@ -40,5 +40,14 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("stocks", service.getStockStatusSummary(loggedInUserId(request),product,program,year));
     }
 
+  @RequestMapping(value = "/stock-available-for-period", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockAvailableForPeriod(
+            @Param("period") Long period,
+            HttpServletRequest request
+    ) {
+
+        return OpenLmisResponse.response("stocks", service.getStockAvailableForPeriod(loggedInUserId(request),period));
+    }
+
 
 }

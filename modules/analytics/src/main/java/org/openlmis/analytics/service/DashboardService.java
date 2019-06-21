@@ -24,5 +24,9 @@ public class DashboardService{
         return repository.getStockStatusSummary(userId,product,program,year);
     }
 
+    public List<HashMap<String,Object>> getStockAvailableForPeriod(Long userId, Long period){
+        return repository.getStockAvailableForPeriod(userId,period);
+    }
+
 }
 
