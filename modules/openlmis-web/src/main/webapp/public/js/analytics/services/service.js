@@ -47,10 +47,38 @@ services.factory('StockAvailableForPeriodData', function ($q, $timeout, $resourc
 
 });
 
+services.factory('StockAvailableByProgramAndPeriodData', function ($q, $timeout, $resource,StockAvailableByProgramAndPeriod) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            StockAvailableByProgramAndPeriod.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 
 services.factory('StockStatusSummary', function ($resource) {
     return $resource('/api/dashboard/stock-status-summary.json', {}, {});
 });
 services.factory('StockAvailableForPeriod', function ($resource) {
     return $resource('/api/dashboard/stock-available-for-period.json', {}, {});
+});
+
+services.factory('StockAvailableByProgramAndPeriod', function ($resource) {
+    return $resource('/api/dashboard/stock-available-for-program-period.json', {}, {});
 });

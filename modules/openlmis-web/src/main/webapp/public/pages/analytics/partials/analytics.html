@@ -117,19 +117,7 @@ background:#fff;
 
     }
 
-    .modal {
-        width: 50% !important;
-        margin-top: 10px !important;
-/*
-        margin-left: 400px !important;
-*/
-        background: 0 !important;
-        max-height: 50% !important;
-    }
 
-    .modal .modal-content {
-        padding: 30px !important;
-    }
     .odd-row{
      background-color: lightblue;
     }
@@ -301,26 +289,66 @@ background:#fff;
 
             </div>
 
+
+                <div style="background: none !important; height:350px !important; display: block !important;" id="availableStockByProgramModal" modal="availableStockByProgramModal"
+                     options="{ backdrop: 'static', escape: false}" role="dialog">
+
+                    <div class="modal-header" ><h3><span ng-style="{'color':stockColor}" style="text-align:center !important">{{titleStockForProgramAvailable}}</span></h3>
+                        <span class="fluid-grid-cell delete-role pull-right">
+                            <a href="" class="close" value="delete"
+                               ng-click="availableStockByProgramModal=false;">&times;</a>
+                        </span>
+
+                    </div>
+                    <div class="modal-body1">
+                        <div class="scrollable">
+                            <table class="striped">
+                                <thead>
+                                <tr class="highlight">
+                                    <th>#</th>
+                                    <th>Name of Products</th>
+                                    <th>Reported Closing Balance</th>
+                                    <th>Average Monthly Consumption</th>
+                                    <th>MOS</th>
+                                </tr>
+                                </thead>
+                                <tbody class="tbody" ng-repeat="drilled in drillDownData">
+                                <tr>
+                                    <td>{{$index+1}}</td>
+                                    <td>{{drilled.productname}}</td>
+                                    <td>{{drilled.soh | number}} </td>
+                                    <td>{{drilled.amc | number}}</td>
+                                    <td>{{drilled.mos | number}}</td>
+
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+
+                        </div>
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" id="cancelNonFullSupply" class="btn btn-cancel"
+                               ng-click="availableStockByProgramModal=false;"
+                               openlmis-message="button.cancel"/>
+                    </div>
+
+                </div>
+
+
+
+
+
+
             <div class="row">
                 <div class="accordion">
                     <!--  <div class="pull-left "><span style="font-size: 12px">National Supply Chain Indicator , {{displayCurrentDate}}</span>
                       </div>-->
-                    <div class="pull-left">
-                        <div class="fixed-action-btn">
-                            <a class="btn-floating btn-small red">
-                                <i class="large material-icons">mode_edit</i>
-                            </a>
-                            <ul>
-                                <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
-                                <li><a class="btn-floating yellow darken-1"><i
-                                        class="material-icons">format_quote</i></a></li>
-                                <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
-                                <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
-                            </ul>
-                        </div>
-
-                    </div>
-
 
                     <div class="pull-right control-accordion">
                     <span style="height:2px !important">
@@ -352,6 +380,83 @@ background:#fff;
                   </span>
                         </div>
                         <div class="accordion-body" style="display:block">
+
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <div class="card">
+                                        <div class="card-content">
+
+                                            <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col s12 m8 l8">
+                                    <div class="card">
+                                        <div class="card-content">
+
+                                            <div id="stock-available-for-program-drill-down" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col s12 m4 l4">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div style="margin: 0 auto;height: 360px !important;">
+                                                <table class="striped" id="datatable">
+                                                    <thead>
+                                                    <tr class="highlight">
+                                                        <th>#</th>
+                                                        <th>Name of Products</th>
+                                                        <th>Reported Closing Balance</th>
+                                                        <th>Average Monthly Consumption</th>
+                                                        <th>MOS</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody class="tbody" ng-repeat="drilled in drillDownData">
+                                                    <tr>
+                                                        <td>{{$index+1}}</td>
+                                                        <td>{{drilled.productname}}</td>
+                                                        <td>{{drilled.soh | number}} </td>
+                                                        <td>{{drilled.amc | number}}</td>
+                                                        <td>{{drilled.mos | number}}</td>
+
+                                                    </tr>
+
+                                                    </tbody>
+
+                                                </table>
+
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+
+
+
+
                             <div class="row orderFillRate">
                                 <div class="col s12 m8 l6">
                                     <div class="section grey lighten-5 card"
@@ -368,7 +473,7 @@ background:#fff;
 
                                             <div class="section">
 
-                                                <div id="stock-available-for-program"></div>
+                                                <div id="stock-available-for-program1"></div>
 
                                                 <!--<div onClick="accordion.expandDetail('accordion-fill-rate')" class="pull-right">-->
                                                 <!--<a >-->

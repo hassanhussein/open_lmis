@@ -34,4 +34,13 @@ public interface AnalyticsMapper {
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     List<HashMap<String,Object>> getStockAvailableForPeriod(@Param("userId") Long userId,
                                                             @Param("period") Long period);
+
+    @SelectProvider(type= DashboardStockAvailableForProgramQueryBuilder.class, method="getStockForProductandProgram")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<HashMap<String,Object>> getStockForProductandProgram(@Param("userId") Long userId,
+                                                            @Param("program") Long program,
+                                                              @Param("period") Long period);
+
+
+
 }
