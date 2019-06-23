@@ -12,13 +12,24 @@ public class StockStatusQueryBuilder {
          Long year = (Long)params.get("year");
 
 
-        return
-                " SELECT periodId, processing_period_name::text as period,case when status::text = null then 'UN' else status::text end as status , COUNT(*) totalFacilities \n" +
-                " from mv_stock_imbalance_by_facility_report WHERE  PROGRAMID = '"+program+"'::INT and productId = '"+product+"'::INT " +
-                " AND emergency = false and stockinhand IS NOT NULL AND skipped = false AND year = '"+year+"'::INT\n" +
-                " AND facility_Id in (select facility_Id from vw_user_facilities where user_id = '"+userId+"'::INT and program_id = '"+program+"'::INT)\n" +
-                " group by processing_period_name ,status ,periodId " +
-                " order by periodId, processing_period_name  ";
+        return "               SELECT periodId, periodName, SUM (SO) as so, \n" +
+                "              SUM(OS) AS OS , SUM( SP) SP , SUM(US) US ,\n" +
+                "              SUM(UK) UK FROM (\n" +
+                "                SELECT periodid,periodName,\n" +
+                "                case when status = 'SO' THEN 1 ELSE 0 END AS SO,\n" +
+                "                case when status = 'SP' THEN 1 ELSE 0 END AS SP,\n" +
+                "                case when status = 'OS' THEN 1 ELSE 0 END AS OS,\n" +
+                "\n" +
+                "                case when status = 'US' THEN 1 ELSE 0 END AS US,\n" +
+                "                case when status = 'UK' THEN 1 ELSE 0 END AS UK\n" +
+                "                \n" +
+                "                from mv_dashboard_tracer_availability_summary\n" +
+                "\n" +
+                "                 WHERE productId = '"+product+"'::int and programId = '"+program+"'::INT  AND reportedYEAR = '"+year+"'\n" +
+                "                \n" +
+                "                )L\n" +
+                "                GROUP BY  periodid,periodName\n" +
+                "                ORDER BY periodid,periodName  ";
 
     }
 

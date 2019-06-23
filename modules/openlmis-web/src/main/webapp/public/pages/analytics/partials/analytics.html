@@ -1,4 +1,5 @@
 <style>
+
   .tabs .tab a {
         color: #42a7ad;
     }
@@ -382,7 +383,7 @@ background:#fff;
                         <div class="accordion-body" style="display:block">
 
                             <div class="row">
-                                <div class="col s12 m12 l12">
+                                <div class="col s12 m4 l4">
                                     <div class="card">
                                         <div class="card-content">
 
@@ -395,9 +396,24 @@ background:#fff;
                                 </div>
 
 
+                                <div class="col s12 m8 l8">
+                                    <div class="card">
+                                        <div class="card-content">
+
+                                            <div id="stockStatusOverTime" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+
                             </div>
 
-                            <div class="row">
+                            <div class="row" ng-show="drillDownData.length">
                                 <div class="col s12 m8 l8">
                                     <div class="card">
                                         <div class="card-content">
@@ -410,33 +426,12 @@ background:#fff;
 
                                 </div>
 
-                                <div class="col s12 m4 l4">
+                                <div class="col s12 m4 l4" >
                                     <div class="card">
                                         <div class="card-content">
-                                            <div style="margin: 0 auto;height: 360px !important;">
-                                                <table class="striped" id="datatable">
-                                                    <thead>
-                                                    <tr class="highlight">
-                                                        <th>#</th>
-                                                        <th>Name of Products</th>
-                                                        <th>Reported Closing Balance</th>
-                                                        <th>Average Monthly Consumption</th>
-                                                        <th>MOS</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody class="tbody" ng-repeat="drilled in drillDownData">
-                                                    <tr>
-                                                        <td>{{$index+1}}</td>
-                                                        <td>{{drilled.productname}}</td>
-                                                        <td>{{drilled.soh | number}} </td>
-                                                        <td>{{drilled.amc | number}}</td>
-                                                        <td>{{drilled.mos | number}}</td>
+                                            <div style="height: 360px !important;">
 
-                                                    </tr>
-
-                                                    </tbody>
-
-                                                </table>
+                                                <div ng-show="drillDownData.length" style="height: 350px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
 
 
                                             </div>

@@ -1,23 +1,31 @@
-function AnalyticsFunction($scope,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
+function AnalyticsFunction($scope,messageService,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
+
+
 
 
 $('ul.tabs').tabs().tabs('select_tab', 'tracer');
 
 
-var params = {product:parseInt(2537,0) ,year:parseInt(2017,0), program: parseInt(1,0),period:parseInt(79,10)};
+var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
 
 
 
 
-/*
 DashboardStockStatusSummaryData.get(params).then(function(data) {
 $scope.stockStatuses   = [];
+ console.log(data);
+ if(!isUndefined(data)){
+ console.log(data);
+ var category = _.pluck(data,'periodName');
 
- $scope.stockStatuses = data;
+ $scope.stockStatusesStackedColumnChart('stockStatusOverTime','column' ,'Stock Status Over Time',category, 'Count of Facilities' );
+
+ }
+
+    console.log(data);
 
 
 });
-*/
 
 
 
@@ -68,11 +76,35 @@ $scope.stockAvailableForPeriodList = [];
 
      //$scope.availableStockByProgramModal = true;
      $scope.dataTableStockStatusChart(category,values,$scope.titleStockForProgramAvailable);
+
      // $('#availableStockByProgramModal').modal();
+
+
 
     });
 
+
+
  }
+
+  $scope.gridOptions = { data: 'drillDownData',
+              showFooter: true,
+              enableGridMenu: true,
+              exporterMenuCsv: true,
+              showFilter: false,
+              enableColumnResize: true,
+              enableSorting: false,
+                 exporterCsvFilename: 'myFile.csv',
+                  exporterPdfDefaultStyle: {fontSize: 9},
+              columnDefs: [
+                {field: 'SN', displayName: '#',cellTemplate: '<div style="text-align: center !important;">{{row.rowIndex + 1}}</div>', width: 15},
+                {field: 'productname', displayName: messageService.get("label.product"), width: 200},
+                {field: 'soh', displayName: 'SOH'},
+                {field: 'amc', displayName: 'AMC'},
+                {field: 'mos', displayName: 'MOS'}
+
+              ]
+   };
 
 
 
@@ -230,6 +262,77 @@ Highcharts.chart('stock-available-for-program-drill-down', {
 }
 
 
+
+ $scope.stockStatusesStackedColumnChart = function (id,chartType, title,category,yAxisTitle,data){
+
+ Highcharts.chart(id, {
+     chart: {
+         type: chartType
+     },
+     title: {
+         text: title
+     },
+     xAxis: {
+         categories: category
+     },
+     yAxis: {
+         min: 0,
+         title: {
+             text: yAxisTitle
+         },
+         stackLabels: {
+             enabled: true,
+             style: {
+                 fontWeight: 'bold',
+                 color: ( // theme
+                     Highcharts.defaultOptions.title.style &&
+                     Highcharts.defaultOptions.title.style.color
+                 ) || 'gray'
+             }
+         }
+     }, credits: {
+               enabled: false
+           },
+     legend: {
+         align: 'right',
+         x: -30,
+         verticalAlign: 'top',
+         y: 25,
+         floating: true,
+         backgroundColor:
+             Highcharts.defaultOptions.legend.backgroundColor || 'white',
+         borderColor: '#CCC',
+         borderWidth: 1,
+         shadow: false
+     },
+     tooltip: {
+         headerFormat: '<b>{point.x}</b><br/>',
+         pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+     },
+     plotOptions: {
+         column: {
+             stacking: 'normal',
+             dataLabels: {
+                 enabled: true
+             }
+         }
+     },
+     series: [{
+         name: 'John',
+         data: [5, 3, 4, 7, 2]
+     }, {
+         name: 'Jane',
+         data: [2, 2, 3, 2, 1]
+     }, {
+         name: 'Joe',
+         data: [3, 4, 4, 2, 5]
+     }]
+ });
+
+
+
+
+ }
 
 
 }
