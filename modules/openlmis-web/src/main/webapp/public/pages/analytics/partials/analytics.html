@@ -448,11 +448,52 @@ background:#fff;
 
                             </div>
 
+                            <div class="row" ng-show="true">
+                                <div class="col s12 m8 l8">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div style="margin: 0 auto;height: 360px !important;"></div>
+
+<!--
+                                            <div style="margin: 0 auto;height: 360px !important;" ng-include="'/public/pages/reports/maps/index.html#/reporting-rate'"></div>
+-->
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col s12 m4 l4" >
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div style="height: 360px !important;">
+
+                                                <div ng-show="drillDownData.length" style="height: 350px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
+
+
+                                            </div>
+
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
 
 
 
 
-                            <div class="row orderFillRate">
+
+
+
+
+                            <div class="row orderFillRate" ng-show="false">
                                 <div class="col s12 m8 l6">
                                     <div class="section grey lighten-5 card"
                                          style="padding-top: 0rem !important;">
