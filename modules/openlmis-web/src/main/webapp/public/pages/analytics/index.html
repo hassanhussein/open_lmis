@@ -37,7 +37,11 @@
     <script src="/public/lib/leaflet/leaflet.js"></script>
     <!--  <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
       <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>-->
+<!--
     <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
+-->
+ <!--   <script type = "text/javascript"
+            src = "https://code.jquery.com/jquery-2.1.1.min.js"></script>-->
 
     <script type="text/javascript" src="/public/lib/material/js/jquery-2.1.4.min.js"></script>
     <script src="/public/lib/jquery/floating-1.12.js"></script>
@@ -47,8 +51,13 @@
 
 
     <script src="/public/lib/angular/angular.min.js"></script>
+
     <script type="text/javascript" src="/public/lib/angular-materialize/src/angular-materialize.js"></script>
+
+
     <script src="/public/lib/material/js/materialize.min.js"></script>
+
+
 
 
     <script src="/public/lib/angular/angular-route.min.js"></script>
@@ -63,8 +72,20 @@
     <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
     <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
     <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-pagination-0.10.0.min.js"></script>
-
     <script src="/public/lib/angular-ui/ng-grid/ng-grid-2.0.7.min.js"></script>
+<!--
+    <script src="/public/lib/angular-ui/ng-grid/ui-grid.js"></script>
+-->
+
+<!--
+    <script src="/public/lib/angular-ui/ng-grid/exporter.js"></script>
+-->
+   <!-- <script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>-->
+ <!--   <script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/lodash.min.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/jszip.min.js"></script>
+    <script src="http://ui-grid.info/docs/grunt-scripts/excel-builder.dist.js"></script>-->
 
     <script src="/public/lib/angular-breadcrumb/js/angular-breadcrumb.min.js"></script>
     <script src="/public/lib/jquery/chosen.jquery.min.js"></script>
@@ -72,6 +93,9 @@
 
 
     <link rel="stylesheet" href="/public/lib/angular-ui/angular-ui.min.css">
+<!--
+    <link rel="stylesheet" href="/public/lib/angular-ui/ng-grid/ui-grid.css">
+-->
 
     <!-- open-lmis shared files -->
     <script src="/public/js/shared/util.js"></script>
@@ -91,6 +115,7 @@
     <script src="/public/lib/highcharts/modules/exporting.js"></script>
     <script src="/public/lib/highcharts/modules/map.js"></script>
     <script src="/public/lib/highcharts/modules/data.js"></script>
+    <script src="/public/lib/highcharts/modules/drilldown.js"></script>
     <!--
         <script src="https://code.highcharts.com/mapdata/countries/tz/tz-all.js"></script>
     -->
@@ -113,6 +138,9 @@
 
 
     <script src="/public/js/shared/services/map-helpers.js"></script>
+    <script src="/public/js/analytics/services/service.js"></script>
+
+
 
     <!-- App directives -->
     <script src="/public/js/shared/directives/form-toolbar.js"></script>
@@ -120,9 +148,12 @@
     <script src="/public/js/shared/directives/placeholder.js"></script>
     <script src="/public/js/shared/directives/ui-nav.js"></script>
     <script src="/public/js/shared/directives/tab-scroll.js"></script>
-<!--
-    <script src="/public/js/shared/directives/modal-events.js"></script>
--->
+
+
+    <!--
+        <script src="/public/js/shared/directives/modal-events.js"></script>
+    -->
+
     <script src="/public/js/shared/directives/slider.js"></script>
     <script src="/public/js/shared/directives/fade-out.js"></script>
     <script src="/public/js/shared/directives/openlmis-pagination.js"></script>
@@ -136,6 +167,8 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="/public/lib/bootstrap-tree-view/js/bootstrap.3.3.7.min.js"></script>
+    <script src="/public/lib/angular-material/angular-material.min2.js"></script>
+
 
 
 
@@ -157,6 +190,9 @@
     <link rel="stylesheet" href="/public/lib/tree-dropdown/tree-dropdown.css">
     <link rel="stylesheet" href="/public/css/app.css">
     <link rel="stylesheet" href="/public/lib/angular-ui/ng-table/ng-table.css">
+    <link href="/public/lib/material/css/materializeicons.css" rel="stylesheet">
+
+
     <!--
         <link rel="stylesheet" href="/public/css/report.css">
     -->
@@ -203,6 +239,12 @@
     <![endif]-->
 
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/vaccine-inventory.css">
+    <link rel="stylesheet" href="/public/lib/angular-material/angular-material.min2.css">
+
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.9/angular-material.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.10/angular-material.min.js"></script>
+    <link href="/public/lib/rxDataTable/styles/rx-data-table.min.css" rel="stylesheet">
+    <script src="/public/lib/rxDataTable/scripts/rx-data-table.min.js"></script>
 
     <!--<link href="/public/css/bootstrap-select.css" type="text/css" rel="stylesheet" media="screen,projection"/>-->
     <!--
@@ -212,6 +254,7 @@
     <!--
         <link rel="stylesheet" href="/public/css/chosen.min.css">
     -->
+    <link rel="stylesheet" href="/public/css/analytics.css">
 
 
 </head>
@@ -224,6 +267,9 @@
     <div ncy-breadcrumb=""></div>
     <div  ui-view></div>
     <script type="text/javascript">
+ $(document).ready(function(){
+    $('ul.tabs').tabs();
+  });
 
 
 
@@ -231,7 +277,14 @@
         $('.modal-trigger').leanModal();
         $(".my_select_box").chosen({max_selected_options: 100});
     $('select').material_select();
+
+
+
 });
+
+
+
+
 
 
 </script>

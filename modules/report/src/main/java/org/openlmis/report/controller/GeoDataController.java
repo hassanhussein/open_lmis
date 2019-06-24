@@ -65,6 +65,12 @@ public class GeoDataController extends BaseController {
         return OpenLmisResponse.response(MAP, this.geographicZoneReportMapper.getGeoReportingRate(userId, program,schedule, period));
     }
 
+ @RequestMapping(value = "/reporting-rate-geo-json", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getGeoJson() {
+
+        return OpenLmisResponse.response(MAP, this.geographicZoneReportMapper.getGeoJson());
+    }
+
 
     @RequestMapping(value = "/reporting-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getReportingFacilities(@RequestParam(value = "program", required = true, defaultValue = "0") Long program,
