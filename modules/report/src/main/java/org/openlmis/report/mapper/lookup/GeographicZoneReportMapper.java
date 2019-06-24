@@ -97,6 +97,8 @@ public interface GeographicZoneReportMapper {
     " on gzz.id = period.geographicZoneId order by gzz.name" )
     List<GeoZoneReportingRate> getGeoReportingRate(@Param("userId") Long userId, @Param("programId") Long programId,@Param("schedule") Long schedule, @Param("processingPeriodId") Long processingPeriodId);
 
+  @Select("select * from mv_dashbiard_gor_map")
+  List<GeoZoneReportingRate>getGeoJson();
 
 
   /*  @Select("select   f.id, f.name, f.mainPhone, f.longitude, f.latitude,false reported ,\n" +

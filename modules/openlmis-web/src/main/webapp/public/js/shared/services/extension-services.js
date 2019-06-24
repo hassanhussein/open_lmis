@@ -1359,4 +1359,8 @@ services.factory('GetItemFillRateSummary', function ($resource) {
     return $resource('/reports/reportdata/item-fill-rate-summary.json', {}, {});
 });
 
+services.factory('GetLocalMap', function ($resource) {
+    return $resource('/public/js/reports/shared/map.json', {}, {});
+});
+
 

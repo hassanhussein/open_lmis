@@ -6,19 +6,55 @@ function AnalyticsFunction($scope,messageService,DashboardStockStatusSummaryData
 $('ul.tabs').tabs().tabs('select_tab', 'tracer');
 
 
-var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
+var params = {product:parseInt(2434,0) ,year:parseInt(2018,0), program: parseInt(1,0),period:parseInt(91,10)};
 
 
 
-
+var stockSummary = [];
 DashboardStockStatusSummaryData.get(params).then(function(data) {
 $scope.stockStatuses   = [];
  console.log(data);
  if(!isUndefined(data)){
  console.log(data);
- var category = _.pluck(data,'periodName');
+ stockSummary = data;
+  var category = _.uniq(_.pluck(stockSummary,'periodname'));
 
- $scope.stockStatusesStackedColumnChart('stockStatusOverTime','column' ,'Stock Status Over Time',category, 'Count of Facilities' );
+               var so = _.pluck(stockSummary, 'so');
+               var os = _.pluck(stockSummary, 'os');
+               var sap = _.pluck(stockSummary, 'sp');
+               var us = _.pluck(stockSummary, 'us');
+               var uk = _.pluck(stockSummary, 'uk');
+               var total = _.pluck(stockSummary, 'total');
+
+               var summaries = [];
+
+               var totalZeroStock = [];
+               var totalLowStock = [];
+               var totalOverStock = [];
+               var totalUnknown = [];
+               var totalSufficientStock = [];
+
+               _.map(total,function(data, index){
+
+             totalZeroStock.push({y:so[index],total:data});
+             totalLowStock.push({y:us[index],total:data});
+             totalOverStock.push({y:os[index],total:data});
+             totalSufficientStock.push({y:sap[index],total:data});
+             totalUnknown.push({y:uk[index],total:data});
+                 return null;
+
+               });
+
+               summaries = [
+                            {name:'Stocked Out', data:totalZeroStock, color:'#ff0d00'},
+                            {name:'Understocked', data:totalLowStock, color:'#ffdb00'},
+                            {name:'OverStocked', data:totalOverStock, color:'#00B2EE'},
+                            {name:'Adequately stocked', data:totalSufficientStock, color:'#006600'},
+                            {name:'UnKnown', data:totalUnknown, color:'gray'}
+
+                           ];
+
+     $scope.stockStatusesStackedColumnChart('stockStatusOverTime','column' ,'Stock Status Over Time',category, 'Count of Facilities',summaries );
 
  }
 
@@ -38,7 +74,9 @@ $scope.stockAvailableForPeriodList = [];
 
         _.each(data, function(value){
 
-        $scope.stockAvailableForPeriodList.push({name:value.program_name,y:Math.round(parseInt(value.totalbyprogram * 100)/value.total),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
+       var totalCalculation = (parseInt(value.totalbyprogram,10) * 100)/value.total;
+
+        $scope.stockAvailableForPeriodList.push({name:value.program_name,y:Math.round(totalCalculation),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
 
         });
         var chartId = 'stock-available-for-program';
@@ -69,13 +107,13 @@ $scope.stockAvailableForPeriodList = [];
      _.each(data, function(drilledData){
      // drillDownSeries.push({name:name,id:program,data:drilledData})
 
-     })
-     console.log($scope.stockColor);
+     });
+
      var category =_.pluck(data,'productname');
      var values = _.pluck(data,'mos');
 
      //$scope.availableStockByProgramModal = true;
-     $scope.dataTableStockStatusChart(category,values,$scope.titleStockForProgramAvailable);
+     $scope.dataTableStockStatusChart(category,values,$scope.titleStockForProgramAvailable,chartData.color);
 
      // $('#availableStockByProgramModal').modal();
 
@@ -147,10 +185,10 @@ Highcharts.chart(id, {
             shadow: true
         },
       events: {
-    	   drillup: function (e) {
-                            alert(e.seriesOptions.name);
-                     }
-          },
+      drillup: function (e) {
+      alert(e.seriesOptions.name);
+      }
+      },
 
     plotOptions: {
         column: {
@@ -199,7 +237,7 @@ Highcharts.chart(id, {
 }
 
 
-$scope.dataTableStockStatusChart = function (category,data,title) {
+$scope.dataTableStockStatusChart = function (category,data,title,color) {
 
 Highcharts.chart('stock-available-for-program-drill-down', {
     chart: {
@@ -254,12 +292,13 @@ Highcharts.chart('stock-available-for-program-drill-down', {
     },
     series: [{
         name: 'MOS',
+        color:color,
         data: data
     }]
 });
 
 
-}
+};
 
 
 
@@ -273,9 +312,16 @@ Highcharts.chart('stock-available-for-program-drill-down', {
          text: title
      },
      xAxis: {
-         categories: category
+         categories: category,
+         labels: {
+                     align: 'right'
+                 },
+             title: {
+                     text: "Processing Periods"
+                 }
      },
      yAxis: {
+     gridLineColor: '',
          min: 0,
          title: {
              text: yAxisTitle
@@ -317,22 +363,13 @@ Highcharts.chart('stock-available-for-program-drill-down', {
              }
          }
      },
-     series: [{
-         name: 'John',
-         data: [5, 3, 4, 7, 2]
-     }, {
-         name: 'Jane',
-         data: [2, 2, 3, 2, 1]
-     }, {
-         name: 'Joe',
-         data: [3, 4, 4, 2, 5]
-     }]
+     series:data
  });
 
 
 
 
- }
+ };
 
 
 }
@@ -348,5 +385,5 @@ YearFilteredData: function ($q, $timeout, OperationYears) {
         }, 100);
         return deferred.promise;
  }
- }
+ };
 
