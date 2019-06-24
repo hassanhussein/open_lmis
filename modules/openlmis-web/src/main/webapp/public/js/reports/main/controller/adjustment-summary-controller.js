@@ -17,21 +17,17 @@ $scope.currentPage = 1;
 
 $scope.exportReport = function (type) {
 
-             var printWindow;
-             $scope.filter.limit = 100000;
+             $scope.filter.limit = 10000;
              $scope.filter.page  = 1;
 
              var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
              allow.then(function(){
-
                 $scope.filter.pdformat = 1;
                      var url = '/reports/download/adjustment_summary/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-                     //var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-                printWindow.location.href = url;
-
+                     $window.open(url, '_blank');
              });
-                printWindow = $window.open('about:blank','_blank');
+
 
      };
 
@@ -74,8 +70,7 @@ $scope.exportReport = function (type) {
 				$scope.pagination = data.openLmisResponse.pagination;
 				$scope.totalItems = 1000;
 				//check if this is last page and reduce totalItemSize so user can not go to next page
-				if (data.openLmisResponse.rows.length !== $scope.pageSize) {
-					$scope.totalItems = $scope.pageSize * $scope.page;
+				if (data.openLmisResponse.rows.length !== parseInt($scope.filter.limit, 10)) {$scope.totalItems = $scope.pageSize * $scope.page;
 				}
 				$scope.currentPage = $scope.pagination.page;
 				$scope.tableParams.total = $scope.totalItems;
@@ -86,12 +81,10 @@ $scope.exportReport = function (type) {
 
 
 	$scope.$watch('currentPage', function () {
-
-   if($scope.page !== $scope.currentPage) {
 		if ($scope.currentPage > 0) {
 			$scope.page = $scope.currentPage;
 			$scope.OnFilterChanged();
 		}
-	}});
+	});
 
 }
