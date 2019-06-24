@@ -17,7 +17,7 @@ $scope.currentPage = 1;
 
 $scope.exportReport = function (type) {
 
-             $scope.filter.limit = 10000;
+             $scope.filter.limit = 1000;
              $scope.filter.page  = 1;
 
              var allow = $scope.allPrinting($scope.getSanitizedParameter());
