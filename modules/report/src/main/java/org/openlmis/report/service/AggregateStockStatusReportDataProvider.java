@@ -31,12 +31,11 @@ public class AggregateStockStatusReportDataProvider extends ReportDataProvider {
 
     @Autowired
     private AggregateStockStatusReportMapper reportMapper;
-    @Autowired
-    private ReportPaginationHelper helper;
 
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-        return reportMapper.getAggregateStockStatusReport(getReportFilterData(filterCriteria), sortCriteria, helper.getPagination(page), this.getUserId());
+        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+        return reportMapper.getAggregateStockStatusReport(getReportFilterData(filterCriteria), sortCriteria, rowBounds, this.getUserId());
     }
 
     public AggregateStockStatusReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

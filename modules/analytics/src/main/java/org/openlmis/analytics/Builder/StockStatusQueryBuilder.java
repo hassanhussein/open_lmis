@@ -14,7 +14,9 @@ public class StockStatusQueryBuilder {
 
         return "               SELECT periodId, periodName, SUM (SO) as so, \n" +
                 "              SUM(OS) AS OS , SUM( SP) SP , SUM(US) US ,\n" +
-                "              SUM(UK) UK FROM (\n" +
+                "              SUM(UK) UK," +
+                "  SUM (SO)+ SUM(OS) + SUM( SP) + SUM(US) + SUM(UK) total " +
+                " FROM (\n" +
                 "                SELECT periodid,periodName,\n" +
                 "                case when status = 'SO' THEN 1 ELSE 0 END AS SO,\n" +
                 "                case when status = 'SP' THEN 1 ELSE 0 END AS SP,\n" +
