@@ -29,7 +29,7 @@ var data = [
 
 
 
-$.getJSON('/public/js/reports/shared/map.json', function (geojson) {
+/*$.getJSON('/public/js/reports/shared/map.json', function (geojson) {
 console.log(geojson);
 
 
@@ -85,7 +85,7 @@ console.log(geojson);
 
 
 
-});
+});*/
 
 
 
@@ -98,22 +98,22 @@ ConsumptionTrendsData.get(params).then(function(data){
 var groupA = _.where(data, {'schedule':45});
 var groupB = _.where(data, {'schedule':46});
 
-console.log(groupB);
     if(!isUndefined(data)) {
-               var category = _.pluck(groupA, 'periodname');
-               var tle_consumption = _.pluck(groupA, 'tle_consumption');
-               var tld_consumption = _.pluck(groupA, 'tld_consumption');
-               var dolutegravir_consumption = _.pluck(groupA, 'dolutegravir_consumption');
 
-                var tle_consumptionB = _.pluck(groupB, 'tle_consumption');
-               var tld_consumptionB = _.pluck(groupB, 'tld_consumption');
-               var dolutegravir_consumptionB = _.pluck(groupB, 'dolutegravir_consumption');
+     var category = _.pluck(groupA, 'periodname');
+     var tle_consumption = _.pluck(groupA, 'tle_consumption');
+     var tld_consumption = _.pluck(groupA, 'tld_consumption');
+     var dolutegravir_consumption = _.pluck(groupA, 'dolutegravir_consumption');
 
-    var chartTypeId = 'consumptionTrendsChartA';
-    var chartTypeId2 = 'consumptionTrendsChartB';
-    var categoryB = _.pluck(groupB, 'periodname');
+     var tle_consumptionB = _.pluck(groupB, 'tle_consumption');
+     var tld_consumptionB = _.pluck(groupB, 'tld_consumption');
+     var dolutegravir_consumptionB = _.pluck(groupB, 'dolutegravir_consumption');
 
-    $scope.consumptionTrends = data;
+     var chartTypeId = 'consumptionTrendsChartA';
+     var chartTypeId2 = 'consumptionTrendsChartB';
+     var categoryB = _.pluck(groupB, 'periodname');
+
+     $scope.consumptionTrends = data;
 
      $scope.consumptionTrendsChart(chartTypeId, data,category,tle_consumption,tld_consumption,dolutegravir_consumption,'Consumption trends, 2019 - Group A');
      $scope.consumptionTrendsChart(chartTypeId2, data,categoryB,tle_consumptionB,tld_consumptionB,dolutegravir_consumptionB,'Consumption trends, 2019 - Group B');
@@ -172,8 +172,6 @@ $scope.stockStatuses   = [];
      $scope.stockStatusesStackedColumnChart('stockStatusOverTime','column' ,'Stock Status Over Time',category, 'Count of Facilities',summaries );
 
  }
-
-    console.log(data);
 
 
 });
