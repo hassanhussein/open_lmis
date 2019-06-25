@@ -1,4 +1,4 @@
-function AnalyticsFunction($scope,messageService,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
+function AnalyticsFunction($scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
 
 
@@ -6,7 +6,122 @@ function AnalyticsFunction($scope,messageService,DashboardStockStatusSummaryData
 $('ul.tabs').tabs().tabs('select_tab', 'tracer');
 
 
-var params = {product:parseInt(2434,0) ,year:parseInt(2018,0), program: parseInt(1,0),period:parseInt(91,10)};
+var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
+
+var data = [
+    ['ID', 1],
+    ['ID', 710],
+    ['ID', 963],
+    ['ID', 541],
+    ['DE.HH', 622],
+    ['DE.RP', 866],
+    ['DE.SL', 398],
+    ['DE.BY', 785],
+    ['DE.SN', 223],
+    ['DE.ST', 605],
+    ['DE.NW', 237],
+    ['DE.BW', 157],
+    ['DE.HE', 134],
+    ['DE.NI', 136],
+    ['DE.TH', 704],
+    ['DE.', 361]
+];
+
+
+
+$.getJSON('/public/js/reports/shared/map.json', function (geojson) {
+console.log(geojson);
+
+
+ Highcharts.mapChart('reportingRateMap', {
+        chart: {
+            map: geojson
+        },
+        credits:{ enabled:false},
+
+        title: {
+            text: 'Reporting Rate'
+        },
+
+        mapNavigation: {
+            enabled: true,
+            buttonOptions: {
+                verticalAlign: 'bottom'
+            }
+        },
+
+        colorAxis: {
+            tickPixelInterval: 100
+        },
+          legend: {
+                     layout: 'horizontal',
+                     borderWidth: 0,
+                     backgroundColor: 'rgba(255,255,255,0.85)',
+                     floating: true,
+                     verticalAlign: 'top',
+                     y: 25
+                 },
+
+        series: [{
+            data: data,
+            keys: ['ID', 'ID'],
+            joinBy: 'ID',
+            name: 'Random data',
+            states: {
+                hover: {
+                    color: '#a4edba'
+                }
+            },
+            cursor: 'pointer',
+            allowPointSelect: true,
+            dataLabels: {
+                enabled: true,
+                format: '{point.properties.ADM2}'
+            }
+        }]
+    });
+
+
+
+
+
+});
+
+
+
+
+
+$scope.consumptionTrends = [];
+ConsumptionTrendsData.get(params).then(function(data){
+
+
+var groupA = _.where(data, {'schedule':45});
+var groupB = _.where(data, {'schedule':46});
+
+console.log(groupB);
+    if(!isUndefined(data)) {
+               var category = _.pluck(groupA, 'periodname');
+               var tle_consumption = _.pluck(groupA, 'tle_consumption');
+               var tld_consumption = _.pluck(groupA, 'tld_consumption');
+               var dolutegravir_consumption = _.pluck(groupA, 'dolutegravir_consumption');
+
+                var tle_consumptionB = _.pluck(groupB, 'tle_consumption');
+               var tld_consumptionB = _.pluck(groupB, 'tld_consumption');
+               var dolutegravir_consumptionB = _.pluck(groupB, 'dolutegravir_consumption');
+
+    var chartTypeId = 'consumptionTrendsChartA';
+    var chartTypeId2 = 'consumptionTrendsChartB';
+    var categoryB = _.pluck(groupB, 'periodname');
+
+    $scope.consumptionTrends = data;
+
+     $scope.consumptionTrendsChart(chartTypeId, data,category,tle_consumption,tld_consumption,dolutegravir_consumption,'Consumption trends, 2019 - Group A');
+     $scope.consumptionTrendsChart(chartTypeId2, data,categoryB,tle_consumptionB,tld_consumptionB,dolutegravir_consumptionB,'Consumption trends, 2019 - Group B');
+
+    }
+
+
+});
 
 
 
@@ -80,7 +195,7 @@ $scope.stockAvailableForPeriodList = [];
 
         });
         var chartId = 'stock-available-for-program';
-        var title = 'Stock Availability per program for June, 2019';
+        var title = 'Stock Availability per program';
         var chartType = 'column';
 
         drillDownChart(chartId,chartType,title,$scope.stockAvailableForPeriodList);
@@ -229,7 +344,22 @@ Highcharts.chart(id, {
             colorByPoint: true,
             data: data
         }
-    ]
+    ],
+          exporting: {
+                     buttons: {
+                         customButton: {
+                             text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
+
+                             symbolStroke: "red",
+                                                 theme: {
+                                         fill:"#28A2F3"
+                                     },
+                             onclick: function () {
+                                 alert('You pressed the button!');
+                             }
+                         }
+                     }
+                 }
 
 });
 
@@ -295,6 +425,22 @@ Highcharts.chart('stock-available-for-program-drill-down', {
         color:color,
         data: data
     }]
+    ,
+                  exporting: {
+                             buttons: {
+                                 customButton: {
+                                     text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
+
+                                     symbolStroke: "red",
+                                                         theme: {
+                                                 fill:"#28A2F3"
+                                             },
+                                     onclick: function () {
+                                         alert('You pressed the button!');
+                                     }
+                                 }
+                             }
+                         }
 });
 
 
@@ -363,13 +509,77 @@ Highcharts.chart('stock-available-for-program-drill-down', {
              }
          }
      },
-     series:data
+     series:data,
+        exporting: {
+                 buttons: {
+                     customButton: {
+                         text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
+
+                         symbolStroke: "red",
+                                             theme: {
+                                     fill:"#28A2F3"
+                                 },
+                         onclick: function () {
+                             alert('You pressed the button!');
+                         }
+                     }
+                 }
+             }
  });
 
 
 
 
  };
+
+
+ $scope.consumptionTrendsChart = function (chartTypeId,data,category,tle_consumption,tld_consumption,dolutegravir_consumption,group){
+
+ Highcharts.chart(chartTypeId, {
+     chart: {
+         type: 'line'
+     }, credits: {
+           enabled:false
+           },
+     title: {
+         text: group
+     },
+     subtitle: {
+         text: ''
+     },
+     xAxis: {
+         categories: category
+     },
+     yAxis: {
+         title: {
+             text: 'Average Monthly Consumption'
+         }
+     },
+     plotOptions: {
+         line: {
+             dataLabels: {
+                 enabled: true
+             },
+             enableMouseTracking: false
+         }
+     },
+     series: [{
+                     name: 'TLE',
+                     data: tle_consumption
+                 }, {
+                     name: 'TLD',
+                     data: tld_consumption
+                 }, {
+                     name: 'Dolutegravir',
+                     data: dolutegravir_consumption
+                 }]
+ });
+
+
+ }
+
+
+
 
 
 }

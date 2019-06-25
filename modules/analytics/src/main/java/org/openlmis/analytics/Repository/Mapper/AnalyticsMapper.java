@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.openlmis.analytics.Builder.DashboardQueryBuilder;
 import org.openlmis.analytics.Builder.DashboardStockAvailableForProgramQueryBuilder;
+import org.openlmis.analytics.Builder.DashboardTLEConsumptionTrend;
 import org.openlmis.analytics.Builder.StockStatusQueryBuilder;
 import org.openlmis.analytics.domain.Dashboard;
 import org.springframework.security.access.method.P;
@@ -40,6 +41,12 @@ public interface AnalyticsMapper {
     List<HashMap<String,Object>> getStockForProductandProgram(@Param("userId") Long userId,
                                                             @Param("program") Long program,
                                                               @Param("period") Long period);
+
+
+ @SelectProvider(type= DashboardTLEConsumptionTrend.class, method="getQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<HashMap<String,Object>> getConsumptioTrends(@Param("userId") Long userId,
+                                                              @Param("year") Long period);
 
 
 

@@ -29,4 +29,8 @@ public class DashboardRepository {
     public List<HashMap<String,Object>> getStockForProductandProgram(Long userId,Long program, Long period){
         return mapper.getStockForProductandProgram(userId,program,period);
     }
+
+    public List<HashMap<String,Object>> getConsumptioTrends(Long userId, Long year){
+        return mapper.getConsumptioTrends(userId,year);
+    }
 }

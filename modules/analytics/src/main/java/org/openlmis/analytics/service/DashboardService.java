@@ -32,5 +32,9 @@ public class DashboardService{
         return repository.getStockForProductandProgram(userId,program,period);
     }
 
+    public List<HashMap<String,Object>> getConsumptioTrends(Long userId, Long year){
+        return repository.getConsumptioTrends(userId,year);
+    }
+
 }
 

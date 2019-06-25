@@ -449,14 +449,11 @@ background:#fff;
                             </div>
 
                             <div class="row" ng-show="true">
-                                <div class="col s12 m8 l8">
+                                <div class="col s12 m6 l6">
                                     <div class="card">
                                         <div class="card-content">
-                                            <div style="margin: 0 auto;height: 360px !important;"></div>
 
-<!--
-                                            <div style="margin: 0 auto;height: 360px !important;" ng-include="'/public/pages/reports/maps/index.html#/reporting-rate'"></div>
--->
+                                            <div style="margin: 0 auto;height: 360px !important;" id="consumptionTrendsChartA"></div>
 
                                         </div>
 
@@ -464,17 +461,11 @@ background:#fff;
 
                                 </div>
 
-                                <div class="col s12 m4 l4" >
+                                <div class="col s12 m6 l6" >
                                     <div class="card">
                                         <div class="card-content">
-                                            <div style="height: 360px !important;">
 
-                                                <div ng-show="drillDownData.length" style="height: 350px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
-
-
-                                            </div>
-
-
+                                                <div style="margin: 0 auto;height: 360px !important;" id="consumptionTrendsChartB"></div>
 
                                         </div>
 
@@ -485,6 +476,42 @@ background:#fff;
 
 
                             </div>
+
+                            <div class="row" ng-show="true">
+                                <div class="col s12 m4 l4">
+                                    <div class="card">
+                                        <div class="card-content">
+
+
+<!--
+                                            <div  style="height: 500px; min-width: 310px; max-width: 600px; margin: 0 auto" id="reportingRateMap"></div>
+-->
+<!--
+                                            <div style="height: 500px; min-width: 310px; max-width: 600px; margin: 0 auto" ng-include="'/public/pages/reports/maps/index.html#/reporting-rate?schedule=&period=&year=2019&program='"></div>
+-->
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col s12 m8 l8" >
+                                    <div class="card">
+                                        <div class="card-content">
+
+                                            <div style="margin: 0 auto;height: 360px !important;" id=""></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
 
 
 

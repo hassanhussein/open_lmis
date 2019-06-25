@@ -59,5 +59,14 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("stocks", service.getStockForProductandProgram(loggedInUserId(request),program,period));
     }
 
+    @RequestMapping(value = "/consumption-trend-year", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getConsumptioTrends(
+            @Param("year") Long year,
+            HttpServletRequest request
+    ) {
+
+        return OpenLmisResponse.response("stocks", service.getConsumptioTrends(loggedInUserId(request),year));
+    }
+
 
 }
