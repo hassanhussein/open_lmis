@@ -104,15 +104,15 @@
                     </div>
                 </div>
 
-                <table class="table table-bordered" ng-show="data == undefined || data.length == 0">
+                <table class="table table-bordered" ng-show="data == undefined || data.rows.length == 0">
                     <tr>
                         <td>No data to show under selected filters</td>
                     </tr>
                 </table>
-                <div ng-show="datarows.length > 0" client-side-sort-pagination='searchReport'>
+                <div ng-show="datarows.length > 0" client-side-sort-pagination='searchReport' class="responsive-report-content">
                     <div ng-if="datarows.length > 0" top-right-table-summary></div>
 
-                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                    <table ng-show="datarows.length > 0" class="table-bordered table table-striped responsive-report-content"
                            ng-table="tableParams">
 
                         <tbody>
@@ -125,28 +125,26 @@
                                 }}
                             </td>-->
                             <td ng-show="showDisaggregatedColumns" data-title="getLocalMessage('label.facility')"
-                                style="width:50px" sortable="facility">
+                                style="width:40%" sortable="facility">
                                 {{ row.facility}}
                             </td>
                             <td ng-show="showDisaggregatedColumns" data-title="getLocalMessage('label.facility.type')"
-                                style="width:100px" sortable="facilityType">{{ row.facilityType}}
+                                sortable="facilityType">{{ row.facilityType}}
                             </td>
-                            <td data-title="getLocalMessage('label.product.code')" style="width:100px" sortable="code">
+                            <td data-title="getLocalMessage('label.product.code')"  sortable="code">
                                 {{row.code}}
                             </td>
                             <td data-title="getLocalMessage('label.product.name')" style="width:40%" sortable="product">
                                 {{ row.product}}
                             </td>
                             <td data-title="getLocalMessage('label.reported.consumption')" class="number"
-                                style="width:80px"  sortable="dispensed">{{ row.dispensed | number }}
+                                  sortable="dispensed">{{ row.dispensed | number }}
                             </td>
                             <td data-title="getLocalMessage('label.reported.consumption.per.packs')" class="number"
-                                style="width:40px !important;"
                                 sortable="consumptionInPacks">{{ row.consumptionInPacks | number }}
                             </td>
                              
                             <td data-title="getLocalMessage('label.adjusted.consumption')" class="number"
-                                style="width:50px"
                                 sortable="consumption">{{ row.consumption | number }}
                             </td>
                              
