@@ -60,10 +60,12 @@ public class IvdFormRepository {
     lineItemService.saveCoverageLineItems(dbVersion, report.getCoverageLineItems(), report.getId(),userId);
     lineItemService.saveColdChainLIneItems(dbVersion, report.getColdChainLineItems(), report.getId(), userId);
     lineItemService.saveVitaminLineItems(dbVersion, report.getVitaminSupplementationLineItems(), report.getId(), userId);
-    if(report.getSource() !=null)
-    lineItemService.saveAdverseEffectLineItemsForInterfaceAPI(dbVersion, report.getAdverseEffectLineItems(), report.getId(), userId);
-    else
-    lineItemService.saveAdverseEffectLineItems(dbVersion, report.getAdverseEffectLineItems(), report.getId(), userId);
+    if(report.getSource() !=null) {
+      lineItemService.saveAdverseEffectLineItemsForInterfaceAPI(dbVersion, report.getAdverseEffectLineItems(), report.getId(), userId);
+    }
+    else {
+      lineItemService.saveAdverseEffectLineItems(dbVersion, report.getAdverseEffectLineItems(), report.getId(), userId);
+    }
     lineItemService.saveCampaignLineItems(dbVersion, report.getCampaignLineItems(), report.getId(), userId);
 /*
     Addional Line Items
@@ -76,6 +78,7 @@ public class IvdFormRepository {
     lineItemService.saveWeightAgeRatioLineItems(dbVersion,report.getWeightAgeRatioLineItems(),report.getId(),userId);
     lineItemService.saveCoverageAgeGroupLineItems(dbVersion, report.getCoverageAgeGroupLineItems(), report.getId(),userId);
     lineItemService.saveHEIDLineItems(dbVersion,report.getHeidLineItems(), report.getId(),userId);
+    lineItemService.saveCTCLineItems(dbVersion,report.getCtcLineItems(), report.getId(),userId);
   }
 
   public void update(VaccineReport fromDb, VaccineReport report, Long userId) {

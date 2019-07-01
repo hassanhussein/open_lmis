@@ -272,6 +272,7 @@ public class IvdFormService {
 
         report.initializeCoverageAgeGroupLineItems(dosesToCover,productDoseAgeGroupList,defaultFieldsToZero);
         report.initializeHEIDLineItems(defaultFieldsToZero);
+        report.initializeCTCLineItems(defaultFieldsToZero);
         return report;
     }
 

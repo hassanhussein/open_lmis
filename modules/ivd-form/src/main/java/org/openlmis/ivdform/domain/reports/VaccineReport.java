@@ -91,6 +91,7 @@ public class VaccineReport extends BaseModel {
     private List<BreastFeedingLineItem> breastFeedingLineItems;
     private List<WeightAgeRatioLineItem> weightAgeRatioLineItems;
     private List<HEIDLineItem> heidLineItems;
+    private List<CTCLineItem> ctcLineItems;
 
 
     public void initializeLogisticsLineItems(List<ProgramProduct> programProducts, VaccineReport previousReport, Boolean defaultFieldsToZero) {
@@ -407,5 +408,15 @@ public class VaccineReport extends BaseModel {
                 lineItem.setFemaleValue(0L);
         }
         this.heidLineItems.add(lineItem);
+    }
+
+    public void initializeCTCLineItems(Boolean defaultFieldsToZero) {
+        this.ctcLineItems = new ArrayList<>();
+        CTCLineItem lineItem = new CTCLineItem();
+        if (defaultFieldsToZero) {
+                lineItem.setMaleValue(0L);
+                lineItem.setFemaleValue(0L);
+        }
+        this.ctcLineItems.add(lineItem);
     }
 }
