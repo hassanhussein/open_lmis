@@ -348,6 +348,17 @@ services.factory('EquipmentFunctionalTestTypes', function ($resource) {
     return $resource('/EquipmentFunctionalTestTypes/EquipmentFunctionalTestTypes/:id', {id: '@_id'}, {update: {method: 'PUT' }});
 });
 
+services.factory('ToggleVerifiedEquipmentInventory', function ($resource) {
+  return $resource('/equipment/inventory/toggleVerified/:id', {id: '@id'}, {put: {method: 'PUT'}});
+});
+
+services.factory('MoveEquipmentInventory', function ($resource) {
+  return $resource('/equipment/inventory/move/:id/:facilityId', {
+    id: '@id',
+    facilityId: '@facilityId'
+  }, {put: {method: 'PUT'}});
+});
+
 services.factory('EquipmentTestItems', function ($resource) {
     return $resource('/equipmentTestItems/:id', {id: '@_id'}, {update: {method: 'PUT' }});
 });
