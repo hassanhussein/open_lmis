@@ -2976,3 +2976,164 @@ app.directive('staticYearMonthlyFilter', ['OperationYears', 'SettingsByKey', fun
         templateUrl: 'filter-static-year-monthly'
     };
 }]);
+
+app.directive('programWithoutSelectFilter', ['ReportUserPrograms', 'ReportProgramsWithBudgeting', 'ReportRegimenPrograms', '$routeParams',
+    function (ReportUserPrograms, ReportProgramsWithBudgeting, ReportRegimenPrograms, $routeParams) {
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+                scope.registerRequired('program', attr);
+                scope.program_filter_visible = attr.visible !== undefined ? attr.visible : true;
+                function bindPrograms(list) {
+                    if (list.length === 1 && !$routeParams.program) {
+                        scope.filter.program = list[0].id;
+                    }
+                    if (!attr.required && !$routeParams.program) {
+                        scope.programs = scope.unshift(list, 'report.filter.all.programs');
+                    } else {
+                        scope.programs = scope.unshift(list, 'report.filter.select.program');
+                    }
+
+                }
+
+                var Service = (attr.regimen) ? ReportRegimenPrograms : (attr.budget) ? ReportProgramsWithBudgeting : ReportUserPrograms;
+                Service.get(function (data) {
+                    bindPrograms(data.programs);
+                });
+            },
+            templateUrl: 'filter-program-template-without-select'
+        };
+    }
+]);
+
+
+
+app.directive('scheduleWithoutSelectFilter', ['ReportSchedules', 'ReportProgramSchedules', '$routeParams',
+    function (ReportSchedules, ReportProgramSchedules, $routeParams) {
+
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+                scope.registerRequired('schedule', attr);
+
+                scope.schedule_filter_visible = (attr.visible !== undefined) ? attr.visible : true;
+
+                if (attr.default !== undefined) {
+                    scope.filter.schedule = attr.default;
+                }
+                var loadSchedules = function () {
+                    ReportProgramSchedules.get({
+                        program: scope.filter.program
+                    }, function (data) {
+                        if (attr.default === undefined && data.schedules.length === 1) {
+                            scope.filter.schedule = data.schedules[0].id;
+                            scope.notifyFilterChanged('schedule-changed');
+                        }
+                        else {
+                            makeMonthlyScheduleDefault(data.schedules);
+                        }
+                        scope.schedules = scope.unshift(data.schedules, 'report.filter.select.group');
+                    });
+                };
+
+                function makeMonthlyScheduleDefault(list) {
+                    if (utils.isEmpty(scope.filter.schedule)) {
+                        monthlySchedule = _.find(list, function (program) {
+                            return program.code == 'Monthly';
+                        });
+                        if (!utils.isNullOrUndefined(monthlySchedule))
+                            scope.filter.schedule = monthlySchedule.id;
+                    }
+                }
+
+                if (!$routeParams.schedule) {
+                    scope.schedules = scope.unshift([], 'report.filter.select.schedule');
+                }
+                scope.subscribeOnChanged('schedule', 'program', loadSchedules, true);
+
+            },
+            templateUrl: 'filter-schedule-template-without-select'
+        };
+    }
+]);
+
+
+app.directive('yearWithoutSelectFilter', ['OperationYears',
+    function (OperationYears) {
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+                scope.registerRequired('year', attr);
+
+                if (attr.visible !== undefined && attr.visible === 'false') {
+                    scope.year_filter_visible = false;
+                } else {
+                    scope.year_filter_visible = true;
+                }
+
+                if (attr.default) {
+                    if (attr.default == 'current') {
+                        var d = new Date();
+                        scope.filter.year = d.getFullYear();
+                    } else {
+                        scope.filter.year = attr.default;
+                    }
+                }
+
+                OperationYears.get(function (data) {
+                    scope.years = data.years;
+                    if (scope.filter.year === undefined) {
+                        scope.filter.year = data.years[data.years.length - 1];
+                    }
+                });
+            },
+            templateUrl: 'filter-year-template-without-select'
+        };
+    }
+]);
+
+
+
+
+app.directive('periodWithoutSelectFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear', '$routeParams',
+    function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
+
+        var onCascadedVarsChanged = function ($scope) {
+            // don't call the server if you don't have all that it takes.
+            if (isUndefined($scope.filter) || isUndefined($scope.filter.year) || isUndefined($scope.filter.schedule))
+                return;
+
+            if ($scope.filter.year !== undefined && $scope.filter.schedule !== undefined) {
+                ReportPeriodsByScheduleAndYear.get({
+                    scheduleId: $scope.filter.schedule,
+                    year: $scope.filter.year
+                }, function (data) {
+                    $scope.periods = $scope.unshift(data.periods, 'report.filter.select.period');
+                });
+            }
+        };
+
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+                scope.registerRequired('period', attr);
+                if (!$routeParams.schedule) {
+                    scope.periods = scope.unshift([], 'report.filter.select.period');
+                }
+
+                function onParentChanged() {
+                    onCascadedVarsChanged(scope);
+                }
+
+                scope.subscribeOnChanged('period', 'program', onParentChanged, false);
+                scope.subscribeOnChanged('period', 'year', onParentChanged, false);
+                scope.subscribeOnChanged('period', 'schedule', onParentChanged, true);
+            },
+            templateUrl: 'filter-period-template-without-select'
+        };
+    }
+]);

@@ -1,95 +1,265 @@
-function AnalyticsFunction($scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
+function AnalyticsFunction(leafletData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
 
 
 
 $('ul.tabs').tabs().tabs('select_tab', 'tracer');
+$('.dropdown-trigger').dropdown();
+
+$('li.dropdown.mega-dropdown').on('click', function (event) {
+    $(this).parent().toggleClass('open');
+});
+
+$("dropdown-menu mega-dropdown-menu").click(function(e){
+   e.stopPropagation();
+})
+
+$scope.stopPropagation = function(event,open){
+
+    return event.stopPropagation();
+}
+
+$scope.minimizePropagation = function(event,open){
+
+return 'dropdown-toggle';
+
+/*
+ $("dropdown-toggle").click(function() {
+        $(this).dropdown("toggle");
+        return false;
+    });
+*/
 
 
-var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
-
-var data = [
-    ['ID', 1],
-    ['ID', 710],
-    ['ID', 963],
-    ['ID', 541],
-    ['DE.HH', 622],
-    ['DE.RP', 866],
-    ['DE.SL', 398],
-    ['DE.BY', 785],
-    ['DE.SN', 223],
-    ['DE.ST', 605],
-    ['DE.NW', 237],
-    ['DE.BW', 157],
-    ['DE.HE', 134],
-    ['DE.NI', 136],
-    ['DE.TH', 704],
-    ['DE.', 361]
-];
+}
 
 
+ $scope.toggled = function (open) {
 
-/*$.getJSON('/public/js/reports/shared/map.json', function (geojson) {
-console.log(geojson);
-
-
- Highcharts.mapChart('reportingRateMap', {
-        chart: {
-            map: geojson
-        },
-        credits:{ enabled:false},
-
-        title: {
-            text: 'Reporting Rate'
-        },
-
-        mapNavigation: {
-            enabled: true,
-            buttonOptions: {
-                verticalAlign: 'bottom'
+        $scope.open = true;
+        var child = $scope.$$childHead;
+        while (child) {
+            if (child.focusToggleElement) {
+                child.isOpen = true;
+                break;
             }
-        },
-
-        colorAxis: {
-            tickPixelInterval: 100
-        },
-          legend: {
-                     layout: 'horizontal',
-                     borderWidth: 0,
-                     backgroundColor: 'rgba(255,255,255,0.85)',
-                     floating: true,
-                     verticalAlign: 'top',
-                     y: 25
-                 },
-
-        series: [{
-            data: data,
-            keys: ['ID', 'ID'],
-            joinBy: 'ID',
-            name: 'Random data',
-            states: {
-                hover: {
-                    color: '#a4edba'
-                }
-            },
-            cursor: 'pointer',
-            allowPointSelect: true,
-            dataLabels: {
-                enabled: true,
-                format: '{point.properties.ADM2}'
-            }
-        }]
+            child = child.$$nextSibling;
+        }
+    };
+   $("li.show > a").click(function(){
+        $("li.hide").fadeToggle();
     });
 
+var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(90,10)};
+
+
+   $scope.geojson = {};
+
+    $scope.default_indicator = "period_over_expected";
+
+    $scope.expectedFilter = function (item) {
+        return item.expected > 0;
+    };
+
+    $scope.style = function (feature) {
+        if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
+            $scope.indicator_type = $scope.filter.indicator_type;
+        }
+        else {
+            $scope.indicator_type = $scope.default_indicator;
+        }
+        var color = ($scope.indicator_type === 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type === 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+
+        return {
+            fillColor: color,
+            weight: 1,
+            opacity: 1,
+            color: 'white',
+            dashArray: '1',
+            fillOpacity: 0.7
+        };
+    };
+
+
+        $scope.drawMap = function(json) {
+            angular.extend($scope, {
+                geojson: {
+                    data: json,
+                    style: $scope.style,
+                    onEachFeature: onEachFeature,
+                    resetStyleOnMouseout: true
+                }
+            });
+
+            $scope.$apply();
+        };
+
+    function getExportDataFunction(features) {
+
+        var arr = [];
+        angular.forEach(features, function (value, key) {
+            if (value.expected > 0) {
+                var percentage = {'percentage': ((value.period / value.expected) * 100).toFixed(0) + ' %'};
+                arr.push(angular.extend(value, percentage));
+            }
+        });
+        $scope.exportData = arr;
+    }
+function interpolate(value, count) {
+    var val = parseFloat(value) / parseFloat(count);
+    var interpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
+    return interpolator(val).hex();
+}
+
+function initiateMap(scope) {
+    angular.extend(scope, {
+        layers: {
+            baselayers: {
+                googleTerrain: {
+                    name: 'Terrain',
+                    layerType: 'TERRAIN',
+                    type: 'google'
+                },
+                googleHybrid: {
+                    name: 'Hybrid',
+                    layerType: 'HYBRID',
+                    type: 'google'
+                },
+                googleRoadmap: {
+                    name: 'Streets',
+                    layerType: 'ROADMAP',
+                    type: 'google'
+                }
+            }
+        },
+        legend: {
+            position: 'bottomleft',
+            colors: ['#FF0000', '#FFFF00', '#5eb95e', "#000000"],
+            labels: ['Non Reporting', 'Partial Reporting ', 'Fully Reporting', 'Not expected to Report']
+        }
+    });
+
+    scope.indicator_types = [
+        {
+            code: 'ever_over_total',
+            name: 'Ever Reported / Total Facilities'
+        },
+        {
+            code: 'ever_over_expected',
+            name: 'Ever Reported / Expected Facilities'
+        },
+        {
+            code: 'period_over_expected',
+            name: 'Reported during period / Expected Facilities'
+        }
+    ];
+
+
+    scope.viewOptins = [
+        {id: '0', name: 'Non Reporting Only'},
+        {id: '1', name: 'Reporting Only'},
+        {id: '2', name: 'All'}
+    ];
+
+}
+
+function popupFormat(feature) {
+    return '<table class="table table-bordered" style="width: 250px"><tr><th colspan="2"><b>' + feature.properties.name + '</b></th></tr>' +
+        '<tr><td>Expected Facilities</td><td class="number">' + feature.expected + '</td></tr>' +
+        '<tr><td>Reported This Period</td><td class="number">' + feature.period + '</td></tr>' +
+        '<tr><td>Ever Reported</td><td class="number">' + feature.ever + '</td></tr>' +
+        '<tr><td class="bold">Total Facilities</b></td><td class="number bold">' + feature.total + '</td></tr>';
+}
+
+function onEachFeature(feature, layer) {
+    layer.bindPopup(popupFormat(feature));
+}
+
+
+$scope.zoomMap = function(){
+
+ $scope.centerL = {
+            lat: -6.397912857937015,
+            lng: 34.911609148190784,
+            zoom: 6
+          }
+
+}
+
+$scope.zoomMap();
 
 
 
-
-});*/
-
-
+    $scope.centerJSON = function () {
+        leafletData.getMap().then(function (map) {
 
 
+            var latlngs = [];
+            for (var c = 0; c < $scope.features.length; c++) {
+                if ($scope.features[c].geometry === null || angular.isUndefined($scope.features[c].geometry))
+                    continue;
+                if ($scope.features[c].geometry.coordinates === null || angular.isUndefined($scope.features[c].geometry.coordinates))
+                    continue;
+                for (var i = 0; i < $scope.features[c].geometry.coordinates.length; i++) {
+                    var coord = $scope.features[c].geometry.coordinates[i];
+                    for (var j in coord) {
+                        var points = coord[j];
+                        var latlng = L.GeoJSON.coordsToLatLng(points);
+
+                        //this is a hack to make the tz shape files to work
+                        //sadly the shapefiles for tz and zm have some areas that are in europe,
+                        //which indicates that the quality of the shapes is not good,
+                        //however the zoom neeeds to show the correct country boundaries.
+                        if (latlng.lat < 0 && latlng.lng > 0) {
+                            latlngs.push(latlng);
+                        }
+                    }
+                }
+            }
+          map.fitBounds(latlngs);
+
+        });
+
+
+
+    };
+
+
+$scope.filter = params;
+
+
+  $scope.OnFilterChanged = function() {
+
+     $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
+               $scope.features = data.map;
+               getExportDataFunction($scope.features);
+               angular.forEach($scope.features, function (feature) {
+                   feature.geometry_text = feature.geometry;
+                   feature.geometry = JSON.parse(feature.geometry);
+                   feature.type = "Feature";
+                   feature.properties = {};
+                   feature.properties.name = feature.name;
+                   feature.properties.id = feature.id;
+               });
+
+               $scope.drawMap({
+                   "type": "FeatureCollection",
+                   "features": $scope.features
+               });
+
+               $scope.centerJSON();
+
+              // zoomAndCenterMap1(leafletData, $scope);
+           });
+}
+
+initiateMap($scope);
+$scope.OnFilterChanged();
+
+ $scope.onDetailClicked = function (feature) {
+        $scope.currentFeature = feature;
+        $scope.$broadcast('openDialogBox');
+    };
 
 $scope.consumptionTrends = [];
 ConsumptionTrendsData.get(params).then(function(data){
@@ -128,9 +298,8 @@ var groupB = _.where(data, {'schedule':46});
 var stockSummary = [];
 DashboardStockStatusSummaryData.get(params).then(function(data) {
 $scope.stockStatuses   = [];
- console.log(data);
  if(!isUndefined(data)){
- console.log(data);
+
  stockSummary = data;
   var category = _.uniq(_.pluck(stockSummary,'periodname'));
 
@@ -182,7 +351,6 @@ StockAvailableForPeriodData.get(params).then(function(data) {
 $scope.stockAvailableForPeriodList = [];
 
     if(data.length > 0) {
-    console.log(data);
 
 
         _.each(data, function(value){
@@ -197,7 +365,6 @@ $scope.stockAvailableForPeriodList = [];
         var chartType = 'column';
 
         drillDownChart(chartId,chartType,title,$scope.stockAvailableForPeriodList);
-        console.log($scope.stockAvailableForPeriodList);
         }
 
 
@@ -208,14 +375,12 @@ $scope.stockAvailableForPeriodList = [];
 
      params.program = program;
     var allParams = angular.extend(params, {program:program});
-      console.log(program);
     StockAvailableByProgramAndPeriodData.get(params).then(function(data){
 
      $scope.titleStockForProgramAvailable = 'List of Available Tracer Items for '+name +' in June 2018';
      $scope.stockColor= chartData.color;
 
      $scope.drillDownData = data;
-      console.log(data);
 
      _.each(data, function(drilledData){
      // drillDownSeries.push({name:name,id:program,data:drilledData})
@@ -310,11 +475,10 @@ Highcharts.chart(id, {
 
               click : function (){
                  var drilldown = this.drilldown;
-                   console.log(drilldown);
 
                   getAvailableDrillDownData(drilldown,this.name, this);
 
-                 console.log(this.name);
+
 
               }
 

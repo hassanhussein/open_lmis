@@ -34,7 +34,9 @@
     <!--
         <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>
     -->
+<!--
     <script src="/public/lib/leaflet/leaflet.js"></script>
+-->
     <!--  <script src="/public/lib/jquery/jquery-2.0.0.min.js"></script>
       <script src="/public/lib/jquery/jquery-ui-1.9.2.custom.min.js"></script>-->
 <!--
@@ -103,6 +105,7 @@
 
     <script src="/public/js/shared/services/services.js"></script>
     <script src="/public/js/shared/services/extension-services.js"></script>
+    <script src="/public/js/shared/services/map-helpers.js"></script>
     <script src="/public/js/shared/services/message-service.js"></script>
     <script src="/public/js/shared/services/authorization-service.js"></script>
     <script src="/public/js/shared/controller/header-controller.js"></script>
@@ -111,6 +114,17 @@
     <script src="/public/js/shared/controller/navigation-controller.js"></script>
     <script src="/public/js/shared/controller/notification-controller.js"></script>
     <script src="/public/js/shared/app.js"></script>
+
+    <script src="/public/lib/leaflet/leaflet.js"></script>
+    <script src="/public/lib/leaflet/angular-leaflet-directive.min.js"></script>
+    <script src="/public/lib/leaflet/chroma.min.js"></script>
+    <script src="/public/lib/leaflet/draganddrop.js"></script>
+    <link rel="stylesheet" href="/public/lib/leaflet/leaflet.css">
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD07vJu2ZJU2dvcXRD8Vjml4LTFT4JQLtM&callback=initMap"
+            type="text/javascript"></script>
+
+
     <script type="text/javascript" src="/public/lib/highcharts2/highcharts.js"></script>
     <script src="/public/lib/highcharts2/modules/exporting.js"></script>
     <script src="/public/lib/highcharts2/modules/map.js"></script>
@@ -140,7 +154,9 @@
     <script type="text/javascript" src="/public/js/shared/services/authorization-service.js"></script>
 
 
+<!--
     <script src="/public/js/shared/services/map-helpers.js"></script>
+-->
     <script src="/public/js/analytics/services/service.js"></script>
 
 
@@ -172,6 +188,9 @@
     <script src="/public/lib/bootstrap-tree-view/js/bootstrap.3.3.7.min.js"></script>
     <script src="/public/lib/angular-material/angular-material.min2.js"></script>
 
+    <script src="/public/lib/angular/angular-animate.js"></script>
+    <script src="/public/lib/angular/animate.css"></script>
+
 
 
 
@@ -189,6 +208,7 @@
     <link rel="stylesheet" type="text/css" href="/public/lib/angularjs-slider/rzslider.css"/>
     <script src="/public/lib/angularjs-slider/rzslider.min.js"></script>
     <script src="/public/js/rnr/directives/full-screen.js"></script>
+    <link rel="stylesheet" href="/public/css/map.css">
     <link rel="stylesheet" href="/public/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="/public/lib/tree-dropdown/tree-dropdown.css">
     <link rel="stylesheet" href="/public/css/app.css">
@@ -219,25 +239,29 @@
     <!-- page specific libaries/files -->
     <script src="/public/js/analytics/module/analytics-module.js"></script>
     <script src="/public/js/analytics/controller/analytics-controller.js"></script>
+    <script src="/public/js/analytics/controller/analytics-map-controller.js"></script>
 
-    <script src="/public/js/reports/shared/directives/filters.js"></script>
+<!--
     <script src="/public/js/reports/maps/module/map-module.js"></script>
-    <script src="/public/js/shared/services/map-helpers.js"></script>
+-->
+<!--
     <script src="/public/js/reports/maps/controller/reporting-rate-controller.js"></script>
+-->
     <script src="/public/js/reports/maps/controller/report-message-controller.js"></script>
+
 
 
     <!--Map directives -->
     <!--
         <script src="https://maps.google.com/maps/api/js?key=AIzaSyBzQCLouEbpyH4UwztMTr35ca_pVOLNar8&v=3&sensor=false"></script>
     -->
-    <script src="/public/lib/leaflet/angular-leaflet-directive.min.js"></script>
-    <script src="/public/lib/leaflet/chroma.min.js"></script>
-    <script src="/public/lib/leaflet/Google.js"></script>
 
 
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/ng-grid.css">
     <link href="/public/lib/material/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+<!--
+    <link href="/public/lib/material/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+-->
 
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
     <link rel="stylesheet" href="/public/css/rnr-mmia-view.css"/>
@@ -271,6 +295,8 @@
 <body onunload="">
 <ng-include src="'/public/pages/header.html'"></ng-include>
 <ng-include src="'/public/pages/navigation.html'"></ng-include>
+<ng-include src="'/public/pages/reports/shared/filters.html'"></ng-include>
+
 
 <div class="content" style="background-color: #eef1f3;">
     <div ncy-breadcrumb=""></div>

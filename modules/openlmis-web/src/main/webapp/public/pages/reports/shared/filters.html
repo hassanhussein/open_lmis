@@ -858,3 +858,51 @@
 
     </div>
 </script>
+
+<!--
+Updated Filters
+-->
+
+<script type="text/ng-template" id="filter-program-template-without-select">
+    <div ng-show="program_filter_visible">
+        <label for="program" class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label>
+        <div>
+            <select id="program" class="input-large" ng-model="filter.program" ng-change="notifyFilterChanged('program-changed');">
+                <option ng-repeat="program in programs" value="{{ program.id }}" ng-selected="program.id == filter.program">{{program.name}}</option>
+            </select>
+        </div>
+    </div>
+</script>
+
+
+<script type="text/ng-template" id="filter-schedule-template-without-select">
+    <div ng-show="schedule_filter_visible">
+        <label for="schedule" class="labels" openlmis-message="label.schedule"><span ng-show="requiredFilters.schedule" class="label-required">*</span></label>
+        <div>
+            <select id="schedule"  class="input-medium" ng-change="notifyFilterChanged('schedule-changed');" ng-model="filter.schedule">
+                <option ng-repeat="schedule in schedules" value="{{ schedule.id }}" ng-selected="filter.schedule == schedule.id" openlmis-message="schedule.name"></option>
+            </select>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter-year-template-without-select">
+    <div ng-show="year_filter_visible">
+        <label for="year" class="labels" openlmis-message="label.year"><span ng-show="requiredFilters.year" class="label-required">*</span></label>
+        <div>
+            <select id="year" class="input-medium" ng-model="filter.year" ng-change="notifyFilterChanged('year-changed');">
+                <option ng-repeat="year in years" ng-selected="filter.year == year" value="{{ year }}">{{year}}</option>
+            </select>
+        </div>
+    </div>
+</script>
+
+<script type="text/ng-template" id="filter-period-template-without-select">
+    <div>
+        <label for="period" class="labels" openlmis-message="label.period"><span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
+        <select id="period" class="input-medium" ng-model="filter.period" ng-change="notifyFilterChanged('period-changed');">
+            <option ng-repeat="period in periods" value="{{ period.id }}" ng-selected="period.id == filter.period">{{period.name}}</option>
+        </select>
+    </div>
+    </div>
+</script>
