@@ -180,12 +180,24 @@ public class IvdFormService {
 
     @Transactional
     public void submit(VaccineReport report, Long userId) {
+        validateSubmissionDatetAfterReportingPeriod(report);
         report.setStatus(ReportStatus.SUBMITTED);
         VaccineReport reportFromDb = getVaccineReportFromDbForUpdate(report);
         repository.update(reportFromDb, report, userId);
         repository.changeStatus(reportFromDb, ReportStatus.SUBMITTED, userId);
         updateEquipmentStatus(report, userId);
         notificationService.sendIVDStatusChangeNotification(reportFromDb, userId);
+    }
+
+    private void validateSubmissionDatetAfterReportingPeriod(VaccineReport report) {
+
+        final Date todayDate = new Date();
+        if (report != null){
+
+            if (todayDate.before(report.getPeriod().getEndDate())){
+                throw  new DataException("error.report.submission.date.before.end.of.reporting.period");
+            }
+        }
     }
 
     private void updateEquipmentStatus(VaccineReport report, Long userId) {

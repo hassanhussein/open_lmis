@@ -72,6 +72,8 @@ function CreateIvdFormController($scope, $location, operationalStatuses, $dialog
         VaccineReportSubmit.update($scope.report, function () {
           $scope.message = "msg.ivd.submitted.successfully";
           $location.path('/');
+        }, function(data){
+        $scope.error = data.data.error;
         });
       }
     };
