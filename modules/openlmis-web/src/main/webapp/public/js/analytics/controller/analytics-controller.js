@@ -12,12 +12,12 @@ $('li.dropdown.mega-dropdown').on('click', function (event) {
 
 $("dropdown-menu mega-dropdown-menu").click(function(e){
    e.stopPropagation();
-})
+});
 
 $scope.stopPropagation = function(event,open){
 
     return event.stopPropagation();
-}
+};
 
 $scope.minimizePropagation = function(event,open){
 
@@ -31,7 +31,7 @@ return 'dropdown-toggle';
 */
 
 
-}
+};
 
 
  $scope.toggled = function (open) {
@@ -50,7 +50,7 @@ return 'dropdown-toggle';
         $("li.hide").fadeToggle();
     });
 
-var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(90,10)};
+var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
 
 
    $scope.geojson = {};
@@ -182,9 +182,9 @@ $scope.zoomMap = function(){
             lat: -6.397912857937015,
             lng: 34.911609148190784,
             zoom: 6
-          }
+          };
 
-}
+};
 
 $scope.zoomMap();
 
@@ -251,7 +251,7 @@ $scope.filter = params;
 
               // zoomAndCenterMap1(leafletData, $scope);
            });
-}
+};
 
 initiateMap($scope);
 $scope.OnFilterChanged();
@@ -508,7 +508,7 @@ Highcharts.chart(id, {
         }
     ],
           exporting: {
-                     buttons: {
+                   /*  buttons: {
                          customButton: {
                              text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
 
@@ -520,7 +520,7 @@ Highcharts.chart(id, {
                                  alert('You pressed the button!');
                              }
                          }
-                     }
+                     }*/
                  }
 
 });
@@ -586,23 +586,23 @@ Highcharts.chart('stock-available-for-program-drill-down', {
         name: 'MOS',
         color:color,
         data: data
-    }]
-    ,
-                  exporting: {
-                             buttons: {
-                                 customButton: {
-                                     text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
+    }],
 
-                                     symbolStroke: "red",
-                                                         theme: {
-                                                 fill:"#28A2F3"
-                                             },
-                                     onclick: function () {
-                                         alert('You pressed the button!');
-                                     }
-                                 }
-                             }
-                         }
+    exporting: {
+    buttons: {
+     customButton: {
+     text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
+     symbolStroke: "red",
+     theme: {
+     fill:"#28A2F3"
+     },
+     onclick: function () {
+     alert('You pressed the button!');
+     }
+     }
+     }
+     }
+
 });
 
 
@@ -738,7 +738,7 @@ Highcharts.chart('stock-available-for-program-drill-down', {
  });
 
 
- }
+ };
 
 
 

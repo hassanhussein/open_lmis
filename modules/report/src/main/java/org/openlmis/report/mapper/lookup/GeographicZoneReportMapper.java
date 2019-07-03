@@ -220,7 +220,7 @@ public interface GeographicZoneReportMapper {
             "WHERE gz.parentId = #{parentId} order by gz.name\n")
     List<GeoZoneTree> getUserGeographicZoneChildren(@Param("programId") Long programId, @Param("parentId") int parentId, @Param("userId") Long userId);
 
-    @Select(" WITH filterd_geozones as (\n" +
+ /*   @Select(" WITH filterd_geozones as (\n" +
             "select * from vw_districts where (district_id = #{zone} or region_id =#{zone} or zone_id = #{zone}  or parent = #{zone} or #{zone}=0)\n" +
             ")\n" +
             "  SELECT  " +
@@ -494,7 +494,166 @@ public interface GeographicZoneReportMapper {
             "   		gz_id  " +
             "   ) adequatelystockedprev ON gzz. ID = adequatelystockedprev.geographicZoneId  " +
             "   ORDER BY  " +
-            "   	gzz. NAME  ")
+            "   	gzz. NAME  ")*/
+
+
+    @Select(" SELECT   \n" +
+            "               \tgzz. ID,   \n" +
+            "               \tgzz. NAME,   \n" +
+            "                   fn_get_parent_geographiczone(gzz.ID,1) georegion,  \n" +
+            "                   fn_get_parent_geographiczone(gzz.ID,2) geozone,  \n" +
+            "               \tgjson.geometry,   \n" +
+            "               \tCOALESCE (stockedout. COUNT, 0) stockedout,  COALESCE (understocked. COUNT, 0) understocked , COALESCE (overstocked. COUNT, 0) overstocked,  COALESCE (adequatelystocked. COUNT, 0) period,   \n" +
+            "               \tCOALESCE (total. COUNT) total,   \n" +
+            "               \tCOALESCE (expected. COUNT, 0) AS expected,   \n" +
+            "               \tCOALESCE (ever. COUNT, 0) AS ever,   \n" +
+            "               \tCOALESCE (stockedout. COUNT, 0) AS stockedout,   \n" +
+            "               \tCOALESCE (understocked. COUNT, 0) AS understocked,   \n" +
+            "               \tCOALESCE (overstocked. COUNT, 0) AS overstocked,   \n" +
+            "               \tCOALESCE (adequatelystocked. COUNT, 0) AS adequatelystocked,   \n" +
+            "               \tCOALESCE (0, 0) AS stockedoutprev,   \n" +
+            "               \tCOALESCE (0, 0) AS understockedprev,   \n" +
+            "               \tCOALESCE (0, 0) AS overstockedprev,   \n" +
+            "               \tCOALESCE (0,\t0) AS adequatelystockedprev   \n" +
+            "               FROM   \n" +
+            "               \tgeographic_zones gzz   \n" +
+            "               LEFT JOIN vw_districts gz on (gz.district_id = gzz.id)  \n" +
+            "               LEFT JOIN geographic_zone_geojson gjson ON gzz. ID = gjson.zoneId   \n" +
+            "               LEFT JOIN (   \n" +
+            "               \tSELECT   \n" +
+            "               \t\tgeographicZoneId,   \n" +
+            "               \t\tCOUNT (*)   \n" +
+            "               \tFROM   \n" +
+            "               \t\tfacilities   \n" +
+            "               \tJOIN programs_supported ps ON ps.facilityId = facilities. ID   \n" +
+            "               \tJOIN geographic_zones gz ON gz. ID = facilities.geographicZoneId   \n" +
+            "               \tJOIN requisition_group_members rgm ON rgm.facilityId = facilities. ID   \n" +
+            "               \tJOIN requisition_group_program_schedules rgps ON rgps.requisitionGroupId = rgm.requisitionGroupId   \n" +
+            "               \tAND rgps.programId = ps.programId   \n" +
+            "               \tJOIN processing_periods pp ON pp.scheduleId = rgps.scheduleId   \n" +
+            "               \tAND pp. ID = #{processingPeriodId} \n" +
+            "               \tWHERE   \n" +
+            "               \t\tgz.levelId = (   \n" +
+            "               \t\t\tSELECT   \n" +
+            "               \t\t\t\tMAX (ID)   \n" +
+            "               \t\t\tFROM   \n" +
+            "               \t\t\t\tgeographic_levels   \n" +
+            "               \t\t)   \n" +
+            "               \tAND ps.programid =#{programId}\n" +
+            "               \tGROUP BY   \n" +
+            "               \t\tgeographicZoneId   \n" +
+            "               ) expected ON gzz. ID = expected.geographicZoneId   \n" +
+            "               LEFT JOIN (   \n" +
+            "               \tSELECT   \n" +
+            "               \t\tgeographicZoneId,   \n" +
+            "               \t\tCOUNT (*)   \n" +
+            "               \tFROM   \n" +
+            "               \t\tfacilities   \n" +
+            "               \tJOIN geographic_zones gz ON gz. ID = facilities.geographicZoneId   \n" +
+            "               \tWHERE   \n" +
+            "               \t\tgz.levelId = (   \n" +
+            "               \t\t\tSELECT   \n" +
+            "               \t\t\t\tMAX (ID)   \n" +
+            "               \t\t\tFROM   \n" +
+            "               \t\t\t\tgeographic_levels   \n" +
+            "               \t\t)   \n" +
+            "               \tGROUP BY   \n" +
+            "               \t\tgeographicZoneId   \n" +
+            "               ) total ON gzz. ID = total.geographicZoneId   \n" +
+            "               LEFT JOIN \n" +
+            "\n" +
+            "\n" +
+            "  (select geographicZoneId, count(*) from facilities \n" +
+            "     join programs_supported ps on ps.facilityId = facilities.id \n" +
+            "     join geographic_zones gz on gz.id = facilities.geographicZoneId \n" +
+            "     where  ps.programId = 1 and facilities.id in  \n" +
+            "   (select facilityId from requisitions where periodId =  #{processingPeriodId} \n" +
+            "               \tAND programid = #{programId}\n" +
+            "                 and status not in ('INITIATED', 'SUBMITTED', 'SKIPPED') and emergency = false ) \n" +
+            "    group by geographicZoneId\n" +
+            "     ) period ON gzz. ID = period.geographicZoneId   \n" +
+            "               LEFT JOIN (   \n" +
+            "               \tSELECT   \n" +
+            "               \t\tgz_id geographicZoneId,   \n" +
+            "               \t\tCOUNT (*)   \n" +
+            "               \tFROM   \n" +
+            "               \t\tmv_dashboard_stock_status_2   \n" +
+            "               \tWHERE   \n" +
+            "               \t\n" +
+            "               \tperiodId = #{processingPeriodId} \n" +
+            "               \tAND programid = #{programId}\n" +
+            "               \tAND productId =#{productId} \n" +
+            "                   AND req_status::text <> 'INITIATED'::text AND reported_figures > 0  \n" +
+            "               \tAND status = 'SO'   \n" +
+            "               \tGROUP BY   \n" +
+            "               \t\tgz_id   \n" +
+            "               ) stockedout ON gzz. ID = stockedout.geographicZoneId   \n" +
+            "               LEFT JOIN (   \n" +
+            "               \tSELECT   \n" +
+            "               \t\tgz_id geographicZoneId,   \n" +
+            "               \t\tCOUNT (*)   \n" +
+            "               \tFROM   \n" +
+            "               \t\tmv_dashboard_stock_status_2   \n" +
+            "               \tWHERE   \n" +
+            "               \t\tperiodId = #{processingPeriodId} \n" +
+            "               \tAND programid = #{programId}\n" +
+            "               \tAND productId =#{productId} \n" +
+            "                   AND req_status <> 'INITIATED' AND reported_figures > 0  \n" +
+            "               \tAND status = 'SO'   \n" +
+            "               \tGROUP BY   \n" +
+            "               \t\tgz_id   \n" +
+            "               ) ever ON gzz. ID = ever.geographicZoneId   \n" +
+            "               LEFT JOIN (   \n" +
+            "               \tSELECT   \n" +
+            "               \t\tgz_id geographicZoneId,   \n" +
+            "               \t\tCOUNT (*)   \n" +
+            "               \tFROM   \n" +
+            "               \t\tmv_dashboard_stock_status_2   \n" +
+
+            "               \tWHERE   \n" +
+            "               \t\tperiodId = #{processingPeriodId} \n" +
+            "               \tAND programid = #{programId}\n" +
+            "               \tAND productId =#{productId}  \n" +
+            "                   AND req_status <> 'INITIATED' AND reported_figures > 0  \n" +
+            "               \tAND status = 'US'   \n" +
+            "               \tGROUP BY   \n" +
+            "               \t\tgz_id   \n" +
+            "               ) understocked ON gzz. ID = understocked.geographicZoneId   \n" +
+            "               LEFT JOIN (   \n" +
+            "               \tSELECT   \n" +
+            "               \t\tgz_id geographicZoneId,   \n" +
+            "               \t\tCOUNT (*)   \n" +
+            "               \tFROM   \n" +
+            "               \t\tmv_dashboard_stock_status_2   \n" +
+
+            "               \tWHERE   \n" +
+            "               \t\tperiodId = #{processingPeriodId} \n" +
+            "               \tAND programid = #{programId}\n" +
+            "               \tAND productId =#{productId} \n" +
+            "                   AND req_status <> 'INITIATED' AND reported_figures > 0  \n" +
+            "               \tAND status = 'OS'   \n" +
+            "               \tGROUP BY   \n" +
+            "               \t\tgz_id   \n" +
+            "               ) overstocked ON gzz. ID = overstocked.geographicZoneId   \n" +
+            "               LEFT JOIN (   \n" +
+            "               \tSELECT   \n" +
+            "               \t\tgz_id geographicZoneId,   \n" +
+            "               \t\tCOUNT (*)   \n" +
+            "               \tFROM   \n" +
+            "               \t\tmv_dashboard_stock_status_2   \n" +
+
+            "               \tWHERE   \n" +
+            "               \t\tperiodId = #{processingPeriodId}\n" +
+            "               \tAND programid = #{programId}  \n" +
+            "               \tAND productId = #{productId}\n" +
+            "                   AND req_status <> 'INITIATED' AND reported_figures > 0  \n" +
+            "               \tAND status = 'SP'   \n" +
+            "               \tGROUP BY   \n" +
+            "               \t\tgz_id   \n" +
+            "               ) adequatelystocked ON gzz. ID = adequatelystocked.geographicZoneId   \n" +
+            "           \n" +
+            "               ORDER BY   \n" +
+            "               \tgzz. NAME \n ")
     List<GeoStockStatusFacilitySummary> getGeoStockStatusFacilitySummary(@Param("programId") Long programId, @Param("processingPeriodId") Long processingPeriodId, @Param("productId") Long productId, @Param("zone") Long zone);
 
 

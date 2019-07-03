@@ -580,9 +580,9 @@ $scope.zoomMap = function(){
             lat: -6.397912857937015,
             lng: 34.911609148190784,
             zoom: 6
-          }
+          };
 
-}
+};
 
 $scope.zoomMap();
      $scope.OnFilterChanged();
