@@ -50,7 +50,7 @@ return 'dropdown-toggle';
         $("li.hide").fadeToggle();
     });
 
-var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
+var params = {product:parseInt(2434,0) ,year:parseInt(2018,0), program: parseInt(1,0),period:parseInt(75,10)};
 
 
    $scope.geojson = {};

@@ -25,7 +25,7 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider){
         {
             name: 'home',
             url: '/home',
-            templateUrl: 'partials/analytics.html',
+            templateUrl: 'partials/analytics2.html',
             controller:AnalyticsFunction,
             resolve:AnalyticsFunction.resolve,
             ncyBreadcrumb: {
