@@ -50,7 +50,7 @@ return 'dropdown-toggle';
         $("li.hide").fadeToggle();
     });
 
-var params = {product:parseInt(2434,0) ,year:parseInt(2018,0), program: parseInt(1,0),period:parseInt(75,10)};
+var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
 
 
    $scope.geojson = {};
@@ -296,7 +296,9 @@ var groupB = _.where(data, {'schedule':46});
 
 
 var stockSummary = [];
-DashboardStockStatusSummaryData.get(params).then(function(data) {
+var params2 = {product:parseInt(2434,0) ,year:parseInt(2018,0), program: parseInt(1,0),period:parseInt(75,10)};
+DashboardStockStatusSummaryData.get(params2).then(function(data) {
+console.log(params);
 $scope.stockStatuses   = [];
  if(!isUndefined(data)){
 
@@ -338,7 +340,7 @@ $scope.stockStatuses   = [];
 
                            ];
 
-     $scope.stockStatusesStackedColumnChart('stockStatusOverTime','column' ,'Stock Status Over Time',category, 'Count of Facilities',summaries );
+     $scope.stockStatusesStackedColumnChart('stockStatusOverTime','column' ,'Stock Status Over Time for '+'Nevirapine',category, 'Count of Facilities',summaries );
 
  }
 
