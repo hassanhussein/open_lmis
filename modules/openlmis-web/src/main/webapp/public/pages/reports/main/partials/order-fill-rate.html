@@ -25,6 +25,7 @@
         visibility: visible !important;
         color: #0c9083;
     }
+
 </style>
 <div class="alert alert-success" id="saveSuccessMsgDiv" ng-bind="message" ng-show="message"></div>
 <div class="container-fluid">
@@ -78,10 +79,9 @@
                         </div>
                     </div>
                     <table client-side-sort-pagination class="table table-bordered"
-                           ng-show="data == undefined || data.length == 0">
+                           ng-show="data === undefined  || data.rows.length === 0">
                         <tr>
                             <td>No data to show under selected filters</td>
-                            <td><strong>Report {{summaries.REPORT_STATUS !== null ? summaries.REPORT_STATUS : 'No requisition'}}</strong></td>
                         </tr>
                     </table>
                     <br/>
@@ -97,8 +97,8 @@
                             {{tableParams.total}}
 
                         </div>
-
-                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right"
+                    <div class="responsive-report-content">
+                        <table ng-show="datarows.length > 0" class="table-bordered table table-striped"
                                ng-table="tableParams">
                             <tbody>
                             <tr ng-repeat-start="row in datarows" ng-class="{'substitutes' : row.substitutes.length > 0}">
@@ -155,6 +155,7 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
 
                 </div>
             </div>
