@@ -54,9 +54,9 @@
           </label>
 
           <div class="form-field">
-            <input ng-model="equipment_type.coldChain" name="is-cold-chain" id="is-cold-chain-false" type="radio" ng-value="false" />
+            <input ng-model="equipment_type.isColdChain" name="is-cold-chain" id="is-cold-chain-false" type="radio" ng-value="false" />
             <strong openlmis-message="button.no"></strong> &nbsp; &nbsp; &nbsp;
-            <input ng-model="equipment_type.coldChain" name="is-cold-chain" id="is-cold-chain-true" type="radio" ng-value="true" />
+            <input ng-model="equipment_type.isColdChain" name="is-cold-chain" id="is-cold-chain-true" type="radio" ng-value="true" />
             <strong openlmis-message="button.yes"></strong>
             <span class="field-error" ng-show="equipmentTypeForm.is-cold-chain.$error.required && showError" openlmis-message="missing.value"></span>
           </div>
