@@ -1147,7 +1147,7 @@ padding: 0px 0px !important;
                     <div class="col s12 m4 l6">
                         <div class="card white darken-1">
                             <div class="card-content">
-                                <div id="categorizationByDistrict" style="height: 400px !important;"></div>
+                                <div id="categorizationByDistrict1" style="height: 400px !important;"></div>
 
 
                                 <!--Table for Coverage By District-->
@@ -1546,7 +1546,8 @@ padding: 0px 0px !important;
                     <div class="col s12 m4 l6">
                         <div class="card white darken-1">
                             <div class="card-content">
-                                <div id="categorizationByFacility" style="height: 400px !important;"></div>
+                                <div ng-show="homeFacility.facilitytypecode == 'dvs'"  id="categorizationByFacility" style="height: 400px !important;"></div>
+                                <div ng-show="homeFacility.facilitytypecode == 'rvs'"  id="categorizationByDistrict" style="height: 400px !important;"></div>
 
 
                                 <!--Table for Coverage By District-->

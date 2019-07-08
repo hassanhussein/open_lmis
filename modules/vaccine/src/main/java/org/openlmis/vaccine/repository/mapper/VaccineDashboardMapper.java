@@ -2166,11 +2166,39 @@ public interface VaccineDashboardMapper {
             "                           ORDER BY ID, period_name,catagorization")
     List<HashMap<String, Object>> getCategorizationByDistrict(@Param("userId") Long userId, @Param("year") Long year);
 
-    @Select("SELECT classificationclass,classification catagorization,period_name,periodid ID,count(*) totaL FROM FACILITY__CLASSIFICATION_categorization_view q\n" +
+   /* @Select("SELECT classificationclass,classification catagorization,period_name,periodid ID,count(*) totaL FROM FACILITY__CLASSIFICATION_categorization_view q\n" +
             "JOIN vw_user_facilities uf ON uf.facility_id = q.facility_id and user_id = #{userId}\n" +
             "WHERE YEAR = #{year}\n" +
             "group by classification,period_name,periodid,classificationclass\n" +
-            "ORDER BY PERIODID,classification")
+            "ORDER BY PERIODID,classification")*/
+
+
+    @Select("select id,period_name, sum(cat_1) cat_1, \n" +
+            "sum(cat_2) cat_2, sum(cat_3) cat_3,sum(cat_4) cat_4\n" +
+            "\n" +
+            " from (\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "SELECT ID, PERIOD_NAME, CASE WHEN lower(catagorization) = lower('cat_1') then total else 0 end as cat_1 , \n" +
+            "CASE WHEN lower(catagorization) = lower('cat_2') then total else 0 end as cat_2 ,\n" +
+            "CASE WHEN lower(catagorization) = lower('cat_3') then total else 0 end as cat_3,\n" +
+            "CASE WHEN lower(catagorization) = lower('cat_4') then total else 0 end as cat_4 FROM (\n" +
+
+            "select ID,period_name, classificationclass, catagorization,  SUM(total) TOTAL from (\n" +
+            "SELECT classificationclass,classification catagorization,period_name,periodid ID,count(*) totaL FROM FACILITY__CLASSIFICATION_categorization_view q\n" +
+            "            JOIN vw_user_facilities uf ON uf.facility_id = q.facility_id and user_id = #{userId}\n" +
+            "            WHERE YEAR = #{year}::int\n" +
+            "            group by classification,period_name,periodid,classificationclass\n" +
+            "            ORDER BY PERIODID,classification\n" +
+            ")x\n" +
+            "--where id = 122\n" +
+            "GROUP BY ID,period_name,classificationclass,catagorization\n" +
+            "order by id\n" +
+            ")L\n" +
+            ")M \n" +
+            "\n" +
+            "group by id,period_name")
     List<HashMap<String,Object>>getCategorizationByFacility(@Param("userId") Long userId, @Param("year") Long year);
 /*
 

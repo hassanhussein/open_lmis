@@ -990,31 +990,26 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
         var colors = {'Cat_3': '#ffdb00', 'Cat_4': '#ff0d00', 'Cat_2': '#ABC9AA', 'Cat_1': '#006600'};
         var dataFunction = (userLevel === 'dvs') ? GetCategorizationByFacilityData : GetCategorizationByDistrictData;
 
-        GetCategorizationByDistrictData.get(params).then(function (data) {
+        dataFunction.get(params).then(function (data) {
+
             var category = _.uniq(_.pluck(data, 'period_name'));
-            var groupByPeriod = _.groupBy(data, function (period) {
-                return period.catagorization;
-            });
+            var cat_1 = _.pluck(data, 'cat_1');
+           var cat1_data=  {name:'cat_1', data:cat_1, color:colors.Cat_1};
+            var cat_2 = _.pluck(data, 'cat_2');
+           var cat2_data=  {name:'cat_2', data:cat_2, color:colors.Cat_2};
+            var cat_3 = _.pluck(data, 'cat_3');
+            var cat3_data=  {name:'cat_3', data:cat_3, color:colors.Cat_3};
+            var cat_4 = _.pluck(data, 'cat_4');
+           var cat4_data=  {name:'cat_4', data:cat_4, color:colors.Cat_4};
 
-            var mappedData = _.map(groupByPeriod, function (value, index) {
-                return {data: value, index: index};
-            });
-            var categorization = [];
-            for (var i = 0; i < mappedData.length; i++) {
-                categorization.push({
-                    name: mappedData[i].index,
-                    data: _.pluck(mappedData[i].data, 'total'),
-                    color: colors[mappedData[i].index]
-                });
-
-            }
+            var allDataToDisplay = [cat1_data,cat2_data,cat3_data,cat4_data];
 
 
             var joinTitle = (userLevel === 'dvs') ? 'Facilities' : 'Districts';
             var title = '<span style="color:#509fc5; font-size: 15px ">Categorization by ' + joinTitle + ' based on Coverage and Dropout ' + params.year + '</span>';
-            var chartId = (userLevel === 'dvs') ? 'categorizationByFacility':'categorizationByFacility';
+            var chartId = (userLevel === 'dvs') ? 'categorizationByFacility':'categorizationByDistrict';
 
-            getDynamicStackedChart(categorization, chartId, title, category, null, null, params.year, 'Districts');
+            getDynamicStackedChart(allDataToDisplay, chartId, title, category, null, null, params.year, 'Districts');
 
         });
 
