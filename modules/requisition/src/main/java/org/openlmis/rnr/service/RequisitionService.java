@@ -129,6 +129,13 @@ public class RequisitionService {
   @Autowired
   private EquipmentOperationalStatusService equipmentOperationalStatusService;
 
+
+  @Autowired
+  private PatientService patientService;
+
+  @Autowired
+  private PatientColumnService patientColumnService;
+
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
@@ -163,7 +170,7 @@ public class RequisitionService {
     }
 
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(
-        facility.getId(), program.getId());
+            facility.getId(), program.getId());
 
     //N:B If usePriceSchedule is selected for the selected program, use the product price from price_schedule table
     if (program.getUsePriceSchedule())
@@ -172,10 +179,15 @@ public class RequisitionService {
     List<Regimen> regimens = regimenService.getByProgram(program.getId());
     RegimenTemplate regimenTemplate = regimenColumnService.getRegimenTemplateByProgramId(program.getId());
 
-    Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, modifiedBy);
+
+    //TB Form Changes
+    List<Patient> patients = patientService.getByProgram(program.getId());
+    PatientTemplate patientTemplate = patientColumnService.getPatientTemplateByProgramId(program.getId());
+
+    Rnr requisition = new Rnr(facility, program, period, emergency, facilityTypeApprovedProducts, regimens, patients, modifiedBy);
     requisition.setCreatedDate(dbMapper.getCurrentTimeStamp());
 
-   // statementService.fetchBudgetData(facility.getId(),program.getId(),period.getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+    // statementService.fetchBudgetData(facility.getId(),program.getId(),period.getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
     populateAllocatedBudget(requisition);
 
     calculationService.fillFieldsForInitiatedRequisition(requisition, rnrTemplate, regimenTemplate);
@@ -203,15 +215,15 @@ public class RequisitionService {
 
     for (ProductPriceSchedule productPriceSchedule : productPriceSchedules) {
       Optional<FacilityTypeApprovedProduct> facilityTypeApprovedProduct = facilityTypeApprovedProducts
-          .parallelStream()
-          .filter(f -> f.getProgramProduct().getProduct().getId().equals(productPriceSchedule.getProduct().getId()))
-          .findFirst();
+              .parallelStream()
+              .filter(f -> f.getProgramProduct().getProduct().getId().equals(productPriceSchedule.getProduct().getId()))
+              .findFirst();
       facilityTypeApprovedProduct
-          .ifPresent(
-              facilityTypeApprovedProduct1 -> facilityTypeApprovedProduct1
-                  .getProgramProduct()
-                  .setCurrentPrice(new Money(BigDecimal.valueOf(productPriceSchedule.getPrice())))
-          );
+              .ifPresent(
+                      facilityTypeApprovedProduct1 -> facilityTypeApprovedProduct1
+                              .getProgramProduct()
+                              .setCurrentPrice(new Money(BigDecimal.valueOf(productPriceSchedule.getPrice())))
+              );
 
     }
   }
@@ -222,7 +234,7 @@ public class RequisitionService {
     requisition.setEquipmentLineItems(new ArrayList<EquipmentLineItem>());
 
     EquipmentOperationalStatus obsoleteEquipmentStatus =
-        equipmentOperationalStatusService.getByCode(OBSOLETE);
+            equipmentOperationalStatusService.getByCode(OBSOLETE);
 
     //if the equipment status become obsolete on the previous Rnr,
     // ignore it for the current and the following Rnr
@@ -278,6 +290,7 @@ public class RequisitionService {
       //TODO: copy only the editable fields.
       savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
       savedRnr.setManualTestLineItems(rnr.getManualTestLineItems());
+      savedRnr.setPatientLineItems(rnr.getPatientLineItems());
     }
 
     requisitionRepository.update(savedRnr);
@@ -301,9 +314,9 @@ public class RequisitionService {
 
     ProgramRnrTemplate template = rnrTemplateService.fetchProgramTemplate(savedRnr.getProgram().getId());
 
-      if(savedRnr.getPeriod().getEnableOrder()) {
-        calculationService.perform(savedRnr, template);
-      }
+    if(savedRnr.getPeriod().getEnableOrder()) {
+      calculationService.perform(savedRnr, template);
+    }
 
     return update(savedRnr);
   }
@@ -342,7 +355,7 @@ public class RequisitionService {
       throw new DataException(RNR_OPERATION_UNAUTHORIZED);
     }
     if(savedRnr.getPeriod().getEnableOrder()) {
-        savedRnr.validateForApproval();
+      savedRnr.validateForApproval();
     }
 
     savedRnr.calculateForApproval();
@@ -434,10 +447,10 @@ public class RequisitionService {
   private List<RnrLineItem> findSubscribedLineItems(Rnr savedRnr, SupplyPartnerProgram subscription) {
     List<String> productCodes = subscription.getProducts().stream().map(p -> p.getCode()).collect(Collectors.toList());
     return savedRnr
-        .getAllLineItems()
-        .stream()
-        .filter(l -> productCodes.contains(l.getProductCode()))
-        .collect(Collectors.toList());
+            .getAllLineItems()
+            .stream()
+            .filter(l -> productCodes.contains(l.getProductCode()))
+            .collect(Collectors.toList());
   }
 
   private Boolean requiresSplitting(Rnr savedRnr) {
@@ -514,7 +527,7 @@ public class RequisitionService {
     }
 
     ProcessingPeriod currentPeriod = processingScheduleService.getCurrentPeriod(facility.getId(), program.getId(),
-        programService.getProgramStartDate(facility.getId(), program.getId()));
+            programService.getProgramStartDate(facility.getId(), program.getId()));
 
     if (currentPeriod == null)
       throw new DataException("error.program.configuration.missing");
@@ -540,7 +553,7 @@ public class RequisitionService {
       }
       periodIdForLastRequisition = lastRegularRequisition.getPeriod().getId();
     }
-     //Original Settings
+    //Original Settings
     List<ProcessingPeriod> periods;
 
     if(null != enabledProgram)
@@ -573,9 +586,9 @@ public class RequisitionService {
 
 
     if(null != program)
-       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
     else
-       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
     List<ProcessingPeriod> rejected = processingScheduleService.getOpenPeriods(facilityId, programId, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
@@ -681,7 +694,7 @@ public class RequisitionService {
 
     ArrayList<User> activeUsersWithRight = userService.filterForActiveUsers(userList);
     statusChangeEventService.notifyUsers(activeUsersWithRight, requisition.getId(), requisition.getFacility(),
-        requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
+            requisition.getProgram(), requisition.getPeriod(), requisition.getStatus().toString());
   }
 
   private void insert(Rnr requisition) {
@@ -731,7 +744,7 @@ public class RequisitionService {
     Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
 
     List<Rnr> requisitions = requisitionRepository.getApprovedRequisitionsForCriteriaAndPageNumber(searchType, searchVal,
-        pageNumber, pageSize, userId, rightName, sortBy, sortDirection);
+            pageNumber, pageSize, userId, rightName, sortBy, sortDirection);
 
     fillFacilityPeriodProgramWithAuditFields(requisitions);
     fillSupplyingFacility(requisitions.toArray(new Rnr[requisitions.size()]));
@@ -936,17 +949,17 @@ public class RequisitionService {
     return requisitionRepository.getResponseMessageBy(sourceId);
   }
   public List<HashMap<String,Object>> getAllResponseByStatus(){
-        return requisitionRepository.getAllResponseByStatus();
+    return requisitionRepository.getAllResponseByStatus();
   }
   public void updateBySourceId(String sourceId){
-        requisitionRepository.updateBySourceId(sourceId);
+    requisitionRepository.updateBySourceId(sourceId);
   }
 
   public void saveUploadedReason(RejectionReasonDTO dto){
-     if (dto.getId() == null){
-       requisitionRepository.insertUploaded(dto);
-     }else
-       requisitionRepository.updateUploaded(dto);
+    if (dto.getId() == null){
+      requisitionRepository.insertUploaded(dto);
+    }else
+      requisitionRepository.updateUploaded(dto);
 
   }
 
@@ -990,14 +1003,14 @@ public class RequisitionService {
 
   public Boolean saveBudgetFromMSDApi(Long facilityId,Long programId) {
 
-     RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
-     criteria.setFacilityId(facilityId);
-     criteria.setProgramId(programId);
-     criteria.setEmergency(false);
-     List<ProcessingPeriod> processingPeriods  = getProcessingPeriods(criteria);
-     if(!processingPeriods.isEmpty()) {
-       statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
-     }
+    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+    criteria.setFacilityId(facilityId);
+    criteria.setProgramId(programId);
+    criteria.setEmergency(false);
+    List<ProcessingPeriod> processingPeriods  = getProcessingPeriods(criteria);
+    if(!processingPeriods.isEmpty()) {
+      statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+    }
     return true;
   }
 
