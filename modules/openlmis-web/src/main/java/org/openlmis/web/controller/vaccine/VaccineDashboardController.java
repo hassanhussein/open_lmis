@@ -769,7 +769,7 @@ public class VaccineDashboardController extends BaseController {
 
 
     @RequestMapping(value = "GetCategorizationByDistrictDrillDown.json", method = RequestMethod.GET)
-    public ResponseEntity<OpenLmisResponse> GetCategorizationByDistrictDrillDown(
+    public ResponseEntity<OpenLmisResponse> GetCategorizationByDistrictDrillDown (
          HttpServletRequest request,
          @Param("period") String period,
          @Param("year") Long year,
@@ -777,6 +777,29 @@ public class VaccineDashboardController extends BaseController {
          ) {
         ResponseEntity<OpenLmisResponse> response;
         response = OpenLmisResponse.response("classification_summary", service.getCategorizationByDistrictDrillDown(loggedInUserId(request),year,indicator,period));
+        return response;
+    }
+
+    @RequestMapping(value = "GetFacilityStockStatusSummary.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getFacilityStockStatusSummary (
+         HttpServletRequest request,
+         @Param("year") Long year,
+         @Param("product") Long product
+         ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("stocks", service.getFacilityStockStatusSummary(year,product,loggedInUserId(request)));
+        return response;
+    }
+   @RequestMapping(value = "GetFacilityStockStatusSummaryData.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getFacilityStockStatusSummaryData (
+         HttpServletRequest request,
+         @Param("year") Long year,
+         @Param("product") Long product,
+         @Param("periodName") String periodName
+
+   ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("stocks", service.getFacilityStockStatusSummaryData(year,product,loggedInUserId(request),periodName));
         return response;
     }
 

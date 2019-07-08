@@ -2,10 +2,10 @@
 --INSERT INTO vaccine_product_targets (productid,targetwastagegood, targetwastagewarn, targetwastagebad, targetcoveragebad, targetcoveragewarn, targetcoveragegood, targetdropoutgood, targetdropoutwarn, targetdropoutbad, targetwastageclosedvialsgood, targetwastageclosedvialswarn, targetwastageclosedvialsbad) VALUES ('2417', '5', '5', '5', '50', '80', '90', '5', '10', '20', '5', '10', '20');
 --INSERT INTO vaccine_product_targets (productid,targetwastagegood, targetwastagewarn, targetwastagebad, targetcoveragebad, targetcoveragewarn, targetcoveragegood, targetdropoutgood, targetdropoutwarn, targetdropoutbad, targetwastageclosedvialsgood, targetwastageclosedvialswarn, targetwastageclosedvialsbad) VALUES ('2429', '5', '5', '5', '50', '80', '90', '5', '10', '20', '5', '10', '20');
 
-
 -- View: vw_vaccine_coverage
 
-DROP VIEW if exists vw_vaccine_coverage;
+
+DROP VIEW if exists vw_vaccine_coverage CASCADE;
 
 CREATE OR REPLACE VIEW vw_vaccine_coverage AS
 SELECT a.program_id,
@@ -148,5 +148,67 @@ ALTER TABLE vw_vaccine_coverage
 OWNER TO postgres;
 
 
+DROP VIEW IF EXISTS public.vw_vims_dhis_female_integrations;
 
+CREATE OR REPLACE VIEW public.vw_vims_dhis_female_integrations AS
+( SELECT vw_vaccine_coverage.facility_code,
+    vw_vaccine_coverage.product_code AS productcode,
+    vw_vaccine_coverage.product_name,
+    vw_vaccine_coverage.dose_id AS doseid,
+    to_char(vw_vaccine_coverage.period_start_date, 'YYYYMM'::text) AS period,
+    sum(vw_vaccine_coverage.within_male) AS datavalues,
+    'WF'::text AS status,
+    ((((vw_vaccine_coverage.product_code::text || ''::text) || vw_vaccine_coverage.product_name::text) || ''::text) || 'WF'::text) || vw_vaccine_coverage.dose_id AS vims_code
+   FROM vw_vaccine_coverage
+  WHERE vw_vaccine_coverage.program_id = 82
+  GROUP BY vw_vaccine_coverage.product_code, vw_vaccine_coverage.product_name, vw_vaccine_coverage.dose_id, vw_vaccine_coverage.facility_code, vw_vaccine_coverage.period_start_date
+  ORDER BY vw_vaccine_coverage.dose_id)
+UNION
+ SELECT vw_vaccine_coverage.facility_code,
+    vw_vaccine_coverage.product_code AS productcode,
+    vw_vaccine_coverage.product_name,
+    vw_vaccine_coverage.dose_id AS doseid,
+    to_char(vw_vaccine_coverage.period_start_date, 'YYYYMM'::text) AS period,
+    sum(vw_vaccine_coverage.outside_male) AS datavalues,
+    'OF'::text AS status,
+    ((((vw_vaccine_coverage.product_code::text || ''::text) || vw_vaccine_coverage.product_name::text) || ''::text) || 'OF'::text) || vw_vaccine_coverage.dose_id AS vims_code
+   FROM vw_vaccine_coverage
+  WHERE vw_vaccine_coverage.program_id = 82
+  GROUP BY vw_vaccine_coverage.product_code, vw_vaccine_coverage.product_name, vw_vaccine_coverage.dose_id, vw_vaccine_coverage.facility_code, vw_vaccine_coverage.period_start_date;
+
+ALTER TABLE public.vw_vims_dhis_female_integrations
+  OWNER TO postgres;
+
+
+
+DROP VIEW IF EXISTS public.vw_vims_dhis_male_integrations;
+
+CREATE OR REPLACE VIEW public.vw_vims_dhis_male_integrations AS
+( SELECT vw_vaccine_coverage.facility_code,
+    vw_vaccine_coverage.product_code AS productcode,
+    vw_vaccine_coverage.product_name,
+    vw_vaccine_coverage.dose_id AS doseid,
+    to_char(vw_vaccine_coverage.period_start_date, 'YYYYMM'::text) AS period,
+    sum(vw_vaccine_coverage.within_male) AS datavalues,
+    'WM'::text AS status,
+    ((((vw_vaccine_coverage.product_code::text || ''::text) || vw_vaccine_coverage.product_name::text) || ''::text) || 'WM'::text) || vw_vaccine_coverage.dose_id AS vims_code
+   FROM vw_vaccine_coverage
+  WHERE vw_vaccine_coverage.program_id = 82
+  GROUP BY vw_vaccine_coverage.product_code, vw_vaccine_coverage.product_name, vw_vaccine_coverage.dose_id, vw_vaccine_coverage.facility_code, vw_vaccine_coverage.period_start_date
+  ORDER BY vw_vaccine_coverage.dose_id)
+UNION
+ SELECT vw_vaccine_coverage.facility_code,
+    vw_vaccine_coverage.product_code AS productcode,
+    vw_vaccine_coverage.product_name,
+    vw_vaccine_coverage.dose_id AS doseid,
+    to_char(vw_vaccine_coverage.period_start_date, 'YYYYMM'::text) AS period,
+    sum(vw_vaccine_coverage.outside_male) AS datavalues,
+    'OM'::text AS status,
+    ((((vw_vaccine_coverage.product_code::text || ''::text) || vw_vaccine_coverage.product_name::text) || ''::text) || 'OM'::text) || vw_vaccine_coverage.dose_id AS vims_code
+   FROM vw_vaccine_coverage
+  WHERE vw_vaccine_coverage.program_id = 82
+  GROUP BY vw_vaccine_coverage.product_code, vw_vaccine_coverage.product_name, vw_vaccine_coverage.dose_id, vw_vaccine_coverage.facility_code, vw_vaccine_coverage.period_start_date;
+
+ALTER TABLE public.vw_vims_dhis_male_integrations
+  OWNER TO postgres;
 

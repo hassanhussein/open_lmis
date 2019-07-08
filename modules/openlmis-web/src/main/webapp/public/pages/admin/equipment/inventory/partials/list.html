@@ -155,14 +155,14 @@
                     <th openlmis-message="label.equipment.year.of.installation"></th>
                     <th openlmis-message="label.equipment.age"></th>
                     <th openlmis-message="label.equipment.replacement.year"></th>
-                    <th openlmis-message="label.delete"></th>
-                    <th ng-show="">Temperature Status</th>
+                    <th openlmis-message="label.equipment.is.verified"></th>
+                    <th openlmis-message="label.equipment.actions"></th>
                 </tr>
                 </thead>
                 <tbody ng-repeat="(key, items) in inventoryList ">
 
                 <tr style="height: 31px;">
-                    <td class="productCategory" id="key{{$index}}" colspan="12"
+                    <td class="productCategory" id="key{{$index}}" colspan="14"
                         ng-bind="items.inventory[0].equipment.designation.name">
                     </td>
                 </tr>
@@ -211,14 +211,13 @@
                     <td>{{item.yearOfInstallation}}</td>
                     <td>{{getAge(item.yearOfInstallation)}}</td>
                     <td>{{getReplacementYear(item.yearOfInstallation)}}</td>
-                    <td><button ng-show="hasPermission('DELETE_EQUIPMENT_INVENTORY')" class="btn btn-danger" ng-click="deleteInventory(item.id)">Delete</button></td>
-                    <td ng-show =""><span>
-                         <a ng-show="item.equipment.id" class="btn btn-primary" ng-click="updateTemperatureStatusModal(item)"
-                            ng-href="">
-                             <span>Add</span>
-                         </a>
-
-                    </span></td>
+                    <td>
+                        <input type="checkbox" ng-change="toggleVerifySerialNumber(item)" ng-model="item.isSerialNumberVerified" />
+                    </td>
+                    <td>
+                        <button ng-show="hasPermission('DELETE_EQUIPMENT_INVENTORY')" class="btn btn-danger" ng-click="deleteInventory(item.id)">Delete</button>
+                        <button ng-show="hasPermission('DELETE_EQUIPMENT_INVENTORY')" class="btn btn-danger" ng-click="moveInventory(item)">Move</button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -261,6 +260,7 @@
                         <a class="btn-mini btn-cont" ng-href="#/log/{{item.id}}">
                             <span openlmis-message="label.equipment.request.logs"></span>
                         </a>
+
                     </td>
                 </tr>
                 </tbody>
@@ -370,6 +370,65 @@
     </div>
 </div>
 
+<div modal="showMoveFacilityModal"  options="{'backdrop':'static', 'escape':false}">
+    <div class="modal-header">
+        <h3>Move equipment to another facility</h3>
+    </div>
+    <div class="modal-body">
+        <div class="app-form">
+            <div class="form-row clearfix">
+                <div class="form-cell">
+                    <h3>Are you sure you would like to move this equipment?</h3>
+                    <p>If you move this equipment to another facility,
+                        It will start appearing in the IVD forms that the new facility would fill.
+                        The past IVD form submissions will continue to appear in the old facility IVD forms.
+                    </p>
+                </div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-cell">
+                    You are moving: <b>{{inventoryToMove.equipment.name}}}</b>
+                    <br />Serial Number: <b>{{inventoryToMove.serialNumber}}</b>
+                    <br />From facility: <b>{{inventoryToMove.facility.geographicZone.name + ' -> ' + inventoryToMove.facility.name}}</b>
+                </div>
+            </div>
+            <div class="form-row clearfix">
+                <div class="form-cell">
+                    <label id="associatedFacilityLabel">
+                        <span>Choose destination facility here:</span>
+                        <span class="label-required"> *</span>
+                    </label>
+
+                    <div class="form-field">
+                        <div id="associatedFacilityField" class="input-div associate-facility clearfix"
+                             ng-click="toggleSlider()">
+                            <div class="facility-associated">
+                                <span class="placeholder" ng-show="!moveToFacility || moveToFacility == undefined" openlmis-message="label.no.facility.selected"></span>
+                                <span ng-show="moveToFacility">{{moveToFacility.code}} - {{moveToFacility.name}}</span>
+                            </div>
+                            <a href="" class="btn">
+                                <i class="icon icon-ellipsis-horizontal"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <span id="facilityFieldError" class="field-error" ng-show="!supervisoryNode.facility && showError"
+                          openlmis-message="select.value"></span>
+                </div>
+                <div class="position-relative">
+                    <div class="slider" slider="showSlider" ng-include
+                         src="'/public/pages/admin/shared/search-filter-facilities.html'"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="button" id="moveToFacility" class="btn btn-primary save-button"
+               ng-click="moveToFacilityClicked()"
+               openlmis-message="button.move"/>
+        <input type="button" ng-click="showMoveFacilityModal=false" class="btn btn-cancel"
+               openlmis-message="button.cancel"/>
+    </div>
+</div>
 
 <!--Temperature Modal-->
 

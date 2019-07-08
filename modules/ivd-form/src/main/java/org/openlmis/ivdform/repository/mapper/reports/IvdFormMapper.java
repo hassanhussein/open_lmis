@@ -89,7 +89,10 @@ public interface IvdFormMapper {
                     many = @Many(select = "org.openlmis.ivdform.repository.mapper.CoverageLineItemAgeGroupMapper.getLineItems")),
 
             @Result(property = "heidLineItems", javaType = List.class, column = "id",
-                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.HEIDLineItemMapper.getLineItems"))
+                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.HEIDLineItemMapper.getLineItems")),
+
+            @Result(property = "ctcLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.ivdform.repository.mapper.reports.CTCLineItemMapper.getLineItems"))
 
 
     })

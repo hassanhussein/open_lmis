@@ -1659,6 +1659,56 @@ services.factory('GetDistributionByIdData', function ($q, $timeout, $resource, G
 
 });
 
+services.factory('GetFacilityStockStatusSummaryData', function ($q, $timeout, $resource, GetFacilityStockStatusSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetFacilityStockStatusSummary.get(params, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+
+services.factory('GetFacilityStockStatusSummaryDataByPeriod', function ($q, $timeout, $resource, GetFacilityStockStatusSummaryByPeriodData) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetFacilityStockStatusSummaryByPeriodData.get(params, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+
 services.factory('FullStockAvailableForDashboard', function ($resource) {
     return $resource('/vaccine/dashboard/fullStockAvailability.json', {}, {});
 });
@@ -1792,4 +1842,12 @@ services.factory('GetFacilityDistributionNotifications', function ($resource) {
 
 services.factory('GetDistributionById', function ($resource) {
     return $resource('/vaccine/inventory/distribution/distribution.json', {}, {});
+});
+
+services.factory('GetFacilityStockStatusSummary', function ($resource) {
+    return $resource('/vaccine/dashboard/GetFacilityStockStatusSummary.json', {}, {});
+});
+
+services.factory('GetFacilityStockStatusSummaryByPeriodData', function ($resource) {
+    return $resource('/vaccine/dashboard/GetFacilityStockStatusSummaryData.json', {}, {});
 });

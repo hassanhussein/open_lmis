@@ -71,6 +71,9 @@ public class LineItemService {
     @Autowired
     HEIDLineItemRepository heidLineItemRepository;
 
+    @Autowired
+    CTCLineItemRepository ctcLineItemRepository;
+
     public void saveLogisticsLineItems(VaccineReport dbVersion, List<LogisticsLineItem> lineItems, Long reportId, Long userId) {
         for (LogisticsLineItem lineItem : emptyIfNull(lineItems)) {
             if (null != dbVersion) {
@@ -145,7 +148,7 @@ public class LineItemService {
             reportId = dbVersion.getId();
         }
         //Fixed Delete Adverse Effect
-        //adverseLineItemRepository.deleteLineItems(reportId);
+        adverseLineItemRepository.deleteLineItems(reportId);
         for (AdverseEffectLineItem lineItem : emptyIfNull(adverseEffectLineItems)) {
             lineItem.setReportId(reportId);
 
@@ -440,6 +443,22 @@ public class LineItemService {
             } else {
                 item.setModifiedBy(userId);
                 heidLineItemRepository.update(item);
+            }
+        }
+
+
+    }
+
+    public void saveCTCLineItems(VaccineReport dbVersion, List<CTCLineItem> lineItems, Long reportId, Long userId) {
+
+        for (CTCLineItem item : emptyIfNull(lineItems)) {
+            item.setReportId(reportId);
+            if (!item.hasId()) {
+                item.setCreatedBy(userId);
+                ctcLineItemRepository.insert(item);
+            } else {
+                item.setModifiedBy(userId);
+                ctcLineItemRepository.update(item);
             }
         }
 
