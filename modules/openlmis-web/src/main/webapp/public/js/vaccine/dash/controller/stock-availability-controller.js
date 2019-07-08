@@ -5,7 +5,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                                           $routeParams, leafletData, ProductService, $state, VaccineProductDoseList, ReportPeriodsByYear, VimsVaccineSupervisedIvdPrograms, AvailableStockDashboard,
                                           FullStockAvailableForDashboard, GetAggregateFacilityPerformanceData,
                                           VaccineCoverageByProductData, GetCoverageByProductAndDoseData, GetCoverageByFacilityData, GetIVDReportingSummaryData,GetFacilityClassificationSummaryData,GetImmunizationSessionSummaryData,$q,
-                                          GetClassificationByDistrictSummaryData,GetClassificationByDistrictDrillDownData, GetFacilityStockStatusSummaryData,GetFacilityStockStatusSummaryDataByPeriod ) {
+                                          GetClassificationByDistrictSummaryData,GetClassificationByDistrictDrillDownData, GetFacilityStockStatusSummaryData,GetFacilityStockStatusSummaryDataByPeriod,GetVaccineDistrictCoverageForMapData ) {
 
 
     $scope.region = true;
@@ -650,16 +650,30 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
         // Data:
         angular.forEach(data, function(value, key) {
 
-            if(fileName === 'facilityCoverageChart')
+
+
+            if(fileName === 'facilityCoverageChart'){
             $scope.exportData.push([value.facility_name, value.coveragepercentage]);
-            if(fileName === 'districtCoverageChart')
-            $scope.exportData.push([value.district_name, value.value]);
-            if(fileName === 'regionCoverageChart')
-            $scope.exportData.push([value.region, value.coverage]);
-            if(fileName === 'facilitySummaryChart')
+            }
+
+            if(fileName === 'districtCoverageChart1'){
+            $scope.exportData.push([value.district, value.value]);
+
+            }
+            if(fileName === 'regionCoverageChart'){
+            $scope.exportData.push([value.region, value.value]);
+
+
+            }
+
+            if(fileName === 'facilitySummaryChart') {
             $scope.exportData.push([value.region, value.coverage]);
 
+            }
+
         });
+
+                                                                            console.log($scope);
 
     };
 
@@ -761,8 +775,38 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         } else {
 
+        $scope.getRegionCoverageDataFunction = function(data){
+        var filteredData = _.filter(data, function(dx){
+        return !isUndefined(dx.coverageclassification);
+                });
 
-            GetCoverageByRegionSummary.get(para).then(function (data) {
+        var badValue = _.where(filteredData, {coverageclassification: 'BAD'});
+
+        var goodValue = _.where(filteredData, {coverageclassification: 'GOOD'});
+        var normalValue = _.where(filteredData, {coverageclassification: 'NORMAL'});
+        var summary1 = (badValue.length > 0) ? badValue.length : 0;
+        var summary3 = (goodValue.length > 0) ? goodValue.length : 0;
+        var summary2 = (normalValue.length > 0) ? normalValue.length : 0;
+
+
+                     var title = 'Region Coverage Summary',name='Regional Coverage',title2=null, chartId = 'regionCoverageChart', legend = 'Region(s)';
+                                 var values = [];
+                                 values.push({name: 'Below 80%', opt: 'BAD', y: summary1, color: 'red', sliced: true},
+                                     {
+                                         name: '80% to 89%', opt: 'NORMAL',
+                                         y: summary2,
+                                         color: 'yellow'
+                                     },
+                                     {name: '90% +', opt: 'GOOD', y: summary3, color: 'green'}
+                                 );
+                                 loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.doseId, filteredData,name);
+
+
+
+        };
+
+
+        /*    GetCoverageByRegionSummary.get(para).then(function (data) {
 
                 var badValue = _.where(data, {coverageclassification: 'BAD'});
                 var goodValue = _.where(data, {coverageclassification: 'GOOD'});
@@ -784,11 +828,13 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                 loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.doseId, data,name);
 
 
-            });
+            });*/
 
             $scope.regionLevel = level;
 
-            GetCoverageByDistrictData.get(para).then(function (data) {
+            GetVaccineDistrictCoverageForMapData.get(para).then(function (data) {
+                             console.log(data);
+
 
                 var badValue = _.where(data, {coverageclassification: 'BAD'});
                 var goodValue = _.where(data, {coverageclassification: 'GOOD'});
@@ -2640,7 +2686,13 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                     // color:interpolateCoverage(code.cumulative_vaccinated,code.monthly_district_target,code.coverageclassification.toLowerCase())
 
                 });
+
+
+
             });
+
+          $scope.getRegionCoverageDataFunction(data);
+
             var small = $('#coverage_map').width() < 400;
             var separators = Highcharts.geojson(Highcharts.maps['countries/tz/tz-all'], 'mapline');
 

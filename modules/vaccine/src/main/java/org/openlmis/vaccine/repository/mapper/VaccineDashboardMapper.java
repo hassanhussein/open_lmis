@@ -2623,4 +2623,73 @@ public interface VaccineDashboardMapper {
     List<HashMap<String,Object>>getCategorizationByDistrictDrillDown(@Param("userId") Long userId,@Param("year") Long year,
                                                                     @Param("indicator")String indicator, @Param("period")Long period, @Param("schedule") Long schedule);
 
+    @Select(" SELECT gz.name,coverage.* FROM GEOGRAPHIC_ZONES GZ\n" +
+            "                \n" +
+            "                     LEFT JOIN (\n" +
+            "                     SELECT COVERAGE.*,\n" +
+            "                       CASE\n" +
+            "                       WHEN value IS NULL THEN NULL\n" +
+            "                       WHEN value > X.TARGETCOVERAGEGOOD THEN 'GOOD'\n" +
+            "                       WHEN value > X.TARGETCOVERAGEWARN THEN 'NORMAL'\n" +
+            "                       WHEN value > X.TARGETCOVERAGEBAD THEN 'WARN'\n" +
+            "                       ELSE 'BAD'\n" +
+            "                           END AS COVERAGECLASSIFICATION, x.*\n" +
+            "                    FROM\n" +
+            "                      ( WITH COVERAGE AS\n" +
+            "                         (SELECT PRODUCTID,\n" +
+            "                         PRODUCT,\n" +
+            "                         DOSEID,\n" +
+            "                         GEOGRAPHICZONEID,\n" +
+            "                         D.DISTRICT_NAME,\n" +
+            "                         D.REGION_NAME REGION,\n" +
+            "                         D.REGION_ID REGIONID,\n" +
+            "                    \n" +
+            "                    (SELECT EXTRACT (MONTH FROM STARTDATE)\n" +
+            "                     FROM PROCESSING_PERIODS\n" +
+            "                     WHERE ID = #{period} :: INT ) MONTHNUMBER,\n" +
+            "                         SUM(A.CUMULATIVE_VACCINATED) CUMULATIVE_VACCINATED,\n" +
+            "                         SUM(E.VALUE) /12::NUMERIC MONTHLY_DISTRICT_TARGET\n" +
+            "                          FROM\n" +
+            "                    (SELECT F.GEOGRAPHICZONEID,\n" +
+            "                    D.DENOMINATORESTIMATECATEGORYID,\n" +
+            "                    D.PRODUCTID,\n" +
+            "                    D.DOSEID,\n" +
+            "                    D.MONTH PERIOD,\n" +
+            "                    P.PRIMARYNAME PRODUCT,\n" +
+            "                    SUM (MONTHLYREGULAR) AS CUMULATIVE_VACCINATED\n" +
+            "                     FROM VW_VACCINE_CUMULATIVE_COVERAGE_BY_DOSE D\n" +
+            "                     JOIN FACILITIES F ON F.ID = D.FACILITYID\n" +
+            "                     JOIN PRODUCTS P ON PRODUCTID = P.ID\n" +
+            "                     WHERE PRODUCTID = #{product} and D.DOSEID = #{doseId}::INT\n" +
+            "                       AND D. YEAR = #{year}::INT\n" +
+            "                       AND D. MONTH <=\n" +
+            "                         (SELECT EXTRACT (MONTH\n" +
+            "                          FROM STARTDATE)\n" +
+            "                          FROM PROCESSING_PERIODS\n" +
+            "                          WHERE ID = #{period}::INT )\n" +
+            "                     GROUP BY 1,2,3,4,5,6\n" +
+            "                     \n" +
+            "                     ORDER BY PRODUCTID) A\n" +
+            "                          JOIN DISTRICT_DEMOGRAPHIC_ESTIMATES E ON E.DEMOGRAPHICESTIMATEID = A.DENOMINATORESTIMATECATEGORYID AND E.YEAR =  #{year}::INT AND DISTRICTID =A.GEOGRAPHICZONEID\n" +
+            "                          JOIN VW_DISTRICTS D ON GEOGRAPHICZONEID = D.DISTRICT_ID\n" +
+            "                    \n" +
+            "                          GROUP BY PRODUCT,DOSEID,PRODUCTID,GEOGRAPHICZONEID,REGION_NAME,D.REGION_ID,D.DISTRICT_NAME\n" +
+            "                          ORDER BY PRODUCTID,DOSEID)\n" +
+            "\n" +
+            "                          \n" +
+            "                          SELECT PRODUCTID,REGION,REGIONID, GEOGRAPHICZONEID, district_name district, SUM(CUMULATIVE_VACCINATED) CUMULATIVE_VACCINATED,SUM(MONTHLY_DISTRICT_TARGET) MONTHLY_DISTRICT_TARGET,PRODUCT,DOSEID,MAX(MONTHNUMBER) MONTHNUMBER,\n" +
+            "                          CASE\n" +
+            "                          WHEN SUM(MONTHLY_DISTRICT_TARGET) > 0 THEN ROUND(SUM(CUMULATIVE_VACCINATED)/ SUM((MONTHLY_DISTRICT_TARGET::NUMERIC))*100,0)\n" +
+            "                          END AS value\n" +
+            "                       FROM COVERAGE C\n" +
+            "                       GROUP BY PRODUCTID,REGION,PRODUCT,DOSEID,REGIONID,GEOGRAPHICZONEID,district_name\n" +
+            "                       ORDER BY PRODUCTID)COVERAGE\n" +
+            "                    LEFT JOIN VACCINE_PRODUCT_TARGETS X ON COVERAGE.PRODUCTID = X.PRODUCTID\n" +
+            "            \n" +
+            "                     )COVERAGE ON gz.id = coverage.regionid\n" +
+            "                     \n" +
+            "                     WHERE levelid =3 AND GEOGRAPHICZONEID in (select district_id from vw_user_facilities where user_id = #{userId}::INT and program_id = fn_get_vaccine_program_id())")
+    List<HashMap<String, Object>> getDistrictVaccineCoverageForMap(@Param("userId") Long userId, @Param("product") Long product, @Param("period") Long periodId, @Param("year") Long year, @Param("doseId") Long doseId);
+
+
 }

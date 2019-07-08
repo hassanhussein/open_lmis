@@ -1855,10 +1855,10 @@ padding: 0px 0px !important;
 
                             <td class="number" style="width:20px;">{{$index+1}}</td>
                             <td ng-show="showRegionInfo">{{value.region}}</td>
-                            <td ng-show="showDistrictInfo ">{{value.district_name}}</td>
+                            <td ng-show="showDistrictInfo ">{{value.district}}</td>
                             <td ng-show="showFacilityInfo">{{value.facility_name}}</td>
-                            <td ng-show="showRegionInfo">{{value.coverage}}</td>
-                            <td ng-show="showDistrictInfo">{{value.value}}</td>
+                            <td ng-show="showRegionInfo">{{(value.coverage == null)?value.value:value.coverage}}</td>
+                            <td ng-show="showDistrictInfo">{{(value.coverage == null)?value.value:value.coverage}}</td>
                             <td ng-show="showFacilityInfo">{{value.coveragepercentage}}</td>
 
                         </tr>
