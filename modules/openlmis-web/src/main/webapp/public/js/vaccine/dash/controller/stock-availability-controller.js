@@ -678,7 +678,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     };
 
 
-    function loadDynamicPieChart(data, title,title2, chartId, legend, periodName, productName, dose, dataTobeFiltered,name) {
+    function loadDynamicPieChart(data, title,title2, chartId, legend, periodName, productName, dose, dataTobeFiltered,name,locationName) {
 
         var char2 = new Highcharts.Chart({
 
@@ -714,7 +714,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             },
             tooltip: {
                 headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}  </b>'+ locationName+'<br/>'
 
 
             },
@@ -768,7 +768,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                     },
                     {name: '90% +', opt: 'GOOD', y: summary3, color: 'green'}
                 );
-                loadDynamicPieChart(values, title,title, chartId, legend, para.periodName, para.productName, para.doseId, data,name);
+                loadDynamicPieChart(values, title,title, chartId, legend, para.periodName, para.productName, para.doseId, data,name,'District');
 
 
             });
@@ -799,7 +799,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                                      },
                                      {name: '90% +', opt: 'GOOD', y: summary3, color: 'green'}
                                  );
-                                 loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.doseId, filteredData,name);
+                                 loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.doseId, filteredData,name,'Regions');
 
 
 
@@ -852,7 +852,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
                         color: 'yellow'
                     },
                     {name: '90% +', y: summary3, opt: 'GOOD', color: 'green'});
-                loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.dose, data,name);
+                loadDynamicPieChart(values, title,title2, chartId, legend, para.periodName, para.productName, para.dose, data,name,'Districts');
             });
 
         }
@@ -994,7 +994,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
             var category = _.uniq(_.pluck(data, 'period_name'));
             var cat_1 = _.pluck(data, 'cat_1');
-           var cat1_data=  {name:'cat_1', data:cat_1, color:colors.Cat_1};
+            var cat1_data=  {name:'cat_1', data:cat_1, color:colors.Cat_1};
             var cat_2 = _.pluck(data, 'cat_2');
            var cat2_data=  {name:'cat_2', data:cat_2, color:colors.Cat_2};
             var cat_3 = _.pluck(data, 'cat_3');
