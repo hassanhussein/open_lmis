@@ -1,4 +1,4 @@
-function AnalyticsFunction(leafletData,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
+function AnalyticsFunction(leafletData,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
 
 
@@ -51,6 +51,9 @@ return 'dropdown-toggle';
     });
 
 var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
+
+$rootScope.parameters = params;
+
 
 
 IndexOfAluStockAvailabilityData.get(params).then(function(data){

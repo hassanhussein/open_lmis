@@ -143,6 +143,30 @@ services.factory('IndexOfAluStockAvailabilityData', function ($q, $timeout, $res
 
 });
 
+services.factory('PercentageWastageData', function ($q, $timeout, $resource,PercentageWastage) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            PercentageWastage.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 
 services.factory('StockStatusSummary', function ($resource) {
     return $resource('/api/dashboard/stock-status-summary.json', {}, {});
@@ -165,4 +189,8 @@ services.factory('RnrPassedQualityCheck', function ($resource) {
 
 services.factory('IndexOfAluStockAvailability', function ($resource) {
     return $resource('/api/dashboard/index-stock-availability.json', {}, {});
+});
+
+services.factory('PercentageWastage', function ($resource) {
+    return $resource('/api/dashboard/percentage-wastage.json', {}, {});
 });
