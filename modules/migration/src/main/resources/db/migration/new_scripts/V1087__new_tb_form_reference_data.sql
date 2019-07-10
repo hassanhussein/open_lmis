@@ -1,6 +1,6 @@
 INSERT INTO programs (code, name, description, active, templateConfigured, regimenTemplateConfigured, budgetingApplies, usesDar, push)
   VALUES
-  ('TB&LEPROSY', 'TB AND LEPROSY', 'TB AND LEPROSY', TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+  ('TB&LEPROSY', 'TB_Monthly', 'TB and Leprsoy monthly report', TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
 
 
 
