@@ -151,6 +151,12 @@ public class RequisitionServiceTest {
   @Mock
   private CustomerStatementService customerStatementService;
 
+  @Mock
+  private PatientService patientService;
+
+  @Mock
+  private PatientColumnService patientColumnService;
+
   @Before
   public void setup() {
     requisitionService.setRequisitionSearchStrategyFactory(requisitionSearchStrategyFactory);
@@ -174,6 +180,7 @@ public class RequisitionServiceTest {
     requisition.setProgram(PROGRAM);
     setupForInitRnr();
 
+
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts = new ArrayList<>();
     ProgramProduct programProduct = new ProgramProduct(null, make(a(defaultProduct)), 10, true);
     facilityTypeApprovedProducts.add(new FacilityTypeApprovedProduct("warehouse", programProduct, 30.56));
@@ -188,6 +195,15 @@ public class RequisitionServiceTest {
     regimenLineItems.add(new RegimenLineItem(null, null, 1L, 1L));
     requisition.setRegimenLineItems(regimenLineItems);
 
+
+    List<Patient> patients = new ArrayList<>();
+    patients.add(new Patient("name", "code", 6L, true,new PatientCategory("code", "name", 1),1 ));
+    requisition.setPatients(patients);
+
+    List<PatientLineItem> patientLineItems = new ArrayList<>();
+    patientLineItems.add(new PatientLineItem(null, null, 1L, 1L));
+    requisition.setPatientLineItems(patientLineItems);
+
     requisition.setStatus(INITIATED);
     Rnr spyRequisition = spy(requisition);
 
@@ -197,7 +213,7 @@ public class RequisitionServiceTest {
 
     when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(new RegimenTemplate());
 
-    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityTypeApprovedProducts, regimens,
+    whenNew(Rnr.class).withArguments(FACILITY, PROGRAM, PERIOD, false, facilityTypeApprovedProducts, regimens, patients,
       USER_ID).thenReturn(spyRequisition);
 
     RequisitionService spyRequisitionService = spy(requisitionService);
@@ -209,9 +225,10 @@ public class RequisitionServiceTest {
 
     when(programService.getById(PROGRAM.getId())).thenReturn(PROGRAM);
     when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
+    when(patientService.getByProgram(PROGRAM.getId())).thenReturn(patients);
+
 
     Rnr rnr = spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null,"WEB_UI");
-
     verify(facilityApprovedProductService).getFullSupplyFacilityApprovedProductByFacilityAndProgram(FACILITY.getId(),
       PROGRAM.getId());
     verify(processingScheduleService).getPeriodById(PERIOD.getId());
@@ -1470,13 +1487,16 @@ public class RequisitionServiceTest {
     RegimenTemplate regimenTemplate = mock(RegimenTemplate.class);
     List<Regimen> regimens = mock(List.class);
 
+    List<Patient> patients = new ArrayList<>();
+    patients.add(new Patient("name", "code", 6L, true,new PatientCategory("code", "name", 1),1 ));
+
     Rnr previousRnr = new Rnr();
     ProcessingPeriod previousPeriod = new ProcessingPeriod(3L);
     Program requisitionProgram = new Program(1234L);
     requisitionProgram.setBudgetingApplies(true);
     requisitionProgram.setPush(false);
     requisitionProgram.setIsEquipmentConfigured(false);
-      requisitionProgram.setUsePriceSchedule(false);
+    requisitionProgram.setUsePriceSchedule(false);
 
     RequisitionService spyRequisitionService = spy(requisitionService);
 
@@ -1490,6 +1510,7 @@ public class RequisitionServiceTest {
     when(regimenColumnService.getRegimenTemplateByProgramId(requisitionProgram.getId())).thenReturn(regimenTemplate);
     ProgramRnrTemplate rnrTemplate = new ProgramRnrTemplate(getRnrColumns());
     when(rnrTemplateService.fetchProgramTemplateForRequisition(requisitionProgram.getId())).thenReturn(rnrTemplate);
+    when(patientService.getByProgram(requisitionProgram.getId())).thenReturn(patients);
 
     when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, requisitionProgram,
       previousPeriod)).thenReturn(previousRnr);
@@ -1502,7 +1523,7 @@ public class RequisitionServiceTest {
     when(requisition.getPeriod()).thenReturn(PERIOD);
     when(requisition.getStatus()).thenReturn(INITIATED);
 
-    whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens,
+    whenNew(Rnr.class).withArguments(FACILITY, requisitionProgram, PERIOD, false, facilityApprovedProducts, regimens, patients,
       USER_ID).thenReturn(requisition);
     when(requisitionRepository.getById(1l)).thenReturn(requisition);
     when(budgetLineItemService.get(FACILITY.getId(), requisitionProgram.getId(), PERIOD.getId())).thenReturn(
@@ -1596,6 +1617,7 @@ public class RequisitionServiceTest {
     when(rnrTemplateService.fetchProgramTemplateForRequisition(PROGRAM.getId())).thenReturn(
       new ProgramRnrTemplate(getRnrColumns()));
     when(regimenColumnService.getRegimenTemplateByProgramId(PROGRAM.getId())).thenReturn(new RegimenTemplate());
+    when(patientColumnService.getPatientTemplateByProgramId(PROGRAM.getId())).thenReturn(new PatientTemplate());
   }
 
   private Rnr getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(Rnr rnr, String rightName) {
