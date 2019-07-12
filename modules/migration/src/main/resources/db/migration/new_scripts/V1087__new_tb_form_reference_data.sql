@@ -39,7 +39,7 @@ update programs set templateConfigured = true where id in ((select id from progr
 
 
 
---Drop TABLE IF EXISTS program_patient_columns;
+Drop TABLE IF EXISTS program_patient_columns;
 
 CREATE TABLE program_patient_columns (
     id SERIAL PRIMARY KEY,
