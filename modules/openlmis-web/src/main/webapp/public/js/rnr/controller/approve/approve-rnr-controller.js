@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
+function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, $location, pageSize, $routeParams, $dialog, requisitionService, $q, patientTemplate) {
 
   $scope.canApproveRnr = requisitionData.canApproveRnr;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
@@ -18,8 +18,11 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
   $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, [], !$scope.rnr.period.enableOrder);
   $scope.error = $scope.message = "";
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+  $scope.patientCount = $scope.rnr.patientLineItems.length;
   $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
   $scope.manualTestCount = $scope.rnr.manualTestLineItems.length;
+  $scope.patientColumns = patientTemplate ? patientTemplate.columns : [];
+
 
   $scope.showMaxStock = showMaxStock;
   $scope.equipmentOperationalStatus = equipmentOperationalStatus;
@@ -265,5 +268,16 @@ ApproveRnrController.resolve = {
       }, {});
     }, 100);
     return deferred.promise;
-  }
+  },
+  patientTemplate: function($q, $timeout, $route, ProgramPatientTemplate) {
+           var deferred = $q.defer();
+           $timeout(function() {
+               ProgramPatientTemplate.get({
+                   programId: $route.current.params.program
+               }, function(data) {
+                   deferred.resolve(data.template);
+               }, {});
+           }, 100);
+           return deferred.promise;
+       }
 };
