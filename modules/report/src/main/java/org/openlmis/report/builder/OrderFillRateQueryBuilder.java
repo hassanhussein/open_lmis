@@ -49,7 +49,8 @@ public class OrderFillRateQueryBuilder {
 
     private static String writePredicates(OrderFillRateReportParam param) {
 
-        String predicate = " and  r.programId=" + param.getProgram() +
+        String predicate = " and r.status= 'RELEASED' and r.approved >0 " +
+                "and  r.programId=" + param.getProgram() +
                 " and r.periodid = " + param.getPeriod() + " ";
         if (param.getZone() != null && param.getZone() != 0) {
             predicate = predicate + " and (r.zoneid = " + param.getZone() + " or r.districtid = " + param.getZone() + " or r.parent = " + param.getZone() + " " +
