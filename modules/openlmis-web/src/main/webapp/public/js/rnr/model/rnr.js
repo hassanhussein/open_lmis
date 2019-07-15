@@ -50,6 +50,18 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
         return errorLineItems;
     };
 
+
+    Rnr.prototype.getPatientErrorLineItemIndexes = function () {
+
+        var errorLineItems = [];
+        $(this.patientLineItems).each(function (i, lineItem) {
+            if (lineItem.hasError) {
+                errorLineItems.push(i);
+            }
+        });
+        return errorLineItems;
+    };
+
     Rnr.prototype.getErrorPages = function (pageSize) {
         function getErrorPages(lineItems) {
             var pagesWithErrors = [];
@@ -75,10 +87,16 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
             return getErrorPages(regimenErrorLineItems);
         }
 
+        function getPatientPagesWithError() {
+             var patientErrorLineItems = thisRnr.getPatientErrorLineItemIndexes();
+              return getErrorPages(patientErrorLineItems);
+        }
+
         var errorPages = {};
         errorPages.fullSupply = getFullSupplyPagesWithError();
         errorPages.nonFullSupply = getNonFullSupplyPagesWithError();
         errorPages.regimen = getRegimenPagesWithError();
+        errorPages.patient = getPatientPagesWithError();
         return errorPages;
     };
 
@@ -292,11 +310,10 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
 
     Rnr.prototype.init = function () {
         var thisRnr = this;
-
         function prepareLineItems(lineItems) {
             var regularLineItems = [];
             $(lineItems).each(function (i, lineItem) {
-                var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.numberOfMonths, programRnrColumns, thisRnr.status,rnr.period.enableOrder,rnr.period);
+                var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.numberOfMonths, programRnrColumns, thisRnr.status,rnr.period.enableOrder,rnr.period, rnr.program);
                 regularLineItems.push(regularLineItem);
             });
             return regularLineItems;

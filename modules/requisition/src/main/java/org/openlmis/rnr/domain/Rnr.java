@@ -76,6 +76,9 @@ public class Rnr extends BaseModel {
   private List<Signature> rnrSignatures;
   private List<ManualTestesLineItem> manualTestLineItems = new ArrayList<>();
 
+  private List<Patient> patients;
+  private List<PatientLineItem> patientLineItems = new ArrayList<>();
+
   public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, Long modifiedBy, Long createdBy) {
     this.facility = facility;
     this.program = program;
@@ -90,6 +93,16 @@ public class Rnr extends BaseModel {
     this(facility, program, period, emergency, modifiedBy, modifiedBy);
     fillLineItems(facilityTypeApprovedProducts);
     fillActiveRegimenLineItems(regimens);
+
+  }
+
+
+  public Rnr(Facility facility, Program program, ProcessingPeriod period, Boolean emergency, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts,
+             List<Regimen> regimens,List<Patient> patients, Long modifiedBy) {
+    this(facility, program, period, emergency, modifiedBy, modifiedBy);
+    fillLineItems(facilityTypeApprovedProducts);
+    fillActiveRegimenLineItems(regimens);
+    fillPatientLineItems(patients);
   }
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period) {
@@ -100,6 +113,22 @@ public class Rnr extends BaseModel {
 
   public Rnr(Long id) {
     this.id = id;
+  }
+
+
+  private void fillPatientLineItems (List<Patient> patients) {
+    for(Patient patient : patients)
+    {
+      if(patient.getActive())
+      {
+        PatientLineItem patientLineItem = new PatientLineItem(patient.getId(),  patient.getCategory(),  createdBy,  modifiedBy);
+        patientLineItem.setCode(patient.getCode());
+        patientLineItem.setName(patient.getName());
+        patientLineItem.setPatientDisplayOrder(patient.getDisplayOrder());
+        patientLineItems.add(patientLineItem);
+      }
+    }
+
   }
 
   private void fillActiveRegimenLineItems(List<Regimen> regimens) {
@@ -151,8 +180,8 @@ public class Rnr extends BaseModel {
 
   private void setBeginningBalances(Rnr previousRequisition, boolean beginningBalanceVisible) {
     if (previousRequisition == null ||
-      previousRequisition.status == INITIATED ||
-      previousRequisition.status == SUBMITTED) {
+            previousRequisition.status == INITIATED ||
+            previousRequisition.status == SUBMITTED) {
 
       if (!beginningBalanceVisible) {
         resetBeginningBalances();

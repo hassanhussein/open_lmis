@@ -177,6 +177,10 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "boolean", name = "Has Been Archived")
   private Boolean archived;
 
+  @ImportField( name = "Consumption Calculation formula by using number of patients")
+  private String patientCalculationFormula;
+
+
   private Boolean trackNet;
 
   public void validate() {

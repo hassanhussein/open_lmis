@@ -11,8 +11,8 @@
 function ApproveRnrListController($scope, requisitionList, $location, messageService) {
   $scope.requisitions = requisitionList;
   $scope.filteredRequisitions = $scope.requisitions;
-  console.log(requisitionList);
   $scope.selectedItems = [];
+
 
   $scope.gridOptions = { data: 'filteredRequisitions',
     multiSelect: false,

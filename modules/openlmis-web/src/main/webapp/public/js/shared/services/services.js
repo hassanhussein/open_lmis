@@ -571,3 +571,7 @@ services.factory('reportIssueOnSD', function ($resource) {
   return $resource('/rest-api/support-desk/reportIssueOnSD.json', {summary: '@summary', description: '@description', reporterId: '@reporterId' }, {});
 });
 
+services.factory('ProgramPatientTemplate', function ($resource) {
+    return $resource('/programId/:programId/programPatientTemplate.json', {}, {});
+});
+

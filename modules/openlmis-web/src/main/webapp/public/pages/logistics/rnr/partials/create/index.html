@@ -13,6 +13,10 @@
 
     <div class="rnr-tabs clearfix">
         <ul class="clearfix" set-focus>
+            <li ng-class="{'selected': visibleTab == 'patient', 'has-error': patientLineItemInValid}"
+                ng-show="patientCount">
+                <a href="" ng-click="switchSupplyType('patient')" id="patientTab" openlmis-message="label.patients"></a>
+            </li>
             <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
                 <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                    openlmis-message="label.full.supply.products"></a></li>
@@ -32,41 +36,44 @@
                 <a href="" ng-click="switchSupplyType('manualTest')" id="manualTestTab" openlmis-message="label.manual.tests"></a>
             </li>
         </ul>
-    <span class="pull-right">
+        <span class="pull-right">
       <a id="resizeViewButton" full-screen href="" class="btn">
         <i class="icon-resize-full"></i>
       </a>
     </span>
-    <span class="pull-right print-button">
+        <span class="pull-right print-button">
       <a id="printButton" class="btn btn-primary" ng-href="/requisitions/{{rnr.id}}/print.pdf"
          openlmis-message="button.print"
          target="_blank"></a>
     </span>
-  </div>
+    </div>
 
     <div ng-hide="programRnrColumnList"></div>
     <form name="saveRnrForm" action="#" id="rnr-form" novalidate>
     <span ng-show="visibleTab === 'nonFullSupply'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-non-full-supply.html'"></ng-include>
     </span>
-    <span ng-show="visibleTab === 'regimen'">
+        <span ng-show="visibleTab === 'regimen'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/regimen-line-item.html'"></ng-include>
     </span>
-    <span ng-show="visibleTab === 'equipment'">
+        <span ng-show="visibleTab === 'patient'">
+      <ng-include src="'/public/pages/logistics/rnr/partials/create/patient.html'"></ng-include>
+    </span>
+        <span ng-show="visibleTab === 'equipment'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/equipment-line-item.html'"></ng-include>
     </span>
-    <span ng-show="visibleTab === 'fullSupply'">
+        <span ng-show="visibleTab === 'fullSupply'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/rnr-full-supply.html'"></ng-include>
     </span>
-    <span ng-show="visibleTab === 'manualTest'">
+        <span ng-show="visibleTab === 'manualTest'">
       <ng-include src="'/public/pages/logistics/rnr/partials/create/manual-test-line-item.html'"></ng-include>
     </span>
 
-    <div set-focus>
-      <openlmis-pagination ng-show="page[visibleTab].length" num-pages="numberOfPages" current-page="currentPage"
-                           max-size="10"
-                           check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
-    </div>
+        <div set-focus>
+            <openlmis-pagination ng-show="page[visibleTab].length" num-pages="numberOfPages" current-page="currentPage"
+                                 max-size="10"
+                                 check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
+        </div>
 
         <div form-toolbar id="action_buttons" class="action-buttons">
             <span ng-if="rnr.period.enableOrder"><ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include></span>
@@ -90,12 +97,12 @@
                        openlmis-message="comments.header"/>
 
                 <comment-box updatable="!formDisabled" show="showCommentBox"></comment-box>
-<!--
-Add fund souce
--->
-<!--
-                <funding-source updatable="!formDisabled" show="false"></funding-source>
--->
+                <!--
+                Add fund souce
+                -->
+                <!--
+                                <funding-source updatable="!formDisabled" show="false"></funding-source>
+                -->
             </div>
             <div class="toolbar-error" id="saveFailMessage" openlmis-message="error" ng-show="error"></div>
             <div class="toolbar-error" id="submitFailMessage" openlmis-message="submitError"
@@ -105,9 +112,9 @@ Add fund souce
             <div class="toolbar-success" id="submitSuccessMsgDiv" openlmis-message="submitMessage"
                  ng-show="submitMessage"></div>
             <div class="toolbar-message">
-              <div ng-if="!rnr.period.enableOrder && !rnr.emergency">
-                NOTE: This is a report only period. This report will <b>NOT</b> be converted to order.
-              </div>
+                <div ng-if="!rnr.period.enableOrder && !rnr.emergency">
+                    NOTE: This is a report only period. This report will <b>NOT</b> be converted to order.
+                </div>
             </div>
         </div>
     </form>
