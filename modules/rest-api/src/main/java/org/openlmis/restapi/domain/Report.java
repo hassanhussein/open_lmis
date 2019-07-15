@@ -44,6 +44,7 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 @EqualsAndHashCode(callSuper = false)
 public class Report {
 
+  private Long id;
   private List<RnrLineItem> products;
   private List<RnrLineItem> nonFullSupplyProducts;
   private List<RegimenLineItem> regimens;
@@ -104,7 +105,7 @@ public class Report {
       addAll(rnr.getNonFullSupplyLineItems());
     }};
     report.setNonFullSupplyProducts(nonFullSupplyProducts);
-
+    report.setId(rnr.getId());
     ArrayList<RnrLineItem> fullSupplyProducts = new ArrayList<RnrLineItem>() {{
       addAll(rnr.getFullSupplyLineItems());
     }};
