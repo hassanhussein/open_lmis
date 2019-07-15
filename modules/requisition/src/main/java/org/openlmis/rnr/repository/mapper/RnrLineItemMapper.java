@@ -166,7 +166,7 @@ public interface RnrLineItemMapper {
 
   @Select({"SELECT productCode, beginningBalance, quantityReceived, quantityDispensed, ",
       "stockInHand, quantityRequested, calculatedOrderQuantity, quantityApproved, ",
-      "totalLossesAndAdjustments, expirationDate",
+      "totalLossesAndAdjustments, expirationDate, amc",
       "FROM requisition_line_items",
       "WHERE rnrId = #{rnrId} and fullSupply = TRUE",
       "AND skipped = FALSE"})

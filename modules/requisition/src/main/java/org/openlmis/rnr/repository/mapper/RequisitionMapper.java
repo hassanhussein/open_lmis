@@ -110,6 +110,7 @@ public interface RequisitionMapper {
   )
   @Results(value = {
       @Result(property = "facility.id", column = "facilityId"),
+      @Result(property = "id", column = "id"),
       @Result(property = "program", javaType = Program.class, column = "programId",
           one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
       @Result(property = "period.id", column = "periodId"),
