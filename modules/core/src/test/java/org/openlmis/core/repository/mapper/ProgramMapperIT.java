@@ -92,7 +92,7 @@ public class ProgramMapperIT {
   @Test
   public void shouldGetAllPullPrograms() throws Exception {
     List<Program> programs = programMapper.getAllPullPrograms();
-    assertThat(4, is(programs.size()));
+    assertThat(5, is(programs.size()));
     assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
     assertThat(programs.get(1).getCode(), is("HIV"));
     assertThat(programs.get(2).getCode(), is("MALARIA"));
@@ -120,8 +120,8 @@ public class ProgramMapperIT {
   @Test
   public void shouldGetAllPrograms() throws Exception {
     List<Program> programs = programMapper.getAll();
-    assertThat(5, is(programs.size()));
-    assertThat(programs.get(0).getCode(), is("ESS_MEDS"));
+    assertThat(6, is(programs.size()));
+    assertThat(programs.get(0).getCode(), is("TB&LEPROSY"));
   }
 
   @Test
@@ -306,7 +306,7 @@ public class ProgramMapperIT {
   public void shouldGetAllProgramsInOrderByRegimentTemplateConfiguredAndName() {
     insertProgram(make(a(defaultProgram, with(regimenTemplateConfigured, true))));
     List<Program> programs = programMapper.getAllByRegimenTemplate();
-    assertThat(programs.size(), is(6));
+    assertThat(programs.size(), is(7));
     //assertThat(programs.get(0).getCode(), is(ProgramBuilder.PROGRAM_CODE));
   }
 

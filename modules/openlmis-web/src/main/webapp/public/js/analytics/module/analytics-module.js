@@ -12,10 +12,10 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the GNU Affero General Public License for more details.
  */
 
-var app  = angular.module('analytics', ['openlmis','ui.router', 'ngGrid', 'ui.bootstrap.dialog', 'ui.bootstrap.accordion',
+var app  = angular.module('analytics', ['openlmis','ui.router','leaflet-directive', 'ngGrid', 'ui.bootstrap.dialog', 'ui.bootstrap.accordion',
     'ui.bootstrap.modal','ui.bootstrap.pagination', 'ui.bootstrap.dropdownToggle',
     'angularUtils.directives.uiBreadcrumbs','ng-breadcrumbs','ncy-angular-breadcrumb','angularCombine',
-    'ngTable','ui.bootstrap.pagination', 'tree.dropdown','rxDataTable'
+    'ngTable','ui.bootstrap.pagination', 'tree.dropdown','rxDataTable','ngAnimate'
 ]);
 ///Start
 
@@ -25,7 +25,7 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider){
         {
             name: 'home',
             url: '/home',
-            templateUrl: 'partials/analytics.html',
+            templateUrl: 'partials/analytics2.html',
             controller:AnalyticsFunction,
             resolve:AnalyticsFunction.resolve,
             ncyBreadcrumb: {

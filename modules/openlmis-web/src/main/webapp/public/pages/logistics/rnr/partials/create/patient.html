@@ -1,0 +1,99 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div ng-controller="CreatePatientLineItemController">
+    <div class="rnr-table" tab-scroll bottom-offset="180" adjust-height>
+        <div class="float-left left-table parent">
+            <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+                <thead>
+                <tr>
+                    <th class="col-{{patientColumn.name}}"
+                        ng-repeat="patientColumn in patientColumns | filter:{fixed : true}">
+                        <div class="regimen-heading">
+                            <span openlmis-message="patientColumn.label"></span>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="patientLineItem in page.patient">
+                <tr>
+                    <td class="productCategory" colspan="{{visiblePatientColumns.columns.length}}"
+                        ng-show="showCategory($index)"
+                        ng-bind="patientLineItem.category.name"></td>
+                </tr>
+                <tr>
+                    <td class="cell-input col-{{ patientColumn.name }}"
+                        ng-repeat="patientColumn in patientColumns | filter:{fixed : true}">
+                        <ng-switch on="patientColumn.name">
+                          <span ng-switch-when="monthOfTreatment" class="cell-text" >
+                            <span ng-bind="patientLineItem.name" class="padding2px"></span>
+                          </span>
+                        </ng-switch>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="float-left right-table parent" custom-horizontal-scroll>
+            <table id="regimenTable" fixed-table-header class="table table-bordered scrollable">
+                <thead>
+                <tr>
+                    <th class="col-{{patientColumn.name}}"
+                        ng-repeat="patientColumn in patientColumns | filter:{fixed : false}">
+                        <div class="regimen-heading">
+                            <span openlmis-message="patientColumn.label"></span>
+                            <span ng-if="patientColumn.name == 'skipped'">
+                              <a href="" id="selectAll" ng-click="setSkipAll(true)"
+                                 openlmis-message="label.select.all"></a>&nbsp;|
+                              <a href="" id="selectNone" ng-click="setSkipAll(false)"
+                                 openlmis-message="label.select.none"></a>
+                          </span>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="patientLineItem in page.patient">
+                <tr>
+                    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length + 4}}"
+                        ng-show="showCategory($index)">
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td class="cell-input col-beginningBalance"
+                        ng-repeat="patientColumn in patientColumns | filter:{fixed : false}">
+                        <ng-switch on="patientColumn.name">
+                          <span ng-switch-when="name" class="cell-text">
+                            <span ng-bind="patientLineItem.name" class="padding2px"></span>
+                          </span>
+                            <span ng-switch-default  class="position-relative" >
+                                 <input ng-required="false"
+                                        ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder)"
+                                        id="{{getId(patientColumn.name, $parent)}}"
+                                        type="text"
+                                        ng-model="patientLineItem[patientColumn.name]"
+                                        maxlength="8"
+                                        ng-class="highlightPatientRequired(showError, patientLineItem[patientColumn.name], disableInput($index + 1, patientLineItem.patientDisplayOrder))"/>
+                                 <span class="rnr-form-error"
+                                       style="display:none;" openlmis-message="error.number.only">
+                                 </span>
+                          </span>
+                        </span>
+
+                            </span>
+                        </ng-switch>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clear-both"></div>
+    </div>
+</div>

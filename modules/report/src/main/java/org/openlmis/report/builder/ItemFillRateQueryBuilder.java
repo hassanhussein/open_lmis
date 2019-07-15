@@ -19,8 +19,8 @@ public class ItemFillRateQueryBuilder {
                         " JOIN pod_line_items li ON pod.id = li.podid \n" +
                         " JOIN facilities f on f.id = pod.facilityid  " +
                         " JOIN vw_districts d ON d.district_ID = F.GEOGRAPHICZONEID " +
-                        " join REQUISITIONS R on R.ID = POD.ORDERID " +
-                        " JOIN requisition_line_items item on item.rnrid = R.ID " +
+                        " join REQUISITIONS R on R.ID = POD.ORDERID" +
+                        " JOIN requisition_line_items item on item.rnrid = R.ID and item.productcode = li.productcode" +
                         " where li.QUANTITYRECEIVED > 0 AND R.periodid = '"+filter.getPeriod()+"' and POD.facilityId = '"+filter.getFacility()+"'  " +
                         " and POD.programId = '"+filter.getProgram()+"' AND R.STATUS IN('RELEASED') and item.quantityApproved > 0 " ;
     }

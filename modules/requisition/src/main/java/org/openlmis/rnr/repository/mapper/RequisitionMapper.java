@@ -65,7 +65,9 @@ public interface RequisitionMapper {
             @Result(property = "manualTestLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper.getManualTestLineItemsByRnrId")),
             @Result(property = "sourceOfFunds", javaType = List.class, column = "id",
-                    many = @Many(select = "org.openlmis.rnr.repository.mapper.FacilitySourceOfFundMapper.getByRnrId"))
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.FacilitySourceOfFundMapper.getByRnrId")),
+            @Result(property = "patientLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientLineItemMapper.getPatientLineItemsByRnrId"))
     })
     Rnr getById(Long rnrId);
 
@@ -144,7 +146,9 @@ public interface RequisitionMapper {
             @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
             @Result(property = "rnrSignatures", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
-            )
+            ),
+            @Result(property = "patientLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientLineItemMapper.getPatientLineItemsByRnrId"))
     })
     List<Rnr> getRequisitionsWithLineItemsByFacility(@Param("facility") Facility facility);
 

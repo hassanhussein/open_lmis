@@ -11,6 +11,10 @@
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
 <div class="rnr-tabs clearfix">
     <ul class="clearfix">
+        <li ng-class="{'selected': visibleTab == 'patient', 'has-error': patientLineItemInValid}"
+            ng-show="patientCount">
+            <a href="" ng-click="switchSupplyType('patient')" id="patientTab" openlmis-message="label.patients"></a>
+        </li>
         <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
             <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                openlmis-message="label.full.supply.products"></a></li>
@@ -55,6 +59,9 @@
   </span>
     <span ng-show="visibleTab === 'manualTest'">
       <ng-include src="'/public/pages/logistics/rnr/partials/approve/manual-test-line-item.html'"></ng-include>
+    </span>
+    <span ng-show="visibleTab === 'patient'">
+      <ng-include src="'/public/pages/logistics/rnr/partials/approve/patient.html'"></ng-include>
     </span>
   <div ng-hide="visibleTab === 'regimen'">
         <openlmis-pagination num-pages="numberOfPages" current-page="currentPage" max-size="10"

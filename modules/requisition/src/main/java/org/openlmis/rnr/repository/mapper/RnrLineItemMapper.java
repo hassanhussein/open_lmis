@@ -25,23 +25,26 @@ import java.util.List;
 @Repository
 public interface RnrLineItemMapper {
 
+
   @Insert({"INSERT INTO requisition_line_items",
     "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, previousStockInHand, beginningBalance,",
     "quantityReceived, quantityDispensed, dispensingUnit,dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock,",
     "totalLossesAndAdjustments, packsToShip, packSize, price, roundToZero, packRoundingThreshold, fullSupply,",
     "newPatientCount, stockOutDays, previousNormalizedConsumptions, reportingDays, skipped, ",
-    "modifiedBy,createdBy)",
+    "modifiedBy,createdBy, totalRequirement, totalQuantityNeededByHF, quantityToIssue, remarksForTBDispensedQuantity, nextMonthPatient)",
     "VALUES (",
     "#{lineItem.rnrId}, #{lineItem.productCode}, #{lineItem.product}, #{lineItem.productDisplayOrder}, #{lineItem.productCategory},",
     "#{lineItem.productCategoryDisplayOrder}, #{lineItem.previousStockInHand}, #{lineItem.beginningBalance}, #{lineItem.quantityReceived}, #{lineItem.quantityDispensed},",
     "#{lineItem.dispensingUnit},#{lineItem.dosesPerMonth}, #{lineItem.dosesPerDispensingUnit}, #{lineItem.maxMonthsOfStock},",
     "#{lineItem.totalLossesAndAdjustments}, #{lineItem.packsToShip}, #{lineItem.packSize}, #{lineItem.price},#{lineItem.roundToZero},",
     "#{lineItem.packRoundingThreshold}, #{lineItem.fullSupply}, #{lineItem.newPatientCount}, #{lineItem.stockOutDays},",
-    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.skipped} , #{lineItem.modifiedBy}, #{lineItem.createdBy})"})
+    "#{previousNormalizedConsumptions}, #{lineItem.reportingDays}, #{lineItem.skipped} , #{lineItem.modifiedBy}, #{lineItem.createdBy}, " +
+            " #{lineItem.totalRequirement}, #{lineItem.totalQuantityNeededByHF}, #{lineItem.quantityToIssue}," +
+            " #{lineItem.remarksForTBDispensedQuantity}, #{lineItem.nextMonthPatient})"})
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select({"SELECT requisition_line_items.*, products.strength, products.primaryname ",
+  @Select({"SELECT requisition_line_items.*, products.strength, products.primaryname, products.patientCalculationFormula ",
           "FROM requisition_line_items, products ",
           "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true ",
           "and requisition_line_items.productcode = products.code ",
@@ -50,6 +53,7 @@ public interface RnrLineItemMapper {
     @Result(property = "id", column = "id"),
     @Result(property = "productStrength", column = "strength"),
     @Result(property = "productPrimaryName", column = "primaryname"),
+    @Result(property = "patientCalculationFormula", column = "patientCalculationFormula"),
     @Result(property = "previousNormalizedConsumptions", column = "previousNormalizedConsumptions", typeHandler = StringToList.class),
     @Result(property = "lossesAndAdjustments", javaType = List.class, column = "id",
       many = @Many(select = "org.openlmis.rnr.repository.mapper.LossesAndAdjustmentsMapper.getByRnrLineItem"))
@@ -79,25 +83,34 @@ public interface RnrLineItemMapper {
     "expirationDate = #{expirationDate},",
     "skipped = #{skipped},",
     "modifiedBy = #{modifiedBy},",
+    "remarksForTBDispensedQuantity = #{remarksForTBDispensedQuantity},",
+    "totalRequirement = #{totalRequirement},",
+    "totalQuantityNeededByHF = #{totalQuantityNeededByHF},",
+    "quantityToIssue = #{quantityToIssue},",
+    "nextMonthPatient = #{nextMonthPatient},",
     "modifiedDate = CURRENT_TIMESTAMP",
     "WHERE id = #{id}"
   })
   int update(RnrLineItem rnrLineItem);
 
   @Insert({"INSERT INTO requisition_line_items",
-    "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, dispensingUnit,",
-    "dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packSize, price, roundToZero,",
-    "packRoundingThreshold, fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
-    "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
-    "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity,",
-    "remarks, quantityRequested, reasonForRequestedQuantity)",
-    "VALUES ( ",
-    "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{dispensingUnit},",
-    "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{packSize}, #{price}, #{roundToZero},",
-    "#{packRoundingThreshold}, #{fullSupply}, #{modifiedBy}, 0, 0, 0,",
-    "0, 0, 0, #{quantityApproved},",
-    "0, 0, 0, 0, 0,",
-    " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity})"})
+          "(rnrId, productCode, product, productDisplayOrder, productCategory, productCategoryDisplayOrder, dispensingUnit,",
+          "dosesPerMonth, dosesPerDispensingUnit, maxMonthsOfStock, packSize, price, roundToZero,",
+          "packRoundingThreshold, fullSupply, modifiedBy, quantityReceived, quantityDispensed, beginningBalance,",
+          "stockInHand, totalLossesAndAdjustments, calculatedOrderQuantity, quantityApproved,",
+          "newPatientCount, stockOutDays, normalizedConsumption, amc, maxStockQuantity,",
+          "remarks, quantityRequested, reasonForRequestedQuantity," +
+                  " totalRequirement, totalQuantityNeededByHF, quantityToIssue," +
+                  "remarksForTBDispensedQuantity, nextMonthPatient)",
+          "VALUES ( ",
+          "#{rnrId}, #{productCode}, #{product}, #{productDisplayOrder}, #{productCategory}, #{productCategoryDisplayOrder}, #{dispensingUnit},",
+          "#{dosesPerMonth}, #{dosesPerDispensingUnit}, #{maxMonthsOfStock},#{packSize}, #{price}, #{roundToZero},",
+          "#{packRoundingThreshold}, #{fullSupply}, #{modifiedBy}, 0, 0, 0,",
+          "0, 0, 0, #{quantityApproved},",
+          "0, 0, 0, 0, 0,",
+          " #{remarks}, #{quantityRequested}, #{reasonForRequestedQuantity}, " +
+                  "#{totalRequirement} , #{totalQuantityNeededByHF} , " +
+                  "#{quantityToIssue} , #{remarksForTBDispensedQuantity}, #{nextMonthPatient})"})
   @Options(useGeneratedKeys = true)
   void insertNonFullSupply(RnrLineItem requisitionLineItem);
 
