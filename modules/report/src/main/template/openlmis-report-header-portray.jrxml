@@ -27,7 +27,7 @@
 				<textFieldExpression><![CDATA[$P{REPORT_SUB_TITLE}.toUpperCase()=="NULL"?"":$P{REPORT_SUB_TITLE}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="520" y="66" width="36" height="20" uuid="71e84ef8-ce3f-4e0a-813d-c62b5574cb0d">
+				<reportElement x="505" y="66" width="36" height="20" uuid="71e84ef8-ce3f-4e0a-813d-c62b5574cb0d">
 					<printWhenExpression><![CDATA[!$P{PAGE_NO}.equals("-1")]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
@@ -36,7 +36,7 @@
 				<text><![CDATA[Page:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="556" y="66" width="31" height="20" forecolor="#000000" uuid="ef77094f-f5e9-4fde-8847-aaa889c3a8a2">
+				<reportElement x="541" y="66" width="31" height="20" forecolor="#000000" uuid="ef77094f-f5e9-4fde-8847-aaa889c3a8a2">
 					<printWhenExpression><![CDATA[!$P{PAGE_NO}.equals("-1")]]></printWhenExpression>
 				</reportElement>
 				<textElement textAlignment="Right" verticalAlignment="Middle">

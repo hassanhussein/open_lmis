@@ -141,7 +141,7 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="79" splitType="Stretch">
+		<band height="134" splitType="Stretch">
 			<subreport>
 				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
@@ -173,46 +173,42 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.JREmptyDataSource()]]></dataSourceExpression>
 				<subreportExpression><![CDATA["openlmis-report-header-landscape.jasper"]]></subreportExpression>
 			</subreport>
-		</band>
-	</title>
-	<pageHeader>
-		<band height="58">
 			<textField>
-				<reportElement x="585" y="21" width="130" height="18" uuid="0fa86237-be68-44f0-b1d2-f610615825bc"/>
+				<reportElement x="569" y="97" width="130" height="18" uuid="0fa86237-be68-44f0-b1d2-f610615825bc"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{label.total.products.approved}+':']]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="585" y="39" width="130" height="17" uuid="d8df6636-e643-40d2-9bf4-98f01a7fd1c0"/>
+				<reportElement x="569" y="115" width="130" height="17" uuid="d8df6636-e643-40d2-9bf4-98f01a7fd1c0"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{label.percent.order.fill.rate}+':']]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Group" evaluationGroup="GroupByFacilityReport" pattern="#,##0">
-				<reportElement x="715" y="21" width="73" height="18" uuid="081b2e6f-e30a-412a-94b1-f05792d2dc71"/>
+				<reportElement x="699" y="97" width="73" height="18" uuid="081b2e6f-e30a-412a-94b1-f05792d2dc71"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{TOTAL_PRODUCTS_APPROVED}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report" pattern="#,##0.00">
-				<reportElement x="714" y="39" width="74" height="17" uuid="d2edc7b8-1a3f-479c-9605-7101361420d6"/>
+				<reportElement x="698" y="115" width="74" height="17" uuid="d2edc7b8-1a3f-479c-9605-7101361420d6"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{ORDER_FILL_RATE}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="585" y="3" width="130" height="18" uuid="8e6fd485-c396-4204-884f-c7efa97421a2"/>
+				<reportElement x="569" y="79" width="130" height="18" uuid="8e6fd485-c396-4204-884f-c7efa97421a2"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{label.total.products.received}+':']]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Group" evaluationGroup="GroupByFacilityReport" pattern="#,##0">
-				<reportElement x="715" y="3" width="73" height="18" uuid="d1efad26-e706-4411-8579-5b976eb09158"/>
+				<reportElement x="699" y="79" width="73" height="18" uuid="d1efad26-e706-4411-8579-5b976eb09158"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$P{TOTAL_PRODUCT_SHIPPED}]]></textFieldExpression>
 			</textField>
 		</band>
-	</pageHeader>
+	</title>
 	<columnHeader>
-		<band height="50">
+		<band height="25">
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="29" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="027748a1-2b55-42d0-a38f-f472bd7efe21">
+				<reportElement mode="Opaque" x="0" y="3" width="802" height="20" forecolor="#FFFFFF" backcolor="#3D9297" uuid="027748a1-2b55-42d0-a38f-f472bd7efe21">
 					<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -226,91 +222,91 @@ WHERE ( li.rnrid = 456911 AND  status = 'RELEASED' AND  li.quantityapproved > 0 
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="29" width="23" height="20" uuid="cf7de1a4-f163-46be-a8b3-57531443a519"/>
+				<reportElement x="0" y="3" width="23" height="20" uuid="cf7de1a4-f163-46be-a8b3-57531443a519"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="165" y="29" width="56" height="20" uuid="99f26edd-b7cc-4872-ad39-9004ad414586"/>
+				<reportElement x="165" y="3" width="56" height="20" uuid="99f26edd-b7cc-4872-ad39-9004ad414586"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.product.code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="221" y="29" width="75" height="20" uuid="5ea010f3-0813-46f9-8f86-61778a7f2b22"/>
+				<reportElement x="221" y="3" width="75" height="20" uuid="5ea010f3-0813-46f9-8f86-61778a7f2b22"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.product.name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="553" y="30" width="59" height="20" uuid="8ef52573-0395-4d69-982a-a0e21c9a92fe"/>
+				<reportElement x="553" y="4" width="59" height="20" uuid="8ef52573-0395-4d69-982a-a0e21c9a92fe"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{header.quantity.ordered}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="612" y="30" width="63" height="20" uuid="da8653cd-9249-4321-bf01-639501fcb65f"/>
+				<reportElement x="612" y="4" width="63" height="20" uuid="da8653cd-9249-4321-bf01-639501fcb65f"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.qty.shipped}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="740" y="29" width="62" height="20" uuid="965e210b-7d8e-448f-b43a-208337557650"/>
+				<reportElement x="740" y="3" width="62" height="20" uuid="965e210b-7d8e-448f-b43a-208337557650"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.item.fill.rate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="23" y="30" width="60" height="20" uuid="49e36ac5-2274-4caf-9760-0f2818d78c7f"/>
+				<reportElement x="23" y="4" width="60" height="20" uuid="49e36ac5-2274-4caf-9760-0f2818d78c7f"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="83" y="29" width="82" height="20" uuid="36f9c362-4823-4e72-aa06-27bb74609cf2"/>
+				<reportElement x="83" y="3" width="82" height="20" uuid="36f9c362-4823-4e72-aa06-27bb74609cf2"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.facility.name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="296" y="30" width="59" height="20" uuid="5ea25219-e36e-47a9-a204-03af129926d5"/>
+				<reportElement x="296" y="4" width="59" height="20" uuid="5ea25219-e36e-47a9-a204-03af129926d5"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.province}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="355" y="29" width="64" height="20" uuid="0136ebd3-cf83-41c3-8954-c6f296652fea"/>
+				<reportElement x="355" y="3" width="64" height="20" uuid="0136ebd3-cf83-41c3-8954-c6f296652fea"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="419" y="29" width="57" height="20" uuid="105576d0-aae5-465a-b287-b73706c25f47"/>
+				<reportElement x="419" y="3" width="57" height="20" uuid="105576d0-aae5-465a-b287-b73706c25f47"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.program}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="476" y="29" width="77" height="20" uuid="31e176bf-0800-45ef-bdbe-e4bdc7430001"/>
+				<reportElement x="476" y="3" width="77" height="20" uuid="31e176bf-0800-45ef-bdbe-e4bdc7430001"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.period}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="675" y="29" width="65" height="20" uuid="37e7a88e-e3d5-42e2-97ef-76efce3a85f0"/>
+				<reportElement x="675" y="3" width="65" height="20" uuid="37e7a88e-e3d5-42e2-97ef-76efce3a85f0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
