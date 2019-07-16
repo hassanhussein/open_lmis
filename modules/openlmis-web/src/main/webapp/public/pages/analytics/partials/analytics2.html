@@ -412,35 +412,45 @@ background:#fff;
                         <div class="accordion-body" style="display:block">
 
                             <div class="row">
-                                <div class="col s12 m4 l4">
+
+                                <div class="col s12 m12 l12">
                                     <div class="card">
                                         <div class="card-content">
+                                            <div class="col s4">
+                                                <div id="stock-by-program-and-period.A" style="margin: 0 auto;height: 360px !important;"></div>
 
+                                            </div>
+                                            <div class="col s4">
+                                                <div id="stock-by-program-and-period.B" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                            </div>
+                                            <div class="col s4">
+                                                <div id="stock-by-program-and-period.C" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                            </div>
+                                            <div ng-show="false" id="stockStatusOverTime" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <div class="card">
+                                        <div class="card-content">
                                             <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
 
                                         </div>
-
                                     </div>
-
                                 </div>
-
-
-                                <div class="col s12 m8 l8">
-                                    <div class="card">
-                                        <div class="card-content">
-
-                                            <div id="stockStatusOverTime" style="margin: 0 auto;height: 360px !important;"></div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-
-
                             </div>
+
+
+
 
 
                             <div class="row" ng-show="drillDownData.length">
