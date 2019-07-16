@@ -114,7 +114,7 @@ $scope.loadRnrPassedQualityCheckData =  function (params) {
 
     });
 
-}
+};
 
 
 
@@ -328,7 +328,7 @@ $scope.zoomMap();
     initiateMap($scope);
     $scope.OnFilterChanged();
 
-    }
+    };
  $scope.onDetailClicked = function (feature) {
         $scope.currentFeature = feature;
         $scope.$broadcast('openDialogBox');
@@ -368,7 +368,7 @@ var groupB = _.where(data, {'schedule':46});
 
 });
 
-}
+};
 
 $scope.loadStockAvailableForPeriodData = function (params){
 
@@ -394,7 +394,7 @@ $scope.stockAvailableForPeriodList = [];
 
 
     });
-}
+};
 
 $scope.loadStockStatusByProgram = function (params, level){
 var stockSummary = [];
@@ -451,7 +451,7 @@ $scope.stockStatuses   = [];
 });
 
 
-}
+};
 
 
  $scope.drawTheChart = function (stockSummary,chartId,title,category) {
@@ -494,7 +494,7 @@ $scope.stockStatuses   = [];
 
               $scope.stockStatusesStackedColumnChart(chartId,'column' ,title,category, 'Number of Incidences Reported',summaries );
 
-              }
+              };
 
 
 
@@ -562,7 +562,7 @@ Highcharts.chart('stock-by-program-and-period', {
 
 
 
-}
+};
 
 
 

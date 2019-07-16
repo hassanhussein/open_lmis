@@ -53,7 +53,7 @@ $scope.loadPercentageWastageChart($scope.percentageValue,'Percentage of wastage 
 
 });
 
-}
+};
 
 
 
@@ -283,10 +283,10 @@ var titleV = 'Percentage wastage by losses and adjustment Type';
                             }
                         }
 
-        }
+        };
 
 
-}
+};
 
 $scope.openAdjustmentReport = function(data) {
  console.log(data);
@@ -297,6 +297,6 @@ $scope.openAdjustmentReport = function(data) {
  var url = '/public/pages/reports/main/index.html#/adjustment-summary?'+jQuery.param($scope.$parent.params);
  $window.open(url, "_BLANK");
 
-}
+};
 
 }

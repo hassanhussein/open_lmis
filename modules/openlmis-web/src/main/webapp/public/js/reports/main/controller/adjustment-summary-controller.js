@@ -44,7 +44,7 @@ console.log($routeParams.color);
           color =  'red';
       }
      return {'background-color':color};
-    }
+    };
 
     $scope.getPercentageTotal = function (adjustment, total){
          var totalV = 0;
@@ -54,7 +54,7 @@ console.log($routeParams.color);
          }
 
         return Math.round(Math.abs(totalV));
-    }
+    };
     $scope.exportReport = function (type) {
 
              $scope.filter.limit = 1000;
