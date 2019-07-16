@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate, equipmentOperationalStatus,showMaxStock, ReOpenRequisition, RejectRequisition , $dialog , $location, pageSize, $routeParams, requisitionService) {
+function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate, equipmentOperationalStatus,showMaxStock, ReOpenRequisition, RejectRequisition , $dialog , $location, pageSize, $routeParams, requisitionService, patientTemplate) {
 
   $scope.rnrColumns = rnrColumns;
   $scope.pageSize = pageSize;
@@ -154,5 +154,16 @@ ViewRnrController.resolve = {
       }, {});
     }, 100);
     return deferred.promise;
-  }
+  },
+      patientTemplate: function($q, $timeout, $route, ProgramPatientTemplate) {
+          var deferred = $q.defer();
+          $timeout(function() {
+              ProgramPatientTemplate.get({
+                  programId: $route.current.params.program
+              }, function(data) {
+                  deferred.resolve(data.template);
+              }, {});
+          }, 100);
+          return deferred.promise;
+      }
 };

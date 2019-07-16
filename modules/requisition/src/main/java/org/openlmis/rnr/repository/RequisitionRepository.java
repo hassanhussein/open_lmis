@@ -92,6 +92,12 @@ public class RequisitionRepository {
     @Autowired
     private FacilitySourceOfFundMapper facilitySourceOfFundMapper;
 
+    @Autowired
+    private PatientLineItemMapper patientLineItemMapper;
+
+
+
+
     public void insert(Rnr requisition) {
         requisition.setStatus(INITIATED);
         requisitionMapper.insert(requisition);
@@ -100,6 +106,7 @@ public class RequisitionRepository {
         insertRegimenLineItems(requisition, requisition.getRegimenLineItems());
         insertEquipmentStatus(requisition, requisition.getEquipmentLineItems());
         insertManualTestsLineItems(requisition, requisition.getManualTestLineItems());
+        insertPatientLineItems(requisition, requisition.getPatientLineItems());
     }
 
     public void insertPatientQuantificationLineItems(Rnr rnr) {
@@ -207,6 +214,15 @@ public class RequisitionRepository {
         }
     }
 
+
+    private void insertPatientLineItems(Rnr requisition, List<PatientLineItem> patientLineItems) {
+        for (PatientLineItem patientLineItem : patientLineItems) {
+            patientLineItem.setRnrId(requisition.getId());
+            patientLineItem.setModifiedBy(requisition.getModifiedBy());
+            patientLineItemMapper.insert(patientLineItem);
+        }
+    }
+
     private void insertLineItems(Rnr requisition, List<RnrLineItem> lineItems) {
         for (RnrLineItem lineItem : lineItems) {
             lineItem.setRnrId(requisition.getId());
@@ -224,6 +240,7 @@ public class RequisitionRepository {
             updateRegimenLineItems(rnr);
             updateEquipmentLineItems(rnr);
             updateManualTestsLineItems(rnr);
+            updatePatientLineItems(rnr);
         }
     }
 
@@ -572,5 +589,11 @@ public class RequisitionRepository {
 
     public void deleteFundSourceByRrnrAndName(String name, Long rnrId) {
         facilitySourceOfFundMapper.deleteFundSourceByRrnrAndName(name, rnrId);
+    }
+
+    private void updatePatientLineItems(Rnr rnr) {
+        for (PatientLineItem patientLineItem : rnr.getPatientLineItems()) {
+            patientLineItemMapper.update(patientLineItem);
+        }
     }
 }

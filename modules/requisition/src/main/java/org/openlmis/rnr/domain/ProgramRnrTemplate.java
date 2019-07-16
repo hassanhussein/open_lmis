@@ -57,6 +57,11 @@ public class ProgramRnrTemplate extends Template {
     final List<String> nonPrintableFullSupplyColumnNames = asList(REMARKS, REASON_FOR_REQUESTED_QUANTITY);
     final List<String> printableFullSupplyReportOnlyColumnNames = asList(PRODUCT, PRODUCT_CODE, DISPENSING_UNIT, STOCK_IN_HAND, STOCK_OUT_DAYS, SKIPPED);
     final List<String> printableNonFullSupplyColumnNames = asList(PRODUCT, PRODUCT_CODE, DISPENSING_UNIT, QUANTITY_REQUESTED, PACKS_TO_SHIP, PRICE, COST, QUANTITY_APPROVED);
+    public static final String NEXT_MONTH_PATIENT = "nextMonthPatient";
+    public static final String DOSE_PER_MONTH = "dosesPerMonth";
+    public static final String QUANTITY_ISSUE = "quantityToIssue";
+    public static final String QUANTITY_NEEDED_BY_HF = "totalQuantityNeededByHF";
+    public static final String TOTAL_REQUIREMENT = "totalRequirement";
     @Getter
     private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
     private Map<String, OpenLmisMessage> errorMap = new HashMap<>();
