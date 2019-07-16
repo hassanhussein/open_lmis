@@ -39,7 +39,11 @@ import org.springframework.stereotype.Component;
 
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
@@ -229,6 +233,17 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         if (currentFacility.getGeographicZone() != null) {
             result.put(REGION, currentFacility.getGeographicZone().getParent().getName());
         }
+
+       // ZoneId z = ZoneId.of( "Africa/Nairobi" ) ;
+        //ZonedDateTime zdt = ZonedDateTime.now( z ) ;
+
+/*
+        LocalDateTime ldt = LocalDateTime.parse(new Date().toString(), DateTimeFormatter.ofPattern("dd/MM/yy hh:mm a"));
+
+        ZonedDateTime tzDateTime = ldt.atZone(ZoneId.of(configurationService.getByKey(Constants.LOCAL_TIME_SETTINGS).toString()));
+*/
+
+        result.put("PRINTED_DATE",dateFormat.format(new Date())) ;
         return result;
     }
 }
