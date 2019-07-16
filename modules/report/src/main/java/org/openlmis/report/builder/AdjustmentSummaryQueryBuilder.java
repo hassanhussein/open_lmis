@@ -32,6 +32,7 @@ public class AdjustmentSummaryQueryBuilder {
     SELECT("adjutment_qty adjustment, processing_periods_name as period, product_category_name category, adjustment_type");
     SELECT("adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment ");
     SELECT("adjutment_qty * pp.currentPrice as price");
+    SELECT(" coalesce(beginningbalance,0) + coalesce(quantityreceived,0)  as total ");
     FROM(" mv_requisition_adjustment ");
     JOIN(" facilities f on f.id = mv_requisition_adjustment.facility_id ");
     JOIN(" vw_districts d on f.geographicZoneId = d.district_id ");

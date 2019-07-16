@@ -41,6 +41,7 @@ public class AdjustmentSummaryReport implements ResultRow {
     private int price;
     private int totalRecords;
     private Pagination pagination;
+    private int total;
 
 
 }

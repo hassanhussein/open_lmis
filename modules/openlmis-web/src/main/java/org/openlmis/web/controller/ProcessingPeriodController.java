@@ -11,6 +11,7 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
+import org.apache.ibatis.annotations.Param;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProcessingScheduleService;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -44,6 +46,7 @@ public class ProcessingPeriodController extends BaseController {
 
   @Autowired
   private ProcessingScheduleService processingScheduleService;
+
 
   @RequestMapping(value = "/schedules/{scheduleId}/periods", method = GET, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SCHEDULE, VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
@@ -90,5 +93,15 @@ public class ProcessingPeriodController extends BaseController {
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
     ProcessingPeriod processingPeriod = processingScheduleService.getPeriodById(id);
     return response("period", processingPeriod);
+  }
+
+  @RequestMapping(value = "/full-reported-period/{program}", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFullProcessingPeriodForCurrentMonth(@PathVariable("program") Long program) {
+   return response("period", processingScheduleService.getFullProcessingPeriodForCurrentMonth(program));
+  }
+
+  @RequestMapping(value = "/default-program", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getDefaultProgram() {
+   return response("program", processingScheduleService.getDefaultProgramForDashboard());
   }
 }

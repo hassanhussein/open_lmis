@@ -2,6 +2,7 @@ package org.openlmis.analytics.controller;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Param;
+import org.openlmis.analytics.Repository.Mapper.AnalyticsMapper;
 import org.openlmis.analytics.Repository.Mapper.DashboardPerformanceBasedMapper;
 import org.openlmis.analytics.Repository.Mapper.PercentageWastageMapper;
 import org.openlmis.analytics.Repository.Mapper.StockAvailabilityMapper;
@@ -34,6 +35,9 @@ public class AnalyticsController extends BaseController {
 
      @Autowired
     private PercentageWastageMapper percentageWastageMapper;
+
+    @Autowired
+    private AnalyticsMapper analyticsMapper;
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
@@ -111,6 +115,17 @@ public class AnalyticsController extends BaseController {
     ) {
 
         return OpenLmisResponse.response("stocks", percentageWastageMapper.getPercentageWastage(loggedInUserId(request),program,period));
+    }
+
+
+    @RequestMapping(value = "/stock-status-by-program-and-year", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockSummaryByYearAndProgram(
+            @Param("program") Long program,
+            @Param("year") Long year,
+            HttpServletRequest request
+    ) {
+
+        return OpenLmisResponse.response("stocks", analyticsMapper.getStockSummaryByYearAndProgram(loggedInUserId(request),program,year));
     }
 
 

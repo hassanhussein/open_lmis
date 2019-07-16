@@ -1,5 +1,32 @@
-function AnalyticsFunction(leafletData,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
+function AnalyticsFunction(leafletData,DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
+var params;
+
+DefaultProgram.get({}, function (data) {
+
+        if(!isUndefined(data)){
+
+         var program = data.program;
+
+        FullProcessingPeriods.get({program:0}, function (data) {
+
+        var period = data.period;
+
+         params ={product:parseInt(2434,0) ,year:parseInt(period.stringYear,0), program: parseInt(program.id,0),programName:program.name,period:parseInt(period.id,10),periodName:period.name, schedule:period.scheduleId};
+         $scope.$parent.params = params;
+         //start loading functions by applying parameters
+
+         $scope.loadStockAvailableForPeriodData(params);
+         $scope.loadRnrPassedQualityCheckData(params);
+         $rootScope.loadPercentageWastageData(params);
+         $scope.loadMap(params);
+         $scope.loadConsumptionTrendsData(params);
+         $scope.loadStockStatusByProgram(params,'level1');
+
+});
+
+ }
+});
 
 
 
@@ -50,18 +77,18 @@ return 'dropdown-toggle';
         $("li.hide").fadeToggle();
     });
 
-var params = {product:parseInt(2434,0) ,year:parseInt(2019,0), program: parseInt(1,0),period:parseInt(91,10)};
+
 
 $rootScope.parameters = params;
 
-
+console.log(params);
 
 IndexOfAluStockAvailabilityData.get(params).then(function(data){
  var value1 = ['Facilities with 1 Presentation',data[0].total];
  var value2 = ['Facilities with 2 Presentation',data[1].total];
  var value3 = ['Facilities with 3 Presentation',data[2].total];
  var value4 = ['Facilities with 4 Presentation',data[3].total];
-console.log(data);
+
 
 var dataV = [value1,value2,value3,value4];
 
@@ -70,23 +97,25 @@ $scope.indexOfStockAvailable(dataV,'Index of Availability of ACTs on the Day of 
 });
 
 
+$scope.loadRnrPassedQualityCheckData =  function (params) {
 
-RnrPassedQualityCheckData.get(params).then(function(data){
+    RnrPassedQualityCheckData.get(params).then(function(data){
 
-if(data.length > 0){
+    if(data.length > 0){
 
-console.log(data);
-var title = 'Percentage of Report and Requisition forms (R&R) that pass data quality check,June 2019';
-var percentage = Math.round((parseInt(data[0].passed_total,10) * 100/parseInt(data[0].total,10)),10);
+    var title = 'Percentage of Report and Requisition forms (R&R) that pass data quality check '+params.periodName+' ,'+params.year;
+    var percentage = Math.round((parseInt(data[0].passed_total,10) * 100/parseInt(data[0].total,10)),10);
 
-var values = [{name:"Total number of R&R that passed data quality check ",y:percentage,color:'green',drilldown:'passed_total'},{name:"Total R&R did not pass the quality check",color:'red',y:100-percentage,drilldown:'total'}];
+    var values = [{name:"Total number of R&R that passed data quality check ",y:percentage,color:'green',drilldown:'passed_total'},{name:"Total R&R did not pass the quality check",color:'red',y:100-percentage,drilldown:'total'}];
 
-$scope.getRnRPasseChart(title,values);
+    $scope.getRnRPasseChart(title,values);
 
+    }
+
+    });
 
 }
 
-});
 
 
 
@@ -265,7 +294,7 @@ $scope.zoomMap();
     };
 
 
-$scope.filter = params;
+
 
 
   $scope.OnFilterChanged = function() {
@@ -293,15 +322,21 @@ $scope.filter = params;
            });
 };
 
-initiateMap($scope);
-$scope.OnFilterChanged();
 
+    $scope.loadMap = function(params){
+    $scope.filter = params;
+    initiateMap($scope);
+    $scope.OnFilterChanged();
+
+    }
  $scope.onDetailClicked = function (feature) {
         $scope.currentFeature = feature;
         $scope.$broadcast('openDialogBox');
     };
 
 $scope.consumptionTrends = [];
+$scope.loadConsumptionTrendsData = function (params){
+
 ConsumptionTrendsData.get(params).then(function(data){
 
 
@@ -333,17 +368,94 @@ var groupB = _.where(data, {'schedule':46});
 
 });
 
+}
+
+$scope.loadStockAvailableForPeriodData = function (params){
+
+StockAvailableForPeriodData.get(params).then(function(data) {
+$scope.stockAvailableForPeriodList = [];
+
+    if(data.length > 0) {
 
 
+        _.each(data, function(value){
+
+       var totalCalculation = (parseInt(value.totalbyprogram,10) * 100)/value.total;
+
+        $scope.stockAvailableForPeriodList.push({name:value.program_name,y:Math.round(totalCalculation),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
+
+        });
+        var chartId = 'stock-available-for-program';
+        var title = 'Stock Availability per program';
+        var chartType = 'column';
+
+        drillDownChart(chartId,chartType,title,$scope.stockAvailableForPeriodList);
+        }
+
+
+    });
+}
+
+$scope.loadStockStatusByProgram = function (params, level){
 var stockSummary = [];
+var getPromiseData = (level === 'level1')?StockStatusByProgramData:DashboardStockStatusSummaryData;
+var chartId =(level === 'level1')?'stock-by-program-and-period':'stockStatusOverTime';
+
+/*StockStatusByProgramData.get(params).then(function(stocks){
+var title = (level === 'level1')?'Stock Status by Program':''Stock Status Over Time for '+'Nevirapine''
+
+var overstock = _.pluck(stocks, 'overstock');
+
+console.log(stocks);
+
+$scope.openStatusByProgramChart(null, 'Stock Status by Program');
+
+});*/
+
+
+
 var params2 = {product:parseInt(2434,0) ,year:parseInt(2018,0), program: parseInt(1,0),period:parseInt(75,10)};
-DashboardStockStatusSummaryData.get(params2).then(function(data) {
-console.log(params);
+getPromiseData.get(params).then(function(data) {
+
 $scope.stockStatuses   = [];
  if(!isUndefined(data)){
 
  stockSummary = data;
-  var category = _.uniq(_.pluck(stockSummary,'periodname'));
+  var category = _.uniq(_.pluck(stockSummary,'period'));
+
+             var groupBySchedule  = _.groupBy(stockSummary, function(schedule){
+                return schedule.schedule;
+             });
+
+             _.map(groupBySchedule, function(groupedData, index) {
+
+                  chartId = 'stock-by-program-and-period.'+index[index.length -1];
+                  var category = _.uniq(_.pluck(groupedData,'period'));
+                  var title = (level === 'level1')?'Stock Status for  '+params.programName+' '+index+',  '+params.year:'Stock Status Over Time for '+ params.periodName +', '+params.year;
+                  var dataV = [];
+                  dataV  = groupedData;
+                  $scope.drawTheChart(dataV,chartId,title,category);
+              console.log(groupedData);
+                 return null;
+
+              });
+
+
+
+
+
+
+ }
+
+
+});
+
+
+}
+
+
+ $scope.drawTheChart = function (stockSummary,chartId,title,category) {
+
 
                var so = _.pluck(stockSummary, 'so');
                var os = _.pluck(stockSummary, 'os');
@@ -380,37 +492,79 @@ $scope.stockStatuses   = [];
 
                            ];
 
-     $scope.stockStatusesStackedColumnChart('stockStatusOverTime','column' ,'Stock Status Over Time for '+'Nevirapine',category, 'Count of Facilities',summaries );
+              $scope.stockStatusesStackedColumnChart(chartId,'column' ,title,category, 'Number of Incidences Reported',summaries );
 
- }
+              }
 
 
+
+
+$scope.openStatusByProgramChart= function(dataV,title) {
+
+Highcharts.chart('stock-by-program-and-period', {
+    chart: {
+        type: 'column'
+    },
+    title: {
+        text: title
+    },
+    xAxis: {
+        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+    },
+    yAxis: {
+        min: 0,
+        title: {
+            text: 'Total fruit consumption'
+        },
+        stackLabels: {
+            enabled: true,
+            style: {
+                fontWeight: 'bold',
+                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+            }
+        }
+    },
+    legend: {
+        align: 'right',
+        x: -30,
+        verticalAlign: 'top',
+        y: 25,
+        floating: true,
+        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+        borderColor: '#CCC',
+        borderWidth: 1,
+        shadow: false
+    },
+    tooltip: {
+        headerFormat: '<b>{point.x}</b><br/>',
+        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+    },
+    plotOptions: {
+        column: {
+            stacking: 'normal',
+            dataLabels: {
+                enabled: true,
+                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+            }
+        }
+    },
+    series: [{
+        name: 'John',
+        data: [5, 3, 4, 7, 2]
+    }, {
+        name: 'Jane',
+        data: [2, 2, 3, 2, 1]
+    }, {
+        name: 'Joe',
+        data: [3, 4, 4, 2, 5]
+    }]
 });
 
 
 
-StockAvailableForPeriodData.get(params).then(function(data) {
-$scope.stockAvailableForPeriodList = [];
-
-    if(data.length > 0) {
+}
 
 
-        _.each(data, function(value){
-
-       var totalCalculation = (parseInt(value.totalbyprogram,10) * 100)/value.total;
-
-        $scope.stockAvailableForPeriodList.push({name:value.program_name,y:Math.round(totalCalculation),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
-
-        });
-        var chartId = 'stock-available-for-program';
-        var title = 'Stock Availability per program';
-        var chartType = 'column';
-
-        drillDownChart(chartId,chartType,title,$scope.stockAvailableForPeriodList);
-        }
-
-
-    });
 
  var drillDownSeries = $scope.drillDownData = [];
  function getAvailableDrillDownData(program,name, chartData){
@@ -419,7 +573,7 @@ $scope.stockAvailableForPeriodList = [];
     var allParams = angular.extend(params, {program:program});
     StockAvailableByProgramAndPeriodData.get(params).then(function(data){
 
-     $scope.titleStockForProgramAvailable = 'List of Available Tracer Items for '+name +' in June 2018';
+     $scope.titleStockForProgramAvailable = 'List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year;
      $scope.stockColor= chartData.color;
 
      $scope.drillDownData = data;
@@ -797,7 +951,7 @@ new Highcharts.chart('rnrPassedChart', {
 
     },
     subtitle: {
-        text: 'Click the slices to view versions. Source: <a href="http://statcounter.com" target="_blank">statcounter.com</a>'
+        text: 'Click the slices to view more details'
     },
     plotOptions: {
           pie: {

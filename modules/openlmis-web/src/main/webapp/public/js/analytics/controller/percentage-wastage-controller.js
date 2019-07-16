@@ -1,5 +1,4 @@
-function PercentageWastageController ($scope,$rootScope, PercentageWastageData){
-var params = $rootScope.parameters;
+function PercentageWastageController ($scope,$rootScope, PercentageWastageData,$window){
 
 function getPercentage(percentFor,percentOf)
 {
@@ -8,15 +7,17 @@ function getPercentage(percentFor,percentOf)
 
 
 $scope.percentageWastage = [];
-PercentageWastageData.get(params).then(function(data){
-console.log(data);
+
+$rootScope.loadPercentageWastageData = function (params) {
+
+PercentageWastageData.get(params).then(function(data) {
+
 if(!isUndefined(data) && data.length > 0) {
 
 var totalAdjustment = 0;
 var total = 0;
+console.log(data);
 
-var expired = _.where(data, {adjustmentname:'EXPIRED'});
-console.log(expired);
 data.forEach(function(d){
 
 var highest = _.max(data, function(o){return o.adjustment_qty;});
@@ -36,7 +37,7 @@ $scope.category = _.pluck(data,'adjustmentname');
 
 $scope.percentageValue = getPercentage(totalAdjustment,total);
 
-$scope.loadPercentageWastageChart($scope.percentageValue,'Percentage Of Wastage');
+$scope.loadPercentageWastageChart($scope.percentageValue,'Percentage of wastage for '+params.programName+' reported on the period of '+params.periodName+', '+params.year);
 
 
 /*  data: [{
@@ -52,14 +53,18 @@ $scope.loadPercentageWastageChart($scope.percentageValue,'Percentage Of Wastage'
 
 });
 
+}
+
+
+
 
 $scope.loadPercentageWastageChart = function(dataV,title) {
 
 var gaugeOptions = {
 
     pane: {
-        center: ['50%', '85%'],
-        size: '140%',
+        center: ['50%', '80%'],
+        size: '130%',
         startAngle: -90,
         endAngle: 90,
         background: {
@@ -139,8 +144,21 @@ title: {
     },
     yAxis: {
         min: 0,
-        max: 100
+        max: 100,
 
+
+            labels: {
+            distance: 20,
+                style: {
+                    'font-size': 18,
+                    'color':'#0c9083'
+                },valueSuffix: ' %'
+            },
+
+                lineWidth: 0,
+                minorTicks: false,
+                tickWidth: 2,
+                tickPosition: 'outside'
     },
 
     credits: {
@@ -183,7 +201,7 @@ Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions,solidGaugeOpti
 
 document.getElementById('back').addEventListener('click', function() {
     this.style.display = "none";
-     Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions,solidGaugeOptions));
+    Highcharts.chart('container-speed', Highcharts.merge(gaugeOptions,solidGaugeOptions));
 });
 
 var titleV = 'Percentage wastage by losses and adjustment Type';
@@ -203,11 +221,14 @@ var titleV = 'Percentage wastage by losses and adjustment Type';
 
            },
              tooltip: {
-             pointFormat: '{series.name}: <br>{point.percentage:.1f} %<br>total: {point.total}'
+             pointFormat: '{point.name}: <b>{point.percentage:.0f} %<br>total: {point.total}'
+
              },
 
        plotOptions: {
          pie: {
+           allowPointSelect: true,
+                                    cursor: 'pointer',
            innerSize: '70%',
               dataLabels: {  useHTML: true,
                             enabled: true,
@@ -228,8 +249,21 @@ var titleV = 'Percentage wastage by losses and adjustment Type';
 
        },
 
-       series: [{  colorByPoint: true,
-         data: $scope.percentageWastage
+       series: [{
+        animation: true,
+        colorByPoint: true,
+         data: $scope.percentageWastage,
+
+                       point:{
+                           events:{
+                               click: function (event) {
+
+                               $scope.openAdjustmentReport(this);
+
+                               }
+                           }
+                       }
+
        }],
 
          exporting: {
@@ -254,6 +288,15 @@ var titleV = 'Percentage wastage by losses and adjustment Type';
 
 }
 
+$scope.openAdjustmentReport = function(data) {
+ console.log(data);
 
+ $scope.$parent.params.adjustmentType = data.name;
+ $scope.$parent.params.color = data.color;
+
+ var url = '/public/pages/reports/main/index.html#/adjustment-summary?'+jQuery.param($scope.$parent.params);
+ $window.open(url, "_BLANK");
+
+}
 
 }

@@ -137,4 +137,8 @@ public class ProcessingPeriodRepository {
   public ProcessingPeriod getCurrentPeriodBySchedule(Long scheduleId){
     return mapper.getCurrentPeriodBySchedule(scheduleId);
   }
+
+  public ProcessingPeriod getFullProcessingPeriodForCurrentMonth(String code){
+    return mapper.getFullProcessingPeriodForCurrentMonth(code);
+  }
 }

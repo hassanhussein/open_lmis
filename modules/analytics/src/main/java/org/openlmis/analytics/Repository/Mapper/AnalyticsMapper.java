@@ -49,5 +49,11 @@ public interface AnalyticsMapper {
                                                               @Param("year") Long period);
 
 
+    @SelectProvider(type= StockStatusQueryBuilder.class, method="getStockSummaryByYearAndProgram")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<HashMap<String,Object>> getStockSummaryByYearAndProgram(@Param("userId") Long userId,
+                                                       @Param("program") Long program,
+                                                       @Param("year") Long year);
+
 
 }

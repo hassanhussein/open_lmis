@@ -10,12 +10,52 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function AdjustmentSummaryReportController($scope, $window, $q, AdjustmentSummaryReport) {
+function AdjustmentSummaryReportController($scope,SettingsByKey, $window,$routeParams, $q, AdjustmentSummaryReport) {
 
 $scope.pageSize = 10;
 $scope.currentPage = 1;
 
-$scope.exportReport = function (type) {
+
+  SettingsByKey.get({key: 'ADJUSTMENT_COLOR_THRESHOLD_LOW'}, function (data) {
+    $scope.low = data.settings.value;
+  });
+
+
+    SettingsByKey.get({key: 'ADJUSTMENT_COLOR_THRESHOLD_MEDIUM'}, function (data) {
+      $scope.medium = data.settings.value;
+    });
+
+    SettingsByKey.get({key: 'ADJUSTMENT_COLOR_THRESHOLD_HIGH'}, function (data) {
+      $scope.high = data.settings.value;
+    });
+
+
+
+$scope.colored = ($scope.$routeParams !==undefined)?$scope.$routeParams.color:$scope.$routeParams;
+console.log($routeParams.color);
+
+    $scope.updateColor = function (number) {
+      var color;
+      if(number <= parseInt($scope.low,10)){
+      color = 'green';
+      } else if(number > parseInt($scope.low, 10) && number <= parseInt( $scope.medium, 10)) {
+      color = 'orange';
+      } else {
+          color =  'red';
+      }
+     return {'background-color':color};
+    }
+
+    $scope.getPercentageTotal = function (adjustment, total){
+         var totalV = 0;
+
+         if(total > 0){
+          totalV  = parseInt(adjustment,10) /parseInt(total,10) * 100;
+         }
+
+        return Math.round(Math.abs(totalV));
+    }
+    $scope.exportReport = function (type) {
 
              $scope.filter.limit = 1000;
              $scope.filter.page  = 1;

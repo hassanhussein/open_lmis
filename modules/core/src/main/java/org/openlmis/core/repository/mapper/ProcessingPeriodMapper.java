@@ -171,4 +171,22 @@ public interface ProcessingPeriodMapper {
     ProcessingPeriod getCurrentPeriodBySchedule(@Param("scheduleId") Long scheduleId);
 
 
+    @Select("\n" +
+            "               WITH Q AS (\n" +
+            "\n" +
+            "               SELECT pp.* \n" +
+            "                FROM \n" +
+            "                   processing_schedules s \n" +
+            "                 inner join processing_periods pp ON pp.scheduleid = s.id \n" +
+            "                where enableorder = true and s.id in \n" +
+            "                      (select scheduleId from requisition_group_program_schedules sc\n" +
+            "                    join programs p on p.id = sc.programid where p.code = lower(#{program})) \n" +
+            "                  order by name\n" +
+            "                  \n" +
+            "               )\n" +
+            "                 select * from Q WHERE EXTRACT(MONTH FROM Q.ENDDATE) = extract(month from CURRENT_DATE)- 2 \n" +
+            "                 AND  EXTRACT(YEAR FROM Q.ENDDATE) = extract(YEAR from CURRENT_DATE) limit 1")
+  ProcessingPeriod getFullProcessingPeriodForCurrentMonth(@Param("program") String program);
+
+
 }

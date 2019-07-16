@@ -83,23 +83,34 @@
                     sortable="supplyingFacility">{{
                   row.supplyingFacility }}
                 </td>
+                <td data-title="getLocalMessage('label.period')" style="width:100px" sortable="period">{{ row.period
+                  }}
+                </td>
                 <td data-title="getLocalMessage('label.product')" style="width:30%" sortable="productDescription">{{
                   row.productDescription
                   }}
                 </td>
+
+                <td data-title="getLocalMessage('label.total.quantity')" style="width:100px" sortable="total">
+                  {{ row.total
+                  }}
+                </td>
+
                 <td data-title="getLocalMessage('label.adjustment.type')" style="width:100px" sortable="adjustmentType">
                   {{ row.adjustmentType
                   }}
                 </td>
-                <td data-title="getLocalMessage('label.period')" style="width:100px" sortable="period">{{ row.period
-                  }}
-                </td>
-                <td data-title="getLocalMessage('label.adjustments')" class="number" style="width:80px"
+
+                <td data-title="getLocalMessage('label.quantity.adjusted')" class="number" style="width:80px"
                     sortable="adjustment">{{
                   row.signedadjustment | number }}
                 </td>
-                <td data-title="getLocalMessage('label.price')" class="number" style="width:80px"
+                <td data-title="getLocalMessage('label.total.amount')" class="number" style="width:80px"
                     sortable="price"><span openlmis-message="label.currency.symbol"></span>{{ row.price | number }}
+                </td>
+
+                <td data-title="getLocalMessage('label.percentage.wastage')" class="number" style="width:80px"
+                    sortable="price" ng-style = "updateColor(getPercentageTotal(row.signedadjustment, row.total))">{{ getPercentageTotal(row.signedadjustment, row.total) }} %
                 </td>
               </tr>
               </tbody>

@@ -36,4 +36,27 @@ public class StockStatusQueryBuilder {
     }
 
 
+    public static String getStockSummaryByYearAndProgram(Map params){
+
+        return " SELECT Schedule, SCHEDULEID,PERIODid, PERIOD, SUM(SP) sp, sum(unknown) uk, sum(understock)us,SUM(overstock) os,\n" +
+                "SUM(SO) SO, SUM(overstock)+SUM(SP)+sum(unknown)+ sum(understock)+SUM(SO) TOTAL\n" +
+                "FROM (\n" +
+                " select Schedule, SCHEDULEID, PERIODid, PROCESSING_PERIOD_NAME period,\n" +
+                "\n" +
+                " CASE WHEN Status ='SP' then 1 else 0 END as SP,\n" +
+                "CASE WHEN Status ='UK' then  1 ELSE 0 END as unknown,\n" +
+                "CASE WHEN Status ='US' then  1 else 0  end as understock,\n" +
+                "\n" +
+                "CASE WHEN Status ='OS' then 1 ELSE 0 end as overstock,\n" +
+                "CASE WHEN Status ='SO' then 1 ELSE 0 end as SO \n" +
+                "\n" +
+                "from mv_stock_imbalance_by_facility_report r where  programID = 1 and year = 2018 and EMERGENCY = FALSE\n" +
+                " AND STATUS NOT IN ('')\n" +
+                " \n" +
+                " )l\n" +
+                "GROUP BY PERIODid,PERIOD,Schedule, SCHEDULEID\n" +
+                "order by periodid,PERIODid,PERIOD,Schedule, SCHEDULEID ";
+
+    }
+
 }

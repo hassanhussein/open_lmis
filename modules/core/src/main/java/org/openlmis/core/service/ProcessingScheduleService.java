@@ -37,6 +37,14 @@ public class ProcessingScheduleService {
   private RequisitionGroupRepository requisitionGroupRepository;
   private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
+  private static final String DEFAULT_PROGRAM_CODE = "DEFAULT_PROGRAM_CODE";
+
+  @Autowired
+  private ConfigurationSettingService settingService;
+
+  @Autowired
+  private ProgramService programService;
+
   @Autowired
   public ProcessingScheduleService(ProcessingScheduleRepository scheduleRepository, ProcessingPeriodRepository periodRepository,
                                    RequisitionGroupRepository requisitionGroupRepository, RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
@@ -168,6 +176,23 @@ public class ProcessingScheduleService {
   public ProcessingPeriod getCurrentPeriodBySchedule(Facility facility, Program program, Date date) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
     return periodRepository.getCurrentPeriodBySchedule(requisitionGroupProgramSchedule.getProcessingSchedule().getId());
+  }
+
+  public ProcessingPeriod getFullProcessingPeriodForCurrentMonth(Long program) {
+    String value;
+    String programCode = settingService.getByKey(DEFAULT_PROGRAM_CODE).getValue();
+    if(program == 0){
+      value = programCode;
+    }else{
+      value = programService.getById(program).getCode();
+
+    }
+    return periodRepository.getFullProcessingPeriodForCurrentMonth(value);
+  }
+
+  public Program getDefaultProgramForDashboard(){
+    String programCode = settingService.getByKey(DEFAULT_PROGRAM_CODE).getValue();
+    return programService.getByCode(programCode);
   }
 
 }

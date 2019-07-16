@@ -167,6 +167,79 @@ services.factory('PercentageWastageData', function ($q, $timeout, $resource,Perc
 
 });
 
+services.factory('StockStatusByProgramData', function ($q, $timeout, $resource,StockStatusByProgram) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            StockStatusByProgram.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+
+services.factory('FullProcessingPeriodData', function ($q, $timeout, $resource,FullProcessingPeriods1) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            FullProcessingPeriods1.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.period;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+services.factory('DefaultProgramData', function ($q, $timeout, $resource,DefaultProgram1) {
+    function get() {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            DefaultProgram1.get({}, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.program;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 
 services.factory('StockStatusSummary', function ($resource) {
     return $resource('/api/dashboard/stock-status-summary.json', {}, {});
@@ -193,4 +266,16 @@ services.factory('IndexOfAluStockAvailability', function ($resource) {
 
 services.factory('PercentageWastage', function ($resource) {
     return $resource('/api/dashboard/percentage-wastage.json', {}, {});
+});
+
+services.factory('FullProcessingPeriods', function ($resource) {
+    return $resource('/full-reported-period/:program.json', {}, {});
+});
+
+services.factory('DefaultProgram', function ($resource) {
+    return $resource('/default-program.json', {}, {});
+});
+
+services.factory('StockStatusByProgram', function ($resource) {
+    return $resource('/api/dashboard/stock-status-by-program-and-year.json', {}, {});
 });
