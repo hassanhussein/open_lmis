@@ -629,4 +629,20 @@ public class RestRequisitionService {
     public List<ProcessingPeriod> getProcessingPeriods(RequisitionSearchCriteria criteria) {
         return requisitionService.getProcessingPeriods(criteria);
     }
+
+    public Rnr getRequisitionStatusByFacilityAndProgram(String facilityCode, String programCode) {
+        Facility facility = facilityService.getFacilityByCode(facilityCode);
+        if (facility == null) {
+            throw new DataException("error.facility.unknown");
+        }
+
+        Program program = programService.getValidatedProgramByCode(programCode);
+        if (program == null) {
+            throw new DataException("error.program.unknown");
+        }
+
+        return requisitionService.getRequisitionStatusByFacilityAndProgram(facility, program);
+    }
 }
+
+

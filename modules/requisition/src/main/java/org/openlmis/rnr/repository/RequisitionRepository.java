@@ -596,4 +596,8 @@ public class RequisitionRepository {
             patientLineItemMapper.update(patientLineItem);
         }
     }
+
+    public Rnr getRequisitionStatusByFacilityAndProgram(Facility facility, Program program) {
+        return requisitionMapper.getLastRequisition(facility.getId(), program.getId());
+    }
 }
