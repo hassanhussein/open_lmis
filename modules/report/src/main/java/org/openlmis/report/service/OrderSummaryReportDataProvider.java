@@ -25,6 +25,7 @@ import org.openlmis.report.model.params.OrderReportParam;
 import org.openlmis.report.model.report.OrderSummaryReport;
 import org.openlmis.report.model.report.SummaryReport;
 import org.openlmis.report.service.lookup.ReportLookupService;
+import org.openlmis.report.util.Constants;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.StringHelper;
 import org.openlmis.rnr.domain.RequisitionStatusChange;
@@ -38,6 +39,7 @@ import org.springframework.stereotype.Component;
 
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.*;
 
 @Component
@@ -65,6 +67,8 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
     public static final String PERIOD = "PERIOD";
     public static final String DEPOT = "DEPOT";
     public static final String TYPE = "TYPE";
+    public static final String RELEASED_BY = "RELEASED_BY";
+    public static final String RELEASED_DATE = "RELEASED_DATE";
 
     @Autowired
     private OrderSummaryReportMapper reportMapper;
@@ -93,6 +97,9 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
     @Autowired
     private ProgramService programService;
+
+    @Autowired
+    ConfigurationSettingService settingService;
 
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
@@ -185,9 +192,9 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
             result.put(DEPOT, depotFacility.getName());
         result.put(TYPE, type);
 
-
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mm a");
-        TimeZone timeZone = TimeZone.getTimeZone("UTC");
+        TimeZone timeZone = TimeZone.getTimeZone(configurationService.getByKey(Constants.LOCAL_TIME_SETTINGS).toString());
+
         dateFormat.setTimeZone(timeZone);
 
         List<RequisitionStatusChange> changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.AUTHORIZED.name());
@@ -208,6 +215,11 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
             result.put(APPROVED_DATE, dateFormat.format(changes.get(0).getCreatedDate()));
         }
 
+        changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.RELEASED.name());
+        if (!changes.isEmpty()) {
+            result.put(RELEASED_BY, changes.get(0).getCreatedBy().getFirstName() + " " + changes.get(0).getCreatedBy().getLastName());
+            result.put(RELEASED_DATE, dateFormat.format(changes.get(0).getCreatedDate()));
+        }
         // register the facility related parameters here
         Facility currentFacility = reportLookupService.getFacilityForRnrId(orderReportParam.getOrderId());
         result.put(FACILITY_ADDRESS, currentFacility.getAddress1());
