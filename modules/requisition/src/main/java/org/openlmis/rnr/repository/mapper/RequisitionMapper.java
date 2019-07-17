@@ -271,6 +271,8 @@ public interface RequisitionMapper {
     })
     Rnr getLastRegularRequisition(@Param("facility") Facility facility, @Param("program") Program program);
 
+
+
     @Select("SELECT programId FROM requisitions WHERE id = #{rnrId}")
     Long getProgramId(Long rnrId);
 
@@ -477,6 +479,38 @@ public interface RequisitionMapper {
 
     @Select("SELECT * FROM interface_response_messages where  sourceOrderId = #{sourceOrderId} and status = 'PROCESSED' ")
     ResponseExtDTO getAllResponseByStatusBySourceID(@Param("sourceOrderId") String sourceOrderId);
+
+
+
+    @Select({"SELECT * FROM requisitions WHERE facilityId = #{facilityId} AND programId = #{programId}",
+            " ORDER BY periodId DESC LIMIT 1"})
+    @Results(value = {
+            @Result(property = "facility", javaType = Facility.class, column = "facilityId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(property = "program", javaType = Program.class, column = "programId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedRnrLineItemsByRnrId")),
+            @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedNonFullSupplyRnrLineItemsByRnrId")),
+            @Result(property = "regimenLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RegimenLineItemMapper.getRegimenLineItemsByRnrId")),
+            @Result(property = "equipmentLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.EquipmentLineItemMapper.getEquipmentLineItemsByRnrId")),
+            @Result(property = "patientQuantifications", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientQuantificationLineItemMapper.getPatientQuantificationLineItemsByRnrId")),
+            @Result(property = "period", column = "periodId", javaType = ProcessingPeriod.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProcessingPeriodMapper.getById")),
+            @Result(property = "clientSubmittedTime", column = "clientSubmittedTime"),
+            @Result(property = "clientSubmittedNotes", column = "clientSubmittedNotes"),
+            @Result(property = "rnrSignatures", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.RequisitionMapper.getRnrSignaturesByRnrId")
+            ),
+            @Result(property = "patientLineItems", javaType = List.class, column = "id",
+                    many = @Many(select = "org.openlmis.rnr.repository.mapper.PatientLineItemMapper.getPatientLineItemsByRnrId"))
+    })
+    Rnr getLastRequisition(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 }
 

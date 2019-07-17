@@ -1014,6 +1014,9 @@ public class RequisitionService {
     return true;
   }
 
+  public Rnr getRequisitionStatusByFacilityAndProgram(Facility facility, Program program) {
+    return requisitionRepository.getRequisitionStatusByFacilityAndProgram(facility, program);
+  }
 
 }
 
