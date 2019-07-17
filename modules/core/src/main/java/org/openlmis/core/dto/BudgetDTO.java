@@ -55,7 +55,7 @@ public class BudgetDTO extends BaseModel {
 
         for (BudgetLineItemDTO lineItemDTO : this.getLineItem()){
             if(isBlank(lineItemDTO.getAllocatedBudget()) ||
-              (Long.valueOf(lineItemDTO.getAllocatedBudget()) < 0L) || isBlank(lineItemDTO.getFundSourceCode())){
+              isBlank(lineItemDTO.getFundSourceCode())){
                 return;
             }
         }

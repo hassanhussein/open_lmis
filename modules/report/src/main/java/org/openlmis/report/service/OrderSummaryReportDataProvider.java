@@ -197,8 +197,8 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
         result.put(TYPE, type);
 
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mm a");
-      //  TimeZone timeZone = TimeZone.getTimeZone(configurationService.getByKey(Constants.LOCAL_TIME_SETTINGS).toString());
-        TimeZone timeZone = TimeZone.getTimeZone("Africa/Nairobi");
+
+        TimeZone timeZone = TimeZone.getTimeZone(configurationService.getByKey(Constants.LOCAL_TIME_SETTINGS).getValue());
 
         dateFormat.setTimeZone(timeZone);
 
