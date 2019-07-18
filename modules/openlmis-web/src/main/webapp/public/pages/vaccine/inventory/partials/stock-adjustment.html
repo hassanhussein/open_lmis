@@ -213,7 +213,7 @@
                            ng-required="lot.isSkipped ===false"
                            ng-disabled="lot.isSkipped"
                            ng-model="lot.quantity"
-                           maxlength="5" type="text"
+                           maxlength="{{maximumLength?10:5}}" type="text"
                            ng-init="max=(lot.hasExpired)?0:''"
                            maximum="{{max}}"
                            numeric-validator="positiveInteger"
