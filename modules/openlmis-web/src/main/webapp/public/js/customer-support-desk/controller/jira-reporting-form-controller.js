@@ -10,7 +10,7 @@
 function JiraReportingFormController($scope, $location, $q, localStorageService, faqArticles, reportIssueOnSD, $timeout) {
 
     $scope.successMessage = "You have submitted issues successfully";
-
+    $scope.faqArticles = faqArticles;
 
     $scope.createNewIssue = function() {
 
