@@ -18,6 +18,7 @@ import org.openlmis.core.domain.MaterializedView;
 import org.openlmis.core.repository.ManualTestTypeRepository;
 import org.openlmis.core.repository.MaterilizedViewConfRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class MaterilizedViewConfService {
     public List<MaterializedView> loadUnPopulatedViews() {
         return repository.loadUnpopulatedViews();
     }
-
+    @Async("myExecutor")
     public void refreshView(String name) {
         repository.refreshView(name);
     }
