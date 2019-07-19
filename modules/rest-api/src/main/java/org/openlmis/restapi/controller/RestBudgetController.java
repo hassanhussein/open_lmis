@@ -52,7 +52,7 @@ public class RestBudgetController extends BaseController{
     public BudgetDTO saveBudgetReport(@RequestBody BudgetDTO budget, Principal principal) {
 
         restBudgetService.updateBudget(budget, loggedInUserId(principal));
-        restBudgetService.sendResponse(budget);
+        restBudgetService.sendResponse(budget,null);
         budget.setErrorMap(null);
         return budget;
     }
@@ -61,6 +61,7 @@ public class RestBudgetController extends BaseController{
     public ResponseEntity<RestResponse> fundSource(@RequestBody SourceOfFundDTO fund, Principal principal) {
         try {
             fundService.saveSDPFund(fund, loggedInUserId(principal));
+            restBudgetService.sendResponse(null,fund);
             return RestResponse.success("message.success.budget.updated");
         } catch (DataException e) {
             return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);

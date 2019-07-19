@@ -129,4 +129,39 @@ public class AnalyticsController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/stock-availability-summary", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getSummary(
+            @Param("program") Long program,
+            @Param("period") Long period,
+            @Param("year") Long year,
+            HttpServletRequest request
+    ) {
+
+        return OpenLmisResponse.response("stocks", stockAvailabilityMapper.getStockSummary(loggedInUserId(request),program,period,year));
+    }
+
+
+    @RequestMapping(value = "/stock-availability-trends-by-program-and-year", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockAvailabilityTrends(
+            @Param("program") Long program,
+            @Param("period") Long period,
+            @Param("year") Long year,
+            HttpServletRequest request
+    ) {
+
+        return OpenLmisResponse.response("stocks", stockAvailabilityMapper.getStockAvailabilityTrends(loggedInUserId(request),program,period,year));
+    }
+
+    @RequestMapping(value = "/stock-availability-by-level", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockAvailableByLevel(
+            @Param("program") Long program,
+            @Param("period") Long period,
+            @Param("year") Long year,
+            HttpServletRequest request
+    ) {
+
+        return OpenLmisResponse.response("stocks", stockAvailabilityMapper.getStockAvailabilityByLevel(loggedInUserId(request),program,period,year));
+    }
+
+
 }

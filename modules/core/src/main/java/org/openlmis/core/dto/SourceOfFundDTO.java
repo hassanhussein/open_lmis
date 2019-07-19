@@ -26,4 +26,6 @@ public class SourceOfFundDTO extends BaseModel implements Importable {
 
     private Long programId;
 
+    private String source = "eLMIS";
+
 }

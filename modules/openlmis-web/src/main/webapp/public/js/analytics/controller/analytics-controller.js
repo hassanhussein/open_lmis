@@ -22,6 +22,9 @@ DefaultProgram.get({}, function (data) {
          $scope.loadMap(params);
          $scope.loadConsumptionTrendsData(params);
          $scope.loadStockStatusByProgram(params,'level1');
+         $rootScope.loadStockStatusSummary(params);
+         $rootScope.loadStockStatusByProgramAndYearData(params);
+         $rootScope.loadStockAvailableByLevel(params);
 
 });
 

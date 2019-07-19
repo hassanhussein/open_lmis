@@ -6,6 +6,7 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.BudgetDTO;
 import org.openlmis.core.dto.ELMISResponseMessageDTO;
+import org.openlmis.core.dto.SourceOfFundDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.BudgetLineItemRepository;
@@ -139,8 +140,9 @@ public class RestBudgetService {
         return budgetDTO;
     }
 
-    public void sendResponse(BudgetDTO dto) {
-        interfaceService.postBudgetToHIM(dto);
+    public void sendResponse(BudgetDTO dto, SourceOfFundDTO fund) {
+        interfaceService.postBudgetToHIM(dto,fund);
 
     }
+
 }

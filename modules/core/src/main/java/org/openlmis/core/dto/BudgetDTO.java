@@ -39,6 +39,7 @@ public class BudgetDTO extends BaseModel {
     private String UID;
     private Long programId;
     private Long periodId;
+    private String source = "eLMIS";
 
 
     private List<BudgetLineItemDTO> lineItem = new ArrayList<>();

@@ -240,6 +240,81 @@ services.factory('DefaultProgramData', function ($q, $timeout, $resource,Default
 
 });
 
+services.factory('StockStatusSummaryByPeriodData', function ($q, $timeout, $resource,StockStatusSummaryByPeriod) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            StockStatusSummaryByPeriod.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+
+
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+services.factory('StockStatusByProgramAndYearData', function ($q, $timeout, $resource,StockStatusByProgramAndYear) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            StockStatusByProgramAndYear.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                                    console.log(params);
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+services.factory('StockAvailableByLevelData', function ($q, $timeout, $resource,StockAvailableByLevel) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            StockAvailableByLevel.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 
 services.factory('StockStatusSummary', function ($resource) {
     return $resource('/api/dashboard/stock-status-summary.json', {}, {});
@@ -278,4 +353,16 @@ services.factory('DefaultProgram', function ($resource) {
 
 services.factory('StockStatusByProgram', function ($resource) {
     return $resource('/api/dashboard/stock-status-by-program-and-year.json', {}, {});
+});
+
+services.factory('StockStatusSummaryByPeriod', function ($resource) {
+    return $resource('/api/dashboard/stock-availability-summary.json', {}, {});
+});
+
+services.factory('StockStatusByProgramAndYear', function ($resource) {
+    return $resource('/api/dashboard/stock-availability-trends-by-program-and-year.json', {}, {});
+});
+
+services.factory('StockAvailableByLevel', function ($resource) {
+    return $resource('/api/dashboard/stock-availability-by-level.json', {}, {});
 });

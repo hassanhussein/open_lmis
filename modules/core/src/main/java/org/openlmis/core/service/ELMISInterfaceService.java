@@ -112,7 +112,7 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetReportingRateData());
-            sendBedNetData(username, password, url, dto, null,null,null);
+            sendBedNetData(username, password, url, dto, null,null,null,null);
         }
 
     }
@@ -130,12 +130,12 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetData());
-            sendBedNetData(username, password, url, dto, null,null,null);
+            sendBedNetData(username, password, url, dto, null,null,null,null);
         }
 
     }
 
-    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data, InterfaceResponseDTO sdp,ResponseExtDTO dto,BudgetDTO budget) {
+    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data, InterfaceResponseDTO sdp,ResponseExtDTO dto,BudgetDTO budget,SourceOfFundDTO fund) {
         ObjectMapper mapper = new ObjectMapper();
         java.net.URL obj = null;
         try {
@@ -144,7 +144,12 @@ public class ELMISInterfaceService {
             String jsonInString ="";
 
             if(budget == null){
-             jsonInString = mapper.writeValueAsString((sdp == null) ? data : dto);
+             if(fund == null) {
+                 jsonInString = mapper.writeValueAsString((sdp == null) ? data : dto);
+             }else {
+
+                 jsonInString = mapper.writeValueAsString(fund);
+             }
             }else {
             jsonInString = mapper.writeValueAsString(budget);
 
@@ -235,18 +240,23 @@ public class ELMISInterfaceService {
     }
 
 
-    public void postBudgetToHIM(BudgetDTO dto) {
-        processBudgetResponseData(dto);
+    public void postBudgetToHIM(BudgetDTO dto,SourceOfFundDTO fund) {
+        processBudgetResponseData(dto,fund);
     }
 
-    private void processBudgetResponseData(BudgetDTO dto) {
+    private void processBudgetResponseData(BudgetDTO dto, SourceOfFundDTO fund) {
 
         String username = settingService.getByKey(IL_BUDGET_USERNAME).getValue();
         String password = settingService.getByKey(IL_BUDGET_PASSWORD).getValue();
         String url = settingService.getByKey(IL_BUDGET_URL).getValue();
 
+
+
         if (username != null && password != null && url != null) {
-            sendBedNetData(username, password, url, null, null,null,dto);
+
+                sendBedNetData(username, password, url, null, null,null,dto,fund);
+
+
         }
 
     }
