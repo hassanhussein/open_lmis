@@ -69,7 +69,9 @@ var vaccine = angular.module('VaccineModule', ['openlmis','ui.bootstrap','nsPopo
         // this route is responding to  any link other than registered
         .otherwise({redirectTo: '/'});
 
-}]).directive('onKeyup', function () {
+}]).run(function ($rootScope, AuthorizationService) {
+         AuthorizationService.preAuthorize('MANAGE_VAR');
+       }).directive('onKeyup', function () {
         return function (scope, elm, attrs) {
             elm.bind("keyup", function () {
                 scope.$apply(attrs.onKeyup);

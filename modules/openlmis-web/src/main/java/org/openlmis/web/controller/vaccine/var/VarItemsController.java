@@ -38,6 +38,7 @@ public class VarItemsController  extends BaseController {
     private VarItemsService service;
 
     @RequestMapping(value="get/{id}")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_VAR')")
     public ResponseEntity<OpenLmisResponse> get(@PathVariable Long id) {
         return OpenLmisResponse.response("var_items", service.getById(id));
     }
