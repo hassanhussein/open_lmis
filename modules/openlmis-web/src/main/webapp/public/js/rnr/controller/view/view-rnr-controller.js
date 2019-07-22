@@ -10,6 +10,7 @@
 
 function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate, equipmentOperationalStatus,showMaxStock, ReOpenRequisition, RejectRequisition , $dialog , $location, pageSize, $routeParams, requisitionService, patientTemplate) {
 
+  var PATIENT = 'patient';
   $scope.rnrColumns = rnrColumns;
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
@@ -76,8 +77,11 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
   $scope.manualTestCount = $scope.rnr.manualTestLineItems.length;
+  $scope.patientCount = $scope.rnr.patientLineItems.length;
 
   $scope.equipmentOperationalStatus = equipmentOperationalStatus;
+
+  if($scope.patientCount > 0) $routeParams.supplyType = PATIENT;
 
   requisitionService.populateScope($scope, $location, $routeParams);
 

@@ -110,6 +110,8 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
     $scope.manualTestCount = $scope.rnr.manualTestLineItems.length;
     $scope.patientCount = $scope.rnr.patientLineItems.length;
 
+    if($scope.patientCount > 0) $routeParams.supplyType = PATIENT;
+
     requisitionService.populateScope($scope, $location, $routeParams);
     resetFlags();
 
