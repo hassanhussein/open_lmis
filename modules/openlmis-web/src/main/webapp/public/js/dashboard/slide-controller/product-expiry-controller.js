@@ -14,7 +14,8 @@ function ProductExpiryController($scope,$routeParams, messageService,
     $scope.currentOverStockedPage = 0;
     DashboardProductExpired.get({zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
-            programId: $scope.filter.program
+            programId: $scope.filter.program,
+            associatedDashlets: ['expiredProductsStockedOutSection']
         },
         function (data) {
 

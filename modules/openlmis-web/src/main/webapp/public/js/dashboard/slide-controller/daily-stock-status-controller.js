@@ -9,7 +9,8 @@ function DailyStockStatusController($scope,$routeParams, messageService,
     $scope.currentDailyStatusPage = 0;
     DashboardCommodityStatus.get({zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
-            programId: $scope.filter.program
+            programId: $scope.filter.program,
+            associatedDashlets: ['dailyStockStatusStockStatusSection']
         },
         function (data) {
 

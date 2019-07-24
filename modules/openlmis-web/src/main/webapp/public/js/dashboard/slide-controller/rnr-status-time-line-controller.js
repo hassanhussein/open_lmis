@@ -1,5 +1,5 @@
 function RnrStatusChangeTimeLineController($scope,$routeParams, messageService,
-                                        ngTableParams, $filter,RnRTimeLines) {
+                                        ngTableParams, $filter,RnRTimeLines, dashBoardService) {
     $scope.gap = 5;
     // DashboardFacilityCommodityStatus
     $scope.filteredItems = [];
@@ -12,15 +12,20 @@ function RnrStatusChangeTimeLineController($scope,$routeParams, messageService,
     $scope.itemsPerPage = 1;
     $scope.pagedOverStockedItems = [];
     $scope.currentOverStockedPage = 0;
+
     RnRTimeLines.get({zoneId: $scope.filter.zoneId,
-            periodId: $scope.filter.period,
-            programId: $scope.filter.program
-        },
-        function (data) {
+        periodId: $scope.filter.period,
+        programId: $scope.filter.program,
+        associatedDashlets: ['requisitionToFulfilmentTimeLineStockedStatusSection']
+    },
+    function (data) {
 
-            $scope.rnrStatusTimeLines =data.rnrStatusTimeLine;
+        $scope.rnrStatusTimeLines = data.rnrStatusTimeLine;
 
 
-        });
+    });
 
-}
+
+
+    }
+

@@ -14,7 +14,8 @@ function ShipmentInterfaceController($scope,$routeParams, messageService,
     $scope.currentOverStockedPage = 0;
     ShipmentInterfaces.get({zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
-            programId: $scope.filter.program
+            programId: $scope.filter.program,
+            associatedDashlets: ['shipmentInterfaceStockedStatusSection','labEquipmentStockedStatusSection']
         },
         function (data) {
 

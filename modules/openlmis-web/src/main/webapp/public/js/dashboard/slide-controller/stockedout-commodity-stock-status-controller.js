@@ -16,7 +16,8 @@ function StockedOutCommodityStatusController($scope,$routeParams, messageService
 
     DashboardFacilityCommodityStatus.get({zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
-            programId: $scope.filter.program
+            programId: $scope.filter.program,
+            associatedDashlets : ['mostStockedOutProductStockStatusSection']
         },
         function (data) {
             // available facilities for the dropdown filter
