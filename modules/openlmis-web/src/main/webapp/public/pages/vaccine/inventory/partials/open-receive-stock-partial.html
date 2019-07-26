@@ -281,6 +281,9 @@
                 <h3><span openlmis-message="label.product"></span>:{{newLot.product.primaryName}}</h3>
             </div>
         </div>
+        <div class="toolbar-error" ng-show = "lotExits">
+            <span openlmis-message="error.duplicate.batch.number"></span>
+        </div>
     </div>
     <div class="modal-body">
         <div class="row-fluid ">

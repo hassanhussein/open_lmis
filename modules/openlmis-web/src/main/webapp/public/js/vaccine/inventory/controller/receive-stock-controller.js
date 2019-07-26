@@ -478,12 +478,18 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
        newLot.lotCode=$scope.newLot.lotCode;
        newLot.manufacturerName=$scope.newLot.manufacturerName;
        newLot.expirationDate=$filter('date')($scope.newLot.expirationDate,"yyyy-MM-dd");
-        Lot.create(newLot,function(data){
+       $scope.lotExits = _.contains(_.pluck($scope.lotsToDisplay, 'lotCode'), $scope.newLot.lotCode);
+       console.log($scope.lotExits);
+        if($scope.lotExits){
+         $scope.newLotModal = true;
+        }else{
+         Lot.create(newLot,function(data){
                $scope.newLotModal=false;
                $scope.lotToAdd.lotId=data.lot.id;
                console.log(JSON.stringify($scope.selectedLot));
                $scope.loadProductLots(data.lot.product);
-        });
+         });
+       }
      };
 
 }
