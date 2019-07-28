@@ -559,3 +559,7 @@ services.factory('TimelinessReporting', function ($resource) {
 services.factory('OntimeDeliveryReport', function ($resource) {
     return $resource('/api/dashboard/on-time-delivery.json', {}, {});
 });
+
+services.factory('RejectionCount', function($resource){
+    return $resource('/api/dashboard/getRejectionCount.json',{}, {});
+});

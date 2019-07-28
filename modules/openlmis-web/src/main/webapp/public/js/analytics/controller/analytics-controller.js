@@ -1,5 +1,5 @@
 function AnalyticsFunction(leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
-GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,
+GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,
 DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
 var params;
@@ -313,6 +313,67 @@ DefaultProgram.get({}, function (data) {
     $scope.sectionLoaded = function(section) {
         return $scope.dashletSectionsLoaded.includes(section);
     };
+
+
+      function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {
+          Highcharts.chart(chartId, {
+              chart: {
+                  type: type
+              },
+              exporting: {
+                  enabled: false
+              },
+              title: {
+                  text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
+              }, credits: {
+                  enabled: false
+              },
+              subtitle: {
+                  text: ''
+              },
+              xAxis: {
+                  categories: category,
+                  crosshair: true
+              },
+              yAxis: {
+                  lineWidth: 1,
+                  gridLineColor: '',
+                  interval: 1,
+
+                  tickWidth: 1,
+
+
+                  min: 0,
+                  title: {
+                      text: '<span style="font-size: x-small;color:#0c9083">' + verticalTitle + '</span>'
+                  }
+              },
+              tooltip: {
+                  /*
+                   headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                   */
+                  headerFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.key}</b></td></tr><br/>',
+                  pointFormat: '<tr><td style="color:{series.color};padding:0">' + verticalTitle + ':</td>' + '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                  footerFormat: '</table>',
+                  shared: true,
+                  useHTML: true
+              },
+              plotOptions: {
+                  column: {
+                      pointPadding: 0.2,
+                      borderWidth: 0
+                  }
+              },
+              series: [{
+                  name: chartName,
+                  data: values
+
+              }]
+          });
+
+      }
+
+
 
 $('ul.tabs').tabs().tabs('select_tab', 'tracer');
 $('.dropdown-trigger').dropdown();
