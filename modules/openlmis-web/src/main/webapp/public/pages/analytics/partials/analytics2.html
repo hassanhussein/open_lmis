@@ -1062,7 +1062,7 @@ background:#fff;
 
                                 </div>
                                 <div class="col s12 m6 l6">
-                                    <div class="section grey lighten-5 card">
+                                    <div class="grey lighten-5 card">
                                         <div style="" ng-show="features && (features | filter:expectedFilter).length > 0">
 
                                             <div id="container" style="min-width: 310px; max-width:480px; height: 500px; margin: 0 auto"></div>
@@ -1078,14 +1078,23 @@ background:#fff;
 
                                 <!-- Trend of Regular Orders Submitted Per Month chart report -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height" overlay-section="trendOfRegularOrdersSubmittedPerMonth">
-                                        <h2>Trend of Regular Orders Submitted Per Month
-                                            <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
-                                               class="small-box-footer modal-trigger pull-right" >
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <div>
+                                    <div class="grey lighten-5 card row2-height" overlay-section="trendOfRegularOrdersSubmittedPerMonth">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Trend of Regular Orders Submitted Per Month</span>
+
+                                            <!--  <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1"
+                                                 class="small-box-footer modal-trigger pull-right" >
+                                                  <i class="material-icons md-18">info</i>
+                                              </a>-->
+
+                                            <!--   <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                                   info
+                                               </i></a>-->
+                                        </div>
+
+
+                                        <div class="card-content">
                                             <div id="trendOfRegualrOrder" style="height: 300px;margin:0 auto "></div>
                                         </div>
                                     </div>
@@ -1093,15 +1102,23 @@ background:#fff;
 
                                 <!-- Percentage of Regular Orders by Program (all time) -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height" overlay-section="percentageOfRegularOrders">
-                                        <h2>Percentage of Regular Orders by Program (all time)
-                                            <a ng-click="percentageofRegularOrdersHelp('percentageOfEmergencyByProgramhelp')"
-                                               data-target="modal1" class="small-box-footer modal-trigger pull-right">
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <span style="font-size: x-small;top: 0px !important;">.</span>
-                                        <div>
+                                    <div class="grey lighten-5 card row2-height" overlay-section="percentageOfRegularOrders">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Percentage of Regular Orders by Program (all time)</span>
+
+                                            <!--  <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1"
+                                                 class="small-box-footer modal-trigger pull-right" >
+                                                  <i class="material-icons md-18">info</i>
+                                              </a>-->
+
+                                            <!--   <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                                   info
+                                               </i></a>-->
+                                        </div>
+
+
+                                        <div class="card-content">
                                             <div id="regularByProgram" style="height: 300px;margin:0 auto " />
                                         </div>
                                     </div>
@@ -1109,14 +1126,21 @@ background:#fff;
 
                                 <!--  Regular Order By Program (Past 1 Month) -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height" overlay-section="regularOrderByProgram">
-                                        <h2>Regular Order By Program (Past 1 Month)
-                                            <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1"
+                                    <div class="grey lighten-5 card row2-height" overlay-section="regularOrderByProgram">
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Regular Order By Program (Past 1 Month)</span>
+
+                                          <!--  <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1"
                                                class="small-box-footer modal-trigger pull-right" >
                                                 <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <div>
+                                            </a>-->
+
+                                            <!--   <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                                   info
+                                               </i></a>-->
+                                        </div>
+
+                                        <div class="card-content">
                                             <div id="regularSubmittedByProgram" style="height: 300px;margin:0 auto "></div>
                                         </div>
                                     </div>
@@ -1127,15 +1151,28 @@ background:#fff;
 
                                 <!-- RnR Rejection Trends chart-->
                                 <div class="col s12 m6 l4">
-                                    <div class="section grey lighten-5 card row3-height" overlay-section="rejectedRnrTrends">
-                                        <h2>RnR Rejection Trends <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                    <div class="grey lighten-5 card row3-height" overlay-section="rejectedRnrTrends">
+                                   <!--     <h2 style="background-color: #17888f;
+    font-size: 15px !important;
+    color: #fff !important;
+    font-weight: bolder !important;
+    align-content: normal;line-height: 40px">RnR Rejection Trends <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
                                             info
-                                        </i></a></h2>
-                                        <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
+                                        </i></a></h2>-->
+                                       <div class="card-action"  style="background-color: #17888f;">
+                                          <span style="color:white">RnR Rejection Trends</span>
+                                        <!--   <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                               info
+                                           </i></a>-->
+                                       </div>
+                                        <div class="card-content">
+                                            <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
+
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Regular & Emergency Requisitions -->
+                               <!-- &lt;!&ndash; Regular & Emergency Requisitions &ndash;&gt;
                                 <div class="col s12 m6 l4">
                                     <div class="section grey lighten-5 card row3-height" overlay-section="regularAndEmergencyRequisition">
                                         <h2>
@@ -1148,17 +1185,41 @@ background:#fff;
                                         <div id="regularEmergencyType" style="padding-top: 0rem !important;"></div>
                                     </div>
                                 </div>
+-->
+
+                                <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
+                                <div class="col s12 m4 l4">
+                                    <div class="grey lighten-5 card row2-height row1-height" overlay-section="provincesWithMostRegularOrders">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Regions with Most Emergency Orders (Past 3 Months)</span>
+                                            <!--   <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                                   info
+                                               </i></a>-->
+                                        </div>
+
+
+                                        <div class="card-content">
+                                            <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
+
+                                            <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
+                                            <div id="addText" style="left:0px; top:0px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
 
                                 <!-- R&R Status Summary -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row3-height " overlay-section="rnrStatusSummary">
-                                        <h2>R&R Status Summary
-                                            <a ng-click="setHelpContentKey('statusSummary')" data-target="modal1"
-                                               class="small-box-footer modal-trigger pull-right" >
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <div id="rnrSummary" style="margin:0 auto"></div>
+                                    <div class="grey lighten-5 card row3-height " overlay-section="rnrStatusSummary">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">R&R Status Summary</span>
+                                        </div>
+
+                                     <div class="card-content">
+                                         <div id="rnrSummary" style="height: 300px;margin:0 auto"></div>
+                                     </div>
                                     </div>
                                 </div>
                             </div>
@@ -1166,15 +1227,13 @@ background:#fff;
                             <!-- Percentage of Emergency Orders by Program (all time) -->
                             <div class="row orderFillRate" >
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height" overlay-section="percentageOrEmergencyOrders">
-                                        <h2>Percentage of Emergency Orders by Program (all time)
-                                            <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')"
-                                               data-target="modal1" class="small-box-footer modal-trigger pull-right" >
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <span style="font-size: x-small;top: 0px !important;">.</span>
-                                        <div>
+                                    <div class="grey lighten-5 card row2-height" overlay-section="percentageOrEmergencyOrders">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Percentage of Emergency Orders by Program (all time)</span>
+                                        </div>
+
+                                        <div class="card-content">
                                             <div id="emergencyByProgram" style="height: 300px;margin:0 auto " />
                                         </div>
                                     </div>
@@ -1182,14 +1241,13 @@ background:#fff;
 
                                 <!--  Emergency Order By Program (Past 1 Month)  -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height" overlay-section="emergencyOrderByProgram">
-                                        <h2>Emergency Order By Program (Past 1 Month)
-                                            <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1"
-                                               class="small-box-footer modal-trigger pull-right" >
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <div>
+                                    <div class="grey lighten-5 card row2-height" overlay-section="emergencyOrderByProgram">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Emergency Order By Program (Past 1 Month)</span>
+                                        </div>
+
+                                        <div class="card-content">
                                             <div id="emergencySubmittedByProgram" style="height: 300px;margin:0 auto "></div>
                                         </div>
 
@@ -1198,32 +1256,30 @@ background:#fff;
 
                                 <!-- Trend of Emergency Orders Submitted Per Month -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height " overlay-section="trendOfEmergencyOrderPerMonth">
-                                        <h2>Trend of Emergency Orders Submitted Per Month
-                                            <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
-                                               class="small-box-footer modal-trigger pull-right">
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <div>
+                                    <div class="grey lighten-5 card row2-height " overlay-section="trendOfEmergencyOrderPerMonth">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Trend of Emergency Orders Submitted Per Month</span>
+                                        </div>
+
+
+                                        <div class="card-content">
                                             <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="row orderFillRate">
+                            <div class="row orderFillRate" ng-show="false">
 
                                 <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
                                 <div class="col s12 m4 l4">
                                     <div class="section grey lighten-5 card row2-height row1-height" overlay-section="provincesWithMostRegularOrders">
-                                        <h2>Provinces with Most Emergency Orders (Past 3 Months)
-                                            <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')"
-                                               data-target="modal1" class="small-box-footer modal-trigger pull-right">
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <div>
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Regions with Most Emergency Orders (Past 3 Months)</span>
+                                        </div>
+                                        <div class="card-content">
                                             <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
 
                                             <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>

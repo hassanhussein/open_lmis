@@ -283,8 +283,8 @@ DefaultProgram.get({}, function (data) {
 
                         };
 
-                        bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
-                        bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
+                      //  bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
+                        //bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
 
                     } else {
                         $scope.message = 'No rnr status summary';
@@ -448,6 +448,20 @@ DefaultProgram.get({}, function (data) {
                   shared: true,
                   useHTML: true
               },
+                  exporting: {
+                                buttons: {
+                                 customButton: {
+                                 text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                                 symbolStroke: "red",
+                                 theme: {
+                                 fill:"#28A2F3"
+                                 },
+                                 onclick: function () {
+                                 $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                                 }
+                                 }
+                                 }
+                                 },
               plotOptions: {
                   column: {
                       pointPadding: 0.2,
@@ -488,6 +502,20 @@ DefaultProgram.get({}, function (data) {
                           innerSize: '60%'
                       }
                   },
+                    exporting: {
+                                                  buttons: {
+                                                   customButton: {
+                                                   text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                                                   symbolStroke: "red",
+                                                   theme: {
+                                                   fill:"#28A2F3"
+                                                   },
+                                                   onclick: function () {
+                                                   $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                                                   }
+                                                   }
+                                                   }
+                                                   },
                   series: [{
                       data: dataValues
                   }]
