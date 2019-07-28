@@ -19,7 +19,7 @@ var app  = angular.module('analytics', ['openlmis','ui.router','leaflet-directiv
 ]);
 ///Start
 
-app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider){
+app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider,$httpProvider){
 
     var states = [
         {
