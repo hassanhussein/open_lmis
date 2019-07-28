@@ -1,4 +1,6 @@
-function AnalyticsFunction(leafletData,DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
+function AnalyticsFunction(leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
+GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,
+DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
 var params;
 
@@ -63,12 +65,12 @@ DefaultProgram.get({}, function (data) {
              loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
          });
 
-        RejectionCount.get({associatedDashlets : ['rejectedRnrTrends']}, function (data) {
+     /*   RejectionCount.get({associatedDashlets : ['rejectedRnrTrends']}, function (data) {
              var reject = _.pluck(data.rejections, 'Month');
              var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
              loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
         });
-
+*/
         GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOrEmergencyOrders']}).then(function (data) {
             var chartId = 'emergencyByProgram';
             var chartRegularId = 'regularByProgram';
@@ -101,13 +103,13 @@ DefaultProgram.get({}, function (data) {
             loadPieChart(chartId, dataValues, total);
         });
 
-        EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
+       /* EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
                 $scope.emergencyOrderFrequentAppearingProducts = data.products;
-        });
+        });*/
 
-        FacilitiesReportingThroughFEAndCE.get({associatedDashlets: ['facilitiesReportingViaCEAndFE']}, function (data) {
+       /* FacilitiesReportingThroughFEAndCE.get({associatedDashlets: ['facilitiesReportingViaCEAndFE']}, function (data) {
                 $scope.facilitiesReportingViaCEAndFE = data.facilities;
-        });
+        });*/
 
         DashboardRnrTypes.get({
             zoneId: $scope.filter.zoneId,
