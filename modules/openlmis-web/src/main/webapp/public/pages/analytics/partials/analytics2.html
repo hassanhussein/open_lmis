@@ -980,17 +980,14 @@ background:#fff;
 
 
 
+                    <!--================== REQUISITION ============----------->
                     <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
-                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                   <span>
-                    <b>+</b>
-                    <a id="programSchedules" href="javascript:void(0);"
-                    >Reporting Status</a>
-                  </span>
+                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('requisition');">
+                        <span>
+                            <b>+</b><a id="programSchedules" href="javascript:void(0);">Requisitions</a>
+                        </span>
                         </div>
                         <div class="accordion-body">
-
-
                             <div class="row" ng-show="false">
                                 <div class="col s12 m6 l6">
 
@@ -1016,8 +1013,7 @@ background:#fff;
                                                 <th style="width:170px !important;">Product</th>
                                                 <th style="width:70px !important;">Reported</th>
                                                 <th style="width: 180px;">Status</th>
-                                                <th style="width: 73px !important; height: 34px !important;">% Stocked
-                                                    Out
+                                                <th style="width: 73px !important; height: 34px !important;">% Stocked Out
                                                 </th>
                                                 <th style="width: 45px;">Check</th>
                                             </tr>
@@ -1025,47 +1021,31 @@ background:#fff;
                                             <tbody>
                                             <tr ng-repeat="product in products | filter:expectedProductFilter">
                                                 <td style="width:170px !important;">{{product.primaryname}}</td>
-                                                <td style="width:70px !important;" class="number">{{product.reported}}
-                                                </td>
+                                                <td style="width:70px !important;" class="number">{{product.reported}}</td>
                                                 <td style="width:180px !important;" class="number">
-                                                    <div class="progress"
-                                                         style="margin-bottom:0px;width:180px;height: 20px">
-                                                        <div class="bar bar-danger leaflet-clickable"
-                                                             ng-click="StockedOutProducts(product,this);"
-                                                             style="width: {{((product.stockedout / product.reported) * 100)}}%">
+                                                    <div class="progress" style="margin-bottom:0px;width:180px;height: 20px">
+                                                        <div class="bar bar-danger leaflet-clickable" ng-click="StockedOutProducts(product,this);" style="width: {{((product.stockedout / product.reported) * 100)}}%">
                                                             {{product.stockedout}}
                                                         </div>
-                                                        <div class="bar bar-warning leaflet-clickable"
-                                                             ng-click="UnderStockedProducts(product, this)"
-                                                             style="width: {{((product.understocked / product.reported) * 100)}}%">
+                                                        <div class="bar bar-warning leaflet-clickable" ng-click="UnderStockedProducts(product, this)" style="width: {{((product.understocked / product.reported) * 100)}}%">
                                                             {{product.understocked}}
                                                         </div>
-                                                        <div class="bar bar-info leaflet-clickable"
-                                                             ng-click="OverStockedProducts(product, this)"
-                                                             style="width: {{((product.overstocked / product.reported) * 100)}}%">
+                                                        <div class="bar bar-info leaflet-clickable" ng-click="OverStockedProducts(product, this)" style="width: {{((product.overstocked / product.reported) * 100)}}%">
                                                             {{product.overstocked}}
                                                         </div>
-                                                        <div class="bar bar-success leaflet-clickable"
-                                                             ng-click="AdequatelyStockedProducts(product, this)"
-                                                             style="width: {{(100 - (((product.stockedout + product.understocked + product.overstocked)/ product.reported) * 100))}}%">
-                                                            {{ (product.reported - (product.stockedout +
-                                                            product.understocked +
-                                                            product.overstocked)) }}
+                                                        <div class="bar bar-success leaflet-clickable" ng-click="AdequatelyStockedProducts(product, this)" style="width: {{(100 - (((product.stockedout + product.understocked + product.overstocked)/ product.reported) * 100))}}%">
+                                                            {{ (product.reported - (product.stockedout + product.understocked + product.overstocked)) }}
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td style="width: 91px !important;" class="number">
-                                                    {{((product.stockedout /
-                                                    product.reported) * 100).toFixed(0)}} %
+                                                <td style="width: 91px !important;" class="number">{{((product.stockedout / product.reported) * 100).toFixed(0)}} %
                                                 </td>
-                                                <td style="width:45px"><input type="checkbox"
-                                                                              ng-model="product.selected"
-                                                                              ng-change="productSelectChange(product.selected, product)">
+                                                <td style="width:45px">
+                                                    <input type="checkbox" ng-model="product.selected" ng-change="productSelectChange(product.selected, product)">
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
-
 
                                     </div>
 
@@ -1076,195 +1056,245 @@ background:#fff;
                                 <div class="col s12 m6 l6">
                                     <div class="section grey lighten-5 card">
 
-                                        <div id="container1"
-                                             style="height: 500px; min-width: 310px; max-width: 480px; margin: 0 auto"></div>
+                                        <div id="container1" style="height: 500px; min-width: 310px; max-width: 480px; margin: 0 auto"></div>
 
                                     </div>
 
                                 </div>
                                 <div class="col s12 m6 l6">
                                     <div class="section grey lighten-5 card">
-                                        <div style=""
-                                             ng-show="features && (features | filter:expectedFilter).length > 0">
+                                        <div style="" ng-show="features && (features | filter:expectedFilter).length > 0">
 
-                                            <div id="container"
-                                                 style="min-width: 310px; max-width:480px; height: 500px; margin: 0 auto"></div>
+                                            <div id="container" style="min-width: 310px; max-width:480px; height: 500px; margin: 0 auto"></div>
                                         </div>
 
                                     </div>
 
                                 </div>
 
-
                             </div>
+
                             <div class="row orderFillRate">
 
+                                <!-- Trend of Regular Orders Submitted Per Month chart report -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height ">
-                                        <h2>Trend of Regular Orders Submitted Per Month <a
-                                                ng-click="setHelpContentKey('trendOfEmergencyHelp')"
-                                                data-target="modal1"
-                                                class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
+                                    <div class="section grey lighten-5 card row2-height" overlay-section="trendOfRegularOrdersSubmittedPerMonth">
+                                        <h2>Trend of Regular Orders Submitted Per Month
+                                            <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
                                         <div>
                                             <div id="trendOfRegualrOrder" style="height: 300px;margin:0 auto "></div>
                                         </div>
-
-
                                     </div>
-
                                 </div>
+
+                                <!-- Percentage of Regular Orders by Program (all time) -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height">
-                                        <h2>Percentage of Regular Orders by Program (all time) <a
-                                                ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')"
-                                                data-target="modal1"
-                                                class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
+                                    <div class="section grey lighten-5 card row2-height" overlay-section="percentageOfRegularOrders">
+                                        <h2>Percentage of Regular Orders by Program (all time)
+                                            <a ng-click="percentageofRegularOrdersHelp('percentageOfEmergencyByProgramhelp')"
+                                               data-target="modal1" class="small-box-footer modal-trigger pull-right">
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
                                         <span style="font-size: x-small;top: 0px !important;">.</span>
                                         <div>
-                                            <div id="regularByProgram" style="height: 300px;margin:0 auto "/>
+                                            <div id="regularByProgram" style="height: 300px;margin:0 auto " />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height">
-                                        <h2>Regular Order By Program (Past 1 Month) <a
-                                                ng-click="setHelpContentKey('emergencyByProgramHelp')"
-                                                data-target="modal1"
-                                                class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
-                                        <div>
-                                            <div id="regularSubmittedByProgram"
-                                                 style="height: 300px;margin:0 auto "></div>
-                                        </div>
 
+                                <!--  Regular Order By Program (Past 1 Month) -->
+                                <div class="col s12 m4 l4">
+                                    <div class="section grey lighten-5 card row2-height" overlay-section="regularOrderByProgram">
+                                        <h2>Regular Order By Program (Past 1 Month)
+                                            <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
+                                        <div>
+                                            <div id="regularSubmittedByProgram" style="height: 300px;margin:0 auto "></div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row orderFillRate">
+
+                                <!-- RnR Rejection Trends chart-->
                                 <div class="col s12 m6 l4">
-                                    <div class="section grey lighten-5 card row3-height">
-                                        <h2>RnR Rejection Trends <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')"
-                                                                    data-target="modal1"
-                                                                    class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
+                                    <div class="section grey lighten-5 card row3-height" overlay-section="rejectedRnrTrends">
+                                        <h2>RnR Rejection Trends <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
                                             info
                                         </i></a></h2>
                                         <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
-
                                     </div>
                                 </div>
+
+                                <!-- Regular & Emergency Requisitions -->
                                 <div class="col s12 m6 l4">
-
-                                    <div class="section grey lighten-5 card row3-height">
-                                        <h2><span>Regular & Emergency Requisitions</span> <a
-                                                ng-click="setHelpContentKey('regularEmergencyRequisitionhelp')"
-                                                data-target="modal1"
-                                                class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
-                                        <div id="regularEmergencyType"
-                                             style="padding-top: 0rem !important;"></div>
-
+                                    <div class="section grey lighten-5 card row3-height" overlay-section="regularAndEmergencyRequisition">
+                                        <h2>
+                                            <span>Regular & Emergency Requisitions</span>
+                                            <a ng-click="setHelpContentKey('regularEmergencyRequisitionhelp')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
+                                        <div id="regularEmergencyType" style="padding-top: 0rem !important;"></div>
                                     </div>
                                 </div>
+
+                                <!-- R&R Status Summary -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row3-height ">
-                                        <h2>R&R Status Summary <a ng-click="setHelpContentKey('statusSummary')"
-                                                                  data-target="modal1"
-                                                                  class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
+                                    <div class="section grey lighten-5 card row3-height " overlay-section="rnrStatusSummary">
+                                        <h2>R&R Status Summary
+                                            <a ng-click="setHelpContentKey('statusSummary')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
                                         <div id="rnrSummary" style="margin:0 auto"></div>
                                     </div>
-
                                 </div>
                             </div>
-                            <div class="row orderFillRate">
 
+                            <!-- Percentage of Emergency Orders by Program (all time) -->
+                            <div class="row orderFillRate" >
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height">
-                                        <h2>Percentage of Emergency Orders by Program (all time) <a
-                                                ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')"
-                                                data-target="modal1"
-                                                class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
+                                    <div class="section grey lighten-5 card row2-height" overlay-section="percentageOrEmergencyOrders">
+                                        <h2>Percentage of Emergency Orders by Program (all time)
+                                            <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')"
+                                               data-target="modal1" class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
                                         <span style="font-size: x-small;top: 0px !important;">.</span>
                                         <div>
-                                            <div id="emergencyByProgram" style="height: 300px;margin:0 auto "/>
+                                            <div id="emergencyByProgram" style="height: 300px;margin:0 auto " />
                                         </div>
                                     </div>
                                 </div>
+
+                                <!--  Emergency Order By Program (Past 1 Month)  -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height">
-                                        <h2>Emergency Order By Program (Past 1 Month) <a
-                                                ng-click="setHelpContentKey('emergencyByProgramHelp')"
-                                                data-target="modal1"
-                                                class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
+                                    <div class="section grey lighten-5 card row2-height" overlay-section="emergencyOrderByProgram">
+                                        <h2>Emergency Order By Program (Past 1 Month)
+                                            <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
                                         <div>
-                                            <div id="emergencySubmittedByProgram"
-                                                 style="height: 300px;margin:0 auto "></div>
+                                            <div id="emergencySubmittedByProgram" style="height: 300px;margin:0 auto "></div>
                                         </div>
 
                                     </div>
                                 </div>
+
+                                <!-- Trend of Emergency Orders Submitted Per Month -->
                                 <div class="col s12 m4 l4">
-                                    <div class="section grey lighten-5 card row2-height ">
-                                        <h2>Trend of Emergency Orders Submitted Per Month <a
-                                                ng-click="setHelpContentKey('trendOfEmergencyHelp')"
-                                                data-target="modal1"
-                                                class="small-box-footer modal-trigger pull-right"><i
-                                                class="material-icons md-18">
-                                            info
-                                        </i></a></h2>
+                                    <div class="section grey lighten-5 card row2-height " overlay-section="trendOfEmergencyOrderPerMonth">
+                                        <h2>Trend of Emergency Orders Submitted Per Month
+                                            <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right">
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
                                         <div>
                                             <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
                                         </div>
-
-
                                     </div>
-
                                 </div>
                             </div>
 
-                            <!--
-                                                    <div class="row orderFillRate">
+                            <div class="row orderFillRate">
 
+                                <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
+                                <div class="col s12 m4 l4">
+                                    <div class="section grey lighten-5 card row2-height row1-height" overlay-section="provincesWithMostRegularOrders">
+                                        <h2>Provinces with Most Emergency Orders (Past 3 Months)
+                                            <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')"
+                                               data-target="modal1" class="small-box-footer modal-trigger pull-right">
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
+                                        <div>
+                                            <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
 
-                                                        <div class="col s12 m4 l4">
-                                                            <div class="section grey lighten-5 card row2-height row1-height">
-                                                                <h2>Provinces with Most Emergency Orders (Past 3 Months) <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                                                    info
-                                                                </i></a></h2>
+                                            <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
+                                            <div id="addText" style="left:0px; top:0px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                                                <div>
-                                                                    <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
+                                <!-- Emergency Orders Frequently Appearing products -->
+                                <div class="col s12 m4 l4">
+                                    <div class="section grey lighten-5 card row2-height" overlay-section="emergencyOrderFrequentlyAppearingProducts">
+                                        <h2>Emergency Orders Frequently Appearing products
+                                            <a ng-click="setHelpContentKey('emergencyOrderFrequentlyAppearingProducts')"
+                                               data-target="modal1" class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
+                                        <div>
+                                            <!-- <div id="emergencyOrderFrequentlyAppearingProducts" style="height: 300px;margin:0 auto "></div> -->
+                                            <div style="height: 300px; overflow: scroll; padding-top: 0rem !important;"
+                                                 class="section grey lighten-3">
+                                                <table class="striped bordered">
+                                                    <thead>
+                                                    <th>Product Name</th>
+                                                    <th>Order count</th>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr ng-repeat="orderedProducts in emergencyOrderFrequentAppearingProducts">
+                                                        <td>{{orderedProducts.product}}</td>
+                                                        <td>{{orderedProducts.order_frequency}}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                                                                    <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
-                                                                    <div id="addText" style="left:0px; top:0px;"></div>
-                                                                </div>
-
-
-                                                            </div>
-
-                                                        </div>
-
-                                                    </div>
-                            -->
+                                <!-- Facilities Reporting through Facility and Central Edition -->
+                                <div class="col s12 m4 l4">
+                                    <div class="section grey lighten-5 card row2-height " overlay-section="facilitiesReportingViaCEAndFE">
+                                        <h2>Facilities Reporting through Facility and Central Edition
+                                            <a ng-click="setHelpContentKey('facilityReportingViaFECE')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right">
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
+                                        <div>
+                                            <div style="height: 300px; overflow: scroll;" class="section grey lighten-3"
+                                                 style="padding-top: 0rem !important;">
+                                                <table class="striped bordered">
+                                                    <thead>
+                                                    <th>Facility</th>
+                                                    <th style="text-align : center;">This Month</th>
+                                                    <th style="text-align : center;">Last Month</th>
+                                                    <th style="text-align : center;">Three Months Ago</th>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr ng-repeat="facilities in facilitiesReportingViaCEAndFE">
+                                                        <td>{{facilities.facility}}</td>
+                                                        <td style="text-align : center;">{{facilities.previousperiod || '-'}}</td>
+                                                        <td style="text-align : center;">{{facilities.lastperiod || '-'}}</td>
+                                                        <td style="text-align : center;">{{facilities.threeperiodsago || '-'}}</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
