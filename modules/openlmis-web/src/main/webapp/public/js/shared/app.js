@@ -58,6 +58,7 @@ var app = angular.module('openlmis', ['openlmis.services', 'angular-google-analy
   });
 
 app.value("loginConfig", {modalShown: false, preventReload: false});
+app.value("resourceLoadingConfig", {hideReloadIcon: false});
 
 app.directive('dateValidator', function () {
   return {

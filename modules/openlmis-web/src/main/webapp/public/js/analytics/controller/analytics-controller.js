@@ -2,6 +2,10 @@ function AnalyticsFunction(leafletData,GetTrendOfEmergencyOrdersSubmittedPerMont
 GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,RejectionCount,RnRStatusSummary,
 DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
+resourceLoadingConfig.hideReloadIcon = true;
+    resourceLoadingConfig.loadingDashlet = [];
+
+
 var params;
 
 DefaultProgram.get({}, function (data) {

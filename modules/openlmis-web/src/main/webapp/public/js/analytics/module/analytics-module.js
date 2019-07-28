@@ -63,8 +63,7 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider){
     })
     .controller('ElementCtrl', function($scope, $stateParams){
         $scope.idElement = $stateParams.idElement;
-    }).
-    .service('DashBoardResourceLoadingInterceptor', ['resourceLoadingConfig', function(resourceLoadingConfig) {
+    }).service('DashBoardResourceLoadingInterceptor', ['resourceLoadingConfig', function(resourceLoadingConfig) {
         var service = this;
 
         this.request = function(config) {
