@@ -1,5 +1,5 @@
 function AnalyticsFunction(leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
-GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,
+GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,RejectionCount,
 DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
 var params;
@@ -65,12 +65,11 @@ DefaultProgram.get({}, function (data) {
              loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
          });
 
-     /*   RejectionCount.get({associatedDashlets : ['rejectedRnrTrends']}, function (data) {
+        RejectionCount.get({associatedDashlets : ['rejectedRnrTrends']}, function (data) {
              var reject = _.pluck(data.rejections, 'Month');
              var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
              loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
         });
-*/
         GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOrEmergencyOrders']}).then(function (data) {
             var chartId = 'emergencyByProgram';
             var chartRegularId = 'regularByProgram';
@@ -372,6 +371,54 @@ DefaultProgram.get({}, function (data) {
           });
 
       }
+
+
+        function loadPieChart(chartId, dataValues, total) {
+
+              var chart = new Highcharts.Chart({
+                  chart: {
+                      renderTo: chartId,
+                      type: 'pie'
+
+                  },
+                  exporting: {
+                      enabled: false
+                  },
+                  credits: {
+                      enabled: false
+                  }, title: {
+                      text: '<span style="font-size:20px">' + total + ' <br><span style="font-size:10px">TOTAL</span></span>',
+                      verticalAlign: 'middle',
+                      floating: true
+                  },
+
+                  plotOptions: {
+                      pie: {
+                          innerSize: '60%'
+                      }
+                  },
+                  series: [{
+                      data: dataValues
+                  }]
+              }/*,
+
+               function(chart) { // on complete
+               var textX = chart.plotLeft + (chart.plotWidth  * 0.5);
+               var textY = chart.plotTop  + (chart.plotHeight * 0.5);
+
+               var span = '<span id="pieChartInfoText" style="position:absolute; text-align:center;">';
+               span += '<span style="font-size: 32px">Upper</span><br>';
+               span += '<span style="font-size: 16px">Lower</span>';
+               span += '</span>';
+
+               $("#addText").append(span);
+               span = $('#pieChartInfoText');
+               span.css('left', textX + (span.width() * -0.5));
+               span.css('top', textY + (span.height() * -0.5));
+               }*/);
+
+
+          }
 
 
 

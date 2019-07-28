@@ -563,3 +563,7 @@ services.factory('OntimeDeliveryReport', function ($resource) {
 services.factory('RejectionCount', function($resource){
     return $resource('/api/dashboard/getRejectionCount.json',{}, {});
 });
+
+services.factory('DashboardRnrTypes', function ($resource) {
+    return $resource('/dashboard/rnr-emergency-regular-types.json', {}, {});
+});
