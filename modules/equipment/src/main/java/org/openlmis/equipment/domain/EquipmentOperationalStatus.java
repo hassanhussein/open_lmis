@@ -23,7 +23,7 @@ import org.openlmis.core.domain.BaseModel;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class EquipmentOperationalStatus extends BaseModel {
 
   private String name;

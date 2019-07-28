@@ -2,10 +2,7 @@ package org.openlmis.analytics.controller;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Param;
-import org.openlmis.analytics.Repository.Mapper.AnalyticsMapper;
-import org.openlmis.analytics.Repository.Mapper.DashboardPerformanceBasedMapper;
-import org.openlmis.analytics.Repository.Mapper.PercentageWastageMapper;
-import org.openlmis.analytics.Repository.Mapper.StockAvailabilityMapper;
+import org.openlmis.analytics.Repository.Mapper.*;
 import org.openlmis.analytics.service.DashboardService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
@@ -38,6 +35,12 @@ public class AnalyticsController extends BaseController {
 
     @Autowired
     private AnalyticsMapper analyticsMapper;
+
+    @Autowired
+    private DashboardTimelinessReportingMapper reportingMapper;
+
+    @Autowired
+    private OnTimeDeliveryMapper deliveryMapper;
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
@@ -163,5 +166,23 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("stocks", stockAvailabilityMapper.getStockAvailabilityByLevel(loggedInUserId(request),program,period,year));
     }
 
+    @RequestMapping(value = "/dashboard-timeliness-reporting", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTimelinessReporting(
+            @Param("program") Long program,
+            @Param("period") Long period,
+            HttpServletRequest request
+    ) {
+
+        return OpenLmisResponse.response("stocks", reportingMapper.getTimelinessReporting(loggedInUserId(request),program,period));
+    }
+
+    @RequestMapping(value = "/on-time-delivery", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getOnTimeDelivery(
+            @Param("program") Long program,
+            @Param("period") Long period,
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("stocks", deliveryMapper.getOnTimeDelivery(loggedInUserId(request),program,period));
+    }
 
 }

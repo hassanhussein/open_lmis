@@ -867,7 +867,7 @@ Updated Filters
     <div ng-show="program_filter_visible">
         <label for="program" class="labels" openlmis-message="label.program"><span ng-show="requiredFilters.program" class="label-required">*</span></label>
         <div>
-            <select id="program" class="input-large" ng-model="filter.program" ng-change="notifyFilterChanged('program-changed');">
+            <select  id="program" class="input-medium" ng-model="filter.program" ng-change="notifyFilterChanged('program-changed');">
                 <option ng-repeat="program in programs" value="{{ program.id }}" ng-selected="program.id == filter.program">{{program.name}}</option>
             </select>
         </div>
@@ -905,4 +905,9 @@ Updated Filters
         </select>
     </div>
     </div>
+</script>
+
+<script type="text/ng-template" id="filter-dashboard-custom-filter">
+
+
 </script>

@@ -315,6 +315,53 @@ services.factory('StockAvailableByLevelData', function ($q, $timeout, $resource,
 
 });
 
+services.factory('TimelinessReportingData', function ($q, $timeout, $resource,TimelinessReporting) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            TimelinessReporting.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+services.factory('OntimeDeliveryReportData', function ($q, $timeout, $resource,OntimeDeliveryReport) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            OntimeDeliveryReport.get(params, function (data) {
+
+                var stocks =[];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 
 services.factory('StockStatusSummary', function ($resource) {
     return $resource('/api/dashboard/stock-status-summary.json', {}, {});
@@ -365,4 +412,12 @@ services.factory('StockStatusByProgramAndYear', function ($resource) {
 
 services.factory('StockAvailableByLevel', function ($resource) {
     return $resource('/api/dashboard/stock-availability-by-level.json', {}, {});
+});
+
+services.factory('TimelinessReporting', function ($resource) {
+    return $resource('/api/dashboard/dashboard-timeliness-reporting.json', {}, {});
+});
+
+services.factory('OntimeDeliveryReport', function ($resource) {
+    return $resource('/api/dashboard/on-time-delivery.json', {}, {});
 });

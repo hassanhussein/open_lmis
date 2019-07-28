@@ -37,7 +37,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams,GetE
 
    if(!isUndefined(data.equipments) && data.equipments.length > 0) {
      $scope.equipments = data.equipments;
-
+console.log($scope.equipments);
      var designationList = _.pluck($scope.equipments, 'designation');
      $scope.designationList = _.uniq(designationList, 'name');
    }
@@ -161,6 +161,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams,GetE
 
   $scope.isObsoleteEquipment = function(){
       if(($scope.inventory === undefined || $scope.inventory.operationalStatusId === undefined)) return false;
+      console.log($scope.labOperationalStatusList);
       var obsoleteStatus = _.where($scope.labOperationalStatusList, {id:  parseInt($scope.inventory.operationalStatusId, 10) })[0];
       return obsoleteStatus.isObsolete || false;
   };
@@ -169,10 +170,14 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams,GetE
     var operationalStatus = _.where($scope.cceOperationalStatusList, {id: parseInt($scope.inventory.operationalStatusId, 10)})[0];
     $scope.badStatusSelected = operationalStatus.isBad;
   };
+            console.log($scope.inventory);
+
 
   $scope.saveInventory = function () {
     $scope.error = '';
     $scope.showError = true;
+          console.log($scope.inventory);
+
     if(!$scope.inventoryForm.$invalid ){
       // Need to set this for deserialization
       if ($scope.screenType === 'create') {
@@ -183,8 +188,11 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams,GetE
         }
       }
 
+
+
       if (!$scope.inventory.equipment.name) {
           var equipmentModelName = _.pluck(_.where($scope.equipmentModels, {id :parseInt($scope.inventory.equipment.equipmentModel.id, 10)}), 'name')[0];
+
          $scope.inventory.equipment.name = $scope.inventory.equipment.manufacturer + " / " + equipmentModelName;
 
       }

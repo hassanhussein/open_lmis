@@ -125,9 +125,13 @@ public class EquipmentInventoryRepository {
     if (!status.equals(existingStatus)) {
       status.setCreatedBy(inventory.getCreatedBy());
       status.setModifiedBy(inventory.getModifiedBy());
-      if (!equipmentOperationalStatusMapper.getById(status.getStatusId()).getIsBad()) {
-        status.setNotFunctionalStatusId(null);
-      }
+      EquipmentOperationalStatus status1 = equipmentOperationalStatusMapper.getById(status.getStatusId());
+
+       if (!status1.getIsBad()) {
+         status.setNotFunctionalStatusId(null);
+       }
+
+
       equipmentInventoryStatusMapper.insert(status);
     }
   }

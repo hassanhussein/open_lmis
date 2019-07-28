@@ -195,7 +195,7 @@
                     <td data-title="getLocalMessage('label.order.quantity')" class="number" style="width:80px"
                         sortable="orderQuantity">{{ row.orderQuantity | number }}
                     </td>
-                    <td data-title="getLocalMessage('label.status')" ng-class="{ red:'Stocked Out'}" style="width:120px"
+                    <td data-title="getLocalMessage('label.status')" ng-class="{ red:'Stocked Out'}" style="width:120px;font-weight: bold;"
                         sortable="status">
                       <div
                           class="{{(row.status == 'SO')?'red':(row.status=='SP')?'green':(row.status=='OS')?'blue':'yellow'}}">

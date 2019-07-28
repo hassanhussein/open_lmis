@@ -1,6 +1,6 @@
 function PercentageWastageController ($scope,$rootScope, PercentageWastageData,$window){
 
-function getPercentage(percentFor,percentOf)
+$rootScope.getPercentage = function (percentFor,percentOf)
 {
     return Math.round((parseInt(percentFor,10)/parseInt(percentOf,10) *100));
 }
@@ -35,7 +35,7 @@ $scope.percentageWastage.push({ name:d.adjustmentname,y:d.adjustment_qty});
 });
 $scope.category = _.pluck(data,'adjustmentname');
 
-$scope.percentageValue = getPercentage(totalAdjustment,total);
+$scope.percentageValue = $rootScope.getPercentage (totalAdjustment,total);
 
 $scope.loadPercentageWastageChart($scope.percentageValue,'Percentage of wastage for '+params.programName+' reported on the period of '+params.periodName+', '+params.year);
 

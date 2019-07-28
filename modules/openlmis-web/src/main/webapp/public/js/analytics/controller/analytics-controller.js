@@ -12,19 +12,23 @@ DefaultProgram.get({}, function (data) {
 
         var period = data.period;
 
-         params ={product:parseInt(2434,0) ,year:parseInt(period.stringYear,0), program: parseInt(program.id,0),programName:program.name,period:parseInt(period.id,10),periodName:period.name, schedule:period.scheduleId};
+         params ={product:parseInt(2434,0) ,year:parseInt(period.stringYear,0), program: parseInt(program.id,0),programName:program.name,period:parseInt(91 ,10),periodName:period.name, schedule:period.scheduleId};
          $scope.$parent.params = params;
          //start loading functions by applying parameters
 
-         $scope.loadStockAvailableForPeriodData(params);
-         $scope.loadRnrPassedQualityCheckData(params);
+        $scope.loadStockAvailableForPeriodData(params);
+        $rootScope.loadTimelinessReportingData(params);
+        $rootScope.loadOnTimeDelivery(params);
+        $scope.loadRnrPassedQualityCheckData(params);
          $rootScope.loadPercentageWastageData(params);
          $scope.loadMap(params);
-         $scope.loadConsumptionTrendsData(params);
-         $scope.loadStockStatusByProgram(params,'level1');
+         //$scope.loadConsumptionTrendsData(params);
+         //$scope.loadStockStatusByProgram(params,'level1');
          $rootScope.loadStockStatusSummary(params);
-         $rootScope.loadStockStatusByProgramAndYearData(params);
+         //$rootScope.loadStockStatusByProgramAndYearData(params);
          $rootScope.loadStockAvailableByLevel(params);
+
+
 
 });
 
@@ -592,7 +596,7 @@ Highcharts.chart('stock-by-program-and-period', {
      //$scope.availableStockByProgramModal = true;
      $scope.dataTableStockStatusChart(category,values,$scope.titleStockForProgramAvailable,chartData.color);
 
-     // $('#availableStockByProgramModal').modal();
+     //$('#availableStockByProgramModal').modal();
 
 
 
@@ -632,10 +636,13 @@ Highcharts.chart(id, {
         type: chartType
     },
     title: {
-        text: title
+      text: '<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>',
+             align:'left'
     },
     subtitle: {
-        text: 'Click the columns to view stock availability of each tracer items'
+        //text: 'Click the columns to view stock availability of each tracer items'
+               text: '<span style="font-size: 14px!important;color: #0c9083;"> Click the columns to view more details</span>'
+
     },
     xAxis: {
         type: 'category'
@@ -698,6 +705,21 @@ Highcharts.chart(id, {
         headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
         pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}%</b> of <b>{point.available}</b> available tracer(s) of <span><b>{point.total}</b></span> total <br/>'
     },
+      exporting: {
+
+        buttons: {
+         customButton: {
+         text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+         symbolStroke: "red",
+         theme: {
+         fill:"#28A2F3"
+         },
+         onclick: function () {
+         $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY_BY_PROGRAM', 'Stock Availability by Program');
+         }
+         }
+         }
+         },
 
     series: [
         {
@@ -705,8 +727,8 @@ Highcharts.chart(id, {
             colorByPoint: true,
             data: data
         }
-    ],
-          exporting: {
+    ]//,
+        //  exporting: {
                    /*  buttons: {
                          customButton: {
                              text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
@@ -720,7 +742,7 @@ Highcharts.chart(id, {
                              }
                          }
                      }*/
-                 }
+                 //}
 
 });
 

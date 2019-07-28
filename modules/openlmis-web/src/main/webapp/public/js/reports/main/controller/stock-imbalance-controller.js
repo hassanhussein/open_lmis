@@ -10,10 +10,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 function StockImbalanceController($scope, $window, $routeParams, StockImbalanceReport, $filter, $q, ngTableParams) {
-    (function init() {
-        $routeParams.reportType = "RE";
-        $routeParams.status = "SO";
-    })();
+
+    if(!$routeParams.dashboardView) {
+     (function init() {
+         $routeParams.reportType = "RE";
+         $routeParams.status = "SO";
+     })();
+
+    }
+
     if ($routeParams.status !== undefined) {
         var statuses = $routeParams.status.split(',');
         $scope.statuses = {};
@@ -139,7 +144,7 @@ $scope.filter.page = $scope.page;
 //variable to manage counts on pagination
 $scope.countFactor = $scope.pageSize * ($scope.page - 1);
 
-if ($scope.filter.status === undefined) {
+if ($scope.filter.status === undefined && !$routeParams.dashboardView) {
 //By Default, show stocked out
 $scope.statuses = {
     'SO': true

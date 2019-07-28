@@ -213,7 +213,7 @@ background:#fff;
     <div class="tab-content clearfix">
 
         <div class="tab-pane active" id="summary">
-            <div class="row">
+         <!--   <div class="row">
                 <div id="filterMenu">
                     <div class="row">
                         <div class="col s12">
@@ -295,7 +295,7 @@ background:#fff;
                 </div>
 
 
-            </div>
+            </div>-->
 
          <!--   <div class="clearfix"></div>
 
@@ -371,6 +371,148 @@ background:#fff;
             </div>
 
 
+            <div id="definitionModal" modal="modal"  role="dialog"
+                     style="overflow: hidden;background: none !important;  min-height: 308px !important;  margin-top: 90px !important;"
+                     options="{ backdrop: 'static', escape: false}">
+
+                    <div class="row ">
+                        <div class="s12 m12 l12">
+                            <div class="card darken-5">
+                                <div class="card-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h2 class="modal-title">{{title}}</h2>
+                                    </div>
+
+                                    <span ng-bind-html="renderHtml(content)"></span>
+
+
+                                </div>
+                                <div class="card-action" style="height:100px !important">
+
+                                    <span style="padding-bottom:10px !important"><button style="padding-bottom:10px !important" type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button></span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!--    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h2 class="modal-title">{{title}}</h2>
+                        </div>
+                        <div class="modal-body" style=" padding-right:0px !important; display: block !important; min-height: 200px !important;background-color:white; ">
+
+
+                                <span ng-bind-html="renderHtml(content)"></span>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>-->
+
+<!--
+                </div>
+-->
+
+
+
+            <div id="modal2" class="modal modal-fixed-footer" style="margin-top: 90px !important;">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h2 class="modal-title">{{title}}</h2>
+            </div>
+            <div class="modal-content" style=" padding-right:0px !important; display: block !important; min-height: 200px !important;background-color:white; ">
+                <div class="content-row">
+                    <span ng-bind-html="renderHtml(content)"></span>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+
+
+           <!--     <div class="modal-body1" ng-controller="stockStatusSummaryController">
+                    <h2><span style="text-align:center">{{title}}</span></h2>
+                    <span ng-bind-html="renderHtml(content)"></span><br>
+
+
+                </div>
+                <div class="modal-footer">
+                    <input type="button" class="btn btn-cancel"
+                           ng-click="availableStockByProgramModal=false;"
+                           openlmis-message="button.cancel"/>
+                </div>-->
+
+              <!--  <div class="modal-header" ><h3><span ng-style="{'color':stockColor}" style="text-align:center !important">Definition of Key Performance Indicator</span></h3>
+                    <span class="fluid-grid-cell delete-role pull-right">
+                            <a href="" class="close" value="delete"
+                               ng-click="definitionModal=false;">&times;</a>
+                        </span>
+
+                </div>
+                <div class="modal-body1">
+                    <div class="scrollable" ng-controller="stockStatusSummaryController">
+
+
+                            {{content}}
+
+&lt;!&ndash;
+                        <table class="striped">
+                            <thead>
+                            <tr class="highlight">
+                                <th>#</th>
+                                <th>Name of Products</th>
+                                <th>Reported Closing Balance</th>
+                                <th>Average Monthly Consumption</th>
+                                <th>MOS</th>
+                            </tr>
+                            </thead>
+                            <tbody class="tbody" ng-repeat="drilled in drillDownData">
+                            <tr>
+                                <td>{{$index+1}}</td>
+                                <td>{{drilled.productname}}</td>
+                                <td>{{drilled.soh | number}} </td>
+                                <td>{{drilled.amc | number}}</td>
+                                <td>{{drilled.mos | number}}</td>
+
+                            </tr>
+
+                            </tbody>
+
+                        </table>
+&ndash;&gt;
+
+
+                    </div>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <input type="button" id="cancelNonFullSupply" class="btn btn-cancel"
+                           ng-click="definitionModal=false;"
+                           openlmis-message="button.cancel"/>
+                </div>-->
+
+<!--
+            </div>
+-->
+
+
 
 
 
@@ -411,24 +553,143 @@ background:#fff;
                         </div>
                         <div class="accordion-body" style="display:block">
 
-                            <div class="row" >
+                            <div class="row">
 
-                                <div class="col s12 m12 l12">
+                                <div class="col s12 m5 l5" ng-controller="stockStatusSummaryController">
                                     <div class="card">
                                         <div class="card-content">
-                                            <div class="col s12 m6 l6" ng-controller="stockStatusSummaryController">
+
                                                 <div id="stock-summary-by-period-and-program" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                       <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col s12 m4 l4" ng-controller="StockAvailabilityByLevelController">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div id="stock-by-level" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                    <div class="col s12 m3 l3">
+                                        <div class="card">
+                                            <div class="card-content" ng-controller="TimelinessReportingController">
+                                                <div id="timeliness-reporting" style="margin: 0 auto;height: 360px !important;"></div>
+
                                             </div>
-                                            <div class="col s12 m6 l6" ng-controller="StockAvailabilityByLevelController">
-                                                <div id="stock-by-level" style="margin: 0 auto;height: 360px !important;"></div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                            </div>
+
+
+                            <div class="row">
+
+                                <div class="col s12 m8 l8">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col s12 m4 l4">
+                                    <div class="card">
+                                        <div class="card-content" ng-controller="TimelinessReportingController">
+                                            <span ng-show="dataToDisplay.length != 0">
+                                                <div id="on-time-delivery" style="margin: 0 auto;height: 360px !important;" ></div>
+
+                                            </span>
+                                            <span ng-if="dataToDisplay.length == 0 ">No Proof of delivery for this program</span>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                                <div class="row" ng-show="drillDownData.length">
+                                    <div class="col s12 m8 l8">
+                                        <div class="card">
+                                            <div class="card-content">
+
+                                                <div id="stock-available-for-program-drill-down" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                            </div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
 
 
                                             </div>
 
                                         </div>
+
                                     </div>
+
+                                    <div class="col s12 m4 l4" >
+                                        <div class="card">
+                                            <div class="card-content">
+                                                <div style="height: 360px !important;">
+
+                                                    <div ng-show="drillDownData.length" style="height: 350px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
+
+
+                                                </div>
+
+
+
+                                            </div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+
+
                                 </div>
-                            </div>
 
                             <div class="row" ng-show ="false">
 
@@ -457,55 +718,12 @@ background:#fff;
 
                             </div>
 
-                            <div class="row">
-                                <div class="col s12 m12 l12">
-                                    <div class="card">
-                                        <div class="card-content">
-                                            <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
 
 
 
 
-                            <div class="row" ng-show="drillDownData.length">
-                                <div class="col s12 m8 l8">
-                                    <div class="card">
-                                        <div class="card-content">
 
-                                            <div id="stock-available-for-program-drill-down" style="margin: 0 auto;height: 360px !important;"></div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col s12 m4 l4" >
-                                    <div class="card">
-                                        <div class="card-content">
-                                            <div style="height: 360px !important;">
-
-                                                <div ng-show="drillDownData.length" style="height: 350px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
-
-
-                                            </div>
-
-
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-
-                            </div>
 
 
                             <div class="row">
@@ -514,6 +732,12 @@ background:#fff;
                                         <div class="card-content">
 
                                             <div id="rnrPassedChart" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
 
                                         </div>
 
@@ -525,6 +749,12 @@ background:#fff;
                                         <div class="card-content" ng-controller="PercentageWastageController">
                                             <a id="back" ng-hide="true" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i>Back to Wastage Percentage</a>
                                             <div id="container-speed" style="margin: 0 auto;height: 360px !important;" class="chart-container"></div>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
 
                                         </div>
 
@@ -715,7 +945,7 @@ background:#fff;
 
                             </div>
 
-                            <div class="row" ng-show="true">
+                            <div class="row" ng-show="false">
                                 <div class="col s12 m6 l6">
                                     <div class="card">
                                         <div class="card-content">
@@ -1038,117 +1268,7 @@ background:#fff;
                         </div>
                     </div>
 
-                    <div class="accordion-section">
-                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                   <span>
-                    <b>+</b>
-                    <a id="thirdGroup" href="javascript:void(0);"
-                    >Stock Keeping</a>
-                  </span>
-                        </div>
-                        <div class="accordion-body">
-                            <div class="row orderFillRate">
 
-                                <!--             <div ng-controller="ShipmentInterfaceController" class="row orderFillRate" ng-show="false">
-
-                                                 <ng-include
-                                                         src="'/public/pages/dashboard/new-partials/shipment-interface-status.html'"></ng-include>
-                                                 <div class="col s12 m4 l4 ">
-                                                     <div class="section grey lighten-5 card row3-height">
-                                                         <h2>Lab Equipment Status  <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                                             info
-                                                         </i></a> </h2>
-                                                         <div>
-                                                             <div id="equipmentStatusContainer" style="height: 300px;margin:0 auto "></div>
-
-                                                             &lt;!&ndash;
-                                                                                         <div id="emergencyTrend" style="height: 300px;margin:0 auto "></div>
-                                                             &ndash;&gt;
-
-                                                         </div>
-
-                                                     </div>
-                                                 </div>
-                                             </div>
-                 -->
-
-                                <!-- <ng-include
-                                         src="'/public/pages/dashboard/new-partials/slide-stockedout-commodity-stock-status.html'"></ng-include>
-                                 <ng-include
-                                         src="'/public/pages/dashboard/new-partials/slide-product-expiry.html'"></ng-include>-->
-
-
-                            </div>
-                            <!---->
-                            <div class="row orderFillRate" ng-show="true">
-                                <!--          <ng-include
-                                                  src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
-                                          <ng-include
-                                                  src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
-              -->
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
-
-                    <div class="accordion-section">
-                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                   <span>
-                    <b>+</b>
-                    <a id="thirdGroup" href="javascript:void(0);"
-                    >Performance</a>
-                  </span>
-                        </div>
-                        <div class="accordion-body">
-                            <div class="row orderFillRate">
-
-                                <!--             <div ng-controller="ShipmentInterfaceController" class="row orderFillRate" ng-show="false">
-
-                                                 <ng-include
-                                                         src="'/public/pages/dashboard/new-partials/shipment-interface-status.html'"></ng-include>
-                                                 <div class="col s12 m4 l4 ">
-                                                     <div class="section grey lighten-5 card row3-height">
-                                                         <h2>Lab Equipment Status  <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                                             info
-                                                         </i></a> </h2>
-                                                         <div>
-                                                             <div id="equipmentStatusContainer" style="height: 300px;margin:0 auto "></div>
-
-                                                             &lt;!&ndash;
-                                                                                         <div id="emergencyTrend" style="height: 300px;margin:0 auto "></div>
-                                                             &ndash;&gt;
-
-                                                         </div>
-
-                                                     </div>
-                                                 </div>
-                                             </div>
-                 -->
-
-                                <!-- <ng-include
-                                         src="'/public/pages/dashboard/new-partials/slide-stockedout-commodity-stock-status.html'"></ng-include>
-                                 <ng-include
-                                         src="'/public/pages/dashboard/new-partials/slide-product-expiry.html'"></ng-include>-->
-
-
-                            </div>
-                            <!---->
-                            <div class="row orderFillRate" ng-show="true">
-                                <!--          <ng-include
-                                                  src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
-                                          <ng-include
-                                                  src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
-              -->
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
 
 
 
