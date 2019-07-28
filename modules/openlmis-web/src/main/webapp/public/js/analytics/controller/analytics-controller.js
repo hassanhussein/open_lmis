@@ -292,6 +292,47 @@ DefaultProgram.get({}, function (data) {
                 });
   }
 
+
+
+      $scope.loadRnRStatusSummary = function (summary) {
+
+          var dataVal = [{name: 'Status', colorByPoint: false, data: summary}];
+
+          Highcharts.chart('rnrSummary', {
+              chart: {
+                  plotBackgroundColor: null,
+                  plotBorderWidth: null,
+                  plotShadow: false,
+                  type: 'pie',
+                  height: '350px'
+              },
+              credits: {
+                  enabled: false
+              },
+              title: {
+                  text: '<span style="background-color:lightGray; font-size: x-small !important;color: #0c9083"></span>'
+              },
+              tooltip: {
+                  pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+              },
+              plotOptions: {
+                  pie: {
+                      allowPointSelect: false,
+                      cursor: 'pointer',
+                      dataLabels: {
+                          enabled: true
+                      },
+                      showInLegend: true,
+                      innerSize: "70%",
+                      size: 150
+                  }
+              },
+              series: dataVal
+          });
+
+      };
+
+
   $scope.dashletSectionsLoaded = [];
 
     $scope.loadDashletsBySectionNames = function(sectionName) {
