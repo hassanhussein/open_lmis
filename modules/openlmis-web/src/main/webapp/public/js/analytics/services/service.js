@@ -567,3 +567,15 @@ services.factory('RejectionCount', function($resource){
 services.factory('DashboardRnrTypes', function ($resource) {
     return $resource('/dashboard/rnr-emergency-regular-types.json', {}, {});
 });
+
+
+services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
+    return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
+});
+services.factory('RnRStatusSummary',function($resource){
+    return $resource('/dashboard/RnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
+  });
+
+services.factory("EmergencyRnRStatusSummary", function($resource){
+    return $resource('/dashboard/EmergencyRnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
+});
