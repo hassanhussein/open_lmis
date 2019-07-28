@@ -14,7 +14,7 @@
 
 var app = angular.module('openlmis', ['openlmis.services', 'angular-google-analytics', 'openlmis.localStorage', 'ui.directives', 'ngCookies', 'ngRoute'],
   function ($httpProvider) {
-    var interceptor = ['$q', '$window', 'loginConfig', function ($q, $window, loginConfig) {
+    var interceptor = ['$q', '$window', 'loginConfig','resourceLoadingConfig', function ($q, $window, loginConfig,resourceLoadingConfig) {
       var requestCount = 0;
 
       function responseSuccess(response) {
@@ -42,6 +42,7 @@ var app = angular.module('openlmis', ['openlmis.services', 'angular-google-analy
 
       function request(config) {
         if ((++requestCount) > 0)
+          if(!resourceLoadingConfig.hideReloadIcon)
           angular.element('#loader').show();
         config.headers["X-Requested-With"] = "XMLHttpRequest";
         return config;
