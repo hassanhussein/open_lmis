@@ -295,6 +295,54 @@ DefaultProgram.get({}, function (data) {
   }
 
 
+  $scope.rnrStatusPieChartOptionFunction = function () {
+
+        $scope.rnRStatusPieChartOption = {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 2 / 4,
+                        formatter: function (label, series) {
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
+                        },
+                        threshold: 0.1
+                    }
+
+                }
+            },
+            legend: {
+                show: true,
+                container: $("#rnrStatusReportLegend"),
+                noColumns: 0,
+                labelBoxBorderColor: "none"
+                //width: 20
+
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderWidth: 1,
+                borderColor: "#d6d6d6",
+                backgroundColor: {
+                    colors: ["#FFF", "#CCC", "#FFF", "#CCC"]
+                }
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s",
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        };
+
+
+    };
 
       $scope.loadRnRStatusSummary = function (summary) {
 
