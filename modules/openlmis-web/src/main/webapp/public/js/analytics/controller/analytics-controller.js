@@ -30,12 +30,34 @@ DefaultProgram.get({}, function (data) {
 
 
 
+
+
+
 });
 
  }
 });
 
+  $scope.dashletSectionsLoaded = [];
 
+    $scope.loadDashletsBySectionNames = function(sectionName) {
+        switch(sectionName) {
+            case 'stockStatus':
+                loadStockStatusSection();
+                break;
+            case 'requisition':
+                loadRequisitionSection();
+                break;
+            default:
+                console.log('Dashboard section does not exist');
+        }
+
+        sectionName && $scope.dashletSectionsLoaded.push(sectionName);
+    };
+
+    $scope.sectionLoaded = function(section) {
+        return $scope.dashletSectionsLoaded.includes(section);
+    };
 
 $('ul.tabs').tabs().tabs('select_tab', 'tracer');
 $('.dropdown-trigger').dropdown();
