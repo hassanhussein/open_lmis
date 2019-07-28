@@ -38,6 +38,259 @@ DefaultProgram.get({}, function (data) {
  }
 });
 
+ function loadRequisitionSection() {
+
+        if($scope.dashletSectionsLoaded.includes('requisition')) return;
+
+        GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({associatedDashlets : ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']})
+        .then(function (data) {
+                var chartId = 'trendOfEmergencyOrder';
+                var chartRegularId = 'trendOfRegualrOrder';
+                var category = _.pluck(data, 'ym');
+                var value = _.pluck(data, 'Emergency Requisitions');
+                var valueRegular = _.pluck(data, 'Regular Requisitions');
+                loadTheChart(category, value, chartId, 'spline', 'Year and Month', '', '# of requisitions');
+                loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month', '', '# of requisitions');
+        });
+
+        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOfRegularOrders']}).then(function (data) {
+             var chartId = 'emergencyByProgram';
+             var chartRegularId = 'regularByProgram';
+             var category = _.pluck(data, 'Program Name');
+             var value = _.pluck(data, 'Emergency');
+             var valueRegular = _.pluck(data, 'Regular');
+             loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+         });
+
+        RejectionCount.get({associatedDashlets : ['rejectedRnrTrends']}, function (data) {
+             var reject = _.pluck(data.rejections, 'Month');
+             var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
+             loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
+        });
+
+        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOrEmergencyOrders']}).then(function (data) {
+            var chartId = 'emergencyByProgram';
+            var chartRegularId = 'regularByProgram';
+            var category = _.pluck(data, 'Program Name');
+            var value = _.pluck(data, 'Emergency');
+            var valueRegular = _.pluck(data, 'Regular');
+            loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+            loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        });
+
+        GetEmergencyOrderByProgramData.get({associatedDashlets : ['emergencyOrderByProgram', 'regularOrderByProgram']}).then(function (data) {
+             var chartId = 'emergencySubmittedByProgram';
+             var chartRegularId = 'regularSubmittedByProgram';
+             var category = _.pluck(data, 'Program Name');
+             var value = _.pluck(data, 'Emergency');
+             var valueRegular = _.pluck(data, 'Regular');
+             loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        });
+
+        GetNumberOfEmergencyData.get({associatedDashlets : ['provincesWithMostRegularOrders']}).then(function (data) {
+            var chartId = 'emergencyByRegion';
+            var data1 = _.pluck(data, 'Number Of EOs');
+            var data2 = _.pluck(data, 'Province');
+            var total = 0;
+            total = _.reduce(data1, function (memo, num) {
+                return memo + num;
+            }, 0);
+            var dataValues = _.zip(data2, data1);
+            loadPieChart(chartId, dataValues, total);
+        });
+
+        EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
+                $scope.emergencyOrderFrequentAppearingProducts = data.products;
+        });
+
+        FacilitiesReportingThroughFEAndCE.get({associatedDashlets: ['facilitiesReportingViaCEAndFE']}, function (data) {
+                $scope.facilitiesReportingViaCEAndFE = data.facilities;
+        });
+
+        DashboardRnrTypes.get({
+            zoneId: $scope.filter.zoneId,
+            periodId: $scope.filter.period,
+            programId: $scope.filter.program,
+            associatedDashlets : ['regularAndEmergencyRequisition']
+        }, function (data) {
+            var rnrTypes = data.rnrTypes;
+            console.log(rnrTypes);
+            var periods = _.pluck(rnrTypes, 'period');
+            var series = [];
+            var emergencyRnrs = _.pluck(rnrTypes, 'emergency');
+            var regularRnrs = _.pluck(rnrTypes, 'regular');
+            var percentages = _.pluck(rnrTypes, 'percent');
+            var emergencySeries = {
+                type: 'spline',
+
+                name: 'Emergency',
+                data: emergencyRnrs
+            };
+            var regularSeries = {
+                type: 'spline',
+
+                name: 'Regular',
+                data: regularRnrs
+            };
+            var percentSeries = {
+                type: 'column',
+                yAxis: 1,
+                name: 'Percent',
+                data: percentages
+            };
+
+            series.push(regularSeries);
+            series.push(emergencySeries);
+            series.push(percentSeries);
+            Highcharts.chart('regularEmergencyType', {
+
+                chart: {
+                    type: 'line',
+                    zoomType: 'xy'
+                },
+                exporting: {
+                    enabled: false
+                },
+                title: {
+                    text: ''
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    categories: periods
+                },
+                yAxis: [{ // Primary yAxis [{ // Primary yAxis
+                    labels: {
+                        format: '{value}',
+                        style: {
+                            color: Highcharts.getOptions().colors[2]
+                        }
+                    },
+                    title: {
+                        text: 'Quantity',
+                        style: {
+                            color: Highcharts.getOptions().colors[2]
+                        }
+                    },
+                    opposite: false
+
+                }, { // Secondary yAxis
+                    gridLineWidth: 0,
+                    title: {
+                        text: 'Percentage',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+
+                    },
+                    labels: {
+                        format: '{value} %',
+                        style: {
+                            color: Highcharts.getOptions().colors[0]
+                        }
+                    },
+                    opposite: true
+
+                }],
+                tooltip: {
+                    shared: true
+                },
+                plotOptions: {
+                    line: {
+                        dataLabels: {
+                            enabled: true
+                        },
+                        enableMouseTracking: false
+                    }
+                },
+                series: series
+            });
+
+        });
+
+        RnRStatusSummary.get({
+                    zoneId: $scope.filter.zoneId,
+                    periodId: $scope.filter.period,
+                    programId: $scope.filter.program,
+                    associatedDashlets: ['rnrStatusSummary']
+                },
+                function (data) {
+
+                    var dataValues = [];
+                    var colors = {
+                        'RELEASED': 'lightblue',
+                        'IN_APPROVAL': 'lightgreen',
+                        'APPROVED': '#82A4EF',
+                        'AUTHORIZED': '#FF558F'
+                    };
+                    data.rnrStatus.forEach(function (d) {
+                        if (d.status === 'AUTHORIZED')
+                            dataValues.push({
+                                sliced: true,
+                                selected: true,
+                                'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                                'y': d.totalStatus,
+                                color: colors[d.status]
+                            });
+                        else
+                            dataValues.push({
+                                'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                                'y': d.totalStatus,
+                                color: colors[d.status]
+                            });
+                    });
+
+                    $scope.loadRnRStatusSummary(dataValues);
+                    $scope.total = 0;
+                    $scope.RnRStatusPieChartData = [];
+                    $scope.dataRows = [];
+                    $scope.datarows = [];
+
+                    if (!isUndefined(data.rnrStatus)) {
+
+                        $scope.dataRows = data.rnrStatus;
+                        if (isUndefined($scope.dataRows)) {
+                            $scope.resetRnRStatusData();
+                            return;
+                        }
+                        var statusData = _.pluck($scope.dataRows, 'status');
+                        var totalData = _.pluck($scope.dataRows, 'totalStatus');
+                        var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFA500', APPROVED: '#0000FF', RELEASED: '#008000'};
+                        $scope.value = 0;
+                        for (var i = 0; i < $scope.dataRows.length; i++) {
+
+                            $scope.total += $scope.dataRows[i].totalStatus;
+
+                            var labelKey = 'label.rnr.status.summary.' + statusData[i];
+                            var label = messageService.get(labelKey);
+                            $scope.RnRStatusPieChartData[i] = {
+                                label: label,
+                                data: totalData[i],
+                                color: color[statusData[i]]
+
+                            };
+
+                        }
+                        $scope.rnrStatusPieChartOptionFunction();
+                        $scope.rnrStatusRenderedData = {
+                            status: _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus, 'status')))
+
+                        };
+
+                        bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
+                        bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
+
+                    } else {
+                        $scope.resetRnRStatusReportData();
+                    }
+                    $scope.overAllTotal();
+                    $scope.paramsChanged($scope.tableParams);
+                });
+  }
+
   $scope.dashletSectionsLoaded = [];
 
     $scope.loadDashletsBySectionNames = function(sectionName) {

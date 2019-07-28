@@ -42,6 +42,9 @@ public class AnalyticsController extends BaseController {
     @Autowired
     private OnTimeDeliveryMapper deliveryMapper;
 
+    @Autowired
+    private RequisitionStatusMapper requisitionStatusMapper;
+
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
         return OpenLmisResponse.response("rnr_list", service.getAllUsers());
@@ -184,5 +187,40 @@ public class AnalyticsController extends BaseController {
     ) {
         return OpenLmisResponse.response("stocks", deliveryMapper.getOnTimeDelivery(loggedInUserId(request),program,period));
     }
+
+    //ZAAMBIA CONTROLLET
+
+
+    @RequestMapping(value = "/getRejectionCount.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getRejectionStatus() {
+        return OpenLmisResponse.response("rejections", this.requisitionStatusMapper.getRnRRejectionCount());
+    }
+    @RequestMapping(value = "/getNumberOfEmergency.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getNumberOfEmergency() {
+        return OpenLmisResponse.response("emergency", this.requisitionStatusMapper.getNumberOfEmergency());
+    }
+
+    @RequestMapping(value = "/getPercentageOfEmergencyOrderByProgram.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPercentageOfEmergencyOrderByProgram() {
+        return OpenLmisResponse.response("emergency", this.requisitionStatusMapper.getPercentageOfEmergencyOrderByProgram());
+    }
+    @RequestMapping(value = "/getEmergencyOrderByProgram.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getEmergencyOrderByProgram() {
+        return OpenLmisResponse.response("emergency", this.requisitionStatusMapper.getEmergencyOrderByProgram());
+    }
+    @RequestMapping(value = "/getTrendOfEmergencyOrdersSubmittedPerMonth.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTrendOfEmergencyOrdersSubmittedPerMonth() {
+        return OpenLmisResponse.response("emergency", this.requisitionStatusMapper.getTrendOfEmergencyOrdersSubmittedPerMonth());
+    }
+    @RequestMapping(value = "/emergencyOrderTrends.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> emergencyOrderTrends() {
+        return OpenLmisResponse.response("emergency", this.requisitionStatusMapper.emergencyOrderTrends());
+    }
+
+    @RequestMapping(value = "/getEmergencyOrderFrequentAppearingProducts.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getEmergencyOrderFrequentAppearingProducts() {
+        return OpenLmisResponse.response("products", this.requisitionStatusMapper.getEmergencyOrderFrequentAppearingProducts());
+    }
+
 
 }

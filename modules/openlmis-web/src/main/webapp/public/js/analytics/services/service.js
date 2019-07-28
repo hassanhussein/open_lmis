@@ -363,6 +363,144 @@ services.factory('OntimeDeliveryReportData', function ($q, $timeout, $resource,O
 });
 
 
+
+
+
+//API for Zambia Dashboard
+services.factory('GetNumberOfEmergencyData', function ($q, $timeout, $resource,GetNumberOfEmergency) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetNumberOfEmergency.get(params, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.emergency;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+services.factory('GetPercentageOfEmergencyOrderByProgramData', function ($q, $timeout, $resource,GetPercentageOfEmergencyOrderByProgram) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetPercentageOfEmergencyOrderByProgram.get(params, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.emergency;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+services.factory('GetEmergencyOrderByProgramData', function ($q, $timeout, $resource,GetEmergencyOrderByProgram) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetEmergencyOrderByProgram.get(params, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.emergency;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+services.factory('GetTrendOfEmergencyOrdersSubmittedPerMonthData', function ($q, $timeout, $resource,GetTrendOfEmergencyOrdersSubmittedPerMonth) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetTrendOfEmergencyOrdersSubmittedPerMonth.get(params, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.emergency;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+services.factory('GetEmergencyOrderTrendsData', function ($q, $timeout, $resource,GetEmergencyOrderTrends) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetEmergencyOrderTrends.get(params, function (data) {
+
+                var stocks ={};
+                if (data !== undefined) {
+                    stocks = data.emergency;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+services.factory('GetNumberOfEmergency', function($resource){
+    return $resource('/api//dashboard/getNumberOfEmergency.json',{}, {});
+});
+services.factory('GetPercentageOfEmergencyOrderByProgram', function($resource){
+    return $resource('/api//dashboard/getPercentageOfEmergencyOrderByProgram.json',{}, {});
+});
+services.factory('GetEmergencyOrderByProgram', function($resource){
+    return $resource('/api//dashboard/getEmergencyOrderByProgram.json',{}, {});
+});
+services.factory('GetTrendOfEmergencyOrdersSubmittedPerMonth', function($resource){
+    return $resource('/api//dashboard/getTrendOfEmergencyOrdersSubmittedPerMonth.json',{}, {});
+});
+services.factory('GetEmergencyOrderTrends', function($resource){
+    return $resource('/api/dashboard/emergencyOrderTrends.json',{}, {});
+});
+
+
+
 services.factory('StockStatusSummary', function ($resource) {
     return $resource('/api/dashboard/stock-status-summary.json', {}, {});
 });
