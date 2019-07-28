@@ -31,77 +31,14 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider){
             ncyBreadcrumb: {
                 label: 'Un-published Dashboard'
             }
-        },
-
-        {
-            name: 'notification',
-            url: '/notification',
-            templateUrl: 'partials/notification-list.html',
-            controller: 'NotificationControllerFunc',
-            ncyBreadcrumb: {
-                label: 'All Notifications'
-            }
         }
-
-
-        /*,
-        {
-            name: 'element',
-            url: '/element:idElement/:facilityId',
-            templateUrl: 'partials/stock-ledger.html',
-            controller: 'MyFacilityStockLedgerFunction',
-            ncyBreadcrumb: {
-                label: 'Stock Ledger',
-                parent: 'home'
-            }
-        },
-        {
-            name: 'detail',
-            url: '/detail:referer',
-            templateUrl: 'partials/detail.html',
-            ncyBreadcrumb: {
-                label: 'Details'
-            }
-        },
-        {
-            name:'toState',
-            url: '/supervisedFacility:facilityId/:facilityName',
-            templateUrl:'partials/stock-on-hand2.html',
-            controller:'ManageStockOnHandControllerFunc',
-            ncyBreadcrumb: {
-                label: 'Stock on Hand for {{facilityName}}',
-                parent: 'supervisedFacility'
-            }
-        },
-
-        {
-            name: 'ledger',
-            url: '/ledger:productId/:facilityId/:facilityName/:product',
-            templateUrl: 'partials/stock-ledger.html',
-            controller: 'StockLedgerFunction2',
-            ncyBreadcrumb: {
-                label: 'Stock Ledger of {{productName}} in {{facilityName}} Store',
-                parent: 'toState'
-            }
-        },
-        {
-            name:'supervisedFacility',
-            url: '/supervisedFacility?:etc',
-            templateUrl:'partials/stock-on-hand3.html',
-            controller:'SupervisedFacilityControllerFunc',
-            resolve:SupervisedFacilityControllerFunc.resolve,
-            ncyBreadcrumb: {
-                label: 'My Supervised Stores',
-                parent: 'home'
-            }
-        }*/
-
     ];
 
     states.forEach($stateProvider.state);
 
 
     $urlRouterProvider.otherwise('/home');
+   $httpProvider.interceptors.push('DashBoardResourceLoadingInterceptor');
 }).config(function(angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
 })
