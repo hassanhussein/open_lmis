@@ -213,7 +213,7 @@ DefaultProgram.get({}, function (data) {
         });
 
         RnRStatusSummary.get({
-                    zoneId: $scope.filter.zoneId,
+                    zoneId: 437,
                     periodId: $scope.filter.period,
                     programId: $scope.filter.program,
                     associatedDashlets: ['rnrStatusSummary']
@@ -250,11 +250,13 @@ DefaultProgram.get({}, function (data) {
                     $scope.dataRows = [];
                     $scope.datarows = [];
 
+                    console.log($scope.filter);
+
                     if (!isUndefined(data.rnrStatus)) {
 
                         $scope.dataRows = data.rnrStatus;
                         if (isUndefined($scope.dataRows)) {
-                            $scope.resetRnRStatusData();
+                            $scope.message = 'No rnr status summary';
                             return;
                         }
                         var statusData = _.pluck($scope.dataRows, 'status');
@@ -285,7 +287,7 @@ DefaultProgram.get({}, function (data) {
                         bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
 
                     } else {
-                        $scope.resetRnRStatusReportData();
+                        $scope.message = 'No rnr status summary';
                     }
                     $scope.overAllTotal();
                     $scope.paramsChanged($scope.tableParams);
