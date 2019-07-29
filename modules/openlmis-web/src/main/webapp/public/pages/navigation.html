@@ -276,10 +276,16 @@
                         <a href="/public/pages/admin/equipment/my-requests/index.html"
                            openlmis-message="link.equipment.maintenance.request"></a>
                     </li>
-                    <li ng-show="hasPermission('SERVICE_VENDOR_RIGHT')">
-                        <a href="/public/pages/admin/equipment/my-contracts/index.html"
-                           openlmis-message="link.equipment.service.contract"></a>
+                    <li ng-show="hasPermission('VIEW_RTM_DASHBOARD')">
+                        <a href="https://coldtrace.org" openlmis-message="link.view.rtm" target="_blank"></a>
                     </li>
+
+                    <li ng-show="hasPermission('right.view.rtm.dashboard')">
+                        <a id="rtm-dashboard"
+                           href="/public/pages/admin/equipment/inventory/index.html"
+                           openlmis-message="link.manage.equipment.inventory"></a>
+                    </li>
+
                     <li class="beak"></li>
                 </ul>
             </div>
