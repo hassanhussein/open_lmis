@@ -4,9 +4,10 @@ function stockStatusSummaryController(Program,Period,$document,$scope,$location,
 $rootScope.loadStockStatusSummary = function(params) {
 
 StockStatusSummaryByPeriodData.get(params).then(function(data){
-var title = 'Stock Availability of Health Commodities for '+params.programName;
-
-$scope.loadTheChart(data, title,'( '+params.periodName+' )');
+var title = 'Stock Availability of Health Commodities for  '+params.programName + ' ( '+params.periodName+', '+params.year+' )';
+$scope.titleStockSummary = title;
+title ='';
+$scope.loadTheChart(data, title,'');
 
 });
 
@@ -40,6 +41,8 @@ var dataToShow = [];
    var uk = ["UnKnown",value.percentage_of_uk,"gray"];
    var sp = ["Adequately stocked", value.percentage_of_sp,"#006600"];
     drilldownData = [os,us,uk,sp];
+    //50B432
+
 
     console.log(drilldownData);
   dataToShow = [{name:'Available Incidence',y: value.percentage_of_total,color: '#50B432', drilldown: 'Available Incidence' },

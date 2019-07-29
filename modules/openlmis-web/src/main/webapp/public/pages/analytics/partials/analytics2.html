@@ -556,7 +556,10 @@ background:#fff;
                             <div class="row">
 
                                 <div class="col s12 m5 l5" ng-controller="stockStatusSummaryController">
-                                    <div class="card">
+                                    <div class="card grey lighten-5 row3-height" overlay-section="stockSummaryByPeriod">
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">{{titleStockSummary}}</span>
+                                        </div>
                                         <div class="card-content">
 
                                                 <div id="stock-summary-by-period-and-program" style="margin: 0 auto;height: 360px !important;"></div>
@@ -571,7 +574,12 @@ background:#fff;
                                 </div>
 
                                 <div class="col s12 m4 l4" ng-controller="StockAvailabilityByLevelController">
-                                    <div class="card">
+                                    <div class="card grey lighten-5 row3-height" overlay-section="stockByLevel">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">{{title_stock_by_level}}</span>
+                                        </div>
+
                                         <div class="card-content">
                                             <div id="stock-by-level" style="margin: 0 auto;height: 360px !important;"></div>
 
@@ -586,9 +594,12 @@ background:#fff;
                                 </div>
 
 
-                                    <div class="col s12 m3 l3">
-                                        <div class="card">
-                                            <div class="card-content" ng-controller="TimelinessReportingController">
+                                    <div class="col s12 m3 l3"  ng-controller="TimelinessReportingController">
+                                        <div class="card grey lighten-5 row3-height" overlay-section="timelinessReporting" >
+                                            <div class="card-action"  style="background-color: #17888f;">
+                                                <span style="color:white">{{title_reporting_timeliness}}</span>
+                                            </div>
+                                            <div class="card-content">
                                                 <div id="timeliness-reporting" style="margin: 0 auto;height: 360px !important;"></div>
 
                                             </div>
@@ -607,7 +618,11 @@ background:#fff;
                             <div class="row">
 
                                 <div class="col s12 m8 l8">
-                                    <div class="card">
+                                    <div class="card grey lighten-5 row3-height" overlay-section="stockAvailableForProgram">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Stock Available for Program</span>
+                                        </div>
                                         <div class="card-content">
                                             <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
 
@@ -622,7 +637,12 @@ background:#fff;
                                 </div>
 
                                 <div class="col s12 m4 l4">
-                                    <div class="card">
+                                    <div class="card grey lighten-5 row3-height" overlay-section="on-time-delivery">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">On-Time Delivery</span>
+                                        </div>
+
                                         <div class="card-content" ng-controller="TimelinessReportingController">
                                             <span ng-show="dataToDisplay.length != 0">
                                                 <div id="on-time-delivery" style="margin: 0 auto;height: 360px !important;" ></div>
@@ -646,7 +666,12 @@ background:#fff;
 
                                 <div class="row" ng-show="drillDownData.length">
                                     <div class="col s12 m8 l8">
-                                        <div class="card">
+                                        <div class="card grey lighten-5 row3-height" overlay-section="stock-available-for-program-drill-down">
+
+                                            <div class="card-action"  style="background-color: #17888f;">
+                                                <span style="color:white">Stock Available drill down</span>
+                                            </div>
+
                                             <div class="card-content">
 
                                                 <div id="stock-available-for-program-drill-down" style="margin: 0 auto;height: 360px !important;"></div>
@@ -664,7 +689,12 @@ background:#fff;
                                     </div>
 
                                     <div class="col s12 m4 l4" >
-                                        <div class="card">
+                                        <div  class="card grey lighten-5 row3-height" overlay-section="stockAvailabilityDrillDownData">
+
+                                            <div class="card-action"  style="background-color: #17888f;">
+                                                <span style="color:white">Stock Availability Table</span>
+                                            </div>
+
                                             <div class="card-content">
                                                 <div style="height: 360px !important;">
 
@@ -728,7 +758,10 @@ background:#fff;
 
                             <div class="row">
                                 <div class="col s12 m6 l6">
-                                    <div class="card">
+                                    <div class="card grey lighten-5 row3-height" overlay-section="RequisitionFormPercentage">
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Requisition form Percentage</span>
+                                        </div>
                                         <div class="card-content">
 
                                             <div id="rnrPassedChart" style="margin: 0 auto;height: 360px !important;"></div>
@@ -745,7 +778,10 @@ background:#fff;
 
                                 </div>
                                 <div class="col s12 m6 l6">
-                                    <div class="card">
+                                    <div class="card grey lighten-5 row3-height" overlay-section="percentageWastage">
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Percentage Wastage</span>
+                                        </div>
                                         <div class="card-content" ng-controller="PercentageWastageController">
                                             <a id="back" ng-hide="true" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i>Back to Wastage Percentage</a>
                                             <div id="container-speed" style="margin: 0 auto;height: 360px !important;" class="chart-container"></div>

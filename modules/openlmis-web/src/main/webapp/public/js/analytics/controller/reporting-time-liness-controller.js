@@ -121,13 +121,15 @@ TimelinessReportingData.get(params).then(function(data){
      var dataToShow = [];
 
    data.forEach(function(dx){
-       dataToShow= [{name:'Reported On Time', y:$rootScope.getPercentage(dx.reportedontime,dx.totalexpected),drilldown: null},{name:'Reported Late',y:$rootScope.getPercentage(dx.reportedlate,dx.totalexpected),drilldown: null},{name:'Un scheduled Reporters',y:$rootScope.getPercentage(dx.unscheduled,dx.totalexpected),drilldown: null},{name:'Not reported Facilities',y:$rootScope.getPercentage(dx.not_reported,dx.totalexpected),drilldown: null}];
+       dataToShow= [{name:'Reported On Time',color:'#50B432', y:$rootScope.getPercentage(dx.reportedontime,dx.totalexpected),drilldown: null},{color:'#D90C29',name:'Reported Late',y:$rootScope.getPercentage(dx.reportedlate,dx.totalexpected),drilldown: null},{name:'Unscheduled',y:$rootScope.getPercentage(dx.unscheduled,dx.totalexpected),drilldown: null},{name:'Not reported',color:'black',y:$rootScope.getPercentage(dx.not_reported,dx.totalexpected),drilldown: null}];
 
 
        //dataToShow = [dx.not_reported, dx.unscheduled, dx.reportedlate, dx.reportedontime];
     });
 
-    $scope.loadChart(chartId,dataToShow,'Reporting Timeliness','' +params.programName+' '+params.periodName+' ',data[0].totalexpected,params.year);
+    $rootScope.title_reporting_timeliness =   'Reporting Timeliness for '+params.programName+' ('+params.periodName+' ,'+params.year+')';
+    console.log($scope.title_reporting_timeliness);
+    $scope.loadChart(chartId,dataToShow,' ',' ',data[0].totalexpected,' ');
 
 
     }
@@ -165,13 +167,15 @@ Highcharts.chart(chartId, {
 
 
       },
-         series: {
-                        dataLabels: {
-                            enabled: true,
-                            format: '{point.name}: {point.y}%'
-                        }
-                    }
+    series: {
+           dataLabels: {
 
+           enabled: true,
+           formatter: function () {
+           return '<span style="color:' + this.point.color + '">' + this.point.name + ' : '+ this.point.y+'%</span>';
+           }
+           }
+    }
     },
 
     tooltip: {
