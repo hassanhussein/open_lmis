@@ -37,7 +37,9 @@ $scope.category = _.pluck(data,'adjustmentname');
 
 $scope.percentageValue = $rootScope.getPercentage (totalAdjustment,total);
 
-$scope.loadPercentageWastageChart($scope.percentageValue,'Percentage of wastage for '+params.programName+' reported on the period of '+params.periodName+', '+params.year);
+$rootScope.wastageTitle = 'Percentage of wastage for '+params.programName+' reported on the period of '+params.periodName+', '+params.year;
+
+$scope.loadPercentageWastageChart($scope.percentageValue,'');
 
 
 /*  data: [{

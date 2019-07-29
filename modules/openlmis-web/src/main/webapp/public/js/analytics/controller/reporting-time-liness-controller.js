@@ -12,11 +12,11 @@ $scope.dataToDisplay = data;
    var display = [
 
    {y:100 - $rootScope.getPercentage(data[0].received,data[0].total),  val: data[0].total - data[0].received,color:'red'},
-   {y:$rootScope.getPercentage(data[0].received,data[0].total),  val: data[0].received }
+   {y:$rootScope.getPercentage(data[0].received,data[0].total),  val: data[0].received, color:'#50B432' }
 
    ];
-
-$scope.loadOnTimeChart(display, 'On-Time Delivery','on-time-delivery');
+$rootScope.titleOnTimeDelivery = 'On-Time Delivery for '+ params.programName+' ( '+params.periodName+' ,'+params.year+' )';
+$scope.loadOnTimeChart(display, '','on-time-delivery');
 
 }
 

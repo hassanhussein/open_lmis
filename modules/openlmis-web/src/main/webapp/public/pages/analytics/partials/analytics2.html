@@ -621,7 +621,7 @@ background:#fff;
                                     <div class="card grey lighten-5 row3-height" overlay-section="stockAvailableForProgram">
 
                                         <div class="card-action"  style="background-color: #17888f;">
-                                            <span style="color:white">Stock Available for Program</span>
+                                            <span style="color:white">{{title_stock_by_program}}</span>
                                         </div>
                                         <div class="card-content">
                                             <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
@@ -640,7 +640,7 @@ background:#fff;
                                     <div class="card grey lighten-5 row3-height" overlay-section="on-time-delivery">
 
                                         <div class="card-action"  style="background-color: #17888f;">
-                                            <span style="color:white">On-Time Delivery</span>
+                                            <span style="color:white">{{titleOnTimeDelivery}}</span>
                                         </div>
 
                                         <div class="card-content" ng-controller="TimelinessReportingController">
@@ -760,7 +760,7 @@ background:#fff;
                                 <div class="col s12 m6 l6">
                                     <div class="card grey lighten-5 row3-height" overlay-section="RequisitionFormPercentage">
                                         <div class="card-action"  style="background-color: #17888f;">
-                                            <span style="color:white">Requisition form Percentage</span>
+                                            <span style="color:white">{{opentitle}}</span>
                                         </div>
                                         <div class="card-content">
 
@@ -780,7 +780,7 @@ background:#fff;
                                 <div class="col s12 m6 l6">
                                     <div class="card grey lighten-5 row3-height" overlay-section="percentageWastage">
                                         <div class="card-action"  style="background-color: #17888f;">
-                                            <span style="color:white">Percentage Wastage</span>
+                                            <span style="color:white">{{wastageTitle}}</span>
                                         </div>
                                         <div class="card-content" ng-controller="PercentageWastageController">
                                             <a id="back" ng-hide="true" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i>Back to Wastage Percentage</a>

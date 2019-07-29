@@ -1,9 +1,9 @@
 function AnalyticsFunction(leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
 GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,RejectionCount,RnRStatusSummary,
-DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData,resourceLoadingConfig) {
+DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
-resourceLoadingConfig.hideReloadIcon = true;
-    resourceLoadingConfig.loadingDashlet = [];
+//resourceLoadingConfig.hideReloadIcon = true;
+  //  resourceLoadingConfig.loadingDashlet = [];
 
 
 var params;
@@ -618,12 +618,13 @@ $scope.loadRnrPassedQualityCheckData =  function (params) {
 
     if(data.length > 0){
 
-    var title = 'Percentage of Report and Requisition forms (R&R) that pass data quality check '+params.periodName+' ,'+params.year;
+    $scope.opentitle = 'Percentage of Report and Requisition forms (R&R) that pass data quality check '+params.periodName+' ,'+params.year;
+
     var percentage = Math.round((parseInt(data[0].passed_total,10) * 100/parseInt(data[0].total,10)),10);
 
     var values = [{name:"Total number of R&R that passed data quality check ",y:percentage,color:'green',drilldown:'passed_total'},{name:"Total R&R did not pass the quality check",color:'red',y:100-percentage,drilldown:'total'}];
 
-    $scope.getRnRPasseChart(title,values);
+    $scope.getRnRPasseChart(' ',values);
 
     }
 
@@ -897,13 +898,14 @@ $scope.stockAvailableForPeriodList = [];
 
        var totalCalculation = (parseInt(value.totalbyprogram,10) * 100)/value.total;
 
-        $scope.stockAvailableForPeriodList.push({name:value.program_name,y:Math.round(totalCalculation),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
+        $scope.stockAvailableForPeriodList.push({name:value.program_name,color:'#50B432',y:Math.round(totalCalculation),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
 
         });
         var chartId = 'stock-available-for-program';
         var title = 'Stock Availability per program';
+        $scope.title_stock_by_program = 'Stock Availability per program ( '+params.periodName+', '+params.year+' )';
         var chartType = 'column';
-
+        title ='';
         drillDownChart(chartId,chartType,title,$scope.stockAvailableForPeriodList);
         }
 
@@ -1157,7 +1159,7 @@ Highcharts.chart(id, {
     },
     yAxis: {
         title: {
-            text: 'Total percent of tracer products'
+             text: '<span style="font-size: 13px!important;color: #0c9083">Total percent of tracer products</span>'
         },
          gridLineColor: ''
 
