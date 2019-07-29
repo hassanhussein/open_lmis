@@ -305,8 +305,14 @@
                 </div>
             </div>
             <div class="span2">
+                <input ng-trim="false"
+                       type="hidden"  ng-model="currentStockLot.customProps.vvmstatus"
+                       numeric-validator="positiveInteger" max-length="8"/>
+
+            </div>
+            <div class="span2">
                 <input type="button" id="addAdjustmentReason"
-                       ng-click="addAdjustmentReason(adjustmentReason)"
+                       ng-click="addAdjustmentReason(adjustmentReason, currentStockLot.customProps.vvmstatus)"
                        ng-disabled="!(adjustmentReason.type && adjustmentReason.quantity) || expirationInvalid"
                        class="btn btn-primary"
                        openlmis-message="button.add"/>

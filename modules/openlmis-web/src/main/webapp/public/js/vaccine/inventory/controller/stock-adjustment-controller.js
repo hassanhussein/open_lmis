@@ -56,6 +56,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
 
        $scope.oldAdjustmentReason = angular.copy(lot.AdjustmentReasons);
        $scope.currentStockLot = lot;
+       //$scope.adjustmentReason.vvmstatus = lot.customProps.vvmstatus;
        $scope.currentStockLot.adjustmentReasons=((lot.adjustmentReasons === undefined)?[]:lot.adjustmentReasons);
        //Remove reason already exist from drop down
        reEvaluateTotalAdjustmentReasons();
@@ -89,13 +90,14 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
 
        };
 
-     $scope.addAdjustmentReason=function(newAdjustmentReason)
+     $scope.addAdjustmentReason=function(newAdjustmentReason, vvmstatus)
      {
          var adjustmentReason={};
          adjustmentReason.type = newAdjustmentReason.type;
          adjustmentReason.name = newAdjustmentReason.type.name;
          adjustmentReason.quantity= newAdjustmentReason.quantity;
-
+         adjustmentReason.vvmstatus= vvmstatus;
+         console.log(vvmstatus);
          $scope.currentStockLot.adjustmentReasons.push(adjustmentReason);
          updateAdjustmentReasonForLot($scope.currentStockLot.adjustmentReasons);
          reEvaluateTotalAdjustmentReasons();
@@ -130,7 +132,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
                                             event.reasonName=reason.name;
                                             if(l.customProps !==null && l.customProps.vvmstatus !==undefined)
                                             {
-                                                event.customProps={"vvmStatus":l.customProps.vvmstatus};
+                                                event.customProps={"vvmStatus":reason.vvmstatus};
                                             }
                                             events.push(event);
                                         });
