@@ -15,98 +15,104 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
                                       ManageEquipmentInventoryProgramList, ManageEquipmentInventoryFacilityProgramList,
                                       EquipmentTypesByProgram, EquipmentOperationalStatus, $routeParams, messageService,
                                       UpdateEquipmentInventoryStatus, $timeout, SaveEquipmentInventory, localStorageService, $dialog,
-                                      ToggleVerifiedEquipmentInventory, MoveEquipmentInventory) {
+                                      ToggleVerifiedEquipmentInventory, MoveEquipmentInventory, ColdtraceToken, $window) {
 
-    $scope.currentPage = 1;
-    $scope.selectedSearchOption = navigateBackService.selectedSearchOption;// || $scope.searchOptions[0];
+  $scope.currentPage = 1;
+  $scope.selectedSearchOption = navigateBackService.selectedSearchOption;// || $scope.searchOptions[0];
 
-    $scope.triggerSearch = function (event) {
-        if (event.keyCode === 13) {
-            $scope.searchInventory(1);
-            //$scope.loadFacilities(1);
-        }
-    };
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode === 13) {
+      $scope.searchInventory(1);
+      //$scope.loadFacilities(1);
+    }
+  };
+
+  $scope.openColdraceDashboard = function (serialNumber) {
+    ColdtraceToken.get(function (token) {
+      var url = "https://tz.coldtrace.org/api/integrations/5b187c5461b32000017a67ae/cce/" + serialNumber + "/days/?token=";
+      url = url + token.token;
+      $window.open(url);
+    });
+  };
 
   /*  $scope.$watch('currentPage', function () {
          if ($scope.currentPage !== 0)
             $scope.loadFacilities($scope.currentPage, $scope.searchedQuery);
     });*/
 
-    $scope.loadFacilities = function (page, lastQuery) {
-        if (!($scope.query || lastQuery)) return;
-        lastQuery ? getFacilities(page, lastQuery) : getFacilities(page, $scope.query);
-    };
-    $scope.$on('$viewContentLoaded', function () {
-        $scope.query = navigateBackService.query;
-    });
+  $scope.loadFacilities = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getFacilities(page, lastQuery) : getFacilities(page, $scope.query);
+  };
+  $scope.$on('$viewContentLoaded', function () {
+    $scope.query = navigateBackService.query;
+  });
 
-    function getFacilities(page, query) {
-        $scope.searchInventory();
-        query = query.trim();
-        $scope.searchedQuery = query;
- /*       Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
-            $scope.facilityList = data.facilities;
-            $scope.pagination = data.pagination;
-            $scope.totalItems = $scope.pagination.totalRecords;
-            $scope.currentPage = $scope.pagination.page;
-            $scope.showResults = true;
-        }, {});*/
-    }
-
-
-
-    $scope.breadcrumbs = breadcrumbs;
+  function getFacilities(page, query) {
+    $scope.searchInventory();
+    query = query.trim();
+    $scope.searchedQuery = query;
+    /*       Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+               $scope.facilityList = data.facilities;
+               $scope.pagination = data.pagination;
+               $scope.totalItems = $scope.pagination.totalRecords;
+               $scope.currentPage = $scope.pagination.page;
+               $scope.showResults = true;
+           }, {});*/
+  }
 
 
-    function getDataForDisplay(data) {
-       // console.log(data);
-        var district;
-        if (data.id === null) {
-            district = data.regionId;
-        } else
-            district = data.id;
-        $scope.showFacilityLevel = false;
-
-        GetByDistrict.get({districtId: parseInt(district, 10)}, function (data) {
-            $scope.displayLevel = data.facility.name;
-            $scope.showFacilityLevel = true;
-
-           // $state.go('toState', { 'facilityId':parseInt(data.facility.id, 10), 'facilityName':facilityName, 'etc':'bluebell' });
+  $scope.breadcrumbs = breadcrumbs;
 
 
-        });
+  function getDataForDisplay(data) {
+    // console.log(data);
+    var district;
+    if (data.id === null) {
+      district = data.regionId;
+    } else
+      district = data.id;
+    $scope.showFacilityLevel = false;
 
+    GetByDistrict.get({districtId: parseInt(district, 10)}, function (data) {
+      $scope.displayLevel = data.facility.name;
+      $scope.showFacilityLevel = true;
 
-    }
+      // $state.go('toState', { 'facilityId':parseInt(data.facility.id, 10), 'facilityName':facilityName, 'etc':'bluebell' });
 
-    GeoDistrictTree.get({}, function (data) {
-
-        var data2 = data.regionFacilityTree;
-        $('#tree').treeview({
-            data: data2,
-            levels: 2,
-            color: "#398085",
-            onhoverColor: 'lightblue',
-            // href: "#node-1",
-            //selectable: false,
-            state: {
-                //checked: true,
-                disabled: true,
-                // expanded: true,
-                selected: true
-            },
-            //silent: true,
-            onNodeSelected: function (event, data) {
-                getDataForDisplay(data);
-            }
-
-
-
-        },'disableNode',  {levels: 2, silent: true } );
 
     });
 
-    $scope.loadPrograms = function (initialLoad) {
+
+  }
+
+  GeoDistrictTree.get({}, function (data) {
+
+    var data2 = data.regionFacilityTree;
+    $('#tree').treeview({
+      data: data2,
+      levels: 2,
+      color: "#398085",
+      onhoverColor: 'lightblue',
+      // href: "#node-1",
+      //selectable: false,
+      state: {
+        //checked: true,
+        disabled: true,
+        // expanded: true,
+        selected: true
+      },
+      //silent: true,
+      onNodeSelected: function (event, data) {
+        getDataForDisplay(data);
+      }
+
+
+    }, 'disableNode', {levels: 2, silent: true});
+
+  });
+
+  $scope.loadPrograms = function (initialLoad) {
     // Get home facility for user
     UserFacilityList.get({}, function (data) {
       $scope.myFacility = data.facilityList[0];
@@ -116,12 +122,12 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
 
         // Home facility found and my facility type selected, get home facility programs
         if ($scope.selectedType === "0") {
-            $scope.showTree = false;
-            $scope.showFacilityLevel = false;
-            ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
+          $scope.showTree = false;
+          $scope.showFacilityLevel = false;
+          ManageEquipmentInventoryFacilityProgramList.get({facilityId: $scope.myFacility.id}, function (data) {
             $scope.programs = data.programs;
             if (initialLoad && $routeParams.program) {
-              $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program,10)});
+              $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
               $scope.loadEquipmentTypes(initialLoad);
             } else if ($scope.programs.length === 1) {
               $scope.selectedProgram = $scope.programs[0];
@@ -137,9 +143,9 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
 
     // Supervised facility type selected, get supervised facility programs
     if ($scope.selectedType === "1") {
-        //$scope.showTree = true;
+      //$scope.showTree = true;
 
-        ManageEquipmentInventoryProgramList.get({}, function (data) {
+      ManageEquipmentInventoryProgramList.get({}, function (data) {
         $scope.programs = data.programs;
         if (initialLoad && $routeParams.program) {
           $scope.selectedProgram = _.findWhere($scope.programs, {id: parseInt($routeParams.program, 10)});
@@ -153,11 +159,11 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
   };
 
   $scope.loadEquipmentTypes = function (initialLoad) {
-      console.log($routeParams);
+    console.log($routeParams);
     EquipmentTypesByProgram.get({programId: $scope.selectedProgram.id}, function (data) {
       $scope.equipmentTypes = data.equipment_types;
       if (initialLoad && $routeParams.equipmentType) {
-        $scope.selectedEquipmentType = _.findWhere($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType,10)});
+        $scope.selectedEquipmentType = _.findWhere($scope.equipmentTypes, {id: parseInt($routeParams.equipmentType, 10)});
         $scope.loadInventory();
       } else if ($scope.equipmentTypes.length === 1) {
         $scope.selectedEquipmentType = $scope.equipmentTypes[0];
@@ -166,31 +172,32 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
     }, {});
   };
 
-  $scope.searchInventory = function(){
-      EquipmentInventorySearch.get({searchParam:$scope.query, typeId: $scope.selectedType,
-          programId: $scope.selectedProgram.id,
-          equipmentTypeId: $scope.selectedEquipmentType.id,
-          page: $scope.page}, function (data) {
+  $scope.searchInventory = function () {
+    EquipmentInventorySearch.get({
+      searchParam: $scope.query, typeId: $scope.selectedType,
+      programId: $scope.selectedProgram.id,
+      equipmentTypeId: $scope.selectedEquipmentType.id,
+      page: $scope.page
+    }, function (data) {
 
-          $scope.inventory = data.inventories;
-          $scope.pagination = data.pagination;
-          $scope.totalItems = $scope.pagination.totalRecords;
-          $scope.currentPage = $scope.pagination.page;
+      $scope.inventory = data.inventories;
+      $scope.pagination = data.pagination;
+      $scope.totalItems = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
 
-          console.log($scope.pagination);
-
-
-          var groupedInventoryData = _.groupBy($scope.inventory,function(item){
-              return (item.equipment.designation) ? item.equipment.designation.name: '-';
-          });
-
-          $scope.inventoryList = $.map(groupedInventoryData, function(value, index) {
-              return {"designation":index,"inventory":value};
-          });
+      console.log($scope.pagination);
 
 
-
+      var groupedInventoryData = _.groupBy($scope.inventory, function (item) {
+        return (item.equipment.designation) ? item.equipment.designation.name : '-';
       });
+
+      $scope.inventoryList = $.map(groupedInventoryData, function (value, index) {
+        return {"designation": index, "inventory": value};
+      });
+
+
+    });
   };
 
 
@@ -204,12 +211,12 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
       }, function (data) {
         $scope.inventory = data.inventory;
 
-        var groupedInventoryData = _.groupBy($scope.inventory,function(item){
-              return (item.equipment.designation) ? item.equipment.designation.name: '-';
-            });
+        var groupedInventoryData = _.groupBy($scope.inventory, function (item) {
+          return (item.equipment.designation) ? item.equipment.designation.name : '-';
+        });
 
-        $scope.inventoryList = $.map(groupedInventoryData, function(value, index) {
-          return {"designation":index,"inventory":value};
+        $scope.inventoryList = $.map(groupedInventoryData, function (value, index) {
+          return {"designation": index, "inventory": value};
         });
 
         $scope.pagination = data.pagination;
@@ -334,22 +341,22 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
 
     if (yearOfInstallation) {
 
-      return yearOfInstallation + parseInt(NumberOfYears,10);
+      return yearOfInstallation + parseInt(NumberOfYears, 10);
 
     } else {
       return null;
     }
   };
 
-  $scope.toggleVerifySerialNumber = function(item) {
+  $scope.toggleVerifySerialNumber = function (item) {
     //return
     // show a confirmation dialog box
-    var callBack=function(result){
-      if(result){
-        ToggleVerifiedEquipmentInventory.put({id:item.id},function(data){
+    var callBack = function (result) {
+      if (result) {
+        ToggleVerifiedEquipmentInventory.put({id: item.id}, function (data) {
           $scope.loadInventory();
         });
-      }else{
+      } else {
         $scope.loadInventory();
       }
     };
@@ -362,15 +369,15 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
     OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
-  $scope.updateTemperatureStatusModal = function (equipment){
-    if(!isUndefined(equipment)){
+  $scope.updateTemperatureStatusModal = function (equipment) {
+    if (!isUndefined(equipment)) {
       $scope.temperatureStatusModal = true;
-       $scope.coldChain = equipment;
+      $scope.coldChain = equipment;
     }
 
   };
 
-  $scope.closeColdChainTemperatureModal= function () {
+  $scope.closeColdChainTemperatureModal = function () {
     $scope.temperatureStatusModal = false;
   };
 
@@ -380,6 +387,7 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
       $scope.loadInventory();
     }
   });
+
   function getGeographicZone(item) {
     return item.facility.geographicZone.name;
   }
@@ -388,25 +396,25 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
   $scope.page = $routeParams.page || "1";
   $scope.loadPrograms(true);
 
-  EquipmentOperationalStatus.get(function(data){
+  EquipmentOperationalStatus.get(function (data) {
     $scope.operationalStatusList = _.where(data.status, {category: 'CCE'});
     $scope.notFunctionalStatusList = _.where(data.status, {category: 'CCE Not Functional'});
   });
 
-  $scope.deleteInventory=function(id){
-      var callBack=function(result){
-        if(result){
-           DeleteEquipmentInventory.get({inventoryId:id},function(data){
-                 $scope.loadInventory();
-           });
-         }
-       };
-        var options = {
-                           id: "confirmDialog",
-                           header: "label.confirm.delete.equipment.inventory",
-                           body: "msg.question.delete.equipment.inventory.confirmation"
-                       };
-      OpenLmisDialog.newDialog(options, callBack, $dialog);
+  $scope.deleteInventory = function (id) {
+    var callBack = function (result) {
+      if (result) {
+        DeleteEquipmentInventory.get({inventoryId: id}, function (data) {
+          $scope.loadInventory();
+        });
+      }
+    };
+    var options = {
+      id: "confirmDialog",
+      header: "label.confirm.delete.equipment.inventory",
+      body: "msg.question.delete.equipment.inventory.confirmation"
+    };
+    OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
 
   $scope.moveInventory = function (item) {
@@ -434,16 +442,16 @@ function EquipmentInventoryController($scope, EquipmentInventorySearch, navigate
   };
 
   $scope.loadRights = function () {
-        $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
+    $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
   }();
 
   $scope.hasPermission = function (permission) {
-              if ($scope.rights !== undefined && $scope.rights !== null) {
-                var rights = JSON.parse($scope.rights);
-                var rightNames = _.pluck(rights, 'name');
-                return rightNames.indexOf(permission) > -1;
-              }
-              return false;
+    if ($scope.rights !== undefined && $scope.rights !== null) {
+      var rights = JSON.parse($scope.rights);
+      var rightNames = _.pluck(rights, 'name');
+      return rightNames.indexOf(permission) > -1;
+    }
+    return false;
   };
 
 }
@@ -470,7 +478,6 @@ EquipmentInventoryController.resolve = {
     return deferred.promise;
 
   }
-
 
 
 };

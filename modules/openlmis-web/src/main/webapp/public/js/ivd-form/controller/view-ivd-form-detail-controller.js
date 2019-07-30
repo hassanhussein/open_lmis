@@ -28,6 +28,14 @@ function ViewIvdFormDetailController($scope, $location, report, discardingReason
     $scope.alarms = data.alarms;
   });
 
+  $scope.openColdraceDashboard = function (serialNumber, date) {
+    ColdtraceToken.get(function (token) {
+      var url = "https://tz.coldtrace.org/api/integrations/5b187c5461b32000017a67ae/cce/" + serialNumber + "/days/" + date + "?token=";
+      url = url + token.token;
+      $window.open(url);
+    });
+  };
+
   $scope.operationalStatusIndex = _.indexBy(operationalStatuses, 'id');
 
   $scope.cancel = function () {
