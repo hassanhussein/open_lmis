@@ -38,6 +38,8 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class TokenController extends BaseController {
@@ -70,13 +72,16 @@ public class TokenController extends BaseController {
       X509EncodedKeySpec keySpecX509 = new X509EncodedKeySpec(Base64.getDecoder().decode(publicKeyContent.replace(" ","")));
       RSAPublicKey publicKey = (RSAPublicKey) kf.generatePublic(keySpecX509);
 
-      Algorithm algorithm = Algorithm.RSA256(publicKey, privateKey);
+      Algorithm algorithm = Algorithm.RSA512(publicKey, privateKey);
+      Map<String, Object> headers  = new HashMap<>();
+      headers.put("iss", "vims");
       String token = JWT.create()
+          .withHeader(headers)
           .withIssuer("vims")
           .withSubject(user.getEmail())
-          .withIssuedAt(new Date())
-          .withClaim("firstname", user.getFirstName())
-          .withClaim("lastname", user.getLastName())
+          .withExpiresAt(new Date())
+          .withClaim("given_name", user.getFirstName())
+          .withClaim("family_name", user.getLastName())
           .sign(algorithm);
       return OpenLmisResponse.response("token", token);
     } catch (Exception exception) {
