@@ -14,7 +14,10 @@ function AggregateProductExpiryController($scope,$routeParams, messageService,
     $scope.currentOverStockedPage = 0;
 
     function loadDashletData(){
-        DashboardAggregateProductExpired.get({program : $scope.filter.program},function(data){
+        DashboardAggregateProductExpired.get({
+            program : $scope.filter.program,
+            associatedDashlets: ['aggregateProductExpiryStockedStatusSection']
+        },function(data){
                 $scope.aggregateExpiry = data.aggregateExpiry;
             });
     }

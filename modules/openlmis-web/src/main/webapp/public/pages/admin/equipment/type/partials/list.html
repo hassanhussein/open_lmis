@@ -19,7 +19,6 @@
   <div class="alert alert-success" ng-show="message">
     <span ng-bind="message"></span>
   </div>
-
   <div class="content-body">
     <table class="table table-bordered table-striped">
       <thead>
@@ -27,6 +26,8 @@
           <th style="width: 30px;">#</th>
           <th openlmis-message="label.code"></th>
           <th openlmis-message="label.name"></th>
+          <th openlmis-message="label.isBioChemistry"></th>
+          <th openlmis-message="label.isColdChain"></th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +42,8 @@
           <td>
             <a ng-href="#/edit/{{type.id}}">{{type.name}}</a>
           </td>
+          <td><span ng-show="type.isBioChemistry" class="icon-ok"></span></td>
+          <td><span ng-show="type.isColdChain" class="icon-ok"></span></td>
         </tr>
       </tbody>
     </table>

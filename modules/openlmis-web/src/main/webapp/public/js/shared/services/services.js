@@ -539,3 +539,10 @@ services.factory('VaccinePendingRequisitions', function ($resource) {
 services.factory('HomeFacilityWithType', function ($resource) {
     return $resource('/user/facilityWithType.json', {}, {});
 });
+services.factory('MaterializedViews', function ($resource) {
+    return $resource('/unpopulated-materialized-views.json', {}, {});
+});
+
+services.factory('RefreshMaterializedViews', function ($resource) {
+    return $resource('/materialized-views/:viewName.json', {}, update);
+});

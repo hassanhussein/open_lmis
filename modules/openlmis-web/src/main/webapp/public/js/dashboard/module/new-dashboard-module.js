@@ -16,7 +16,7 @@ var app = angular.module('new-dashboard', ['openlmis','ui.router', 'ngGrid', 'ui
     'ui.bootstrap.modal','ui.bootstrap.pagination', 'ui.bootstrap.dropdownToggle','ui.bootstrap',
     'angularUtils.directives.uiBreadcrumbs','ng-breadcrumbs','ncy-angular-breadcrumb','angularCombine',
     'ngTable','ui.bootstrap.pagination', 'tree.dropdown','angularScreenfull','rzModule','ui.materialize','leaflet-directive','textAngular']);
-app.config(function ($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
+app.config(function ($stateProvider, $urlRouterProvider, $breadcrumbProvider, $httpProvider) {
 
     var states = [
         {
@@ -34,8 +34,9 @@ app.config(function ($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
 
     states.forEach($stateProvider.state);
 
-
     $urlRouterProvider.otherwise('/home');
+
+    $httpProvider.interceptors.push('DashBoardResourceLoadingInterceptor');
 }).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
 })
@@ -58,6 +59,29 @@ app.config(function ($stateProvider, $urlRouterProvider, $breadcrumbProvider) {
         return Math.abs(input);
     };
 }).controller('ElementCtrl', function ($scope, $stateParams) {
-        $scope.idElement = $stateParams.idElement;});
+        $scope.idElement = $stateParams.idElement;})
 
+.service('DashBoardResourceLoadingInterceptor', ['resourceLoadingConfig', function(resourceLoadingConfig) {
+    var service = this;
 
+    this.request = function(config) {
+       if(config.params && config.params.associatedDashlets) {
+            console.log(config.params.associatedDashlets);
+            config.params.associatedDashlets.forEach(function(dashlet) {
+                angular.element('#'+dashlet+'').show();
+            });
+            config.dashlets = config.params.associatedDashlets;
+            delete config.params.associatedDashlets;
+       }
+        return config;
+    };
+
+    this.response = function(response) {
+        if(response.config.dashlets) {
+            response.config.dashlets.forEach(function(dashlet) {
+                angular.element('#'+dashlet+'').hide();
+            });
+        }
+       return response;
+    };
+}]);

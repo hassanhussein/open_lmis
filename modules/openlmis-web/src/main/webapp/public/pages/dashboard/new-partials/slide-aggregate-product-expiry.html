@@ -1,8 +1,10 @@
 
     <div class="col s12 m6 l6" ng-controller="AggregateProductExpiryController">
-        <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
+        <div class="section grey lighten-5 card" s style="padding-top: 0rem !important;">
             <h2><span> Aggregate Product Expiry</span></h2>
-            <div filter-container><program-filter class="form-cell horizontalFilters" required="true"></program-filter></div>
+            <div filter-container>
+                <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+            </div>
             <h5 ng-hide="aggregateExpiry" style="float: left;clear: both;text-align: center;width: 100%;">No data available to show</h5>
             <table class="striped bordered " ng-show="aggregateExpiry">
                 <thead>

@@ -200,7 +200,7 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="22" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="22" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
@@ -245,7 +245,7 @@
 					<crosstabRowHeader>
 						<cellContents>
 							<textField>
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="60" height="25" forecolor="#000000" uuid="9e875326-4e43-451a-8164-9763d462124e"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="25" forecolor="#000000" uuid="9e875326-4e43-451a-8164-9763d462124e"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
@@ -270,7 +270,7 @@
 					<crosstabRowHeader>
 						<cellContents>
 							<textField>
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="25" uuid="e79cd276-4e5e-4318-9467-f526d303bee3"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="65" height="25" uuid="e79cd276-4e5e-4318-9467-f526d303bee3"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
@@ -295,7 +295,7 @@
 					<crosstabRowHeader>
 						<cellContents>
 							<textField>
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="100" height="25" uuid="a642a497-5bf8-44cd-ae5b-bd04c08b16ea"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="25" uuid="a642a497-5bf8-44cd-ae5b-bd04c08b16ea"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
@@ -320,7 +320,7 @@
 					<crosstabRowHeader>
 						<cellContents>
 							<textField>
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="47" height="25" uuid="694df33a-015e-432c-8e6e-36af53308263"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="47" height="25" uuid="694df33a-015e-432c-8e6e-36af53308263"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
@@ -345,7 +345,7 @@
 					<crosstabRowHeader>
 						<cellContents>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="76" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="76" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
 									<leftPen lineWidth="1.0"/>
@@ -400,7 +400,7 @@
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" stretchType="RelativeToTallestObject" x="0" y="0" width="31" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="31" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
 							<box leftPadding="2">
 								<topPen lineWidth="1.0"/>
 								<leftPen lineWidth="1.0"/>

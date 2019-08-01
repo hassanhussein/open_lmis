@@ -1,50 +1,64 @@
 <style>
-.material-icons.md-18 { font-size: 18px;
-background-color:transparent;
-color:#fff}
-.table_column{
-text-align:right !important;
-}
-.small-box{
-height:210px;
-<!--width:300px;-->
-}
-.inner{
-height:180px;
-}
-.vital_data{
-font-size:12px !important;
-margin-right:20px;
+    .material-icons.md-18 {
+        font-size: 18px;
+        background-color: transparent;
+        color: #fff
+    }
 
-}
-h2 {
-    background-color: #17888f;
-    font-size: 15px !important;
-    color: #fff !important;
-    font-weight: bolder !important;
-    align-content: normal;
-}
-h3{
-font-size:20px !important;
-}
-.row1-height{
-height:425px;
-padding-top: 0rem !important;
-}
-.row2-height{
-height:355px;
-padding-top: 0rem !important;
-}
-.row3-height{
-height:500px;
-padding-top: 0rem !important;
-}
-.section{
-margin-left:20px;
-}
-.accordion{
-background:#fff;
-}
+    .table_column {
+        text-align: right !important;
+    }
+
+    .small-box {
+        height: 210px;
+        <!--width: 300px;
+        -->
+    }
+
+    .inner {
+        height: 180px;
+    }
+
+    .vital_data {
+        font-size: 12px !important;
+        margin-right: 20px;
+    }
+
+    h2 {
+        background-color: #17888f;
+        font-size: 15px !important;
+        color: #fff !important;
+        font-weight: bolder !important;
+        align-content: normal;
+    }
+
+    h3 {
+        font-size: 20px !important;
+    }
+
+    .row1-height {
+        height: 425px;
+        padding-top: 0rem !important;
+    }
+
+    .row2-height {
+        height: 405px;
+        padding-top: 0rem !important;
+    }
+
+    .row3-height {
+        height: 500px;
+        padding-top: 0rem !important;
+    }
+
+    .section {
+        margin-left: 20px;
+    }
+
+    .accordion {
+        background: #fff;
+    }
+
     .orderFillRate .col {
         padding: 0px 0.25rem !important;
     }
@@ -75,10 +89,10 @@ background:#fff;
         padding-left: 5px !important;
     }
 
-    td, th {
+    td,
+    th {
         padding: 7px 0px !important;
         font-size: smaller;
-
     }
 
     .collection .collection-item {
@@ -91,9 +105,9 @@ background:#fff;
         margin-bottom: 0px !important;
     }
 
-    #tab, ul {
+    #tab,
+    ul {
         padding: 0px 5px 0px !important;
-
     }
 
     .content {
@@ -107,46 +121,68 @@ background:#fff;
 
     #order {
         padding-bottom: 0px !important;
-
     }
 
     .modal {
         width: 50% !important;
         margin-top: 10px !important;
-/*
+        /*
         margin-left: 400px !important;
 */
         background: 0 !important;
         /*max-height: 50% !important;*/
         min-height: 600px !important;
     }
-    th td{
+
+    th td {
         padding-left: 2px;
     }
 
     .modal .modal-content {
         padding: 30px !important;
     }
-    .odd-row{
-     background-color: lightblue;
+
+    .odd-row {
+        background-color: lightblue;
     }
 
-.pagination li {
+    .pagination li {
+        font-size: 11px;
+    }
 
-    font-size: 11px;
+    .pagination li.active {
+        display: none;
+    }
+    /**** overaly ***/
 
-}
+    .dashlet-overlay {
+        position: absolute;
+        display: table;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.59);
+        z-index: 2;
+        font-weight: bolder;
+    }
 
-.pagination li.active {
-    display : none;
-}
+    .dashlet-overlay > div {
+        height: 100%;
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+    }
 
+    .overview-tabular-section {
+        max-height: 300px;
+        overflow: scroll;
+    }
 </style>
 
 <div id="tab">
-
-
-
     <!-- Modal Structure -->
     <div id="modal1" class="modal">
         <div class="modal-content">
@@ -169,40 +205,33 @@ background:#fff;
     <div id="mdUsersInLast" class="modal">
 
         <div class="modal-content">
-            <div class="modal-header"> <h3>Users Created In Last Three Months</h3></div>
+            <div class="modal-header">
+                <h3>Users Created In Last Three Months</h3></div>
             <div class="modal-body">
-            <div class="row">
-                <form class="col s12">
-
-                    <table class="table table-bordered">
-                        <thead>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Email Address</th>
-                            <th>Phone</th>
-                            <th>Facility Name</th>
-                            <th>District</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr ng-repeat="row in usersThreeMonths">
-                            <td>
-
-
-                    {{ row.username }}
-
-
-                            </td>
-
-                            <td>{{ row.email }}</td>
-                            <td>{{ row.cellphone }}</td>
-                            <td>{{ row.facility }}</td>
-                            <td>{{ row.district }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </form>
-            </div>
+                <div class="row">
+                    <form class="col s12">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Email Address</th>
+                                <th>Phone</th>
+                                <th>Facility Name</th>
+                                <th>District</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="row in usersThreeMonths">
+                                <td> {{ row.username }}</td>
+                                <td>{{ row.email }}</td>
+                                <td>{{ row.cellphone }}</td>
+                                <td>{{ row.facility }}</td>
+                                <td>{{ row.district }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
             </div>
 
         </div>
@@ -225,154 +254,121 @@ background:#fff;
 
         <div class="tab-pane active" id="summary">
             <div class="accordion">
-                <div class="pull-left "><span style="font-size: 12px">National Supply Chain Indicator , {{displayCurrentDate}}</span>
+                <div class="pull-left ">
+                    <span style="font-size: 12px">National Supply Chain Indicator , {{displayCurrentDate}}</span>
                 </div>
                 <div class="pull-right control-accordion">
-                    <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
-                       openlmis-message="label.expand.all"></a> / <a
-                        id="collapseAll"
-                        href="javascript:void(0);"
-                        onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
+                    <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all"></a> /
+                    <a id="collapseAll" href="javascript:void(0);" onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
                 </div>
                 <div class="clearfix"></div>
+
+                <!--================ Overview section  ==================-->
                 <div class="accordion-section">
                     <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                   <span>
-                    <b>-</b>
-                    <a id="overview" href="javascript:void(0);"
-                    >Overview </a>
-                  </span>
+                        <span>
+                            <b>-</b><a id="overview" href="javascript:void(0);">Overview </a>
+                        </span>
                     </div>
                     <div class="accordion-body" style="display:block">
-
-                        <div class="row orderFillRate" ng-show="orderFillRateByZone.zones.length >0">
-                            <div  class="col s12 m4 l4">
-
-                                <div class="section grey lighten-5 card row1-height"
-                                     style="padding-top: 0rem !important;">
-                                    <h2><span >National Order Fill Rate %</span> <a ng-click="setHelpContentKey('orderFillRateHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-
+                    <!-- Order fill rate chart -->
+                        <div class="row orderFillRate">
+                            <div class="col s12 m4 l4" id="nationalOrderFillRateChart">
+                                <div class="section grey lighten-5 card row1-height" overlay-section="nationalOrderFillRatePercentage" style="padding-top: 0rem !important;">
+                                    <h2><span>National Order Fill Rate %</span>
+                                        <a ng-click="setHelpContentKey('orderFillRateHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right">
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div class="col s12">
-
                                         <div class="section" style="padding-top: 0rem !important;">
-
-                                            <div id="container-order-fill-rate"
-                                                 style="height: 350px; margin:0 auto"></div>
-
-
-                                            <!--<div onClick="accordion.expandDetail('accordion-fill-rate')" class="pull-right">-->
-                                                <!--<a >-->
-                                                    <!--<i class="material-icons">-->
-                                                        <!--details-->
-                                                    <!--</i>-->
-                                                <!--</a>-->
-                                            <!--</div>-->
-
-
+                                            <div id="container-order-fill-rate" style="height: 350px; margin:0 auto"></div>
                                         </div>
-
                                     </div>
-
-                                </div>
-                            </div>
-                            <div  class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row1-height"
-                                     style="padding-top: 0rem !important;">
-                                    <h2><span ng-if="true" >Stock Availability</span> <a ng-click="setHelpContentKey('stockAvailabilityHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-
-                                    <div class="col s12">
-
-                                        <div class="section">
-
-                                            <div id="stock-availability" style="height: 350px; margin:0 auto"></div>
-
-                                            <!--<div onClick="accordion.expandDetail('accordion-fill-rate')" class="pull-right">-->
-                                                <!--<a >-->
-                                                    <!--<i class="material-icons">-->
-                                                        <!--details-->
-                                                    <!--</i>-->
-                                                <!--</a>-->
-                                            <!--</div>-->
-
-                                        </div>
-
-                                    </div>
-
-
-                                </div>
-                            </div>
-                            <div  class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row1-height"
-                                     style="padding-top: 0rem !important;">
-                                    <h2><span >Reporting Rate</span> <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-
-                                    <div class="col s12">
-
-                                        <div class="section">
-                                            <!--  <ul>
-                                                  <li class="collection-item"><i class="tiny material-icons icon-green">lens</i>&nbsp;&nbsp;<span style="font-size: x-small">Good Performance</span> </li>
-                                                  <li class="collection-item"><i class="tiny material-icons icon-yellow">lens</i>&nbsp;&nbsp;<span style="font-size: x-small">Good Performance</span> </li>
-                                                  <li class="collection-item"><i class="tiny material-icons icon-red">lens</i>&nbsp;&nbsp;<span style="font-size: x-small">Bad Performance</span> </li>
-                                              </ul>-->
-                                            <div id="reporting-rate" style="height: 350px; margin:0 auto"></div>
-                                            <!--<div onClick="accordion.expandDetail('accordion-fill-rate')" class="pull-right">-->
-                                                <!--<a >-->
-                                                    <!--<i class="material-icons">-->
-                                                        <!--details-->
-                                                    <!--</i>-->
-                                                <!--</a>-->
-                                            <!--</div>-->
-
-                                        </div>
-
-                                    </div>
-
-
                                 </div>
                             </div>
 
-                        </div>
-                        <div class="row orderFillRate" ng-show="orderFillRateByZone.zones.length >0">
+                    <!-- Stock Availability Chart -->
                             <div class="col s12 m4 l4">
-
-                                <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
-                                    <h2><span >National Order Fill Rate %</span> <a ng-click="setHelpContentKey('orderFillRateHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-
+                                <div class="section grey lighten-5 card row1-height" style="padding-top: 0rem !important;" overlay-section="stockAvailability">
+                                    <h2>
+                                        <span ng-if="true" >Stock Availability</span>
+                                        <a ng-click="setHelpContentKey('stockAvailabilityHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
 
                                     <div class="col s12">
-                                        <div style="height: 425px; overflow: scroll;" class="section grey lighten-3"
-                                             style="padding-top: 0rem !important;">
+                                        <div class="section">
+                                            <div id="stock-availability" style="height: 350px; margin:0 auto"></div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                   <!-- Reporting rate chart -->
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row1-height" overlay-section="reportingRate" style="padding-top: 0rem !important;">
+                                    <h2>
+                                        <span >Reporting Rate</span>
+                                        <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info </i>
+                                        </a>
+                                    </h2>
+                                    <div class="col s12">
+                                        <div class="section">
+                                            <div id="reporting-rate" style="height: 350px; margin:0 auto"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    <!--============= Overview second row =================-->
+
+                        <div class="row orderFillRate">
+
+                            <!-- National Order Fill Rate % tabular report -->
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height" overlay-section="nationalOrderFillRatePercentageTabular" style="padding-top: 0rem !important;">
+                                    <h2>
+                                        <span>National Order Fill Rate %</span>
+                                        <a ng-click="setHelpContentKey('orderFillRateHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i></a>
+                                    </h2>
+                                    <div class="col s12">
+                                        <div class="section grey lighten-3 overview-tabular-section" style="padding-top: 0rem !important;">
 
                                             <table class="striped bordered">
                                                 <thead>
                                                 <tr>
                                                     <th>Zone</th>
-                                                    <th class="table_column">Three Month<br> Ago</th>
-                                                    <th class="table_column">Previous<br> Month</th>
-                                                    <th class="table_column">Current <br>Month</th>
+                                                    <th class="table_column">Three Month
+                                                        <br> Ago</th>
+                                                    <th class="table_column">Previous
+                                                        <br> Month</th>
+                                                    <th class="table_column">Current
+                                                        <br>Month</th>
                                                     <th class="table_column">Status</th>
                                                     <th class="table_column">Progress</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr ng-repeat="report in orderFillRateByZone.zones">
-                                                    <td >{{report.name}}</td>
+                                                    <td>{{report.name}}</td>
                                                     <td class="table_column">{{report.pastprev|number}}%</td>
                                                     <td class="table_column">{{report.prev|number}}%</td>
                                                     <td class="table_column">{{report.current|number}}%</td>
                                                     <td class="table_column" ng-show="report.current >=80"><a href="#!"><i
                                                             class="tiny material-icons icon-green">lens</i></a>
                                                     </td>
-                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><a
-                                                            href="#!"><i
+                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><a href="#!"><i
                                                             class="tiny material-icons icon-yellow">lens</i></a></td>
                                                     <td class="table_column" ng-show="report.current < 60"><a href="#!"><i
                                                             class="tiny material-icons icon-red">lens</i></a>
@@ -392,45 +388,45 @@ background:#fff;
 
                                             </table>
 
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                    <!-- Stock Availability tabular report -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
-                                    <h2><span ng-if="true" >Stock Availability</span> <a ng-click="setHelpContentKey('stockAvailabilityHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-
+                                <div class="section grey lighten-5 card row2-height" overlay-section="stockAvailabilityTabular" style="padding-top: 0rem !important;">
+                                    <h2>
+                                        <span ng-if="true" >Stock Availability</span>
+                                        <a ng-click="setHelpContentKey('stockAvailabilityHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div class="col s12">
-
                                         <div class="section" style="padding-top: 0rem !important;">
+                                            <span ng-show="true"><span style="font-size: x-small">Keys</span>
 
-                                    <span ng-show="true"><span style="font-size: x-small">Keys</span>
-
-                                   <a href="#!"><i class="tiny material-icons icon-green">lens</i> </a>
-                                        <span style="font-size: x-small"> Good >=80%</span>
-                                   <a href="#!"><i class="tiny material-icons icon-yellow">lens</i></a>
-                                        <span style="font-size: x-small"> Normal >69%</span>
-                                   <a href="#!"><i class="tiny material-icons icon-red">lens</i></a>
-                                        <span style="font-size: x-small"> Bad <70%</span></span>
-
-
+                                            <a href="#!"><i class="tiny material-icons icon-green">lens</i> </a>
+                                            <span style="font-size: x-small"> Good >=80%</span>
+                                            <a href="#!"><i class="tiny material-icons icon-yellow">lens</i></a>
+                                            <span style="font-size: x-small"> Normal >69%</span>
+                                            <a href="#!"><i class="tiny material-icons icon-red">lens</i></a>
+                                            <span style="font-size: x-small"> Bad <70%</span></span>
                                         </div>
-
                                     </div>
-                                    <div style="height: 425px; overflow: scroll;" class="col s12">
+                                    <div class="col s12 overview-tabular-section">
                                         <div class="section grey lighten-3">
-
                                             <table class="striped bordered">
                                                 <thead>
                                                 <tr>
-
-                                                    <th >Zone</th>
-                                                    <th class="table_column">Previous<br> Three Month</th>
-                                                    <th class="table_column">Previous<br> Month</th>
-                                                    <th class="table_column">Current <br>Month</th>
+                                                    <th>Zone</th>
+                                                    <th class="table_column">Previous
+                                                        <br> Three Month</th>
+                                                    <th class="table_column">Previous
+                                                        <br> Month</th>
+                                                    <th class="table_column">Current
+                                                        <br>Month</th>
                                                     <th class="table_column">Status</th>
                                                     <th class="table_column">Progress</th>
                                                 </tr>
@@ -438,15 +434,14 @@ background:#fff;
                                                 <tbody>
                                                 <tr ng-repeat="report in stockAvailability.zones">
 
-                                                    <td >{{report.name}}</td>
+                                                    <td>{{report.name}}</td>
                                                     <td class="table_column">{{report.prevprev|number}}%</td>
                                                     <td class="table_column">{{report.prev|number}}%</td>
                                                     <td class="table_column">{{report.current|number}}%</td>
                                                     <td class="table_column" ng-show="report.current >=80"><a href="#!"><i
                                                             class="tiny material-icons icon-green">lens</i></a>
                                                     </td>
-                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><a
-                                                            href="#!"><i
+                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><a href="#!"><i
                                                             class="tiny material-icons icon-yellow">lens</i></a></td>
                                                     <td class="table_column" ng-show="report.current < 60"><a href="#!"><i
                                                             class="tiny material-icons icon-red">lens</i></a>
@@ -459,124 +454,94 @@ background:#fff;
                                                     <td class="table_column" ng-show="report.current < report.prev"><a href="#!"><i
                                                             class="tiny material-icons icon-red">trending_down</i></a>
                                                     </td>
-
                                                 </tr>
-
                                                 </tbody>
-
                                             </table>
-
-
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
+
+                        <!-- Reporting Rate tabular report -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card" style="padding-top: 0rem !important;">
-                                    <h2><span >Reporting Rate</span> <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-
-
+                                <div class="section grey lighten-5 card row2-height" overlay-section="reportingRateTabularReport" style="padding-top: 0rem !important;">
+                                    <h2>
+                                        <span >Reporting Rate</span>
+                                        <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div class="col s12">
-
                                         <div class="section" style="padding-top: 0rem !important;">
-
-                                    <span ng-show="true"><span style="font-size: x-small">Keys</span>
-
-                                   <a href="#!"><i class="tiny material-icons icon-green">lens</i> </a>
-                                        <span style="font-size: x-small"> Good >=80%</span>
-                                   <a href="#!"><i class="tiny material-icons icon-yellow">lens</i></a>
-                                        <span style="font-size: x-small"> Normal >69%</span>
-                                   <a href="#!"><i class="tiny material-icons icon-red">lens</i></a>
-                                        <span style="font-size: x-small"> Bad <70%</span></span>
-
-
+                                            <span ng-show="true"><span style="font-size: x-small">Keys</span>
+                                            <a href="#!"><i class="tiny material-icons icon-green">lens</i> </a>
+                                            <span style="font-size: x-small"> Good >=80%</span>
+                                            <a href="#!"><i class="tiny material-icons icon-yellow">lens</i></a>
+                                            <span style="font-size: x-small"> Normal >69%</span>
+                                            <a href="#!"><i class="tiny material-icons icon-red">lens</i></a>
+                                            <span style="font-size: x-small"> Bad <70%</span></span>
                                         </div>
-
                                     </div>
-
                                     <div class="col s12">
-                                        <div style="height: 425px; overflow: scroll;" class="section grey lighten-3">
-
+                                        <div class="section grey lighten-3 overview-tabular-section">
                                             <table class="striped bordered">
                                                 <thead>
                                                 <tr>
-
                                                     <th>Zone</th>
-                                                    <th>Previous<br> Three Month</th>
-                                                    <th>Previous<br> Month</th>
-                                                    <th>Current <br>Month</th>
+                                                    <th>Previous
+                                                        <br> Three Month</th>
+                                                    <th>Previous
+                                                        <br> Month</th>
+                                                    <th>Current
+                                                        <br>Month</th>
                                                     <th>Status</th>
                                                     <th>Progress</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr ng-repeat="report in reportingRate.zones">
-
-                                                    <td >{{report.name}}</td>
+                                                    <td>{{report.name}}</td>
                                                     <td class="table_column">{{report.prevprev|number}}%</td>
                                                     <td class="table_column">{{report.prev|number}}%</td>
                                                     <td class="table_column">{{report.current|number}}%</td>
-                                                    <td class="table_column" ng-show="report.current >=80"><i
-                                                            class="tiny material-icons icon-green">lens</i>
+                                                    <td class="table_column" ng-show="report.current >=80"><i class="tiny material-icons icon-green">lens</i></td>
+                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><i class="tiny material-icons icon-yellow">lens</i></td>
+                                                    <td class="table_column" ng-show="report.current < 60"><i class="tiny material-icons icon-red">lens</i></td>
+                                                    <td class="table_column" ng-show="report.current > report.prev"><i class="tiny material-icons icon-green">trending_up</i></td>
+                                                    <td class="table_column" ng-show="report.current == report.prev"><i class="tiny material-icons icon-yellow">forward</i></td>
+                                                    <td class="table_column" ng-show="report.current < report.prev"><i class="tiny material-icons icon-red">trending_down</i>
                                                     </td>
-                                                    <td class="table_column" ng-show="report.current >=60  && report.current <=79"><i
-                                                            class="tiny material-icons icon-yellow">lens</i></td>
-                                                    <td class="table_column" ng-show="report.current < 60"><i
-                                                            class="tiny material-icons icon-red">lens</i>
-                                                    </td>
-                                                    <td class="table_column" ng-show="report.current > report.prev"><i
-                                                            class="tiny material-icons icon-green">trending_up</i></td>
-                                                    <td class="table_column" ng-show="report.current == report.prev"><i
-                                                            class="tiny material-icons icon-yellow">forward</i></td>
-                                                    <td class="table_column" ng-show="report.current < report.prev"><i
-                                                            class="tiny material-icons icon-red">trending_down</i>
-                                                    </td>
-
                                                 </tr>
-
                                                 </tbody>
-
                                             </table>
-
-
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
-
                         </div>
+
                         <div class="row orderFillRate">
                             <div class="row">
-
                                 <div class="col-lg-3 col-xs-6">
                                     <!-- small box -->
                                     <div class="small-box bg-aqua">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
-
-                                          <span ng-if="status.model=='Number of R&Rs submitted'">
+                                                <span ng-if="status.model=='Number of R&Rs submitted'">
                                               <h3> Submitted R&Rs</h3>
 
                                             <p>Total <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
-                                              </span>
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                                </span>
                                             </div>
-                                            <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                            <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a>
                                         </div>
-
-
                                     </div>
-
                                 </div>
                                 <!-- ./col -->
                                 <div class="col-lg-3 col-xs-6">
@@ -585,20 +550,20 @@ background:#fff;
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
-                                          <span ng-if="status.model=='Number of Emergency R&Rs'">
+                                                <span ng-if="status.model=='Number of Emergency R&Rs'">
                                               <h3>Emergency R&Rs</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
-                                              </span>
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                                </span>
                                             </div>
                                             <a ng-click="setHelpContentKey('emergencyRnr')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
-                                            </i></a></i></a>
+                                            </i></a></i>
+                                            </a>
                                         </div>
-
 
                                     </div>
                                 </div>
@@ -609,18 +574,19 @@ background:#fff;
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
-                                          <span ng-if="status.model=='Number of R&R Approved'">
+                                                <span ng-if="status.model=='Number of R&R Approved'">
                                               <h3>Approved R&Rs</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
-                                              </span>
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                                </span>
                                             </div>
                                             <a ng-click="setHelpContentKey('approvedRnrHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
-                                            </i></a></i></a>
+                                            </i></a></i>
+                                            </a>
                                         </div>
 
                                     </div>
@@ -632,23 +598,23 @@ background:#fff;
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
-                                          <span ng-if="status.model=='Number of Orders Placed to MSL'">
+                                                <span ng-if="status.model=='Number of Orders Placed to MSL'">
                                               <h3>Orders Sent To MSL</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
-                                              </span>
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                                </span>
                                             </div>
                                             <a ng-click="setHelpContentKey('orderSentToMslHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
-                                            </i></a></i></a>
+                                            </i></a></i>
+                                            </a>
                                         </div>
 
                                     </div>
                                 </div>
-
 
                                 <!-- ./col -->
                             </div>
@@ -656,25 +622,25 @@ background:#fff;
                         <div class="row orderFillRate">
                             <div class="row">
 
-
                                 <div class="col-lg-3 col-xs-6">
                                     <!-- small box -->
                                     <div class="small-box bg-fuchsia">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
-                                          <span ng-if="status.model=='Number of Shipments setn by MSL'">
+                                                <span ng-if="status.model=='Number of Shipments setn by MSL'">
                                               <h3>Shipment By MSL</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
-                                              </span>
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                                </span>
                                             </div>
                                             <a ng-click="setHelpContentKey('shipementbyMslHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
-                                            </i></a></i></a>
+                                            </i></a></i>
+                                            </a>
                                         </div>
 
                                     </div>
@@ -686,18 +652,19 @@ background:#fff;
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
-                                          <span ng-if="status.model=='Number of Facilities'">
+                                                <span ng-if="status.model=='Number of Facilities'">
                                               <h3>Facilities</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
-                                              </span>
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                                </span>
                                             </div>
                                             <a ng-click="setHelpContentKey('facilitiesHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
-                                            </i></a></i></a>
+                                            </i></a></i>
+                                            </a>
                                         </div>
 
                                     </div>
@@ -708,14 +675,14 @@ background:#fff;
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
-                                          <span ng-if="status.model=='Number of Products'">
+                                                <span ng-if="status.model=='Number of Products'">
                                               <h3>Products</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <p>Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
-                                              </span>
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
+                                                </span>
                                             </div>
                                             <a ng-click="setHelpContentKey('productsHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
@@ -731,19 +698,19 @@ background:#fff;
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
-                                          <span ng-if="status.model=='Number of Users'">
+                                                <span ng-if="status.model=='Number of Users'">
                                               <h3>Users</h3>
 
                                               <p>Total  <span class="vital_data pull-right">{{status.total|number}}</span> </p>
-                                              <p>Current Period  <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
-                                              <p>Last Three Month  <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
-                                              <a data-target="mdUsersInLast" class="small-box-footer modal-trigger ">
+                                                <p>Current Period <span class="vital_data pull-right">{{status.currentMonth|number}}</span> </p>
+                                                <p>Last Three Month <span class="vital_data pull-right">{{status.lastThreeMonth|number}}</span> </p>
+                                                <a data-target="mdUsersInLast" class="small-box-footer modal-trigger ">
                                                   Last Six Month  <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </a>
 
-                                              </span>
+                                                </span>
 
                                             </div>
-                                            <a  data-target="mdUsersInLast" class="small-box-footer modal-trigger pull-left"><i class="material-icons md-18">
+                                            <a data-target="mdUsersInLast" class="small-box-footer modal-trigger pull-left"><i class="material-icons md-18">
                                                 info
                                             </i></a>
                                             <a ng-click="setHelpContentKey('usersHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
@@ -759,85 +726,69 @@ background:#fff;
                             </div>
                         </div>
 
-
-
                         <div class="row itemFillRate">
+
+                        <!-- Reporting rate map report -->
                             <div class="col s12 m4 l6">
                                 <div class="section grey lighten-5 card row3-height">
-                                    <h2><span > Reporting Rate</span> <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-                                    <leaflet style=" padding-top: 0rem !important; height: 300px;margin:0 auto " width="100%" height="500px" legend="legend" geojson="geojson"
-                                             layers="layers"></leaflet>
-
+                                    <h2>
+                                        <span > Reporting Rate</span>
+                                        <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <leaflet style=" padding-top: 0rem !important; height: 300px;margin:0 auto "
+                                             width="100%" height="500px" legend="legend"
+                                             geojson="geojson" layers="layers"></leaflet>
                                 </div>
-
                             </div>
 
+                        <!-- Reporting rate tabular bar char report -->
                             <div class="col s12 m6 l6">
-                                <div class="section grey lighten-5 card row3-height" style="padding-top: 0rem !important;">
-                                    <h2><span  >Reporting Rate</span></h2>
-                                    <div style=" height: 500px; overflow: scroll;"
-                                         ng-show="features && (features | filter:expectedFilter).length > 0">
-
+                                <div class="section grey lighten-5 card row3-height"  style="padding-top: 0rem !important;">
+                                    <h2><span>Reporting Rate</span></h2>
+                                    <div style="height: 500px; overflow: scroll;" ng-show="features && (features | filter:expectedFilter).length > 0">
                                         <table class="striped">
                                             <thead>
                                             <tr style="margin-bottom: 20px">
                                                 <th style="width:35%" openlmis-message="label.district"></th>
-                                                <th style="width:10%" class="number"
-                                                    openlmis-message="label.expected"></th>
-                                                <th style="width:10% !important;" class="number"
-                                                    openlmis-message="label.reported"></th>
-                                                <th style="width: 30%; text-align: right"
-                                                    openlmis-message="label.percent.reported"></th>
+                                                <th style="width:10%" class="number" openlmis-message="label.expected"></th>
+                                                <th style="width:10% !important;" class="number" openlmis-message="label.reported"></th>
+                                                <th style="width: 30%; text-align: right" openlmis-message="label.percent.reported"></th>
                                             </tr>
-                                            <!--<tr><th colspan="4">&nbsp;</th></tr>-->
                                             </thead>
                                             <tbody>
                                             <tr ng-repeat="feature in features | filter:expectedFilter">
                                                 <td style="width:35% !important;">{{feature.name}}</td>
-                                                <td style="width:10% !important;" class="number">{{feature.expected}}
-                                                </td>
+                                                <td style="width:10% !important;" class="number">{{feature.expected}}</td>
                                                 <td style="width:10% !important;" class="number">{{feature.period}}</td>
                                                 <td style="width:30% !important;right-margin:4px" class="number">
-                                                    <div class="number" style="float:right;">{{((feature.period /
-                                                        feature.expected)
-                                                        * 100).toFixed(0)}} %
+                                                    <div class="number" style="float:right;">{{((feature.period / feature.expected) * 100).toFixed(0)}} %
                                                     </div>
                                                     <div class="progress" style="margin-bottom:0px;width:68%">
-                                                        <div class="bar bar-success leaflet-clickable"
-                                                             ng-click="onDetailClicked(feature, this)"
-                                                             style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
-                                                        <div class="bar bar-danger leaflet-clickable"
-                                                             ng-click="onDetailClicked(feature, this)"
-                                                             style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
+                                                        <div class="bar bar-success leaflet-clickable" ng-click="onDetailClicked(feature, this)" style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
+                                                        <div class="bar bar-danger leaflet-clickable" ng-click="onDetailClicked(feature, this)" style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
                                                     </div>
                                                 </td>
                                             </tr>
                                             </tbody>
                                         </table>
-
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!--================== REQUISITION ============----------->
                 <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
-                    <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                   <span>
-                    <b>+</b>
-                    <a id="programSchedules" href="javascript:void(0);"
-                    >Requisitions</a>
-                  </span>
+                    <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('requisition');">
+                        <span>
+                            <b>+</b><a id="programSchedules" href="javascript:void(0);">Requisitions</a>
+                        </span>
                     </div>
                     <div class="accordion-body">
-
-
-
                         <div class="row" ng-show="false">
                             <div class="col s12 m6 l6">
 
@@ -873,42 +824,29 @@ background:#fff;
                                             <td style="width:170px !important;">{{product.primaryname}}</td>
                                             <td style="width:70px !important;" class="number">{{product.reported}}</td>
                                             <td style="width:180px !important;" class="number">
-                                                <div class="progress"
-                                                     style="margin-bottom:0px;width:180px;height: 20px">
-                                                    <div class="bar bar-danger leaflet-clickable"
-                                                         ng-click="StockedOutProducts(product,this);"
-                                                         style="width: {{((product.stockedout / product.reported) * 100)}}%">
+                                                <div class="progress" style="margin-bottom:0px;width:180px;height: 20px">
+                                                    <div class="bar bar-danger leaflet-clickable" ng-click="StockedOutProducts(product,this);" style="width: {{((product.stockedout / product.reported) * 100)}}%">
                                                         {{product.stockedout}}
                                                     </div>
-                                                    <div class="bar bar-warning leaflet-clickable"
-                                                         ng-click="UnderStockedProducts(product, this)"
-                                                         style="width: {{((product.understocked / product.reported) * 100)}}%">
+                                                    <div class="bar bar-warning leaflet-clickable" ng-click="UnderStockedProducts(product, this)" style="width: {{((product.understocked / product.reported) * 100)}}%">
                                                         {{product.understocked}}
                                                     </div>
-                                                    <div class="bar bar-info leaflet-clickable"
-                                                         ng-click="OverStockedProducts(product, this)"
-                                                         style="width: {{((product.overstocked / product.reported) * 100)}}%">
+                                                    <div class="bar bar-info leaflet-clickable" ng-click="OverStockedProducts(product, this)" style="width: {{((product.overstocked / product.reported) * 100)}}%">
                                                         {{product.overstocked}}
                                                     </div>
-                                                    <div class="bar bar-success leaflet-clickable"
-                                                         ng-click="AdequatelyStockedProducts(product, this)"
-                                                         style="width: {{(100 - (((product.stockedout + product.understocked + product.overstocked)/ product.reported) * 100))}}%">
-                                                        {{ (product.reported - (product.stockedout +
-                                                        product.understocked +
-                                                        product.overstocked)) }}
+                                                    <div class="bar bar-success leaflet-clickable" ng-click="AdequatelyStockedProducts(product, this)" style="width: {{(100 - (((product.stockedout + product.understocked + product.overstocked)/ product.reported) * 100))}}%">
+                                                        {{ (product.reported - (product.stockedout + product.understocked + product.overstocked)) }}
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td style="width: 91px !important;" class="number">{{((product.stockedout /
-                                                product.reported) * 100).toFixed(0)}} %
+                                            <td style="width: 91px !important;" class="number">{{((product.stockedout / product.reported) * 100).toFixed(0)}} %
                                             </td>
-                                            <td style="width:45px"><input type="checkbox" ng-model="product.selected"
-                                                                          ng-change="productSelectChange(product.selected, product)">
+                                            <td style="width:45px">
+                                                <input type="checkbox" ng-model="product.selected" ng-change="productSelectChange(product.selected, product)">
                                             </td>
                                         </tr>
                                         </tbody>
                                     </table>
-
 
                                 </div>
 
@@ -919,8 +857,7 @@ background:#fff;
                             <div class="col s12 m6 l6">
                                 <div class="section grey lighten-5 card">
 
-                                    <div id="container1"
-                                         style="height: 500px; min-width: 310px; max-width: 480px; margin: 0 auto"></div>
+                                    <div id="container1" style="height: 500px; min-width: 310px; max-width: 480px; margin: 0 auto"></div>
 
                                 </div>
 
@@ -929,132 +866,164 @@ background:#fff;
                                 <div class="section grey lighten-5 card">
                                     <div style="" ng-show="features && (features | filter:expectedFilter).length > 0">
 
-                                        <div id="container"
-                                             style="min-width: 310px; max-width:480px; height: 500px; margin: 0 auto"></div>
+                                        <div id="container" style="min-width: 310px; max-width:480px; height: 500px; margin: 0 auto"></div>
                                     </div>
 
                                 </div>
 
                             </div>
 
-
                         </div>
-<div class="row orderFillRate">
 
-    <div class="col s12 m4 l4">
-        <div class="section grey lighten-5 card row2-height ">
-            <h2>Trend of Regular Orders Submitted Per Month <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                info
-            </i></a> </h2>
-            <div>
-                <div id="trendOfRegualrOrder" style="height: 300px;margin:0 auto "></div>
-            </div>
-
-
-        </div>
-
-    </div>
-    <div class="col s12 m4 l4">
-        <div class="section grey lighten-5 card row2-height">
-            <h2>Percentage of Regular Orders by Program (all time) <a ng-click="percentageofRegularOrdersHelp('percentageOfEmergencyByProgramhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                info
-            </i></a></h2>
-            <span style="font-size: x-small;top: 0px !important;">.</span>
-            <div>
-                <div id="regularByProgram" style="height: 300px;margin:0 auto " />
-            </div>
-        </div>
-    </div>
-    <div class="col s12 m4 l4">
-        <div class="section grey lighten-5 card row2-height">
-            <h2>Regular Order By Program (Past 1 Month) <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                info
-            </i></a></h2>
-            <div>
-                <div id="regularSubmittedByProgram"
-                     style="height: 300px;margin:0 auto "></div>
-            </div>
-
-        </div>
-    </div>
-</div>
                         <div class="row orderFillRate">
+
+                <!-- Trend of Regular Orders Submitted Per Month chart report -->
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height" overlay-section="trendOfRegularOrdersSubmittedPerMonth">
+                                    <h2>Trend of Regular Orders Submitted Per Month
+                                        <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <div>
+                                        <div id="trendOfRegualrOrder" style="height: 300px;margin:0 auto "></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                 <!-- Percentage of Regular Orders by Program (all time) -->
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height" overlay-section="percentageOfRegularOrders">
+                                    <h2>Percentage of Regular Orders by Program (all time)
+                                        <a ng-click="percentageofRegularOrdersHelp('percentageOfEmergencyByProgramhelp')"
+                                           data-target="modal1" class="small-box-footer modal-trigger pull-right">
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <span style="font-size: x-small;top: 0px !important;">.</span>
+                                    <div>
+                                        <div id="regularByProgram" style="height: 300px;margin:0 auto " />
+                                    </div>
+                                </div>
+                            </div>
+
+                <!--  Regular Order By Program (Past 1 Month) -->
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height" overlay-section="regularOrderByProgram">
+                                    <h2>Regular Order By Program (Past 1 Month)
+                                        <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <div>
+                                        <div id="regularSubmittedByProgram" style="height: 300px;margin:0 auto "></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row orderFillRate">
+
+                <!-- RnR Rejection Trends chart-->
                             <div class="col s12 m6 l4">
-                                <div class="section grey lighten-5 card row3-height">
+                                <div class="section grey lighten-5 card row3-height" overlay-section="rejectedRnrTrends">
                                     <h2>RnR Rejection Trends <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
                                         info
                                     </i></a></h2>
                                     <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
-
                                 </div>
                             </div>
+
+                <!-- Regular & Emergency Requisitions -->
                             <div class="col s12 m6 l4">
-
-                                <div class="section grey lighten-5 card row3-height">
-                                    <h2><span >Regular & Emergency Requisitions</span> <a ng-click="setHelpContentKey('regularEmergencyRequisitionhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
-                                    <div id="regularEmergencyType"
-                                         style="padding-top: 0rem !important;"></div>
-
+                                <div class="section grey lighten-5 card row3-height" overlay-section="regularAndEmergencyRequisition">
+                                    <h2>
+                                        <span>Regular & Emergency Requisitions</span>
+                                        <a ng-click="setHelpContentKey('regularEmergencyRequisitionhelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <div id="regularEmergencyType" style="padding-top: 0rem !important;"></div>
                                 </div>
                             </div>
+
+                <!-- R&R Status Summary -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row3-height ">
-                                    <h2>R&R Status Summary <a ng-click="setHelpContentKey('statusSummary')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
+                                <div class="section grey lighten-5 card row3-height " overlay-section="rnrStatusSummary">
+                                    <h2>R&R Status Summary
+                                        <a ng-click="setHelpContentKey('statusSummary')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div id="rnrSummary" style="margin:0 auto"></div>
                                 </div>
-
                             </div>
                         </div>
-<div class="row orderFillRate">
 
-    <div class="col s12 m4 l4">
-        <div class="section grey lighten-5 card row2-height">
-            <h2>Percentage of Emergency Orders by Program (all time) <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                info
-            </i></a></h2>
-            <span style="font-size: x-small;top: 0px !important;">.</span>
-            <div>
-                <div id="emergencyByProgram" style="height: 300px;margin:0 auto " />
-            </div>
-        </div>
-    </div>
-    <div class="col s12 m4 l4">
-        <div class="section grey lighten-5 card row2-height">
-            <h2>Emergency Order By Program (Past 1 Month) <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                info
-            </i></a></h2>
-            <div>
-                <div id="emergencySubmittedByProgram"
-                     style="height: 300px;margin:0 auto "></div>
-            </div>
+                <!-- Percentage of Emergency Orders by Program (all time) -->
+                        <div class="row orderFillRate" >
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height" overlay-section="percentageOrEmergencyOrders">
+                                    <h2>Percentage of Emergency Orders by Program (all time)
+                                        <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')"
+                                           data-target="modal1" class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <span style="font-size: x-small;top: 0px !important;">.</span>
+                                    <div>
+                                        <div id="emergencyByProgram" style="height: 300px;margin:0 auto " />
+                                    </div>
+                                </div>
+                            </div>
 
-        </div>
-    </div>
-    <div class="col s12 m4 l4">
-        <div class="section grey lighten-5 card row2-height ">
-            <h2>Trend of Emergency Orders Submitted Per Month <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                info
-            </i></a> </h2>
-            <div>
-                <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
-            </div>
+                <!--  Emergency Order By Program (Past 1 Month)  -->
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height" overlay-section="emergencyOrderByProgram">
+                                    <h2>Emergency Order By Program (Past 1 Month)
+                                        <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <div>
+                                        <div id="emergencySubmittedByProgram" style="height: 300px;margin:0 auto "></div>
+                                    </div>
 
+                                </div>
+                            </div>
 
-        </div>
-
-    </div>
-</div>
+                <!-- Trend of Emergency Orders Submitted Per Month -->
+                            <div class="col s12 m4 l4">
+                                <div class="section grey lighten-5 card row2-height " overlay-section="trendOfEmergencyOrderPerMonth">
+                                    <h2>Trend of Emergency Orders Submitted Per Month
+                                        <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right">
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
+                                    <div>
+                                        <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row orderFillRate">
+
+                <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height row1-height">
-                                    <h2>Provinces with Most Emergency Orders (Past 3 Months) <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a></h2>
+                                <div class="section grey lighten-5 card row2-height row1-height" overlay-section="provincesWithMostRegularOrders">
+                                    <h2>Provinces with Most Emergency Orders (Past 3 Months)
+                                        <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')"
+                                           data-target="modal1" class="small-box-footer modal-trigger pull-right">
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div>
                                         <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
 
@@ -1063,41 +1032,49 @@ background:#fff;
                                     </div>
                                 </div>
                             </div>
+
+                <!-- Emergency Orders Frequently Appearing products -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height ">
-                                    <h2>Emergency Orders Frequently Appearing products <a ng-click="setHelpContentKey('emergencyOrderFrequentlyAppearingProducts')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a> </h2>
+                                <div class="section grey lighten-5 card row2-height" overlay-section="emergencyOrderFrequentlyAppearingProducts">
+                                    <h2>Emergency Orders Frequently Appearing products
+                                        <a ng-click="setHelpContentKey('emergencyOrderFrequentlyAppearingProducts')"
+                                           data-target="modal1" class="small-box-footer modal-trigger pull-right" >
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div>
                                         <!-- <div id="emergencyOrderFrequentlyAppearingProducts" style="height: 300px;margin:0 auto "></div> -->
-                                        <div style="height: 300px; overflow: scroll;" class="section grey lighten-3"
-                                             style="padding-top: 0rem !important;">
-
-                                        <table class="striped bordered">
-                                            <thead>
-                                            <th>Product Name</th>
-                                            <th>Order count</th>
-                                            </thead>
-                                            <tbody>
-                                            <tr ng-repeat="orderedProducts in emergencyOrderFrequentAppearingProducts">
-                                                <td>{{orderedProducts.product}}</td>
-                                                <td>{{orderedProducts.order_frequency}}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
+                                        <div style="height: 300px; overflow: scroll; padding-top: 0rem !important;"
+                                             class="section grey lighten-3">
+                                            <table class="striped bordered">
+                                                <thead>
+                                                <th>Product Name</th>
+                                                <th>Order count</th>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="orderedProducts in emergencyOrderFrequentAppearingProducts">
+                                                    <td>{{orderedProducts.product}}</td>
+                                                    <td>{{orderedProducts.order_frequency}}</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                <!-- Facilities Reporting through Facility and Central Edition -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height ">
-                                    <h2>Facilities Reporting through Facility and Central Edition <a ng-click="setHelpContentKey('facilityReportingViaFECE')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a> </h2>
+                                <div class="section grey lighten-5 card row2-height " overlay-section="facilitiesReportingViaCEAndFE">
+                                    <h2>Facilities Reporting through Facility and Central Edition
+                                        <a ng-click="setHelpContentKey('facilityReportingViaFECE')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right">
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div>
                                         <div style="height: 300px; overflow: scroll;" class="section grey lighten-3"
                                              style="padding-top: 0rem !important;">
-
                                             <table class="striped bordered">
                                                 <thead>
                                                 <th>Facility</th>
@@ -1121,71 +1098,55 @@ background:#fff;
                         </div>
                     </div>
                 </div>
-
+    <!-- stock status section -->
                 <div class="accordion-section">
-                    <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
-                   <span>
-                    <b>+</b>
-                    <a id="thirdGroup" href="javascript:void(0);"
-                    >Stock Status</a>
-                  </span>
+                    <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)" ng-click="loadDashletsBySectionNames('stockStatus');">
+                        <span>
+                            <b>+</b><a id="thirdGroup" href="javascript:void(0);">Stock Status</a>
+                        </span>
                     </div>
                     <div class="accordion-body">
                         <div class="row orderFillRate">
-                            <ng-include
-                                    src="'/public/pages/dashboard/new-partials/slide-stockedout-commodity-stock-status.html'"></ng-include>
-                            <ng-include
-                                    src="'/public/pages/dashboard/new-partials/slide-product-expiry.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/new-partials/slide-stockedout-commodity-stock-status.html'"
+                                        ng-if="sectionLoaded('stockStatus')"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/new-partials/slide-product-expiry.html'"
+                                        ng-if="sectionLoaded('stockStatus')"></ng-include>
                         </div>
                         <!---->
                         <div class="row orderFillRate" ng-show="true">
-                            <ng-include
-                                    src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"></ng-include>
-                            <ng-include
-                                    src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"></ng-include>
-
-
+                            <ng-include src="'/public/pages/dashboard/new-partials/slide-commodity-stock-status.html'"
+                                        ng-if="sectionLoaded('stockStatus')"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/new-partials/slide-daily-stock-status.html'"
+                                        ng-if="sectionLoaded('stockStatus')"></ng-include>
 
                         </div>
 
-
-
-                        <div ng-controller="ShipmentInterfaceController" class="row orderFillRate" ng-show="true">
-
-                            <ng-include
-                                    src="'/public/pages/dashboard/new-partials/shipment-interface-status.html'"></ng-include>
-                            <div class="col s12 m4 l4 ">
-                                <div class="section grey lighten-5 card row3-height">
-                                    <h2>Lab Equipment Status  <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                        info
-                                    </i></a> </h2>
+                        <div  class="row orderFillRate" >
+                            <ng-include ng-controller="ShipmentInterfaceController"
+                                        src="'/public/pages/dashboard/new-partials/shipment-interface-status.html'"
+                                        ng-if="sectionLoaded('stockStatus')"></ng-include>
+                            <div class="col s12 m6 l6" >
+                                <div class="section grey lighten-5 card  row3-height" overlay-section="labEquipmentStockedStatusSection">
+                                    <h2>Lab Equipment Status
+                                        <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1"
+                                           class="small-box-footer modal-trigger pull-right">
+                                            <i class="material-icons md-18">info</i>
+                                        </a>
+                                    </h2>
                                     <div>
                                         <div id="equipmentStatusContainer" style="height: 300px;margin:0 auto "></div>
-
-                                        <!--
-                                                                    <div id="emergencyTrend" style="height: 300px;margin:0 auto "></div>
-                                        -->
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-
                         <div class="row orderFillRate" ng-show="true">
-                            <ng-include  src="'/public/pages/dashboard/new-partials/rnr-status-time-line.html'"></ng-include>
-                            <ng-include  src="'/public/pages/dashboard/new-partials/slide-aggregate-product-expiry.html'"></ng-include>
-
-
-
+                            <ng-include src="'/public/pages/dashboard/new-partials/rnr-status-time-line.html'"></ng-include>
+                            <ng-include src="'/public/pages/dashboard/new-partials/slide-aggregate-product-expiry.html'"></ng-include>
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 
     <div id="modal12" class="modal" ng-if="modal12=true;">
@@ -1211,7 +1172,6 @@ background:#fff;
 
                 </tbody>
 
-
             </table>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -1220,8 +1180,6 @@ background:#fff;
 
         </div>
 
-
     </div>
 
 </div>
-

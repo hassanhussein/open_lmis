@@ -20,8 +20,7 @@ function DistrictConsumptionReportController($scope,  DistrictConsumptionReport)
       $scope.filter.max = 10000;
       DistrictConsumptionReport.get($scope.getSanitizedParameter(), function(data) {
         if(data.districtData.page !== undefined){
-          $scope.data = chainParentChildReport(data);//.districtData.rows;
-            console.log($scope.data);
+          $scope.data = chainParentChildReport(data);
           $scope.paramsChanged($scope.tableParams);
         }
       });
