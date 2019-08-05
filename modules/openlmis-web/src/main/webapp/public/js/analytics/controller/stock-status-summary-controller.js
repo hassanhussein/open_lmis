@@ -4,7 +4,7 @@ function stockStatusSummaryController(Program,Period,$document,$scope,$location,
 $rootScope.loadStockStatusSummary = function(params) {
 
 StockStatusSummaryByPeriodData.get(params).then(function(data){
-var title = 'Stock Availability of Health Commodities for  '+params.programName + ' ( '+params.periodName+', '+params.year+' )';
+var title = 'Stock Availability of Health Commodities for  '+params.programName + ' '+params.periodName+', '+params.year+' ';
 $scope.titleStockSummary = title;
 title ='';
 $scope.loadTheChart(data, title,'');
@@ -204,8 +204,23 @@ Highcharts.chart('stock-summary-by-period-and-program', {
       },
     plotOptions: {
        pie: {
+        size: '60%',
         allowPointSelect: true,
         cursor: 'pointer',
+
+            dataLabels: {
+                                       enabled: true,
+                                       format: '<b>  {point.percentage:.0f} %',
+
+                                       /*
+                                                               format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                       */
+                                       style: {
+                                           color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                           fontFamily: '\'Lato\', sans-serif', lineHeight: '18px', fontSize: '17px'
+                                       }
+                                   },
+                                   showInLegend: true,
 
          point: {
            events: {
@@ -284,7 +299,7 @@ Highcharts.chart('stock-summary-by-period-and-program', {
             plotOptions: {
 
              pie:{
-
+                 size: '100%',
               events: {
                        click: function() {
 

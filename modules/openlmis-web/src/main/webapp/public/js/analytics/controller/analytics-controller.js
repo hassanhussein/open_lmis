@@ -1032,7 +1032,7 @@ $scope.stockAvailableForPeriodList = [];
         });
         var chartId = 'stock-available-for-program';
         var title = 'Stock Availability per program';
-        $scope.title_stock_by_program = 'Stock Availability per program ( '+params.periodName+', '+params.year+' )';
+        $scope.title_stock_by_program = 'Stock Availability per program '+params.periodName+', '+params.year+'';
         var chartType = 'column';
         title ='';
         drillDownChart(chartId,chartType,title,$scope.stockAvailableForPeriodList);
@@ -1272,7 +1272,11 @@ function drillDownChart(id,chartType, title,data){
 // Create the chart
 Highcharts.chart(id, {
     chart: {
-        type: chartType
+        type: chartType,
+            spacingBottom: 10,
+                spacingTop: 30,
+                spacingLeft: 0,
+                spacingRight: 10
     },
     title: {
       text: '<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>',
@@ -1280,7 +1284,7 @@ Highcharts.chart(id, {
     },
     subtitle: {
         //text: 'Click the columns to view stock availability of each tracer items'
-               text: '<span style="font-size: 14px!important;color: #0c9083;"> Click the columns to view more details</span>'
+               text: ''
 
     },
     xAxis: {
@@ -1333,6 +1337,9 @@ Highcharts.chart(id, {
         },
         series: {
             borderWidth: 0,
+              pointWidth: 20,
+                         pointPadding: 0.1,
+                         groupPadding: 0,
             dataLabels: {
                 enabled: true,
                 format: '{point.y}%'
