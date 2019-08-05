@@ -1,112 +1,76 @@
-function TimelinessReportingController($scope,$rootScope,TimelinessReportingData,$window,OntimeDeliveryReportData){
+function TimelinessReportingController($scope,$location,Program,Period,$rootScope,TimelinessReportingData,$window,OntimeDeliveryReportData){
 
-$rootScope.loadOnTimeDelivery = function(params){
-$scope.dataToDisplay = [];
 
-OntimeDeliveryReportData.get(params).then(function(data){
 
-if(data.length >0) {
+   function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {
+          Highcharts.chart(chartId, {
+              chart: {
+                  type: type
+              },
 
-$scope.dataToDisplay = data;
+              title: {
+                  text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
+              }, credits: {
+                  enabled: false
+              },
+              subtitle: {
+                  text: ''
+              },
+              xAxis: {
+                  categories: category,
+                  crosshair: true
+              },
+              yAxis: {
+                  lineWidth: 1,
+                  gridLineColor: '',
+                  interval: 1,
 
-   var display = [
+                  tickWidth: 1,
 
-   {y:100 - $rootScope.getPercentage(data[0].received,data[0].total),  val: data[0].total - data[0].received,color:'red'},
-   {y:$rootScope.getPercentage(data[0].received,data[0].total),  val: data[0].received, color:'#50B432' }
 
-   ];
-$rootScope.titleOnTimeDelivery = 'On-Time Delivery for '+ params.programName+' ( '+params.periodName+' ,'+params.year+' )';
-$scope.loadOnTimeChart(display, '','on-time-delivery');
+                  min: 0,
+                  title: {
+                      text: '<span style="font-size: x-small;color:#0c9083">' + verticalTitle + '</span>'
+                  }
+              },
+              tooltip: {
+                  /*
+                   headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                   */
+                  headerFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.key}</b></td></tr><br/>',
+                  pointFormat: '<tr><td style="color:{series.color};padding:0">' + verticalTitle + ':</td>' + '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                  footerFormat: '</table>',
+                  shared: true,
+                  useHTML: true
+              },
+                  exporting: {
+                                buttons: {
+                                 customButton: {
+                                 text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                                 symbolStroke: "red",
+                                 theme: {
+                                 fill:"#28A2F3"
+                                 },
+                                 onclick: function () {
+                                 $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                                 }
+                                 }
+                                 }
+                                 },
+              plotOptions: {
+                  column: {
+                      pointPadding: 0.2,
+                      borderWidth: 0
+                  }
+              },
+              series: [{
+                  name: chartName,
+                  data: values
 
-}
+              }]
+          });
 
-});
-
-}
-
-$scope.loadOnTimeChart = function (dataV, title, chartId){
-
-new Highcharts.Chart({
-    chart: {
-        renderTo:chartId,
-        type:'bar'
-    },
-    title:{
-
-    text:'<span style="font-size: 15px!important;color: #0c9083">'+title+' </span>'
-
-    },
-    credits:{enabled:false},
-    legend:{
-    enabled:false
-
-    },
-    tooltip: {
-        formatter: function() {
-            return 'Value: '+this.point.val;
-        }
-    },
-      exporting: {
-                      buttons: {
-                       customButton: {
-                       text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                       symbolStroke: "red",
-                       theme: {
-                       fill:"#28A2F3"
-                       },
-                       onclick: function () {
-                       $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
-                       }
-                       }
-                       }
-                       },
-    plotOptions: {
-        series: {
-            shadow:false,
-            borderWidth:0,
-            dataLabels:{
-                enabled:true,
-                formatter: function() {
-                    return this.y +'%';
-                }
-            }
-        }
-    },
-    xAxis:{
-        lineColor:'#999',
-        lineWidth:1,
-        tickColor:'#666',
-        tickLength:3,
-
-        categories: ['% HF did not receive Deliveries','% HF Received Deliveries'],
-
-            margin:0
-
-    },
-    yAxis:{
-        lineColor:'#999',
-        lineWidth:1,
-        tickColor:'#666',
-        tickWidth:1,
-        tickLength:3,
-        gridLineColor:'#ddd',
-        title:{
-            text:'percentage',
-            rotation:0
-        },
-        labels: {
-            formatter: function() {
-                return (this.isLast ? this.value + '%' : this.value);
-            }
-        }
-    },
-    series: [{
-        data: dataV
-    }]
-
-});
-
-}
+      }
 
 
 $rootScope.loadTimelinessReportingData = function (params) {
@@ -129,7 +93,7 @@ TimelinessReportingData.get(params).then(function(data){
 
     $rootScope.title_reporting_timeliness =   'Reporting Timeliness for '+params.programName+' ('+params.periodName+' ,'+params.year+')';
     console.log($scope.title_reporting_timeliness);
-    $scope.loadChart(chartId,dataToShow,' ',' ',data[0].totalexpected,' ');
+    loadChart(chartId,dataToShow,' ',' ',data[0].totalexpected,' ');
 
 
     }
@@ -138,9 +102,9 @@ TimelinessReportingData.get(params).then(function(data){
 
 });
 
-}
+};
 
-$scope.loadChart = function(chartId,dataV,title,subtitle,totalExpected,year){
+function loadChart(chartId,dataV,title,subtitle,totalExpected,year){
 
 
 // Create the chart
@@ -209,5 +173,47 @@ Highcharts.chart(chartId, {
 
 
 }
+
+
+
+
+//Filters
+
+
+$scope.OnFilterChanged = function () {
+
+console.log ('changed');
+
+var programName = '';
+Program.get({id: parseInt($location.search().program,10)}, function(da){
+programName = da.program.name;
+
+var periodName = '';
+Period.get({id: parseInt($location.search().period,10)}, function(da){
+periodName = da.period.name;
+
+$location.search().programName = programName;
+$location.search().periodName = periodName;
+
+console.log($location.search());
+
+
+$scope.$parent.params = $location.search();
+
+$rootScope.loadTimelinessReportingData($location.search());
+
+
+});
+
+
+});
+
+
+
+
+
+
+};
+
 
 }

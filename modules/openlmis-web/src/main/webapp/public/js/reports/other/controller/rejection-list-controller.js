@@ -10,7 +10,7 @@ function RejectionByZoneControllerFunction($scope,$state,$stateParams,GetRejecte
             $scope.pagination = data.pagination;
         }
 
-        console.log(JSON.stringify($scope.pagination));
+        console.log(JSON.stringify(data));
 
     });
 

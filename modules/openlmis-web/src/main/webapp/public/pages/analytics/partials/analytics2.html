@@ -543,19 +543,19 @@ background:#fff;
                     </div>
 
 
-                    <div class="accordion-section">
-                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
+                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
+                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)" ng-click="loadDashletsBySectionNames('overview');">
                    <span>
                     <b>-</b>
                     <a id="overview" href="javascript:void(0);"
                     >Overview </a>
                   </span>
                         </div>
-                        <div class="accordion-body" style="display:block">
+                        <div class="accordion-body" style="display:block; margin: 15px 0px 0px 0px !important">
 
-                            <div class="row itemFillRate">
+                     <!--       <div class="row itemFillRate">
 
-                                <!-- Reporting rate map report -->
+                                &lt;!&ndash; Reporting rate map report &ndash;&gt;
                                 <div class="col s12 m4 l6">
                                     <div class="card grey lighten-5 row3-height" overlay-section="reportingRate">
                                         <div class="card-action"  style="background-color: #17888f;">
@@ -568,7 +568,7 @@ background:#fff;
                                     </div>
                                 </div>
 
-                                <!-- Reporting rate tabular bar char report -->
+                                &lt;!&ndash; Reporting rate tabular bar char report &ndash;&gt;
                                 <div class="col s12 m6 l6">
                                     <div class="card grey lighten-5 row3-height" overlay-section="stockSummaryByPeriod" style="padding-top: 0rem !important;">
                                         <div class="card-action"  style="background-color: #17888f;">
@@ -604,9 +604,191 @@ background:#fff;
                                         </div>
                                     </div>
                                 </div>
+                            </div>-->
+
+                            <div class="row" ng-show="true">
+
+
+                                <div class="col s12 m8 l8">
+                                    <div class="card grey lighten-5 row3-height" overlay-section="stockSummaryByPeriod" style="border: 0px!important">
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">Reporting Rate</span>
+                                            <span class="pull-right" style="color:white">
+                                                        You can click on the chart to see list of facilities
+                                                    </span>
+                                        </div>
+
+                                        <div class="card-content grey lighten-5" style="padding-bottom:0px !important">
+                                            <div class="section col s12 m8 l8">
+
+                                                <leaflet center="centerL" layers="layers" style="padding-top: 0rem !important; height: 650px;margin:0 auto" width="100%" height="560px" geojson="geojson" legend="legend"></leaflet>
+
+                                            </div>
+
+
+                                            <div class="section col s12 m4 l4 grey lighten-5">
+                                              <div style="" ng-show="features && (features | filter:expectedFilter).length > 0" >
+
+                                                    <table class="table table-striped table-scrollable scroll">
+                                                        <thead>
+                                                        <tr>
+                                                            <th style="width:3%" openlmis-message="label.district"></th>
+                                                            <th style="width:15% text-align: left !important;" class="number"><span style="text-align:left">Expected</span></th>
+                                                            <th style="width:10%" class="number" >Reportd</th>
+                                                            <th style="width: 30%; text-align: right" openlmis-message="label.percent.reported"></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody style="height:510px !important">
+                                                        <tr ng-repeat="feature in features | filter:expectedFilter">
+                                                            <td style="width:35% !important;">{{feature.name}}</td>
+                                                            <td style="width:10% !important;" class="number">{{feature.expected}}</td>
+                                                            <td style="width:10% !important;" class="number">{{feature.period}}</td>
+                                                            <td style="width:30% !important;" class="number">
+                                                                <div class="number" style="float:right;">{{((feature.period / feature.expected) * 100).toFixed(0)}} %</div>
+                                                                <div class="progress" style="margin-bottom:0px;width:68%">
+                                                                    <div class="bar bar-success leaflet-clickable" ng-click="onDetailClicked(feature, this)"
+                                                                         style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
+                                                                    <div class="bar bar-danger leaflet-clickable" ng-click="onDetailClicked(feature, this)"
+                                                                         style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="card-action grey lighten-4">
+
+                                            <div class="btn-group dropup" >
+                                                <button id='searchOptionButton'  class="btn dropdown-toggle">
+                                                    <span id="selectedSearchOption"><i id='searchIcon' class="icon-search"></i></span>
+                                                    <span class="caret"></span>
+                                                </button>
+                                                <ul class="dropdown-menu mega-dropdown-menu v-1 z-depth-1 white py-5 px-3" style="width:600px;height:400px;"  ng-click="stopPropagation($event, 0)">
+                                                    <li>
+
+                                                        <div class="row">
+                                                            <div class="col s6">
+                                                                <filter-container>
+                                                                    <program-without-select-filter class="form-cell horizontalFilters" required="true"></program-without-select-filter>
+                                                                    <schedule-without-select-filter class="form-cell horizontalFilters" required="true"></schedule-without-select-filter>
+                                                                    <year-without-select-filter class="form-cell horizontalFilters" required="true"></year-without-select-filter>
+                                                                    <period-without-select-filter class="form-cell horizontalFilters" required="true"></period-without-select-filter>
+                                                                    <div class="form-cell horizontalFilters">
+                                                                        <label class="labels">Indicator</label>
+                                                                        <select style="width: 400px;" ng-model="filter.indicator_type" ng-change="OnFilterChanged()">
+                                                                            <option ng-repeat="type in indicator_types" ng-selected="type.code == default_indicator"
+                                                                                    value="{{type.code}}">{{type.name}}
+                                                                            </option>
+                                                                        </select>
+                                                                    </div>
+
+                                                                </filter-container>
+
+                                                            </div>
+                                                            <div class="col s6"></div>
+                                                        </div>
+
+                                                    </li>
+                                                    <li>
+
+                                                        <!--      <button ng-class="minimizePropagation($event)">
+                                                                  Submit
+                                                              </button>-->
+
+
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+                                <!--
+                                                                                <ng-include src="'/public/pages/reports/maps/partials/reporting-rate/details.html'"></ng-include>
+                                -->
+                                <div class="col s12 m4 l4 grey lighten-4" ng-controller="RequisitionStatusSummaryController">
+                                    <div class="card grey lighten-5 row3-height">
+
+                                        <div class="card-action" style="background-color: #17888f;">
+                                            <span style="color:white">{{rnrStatusTitle}}</span>
+
+                                        </div>
+                                        <div class="card-content">
+                                            <div class="section">
+                                                <div id="rnr-status-summary"  style="margin: 0 auto;height: 260px !important;"></div>
+
+                                            </div>
+                                            <div>
+                                                <div ng-hide="RnRStatusPieChartData"><label class="chart-note">No data to show under selected
+                                                    filter</label></div>
+                                                <div ng-show="RnRStatusPieChartData !== undefined && RnRStatusPieChartData.length > 0">
+                                                    <table ng-show="RnRStatusPieChartData.length > 0"
+                                                           class="table table-striped table-scrollable pull-right"
+                                                           ng-table="tableParams">
+                                                        <thead style="height:10px !important">
+                                                        <th>Pending at</th>
+                                                        <th>Number Of RnR</th>
+                                                        </thead>
+                                                        <tbody style="height:220px !important">
+                                                        <tr ng-repeat="row in dataRows" >
+                                                            <td ><span
+                                                                    openlmis-message="label.rnr.status.summary.{{row.status}}"></span></td>
+                                                            <td>{{row.totalStatus}}</td>
+
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: bold;text-align: left;" openlmis-message="label.rnr.status.total.regular"></td>
+                                                            <td class="number" style="font-weight: bold;text-align: left;">{{total}}
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: bold;text-align: left;" openlmis-message="label.rnr.status.total.emergency"></td>
+                                                            <td class="number" style="font-weight: bold;text-align: left;">{{totalEmergency}}
+
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: bold;text-align: left;" openlmis-message="label.rnr.status.total.overall"></td>
+                                                            <td class="number" style="font-weight: bold;text-align: left;">{{allTotal}}
+
+                                                            </td>
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+
+
                             </div>
-
-
 
 
                             <div class="row">
@@ -630,7 +812,7 @@ background:#fff;
                                 </div>
 
                                 <div class="col s12 m4 l4" ng-controller="StockAvailabilityByLevelController">
-                                    <div class="card grey lighten-5 row3-height" overlay-section="stockByLevel">
+                                    <div class="card white lighten-5 row3-height" overlay-section="stockByLevel">
 
                                         <div class="card-action"  style="background-color: #17888f;">
                                             <span style="color:white">{{title_stock_by_level}}</span>
@@ -673,7 +855,7 @@ background:#fff;
 
                             <div class="row">
 
-                                <div class="col s12 m8 l8">
+                                <div class="col s12 m12 l12">
                                     <div class="card grey lighten-5 row3-height" overlay-section="stockAvailableForProgram">
 
                                         <div class="card-action"  style="background-color: #17888f;">
@@ -692,29 +874,7 @@ background:#fff;
                                     </div>
                                 </div>
 
-                                <div class="col s12 m4 l4">
-                                    <div class="card grey lighten-5 row3-height" overlay-section="on-time-delivery">
 
-                                        <div class="card-action"  style="background-color: #17888f;">
-                                            <span style="color:white">{{titleOnTimeDelivery}}</span>
-                                        </div>
-
-                                        <div class="card-content" ng-controller="TimelinessReportingController">
-                                            <span ng-show="dataToDisplay.length != 0">
-                                                <div id="on-time-delivery" style="margin: 0 auto;height: 360px !important;" ></div>
-
-                                            </span>
-                                            <span ng-if="dataToDisplay.length == 0 ">No Proof of delivery for this program</span>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-
-                                        </div>
-                                    </div>
-                                </div>
 
 
                             </div>
@@ -812,15 +972,15 @@ background:#fff;
 
 
 
-                            <div class="row">
-                                <div class="col s12 m6 l6">
-                                    <div class="card grey lighten-5 row3-height" overlay-section="RequisitionFormPercentage">
+                            <div class="row orderFillRate">
+                                <div class="col s12 m4 l4" ng-controller="RnRQualityCheckController">
+                                    <div class="card grey lighten-5 row2-height" overlay-section="RequisitionFormPercentage">
                                         <div class="card-action"  style="background-color: #17888f;">
                                             <span style="color:white">{{opentitle}}</span>
                                         </div>
                                         <div class="card-content">
 
-                                            <div id="rnrPassedChart" style="margin: 0 auto;height: 360px !important;"></div>
+                                            <div id="rnrPassedChart"  style="height: 300px;margin:0 auto "></div>
 
                                         </div>
                                         <div class="card-action grey lighten-4">
@@ -833,14 +993,49 @@ background:#fff;
                                     </div>
 
                                 </div>
-                                <div class="col s12 m6 l6">
-                                    <div class="card grey lighten-5 row3-height" overlay-section="percentageWastage">
+                                <div class="col s12 m4 l4">
+                                    <div class="card grey lighten-5 row2-height" overlay-section="percentageWastage" ng-controller="PercentageWastageController">
                                         <div class="card-action"  style="background-color: #17888f;">
                                             <span style="color:white">{{wastageTitle}}</span>
                                         </div>
-                                        <div class="card-content" ng-controller="PercentageWastageController">
+                                        <div class="card-content" ng-show="percentageWastage.length > 0">
                                             <a id="back" ng-hide="true" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i>Back to Wastage Percentage</a>
-                                            <div id="container-speed" style="margin: 0 auto;height: 360px !important;" class="chart-container"></div>
+                                            <div id="container-speed" style="height: 300px;margin:0 auto " class="chart-container"></div>
+
+                                        </div>
+                                        <div class="card-content" ng-show="percentageWastage == 0" >
+                                            <div  style="text-align:center;height: 300px !important;">No data to show under selected filters</div>
+
+                                        </div>
+
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+
+                                        </div>
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col s12 m4 l4">
+                                    <div class="card grey lighten-5 row2-height" overlay-section="on-time-delivery" ng-controller="OnTimeDeliveryController">
+
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">{{titleOnTimeDelivery}}</span>
+                                        </div>
+
+                                        <div class="card-content" ng-show="dataToDisplay.length != 0" >
+                                            <span >
+                                                <div id="on-time-delivery" style="height: 300px;margin:0 auto " ></div>
+
+                                            </span>
+
+                                        </div>
+                                        <div class="card-content" ng-show="dataToDisplay.length == 0" >
+                                            <div  style="text-align:center;height: 300px !important;">No data to show under selected filter</div>
 
                                         </div>
                                         <div class="card-action grey lighten-4">
@@ -849,193 +1044,12 @@ background:#fff;
 
 
                                         </div>
-
                                     </div>
-
                                 </div>
+
 
                             </div>
 
-                            <div class="row" ng-show="true">
-                                <!--<div class="col s12 m5 l5">
-                                    <div class="card">
-                                        <div class="section grey lighten-5 card-content">
-
-                                            <div class="section customSection">
-                                                <div id="searchControl" class="row-fluid">
-                                                    <div class="span5 search-in-category">
-                                                        <div class="input-append input-prepend">
-                                                            <div class="btn-group">
-                                                                <button id='searchOptionButton'  class="btn dropdown-toggle">
-                                                                    <span id="selectedSearchOption"><i id='searchIcon' class="icon-search"></i></span>
-                                                                    <span class="caret"></span>
-                                                                </button>
-                                                                <ul class="dropdown-menu mega-dropdown-menu v-1 z-depth-1 white py-5 px-3" style="width:600px;height:400px;"  ng-click="stopPropagation($event, 0)">
-                                                                    <li>
-
-                                                                        <div class="row">
-                                                                            <div class="col s6">
-                                                                                <filter-container>
-                                                                                    <program-without-select-filter class="form-cell horizontalFilters" required="true"></program-without-select-filter>
-                                                                                    <schedule-without-select-filter class="form-cell horizontalFilters" required="true"></schedule-without-select-filter>
-                                                                                    <year-without-select-filter class="form-cell horizontalFilters" required="true"></year-without-select-filter>
-                                                                                    <period-without-select-filter class="form-cell horizontalFilters" required="true"></period-without-select-filter>
-                                                                                    <div class="form-cell horizontalFilters">
-                                                                                        <label class="labels">Indicator</label>
-                                                                                        <select style="width: 400px;" ng-model="filter.indicator_type" ng-change="OnFilterChanged()">
-                                                                                            <option ng-repeat="type in indicator_types" ng-selected="type.code == default_indicator"
-                                                                                                    value="{{type.code}}">{{type.name}}
-                                                                                            </option>
-                                                                                        </select>
-                                                                                    </div>
-
-                                                                                </filter-container>
-
-                                                                            </div>
-                                                                            <div class="col s6"></div>
-                                                                        </div>
-
-                                                                    </li>
-                                                                    <li>
-
-                                                                        <button ng-class="minimizePropagation($event)">
-                                                                            Submit
-                                                                        </button>
-
-
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-
-                                            <div class="section customSection">
-                                                <leaflet center="centerL" layers="layers" style="padding-top: 0rem !important; height: 300px;margin:0 auto" width="100%" height="500px" geojson="geojson" legend="legend"></leaflet>
-
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>-->
-
-                                <div class="col s12 m12 l12">
-                                    <div class="card" >
-                                        <div class="card-content grey lighten-4" style="padding-bottom:0px !important">
-                                            <div class="col s12 m7 l7">
-
-                                                <div class="section customSection grey lighten-4">
-                                                    <leaflet center="centerL" layers="layers" style="padding-top: 0rem !important; height: 650px;margin:0 auto" width="100%" height="650px" geojson="geojson" legend="legend"></leaflet>
-
-                                                </div>
-
-
-
-                                            </div>
-
-
-                                            <div class="col s12 m5 l5 grey lighten-4">
-                                                <div style="" ng-show="features && (features | filter:expectedFilter).length > 0" >
-                                                    <p class="grey pull-right">
-                                                        You can click on the chart to see list of facilities
-                                                    </p><br/>
-                                                    <table class="table table-striped table-scrollable scroll">
-                                                        <thead>
-                                                        <tr>
-                                                            <th style="width:35%" openlmis-message="label.district"></th>
-                                                            <th style="width:10%" class="number" openlmis-message="label.expected"></th>
-                                                            <th style="width:10% !important;" class="number" openlmis-message="label.reported"></th>
-                                                            <th style="width: 30%; text-align: right" openlmis-message="label.percent.reported"></th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        <tr ng-repeat="feature in features | filter:expectedFilter">
-                                                            <td style="width:35% !important;">{{feature.name}}</td>
-                                                            <td style="width:10% !important;" class="number">{{feature.expected}}</td>
-                                                            <td style="width:10% !important;" class="number">{{feature.period}}</td>
-                                                            <td style="width:30% !important;" class="number">
-                                                                <div class="number" style="float:right;">{{((feature.period / feature.expected) * 100).toFixed(0)}} %</div>
-                                                                <div class="progress" style="margin-bottom:0px;width:68%">
-                                                                    <div class="bar bar-success leaflet-clickable" ng-click="onDetailClicked(feature, this)"
-                                                                         style="width: {{((feature.period / feature.expected) * 100).toFixed(2)}}%"></div>
-                                                                    <div class="bar bar-danger leaflet-clickable" ng-click="onDetailClicked(feature, this)"
-                                                                         style="width: {{(100 - ((feature.period / feature.expected) * 100).toFixed(2))}}%"></div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-
-                                        <div class="card-action grey lighten-4">
-
-                                            <div class="btn-group dropup" >
-                                                <button id='searchOptionButton'  class="btn dropdown-toggle">
-                                                    <span id="selectedSearchOption"><i id='searchIcon' class="icon-search"></i></span>
-                                                    <span class="caret"></span>
-                                                </button>
-                                                <ul class="dropdown-menu mega-dropdown-menu v-1 z-depth-1 white py-5 px-3" style="width:600px;height:400px;"  ng-click="stopPropagation($event, 0)">
-                                                    <li>
-
-                                                        <div class="row">
-                                                            <div class="col s6">
-                                                                <filter-container>
-                                                                    <program-without-select-filter class="form-cell horizontalFilters" required="true"></program-without-select-filter>
-                                                                    <schedule-without-select-filter class="form-cell horizontalFilters" required="true"></schedule-without-select-filter>
-                                                                    <year-without-select-filter class="form-cell horizontalFilters" required="true"></year-without-select-filter>
-                                                                    <period-without-select-filter class="form-cell horizontalFilters" required="true"></period-without-select-filter>
-                                                                    <div class="form-cell horizontalFilters">
-                                                                        <label class="labels">Indicator</label>
-                                                                        <select style="width: 400px;" ng-model="filter.indicator_type" ng-change="OnFilterChanged()">
-                                                                            <option ng-repeat="type in indicator_types" ng-selected="type.code == default_indicator"
-                                                                                    value="{{type.code}}">{{type.name}}
-                                                                            </option>
-                                                                        </select>
-                                                                    </div>
-
-                                                                </filter-container>
-
-                                                            </div>
-                                                            <div class="col s6"></div>
-                                                        </div>
-
-                                                    </li>
-                                                    <li>
-
-                                                        <!--      <button ng-class="minimizePropagation($event)">
-                                                                  Submit
-                                                              </button>-->
-
-
-                                                    </li>
-                                                </ul>
-                                            </div>
-
-                                        </div>
-
-
-                                    </div>
-
-
-                                </div>
-                                <!--
-                                                                                <ng-include src="'/public/pages/reports/maps/partials/reporting-rate/details.html'"></ng-include>
-                                -->
-
-
-
-                            </div>
 
                             <div class="row" ng-show="false">
                                 <div class="col s12 m6 l6">

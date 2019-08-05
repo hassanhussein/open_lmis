@@ -108,7 +108,7 @@
         <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
         <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
         <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
-        <div class="form-cell horizontalFilters">
+   <!--     <div class="form-cell horizontalFilters">
             <label for="status" class="labels" openlmis-message="label.status"></label>
             <div>
             <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
@@ -117,7 +117,7 @@
                 </option>
             </select>
             </div>
-        </div>
+        </div>-->
 
     </filter-container>
 
@@ -132,7 +132,7 @@
     <a id="printButton" style="background-color:#4897BA !important;"
 
        id="xls-button" href="" export export-data="datarows"
-       export-keys="['districtName','regionName','zoneName','rejectedCount']"
+       export-keys="['districtName','regionName','zoneName','rejectionCount']"
        export-headers="['District name','Region Name','MSD Zone','Total Rejected']"
 
        class="btn-small btn-primary"
@@ -204,7 +204,7 @@
                                         <td class="cell-text">{{rejected.zoneName}}</td>
                                         <td class="cell-text  padding2px"
                                             style="text-align: right;font-family: 'Times New Roman';font-weight: bold">
-                                            {{rejected.rejectedCount | number}}
+                                            {{rejected.rejectionCount | number}}
                                         </td>
                                         <td class="cell-text  padding2px" style="text-align: center">
                                <!--     <span class="cell-text">

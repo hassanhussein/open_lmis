@@ -1,7 +1,10 @@
-function RejectedControllerFunction($scope, GetRejectedRnRReport,$state) {
+function RejectedControllerFunction($scope,$location,$routeParams,$rootScope,$stateParams, GetRejectedRnRByZoneReport,$state) {
     "use strict";
     $scope.statuses = [{code:'INITIATED',name:'District Rejected'},{code:'AUTHORIZED',name:'LMU Rejected'}];
-    $scope.default_status = 'INITIATED';
+    $scope.default_status = 'AUTHORIZED';
+     $scope.filter = $stateParams;
+     console.log($scope);
+      //$scope.filter.status = $scope.default_status;
 
     function getRejectionRate(rows) {
 
@@ -11,7 +14,7 @@ function RejectedControllerFunction($scope, GetRejectedRnRReport,$state) {
 
             var total = 0;
             for (var i = 0; i < value.length; i++) {
-                var rejectedCount = value[i].rejectedCount;
+                var rejectedCount = value[i].rejectionCount;
                 total += (rejectedCount);
             }
             return {'key': key, 'total': total};
@@ -36,22 +39,24 @@ function RejectedControllerFunction($scope, GetRejectedRnRReport,$state) {
     }
     $scope.currentPage = 1;
     $scope.pageSize = 50;
-    $scope.OnFilterChanged = function(){
+    $scope.OnFilterChanged = function() {
 
         $scope.filter.max = 10000;
         $scope.filter.page = 1;
        // var param = angular.extend($scope.getSanitizedParameter(),{page: $scope.page,limit:$scope.pageSize,max:1000});
         $scope.default_status = 'INITIATED';
         $scope.data = $scope.datarows = [];
+         $scope.filter.status = $scope.default_status;
 
         $scope.filter.max = 10000;
         $scope.status = $scope.getSanitizedParameter().status;
         $scope.program = $scope.getSanitizedParameter().program;
 
         console.log($scope.program);
-        GetRejectedRnRReport.get($scope.getSanitizedParameter(), function (data) {
+        GetRejectedRnRByZoneReport.get($scope.getSanitizedParameter(), function (data) {
            if(data.pages !== undefined){
             $scope.data=data.pages.rows;
+            console.log(data);
             $scope.paramsChanged($scope.tableParams);
 
             getRejectionRate(data.pages.rows);

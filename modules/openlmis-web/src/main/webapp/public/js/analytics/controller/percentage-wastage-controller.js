@@ -1,22 +1,27 @@
-function PercentageWastageController ($scope,$rootScope, PercentageWastageData,$window){
+function PercentageWastageController ($scope,$rootScope,Program,Period,$location, PercentageWastageData,$window){
 
 $rootScope.getPercentage = function (percentFor,percentOf)
 {
     return Math.round((parseInt(percentFor,10)/parseInt(percentOf,10) *100));
-}
+};
 
 
-$scope.percentageWastage = [];
+
 
 $rootScope.loadPercentageWastageData = function (params) {
 
-PercentageWastageData.get(params).then(function(data) {
+PercentageWastageData.get(params).then(function(dataValues) {
+var data = [];
+data = dataValues;
+$scope.percentageWastage = [];
+$rootScope.wastageTitle = 'Percentage of wastage for '+params.programName+'  ( '+params.periodName+', '+params.year+' )';
 
+console.log(data);
 if(!isUndefined(data) && data.length > 0) {
 
 var totalAdjustment = 0;
 var total = 0;
-console.log(data);
+
 
 data.forEach(function(d){
 
@@ -37,7 +42,6 @@ $scope.category = _.pluck(data,'adjustmentname');
 
 $scope.percentageValue = $rootScope.getPercentage (totalAdjustment,total);
 
-$rootScope.wastageTitle = 'Percentage of wastage for '+params.programName+' reported on the period of '+params.periodName+', '+params.year;
 
 $scope.loadPercentageWastageChart($scope.percentageValue,'');
 
@@ -81,6 +85,20 @@ var gaugeOptions = {
     tooltip: {
         enabled: false
     },
+          exporting: {
+                          buttons: {
+                           customButton: {
+                           text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                           symbolStroke: "red",
+                           theme: {
+                           fill:"#28A2F3"
+                           },
+                           onclick: function () {
+                           $rootScope.openDefinitionModal('DASHLET_WASTAGE', 'Percentage Wastage');
+                           }
+                           }
+                           }
+                           },
 
     // the value axis
     yAxis: {
@@ -219,7 +237,7 @@ var titleV = 'Percentage wastage by losses and adjustment Type';
        enabled:false
        },
         title: {
-               text:'<span style="font-size: 15px!important;color: #0c9083">'+titleV+'</span>'
+               text:''
 
            },
              tooltip: {
@@ -272,7 +290,7 @@ var titleV = 'Percentage wastage by losses and adjustment Type';
 
                          buttons: {
                                 customButton: {
-                                    text: '<span style="background-color:blue;display: none;"> <a id="back" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i> ◁ Back to Wastage Percentage</a></span>',
+                                    text: '<span style="background-color:blue;display: none;"> <a id="back" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i> ◁ Back to Summary</a></span>',
 
                                     symbolStroke: "red",
                                                         theme: {
@@ -300,5 +318,48 @@ $scope.openAdjustmentReport = function(data) {
  $window.open(url, "_BLANK");
 
 };
+
+
+//Filters
+
+
+$scope.OnFilterChanged = function () {
+
+console.log ('changed');
+
+var programName = '';
+Program.get({id: parseInt($location.search().program,10)}, function(da){
+programName = da.program.name;
+
+var periodName = '';
+Period.get({id: parseInt($location.search().period,10)}, function(da){
+periodName = da.period.name;
+
+$location.search().programName = programName;
+$location.search().periodName = periodName;
+
+console.log($location.search());
+
+
+$scope.$parent.params = $location.search();
+
+$rootScope.loadPercentageWastageData($location.search());
+
+
+});
+
+
+});
+
+
+
+
+
+
+};
+
+
+
+
 
 }

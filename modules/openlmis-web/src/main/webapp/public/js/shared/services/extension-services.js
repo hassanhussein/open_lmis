@@ -1363,4 +1363,6 @@ services.factory('GetLocalMap', function ($resource) {
     return $resource('/public/js/reports/shared/map.json', {}, {});
 });
 
-
+services.factory('GetRejectedRnRByZoneReport', function ($resource) {
+    return $resource('/reports/reportdata/zone-rejected-rnr', {}, {});
+});

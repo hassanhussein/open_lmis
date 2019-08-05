@@ -82,7 +82,7 @@ console.log(categories);
 
     });
 
-    }
+    };
 
 
     $scope.showTheChart = function (data,title, subtitle, categories) {
@@ -193,5 +193,5 @@ console.log(categories);
 
 
 
-    }
+    };
 }

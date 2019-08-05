@@ -1,9 +1,9 @@
-function AnalyticsFunction(leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
+function AnalyticsFunction($stateParams,leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
 GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,RejectionCount,RnRStatusSummary,
 DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData,StockAvailableForPeriodData, StockAvailableByProgramAndPeriodData) {
 
 //resourceLoadingConfig.hideReloadIcon = true;
-  //  resourceLoadingConfig.loadingDashlet = [];
+//resourceLoadingConfig.loadingDashlet = [];
 
 
 var params;
@@ -18,21 +18,25 @@ DefaultProgram.get({}, function (data) {
 
         var period = data.period;
 
-         params ={product:parseInt(2434,0) ,year:parseInt(period.stringYear,0), program: parseInt(program.id,0),programName:program.name,period:parseInt(91 ,10),periodName:period.name, schedule:period.scheduleId,zoneId:0};
+         params ={product:parseInt(2434,0) ,year:parseInt(period.stringYear,0), program: parseInt(program.id,0),programName:program.name,period:parseInt(period.id ,10),periodName:period.name, schedule:period.scheduleId,zone:437};
          $scope.$parent.params = params;
          //start loading functions by applying parameters
+
+       $scope.loadMap(params);
+       $rootScope.initializeRequisitionSummary(params);
 
         $scope.loadStockAvailableForPeriodData(params);
         $rootScope.loadTimelinessReportingData(params);
         $rootScope.loadOnTimeDelivery(params);
-        $scope.loadRnrPassedQualityCheckData(params);
+        $rootScope.loadRnrPassedQualityCheckData(params);
          $rootScope.loadPercentageWastageData(params);
-         $scope.loadMap(params);
+
          //$scope.loadConsumptionTrendsData(params);
          //$scope.loadStockStatusByProgram(params,'level1');
          $rootScope.loadStockStatusSummary(params);
          //$rootScope.loadStockStatusByProgramAndYearData(params);
          $rootScope.loadStockAvailableByLevel(params);
+
 
 
 
@@ -236,13 +240,13 @@ DefaultProgram.get({}, function (data) {
                             dataValues.push({
                                 sliced: true,
                                 selected: true,
-                                'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                                'name': messageService.get('label.rnr.status.summary.' + d.status),
                                 'y': d.totalStatus,
                                 color: colors[d.status]
                             });
                         else
                             dataValues.push({
-                                'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                                'name': messageService.get('label.rnr.status.summary.' + d.status),
                                 'y': d.totalStatus,
                                 color: colors[d.status]
                             });
@@ -293,8 +297,8 @@ DefaultProgram.get({}, function (data) {
                     } else {
                         $scope.message = 'No rnr status summary';
                     }
-                    $scope.overAllTotal();
-                    $scope.paramsChanged($scope.tableParams);
+                    //$scope.overAllTotal();
+                  //  $scope.paramsChanged($scope.tableParams);
                 });
   }
 
@@ -335,6 +339,20 @@ DefaultProgram.get({}, function (data) {
                 }
             },
             tooltip: true,
+            exporting: {
+                          buttons: {
+                           customButton: {
+                           text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                           symbolStroke: "red",
+                           theme: {
+                           fill:"#28A2F3"
+                           },
+                           onclick: function () {
+                           $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                           }
+                           }
+                           }
+                           },
             tooltipOpts: {
                 content: "%p.0%, %s",
                 shifts: {
@@ -368,7 +386,20 @@ DefaultProgram.get({}, function (data) {
               },
               tooltip: {
                   pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-              },
+              },exporting: {
+                              buttons: {
+                               customButton: {
+                               text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                               symbolStroke: "red",
+                               theme: {
+                               fill:"#28A2F3"
+                               },
+                               onclick: function () {
+                               $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                               }
+                               }
+                               }
+                               },
               plotOptions: {
                   pie: {
                       allowPointSelect: false,
@@ -414,9 +445,7 @@ DefaultProgram.get({}, function (data) {
               chart: {
                   type: type
               },
-              exporting: {
-                  enabled: false
-              },
+
               title: {
                   text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
               }, credits: {
@@ -452,15 +481,15 @@ DefaultProgram.get({}, function (data) {
                   shared: true,
                   useHTML: true
               },
-                  exporting: {
-                                buttons: {
-                                 customButton: {
-                                 text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                                 symbolStroke: "red",
-                                 theme: {
-                                 fill:"#28A2F3"
-                                 },
-                                 onclick: function () {
+              exporting: {
+                        buttons: {
+                        customButton: {
+                        text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                        symbolStroke: "red",
+                        theme: {
+                        fill:"#28A2F3"
+                        },
+                        onclick: function () {
                                  $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
                                  }
                                  }
@@ -490,9 +519,7 @@ DefaultProgram.get({}, function (data) {
                       type: 'pie'
 
                   },
-                  exporting: {
-                      enabled: false
-                  },
+
                   credits: {
                       enabled: false
                   }, title: {
@@ -596,9 +623,14 @@ return 'dropdown-toggle';
 
 $rootScope.parameters = params;
 
-console.log(params);
 
-IndexOfAluStockAvailabilityData.get(params).then(function(data){
+//Not Used Function
+
+
+function loadIndexStockAvailability () {
+
+IndexOfAluStockAvailabilityData.get(params).then(function(data) {
+
  var value1 = ['Facilities with 1 Presentation',data[0].total];
  var value2 = ['Facilities with 2 Presentation',data[1].total];
  var value3 = ['Facilities with 3 Presentation',data[2].total];
@@ -610,27 +642,7 @@ var dataV = [value1,value2,value3,value4];
 $scope.indexOfStockAvailable(dataV,'Index of Availability of ACTs on the Day of Visit, June, 2018');
 
 });
-
-
-$scope.loadRnrPassedQualityCheckData =  function (params) {
-
-    RnrPassedQualityCheckData.get(params).then(function(data){
-
-    if(data.length > 0){
-
-    $scope.opentitle = 'Percentage of Report and Requisition forms (R&R) that pass data quality check '+params.periodName+' ,'+params.year;
-
-    var percentage = Math.round((parseInt(data[0].passed_total,10) * 100/parseInt(data[0].total,10)),10);
-
-    var values = [{name:"Total number of R&R that passed data quality check ",y:percentage,color:'green',drilldown:'passed_total'},{name:"Total R&R did not pass the quality check",color:'red',y:100-percentage,drilldown:'total'}];
-
-    $scope.getRnRPasseChart(' ',values);
-
-    }
-
-    });
-
-};
+}
 
 
 
@@ -638,6 +650,62 @@ $scope.loadRnrPassedQualityCheckData =  function (params) {
 
 //Start of Map
 
+  $scope.geojson = {};
+
+    $scope.default_indicator = "period_over_expected";
+
+    $scope.expectedFilter = function (item) {
+        return item.expected > 0;
+    };
+
+    $scope.style = function (feature) {
+        if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
+            $scope.indicator_type = $scope.filter.indicator_type;
+        }
+        else {
+            $scope.indicator_type = $scope.default_indicator;
+        }
+        var color = ($scope.indicator_type === 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type === 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+
+        return {
+            fillColor: color,
+            weight: 1,
+            opacity: 1,
+            color: 'white',
+            dashArray: '1',
+            fillOpacity: 0.7
+        };
+    };
+
+    $scope.drawMap = function (json) {
+
+        angular.extend($scope, {
+            geojson: {
+                data: json,
+                style: $scope.style,
+                onEachFeature: onEachFeature,
+                resetStyleOnMouseout: true
+            }
+        });
+        $scope.$apply();
+    };
+
+    function getExportDataFunction(features) {
+
+        var arr = [];
+        angular.forEach(features, function (value, key) {
+            if (value.expected > 0) {
+                var percentage = {'percentage': ((value.period / value.expected) * 100).toFixed(0) + ' %'};
+                arr.push(angular.extend(value, percentage));
+            }
+        });
+        $scope.exportData = arr;
+    }
+
+
+
+
+/*
    $scope.geojson = {};
 
     $scope.default_indicator = "period_over_expected";
@@ -771,7 +839,8 @@ $scope.zoomMap = function(){
 
 };
 
-$scope.zoomMap();
+$scope.zoomMap();*/
+
 
 
 
@@ -801,6 +870,7 @@ $scope.zoomMap();
                     }
                 }
             }
+
           map.fitBounds(latlngs);
 
         });
@@ -809,8 +879,64 @@ $scope.zoomMap();
 
     };
 
+console.log(params);
+$scope.filter = params;
+  filter();
+
+    function filter() {
 
 
+        $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
+            $scope.features = data.map;
+            var dataValues = [];
+            var districts = _.pluck($scope.features, 'name');
+            var expected = _.pluck($scope.features, 'expected');
+            var reported = _.pluck($scope.features, 'period');
+            var expArray = [{name: 'expected', data: expected},
+                {name: 'reported', data: reported}
+            ];
+            var districtMap = _.groupBy($scope.features, 'name');
+           getExportDataFunction($scope.features);
+            angular.forEach(districtMap, function () {
+
+            });
+            angular.forEach($scope.features, function (feature) {
+                feature.geometry_text = feature.geometry;
+                feature.geometry = JSON.parse(feature.geometry);
+                feature.type = "Feature";
+                feature.properties = {};
+                feature.properties.name = feature.name;
+                feature.properties.id = feature.id;
+                dataValues.push({
+                    name: feature.name,
+                    data: [parseInt('200', feature.expected), parseInt('200', feature.period)]
+                    // period: parseInt('200',feature.period),
+                    // value:300,
+                    // color: 'green'
+                    // // color:interpolateCoverage(code.cumulative_vaccinated,code.monthly_district_target,code.coverageclassification.toLowerCase())
+
+                });
+            });
+            $scope.drawMap({
+                "type": "FeatureCollection",
+                "features": $scope.features
+            });
+             $scope.centerJSON();
+            //zoomAndCenterMap(leafletData, $scope);
+
+
+
+        });
+
+
+    }
+console.log($stateParams.lat);
+    initiateMap($scope);
+
+    $scope.onDetailClicked = function (feature) {
+        $scope.currentFeature = feature;
+        $scope.$broadcast('openDialogBox');
+    };
 
 
   $scope.OnFilterChanged = function() {
@@ -833,6 +959,9 @@ $scope.zoomMap();
                });
 
                $scope.centerJSON();
+
+               //zoomAndCenterMap(leafletData, $scope);
+
 
               // zoomAndCenterMap1(leafletData, $scope);
            });
@@ -896,9 +1025,9 @@ $scope.stockAvailableForPeriodList = [];
 
         _.each(data, function(value){
 
-       var totalCalculation = (parseInt(value.totalbyprogram,10) * 100)/value.total;
+       var totalCalculation = (parseInt(value.totalbyprogram,10) * 100)/value.total;//#50B432
 
-        $scope.stockAvailableForPeriodList.push({name:value.program_name,color:'#50B432',y:Math.round(totalCalculation),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
+        $scope.stockAvailableForPeriodList.push({name:value.program_name,color:'#3C81B0',y:Math.round(totalCalculation),available:value.totalbyprogram,total:value.total, drilldown:value.programid });
 
         });
         var chartId = 'stock-available-for-program';
@@ -1472,147 +1601,7 @@ Highcharts.chart('stock-available-for-program-drill-down', {
  };
 
 
-$scope.getRnRPasseChart = function(title,dataV){
-console.log(dataV);
-new Highcharts.chart('rnrPassedChart', {
-    chart: {
-        type: 'pie'
-    },credits:{
-    enabled:false
 
-    },
-    title: {
-        text:'<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>'
-
-    },
-    subtitle: {
-        text: 'Click the slices to view more details'
-    },
-    plotOptions: {
-          pie: {
-                           innerSize: '70%',
-                           allowPointSelect: true,
-                           cursor: 'pointer',
-                           dataLabels: {
-                               enabled: true,
-                               format: '<b>  {point.percentage:.0f} %',
-
-                               /*
-                                                       format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                               */
-                               style: {
-                                   color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-                                   fontFamily: '\'Lato\', sans-serif', lineHeight: '18px', fontSize: '17px'
-                               }
-                           },
-                           showInLegend: true
-                       }
-    },
-
-    tooltip: {
-        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-    },
-
-    series: [
-        {
-            name: "Requisition Forms",
-            colorByPoint: true,
-            data:dataV
-
-
-        }
-    ],
-    drilldown: {
-        series: [
-            {
-                name: "Chrome",
-                id: "Chrome",
-                data: [
-                    [
-                        "v65.0",
-                        0.1
-                    ],
-                    [
-                        "v64.0",
-                        1.3
-                    ],
-                    [
-                        "v63.0",
-                        53.02
-                    ],
-                    [
-                        "v62.0",
-                        1.4
-                    ],
-                    [
-                        "v61.0",
-                        0.88
-                    ],
-                    [
-                        "v60.0",
-                        0.56
-                    ],
-                    [
-                        "v59.0",
-                        0.45
-                    ],
-                    [
-                        "v58.0",
-                        0.49
-                    ],
-                    [
-                        "v57.0",
-                        0.32
-                    ],
-                    [
-                        "v56.0",
-                        0.29
-                    ],
-                    [
-                        "v55.0",
-                        0.79
-                    ],
-                    [
-                        "v54.0",
-                        0.18
-                    ],
-                    [
-                        "v51.0",
-                        0.13
-                    ],
-                    [
-                        "v49.0",
-                        2.16
-                    ],
-                    [
-                        "v48.0",
-                        0.13
-                    ],
-                    [
-                        "v47.0",
-                        0.11
-                    ],
-                    [
-                        "v43.0",
-                        0.17
-                    ],
-                    [
-                        "v29.0",
-                        0.26
-                    ]
-                ]
-            }
-        ]
-    }
-});
-
-
-
-
-
-
-};
 
 
 

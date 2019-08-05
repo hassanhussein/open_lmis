@@ -31,7 +31,16 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider,$htt
             ncyBreadcrumb: {
                 label: 'Un-published Dashboard'
             }
-        }
+        },  {
+                      name: 'rejectionByZoneView',
+                      url: '/zone:zone/:value/:status/:period/:program',
+                      templateUrl: 'partials/rejection-by-zone.html',
+                      controller: 'RejectionByZoneControllerFunction',
+                      ncyBreadcrumb: {
+                          label: 'Rejection of {{zone}}',
+                          parent: 'home'
+                      }
+                  }
     ];
 
     states.forEach($stateProvider.state);
@@ -67,23 +76,23 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider,$htt
         var service = this;
 
         this.request = function(config) {
-           if(config.params && config.params.associatedDashlets) {
+         /*  if(config.params && config.params.associatedDashlets) {
                 console.log(config.params.associatedDashlets);
                 config.params.associatedDashlets.forEach(function(dashlet) {
                     angular.element('#'+dashlet+'').show();
                 });
                 config.dashlets = config.params.associatedDashlets;
                 delete config.params.associatedDashlets;
-           }
+           }*/
             return config;
         };
 
         this.response = function(response) {
-            if(response.config.dashlets) {
+      /*      if(response.config.dashlets) {
                 response.config.dashlets.forEach(function(dashlet) {
                     angular.element('#'+dashlet+'').hide();
                 });
-            }
+            }*/
            return response;
         };
     }]);

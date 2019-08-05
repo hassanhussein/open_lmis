@@ -11,7 +11,7 @@ $scope.loadTheChart(data, title,'');
 
 });
 
-}
+};
 
 $rootScope.loadStockStatusByProgramAndYearData = function(params){
 
@@ -21,7 +21,7 @@ console.log(data);
 
 
 })*/
-}
+};
 
   $rootScope.renderHtml = function (htmlCode) {
             return $sce.trustAsHtml(htmlCode);
@@ -45,7 +45,7 @@ var dataToShow = [];
 
 
     console.log(drilldownData);
-  dataToShow = [{name:'Available Incidence',y: value.percentage_of_total,color: '#50B432', drilldown: 'Available Incidence' },
+  dataToShow = [{name:'Available Incidence',y: value.percentage_of_total,color: '#3C81B0', drilldown: 'Available Incidence' },
    {name:'Stock out Incidence', y: value.percentage_of_stock_out,color:'#D90C29', drilldown:'Stock out Incidence', sliced: true,selected: true }];
   /*  dataToShow = [{y: value.percentage_of_total,color: '#50B432', drilldown: {name:'Available Incidence',categories:['Over stock','Adequately stocked','Under stock','Unknown'] ,data:[value.percentage_of_os,value.percentage_of_sp,value.percentage_of_us,value.percentage_of_uk] } },
    {y: value.percentage_of_stock_out,color:'#ED561B', drilldown: {name:'Stock out Incidence', categories:['stock out'], data:[value.percentage_of_stock_out] } }];
@@ -224,9 +224,6 @@ Highcharts.chart('stock-summary-by-period-and-program', {
             dataLabels: {
                 enabled: true,
                  useHTML: true,
-
-                    useHTML: true,
-
                     formatter: function () {
                      return '<span style="color:' + this.point.color + '">' + this.point.name + ' : '+ this.point.y+'%</span>';
                     }
@@ -307,7 +304,7 @@ Highcharts.chart('stock-summary-by-period-and-program', {
 });
 
 
-}
+};
 
 
 $scope.openStockImbalanceReport = function(data) {
@@ -355,7 +352,7 @@ $rootScope.openDefinitionModal = function (key,title) {
 
 
 
-}
+};
 
 //Filters
 
@@ -393,7 +390,7 @@ $rootScope.loadStockStatusSummary($location.search());
 
 
 
-}
+};
 
 
 

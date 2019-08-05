@@ -3137,3 +3137,90 @@ app.directive('periodWithoutSelectFilter', ['ReportPeriods', 'ReportPeriodsBySch
         };
     }
 ]);
+
+
+
+app.directive('zoneWithoutSelectFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService',
+    function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService) {
+
+        var onCascadedVarsChanged = function ($scope, attr) {
+            if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
+
+                var service = TreeGeographicZoneListByProgram;
+                if (attr.nozone) {
+                    service = TreeGeographicTreeByProgramNoZones;
+                }
+
+                service.get({
+                    program: $scope.filter.program
+                }, function (data) {
+                    $scope.zones = [data.zone];
+                    if ($scope.selectedZone === undefined || $scope.selectedZone === null) {
+                        $scope.selectedZone = data.zone;
+                    }
+                });
+            } else {
+                TreeGeographicZoneList.get(function (data) {
+                    $scope.zones = [data.zone];
+                    if ($scope.selectedZone === undefined) {
+                        $scope.selectedZone = data.zone;
+                    }
+                });
+            }
+        };
+
+        var categoriseZoneBySupervisoryNode = function ($scope) {
+            GetUserUnassignedSupervisoryNode.get({
+                program: $scope.filter.program
+            }, function (data) {
+                $scope.user_geo_level = messageService.get('report.filter.all.geographic.zones');
+                if (!angular.isUndefined(data.supervisory_nodes)) {
+                    if (data.supervisory_nodes === 0)
+                        $scope.user_geo_level = messageService.get('report.filter.national');
+                }
+            });
+        };
+
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+                scope.$watch('selectedZone', function () {
+                    if (scope.$parent.filter !== undefined && scope.selectedZone !== undefined && scope.selectedZone !== null) {
+                        scope.$parent.filter.zone = scope.selectedZone.id;
+                        scope.$parent.filter.zoneName = scope.selectedZone.name.replace(/%20/g, '+');
+                        scope.notifyFilterChanged('zone-filter-changed');
+                    }
+                });
+
+                scope.registerRequired('zone', attr);
+                if (scope.filter !== undefined && scope.filter !== null && scope.filter.zone !== undefined) {
+                    scope.selectedZone = {
+                        id: scope.filter.zone,
+                        name: scope.filter.zoneName.replace(/\+/g, ' ')
+                    };
+                }
+
+                if (attr.districtOnly) {
+                    scope.showDistrictOnly = true;
+                }
+                categoriseZoneBySupervisoryNode(scope);
+
+                var onParamsChanged = function () {
+                    if (!scope.showDistrictOnly) {
+                        categoriseZoneBySupervisoryNode(scope);
+                    }
+                    onCascadedVarsChanged(scope, attr);
+                };
+
+                //check if the directive does not depend on any other property to load data
+                if (attr.standAlone) {
+                    onParamsChanged();
+                } else {
+                    scope.subscribeOnChanged('zone', 'program', onParamsChanged, true);
+                }
+            },
+            templateUrl: 'filter-zone-template-without-select2'
+        };
+    }
+]);

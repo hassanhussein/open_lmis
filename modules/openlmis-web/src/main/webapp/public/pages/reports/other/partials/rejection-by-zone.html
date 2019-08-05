@@ -7,8 +7,8 @@
     <a id="printButton" style="background-color:#4897BA !important;"
 
        id="xls-button" href="" export export-data="rejectedRnRLis"
-       export-keys="['districtName','regionName','zoneName','rejectedCount']"
-       export-headers="['District name','Region Name','MSD Zone','Total Rejected']"
+       export-keys="['districtName','regionName','zoneName','rejectedcount','reason']"
+       export-headers="['District name','Region Name','MSD Zone','Total Rejected','Reason for Rejection']"
 
        class="btn-small btn-primary"
        target="_blank">Export</a>
@@ -43,6 +43,11 @@
                                 <span>MSD Zone</span>
                             </div>
                         </th>
+                        <th class="col-product" style="min-width: 100px !important;">
+                            <div class="regimen-heading">
+                                <span>Reason for Rejection</span>
+                            </div>
+                        </th>
 
                         <th class="col-product" style="min-width: 100px !important;">
                             <div class="regimen-heading">
@@ -62,11 +67,12 @@
                         <td class="cell-text">{{rejected.districtname}}</td>
                         <td class="cell-text">{{rejected.regionname}}</td>
                         <td class="cell-text">{{rejected.zonename}}</td>
+                        <td class="cell-text">{{rejected.reason}}</td>
+
                         <td class="cell-text  padding2px"
                             style="text-align: right;font-family: 'Times New Roman';font-weight: bold">
                             {{rejected.rejectedcount | number}}
                         </td>
-
                     </tr>
 
                     </tbody>

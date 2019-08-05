@@ -483,6 +483,35 @@ services.factory('GetEmergencyOrderTrendsData', function ($q, $timeout, $resourc
 
 });
 
+
+services.factory('RnRStatusSummaryData', function ($q, $timeout, $resource,RnRStatusSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+
+         RnRStatusSummary.get({zoneId: params.zone,
+                        periodId: params.period,
+                        programId: params.program
+                    },
+                    function (data) {
+                    var stocks ={};
+                    if (data !== undefined) {
+                        stocks = data.rnrStatus;
+                    }
+                    deferred.resolve(stocks);
+
+                    });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 services.factory('GetNumberOfEmergency', function($resource){
     return $resource('/api//dashboard/getNumberOfEmergency.json',{}, {});
 });
