@@ -10,6 +10,7 @@
 
 function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, $location, pageSize, $routeParams, $dialog, requisitionService, $q, patientTemplate) {
 
+  var PATIENT = 'patient';
   $scope.canApproveRnr = requisitionData.canApproveRnr;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.rnrColumns = rnrColumns;
@@ -33,6 +34,8 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
   $scope.rnr.displayOtherSources = true;
 
   var NON_FULL_SUPPLY = 'nonFullSupply';
+
+  if($scope.patientCount > 0) $routeParams.supplyType = PATIENT;
 
   requisitionService.populateScope($scope, $location, $routeParams);
 

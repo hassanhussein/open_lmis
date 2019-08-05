@@ -17,7 +17,7 @@
                     <th class="col-{{patientColumn.name}}"
                         ng-repeat="patientColumn in patientColumns | filter:{fixed : true}">
                         <div class="regimen-heading">
-                            <span style="float: right;position: relative;left: -50%; text-align: left;"  openlmis-message="patientColumn.label"></span>
+                            <span style="float: right;position: relative;left: -50%; text-align: left;" openlmis-message="patientColumn.label"></span>
                         </div>
                     </th>
                 </tr>
@@ -33,7 +33,7 @@
                         ng-repeat="patientColumn in patientColumns | filter:{fixed : true}">
                         <ng-switch on="patientColumn.name">
                           <span ng-switch-when="monthOfTreatment" class="cell-text" >
-                            <span  ng-bind="patientLineItem.name" class="padding2px"></span>
+                            <span ng-bind="patientLineItem.name" class="padding2px"></span>
                           </span>
                         </ng-switch>
                     </td>
@@ -70,22 +70,12 @@
                     <td class="cell-input col-beginningBalance"
                         ng-repeat="patientColumn in patientColumns | filter:{fixed : false}">
                         <ng-switch on="patientColumn.name">
-                          <span ng-switch-when="name" class="cell-text">
-                            <span ng-bind="patientLineItem.name" class="padding2px"></span>
+                          <span ng-switch-default class="cell-text">
+                            <span ng-bind="patientLineItem[patientColumn.name]"
+                                  ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder)"
+                                  class="padding2px"></span>
                           </span>
-                            <span ng-switch-default  class="position-relative" >
-                                 <input ng-required="false"
-                                        ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder)"
-                                        id="{{getId(patientColumn.name, $parent)}}"
-                                        type="text"
-                                        ng-model="patientLineItem[patientColumn.name]"
-                                        maxlength="8"
-                                        ng-class="highlightPatientRequired(showError, patientLineItem[patientColumn.name], disableInput($index + 1, patientLineItem.patientDisplayOrder))"/>
-                                 <span class="rnr-form-error"
-                                       style="display:none;" openlmis-message="error.number.only">
-                                 </span>
-                          </span>
-                        </span>
+                            </span>
 
                             </span>
                         </ng-switch>

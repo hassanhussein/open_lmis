@@ -1,6 +1,6 @@
 INSERT INTO programs (code, name, description, active, templateConfigured, regimenTemplateConfigured, budgetingApplies, usesDar, push)
   VALUES
-  ('TB&LEPROSY', 'TB_Monthly', 'TB and Leprsoy monthly report', TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+  ('TBL-FMRF', 'TBL-FMRF', 'TB and Leprsoy monthly report', TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
 
 
 
@@ -23,9 +23,9 @@ INSERT INTO program_rnr_columns
 ((select id from master_rnr_columns where name='product'), (select id from programs where code = 'TB&LEPROSY'),  true, 'R', 3,  'Medicine Name', null),
 ((select id from master_rnr_columns where name='dispensingUnit'), (select id from programs where code = 'TB&LEPROSY'),  true, 'R', 4,  'Unit of Measure (U)', null),
 ((select id from master_rnr_columns where name='stockInHand'), (select id from programs where code = 'TB&LEPROSY'),  true, 'U', 5,  'Stock on Hand (A)', null),
-((select id from master_rnr_columns where name='lossesAndAdjustments'), (select id from programs where code = 'TB&LEPROSY'),  true, 'U', 6,  'Qnty damaged & Expired (B)', null),
-((select id from master_rnr_columns where name='nextMonthPatient'), (select id from programs where code = 'TB&LEPROSY'),  true, 'C', 7,  'No of Patients on Treatment next month', null),
-((select id from master_rnr_columns where name='dosesPerMonth'), (select id from programs where code = 'TB&LEPROSY'),  true, 'R', 8,  'Individual Monthly Requirement', null),
+((select id from master_rnr_columns where name='lossesAndAdjustments'), (select id from programs where code = 'TB&LEPROSY'),  true, 'U', 6,  'Loss & Adjustment (B)', null),
+((select id from master_rnr_columns where name='nextMonthPatient'), (select id from programs where code = 'TB&LEPROSY'),  true, 'C', 7,  'No of Patients on Treatment next month (C)', null),
+((select id from master_rnr_columns where name='dosesPerMonth'), (select id from programs where code = 'TB&LEPROSY'),  true, 'R', 8,  'Individual Monthly Requirement (D)', null),
 ((select id from master_rnr_columns where name='totalRequirement') , (select id from programs where code = 'TB&LEPROSY'),  true, 'C', 9,  'Total Requirement (E) E = C * D', null),
 ((select id from master_rnr_columns where name='totalQuantityNeededByHF'), (select id from programs where code = 'TB&LEPROSY'),  true, 'C', 10,  'Total Quantity Needed by HF (F) F ß= E * 2', null),
 ((select id from master_rnr_columns where name='quantityToIssue'), (select id from programs where code = 'TB&LEPROSY'),  true, 'C', 11, 'Quantity to Issue (G) G = F - A', null),
@@ -127,7 +127,7 @@ DELETE FROM patients;
 INSERT INTO patients (programid, categoryid, code, name, active, displayorder) VALUES
 ((select id from programs where code='TB&LEPROSY'), (select id from patient_categories where code='TB'), 'Number of adult patients(New)', 'Number of adult patients(New)', TRUE, 1),
 ((select id from programs where code='TB&LEPROSY'), (select id from patient_categories where code='TB'), 'Number of children(New)', 'Number of children(New)', TRUE, 2),
-((select id from programs where code='TB&LEPROSY'), (select id from patient_categories where code='TB'), 'Number of Retreatment patients', 'Number of Retreatment patients', TRUE, 3),
+((select id from programs where code='TB&LEPROSY'), (select id from patient_categories where code='TB'), 'Number of Retreatment patients', 'Number of Retreatment patients', FALSE, 3),
 ((select id from programs where code='TB&LEPROSY'), (select id from patient_categories where code='TB'), 'Number of adults on IPT', 'Number of adults on IPT', TRUE, 4),
 ((select id from programs where code='TB&LEPROSY'), (select id from patient_categories where code='TB'), 'Number of Children on IPT', 'Number of Children on IPT', TRUE, 5),
 ((select id from programs where code='TB&LEPROSY'), (select id from patient_categories where code='LEPROSY'), 'Number of adult on MB regimen', 'Number of adult on MB regimen', TRUE, 6),
@@ -210,8 +210,8 @@ ADD COLUMN patientCalculationFormula VARCHAR(255);
 --
 --
 --
-----Program prodcut mapping
---
+--Program prodcut mapping
+
 ----RHZE
 --update  products set patientcalculationformula='ADULT_NEW_INTENSIVE_PHASE'
 --where  code='10010087AE';
@@ -258,4 +258,7 @@ ADD COLUMN patientCalculationFormula VARCHAR(255);
 ----Isonizid 300mg
 --update  products set patientcalculationformula='IPT_ADULT'
 --where code='10010089AE';
+--
+--
+--update patients set active=false where id=3
 
