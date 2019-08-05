@@ -713,4 +713,8 @@ public class VaccineDashboardService {
     public List<HashMap<String,Object>> getFacilityStockStatusSummaryData(Long year,Long product,Long userId,String periodName) {
         return repository.getFacilityStockStatusSummaryData(year,product,userId,periodName);
     }
+
+    public List<HashMap<String, Object>> getVaccineDistrictCoverageForMap(Long userId, Long productId, Long periodId, Long year, Long doseId) {
+        return repository.getVaccineDistrictCoverageForMap(userId, productId, periodId, year, doseId);
+    }
 }

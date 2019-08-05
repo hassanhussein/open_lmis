@@ -1709,6 +1709,40 @@ services.factory('GetFacilityStockStatusSummaryDataByPeriod', function ($q, $tim
 
 });
 
+
+services.factory('GetVaccineDistrictCoverageForMapData', function ($q, $timeout, $resource, GetVaccineDistrictCoverageForMap) {
+
+    function get(params) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetVaccineDistrictCoverageForMap.get({
+                product: parseInt(params.product, 10),
+                periodId: parseInt(params.period, 10),
+                year: parseInt(params.year, 10),
+                doseId: parseInt(params.dose, 10)
+            }, function (data) {
+
+                var stocks = {};
+                if (data !== undefined) {
+                    stocks = data.map_data;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+
+
+
+
 services.factory('FullStockAvailableForDashboard', function ($resource) {
     return $resource('/vaccine/dashboard/fullStockAvailability.json', {}, {});
 });
@@ -1850,4 +1884,8 @@ services.factory('GetFacilityStockStatusSummary', function ($resource) {
 
 services.factory('GetFacilityStockStatusSummaryByPeriodData', function ($resource) {
     return $resource('/vaccine/dashboard/GetFacilityStockStatusSummaryData.json', {}, {});
+});
+
+services.factory('GetVaccineDistrictCoverageForMap', function ($resource) {
+    return $resource('/vaccine/dashboard/GetVaccineDistrictCoverageForMap.json', {}, {});
 });

@@ -804,4 +804,19 @@ public class VaccineDashboardController extends BaseController {
     }
 
 
+    @RequestMapping(value = "GetVaccineDistrictCoverageForMap.json", method = RequestMethod.GET)
+    public ResponseEntity<OpenLmisResponse> getVaccineDistrictCoverageForMap(
+            HttpServletRequest request,
+            @Param("periodId") Long periodId,
+            @Param("year") Long year,
+            @Param("product") Long product,
+            @Param("doseId") Long doseId
+
+    ) {
+        ResponseEntity<OpenLmisResponse> response;
+        response = OpenLmisResponse.response("map_data", service.getVaccineDistrictCoverageForMap(loggedInUserId(request), product, periodId, year, doseId));
+        return response;
+    }
+
+
 }
