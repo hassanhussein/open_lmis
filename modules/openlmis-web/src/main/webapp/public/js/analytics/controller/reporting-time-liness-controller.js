@@ -125,10 +125,41 @@ Highcharts.chart(chartId, {
     },
     plotOptions: {
       pie:{
-          allowPointSelect: true,
-                cursor: 'pointer',
-                 innerSize: '60%'
+               innerSize: '70%',
+                                      allowPointSelect: true,
+                                      size: '70%',
+                                      cursor: 'pointer',
+                                      dataLabels: {
+                                          enabled: true,
+                                          format: '<b>  {point.percentage:.0f} %',
 
+                                          /*
+                                                                  format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                          */
+                                          style: {
+                                              color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                              fontFamily: '\'Lato\', sans-serif', lineHeight: '18px', fontSize: '17px'
+                                          }
+                                      },
+                                      showInLegend: true,
+
+                                       events:{
+                                         click: function (event) {
+
+                                         if(event.point.color !== 'green'){
+                                        // console.log(para);
+                                         //openRejectionReport(para);
+
+                                         }else {
+
+
+
+                                         }
+
+                                          //$scope.openAdjustmentReport(this);
+
+                                             }
+                                       }
 
       },
     series: {
@@ -143,8 +174,9 @@ Highcharts.chart(chartId, {
     },
 
     tooltip: {
-        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}%</b> of total<br/>'
+       // headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        //pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}%</b> of total<br/>'
+         pointFormat: '{point.name}: <b>{point.name:.0f} %<br>total: {point.y}'
     },
     exporting: {
                   buttons: {
@@ -165,6 +197,7 @@ Highcharts.chart(chartId, {
         {
             name: "Facilities",
             colorByPoint: true,
+            animation: true,
             data: dataV
         }
     ]

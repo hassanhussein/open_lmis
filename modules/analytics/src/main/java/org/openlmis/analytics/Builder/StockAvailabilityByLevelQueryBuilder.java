@@ -42,8 +42,8 @@ public class StockAvailabilityByLevelQueryBuilder {
                 "                                CASE WHEN Status ='OS' then 1 ELSE 0 end as overstock,\n" +
                 "                                CASE WHEN Status ='SO' then 1 ELSE 0 end as SO \n" +
                 "                                \n" +
-                "                                from mv_stock_imbalance_by_facility_report r where  programID = 1::int and year = 2019::int and EMERGENCY = FALSE \n" +
-                "                                 and periodid = 92::int and tracer = true\n" +
+                "                                from mv_stock_imbalance_by_facility_report r where  programID = '"+program+"'::int and year = '"+year+"'::int and EMERGENCY = FALSE \n" +
+                "                                 and periodid = '"+period+"'::int and tracer = true\n" +
                 "                                 AND STATUS NOT IN ('')\n" +
                 "                                 \n" +
                 "                                 )l\n" +
@@ -73,8 +73,8 @@ public class StockAvailabilityByLevelQueryBuilder {
                 "                                CASE WHEN Status ='OS' then 1 ELSE 0 end as overstock,\n" +
                 "                                CASE WHEN Status ='SO' then 1 ELSE 0 end as SO \n" +
                 "                                \n" +
-                "                                from mv_stock_imbalance_by_facility_report r where  programID = 1::int and year = 2019::int and EMERGENCY = FALSE \n" +
-                "                                 and periodid = 92::int\n" +
+                "                                from mv_stock_imbalance_by_facility_report r where  programID = '"+program+"'::int and year = '"+year+"'::int and EMERGENCY = FALSE \n" +
+                "                                 and periodid = '"+period+"'::int\n" +
                 "                                 AND STATUS NOT IN ('')\n" +
                 "                                 \n" +
                 "                                 )l\n" +

@@ -1,33 +1,17 @@
-function StockAvailabilityByLevelController ($scope, $rootScope,StockAvailableByLevelData){
+function StockAvailabilityByLevelController ($scope,$location,Program,Period, $rootScope,StockAvailableByLevelData){
 
 
 $rootScope.loadStockAvailableByLevel = function(params){
 
     StockAvailableByLevelData.get(params).then(function(data) {
 
-
+if(data.length > 0 && !isUndefined(data)) {
 
      var categories = _.pluck(data, 'tracerItems');
-console.log(categories);
+
 
      var tracerItems = _.filter(data, {traceritems:'tracerItems'});
      var allItems = _.filter(data, {traceritems:'allItems'});
-
-     var displayData = [];
-
-  /*    data.forEach(function(d){
-
-       displayData.push({name:d.facilitytype,y:d.percentage_of_total,drilldown:d.facilitytype});
-
-      });*/
-
-
-
-
-
-
-
-
 
 
         var dataV = [
@@ -37,8 +21,7 @@ console.log(categories);
 
         ];
 
-     console.log(data);
-          var availabileData =  [
+        var availabileData =  [
                       {
                         name: 'not available',
                         data: [{
@@ -58,12 +41,12 @@ console.log(categories);
                                  data: [{
                                      name: 'All Items',
                                      y: allItems[0].percentage_of_total,
-                                     color:'#50B432',
+                                     color:'#3C81B0',
                                      drilldown: 'phc-available'
                                  }, {
                                      name: 'Tracer Items',
                                      y: tracerItems[0].percentage_of_total,
-                                     color:'#50B432',
+                                     color:'#3C81B0',
                                      drilldown: 'hospital-available'
                                  }]
                              }
@@ -73,12 +56,11 @@ console.log(categories);
 
                         ];
 
-         console.log(tracerItems);
 
      $scope.title_stock_by_level = 'Stock availability by Level for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
 
     $scope.showTheChart(availabileData,'','',categories);
-
+     }
 
     });
 
@@ -121,13 +103,16 @@ console.log(categories);
             series: {
                 stacking: 'normal',
                 borderWidth: 0,
+                  pointWidth: 30,
+                    pointPadding: 0.2,
                 dataLabels: {
                     enabled: true
                 }
             },
              column: {
                         stacking: 'percent'
-                    }
+                    },
+
         },
          tooltip: {
                 headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
@@ -185,13 +170,45 @@ console.log(categories);
         }
     });
 
+    };
 
 
 
+    //Filters
 
 
+    $scope.OnFilterChanged = function () {
+
+    console.log ('changed');
+
+    var programName = '';
+    Program.get({id: parseInt($location.search().program,10)}, function(da){
+    programName = da.program.name;
+
+    var periodName = '';
+    Period.get({id: parseInt($location.search().period,10)}, function(da){
+    periodName = da.period.name;
+
+    $location.search().programName = programName;
+    $location.search().periodName = periodName;
+
+    console.log($location.search());
 
 
+    $scope.$parent.params = $location.search();
+
+    $rootScope.loadStockAvailableByLevel($location.search());
+
+
+    });
+
+
+    });
 
     };
+
+
+
+
+
 }

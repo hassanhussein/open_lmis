@@ -736,8 +736,8 @@ background:#fff;
                                                            class="table table-striped table-scrollable pull-right"
                                                            ng-table="tableParams">
                                                         <thead style="height:10px !important">
-                                                        <th>Pending at</th>
-                                                        <th>Number Of RnR</th>
+                                                        <th style="text-align:left">Pending at</th>
+                                                        <th style="text-align:left">Number Of RnR</th>
                                                         </thead>
                                                         <tbody style="height:220px !important">
                                                         <tr ng-repeat="row in dataRows" >
@@ -832,7 +832,7 @@ background:#fff;
                                 </div>
 
 
-                                <div class="col s12 m4 l4">
+                                <div class="col s12 m4 l4" ng-controller="stockAvailabilityPerProgramController">
                                         <div class="card grey lighten-5 row2-height" overlay-section="stockAvailableForProgram">
 
                                             <div class="card-action"  style="background-color: #17888f;">
@@ -859,7 +859,7 @@ background:#fff;
 
 
 
-                            <div class="row" ng-show="drillDownData.length">
+                            <div class="row" ng-show="drillDownData.length" ng-controller="stockAvailabilityPerProgramController">
                                 <div class="col s12 m8 l8">
                                     <div class="card grey lighten-5 row3-height" overlay-section="stock-available-for-program-drill-down">
 
@@ -916,8 +916,8 @@ background:#fff;
 
                             </div>
                             <div class="row">
-                                <div class="col s12 m3 l3"  ng-controller="TimelinessReportingController">
-                                    <div class="card grey lighten-5 row3-height" overlay-section="timelinessReporting" >
+                                <div class="col s12 m4 l4"  ng-controller="TimelinessReportingController">
+                                    <div class="card grey lighten-5 row2-height" overlay-section="timelinessReporting" >
                                         <div class="card-action"  style="background-color: #17888f;">
                                             <span style="color:white">{{title_reporting_timeliness}}</span>
                                         </div>

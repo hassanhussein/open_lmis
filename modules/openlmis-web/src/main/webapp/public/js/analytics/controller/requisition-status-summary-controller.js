@@ -10,12 +10,12 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function RequisitionStatusSummaryController($scope,$rootScope, messageService, EmergencyRnRStatusSummary,ExtraAnalyticDataForRnRStatus,$timeout, $filter, RnRStatusSummaryData, $location) {
+function RequisitionStatusSummaryController($scope,Program,Period,$rootScope, messageService, EmergencyRnRStatusSummary,ExtraAnalyticDataForRnRStatus,$timeout, $filter, RnRStatusSummaryData, $location) {
 
 
 
    $rootScope.initializeRequisitionSummary = function (params) {
-
+        params.zone = 437;
         $scope.showProductsFilter = false;
         $scope.$parent.currentTab = "RNR-STATUS-SUMMARY";
 
@@ -502,5 +502,39 @@ $scope.formFilter = {};
 
     // watch for changes of parameters
     $scope.$watch('tableParams', $scope.paramsChanged, true);
+
+
+      //Filters
+
+
+           $scope.OnFilterChanged = function () {
+
+           console.log ('changed');
+
+           var programName = '';
+           Program.get({id: parseInt($location.search().program,10)}, function(da){
+           programName = da.program.name;
+
+           var periodName = '';
+           Period.get({id: parseInt($location.search().period,10)}, function(da){
+           periodName = da.period.name;
+
+           $location.search().programName = programName;
+           $location.search().periodName = periodName;
+
+           console.log($location.search());
+
+
+           $scope.$parent.params = $location.search();
+
+           $rootScope.initializeRequisitionSummary($location.search());
+
+
+           });
+
+
+           });
+
+           };
 
 }
