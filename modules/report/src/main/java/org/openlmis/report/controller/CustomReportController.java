@@ -15,6 +15,8 @@ package org.openlmis.report.controller;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.model.CustomReport;
@@ -47,8 +49,12 @@ public class CustomReportController extends BaseController {
   public static final String REPORTS = "reports";
   public static final String QUERY_MODEL = "queryModel";
   public static final String REPORT = "report";
+  public static final  String DEFAULT_CUSTOM_LIMT = "DEFAULT_CUSTOM_LIMT";
   @Autowired
   CustomReportRepository reportRepository;
+
+  @Autowired
+  ConfigurationSettingService settingService;
 
   @RequestMapping(value = "list")
   public ResponseEntity<OpenLmisResponse> getListOfReports(){
@@ -62,9 +68,11 @@ public class CustomReportController extends BaseController {
   }
 
   @RequestMapping(value = "report")
-  public ResponseEntity<OpenLmisResponse> getReportData( @RequestParam Map filter ){
+  public ResponseEntity<OpenLmisResponse> getReportData( @RequestParam Map filter,
+                                                         @RequestParam(value = "limit", required = false, defaultValue = "10") String limit
+                                                         ){
     long requestTime = new Date().getTime();
-    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(VALUES, reportRepository.getReportData(filter));
+    ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(VALUES, reportRepository.getReportData(filter,limit));
     response.getBody().addData(DATE, new Date());
     long responseTime = new Date().getTime();
     long duration = responseTime - requestTime;
@@ -74,7 +82,7 @@ public class CustomReportController extends BaseController {
 
   @RequestMapping(value="report.csv" , method = GET)
   public ModelAndView getCsvReport( @RequestParam Map filter){
-    List<Map> report = reportRepository.getReportData(filter);
+    List<Map> report = reportRepository.getReportData(filter,settingService.getByKey(DEFAULT_CUSTOM_LIMT).getValue());
     Map queryModel = reportRepository.getQueryModelByKey(filter.get("report_key").toString());
     ModelAndView view = new ModelAndView("customCsvTemplate");
     view.addObject(REPORT, report);
@@ -84,7 +92,7 @@ public class CustomReportController extends BaseController {
 
   @RequestMapping(value="excel.xlsx" , method = GET)
   public ModelAndView getExcelReport( @RequestParam Map filter){
-    List<Map> report = reportRepository.getReportData(filter);
+    List<Map> report = reportRepository.getReportData(filter,settingService.getByKey(DEFAULT_CUSTOM_LIMT).getValue());
     Map queryModel = reportRepository.getQueryModelByKey(filter.get("report_key").toString());
     ModelAndView view = new ModelAndView("customExcelTemplate");
     view.addObject(REPORT, report);

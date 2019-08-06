@@ -40,11 +40,17 @@ public class CustomReportRepository {
     return mapper.getListWithFullAttributes();
   }
 
-  public List<Map> getReportData(Map filter) {
+  public List<Map> getReportData(Map filter, String limit) {
     String reportKey = filter.get("report_key").toString();
     Map report = mapper.getCustomReportByKey(reportKey);
     String query = report.get("query").toString();
-    filter.put("sql", query);
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append(query);
+    if(limit != null){
+      stringBuilder.append(" LIMIT ");
+      stringBuilder.append(limit);
+    }
+    filter.put("sql", stringBuilder);
     return mapper.getReportData(filter);
   }
 
