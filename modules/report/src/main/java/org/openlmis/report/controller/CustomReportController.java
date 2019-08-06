@@ -49,7 +49,7 @@ public class CustomReportController extends BaseController {
   public static final String REPORTS = "reports";
   public static final String QUERY_MODEL = "queryModel";
   public static final String REPORT = "report";
-  public static final  String DEFAULT_CUSTOM_LIMT = "DEFAULT_CUSTOM_LIMT";
+  public static final  String DEFAULT_CUSTOM_LIMT = "DEFAULT_CUSTOM_LIMIT";
   @Autowired
   CustomReportRepository reportRepository;
 
