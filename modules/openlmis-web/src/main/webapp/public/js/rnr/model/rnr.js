@@ -275,9 +275,10 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
 
   Rnr.prototype.numberOfProductsOrdered = function() {
    //  var rnr = this;
-    return rnr.allSupplyLineItems.filter(function(lineItem) {
-        return !lineItem.skipped && lineItem.calculatedOrderQuantity;
-     }).length;
+   return (this.fullSupplyLineItems.filter(function(lineItem) {
+           return !lineItem.skipped && lineItem.packsToShip;}).length || 0) +
+          (this.nonFullSupplyLineItems.filter(function(lineItem) {
+               return !lineItem.skipped && lineItem.packsToShip;}).length || 0);
   };
 
   Rnr.prototype.percentageOfProductsOrdered = function() {
