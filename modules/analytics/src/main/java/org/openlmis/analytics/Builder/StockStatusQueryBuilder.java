@@ -10,9 +10,38 @@ public class StockStatusQueryBuilder {
          Long product = (Long)params.get("product");
          Long program = (Long)params.get("program");
          Long year = (Long)params.get("year");
+         Long schedule = (Long)params.get("schedule");
+
+         return " \n" +
+                 "        SELECT periodId, " +
+                 " case when (   ( select id from programs where id = '"+program+"'::int and enablemonthlyreporting = true limit 1) <> 0 ) THEN \n" +
+                 "                ( select to_char(to_timestamp (date_part('month', ENDDATE::TIMESTAMP)::text, 'MM'), 'Month')\n" +
+                 "                 from processing_periods where id = periodId)\n" +
+                 "                ELSE periodName end as periodName, " +
+                 " SUM (SO) as so, \n" +
+                 "                              SUM(OS) AS OS , SUM( SP) SP , SUM(US) US ,\n" +
+                 "                              SUM(UK) UK, \n" +
+                 "                  SUM (SO)+ SUM(OS) + SUM( SP) + SUM(US) + SUM(UK) total  \n" +
+                 "                 FROM (\n" +
+                 "                                SELECT periodid,processing_period_name periodName,\n" +
+                 "                                case when status = 'SO' THEN 1 ELSE 0 END AS SO,\n" +
+                 "                                case when status = 'SP' THEN 1 ELSE 0 END AS SP,\n" +
+                 "                                case when status = 'OS' THEN 1 ELSE 0 END AS OS,\n" +
+                 "                \n" +
+                 "                                case when status = 'US' THEN 1 ELSE 0 END AS US,\n" +
+                 "                                case when status = 'UK' THEN 1 ELSE 0 END AS UK\n" +
+                 "                                \n" +
+                 "                                from mv_stock_imbalance_by_facility_report\n" +
+                 "                \n" +
+                 "                                 WHERE  programId = '"+program+"'::INT  AND YEAR = '"+year+"'::int\n" +
+                 "                               and productId = '"+product+"'::int \n and scheduleId = '"+schedule+"'" +
+                 "                                \n" +
+                 "                                )L\n" +
+                 "                                GROUP BY  periodid,periodName\n" +
+                 "                                ORDER BY periodid,periodName  ";
 
 
-        return "               SELECT periodId, periodName, SUM (SO) as so, \n" +
+      /*  return "               SELECT periodId, periodName, SUM (SO) as so, \n" +
                 "              SUM(OS) AS OS , SUM( SP) SP , SUM(US) US ,\n" +
                 "              SUM(UK) UK," +
                 "  SUM (SO)+ SUM(OS) + SUM( SP) + SUM(US) + SUM(UK) total " +
@@ -31,7 +60,13 @@ public class StockStatusQueryBuilder {
                 "                \n" +
                 "                )L\n" +
                 "                GROUP BY  periodid,periodName\n" +
-                "                ORDER BY periodid,periodName  ";
+                "                ORDER BY periodid,periodName  ";*/
+
+
+
+
+
+
 
     }
 

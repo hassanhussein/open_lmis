@@ -56,10 +56,12 @@ public class AnalyticsController extends BaseController {
             @Param("product") Long product,
             @Param("program") Long program,
             @Param("year") Long year,
+            @Param("schedule") Long schedule,
+
             HttpServletRequest request
     ) {
 
-        return OpenLmisResponse.response("stocks", service.getStockStatusSummary(loggedInUserId(request),product,program,year));
+        return OpenLmisResponse.response("stocks", service.getStockStatusSummary(loggedInUserId(request),product,program,year,schedule));
     }
 
   @RequestMapping(value = "/stock-available-for-period", method = GET, headers = BaseController.ACCEPT_JSON)

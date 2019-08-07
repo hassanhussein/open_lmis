@@ -36,6 +36,7 @@ DefaultProgram.get({}, function (data) {
          $rootScope.loadStockStatusSummary(params);
          //$rootScope.loadStockStatusByProgramAndYearData(params);
          $rootScope.loadStockAvailableByLevel(params);
+         $rootScope.loadStockStatusByProgramTrends(params,'level1');
 
 
 
@@ -1055,7 +1056,7 @@ $scope.stockStatuses   = [];
                   var title = (level === 'level1')?'Stock Status for  '+params.programName+' '+index+',  '+params.year:'Stock Status Over Time for '+ params.periodName +', '+params.year;
                   var dataV = [];
                   dataV  = groupedData;
-                  $scope.drawTheChart(dataV,chartId,title,category);
+                  $rootScope.drawTheChart(dataV,chartId,title,category);
               console.log(groupedData);
                  return null;
 
@@ -1075,7 +1076,7 @@ $scope.stockStatuses   = [];
 };
 
 
- $scope.drawTheChart = function (stockSummary,chartId,title,category) {
+ $rootScope.drawTheChart = function (stockSummary,chartId,title,category) {
 
 
                var so = _.pluck(stockSummary, 'so');
@@ -1106,14 +1107,15 @@ $scope.stockStatuses   = [];
 
                summaries = [
                             {name:'Stocked Out', data:totalZeroStock, color:'#ff0d00'},
-                            {name:'Understocked', data:totalLowStock, color:'#ffdb00'},
+                            {name:'Understocked', data:totalLowStock, color:'orange'},
                             {name:'OverStocked', data:totalOverStock, color:'#00B2EE'},
                             {name:'Adequately stocked', data:totalSufficientStock, color:'#006600'},
                             {name:'UnKnown', data:totalUnknown, color:'gray'}
 
                            ];
+              var numberOfIncidence = '<span style="font-size: 10px!important;color: #0c9083">Number of Incidences Reported</span>';
 
-              $scope.stockStatusesStackedColumnChart(chartId,'column' ,title,category, 'Number of Incidences Reported',summaries );
+              $rootScope.stockStatusesStackedColumnChart(chartId,'line' ,title,category, numberOfIncidence,summaries );
 
               };
 
@@ -1190,14 +1192,14 @@ Highcharts.chart('stock-by-program-and-period', {
 
 
 
- $scope.stockStatusesStackedColumnChart = function (id,chartType, title,category,yAxisTitle,data){
+ $rootScope.stockStatusesStackedColumnChart = function (id,chartType, title,category,yAxisTitle,data){
 
  Highcharts.chart(id, {
      chart: {
          type: chartType
      },
      title: {
-         text: title
+         text: '<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>'
      },
      xAxis: {
          categories: category,
@@ -1205,7 +1207,7 @@ Highcharts.chart('stock-by-program-and-period', {
                      align: 'right'
                  },
              title: {
-                     text: "Processing Periods"
+                     text: '<span style="font-size: 10px!important;color: #0c9083">Processing Periods</span>'
                  }
      },
      yAxis: {
@@ -1228,21 +1230,40 @@ Highcharts.chart('stock-by-program-and-period', {
                enabled: false
            },
      legend: {
-         align: 'right',
-         x: -30,
-         verticalAlign: 'top',
-         y: 25,
-         floating: true,
+      itemStyle: {
+
+
+                 fontSize: '10px'
+             },
+         align: 'center',
+          layout: 'horizontal',
+
+         verticalAlign: 'bottom',
+
+         floating: false,
          backgroundColor:
              Highcharts.defaultOptions.legend.backgroundColor || 'white',
          borderColor: '#CCC',
-         borderWidth: 1,
+         borderWidth: 0,
          shadow: false
      },
      tooltip: {
          headerFormat: '<b>{point.x}</b><br/>',
          pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-     },
+     }, exporting: {
+                             buttons: {
+                              customButton: {
+                              text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                              symbolStroke: "red",
+                              theme: {
+                              fill:"#28A2F3"
+                              },
+                              onclick: function () {
+                              $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY_BY_LEVEL','Stock Status Over Time');
+                              }
+                              }
+                              }
+                              },
      plotOptions: {
          column: {
              stacking: 'normal',
@@ -1251,22 +1272,7 @@ Highcharts.chart('stock-by-program-and-period', {
              }
          }
      },
-     series:data,
-        exporting: {
-                 buttons: {
-                     customButton: {
-                         text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>Read Description</span>',
-
-                         symbolStroke: "red",
-                                             theme: {
-                                     fill:"#28A2F3"
-                                 },
-                         onclick: function () {
-                             alert('You pressed the button!');
-                         }
-                     }
-                 }
-             }
+     series:data
  });
 
 

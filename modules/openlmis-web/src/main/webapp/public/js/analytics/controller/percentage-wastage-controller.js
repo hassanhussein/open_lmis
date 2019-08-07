@@ -70,7 +70,7 @@ var gaugeOptions = {
 
     pane: {
         center: ['50%', '80%'],
-        size: '130%',
+        size: '120%',
         startAngle: -90,
         endAngle: 90,
         background: {
@@ -168,7 +168,7 @@ title: {
 
 
             labels: {
-            distance: 20,
+            distance: 5,
                 style: {
                     'font-size': 18,
                     'color':'#0c9083'

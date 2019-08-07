@@ -29,7 +29,8 @@ public interface AnalyticsMapper {
     List<HashMap<String,Object>> getStockStatusSummary(@Param("userId") Long userId,
                                                        @Param("product") Long product,
                                                        @Param("program") Long program,
-                                                       @Param("year") Long year);
+                                                       @Param("year") Long year,
+                                                       @Param("schedule") Long schedule);
 
     @SelectProvider(type= DashboardStockAvailableForProgramQueryBuilder.class, method="getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
