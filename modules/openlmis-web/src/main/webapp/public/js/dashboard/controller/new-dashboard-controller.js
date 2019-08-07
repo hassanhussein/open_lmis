@@ -2,7 +2,7 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity, ItemFillRate, DashboardCommodityStatus, DashboardProductExpired,
                                      DashboardRnrTypes, ShipmentInterfaces, VitalStates, dashboardSlidesHelp, UserInThreeMonths,
-                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE) {
+                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE, ReportingRateGis, dashBoardService) {
     resourceLoadingConfig.hideReloadIcon = true;
     resourceLoadingConfig.loadingDashlet = [];
     $scope.myInterval = 3000;
@@ -93,7 +93,10 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         console.log(data);
     });
 
-
+    $scope.saveDashboardPreferences = function(configs){
+        //console.log(dashBoardService.dashletConfigsGetAllVisible());
+        console.log(dashBoardService.dashletConfigShowAllConfigValues()); // save this value to db
+    };
 
 
     function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {
@@ -402,8 +405,10 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
 
     function filter() {
 
+        $scope.filter.associatedDashlets = ['reportingRateBar','reportingRateMap'];
 
-        $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
+         ReportingRateGis.get($scope.filter, function (data) {
+
             $scope.features = data.map;
             var dataValues = [];
             var districts = _.pluck($scope.features, 'name');
@@ -1337,7 +1342,8 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
     VitalStates.get({
         zoneId: $scope.filter.zoneId,
         periodId: $scope.filter.period,
-        programId: $scope.filter.program
+        programId: $scope.filter.program,
+        associatedDashlets: ['submittedRnrs', 'emergencyRnrs', 'approvedRnrs','ordersSentToMsl','shipmentByMsl','facilities','products','users']
     }, function (data) {
         $scope.vitalStatuses = data.vitalStatuses;
 

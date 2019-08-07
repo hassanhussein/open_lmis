@@ -1534,3 +1534,7 @@ services.factory('FacilitiesReportingThroughFEAndCE', function($resource){
 services.factory('DashboardAggregateProductExpired', function ($resource) {
     return $resource('/dashboard/aggregateExpiry', {}, {});
 });
+
+services.factory('ReportingRateGis', function ($resource) {
+    return $resource('/gis/reporting-rate.json', {}, {});
+});

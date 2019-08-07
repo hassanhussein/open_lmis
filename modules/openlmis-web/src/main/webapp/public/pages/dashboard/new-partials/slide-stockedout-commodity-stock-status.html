@@ -1,8 +1,10 @@
 
 
-    <div ng-controller="StockedOutCommodityStatusController" class="col s12 m6 l6">
-        <div class="section grey lighten-5 card row3-height" overlay-section="mostStockedOutProductStockStatusSection" style="padding-top: 0rem !important;">
-            <h2><span > Most Stocked out Products</span></h2>
+    <div ng-controller="StockedOutCommodityStatusController" dashlet="mostStockedOutProductStockStatusSection" class="col s12 m6 l6">
+        <div class="section grey lighten-5 card row3-height overlay-section"  style="padding-top: 0rem !important;">
+            <h2><span > Most Stocked out Products</span>
+                <div class="dashlet-config pull-right green-header-config-icon"></div>
+            </h2>
             Select Facility : <select ng-model="facilityFilter" ng-change="filterAndPaginateFacilityCommodityStatus()">
                 <option value="">--Select Facility--</option>
                 <option ng-repeat="f in stockedFacilities" ng-value="f.facilityId">{{f.facility}}</option>
