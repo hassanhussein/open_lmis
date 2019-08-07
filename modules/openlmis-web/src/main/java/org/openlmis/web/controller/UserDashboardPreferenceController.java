@@ -2,6 +2,7 @@ package org.openlmis.web.controller;
 
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.User;
 import org.openlmis.core.domain.UserDashboardReference;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.logging.ApplicationLogger;
@@ -46,13 +47,16 @@ public class UserDashboardPreferenceController extends BaseController {
 
     @RequestMapping(value = "/dashboard-preferences", method = POST, headers = ACCEPT_JSON)
 
-    public ResponseEntity<OpenLmisResponse> addPreference(@RequestBody  List<UserDashboardReference> dashboardReferencesList, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> addPreference(@RequestBody List<UserDashboardReference> dashboardReferencesList, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        User user = new User();
+        user.setId(userId);
         if (dashboardReferencesList != null && !dashboardReferencesList.isEmpty()) {
             try {
                 dashboardReferencesList.stream().forEach((dashboardReference -> {
                     dashboardReference.setCreatedBy(loggedInUserId(request));
                     dashboardReference.setModifiedBy(loggedInUserId(request));
-
+                    dashboardReference.setUser(user);
                     service.addPreference(dashboardReference);
 
                 }));
@@ -85,5 +89,13 @@ public class UserDashboardPreferenceController extends BaseController {
     public ResponseEntity<OpenLmisResponse> loaduserPreference(@PathVariable("userId") Long userId, @PathVariable("dashboard") String dashboard) {
         UserDashboardReference preference = service.loaduserPreference(userId, dashboard);
         return OpenLmisResponse.response(PREFERENCE, preference);
+    }
+
+    @RequestMapping(value = "/dashboard-preferences", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> loadUserPreferencesDashlets( HttpServletRequest request) {
+        Long userId = this.loggedInUserId(request);
+        List<UserDashboardReference> userDashboardReferenceList = null;
+        userDashboardReferenceList = service.loadDashlets(userId);
+        return OpenLmisResponse.response(PREFERENCES, userDashboardReferenceList);
     }
 }

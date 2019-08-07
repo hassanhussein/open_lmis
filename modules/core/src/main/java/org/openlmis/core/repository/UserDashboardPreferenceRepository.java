@@ -40,4 +40,8 @@ public class UserDashboardPreferenceRepository {
     public UserDashboardReference loaduserPreference(Long userId, String dashboard) {
         return mapper.loaduserPreference(userId, dashboard);
     }
+
+    public List<UserDashboardReference> loadDashlets(Long userId) {
+        return mapper.loadDashlets(userId);
+    }
 }

@@ -47,4 +47,7 @@ public class UserDashboardReferenceService {
         return repository.loaduserPreference(userId, dashboard);
     }
 
+    public List<UserDashboardReference> loadDashlets(Long userId) {
+        return repository.loadDashlets(userId);
+    }
 }

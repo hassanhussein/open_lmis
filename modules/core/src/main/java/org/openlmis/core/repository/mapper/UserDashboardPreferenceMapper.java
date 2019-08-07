@@ -43,4 +43,7 @@ public interface UserDashboardPreferenceMapper {
     @Select("select * from public.user_dashboard_preferences " +
             " where  dashboard=#{dashboard} and userid=#{userId}")
     UserDashboardReference loaduserPreference(@Param("userId") Long userId, @Param("dashboard") String dashboard);
+    @Select("select * from public.user_dashboard_preferences " +
+            " where  userid=#{userId}")
+    List<UserDashboardReference> loadDashlets(Long userId);
 }
