@@ -40,8 +40,7 @@ $scope.stockStatusesTitle = 'Stock Status Over Time for '+params.programName+', 
 
   var productName = '';
     GetProductById.get({id:parseInt($location.search().product,10)}, function(dat){
-            console.log(dat);
-            productName = dat.productDTO.product.primaryName
+            productName = dat.productDTO.product.primaryName;
 
 
 
