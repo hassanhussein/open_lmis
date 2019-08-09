@@ -44,6 +44,8 @@ public class AnalyticsController extends BaseController {
 
     @Autowired
     private RequisitionStatusMapper requisitionStatusMapper;
+    @Autowired
+    private DashboardConsumptionMapper consumptionMapper;
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
@@ -222,6 +224,15 @@ public class AnalyticsController extends BaseController {
     @RequestMapping(value = "/getEmergencyOrderFrequentAppearingProducts.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getEmergencyOrderFrequentAppearingProducts() {
         return OpenLmisResponse.response("products", this.requisitionStatusMapper.getEmergencyOrderFrequentAppearingProducts());
+    }
+
+    @RequestMapping(value = "/getConsumptionSummaryTrends.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getConsumptionSummaryTrends(@Param("program") Long program,
+                                                                                       @Param("product") Long product,
+                                                                                       @Param("year") Long year,
+                                                                                       @Param("period") Long period,
+                                                                                       HttpServletRequest request) {
+        return OpenLmisResponse.response("stocks", this.consumptionMapper.getConsumptionSummary(loggedInUserId(request), product ,program,period,year));
     }
 
 

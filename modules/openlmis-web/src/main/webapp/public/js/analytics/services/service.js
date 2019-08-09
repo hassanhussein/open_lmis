@@ -511,6 +511,30 @@ services.factory('RnRStatusSummaryData', function ($q, $timeout, $resource,RnRSt
     };
 
 });
+services.factory('ConsumptionTrendSummaryData', function ($q, $timeout, $resource,ConsumptionTrendSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+
+         ConsumptionTrendSummary.get(params,
+                    function (data) {
+                    var stocks ={};
+                    if (data !== undefined) {
+                        stocks = data.rnrStatus;
+                    }
+                    deferred.resolve(stocks);
+
+                    });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
 
 services.factory('GetNumberOfEmergency', function($resource){
     return $resource('/api//dashboard/getNumberOfEmergency.json',{}, {});
@@ -607,4 +631,8 @@ services.factory('RnRStatusSummary',function($resource){
 
 services.factory("EmergencyRnRStatusSummary", function($resource){
     return $resource('/dashboard/EmergencyRnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
+});
+
+services.factory("ConsumptionTrendSummary", function($resource){
+    return $resource('/api/dashboard/getConsumptionSummaryTrends.json',{},{});
 });
