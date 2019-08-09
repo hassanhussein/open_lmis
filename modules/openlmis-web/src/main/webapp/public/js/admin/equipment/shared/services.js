@@ -54,6 +54,9 @@ services.factory('RemoveEquipment',function($resource){
     return $resource('/equipment/manage/remove/:equipmentTypeId/:id.json',{},{});
 });
 
+services.factory('ColdtraceToken', function ($resource) {
+  return $resource('/rest-api/nexleaf-token');
+});
 
 /* Equipment Inventory */
 services.factory('EquipmentInventories', function ($resource) {
