@@ -412,6 +412,16 @@
                         <property name="recordHandler" ref="interfacePersistenceHandler"/>
                     </bean>
                 </entry>
+
+                <entry key="location-type">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="menu.header.location.type"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.LocationType</value>
+                        </property>
+                        <property name="recordHandler" ref="locationTypePersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

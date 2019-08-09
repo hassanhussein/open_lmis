@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface LocationTypeMapper {
 
-    @Insert(" INSERT INTO location_types (code,name, description, active, createdBy, createDate,modifiedBy,modifiedDate) " +
+    @Insert(" INSERT INTO location_types (code,name, description, active, createdBy, createdDate,modifiedBy,modifiedDate) " +
             " VALUES(#{code},#{name}, #{description}, #{active}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer insert(LocationType locationType);
