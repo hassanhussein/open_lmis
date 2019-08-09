@@ -95,6 +95,7 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
     $scope.visibleRegimenColumns = _.where($scope.regimenColumns, {
         'visible': true
     });
+    $scope.addNonFullSupplyLineItemButtonShown = _.findWhere($scope.programRnrColumnList, {'name': 'quantityRequested'});
 
     $scope.patientColumns = patientTemplate ? patientTemplate.columns : [];
 
@@ -328,9 +329,11 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
     }
 
     $scope.checkIfPatientColumnIsDisabled = function(colId, rowId) {
-        if (colId < 7)
+        if (colId < 8)
             return false;
-        else if (colId > 6  && (rowId === 1 || rowId === 2 || rowId === 3 || rowId === 4 || rowId === 6 || rowId === 8))
+        else if ((colId >= 11 && rowId === 3))
+            return true;
+        else if (colId > 7  && (rowId === 1 || rowId === 2 || rowId === 9 || rowId === 4 || rowId === 6 || rowId === 8))
             return true;
     };
 
@@ -339,14 +342,16 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
         $.each($scope.rnr.patientLineItems, function(index, patientLineItem) {
             var patientLineItemsIndex = index;
             patientLineItem.hasError = false;
+            if (!patientLineItem.skipped){
             $.each($scope.patientColumns, function(index, patientColumn) {
-                var isDisabled = $scope.checkIfPatientColumnIsDisabled(index + 1, patientLineItemsIndex + 1);
-                if ((patientColumn.name !== "monthOfTreatment" && !isDisabled && isUndefined(patientLineItem[patientColumn.name]))) {
+                var isDisabled = $scope.checkIfPatientColumnIsDisabled(index, patientLineItemsIndex + 1);
+                if ((patientColumn.name !== "monthOfTreatment" && patientColumn.name !== "skipped" && !isDisabled && isUndefined(patientLineItem[patientColumn.name]))) {
                     patientLineItem.hasError = true;
                     setError = true;
                     $scope.patientLineItemInValid = true;
                 }
             });
+            }
         });
         if (!setError)
             $scope.patientLineItemInValid = false;
