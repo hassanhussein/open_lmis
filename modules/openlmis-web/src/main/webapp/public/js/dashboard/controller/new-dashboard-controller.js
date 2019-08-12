@@ -1,11 +1,11 @@
 function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
                                      ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
                                      ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity, ItemFillRate, DashboardCommodityStatus, DashboardProductExpired,
-                                     DashboardRnrTypes, ShipmentInterfaces, VitalStates, dashboardSlidesHelp, UserInThreeMonths,
-                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE, ReportingRateGis, dashBoardService, UserDashboardPreference,dashboardUserpreference) {
+                                     DashboardRnrTypes, ShipmentInterfaces, VitalStates,  helpContents, UserInThreeMonths,
+                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE, ReportingRateGis, dashBoardService, UserDashboardPreference, dashboardUserpreference) {
 
     // this is the saved user dashboard preference ... so the logic to hide and show dashlet can be done using this
-    console.log("the preferen"+ JSON.stringify(dashboardUserpreference));
+    console.log("the preferen" + JSON.stringify(dashboardUserpreference));
     resourceLoadingConfig.hideReloadIcon = true;
     resourceLoadingConfig.loadingDashlet = [];
     $scope.myInterval = 3000;
@@ -1394,389 +1394,15 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
 
-    $scope.dashboardHelps = dashboardSlidesHelp;
+    $scope.dashboardHelps = helpContents;
     $scope.setHelpContentKey = function (keyValue) {
-        $scope.helpContent = $scope.dashboardHelps[keyValue];
+        $scope.helpContent = _.findWhere($scope.dashboardHelps,{key:keyValue});
 
 
     };
 }
 
 DashboardControllerFunction.resolve = {
-    dashboardSlidesHelp: function ($q, $timeout, HelpContentByKey, messageService) {
-
-        var deferred = $q.defer();
-        var helps = {};
-        $timeout(function () {
-            HelpContentByKey.get({content_key: 'Submitted R&Rs'}, function (data) {
-
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.submitterRnRHelp = data.siteContent;
-
-                } else {
-
-                    helps.submitterRnRHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-
-            });
-            HelpContentByKey.get({content_key: 'Emergency R&Rs'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.emergencyRnr = data.siteContent;
-
-                } else {
-
-                    helps.emergencyRnr = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Approved R&R'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.approvedRnrHelp = data.siteContent;
-
-                } else {
-
-                    helps.approvedRnrHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Orders send to MSL'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.orderSentToMslHelp = data.siteContent;
-
-                } else {
-
-                    helps.orderSentToMslHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Shipment by MSL'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.shipementbyMslHelp = data.siteContent;
-
-                } else {
-
-                    helps.shipementbyMslHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Products'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.productsHelp = data.siteContent;
-
-                } else {
-
-                    helps.productsHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Users'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.usersHelp = data.siteContent;
-
-                } else {
-
-                    helps.usersHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Facilities'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.facilitiesHelp = data.siteContent;
-
-                } else {
-
-                    helps.facilitiesHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Order Fill Rate'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.orderFillRateHelp = data.siteContent;
-
-                } else {
-
-                    helps.orderFillRateHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Stock Availability'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.stockAvailabilityHelp = data.siteContent;
-
-                } else {
-
-                    helps.stockAvailabilityHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Expired Products'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.expiredHelp = data.siteContent;
-
-                } else {
-
-                    helps.expiredHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Transmission Failure'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.transmissionHelp = data.siteContent;
-
-                } else {
-
-                    helps.transmissionHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'MOS'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.mosHelp = data.siteContent;
-
-                } else {
-
-                    helps.mosHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'AMC'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.amcHelp = data.siteContent;
-
-                } else {
-
-                    helps.amcHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Stock on Hand'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.stockOnHandHelp = data.siteContent;
-
-                } else {
-
-                    helps.stockOnHandHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Over Stocked'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.overStockedHelp = data.siteContent;
-
-                } else {
-
-                    helps.overStockedHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-
-            HelpContentByKey.get({content_key: 'Under Stocked'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.underStocked = data.siteContent;
-
-                } else {
-
-                    helps.underStocked = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'MAX Stock Level'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.maxStockLevel = data.siteContent;
-
-                } else {
-
-                    helps.maxStockLevel = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Reporting Rate'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.reportingRate = data.siteContent;
-
-                } else {
-
-                    helps.reportingRate = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'R&R Status Summary'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.statusSummary = data.siteContent;
-
-                } else {
-
-                    helps.statusSummary = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-//                                                                      Provinces with Most Emergency Orders (Past 3 Months)
-            HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3 Months)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.provincesWithMostEmergencyHelp = data.siteContent;
-
-                } else {
-
-                    helps.provincesWithMostEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Trend of Emergency Orders Submitted Per Month'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.trendOfEmergencyHelp = data.siteContent;
-
-                } else {
-
-                    helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Emergency Order By Program (Past 1 Month)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.emergencyByProgramHelp = data.siteContent;
-
-                } else {
-
-                    helps.emergencyByProgramHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'RnR Rejection Trends'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.rnrRejectionTrenhelp = data.siteContent;
-
-                } else {
-
-                    helps.rnrRejectionTrenhelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Regular & Emergency Requisitions'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.regularEmergencyRequisitionhelp = data.siteContent;
-
-                } else {
-
-                    helps.rnrRejectionTrendelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Percentage of Emergency Orders by Program (all time)'}, function (data) {
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.percentageOfEmergencyByProgramhelp = data.siteContent;
-
-                } else {
-
-                    helps.percentageOfEmergencyByProgramhelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Percentage of Regular Orders by Program (all time)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.percentageofRegularOrdersHelp = data.siteContent;
-
-                } else {
-
-                    helps.percentageofRegularOrdersHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Trend of Regular Orders Submitted Per Month'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.trendOfReHelp = data.siteContent;
-
-                } else {
-
-                    helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Regular Order By Program (Past 1 Month)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.regularByProgramHelp = data.siteContent;
-
-                } else {
-
-                    helps.regularByProgramHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-
-            deferred.resolve(helps);
-
-        }, 100);
-        return deferred.promise;
-    },
     dashboardUserpreference: function ($q, $timeout, UserDashboardPreferences, messageService) {
 
         var deferred = $q.defer();
@@ -1792,6 +1418,20 @@ DashboardControllerFunction.resolve = {
                 }
             });
             deferred.resolve(dashboardPreference);
+        }, 100);
+        return deferred.promise;
+    },
+    helpContents: function ($q, $timeout, DashboardDashletHelpContent, messageService) {
+
+        var deferred = $q.defer();
+
+        $timeout(function () {
+            var dashletHelps = [];
+            DashboardDashletHelpContent.get({}, function (data) {
+                dashletHelps = data.dashboardDashletHelp;
+                deferred.resolve(dashletHelps);
+            });
+
         }, 100);
         return deferred.promise;
     }

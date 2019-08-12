@@ -686,6 +686,9 @@ services.factory('SiteContent', function ($resource) {
 services.factory('HelpContentByKey', function ($resource) {
     return $resource('/general_content/:content_key.json', {}, {post: {method: 'GET'}});
 });
+services.factory('DashboardDashletHelpContent', function ($resource) {
+    return $resource('/dashboard_dashlet_help.json', {}, {post: {method: 'GET'}});
+});
 services.factory('VaccineTargetUpdate', function ($resource) {
     return $resource('/vaccine/target/create.json', {}, {post: {method: 'POST'}});
 });
