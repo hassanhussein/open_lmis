@@ -1,29 +1,18 @@
-function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
-                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
-                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity, ItemFillRate, DashboardCommodityStatus, DashboardProductExpired,
-                                     DashboardRnrTypes, ShipmentInterfaces, VitalStates,  helpContents, UserInThreeMonths,
-                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE, ReportingRateGis, dashBoardService, UserDashboardPreference, dashboardUserpreference) {
+function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, RejectionCount, leafletData, RnRStatusSummary,
+                                    GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
+                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams,
+                                     messageService, GetEmergencyOrderTrendsData, ngTableParams, $filter, ReportingRate,
+                                     StockStatusAvailaiblity, ItemFillRate, DashboardCommodityStatus, DashboardProductExpired,
+                                     DashboardRnrTypes, ShipmentInterfaces, VitalStates, helpContents, UserInThreeMonths,
+                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE,
+                                     ReportingRateGis,dashBoardService, UserDashboardPreference, dashboardUserpreference) {
 
     // this is the saved user dashboard preference ... so the logic to hide and show dashlet can be done using this
-    console.log("the preferen" + JSON.stringify(dashboardUserpreference));
+    $scope.persistedConfigs = dashboardUserpreference;
     resourceLoadingConfig.hideReloadIcon = true;
     resourceLoadingConfig.loadingDashlet = [];
-    $scope.myInterval = 3000;
-    $scope.slides = [
-        {
-            image: 'http://lorempixel.com/400/200/'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/food'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/sports'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/people'
-        }
-    ];
-    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+    "November", "December"];
 
     $scope.displayCurrentDate = monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
 
@@ -91,12 +80,15 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         var chartId = 'emergencyTrend';
         var category = _.pluck(data, 'Month');
         var value = _.pluck(data, 'Emergency Requisitions');
-        loadTheChart(category, value, chartId, 'line', 'Year and Month', 'Emergency Order Trends (past 1 year)', '# of requisitions');
+        loadTheChart(category, value, chartId, 'line', 'Year and Month', 'Emergency Order Trends (past 1 year)',
+         '# of requisitions');
 
         console.log(data);
     });
     var dashboardPreferenceSaveCallback = function (data) {
+        $scope.message = 'Dashboard preference saved successfully';
         console.log("saved successfully");
+        window.location.reload();
     };
     var errorFunc = function (data) {
         console.log("error occured while saving");
@@ -1424,15 +1416,15 @@ DashboardControllerFunction.resolve = {
     helpContents: function ($q, $timeout, DashboardDashletHelpContent, messageService) {
 
         var deferred = $q.defer();
-
-        $timeout(function () {
+deferred.resolve([]);
+        /*$timeout(function () {
             var dashletHelps = [];
             DashboardDashletHelpContent.get({}, function (data) {
                 dashletHelps = data.dashboardDashletHelp;
                 deferred.resolve(dashletHelps);
             });
 
-        }, 100);
+        }, 100);*/
         return deferred.promise;
     }
 };
