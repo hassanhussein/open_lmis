@@ -45,7 +45,7 @@ public interface ApproverMapper {
       "where r.id = #{RnrID} and u.active = true and u.verified = true and u.receiveSupervisoryNotifications = true")
   List<User> getNextSupervisors( @Param(value = "RnrID") Long rnrID );
 
-  @Select("select chatId, label, rnrId  from telegram_bot_subscribers where rnrId=#{rnrId} and active=true and label='REQUISITION_STATUS'")
-  List <Subscribers> getListOfSubscribers (@Param(value = "rnrId") Long rnrId);
+//  @Select("select chatId, label, rnrId  from telegram_bot_subscribers where rnrId=#{rnrId} and active=true and label='REQUISITION_STATUS'")
+//  List <Subscribers> getListOfSubscribers (@Param(value = "rnrId") Long rnrId);
 
 }

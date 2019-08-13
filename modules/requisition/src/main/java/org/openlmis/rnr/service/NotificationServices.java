@@ -67,7 +67,7 @@ public class NotificationServices {
     final String telegram_send_notification_base_url = "https://api.telegram.org/bot" +  staticReferenceDataService.getPropertyValue("bot.token") +"/sendMessage?chat_id=";
     String telegram_content = null;
 
-    subscribers = approverService.getListOfSubscribers(requisition.getId());
+//    subscribers = approverService.getListOfSubscribers(requisition.getId());
 
     if(subscribers != null){
         for(Subscribers subscriber : subscribers)
