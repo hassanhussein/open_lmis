@@ -39,9 +39,9 @@ public class ApproverService {
   }
 
 
-  public List<Subscribers> getListOfSubscribers(Long rnrId){
-    return approverMapper.getListOfSubscribers(rnrId);
-  }
+//  public List<Subscribers> getListOfSubscribers(Long rnrId){
+//    return approverMapper.getListOfSubscribers(rnrId);
+//  }
 
 
 
