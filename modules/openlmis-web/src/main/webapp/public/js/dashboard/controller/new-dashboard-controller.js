@@ -8,25 +8,9 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
                                      ReportingRateGis,dashBoardService, UserDashboardPreference, dashboardUserpreference) {
 
     // this is the saved user dashboard preference ... so the logic to hide and show dashlet can be done using this
-    console.log("the preferen"+ JSON.stringify(dashboardUserpreference));
     $scope.persistedConfigs = dashboardUserpreference;
     resourceLoadingConfig.hideReloadIcon = true;
     resourceLoadingConfig.loadingDashlet = [];
-    $scope.myInterval = 3000;
-    $scope.slides = [
-        {
-            image: 'http://lorempixel.com/400/200/'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/food'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/sports'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/people'
-        }
-    ];
     var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
     "November", "December"];
 
@@ -1432,15 +1416,15 @@ DashboardControllerFunction.resolve = {
     helpContents: function ($q, $timeout, DashboardDashletHelpContent, messageService) {
 
         var deferred = $q.defer();
-
-        $timeout(function () {
+deferred.resolve([]);
+        /*$timeout(function () {
             var dashletHelps = [];
             DashboardDashletHelpContent.get({}, function (data) {
                 dashletHelps = data.dashboardDashletHelp;
                 deferred.resolve(dashletHelps);
             });
 
-        }, 100);
+        }, 100);*/
         return deferred.promise;
     }
 };
