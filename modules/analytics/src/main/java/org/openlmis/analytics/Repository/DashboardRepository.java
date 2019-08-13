@@ -18,8 +18,8 @@ public class DashboardRepository {
         return mapper.getUsers();
     }
 
-    public List<HashMap<String,Object>> getStockStatusSummary(Long userId, Long product, Long program, Long year){
-        return mapper.getStockStatusSummary(userId,product,program,year);
+    public List<HashMap<String,Object>> getStockStatusSummary(Long userId, Long product, Long program, Long year,Long schedule){
+        return mapper.getStockStatusSummary(userId,product,program,year,schedule);
     }
 
     public List<HashMap<String,Object>> getStockAvailableForPeriod(Long userId, Long period){
