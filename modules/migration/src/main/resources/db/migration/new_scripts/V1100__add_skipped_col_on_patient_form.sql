@@ -1,0 +1,2 @@
+INSERT INTO program_patient_columns(name, programId, label, visible, dataType, displayorder, fixed) values
+('skipped',(select id from programs where code='TB&LEPROSY'), 'header.skipped',true,'patient.reporting.dataType.boolean', 0, true);
