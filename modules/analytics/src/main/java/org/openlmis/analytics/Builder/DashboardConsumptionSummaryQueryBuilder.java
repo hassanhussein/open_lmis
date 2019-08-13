@@ -12,7 +12,7 @@ public class DashboardConsumptionSummaryQueryBuilder {
 
      return " select productCode,productname, periodName, sum(amc)amc,sum(stockinhand) soh, sum(mos) mos from \n" +
              "\n" +
-             "mv_dashboard_consumption_summary where periodId ='"+period+"'::int and programId = '"+program+"'::int and productId = '1272'::INT\n" +
+             "mv_dashboard_consumption_summary where programId = '"+program+"'::int and productId IN('"+productIds+"'::INT)\n" +
 
              "GROUP BY PERIODNAME,productCode,productname ";
  }

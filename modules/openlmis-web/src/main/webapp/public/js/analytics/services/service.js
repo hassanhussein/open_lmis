@@ -521,7 +521,7 @@ services.factory('ConsumptionTrendSummaryData', function ($q, $timeout, $resourc
                     function (data) {
                     var stocks ={};
                     if (data !== undefined) {
-                        stocks = data.rnrStatus;
+                        stocks = data.stocks;
                     }
                     deferred.resolve(stocks);
 
