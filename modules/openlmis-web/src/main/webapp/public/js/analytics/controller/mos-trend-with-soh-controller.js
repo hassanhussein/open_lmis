@@ -1,5 +1,28 @@
-function mosTrendWithSOHController ($scope,$rootScope){
+function mosTrendWithSOHController ($scope,$rootScope,ConsumptionTrendSummaryData){
 $rootScope.mos_soh_title = 'MOS Trend Of Nevirapine with SOH ,April- June, 2019';
+
+
+$rootScope.loadConsumptionTrendSummary = function (params) {
+     console.log(params);
+     params.product = '1272';
+     params.period = parseInt(95,10);
+     params.program = parseInt(1,10);
+
+ConsumptionTrendSummaryData.get(params).then(function(data){
+console.log(data);
+
+    if(!isUndefined(data)) {
+
+
+
+
+    }
+
+});
+
+}
+
+
 
 Highcharts.chart('mos-soh-chart', {
     chart: {
