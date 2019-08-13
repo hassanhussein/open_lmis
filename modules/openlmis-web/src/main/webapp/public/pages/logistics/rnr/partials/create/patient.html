@@ -16,15 +16,23 @@
                 <tr>
                     <th class="col-{{patientColumn.name}}"
                         ng-repeat="patientColumn in patientColumns | filter:{fixed : true}">
-                        <div class="regimen-heading">
+                        <ng-switch on="patientColumn.name">
+                           <span ng-if="patientColumn.name == 'skipped'">
+                              <a href="" id="selectAll" ng-click="setSkipAll(true)"
+                                 openlmis-message="label.select.all"></a>&nbsp;|
+                              <a href="" id="selectNone" ng-click="setSkipAll(false)"
+                                 openlmis-message="label.select.none"></a>
+                          </span>
+                        <div ng-switch-default  class="regimen-heading">
                             <span style="float: right;position: relative;left: -50%; text-align: left;"  openlmis-message="patientColumn.label"></span>
                         </div>
+                        </ng-switch>
                     </th>
                 </tr>
                 </thead>
                 <tbody ng-repeat="patientLineItem in page.patient">
                 <tr>
-                    <td class="productCategory" colspan="{{visiblePatientColumns.columns.length}}"
+                    <td class="productCategory" colspan="{{(patientColumns|filter:{fixed : true}).length}}"
                         ng-show="showCategory($index)"
                         ng-bind="patientLineItem.category.name"></td>
                 </tr>
@@ -34,6 +42,9 @@
                         <ng-switch on="patientColumn.name">
                           <span ng-switch-when="monthOfTreatment" class="cell-text" >
                             <span  ng-bind="patientLineItem.name" class="padding2px"></span>
+                          </span>
+                            <span ng-switch-when="skipped" class="col-skipped">
+                            <input id="skip_{{patientLineItem.id}}" ng-model="patientLineItem.skipped" type="checkbox"/>
                           </span>
                         </ng-switch>
                     </td>
@@ -49,12 +60,6 @@
                         ng-repeat="patientColumn in patientColumns | filter:{fixed : false}">
                         <div class="regimen-heading">
                             <span style="float: right;position: relative;left: -50%; text-align: left;" openlmis-message="patientColumn.label"></span>
-                            <span ng-if="patientColumn.name == 'skipped'">
-                              <a href="" id="selectAll" ng-click="setSkipAll(true)"
-                                 openlmis-message="label.select.all"></a>&nbsp;|
-                              <a href="" id="selectNone" ng-click="setSkipAll(false)"
-                                 openlmis-message="label.select.none"></a>
-                          </span>
                         </div>
                     </th>
                 </tr>
@@ -74,13 +79,14 @@
                             <span ng-bind="patientLineItem.name" class="padding2px"></span>
                           </span>
                             <span ng-switch-default  class="position-relative" >
-                                 <input ng-required="false"
-                                        ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder)"
+                                 <input
+                                         ng-required="false"
+                                        ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder) || (patientLineItem.skipped && !patientLineItem[patientColumn.name])"
                                         id="{{getId(patientColumn.name, $parent)}}"
                                         type="text"
                                         ng-model="patientLineItem[patientColumn.name]"
                                         maxlength="8"
-                                        ng-class="highlightPatientRequired(showError, patientLineItem[patientColumn.name], disableInput($index + 1, patientLineItem.patientDisplayOrder))"/>
+                                        ng-class="highlightPatientRequired(showError, patientLineItem[patientColumn.name], disableInput($index + 1, patientLineItem.patientDisplayOrder), patientLineItem['skipped'])"/>
                                  <span class="rnr-form-error"
                                        style="display:none;" openlmis-message="error.number.only">
                                  </span>

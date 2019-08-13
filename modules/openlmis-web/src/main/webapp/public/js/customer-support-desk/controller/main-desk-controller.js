@@ -14,13 +14,15 @@ function MainDeskController($scope, $location, faqArticles, archive) {
 
     $scope.viewFAQContent = function(contentNumber) {
         $location.path($location.path().replace(getURLName(), 'articles')).search({
-            param: $scope.faqArticles.values[contentNumber].content.iframeSrc
+            param: $scope.faqArticles.values[contentNumber].content.iframeSrc,
+            title: $scope.faqArticles.values[contentNumber].title
         });
     };
 
     $scope.viewArchiveContent = function(contentNumber) {
         $location.path($location.path().replace(getURLName(), 'articles')).search({
-            param: $scope.archive.values[contentNumber].content.iframeSrc
+            param: $scope.archive.values[contentNumber].content.iframeSrc,
+            title: $scope.archive.values[contentNumber].title
         });
     };
 

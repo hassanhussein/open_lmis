@@ -31,6 +31,9 @@ config(['$routeProvider', function($routeProvider) {
         resolve: {
             topicUrl: ['$route', function($route) {
                 return $route.current.params.param;
+            }],
+            title: ['$route', function($route) {
+              return $route.current.params.title;
             }]
         }
     }).

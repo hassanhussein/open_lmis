@@ -129,7 +129,7 @@
         <span ng-switch-when="quantityReceived"
               ng-class="getCellErrorClass(rnrLineItem)" class="position-relative">
             <input ng-required="true"
-                   ng-disabled="formDisabled || rnrLineItem.skipped"
+                   ng-disabled="formDisabled || rnrLineItem.skipped || patientCount > 0"
                    id="{{getId(column.name, $parent)}}" type="text"
                    name="quantityReceived{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
@@ -315,8 +315,21 @@
           </span>
         </span>
 
+        <span ng-switch-when="nextMonthPatient" class="position-relative">
+            <input ng-required="true"
+                   ng-disabled="formDisabled || rnrLineItem.skipped"
+                   id="{{getId(column.name, $parent)}}"
+                   type="number" name="nextMonthPatient{{rnrLineItem['id']}}"
+                   ng-model="rnrLineItem[column.name]"
+                   numeric-validator="positiveInteger" maxlength="8"
+                   ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
+            <span class="rnr-form-error" id="nextMonthPatient{{rnrLineItem['id']}}"
+                  style="display:none;" openlmis-message="error.number.only">
+          </span>
+        </span>
+
        <span class="reasonForRequestedQuantityContainer" ng-switch-when="remarksForTBDispensedQuantity">
-          <input ng-disabled="formDisabled || rnrLineItem.skipped"
+          <input ng-disabled="true"
                  id="{{getId(column.name, $parent)}}" type="text"
                  name="reasonForRequestedQuantity{{rnrLineItem['id']}}"
                  ng-model="rnrLineItem[column.name]"

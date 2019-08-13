@@ -24,7 +24,7 @@
                 </thead>
                 <tbody ng-repeat="patientLineItem in page.patient">
                 <tr>
-                    <td class="productCategory" colspan="{{visiblePatientColumns.columns.length}}"
+                    <td class="productCategory" colspan="{{(patientColumns|filter:{fixed : true}).length}}"
                         ng-show="showCategory($index)"
                         ng-bind="patientLineItem.category.name"></td>
                 </tr>
@@ -34,6 +34,10 @@
                         <ng-switch on="patientColumn.name">
                           <span ng-switch-when="monthOfTreatment" class="cell-text" >
                             <span ng-bind="patientLineItem.name" class="padding2px"></span>
+                          </span>
+                            <span ng-switch-when="skipped" class="col-skipped">
+                         <input ng-model="patientLineItem.skipped" id="skip_{{$parent.$parent.$index}}"
+                                ng-disabled="true" type="checkbox">
                           </span>
                         </ng-switch>
                     </td>

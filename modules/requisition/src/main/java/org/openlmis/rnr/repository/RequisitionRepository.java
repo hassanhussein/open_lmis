@@ -241,6 +241,16 @@ public class RequisitionRepository {
             updateEquipmentLineItems(rnr);
             updateManualTestsLineItems(rnr);
             updatePatientLineItems(rnr);
+
+        }else if(rnr.getStatus() == IN_APPROVAL && rnr.getPatientLineItems().size()>0)
+        {
+            updateFullSupplyLineItemsForTBMonthlyProgram(rnr);
+        }
+    }
+
+    private void updateFullSupplyLineItemsForTBMonthlyProgram(Rnr requisition){
+        for (RnrLineItem lineItem : requisition.getFullSupplyLineItems()) {
+            rnrLineItemMapper.updateQuantityReceived(lineItem);
         }
     }
 

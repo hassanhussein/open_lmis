@@ -62,6 +62,7 @@ public class ProgramRnrTemplate extends Template {
     public static final String QUANTITY_ISSUE = "quantityToIssue";
     public static final String QUANTITY_NEEDED_BY_HF = "totalQuantityNeededByHF";
     public static final String TOTAL_REQUIREMENT = "totalRequirement";
+    public static final String REMARKS_FOR_TB = "remarksForTBDispensedQuantity";
     @Getter
     private Map<String, RnrColumn> rnrColumnsMap = new HashMap<>();
     private Map<String, OpenLmisMessage> errorMap = new HashMap<>();

@@ -15,6 +15,7 @@ services.factory('requisitionService', function(messageService) {
     var EQUIPMENT = 'equipment';
     var MANUAL_TEST = 'manualTest';
     var PATIENT = 'patient';
+    var patientLineItem;
 
     var populateScope = function($scope, $location, $routeParams) {
         $scope.visibleTab = $routeParams.supplyType;
@@ -46,8 +47,8 @@ services.factory('requisitionService', function(messageService) {
             return null;
         };
 
-        $scope.highlightPatientRequired = function(showError, value, disabled) {
-            if (showError && isUndefined(value) && !disabled) {
+        $scope.highlightPatientRequired = function(showError, value, disabled, skipped) {
+            if (showError && isUndefined(value) && !disabled && !skipped) {
                 return "required-error";
             }
             return null;
@@ -83,7 +84,6 @@ services.factory('requisitionService', function(messageService) {
     };
 
     var refreshGrid = function($scope, $location, $routeParams, save) {
-
         var lineItemMap = {
             'nonFullSupply': $scope.rnr.nonFullSupplyLineItems,
             'fullSupply': $scope.rnr.fullSupplyLineItems,
@@ -113,74 +113,101 @@ services.factory('requisitionService', function(messageService) {
         $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page,
             10) : 1;
 
-
         $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1),
             $scope.pageSize * $scope.currentPage);
 
         if ($scope.rnr.patientLineItems.length > 0)
             updateCalculatedColumn($scope.page[$scope.visibleTab], $scope.rnr.patientLineItems);
+
     };
 
     function updateCalculatedColumn(fullSupplyLineItems, patientLineItems) {
 
-        angular.forEach(fullSupplyLineItems, function(fullSupplyLineItem, key) {
+       angular.forEach(fullSupplyLineItems, function(fullSupplyLineItem, key) {
             switch (fullSupplyLineItem.patientCalculationFormula) {
                 case 'ADULT_NEW_INTENSIVE_PHASE':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[0].firstMonth, messageService.get("radix.no")) + parseInt(patientLineItems[0].secondMonth,messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of adult patients(New)";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth, messageService.get("radix.no")) + parseInt(patientLineItem.secondMonth,messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 case 'ADULT_NEW_CONTINUATION_PHASE':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[0].thirdMonth,messageService.get("radix.no")) + parseInt(patientLineItems[0].fourthMonth,messageService.get("radix.no")) +
-                        parseInt(patientLineItems[0].fifthMonth,messageService.get("radix.no")) + parseInt(patientLineItems[0].sixthMonth,messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of adult patients(New)";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.thirdMonth,messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth,messageService.get("radix.no")) +
+                        parseInt(patientLineItem.fifthMonth,messageService.get("radix.no")) + parseInt(patientLineItem.sixthMonth,messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
 
                 case 'CHILD_NEW_INTENSIVE_PHASE':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[1].firstMonth,messageService.get("radix.no")) + parseInt(patientLineItems[1].secondMonth,messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of children(New)";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth,messageService.get("radix.no")) + parseInt(patientLineItem.secondMonth,messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 case 'CHILD_NEW_CONTINUATION_PHASE':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[1].thirdMonth,messageService.get("radix.no")) + parseInt(patientLineItems[1].fourthMonth,messageService.get("radix.no")) +
-                        parseInt(patientLineItems[1].fifthMonth,messageService.get("radix.no")) + parseInt(patientLineItems[1].sixthMonth,messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of children(New)";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.thirdMonth,messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth,messageService.get("radix.no")) +
+                        parseInt(patientLineItem.fifthMonth,messageService.get("radix.no")) + parseInt(patientLineItem.sixthMonth,messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 case 'MB_ADULT':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[4].firstMonth,messageService.get("radix.no")) + parseInt(patientLineItems[4].secondMonth,messageService.get("radix.no")) +
-                        parseInt(patientLineItems[4].thirdMonth,messageService.get("radix.no")) + parseInt(patientLineItems[4].fourthMonth,messageService.get("radix.no")) + parseInt(patientLineItems[4].fifthMonth,messageService.get("radix.no")) +
-                        parseInt(patientLineItems[4].sixthMonth,messageService.get("radix.no")) + parseInt(patientLineItems[4].seventhMonth,messageService.get("radix.no")) + parseInt(patientLineItems[4].eighthMonth,messageService.get("radix.no")) +
-                            parseInt(patientLineItems[4].ninthMonth,messageService.get("radix.no")) + parseInt(patientLineItems[4].tenthMonth,messageService.get("radix.no")) + parseInt(patientLineItems[4].eleventhMonth,messageService.get("radix.no")) +
-                            parseInt(patientLineItems[4].twelfthMonth,messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of adult on MB regimen";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth,messageService.get("radix.no")) + parseInt(patientLineItem.secondMonth,messageService.get("radix.no")) +
+                        parseInt(patientLineItem.thirdMonth,messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth,messageService.get("radix.no")) + parseInt(patientLineItem.fifthMonth,messageService.get("radix.no")) +
+                        parseInt(patientLineItem.sixthMonth,messageService.get("radix.no")) + parseInt(patientLineItem.seventhMonth,messageService.get("radix.no")) + parseInt(patientLineItem.eighthMonth,messageService.get("radix.no")) +
+                        parseInt(patientLineItem.ninthMonth,messageService.get("radix.no")) + parseInt(patientLineItem.tenthMonth,messageService.get("radix.no")) + parseInt(patientLineItem.eleventhMonth,messageService.get("radix.no")) +
+                            parseInt(patientLineItem.twelfthMonth,messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 case 'PB_ADULT':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[5].firstMonth,10) + parseInt(patientLineItems[5].secondMonth,10) +
-                        parseInt(patientLineItems[5].thirdMonth,10) + parseInt(patientLineItems[5].fourthMonth,10) + parseInt(patientLineItems[5].fifthMonth,10) +
-                        parseInt(patientLineItems[5].sixthMonth,10);
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of adult on PB regimen";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth,messageService.get("radix.no")) + parseInt(patientLineItem.secondMonth,messageService.get("radix.no")) +
+                        parseInt(patientLineItem.thirdMonth,messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth,messageService.get("radix.no")) + parseInt(patientLineItem.fifthMonth,messageService.get("radix.no")) +
+                        parseInt(patientLineItem.sixthMonth,messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 case 'MB_PEDIATRIC':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[6].firstMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].secondMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[6].thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].fifthMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[6].sixthMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].seventhMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].eighthMonth, messageService.get("radix.no")) +
-                            parseInt(patientLineItems[6].ninthMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].tenthMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].eleventhMonth, messageService.get("radix.no")) +
-                            parseInt(patientLineItems[6].twelfthMonth, messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of children on MB regimen";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth, messageService.get("radix.no")) + parseInt(patientLineItems[6].secondMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fifthMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.sixthMonth, messageService.get("radix.no")) + parseInt(patientLineItem.seventhMonth, messageService.get("radix.no")) + parseInt(patientLineItem.eighthMonth, messageService.get("radix.no")) +
+                            parseInt(patientLineItem.ninthMonth, messageService.get("radix.no")) + parseInt(patientLineItem.tenthMonth, messageService.get("radix.no")) + parseInt(patientLineItem.eleventhMonth, messageService.get("radix.no")) +
+                            parseInt(patientLineItem.twelfthMonth, messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 case 'PB_PEDIATRIC':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[7].firstMonth, messageService.get("radix.no")) + parseInt(patientLineItems[7].secondMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[7].thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItems[7].fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItems[7].fifthMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[7].sixthMonth, messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of children on PB regimen";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth, messageService.get("radix.no")) + parseInt(patientLineItem.secondMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fifthMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.sixthMonth, messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
 
                 case 'IPT_PEDIATRIC':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[3].firstMonth, messageService.get("radix.no")) + parseInt(patientLineItems[3].secondMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[3].thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItems[3].fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItems[3].fifthMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[3].sixthMonth, messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of Children on IPT";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth, messageService.get("radix.no")) + parseInt(patientLineItem.secondMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fifthMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.sixthMonth, messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 case 'IPT_ADULT':
-                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItems[2].firstMonth, messageService.get("radix.no")) + parseInt(patientLineItems[2].secondMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[2].thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItems[2].fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItems[2].fifthMonth, messageService.get("radix.no")) +
-                        parseInt(patientLineItems[2].sixthMonth, messageService.get("radix.no"));
+                    patientLineItem = patientLineItems.filter(function(item){return item.code === "Number of Children on IPT";})[0];
+                    fullSupplyLineItem.nextMonthPatient = parseInt(patientLineItem.firstMonth, messageService.get("radix.no")) + parseInt(patientLineItem.secondMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.thirdMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fourthMonth, messageService.get("radix.no")) + parseInt(patientLineItem.fifthMonth, messageService.get("radix.no")) +
+                        parseInt(patientLineItem.sixthMonth, messageService.get("radix.no"));
+                    if(isNaN(fullSupplyLineItem.nextMonthPatient)) fullSupplyLineItem.nextMonthPatient=0;
                     break;
                 default:
                     break;
 
             }
             //Need to put this somewhere
-            fullSupplyLineItem.quantityReceived = 0;
+            if(fullSupplyLineItem.stockInHand){
+              fullSupplyLineItem.quantityReceived = 0;
+              fullSupplyLineItem.totalRequirement = fullSupplyLineItem.nextMonthPatient * fullSupplyLineItem.dosesPerMonth;
+              fullSupplyLineItem.totalQuantityNeededByHF = (fullSupplyLineItem.totalRequirement * 2);
+              fullSupplyLineItem.quantityToIssue = fullSupplyLineItem.totalQuantityNeededByHF - fullSupplyLineItem.stockInHand;
+              if(fullSupplyLineItem.quantityToIssue < 0) fullSupplyLineItem.quantityToIssue = 0;
+              fullSupplyLineItem.total = Math.floor(fullSupplyLineItem.quantityToIssue / utils.parseIntWithBaseTen(fullSupplyLineItem.packSize));
+           }
         });
     }
 

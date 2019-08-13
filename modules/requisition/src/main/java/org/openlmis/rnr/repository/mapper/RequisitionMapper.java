@@ -485,6 +485,7 @@ public interface RequisitionMapper {
     @Select({"SELECT * FROM requisitions WHERE facilityId = #{facilityId} AND programId = #{programId}",
             " ORDER BY periodId DESC LIMIT 1"})
     @Results(value = {
+            @Result(property = "id", column = "id"),
             @Result(property = "facility", javaType = Facility.class, column = "facilityId",
                     one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
             @Result(property = "program", javaType = Program.class, column = "programId",

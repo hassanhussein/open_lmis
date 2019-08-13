@@ -14,6 +14,7 @@ package org.openlmis.core.service;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Subscribers;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.repository.mapper.ApproverMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class ApproverService {
 
   public List<User> getFacilityBasedAutorizers(Long rnrID){
     return approverMapper.getFacilityBasedAuthorizers(rnrID);
+  }
+
+
+  public List<Subscribers> getListOfSubscribers(Long rnrId){
+    return approverMapper.getListOfSubscribers(rnrId);
   }
 
 

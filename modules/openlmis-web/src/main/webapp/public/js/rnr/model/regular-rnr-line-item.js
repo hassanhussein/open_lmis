@@ -41,7 +41,7 @@ var RegularRnrLineItem = base2.Base.extend({
     },
 
     reduceForApproval: function() {
-        return _.pick(this, 'id', 'skipped', 'productCode', 'quantityApproved', 'remarks');
+        return  _.pick(this, 'id', 'skipped', 'productCode', 'quantityApproved', 'remarks', 'remarksForTBDispensedQuantity', 'quantityReceived');
     },
 
     init: function() {
@@ -85,11 +85,14 @@ var RegularRnrLineItem = base2.Base.extend({
 
 
     calculateTBReporting: function() {
+    if(this.stockInHand){
         this.totalRequirement = this.nextMonthPatient * this.dosesPerMonth;
         this.totalQuantityNeededByHF = (this.totalRequirement * 2);
         this.quantityToIssue = this.totalQuantityNeededByHF - this.stockInHand;
+        if(this.quantityToIssue < 0) this.quantityToIssue = 0;
         this.total = Math.floor(this.quantityToIssue / utils.parseIntWithBaseTen(this.packSize));
         this.applyRoundingRulesToPacksToShipForTB(this.total);
+        }
     },
 
     applyRoundingRulesToPacksToShipForTB: function(orderQuantity) {

@@ -14,6 +14,7 @@ package org.openlmis.rnr.service;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ConfigurationSettingKey;
+import org.openlmis.core.domain.Subscribers;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
@@ -27,6 +28,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.List;
 
 @Service
@@ -54,7 +60,34 @@ public class NotificationServices {
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
 
+
   public void notifyStatusChange(Rnr requisition) {
+
+    List <Subscribers> subscribers = null;
+    final String telegram_send_notification_base_url = "https://api.telegram.org/bot" +  staticReferenceDataService.getPropertyValue("bot.token") +"/sendMessage?chat_id=";
+    String telegram_content = null;
+
+    subscribers = approverService.getListOfSubscribers(requisition.getId());
+
+    if(subscribers != null){
+        for(Subscribers subscriber : subscribers)
+        {
+            try
+            {
+              telegram_content = "RnR for facility " + requisition.getFacility().getName() + " " + requisition.getFacility().getFacilityType().getName() + " for period " + requisition.getPeriod().getName() + " " + requisition.getPeriod().getStringYear()  + " has been " + requisition.getStatus().name();
+
+
+              System.out.println(telegram_send_notification_base_url + subscriber.getChatId() + "&text=" + URLEncoder.encode(telegram_content, "UTF-8"));
+              URL url = new URL(telegram_send_notification_base_url + subscriber.getChatId() + "&text=" + URLEncoder.encode(telegram_content, "UTF-8"));
+              HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+              BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+              rd.close();
+            } catch (Exception e){
+                e.fillInStackTrace();
+            }
+        }
+
+     }
 
 
     List<User> users = null;
