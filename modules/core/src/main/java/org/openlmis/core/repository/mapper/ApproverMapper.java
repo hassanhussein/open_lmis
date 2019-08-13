@@ -15,6 +15,7 @@ package org.openlmis.core.repository.mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import org.openlmis.core.domain.Subscribers;
 import org.openlmis.core.domain.User;
 import org.springframework.stereotype.Repository;
 
@@ -43,5 +44,8 @@ public interface ApproverMapper {
       "   on u.id = ra.userId " +
       "where r.id = #{RnrID} and u.active = true and u.verified = true and u.receiveSupervisoryNotifications = true")
   List<User> getNextSupervisors( @Param(value = "RnrID") Long rnrID );
+
+  @Select("select chatId, label, rnrId  from telegram_bot_subscribers where rnrId=#{rnrId} and active=true and label='REQUISITION_STATUS'")
+  List <Subscribers> getListOfSubscribers (@Param(value = "rnrId") Long rnrId);
 
 }

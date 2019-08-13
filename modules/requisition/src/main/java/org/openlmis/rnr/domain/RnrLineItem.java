@@ -257,12 +257,12 @@ public class RnrLineItem extends LineItem {
     }
 
     public void calculateAmc(Integer numberOfMonths) {
-        Integer sumOfNCs = normalizedConsumption;
+        Integer sumOfNCs = normalizedConsumption; // Take normalize consumption value
         for (Integer previousNC : previousNormalizedConsumptions) {
-            sumOfNCs += previousNC;
+            sumOfNCs += previousNC; //loop through previousNormalizeConsumptions
         }
 
-        BigDecimal countOfNCs = new BigDecimal((previousNormalizedConsumptions.size() + 1) * numberOfMonths);
+        BigDecimal countOfNCs = new BigDecimal((previousNormalizedConsumptions.size() + 1) * numberOfMonths); //1 + 1 * 2 OR 3
 
         amc = new BigDecimal(sumOfNCs).divide(countOfNCs, MATH_CONTEXT).setScale(0, HALF_UP).intValue();
     }
@@ -407,7 +407,7 @@ public class RnrLineItem extends LineItem {
     }
 
     public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
-        String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS, SKIPPED};
+        String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS, SKIPPED, QUANTITY_RECEIVED, REMARKS_FOR_TB};
 
         for (String fieldName : approverEditableFields) {
             copyField(fieldName, lineItem, template);

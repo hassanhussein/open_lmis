@@ -44,6 +44,7 @@ public interface PatientLineItemMapper {
 
             @Result(property = "category.name", column = "patientCategory"),
             @Result(property = "category.displayOrder", column = "patientCategoryDisplayOrder"),
+            @Result(property = "skipped", column = "skipped"),
     })
     List<PatientLineItem> getPatientLineItemsByRnrId(Long rnrId);
 
@@ -62,6 +63,7 @@ public interface PatientLineItemMapper {
             "tenthMonth = #{tenthMonth} ," +
             "eleventhMonth = #{eleventhMonth} ," +
             "twelfthMonth = #{twelfthMonth} ," +
+            "skipped = #{skipped} ," +
 
             "modifiedBy = #{modifiedBy}, modifiedDate =CURRENT_TIMESTAMP where id=#{id}")
     void update(PatientLineItem patientLineItem);

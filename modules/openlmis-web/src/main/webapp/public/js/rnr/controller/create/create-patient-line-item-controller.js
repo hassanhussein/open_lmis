@@ -17,10 +17,17 @@ function CreatePatientLineItemController($scope) {
     $scope.disableInput = function(colId, rowId) {
         if (colId < 7)
             return false;
-        else if ((colId >= 10 && rowId === 3))
+      else if ((colId >= 10 && rowId === 3))
             return true;
         else if (colId > 6 && rowId != 3 && (rowId === 1 || rowId === 2 || rowId === 4 || rowId === 5 || rowId === 7 || rowId === 9))
             return true;
     };
+
+      $scope.setSkipAll = function(value){
+        _.each($scope.page.patient, function (patient) {
+          $scope.saveRnrForm.$dirty = true;
+          patient.skipped = value;
+        });
+      };
 
 }

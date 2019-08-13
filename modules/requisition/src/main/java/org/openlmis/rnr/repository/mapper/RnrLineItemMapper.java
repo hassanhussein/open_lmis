@@ -214,4 +214,14 @@ public interface RnrLineItemMapper {
   @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false and skipped = false")
   public List<RnrLineItem> getNonFullSupplyRnrLineItemsWithoutSkippedItemsByRnrId(Long rnrId);
 
+
+  @Update("UPDATE requisition_line_items " +
+          "SET quantityReceived = #{quantityReceived}, " +
+          " remarksForTBDispensedQuantity = #{remarksForTBDispensedQuantity}, " +
+          " modifiedBy = #{modifiedBy}, " +
+          " modifiedDate = CURRENT_TIMESTAMP " +
+          " WHERE id = #{id}"
+  )
+  void updateQuantityReceived (RnrLineItem lineItem);
+
 }

@@ -1,6 +1,7 @@
 package org.openlmis.restapi.service;
 
 
+
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -26,8 +27,13 @@ public class RestSDService {
 
     @Autowired
     private StaticReferenceDataService staticReferenceDataService;
+
     @Autowired
     private MessageService messageService;
+
+
+//    @Autowired
+//    private SubscriberNotificationMapper subscriberMapper;
 
 
     public String getArticlesBySearchKeyword(String query) {
@@ -86,4 +92,12 @@ public class RestSDService {
         }
         return null;
     }
+
+
+    public void addNotificationSubscribers(String chatId, Integer rnrId, String label)
+    {
+//         subscriberMapper.insert(chatId,  rnrId, label);
+    }
+
+
 }

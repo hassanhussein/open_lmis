@@ -15,6 +15,7 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
   $scope.pageSize = pageSize;
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
+  $scope.patientColumns = patientTemplate ? patientTemplate.columns : [];
 
   $scope.showMaxStock = showMaxStock;
 
@@ -159,7 +160,7 @@ ViewRnrController.resolve = {
     }, 100);
     return deferred.promise;
   },
-      patientTemplate: function($q, $timeout, $route, ProgramPatientTemplate) {
+  patientTemplate: function($q, $timeout, $route, ProgramPatientTemplate) {
           var deferred = $q.defer();
           $timeout(function() {
               ProgramPatientTemplate.get({

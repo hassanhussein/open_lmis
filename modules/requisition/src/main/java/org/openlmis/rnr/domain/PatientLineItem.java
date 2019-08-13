@@ -51,6 +51,7 @@ public class PatientLineItem extends LineItem {
 
     private Long createdBy;
     private Long modifiedBy;
+    private boolean skipped;
 
 
     private static Logger logger = LoggerFactory.getLogger(PatientLineItem.class);
