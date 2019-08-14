@@ -1,8 +1,42 @@
-function RnRQualityCheckController ($scope,$location,$state,$window,Program,Period,$rootScope,RnrPassedQualityCheckData){
+function RnRQualityCheckController (GetRejectedRnRByZoneReport,$scope,$location,$state,$window,Program,Period,$rootScope,RnrPassedQualityCheckData){
 
 $rootScope.loadRnrPassedQualityCheckData =  function (params) {
 
-    $scope.opentitle = 'R&R passed data quality check '+params.periodName+' ,'+params.year;
+         params.status='INITIATED';
+         params.max=10000;
+         params.page=1;
+         var dataV = [];
+        GetRejectedRnRByZoneReport.get(params, function (data) {
+                      console.log(data.pages.rows);
+           if(data.pages !== undefined && !isUndefined(data.pages.rows)){
+           // dataValue=data.pages.rows;
+
+            dataV = $scope.getRejectionRate(data.pages.rows);
+
+           loadChartSummary(params,dataV);
+
+           } else {
+
+            loadChartSummary(params,null);
+
+          }
+
+            //  $scope.pagination = data.pagination;
+          //  $scope.totalItems = $scope.pagination.totalRecords;
+          //  $scope.currentPage = $scope.pagination.page;
+
+            return dataV;
+        });
+
+
+
+};
+
+
+function loadChartSummary(params,drillDownData) {
+
+
+  $scope.opentitle = 'R&R passed data quality check '+params.periodName+' ,'+params.year;
 
     RnrPassedQualityCheckData.get(params).then(function(data){
 
@@ -13,18 +47,89 @@ $rootScope.loadRnrPassedQualityCheckData =  function (params) {
 
     var values = [{name:"Total number of R&R passed data quality check ",y:percentage,color:'green',drilldown:'passed_total'},{name:"Total R&R did not pass the quality check",sliced:true,color:'red',y:100-percentage,drilldown:'details'}];
 
-    getRnRPasseChart(' ',values,params);
+     $scope.dataValue = [];
+
+
+    getRnRPasseChart(' ',values,params, drillDownData);
 
     }
 
     });
 
+
+
+}
+
+
+
+
+
+$scope.loadRejectionByZone = function (params) {
+
+         var param = jQuery.param(params);
+         console.log(param);
+         params.status='INITIATED';
+         params.max=10000;
+         params.page=1;
+         var dataV = [];
+        GetRejectedRnRByZoneReport.get(params, function (data) {
+                      console.log(data.pages.rows);
+           if(data.pages !== undefined && !isUndefined(data.pages.rows)){
+           // dataValue=data.pages.rows;
+
+            dataV = $scope.getRejectionRate(data.pages.rows);
+            console.log( $scope.getRejectionRate(data.pages.rows));
+           }
+
+            //  $scope.pagination = data.pagination;
+          //  $scope.totalItems = $scope.pagination.totalRecords;
+          //  $scope.currentPage = $scope.pagination.page;
+
+            return dataV;
+        });
+
 };
 
+$scope.getRejectionRate = function(rows) {
 
+        var groupByZone = _.groupBy(rows, 'zoneName');
 
-function getRnRPasseChart(title,dataV,para){
-console.log(dataV);
+        var data = _.map(groupByZone, function (value, key) {
+
+            var total = 0;
+            for (var i = 0; i < value.length; i++) {
+                var rejectedCount = value[i].rejectionCount;
+                total += (rejectedCount);
+            }
+            return {'key': key, 'total': total};
+        });
+        var totalValues = _.pluck(data, 'total');
+        var key = _.pluck(data, 'key');
+
+        var maximumValue = Math.max.apply(null, totalValues);
+
+        var array1 = key, array3 = totalValues, result = [], i = -1;
+
+        while (array1[++i]) {
+            if (array3[i] === maximumValue)
+                result.push({
+                    name: array1[i], y: array3[i], sliced: true,
+                    selected: true,color:'red'
+                });
+            else
+                result.push([array1[i], array3[i]]);
+        }
+
+       return result;
+        //console.log(JSON.stringify(dataValue));
+       // functionalData(result);
+    };
+
+function getRnRPasseChart(title,dataV,para,drillDownData){
+
+//dataValue = [{"name":"Dar Es Salaam Zone","y":34,"sliced":true,"selected":true,"color":"red"},["Dodoma Zone",27],["Iringa Zone",12],["Mbeya Zone",31],["Moshi Zone",8],["Mtwara Zone",7],{"name":"Tabora Zone","y":34,"sliced":true,"selected":true,"color":"red"},["Tanga Zone",3]];
+
+console.log(drillDownData);
 new Highcharts.chart('rnrPassedChart', {
     chart: {
         type: 'pie'
@@ -111,80 +216,7 @@ new Highcharts.chart('rnrPassedChart', {
             {
                 name: "Chrome",
                 id: "details",
-                data: [
-                    [
-                        "v65.0",
-                        0.1
-                    ],
-                    [
-                        "v64.0",
-                        1.3
-                    ],
-                    [
-                        "v63.0",
-                        53.02
-                    ],
-                    [
-                        "v62.0",
-                        1.4
-                    ],
-                    [
-                        "v61.0",
-                        0.88
-                    ],
-                    [
-                        "v60.0",
-                        0.56
-                    ],
-                    [
-                        "v59.0",
-                        0.45
-                    ],
-                    [
-                        "v58.0",
-                        0.49
-                    ],
-                    [
-                        "v57.0",
-                        0.32
-                    ],
-                    [
-                        "v56.0",
-                        0.29
-                    ],
-                    [
-                        "v55.0",
-                        0.79
-                    ],
-                    [
-                        "v54.0",
-                        0.18
-                    ],
-                    [
-                        "v51.0",
-                        0.13
-                    ],
-                    [
-                        "v49.0",
-                        2.16
-                    ],
-                    [
-                        "v48.0",
-                        0.13
-                    ],
-                    [
-                        "v47.0",
-                        0.11
-                    ],
-                    [
-                        "v43.0",
-                        0.17
-                    ],
-                    [
-                        "v29.0",
-                        0.26
-                    ]
-                ]
+                data: drillDownData
             }
         ]
     }

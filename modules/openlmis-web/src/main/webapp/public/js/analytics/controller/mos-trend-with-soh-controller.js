@@ -12,7 +12,7 @@ ConsumptionTrendSummaryData.get(params).then(function(data){
 console.log(data);
 
    var productTitle = _.uniq(data, function(dx){
-                    return dx.productname
+                    return dx.productname;
    });
 
    var str = '';
@@ -38,7 +38,7 @@ console.log(data);
 
 });
 
-}
+};
 
 function showTheChart(categories,amc,soh,id) {
 

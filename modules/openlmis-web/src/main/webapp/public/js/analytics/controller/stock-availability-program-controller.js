@@ -161,7 +161,7 @@ Highcharts.chart(id, {
 
 
 $scope.dataTableStockStatusChart = function (category,data,title,color) {
-
+console.log(data);
 Highcharts.chart('stock-available-for-program-drill-down', {
     chart: {
         type: 'bar'
@@ -246,7 +246,7 @@ Highcharts.chart('stock-available-for-program-drill-down', {
      params.program = program;
     var allParams = angular.extend(params, {program:program});
     StockAvailableByProgramAndPeriodData.get(params).then(function(data){
-
+     console.log(data);
      $scope.titleStockForProgramAvailable = 'List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year;
      $scope.stockColor= chartData.color;
 
