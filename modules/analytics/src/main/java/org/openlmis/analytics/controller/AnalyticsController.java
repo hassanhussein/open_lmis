@@ -230,9 +230,9 @@ public class AnalyticsController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getConsumptionSummaryTrends(               @Param("program") Long program,
                                                                                        @Param("product") String product,
                                                                                        @Param("year") Long year,
-                                                                                       @Param("period") Long period,
+                                                                                       @Param("schedule") Long schedule,
                                                                                        HttpServletRequest request) {
-        return OpenLmisResponse.response("stocks", this.consumptionMapper.getConsumptionSummary(loggedInUserId(request), product ,program,period,year));
+        return OpenLmisResponse.response("stocks", this.consumptionMapper.getConsumptionSummary(loggedInUserId(request), product ,program,schedule,year));
     }
 
 

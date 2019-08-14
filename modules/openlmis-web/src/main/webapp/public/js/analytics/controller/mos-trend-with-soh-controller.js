@@ -1,20 +1,38 @@
-function mosTrendWithSOHController ($scope,$rootScope,ConsumptionTrendSummaryData){
-$rootScope.mos_soh_title = 'MOS Trend Of Nevirapine with SOH ,April- June, 2019';
+function mosTrendWithSOHController ($scope,Program,Period,$location,$rootScope,ConsumptionTrendSummaryData){
+
 
 
 $rootScope.loadConsumptionTrendSummary = function (params) {
      console.log(params);
-     params.product = '1272';
-     params.period = parseInt(95,10);
-     params.program = parseInt(1,10);
+     //params.product = '1272';
+     //params.period = parseInt(95,10);
+   //  params.program = parseInt(1,10);
 
 ConsumptionTrendSummaryData.get(params).then(function(data){
 console.log(data);
 
+   var productTitle = _.uniq(data, function(dx){
+                    return dx.productname
+   });
+
+   var str = '';
+
+   productTitle.forEach(function(product) {
+
+    str += "MOS and SOH Trend Of " + product.productname + ", "+params.periodName+', '+params.year;
+
+   });
+   console.log(str);
+  $rootScope.mos_soh_title = str;
+
     if(!isUndefined(data)) {
 
+     var categories = _.pluck(data, 'periodname');
+     var amc = _.pluck(data, 'amc');
+     var soh = _.pluck(data, 'soh');
+     var id = 'mos-soh-chart';
 
-
+     showTheChart(categories,amc,soh,id);
 
     }
 
@@ -22,9 +40,9 @@ console.log(data);
 
 }
 
+function showTheChart(categories,amc,soh,id) {
 
-
-Highcharts.chart('mos-soh-chart', {
+Highcharts.chart(id, {
     chart: {
         zoomType: 'xy'
     },
@@ -38,8 +56,7 @@ Highcharts.chart('mos-soh-chart', {
         text: ''
     },
     xAxis: [{
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        categories:categories,
         crosshair: true
     }],
     yAxis: [{ // Primary yAxis
@@ -88,7 +105,7 @@ Highcharts.chart('mos-soh-chart', {
         name: 'SOH',
         type: 'column',
         yAxis: 1,
-        data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+        data: soh,
         tooltip: {
             valueSuffix: ' '
         }
@@ -96,12 +113,49 @@ Highcharts.chart('mos-soh-chart', {
     }, {
         name: 'AMC',
         type: 'spline',
-        data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6],
+        data: amc,
         tooltip: {
             valueSuffix: ' '
         }
     }]
 });
+
+
+}
+
+
+$scope.OnFilterChanged = function () {
+
+var programName = '';
+Program.get({id: parseInt($location.search().program,10)}, function(da){
+programName = da.program.name;
+
+var periodName = '';
+Period.get({id: parseInt($location.search().period,10)}, function(da){
+periodName = da.period.name;
+
+$location.search().programName = programName;
+$location.search().periodName = periodName;
+
+$scope.$parent.params = $location.search();
+
+$rootScope.loadConsumptionTrendSummary($location.search());
+
+
+});
+
+
+});
+
+
+
+
+
+
+};
+
+
+
 
 
 

@@ -19,7 +19,7 @@ public interface DashboardConsumptionMapper {
     List<HashMap<String,Object>> getConsumptionSummary(@Param("userId") Long userId,
                                                        @Param("product") String product,
                                                        @Param("program") Long program,
-                                                       @Param("period") Long period,
+                                                       @Param("schedule") Long schedule,
                                                        @Param("year") Long year);
 
 
