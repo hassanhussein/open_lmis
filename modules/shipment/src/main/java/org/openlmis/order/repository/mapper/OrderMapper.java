@@ -13,6 +13,7 @@
 package org.openlmis.order.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
@@ -150,7 +151,7 @@ public interface OrderMapper {
           "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ",
           " INNER JOIN facilities f on f.id = r.facilityid ",
           "WHERE FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
-                  "ORDER BY f.name ASC "})
+                  "ORDER BY f.name ASC LIMIT #{limit} OFFSET #{offset} "})
   @Results({
           @Result(property = "id", column = "id"),
           @Result(property = "rnr.id", column = "id"),
@@ -160,10 +161,6 @@ public interface OrderMapper {
                   one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
   })
   List<Order> getOrdersByDepotWithoutPagination(@Param("userId") Long userId, @Param("rightName") String rightName, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
-
-
-
-
 
 
 }

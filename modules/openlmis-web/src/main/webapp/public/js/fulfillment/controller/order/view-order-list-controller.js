@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewOrderListController($scope,AllOrders,messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear, ReportProgramSchedules) {
+function ViewOrderListController($scope,Orders,AllOrders,messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear, ReportProgramSchedules) {
 
   $scope.supplylines = supplylines;
   $scope.programs = programs;
@@ -63,7 +63,7 @@ function ViewOrderListController($scope,AllOrders,messageService, $location, $ro
 
     $scope.currentPage = $routeParams.page ? utils.parseIntWithBaseTen($routeParams.page) : 1;
 
-   /* Orders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
+    Orders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
       if ((!data.orders || data.orders.length === 0) && $routeParams.page != 1) {
         $location.search('page', 1);
         return;
@@ -76,11 +76,16 @@ function ViewOrderListController($scope,AllOrders,messageService, $location, $ro
             return (rnr.rnr.emergency === false);
         });
 
-        $scope.orders = data.orders || [];$scope.search_orders = data || [];
+      //  $scope.orders = data.orders || [];$scope.search_orders = data || [];
 
-    });*/
+                    $scope.filteredOrders = data.orders || [];$scope.search_orders = data || [];
+                    $scope.orders = $scope.filteredOrders;
+                    $scope.pageSize = data.pageSize;
+                    $scope.numberOfPages = data.numberOfPages || 1;
 
-    AllOrders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
+    });
+
+   /* AllOrders.get({page: $scope.currentPage, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
 
         $scope.totalEmergency =  _.filter(data.orders, function (rnr) {
             return (rnr.rnr.emergency === true);
@@ -93,7 +98,7 @@ function ViewOrderListController($scope,AllOrders,messageService, $location, $ro
         $scope.orders = data.orders || [];$scope.search_orders = data || [];
                   console.log(data);
 
-      });
+      });*/
 
 
 
