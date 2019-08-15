@@ -30,6 +30,7 @@ public class ConsumptionBuilder {
         SELECT("ceil(sum(r.dispensed/r.packsize)::float) consumptionInPacks");
         SELECT("ceil(sum(r.consumption/r.packsize)::float) adjustedConsumptionInPacks ");
     }
+
     public static void writeCommonJoinStatment() {
         FROM("mv_requisition r");
     }
@@ -38,19 +39,21 @@ public class ConsumptionBuilder {
 
         WHERE(programIsFilteredBy("r.programid"));
         WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
-        if( filter.getPeriodStart()!=null)
-        WHERE(periodStartDateRangeFilteredBy("r.startdate", filter.getPeriodStart().trim()));
-        if( filter.getPeriodEnd()!=null)
-        WHERE(periodEndDateRangeFilteredBy("r.enddate", filter.getPeriodEnd().trim()));
-        if( filter.getPeriod()!=null)
+        if (filter.getPeriodStart() != null)
+            WHERE(periodStartDateRangeFilteredBy("r.startdate", filter.getPeriodStart().trim()));
+        if (filter.getPeriodEnd() != null)
+            WHERE(periodEndDateRangeFilteredBy("r.enddate", filter.getPeriodEnd().trim()));
+        if (filter.getPeriod() != null)
             WHERE(periodIsFilteredBy("r.periodid"));
         if (filter.getFacility() != null && filter.getFacility() != 0) {
             WHERE(facilityIsFilteredBy("r.facilityid"));
         }
         if (filter.getZone() != null && filter.getZone() != 0) {
-            WHERE(geoZoneIsFilteredBy("r.provinceid","r.parent","r.zoneid","r.districtid"));
+            WHERE(geoZoneIsFilteredBy("r.provinceid", "r.parent", "r.zoneid", "r.districtid"));
         }
-
+        if (filter.getProducts() != null && !filter.getProducts().trim().equalsIgnoreCase("")) {
+            WHERE(multiProductFilterBy(filter.getProducts(),"r.productid","r.tracer"));
+        }
         if (filter.getAllReportType()) {
             WHERE("r.emergency in (true,false)");
         } else {
@@ -62,13 +65,13 @@ public class ConsumptionBuilder {
 
         StringBuilder predicate = new StringBuilder();
         predicate.append(" where r.programid=" + filter.getProgram());
-        predicate.append(" and r.status in (" +  filter.getAcceptedRnrStatuses() + ")");
+        predicate.append(" and r.status in (" + filter.getAcceptedRnrStatuses() + ")");
         predicate.append(" and r.startdate::date>='" + filter.getPeriodStart() + "'::date");
         predicate.append(" and  r.enddate::date<='" + filter.getPeriodEnd() + "'::date");
         if (filter.getFacility() != null && filter.getFacility() != 0) {
             predicate.append(" and r.facilityid =" + filter.getFacility());
         }
-        if (filter.getZone() != null &&filter.getZone() != 0) {
+        if (filter.getZone() != null && filter.getZone() != 0) {
             predicate.append(" and (r.zoneid=" + filter.getZone() + " or r.provinceid=" +
                     filter.getZone() + " or r.districtid=" + filter.getZone() + ")");
         }
@@ -84,7 +87,7 @@ public class ConsumptionBuilder {
     public static String getOrderString(BaseParam filter) {
         String sortString = "";
         sortString = (filter.getSortBy() != null && filter.getSortBy().trim().length() > 0) ? filter.getSortBy() : " productcode ";
-        sortString = sortString+" " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
+        sortString = sortString + " " + (filter.getSortDirection() != null && filter.getSortDirection().trim().length() > 0 ? filter.getSortDirection() : " asc ");
         return sortString;
     }
 }
