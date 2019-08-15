@@ -10,34 +10,33 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $window, FacilityConsumptionReport, $q) {
-    $scope.showDisaggregatedColumns= false;
-    $scope.OnFilterChanged = function() {
+    $scope.showDisaggregatedColumns = false;
+    $scope.OnFilterChanged = function () {
         $scope.registerServerSidePagination($scope.tableParams, $scope.runReport);
     };
 
     $scope.runReport = function () {
 
-        if($scope.filter.error) return;
+        if ($scope.filter.error) return;
         var deferred = $q.defer();
-        $scope.filter.adjustedConsumption='true';
-        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
-
-        FacilityConsumptionReport.get(allParams, function (data) {
+        $scope.filter.adjustedConsumption = 'true';
+        var param = $scope.getSanitizedParameter();
+        FacilityConsumptionReport.get(param, function (data) {
             $scope.data = [];
             if (data.pages !== undefined) {
                 $scope.data = data.pages;
                 $scope.periods = $scope.data.rows.length > 0 ? $scope.data.rows[0].headerPeriods : [];
-                $scope.showDisaggregatedColumns  = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
+                $scope.showDisaggregatedColumns = $scope.filter.disaggregated === true || $scope.filter.disaggregated === 'true' ? true : false;
             }
             deferred.resolve();
-        }, function(error){
-             deferred.reject(error);
+        }, function (error) {
+            deferred.reject(error);
         });
         return deferred.promise;
     };
 
     $scope.consumptionForPeriod = function (row, period) {
-        var consumption=0;
+        var consumption = 0;
         if (!utils.isNullOrUndefined(row)) {
             consumption = _.findWhere(row.consumptionColumnList, {header: period}).valeu;
         }

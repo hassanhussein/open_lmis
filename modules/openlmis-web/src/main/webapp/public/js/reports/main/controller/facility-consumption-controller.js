@@ -19,9 +19,9 @@ function FacilityConsumptionReportController($scope, $filter, $window, FacilityC
         if($scope.filter.error) return;
 
         var deferred = $q.defer();
-        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
+        var param=$scope.getSanitizedParameter();
 
-        FacilityConsumptionReport.get($scope.getSanitizedParameter(), function (data) {
+        FacilityConsumptionReport.get(param, function (data) {
             $scope.data = [];
             if (data.pages !== undefined) {
                 $scope.data = data.pages;
