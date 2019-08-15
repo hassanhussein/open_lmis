@@ -51,7 +51,7 @@ public class ConsumptionBuilder {
         if (filter.getZone() != null && filter.getZone() != 0) {
             WHERE(geoZoneIsFilteredBy("r.provinceid", "r.parent", "r.zoneid", "r.districtid"));
         }
-        if (filter.getProducts() != null && !filter.getProducts().trim().equalsIgnoreCase("")) {
+        if (filter.getProducts() != null&&!"0".equals(filter.getProducts()) && !filter.getProducts().isEmpty()&& !filter.getProducts().trim().equalsIgnoreCase("")) {
             WHERE(multiProductFilterBy(filter.getProducts(),"r.productid","r.tracer"));
         }
         if (filter.getAllReportType()) {
