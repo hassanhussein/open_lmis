@@ -75,7 +75,9 @@ public class ConsumptionBuilder {
             predicate.append(" and (r.zoneid=" + filter.getZone() + " or r.provinceid=" +
                     filter.getZone() + " or r.districtid=" + filter.getZone() + ")");
         }
-
+        if (filter.getProducts() != null&&!"0".equals(filter.getProducts()) && !filter.getProducts().isEmpty()&& !filter.getProducts().trim().equalsIgnoreCase("")) {
+            predicate.append("and " +multiProductFilterBy(filter.getProducts(),"r.productid","r.tracer"));
+        }
         if (filter.getAllReportType()) {
             predicate.append(" and r.emergency in (true,false)");
         } else {
