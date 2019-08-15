@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.service.inventory;
 
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -58,7 +59,7 @@ public class SdpNotificationService {
     VaccineInventoryDistributionService service;
 
 
-  //  @Async("myExecutor")
+    //  @Async("myExecutor")
     public void updateNotification(VaccineDistribution distribution, Long userId) {
         System.out.println("savae  dsierr");
         service.save(distribution, userId);
@@ -69,7 +70,17 @@ public class SdpNotificationService {
             String username = configurationSettingService.getByKey(TIIS_USERNAME).getValue();
             String password = configurationSettingService.getByKey(TIIS_PASSWORD).getValue();
             if (url != null && username != null && password != null) {
-                sendHttps(d, url, username, password);
+
+                String letter = Character.toString(url.charAt(4));
+
+                if(letter.toLowerCase().equals("s")) {
+                    sendHttps(d, url, username, password);
+
+                }else {
+                    sendHttp(d, url, username, password);
+
+                }
+
 
             }
         }
@@ -115,6 +126,88 @@ public class SdpNotificationService {
         } catch (KeyManagementException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendHttp(VaccineDistribution d, String url, String username, String password) {
+        VaccineDistribution distribution = service.getDistributionByToFacility(d.getToFacilityId());
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            String jsonInString = mapper.writeValueAsString(distribution);
+
+            //URL obj = new URL(url);
+            java.net.URL wsURL = new URL(url);
+            // Create a trust manager that does not validate certificate chains
+       /*     TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }
+            };*/
+
+            // Install the all-trusting trust manager
+         /*   SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            // Create all-trusting host name verifier
+            HostnameVerifier allHostsValid = new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };*/
+
+            // Install the all-trusting host verifier
+            //HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+
+            HttpURLConnection con = (HttpURLConnection) wsURL.openConnection();
+
+            // disableSslVerification();
+            String userCredentials = username + ":" + password;
+            String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userCredentials.getBytes()));
+            con.setRequestProperty("Authorization", basicAuth);
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "text/plain");
+            System.out.println("all connection" + con);
+
+            con.setDoOutput(true);
+
+            System.out.println(jsonInString);
+
+            OutputStream wr = con.getOutputStream();
+            wr.write(jsonInString.getBytes("UTF-8"));
+
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            //print result
+            System.out.println(response.toString());
+        } catch (Exception e) {
+            System.out.println("e" + e.getMessage());
+            e.printStackTrace();
+        }
+
+
     }
 
     private void sendHttps(VaccineDistribution d, String url, String username, String password) {
@@ -198,8 +291,7 @@ public class SdpNotificationService {
 
     }
 
-
     public List<HashMap<String, Object>> getLastDistributionForFacility(Long toFacilityId, String distributionType, String distributionDate, String status) {
-       return service.getLastDistributionForFacility(toFacilityId,distributionType,distributionDate,status);
+        return service.getLastDistributionForFacility(toFacilityId,distributionType,distributionDate,status);
     }
 }
