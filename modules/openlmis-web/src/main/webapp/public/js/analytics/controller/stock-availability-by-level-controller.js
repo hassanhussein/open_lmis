@@ -11,7 +11,34 @@ if(data.length > 0 && !isUndefined(data)) {
 
 
      var tracerItems = _.filter(data, {traceritems:'tracerItems'});
+     console.log(tracerItems);
+
+/*
+      var os = ["OverStocked",value.percentage_of_os,"#00B2EE"];
+        var us = ["Understocked", value.percentage_of_us,"#FFA500"];
+        var uk = ["UnKnown",value.percentage_of_uk,"gray"];
+        var sp = ["Adequately stocked", value.percentage_of_sp,"#006600"];
+*/
+
+     var availableTracer = [
+                         {name:'OverStocked',y: tracerItems[0].percentage_of_os, color:"#00B2EE"},
+                         {name:'Understocked', y:tracerItems[0].percentage_of_us,color:"#FFA500"},
+                         {name:'Adequately Stocked', y:tracerItems[0].percentage_of_sp,color:"#006600"},
+                         {name:'Unknown',y:tracerItems[0].percentage_of_uk,color:"gray"}
+                     ];
+
+
      var allItems = _.filter(data, {traceritems:'allItems'});
+
+
+     var availableAll = [
+ {name:'OverStocked',y: allItems[0].percentage_of_os, color:"#00B2EE"},
+ {name:'Understocked', y:allItems[0].percentage_of_us,color:"#FFA500"},
+ {name:'Adequately Stocked', y:allItems[0].percentage_of_sp,color:"#006600"},
+ {name:'Unknown',y:allItems[0].percentage_of_uk,color:"gray"}
+                         ];
+
+
 
 
         var dataV = [
@@ -28,12 +55,12 @@ if(data.length > 0 && !isUndefined(data)) {
                         name: 'All Items',
                         y: 100 - allItems[0].percentage_of_total,
                          color:'#D90C29',
-                        drilldown: 'phc-not available'
+                        drilldown: null
                         }, {
                         name: 'Tracer Items',
                         y: 100 - tracerItems[0].percentage_of_total,
                         color:'#D90C29',
-                        drilldown: 'hospital-not-available'
+                        drilldown: null
                         }]
                         },
         {
@@ -59,7 +86,7 @@ if(data.length > 0 && !isUndefined(data)) {
 
      $scope.title_stock_by_level = 'Stock availability by Level for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
 
-    $scope.showTheChart(availabileData,'','',categories);
+    $scope.showTheChart(availabileData,'','',categories,availableTracer,availableAll);
      }
 
     });
@@ -67,7 +94,7 @@ if(data.length > 0 && !isUndefined(data)) {
     };
 
 
-    $scope.showTheChart = function (data,title, subtitle, categories) {
+    $scope.showTheChart = function (data,title, subtitle, categories,availableTracer,availableAll) {
 
     // Create the chart
     $('#stock-by-level').highcharts({
@@ -136,36 +163,16 @@ if(data.length > 0 && !isUndefined(data)) {
         drilldown: {
             series: [{
                 id: 'phc-available',
-                data: [
-                    ['East', 4],
-                    ['West', 2],
-                    ['North', 1],
-                    ['South', 4]
-                ]
+                data:availableTracer
             }, {
                 id: 'hospital-available',
-                data: [
-                    ['East', 6],
-                    ['West', 2],
-                    ['North', 2],
-                    ['South', 4]
-                ]
+                data: availableAll
             }, {
                 id: 'phc-not available',
-                data: [
-                    ['East', 2],
-                    ['West', 7],
-                    ['North', 3],
-                    ['South', 2]
-                ]
+                data: []
             }, {
                 id: 'hospital-not-available',
-                data: [
-                    ['East', 2],
-                    ['West', 4],
-                    ['North', 1],
-                    ['South', 7]
-                ]
+                data: []
             }]
         }
     });

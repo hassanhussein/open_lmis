@@ -37,6 +37,7 @@ DefaultProgram.get({}, function (data) {
          //$rootScope.loadStockStatusByProgramAndYearData(params);
          $rootScope.loadStockAvailableByLevel(params);
          $rootScope.loadStockStatusByProgramTrends(params,'level1');
+         $rootScope.loadConsumptionTrendSummary(params);
 
 
 

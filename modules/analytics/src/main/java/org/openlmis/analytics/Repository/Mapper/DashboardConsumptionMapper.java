@@ -17,9 +17,9 @@ public interface DashboardConsumptionMapper {
     @SelectProvider(type= DashboardConsumptionSummaryQueryBuilder.class, method="getSummary")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     List<HashMap<String,Object>> getConsumptionSummary(@Param("userId") Long userId,
-                                                       @Param("product") Long product,
+                                                       @Param("product") String product,
                                                        @Param("program") Long program,
-                                                       @Param("period") Long period,
+                                                       @Param("schedule") Long schedule,
                                                        @Param("year") Long year);
 
 
