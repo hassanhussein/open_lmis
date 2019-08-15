@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.serializer.MoneyDeSerializer;
+import org.openlmis.core.serializer.MoneySerializer;
 
 import java.math.BigDecimal;
 
@@ -25,7 +26,7 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
  * Money represents data type for all monetary entities. Provides methods to add, multiply, compare monetary entity.
  */
 @Data
-@JsonSerialize(as = BigDecimal.class)
+@JsonSerialize(using = MoneySerializer.class)
 @JsonDeserialize(using = MoneyDeSerializer.class)
 @EqualsAndHashCode(callSuper = false)
 public class Money extends Number {
