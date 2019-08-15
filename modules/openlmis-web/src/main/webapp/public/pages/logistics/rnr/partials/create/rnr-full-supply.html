@@ -136,7 +136,7 @@
                    align="right"
                    numeric-validator="positiveInteger" maxlength="8"
                    ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
-                   ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
+                   ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped) && !(patientCount > 0)"/>
             <span class="rnr-form-error" id="quantityReceived{{rnrLineItem['id']}}"
                   style="display:none;" openlmis-message="error.number.only">
             </span>

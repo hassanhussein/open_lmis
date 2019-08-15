@@ -201,7 +201,7 @@ services.factory('requisitionService', function(messageService) {
             }
             //Need to put this somewhere
             if(fullSupplyLineItem.stockInHand){
-              fullSupplyLineItem.quantityReceived = 0;
+             // fullSupplyLineItem.quantityReceived = 0;
               fullSupplyLineItem.totalRequirement = fullSupplyLineItem.nextMonthPatient * fullSupplyLineItem.dosesPerMonth;
               fullSupplyLineItem.totalQuantityNeededByHF = (fullSupplyLineItem.totalRequirement * 2);
               fullSupplyLineItem.quantityToIssue = fullSupplyLineItem.totalQuantityNeededByHF - fullSupplyLineItem.stockInHand;
