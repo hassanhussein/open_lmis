@@ -235,5 +235,11 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("stocks", this.consumptionMapper.getConsumptionSummary(loggedInUserId(request), product ,program,schedule,year));
     }
 
+    @RequestMapping(value = "/getEmergencyAndRegularRnRTrends.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getConsumptionSummaryTrends(               @Param("program") Long program,
+                                                                                       HttpServletRequest request) {
+        return OpenLmisResponse.response("stocks", this.requisitionStatusMapper.getEmergencyAndRegularRnRTrend(loggedInUserId(request),program));
+    }
+
 
 }
