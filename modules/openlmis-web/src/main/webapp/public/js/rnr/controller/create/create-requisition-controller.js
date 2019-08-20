@@ -329,11 +329,11 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
     }
 
     $scope.checkIfPatientColumnIsDisabled = function(colId, rowId) {
-        if (colId < 8)
+        if (colId < 7)
             return false;
-        else if ((colId >= 11 && rowId === 3))
+      else if ((colId >= 6 && rowId === 3))
             return true;
-        else if (colId > 7  && (rowId === 1 || rowId === 2 || rowId === 9 || rowId === 4 || rowId === 6 || rowId === 8))
+        else if (colId > 6 && rowId != 3 && (rowId === 1 || rowId === 2 || rowId === 4 || rowId === 5 || rowId === 7 || rowId === 9))
             return true;
     };
 
