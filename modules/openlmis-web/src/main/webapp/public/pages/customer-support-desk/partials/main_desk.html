@@ -29,7 +29,7 @@
             <div><h3 openlmis-message="title.support.topics"></h3></div>
             <ul class="ul-list">
                 <ul class="ul-list">
-                    <div ng-repeat="articles in archive.values | limitTo:7" ng-click="viewArchiveContent($index)">
+                    <div ng-repeat="articles in archive.values | limitTo:10" ng-click="viewArchiveContent($index)">
                         <li><a href="" >{{articles.title}}</a></li>
                     </div>
                 </ul>
@@ -39,7 +39,7 @@
             <div><h3 openlmis-message="title.support.faq"></h3></div>
             <ul class="ul-list">
                 <ul class="ul-list">
-                    <div ng-repeat="articles in faqArticles.values | limitTo:7" ng-click="viewFAQContent($index)">
+                    <div ng-repeat="articles in faqArticles.values | limitTo:10" ng-click="viewFAQContent($index)">
                         <li><a href="" >{{articles.title}}</a></li>
                     </div>
                 </ul>
