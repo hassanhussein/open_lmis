@@ -40,11 +40,11 @@ public class RestSDService {
         try {
             HttpClient client = new HttpClient();
 
-            GetMethod method = new GetMethod(staticReferenceDataService.getPropertyValue("jira.tz.url") + "/rest/servicedeskapi/" +
-                    "servicedesk/" + staticReferenceDataService.getPropertyValue("jira.tz.service-desk.id") + "/knowledgebase/article?query=" + query.replace(" ", "%"));
+            GetMethod method = new GetMethod(staticReferenceDataService.getPropertyValue("jira.openlmis.url") + "/rest/servicedeskapi/" +
+                    "servicedesk/" + staticReferenceDataService.getPropertyValue("jira.openlmis.service-desk.id") + "/knowledgebase/article?query=" + query.replace(" ", "%"));
 
             method.setRequestHeader("Accept", "application/json");
-            method.setRequestHeader("Authorization", "Basic " + staticReferenceDataService.getPropertyValue("jira.tz.authorization.key"));
+            method.setRequestHeader("Authorization", "Basic " + staticReferenceDataService.getPropertyValue("jira.openlmis.authorization.key"));
             method.setRequestHeader("X-ExperimentalApi", "opt-in");
             method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
                     new DefaultHttpMethodRetryHandler(3, false));

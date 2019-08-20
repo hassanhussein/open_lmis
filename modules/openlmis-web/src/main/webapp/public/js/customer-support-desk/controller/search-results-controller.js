@@ -14,13 +14,15 @@ function SearchResultController($scope, $location, searchResults, faqArticles) {
 
     $scope.viewContent = function(contentNumber) {
         $location.path($location.$$path.replace(getURLName(), 'articles')).search({
-            param: $scope.searchResults.values[contentNumber].content.iframeSrc
+            param: $scope.searchResults.values[contentNumber].content.iframeSrc,
+            title: $scope.searchResults.values[contentNumber].title
         });
     };
 
      $scope.viewFAQContent = function(contentNumber) {
             $location.path($location.$$path.replace(getURLName(), 'articles')).search({
-                param: $scope.faqArticles.values[contentNumber].content.iframeSrc
+                param: $scope.faqArticles.values[contentNumber].content.iframeSrc,
+                title: $scope.faqArticles.values[contentNumber].title
             });
         };
 
