@@ -1,5 +1,11 @@
 function StockAvailabilityByLevelController ($scope,$location,Program,Period, $rootScope,StockAvailableByLevelData){
 
+function calculatePercentage (num, den) {
+
+ var total = (parseInt(num,10) / parseInt(den, 10) * 100);
+ return Math.round(total,0);
+
+}
 
 $rootScope.loadStockAvailableByLevel = function(params){
 
@@ -19,28 +25,26 @@ if(data.length > 0 && !isUndefined(data)) {
         var uk = ["UnKnown",value.percentage_of_uk,"gray"];
         var sp = ["Adequately stocked", value.percentage_of_sp,"#006600"];
 */
+ var totalTracerAvailable = tracerItems[0].percentage_of_os + tracerItems[0].percentage_of_us + tracerItems[0].percentage_of_sp + tracerItems[0].percentage_of_uk;
 
-     var availableTracer = [
-                         {name:'OverStocked',y: tracerItems[0].percentage_of_os, color:"#00B2EE"},
-                         {name:'Understocked', y:tracerItems[0].percentage_of_us,color:"#FFA500"},
-                         {name:'Adequately Stocked', y:tracerItems[0].percentage_of_sp,color:"#006600"},
-                         {name:'Unknown',y:tracerItems[0].percentage_of_uk,color:"gray"}
+var availableTracer = [
+                         {name:'OverStocked',y: calculatePercentage(tracerItems[0].percentage_of_os,totalTracerAvailable), color:"#00B2EE"},
+                         {name:'Understocked', y:calculatePercentage(tracerItems[0].percentage_of_us,totalTracerAvailable),color:"#FFA500"},
+                         {name:'Adequately Stocked', y:calculatePercentage(tracerItems[0].percentage_of_sp,totalTracerAvailable),color:"#006600"},
+                         {name:'Unknown',y:calculatePercentage(tracerItems[0].percentage_of_uk,totalTracerAvailable),color:"gray"}
                      ];
 
 
-     var allItems = _.filter(data, {traceritems:'allItems'});
+ var allItems = _.filter(data, {traceritems:'allItems'});
 
+ var totalAllAvailable = allItems[0].percentage_of_os + allItems[0].percentage_of_us + allItems[0].percentage_of_sp + allItems[0].percentage_of_uk;
 
-     var availableAll = [
- {name:'OverStocked',y: allItems[0].percentage_of_os, color:"#00B2EE"},
- {name:'Understocked', y:allItems[0].percentage_of_us,color:"#FFA500"},
- {name:'Adequately Stocked', y:allItems[0].percentage_of_sp,color:"#006600"},
- {name:'Unknown',y:allItems[0].percentage_of_uk,color:"gray"}
+ var availableAll = [
+ {name:'OverStocked',y: calculatePercentage(allItems[0].percentage_of_os,totalAllAvailable), color:"#00B2EE"},
+ {name:'Understocked', y:calculatePercentage(allItems[0].percentage_of_us, totalAllAvailable),color:"#FFA500"},
+ {name:'Adequately Stocked', y:calculatePercentage(allItems[0].percentage_of_sp,totalAllAvailable),color:"#006600"},
+ {name:'Unknown',y:calculatePercentage(allItems[0].percentage_of_uk,totalAllAvailable),color:"gray"}
                          ];
-
-
-
-
         var dataV = [
 
         {name:'Tracer Items Availability', data:[tracerItems[0].percentage_of_total]},
@@ -96,8 +100,146 @@ if(data.length > 0 && !isUndefined(data)) {
 
     $scope.showTheChart = function (data,title, subtitle, categories,availableTracer,availableAll) {
 
+      (function (H) {
+
+            //For X-axis labels
+            H.wrap(H.Point.prototype, 'init', function (proceed, series, options, x) {
+                var point = proceed.call(this, series, options, x),
+                    chart = series.chart,
+                    tick = series.xAxis && series.xAxis.ticks[x],
+                    tickLabel = tick && tick.label;
+                //console.log("series");
+                //console.log(series);
+
+                if (point.drilldown) {
+
+                    if (tickLabel) {
+                        if (!tickLabel._basicStyle) {
+                            tickLabel._basicStyle = tickLabel.element.getAttribute('style');
+                        }
+                        tickLabel.addClass('highcharts-drilldown-axis-label')          .css({
+                            'text-decoration': 'none',
+                            'font-weight': 'normal',
+                            'cursor': 'auto'
+                            }).on('click', function () {
+                                if (point.doDrilldown) {
+                                    return false;
+                                }
+                            });//remove this "on" block to make axis labels clickable
+                    }
+                }
+                else if (tickLabel && tickLabel._basicStyle)
+                {
+                }
+
+                return point;
+            });
+        })(Highcharts);
+
+
+ $('#stock-by-level').highcharts({
+        chart: {
+            type: 'column'
+        },
+       title: {
+                   text: '<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>',
+                   align:'left'
+               },
+               credits :{
+                enabled:false
+               },
+               subtitle: {
+                  text: '<span style="font-size: 14px!important;color: #0c9083;">'+subtitle+' </span>'
+
+               },
+              xAxis: {
+                  type: 'category'
+              },
+               yAxis: {
+                              title: {
+                                  text: '<span style="font-size: 10px!important;color: #0c9083">Total Percentage Incidences Occurred </span>'
+                              },
+
+                       min:0,
+                       max: 100
+
+                      },
+
+
+        plotOptions: {
+            column : {
+                stacking : 'normal',
+                    borderWidth: 0,
+                                  pointWidth: 30,
+                                   pointPadding: 0.2,
+                                dataLabels: {
+                                    enabled: true
+                   }
+            }
+        },
+
+        series:data,
+        drilldown: {
+
+        series: [{      type: 'pie',
+                        size: '60%',
+                        id: 'phc-available',
+
+                                dataLabels: {
+                                                                                       enabled: true,
+                                                                                       format: '<b>  {point.percentage:.0f} %',
+
+                                                                                       /*
+                                                                                                               format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                                                                       */
+                                                                                       style: {
+                                                                                           color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                                                                           fontFamily: '\'Lato\', sans-serif', lineHeight: '18px', fontSize: '17px'
+                                                                                       }
+                                                                                   },
+                                                                                   showInLegend: true,
+
+                        data:availableAll
+                    }, {
+                        type: 'pie',
+                        size: '60%',
+                            dataLabels: {
+                           enabled: true,
+                           format: '<b>  {point.percentage:.0f} %',
+
+                                                               /*
+                                                                                       format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                                               */
+                                                               style: {
+                                                                   color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                                                   fontFamily: '\'Lato\', sans-serif', lineHeight: '18px', fontSize: '17px'
+                                                               }
+                                                           },
+                                                           showInLegend: true,
+                        id: 'hospital-available',
+                        data: availableTracer
+
+                    }, {
+                        id: 'phc-not available',
+                        data: []
+                    }, {
+                        id: 'hospital-not-available',
+                        data: []
+                    }]
+
+
+        }
+    });
+
+
+
+
+
+
+
+
     // Create the chart
-    $('#stock-by-level').highcharts({
+    /*$('#stock-by-level').highcharts({
        chart: {
              type: 'column'
          },
@@ -138,6 +280,7 @@ if(data.length > 0 && !isUndefined(data)) {
             },
              column: {
                         stacking: 'percent'
+
                     },
 
         },
@@ -163,10 +306,11 @@ if(data.length > 0 && !isUndefined(data)) {
         drilldown: {
             series: [{
                 id: 'phc-available',
-                data:availableTracer
+
+                data:availableAll
             }, {
                 id: 'hospital-available',
-                data: availableAll
+                data: availableTracer
             }, {
                 id: 'phc-not available',
                 data: []
@@ -175,7 +319,7 @@ if(data.length > 0 && !isUndefined(data)) {
                 data: []
             }]
         }
-    });
+    });*/
 
     };
 

@@ -1,4 +1,4 @@
-function AnalyticsFunction($stateParams,leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
+function AnalyticsFunction($stateParams,GetEmergencyAndRegularRnRTrendsData,leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
 GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,RejectionCount,RnRStatusSummary,
 DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData) {
 
@@ -38,6 +38,7 @@ DefaultProgram.get({}, function (data) {
          $rootScope.loadStockAvailableByLevel(params);
          $rootScope.loadStockStatusByProgramTrends(params,'level1');
          $rootScope.loadConsumptionTrendSummary(params);
+         loadRegularEmergenceTrend(params);
 
 
 
@@ -50,9 +51,164 @@ DefaultProgram.get({}, function (data) {
  }
 });
 
+    function  loadRegularEmergenceTrend(params) {
+
+    GetEmergencyAndRegularRnRTrendsData.get(params).then(function(data){
+     if(data.length > 0) {
+      var categories = _.pluck(data,'Month');
+      var emergency = _.pluck(data,'Emergency Requisitions');
+      var regular = _.pluck(data,'Regular Requisitions');
+
+     console.log(regular);
+        loadChart(categories,emergency,regular);
+     }
+    });
+    }
+
+ function loadChart(category,emergency,regular){
+
+Highcharts.chart('rnrSummary', {
+
+    title: {
+        text: ''
+    },
+
+    subtitle: {
+        text: ''
+    },
+   xAxis: {
+        categories: category
+    },
+    yAxis: {
+        title: {
+            text: ''
+        },
+        category:category
+    },
+     credits:{
+          enabled:false
+         },
+    legend: {
+        layout: 'horizontal',
+        verticalAlign: 'bottom'
+    },
+
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            }
+        }
+    },
+
+    series: [{
+        name: 'Regular Requisitions',
+        data: regular
+    }, {
+        name: 'Emergency Requisitions',
+               data: emergency
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+
+});
+
+
+
+
+/* Highcharts.chart('rnrSummary', {
+
+     credits:{
+      enabled:false
+     },
+     title: {
+         text: ''
+
+     },
+
+    yAxis: {
+           title: {
+               text: 'Number of Employees'
+           }
+       },
+
+       plotOptions: {
+           series: {
+               label: {
+                   connectorAllowed: false
+               },
+               pointStart: 2010
+           }
+       },
+
+     tooltip: {
+         shared: true
+     },
+
+
+     legend: {
+         layout: 'horizontal',
+
+         verticalAlign: 'bottom',
+
+         backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255,255,255,0.25)'
+     },
+     series: [{
+                       name: 'Regular Requisitions',
+                       type: 'spline',
+                       data: regular,
+                       tooltip: {
+                           valueSuffix: ''
+                       }
+                   },
+          {
+         name: 'Emergency Requisitions',
+         type: 'spline',
+         yAxis: 1,
+         data: emergency,
+         tooltip: {
+             valueSuffix: ' '
+         }
+
+     }],
+
+
+       responsive: {
+             rules: [{
+                 condition: {
+                     maxWidth: 500
+                 },
+                 chartOptions: {
+                     legend: {
+                         layout: 'horizontal',
+                         align: 'center',
+                         verticalAlign: 'bottom'
+                     }
+                 }
+             }]
+         }
+
+ });*/
+
+
+
+ }
  function loadRequisitionSection() {
 
-        if($scope.dashletSectionsLoaded.includes('requisition')) return;
+       // if($scope.dashletSectionsLoaded.includes('requisition')) return;
 
         GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({associatedDashlets : ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']})
         .then(function (data) {
@@ -111,6 +267,7 @@ DefaultProgram.get({}, function (data) {
             var dataValues = _.zip(data2, data1);
             loadPieChart(chartId, dataValues, total);
         });
+
 
        /* EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
                 $scope.emergencyOrderFrequentAppearingProducts = data.products;
@@ -222,7 +379,7 @@ DefaultProgram.get({}, function (data) {
 
         });
 
-        RnRStatusSummary.get({
+   /*     RnRStatusSummary.get({
                     zoneId: 437,
                     periodId: $scope.filter.period,
                     programId: $scope.filter.program,
@@ -254,7 +411,7 @@ DefaultProgram.get({}, function (data) {
                             });
                     });
 
-                    $scope.loadRnRStatusSummary(dataValues);
+                  //  $scope.loadRnRStatusSummary(dataValues);
                     $scope.total = 0;
                     $scope.RnRStatusPieChartData = [];
                     $scope.dataRows = [];
@@ -301,7 +458,10 @@ DefaultProgram.get({}, function (data) {
                     }
                     //$scope.overAllTotal();
                   //  $scope.paramsChanged($scope.tableParams);
-                });
+                });*/
+
+
+
   }
 
 
@@ -492,7 +652,7 @@ DefaultProgram.get({}, function (data) {
                         fill:"#28A2F3"
                         },
                         onclick: function () {
-                                 $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                                 $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
                                  }
                                  }
                                  }
@@ -544,7 +704,7 @@ DefaultProgram.get({}, function (data) {
                                                    fill:"#28A2F3"
                                                    },
                                                    onclick: function () {
-                                                   $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                                                   $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
                                                    }
                                                    }
                                                    }

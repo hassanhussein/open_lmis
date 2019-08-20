@@ -536,6 +536,31 @@ services.factory('ConsumptionTrendSummaryData', function ($q, $timeout, $resourc
 
 });
 
+services.factory('GetEmergencyAndRegularRnRTrendsData', function ($q, $timeout, $resource,GetEmergencyAndRegularRnRTrends) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+
+         GetEmergencyAndRegularRnRTrends.get(params,
+                    function (data) {
+                    var stocks ={};
+                    if (data !== undefined) {
+                        stocks = data.stocks;
+                    }
+                    deferred.resolve(stocks);
+
+                    });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 services.factory('GetNumberOfEmergency', function($resource){
     return $resource('/api//dashboard/getNumberOfEmergency.json',{}, {});
 });
@@ -635,4 +660,8 @@ services.factory("EmergencyRnRStatusSummary", function($resource){
 
 services.factory("ConsumptionTrendSummary", function($resource){
     return $resource('/api/dashboard/getConsumptionSummaryTrends.json',{},{});
+});
+
+services.factory("GetEmergencyAndRegularRnRTrends", function($resource){
+    return $resource('/api/dashboard/getEmergencyAndRegularRnRTrends.json',{},{});
 });

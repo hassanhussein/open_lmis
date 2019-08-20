@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.mapping.ResultSetType;
+import org.openlmis.analytics.Builder.DashboardEmergencyAndRegularRnRTrendQueryBuilder;
 import org.openlmis.analytics.Builder.EmergencyRequisitionStatusTrendQueryBuilder;
 import org.openlmis.analytics.Builder.OnTimeDeliveryQueryBuilder;
 import org.springframework.stereotype.Repository;
@@ -102,6 +103,11 @@ public interface RequisitionStatusMapper {
             " order by  1,2\n" +
             " limit 10")
     List<HashMap<String, Object>> getEmergencyOrderFrequentAppearingProducts();
+
+    @SelectProvider(type= DashboardEmergencyAndRegularRnRTrendQueryBuilder.class, method="getQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    List<HashMap<String,Object>> getEmergencyAndRegularRnRTrend(@Param("userId") Long userId,
+                                                           @Param("program") Long program);
 
 
 }
