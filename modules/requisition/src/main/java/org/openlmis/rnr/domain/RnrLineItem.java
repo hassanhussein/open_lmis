@@ -110,7 +110,7 @@ public class RnrLineItem extends LineItem {
     this.createdBy = createdBy;
   }
 
-  public void setFieldsForApproval() {
+  public void setFieldsForApproval(String sourceApplication) {
     if (this.skipped) {
       this.quantityReceived = null;
       this.quantityDispensed = null;
@@ -129,8 +129,13 @@ public class RnrLineItem extends LineItem {
       this.remarks = null;
       this.expirationDate = null;
     }
-    if(quantityApproved == null){
-      quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
+    if(quantityApproved == null) {
+      //If the rnr report is originating from FE, set the quantityApproved with calculatedOrderQuantity
+      // to avoid a lot of stock outs at the facilities. Check -> https://elmis-tzm.atlassian.net/browse/ECZ-113
+      if(sourceApplication.equals(SourceApplications.ELMIS_FE.toString()))
+        quantityApproved = calculatedOrderQuantity;
+      else
+        quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
     }
   }
 

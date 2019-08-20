@@ -406,8 +406,9 @@ public class RnrTest {
 
     rnr.setFieldsForApproval();
 
-    verify(rnrLineItem1).setFieldsForApproval();
-    verify(rnrLineItem2).setFieldsForApproval();
+    String ceSourceapplication = SourceApplications.OTHERS.toString();
+    verify(rnrLineItem1).setFieldsForApproval(ceSourceapplication);
+    verify(rnrLineItem2).setFieldsForApproval(ceSourceapplication);
   }
 
   @Test

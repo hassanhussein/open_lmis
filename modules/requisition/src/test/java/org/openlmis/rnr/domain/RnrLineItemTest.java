@@ -91,7 +91,7 @@ public class RnrLineItemTest {
     lineItem.setSkipped(true);
     lineItem.setExpirationDate("some date");
 
-    lineItem.setFieldsForApproval();
+    lineItem.setFieldsForApproval(SourceApplications.OTHERS.toString());
 
     assertThat(lineItem.getLossesAndAdjustments().size(), is(0));
     assertThat(lineItem.getTotalLossesAndAdjustments(), is(0));
@@ -681,9 +681,22 @@ public class RnrLineItemTest {
     lineItem.setCalculatedOrderQuantity(10);
     lineItem.setQuantityRequested(20);
 
-    lineItem.setFieldsForApproval();
+    lineItem.setFieldsForApproval(SourceApplications.OTHERS.toString());
 
     assertThat(lineItem.getQuantityApproved(), is(20));
+  }
+
+  @Test
+  public void shouldSetQuantityApprovedEqualToOrderedQuantityIfFullSupplyAndSourceIsFromFE() throws Exception {
+    RnrLineItem lineItem = new RnrLineItem();
+    lineItem.setFullSupply(true);
+    lineItem.setSkipped(false);
+    lineItem.setCalculatedOrderQuantity(10);
+    lineItem.setQuantityRequested(20);
+
+    lineItem.setFieldsForApproval(SourceApplications.ELMIS_FE.toString());
+
+    assertThat(lineItem.getQuantityApproved(), is(10));
   }
 
   @Test
@@ -694,7 +707,7 @@ public class RnrLineItemTest {
     lineItem.setCalculatedOrderQuantity(10);
     lineItem.setQuantityRequested(20);
 
-    lineItem.setFieldsForApproval();
+    lineItem.setFieldsForApproval(SourceApplications.OTHERS.toString());
 
     assertThat(lineItem.getQuantityApproved(), is(20));
   }
