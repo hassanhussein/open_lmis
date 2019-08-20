@@ -112,9 +112,9 @@ subprojects {
 
         'org.projectlombok:lombok:1.16.2',
 
-        'com.fasterxml.jackson.core:jackson-databind:2.9.9',
-        'com.fasterxml.jackson.core:jackson-core:2.9.9',
-        'com.fasterxml.jackson.core:jackson-annotations:2.9.9',
+        'com.fasterxml.jackson.core:jackson-databind:2.5.1',
+        'com.fasterxml.jackson.core:jackson-core:2.5.1',
+        'com.fasterxml.jackson.core:jackson-annotations:2.5.1',
 
         'javax.mail:javax.mail-api:1.5.2',
         'com.sun.mail:javax.mail:1.5.2',
