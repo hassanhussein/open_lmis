@@ -547,3 +547,13 @@ services.factory('RejectionReason', function ($resource) {
 services.factory('RequisitionRejectedReason', function ($resource) {
     return $resource('/requisitions/save_rejection_reason.json', {}, {});
 });
+services.factory("Locations", function ($resource) {
+    return $resource('/locations/:id.json', {id: '@id'}, update);
+});
+
+services.factory("LocationTypes", function ($resource) {
+    return $resource('/location-types.json', {}, {});
+});
+services.factory("LocationsLookup", function ($resource) {
+    return $resource('/location-lookup.json', {}, {});
+});
