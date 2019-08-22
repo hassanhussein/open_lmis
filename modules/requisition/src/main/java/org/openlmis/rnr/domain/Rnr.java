@@ -172,10 +172,10 @@ public class Rnr extends BaseModel {
 
   public void setFieldsForApproval() {
     for (RnrLineItem item : fullSupplyLineItems) {
-      item.setFieldsForApproval();
+      item.setFieldsForApproval(sourceApplication);
     }
     for (RnrLineItem item : nonFullSupplyLineItems) {
-      item.setFieldsForApproval();
+      item.setFieldsForApproval(sourceApplication);
     }
   }
 
