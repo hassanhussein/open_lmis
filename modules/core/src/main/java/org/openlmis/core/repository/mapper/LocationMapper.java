@@ -11,14 +11,14 @@ import java.util.Map;
 
 @Repository
 public interface LocationMapper {
-    @Insert("insert into locations(code, name, active, typeid, zoneid, size, capacity, aisleid, parentid, createdDate,createdBy, modifiedBy, modifiedDate) values(" +
-            "#{code}, #{name},#{active},#{locationType.id},#{zone},#{size},#{capacity},#{aisle},#{parent.id}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
+    @Insert("insert into locations(code, name, active, typeid, zoneid, size, capacity, aisleid, parentid, scrap, createdDate,createdBy, modifiedBy, modifiedDate) values(" +
+            "#{code}, #{name},#{active},#{locationType.id},#{zone},#{size},#{capacity},#{aisle},#{parent.id}, #{scrap}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
             "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
      void insert(Location location);
 
     @Update("update  locations set code = #{code}, name = #{name},active = #{active},typeid = #{locationType.id},zoneid = #{zone}, size = #{size}," +
-            "capacity = #{capacity},aisleid = #{aisle}, parentid = #{parent.id}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
+            "capacity = #{capacity},aisleid = #{aisle}, parentid = #{parent.id}, scrap = #{scrap}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
     void update(Location location);
 
     @Select("SELECT * FROM locations")

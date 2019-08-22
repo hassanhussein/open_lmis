@@ -25,4 +25,5 @@ public class Location extends BaseModel {
     private Double capacity;
     private String aisle;
     private Location parent;
+    private boolean scrap;
 }
