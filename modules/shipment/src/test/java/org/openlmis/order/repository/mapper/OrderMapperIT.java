@@ -190,9 +190,9 @@ public class OrderMapperIT {
   public void shouldGetOrderFileTemplate() throws Exception {
     List<OrderFileColumn> orderFileColumns = mapper.getOrderFileColumns();
     String[] expectedDataFieldLabels = {"header.order.number", "create.facility.code", "header.product.code",
-      "header.product.name", "header.quantity.approved", "label.period", "header.order.date"};
-    String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Product name", "Approved quantity",
-      "Period", "Order date"};
+      "header.quantity.approved", "label.period", "header.order.date" ,"header.product.name"};
+    String[] expectedColumnLabels = {"Order number", "Facility code", "Product code", "Approved quantity",
+      "Period", "Order date", "Product name"};
     assertThat(orderFileColumns.size(), is(expectedDataFieldLabels.length));
     for (int i = 0; i < expectedDataFieldLabels.length; i++) {
       assertThat(orderFileColumns.get(i).getDataFieldLabel(), is(expectedDataFieldLabels[i]));
