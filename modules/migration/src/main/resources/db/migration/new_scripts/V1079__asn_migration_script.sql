@@ -113,3 +113,37 @@ createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 modifiedBy INTEGER,
 modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE asn_details ADD CONSTRAINT asn_details_asns_fkey FOREIGN KEY (asnid) REFERENCES asns (ID);
+
+ALTER TABLE asn_details ADD CONSTRAINT asn_details_products_fkey FOREIGN KEY (productid) REFERENCES products (ID);
+
+---------- asn_lots ------------
+CREATE TABLE asn_lots (ID SERIAL PRIMARY KEY,
+asndetailid INTEGER,
+lotnumber VARCHAR (255),
+serialnumber VARCHAR (255),
+expirydate TIMESTAMP,
+manufacturingdate TIMESTAMP,
+quantity INTEGER,
+createdBy INTEGER,
+createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+modifiedBy INTEGER,
+modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE asn_lots ADD CONSTRAINT asn_lots_asn_details_fkey FOREIGN KEY (asndetailid) REFERENCES asn_details (ID);
+
+---------- purchase_documents ------------
+CREATE TABLE purchase_documents (ID SERIAL PRIMARY KEY,
+asnid INTEGER,
+documenttype INTEGER,
+filelocation VARCHAR (1000),
+createdBy INTEGER,
+createdDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+modifiedBy INTEGER,
+modifiedDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+ALTER TABLE purchase_documents ADD CONSTRAINT purchase_documents_asns_fkey FOREIGN KEY (asnid) REFERENCES asns (ID);
+
+ALTER TABLE purchase_documents ADD CONSTRAINT purchase_documents_document_types_fkey FOREIGN KEY (documenttype) REFERENCES document_types (ID);
