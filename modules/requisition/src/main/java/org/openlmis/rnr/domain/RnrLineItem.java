@@ -132,7 +132,8 @@ public class RnrLineItem extends LineItem {
     if(quantityApproved == null) {
       //If the rnr report is originating from FE, set the quantityApproved with calculatedOrderQuantity
       // to avoid a lot of stock outs at the facilities. Check -> https://elmis-tzm.atlassian.net/browse/ECZ-113
-      if(sourceApplication.equals(SourceApplications.ELMIS_FE.toString()))
+      //N.B the sourceApplication field from FE might come in different cases, requiring case insensitive comparison
+      if(sourceApplication != null && sourceApplication.equalsIgnoreCase(SourceApplications.ELMIS_FE.toString()))
         quantityApproved = calculatedOrderQuantity;
       else
         quantityApproved = (quantityRequested == null) ? calculatedOrderQuantity : quantityRequested;
