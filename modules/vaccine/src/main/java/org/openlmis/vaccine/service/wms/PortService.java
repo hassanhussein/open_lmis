@@ -1,7 +1,7 @@
 package org.openlmis.vaccine.service.wms;
 
 import org.openlmis.vaccine.domain.wms.Port;
-import org.openlmis.vaccine.repository.asn.PortRepository;
+import org.openlmis.vaccine.repository.wms.PortRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
