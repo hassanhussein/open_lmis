@@ -53,7 +53,7 @@ public class AsnController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "documentTypes", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "document-types", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getDocumentTypes() {
         return OpenLmisResponse.response("documents", documentTypeService.getAll());
     }
