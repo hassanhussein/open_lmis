@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.domain.asn;
+package org.openlmis.vaccine.domain.wms;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

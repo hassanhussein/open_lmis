@@ -1,7 +1,7 @@
 package org.openlmis.vaccine.repository.mapper.asn;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.vaccine.domain.asn.Port;
+import org.openlmis.vaccine.domain.wms.Port;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

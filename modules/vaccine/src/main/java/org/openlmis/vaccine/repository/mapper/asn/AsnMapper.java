@@ -1,7 +1,7 @@
 package org.openlmis.vaccine.repository.mapper.asn;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.vaccine.domain.asn.Asn;
+import org.openlmis.vaccine.domain.wms.Asn;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,9 +24,9 @@ public interface AsnMapper {
     @Select("select * from asns where id = #{id}")
     @Results(value = {
             @Result(property = "asnLineItems", column = "asnid", javaType = List.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.asn.AsnLineItemMappper.getById")),
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.wms.AsnLineItemMappper.getById")),
             @Result(property = "purchaseDocuments", column = "asnid", javaType = List.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.asn.PurchaseDocumentMapper.getById"))
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.wms.PurchaseDocumentMapper.getById"))
     })
     Asn getById(@Param("id") Long id);
 

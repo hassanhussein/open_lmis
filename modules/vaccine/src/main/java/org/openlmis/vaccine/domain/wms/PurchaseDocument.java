@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.domain.asn;
+package org.openlmis.vaccine.domain.wms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

@@ -1,7 +1,7 @@
-package org.openlmis.vaccine.service.asn;
+package org.openlmis.vaccine.service.wms;
 
-import org.openlmis.vaccine.domain.asn.DocumentType;
-import org.openlmis.vaccine.repository.asn.DocumentTypeRepository;
+import org.openlmis.vaccine.domain.wms.DocumentType;
+import org.openlmis.vaccine.repository.wms.DocumentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

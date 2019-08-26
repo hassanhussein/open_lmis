@@ -1,0 +1,4 @@
+function WarehouseManagementController($scope) {
+
+
+}

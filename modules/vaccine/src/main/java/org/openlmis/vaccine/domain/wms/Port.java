@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.domain.asn;
+package org.openlmis.vaccine.domain.wms;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -8,7 +8,13 @@ import org.openlmis.core.domain.BaseModel;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class DocumentType extends BaseModel {
+public class Port extends BaseModel {
+
+    private  String code;
+
     private String name;
+
     private String description;
+
+    private boolean active;
 }

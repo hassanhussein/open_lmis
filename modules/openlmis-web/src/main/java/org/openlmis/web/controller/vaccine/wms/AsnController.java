@@ -1,12 +1,12 @@
-package org.openlmis.web.controller.vaccine.asn;
+package org.openlmis.web.controller.vaccine.wms;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.vaccine.domain.asn.Asn;
-import org.openlmis.vaccine.service.asn.*;
+import org.openlmis.vaccine.domain.wms.Asn;
+import org.openlmis.vaccine.service.wms.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
-@RequestMapping(value = "/rest-api/asn")
+@RequestMapping(value = "/rest-api/wms")
 public class AsnController extends BaseController {
 
     @Autowired
@@ -45,7 +45,7 @@ public class AsnController extends BaseController {
             asn.setCreatedBy(userId);
             asn.setModifiedBy(userId);
             asnService.save(asn, userId);
-            return success("message.success.asn.created");
+            return success("message.success.wms.created");
 
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
@@ -66,7 +66,7 @@ public class AsnController extends BaseController {
     }
     @RequestMapping(value = "{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
-        return OpenLmisResponse.response("asn", asnService.getById(id));
+        return OpenLmisResponse.response("wms", asnService.getById(id));
     }
     @RequestMapping(value = "{id}", method =PUT, headers = ACCEPT_JSON)
     public ResponseEntity update(@RequestBody Asn asn, @PathVariable(value = "id") Long id,Principal principal) {
@@ -75,7 +75,7 @@ public class AsnController extends BaseController {
         asn.setId(id);
         asn.setModifiedBy(loggedInUserId(principal));
         asnService.save(asn, loggedInUserId(principal));
-        return success("message.success.asn.updated");
+        return success("message.success.wms.updated");
 
     } catch (DataException e) {
         return error(e.getOpenLmisMessage(), BAD_REQUEST);

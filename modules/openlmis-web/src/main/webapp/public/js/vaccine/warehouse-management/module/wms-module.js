@@ -9,11 +9,11 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('warehouse-management', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover', 'textAngular'])
+angular.module('wms', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover', 'textAngular'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
-            when('/vaccine-report', {controller:VaccineReportPOCReportController, templateUrl:'partials/vaccine-report.html',reloadOnSearch:false}).
-            otherwise({redirectTo:'/vaccine-report'});
+            when('/list', {controller:WarehouseManagementController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+            otherwise({redirectTo:'/list'});
     }]).config(function(angularCombineConfigProvider) {
         angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
     });
