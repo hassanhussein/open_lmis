@@ -30,15 +30,14 @@ public class AsnController extends BaseController {
     AsnService asnService;
     @Autowired
     AsnLineItemService asnLineItemService;
-
     @Autowired
     AsnLotService asnLotService;
-
     @Autowired
     PurchaseDocumentService purchaseDocumentService;
     @Autowired
     DocumentTypeService documentTypeService;
-
+    @Autowired
+    PortService portService;
     @RequestMapping(method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> save(@RequestBody Asn asn, Principal principal) {
         try {
@@ -56,6 +55,10 @@ public class AsnController extends BaseController {
     @RequestMapping(value = "document-types", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getDocumentTypes() {
         return OpenLmisResponse.response("documents", documentTypeService.getAll());
+    }
+    @RequestMapping(value = "ports", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPorts() {
+        return OpenLmisResponse.response("ports", portService.getAll());
     }
     @RequestMapping(method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> retriveAllAsns() {
