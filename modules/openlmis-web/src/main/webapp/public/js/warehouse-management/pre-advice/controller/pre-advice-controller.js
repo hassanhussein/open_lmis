@@ -15,6 +15,20 @@
 
 
 
- function AsnController($scope){
-        console.log('testing')
+ function PreAdviceController($scope){
+
+
+    $scope.products=[{id:'choice1'}]
+
+
+
+        $scope.addProduct=function(){
+                       var newItemNo = $scope.products.length+1;
+                        $scope.products.push({'id':'choice'+newItemNo});
+                }
+
+        $scope.removeProduct=function(){
+               var lastItem = $scope.products.length-1;
+                $scope.products.splice(lastItem);
+        }
  }
