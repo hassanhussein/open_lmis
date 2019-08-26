@@ -1,8 +1,8 @@
-package org.openlmis.vaccine.repository.wms;
+package org.openlmis.vaccine.repository.warehouse;
 
 
 import org.openlmis.vaccine.domain.wms.AsnLineItem;
-import org.openlmis.vaccine.repository.mapper.asn.AsnLineItemMapper;
+import org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.repository.mapper.asn;
+package org.openlmis.vaccine.repository.mapper.warehouse.asn;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.DocumentType;

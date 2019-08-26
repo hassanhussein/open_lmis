@@ -1,10 +1,10 @@
-package org.openlmis.vaccine.service.wms;
+package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.AsnLineItem;
 import org.openlmis.vaccine.domain.wms.AsnLot;
 import org.openlmis.vaccine.domain.wms.PurchaseDocument;
-import org.openlmis.vaccine.repository.wms.AsnRepository;
+import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

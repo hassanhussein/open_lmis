@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.repository.mapper.asn;
+package org.openlmis.vaccine.repository.mapper.warehouse.asn;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.AsnLineItem;
@@ -11,11 +11,11 @@ public interface AsnLineItemMapper {
 
     @Insert(" INSERT INTO asn_details (asnid, productid, expirydate, manufacturingdate, quantityexpected, lotflag, " +
             "createdBy, createdDate,modifiedBy,modifiedDate) " +
-            " VALUES(#{wms.id}, #{productid}, #{expirydate}, #{manufacturingdate}, #{quantityexpected}, #{lotflag}, #{createdBy}, NOW(), #{modifiedBy}, NOW()) ")
+            " VALUES(#{warehouse.id}, #{productid}, #{expirydate}, #{manufacturingdate}, #{quantityexpected}, #{lotflag}, #{createdBy}, NOW(), #{modifiedBy}, NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer insert(AsnLineItem asnLineItem);
 
-    @Update(" update asn_details set  asnid = #{wms.id}, productid = #{productid}, expirydate = #{expirydate}, " +
+    @Update(" update asn_details set  asnid = #{warehouse.id}, productid = #{productid}, expirydate = #{expirydate}, " +
             " manufacturingdate = #{manufacturingdate}, quantityexpected = #{quantityexpected}, lotflag = #{lotflag}, "+
             " modifiedDate = now(), " +
             " modifiedBy = #{modifiedBy}  where id = #{id} ")

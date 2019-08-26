@@ -1,4 +1,4 @@
-package org.openlmis.vaccine.repository.mapper.asn;
+package org.openlmis.vaccine.repository.mapper.warehouse.asn;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.Asn;
@@ -24,9 +24,9 @@ public interface AsnMapper {
     @Select("select * from asns where id = #{id}")
     @Results(value = {
             @Result(property = "asnLineItems", column = "asnid", javaType = List.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.wms.AsnLineItemMappper.getById")),
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.AsnLineItemMappper.getById")),
             @Result(property = "purchaseDocuments", column = "asnid", javaType = List.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.wms.PurchaseDocumentMapper.getById"))
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.PurchaseDocumentMapper.getById"))
     })
     Asn getById(@Param("id") Long id);
 
