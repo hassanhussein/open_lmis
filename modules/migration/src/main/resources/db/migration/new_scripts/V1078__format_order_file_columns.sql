@@ -8,7 +8,7 @@
 -- You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
 --
 
-DELETE * FROM order_file_columns;
+DELETE  FROM order_file_columns;
 
 INSERT INTO order_file_columns
 (position, openLmisField, dataFieldLabel, nested, keyPath,includeinorderfile, columnLabel, format) VALUES
