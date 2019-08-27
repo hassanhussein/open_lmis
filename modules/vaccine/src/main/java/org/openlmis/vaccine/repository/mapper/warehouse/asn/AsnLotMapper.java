@@ -25,4 +25,7 @@ public interface AsnLotMapper {
 
     @Select(" select * from asn_lots")
     List<AsnLot> getAll();
+
+    @Select("select * from asn_lots where asndetailid = #{id}")
+    List<AsnLot>  getByAsnDetail(@Param("id") Long id);
 }
