@@ -25,7 +25,7 @@ public interface AsnMapper {
 
     @Select("select * from asns where id = #{id}")
     @Results(value = {
-
+            @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper.getById")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
@@ -35,6 +35,7 @@ public interface AsnMapper {
 
     @Select(" select * from asns")
     @Results(value = {
+            @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper.getByAsnId")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
