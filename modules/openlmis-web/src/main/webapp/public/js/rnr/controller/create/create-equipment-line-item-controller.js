@@ -78,4 +78,12 @@ function CreateEquipmentLineItemController($scope) {
             lineItem.isEquipmentValid = true;
         return validateDays(daysOutOfUse);
    };
+
+  $scope.formDisabled = function () {
+       var status = $scope.rnr.status;
+
+       if ($scope.authorizedFEReport ||
+        (status === 'INITIATED' && $scope.hasPermission('CREATE_REQUISITION'))) return false;
+       return !(status === 'SUBMITTED' && $scope.hasPermission('AUTHORIZE_REQUISITION'));
+  }();
 }

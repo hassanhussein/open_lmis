@@ -206,9 +206,13 @@ public class RequisitionRepository {
     updateNonFullSupplyLineItems(rnr);
     if (!(rnr.getStatus() == AUTHORIZED || rnr.getStatus() == IN_APPROVAL)) {
       updateRegimenLineItems(rnr);
-      updateEquipmentLineItems(rnr);
-      updateManualTestsLineItems(rnr);
+      updateEquipmentStatusAndManualTestTypes(rnr);
     }
+  }
+
+  public void updateEquipmentStatusAndManualTestTypes(Rnr rnr) {
+    updateManualTestsLineItems(rnr);
+    updateEquipmentLineItems(rnr);
   }
 
   private void updateManualTestsLineItems(Rnr rnr) {

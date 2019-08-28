@@ -63,7 +63,13 @@ public class RequisitionPermissionService {
     return (rnr.getStatus() == INITIATED && hasPermission(userId, rnr, CREATE_REQUISITION)) ||
         (rnr.getStatus() == SUBMITTED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)) ||
         (rnr.getStatus() == AUTHORIZED && hasPermissionToApprove(userId, rnr)) ||
+         hasPermissionToSaveFEEquipmentReport(userId, rnr) ||
         (rnr.getStatus() == IN_APPROVAL && hasPermissionToApprove(userId, rnr));
+  }
+
+  public boolean hasPermissionToSaveFEEquipmentReport(Long userId, Rnr rnr) {
+    return (rnr.getStatus() == AUTHORIZED && hasPermission(userId, rnr, AUTHORIZE_REQUISITION)
+            && rnr.getSourceApplication().equalsIgnoreCase(SourceApplications.ELMIS_FE.toString()));
   }
 
   private boolean hasPermissionToApprove(Long userId, final Rnr rnr) {
