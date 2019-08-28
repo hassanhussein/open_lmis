@@ -21,6 +21,7 @@ import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.help.domain.HelpTopic;
 import org.openlmis.help.domain.HelpTopicRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ public class HelpTopicService {
     private HelpContentRepository contentRepository;
     private List<HelpTopic> roleHelpTopicList;
     private List<HelpTopic> helpTopicList;
-
+    @Value("${dashboard.dashlet.help.keys}")
+    private String configuredDashboardHelpKeys;
     public void addHelpTopic(HelpTopic helpTopic) {
         this.repository.insert(helpTopic);
         if (helpTopic.isCategory()) {
@@ -197,5 +199,10 @@ public class HelpTopicService {
     }
     public List<HelpTopic> getDashboardReportLegendContent() {
         return this.repository.getDashboardReportLegendContent();
+    }
+
+    public List<HelpTopic> getDashboardHelpKeys() {
+        return this.repository.getDashboardHelpKeys(configuredDashboardHelpKeys);
+
     }
 }

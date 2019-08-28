@@ -20,6 +20,7 @@ import org.openlmis.core.builder.ProgramBuilder;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Program;
+import org.openlmis.core.domain.SourceApplications;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
 import org.openlmis.rnr.domain.RnrStatus;
@@ -73,6 +74,7 @@ public class RequisitionBuilder {
     rnr.add(rnrLineItemCost48, true);
     rnr.setModifiedBy(lookup.valueOf(modifiedBy, 1L));
     rnr.setCreatedBy(lookup.valueOf(modifiedBy, 1L));
+    rnr.setSourceApplication(SourceApplications.OTHERS.toString());
     return rnr;
   }
 

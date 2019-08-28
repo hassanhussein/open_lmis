@@ -155,7 +155,7 @@
     }
     /**** overaly ***/
 
-    .dashlet-overlay {
+    .dashlet-overlay, .dashlet-config-overlay {
         position: absolute;
         display: table;
         width: 100%;
@@ -169,7 +169,11 @@
         font-weight: bolder;
     }
 
-    .dashlet-overlay > div {
+    .dashlet-config-overlay {
+        background-color: rgba(255, 242, 242, 0.88);
+    }
+
+    .dashlet-overlay > div, .dashlet-config-overlay > div {
         height: 100%;
         display: table-cell;
         vertical-align: middle;
@@ -179,6 +183,11 @@
     .overview-tabular-section {
         max-height: 300px;
         overflow: scroll;
+    }
+    .green-header-config-icon {
+        padding-left: 4px;
+        margin-top: -2px;
+        padding-right: 3px;
     }
 </style>
 
@@ -249,7 +258,6 @@
             <a href="#otherTabs" data-toggle="tab"></a>
         </li>
     </ul>
-
     <div class="tab-content clearfix">
 
         <div class="tab-pane active" id="summary">
@@ -258,11 +266,11 @@
                     <span style="font-size: 12px">National Supply Chain Indicator , {{displayCurrentDate}}</span>
                 </div>
                 <div class="pull-right control-accordion">
+                    <a id="showHiddenDashlets" href="javascript:void(0);" ng-click="showHiddenDashletsForConfiguration()">Show Hidden Dashlets</a> /
                     <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')" openlmis-message="label.expand.all"></a> /
                     <a id="collapseAll" href="javascript:void(0);" onClick="accordion.expandCollapse('collapse')" openlmis-message="label.collapse.all"></a>
                 </div>
                 <div class="clearfix"></div>
-
                 <!--================ Overview section  ==================-->
                 <div class="accordion-section">
                     <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)">
@@ -273,16 +281,17 @@
                     <div class="accordion-body" style="display:block">
                     <!-- Order fill rate chart -->
                         <div class="row orderFillRate">
-                            <div class="col s12 m4 l4" id="nationalOrderFillRateChart">
-                                <div class="section grey lighten-5 card row1-height" overlay-section="nationalOrderFillRatePercentage" style="padding-top: 0rem !important;">
+                            <div class="col s12 m4 l4"  dashlet="nationalOrderFillRatePercentage">
+                                <div class="section grey lighten-5 card row1-height"  style="padding-top: 0rem !important;">
                                     <h2><span>National Order Fill Rate %</span>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('orderFillRateHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right">
                                             <i class="material-icons md-18">info</i>
                                         </a>
                                     </h2>
                                     <div class="col s12">
-                                        <div class="section" style="padding-top: 0rem !important;">
+                                        <div class="section overlay-section" style="padding-top: 0rem !important;">
                                             <div id="container-order-fill-rate" style="height: 350px; margin:0 auto"></div>
                                         </div>
                                     </div>
@@ -291,9 +300,10 @@
 
                     <!-- Stock Availability Chart -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row1-height" style="padding-top: 0rem !important;" overlay-section="stockAvailability">
+                                <div class="section grey lighten-5 card row1-height" style="padding-top: 0rem !important;" dashlet="stockAvailability">
                                     <h2>
-                                        <span ng-if="true" >Stock Availability</span>
+                                        <span>Stock Availability</span>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('stockAvailabilityHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
@@ -301,7 +311,7 @@
                                     </h2>
 
                                     <div class="col s12">
-                                        <div class="section">
+                                        <div class="section overlay-section">
                                             <div id="stock-availability" style="height: 350px; margin:0 auto"></div>
                                         </div>
 
@@ -312,16 +322,17 @@
 
                    <!-- Reporting rate chart -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row1-height" overlay-section="reportingRate" style="padding-top: 0rem !important;">
+                                <div class="section grey lighten-5 card row1-height" dashlet="reportingRate" style="padding-top: 0rem !important;">
                                     <h2>
-                                        <span >Reporting Rate</span>
+                                        <span>Reporting Rate</span>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info </i>
                                         </a>
                                     </h2>
                                     <div class="col s12">
-                                        <div class="section">
+                                        <div class="section overlay-section">
                                             <div id="reporting-rate" style="height: 350px; margin:0 auto"></div>
                                         </div>
                                     </div>
@@ -335,15 +346,16 @@
 
                             <!-- National Order Fill Rate % tabular report -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="nationalOrderFillRatePercentageTabular" style="padding-top: 0rem !important;">
+                                <div class="section grey lighten-5 card row2-height" dashlet="nationalOrderFillRatePercentageTabular" style="padding-top: 0rem !important;">
                                     <h2>
                                         <span>National Order Fill Rate %</span>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('orderFillRateHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i></a>
                                     </h2>
                                     <div class="col s12">
-                                        <div class="section grey lighten-3 overview-tabular-section" style="padding-top: 0rem !important;">
+                                        <div class="section grey lighten-3 overview-tabular-section overlay-section" style="padding-top: 0rem !important;">
 
                                             <table class="striped bordered">
                                                 <thead>
@@ -395,16 +407,17 @@
 
                     <!-- Stock Availability tabular report -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="stockAvailabilityTabular" style="padding-top: 0rem !important;">
+                                <div class="section grey lighten-5 card row2-height" dashlet="stockAvailabilityTabular" style="padding-top: 0rem !important;">
                                     <h2>
                                         <span ng-if="true" >Stock Availability</span>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('stockAvailabilityHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
                                         </a>
                                     </h2>
                                     <div class="col s12">
-                                        <div class="section" style="padding-top: 0rem !important;">
+                                        <div class="section overlay-section" style="padding-top: 0rem !important;">
                                             <span ng-show="true"><span style="font-size: x-small">Keys</span>
 
                                             <a href="#!"><i class="tiny material-icons icon-green">lens</i> </a>
@@ -464,16 +477,17 @@
 
                         <!-- Reporting Rate tabular report -->
                             <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="reportingRateTabularReport" style="padding-top: 0rem !important;">
+                                <div class="section grey lighten-5 card row2-height" dashlet="reportingRateTabularReport" style="padding-top: 0rem !important;">
                                     <h2>
                                         <span >Reporting Rate</span>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
                                         </a>
                                     </h2>
                                     <div class="col s12">
-                                        <div class="section" style="padding-top: 0rem !important;">
+                                        <div class="section overlay-section" style="padding-top: 0rem !important;">
                                             <span ng-show="true"><span style="font-size: x-small">Keys</span>
                                             <a href="#!"><i class="tiny material-icons icon-green">lens</i> </a>
                                             <span style="font-size: x-small"> Good >=80%</span>
@@ -520,14 +534,15 @@
                                 </div>
                             </div>
                         </div>
-
+<!-- Rectangular dashlets --->
                         <div class="row orderFillRate">
                             <div class="row">
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="submittedRnrs">
                                     <!-- small box -->
-                                    <div class="small-box bg-aqua">
+                                    <div class="small-box bg-aqua overlay-section">
+
                                         <div class="inner">
-                                            <div ng-repeat="status in vitalStatuses ">
+                                            <div ng-repeat="status in vitalStatuses">
                                                 <span ng-if="status.model=='Number of R&Rs submitted'">
                                               <h3> Submitted R&Rs</h3>
 
@@ -537,6 +552,7 @@
                                                 <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                                 </span>
                                             </div>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a>
@@ -544,9 +560,9 @@
                                     </div>
                                 </div>
                                 <!-- ./col -->
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="emergencyRnrs">
                                     <!-- small box -->
-                                    <div class="small-box bg-green">
+                                    <div class="small-box bg-green overlay-section">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
@@ -559,6 +575,7 @@
                                                 <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                                 </span>
                                             </div>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('emergencyRnr')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a></i>
@@ -568,9 +585,9 @@
                                     </div>
                                 </div>
                                 <!-- ./col -->
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="approvedRnrs">
                                     <!-- small box -->
-                                    <div class="small-box bg-yellow">
+                                    <div class="small-box bg-yellow overlay-section">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
@@ -583,6 +600,7 @@
                                                 <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                                 </span>
                                             </div>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('approvedRnrHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a></i>
@@ -592,9 +610,9 @@
                                     </div>
                                 </div>
                                 <!-- ./col -->
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="ordersSentToMsl">
                                     <!-- small box -->
-                                    <div class="small-box bg-red">
+                                    <div class="small-box bg-red overlay-section">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
@@ -607,6 +625,7 @@
                                                 <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                                 </span>
                                             </div>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('orderSentToMslHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a></i>
@@ -622,9 +641,9 @@
                         <div class="row orderFillRate">
                             <div class="row">
 
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="shipmentByMsl">
                                     <!-- small box -->
-                                    <div class="small-box bg-fuchsia">
+                                    <div class="small-box bg-fuchsia overlay-section">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
@@ -637,6 +656,7 @@
                                                 <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                                 </span>
                                             </div>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('shipementbyMslHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a></i>
@@ -646,9 +666,9 @@
                                     </div>
                                 </div>
                                 <!-- ./col -->
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="facilities">
                                     <!-- small box -->
-                                    <div class="small-box bg-purple">
+                                    <div class="small-box bg-purple overlay-section">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
@@ -661,6 +681,7 @@
                                                 <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                                 </span>
                                             </div>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('facilitiesHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a></i>
@@ -669,9 +690,9 @@
 
                                     </div>
                                 </div>
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="products">
                                     <!-- small box -->
-                                    <div class="small-box bg-fuchsia">
+                                    <div class="small-box bg-fuchsia overlay-section">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
@@ -684,6 +705,7 @@
                                                 <p>Last Six Month <span class="vital_data pull-right">{{status.lastSixMonth|number}}</span> </p>
                                                 </span>
                                             </div>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('productsHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a>
@@ -692,9 +714,9 @@
                                     </div>
                                 </div>
                                 <!-- ./col -->
-                                <div class="col-lg-3 col-xs-6">
+                                <div class="col-lg-3 col-xs-6" dashlet="users">
                                     <!-- small box -->
-                                    <div class="small-box bg-purple">
+                                    <div class="small-box bg-purple overlay-section">
                                         <div class="inner">
                                             <div ng-repeat="status in vitalStatuses ">
 
@@ -710,9 +732,7 @@
                                                 </span>
 
                                             </div>
-                                            <a data-target="mdUsersInLast" class="small-box-footer modal-trigger pull-left"><i class="material-icons md-18">
-                                                info
-                                            </i></a>
+                                            <div class="dashlet-config pull-right"></div>
                                             <a ng-click="setHelpContentKey('usersHelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right"><i class="material-icons md-18">
                                                 info
                                             </i></a>
@@ -729,26 +749,32 @@
                         <div class="row itemFillRate">
 
                         <!-- Reporting rate map report -->
-                            <div class="col s12 m4 l6">
-                                <div class="section grey lighten-5 card row3-height">
-                                    <h2>
-                                        <span > Reporting Rate</span>
-                                        <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1"
-                                           class="small-box-footer modal-trigger pull-right" >
-                                            <i class="material-icons md-18">info</i>
-                                        </a>
-                                    </h2>
-                                    <leaflet style=" padding-top: 0rem !important; height: 300px;margin:0 auto "
-                                             width="100%" height="500px" legend="legend"
-                                             geojson="geojson" layers="layers"></leaflet>
+                            <div class="col s12 m4 l6" >
+                                <div class="section grey lighten-5 card row3-height" dashlet="reportingRateMap">
+                                    <div class="overlay-section">
+                                        <h2>
+                                            <span > Reporting Rate</span>
+                                            <div class="dashlet-config pull-right green-header-config-icon"></div>
+                                            <a ng-click="setHelpContentKey('reportingRate')" data-target="modal1"
+                                               class="small-box-footer modal-trigger pull-right" >
+                                                <i class="material-icons md-18">info</i>
+                                            </a>
+                                        </h2>
+                                        <leaflet style=" padding-top: 0rem !important; height: 300px;margin:0 auto "
+                                                 width="100%" height="500px" legend="legend"
+                                                 geojson="geojson" layers="layers"></leaflet>
+                                    </div>
                                 </div>
                             </div>
 
                         <!-- Reporting rate tabular bar char report -->
                             <div class="col s12 m6 l6">
-                                <div class="section grey lighten-5 card row3-height"  style="padding-top: 0rem !important;">
-                                    <h2><span>Reporting Rate</span></h2>
-                                    <div style="height: 500px; overflow: scroll;" ng-show="features && (features | filter:expectedFilter).length > 0">
+                                <div class="section grey lighten-5 card row3-height" dashlet="reportingRateBar"  style="padding-top: 0rem !important;">
+                                    <h2><span>Reporting Rate</span>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
+                                    </h2>
+                                    <div class="overlay-section" >
+                                    <div style="height: 500px; overflow: scroll;"  ng-show="features && (features | filter:expectedFilter).length > 0">
                                         <table class="striped">
                                             <thead>
                                             <tr style="margin-bottom: 20px">
@@ -774,6 +800,7 @@
                                             </tr>
                                             </tbody>
                                         </table>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -878,9 +905,10 @@
                         <div class="row orderFillRate">
 
                 <!-- Trend of Regular Orders Submitted Per Month chart report -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="trendOfRegularOrdersSubmittedPerMonth">
+                            <div class="col s12 m4 l4" dashlet="trendOfRegularOrdersSubmittedPerMonth">
+                                <div class="section grey lighten-5 card row2-height overlay-section">
                                     <h2>Trend of Regular Orders Submitted Per Month
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
@@ -893,9 +921,10 @@
                             </div>
 
                  <!-- Percentage of Regular Orders by Program (all time) -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="percentageOfRegularOrders">
+                            <div class="col s12 m4 l4" dashlet="percentageOfRegularOrders">
+                                <div class="section grey lighten-5 card row2-height overlay-section">
                                     <h2>Percentage of Regular Orders by Program (all time)
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="percentageofRegularOrdersHelp('percentageOfEmergencyByProgramhelp')"
                                            data-target="modal1" class="small-box-footer modal-trigger pull-right">
                                             <i class="material-icons md-18">info</i>
@@ -909,9 +938,10 @@
                             </div>
 
                 <!--  Regular Order By Program (Past 1 Month) -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="regularOrderByProgram">
+                            <div class="col s12 m4 l4" dashlet="regularOrderByProgram">
+                                <div class="section grey lighten-5 card row2-height overlay-section" >
                                     <h2>Regular Order By Program (Past 1 Month)
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('regularByProgramHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
@@ -927,9 +957,11 @@
                         <div class="row orderFillRate">
 
                 <!-- RnR Rejection Trends chart-->
-                            <div class="col s12 m6 l4">
-                                <div class="section grey lighten-5 card row3-height" overlay-section="rejectedRnrTrends">
-                                    <h2>RnR Rejection Trends <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                            <div class="col s12 m6 l4" dashlet="rejectedRnrTrends">
+                                <div class="section grey lighten-5 card row3-height overlay-section">
+                                    <h2>RnR Rejection Trends
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
+                                        <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
                                         info
                                     </i></a></h2>
                                     <div id="rejectionCountId" style="height: 300px; margin:0 auto"></div>
@@ -937,9 +969,10 @@
                             </div>
 
                 <!-- Regular & Emergency Requisitions -->
-                            <div class="col s12 m6 l4">
-                                <div class="section grey lighten-5 card row3-height" overlay-section="regularAndEmergencyRequisition">
+                            <div class="col s12 m6 l4"  dashlet="regularAndEmergencyRequisition">
+                                <div class="section grey lighten-5 card row3-height overlay-section">
                                     <h2>
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <span>Regular & Emergency Requisitions</span>
                                         <a ng-click="setHelpContentKey('regularEmergencyRequisitionhelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
@@ -951,9 +984,10 @@
                             </div>
 
                 <!-- R&R Status Summary -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row3-height " overlay-section="rnrStatusSummary">
+                            <div class="col s12 m4 l4" dashlet="rnrStatusSummary">
+                                <div class="section grey lighten-5 card row3-height overlay-section">
                                     <h2>R&R Status Summary
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('statusSummary')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
@@ -966,9 +1000,10 @@
 
                 <!-- Percentage of Emergency Orders by Program (all time) -->
                         <div class="row orderFillRate" >
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="percentageOrEmergencyOrders">
+                            <div class="col s12 m4 l4" dashlet="percentageOrEmergencyOrders">
+                                <div class="section grey lighten-5 card row2-height overlay-section" >
                                     <h2>Percentage of Emergency Orders by Program (all time)
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('percentageOfEmergencyByProgramhelp')"
                                            data-target="modal1" class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
@@ -982,9 +1017,10 @@
                             </div>
 
                 <!--  Emergency Order By Program (Past 1 Month)  -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="emergencyOrderByProgram">
+                            <div class="col s12 m4 l4" dashlet="emergencyOrderByProgram">
+                                <div class="section grey lighten-5 card row2-height overlay-section" >
                                     <h2>Emergency Order By Program (Past 1 Month)
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('emergencyByProgramHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
@@ -998,9 +1034,10 @@
                             </div>
 
                 <!-- Trend of Emergency Orders Submitted Per Month -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height " overlay-section="trendOfEmergencyOrderPerMonth">
+                            <div class="col s12 m4 l4" dashlet="trendOfEmergencyOrderPerMonth" >
+                                <div class="section grey lighten-5 card row2-height overlay-section" >
                                     <h2>Trend of Emergency Orders Submitted Per Month
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('trendOfEmergencyHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right">
                                             <i class="material-icons md-18">info</i>
@@ -1016,9 +1053,10 @@
                         <div class="row orderFillRate">
 
                 <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height row1-height" overlay-section="provincesWithMostRegularOrders">
+                            <div class="col s12 m4 l4" dashlet="provincesWithMostRegularOrders">
+                                <div class="section grey lighten-5 card row2-height row1-height overlay-section" >
                                     <h2>Provinces with Most Emergency Orders (Past 3 Months)
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('provincesWithMostEmergencyHelp')"
                                            data-target="modal1" class="small-box-footer modal-trigger pull-right">
                                             <i class="material-icons md-18">info</i>
@@ -1034,9 +1072,10 @@
                             </div>
 
                 <!-- Emergency Orders Frequently Appearing products -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height" overlay-section="emergencyOrderFrequentlyAppearingProducts">
+                            <div class="col s12 m4 l4" dashlet="emergencyOrderFrequentlyAppearingProducts">
+                                <div class="section grey lighten-5 card row2-height overlay-section" >
                                     <h2>Emergency Orders Frequently Appearing products
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('emergencyOrderFrequentlyAppearingProducts')"
                                            data-target="modal1" class="small-box-footer modal-trigger pull-right" >
                                             <i class="material-icons md-18">info</i>
@@ -1064,9 +1103,10 @@
                             </div>
 
                 <!-- Facilities Reporting through Facility and Central Edition -->
-                            <div class="col s12 m4 l4">
-                                <div class="section grey lighten-5 card row2-height " overlay-section="facilitiesReportingViaCEAndFE">
+                            <div class="col s12 m4 l4" dashlet="facilitiesReportingViaCEAndFE">
+                                <div class="section grey lighten-5 card row2-height overlay-section" >
                                     <h2>Facilities Reporting through Facility and Central Edition
+                                        <div class="dashlet-config pull-right green-header-config-icon"></div>
                                         <a ng-click="setHelpContentKey('facilityReportingViaFECE')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right">
                                             <i class="material-icons md-18">info</i>
@@ -1126,7 +1166,7 @@
                                         src="'/public/pages/dashboard/new-partials/shipment-interface-status.html'"
                                         ng-if="sectionLoaded('stockStatus')"></ng-include>
                             <div class="col s12 m6 l6" >
-                                <div class="section grey lighten-5 card  row3-height" overlay-section="labEquipmentStockedStatusSection">
+                                <div class="section grey lighten-5 card  row3-height" dashlet="labEquipmentStockedStatusSection">
                                     <h2>Lab Equipment Status
                                         <a ng-click="setHelpContentKey('submitterRnRHelp')" data-target="modal1"
                                            class="small-box-footer modal-trigger pull-right">
@@ -1180,6 +1220,29 @@
 
         </div>
 
+    </div>
+
+    <div class="action-buttons" form-toolbar ng-show="anyDashletConfigVisible()"  id="action_buttons">
+        <div class="form-cell button-row">
+            <input
+                    ng-disabled="formStatus == 'Finalized'"
+                    class="btn btn-primary save-button"
+                    id="saveButton"
+                    ng-click="saveDashboardPreferences()"
+                    openlmis-message="button.save"
+                    type="submit"/>
+            <input
+                    class="btn btn-cancel cancel-button"
+                    id="cancelButton"
+                    ng-click="closeAllVisibleDashletConfig()"
+                    openlmis-message="button.cancel"
+                    type="button"/>
+        </div>
+
+        <div class="toolbar-error" id="saveErrorMsgDiv">
+            <span ng-show="error" openlmis-message="error"></span>&nbsp;
+        </div>
+        <div class="toolbar-success" id="saveSuccessMsgDiv" ng-show="message" openlmis-message="message"></div>
     </div>
 
 </div>

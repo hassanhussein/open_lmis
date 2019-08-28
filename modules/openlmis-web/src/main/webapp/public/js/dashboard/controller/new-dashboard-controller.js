@@ -1,26 +1,18 @@
-function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, RejectionCount, leafletData, RnRStatusSummary, GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
-                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams, messageService, GetEmergencyOrderTrendsData,
-                                     ngTableParams, $filter, ReportingRate, StockStatusAvailaiblity, ItemFillRate, DashboardCommodityStatus, DashboardProductExpired,
-                                     DashboardRnrTypes, ShipmentInterfaces, VitalStates, dashboardSlidesHelp, UserInThreeMonths,
-                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE) {
+function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, RejectionCount, leafletData, RnRStatusSummary,
+                                    GetNumberOfEmergencyData, GetEmergencyOrderByProgramData, GetPercentageOfEmergencyOrderByProgramData,
+                                     ExtraAnalyticDataForRnRStatus, GetTrendOfEmergencyOrdersSubmittedPerMonthData, $routeParams,
+                                     messageService, GetEmergencyOrderTrendsData, ngTableParams, $filter, ReportingRate,
+                                     StockStatusAvailaiblity, ItemFillRate, DashboardCommodityStatus, DashboardProductExpired,
+                                     DashboardRnrTypes, ShipmentInterfaces, VitalStates, helpContents, UserInThreeMonths,
+                                     EmergencyOrderFrequentAppearingProducts, FacilitiesReportingThroughFEAndCE,
+                                     ReportingRateGis,dashBoardService, UserDashboardPreference, dashboardUserpreference) {
+
+    // this is the saved user dashboard preference ... so the logic to hide and show dashlet can be done using this
+    $scope.persistedConfigs = dashboardUserpreference;
     resourceLoadingConfig.hideReloadIcon = true;
     resourceLoadingConfig.loadingDashlet = [];
-    $scope.myInterval = 3000;
-    $scope.slides = [
-        {
-            image: 'http://lorempixel.com/400/200/'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/food'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/sports'
-        },
-        {
-            image: 'http://lorempixel.com/400/200/people'
-        }
-    ];
-    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October",
+    "November", "December"];
 
     $scope.displayCurrentDate = monthNames[new Date().getMonth()] + ' ' + new Date().getFullYear();
 
@@ -88,12 +80,35 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         var chartId = 'emergencyTrend';
         var category = _.pluck(data, 'Month');
         var value = _.pluck(data, 'Emergency Requisitions');
-        loadTheChart(category, value, chartId, 'line', 'Year and Month', 'Emergency Order Trends (past 1 year)', '# of requisitions');
+        loadTheChart(category, value, chartId, 'line', 'Year and Month', 'Emergency Order Trends (past 1 year)',
+         '# of requisitions');
 
         console.log(data);
     });
+    var dashboardPreferenceSaveCallback = function (data) {
+        $scope.message = 'Dashboard preference saved successfully';
+        console.log("saved successfully");
+        window.location.reload();
+    };
+    var errorFunc = function (data) {
+        console.log("error occured while saving");
+        $scope.showError = "true";
+        $scope.message = "";
+        $scope.error = data.data.error;
+    };
+    $scope.saveDashboardPreferences = function (configs) {
+        //console.log(dashBoardService.dashletConfigsGetAllVisible());
+        var configVal = dashBoardService.dashletConfigShowAllConfigValues();
+        var keys = Object.keys(configVal);
+        var preference = [];
+        console.log(keys);
+        keys.forEach(function (key) {
+            preference.push({"dashboard": key, "show": configVal[key].showDashlet});
+        });
 
-
+        UserDashboardPreference.save({}, preference, dashboardPreferenceSaveCallback, errorFunc);
+        console.log(JSON.stringify(preference)); // save this value to db
+    };
 
 
     function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {
@@ -402,8 +417,10 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
 
     function filter() {
 
+        $scope.filter.associatedDashlets = ['reportingRateBar', 'reportingRateMap'];
 
-        $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
+        ReportingRateGis.get($scope.filter, function (data) {
+
             $scope.features = data.map;
             var dataValues = [];
             var districts = _.pluck($scope.features, 'name');
@@ -579,19 +596,19 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         var total = 0;
         var prevTot = 0;
         var prev2Tot = 0;
-        var pastPrevTot=0;
+        var pastPrevTot = 0;
         angular.forEach(data, function (da, index) {
             total += da.current;
             prevTot += da.prev;
-            prev2Tot += !utils.isNullOrUndefined(da.prevprev)?da.prevprev:da.pastprev!==null?da.pastprev:0 ;
+            prev2Tot += !utils.isNullOrUndefined(da.prevprev) ? da.prevprev : da.pastprev !== null ? da.pastprev : 0;
 
         });
         var average = (total + prevTot + prev2Tot) / 3;
-        var result= [
-            {name:"Three Months Ago", data:[ parseInt(prev2Tot / parseInt(data.length, 10), 10)]},
-            { name:"Previous Month", data:[(prevTot / parseInt(data.length, 10), 10)]},
-            {name:"Current Month", data:[ parseInt(total / parseInt(data.length, 10), 10)]},
-            {name:"Average", data:[ parseInt(average / parseInt(data.length, 10), 10)]}
+        var result = [
+            {name: "Three Months Ago", data: [parseInt(prev2Tot / parseInt(data.length, 10), 10)]},
+            {name: "Previous Month", data: [(prevTot / parseInt(data.length, 10), 10)]},
+            {name: "Current Month", data: [parseInt(total / parseInt(data.length, 10), 10)]},
+            {name: "Average", data: [parseInt(average / parseInt(data.length, 10), 10)]}
         ];
 
         return result;
@@ -599,8 +616,8 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
 
     $scope.dashletSectionsLoaded = [];
 
-    $scope.loadDashletsBySectionNames = function(sectionName) {
-        switch(sectionName) {
+    $scope.loadDashletsBySectionNames = function (sectionName) {
+        switch (sectionName) {
             case 'stockStatus':
                 loadStockStatusSection();
                 break;
@@ -614,7 +631,7 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         sectionName && $scope.dashletSectionsLoaded.push(sectionName);
     };
 
-    $scope.sectionLoaded = function(section) {
+    $scope.sectionLoaded = function (section) {
         return $scope.dashletSectionsLoaded.includes(section);
     };
 
@@ -624,62 +641,62 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
     //    loadItemFillRateSection();
     //};
 
-   loadItemFillRateSection();
+    loadItemFillRateSection();
 
     function loadItemFillRateSection() {
 
         ItemFillRate.get({
-               zoneId: $scope.filter.zoneId,
-               periodId: $scope.filter.period,
-               programId: $scope.filter.program,
-               associatedDashlets: ['nationalOrderFillRatePercentage', 'nationalOrderFillRatePercentageTabular']
-           },
-           function (data) {
-               $scope.orderFillRateByZone = {"zones": data.itemFillRate};
-               console.log(JSON.stringify(data.itemFillRate));
-               $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
-               $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate-summary', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
-
-       });
-
-       ReportingRate.get({
-            zoneId: $scope.filter.zoneId,
-            periodId: $scope.filter.period,
-            programId: $scope.filter.program,
-            associatedDashlets: ['reportingRate', 'reportingRateTabularReport']
-        },
-       function (data) {
-            $scope.reportingRate = {"zones": data.reportingRate};
-            console.log(JSON.stringify(data.reportingRate));
-            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
-            $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate-summary', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
-        });
-
-       StockStatusAvailaiblity.get({
                 zoneId: $scope.filter.zoneId,
                 periodId: $scope.filter.period,
                 programId: $scope.filter.program,
-                associatedDashlets: ['stockAvailability','stockAvailabilityTabular']
-       },
-       function (data) {
-            $scope.stockAvailability = {"zones": data.stockStatus};
-            console.log(JSON.stringify($scope.stockAvailability));
-            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
-            $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability-summary', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
-       });
-   }
+                associatedDashlets: ['nationalOrderFillRatePercentage', 'nationalOrderFillRatePercentageTabular']
+            },
+            function (data) {
+                $scope.orderFillRateByZone = {"zones": data.itemFillRate};
+                console.log(JSON.stringify(data.itemFillRate));
+                $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
+                $scope.dynamicPerformanceChart($scope.orderFillRateByZone, '#container-order-fill-rate-summary', 'OrderFillRate', calculatePercentage($scope.orderFillRateByZone.zones));
+
+            });
+
+        ReportingRate.get({
+                zoneId: $scope.filter.zoneId,
+                periodId: $scope.filter.period,
+                programId: $scope.filter.program,
+                associatedDashlets: ['reportingRate', 'reportingRateTabularReport']
+            },
+            function (data) {
+                $scope.reportingRate = {"zones": data.reportingRate};
+                console.log(JSON.stringify(data.reportingRate));
+                $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
+                $scope.dynamicPerformanceChart(data.reportingRate, '#reporting-rate-summary', 'ReportingRate', calculatePercentage($scope.reportingRate.zones));
+            });
+
+        StockStatusAvailaiblity.get({
+                zoneId: $scope.filter.zoneId,
+                periodId: $scope.filter.period,
+                programId: $scope.filter.program,
+                associatedDashlets: ['stockAvailability', 'stockAvailabilityTabular']
+            },
+            function (data) {
+                $scope.stockAvailability = {"zones": data.stockStatus};
+                console.log(JSON.stringify($scope.stockAvailability));
+                $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
+                $scope.dynamicPerformanceChart($scope.stockAvailability, '#stock-availability-summary', 'StockAvailability', calculatePercentage($scope.stockAvailability.zones));
+            });
+    }
 
 
     function loadStockStatusSection() {
-        if($scope.sectionLoaded('stockStatus')) return;
-   }
+        if ($scope.sectionLoaded('stockStatus')) return;
+    }
 
-     function loadRequisitionSection() {
+    function loadRequisitionSection() {
 
-        if($scope.dashletSectionsLoaded.includes('requisition')) return;
+        if ($scope.dashletSectionsLoaded.includes('requisition')) return;
 
-        GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({associatedDashlets : ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']})
-        .then(function (data) {
+        GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({associatedDashlets: ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']})
+            .then(function (data) {
                 var chartId = 'trendOfEmergencyOrder';
                 var chartRegularId = 'trendOfRegualrOrder';
                 var category = _.pluck(data, 'ym');
@@ -687,25 +704,9 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
                 var valueRegular = _.pluck(data, 'Regular Requisitions');
                 loadTheChart(category, value, chartId, 'spline', 'Year and Month', '', '# of requisitions');
                 loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month', '', '# of requisitions');
-        });
+            });
 
-        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOfRegularOrders']}).then(function (data) {
-             var chartId = 'emergencyByProgram';
-             var chartRegularId = 'regularByProgram';
-             var category = _.pluck(data, 'Program Name');
-             var value = _.pluck(data, 'Emergency');
-             var valueRegular = _.pluck(data, 'Regular');
-             loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
-             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
-         });
-
-        RejectionCount.get({associatedDashlets : ['rejectedRnrTrends']}, function (data) {
-             var reject = _.pluck(data.rejections, 'Month');
-             var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
-             loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
-        });
-
-        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOrEmergencyOrders']}).then(function (data) {
+        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets: ['percentageOfRegularOrders']}).then(function (data) {
             var chartId = 'emergencyByProgram';
             var chartRegularId = 'regularByProgram';
             var category = _.pluck(data, 'Program Name');
@@ -715,17 +716,33 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
         });
 
-        GetEmergencyOrderByProgramData.get({associatedDashlets : ['emergencyOrderByProgram', 'regularOrderByProgram']}).then(function (data) {
-             var chartId = 'emergencySubmittedByProgram';
-             var chartRegularId = 'regularSubmittedByProgram';
-             var category = _.pluck(data, 'Program Name');
-             var value = _.pluck(data, 'Emergency');
-             var valueRegular = _.pluck(data, 'Regular');
-             loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
-             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        RejectionCount.get({associatedDashlets: ['rejectedRnrTrends']}, function (data) {
+            var reject = _.pluck(data.rejections, 'Month');
+            var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
+            loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
         });
 
-        GetNumberOfEmergencyData.get({associatedDashlets : ['provincesWithMostRegularOrders']}).then(function (data) {
+        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets: ['percentageOrEmergencyOrders']}).then(function (data) {
+            var chartId = 'emergencyByProgram';
+            var chartRegularId = 'regularByProgram';
+            var category = _.pluck(data, 'Program Name');
+            var value = _.pluck(data, 'Emergency');
+            var valueRegular = _.pluck(data, 'Regular');
+            loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+            loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        });
+
+        GetEmergencyOrderByProgramData.get({associatedDashlets: ['emergencyOrderByProgram', 'regularOrderByProgram']}).then(function (data) {
+            var chartId = 'emergencySubmittedByProgram';
+            var chartRegularId = 'regularSubmittedByProgram';
+            var category = _.pluck(data, 'Program Name');
+            var value = _.pluck(data, 'Emergency');
+            var valueRegular = _.pluck(data, 'Regular');
+            loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+            loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        });
+
+        GetNumberOfEmergencyData.get({associatedDashlets: ['provincesWithMostRegularOrders']}).then(function (data) {
             var chartId = 'emergencyByRegion';
             var data1 = _.pluck(data, 'Number Of EOs');
             var data2 = _.pluck(data, 'Province');
@@ -737,19 +754,19 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
             loadPieChart(chartId, dataValues, total);
         });
 
-        EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
-                $scope.emergencyOrderFrequentAppearingProducts = data.products;
+        EmergencyOrderFrequentAppearingProducts.get({associatedDashlets: ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
+            $scope.emergencyOrderFrequentAppearingProducts = data.products;
         });
 
         FacilitiesReportingThroughFEAndCE.get({associatedDashlets: ['facilitiesReportingViaCEAndFE']}, function (data) {
-                $scope.facilitiesReportingViaCEAndFE = data.facilities;
+            $scope.facilitiesReportingViaCEAndFE = data.facilities;
         });
 
         DashboardRnrTypes.get({
             zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program,
-            associatedDashlets : ['regularAndEmergencyRequisition']
+            associatedDashlets: ['regularAndEmergencyRequisition']
         }, function (data) {
             var rnrTypes = data.rnrTypes;
             console.log(rnrTypes);
@@ -848,84 +865,89 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         });
 
         RnRStatusSummary.get({
-                    zoneId: $scope.filter.zoneId,
-                    periodId: $scope.filter.period,
-                    programId: $scope.filter.program,
-                    associatedDashlets: ['rnrStatusSummary']
-                },
-                function (data) {
+                zoneId: $scope.filter.zoneId,
+                periodId: $scope.filter.period,
+                programId: $scope.filter.program,
+                associatedDashlets: ['rnrStatusSummary']
+            },
+            function (data) {
 
-                    var dataValues = [];
-                    var colors = {
-                        'RELEASED': 'lightblue',
-                        'IN_APPROVAL': 'lightgreen',
-                        'APPROVED': '#82A4EF',
-                        'AUTHORIZED': '#FF558F'
+                var dataValues = [];
+                var colors = {
+                    'RELEASED': 'lightblue',
+                    'IN_APPROVAL': 'lightgreen',
+                    'APPROVED': '#82A4EF',
+                    'AUTHORIZED': '#FF558F'
+                };
+                data.rnrStatus.forEach(function (d) {
+                    if (d.status === 'AUTHORIZED')
+                        dataValues.push({
+                            sliced: true,
+                            selected: true,
+                            'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                            'y': d.totalStatus,
+                            color: colors[d.status]
+                        });
+                    else
+                        dataValues.push({
+                            'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
+                            'y': d.totalStatus,
+                            color: colors[d.status]
+                        });
+                });
+
+                $scope.loadRnRStatusSummary(dataValues);
+                $scope.total = 0;
+                $scope.RnRStatusPieChartData = [];
+                $scope.dataRows = [];
+                $scope.datarows = [];
+
+                if (!isUndefined(data.rnrStatus)) {
+
+                    $scope.dataRows = data.rnrStatus;
+                    if (isUndefined($scope.dataRows)) {
+                        $scope.resetRnRStatusData();
+                        return;
+                    }
+                    var statusData = _.pluck($scope.dataRows, 'status');
+                    var totalData = _.pluck($scope.dataRows, 'totalStatus');
+                    var color = {
+                        AUTHORIZED: '#FF0000',
+                        IN_APPROVAL: '#FFA500',
+                        APPROVED: '#0000FF',
+                        RELEASED: '#008000'
                     };
-                    data.rnrStatus.forEach(function (d) {
-                        if (d.status === 'AUTHORIZED')
-                            dataValues.push({
-                                sliced: true,
-                                selected: true,
-                                'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
-                                'y': d.totalStatus,
-                                color: colors[d.status]
-                            });
-                        else
-                            dataValues.push({
-                                'name': messageService.get('label.rnr.status.summary.zm.' + d.status),
-                                'y': d.totalStatus,
-                                color: colors[d.status]
-                            });
-                    });
+                    $scope.value = 0;
+                    for (var i = 0; i < $scope.dataRows.length; i++) {
 
-                    $scope.loadRnRStatusSummary(dataValues);
-                    $scope.total = 0;
-                    $scope.RnRStatusPieChartData = [];
-                    $scope.dataRows = [];
-                    $scope.datarows = [];
+                        $scope.total += $scope.dataRows[i].totalStatus;
 
-                    if (!isUndefined(data.rnrStatus)) {
-
-                        $scope.dataRows = data.rnrStatus;
-                        if (isUndefined($scope.dataRows)) {
-                            $scope.resetRnRStatusData();
-                            return;
-                        }
-                        var statusData = _.pluck($scope.dataRows, 'status');
-                        var totalData = _.pluck($scope.dataRows, 'totalStatus');
-                        var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFA500', APPROVED: '#0000FF', RELEASED: '#008000'};
-                        $scope.value = 0;
-                        for (var i = 0; i < $scope.dataRows.length; i++) {
-
-                            $scope.total += $scope.dataRows[i].totalStatus;
-
-                            var labelKey = 'label.rnr.status.summary.' + statusData[i];
-                            var label = messageService.get(labelKey);
-                            $scope.RnRStatusPieChartData[i] = {
-                                label: label,
-                                data: totalData[i],
-                                color: color[statusData[i]]
-
-                            };
-
-                        }
-                        $scope.rnrStatusPieChartOptionFunction();
-                        $scope.rnrStatusRenderedData = {
-                            status: _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus, 'status')))
+                        var labelKey = 'label.rnr.status.summary.' + statusData[i];
+                        var label = messageService.get(labelKey);
+                        $scope.RnRStatusPieChartData[i] = {
+                            label: label,
+                            data: totalData[i],
+                            color: color[statusData[i]]
 
                         };
 
-                        bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
-                        bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
-
-                    } else {
-                        $scope.resetRnRStatusReportData();
                     }
-                    $scope.overAllTotal();
-                    $scope.paramsChanged($scope.tableParams);
-                });
-  }
+                    $scope.rnrStatusPieChartOptionFunction();
+                    $scope.rnrStatusRenderedData = {
+                        status: _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus, 'status')))
+
+                    };
+
+                    bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
+                    bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
+
+                } else {
+                    $scope.resetRnRStatusReportData();
+                }
+                $scope.overAllTotal();
+                $scope.paramsChanged($scope.tableParams);
+            });
+    }
 
     function borderColor(data) {
         return (data >= 100) ? 'rgb(149,206,255)' : (data < 100 && data > 70) ? 'orange' : 'rgb(255,117,153)';
@@ -1337,7 +1359,8 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
     VitalStates.get({
         zoneId: $scope.filter.zoneId,
         periodId: $scope.filter.period,
-        programId: $scope.filter.program
+        programId: $scope.filter.program,
+        associatedDashlets: ['submittedRnrs', 'emergencyRnrs', 'approvedRnrs', 'ordersSentToMsl', 'shipmentByMsl', 'facilities', 'products', 'users']
     }, function (data) {
         $scope.vitalStatuses = data.vitalStatuses;
 
@@ -1363,387 +1386,45 @@ function DashboardControllerFunction($scope, $timeout, resourceLoadingConfig, Re
         return num.toFixed(1).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
     };
 
-    $scope.dashboardHelps = dashboardSlidesHelp;
+    $scope.dashboardHelps = helpContents;
     $scope.setHelpContentKey = function (keyValue) {
-        $scope.helpContent = $scope.dashboardHelps[keyValue];
+        $scope.helpContent = _.findWhere($scope.dashboardHelps,{key:keyValue});
 
 
     };
 }
 
 DashboardControllerFunction.resolve = {
-    dashboardSlidesHelp: function ($q, $timeout, HelpContentByKey, messageService) {
+    dashboardUserpreference: function ($q, $timeout, UserDashboardPreferences, messageService) {
 
         var deferred = $q.defer();
-        var helps = {};
+        var dashboardPreference = {};
         $timeout(function () {
-            HelpContentByKey.get({content_key: 'Submitted R&Rs'}, function (data) {
+            UserDashboardPreferences.get({}, function (data) {
 
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.submitterRnRHelp = data.siteContent;
-
-                } else {
-
-                    helps.submitterRnRHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-
-            });
-            HelpContentByKey.get({content_key: 'Emergency R&Rs'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.emergencyRnr = data.siteContent;
-
-                } else {
-
-                    helps.emergencyRnr = {htmlContent: messageService.get('content.help.default')};
-
+                if (!isUndefined(data.preferences)) {
+                    var preferences = data.preferences;
+                    preferences.forEach(function (pref) {
+                        dashboardPreference[pref.dashboard] = {"showDashlet": pref.show};
+                    });
                 }
             });
-            HelpContentByKey.get({content_key: 'Approved R&R'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.approvedRnrHelp = data.siteContent;
-
-                } else {
-
-                    helps.approvedRnrHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Orders send to MSL'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.orderSentToMslHelp = data.siteContent;
-
-                } else {
-
-                    helps.orderSentToMslHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Shipment by MSL'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.shipementbyMslHelp = data.siteContent;
-
-                } else {
-
-                    helps.shipementbyMslHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Products'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.productsHelp = data.siteContent;
-
-                } else {
-
-                    helps.productsHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Users'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.usersHelp = data.siteContent;
-
-                } else {
-
-                    helps.usersHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Facilities'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.facilitiesHelp = data.siteContent;
-
-                } else {
-
-                    helps.facilitiesHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Order Fill Rate'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.orderFillRateHelp = data.siteContent;
-
-                } else {
-
-                    helps.orderFillRateHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Stock Availability'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.stockAvailabilityHelp = data.siteContent;
-
-                } else {
-
-                    helps.stockAvailabilityHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Expired Products'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.expiredHelp = data.siteContent;
-
-                } else {
-
-                    helps.expiredHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Transmission Failure'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.transmissionHelp = data.siteContent;
-
-                } else {
-
-                    helps.transmissionHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'MOS'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.mosHelp = data.siteContent;
-
-                } else {
-
-                    helps.mosHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'AMC'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.amcHelp = data.siteContent;
-
-                } else {
-
-                    helps.amcHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Stock on Hand'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.stockOnHandHelp = data.siteContent;
-
-                } else {
-
-                    helps.stockOnHandHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Over Stocked'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.overStockedHelp = data.siteContent;
-
-                } else {
-
-                    helps.overStockedHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-
-            HelpContentByKey.get({content_key: 'Under Stocked'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.underStocked = data.siteContent;
-
-                } else {
-
-                    helps.underStocked = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'MAX Stock Level'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.maxStockLevel = data.siteContent;
-
-                } else {
-
-                    helps.maxStockLevel = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Reporting Rate'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.reportingRate = data.siteContent;
-
-                } else {
-
-                    helps.reportingRate = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'R&R Status Summary'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.statusSummary = data.siteContent;
-
-                } else {
-
-                    helps.statusSummary = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-//                                                                      Provinces with Most Emergency Orders (Past 3 Months)
-            HelpContentByKey.get({content_key: 'Provinces with Most Emergency Orders (Past 3 Months)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.provincesWithMostEmergencyHelp = data.siteContent;
-
-                } else {
-
-                    helps.provincesWithMostEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Trend of Emergency Orders Submitted Per Month'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.trendOfEmergencyHelp = data.siteContent;
-
-                } else {
-
-                    helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Emergency Order By Program (Past 1 Month)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.emergencyByProgramHelp = data.siteContent;
-
-                } else {
-
-                    helps.emergencyByProgramHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'RnR Rejection Trends'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.rnrRejectionTrenhelp = data.siteContent;
-
-                } else {
-
-                    helps.rnrRejectionTrenhelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-            HelpContentByKey.get({content_key: 'Regular & Emergency Requisitions'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.regularEmergencyRequisitionhelp = data.siteContent;
-
-                } else {
-
-                    helps.rnrRejectionTrendelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Percentage of Emergency Orders by Program (all time)'}, function (data) {
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.percentageOfEmergencyByProgramhelp = data.siteContent;
-
-                } else {
-
-                    helps.percentageOfEmergencyByProgramhelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Percentage of Regular Orders by Program (all time)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.percentageofRegularOrdersHelp = data.siteContent;
-
-                } else {
-
-                    helps.percentageofRegularOrdersHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Trend of Regular Orders Submitted Per Month'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.trendOfReHelp = data.siteContent;
-
-                } else {
-
-                    helps.trendOfEmergencyHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-            HelpContentByKey.get({content_key: 'Regular Order By Program (Past 1 Month)'}, function (data) {
-
-                if (!isUndefined(data.siteContent)) {
-
-                    helps.regularByProgramHelp = data.siteContent;
-
-                } else {
-
-                    helps.regularByProgramHelp = {htmlContent: messageService.get('content.help.default')};
-
-                }
-            });
-
-
-            deferred.resolve(helps);
-
+            deferred.resolve(dashboardPreference);
         }, 100);
+        return deferred.promise;
+    },
+    helpContents: function ($q, $timeout, DashboardDashletHelpContent, messageService) {
+
+        var deferred = $q.defer();
+deferred.resolve([]);
+        /*$timeout(function () {
+            var dashletHelps = [];
+            DashboardDashletHelpContent.get({}, function (data) {
+                dashletHelps = data.dashboardDashletHelp;
+                deferred.resolve(dashletHelps);
+            });
+
+        }, 100);*/
         return deferred.promise;
     }
 };

@@ -42,6 +42,7 @@ public class HelpTopic extends BaseModel implements Importable {
     private Long parentHelpTopic;
 
     private String name;
+    private String key;
     private List<HelpTopicRole> roleList;
     private List<HelpContent> helpContentList;
     private boolean category;

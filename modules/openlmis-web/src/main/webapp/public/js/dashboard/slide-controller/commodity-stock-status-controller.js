@@ -15,7 +15,7 @@ function CommodityStockStatusController($scope,$routeParams, messageService,
     DashboardFacilityCommodityStatus.get({zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program,
-            associatedDashlets: ['MostOverStockedStatusSection']
+            associatedDashlets: ['mostOverStockedStatusSection']
         },
         function (data) {
 

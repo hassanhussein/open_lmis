@@ -23,9 +23,9 @@ import java.util.List;
 @Repository
 public interface HelpTopicMapper {
     @Insert({"INSERT INTO elmis_help_topic",
-            "( level, name, created_by, modifiedby, modifiedDate) ",
+            "( level, name,key, created_by, modifiedby, modifiedDate) ",
             "VALUES",
-            "( #{level}, #{name}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) )"})
+            "( #{level}, #{name},#{key}, #{createdBy}, #{modifiedBy}, #{modifiedDate}) )"})
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long createRootHelpTopic(HelpTopic helpTopic);
 
@@ -36,9 +36,9 @@ public interface HelpTopicMapper {
 
      */
     @Insert({"INSERT INTO elmis_help_topic",
-            "( level, name, created_by, modifiedby, modifiedDate, parent_help_topic_id, html_content, is_category) ",
+            "( level, name,key, created_by, modifiedby, modifiedDate, parent_help_topic_id, html_content, is_category) ",
             "VALUES",
-            "( #{level}, #{name}, #{createdBy}, #{modifiedBy}, #{modifiedDate} , #{parentHelpTopic},#{htmlContent},#{category})"})
+            "( #{level}, #{name}, #{key},#{createdBy}, #{modifiedBy}, #{modifiedDate} , #{parentHelpTopic},#{htmlContent},#{category})"})
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     Long insert(HelpTopic helpTopic);
 
@@ -47,6 +47,7 @@ public interface HelpTopicMapper {
      */
     @Update("UPDATE elmis_help_topic " +
             "   SET name= #{name}," +
+            " key=#{key}," +
             " level= #{level}," +
             " modifiedby=#{modifiedBy}, " +
             "html_content=#{htmlContent}, " +
@@ -197,4 +198,13 @@ public interface HelpTopicMapper {
     })
     List<HelpTopic> getDashboardReportLegendContent();
 
+    @Select("SELECT p.* \n" +
+            "FROM public.elmis_help_topic p\n" +
+            "WHERE p.key in ( ${configuredDashboardHelpKeys} ) " )
+    @Results({
+            @Result(column = "parent_help_topic_id", property = "parentHelpTopic"),
+            @Result(column = "html_content", property = "htmlContent"),
+            @Result(column = "is_category", property = "category")
+    })
+    List<HelpTopic> getDashboardHelpKeys(@Param(value = "configuredDashboardHelpKeys") String configuredDashboardHelpKeys);
 }

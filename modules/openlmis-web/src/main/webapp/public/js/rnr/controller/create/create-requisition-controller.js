@@ -122,6 +122,13 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
     return !(status === 'SUBMITTED' && $scope.hasPermission('AUTHORIZE_REQUISITION'));
   }();
 
+  $scope.authorizedFEReport = isAuthorizedFEReport();
+
+  function isAuthorizedFEReport () {
+       return ($scope.rnr.status === 'AUTHORIZED' && $scope.rnr.sourceApplication === 'ELMIS_FE' &&
+       !isUndefined($scope.hasPermission('AUTHORIZE_REQUISITION')));
+  }
+
   $scope.setSkipAll = function (skipAllFlag) {
     if (!$scope.formDisabled) {
       $scope.saveRnrForm.$dirty = true;
@@ -249,6 +256,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
       resetFlags();
       $scope.rnr.status = "AUTHORIZED";
       $scope.formDisabled = true;
+      $scope.authorizedFEReport = isAuthorizedFEReport();
       $scope.submitMessage = data.success;
       $scope.saveRnrForm.$setPristine();
     }, function (data) {

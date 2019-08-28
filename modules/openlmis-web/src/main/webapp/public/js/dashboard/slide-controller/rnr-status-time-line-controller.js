@@ -1,5 +1,5 @@
 function RnrStatusChangeTimeLineController($scope,$routeParams, messageService,
-                                        ngTableParams, $filter,RnRTimeLines, dashBoardService) {
+                                        ngTableParams, $filter,RnRTimeLines) {
     $scope.gap = 5;
     // DashboardFacilityCommodityStatus
     $scope.filteredItems = [];

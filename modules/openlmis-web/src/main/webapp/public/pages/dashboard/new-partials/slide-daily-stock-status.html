@@ -1,8 +1,10 @@
 
-    <div  ng-controller="DailyStockStatusController" class="col s12 m6 l6">
-        <div class="section grey lighten-5 card row3-height" overlay-section="dailyStockStatusStockStatusSection" style="padding-top: 0rem !important;">
+    <div  ng-controller="DailyStockStatusController" dashlet="dailyStockStatusStockStatusSection" class="col s12 m6 l6">
+        <div class="section grey lighten-5 card row3-height overlay-section"  style="padding-top: 0rem !important;">
 
-            <h2><span > Daily Stock Status in Recent 7 Days</span></h2>
+            <h2><span > Daily Stock Status in Recent 7 Days</span>
+                <div class="dashlet-config pull-right green-header-config-icon"></div>
+            </h2>
 
             <div style="margin-left: 10px; height: 500px; overflow: scroll">
                 <table class="striped bordered ">

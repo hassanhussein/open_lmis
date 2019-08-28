@@ -79,7 +79,7 @@ app.config(function ($stateProvider, $urlRouterProvider, $breadcrumbProvider, $h
     this.response = function(response) {
         if(response.config.dashlets) {
             response.config.dashlets.forEach(function(dashlet) {
-                angular.element('#'+dashlet+'').hide();
+               angular.element('#'+dashlet+'').hide();
             });
         }
        return response;

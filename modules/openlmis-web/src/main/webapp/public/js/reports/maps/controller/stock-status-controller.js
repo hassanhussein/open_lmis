@@ -283,7 +283,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                 $scope.productsSelected.push(itm.id);
             }
         });
-
+        $scope.inProgress=true;
         StockStatusProductConsumptionGraph.get({
             program: $scope.filter.program,
             product: $scope.productsSelected,
@@ -293,7 +293,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             $scope.consumptionData =  data.consumption;
             //alert("fail5:" +  JSON.stringify($scope.consumptionData));
             adjustDataForChart($scope.consumptionData);
-
+            $scope.inProgress=false;
 
         });
     };

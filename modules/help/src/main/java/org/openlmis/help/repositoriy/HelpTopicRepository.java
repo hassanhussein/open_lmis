@@ -88,4 +88,8 @@ public List<HelpTopic> loadChildrenOfHelpTopic(Long loggedUserId, HelpTopic pare
     public List<HelpTopic> getDashboardReportLegendContent(){
         return this.mapper.getDashboardReportLegendContent();
     }
+
+    public List<HelpTopic> getDashboardHelpKeys(String configuredDashboardHelpKeys) {
+        return this.mapper.getDashboardHelpKeys(configuredDashboardHelpKeys);
+    }
 }
