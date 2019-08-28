@@ -239,6 +239,10 @@ public class RequisitionService {
     }
   }
 
+  private boolean isPartialFEReportUpdate(Long userId, Rnr savedRnr) {
+    return requisitionPermissionService.hasPermissionToSaveFEEquipmentReport(userId, savedRnr);
+  }
+
   @Transactional
   public Rnr save(Rnr rnr) {
     Rnr savedRnr = getFullRequisitionById(rnr.getId());
@@ -252,16 +256,20 @@ public class RequisitionService {
 
     if (savedRnr.getStatus() == AUTHORIZED || savedRnr.getStatus() == IN_APPROVAL) {
       savedRnr.copyApproverEditableFields(rnr, rnrTemplate);
-
     } else {
       List<ProgramProduct> programProducts = programProductService.getNonFullSupplyProductsForProgram(savedRnr.getProgram());
       savedRnr.copyCreatorEditableFields(rnr, rnrTemplate, regimenTemplate, programProducts);
-      //TODO: copy only the editable fields.
-      savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
-      savedRnr.setManualTestLineItems(rnr.getManualTestLineItems());
     }
 
-    requisitionRepository.update(savedRnr);
+    savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
+    savedRnr.setManualTestLineItems(rnr.getManualTestLineItems());
+
+    // FE users can't submit equipment and manual test types. This is a makeshift solution for
+    // updating equipment and manual test types of AUTHORIZED FE reports
+    if(isPartialFEReportUpdate(rnr.getModifiedBy(), savedRnr))
+      requisitionRepository.updateEquipmentStatusAndManualTestTypes(savedRnr);
+    else
+      requisitionRepository.update(savedRnr);
 
     return savedRnr;
   }
