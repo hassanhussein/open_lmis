@@ -55,12 +55,14 @@ public class Customer {
   @JsonProperty("CustomerEmail")
   private String customerEmail;
 
-  public Facility createNewFacility() {
+  public Facility createNewFacility(String facilityTypeCode, String geographicZoneCode) {
     Facility facility = new Facility();
-//    facility.setFacilityType(new FacilityType());
-//    facility.getFacilityType().setId(1L);
-//    facility.setGeographicZone(new GeographicZone());
-//    facility.getGeographicZone().setId(1L);
+    facility.setFacilityType(new FacilityType());
+    facility.getFacilityType().setCode(facilityTypeCode);
+    facility.setGeographicZone(new GeographicZone());
+    facility.getGeographicZone().setCode(geographicZoneCode);
+    facility.setSdp(true);
+    facility.setGoLiveDate(new Date());
     updateFacility(facility);
     return facility;
   }

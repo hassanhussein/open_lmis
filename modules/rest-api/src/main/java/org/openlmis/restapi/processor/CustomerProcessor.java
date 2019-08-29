@@ -16,10 +16,17 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.restapi.dtos.sage.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
 public class CustomerProcessor {
+
+  @Value("${elmis.default.facility.type.code}")
+  private String defaultFacilityTypeCode;
+
+  @Value("${elmis.default.geographic.zone.code}")
+  private String defaultGeographicZoneCode;
 
   @Autowired
   FacilityService facilityService;
@@ -27,7 +34,7 @@ public class CustomerProcessor {
   public void process(Customer customer) {
     Facility facility = facilityService.getByCodeFor(customer.getCustomerId());
     if (facility == null) {
-      facility = customer.createNewFacility();
+      facility = customer.createNewFacility(defaultFacilityTypeCode, defaultGeographicZoneCode);
       facilityService.save(facility);
     } else {
       customer.updateFacility(facility);

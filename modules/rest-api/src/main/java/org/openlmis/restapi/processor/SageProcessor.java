@@ -14,10 +14,7 @@ package org.openlmis.restapi.processor;
 
 import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.service.ConfigurationSettingService;
-import org.openlmis.restapi.dtos.sage.Customer;
-import org.openlmis.restapi.dtos.sage.ItemPrice;
-import org.openlmis.restapi.dtos.sage.ItemStock;
-import org.openlmis.restapi.dtos.sage.Shipment;
+import org.openlmis.restapi.dtos.sage.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +30,7 @@ import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 public class SageProcessor {
 
   private static final String LAST_CUSTOMER_UPDATE_TIME = "LAST_CUSTOMER_UPDATE_TIME";
+  private static final String LAST_ITEM_UPDATE_TIME = "LAST_ITEM_UPDATE_TIME";
   private static final String LAST_ITEM_STOCK_UPDATE_TIME = "LAST_ITEM_STOCK_UPDATE_TIME";
   private static final String LAST_ITEM_PRICE_UPDATE_TIME = "LAST_ITEM_PRICE_UPDATE_TIME";
   private static final String LAST_SHIPMENT_UPDATE_TIME = "LAST_SHIPMENT_UPDATE_TIME";
@@ -40,6 +38,9 @@ public class SageProcessor {
 
   @Autowired
   CustomerProcessor customerProcessor;
+
+  @Autowired
+  ItemProcessor itemProcessor;
 
   @Autowired
   ItemStockProcessor itemStockProcessor;
@@ -112,8 +113,14 @@ public class SageProcessor {
     return updateStoreAndReturnSummary(startTime, lastUpdateConfiguration, items);
   }
 
-  public void processItems() {
+  public Map<String, String> processItems() {
+    Date startTime = new Date();
+    ConfigurationSetting lastUpdateConfiguration = getOrCreateLastUpdateTime(LAST_ITEM_UPDATE_TIME);
 
+    List<Item> items = restClient.callGetItems(lastUpdateConfiguration.getValue());
+    items.parallelStream().forEach(c -> itemProcessor.process(c));
+
+    return updateStoreAndReturnSummary(startTime, lastUpdateConfiguration, items);
   }
 
   public Map<String, String> processCustomers() {

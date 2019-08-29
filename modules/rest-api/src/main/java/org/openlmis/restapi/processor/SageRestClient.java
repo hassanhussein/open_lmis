@@ -14,10 +14,7 @@ package org.openlmis.restapi.processor;
 
 import org.apache.commons.net.util.Base64;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.restapi.dtos.sage.Customer;
-import org.openlmis.restapi.dtos.sage.ItemPrice;
-import org.openlmis.restapi.dtos.sage.ItemStock;
-import org.openlmis.restapi.dtos.sage.Shipment;
+import org.openlmis.restapi.dtos.sage.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -79,6 +76,15 @@ public class SageRestClient {
 
     RestTemplate template = new RestTemplate();
     ResponseEntity<List<Customer>> response = template.exchange(urlFactory.customer() + queryString, HttpMethod.GET, createHeaders(), new ParameterizedTypeReference<List<Customer>>() {
+    });
+    return response.getBody();
+  }
+
+  public List<Item> callGetItems(String lastUpdateTime) {
+    String queryString = (!StringUtils.isEmpty(lastUpdateTime)) ? "?dtReturn=" + lastUpdateTime : "";
+
+    RestTemplate template = new RestTemplate();
+    ResponseEntity<List<Item>> response = template.exchange(urlFactory.item() + queryString, HttpMethod.GET, createHeaders(), new ParameterizedTypeReference<List<Item>>() {
     });
     return response.getBody();
   }
