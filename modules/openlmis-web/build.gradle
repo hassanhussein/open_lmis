@@ -17,20 +17,6 @@ import org.apache.tools.ant.taskdefs.condition.Os
 apply plugin: 'jetty'
 apply plugin: 'war'
 apply plugin: 'cobertura'
-//apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
-
-//gretty {
-//    httpPort = 9091
-//    contextPath = '/'
-//    scanInterval = 1
-//    jvmArgs = ['-DdefaultLocale=en']
-//    managedClassReload=false
-//    loggingLevel='DEBUG'
-//    servletContainer = 'jetty9'
-//    onScanFilesChanged {
-//        System.out.println('Change detected! reloading classes!')
-//    }
-//}
 
 task npm(type: Exec) {
   group = "Build"

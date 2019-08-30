@@ -12,32 +12,31 @@
 
 package org.openlmis.restapi.processor;
 
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.service.ProductService;
+import org.openlmis.restapi.dtos.sage.Item;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
-@Configuration
-public class UrlFactory {
+@Service
+public class ItemProcessor {
 
-  @Value("${integration.sage.base.url}")
-  private String BASE_URL;
+  @Value("${elmis.default.product.default.dosage.unit.code}")
+  private String defaultDosageUnitCode;
 
-  public String customer() {
-    return BASE_URL + "/Customer/Get";
-  }
+  @Value("${elmis.default.product.default.product.form.code}")
+  private String defaultProductFormCode;
 
-  public String itemStock() {
-    return BASE_URL + "/ItemStock/Get";
-  }
+  @Autowired
+  ProductService productService;
 
-  public String itemPrice() {
-    return BASE_URL + "/ItemPrice/Get";
-  }
+  public void process(Item item) {
+    Product product = productService.getByCode(item.getCode());
 
-  public String shipment() {
-    return BASE_URL + "/Shipment/Get";
-  }
-
-  public String item() {
-    return BASE_URL + "/Item/Get";
+    if(product == null) {
+      Product newProduct = item.createNewProduct(defaultDosageUnitCode, defaultProductFormCode);
+      productService.save(newProduct);
+    }
   }
 }

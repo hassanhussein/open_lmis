@@ -39,6 +39,11 @@ public class IntegrationController extends BaseController {
     sageProcessor.processCustomers();
   }
 
+  @RequestMapping(value = "/rest-api/integration/process-item", method = RequestMethod.GET)
+  public void callItemProcessor() {
+    sageProcessor.processItems();
+  }
+
   @RequestMapping(value = "/rest-api/integration/process-item-price", method = RequestMethod.GET)
   public @ResponseBody
   Map<String, String> callItemPriceProcessor() {

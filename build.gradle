@@ -14,13 +14,11 @@ apply plugin: 'idea'
 apply plugin: 'com.github.ben-manes.versions'
 apply plugin: 'properties'
 apply plugin: 'org.sonarqube'
-apply plugin: 'nebula.lint'
 
 
 idea.project.languageLevel = '1.8'
 idea.project.jdkName = '1.8'
 
-gradleLint.rules = ['unused-dependency']
 
 
 
@@ -54,10 +52,7 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'properties'
-  apply plugin: 'nebula.lint'
-
-  gradleLint.rules = ['unused-dependency']
-
+  
   sonarqube {
     properties {
       property "sonar.junit.reportsPath", "$buildDir/test-results/"

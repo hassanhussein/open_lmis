@@ -13,10 +13,8 @@
 package org.openlmis.restapi.processor;
 
 import org.apache.commons.net.util.Base64;
-import org.openlmis.restapi.dtos.sage.Customer;
-import org.openlmis.restapi.dtos.sage.ItemPrice;
-import org.openlmis.restapi.dtos.sage.ItemStock;
-import org.openlmis.restapi.dtos.sage.Shipment;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.restapi.dtos.sage.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -43,11 +41,17 @@ public class SageRestClient {
   @Value("${integration.sage.user.password}")
   private String PASSWORD;
 
+  public RestTemplate createRestTemplate(){
+    RestTemplate restTemplate = new RestTemplate();
+    restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor(USER_NAME, PASSWORD));
+    return restTemplate;
+  }
+
   public List<ItemStock> callGetItemStock(String lastUpdateTime) {
     String queryString = (!StringUtils.isEmpty(lastUpdateTime)) ? "?dtReturn=" + lastUpdateTime : "";
 
-    RestTemplate template = new RestTemplate();
-    ResponseEntity<List<ItemStock>> response = template.exchange(urlFactory.itemStock() + queryString, HttpMethod.GET, createHeaders(), new ParameterizedTypeReference<List<ItemStock>>() {
+    RestTemplate template = createRestTemplate();
+    ResponseEntity<List<ItemStock>> response = template.exchange(urlFactory.itemStock() + queryString, HttpMethod.GET, null, new ParameterizedTypeReference<List<ItemStock>>() {
     });
     return response.getBody();
   }
@@ -55,10 +59,16 @@ public class SageRestClient {
   public List<ItemPrice> callGetItemPrice(String lastUpdateTime) {
     String queryString = (!StringUtils.isEmpty(lastUpdateTime)) ? "?dtReturn=" + lastUpdateTime : "";
 
-    RestTemplate template = new RestTemplate();
-    ResponseEntity<List<ItemPrice>> response = template.exchange(urlFactory.itemPrice() + queryString, HttpMethod.GET, createHeaders(), new ParameterizedTypeReference<List<ItemPrice>>() {
-    });
-    return response.getBody();
+    RestTemplate template = createRestTemplate();
+    try {
+      ResponseEntity<List<ItemPrice>> response = template.exchange(urlFactory.itemPrice() + queryString, HttpMethod.GET, null, new ParameterizedTypeReference<List<ItemPrice>>() {
+
+      });
+      return response.getBody();
+    }catch(Exception exp)
+    {
+      throw new DataException(exp.getMessage(), exp.getLocalizedMessage());
+    }
   }
 
   public List<Customer> callGetCustomers(String lastUpdateTime) {
@@ -66,6 +76,15 @@ public class SageRestClient {
 
     RestTemplate template = new RestTemplate();
     ResponseEntity<List<Customer>> response = template.exchange(urlFactory.customer() + queryString, HttpMethod.GET, createHeaders(), new ParameterizedTypeReference<List<Customer>>() {
+    });
+    return response.getBody();
+  }
+
+  public List<Item> callGetItems(String lastUpdateTime) {
+    String queryString = (!StringUtils.isEmpty(lastUpdateTime)) ? "?dtReturn=" + lastUpdateTime : "";
+
+    RestTemplate template = new RestTemplate();
+    ResponseEntity<List<Item>> response = template.exchange(urlFactory.item() + queryString, HttpMethod.GET, createHeaders(), new ParameterizedTypeReference<List<Item>>() {
     });
     return response.getBody();
   }
