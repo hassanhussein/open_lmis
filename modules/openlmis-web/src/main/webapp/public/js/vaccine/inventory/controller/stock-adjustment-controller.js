@@ -12,6 +12,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
     //Get Home Facility
     $scope.currentStockLot = undefined;
     $scope.adjustmentReasonsDialogModal = false;
+    $scope.isCentralUser = false;
     $scope.userPrograms=configurations.programs;
     $scope.adjustmentReason={};
     $scope.vvmStatuses=[{"value":"1","name":" 1 "},{"value":"2","name":" 2 "}];
@@ -32,6 +33,9 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
             $scope.homeFacilityId=homeFacility.id;
             $scope.selectedFacilityId=homeFacility.id;
             $scope.facilityDisplayName=homeFacility.name;
+            if(homeFacility.facilityType.code == 'cvs'){
+                   $scope.isCentralUser = true;
+                }
             }
     if($scope.userPrograms.length > 1)
     {
