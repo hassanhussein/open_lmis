@@ -592,19 +592,23 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
     }
 
     getStockStatusByProduct = function() {
+        $scope.inprogress=true;
         $.getJSON('/gis/stock-status-products.json', $scope.filter, function(data) {
             $scope.products = data.products;
+            $scope.inprogress=false;
         });
     };
 
     getStockStatusProductConsumption = function() {
+        $scope.inprogress=true;
         $.getJSON('/gis/stock-status-product-consumption.json', $scope.filter, function(data) {
             $scope.consumption = data.consumption;
+            $scope.inprogress=false;
 
         });
     };
     $scope.OnFilterChanged = function() {
-
+        $scope.inprogress=true;
         $.getJSON('/gis/stock-status-facilities.json', $scope.filter, function(data) {
             $scope.features = data.map;
 
@@ -618,6 +622,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
                 feature.properties = {};
                 feature.properties.name = feature.name;
                 feature.properties.id = feature.id;
+                $scope.inprogress=false;
             });
             $scope.drawMap({
                 "type": "FeatureCollection",
