@@ -60,10 +60,14 @@ public class Item {
     product.setMslPackSize(1);
     product.setDosageUnit(new DosageUnit());
     product.getDosageUnit().setCode(dosageUnitCode);
+    product.setDosesPerDispensingUnit(1);
     product.setForm(new ProductForm());
     product.getForm().setCode(productFormCode);
 
     product.setActive(true);
+    product.setTracer(false);
+    product.setPackRoundingThreshold(1);
+    product.setRoundToZero(true);
     return product;
   }
 }
