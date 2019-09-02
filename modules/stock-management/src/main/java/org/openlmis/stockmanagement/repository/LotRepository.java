@@ -62,4 +62,8 @@ public class LotRepository {
   public List<Lot> getAll() {
     return mapper.getAll();
   }
+
+    public Lot getByCode(String lotCode) {
+    return mapper.getByCode(lotCode);
+    }
 }
