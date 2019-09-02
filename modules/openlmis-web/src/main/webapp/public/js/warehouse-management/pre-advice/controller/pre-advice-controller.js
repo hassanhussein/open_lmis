@@ -18,17 +18,33 @@
  function PreAdviceController($scope){
 
 
-    $scope.products=[{id:'choice1'}]
+    $scope.products=[{
+    id:1,
+    unitPrice:0,
+    lots:[{'id':Date.now()}]
+    }]
+
+    $scope.addLot=function(productIndex){
+       $scope.products[productIndex].lots.push({'id':Date.now()});
+ }
+
+ $scope.addProduct=function(){
+ $scope.products.push({'id':$scope.products.length+1,unitPrice:0,lots:[{'id':Date.now()}]});
+ }
 
 
+ $scope.removeProduct=function(productIndex){
+ console.log(productIndex)
 
-        $scope.addProduct=function(){
-                       var newItemNo = $scope.products.length+1;
-                        $scope.products.push({'id':'choice'+newItemNo});
-                }
+ $scope.products.splice(productIndex,1);
+ if($scope.products.length==1 && productIndex==0){
+    $scope.addProduct();
+  }
+ }
 
-        $scope.removeProduct=function(){
-               var lastItem = $scope.products.length-1;
-                $scope.products.splice(lastItem);
-        }
+
+ $scope.removeLot=function(productIndex,lotIndex){
+    $scope.products[productIndex].lots.splice(lotIndex,1);
+ }
+
  }

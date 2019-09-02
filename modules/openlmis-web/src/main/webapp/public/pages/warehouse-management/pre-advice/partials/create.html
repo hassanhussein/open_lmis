@@ -124,15 +124,18 @@
 
                 <div class="form-row clearfix">
 
-                    <div class="form-cell">
+                    <div class="form-cell" ng-init="switch.Data=1">
                         <label class="checkbox inline">
-                            <input type="radio" name="productType"  value="1" checked="checked"  > Vaccines/Associated Products
+                            <input type="radio" ng-model="switch.Data"  value="1"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" name="productType"  value="2"> Other Items
+                            <input type="radio" ng-model="switch.Data"   value="2"> Other Items
                         </label>
 
                     </div>
+
+
+
 
                 </div>
 
@@ -148,53 +151,256 @@
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab1">
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Unit of Measurement</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Price</th>
-                                    <th>Total Cost</th>
-                                    <th>Action</th>
-                                    <th></th>
+<!--                            <div ng-switch="switch.Data" id="wrapper">-->
+<!--                                <div ng-switch-when="1">-->
+<!--                                    <table class="table table-striped">-->
+<!--                                        <thead>-->
+<!--                                        <tr>-->
+<!--                                            <th>Product</th>-->
+<!--                                            <th>Unit of Measurement</th>-->
+<!--                                            <th>Quantity</th>-->
+<!--                                            <th>Unit Price</th>-->
+<!--                                            <th>Total Cost</th>-->
+<!--                                            <th>Action</th>-->
+<!--                                            <th></th>-->
 
-                                </tr>
-                                </thead>
-                                <tbody id="append-element">
-                                <tr data-ng-repeat="product in products">
-                                    <td>
-                                        <select>
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <input type="text">
-                                    </td>
-                                    <td>
-                                        <input type="number">
-                                    </td>
-                                    <td>
-                                        <input type="text">
-                                    </td>
-                                    <td>445</td>
-                                    <td><span class="btn btn-link">Lot</span></td>
-                                    <td ng-show="$last"><span class="btn btn-danger" ng-click="removeProduct()"><i class="icon-remove"></i></i></span></td>
-                                </tr>
+<!--                                        </tr>-->
+<!--                                        </thead>-->
+<!--                                        <tbody id="append-element">-->
+<!--                                        <tr data-ng-repeat="product in products">-->
+<!--                                            <td>-->
+<!--                                                <select>-->
+<!--                                                    <option>BCG</option>-->
+<!--                                                    <option>OPV</option>-->
+<!--                                                </select>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                Doses-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <input type="number" ng-model="product.quantity">-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <input type="number" ng-model="product.unitPrice">-->
+<!--                                            </td>-->
+<!--                                            <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0}}</td>-->
+<!--                                            <td><span class="btn btn-link">Lot</span></td>-->
+<!--                                            <td ng-show="$last"><span class="btn btn-danger" ng-click="removeProduct('vaccine')"><i class="icon-remove"></i></i></span></td>-->
+<!--                                        </tr>-->
 
-                                </tbody>
-                                <tfoot>
-                                <tr>
-                                    <td>
-                                        <button class="btn btn-small btn-info" type="button" ng-click="addProduct()">Add Product</button>
-                                    </td>
-                                </tr>
-                                </tfoot>
-                            </table>
+<!--                                        </tbody>-->
+
+
+
+
+<!--                                        <tfoot>-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct('vaccine')">Add Product</button>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        </tfoot>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                                <div ng-switch-when="2">-->
+<!--                                    <table class="table table-striped">-->
+<!--                                        <thead>-->
+<!--                                        <tr>-->
+<!--                                            <th>Product</th>-->
+<!--                                            <th>Unit of Measurement</th>-->
+<!--                                            <th>Quantity</th>-->
+<!--                                            <th>Unit Price</th>-->
+<!--                                            <th>Total Cost</th>-->
+
+<!--                                            <th></th>-->
+
+<!--                                        </tr>-->
+<!--                                        </thead>-->
+<!--                                        <tbody id="append-element">-->
+<!--                                        <tr data-ng-repeat="product in otherProducts">-->
+<!--                                            <td>-->
+<!--                                                <select>-->
+<!--                                                    <option>Laptop</option>-->
+<!--                                                    <option>SCanner</option>-->
+<!--                                                </select>-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                Units-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <input type="number" ng-model="product.quantity">-->
+<!--                                            </td>-->
+<!--                                            <td>-->
+<!--                                                <input type="number" ng-model="product.unitPrice">-->
+<!--                                            </td>-->
+<!--                                            <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0}}</td>-->
+
+<!--                                            <td ng-show="$last"><span class="btn btn-danger" ng-click="removeProduct('other')"><i class="icon-remove"></i></i></span></td>-->
+<!--                                        </tr>-->
+
+<!--                                        </tbody>-->
+
+
+
+
+<!--                                        <tfoot>-->
+<!--                                        <tr>-->
+<!--                                            <td>-->
+<!--                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct('other')">Add Product</button>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                        </tfoot>-->
+<!--                                    </table>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+
+
+
+                            <div>
+                                <table  class="table table-bordered receive">
+                                    <thead>
+                                    <tr class="gradient-header">
+                                        <th  style="width:250px !important;max-width:250px !important" class="col-product " openlmis-message="label.products"></th>
+                                        <th class="col-product" style="max-width:160px !important; width:160px !important">
+                                            <span openlmis-message="label.unit.of.measure"></span></th>
+                                        <th style="width:300px !important;max-width:300px !important" class="col-lot" ng-hide="switch.Data==2"><span openlmis-message="label.stock.batch"></span></th>
+                                        <th class="col-quantity" style="width:150px !important;max-width:150px !important"><span
+                                                openlmis-message="label.stock.quantity"></span></th>
+                                        <th style="width:150px !important;max-width:150px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
+                                        <th class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody >
+                                    <tr ng-repeat-start="product in products" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add" >
+                                            <select style="width:90% !important;" ui-select2
+                                                    ng-change="loadProductLots(productToAdd.programProduct.product)"
+                                                    ng-disabled="productToAdd.lots.length >0 || lotToAdd.quantity !== undefined || lotToAdd.lotId !== undefined || lotToAdd.vvmStatus"
+                                                    ng-model="productToAdd.programProduct"
+                                                    ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
+                                                <option value="" openlmis-message="placeholder.select.product"></option>
+                                            </select>
+                                        </td>
+
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add "> Doses</td>
+
+                                        <td>
+                                            <input type="text">
+
+                                        </td>
+                                        <td>
+                                            <input type="number">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-if="product.lots.length==1" >Add</button>
+                                            <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
+
+                                        </td>
+
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add ">
+                                            <button class="btn btn-small btn-danger" ng-if="product && !$last && products.length>1" ng-click="removeProduct(productIndex)"  type="button" >Remove</button>
+                                            <button class="btn btn-small btn-info" ng-click="addProduct()" ng-if="$last"  >Add</button>
+                                        </td>
+
+                                    </tr>
+                                    <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
+                                        <td>
+                                            <input type="text">
+                                        </td>
+                                        <td>
+                                            <input type="number">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex)" >Add</button>
+                                            <button class="btn btn-small btn-danger" ng-if="lot && !$last" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
+                                        </td>
+
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+<!--Lot Modal-->
+<div id="popup-box" ng-form="newLotForm" modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
+    <div class="modal-header">
+        <div class="row-fluid">
+            <div class="span4">
+                <h3 openlmis-message="header.vaccine.stock.create.lot"></h3>&nbsp;&nbsp;
+            </div>
+            <div class="span4">
+                <h3><span openlmis-message="label.product"></span>:{{newLot.product.primaryName}}</h3>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="row-fluid ">
+            <div class="span3">
+                <label id="newLotLotCodeLabel" for="newLot.lotCode">
+                    <span openlmis-message="label.batchId "></span>
+                    <span class="label-required">*</span>
+                </label>
+                <span class="position-relative">
+                                    <input  ng-required="true" class="span12" type="text" ng-model="newLot.lotCode" value="" id="newLot.lotCode" />
+                                </span>
+            </div>
+
+            <div class="span3">
+                <label id="newLotExpirationDateLabel" for="newLot.expirationDate">
+                    <span openlmis-message="label.expiryDate"></span>
+                    <span class="label-required">*</span>
+                </label>
+                <span class="position-relative">
+                                <input ng-required="true" class="span12"
+                                       ng-required="true"
+                                       id="newLot.expirationDate"
+                                       name="expirationDate"
+                                       type="text"
+                                       ui-date-format="yy-mm-dd"
+                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, minDate:'today + 1'}"
+                                       ng-model="newLot.expirationDate"/>
+                                </span>
+            </div>
+            <div class="span3">
+                <label id="newLotManufacturerLabel" for="newLot.manufacturerName">
+                    <span openlmis-message="label.manufacturer"></span>
+                    <span class="label-required">*</span>
+                </label>
+                <span class="position-relative">
+                    <select style="width:90% !important;" ui-select2 ng-required="true" class="span12"
+                            ng-model="newLot.manufacturerName" id="newLot.manufacturerName"
+                            ng-options="manufacturer.name as manufacturer.name for manufacturer in manufacturers">
+                        <option value="" openlmis-message="placeholder.select.manufacturer"></option>
+                    </select>
+                </span>
+            </div>
+            <div class="span3">
+                <label id="newLotManufactureDateLabel" for="newLot.manufactureDate">
+                    <span openlmis-message="label.manufacture.date "></span>
+                </label>
+                <span class="position-relative">
+                                <input class="span12"  id="newLot.manufactureDate" name="newLot.manufactureDate" type="text"
+                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
+                                       ng-model="newLot.manufactureDate"/>
+                                </span>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="button" id="issueSubmit" class="btn btn-primary save-button"
+               ng-click="createLot()"
+               ng-disabled="newLotForm.$invalid"
+               openlmis-message="button.create"/>
+        <input type="button" ng-click="closeNewLotModal();" class="btn btn-cancel"
+               openlmis-message="button.cancel"/>
+    </div>
+
+</div>
+
+<!--Lot Modal Ends-->
+
+
+
                         </div>
                         <div class="tab-pane" id="tab2">
                             <div class="form-row clearfix">
@@ -317,11 +523,7 @@
                                 <div class="span6 ">
 
 
-                                    <div  class="row">
-                                        <li><span class="btn btn-danger" ><i class="icon-remove"></i></i></span> Airbillway.pdf(Airbillway)</li>
-                                        <li><span class="btn btn-danger" ><i class="icon-remove"></i></i></span> Parking li...(Parking list)</label></li>
-                                    </div>
-
+                                   
 
 
                                 </div>
