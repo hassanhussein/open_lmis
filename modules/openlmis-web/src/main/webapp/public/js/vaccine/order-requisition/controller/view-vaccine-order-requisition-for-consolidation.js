@@ -172,12 +172,9 @@ function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $root
     SupervisoryNodeByFacilityAndRequisition.get({facilityId: parseInt(facility.id, 10)}, function (data) {
         $scope.supervisoryNode = data.supervisoryNodes;
         if (data.supervisoryNodes === null) {
-          $scope.gridOpt = true;
-
-            //Will be used for consolidation purposed
-           //$scope.gridOption = true;
+            $scope.gridOption = true;
         } else {
-            $scope.gridOpt = true ;
+            $scope.gridOpt = true;
 
         }
 
@@ -237,7 +234,6 @@ function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $root
     };
 
     $scope.distributeToFacility = function (row) {
-    console.log(row);
 
         $window.location = '/public/pages/vaccine/inventory/stock-movement/index.html#/stock-movement-view/' + row.programId + '/' + row.periodId + '/' + row.facilityId + '/' + row.facilityName + '/' + row.id;
 
