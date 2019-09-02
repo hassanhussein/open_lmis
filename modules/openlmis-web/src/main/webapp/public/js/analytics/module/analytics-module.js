@@ -12,7 +12,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the GNU Affero General Public License for more details.
  */
 
-var app  = angular.module('analytics', ['openlmis','ui.router','leaflet-directive', 'ngGrid', 'ui.bootstrap.dialog', 'ui.bootstrap.accordion',
+var app  = angular.module('analytics', ['openlmis','ui.router','leaflet-directive','google-maps', 'ngGrid', 'ui.bootstrap.dialog', 'ui.bootstrap.accordion',
     'ui.bootstrap.modal','ui.bootstrap.pagination', 'ui.bootstrap.dropdownToggle',
     'angularUtils.directives.uiBreadcrumbs','ng-breadcrumbs','ncy-angular-breadcrumb','angularCombine',
     'ngTable','ui.bootstrap.pagination', 'tree.dropdown','rxDataTable','ngAnimate'

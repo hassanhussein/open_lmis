@@ -561,6 +561,31 @@ services.factory('GetEmergencyAndRegularRnRTrendsData', function ($q, $timeout, 
 
 });
 
+services.factory('GetGeoStockStatusForMapData', function ($q, $timeout, $resource,GetGeoStockStatusForMap) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+
+         GetGeoStockStatusForMap.get(params,
+                    function (data) {
+                    var stocks ={};
+                    if (data !== undefined) {
+                        stocks = data.stocks;
+                    }
+                    deferred.resolve(stocks);
+
+                    });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 services.factory('GetNumberOfEmergency', function($resource){
     return $resource('/api//dashboard/getNumberOfEmergency.json',{}, {});
 });
@@ -664,4 +689,8 @@ services.factory("ConsumptionTrendSummary", function($resource){
 
 services.factory("GetEmergencyAndRegularRnRTrends", function($resource){
     return $resource('/api/dashboard/getEmergencyAndRegularRnRTrends.json',{},{});
+});
+
+services.factory("GetGeoStockStatusForMap", function($resource){
+    return $resource('/api/dashboard/getGeoStockStatusForMap.json',{},{});
 });
