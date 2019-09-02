@@ -1,5 +1,6 @@
 package org.openlmis.vaccine.service.warehouse;
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.AsnLineItem;
 import org.openlmis.vaccine.domain.wms.AsnLot;
@@ -73,5 +74,21 @@ public class AsnService {
     public List<Asn> getAll(){
 
         return  repository.getAll();
+    }
+
+    public Integer getTotalSearchResultCount(String searchParam, String column) {
+        if(column.equals("asnumber")){
+            return repository.getTotalSearchResultCountByAsnumber(searchParam);
+        }
+        if(column.equals("ponumber")){
+            return repository.getTotalSearchResultCountByPonumber(searchParam);
+        }
+        if(column.equals("supplier")){
+            return repository.getTotalSearchResultCountBySupplier(searchParam);
+        }
+        return 0;
+    }
+    public List<Asn> searchBy(String searchParam, String column, Pagination pagination) {
+        return repository.searchBy(searchParam, column, pagination);
     }
 }
