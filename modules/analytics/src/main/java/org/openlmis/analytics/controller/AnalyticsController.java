@@ -47,6 +47,9 @@ public class AnalyticsController extends BaseController {
     @Autowired
     private DashboardConsumptionMapper consumptionMapper;
 
+    @Autowired
+    private GeoFacilityStockStatusMapper stockStatusMapper;
+
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
         return OpenLmisResponse.response("rnr_list", service.getAllUsers());
@@ -241,5 +244,14 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("stocks", this.requisitionStatusMapper.getEmergencyAndRegularRnRTrend(loggedInUserId(request),program));
     }
 
+
+    @RequestMapping(value = "/getGeoStockStatusForMap.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getGeoStockStatusForMap(               @Param("program") Long program,
+                                                                                       @Param("product") Long product,
+                                                                                       @Param("year") Long year,
+                                                                                       @Param("period") Long period,
+                                                                                       HttpServletRequest request) {
+        return OpenLmisResponse.response("stocks", this.stockStatusMapper.getGeoFacilityStockStatus(loggedInUserId(request),product,program,year,period));
+    }
 
 }

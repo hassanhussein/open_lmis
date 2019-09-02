@@ -29,7 +29,8 @@ DefaultProgram.get({}, function (data) {
         $rootScope.loadTimelinessReportingData(params);
         $rootScope.loadOnTimeDelivery(params);
         $rootScope.loadRnrPassedQualityCheckData(params);
-         $rootScope.loadPercentageWastageData(params);
+        $rootScope.loadPercentageWastageData(params);
+        $rootScope.loadGeoFacilityStockMap(params);
 
          //$scope.loadConsumptionTrendsData(params);
          //$scope.loadStockStatusByProgram(params,'level1');
