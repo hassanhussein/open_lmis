@@ -72,4 +72,15 @@
      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
  }
 
+  $scope.showNewLotModal=function(product){
+         $scope.newLotModal=true;
+         $scope.newLot={};
+
+      };
+
+      $scope.closeNewLotModal=function(){
+          $scope.newLot={};
+          $scope.newLotModal=false;
+      };
+
  }
