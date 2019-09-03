@@ -38,7 +38,11 @@
 
  $scope.products.splice(productIndex,1);
  if($scope.products.length==1 && productIndex==0){
-    $scope.addProduct();
+    $scope.products=[{
+        id:1,
+        unitPrice:0,
+        lots:[{'id':Date.now()}]
+        }]
   }
  }
 
