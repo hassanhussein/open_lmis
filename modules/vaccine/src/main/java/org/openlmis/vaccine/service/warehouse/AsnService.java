@@ -1,10 +1,7 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.core.domain.Pagination;
-import org.openlmis.vaccine.domain.wms.Asn;
-import org.openlmis.vaccine.domain.wms.AsnLineItem;
-import org.openlmis.vaccine.domain.wms.AsnLot;
-import org.openlmis.vaccine.domain.wms.PurchaseDocument;
+import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,5 +87,10 @@ public class AsnService {
     }
     public List<Asn> searchBy(String searchParam, String column, Pagination pagination) {
         return repository.searchBy(searchParam, column, pagination);
+    }
+
+    public Object uploadDocument(ASNDocument asnDocument) {
+        repository.uploadDocument(asnDocument);
+        return null;
     }
 }

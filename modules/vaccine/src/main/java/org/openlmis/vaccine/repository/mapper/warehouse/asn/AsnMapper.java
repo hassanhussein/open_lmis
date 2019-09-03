@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.asn;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.springframework.stereotype.Repository;
 
@@ -63,6 +64,14 @@ public interface AsnMapper {
     })
     List<Asn> search(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
                      RowBounds rowBounds);
+
+    @Insert({"INSERT INTO wms_documents ",
+            "( documentType, url, createdDate,createdBy) ",
+            "VALUES",
+            "( #{documentType}, #{fileUrl},#{createdDate}, #{createdBy})"})
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    void uploadDocument(ASNDocument asnDocument);
+
     class SelectAsn {
         @SuppressWarnings(value = "unused")
         public static String getAsnCountBy(Map<String, Object> params) {
