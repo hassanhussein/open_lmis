@@ -317,7 +317,7 @@
                                             <input type="number" ng-model="product.unitPrice" style="width:99px">
                                         </td>
 
-                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">{{totalCostPerProduct(product)}}</td>
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">{{totalCostPerProduct(product) | number}}</td>
                                         <td>
                                             <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-if="product.lots.length==1" >Add</button>
                                             <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
@@ -369,7 +369,7 @@
                                         <td colspan="4"></td>
                                         <th >Grand Total</th>
 
-                                        <td colspan="3">{{grandTotal()}}</td>
+                                        <td colspan="3">{{grandTotal() | number}}</td>
 
 
                                     </tr>
