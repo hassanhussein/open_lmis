@@ -12,7 +12,7 @@ $rootScope.loadGeoFacilityStockMap = function(params){
 
 
    GetGeoStockStatusForMapData.get(params).then (function(data){
-          console.log(data);
+
 
 
     google.maps.event.addDomListener(window, 'load', initialize(data));
@@ -47,14 +47,19 @@ function initialize(data) {
 
     var wellCircle = new google.maps.Circle({
          strokeColor:    checkGreaterThanZero(well),
-         strokeOpacity: 0.8,
-         strokeWeight: 2,
+         strokeOpacity: 1,
+         strokeWeight: 0,
          fillColor:    checkGreaterThanZero(well),
-         fillOpacity: 0.35,
+         fillOpacity: 1,
          map: map,
          center: new google.maps.LatLng(well.latitude, well.longitude),
-         radius: 10000,
-         preferCanvas: true
+         radius: 12000,
+         preferCanvas: false,
+         icon: {
+                     path: google.maps.SymbolPath.CIRCLE,
+                     scale: 10
+                   },
+                   draggable: true
        });
 
         google.maps.event.addListener(wellCircle, 'click', function(ev) {
@@ -72,7 +77,7 @@ function initialize(data) {
 //google.maps.event.addDomListener(window, 'load', initialize);
 
 function checkGreaterThanZero(data) {
-var color =(data.os > 0 )?'#00B2EE':(data.uk > 0)?'gray':(data.so > 0) ?'#ff0d00':(data.us > 0)?'#ffdb00':'#006600';
+var color =(data.os > 0 )?'#00B2EE':(data.uk > 0)?'gray':(data.so > 0) ?'#ff0d00':(data.us > 0)?'orange':'#006600';
 return color;
 }
 
