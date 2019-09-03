@@ -60,7 +60,7 @@
  }
 
  $scope.totalQuantityPerProduct=function(product){
-  sum=0;
+            sum=0;
         product.lots.forEach(function(lot){
           sum+=lot.quantity;
         })
@@ -70,6 +70,7 @@
 
  $scope.numberWithCommas=function(x) {
      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
  }
 
   $scope.showNewLotModal=function(product){
@@ -82,5 +83,16 @@
           $scope.newLot={};
           $scope.newLotModal=false;
       };
+
+
+      $scope.grandTotal=function(){
+                sum=0;
+                $scope.products.forEach(function(product){
+                  sum+=parseInt($scope.totalCostPerProduct(product).replace(/,/g, ''));
+
+
+                })
+                return $scope.numberWithCommas(sum);
+      }
 
  }
