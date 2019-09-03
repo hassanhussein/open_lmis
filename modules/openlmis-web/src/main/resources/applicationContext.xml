@@ -422,6 +422,15 @@
                         <property name="recordHandler" ref="locationTypePersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="lot">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="menu.header.lot"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.stockmanagement.domain.Lot</value>
+                        </property>
+                        <property name="recordHandler" ref="lotPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
