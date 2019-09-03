@@ -267,8 +267,11 @@
                                         <th style="width:300px !important;max-width:300px !important" class="col-lot" ng-hide="switch.Data==2"><span openlmis-message="label.stock.batch"></span></th>
                                         <th class="col-quantity" style="width:150px !important;max-width:150px !important"><span
                                                 openlmis-message="label.stock.quantity"></span></th>
+                                        <th style="width:150px !important;max-width:150px !important" class="col-add-lot" >Unit Price</th>
+                                        <th style="width:150px !important;max-width:150px !important" class="col-add-lot">Total Cost</th>
                                         <th style="width:150px !important;max-width:150px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
                                         <th class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
+
                                     </tr>
                                     </thead>
                                     <tbody >
@@ -283,15 +286,20 @@
                                             </select>
                                         </td>
 
-                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add "> Doses</td>
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add"> Doses</td>
 
-                                        <td>
+                                        <td >
                                             <input type="text">
 
                                         </td>
                                         <td>
-                                            <input type="number">
+                                            <input type="number" ng-model="product.lots[0].quantity">
                                         </td>
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">
+                                            <input type="number" ng-model="product.unitPrice">
+                                        </td>
+
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">{{totalCostPerProduct(product)}}</td>
                                         <td>
                                             <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-if="product.lots.length==1" >Add</button>
                                             <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
@@ -309,7 +317,7 @@
                                             <input type="text">
                                         </td>
                                         <td>
-                                            <input type="number">
+                                            <input type="number" ng-model="lot.quantity" name="quantity">
                                         </td>
                                         <td>
                                             <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex)" >Add</button>
