@@ -441,6 +441,15 @@
                         <property name="recordHandler" ref="reasonForRejectionPercistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="facility-coordinates">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="menu.header.facility.coordinates"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.FacilityDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityGeoCordinatesPersistenceHandler"/>
+                    </bean>
+                </entry>
 
             </map>
         </constructor-arg>

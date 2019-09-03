@@ -328,9 +328,7 @@ public interface FacilityMapper {
             " JOIN FACILITIES F ON S.facilityId = F.id ")
     Facility getParentFacility(@Param("facilityId")Long facilityId);
 
-
-
-    public class SelectFacilities {
+  public class SelectFacilities {
     @SuppressWarnings(value = "unused")
     public static String getFacilitiesCountBy(Map<String, Object> params) {
       StringBuilder sql = new StringBuilder();
@@ -616,5 +614,7 @@ Integer insertHfrMapping(HfrMappingDTO dto);
             " WHERE m.mappedId = #{agentCode} AND app.name = (SELECT value FROM configuration_settings WHERE LOWER(key) = LOWER(#{appCode}) LIMIT 1) ")
   FacilityMappingDTO getByAgentCode(@Param("agentCode") String agentCode, @Param("appCode") String appCode);
 
+  @Update(" update facilities set latitude = #{latitude}, longitude = #{longitude} where code = #{code} ")
+  void updateFacilityByCode(FacilityDTO dto);
 
 }

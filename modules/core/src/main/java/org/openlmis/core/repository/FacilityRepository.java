@@ -338,4 +338,8 @@ public class FacilityRepository {
   public FacilityMappingDTO getByAgentCode(String agentCode, String appCode){
     return mapper.getByAgentCode(agentCode,appCode);
   }
+
+    public void updateFacilityByCode(FacilityDTO dto) {
+            mapper.updateFacilityByCode(dto);
+    }
 }

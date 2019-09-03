@@ -23,65 +23,58 @@ $rootScope.loadGeoFacilityStockMap = function(params){
 
 };
 
+var map;
+var mapProp;
+
+
 function initialize(data) {
 
-            $scope.map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 6,
-                center: { lat: -6.3690, lng:  34.8888},
-                preferCanvas: true
-            });
+ mapProp = {
+    center: new google.maps.LatLng(-6.3690, 34.8888),
+    zoom: 6,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  map = new google.maps.Map(document.getElementById("map"), mapProp);
 
-           $scope.cities = [];
-            data.forEach(function(dx){
-              $scope.cities.push({title:dx.facility, lat:dx.latitude, lng:dx.longitude});
-
-            });
-
-         /*   $scope.cities = [
-                { title: 'Chahwa', lat: -6.06583, lng: 35.98432,color:'blue' },
-                { title: 'Melbourne', lat: -37.812228, lng: 144.968355 }
-            ];*/
+  var infoWindow = new google.maps.InfoWindow({
+    content: "<div>Hello! World</div>",
+    maxWidth: 500
+  });
 
 
-            $scope.infowindow = new google.maps.InfoWindow({
-                content: ''
-            });
+ $.each(data, function(i, well) {
+ if(!isUndefined(well.latitude)) {
+
+    var wellCircle = new google.maps.Circle({
+         strokeColor:    checkGreaterThanZero(well),
+         strokeOpacity: 0.8,
+         strokeWeight: 2,
+         fillColor:    checkGreaterThanZero(well),
+         fillOpacity: 0.35,
+         map: map,
+         center: new google.maps.LatLng(well.latitude, well.longitude),
+         radius: 10000,
+         preferCanvas: true
+       });
+
+        google.maps.event.addListener(wellCircle, 'click', function(ev) {
+                  infoWindow.setPosition(ev.latLng);
+                  infoWindow.open(map);
+      });
 
 
-            for (var i = 0; i < $scope.cities.length; i++) {
+ }
 
-                      var cityCircle = new google.maps.Circle ({
-                                                    strokeColor: '#FF0000',
-                                                    strokeOpacity: 0.8,
-                                                    strokeWeight: 2,
-                                                    fillColor: '#FF0000',
-                                                    fillOpacity: 0.35,
-                                                    map: $scope.map
-                                                    center: $scope.cities[i].lat,
-                                                    radius: 100
-                                          });
-
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng($scope.cities[i].lat, $scope.cities[i].lng),
-                    map: $scope.map,
-                    title: $scope.cities[i].title
-                });
-
-                var content = '<a ng-click="cityDetail(' + i + ')" class="btn btn-default">View details</a>';
-                var compiledContent = $compile(content)($scope);
-
-                google.maps.event.addListener(marker, 'click', (function(marker, content, scope) {
-                    return function() {
-                        scope.infowindow.setContent(content);
-                        scope.infowindow.open(scope.map, cityCircle);
-                    };
-                })(marker, compiledContent[0], $scope));
-
-            }
-
-
+});
 
         }
+
+//google.maps.event.addDomListener(window, 'load', initialize);
+
+function checkGreaterThanZero(data) {
+var color =(data.os > 0 )?'#00B2EE':(data.uk > 0)?'gray':(data.so > 0) ?'#ff0d00':(data.us > 0)?'#ffdb00':'#006600';
+return color;
+}
 
 
 
