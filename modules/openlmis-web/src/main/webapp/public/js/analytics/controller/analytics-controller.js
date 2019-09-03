@@ -1044,65 +1044,18 @@ $scope.zoomMap();*/
 
 console.log(params);
 $scope.filter = params;
-  filter();
 
-    function filter() {
-
-
-        $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
-            $scope.features = data.map;
-            var dataValues = [];
-            var districts = _.pluck($scope.features, 'name');
-            var expected = _.pluck($scope.features, 'expected');
-            var reported = _.pluck($scope.features, 'period');
-            var expArray = [{name: 'expected', data: expected},
-                {name: 'reported', data: reported}
-            ];
-            var districtMap = _.groupBy($scope.features, 'name');
-           getExportDataFunction($scope.features);
-            angular.forEach(districtMap, function () {
-
-            });
-            angular.forEach($scope.features, function (feature) {
-                feature.geometry_text = feature.geometry;
-                feature.geometry = JSON.parse(feature.geometry);
-                feature.type = "Feature";
-                feature.properties = {};
-                feature.properties.name = feature.name;
-                feature.properties.id = feature.id;
-                dataValues.push({
-                    name: feature.name,
-                    data: [parseInt('200', feature.expected), parseInt('200', feature.period)]
-                    // period: parseInt('200',feature.period),
-                    // value:300,
-                    // color: 'green'
-                    // // color:interpolateCoverage(code.cumulative_vaccinated,code.monthly_district_target,code.coverageclassification.toLowerCase())
-
-                });
-            });
-            $scope.drawMap({
-                "type": "FeatureCollection",
-                "features": $scope.features
-            });
-             $scope.centerJSON();
-            //zoomAndCenterMap(leafletData, $scope);
-
-
-
-        });
-
-
-    }
-console.log($stateParams.lat);
     initiateMap($scope);
 
     $scope.onDetailClicked = function (feature) {
+
         $scope.currentFeature = feature;
         $scope.$broadcast('openDialogBox');
     };
 
 
   $scope.OnFilterChanged = function() {
+
 
      $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
                $scope.features = data.map;
@@ -1137,10 +1090,12 @@ console.log($stateParams.lat);
     $scope.OnFilterChanged();
 
     };
+/*
  $scope.onDetailClicked = function (feature) {
         $scope.currentFeature = feature;
         $scope.$broadcast('openDialogBox');
     };
+*/
 
 $scope.consumptionTrends = [];
 $scope.loadConsumptionTrendsData = function (params){
