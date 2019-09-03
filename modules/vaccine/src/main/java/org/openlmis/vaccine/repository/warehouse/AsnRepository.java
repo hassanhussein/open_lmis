@@ -1,5 +1,6 @@
 package org.openlmis.vaccine.repository.warehouse;
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,5 +29,20 @@ public class AsnRepository {
 
     public List<Asn> getAll(){
         return mapper.getAll();
+    }
+
+    public Integer getTotalSearchResultCountByAsnumber(String searchParam) {
+        return mapper.getTotalSearchResultCountByAsnumber(searchParam);
+    }
+
+    public Integer getTotalSearchResultCountByPonumber(String searchParam) {
+        return mapper.getTotalSearchResultCountByPonumber(searchParam);
+    }
+    public Integer getTotalSearchResultCountBySupplier(String searchParam) {
+        return mapper.getTotalSearchResultCountBySupplier(searchParam);
+    }
+
+    public List<Asn> searchBy(String searchParam, String column,  Pagination pagination){
+        return mapper.search(searchParam, column, pagination);
     }
 }

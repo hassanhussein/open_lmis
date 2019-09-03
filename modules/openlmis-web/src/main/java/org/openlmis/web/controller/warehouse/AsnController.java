@@ -1,21 +1,32 @@
 package org.openlmis.web.controller.warehouse;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.ivdform.domain.Manufacturer;
+import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.vaccine.domain.wms.Asn;
+import org.openlmis.vaccine.domain.wms.DocumentType;
+import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.service.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -38,6 +49,10 @@ public class AsnController extends BaseController {
     DocumentTypeService documentTypeService;
     @Autowired
     PortService portService;
+    @Autowired
+    ManufacturerService manufacturerService;
+    @Autowired
+    SupplyPartnerService supplyPartnerService;
     @RequestMapping(method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> save(@RequestBody Asn asn, Principal principal) {
         try {
@@ -60,13 +75,38 @@ public class AsnController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getPorts() {
         return OpenLmisResponse.response("ports", portService.getAll());
     }
-    @RequestMapping(method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "all",method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> retriveAllAsns() {
         return OpenLmisResponse.response("asns", asnService.getAll());
     }
+    @RequestMapping(value = "asn/template",method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAsnLookupTemplate() {
+
+        List<DocumentType> documentTypes = documentTypeService.getAll();
+        List<Port> ports = portService.getAll();
+        List<Manufacturer> manufacturers = manufacturerService.getAll();
+        List<SupplyPartner> supplyPartners = supplyPartnerService.getAll();
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("document-types", documentTypes);
+        response.getBody().addData("ports", ports);
+        response.getBody().addData("manufactures", manufacturers);
+        response.getBody().addData("suppliers", supplyPartners);
+        return response;
+    }
+    @RequestMapping(method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAsnByPagination(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                                               @RequestParam(value = "column") String column,
+                                                               @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                               @Value("${search.page.size}") String limit) {
+        Pagination pagination = new Pagination(page, parseInt(limit));
+        pagination.setTotalRecords(asnService.getTotalSearchResultCount(searchParam, column));
+        List<Asn> asns = asnService.searchBy(searchParam, column, pagination);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("asns", asns);
+        response.getBody().addData("pagination", pagination);
+        return response;
+    }
     @RequestMapping(value = "{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
-        return OpenLmisResponse.response("warehouse", asnService.getById(id));
+        return OpenLmisResponse.response("asn", asnService.getById(id));
     }
     @RequestMapping(value = "{id}", method =PUT, headers = ACCEPT_JSON)
     public ResponseEntity update(@RequestBody Asn asn, @PathVariable(value = "id") Long id,Principal principal) {

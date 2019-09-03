@@ -1,7 +1,11 @@
 package org.openlmis.stockmanagement.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.DeliveryZoneWarehouse;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.repository.LotRepository;
@@ -25,6 +29,7 @@ public class LotService {
 
 
     public void insertLot(Lot lot){
+        setProduct(lot);
         if(lot.getId()==null)
         repository.getOrCreateLot(lot);
         else {
@@ -54,5 +59,17 @@ public class LotService {
 
     public List<Lot> getAll(){
         return repository.getAll();
+    }
+
+    private void setProduct(Lot lot) {
+        Product product = service.getByCode(lot.getProduct().getCode());
+        if (product == null) throw new DataException("product.code.invalid");
+        lot.setProduct(product);
+    }
+    public Lot getByCode(Lot record) {
+        if(record.getLotCode() != null){
+            return repository.getByCode(record.getLotCode());
+        }
+        return null;
     }
 }

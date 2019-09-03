@@ -110,4 +110,7 @@ public interface LotMapper {
             @Result(property = "lotCode", column = "lotnumber")
     })
     List<Lot> getAll();
+
+    @Select("select * from lots where lower(lotnumber) = lower(#{lotCode})")
+    Lot getByCode(@Param("lotCode") String lotCode);
 }

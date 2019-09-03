@@ -22,7 +22,20 @@ public interface AsnLineItemMapper {
     void update(AsnLineItem asnLineItem);
 
     @Select("select * from asn_details where id = #{id}")
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(property = "asnLots", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLotMapper.getByAsnDetail"))
+    })
     AsnLineItem  getById(@Param("id") Long id);
+
+    @Select("select * from asn_details where asnid = #{id}")
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(property = "asnLots", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLotMapper.getByAsnDetail"))
+    })
+    List<AsnLineItem>  getByAsnId(@Param("id") Long id);
 
     @Select(" select * from asn_details")
     List<AsnLineItem> getAll();
