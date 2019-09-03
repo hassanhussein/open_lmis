@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URISyntaxException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -457,4 +458,23 @@ public class FacilityService {
         return facility;
     }
 
+    public Facility getFacilityForCode(FacilityDTO dto) {
+        return getFacilityByCode(dto.getCode());
+
+    }
+
+    public void updateCordinates(FacilityDTO dto) {
+
+       Facility facility =  getFacilityByCode(dto.getCode());
+        DecimalFormat df = new DecimalFormat("#.#####");
+        FacilityDTO dto1 = new FacilityDTO();
+
+        if(null != facility){
+            dto1.setCode(dto.getCode());
+            dto1.setLatitude(Double.valueOf(df.format(dto.getLatitude())));
+            dto1.setLongitude(Double.valueOf(df.format(dto.getLongitude())));
+            facilityRepository.updateFacilityByCode(dto1);
+        }
+
+    }
 }
