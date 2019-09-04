@@ -43,20 +43,7 @@ function TimelinessReportingController($scope,$location,Program,Period,$rootScop
                   shared: true,
                   useHTML: true
               },
-                  exporting: {
-                                buttons: {
-                                 customButton: {
-                                 text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                                 symbolStroke: "red",
-                                 theme: {
-                                 fill:"#28A2F3"
-                                 },
-                                 onclick: function () {
-                                 $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
-                                 }
-                                 }
-                                 }
-                                 },
+
               plotOptions: {
                   column: {
                       pointPadding: 0.2,
@@ -178,20 +165,20 @@ Highcharts.chart(chartId, {
         //pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y}%</b> of total<br/>'
          pointFormat: '{point.name}: <b>{point.name:.0f} %<br>total: {point.y}'
     },
-    exporting: {
-                  buttons: {
-                   customButton: {
-                   text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                   symbolStroke: "red",
-                   theme: {
-                   fill:"#28A2F3"
-                   },
-                   onclick: function () {
-                   $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
-                   }
-                   }
-                   }
-                   },
+   exporting: {
+                                   buttons: {
+                                    customButton: {
+                                    text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                                    symbolStroke: "red",
+                                    theme: {
+                                    fill:"#28A2F3"
+                                    },
+                                    onclick: function () {
+                                    $rootScope.openDefinitionModal('DASHLET_REPORTING_TIMELINESS', 'Reporting Timeliness');
+                                    }
+                                    }
+                                    }
+                                    },
 
     series: [
         {

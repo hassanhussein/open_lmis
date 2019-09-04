@@ -52,27 +52,30 @@ var availableTracer = [
 
         ];
 
-        var availabileData =  [
+var availableData =  [
                       {
                         name: 'not available',
+                        color:'#D90C29',
                         data: [{
                         name: 'All Items',
                         y: 100 - allItems[0].percentage_of_total,
-                         color:'#D90C29',
+
                         drilldown: null
                         }, {
                         name: 'Tracer Items',
-                        y: 100 - tracerItems[0].percentage_of_total,
                         color:'#D90C29',
+                        y: 100 - tracerItems[0].percentage_of_total,
+
                         drilldown: null
                         }]
                         },
-        {
+                        {
                                  name: 'available',
+                                 color:'#3C81B0',
                                  data: [{
                                      name: 'All Items',
                                      y: allItems[0].percentage_of_total,
-                                     color:'#3C81B0',
+
                                      drilldown: 'phc-available'
                                  }, {
                                      name: 'Tracer Items',
@@ -80,17 +83,13 @@ var availableTracer = [
                                      color:'#3C81B0',
                                      drilldown: 'hospital-available'
                                  }]
-                             }
-
-
-
+                         }
 
                         ];
 
+    $scope.title_stock_by_level = 'Stock availability by Level for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
 
-     $scope.title_stock_by_level = 'Stock availability by Level for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
-
-    $scope.showTheChart(availabileData,'','',categories,availableTracer,availableAll);
+    $scope.showTheChart(availableData,'','',categories,availableTracer,availableAll);
      }
 
     });
@@ -178,6 +177,20 @@ var availableTracer = [
             }
         },
 
+         exporting: {
+                      buttons: {
+                       customButton: {
+                       text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                       symbolStroke: "red",
+                       theme: {
+                       fill:"#28A2F3"
+                       },
+                       onclick: function () {
+                       $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY_BY_LEVEL','Stock Availability By Level');
+                       }
+                       }
+                       }
+                       },
         series:data,
         drilldown: {
 

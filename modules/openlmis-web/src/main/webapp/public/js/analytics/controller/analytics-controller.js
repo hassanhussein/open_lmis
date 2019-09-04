@@ -1193,7 +1193,7 @@ $scope.stockStatuses   = [];
 };
 
 
- $rootScope.drawTheChart = function (stockSummary,chartId,title,category) {
+ $rootScope.drawTheChart = function (stockSummary,chartId,title,category,level,name) {
 
 
                var so = _.pluck(stockSummary, 'so');
@@ -1232,7 +1232,7 @@ $scope.stockStatuses   = [];
                            ];
               var numberOfIncidence = '<span style="font-size: 10px!important;color: #0c9083">Number of Incidences Reported</span>';
 
-              $rootScope.stockStatusesStackedColumnChart(chartId,'line' ,title,category, numberOfIncidence,summaries );
+              $rootScope.stockStatusesStackedColumnChart(chartId,'line' ,title,category, numberOfIncidence,summaries,level,name );
 
               };
 
@@ -1309,7 +1309,7 @@ Highcharts.chart('stock-by-program-and-period', {
 
 
 
- $rootScope.stockStatusesStackedColumnChart = function (id,chartType, title,category,yAxisTitle,data){
+ $rootScope.stockStatusesStackedColumnChart = function (id,chartType, title,category,yAxisTitle,data,level,name){
 
  Highcharts.chart(id, {
      chart: {
@@ -1376,7 +1376,7 @@ Highcharts.chart('stock-by-program-and-period', {
                               fill:"#28A2F3"
                               },
                               onclick: function () {
-                              $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY_BY_LEVEL','Stock Status Over Time');
+                              $rootScope.openDefinitionModal(level,name);
                               }
                               }
                               }
