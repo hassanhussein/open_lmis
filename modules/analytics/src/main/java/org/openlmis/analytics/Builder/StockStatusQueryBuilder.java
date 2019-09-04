@@ -13,7 +13,7 @@ public class StockStatusQueryBuilder {
          Long schedule = (Long)params.get("schedule");
 
          return " \n" +
-                 "        SELECT periodId, " +
+                 "        SELECT periodId,product, " +
                  " case when (   ( select id from programs where id = '"+program+"'::int and enablemonthlyreporting = true limit 1) <> 0 ) THEN \n" +
                  "                ( select to_char(to_timestamp (date_part('month', ENDDATE::TIMESTAMP)::text, 'MM'), 'Month')\n" +
                  "                 from processing_periods where id = periodId)\n" +
@@ -23,7 +23,7 @@ public class StockStatusQueryBuilder {
                  "                              SUM(UK) UK, \n" +
                  "                  SUM (SO)+ SUM(OS) + SUM( SP) + SUM(US) + SUM(UK) total  \n" +
                  "                 FROM (\n" +
-                 "                                SELECT periodid,processing_period_name periodName,\n" +
+                 "                                SELECT periodid,product,processing_period_name periodName,\n" +
                  "                                case when status = 'SO' THEN 1 ELSE 0 END AS SO,\n" +
                  "                                case when status = 'SP' THEN 1 ELSE 0 END AS SP,\n" +
                  "                                case when status = 'OS' THEN 1 ELSE 0 END AS OS,\n" +
@@ -37,8 +37,8 @@ public class StockStatusQueryBuilder {
                  "                               and productId = '"+product+"'::int \n and scheduleId = '"+schedule+"'" +
                  "                                \n" +
                  "                                )L\n" +
-                 "                                GROUP BY  periodid,periodName\n" +
-                 "                                ORDER BY periodid,periodName  ";
+                 "                                GROUP BY  periodid,product,periodName\n" +
+                 "                                ORDER BY periodid,periodName,product  ";
 
 
       /*  return "               SELECT periodId, periodName, SUM (SO) as so, \n" +

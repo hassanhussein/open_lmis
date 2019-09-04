@@ -7,7 +7,7 @@ var chartId ='stockStatusOverTime';
 
 DashboardStockStatusSummaryData.get(params).then(function(stocks) {
     console.log (stocks);
-$scope.stockStatusesTitle = 'Stock Status Over Time for '+params.programName+', '+params.productName+', '+params.year;
+$scope.stockStatusesTitle = 'Stock Status Over Time for '+params.programName+', '+stocks[0].product+', '+params.year;
 
 
 
