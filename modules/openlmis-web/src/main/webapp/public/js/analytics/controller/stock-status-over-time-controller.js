@@ -18,7 +18,7 @@ $scope.stockStatusesTitle = 'Stock Status Over Time for '+params.programName+', 
   var category = _.uniq(_.pluck(stockSummary,'periodname'));
 
 
-  $rootScope.drawTheChart(stocks,chartId,'',category);
+  $rootScope.drawTheChart(stocks,chartId,'',category,'DASHLET_STOCK_STATUS_OVER_TIME','Stock Status Over Time');
 
  }
 

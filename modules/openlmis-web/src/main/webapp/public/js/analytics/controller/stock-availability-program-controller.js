@@ -47,8 +47,8 @@ Highcharts.chart(id, {
              align:'left'
     },
     subtitle: {
-        //text: 'Click the columns to view stock availability of each tracer items'
-               text: ''
+        text: '<span style="font-size: 12px!important;color: #0c9083">Click the columns to view more details</span>'
+              // text: ''
 
     },
     xAxis: {
@@ -191,6 +191,21 @@ Highcharts.chart('stock-available-for-program-drill-down', {
     tooltip: {
         valueSuffix: ' Months'
     },
+      exporting: {
+
+            buttons: {
+             customButton: {
+             text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+             symbolStroke: "red",
+             theme: {
+             fill:"#28A2F3"
+             },
+             onclick: function () {
+             $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY_BY_PROGRAM_DRILL_DOWN', 'List of available stock by program');
+             }
+             }
+             }
+             },
     plotOptions: {
         bar: {
             dataLabels: {
@@ -217,22 +232,7 @@ Highcharts.chart('stock-available-for-program-drill-down', {
         name: 'MOS',
         color:color,
         data: data
-    }],
-
-    exporting: {
-    buttons: {
-     customButton: {
-     text: '<span style="background-color:blue"><i class="fas fa-info-circle></i>info</span>',
-     symbolStroke: "red",
-     theme: {
-     fill:"#28A2F3"
-     },
-     onclick: function () {
-     alert('You pressed the button!');
-     }
-     }
-     }
-     }
+    }]
 
 });
 
@@ -247,7 +247,10 @@ Highcharts.chart('stock-available-for-program-drill-down', {
     var allParams = angular.extend(params, {program:program});
     StockAvailableByProgramAndPeriodData.get(params).then(function(data){
      console.log(data);
-     $scope.titleStockForProgramAvailable = 'List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year;
+                  text: '<span style="font-size: 13px!important;color: #0c9083">Total percent of tracer products</span>'
+
+
+     $scope.titleStockForProgramAvailable = '<span style="font-size: 13px!important;color: #0c9083">List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year+'</span>';
      $scope.stockColor= chartData.color;
 
      $scope.drillDownData = data;
