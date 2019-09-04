@@ -82,11 +82,11 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
   } else {
 
   columnsAllowedToDisplay = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
-           ['quantityApproved','remarks','quantityReceived','beginningBalance','quantityDispensed','normalizedConsumption','maxStockQuantity','calculatedOrderQuantity','quantityRequested','packsToShip','reasonForRequestedQuantity','price','cost'], !$scope.rnr.period.enableOrder);
+           ['quantityApproved','lossesAndAdjustments','remarks','quantityReceived','beginningBalance','quantityDispensed','normalizedConsumption','maxStockQuantity','calculatedOrderQuantity','quantityRequested','packsToShip','reasonForRequestedQuantity','price','cost'], !$scope.rnr.period.enableOrder);
 
   }
 
-       console.log($scope.visibleColumns);
+       console.log(columnsAllowedToDisplay);
   $scope.visibleColumns = columnsAllowedToDisplay;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
