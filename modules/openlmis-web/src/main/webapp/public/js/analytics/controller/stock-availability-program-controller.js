@@ -246,9 +246,6 @@ Highcharts.chart('stock-available-for-program-drill-down', {
      params.program = program;
     var allParams = angular.extend(params, {program:program});
     StockAvailableByProgramAndPeriodData.get(params).then(function(data){
-     console.log(data);
-                  text: '<span style="font-size: 13px!important;color: #0c9083">Total percent of tracer products</span>'
-
 
      $scope.titleStockForProgramAvailable = '<span style="font-size: 13px!important;color: #0c9083">List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year+'</span>';
      $scope.stockColor= chartData.color;
