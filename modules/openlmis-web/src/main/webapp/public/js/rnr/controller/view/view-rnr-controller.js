@@ -73,8 +73,21 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
 
     OpenLmisDialog.newDialog(options, callBack, $dialog);
   };
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
-       ['quantityApproved','remarks'], !$scope.rnr.period.enableOrder);
+  var columnsAllowedToDisplay;
+  if($scope.rnr.period.enableOrder) {
+
+    columnsAllowedToDisplay = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
+         ['quantityApproved','remarks'], !$scope.rnr.period.enableOrder);
+
+  } else {
+
+  columnsAllowedToDisplay = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
+           ['quantityApproved','remarks','quantityReceived','beginningBalance','quantityDispensed','normalizedConsumption','maxStockQuantity','calculatedOrderQuantity','quantityRequested','packsToShip','reasonForRequestedQuantity','price','cost'], !$scope.rnr.period.enableOrder);
+
+  }
+
+       console.log($scope.visibleColumns);
+  $scope.visibleColumns = columnsAllowedToDisplay;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
   $scope.manualTestCount = $scope.rnr.manualTestLineItems.length;
