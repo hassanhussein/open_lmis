@@ -138,7 +138,7 @@ function RequisitionStatusSummaryController($scope,Program,Period,$rootScope, me
                            fill:"#28A2F3"
                            },
                            onclick: function () {
-                           $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                           $rootScope.openDefinitionModal('DASHLET_RNR_STATUS_SUMMARY', 'Requisition Status Summary');
                            }
                            }
                            }

@@ -29,7 +29,7 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider,$htt
             controller:AnalyticsFunction,
             resolve:AnalyticsFunction.resolve,
             ncyBreadcrumb: {
-                label: 'Un-published Dashboard'
+                label: 'Supply Chain Dashboard'
             }
         },  {
                       name: 'rejectionByZoneView',
