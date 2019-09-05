@@ -72,7 +72,7 @@ function initialize(data) {
 
 });
 
-        }
+}
 
 //google.maps.event.addDomListener(window, 'load', initialize);
 
