@@ -557,3 +557,9 @@ services.factory("LocationTypes", function ($resource) {
 services.factory("LocationsLookup", function ($resource) {
     return $resource('/location-lookup.json', {}, {});
 });
+services.factory("Preadvice", function ($resource) {
+    return $resource('/rest-api/warehouse/asn/:id.json', {id: '@id'}, update);
+});
+services.factory("PreadviceTemplate", function ($resource) {
+    return $resource('/rest-api/warehouse/asn/template.json', {}, {});
+});

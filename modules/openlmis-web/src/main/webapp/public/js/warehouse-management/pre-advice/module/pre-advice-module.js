@@ -12,7 +12,7 @@
 var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-          when('/list', {controller: PreAdviceController, templateUrl: 'partials/list.html'}).
+          when('/list', {controller: PreAdviceSearchController, templateUrl: 'partials/list.html'}).
           when('/create', {controller: PreAdviceController, templateUrl: 'partials/create.html', resolve: PreAdviceController.resolve}).
           when('/edit/:id', {controller: PreAdviceController, templateUrl: 'partials/edit.html', resolve: PreAdviceController.resolve}).
           otherwise({redirectTo: '/search'});
