@@ -265,10 +265,13 @@
                                         <th class="col-product" style="max-width:160px !important; width:160px !important">
                                             <span openlmis-message="label.unit.of.measure"></span></th>
                                         <th style="width:300px !important;max-width:300px !important" class="col-lot" ng-hide="switch.Data==2"><span openlmis-message="label.stock.batch"></span></th>
-                                        <th class="col-quantity" style="width:150px !important;max-width:150px !important"><span
+                                        <th class="col-quantity" ><span
                                                 openlmis-message="label.stock.quantity"></span></th>
-                                        <th style="width:150px !important;max-width:150px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
+                                        <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Unit Price</th>
+                                        <th  class="col-add-lot style="width:100px !important;max-width:100px !important">Total Cost</th>
+                                        <th style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
                                         <th class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
+
                                     </tr>
                                     </thead>
                                     <tbody >
@@ -283,15 +286,38 @@
                                             </select>
                                         </td>
 
-                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add "> Doses</td>
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add"> Doses</td>
 
-                                        <td>
-                                            <input type="text">
+                                        <td >
+                                            <div class="row-fluid" >
+                                                <div  style="width:20%; float:left;margin-top:1px">
+                                                    <input type="button" ng-disabled="lotToAdd.lotId !== undefined "
+                                                           class="btn btn-primary btn-small"
+                                                           href ng-click="showNewLotModal(product)"
+                                                           openlmis-message="button.create"/>
+                                                </div>
+                                                <div style="width:80%; float:left">
+                                                    <select  ui-select2
+                                                             style="min-width:200px !important"
+                                                            >
+                                                        <option value="" openlmis-message="placeholder.select.batch"></option>
+                                                        <option ng-repeat="lot in lotsToDisplay" value="{{lot.id}}"
+                                                                ng-selected="lotToAdd.lotId == lot.id">{{lot.lotCode}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
 
                                         </td>
                                         <td>
-                                            <input type="number">
+                                            <input type="number" ng-model="product.lots[0].quantity" style="width:99px">
                                         </td>
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">
+                                            <input type="number" ng-model="product.unitPrice" style="width:99px">
+                                        </td>
+
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">{{totalCostPerProduct(product) | number}}</td>
                                         <td>
                                             <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-if="product.lots.length==1" >Add</button>
                                             <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
@@ -306,10 +332,28 @@
                                     </tr>
                                     <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
                                         <td>
-                                            <input type="text">
+                                            <div class="row-fluid" >
+                                                <div  style="width:20%; float:left;margin-top:1px">
+                                                    <input type="button" ng-disabled="lotToAdd.lotId !== undefined "
+                                                           class="btn btn-primary btn-small"
+                                                           href ng-click="showNewLotModal(product)"
+                                                           openlmis-message="button.create"/>
+                                                </div>
+                                                <div style="width:80%; float:left">
+                                                    <select  ui-select2
+                                                             style="min-width:200px !important"
+                                                    >
+                                                        <option value="" openlmis-message="placeholder.select.batch"></option>
+                                                        <option ng-repeat="lot in lotsToDisplay" value="{{lot.id}}"
+                                                                ng-selected="lotToAdd.lotId == lot.id">{{lot.lotCode}}
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                            </div>
                                         </td>
                                         <td>
-                                            <input type="number">
+                                            <input type="number" ng-model="lot.quantity" name="quantity" style="width:99px">
                                         </td>
                                         <td>
                                             <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex)" >Add</button>
@@ -317,7 +361,19 @@
                                         </td>
 
                                     </tr>
+
                                     </tbody>
+                                    <tfoot>
+                                    <tr>
+
+                                        <td colspan="4"></td>
+                                        <th >Grand Total</th>
+
+                                        <td colspan="3">{{grandTotal() | number}}</td>
+
+
+                                    </tr>
+                                    </tfoot>
                                 </table>
                             </div>
 

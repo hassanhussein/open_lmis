@@ -17,19 +17,20 @@
 
  function PreAdviceController($scope){
 
-
-    $scope.products=[{
-    id:1,
-    unitPrice:0,
-    lots:[{'id':Date.now()}]
-    }]
+ $scope.products=[{
+        id:1,
+        unitPrice:0,
+        unitOfMeasure:null,
+        lots:[{'id':Date.now(),'quantity':0}],
+        totalCost:0
+        }]
 
     $scope.addLot=function(productIndex){
-       $scope.products[productIndex].lots.push({'id':Date.now()});
+       $scope.products[productIndex].lots.push({'id':Date.now(),'quantity':0});
  }
 
  $scope.addProduct=function(){
- $scope.products.push({'id':$scope.products.length+1,unitPrice:0,lots:[{'id':Date.now()}]});
+ $scope.products.push({'id':$scope.products.length+1,unitPrice:0,lots:[{'id':Date.now(),'quantity':0}]});
  }
 
 
@@ -38,10 +39,12 @@
 
  $scope.products.splice(productIndex,1);
  if($scope.products.length==1 && productIndex==0){
-    $scope.products=[{
+     $scope.products=[{
         id:1,
         unitPrice:0,
-        lots:[{'id':Date.now()}]
+        unitOfMeasure:null,
+        lots:[{'id':Date.now(),'quantity':0}],
+        totalCost:0
         }]
   }
  }
@@ -50,5 +53,41 @@
  $scope.removeLot=function(productIndex,lotIndex){
     $scope.products[productIndex].lots.splice(lotIndex,1);
  }
+
+ $scope.totalCostPerProduct=function(product){
+
+       return $scope.totalQuantityPerProduct(product)*product.unitPrice
+ }
+
+ $scope.totalQuantityPerProduct=function(product){
+            sum=0;
+        product.lots.forEach(function(lot){
+          sum+=lot.quantity;
+        })
+        return sum
+ }
+
+
+  $scope.showNewLotModal=function(product){
+         $scope.newLotModal=true;
+         $scope.newLot={};
+
+      };
+
+      $scope.closeNewLotModal=function(){
+          $scope.newLot={};
+          $scope.newLotModal=false;
+      };
+
+
+      $scope.grandTotal=function(){
+                sum=0;
+                $scope.products.forEach(function(product){
+                  sum+=$scope.totalCostPerProduct(product);
+
+
+                })
+                return sum;
+      }
 
  }

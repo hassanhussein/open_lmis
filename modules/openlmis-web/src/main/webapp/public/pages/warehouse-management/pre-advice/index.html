@@ -27,6 +27,7 @@
     <script src="/public/lib/angular-ui/angular-ui.min.js"></script>
     <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-0.1.0.min.js"></script>
     <script src="/public/lib/angular-ui/bootstrap/ui-bootstrap-pagination-0.10.0.min.js"></script>
+    <script src="/public/lib/angular-ui/ng-table/ng-table.js"></script>
     <link rel="stylesheet" href="/public/lib/select2/select2.css">
     <link rel="icon" href="/public/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="/public/lib/bootstrap/css/bootstrap.min.css">
@@ -66,12 +67,19 @@
     <script src="/public/lib/localstorage/localStorage.js"></script>
     <script src="/public/js/shared/util.js"></script>
     <script src="/public/js/shared/open-lmis-dialog.js"></script>
+    <script src="/public/js/shared/directives/ng-table-scroll.js"></script>
 
     <script src="/public/js/shared/localStorageKeys.js"></script>
     <link type="text/css" rel="stylesheet" href="/public/css/app.css">
     <!--[if IE 9]>
     <link rel="stylesheet" href="/public/css/ie9.css"/>
     <![endif]-->
+
+    <style>
+        .form-group .form-row input[type="text"][ui-date] {
+    width: -webkit-fill-available;
+}
+    </style>
 </head>
 
 <body onunload="">
