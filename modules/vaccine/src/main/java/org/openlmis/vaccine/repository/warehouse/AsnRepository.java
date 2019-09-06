@@ -41,6 +41,9 @@ public class AsnRepository {
     public Integer getTotalSearchResultCountBySupplier(String searchParam) {
         return mapper.getTotalSearchResultCountBySupplier(searchParam);
     }
+    public Integer getTotalSearchResultCountAll() {
+        return mapper.getTotalSearchResultCountAll();
+    }
 
     public List<Asn> searchBy(String searchParam, String column,  Pagination pagination){
         return mapper.search(searchParam, column, pagination);
