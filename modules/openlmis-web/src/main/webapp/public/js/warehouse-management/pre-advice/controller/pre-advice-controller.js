@@ -15,7 +15,11 @@
 
 
 
- function PreAdviceController($scope){
+ function PreAdviceController($scope,configurations,homeFacility,ProductLots,FacilityTypeAndProgramProducts,VaccineProgramProducts){
+
+$scope.homeFacilityId=homeFacility.id;
+$scope.userPrograms=configurations.programs;
+
 
  $scope.products=[{
         id:1,
@@ -25,9 +29,47 @@
         totalCost:0
         }]
 
+  $scope.dbProducts=[
+  {
+  'primaryName':'TT',
+  'category':101,
+  'lots':['t342524','t42352','t23432','t23432','t234234','t463232','t5623462']
+  },
+  {
+    'primaryName':'BoPV',
+    'category':101,
+    'lots':['b23432','b23432','b234234','b463232','b5623462']
+    },
+    {
+        'primaryName':'ROTA',
+        'category':101,
+        'lots':['r23432','r23432','r234234','r463232','r5623462']
+        },
+
+
+        {
+            'primaryName':'Sdilution',
+            'category':102,
+            'lots':['s23432','s23432','s234234','s463232','s5623462']
+            },
+
+         {
+                     'primaryName':'ADS_0.05ml',
+                     'category':102,
+                     'lots':['a23432','a23432','a234234','a463232','a5623462']
+                     }
+  ]
+
     $scope.addLot=function(productIndex){
        $scope.products[productIndex].lots.push({'id':Date.now(),'quantity':0});
  }
+
+// $scope.addLot=function(lotToAdd){
+//             lotToAdd.lot=_.findWhere($scope.lotsToDisplay,{id:parseInt(lotToAdd.lotId,10)});
+//             $scope.productToAdd.lots.push(lotToAdd);
+//             $scope.lotToAdd={};
+//             updateLotsToDisplay($scope.productToAdd.lots);
+//     };
 
  $scope.addProduct=function(){
  $scope.products.push({'id':$scope.products.length+1,unitPrice:0,lots:[{'id':Date.now(),'quantity':0}]});
@@ -35,8 +77,6 @@
 
 
  $scope.removeProduct=function(productIndex){
- console.log(productIndex)
-
  $scope.products.splice(productIndex,1);
  if($scope.products.length==1 && productIndex==0){
      $scope.products=[{
@@ -90,4 +130,87 @@
                 return sum;
       }
 
+
+      $scope.loadProducts=function(facilityId,programId){
+              FacilityTypeAndProgramProducts.get({facilityId:facilityId, programId:programId},function(data){
+                      var allProducts=data.facilityProduct;
+                      $scope.allProducts=_.sortBy(allProducts,function(product){
+                          return product.programProduct.product.id;
+                      });
+
+                       $scope.productsToDisplay=$scope.allProducts;
+
+              });
+
+
+          };
+
+          function updateLotsToDisplay(lotsToAdd)
+              {
+                       var toExclude = _.pluck(_.pluck(lotsToAdd, 'lot'), 'lotCode');
+                       $scope.lotsToDisplay = $.grep($scope.allLots, function (lotObject) {
+                             return $.inArray(lotObject.lotCode, toExclude) == -1;
+                       });
+              }
+
+
+          $scope.loadProductLots=function(product)
+             {
+                  $scope.lotsToDisplay={};
+
+                  if(product !==null)
+                  {
+
+
+                         ProductLots.get({productId:product.id},function(data){
+                              $scope.allLots=data.lots;
+                              $scope.lotsToDisplay=$scope.allLots;
+                         });
+
+
+                  }
+             };
+
+             $scope.loadProducts($scope.homeFacilityId,82);
+
+ }
+
+
+ PreAdviceController.resolve={
+    configurations:function($q, $timeout, AllVaccineInventoryConfigurations) {
+              var deferred = $q.defer();
+              var configurations={};
+              $timeout(function () {
+              AllVaccineInventoryConfigurations.get(function(data)
+                 {
+                     configurations=data;
+                     deferred.resolve(configurations);
+                 });
+              }, 100);
+              return deferred.promise;
+            },
+
+            homeFacility: function ($q, $timeout,UserFacilityList,StockCards) {
+                        var deferred = $q.defer();
+                        var homeFacility={};
+
+                        $timeout(function () {
+                               UserFacilityList.get({}, function (data) {
+                                       homeFacility = data.facilityList[0];
+                                       StockCards.get({facilityId:homeFacility.id},function(data){
+                                         if(data.stockCards.length> 0)
+                                         {
+                                            homeFacility.hasStock=true;
+                                         }
+                                         else{
+                                           homeFacility.hasStock=false;
+                                         }
+                                         deferred.resolve(homeFacility);
+                                       });
+
+                               });
+
+                        }, 100);
+                        return deferred.promise;
+                     },
  }
