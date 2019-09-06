@@ -54,6 +54,8 @@ public interface AsnMapper {
     @Select("SELECT COUNT(*) FROM asns A INNER JOIN manufacturers M ON M.id = A.supplierid AND " +
             "(LOWER(M.name) LIKE '%' || LOWER(#{searchParam}) || '%')")
     Integer getTotalSearchResultCountBySupplier(String searchParam);
+    @Select("SELECT COUNT(*) FROM asns ")
+    Integer getTotalSearchResultCountAll();
 
     @SelectProvider(type = SelectAsn.class, method = "getAsnBySearchParam")
     @Results(value = {
@@ -88,7 +90,7 @@ public interface AsnMapper {
             sql.append("SELECT A.*, M.* FROM asns A ");
             sql.append("INNER JOIN manufacturers M on M.id = A.supplierid WHERE ");
             if(column.equalsIgnoreCase("asnumber")) {
-                sql.append("(LOWER(A.asnnumber) LIKE '%' || LOWER(#{searchParam}) || '%')");
+                sql.append("(LOWER(A.asnnumber) LIKE '%' || LOWER(#{searchParam}) || '%') ");
 
             }
             else if(column.equalsIgnoreCase("ponumber")) {

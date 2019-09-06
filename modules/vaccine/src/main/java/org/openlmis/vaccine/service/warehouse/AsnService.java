@@ -83,9 +83,16 @@ public class AsnService {
         if(column.equals("supplier")){
             return repository.getTotalSearchResultCountBySupplier(searchParam);
         }
+        if(column.equals("all")){
+            return repository.getTotalSearchResultCountAll();
+        }
         return 0;
     }
     public List<Asn> searchBy(String searchParam, String column, Pagination pagination) {
+
+        if(column.equals("all")){
+            return repository.getAll();
+        }
         return repository.searchBy(searchParam, column, pagination);
     }
 

@@ -85,8 +85,7 @@ public class AsnController extends BaseController {
     public static final String SUCCESS = "success";
 
 
-
-    @RequestMapping(method = POST, headers = ACCEPT_JSON)
+    @RequestMapping(value = "asn", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> save(@RequestBody Asn asn, Principal principal) {
         try {
             Long userId = loggedInUserId(principal);
@@ -125,7 +124,7 @@ public class AsnController extends BaseController {
         response.getBody().addData("suppliers", supplyPartners);
         return response;
     }
-    @RequestMapping(method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "asn", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAsnByPagination(@RequestParam(value = "searchParam", required = false) String searchParam,
                                                                @RequestParam(value = "column") String column,
                                                                @RequestParam(value = "page", defaultValue = "1") Integer page,
@@ -137,11 +136,11 @@ public class AsnController extends BaseController {
         response.getBody().addData("pagination", pagination);
         return response;
     }
-    @RequestMapping(value = "{id}", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "asn/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
         return OpenLmisResponse.response("asn", asnService.getById(id));
     }
-    @RequestMapping(value = "{id}", method =PUT, headers = ACCEPT_JSON)
+    @RequestMapping(value = "asn/{id}", method =PUT, headers = ACCEPT_JSON)
     public ResponseEntity update(@RequestBody Asn asn, @PathVariable(value = "id") Long id,Principal principal) {
 
        try{
