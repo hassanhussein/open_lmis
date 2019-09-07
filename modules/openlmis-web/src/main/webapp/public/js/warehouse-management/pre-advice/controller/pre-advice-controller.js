@@ -15,53 +15,35 @@
 
 
 
- function PreAdviceController($scope,configurations,homeFacility,ProductLots,FacilityTypeAndProgramProducts,VaccineProgramProducts){
+ function PreAdviceController($scope,$filter,configurations,homeFacility,ProductLots,FacilityTypeAndProgramProducts,VaccineProgramProducts,manufacturers,Lot){
 
 $scope.homeFacilityId=homeFacility.id;
 $scope.userPrograms=configurations.programs;
+$scope.manufacturers = manufacturers;
 
 
- $scope.products=[{
-        id:1,
-        unitPrice:0,
-        unitOfMeasure:null,
-        lots:[{'id':Date.now(),'quantity':0}],
-        totalCost:0
-        }]
+ $scope.productsToAdd=[{
+ id:0,
+ programProduct:{},
+ maxMonthsOfStock:0,
+ minMonthsOfStock:0,
+ eop:null,
+ lots:[{quantity:0,displayCodeOnly:false}],
+ unitPrice:0
 
-  $scope.dbProducts=[
-  {
-  'primaryName':'TT',
-  'category':101,
-  'lots':['t342524','t42352','t23432','t23432','t234234','t463232','t5623462']
-  },
-  {
-    'primaryName':'BoPV',
-    'category':101,
-    'lots':['b23432','b23432','b234234','b463232','b5623462']
-    },
-    {
-        'primaryName':'ROTA',
-        'category':101,
-        'lots':['r23432','r23432','r234234','r463232','r5623462']
-        },
+ }];
 
 
-        {
-            'primaryName':'Sdilution',
-            'category':102,
-            'lots':['s23432','s23432','s234234','s463232','s5623462']
-            },
 
-         {
-                     'primaryName':'ADS_0.05ml',
-                     'category':102,
-                     'lots':['a23432','a23432','a234234','a463232','a5623462']
-                     }
-  ]
+
+
+
+
 
     $scope.addLot=function(productIndex){
-       $scope.products[productIndex].lots.push({'id':Date.now(),'quantity':0});
+       $lotIndex=$scope.productsToAdd[productIndex].lots.length-1;
+       $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly=true;
+       $scope.productsToAdd[productIndex].lots.push({quantity:0,displayCodeOnly:false});
  }
 
 // $scope.addLot=function(lotToAdd){
@@ -72,26 +54,41 @@ $scope.userPrograms=configurations.programs;
 //     };
 
  $scope.addProduct=function(){
- $scope.products.push({'id':$scope.products.length+1,unitPrice:0,lots:[{'id':Date.now(),'quantity':0}]});
+ $scope.productsToAdd.push({
+                            id:0,
+                            programProduct:{},
+                            maxMonthsOfStock:0,
+                            minMonthsOfStock:0,
+                            eop:null,
+                            lots:[{quantity:0,displayCodeOnly:false}],
+                            unitPrice:0
+
+                            });
  }
 
 
  $scope.removeProduct=function(productIndex){
- $scope.products.splice(productIndex,1);
- if($scope.products.length==1 && productIndex==0){
-     $scope.products=[{
-        id:1,
-        unitPrice:0,
-        unitOfMeasure:null,
-        lots:[{'id':Date.now(),'quantity':0}],
-        totalCost:0
-        }]
-  }
+ $scope.productsToAdd.splice(productIndex,1);
+ if($scope.productsToAdd.length==1 && productIndex==0){
+    $scope.productsToAdd=[{
+     id:0,
+     programProduct:{},
+     maxMonthsOfStock:0,
+     minMonthsOfStock:0,
+     eop:null,
+     lots:[{quantity:0,displayCodeOnly:false}],
+     unitPrice:0
+
+     }]
+
+
+ }
+
  }
 
 
  $scope.removeLot=function(productIndex,lotIndex){
-    $scope.products[productIndex].lots.splice(lotIndex,1);
+    $scope.productsToAdd[productIndex].lots.splice(lotIndex,1);
  }
 
  $scope.totalCostPerProduct=function(product){
@@ -107,10 +104,18 @@ $scope.userPrograms=configurations.programs;
         return sum
  }
 
+ $scope.seeLots=function(productIndex,lotIndex){
 
+ }
+
+
+ $scope.changeLotDisplay=function(lotId){
+  console.log($scope.productsToAdd)
+  }
   $scope.showNewLotModal=function(product){
          $scope.newLotModal=true;
          $scope.newLot={};
+         $scope.newLot.product=product;
 
       };
 
@@ -122,7 +127,7 @@ $scope.userPrograms=configurations.programs;
 
       $scope.grandTotal=function(){
                 sum=0;
-                $scope.products.forEach(function(product){
+                $scope.productsToAdd.forEach(function(product){
                   sum+=$scope.totalCostPerProduct(product);
 
 
@@ -132,13 +137,17 @@ $scope.userPrograms=configurations.programs;
 
 
       $scope.loadProducts=function(facilityId,programId){
+
               FacilityTypeAndProgramProducts.get({facilityId:facilityId, programId:programId},function(data){
                       var allProducts=data.facilityProduct;
                       $scope.allProducts=_.sortBy(allProducts,function(product){
                           return product.programProduct.product.id;
                       });
 
+
                        $scope.productsToDisplay=$scope.allProducts;
+
+//                       console.log($scope.productsToDisplay)
 
               });
 
@@ -154,8 +163,29 @@ $scope.userPrograms=configurations.programs;
               }
 
 
+              $scope.createLot=function(){
+                     var newLot={};
+                     newLot.product=$scope.newLot.product;
+                     newLot.lotCode=$scope.newLot.lotCode;
+                     newLot.manufacturerName=$scope.newLot.manufacturerName;
+                     newLot.expirationDate=$filter('date')($scope.newLot.expirationDate,"yyyy-MM-dd");
+                      Lot.create(newLot,function(data){
+                             $scope.newLotModal=false;
+//                             $scope.lotToAdd.lotId=data.lot.id;
+//                             console.log(JSON.stringify($scope.selectedLot));
+                             console.log(data.lot.product)
+                             $scope.loadProductLots(data.lot.product);
+                      });
+                   };
+
+
+
           $scope.loadProductLots=function(product)
+
              {
+
+//                       console.log($scope.productsToAdd)
+
                   $scope.lotsToDisplay={};
 
                   if(product !==null)
@@ -165,6 +195,7 @@ $scope.userPrograms=configurations.programs;
                          ProductLots.get({productId:product.id},function(data){
                               $scope.allLots=data.lots;
                               $scope.lotsToDisplay=$scope.allLots;
+
                          });
 
 
@@ -213,4 +244,14 @@ $scope.userPrograms=configurations.programs;
                         }, 100);
                         return deferred.promise;
                      },
+                     manufacturers : function($q, $timeout, $route, ManufacturerList){
+                                         var deferred = $q.defer();
+
+                                         $timeout(function () {
+                                           ManufacturerList.get(function (data) {
+                                             deferred.resolve(data.manufacturers);
+                                           });
+                                         }, 100);
+                                         return deferred.promise;
+                                       }
  }
