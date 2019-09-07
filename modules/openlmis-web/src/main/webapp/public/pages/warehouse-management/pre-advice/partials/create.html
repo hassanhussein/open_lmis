@@ -52,9 +52,9 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-required="(distribution !== undefined && !noVoucherNumber) || hasPermission('OPEN_STOCK_RECEIVING_PROCESS')"
+                            <input
                                    id="receivingDate" name="receivingDate" type="text"
-                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
+                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                    ui-date-format="yy-mm-dd"
                                    ng-model="occurredDate"/>
                         </div>
@@ -275,88 +275,96 @@
                                     </tr>
                                     </thead>
                                     <tbody >
-                                    <tr ng-repeat-start="product in products" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
+                                    <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add" >
                                             <select style="width:90% !important;" ui-select2
-                                                    ng-change="loadProductLots(productToAdd.programProduct.product)"
-                                                    ng-disabled="productToAdd.lots.length >0 || lotToAdd.quantity !== undefined || lotToAdd.lotId !== undefined || lotToAdd.vvmStatus"
-                                                    ng-model="productToAdd.programProduct"
+                                                    ng-change="loadProductLots(product.programProduct.product)"
+
+                                                    ng-model="product.programProduct"
                                                     ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
                                                 <option value="" openlmis-message="placeholder.select.product"></option>
                                             </select>
                                         </td>
 
-                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add"> Doses</td>
+                                        <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">
+                                            <span ng-bind="product.programProduct.product.dosageUnit.code"></span>
+                                        </td>
 
                                         <td >
-                                            <div class="row-fluid" >
+                                            <div class="row-fluid" ng-if="!product.lots[0].displayCodeOnly" >
                                                 <div  style="width:20%; float:left;margin-top:1px">
-                                                    <input type="button" ng-disabled="lotToAdd.lotId !== undefined "
+                                                    <input type="button" ng-disabled="!product.programProduct.product"
                                                            class="btn btn-primary btn-small"
-                                                           href ng-click="showNewLotModal(product)"
-                                                           openlmis-message="button.create"/>
+                                                           href ng-click="showNewLotModal(product.programProduct.product)"
+                                                           openlmis-message="button.create"
+                                                    />
                                                 </div>
                                                 <div style="width:80%; float:left">
                                                     <select  ui-select2
                                                              style="min-width:200px !important"
+                                                             ng-model="product.lots[0].info"
+                                                             ng-disabled="!product.programProduct.product"
+                                                             ng-options="obj.lotCode for obj in lotsToDisplay"
                                                             >
                                                         <option value="" openlmis-message="placeholder.select.batch"></option>
-                                                        <option ng-repeat="lot in lotsToDisplay" value="{{lot.id}}"
-                                                                ng-selected="lotToAdd.lotId == lot.id">{{lot.lotCode}}
-                                                        </option>
+
                                                     </select>
                                                 </div>
 
                                             </div>
 
+                                            <div ng-if="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
+
                                         </td>
                                         <td>
-                                            <input type="number" ng-model="product.lots[0].quantity" style="width:99px">
+                                            <input type="number" ng-disabled="!product.lots[0].info" ng-model="product.lots[0].quantity" style="width:99px">
                                         </td>
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">
-                                            <input type="number" ng-model="product.unitPrice" style="width:99px">
+                                            <input type="number" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity" style="width:99px">
                                         </td>
 
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">{{totalCostPerProduct(product) | number}}</td>
                                         <td>
-                                            <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-if="product.lots.length==1" >Add</button>
+                                            <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1" >Add</button>
                                             <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
 
                                         </td>
 
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add ">
-                                            <button class="btn btn-small btn-danger" ng-if="product && !$last && products.length>1" ng-click="removeProduct(productIndex)"  type="button" >Remove</button>
-                                            <button class="btn btn-small btn-info" ng-click="addProduct()" ng-if="$last"  >Add</button>
+                                            <button class="btn btn-small btn-danger" ng-if="product && !$last && productsToAdd.length>1" ng-click="removeProduct(productIndex)"  type="button" >Remove</button>
+                                            <button class="btn btn-small btn-info" ng-click="addProduct()" ng-if="$last" ng-disabled="product.programProduct.product===undefined"   >Add</button>
                                         </td>
 
                                     </tr>
                                     <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
                                         <td>
-                                            <div class="row-fluid" >
+                                            <div class="row-fluid" ng-if="!lot.displayCodeOnly" >
                                                 <div  style="width:20%; float:left;margin-top:1px">
-                                                    <input type="button" ng-disabled="lotToAdd.lotId !== undefined "
+                                                    <input type="button"
                                                            class="btn btn-primary btn-small"
-                                                           href ng-click="showNewLotModal(product)"
+                                                           href ng-click="showNewLotModal(product.programProduct.product)"
+                                                           ng-disabled="!product.programProduct.product"
                                                            openlmis-message="button.create"/>
                                                 </div>
-                                                <div style="width:80%; float:left">
+                                                <div style="width:80%; float:left" ng-if="!lot.displayCodeOnly">
                                                     <select  ui-select2
                                                              style="min-width:200px !important"
+                                                             ng-disabled="!product.programProduct.product"
+                                                             ng-model="lot.info"
+                                                             ng-options="obj.lotCode for obj in lotsToDisplay"
                                                     >
                                                         <option value="" openlmis-message="placeholder.select.batch"></option>
-                                                        <option ng-repeat="lot in lotsToDisplay" value="{{lot.id}}"
-                                                                ng-selected="lotToAdd.lotId == lot.id">{{lot.lotCode}}
-                                                        </option>
                                                     </select>
                                                 </div>
 
                                             </div>
+                                            <div ng-if="lot.displayCodeOnly">{{lot.info.lotCode}}</div>
                                         </td>
                                         <td>
-                                            <input type="number" ng-model="lot.quantity" name="quantity" style="width:99px">
+                                            <input type="number" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info" style="width:99px">
                                         </td>
                                         <td>
-                                            <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex)" >Add</button>
+                                            <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex,lot)" >Add</button>
                                             <button class="btn btn-small btn-danger" ng-if="lot && !$last" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
                                         </td>
 
@@ -511,9 +519,9 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-required="(distribution !== undefined && !noVoucherNumber) || hasPermission('OPEN_STOCK_RECEIVING_PROCESS')"
+                                        <input
                                                id="receivingDate" name="receivingDate" type="text"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
+                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                                ui-date-format="yy-mm-dd"
                                                ng-model="occurredDate"/>
                                     </div>
@@ -579,7 +587,7 @@
                                 <div class="span6 ">
 
 
-                                   
+
 
 
                                 </div>
@@ -603,6 +611,13 @@
                            openlmis-message="button.save" ng-click="save()"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
+
+
+                    <input  type="button" class="btn btn-primary pull-right"
+                           ng-click="finalize()" value="Finalize" style="margin-left:10px;margin-right:10px"/>
+
+                    <input  type="button" class="btn btn-primary pull-right"
+                           ng-click="finalizeCreateDocs()" value="Finalize and Create Receiving Docs"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
