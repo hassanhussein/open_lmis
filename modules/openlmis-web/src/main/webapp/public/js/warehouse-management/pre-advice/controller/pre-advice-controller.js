@@ -15,13 +15,14 @@
 
 
 
- function PreAdviceController($scope,$filter,Preadvice,configurations,homeFacility,asnLookups,ProductLots,FacilityTypeAndProgramProducts,VaccineProgramProducts,manufacturers,Lot){
+ function PreAdviceController($scope,$filter,$location,Preadvice,configurations,homeFacility,asnLookups,ProductLots,FacilityTypeAndProgramProducts,VaccineProgramProducts,manufacturers,Lot){
 $scope.homeFacilityId=homeFacility.id;
 $scope.userPrograms=configurations.programs;
 $scope.manufacturers = manufacturers;
 $scope.ports=asnLookups.ports;
 $scope.documentTypes=asnLookups['document-types'];
 $scope.suppliers=asnLookups.suppliers;
+ $scope.productError=false;
 
 
 
@@ -38,7 +39,7 @@ $scope.suppliers=asnLookups.suppliers;
 
 
 
-
+console.log($scope.productsToAdd)
 
 
 
@@ -49,12 +50,14 @@ $scope.suppliers=asnLookups.suppliers;
        $scope.productsToAdd[productIndex].lots.push({quantity:0,displayCodeOnly:false});
  }
 
-// $scope.addLot=function(lotToAdd){
-//             lotToAdd.lot=_.findWhere($scope.lotsToDisplay,{id:parseInt(lotToAdd.lotId,10)});
-//             $scope.productToAdd.lots.push(lotToAdd);
-//             $scope.lotToAdd={};
-//             updateLotsToDisplay($scope.productToAdd.lots);
-//     };
+$scope.validateProduct=function(){
+ if(angular.equals($scope.productsToAdd[0].programProduct,{})||!$scope.productsToAdd[0].unitPrice || !$scope.productsToAdd[0].lots[0].quantity){
+    $scope.productError=true
+    return;
+ }
+
+ $scope.productError=false
+}
 
  $scope.addProduct=function(){
  $scope.productsToAdd.push({
@@ -116,7 +119,9 @@ $scope.suppliers=asnLookups.suppliers;
 
    var success = function (data) {
      $scope.error = "";
+     console.log(data)
      $scope.$parent.message = data.success;
+     $scope.$parent.asnId = true
 
      $scope.showError = false;
      $location.path('');
@@ -205,7 +210,7 @@ $scope.suppliers=asnLookups.suppliers;
 
              {
 
-//                       console.log($scope.productsToAdd)
+                 $scope.productError=false;
 
                   $scope.lotsToDisplay={};
 
@@ -215,7 +220,7 @@ $scope.suppliers=asnLookups.suppliers;
 
                          ProductLots.get({productId:product.id},function(data){
                               $scope.allLots=data.lots;
-//                              console.log(data.lots)
+                              console.log(data.lots)
                               $scope.lotsToDisplay=$scope.allLots;
 
                          });
@@ -226,6 +231,15 @@ $scope.suppliers=asnLookups.suppliers;
 
 
              $scope.saveAsn=function(){
+
+                $scope.validateProduct();
+                console.log($scope.asnForm)
+             if ( $scope.asnForm.$error.required) {
+                   $scope.showError = true;
+                   $scope.error = 'form.error';
+                   $scope.message = "";
+                   return;
+                 }
 
            var lotflag=true
             var asnLineItems=[]
