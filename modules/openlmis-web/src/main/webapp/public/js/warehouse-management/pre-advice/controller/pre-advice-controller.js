@@ -15,11 +15,14 @@
 
 
 
- function PreAdviceController($scope,$filter,configurations,homeFacility,ProductLots,FacilityTypeAndProgramProducts,VaccineProgramProducts,manufacturers,Lot){
-
+ function PreAdviceController($scope,$filter,Preadvice,configurations,homeFacility,asnLookups,ProductLots,FacilityTypeAndProgramProducts,VaccineProgramProducts,manufacturers,Lot){
 $scope.homeFacilityId=homeFacility.id;
 $scope.userPrograms=configurations.programs;
 $scope.manufacturers = manufacturers;
+$scope.ports=asnLookups.ports;
+$scope.documentTypes=asnLookups['document-types'];
+$scope.suppliers=asnLookups.suppliers;
+
 
 
  $scope.productsToAdd=[{
@@ -104,9 +107,27 @@ $scope.manufacturers = manufacturers;
         return sum
  }
 
- $scope.seeLots=function(productIndex,lotIndex){
+ $scope.seeLots=function(){
+
+
 
  }
+
+
+   var success = function (data) {
+     $scope.error = "";
+     $scope.$parent.message = data.success;
+
+     $scope.showError = false;
+     $location.path('');
+   };
+
+
+    var error = function (data) {
+       $scope.$parent.message = "";
+       $scope.error = data.data.error;
+       $scope.showError = true;
+     };
 
 
  $scope.changeLotDisplay=function(lotId){
@@ -194,6 +215,7 @@ $scope.manufacturers = manufacturers;
 
                          ProductLots.get({productId:product.id},function(data){
                               $scope.allLots=data.lots;
+//                              console.log(data.lots)
                               $scope.lotsToDisplay=$scope.allLots;
 
                          });
@@ -201,6 +223,65 @@ $scope.manufacturers = manufacturers;
 
                   }
              };
+
+
+             $scope.saveAsn=function(){
+
+           var lotflag=true
+            var asnLineItems=[]
+             angular.forEach($scope.productsToAdd,function(product,key){
+             var asnLots=[]
+                angular.forEach(product.lots,function(lot,key){
+                    asnLots.push({
+                    expirydate:lot.info.expirationDate,
+                    lotnumber:lot.info.lotCode,
+                    manufacturingdate:lot.info.manufactureDate,
+                    quantity:lot.quantity,
+                    serialnumber:'string'
+                    })
+                    asnLineItems.push({
+                    asnLots:asnLots,
+                    lotflag:true,
+                    productid:product.programProduct.product.id
+                    })
+
+
+                })
+
+
+             })
+            var asn={
+             asnLineItems:asnLineItems,
+             asndate:$scope.asnReceiptDate,
+             asnnumber:$scope.asnCode,
+             blawbnumber:$scope.blAwbNumber,
+             clearingagent:$scope.clearingAgent,
+             expectedarrivaldate:$scope.expectedArrivalDate,
+             flightvesselnumber:$scope.flightVesselNumber,
+             note:$scope.notes,
+             podate:$scope.poDate,
+             ponumber:$scope.poNumber,
+             portofarrival:$scope.portOfArrivalId,
+             purchaseDocuments:[
+                                 {
+                                    "documentType": {
+                                    "id":1,
+                                    "description": "Testing",
+                                    "name": "Testing"
+                                    },
+                                    "filelocation": "string"
+                                    }
+                                    ],
+             status:'Saved',
+             supplierid:$scope.supplierId
+             }
+
+
+            console.log(asn)
+
+             Preadvice.save({}, asn, success, error);
+
+             }
 
              $scope.loadProducts($scope.homeFacilityId,82);
 
@@ -253,5 +334,15 @@ $scope.manufacturers = manufacturers;
                                            });
                                          }, 100);
                                          return deferred.promise;
-                                       }
+                                       },
+                      asnLookups : function($q, $timeout, $route, AsnLookups){
+                                                               var deferred = $q.defer();
+
+                                                               $timeout(function () {
+                                                                 AsnLookups.get(function (data) {
+                                                                   deferred.resolve(data);
+                                                                 });
+                                                               }, 100);
+                                                               return deferred.promise;
+                                                             }
  }

@@ -12,10 +12,10 @@
     <div ng-hide="geoZone.id"><h2 id="addNewGeoZoneHeader" >Add New ASN/Pre-advice</h2></div>
     <div ng-show="geoZone.id"><h2 id="editGeoZoneHeader" ></h2></div>
 
-    <form ng-submit="saveGeoZone()" name="geoZoneForm" novalidate>
+    <form  novalidate>
         <div class="app-form">
 
-            <div id="geoZoneFormGroup" class="form-group clear-top">
+            <div class="form-group clear-top">
 
                 <div class="form-row clearfix">
                     <div class="span4">
@@ -25,7 +25,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
+                            <input ng-model="asnCode"  type="text" maxlength="50" ng-required="true"/>
                             <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
@@ -38,11 +38,11 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-required="(distribution !== undefined && !noVoucherNumber) || hasPermission('OPEN_STOCK_RECEIVING_PROCESS')"
-                                   id="receivingDate" name="receivingDate" type="text"
+                            <input
+                                    type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="occurredDate"/>
+                                   ng-model="asnReceiptDate"/>
                         </div>
                     </div>
                     <div class="span4">
@@ -53,10 +53,10 @@
 
                         <div class="form-field">
                             <input
-                                   id="receivingDate" name="receivingDate" type="text"
+                                   id="receivingDate" type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="occurredDate"/>
+                                   ng-model="expectedDeliveryDate"/>
                         </div>
                     </div>
 
@@ -77,15 +77,14 @@
                         <label id="parentLabel" >Supplier</label>
 
                         <div class="form-field row-fluid">
-                            <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
-                                    openlmis-message="label.select.parent.zone">
+                            <select ui-select2="{width: '90%'}" class="span11"
+                                    openlmis-message="label.select.parent.zone"
+                            ng-model="supplierId">
                                 <option value=""></option>
-                                <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
-                                    <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
-                                            value="{{ parentGeoZone.code }}">
-                                        {{ parentGeoZone.name }}
+                                    <option ng-repeat="supplier in suppliers"
+                                            value="{{ supplier.id }}">
+                                        {{ supplier.name }}
                                     </option>
-                                </optgroup>
                             </select>
                             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                   openlmis-message="missing.value"></span>
@@ -98,7 +97,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
+                            <input ng-model="poNumber" type="text" maxlength="50" ng-required="true"/>
                             <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
@@ -111,11 +110,11 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-required="(distribution !== undefined && !noVoucherNumber) || hasPermission('OPEN_STOCK_RECEIVING_PROCESS')"
-                                   id="receivingDate" name="receivingDate" type="text"
+                            <input
+                                    type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="occurredDate"/>
+                                   ng-model="poDate"/>
                         </div>
                     </div>
                 </div>
@@ -305,6 +304,7 @@
                                                              ng-model="product.lots[0].info"
                                                              ng-disabled="!product.programProduct.product"
                                                              ng-options="obj.lotCode for obj in lotsToDisplay"
+
                                                             >
                                                         <option value="" openlmis-message="placeholder.select.batch"></option>
 
@@ -342,7 +342,8 @@
                                                 <div  style="width:20%; float:left;margin-top:1px">
                                                     <input type="button"
                                                            class="btn btn-primary btn-small"
-                                                           href ng-click="showNewLotModal(product.programProduct.product)"
+                                                           href ng-click="showNewLotModal(product.programProduct.productconsole.log(ports)
+)"
                                                            ng-disabled="!product.programProduct.product"
                                                            openlmis-message="button.create"/>
                                                 </div>
@@ -475,7 +476,7 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
+                                        <input ng-model="blAwbNumber"  type="text" maxlength="50" ng-required="true"/>
                                         <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
@@ -485,15 +486,15 @@
                                     <label id="parentLabel" >Destination Airport/Port</label>
 
                                     <div class="form-field row-fluid">
-                                        <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
+                                        <select ui-select2="{width: '90%'}" class="span11"  ng-model="portOfArrivalId"
                                                 openlmis-message="label.select.parent.zone">
                                             <option value=""></option>
-                                            <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
-                                                <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
-                                                        value="{{ parentGeoZone.code }}">
-                                                    {{ parentGeoZone.name }}
+
+                                                <option ng-repeat="port in ports"
+                                                        value="{{ port.id }}">
+                                                    {{ port.name }}
                                                 </option>
-                                            </optgroup>
+
                                         </select>
                                         <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
@@ -506,7 +507,7 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
+                                        <input ng-model="flightVesselNumber" type="text" maxlength="50" ng-required="true"/>
                                         <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
@@ -520,10 +521,10 @@
 
                                     <div class="form-field">
                                         <input
-                                               id="receivingDate" name="receivingDate" type="text"
+                                                type="text"
                                                ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                                ui-date-format="yy-mm-dd"
-                                               ng-model="occurredDate"/>
+                                               ng-model="expectedArrivalDate"/>
                                     </div>
                                 </div>
                         </div>
@@ -535,7 +536,7 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <textarea rows="3" ></textarea>
+                                        <textarea rows="3" ng-model="notes" ></textarea>
                                         <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
@@ -547,7 +548,7 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
+                                        <input ng-model="clearingAgent" id="code" type="text" maxlength="50" ng-required="true"/>
                                         <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
@@ -561,15 +562,16 @@
                                         <label id="parentLabel" >Upload Type</label>
 
                                         <div class="form-field row-fluid">
-                                            <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
-                                                    openlmis-message="label.select.parent.zone">
+                                            <select ui-select2="{width: '90%'}" class="span11"
+                                                    openlmis-message="label.select.parent.zone"
+                                            ng-model="uploadTypeId">
                                                 <option value=""></option>
-                                                <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
-                                                    <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
-                                                            value="{{ parentGeoZone.code }}">
-                                                        {{ parentGeoZone.name }}
+
+                                                    <option ng-repeat="doc in documentTypes"
+                                                            >
+                                                        {{ doc.name }}
                                                     </option>
-                                                </optgroup>
+
                                             </select>
                                             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                                   openlmis-message="missing.value"></span>
@@ -608,7 +610,7 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="save()"/>
+                           openlmis-message="button.save" ng-click="saveAsn()"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
 
