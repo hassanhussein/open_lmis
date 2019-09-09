@@ -61,4 +61,22 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
       $scope.search(1);
     }
   };
+
+
+
+  $scope.deleteAsn=function(id,index)
+      {
+           var callBack=function(results){
+             if(results){
+                $scope.asnList.splice(index,1);
+             }
+           };
+
+           var options = {
+                          id: "confirmDialog",
+                          header: "Confirm Remove ASN",
+                          body: "Are you sure you want to delete the ASN"
+                      };
+           OpenLmisDialog.newDialog(options, callBack, $dialog);
+       };
 }

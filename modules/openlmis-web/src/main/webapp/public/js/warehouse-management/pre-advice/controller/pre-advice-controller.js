@@ -37,7 +37,7 @@ $scope.loadProducts=function(facilityId,programId){
 
 
                        $scope.productsToDisplay=$scope.allProducts;
-                       console.log($scope.allProducts)
+//                       console.log($scope.allProducts)
 
               });
 
@@ -50,7 +50,7 @@ $scope.loadProducts=function(facilityId,programId){
         angular.forEach($scope.configurations.productsConfiguration,function(product,value){
 //        console.log(product.product.id)
         if(productId==product.product.id){
-        console.log('am here')
+//        console.log('am here')
          editProduct=product
         }
         })
@@ -121,18 +121,53 @@ angular.forEach($scope.asn.asnLineItems,function(product,value){
 
 
 
+ $scope.updateLotsToDisplay=function ()
+     {
+
+        var toExclude=[]
+         angular.forEach($scope.productsToAdd,function(product,value){
+
+            angular.forEach(product.lots,function(lot,value){
+             if(lot.info){
+                     toExclude.push(lot.info.lotCode);
+                     }
+
+            })
+
+
+         })
+
+
+              $scope.lotsToDisplay = $.grep($scope.allLots, function (lotObject) {
+                    return $.inArray(lotObject.lotCode, toExclude) == -1;
+              });
+     }
 
 
 
 
 
+ $scope.updateProductsToDisplay=function(){
 
+
+ var toExclude =_.pluck( _.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'),'primaryName');
+
+             $scope.productsToDisplay = $.grep($scope.allProducts, function (productObject) {
+                  return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
+              });
+
+
+
+
+ }
 
 
     $scope.addLot=function(productIndex){
+
        $lotIndex=$scope.productsToAdd[productIndex].lots.length-1;
        $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly=true;
        $scope.productsToAdd[productIndex].lots.push({quantity:0,displayCodeOnly:false});
+       $scope.updateLotsToDisplay()
  }
 
 $scope.validateProduct=function(){
@@ -155,12 +190,17 @@ $scope.validateProduct=function(){
                             unitPrice:0
 
                             });
+
+   $scope.updateProductsToDisplay();
  }
 
 
+
+
  $scope.removeProduct=function(productIndex){
+ console.log(productIndex)
  $scope.productsToAdd.splice(productIndex,1);
- if($scope.productsToAdd.length==1 && productIndex==0){
+ if($scope.productsToAdd.length+1==1 && productIndex==0){
     $scope.productsToAdd=[{
      id:0,
      programProduct:{},
@@ -175,12 +215,18 @@ $scope.validateProduct=function(){
 
  }
 
+ $scope.updateProductsToDisplay();
+
  }
 
 
  $scope.removeLot=function(productIndex,lotIndex){
     $scope.productsToAdd[productIndex].lots.splice(lotIndex,1);
+    $scope.updateLotsToDisplay()
  }
+
+
+
 
  $scope.totalCostPerProduct=function(product){
 
@@ -212,7 +258,7 @@ $scope.validateProduct=function(){
 
    var success = function (data) {
      $scope.error = "";
-     console.log(data)
+//     console.log(data)
      $scope.$parent.message = data.success;
      $scope.$parent.asnId = true
 
@@ -229,7 +275,7 @@ $scope.validateProduct=function(){
 
 
  $scope.changeLotDisplay=function(lotId){
-  console.log($scope.productsToAdd)
+//  console.log($scope.productsToAdd)
   }
   $scope.showNewLotModal=function(product){
          $scope.newLotModal=true;
@@ -274,9 +320,7 @@ $scope.validateProduct=function(){
                      newLot.expirationDate=$filter('date')($scope.newLot.expirationDate,"yyyy-MM-dd");
                       Lot.create(newLot,function(data){
                              $scope.newLotModal=false;
-//                             $scope.lotToAdd.lotId=data.lot.id;
-//                             console.log(JSON.stringify($scope.selectedLot));
-                             console.log(data.lot.product)
+//                             console.log(data.lot.product)
                              $scope.loadProductLots(data.lot.product);
                       });
                    };
@@ -297,7 +341,7 @@ $scope.validateProduct=function(){
 
                          ProductLots.get({productId:product.id},function(data){
                               $scope.allLots=data.lots;
-                              console.log(data.lots)
+//                              console.log(data.lots)
                               $scope.lotsToDisplay=$scope.allLots;
 
                          });
@@ -310,7 +354,7 @@ $scope.validateProduct=function(){
              $scope.saveAsn=function(status){
 
                 $scope.validateProduct();
-                console.log($scope.asnForm)
+//                console.log($scope.asnForm)
              if ( $scope.asnForm.$error.required) {
                    $scope.showError = true;
                    $scope.error = 'form.error';
@@ -375,7 +419,7 @@ $scope.validateProduct=function(){
              }
 
 
-            console.log(asn)
+//            console.log(asn)
 
              Preadvice.save({}, asn, success, error);
 
