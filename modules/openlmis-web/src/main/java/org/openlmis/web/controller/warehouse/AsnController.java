@@ -16,12 +16,11 @@ import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.service.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -120,6 +119,18 @@ public class AsnController extends BaseController {
     } catch (DataException e) {
         return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
+    }
+
+    @RequestMapping(value = "/asn/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity deleteLocation(@PathVariable("id") Long id) {
+
+        try {
+            asnService.deleteById(id);
+        } catch (DataIntegrityViolationException ex) {
+            return OpenLmisResponse.error("asn.data.already.in.use", HttpStatus.BAD_REQUEST);
+        }
+
+        return OpenLmisResponse.success("message.asn.deleted.success");
     }
 
 }

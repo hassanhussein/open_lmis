@@ -98,4 +98,8 @@ public class AsnService {
         }
         return repository.searchBy(searchParam, column, pagination);
     }
+
+    public void deleteById(Long id) {
+       repository.deleteById(id);
+    }
 }
