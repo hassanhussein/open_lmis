@@ -288,17 +288,22 @@
                                     <tbody >
                                     <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add" >
-                                            <select style="width:90% !important;" ui-select2
-                                                    ng-change="loadProductLots(product.programProduct.product)"
-
+                                            <select style="width:90% !important;" ui-select2 ng-change="loadProductLots(product.programProduct.product)"
+                                                    ng-if="!editMode"
                                                     ng-model="product.programProduct"
                                                     ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
                                                 <option value="" openlmis-message="placeholder.select.product"></option>
                                             </select>
+                                            <div class="row-fluid" ng-if="editMode">
+                                                {{product.programProduct.primaryName}}
+                                            </div>
                                         </td>
 
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">
-                                            <span ng-bind="product.programProduct.product.dosageUnit.code"></span>
+                                            <span ng-bind="product.programProduct.product.dosageUnit.code" ng-if="!editMode"></span>
+                                            <span class="row-fluid" ng-if="editMode">
+                                                {{product.programProduct.dosageUnit.code}}
+                                            </span>
                                         </td>
 
                                         <td >
