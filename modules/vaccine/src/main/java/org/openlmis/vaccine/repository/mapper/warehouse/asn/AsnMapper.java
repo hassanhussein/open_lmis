@@ -66,6 +66,10 @@ public interface AsnMapper {
     })
     List<Asn> search(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
                      RowBounds rowBounds);
+
+    @Delete("delete from asns where id = #{id}")
+    void deleteById(@Param("id") Long id);
+
     class SelectAsn {
         @SuppressWarnings(value = "unused")
         public static String getAsnCountBy(Map<String, Object> params) {

@@ -48,4 +48,8 @@ public class AsnRepository {
     public List<Asn> searchBy(String searchParam, String column,  Pagination pagination){
         return mapper.search(searchParam, column, pagination);
     }
+
+    public void deleteById(Long id) {
+        mapper.deleteById(id);
+    }
 }
