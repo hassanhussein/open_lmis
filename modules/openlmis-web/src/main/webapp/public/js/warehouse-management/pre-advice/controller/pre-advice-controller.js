@@ -307,7 +307,7 @@ $scope.validateProduct=function(){
              };
 
 
-             $scope.saveAsn=function(){
+             $scope.saveAsn=function(status){
 
                 $scope.validateProduct();
                 console.log($scope.asnForm)
@@ -370,7 +370,7 @@ $scope.validateProduct=function(){
                                     "filelocation": "string"
                                     }
                                     ],
-             status:'Saved',
+             status:status,
              supplierid:$scope.supplierId
              }
 

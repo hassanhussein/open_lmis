@@ -553,16 +553,16 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="saveAsn()"/>
+                           openlmis-message="button.save" ng-click="saveAsn('Draft')"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
 
 
                     <input  type="button" class="btn btn-primary pull-right"
-                           ng-click="finalize()" value="Finalize" style="margin-left:10px;margin-right:10px"/>
+                           ng-click="saveAsn('Finalized')" value="Finalize" style="margin-left:10px;margin-right:10px"/>
 
                     <input  type="button" class="btn btn-primary pull-right"
-                           ng-click="finalizeCreateDocs()" value="Finalize and Create Receiving Docs"/>
+                           ng-click="saveAsn('Finalized')" value="Finalize and Create Receiving Docs"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
