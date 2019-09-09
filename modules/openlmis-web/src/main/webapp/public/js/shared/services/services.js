@@ -563,3 +563,7 @@ services.factory("Preadvice", function ($resource) {
 services.factory("PreadviceTemplate", function ($resource) {
     return $resource('/rest-api/warehouse/asn/template.json', {}, {});
 });
+
+services.factory("AsnLookups", function ($resource) {
+    return $resource('/rest-api/warehouse/asn/template.json', {}, {});
+});

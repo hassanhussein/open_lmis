@@ -9,13 +9,13 @@
   -->
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
-    <div ng-hide="geoZone.id"><h2 id="addNewGeoZoneHeader" >Add New ASN/Pre-advice</h2></div>
-    <div ng-show="geoZone.id"><h2 id="editGeoZoneHeader" ></h2></div>
+    <div><h2>Add New ASN/Pre-advice</h2></div>
 
-    <form ng-submit="saveGeoZone()" name="geoZoneForm" novalidate>
+
+    <form name="asnForm"  novalidate>
         <div class="app-form">
 
-            <div id="geoZoneFormGroup" class="form-group clear-top">
+            <div class="form-group clear-top">
 
                 <div class="form-row clearfix">
                     <div class="span4">
@@ -25,8 +25,8 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
-                            <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
+                            <input ng-model="asnCode" name="asnCode"  type="text" maxlength="50" ng-required="true"/>
+                            <span class="field-error" ng-show="asnForm.asnCode.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
@@ -38,11 +38,13 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-required="(distribution !== undefined && !noVoucherNumber) || hasPermission('OPEN_STOCK_RECEIVING_PROCESS')"
-                                   id="receivingDate" name="receivingDate" type="text"
+                            <input
+                                    type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="occurredDate"/>
+                                   ng-model="asnReceiptDate" name="asnReceiptDate" ng-required="true"/>
+                            <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
                         </div>
                     </div>
                     <div class="span4">
@@ -52,11 +54,16 @@
                         </label>
 
                         <div class="form-field">
-                            <input
-                                   id="receivingDate" name="receivingDate" type="text"
+                            <input name="expectedDeliveryDate"
+                                   type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="occurredDate"/>
+                                   ng-model="expectedDeliveryDate"
+                                   ng-required="true"
+                            />
+
+                            <span class="field-error" ng-show="asnForm.expectedDeliveryDate.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
                         </div>
                     </div>
 
@@ -77,15 +84,14 @@
                         <label id="parentLabel" >Supplier</label>
 
                         <div class="form-field row-fluid">
-                            <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
-                                    openlmis-message="label.select.parent.zone">
+                            <select ui-select2="{width: '90%'}" class="span11"
+                                    openlmis-message="label.select.parent.zone"
+                            ng-model="supplierId">
                                 <option value=""></option>
-                                <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
-                                    <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
-                                            value="{{ parentGeoZone.code }}">
-                                        {{ parentGeoZone.name }}
+                                    <option ng-repeat="supplier in suppliers"
+                                            value="{{ supplier.id }}">
+                                        {{ supplier.name }}
                                     </option>
-                                </optgroup>
                             </select>
                             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                   openlmis-message="missing.value"></span>
@@ -98,8 +104,8 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
-                            <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
+                            <input ng-model="poNumber" type="text" maxlength="50" name="poNumber" ng-required="true"/>
+                            <span class="field-error" ng-show="asnForm.poNumber.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
@@ -111,11 +117,14 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-required="(distribution !== undefined && !noVoucherNumber) || hasPermission('OPEN_STOCK_RECEIVING_PROCESS')"
-                                   id="receivingDate" name="receivingDate" type="text"
+                            <input  name="poDate"
+                                    type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="occurredDate"/>
+                                   ng-model="poDate"
+                                    ng-required="true"/>
+                            <span class="field-error" ng-show="asnForm.poDate.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
                         </div>
                     </div>
                 </div>
@@ -258,6 +267,8 @@
 
 
                             <div>
+                                <div class="alert alert-danger" ng-show="productError"
+                                     >Atleast One product with atleast One batch is required</div>
                                 <table  class="table table-bordered receive">
                                     <thead>
                                     <tr class="gradient-header">
@@ -277,17 +288,22 @@
                                     <tbody >
                                     <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add" >
-                                            <select style="width:90% !important;" ui-select2
-                                                    ng-change="loadProductLots(product.programProduct.product)"
-
+                                            <select style="width:90% !important;" ui-select2 ng-change="loadProductLots(product.programProduct.product)"
+                                                    ng-if="!editMode"
                                                     ng-model="product.programProduct"
                                                     ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
                                                 <option value="" openlmis-message="placeholder.select.product"></option>
                                             </select>
+                                            <div class="row-fluid" ng-if="editMode">
+                                                {{product.programProduct.primaryName}}
+                                            </div>
                                         </td>
 
                                         <td rowspan="{{product.lots.length}}" class="col-product cell-input row-add">
-                                            <span ng-bind="product.programProduct.product.dosageUnit.code"></span>
+                                            <span ng-bind="product.programProduct.product.dosageUnit.code" ng-if="!editMode"></span>
+                                            <span class="row-fluid" ng-if="editMode">
+                                                {{product.programProduct.dosageUnit.code}}
+                                            </span>
                                         </td>
 
                                         <td >
@@ -305,6 +321,7 @@
                                                              ng-model="product.lots[0].info"
                                                              ng-disabled="!product.programProduct.product"
                                                              ng-options="obj.lotCode for obj in lotsToDisplay"
+
                                                             >
                                                         <option value="" openlmis-message="placeholder.select.batch"></option>
 
@@ -342,7 +359,8 @@
                                                 <div  style="width:20%; float:left;margin-top:1px">
                                                     <input type="button"
                                                            class="btn btn-primary btn-small"
-                                                           href ng-click="showNewLotModal(product.programProduct.product)"
+                                                           href ng-click="showNewLotModal(product.programProduct.productconsole.log(ports)
+)"
                                                            ng-disabled="!product.programProduct.product"
                                                            openlmis-message="button.create"/>
                                                 </div>
@@ -385,83 +403,7 @@
                                 </table>
                             </div>
 
-<!--Lot Modal-->
-<div id="popup-box" ng-form="newLotForm" modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
-    <div class="modal-header">
-        <div class="row-fluid">
-            <div class="span4">
-                <h3 openlmis-message="header.vaccine.stock.create.lot"></h3>&nbsp;&nbsp;
-            </div>
-            <div class="span4">
-                <h3><span openlmis-message="label.product"></span>:{{newLot.product.primaryName}}</h3>
-            </div>
-        </div>
-    </div>
-    <div class="modal-body">
-        <div class="row-fluid ">
-            <div class="span3">
-                <label id="newLotLotCodeLabel" for="newLot.lotCode">
-                    <span openlmis-message="label.batchId "></span>
-                    <span class="label-required">*</span>
-                </label>
-                <span class="position-relative">
-                                    <input  ng-required="true" class="span12" type="text" ng-model="newLot.lotCode" value="" id="newLot.lotCode" />
-                                </span>
-            </div>
 
-            <div class="span3">
-                <label id="newLotExpirationDateLabel" for="newLot.expirationDate">
-                    <span openlmis-message="label.expiryDate"></span>
-                    <span class="label-required">*</span>
-                </label>
-                <span class="position-relative">
-                                <input ng-required="true" class="span12"
-                                       ng-required="true"
-                                       id="newLot.expirationDate"
-                                       name="expirationDate"
-                                       type="text"
-                                       ui-date-format="yy-mm-dd"
-                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, minDate:'today + 1'}"
-                                       ng-model="newLot.expirationDate"/>
-                                </span>
-            </div>
-            <div class="span3">
-                <label id="newLotManufacturerLabel" for="newLot.manufacturerName">
-                    <span openlmis-message="label.manufacturer"></span>
-                    <span class="label-required">*</span>
-                </label>
-                <span class="position-relative">
-                    <select style="width:90% !important;" ui-select2 ng-required="true" class="span12"
-                            ng-model="newLot.manufacturerName" id="newLot.manufacturerName"
-                            ng-options="manufacturer.name as manufacturer.name for manufacturer in manufacturers">
-                        <option value="" openlmis-message="placeholder.select.manufacturer"></option>
-                    </select>
-                </span>
-            </div>
-            <div class="span3">
-                <label id="newLotManufactureDateLabel" for="newLot.manufactureDate">
-                    <span openlmis-message="label.manufacture.date "></span>
-                </label>
-                <span class="position-relative">
-                                <input class="span12"  id="newLot.manufactureDate" name="newLot.manufactureDate" type="text"
-                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
-                                       ng-model="newLot.manufactureDate"/>
-                                </span>
-            </div>
-        </div>
-    </div>
-    <div class="modal-footer">
-        <input type="button" id="issueSubmit" class="btn btn-primary save-button"
-               ng-click="createLot()"
-               ng-disabled="newLotForm.$invalid"
-               openlmis-message="button.create"/>
-        <input type="button" ng-click="closeNewLotModal();" class="btn btn-cancel"
-               openlmis-message="button.cancel"/>
-    </div>
-
-</div>
-
-<!--Lot Modal Ends-->
 
 
 
@@ -475,8 +417,8 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
-                                        <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
+                                        <input ng-model="blAwbNumber"  type="text" maxlength="50" name="blAwbNumber" ng-required="true"/>
+                                        <span class="field-error" ng-show="asnForm.blAwbNumber.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
@@ -485,15 +427,15 @@
                                     <label id="parentLabel" >Destination Airport/Port</label>
 
                                     <div class="form-field row-fluid">
-                                        <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
+                                        <select ui-select2="{width: '90%'}" class="span11"  ng-model="portOfArrivalId"
                                                 openlmis-message="label.select.parent.zone">
                                             <option value=""></option>
-                                            <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
-                                                <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
-                                                        value="{{ parentGeoZone.code }}">
-                                                    {{ parentGeoZone.name }}
+
+                                                <option ng-repeat="port in ports"
+                                                        value="{{ port.id }}">
+                                                    {{ port.name }}
                                                 </option>
-                                            </optgroup>
+
                                         </select>
                                         <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
@@ -506,8 +448,8 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
-                                        <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
+                                        <input ng-model="flightVesselNumber" type="text" maxlength="50" name="flightVesselNumber" ng-required="true"/>
+                                        <span class="field-error" ng-show="asnForm.flightVesselNumber.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
@@ -519,11 +461,14 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input
-                                               id="receivingDate" name="receivingDate" type="text"
+                                        <input name="expectedArrivalDate"
+                                                type="text"
                                                ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                                ui-date-format="yy-mm-dd"
-                                               ng-model="occurredDate"/>
+                                               ng-model="expectedArrivalDate"
+                                        ng-required="true"/>
+                                        <span class="field-error" ng-show="asnForm.expectedArrivalDate.$error.required && showError"
+                                              openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
                         </div>
@@ -531,13 +476,12 @@
                                 <div class="span3">
                                     <label id="codeLabel" for="code">
                                         <span >Notes</span>
-                                        <span class="label-required"> *</span>
+<!--                                        <span class="label-required"> *</span>-->
                                     </label>
 
                                     <div class="form-field">
-                                        <textarea rows="3" ></textarea>
-                                        <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
-                                              openlmis-message="missing.value"></span>
+                                        <textarea rows="3" ng-model="notes" ></textarea>
+
                                     </div>
                                 </div>
                                 <div class="span3">
@@ -547,8 +491,8 @@
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="asn.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
-                                        <span class="field-error" ng-show="geoZoneForm.code.$error.required && showError"
+                                        <input ng-model="clearingAgent" name="clearingAgent" type="text" maxlength="50" ng-required="true"/>
+                                        <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
@@ -561,15 +505,16 @@
                                         <label id="parentLabel" >Upload Type</label>
 
                                         <div class="form-field row-fluid">
-                                            <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
-                                                    openlmis-message="label.select.parent.zone">
+                                            <select ui-select2="{width: '90%'}" class="span11"
+                                                    openlmis-message="label.select.parent.zone"
+                                            ng-model="uploadTypeId">
                                                 <option value=""></option>
-                                                <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
-                                                    <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
-                                                            value="{{ parentGeoZone.code }}">
-                                                        {{ parentGeoZone.name }}
+
+                                                    <option ng-repeat="doc in documentTypes"
+                                                            >
+                                                        {{ doc.name }}
                                                     </option>
-                                                </optgroup>
+
                                             </select>
                                             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                                   openlmis-message="missing.value"></span>
@@ -608,7 +553,7 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="save()"/>
+                           openlmis-message="button.save" ng-click="saveAsn()"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
 
@@ -625,6 +570,84 @@
 
         </div>
     </form>
+
+    <!--Lot Modal-->
+    <div id="popup-box" name="newLot"  modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
+        <div class="modal-header">
+            <div class="row-fluid">
+                <div class="span4">
+                    <h3 openlmis-message="header.vaccine.stock.create.lot"></h3>&nbsp;&nbsp;
+                </div>
+                <div class="span4">
+                    <h3><span openlmis-message="label.product"></span>:{{newLot.product.primaryName}}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="row-fluid ">
+                <div class="span3">
+                    <label id="newLotLotCodeLabel" for="newLot.lotCode">
+                        <span openlmis-message="label.batchId "></span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <span class="position-relative">
+                                    <input  ng-required="true" class="span12" type="text" ng-model="newLot.lotCode" value="" id="newLot.lotCode" />
+                                </span>
+                </div>
+
+                <div class="span3">
+                    <label id="newLotExpirationDateLabel" for="newLot.expirationDate">
+                        <span openlmis-message="label.expiryDate"></span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <span class="position-relative">
+                                <input ng-required="true" class="span12"
+                                       ng-required="true"
+                                       id="newLot.expirationDate"
+                                       name="expirationDate"
+                                       type="text"
+                                       ui-date-format="yy-mm-dd"
+                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, minDate:'today + 1'}"
+                                       ng-model="newLot.expirationDate"/>
+                                </span>
+                </div>
+                <div class="span3">
+                    <label id="newLotManufacturerLabel" for="newLot.manufacturerName">
+                        <span openlmis-message="label.manufacturer"></span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <span class="position-relative">
+                    <select style="width:90% !important;" ui-select2 ng-required="true" class="span12"
+                            ng-model="newLot.manufacturerName" id="newLot.manufacturerName"
+                            ng-options="manufacturer.name as manufacturer.name for manufacturer in manufacturers">
+                        <option value="" openlmis-message="placeholder.select.manufacturer"></option>
+                    </select>
+                </span>
+                </div>
+                <div class="span3">
+                    <label id="newLotManufactureDateLabel" for="newLot.manufactureDate">
+                        <span openlmis-message="label.manufacture.date "></span>
+                    </label>
+                    <span class="position-relative">
+                                <input class="span12"  id="newLot.manufactureDate" name="newLot.manufactureDate" type="text"
+                                       ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
+                                       ng-model="newLot.manufactureDate"/>
+                                </span>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="button" id="issueSubmit" class="btn btn-primary save-button"
+                   ng-click="createLot()"
+                   ng-disabled="newLotForm.$invalid"
+                   openlmis-message="button.create"/>
+            <input type="button" ng-click="closeNewLotModal();" class="btn btn-cancel"
+                   openlmis-message="button.cancel"/>
+        </div>
+
+    </div>
+
+    <!--Lot Modal Ends-->
 </div>
 
 
