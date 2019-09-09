@@ -58,6 +58,7 @@ public interface AsnMapper {
 
     @SelectProvider(type = SelectAsn.class, method = "getAsnBySearchParam")
     @Results(value = {
+            @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper.getByAsnId")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
