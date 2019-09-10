@@ -95,7 +95,9 @@
                             ng-model="supplierId">
                                 <option value=""></option>
                                     <option ng-repeat="supplier in suppliers"
-                                            value="{{ supplier.id }}">
+                                            value="{{ supplier.id }}"
+                                            ng-selected="supplierId== supplier.id"
+                                    >
                                         {{ supplier.name }}
                                     </option>
                             </select>
@@ -477,7 +479,9 @@
                                                 <option value=""></option>
 
                                                     <option ng-repeat="doc in documentTypes"
-                                                            value="{{ doc.id }}" >
+                                                            value="{{ doc.id }}"
+
+                                                    >
                                                         {{ doc.name }}
                                                     </option>
 
