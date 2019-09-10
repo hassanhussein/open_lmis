@@ -14,6 +14,7 @@
 function PreAdviceController($scope,$filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService
 ) {
+    $scope.displayDocumentTypes =  documentTypes;
     $scope.homeFacilityId = homeFacility.id;
     $scope.userPrograms = configurations.programs;
     $scope.manufacturers = manufacturers;
@@ -482,11 +483,6 @@ $scope.changeProductType=function(isVaccine){
         Preadvice.save({}, asn, success, error);
 
     }
-
-
-
- $scope.displayDocumentTypes =  documentTypes;
-
 
 
 
