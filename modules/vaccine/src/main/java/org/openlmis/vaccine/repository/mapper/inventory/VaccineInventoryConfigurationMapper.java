@@ -25,7 +25,7 @@ public interface VaccineInventoryConfigurationMapper {
 
     @Select("SELECT *" +
             " FROM vaccine_inventory_product_configurations " +
-            " WHERE productid=#{productId}")
+            " WHERE productid=#{productId} LIMIT 1 ")
     VaccineInventoryProductConfiguration getByProductId(Long productId);
 
     @Update("update vaccine_inventory_product_configurations " +
