@@ -459,7 +459,7 @@ $scope.changeProductType=function(isVaccine){
             portofarrival: $scope.portOfArrivalId,
             purchaseDocuments: [{
                 "documentType": {
-                    "id": 1,
+                    "id": $scope.uploadTypeId,
                     "description": "Testing",
                     "name": "Testing"
                 },
