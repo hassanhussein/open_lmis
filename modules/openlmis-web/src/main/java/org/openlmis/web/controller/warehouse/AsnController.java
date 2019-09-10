@@ -1,15 +1,18 @@
 package org.openlmis.web.controller.warehouse;
 
 import lombok.NoArgsConstructor;
+import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
+import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.DocumentType;
 import org.openlmis.vaccine.domain.wms.Port;
@@ -21,14 +24,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Integer.parseInt;
+import static org.openlmis.core.web.OpenLmisResponse.response;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.success;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
@@ -52,6 +72,26 @@ public class AsnController extends BaseController {
     ManufacturerService manufacturerService;
     @Autowired
     SupplyPartnerService supplyPartnerService;
+
+    @Autowired
+    MessageService messageService;
+
+    public static final String ERROR = "error";
+    public static final String SUCESS = "success";
+
+    public static final String UPLOAD_FILE_SUCCESS = "File uploaded successfully";
+
+    @Value("${wms.document.uploadLocation}")
+    private String fileStoreLocation;
+    @Value("${help.document.accessBaseUrl}")
+    private String fileAccessBaseUrl;
+
+
+    public static final String FILE_UPLOAD_LIST = "fileUploadList";
+    private static final Logger LOGGER = Logger.getLogger(AsnController.class);
+    public static final String SUCCESS = "success";
+
+
     @RequestMapping(value = "asn", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> save(@RequestBody Asn asn, Principal principal) {
         try {
@@ -120,6 +160,136 @@ public class AsnController extends BaseController {
         return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
     }
+
+    //Upload file function
+
+
+    @RequestMapping(value = "/uploadDocument", method = RequestMethod.POST)
+    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
+    public ResponseEntity<OpenLmisResponse> uploadDocuments(MultipartFile asnDocuments, String documentType, HttpServletRequest request) {
+        FileOutputStream outputStream = null;
+        try {
+            String fileName;
+            Long userId = loggedInUserId((Principal) request);
+            String filePath;
+            byte[] byteFile;
+            InputStream inputStream;
+            ASNDocument asnDocument = new ASNDocument();
+            inputStream = asnDocuments.getInputStream();
+            int val = inputStream.available();
+            byteFile = new byte[val];
+            inputStream.read(byteFile);
+            fileName = asnDocuments.getOriginalFilename();
+            filePath = this.fileStoreLocation + fileName;
+            asnDocument.setDocumentType(documentType);
+            asnDocument.setFileUrl(fileName);
+            asnDocument.setCreatedDate(new Date());
+            asnDocument.setCreatedBy(userId);
+            File file = new File(filePath);
+            File directory = new File(this.fileStoreLocation);
+
+            boolean isFileExist = directory.exists();
+            if (isFileExist) {
+                boolean isWritePermitted = directory.canWrite();
+                if (isWritePermitted) {
+                    outputStream = new FileOutputStream(file);
+
+                    outputStream.write(byteFile);
+                    outputStream.flush();
+                    outputStream.close();
+                    this.asnService.uploadDocument(asnDocument);
+                    return this.successPage(1);
+                } else {
+                    return errorPage("No Permission To Upload At Specified Path");
+                }
+            } else {
+                return errorPage("Upload Path do not Exist");
+            }
+        } catch (Exception ex) {
+            LOGGER.warn("Cannot upload in this location",ex);
+            return errorPage("Cannot upload in this location");
+        }
+
+    }
+
+
+
+
+    private  ResponseEntity<OpenLmisResponse> successPage(int recordsProcessed) {
+        Map<String, String> responseMessages = new HashMap<>();
+        String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsProcessed);
+        responseMessages.put(SUCCESS, message);
+        return response(responseMessages, OK, TEXT_HTML_VALUE);
+    }
+
+    private static ResponseEntity<OpenLmisResponse> errorPage(String message) {
+        Map<String, String> responseMessages = new HashMap<>();
+        responseMessages.put(ERROR, message);
+        return response(responseMessages, NOT_FOUND, TEXT_HTML_VALUE);
+    }
+
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
+
+        return  saveUploadedFiles(asnDocuments,this.fileStoreLocation);
+
+    }
+
+
+    private String saveUploadedFiles(MultipartFile file, String saveDirectory){
+        String fileName;
+        String filePath;
+        FileOutputStream outputStream = null;
+
+        if (file.isEmpty()) {
+            return "Failed to Store Empty File";
+        }
+
+
+        try {
+            InputStream inputStream;
+            String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
+            byte[] byteFile;
+            fileName = date+file.getOriginalFilename();
+            filePath = this.fileStoreLocation + fileName;
+            inputStream = file.getInputStream();
+            int val = inputStream.available();
+            byteFile = new byte[val];
+            inputStream.read(byteFile);
+
+            File newFile = new File(filePath);
+            File directory = new File(this.fileStoreLocation);
+
+            boolean isFileExist = directory.exists();
+            if(isFileExist){
+                boolean isWritePermitted = directory.canWrite();
+                if (isWritePermitted) {
+
+                    outputStream = new FileOutputStream(newFile);
+                    outputStream.write(byteFile);
+                    outputStream.flush();
+                    outputStream.close();
+
+                } else {
+                    return "No Permission To Upload At Specified Path";
+                }
+
+            }else {
+                return "Upload Path do not Exist";
+            }
+
+        } catch (Exception  ex){
+
+            LOGGER.warn("Cannot upload in this location",ex);
+            return "Cannot upload in this location";
+
+        }
+
+        return  "Successfully Uploaded";
+    }
+
+
 
     @RequestMapping(value = "/asn/{id}", method = RequestMethod.DELETE)
     public ResponseEntity deleteLocation(@PathVariable("id") Long id) {

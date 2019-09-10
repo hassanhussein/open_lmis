@@ -9,7 +9,7 @@
  */
 
 
-var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
+var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable','lr.upload','ngFileUpload','angularFileUpload']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/list', {controller: PreAdviceSearchController, templateUrl: 'partials/list.html'}).
@@ -19,5 +19,35 @@ var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','l
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.asnSelected = "selected";
 //      AuthorizationService.preAuthorize('MANAGE_ASN');
-    });
+    }).directive('validFile',[function() {
+                      return {
+                        require : 'ngModel',
+                        scope : {format: '@', upload : '&upload'},
+                        link : function(scope, el, attrs, ngModel) {
+                          // change event is fired when file is selected
+                          el.bind('change', function(event) {
+                            console.log(event.target.files[0]);
+                            scope.upload({file:event.target.files[0]});
+                            scope.$apply(function() {
+                              ngModel.$setViewValue(el.val());
+                              ngModel.$render();
+                            });
+                          });
+                        }
+                      };
+                    }]).directive('fileModel', [ '$parse', function($parse) {
+                           return {
+                               restrict : 'A',
+                               link : function(scope, element, attrs) {
+                                   var model = $parse(attrs.fileModel);
+                                   var modelSetter = model.assign;
+
+                                   element.bind('change', function() {
+                                       scope.$apply(function() {
+                                           modelSetter(scope, element[0].files[0]);
+                                       });
+                                   });
+                               }
+                           };
+                       } ]);
 

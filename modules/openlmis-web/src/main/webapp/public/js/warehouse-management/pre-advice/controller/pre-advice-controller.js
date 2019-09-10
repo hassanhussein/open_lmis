@@ -11,12 +11,15 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($scope, $filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot) {
+function PreAdviceController($scope,$filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+$rootScope,documentTypes,UploadFile,$http,docService
+) {
+    $scope.displayDocumentTypes =  documentTypes;
     $scope.homeFacilityId = homeFacility.id;
     $scope.userPrograms = configurations.programs;
     $scope.manufacturers = manufacturers;
     $scope.ports = asnLookups.ports;
-    $scope.documentTypes = asnLookups['document-types'];
+    $scope.documentTypes = documentTypes;
     $scope.suppliers = asnLookups.suppliers;
     $scope.productError = false;
     //console.log(configurations.productsConfiguration[0].product.id)
@@ -45,17 +48,17 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
 
     $scope.loadProducts($scope.homeFacilityId, 82);
     $scope.getProductFromId = function(productId) {
-        var editProduct = {}
+        var editProduct = {};
         angular.forEach($scope.configurations.productsConfiguration, function(product, value) {
             //        console.log(product.product.id)
             if (productId == product.product.id) {
                 //        console.log('am here')
-                editProduct = product
+                editProduct = product;
             }
-        })
-        return editProduct.product
+        });
+        return editProduct.product;
 
-    }
+    };
 
     if ($scope.asn) {
         $scope.editMode = true;
@@ -70,6 +73,8 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
         $scope.poDate = asn.podate;
         $scope.poNumber = asn.ponumber;
         $scope.portOfArrivalId = asn.portofarrival;
+        $scope.supplierId = asn.supplierid;
+        $scope.productsToAdd = [];
         $scope.supplierId = asn.supplier.id;
 
 
@@ -77,7 +82,7 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
         $scope.productsToAdd = []
         angular.forEach($scope.asn.asnLineItems, function(product, value) {
             editProduct = $scope.getProductFromId(product.productid);
-            var productLots = []
+            var productLots = [];
             angular.forEach(product.asnLots, function(lot, value) {
 
                 productLots.push({
@@ -89,9 +94,9 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
                         manufactureDate: lot.manufacturingdate
                     }
 
-                })
+                });
 
-            })
+            });
 
             $scope.productsToAdd.push({
                 id: 0,
@@ -484,11 +489,174 @@ $scope.changeProductType=function(isVaccine){
 
 
 
+          $scope.documentDetails = [ ];
+
+
+              $scope.addNew = function(documentDetail) {
+
+                  $scope.documentDetails.push({
+                        'id':"",
+                        'name': "",
+                        'fileType': "",
+                         'documentType':"",
+                         'file':""
+                    });
+                    prepareSaveDocument($scope.documentDetails);
+                };
+
+                $scope.remove = function(){
+                    var newDataList=[];
+                    $scope.selectedAll = false;
+                    angular.forEach($scope.documentDetails, function(selected){
+                        if(!selected.selected){
+                            newDataList.push(selected);
+                        }else {
+                        $scope.displayDocumentTypes.push(selected.documentType);
+                        }
+
+
+                    });
+                    $scope.documentDetails = newDataList;
+                };
+
+
+            $scope.checkAll = function () {
+                if (!$scope.selectedAll) {
+                    $scope.selectedAll = true;
+                } else {
+                    $scope.selectedAll = false;
+                }
+                angular.forEach($scope.documentDetails, function(documentDetail) {
+                    documentDetail.selected = $scope.selectedAll;
+                });
+            };
+
+           $scope.loadDocumentDetails = function (data){
+
+
+
+           }
+
+          $scope.uploadFile = function(element) {
+
+
+              //$scope.documentDetail.name = element;
+
+
+
+             // console.log(element);
+            }
+
+
+          $scope.doUpload = function (document) {
+
+           $scope.file = document;
+
+         console.log(document);
+
+
+          };
+           $scope.disableSelectedRows = false;
+          function removeItemFromList(document) {
+
+
+           var i = $scope.displayDocumentTypes.length;
+           var dataToDisplay = [];
+
+           while(i--) {
+            $scope.displayDocumentTypes[i].disableSelectedRows = false;
+            var name = $scope.displayDocumentTypes[i];
+
+            if(document.name === name.name) {
+               $scope.displayDocumentTypes[i].disableSelectedRows = true;
+
+               $scope.displayDocumentTypes.splice(i,1);
+               dataToDisplay = $scope.displayDocumentTypes;
+            }
+
+
+           }
+                        console.log(dataToDisplay);
+
+          }
+
+          function prepareSaveDocument(selectedDocuments) {
+
+            var dataToBeUploaded = [];
+
+            selectedDocuments.forEach(function(document) {
+
+               if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
+                  removeItemFromList(document.documentType);
+                 getFile(document.file, document.documentType);
+               //  createPost(document.file);
+                console.log(document.file);
+
+             //    console.log(document.documentType);
+
+               //input = document.createElement('input');
+
+
+               }
+
+            });
+
+           }
+
+
+  var getFile = function(data,documentType){
+       console.log(data);
+
+  var file = data;
+
+  docService.saveDoc(file, documentType).then(
+  function (response) {
+  console.log(response);
+  $scope.message = "File uploaded successfully";
+
+  $http.get("/rest-api/warehouse/upload").success(
+  function(response) {
+
+  $rootScope.docList = response;
+
+  });
+  },
+  function (errResponse) {
+
+                           }
+                       );
+
+
+  }
+
+
+
+
+
 
 }
 
 
 PreAdviceController.resolve = {
+
+   documentTypes: function ($q, $timeout, $route, DocumentTypes) {
+         var deferred = $q.defer();
+         $timeout(function () {
+             DocumentTypes.get({},function (data) {
+                 console.log(data);
+                var documents = [];
+
+                  if(!isUndefined(data.documents)){
+                   documents = data.documents;
+                  }
+
+                 deferred.resolve(documents);
+             });
+         }, 100);
+         return deferred.promise;
+     },
+
+
     configurations: function($q, $timeout, AllVaccineInventoryConfigurations) {
         var deferred = $q.defer();
         var configurations = {};

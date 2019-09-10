@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.asn;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.springframework.stereotype.Repository;
@@ -76,6 +77,14 @@ public interface AsnMapper {
 
     @Delete("delete from asns where id = #{id}")
     void deleteById(@Param("id") Long id);
+
+
+    @Insert({"INSERT INTO wms_documents ",
+            "( documentType, url, createdDate,createdBy) ",
+            "VALUES",
+            "( #{documentType}, #{fileUrl},#{createdDate}, #{createdBy})"})
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
+    void uploadDocument(ASNDocument asnDocument);
 
     class SelectAsn {
         @SuppressWarnings(value = "unused")

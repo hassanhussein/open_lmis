@@ -9,11 +9,41 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('wms', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover', 'textAngular'])
+angular.module('wms', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap', 'nsPopover', 'textAngular','lr.upload','ngFileUpload','angularFileUpload'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:WarehouseManagementController, templateUrl:'partials/list.html',reloadOnSearch:false}).
             otherwise({redirectTo:'/list'});
     }]).config(function(angularCombineConfigProvider) {
         angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
-    });
+    }).directive('validFile',[function() {
+               return {
+                 require : 'ngModel',
+                 scope : {format: '@', upload : '&upload'},
+                 link : function(scope, el, attrs, ngModel) {
+                   // change event is fired when file is selected
+                   el.bind('change', function(event) {
+                     console.log(event.target.files[0]);
+                     scope.upload({file:event.target.files[0]});
+                     scope.$apply(function() {
+                       ngModel.$setViewValue(el.val());
+                       ngModel.$render();
+                     });
+                   });
+                 }
+               };
+             }]).directive('fileModel', [ '$parse', function($parse) {
+                    return {
+                        restrict : 'A',
+                        link : function(scope, element, attrs) {
+                            var model = $parse(attrs.fileModel);
+                            var modelSetter = model.assign;
+
+                            element.bind('change', function() {
+                                scope.$apply(function() {
+                                    modelSetter(scope, element[0].files[0]);
+                                });
+                            });
+                        }
+                    };
+                } ]);
