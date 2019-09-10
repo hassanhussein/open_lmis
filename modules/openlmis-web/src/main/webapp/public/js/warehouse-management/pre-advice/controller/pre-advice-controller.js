@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($scope,$filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController($scope,$filter, $location,$timeout, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService
 ) {
     $scope.displayDocumentTypes =  documentTypes;
@@ -414,6 +414,8 @@ $scope.changeProductType=function(isVaccine){
 
     $scope.saveAsn = function(status) {
 
+    console.log(status);
+
         $scope.validateProduct();
         //                console.log($scope.asnForm)
         if ($scope.asnForm.$error.required) {
@@ -478,16 +480,14 @@ $scope.changeProductType=function(isVaccine){
         }
 
 
-        //            console.log(asn)
+               console.log(asn)
 
         Preadvice.save({}, asn, success, error);
 
     }
 
 
-
-          $scope.documentDetails = [ ];
-
+         $scope.documentDetails = [];
 
               $scope.addNew = function(documentDetail) {
 
@@ -530,56 +530,42 @@ $scope.changeProductType=function(isVaccine){
 
            $scope.loadDocumentDetails = function (data){
 
-
-
            }
 
           $scope.uploadFile = function(element) {
 
-
-              //$scope.documentDetail.name = element;
-
-
-
-             // console.log(element);
-            }
+          }
 
 
           $scope.doUpload = function (document) {
 
-           $scope.file = document;
-
-         console.log(document);
-
+          $scope.file = document;
 
           };
            $scope.disableSelectedRows = false;
           function removeItemFromList(document) {
 
-
            var i = $scope.displayDocumentTypes.length;
-           var dataToDisplay = [];
 
            while(i--) {
+
             $scope.displayDocumentTypes[i].disableSelectedRows = false;
+
             var name = $scope.displayDocumentTypes[i];
 
             if(document.name === name.name) {
                $scope.displayDocumentTypes[i].disableSelectedRows = true;
 
                $scope.displayDocumentTypes.splice(i,1);
-               dataToDisplay = $scope.displayDocumentTypes;
+
             }
 
 
            }
-                        console.log(dataToDisplay);
 
           }
 
           function prepareSaveDocument(selectedDocuments) {
-
-            var dataToBeUploaded = [];
 
             selectedDocuments.forEach(function(document) {
 
@@ -588,11 +574,6 @@ $scope.changeProductType=function(isVaccine){
                  getFile(document.file, document.documentType);
                //  createPost(document.file);
                 console.log(document.file);
-
-             //    console.log(document.documentType);
-
-               //input = document.createElement('input');
-
 
                }
 
@@ -608,8 +589,16 @@ $scope.changeProductType=function(isVaccine){
 
   docService.saveDoc(file, documentType).then(
   function (response) {
-  console.log(response);
-  $scope.message = "File uploaded successfully";
+
+  $scope.message = response;
+  $scope.openMessage = true;
+
+  $timeout(function() {
+
+    $scope.openMessage = false;
+
+  },2000);
+
 
   $http.get("/rest-api/warehouse/upload").success(
   function(response) {
@@ -622,8 +611,6 @@ $scope.changeProductType=function(isVaccine){
 
                            }
                        );
-
-
   }
 
 

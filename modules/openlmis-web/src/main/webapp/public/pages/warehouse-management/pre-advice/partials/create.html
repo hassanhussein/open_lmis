@@ -506,7 +506,7 @@
                                                 </table>
 
                                                 <div class="button-row">
-                                                    <span>{{message}}</span>
+                                                    <span style="color:#276E72" ng-show="openMessage">{{message}}</span>
                                                     <input ng-hide="!documentDetails.length" type="button" class="btn btn-danger pull-right" ng-click="remove()" value="Remove">
                                                     <input type="submit" ng-click="addNew(this);" style="margin-right:10px" class="btn btn-primary addnew pull-right btn-upload" value="Add New">
                                                 </div>
