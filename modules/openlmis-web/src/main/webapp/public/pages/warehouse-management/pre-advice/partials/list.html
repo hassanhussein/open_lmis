@@ -70,7 +70,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="asn in asnList">
+            <tr ng-repeat="asn in asnList" ng-init="arrayIndex=$index">
 
                 <td  ng-bind="asn.asnnumber"></td>
                 <td  ng-bind="asn.asndate"></td>
@@ -78,10 +78,10 @@
                 <td  ng-bind="asn.supplierid"></td>
                 <td  ng-bind="asn.status"></td>
                 <td>
-                    <a  href="" ng-click="editPreadvice(asn.id)" openlmis-message="update"></a>
+                    <a  href="" ng-click="edit(asn.id)" ng-if="asn.status=='Draft'" openlmis-message="update"></a>
                 </td>
                 <td>
-                    <a  href="" ng-click="deletePreadvice(asn)" openlmis-message="delete"></a>
+                    <a  href="" ng-click="deleteAsn(asn.id,arrayIndex)" ng-if="asn.status=='Draft'" openlmis-message="delete"></a>
                 </td>
             </tr>
 
