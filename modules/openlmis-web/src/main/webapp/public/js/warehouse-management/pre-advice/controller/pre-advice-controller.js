@@ -64,6 +64,7 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
         $scope.blAwbNumber = asn.blawbnumber;
         $scope.clearingAgent = asn.clearingagent;
         $scope.expectedArrivalDate = asn.expectedarrivaldate;
+        $scope.expectedDeliveryDate = asn.expecteddeliverydate;
         $scope.flightVesselNumber = asn.flightvesselnumber;
         $scope.notes = asn.note;
         $scope.poDate = asn.podate;
@@ -99,7 +100,7 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
                 minMonthsOfStock: 0,
                 eop: null,
                 lots: productLots,
-                unitPrice: 0
+                unitPrice: product.unitprice,
 
             })
 
@@ -443,7 +444,8 @@ $scope.changeProductType=function(isVaccine){
             asnLineItems.push({
                 asnLots: asnLots,
                 lotflag: true,
-                productid: product.programProduct.product.id
+                productid: product.programProduct.product.id,
+                unitprice:product.unitPrice
             })
 
 
@@ -455,6 +457,7 @@ $scope.changeProductType=function(isVaccine){
             blawbnumber: $scope.blAwbNumber,
             clearingagent: $scope.clearingAgent,
             expectedarrivaldate: $scope.expectedArrivalDate,
+            expecteddeliverydate:$scope.expectedDeliveryDate,
             flightvesselnumber: $scope.flightVesselNumber,
             note: $scope.notes,
             podate: $scope.poDate,
