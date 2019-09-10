@@ -12,14 +12,14 @@ import java.util.Map;
 @Repository
 public interface AsnMapper {
     @Insert(" INSERT INTO asns (ponumber,podate,supplierid,asnnumber,asndate,blawbnumber,flightvesselnumber,portofarrival,expectedarrivaldate, " +
-            "clearingagent,status,note,createdBy, createdDate,modifiedBy,modifiedDate)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
-            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent},#{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
+            "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
+            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
     @Options(useGeneratedKeys = true)
     Long insert(Asn asn);
 
     @Update(" update asns set  ponumber = #{ponumber}, " +
             " podate = #{podate}, supplierid = #{supplierid}, asnnumber =#{asnnumber}, asndate = #{asndate}," +
-            " blawbnumber = #{blawbnumber}, flightvesselnumber = #{flightvesselnumber}, portofarrival =#{portofarrival}, expectedarrivaldate = #{expectedarrivaldate}," +
+            " blawbnumber = #{blawbnumber}, flightvesselnumber = #{flightvesselnumber}, portofarrival =#{portofarrival}, expecteddeliverydate = #{expecteddeliverydate}, expectedarrivaldate = #{expectedarrivaldate}," +
             " clearingagent = #{clearingagent}, status = #{status}, note =#{note}, " +
             " modifiedDate = now(), modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(Asn asn);
