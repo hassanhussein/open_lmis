@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.serializer.DateDeserializer;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Asn extends BaseModel {
     private Date podate;
 
     private Long supplierid;
+    private SupplyPartner supplier;
     private String asnnumber;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

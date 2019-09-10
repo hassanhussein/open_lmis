@@ -563,3 +563,80 @@ services.factory("Preadvice", function ($resource) {
 services.factory("PreadviceTemplate", function ($resource) {
     return $resource('/rest-api/warehouse/asn/template.json', {}, {});
 });
+
+services.factory("AsnLookups", function ($resource) {
+    return $resource('/rest-api/warehouse/asn/template.json', {}, {});
+});
+
+services.factory("DocumentTypes", function ($resource) {
+    return $resource('/rest-api/warehouse/document-types.json', {}, {});
+});
+
+services.factory("AllDocumentTypes", function ($resource) {
+    return $resource('/rest-api/warehouse/asn/all-document-types.json', {}, {});
+});
+
+
+services.factory('UploadFile', function ($resource) {
+
+return $resource('/rest-api/warehouse/uploadDocument.json', {}, {
+                 create: {
+                     method: "POST",
+                     transformRequest: angular.identity,
+                     headers: { 'Content-Type': undefined }
+             }
+
+});
+
+});
+
+services.factory('docService', ['$http', '$q', function ($http, $q) {
+
+                     var factory = {
+                         saveDoc: saveDoc,
+                         findDoc: findDoc
+                     };
+
+                     return factory;
+
+                     function saveDoc(file,documentType) {
+                         var deferred = $q.defer();
+                         var formData = new FormData();
+                         formData.append('file', file);
+                         formData.append('documentType', documentType);
+
+                         $http.post('/rest-api/warehouse/'+'upload', formData,{
+                             transformRequest : angular.identity,
+                             headers : {
+                                 'Content-Type' : undefined
+                             }})
+                             .then(
+                                 function (response) {
+
+                                     deferred.resolve(response.data);
+                                 },
+                                 function (errResponse) {
+                                     alert(errResponse);
+                                     console.log(errResponse);
+                                     deferred.reject(errResponse);
+                                 }
+                             );
+                         return deferred.promise;
+                     }
+
+                     function findDoc(docId) {
+                         var deferred = $q.defer();
+                         $http.get(urls.DOC_URL + '/'+docId)
+                             .then(
+                                 function (response) {
+                                     deferred.resolve(response.data);
+                                 },
+                                 function (errResponse) {
+                                     alert(errResponse.data.errorMessage);
+                                     deferred.reject(errResponse);
+                                 }
+                             );
+                         return deferred.promise;
+                     }
+                 }
+ ]);

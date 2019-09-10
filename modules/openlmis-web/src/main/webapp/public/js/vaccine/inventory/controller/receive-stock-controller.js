@@ -26,9 +26,12 @@ function ReceiveStockController($scope,$filter, Lot,StockCards,manufacturers,Upd
     $scope.isTransferIn=($location.url() ==='/transfer-in')?true:undefined;
 //    console.log($location.url());
 
+
+
     $scope.loadProducts=function(facilityId,programId){
         FacilityTypeAndProgramProducts.get({facilityId:facilityId, programId:programId},function(data){
                 var allProducts=data.facilityProduct;
+                console.log(allProducts);
                 $scope.allProducts=_.sortBy(allProducts,function(product){
                     return product.programProduct.product.id;
                 });

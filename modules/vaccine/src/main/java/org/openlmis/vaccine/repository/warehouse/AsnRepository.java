@@ -54,4 +54,8 @@ public class AsnRepository {
       this.mapper.uploadDocument(asnDocument);
 
     }
+
+    public void deleteById(Long id) {
+        mapper.deleteById(id);
+    }
 }

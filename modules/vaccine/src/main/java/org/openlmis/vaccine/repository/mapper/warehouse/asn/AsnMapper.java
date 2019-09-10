@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.asn;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.vaccine.domain.wms.ASNDocument;
+import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +30,8 @@ public interface AsnMapper {
             @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper.getByAsnId")),
+            @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId"))
     })
@@ -39,6 +42,8 @@ public interface AsnMapper {
             @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper.getByAsnId")),
+            @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId"))
     })
@@ -59,13 +64,20 @@ public interface AsnMapper {
 
     @SelectProvider(type = SelectAsn.class, method = "getAsnBySearchParam")
     @Results(value = {
+            @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper.getByAsnId")),
+            @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId"))
     })
     List<Asn> search(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
                      RowBounds rowBounds);
+
+    @Delete("delete from asns where id = #{id}")
+    void deleteById(@Param("id") Long id);
+
 
     @Insert({"INSERT INTO wms_documents ",
             "( documentType, url, createdDate,createdBy) ",

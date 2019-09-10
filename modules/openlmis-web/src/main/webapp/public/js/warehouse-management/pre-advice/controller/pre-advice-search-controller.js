@@ -19,8 +19,9 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
   });
 
   $scope.edit = function (id) {
-    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
-    navigateBackService.setData(data);
+//    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
+//    navigateBackService.setData(data);
+    console.log(id)
     $location.path('edit/' + id);
   };
 
@@ -60,4 +61,22 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
       $scope.search(1);
     }
   };
+
+
+
+  $scope.deleteAsn=function(id,index)
+      {
+           var callBack=function(results){
+             if(results){
+                $scope.asnList.splice(index,1);
+             }
+           };
+
+           var options = {
+                          id: "confirmDialog",
+                          header: "Confirm Remove ASN",
+                          body: "Are you sure you want to delete the ASN"
+                      };
+           OpenLmisDialog.newDialog(options, callBack, $dialog);
+       };
 }

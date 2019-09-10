@@ -100,4 +100,8 @@ public class AsnService {
         repository.uploadDocument(asnDocument);
         return null;
     }
+
+    public void deleteById(Long id) {
+       repository.deleteById(id);
+    }
 }
