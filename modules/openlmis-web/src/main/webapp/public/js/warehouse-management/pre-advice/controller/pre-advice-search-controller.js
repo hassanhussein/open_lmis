@@ -21,7 +21,7 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
   $scope.edit = function (id) {
 //    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
 //    navigateBackService.setData(data);
-    console.log(id)
+//    console.log(id)
     $location.path('edit/' + id);
   };
 
