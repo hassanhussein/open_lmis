@@ -8,7 +8,6 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.web.OpenLmisResponse;
-import org.openlmis.help.domain.HelpDocument;
 import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.controller.BaseController;
@@ -21,7 +20,6 @@ import org.openlmis.vaccine.service.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,8 +27,14 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +78,7 @@ public class AsnController extends BaseController {
 
     public static final String UPLOAD_FILE_SUCCESS = "File uploaded successfully";
 
-    @Value("${help.document.uploadLocation}")
+    @Value("${wms.document.uploadLocation}")
     private String fileStoreLocation;
     @Value("${help.document.accessBaseUrl}")
     private String fileAccessBaseUrl;
@@ -206,6 +210,8 @@ public class AsnController extends BaseController {
     }
 
 
+
+
     private  ResponseEntity<OpenLmisResponse> successPage(int recordsProcessed) {
         Map<String, String> responseMessages = new HashMap<>();
         String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsProcessed);
@@ -217,6 +223,67 @@ public class AsnController extends BaseController {
         Map<String, String> responseMessages = new HashMap<>();
         responseMessages.put(ERROR, message);
         return response(responseMessages, NOT_FOUND, TEXT_HTML_VALUE);
+    }
+
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
+
+        return  saveUploadedFiles(asnDocuments,this.fileStoreLocation);
+
+    }
+
+
+    private String saveUploadedFiles(MultipartFile file, String saveDirectory){
+        String fileName;
+        String filePath;
+        FileOutputStream outputStream = null;
+
+        if (file.isEmpty()) {
+            return "Failed to Store Empty File";
+        }
+
+
+        try {
+            InputStream inputStream;
+            String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
+            byte[] byteFile;
+            fileName = date+file.getOriginalFilename();
+            filePath = this.fileStoreLocation + fileName;
+            inputStream = file.getInputStream();
+            int val = inputStream.available();
+            byteFile = new byte[val];
+            inputStream.read(byteFile);
+
+            File newFile = new File(filePath);
+            File directory = new File(this.fileStoreLocation);
+
+            boolean isFileExist = directory.exists();
+            if(isFileExist){
+                boolean isWritePermitted = directory.canWrite();
+                if (isWritePermitted) {
+
+                    outputStream = new FileOutputStream(newFile);
+                    outputStream.write(byteFile);
+                    outputStream.flush();
+                    outputStream.close();
+
+                } else {
+                    return "No Permission To Upload At Specified Path";
+                }
+
+            }else {
+                return "Upload Path do not Exist";
+            }
+
+        } catch (Exception  ex){
+
+            LOGGER.warn("Cannot upload in this location",ex);
+            return "Cannot upload in this location";
+
+        }
+
+        return  "Successfully Uploaded";
     }
 
 
