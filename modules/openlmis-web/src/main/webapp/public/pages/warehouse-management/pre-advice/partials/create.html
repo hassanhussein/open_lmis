@@ -95,7 +95,9 @@
                             ng-model="supplierId">
                                 <option value=""></option>
                                     <option ng-repeat="supplier in suppliers"
-                                            value="{{ supplier.id }}">
+                                            value="{{ supplier.id }}"
+                                            ng-selected="supplierId== supplier.id"
+                                    >
                                         {{ supplier.name }}
                                     </option>
                             </select>
@@ -465,8 +467,7 @@
                             </div>
                             </div>
                         <div class="tab-pane" id="tab3">
-
-                            <div class="row clearfix">
+                            <div class="form-row clearfix">
                                 <div class="span8">
                                     <div class="panel panel-default">
                                         <div class="panel-body">
@@ -513,7 +514,10 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
+
+
 
                         </div>
 

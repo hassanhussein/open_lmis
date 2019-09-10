@@ -38,6 +38,10 @@ public class Asn extends BaseModel {
     @JsonDeserialize(using = DateDeserializer.class)
     private Date expectedarrivaldate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = DateDeserializer.class)
+    private Date expecteddeliverydate;
+
     private String clearingagent;
 
     private String status;

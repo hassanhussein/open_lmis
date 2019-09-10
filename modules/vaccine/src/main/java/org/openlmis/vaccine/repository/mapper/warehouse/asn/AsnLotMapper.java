@@ -9,14 +9,14 @@ import java.util.List;
 @Repository
 public interface AsnLotMapper {
 
-    @Insert(" INSERT INTO asn_lots (asndetailid, lotnumber, serialnumber, expirydate, manufacturingdate, quantity, " +
+    @Insert(" INSERT INTO asn_lots (asndetailid, lotnumber, serialnumber, expirydate, manufacturingdate, quantity, unitprice, " +
             "createdBy, createdDate,modifiedBy,modifiedDate) " +
-            " VALUES(#{asnLineItem.id}, #{lotnumber}, #{serialnumber}, #{expirydate}, #{manufacturingdate}, #{quantity}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
+            " VALUES(#{asnLineItem.id}, #{lotnumber}, #{serialnumber}, #{expirydate}, #{manufacturingdate}, #{quantity}, #{unitprice}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer insert(AsnLot asnLot);
 
     @Update(" update asn_lots set  asndetailid = #{asnLineItem.id}, lotnumber = #{lotnumber}, serialnumber = #{serialnumber}, expirydate = #{expirydate}, " +
-            " manufacturingdate = #{manufacturingdate}, quantity = #{quantity}, "+
+            " manufacturingdate = #{manufacturingdate}, quantity = #{quantity}, unitprice = #{unitprice}, "+
             " modifiedDate = now(), " +
             " modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(AsnLot asnLot);

@@ -21,6 +21,8 @@ public class AsnLot extends BaseModel {
 
     String serialnumber;
 
+    Double unitprice;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = DateDeserializer.class)
     private Date expirydate;
