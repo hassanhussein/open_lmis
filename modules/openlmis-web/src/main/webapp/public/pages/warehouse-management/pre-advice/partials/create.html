@@ -139,12 +139,12 @@
 
                 <div class="form-row clearfix">
 
-                    <div class="form-cell" ng-init="switch.Data=1">
+                    <div class="form-cell" ng-init="switch.Data=2">
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switch.Data"  value="1"> Vaccines/Associated Products
+                            <input type="radio" ng-model="switch.Data"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switch.Data"   value="2"> Other Items
+                            <input type="radio" ng-model="switch.Data"   value="1" ng-click="changeProductType(false)" > Other Items
                         </label>
 
                     </div>
@@ -166,248 +166,208 @@
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab1">
-<!--                            <div ng-switch="switch.Data" id="wrapper">-->
-<!--                                <div ng-switch-when="1">-->
-<!--                                    <table class="table table-striped">-->
-<!--                                        <thead>-->
-<!--                                        <tr>-->
-<!--                                            <th>Product</th>-->
-<!--                                            <th>Unit of Measurement</th>-->
-<!--                                            <th>Quantity</th>-->
-<!--                                            <th>Unit Price</th>-->
-<!--                                            <th>Total Cost</th>-->
-<!--                                            <th>Action</th>-->
-<!--                                            <th></th>-->
-
-<!--                                        </tr>-->
-<!--                                        </thead>-->
-<!--                                        <tbody id="append-element">-->
-<!--                                        <tr data-ng-repeat="product in products">-->
-<!--                                            <td>-->
-<!--                                                <select>-->
-<!--                                                    <option>BCG</option>-->
-<!--                                                    <option>OPV</option>-->
-<!--                                                </select>-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                Doses-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                <input type="number" ng-model="product.quantity">-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                <input type="number" ng-model="product.unitPrice">-->
-<!--                                            </td>-->
-<!--                                            <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0}}</td>-->
-<!--                                            <td><span class="btn btn-link">Lot</span></td>-->
-<!--                                            <td ng-show="$last"><span class="btn btn-danger" ng-click="removeProduct('vaccine')"><i class="icon-remove"></i></i></span></td>-->
-<!--                                        </tr>-->
-
-<!--                                        </tbody>-->
+                            <div ng-switch="switch.Data" id="wrapper">
+                                <div ng-switch-when="1">
+                                    <table class="table table-bordered receive">
+                                        <thead>
+                                        <tr class="gradient-header">
+                                            <th>Product</th>
+                                            <th>Unit of Measurement</th>
+                                            <th>Quantity</th>
+                                            <th>Unit Price</th>
+                                            <th>Total Cost</th>
+                                            <th>Action</th>
 
 
+                                        </tr>
+                                        </thead>
+                                        <tbody id="append-element">
+                                        <tr data-ng-repeat="product in productsToAdd">
+                                            <td>
+                                                <select>
+                                                    <option>Laptop</option>
+                                                    <option>Scanner</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                Doses
+                                            </td>
+                                            <td>
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.quantity">
+                                            </td>
+                                            <td>
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice">
+                                            </td>
+                                            <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
 
+                                            <td ><span class="btn btn-danger" ng-click="removeProduct('vaccine')"><i class="icon-remove"></i></i></span></td>
+                                        </tr>
 
-<!--                                        <tfoot>-->
-<!--                                        <tr>-->
-<!--                                            <td>-->
-<!--                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct('vaccine')">Add Product</button>-->
-<!--                                            </td>-->
-<!--                                        </tr>-->
-<!--                                        </tfoot>-->
-<!--                                    </table>-->
-<!--                                </div>-->
-<!--                                <div ng-switch-when="2">-->
-<!--                                    <table class="table table-striped">-->
-<!--                                        <thead>-->
-<!--                                        <tr>-->
-<!--                                            <th>Product</th>-->
-<!--                                            <th>Unit of Measurement</th>-->
-<!--                                            <th>Quantity</th>-->
-<!--                                            <th>Unit Price</th>-->
-<!--                                            <th>Total Cost</th>-->
+                                        </tbody>
 
-<!--                                            <th></th>-->
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="3">
+                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct('vaccine')">Add Product</button>
 
-<!--                                        </tr>-->
-<!--                                        </thead>-->
-<!--                                        <tbody id="append-element">-->
-<!--                                        <tr data-ng-repeat="product in otherProducts">-->
-<!--                                            <td>-->
-<!--                                                <select>-->
-<!--                                                    <option>Laptop</option>-->
-<!--                                                    <option>SCanner</option>-->
-<!--                                                </select>-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                Units-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                <input type="number" ng-model="product.quantity">-->
-<!--                                            </td>-->
-<!--                                            <td>-->
-<!--                                                <input type="number" ng-model="product.unitPrice">-->
-<!--                                            </td>-->
-<!--                                            <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0}}</td>-->
-
-<!--                                            <td ng-show="$last"><span class="btn btn-danger" ng-click="removeProduct('other')"><i class="icon-remove"></i></i></span></td>-->
-<!--                                        </tr>-->
-
-<!--                                        </tbody>-->
+                                            </td>
 
 
 
 
-<!--                                        <tfoot>-->
-<!--                                        <tr>-->
-<!--                                            <td>-->
-<!--                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct('other')">Add Product</button>-->
-<!--                                            </td>-->
-<!--                                        </tr>-->
-<!--                                        </tfoot>-->
-<!--                                    </table>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                                            <th >Grand Total</th>
+
+                                            <td colspan="3">{{grandTotal() | number}}</td>
 
 
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
 
+                                <div ng-switch-when="2">
+                                    <div  class="alert alert-danger" ng-show="productError"
+                                    >Atleast One product with atleast One batch is required</div>
+                                    <table  class="table table-bordered receive">
+                                        <thead>
+                                        <tr class="gradient-header">
+                                            <th  style="width:250px !important;max-width:250px !important" class="col-product " openlmis-message="label.products"></th>
+                                            <th class="col-product" style="max-width:160px !important; width:160px !important">
+                                                <span openlmis-message="label.unit.of.measure"></span></th>
+                                            <th style="width:300px !important;max-width:300px !important" class="col-lot" ><span openlmis-message="label.stock.batch"></span></th>
+                                            <th class="col-quantity" ><span
+                                                    openlmis-message="label.stock.quantity"></span></th>
+                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Unit Price</th>
+                                            <th  class="col-add-lot style="width:100px !important;max-width:100px !important">Total Cost</th>
+                                            <th style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
+                                            <th class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
 
-                            <div>
-                                <div class="alert alert-danger" ng-show="productError"
-                                     >Atleast One product with atleast One batch is required</div>
-                                <table  class="table table-bordered receive">
-                                    <thead>
-                                    <tr class="gradient-header">
-                                        <th  style="width:250px !important;max-width:250px !important" class="col-product " openlmis-message="label.products"></th>
-                                        <th class="col-product" style="max-width:160px !important; width:160px !important">
-                                            <span openlmis-message="label.unit.of.measure"></span></th>
-                                        <th style="width:300px !important;max-width:300px !important" class="col-lot" ng-hide="switch.Data==2"><span openlmis-message="label.stock.batch"></span></th>
-                                        <th class="col-quantity" ><span
-                                                openlmis-message="label.stock.quantity"></span></th>
-                                        <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Unit Price</th>
-                                        <th  class="col-add-lot style="width:100px !important;max-width:100px !important">Total Cost</th>
-                                        <th style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
-                                        <th class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody >
+                                        <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
+                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
+                                                <select style="width:90% !important;" ui-select2 ng-change="loadProductLots(product.programProduct.product)"
+                                                        ng-if="!editMode"
+                                                        ng-model="product.programProduct"
+                                                        ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
+                                                    <option value="" openlmis-message="placeholder.select.product"></option>
+                                                </select>
+                                                <div class="row-fluid" ng-if="editMode">
+                                                    {{product.programProduct.primaryName}}
+                                                </div>
+                                            </td>
 
-                                    </tr>
-                                    </thead>
-                                    <tbody >
-                                    <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
-                                        <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
-                                            <select style="width:90% !important;" ui-select2 ng-change="loadProductLots(product.programProduct.product)"
-                                                    ng-if="!editMode"
-                                                    ng-model="product.programProduct"
-                                                    ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
-                                                <option value="" openlmis-message="placeholder.select.product"></option>
-                                            </select>
-                                            <div class="row-fluid" ng-if="editMode">
-                                                {{product.programProduct.primaryName}}
-                                            </div>
-                                        </td>
-
-                                        <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
-                                            <span ng-bind="product.programProduct.product.dosageUnit.code" ng-if="!editMode"></span>
-                                            <span class="row-fluid" ng-if="editMode">
+                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
+                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ng-if="!editMode"></span>
+                                                <span class="row-fluid" ng-if="editMode">
                                                 {{product.programProduct.dosageUnit.code}}
                                             </span>
-                                        </td>
+                                            </td>
 
-                                        <td >
-                                            <div class="row-fluid" ng-if="!product.lots[0].displayCodeOnly" >
-                                                <div  style="width:20%; float:left;margin-top:1px">
-                                                    <input type="button" ng-disabled="!product.programProduct.product"
-                                                           class="btn btn-primary btn-small"
-                                                           href ng-click="showNewLotModal(product.programProduct.product)"
-                                                           openlmis-message="button.create"
-                                                    />
+                                            <td >
+                                                <div class="row-fluid" ng-if="!product.lots[0].displayCodeOnly" >
+                                                    <div  style="width:20%; float:left;margin-top:1px">
+                                                        <input type="button" ng-disabled="!product.programProduct.product"
+                                                               class="btn btn-primary btn-small"
+                                                               href ng-click="showNewLotModal(product.programProduct.product)"
+                                                               openlmis-message="button.create"
+                                                        />
+                                                    </div>
+                                                    <div style="width:80%; float:left">
+                                                        <select  ui-select2
+                                                                 style="min-width:200px !important"
+                                                                 ng-model="product.lots[0].info"
+                                                                 ng-disabled="!product.programProduct.product"
+                                                                 ng-options="obj.lotCode for obj in lotsToDisplay"
+
+                                                        >
+                                                            <option value="" openlmis-message="placeholder.select.batch"></option>
+
+                                                        </select>
+                                                    </div>
+
                                                 </div>
-                                                <div style="width:80%; float:left">
-                                                    <select  ui-select2
-                                                             style="min-width:200px !important"
-                                                             ng-model="product.lots[0].info"
-                                                             ng-disabled="!product.programProduct.product"
-                                                             ng-options="obj.lotCode for obj in lotsToDisplay"
 
-                                                            >
-                                                        <option value="" openlmis-message="placeholder.select.batch"></option>
+                                                <div ng-if="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
 
-                                                    </select>
-                                                </div>
+                                            </td>
+                                            <td>
+                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info" ng-model="product.lots[0].quantity" style="width:99px">
+                                            </td>
+                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:1px;">
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity" style="width:99px">
+                                            </td>
 
-                                            </div>
+                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;" >{{totalCostPerProduct(product) | number}}</td>
+                                            <td>
+                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1" >Add</button>
+                                                <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
 
-                                            <div ng-if="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
+                                            </td>
 
-                                        </td>
-                                        <td>
-                                            <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info" ng-model="product.lots[0].quantity" style="width:99px">
-                                        </td>
-                                        <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:1px;">
-                                            <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity" style="width:99px">
-                                        </td>
+                                            <td rowspan="{{product.lots.length}}" >
+                                                <button class="btn btn-small btn-danger" ng-if="product && !$last && productsToAdd.length>1" ng-click="removeProduct(productIndex)"  type="button" >Remove</button>
+                                                <button class="btn btn-small btn-info" ng-click="addProduct()" ng-if="$last" ng-disabled="product.programProduct.product===undefined"   >Add</button>
+                                            </td>
 
-                                        <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;" >{{totalCostPerProduct(product) | number}}</td>
-                                        <td>
-                                            <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1" >Add</button>
-                                            <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
-
-                                        </td>
-
-                                        <td rowspan="{{product.lots.length}}" >
-                                            <button class="btn btn-small btn-danger" ng-if="product && !$last && productsToAdd.length>1" ng-click="removeProduct(productIndex)"  type="button" >Remove</button>
-                                            <button class="btn btn-small btn-info" ng-click="addProduct()" ng-if="$last" ng-disabled="product.programProduct.product===undefined"   >Add</button>
-                                        </td>
-
-                                    </tr>
-                                    <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
-                                        <td>
-                                            <div class="row-fluid" ng-if="!lot.displayCodeOnly" >
-                                                <div  style="width:20%; float:left;margin-top:1px">
-                                                    <input type="button"
-                                                           class="btn btn-primary btn-small"
-                                                           href ng-click="showNewLotModal(product.programProduct.productconsole.log(ports)
+                                        </tr>
+                                        <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
+                                            <td>
+                                                <div class="row-fluid" ng-if="!lot.displayCodeOnly" >
+                                                    <div  style="width:20%; float:left;margin-top:1px">
+                                                        <input type="button"
+                                                               class="btn btn-primary btn-small"
+                                                               href ng-click="showNewLotModal(product.programProduct.productconsole.log(ports)
 )"
-                                                           ng-disabled="!product.programProduct.product"
-                                                           openlmis-message="button.create"/>
+                                                               ng-disabled="!product.programProduct.product"
+                                                               openlmis-message="button.create"/>
+                                                    </div>
+                                                    <div style="width:80%; float:left" ng-if="!lot.displayCodeOnly">
+                                                        <select  ui-select2
+                                                                 style="min-width:200px !important"
+                                                                 ng-disabled="!product.programProduct.product"
+                                                                 ng-model="lot.info"
+                                                                 ng-options="obj.lotCode for obj in lotsToDisplay"
+                                                        >
+                                                            <option value="" openlmis-message="placeholder.select.batch"></option>
+                                                        </select>
+                                                    </div>
+
                                                 </div>
-                                                <div style="width:80%; float:left" ng-if="!lot.displayCodeOnly">
-                                                    <select  ui-select2
-                                                             style="min-width:200px !important"
-                                                             ng-disabled="!product.programProduct.product"
-                                                             ng-model="lot.info"
-                                                             ng-options="obj.lotCode for obj in lotsToDisplay"
-                                                    >
-                                                        <option value="" openlmis-message="placeholder.select.batch"></option>
-                                                    </select>
-                                                </div>
+                                                <div ng-if="lot.displayCodeOnly">{{lot.info.lotCode}}</div>
+                                            </td>
+                                            <td>
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info" style="width:99px">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex,lot)" >Add</button>
+                                                <button class="btn btn-small btn-danger" ng-if="lot && !$last" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
+                                            </td>
 
-                                            </div>
-                                            <div ng-if="lot.displayCodeOnly">{{lot.info.lotCode}}</div>
-                                        </td>
-                                        <td>
-                                            <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info" style="width:99px">
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex,lot)" >Add</button>
-                                            <button class="btn btn-small btn-danger" ng-if="lot && !$last" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
-                                        </td>
+                                        </tr>
 
-                                    </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
 
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
+                                            <td colspan="4"></td>
+                                            <th >Grand Total</th>
 
-                                        <td colspan="4"></td>
-                                        <th >Grand Total</th>
-
-                                        <td colspan="3">{{grandTotal() | number}}</td>
+                                            <td colspan="3">{{grandTotal() | number}}</td>
 
 
-                                    </tr>
-                                    </tfoot>
-                                </table>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+
                             </div>
+
+
+
+
+
 
 
 
@@ -564,11 +524,13 @@
                            ng-click="cancel()"/>
 
 
-                    <input  type="button" class="btn btn-primary pull-right"
-                           ng-click="saveAsn('Finalized')" value="Finalize" style="margin-left:10px;margin-right:10px"/>
+
 
                     <input  type="button" class="btn btn-primary pull-right"
                            ng-click="saveAsn('Finalized')" value="Finalize and Create Receiving Docs"/>
+
+                    <input  type="button" class="btn btn-primary pull-right"
+                            ng-click="saveAsn('Finalized')" value="Finalize" style="margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>

@@ -105,6 +105,7 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
 
     } else {
 
+       $scope.isVaccine=true
         $scope.productsToAdd = [{
             id: 0,
             programProduct: {},
@@ -121,6 +122,38 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
 
     }
 
+
+
+$scope.changeProductType=function(isVaccine){
+
+        if(isVaccine){
+        $scope.productsToAdd = [{
+                        id: 0,
+                        programProduct: {},
+                        maxMonthsOfStock: 0,
+                        minMonthsOfStock: 0,
+                        eop: null,
+                        lots: [{
+                            quantity: 0,
+                            displayCodeOnly: false
+                        }],
+                        unitPrice: 0
+
+                    }]
+        }else{
+        $scope.productsToAdd = [{
+                        id: 0,
+                        programProduct: {},
+                        maxMonthsOfStock: 0,
+                        minMonthsOfStock: 0,
+                        eop: null,
+                        quantity:0,
+                        unitPrice: 0
+
+                    }]
+        }
+
+}
 
 
     $scope.updateLotsToDisplay = function() {
@@ -198,6 +231,10 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
         });
 
         $scope.updateProductsToDisplay();
+
+//        lock the previous product and its last product if not locked
+//          you can only add new product only when the last product is okay
+
     }
 
 
@@ -243,10 +280,17 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
     }
 
     $scope.totalQuantityPerProduct = function(product) {
-        sum = 0;
-        product.lots.forEach(function(lot) {
-            sum += lot.quantity;
-        })
+        var sum = 0;
+        if($scope.isVaccine){
+
+          product.lots.forEach(function(lot) {
+                    sum += lot.quantity;
+                })
+        }else{
+
+        sum=product.quantity
+        }
+           console.log(sum)
         return sum
     }
 
