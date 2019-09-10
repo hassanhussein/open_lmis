@@ -11,8 +11,8 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($scope,$filter, $location,$timeout, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
-$rootScope,documentTypes,UploadFile,$http,docService
+function PreAdviceController($scope,$filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+$rootScope,documentTypes,UploadFile,$http,docService, $timeout
 ) {
     $scope.displayDocumentTypes =  documentTypes;
     $scope.homeFacilityId = homeFacility.id;
@@ -67,6 +67,7 @@ $rootScope,documentTypes,UploadFile,$http,docService
         $scope.blAwbNumber = asn.blawbnumber;
         $scope.clearingAgent = asn.clearingagent;
         $scope.expectedArrivalDate = asn.expectedarrivaldate;
+        $scope.expectedDeliveryDate = asn.expecteddeliverydate;
         $scope.flightVesselNumber = asn.flightvesselnumber;
         $scope.notes = asn.note;
         $scope.poDate = asn.podate;
@@ -78,7 +79,7 @@ $rootScope,documentTypes,UploadFile,$http,docService
 
 
 
-        $scope.productsToAdd = []
+        $scope.productsToAdd = [];
         angular.forEach($scope.asn.asnLineItems, function(product, value) {
             editProduct = $scope.getProductFromId(product.productid);
             var productLots = [];
@@ -104,16 +105,16 @@ $rootScope,documentTypes,UploadFile,$http,docService
                 minMonthsOfStock: 0,
                 eop: null,
                 lots: productLots,
-                unitPrice: 0
+                unitPrice: product.unitprice,
 
-            })
+            });
 
 
-        })
+        });
 
     } else {
 
-       $scope.isVaccine=true
+       $scope.isVaccine=true;
         $scope.productsToAdd = [{
             id: 0,
             programProduct: {},
@@ -147,7 +148,7 @@ $scope.changeProductType=function(isVaccine){
                         }],
                         unitPrice: 0
 
-                    }]
+                    }];
         }else{
         $scope.productsToAdd = [{
                         id: 0,
@@ -158,15 +159,15 @@ $scope.changeProductType=function(isVaccine){
                         quantity:0,
                         unitPrice: 0
 
-                    }]
+                    }];
         }
 
-}
+};
 
 
     $scope.updateLotsToDisplay = function() {
 
-        var toExclude = []
+        var toExclude = [];
         angular.forEach($scope.productsToAdd, function(product, value) {
 
             angular.forEach(product.lots, function(lot, value) {
@@ -174,16 +175,16 @@ $scope.changeProductType=function(isVaccine){
                     toExclude.push(lot.info.lotCode);
                 }
 
-            })
+            });
 
 
-        })
+        });
 
 
         $scope.lotsToDisplay = $.grep($scope.allLots, function(lotObject) {
             return $.inArray(lotObject.lotCode, toExclude) == -1;
         });
-    }
+    };
 
 
 
@@ -200,7 +201,7 @@ $scope.changeProductType=function(isVaccine){
 
 
 
-    }
+    };
 
 
     $scope.addLot = function(productIndex) {
@@ -211,17 +212,17 @@ $scope.changeProductType=function(isVaccine){
             quantity: 0,
             displayCodeOnly: false
         });
-        $scope.updateLotsToDisplay()
-    }
+        $scope.updateLotsToDisplay();
+    };
 
     $scope.validateProduct = function() {
         if (angular.equals($scope.productsToAdd[0].programProduct, {}) || !$scope.productsToAdd[0].unitPrice || !$scope.productsToAdd[0].lots[0].quantity) {
-            $scope.productError = true
+            $scope.productError = true;
             return;
         }
 
-        $scope.productError = false
-    }
+        $scope.productError = false;
+    };
 
     $scope.addProduct = function() {
         $scope.productsToAdd.push({
@@ -243,7 +244,7 @@ $scope.changeProductType=function(isVaccine){
 //        lock the previous product and its last product if not locked
 //          you can only add new product only when the last product is okay
 
-    }
+    };
 
 
 
@@ -251,7 +252,7 @@ $scope.changeProductType=function(isVaccine){
     $scope.removeProduct = function(productIndex) {
 
         $scope.productsToAdd.splice(productIndex, 1);
-        if ($scope.productsToAdd.length + 1 == 1 && productIndex == 0) {
+        if ($scope.productsToAdd.length + 1 === 1 && productIndex === 0) {
             $scope.productsToAdd = [{
                 id: 0,
                 programProduct: {},
@@ -264,28 +265,28 @@ $scope.changeProductType=function(isVaccine){
                 }],
                 unitPrice: 0
 
-            }]
+            }];
 
 
         }
 
         $scope.updateProductsToDisplay();
 
-    }
+    };
 
 
     $scope.removeLot = function(productIndex, lotIndex) {
         $scope.productsToAdd[productIndex].lots.splice(lotIndex, 1);
-        $scope.updateLotsToDisplay()
-    }
+        $scope.updateLotsToDisplay();
+    };
 
 
 
 
     $scope.totalCostPerProduct = function(product) {
 
-        return $scope.totalQuantityPerProduct(product) * product.unitPrice
-    }
+        return $scope.totalQuantityPerProduct(product) * product.unitPrice;
+    };
 
     $scope.totalQuantityPerProduct = function(product) {
         var sum = 0;
@@ -293,20 +294,15 @@ $scope.changeProductType=function(isVaccine){
 
           product.lots.forEach(function(lot) {
                     sum += lot.quantity;
-                })
+                });
         }else{
 
-        sum=product.quantity
+        sum=product.quantity;
         }
 
-        return sum
-    }
+        return sum;
+    };
 
-    $scope.seeLots = function() {
-
-
-
-    }
 
 
     $scope.cancel = function() {
@@ -314,14 +310,14 @@ $scope.changeProductType=function(isVaccine){
         $scope.showError = false;
         $location.path('');
 
-    }
+    };
 
 
     var success = function(data) {
         $scope.error = "";
         //     console.log(data)
         $scope.$parent.message = data.success;
-        $scope.$parent.asnId = true
+        $scope.$parent.asnId = true;
 
         $scope.showError = false;
         $location.path('');
@@ -337,7 +333,7 @@ $scope.changeProductType=function(isVaccine){
 
     $scope.changeLotDisplay = function(lotId) {
         //  console.log($scope.productsToAdd)
-    }
+    };
     $scope.showNewLotModal = function(product) {
         $scope.newLotModal = true;
         $scope.newLot = {};
@@ -357,9 +353,9 @@ $scope.changeProductType=function(isVaccine){
             sum += $scope.totalCostPerProduct(product);
 
 
-        })
+        });
         return sum;
-    }
+    };
 
 
 
@@ -414,8 +410,6 @@ $scope.changeProductType=function(isVaccine){
 
     $scope.saveAsn = function(status) {
 
-    console.log(status);
-
         $scope.validateProduct();
         //                console.log($scope.asnForm)
         if ($scope.asnForm.$error.required) {
@@ -425,10 +419,10 @@ $scope.changeProductType=function(isVaccine){
             return;
         }
 
-        var lotflag = true
-        var asnLineItems = []
+        var lotflag = true;
+        var asnLineItems = [];
         angular.forEach($scope.productsToAdd, function(product, key) {
-            var asnLots = []
+            var asnLots = [];
 
 
             angular.forEach(product.lots, function(lot, key) {
@@ -439,22 +433,23 @@ $scope.changeProductType=function(isVaccine){
                         manufacturingdate: lot.info.manufactureDate,
                         quantity: lot.quantity,
                         serialnumber: 'string'
-                    })
+                    });
 
 
 
                 }
-            })
+            });
 
 
             asnLineItems.push({
                 asnLots: asnLots,
                 lotflag: true,
-                productid: product.programProduct.product.id
-            })
+                productid: product.programProduct.product.id,
+                unitprice:product.unitPrice
+            });
 
 
-        })
+        });
         var asn = {
             asnLineItems: asnLineItems,
             asndate: $scope.asnReceiptDate,
@@ -462,6 +457,7 @@ $scope.changeProductType=function(isVaccine){
             blawbnumber: $scope.blAwbNumber,
             clearingagent: $scope.clearingAgent,
             expectedarrivaldate: $scope.expectedArrivalDate,
+            expecteddeliverydate:$scope.expectedDeliveryDate,
             flightvesselnumber: $scope.flightVesselNumber,
             note: $scope.notes,
             podate: $scope.poDate,
@@ -477,17 +473,19 @@ $scope.changeProductType=function(isVaccine){
             }],
             status: status,
             supplierid: $scope.supplierId
-        }
+        };
 
 
-               console.log(asn)
+        //            console.log(asn)
 
         Preadvice.save({}, asn, success, error);
 
-    }
+    };
 
 
-         $scope.documentDetails = [];
+
+          $scope.documentDetails = [ ];
+
 
               $scope.addNew = function(documentDetail) {
 
@@ -530,34 +528,37 @@ $scope.changeProductType=function(isVaccine){
 
            $scope.loadDocumentDetails = function (data){
 
-           }
+
+
+           };
 
           $scope.uploadFile = function(element) {
-
-          }
+            };
 
 
           $scope.doUpload = function (document) {
 
-          $scope.file = document;
+           $scope.file = document;
+
+
 
           };
            $scope.disableSelectedRows = false;
           function removeItemFromList(document) {
 
+
            var i = $scope.displayDocumentTypes.length;
+           var dataToDisplay = [];
 
            while(i--) {
-
             $scope.displayDocumentTypes[i].disableSelectedRows = false;
-
             var name = $scope.displayDocumentTypes[i];
 
             if(document.name === name.name) {
                $scope.displayDocumentTypes[i].disableSelectedRows = true;
 
                $scope.displayDocumentTypes.splice(i,1);
-
+               dataToDisplay = $scope.displayDocumentTypes;
             }
 
 
@@ -567,6 +568,7 @@ $scope.changeProductType=function(isVaccine){
 
           function prepareSaveDocument(selectedDocuments) {
 
+
             selectedDocuments.forEach(function(document) {
 
                if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
@@ -574,6 +576,11 @@ $scope.changeProductType=function(isVaccine){
                  getFile(document.file, document.documentType);
                //  createPost(document.file);
                 console.log(document.file);
+
+             //    console.log(document.documentType);
+
+               //input = document.createElement('input');
+
 
                }
 
@@ -589,13 +596,11 @@ $scope.changeProductType=function(isVaccine){
 
   docService.saveDoc(file, documentType).then(
   function (response) {
-
-  $scope.message = response;
   $scope.openMessage = true;
+  $scope.message = response;
+  $timeout(function(){
 
-  $timeout(function() {
-
-    $scope.openMessage = false;
+  $scope.openMessage = false;
 
   },2000);
 
@@ -611,7 +616,9 @@ $scope.changeProductType=function(isVaccine){
 
                            }
                        );
-  }
+
+
+  };
 
 
 
@@ -713,4 +720,4 @@ PreAdviceController.resolve = {
         }, 100);
         return deferred.promise;
     }
-}
+};

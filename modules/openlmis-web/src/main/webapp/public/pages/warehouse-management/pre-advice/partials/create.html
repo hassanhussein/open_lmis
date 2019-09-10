@@ -187,12 +187,13 @@
                                         <tr data-ng-repeat="product in productsToAdd">
                                             <td>
                                                 <select>
+                                                    <option value="" openlmis-message="placeholder.select.product"></option>
                                                     <option>Laptop</option>
                                                     <option>Scanner</option>
                                                 </select>
                                             </td>
                                             <td>
-                                                Doses
+
                                             </td>
                                             <td>
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="product.quantity">
