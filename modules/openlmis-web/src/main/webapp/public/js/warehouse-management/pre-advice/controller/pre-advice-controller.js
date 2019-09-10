@@ -69,7 +69,10 @@ function PreAdviceController($scope, $filter, $location, asn, Preadvice, configu
         $scope.poDate = asn.podate;
         $scope.poNumber = asn.ponumber;
         $scope.portOfArrivalId = asn.portofarrival;
-        $scope.supplierId = asn.supplierid;
+        $scope.supplierId = asn.supplier.id;
+
+
+
         $scope.productsToAdd = []
         angular.forEach($scope.asn.asnLineItems, function(product, value) {
             editProduct = $scope.getProductFromId(product.productid);
@@ -241,7 +244,7 @@ $scope.changeProductType=function(isVaccine){
 
 
     $scope.removeProduct = function(productIndex) {
-        console.log(productIndex)
+
         $scope.productsToAdd.splice(productIndex, 1);
         if ($scope.productsToAdd.length + 1 == 1 && productIndex == 0) {
             $scope.productsToAdd = [{
@@ -290,7 +293,7 @@ $scope.changeProductType=function(isVaccine){
 
         sum=product.quantity
         }
-           console.log(sum)
+
         return sum
     }
 
@@ -459,7 +462,7 @@ $scope.changeProductType=function(isVaccine){
             portofarrival: $scope.portOfArrivalId,
             purchaseDocuments: [{
                 "documentType": {
-                    "id": 1,
+                    "id": $scope.uploadTypeId,
                     "description": "Testing",
                     "name": "Testing"
                 },
