@@ -625,7 +625,7 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
 
                      function findDoc(docId) {
                          var deferred = $q.defer();
-                         $http.get('/rest-api/warehouse/'+'upload' '/'+docId)
+                         $http.get('/rest-api/warehouse/'+'upload'+ '/'+docId)
                              .then(
                                  function (response) {
                                      deferred.resolve(response.data);
