@@ -631,7 +631,6 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
                                                      deferred.resolve(response.data);
                                                  },
                                                  function (errResponse) {
-                                                     alert(errResponse.data.errorMessage);
                                                      deferred.reject(errResponse);
                                                  }
                                              );
