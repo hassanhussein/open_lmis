@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -38,10 +37,7 @@ import java.nio.file.Paths;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 import static org.openlmis.core.web.OpenLmisResponse.response;
@@ -262,7 +258,17 @@ public class AsnController extends BaseController {
             File directory = new File(this.fileStoreLocation);
 
             boolean isFileExist = directory.exists();
-            if(isFileExist){
+
+            if(!isFileExist) {
+
+                Path mypath = Paths.get(this.fileStoreLocation);
+                Files.createDirectories(mypath);
+                LOGGER.debug("Directory created");
+
+
+            }
+
+
                 boolean isWritePermitted = directory.canWrite();
                 if (isWritePermitted) {
 
@@ -275,9 +281,6 @@ public class AsnController extends BaseController {
                     return "No Permission To Upload At Specified Path";
                 }
 
-            }else {
-                return "Upload Path do not Exist";
-            }
 
         } catch (Exception  ex){
 
@@ -302,5 +305,7 @@ public class AsnController extends BaseController {
 
         return OpenLmisResponse.success("message.asn.deleted.success");
     }
+
+
 
 }
