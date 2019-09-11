@@ -526,39 +526,33 @@ $scope.changeProductType=function(isVaccine){
                 });
             };
 
-           $scope.loadDocumentDetails = function (data){
+          $scope.loadDocumentDetails = function (data){};
 
-
-
-           };
-
-          $scope.uploadFile = function(element) {
-            };
-
+          $scope.uploadFile = function(element) {};
 
           $scope.doUpload = function (document) {
 
            $scope.file = document;
 
-
-
           };
-           $scope.disableSelectedRows = false;
+
+          $scope.disableSelectedRows = false;
+
           function removeItemFromList(document) {
 
 
            var i = $scope.displayDocumentTypes.length;
-           var dataToDisplay = [];
 
            while(i--) {
+
             $scope.displayDocumentTypes[i].disableSelectedRows = false;
             var name = $scope.displayDocumentTypes[i];
 
             if(document.name === name.name) {
-               $scope.displayDocumentTypes[i].disableSelectedRows = true;
 
+               $scope.displayDocumentTypes[i].disableSelectedRows = true;
                $scope.displayDocumentTypes.splice(i,1);
-               dataToDisplay = $scope.displayDocumentTypes;
+
             }
 
 
@@ -568,19 +562,11 @@ $scope.changeProductType=function(isVaccine){
 
           function prepareSaveDocument(selectedDocuments) {
 
-
             selectedDocuments.forEach(function(document) {
 
                if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
                   removeItemFromList(document.documentType);
                  getFile(document.file, document.documentType);
-               //  createPost(document.file);
-                console.log(document.file);
-
-             //    console.log(document.documentType);
-
-               //input = document.createElement('input');
-
 
                }
 
@@ -589,41 +575,33 @@ $scope.changeProductType=function(isVaccine){
            }
 
 
-  var getFile = function(data,documentType){
-       console.log(data);
+  function getFile(file,documentType){
 
-  var file = data;
+      docService.saveDoc(file, documentType).then(
 
-  docService.saveDoc(file, documentType).then(
-  function (response) {
-  $scope.openMessage = true;
-  $scope.message = response;
-  $timeout(function(){
+      function (response) {
 
-  $scope.openMessage = false;
+      $scope.openMessage = true;
+      $scope.message = response;
 
-  },2000);
+      $timeout(function(){
 
+      $scope.openMessage = false;
 
-  $http.get("/rest-api/warehouse/upload").success(
-  function(response) {
-
-  $rootScope.docList = response;
-
-  });
-  },
-  function (errResponse) {
-
-                           }
-                       );
+      },2000);
 
 
-  };
+      $http.get("/rest-api/warehouse/upload").success(
 
+      function(response) {
 
+      $rootScope.docList = response;
 
+      });
+      },
+      function (errResponse) { });
 
-
+  }
 
 }
 
@@ -634,7 +612,7 @@ PreAdviceController.resolve = {
          var deferred = $q.defer();
          $timeout(function () {
              DocumentTypes.get({},function (data) {
-                 console.log(data);
+
                 var documents = [];
 
                   if(!isUndefined(data.documents)){
