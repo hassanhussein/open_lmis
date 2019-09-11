@@ -623,19 +623,19 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
                          return deferred.promise;
                      }
 
-                     function findDoc(docId) {
-                         var deferred = $q.defer();
-                         $http.get('/rest-api/warehouse/'+'upload'+ '/'+docId)
-                             .then(
-                                 function (response) {
-                                     deferred.resolve(response.data);
-                                 },
-                                 function (errResponse) {
-
-                                     deferred.reject(errResponse);
-                                 }
-                             );
-                         return deferred.promise;
-                     }
+                  function findDoc(docId) {
+                                         var deferred = $q.defer();
+                                         $http.get(urls.DOC_URL + '/'+docId)
+                                             .then(
+                                                 function (response) {
+                                                     deferred.resolve(response.data);
+                                                 },
+                                                 function (errResponse) {
+                                                     alert(errResponse.data.errorMessage);
+                                                     deferred.reject(errResponse);
+                                                 }
+                                             );
+                                         return deferred.promise;
+                  }
                  }
  ]);
