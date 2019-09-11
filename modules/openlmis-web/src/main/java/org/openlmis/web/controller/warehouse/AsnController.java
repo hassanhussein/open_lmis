@@ -157,60 +157,6 @@ public class AsnController extends BaseController {
     }
     }
 
-    //Upload file function
-
-
-    @RequestMapping(value = "/uploadDocument", method = RequestMethod.POST)
-    //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'CONFIGURE_HELP_CONTENT')")
-    public ResponseEntity<OpenLmisResponse> uploadDocuments(MultipartFile asnDocuments, String documentType, HttpServletRequest request) {
-        FileOutputStream outputStream = null;
-        try {
-            String fileName;
-            Long userId = loggedInUserId((Principal) request);
-            String filePath;
-            byte[] byteFile;
-            InputStream inputStream;
-            ASNDocument asnDocument = new ASNDocument();
-            inputStream = asnDocuments.getInputStream();
-            int val = inputStream.available();
-            byteFile = new byte[val];
-            inputStream.read(byteFile);
-            fileName = asnDocuments.getOriginalFilename();
-            filePath = this.fileStoreLocation + fileName;
-            asnDocument.setDocumentType(documentType);
-            asnDocument.setFileUrl(fileName);
-            asnDocument.setCreatedDate(new Date());
-            asnDocument.setCreatedBy(userId);
-            File file = new File(filePath);
-            File directory = new File(this.fileStoreLocation);
-
-            boolean isFileExist = directory.exists();
-            if (isFileExist) {
-                boolean isWritePermitted = directory.canWrite();
-                if (isWritePermitted) {
-                    outputStream = new FileOutputStream(file);
-
-                    outputStream.write(byteFile);
-                    outputStream.flush();
-                    outputStream.close();
-                    this.asnService.uploadDocument(asnDocument);
-                    return this.successPage(1);
-                } else {
-                    return errorPage("No Permission To Upload At Specified Path");
-                }
-            } else {
-                return errorPage("Upload Path do not Exist");
-            }
-        } catch (Exception ex) {
-            LOGGER.warn("Cannot upload in this location",ex);
-            return errorPage("Cannot upload in this location");
-        }
-
-    }
-
-
-
-
     private  ResponseEntity<OpenLmisResponse> successPage(int recordsProcessed) {
         Map<String, String> responseMessages = new HashMap<>();
         String message = messageService.message(UPLOAD_FILE_SUCCESS, recordsProcessed);
@@ -224,16 +170,14 @@ public class AsnController extends BaseController {
         return response(responseMessages, NOT_FOUND, TEXT_HTML_VALUE);
     }
 
-
+    //Upload file function
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
-
-        return  saveUploadedFiles(asnDocuments,this.fileStoreLocation);
-
+        return  saveUploadedFiles(asnDocuments);
     }
 
+    private String saveUploadedFiles(MultipartFile file) {
 
-    private String saveUploadedFiles(MultipartFile file, String saveDirectory){
         String fileName;
         String filePath;
         FileOutputStream outputStream = null;
@@ -242,8 +186,8 @@ public class AsnController extends BaseController {
             return "Failed to Store Empty File";
         }
 
-
         try {
+
             InputStream inputStream;
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
             byte[] byteFile;
@@ -265,22 +209,19 @@ public class AsnController extends BaseController {
                 Files.createDirectories(mypath);
                 LOGGER.debug("Directory created");
 
-
             }
 
+            boolean isWritePermitted = directory.canWrite();
+            if (isWritePermitted) {
 
-                boolean isWritePermitted = directory.canWrite();
-                if (isWritePermitted) {
+                outputStream = new FileOutputStream(newFile);
+                outputStream.write(byteFile);
+                outputStream.flush();
+                outputStream.close();
 
-                    outputStream = new FileOutputStream(newFile);
-                    outputStream.write(byteFile);
-                    outputStream.flush();
-                    outputStream.close();
-
-                } else {
-                    return "No Permission To Upload At Specified Path";
-                }
-
+            } else {
+                return "No Permission To Upload At Specified Path";
+            }
 
         } catch (Exception  ex){
 
@@ -288,10 +229,8 @@ public class AsnController extends BaseController {
             return "Cannot upload in this location";
 
         }
-
         return  "Successfully Uploaded";
     }
-
 
 
     @RequestMapping(value = "/asn/{id}", method = RequestMethod.DELETE)
