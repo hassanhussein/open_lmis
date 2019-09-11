@@ -61,16 +61,16 @@
             </tr>
 
             <tr class="gradient-header" ng-show="asnList.length">
-                <th openlmis-message="header.asn.number"></th>
-                <th  openlmis-message="header.asn.date"></th>
-                <th  openlmis-message="header.asn.po.number"></th>
-                <th  openlmis-message="header.asn.supplier"></th>
-                <th  openlmis-message="header.asn.status"></th>
+                <th openlmis-message="header.asn.number" ng-click='sortColumn("asnnumber")' ng-class='sortClass("asnnumber")'></th>
+                <th  openlmis-message="header.asn.date" ng-click='sortColumn("asndate")' ng-class='sortClass("asndate")'></th>
+                <th  openlmis-message="header.asn.po.number" ng-click='sortColumn("ponumber")' ng-class='sortClass("ponumber")'></th>
+                <th  openlmis-message="header.asn.supplier" ng-click='sortColumn("supplier.name")' ng-class='sortClass("supplier.name")'></th>
+                <th  openlmis-message="header.asn.status" ng-click='sortColumn("status")' ng-class='sortClass("status")'></th>
                 <th colspan="2" id="actionHeader" openlmis-message="header.asn.action"></th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="asn in asnList" ng-init="arrayIndex=$index">
+            <tr ng-repeat="asn in asnList|orderBy:column:reverse" ng-init="arrayIndex=$index">
 
                 <td  ng-bind="asn.asnnumber"></td>
                 <td  ng-bind="asn.asndate"></td>
