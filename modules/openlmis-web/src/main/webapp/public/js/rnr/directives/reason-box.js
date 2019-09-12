@@ -62,6 +62,27 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
             }
 
 
+     $('.collapse').collapse();
+
+
+  scope.status = {
+    isFirstOpen: true,
+    isFirstDisabled: false
+  };
+
+            scope.open = [];
+            scope.Activate = function (ind) {
+
+                if (!scope.open[ind]) {
+                    scope.open[ind] = true;
+                }
+                else
+                {
+                    scope.open[ind] = false;
+                }
+            }
+
+
             var commentContainer = document.getElementById('comments-list');
 
 
