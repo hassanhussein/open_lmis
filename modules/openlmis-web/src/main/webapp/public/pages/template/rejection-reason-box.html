@@ -24,37 +24,57 @@
 
         <div class="span12">
 
-            <div id="checkboxes">
-                <br/>
-                <ul ng-repeat="res in  rejectionReasons" id="comments-list" style="list-style: none;">
-                    <li class="comment">
-                        <span>{{res.name}}</span>
-                        <span>
+
+            <div  ng-repeat-start="res in  rejectionReasons">
+
+            <div class="panel-group" id="accordion-{{$index}}">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion-{{$index}}" href="#collapseOne">
+                                {{res.name}}
+                            </a>
+                        </h4>
+                    </div><!--/.panel-heading -->
+                    <div id="collapseOne" class="panel-collapse collapse in">
+                        <div class="panel-body" ng-repeat="reason in res.rejections">
+
+                            <li><span>{{reason.name}}</span>
+                                <span>
                             <input type="checkbox"
                                    ng-change="sync(bool, res)" ng-model="bool" ng-init="bool=false" class="pull-right"/>
                         </span>
 
-                    </li>
-                </ul>
-            </div>
-      <!--  <div>
-            <label for="reason" class="labels">Reasons</label>
-            <div>
-                <select id="reason" ui-select2 class="input-medium" ng-model="reason" ng-change="">
-                    <option ng-repeat="option in rejectionReasons" value="{{ option.id }}" ng-selected="reason == option.id">{{option.name}}</option>
-                </select>
+                            </li>
+
+                        </div><!--/.panel-body -->
+                    </div><!--/.panel-collapse -->
+                </div>
             </div>
 
-        </div>-->
+            </div>
+            <div ng-repeat-end=""></div>
+
+
+            <div  ng-repeat-start="res in  rejectionReasons">
+
+                <button type="button" class="panel-group accordion reason-accordion" data-toggle="collapse" data-target="#open-list-{{$index}}">{{res.name}}</button>
+                <div id="open-list-{{$index}}" class="collapse">
+                   <ul ng-repeat="reason in res.rejections">
+                       <li><span>{{reason.name}}</span>
+                           <span>
+                            <input type="checkbox"
+                                   ng-change="sync(bool, res)" ng-model="bool" ng-init="bool=false" class="pull-right"/>
+                        </span>
+
+                       </li>
+                   </ul>
+                </div>
+
+            </div>
+            <div ng-repeat-end=""></div>
         </div>
-      <!--  <div class="span4">
-            <br/>
-            <input style="top: 1px !important;" type="button" openlmis-message="button.add" ng-click="addReasons()"
-                   ng-disabled="!reason"
-                   class="btn btn-primary"/>
-
-        </div>-->
-
 
     </div>
 

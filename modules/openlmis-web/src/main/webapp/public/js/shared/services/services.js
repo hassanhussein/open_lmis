@@ -575,3 +575,7 @@ services.factory('ProgramPatientTemplate', function ($resource) {
     return $resource('/programId/:programId/programPatientTemplate.json', {}, {});
 });
 
+services.factory('GetRejectionByCategory', function ($resource) {
+    return $resource('/requisitions/get-rejection-by-category.json', {}, {});
+});
+

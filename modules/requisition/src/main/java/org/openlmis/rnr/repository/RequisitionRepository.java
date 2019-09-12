@@ -610,4 +610,8 @@ public class RequisitionRepository {
     public Rnr getRequisitionStatusByFacilityAndProgram(Facility facility, Program program) {
         return requisitionMapper.getLastRequisition(facility.getId(), program.getId());
     }
+
+    public List <RejectionReasonCategoryDTO> getRejectionByCategory(){
+        return rejectionReasonMapper.getRejectionByCategory();
+    }
 }

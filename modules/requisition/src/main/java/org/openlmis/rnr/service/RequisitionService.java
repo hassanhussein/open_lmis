@@ -1018,5 +1018,8 @@ public class RequisitionService {
     return requisitionRepository.getRequisitionStatusByFacilityAndProgram(facility, program);
   }
 
+  public List<RejectionReasonCategoryDTO> getRejectionByCategory(){
+    return requisitionRepository.getRejectionByCategory();
+  }
 }
 

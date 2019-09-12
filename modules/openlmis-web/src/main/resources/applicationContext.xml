@@ -451,6 +451,16 @@
                     </bean>
                 </entry>
 
+                <entry key="rejection-categories">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="menu.header.rejection.categories"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.RejectionCategoryDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="rejectionCategoryPersistanceHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>

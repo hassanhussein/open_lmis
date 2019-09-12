@@ -23,5 +23,8 @@ public class RejectionReasonDTO extends BaseModel implements Importable {
     @ImportField(mandatory = true, name = "Code")
     private String code;
 
+    @ImportField(mandatory = true, name = "Rejection Category Code", nested = "code")
+    RejectionCategoryDTO rejectionCategory;
+
     private Long rnrId;
 }
