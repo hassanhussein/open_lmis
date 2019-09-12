@@ -49,16 +49,35 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
     $scope.loadProducts($scope.homeFacilityId, 82);
     $scope.getProductFromId = function(productId) {
         var editProduct = {};
+        $scope.allProducts=[];
         angular.forEach($scope.configurations.productsConfiguration, function(product, value) {
             //        console.log(product.product.id)
             if (productId == product.product.id) {
                 //        console.log('am here')
                 editProduct = product;
             }
+
+            $scope.allProducts.push({programProduct:product});
         });
         return editProduct.product;
 
     };
+
+
+       $scope.updateProductsToDisplay = function() {
+
+
+            var toExclude = _.pluck(_.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'), 'primaryName');
+
+            $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
+                return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
+            });
+
+
+
+
+        };
+
 
     if ($scope.asn) {
         $scope.editMode = true;
@@ -76,12 +95,18 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
         $scope.supplierId = asn.supplierid;
         $scope.productsToAdd = [];
         $scope.supplierId = asn.supplier.id;
+         $scope.isVaccine=true;
+//        console.log($scope.configurations.productsConfiguration)
+//        $scope.allProducts=$scope.configurations.productsConfiguration;
+
+
 
 
 
         $scope.productsToAdd = [];
         angular.forEach($scope.asn.asnLineItems, function(product, value) {
             editProduct = $scope.getProductFromId(product.productid);
+//            console.log($scope.allProducts)
             var productLots = [];
             angular.forEach(product.asnLots, function(lot, value) {
 
@@ -100,7 +125,10 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
             $scope.productsToAdd.push({
                 id: 0,
-                programProduct: editProduct,
+                displayNameOnly:true,
+                programProduct: {
+                product:editProduct
+                },
                 maxMonthsOfStock: 0,
                 minMonthsOfStock: 0,
                 eop: null,
@@ -110,13 +138,25 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
             });
 
 
+
+
+
         });
+
+
+
+$scope.updateProductsToDisplay();
+
+
+
+
 
     } else {
 
        $scope.isVaccine=true;
         $scope.productsToAdd = [{
             id: 0,
+            displayNameOnly:false,
             programProduct: {},
             maxMonthsOfStock: 0,
             minMonthsOfStock: 0,
@@ -138,6 +178,7 @@ $scope.changeProductType=function(isVaccine){
         if(isVaccine){
         $scope.productsToAdd = [{
                         id: 0,
+                        displayNameOnly:false,
                         programProduct: {},
                         maxMonthsOfStock: 0,
                         minMonthsOfStock: 0,
@@ -152,6 +193,7 @@ $scope.changeProductType=function(isVaccine){
         }else{
         $scope.productsToAdd = [{
                         id: 0,
+                        displayNameOnly:false,
                         programProduct: {},
                         maxMonthsOfStock: 0,
                         minMonthsOfStock: 0,
@@ -189,24 +231,12 @@ $scope.changeProductType=function(isVaccine){
 
 
 
-    $scope.updateProductsToDisplay = function() {
 
 
-        var toExclude = _.pluck(_.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'), 'primaryName');
-
-        $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
-            return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
-        });
-
-
-
-
-    };
-
-
-    $scope.addLot = function(productIndex) {
-
+    $scope.addLot = function(product,lot) {
+        productIndex=_.indexOf($scope.productsToAdd,product);
         $lotIndex = $scope.productsToAdd[productIndex].lots.length - 1;
+//        console.log($lotIndex);
         $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
         $scope.productsToAdd[productIndex].lots.push({
             quantity: 0,
@@ -227,6 +257,7 @@ $scope.changeProductType=function(isVaccine){
     $scope.addProduct = function() {
         $scope.productsToAdd.push({
             id: 0,
+            displayNameOnly:false,
             programProduct: {},
             maxMonthsOfStock: 0,
             minMonthsOfStock: 0,
@@ -242,7 +273,19 @@ $scope.changeProductType=function(isVaccine){
         $scope.updateProductsToDisplay();
 
 //        lock the previous product and its last product if not locked
-//          you can only add new product only when the last product is okay
+            var previousProduct=$scope.productsToAdd[$scope.productsToAdd.length-2];
+            previousProduct.displayNameOnly=true;
+//            lock previous product lots
+            var previousProductLot=previousProduct.lots[previousProduct.lots.length-1];
+            if(previousProductLot.quantity===0 && !previousProductLot.info){
+//            lot not defined so remove it from array
+              previousProduct.lots.splice(previousProduct.lots.length-1,1)
+            }else{
+            previousProductLot.displayCodeOnly=true;
+            }
+
+
+
 
     };
 
@@ -255,6 +298,7 @@ $scope.changeProductType=function(isVaccine){
         if ($scope.productsToAdd.length + 1 === 1 && productIndex === 0) {
             $scope.productsToAdd = [{
                 id: 0,
+                displayNameOnly:false,
                 programProduct: {},
                 maxMonthsOfStock: 0,
                 minMonthsOfStock: 0,
@@ -276,8 +320,22 @@ $scope.changeProductType=function(isVaccine){
 
 
     $scope.removeLot = function(productIndex, lotIndex) {
-        $scope.productsToAdd[productIndex].lots.splice(lotIndex, 1);
-        $scope.updateLotsToDisplay();
+
+    var productToRemoveLot=$scope.productsToAdd[productIndex]
+
+    if(productToRemoveLot.lots.length===1 && $scope.productsToAdd.length>=1){
+//        completely remove the product
+$scope.removeProduct(productIndex);
+
+    }else{
+     $scope.productsToAdd[productIndex].lots.splice(lotIndex, 1);
+    }
+
+    if($scope.allLots){
+    $scope.updateLotsToDisplay();
+    }
+
+
     };
 
 
@@ -285,6 +343,7 @@ $scope.changeProductType=function(isVaccine){
 
     $scope.totalCostPerProduct = function(product) {
 
+//        console.log($scope.totalQuantityPerProduct(product) * product.unitPrice)
         return $scope.totalQuantityPerProduct(product) * product.unitPrice;
     };
 
@@ -590,7 +649,7 @@ $scope.changeProductType=function(isVaccine){
 
 
   var getFile = function(data,documentType){
-       console.log(data);
+//       console.log(data);
 
   var file = data;
 
@@ -634,7 +693,7 @@ PreAdviceController.resolve = {
          var deferred = $q.defer();
          $timeout(function () {
              DocumentTypes.get({},function (data) {
-                 console.log(data);
+
                 var documents = [];
 
                   if(!isUndefined(data.documents)){

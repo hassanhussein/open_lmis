@@ -264,19 +264,19 @@
                                         <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
                                             <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
                                                 <select style="width:90% !important;" ui-select2 ng-change="loadProductLots(product.programProduct.product)"
-                                                        ng-if="!editMode"
+                                                        ng-show="!product.displayNameOnly"
                                                         ng-model="product.programProduct"
                                                         ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
                                                     <option value="" openlmis-message="placeholder.select.product"></option>
                                                 </select>
-                                                <div class="row-fluid" ng-if="editMode">
-                                                    {{product.programProduct.primaryName}}
+                                                <div class="row-fluid" ng-show="product.displayNameOnly">
+                                                    {{product.programProduct.product.primaryName}}
                                                 </div>
                                             </td>
 
                                             <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
-                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ng-if="!editMode"></span>
-                                                <span class="row-fluid" ng-if="editMode">
+                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ></span>
+                                                <span class="row-fluid" >
                                                 {{product.programProduct.dosageUnit.code}}
                                             </span>
                                             </td>
@@ -305,7 +305,7 @@
 
                                                 </div>
 
-                                                <div ng-if="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
+                                                <div ng-show="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
 
                                             </td>
                                             <td>
@@ -317,8 +317,8 @@
 
                                             <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;" >{{totalCostPerProduct(product) | number}}</td>
                                             <td>
-                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(productIndex)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1" >Add</button>
-                                                <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
+                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
+                                                <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
 
                                             </td>
 
@@ -357,8 +357,8 @@
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info" style="width:99px">
                                             </td>
                                             <td>
-                                                <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length" type="button" ng-click="addLot(productIndex,lot)" >Add</button>
-                                                <button class="btn btn-small btn-danger" ng-if="lot && !$last" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
+                                                <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length && !lot.displayCodeOnly" type="button" ng-click="addLot(product,lot)" >Add</button>
+                                                <button class="btn btn-small btn-danger" ng-if="lot && !$last || lot.displayCodeOnly" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
                                             </td>
 
                                         </tr>
@@ -552,8 +552,7 @@
 
 
 
-                    <input  type="button" class="btn btn-primary pull-right"
-                           ng-click="saveAsn('Finalized')" value="Finalize and Create Receiving Docs"/>
+
 
                     <input  type="button" class="btn btn-primary pull-right"
                             ng-click="saveAsn('Finalized')" value="Finalize" style="margin-left:10px;margin-right:10px"/>
