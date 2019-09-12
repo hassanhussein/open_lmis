@@ -358,14 +358,14 @@ public class RequisitionController extends BaseController {
 
     @RequestMapping(value = "/requisitions/{id}/rejections", method = POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
-    public ResponseEntity<OpenLmisResponse> insertRejection(@RequestBody RejectionReason comment,
+    public ResponseEntity<OpenLmisResponse> insertRejection(@RequestBody RejectionReason reason,
                                                             @PathVariable("id") Long id,
                                                             HttpServletRequest request) {
-        comment.setRnrId(id);
+        reason.setRnrId(id);
         User author = new User();
         author.setId(loggedInUserId(request));
-        comment.setAuthor(author);
-        requisitionService.insertRejectionReason(comment);
+        reason.setAuthor(author);
+        requisitionService.insertRejectionReason(reason);
         return OpenLmisResponse.response("rejections", requisitionService.getRejectionsByRnrId(id));
     }
 
@@ -428,6 +428,11 @@ public class RequisitionController extends BaseController {
                                                                 HttpServletRequest request) {
         return response("data", requisitionService.saveBudgetFromMSDApi(facilityId,programId));
     }
+
+     @RequestMapping(value = "/requisitions/get-rejection-by-category", method = GET, headers = ACCEPT_JSON)
+        public ResponseEntity<OpenLmisResponse> getRejectionByCategory(HttpServletRequest request) {
+            return response("categories", requisitionService.getRejectionByCategory());
+        }
 
 
 

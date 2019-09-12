@@ -13,14 +13,21 @@ public interface RejectionReasonDTOMapper {
     List<RejectionReasonDTO> getAllRejections();
 
     @Insert("INSERT INTO public.rejections(\n" +
-            "            name, code, createdBy, createdDate, modifiedBy, modifiedDate)\n" +
-            "    VALUES (  #{name}, #{code}, #{createdBy},NOW(), #{modifiedBy}, NOW());")
+            "            name, code, createdBy, createdDate, modifiedBy, modifiedDate,rejectionCategoryId)\n" +
+            "    VALUES (  #{name}, #{code}, #{createdBy},NOW(), #{modifiedBy}, NOW(),#{rejectionCategory.id});")
     @Options(useGeneratedKeys = true)
     int insertUploaded(RejectionReasonDTO rejectionReason);
 
-    @Update("update rejections set name = #{name}, code = #{code} where id = #{id}")
+    @Update("update rejections set name = #{name}, code = #{code} , rejectionCategoryId = #{rejectionCategory.id} where id = #{id} ")
     void update(RejectionReasonDTO rejectionReasonDTO);
 
     @Select(" select * from rejections where code = #{code} ")
     RejectionReasonDTO getByCode(@Param("code") String code);
+
+    @Select(" select * from rejections where id = #{id} ")
+    RejectionReasonDTO getById(@Param("id") Long id);
+
+    @Select(" select * from rejections where rejectionCategoryId = #{rejectionCategoryId}")
+    List<RejectionReasonDTO> getByRejectionCategory(@Param("rejectionCategoryId") Long rejectionCategoryId);
+
 }

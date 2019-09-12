@@ -11,7 +11,7 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routeParams) {
+app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routeParams,GetRejectionByCategory) {
     return {
         restrict:'E',
         scope:{
@@ -20,6 +20,27 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
         },
         link:function (scope) {
 
+     $('.collapse').collapse();
+
+
+  scope.status = {
+    isFirstOpen: true,
+    isFirstDisabled: false
+  };
+
+            scope.open = [];
+            scope.Activate = function (ind) {
+
+                if (!scope.open[ind]) {
+                    scope.open[ind] = true;
+                }
+                else
+                {
+                    scope.open[ind] = false;
+                }
+            }
+
+
             var commentContainer = document.getElementById('comments-list');
 
 
@@ -27,6 +48,15 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
 
             AllRejections.get({}, function (data) {
                 scope.rejectionReasons =  data.rejections;
+            });
+
+            GetRejectionByCategory.get({}, function(data){
+               scope.rejectionReasons = [];
+               if(!isUndefined(data.categories)) {
+               scope.rejectionReasons = data.categories;
+               console.log(data.categories);
+               }
+
             });
 
             RequisitionRejection.get({id:$routeParams.rnr}, function (data) {
@@ -60,7 +90,6 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                 }
                 return match;
             };
-
 
             scope.sync = function(bool, item){
                 if(bool){

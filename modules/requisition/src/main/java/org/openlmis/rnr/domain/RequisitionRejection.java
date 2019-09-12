@@ -17,14 +17,13 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @EqualsAndHashCode(callSuper = false)
-public class RejectionReason extends BaseModel {
-
+public class RequisitionRejection extends BaseModel {
 
     private Long rnrId;
 
     private RejectionCategoryDTO rejectionCategory;
 
-    private RejectionReasonDTO rejection;
+    private RejectionReasonDTO reason;
 
     private User author;
 
