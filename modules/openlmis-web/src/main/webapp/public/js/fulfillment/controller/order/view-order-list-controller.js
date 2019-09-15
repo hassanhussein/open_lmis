@@ -8,7 +8,23 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewOrderListController($scope,Orders,AllOrders,messageService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear, ReportProgramSchedules) {
+function ViewOrderListController($scope,FilteredOrders,Orders,AllOrders,messageService,navigateBackService, $location, $routeParams, supplylines, programs, schedules, years, ReportPeriodsByScheduleAndYear, ReportProgramSchedules) {
+
+    $scope.searchOptions = [
+      {value: "facilityName", name: "option.value.facility"},
+      {value: "district", name: "option.value.district.name"},
+      {value: "orderNumber", name: "option.value.order.number"}
+    ];
+
+
+  $scope.showResults = false;
+  $scope.currentPage = 1;
+  $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
+
+  $scope.selectSearchType = function (searchOption) {
+    console.log(searchOption);
+    $scope.selectedSearchOption = searchOption;
+  };
 
   $scope.supplylines = supplylines;
   $scope.programs = programs;
@@ -145,6 +161,75 @@ function ViewOrderListController($scope,Orders,AllOrders,messageService, $locati
   $scope.$watch('currentPage', function () {
     $location.search('page', $scope.currentPage);
   });
+
+
+
+    $scope.triggerSearch = function (event) {
+      if (event.keyCode === 13) {
+        $scope.loadOrders(1);
+      }
+    };
+
+    $scope.clearSearch = function () {
+      $scope.query = "";
+      $scope.totalItems = 0;
+      $scope.facilityList = [];
+      $scope.showResults = false;
+      angular.element("#searchFacility").focus();
+    };
+
+ $scope.loadOrders = function (page, lastQuery) {
+ console.log($scope.query);
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getOrders(page, lastQuery) : getOrders(page, $scope.query);
+  };
+
+ function getOrders(page, query) {
+    query = query.trim();
+    $scope.searchedQuery = query;
+
+
+
+
+  /*  Facility.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+      $scope.facilityList = data.facilities;
+      $scope.pagination = data.pagination;
+      $scope.totalItems = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
+      $scope.showResults = true;
+    }, {});
+    */
+    console.log($scope.program);
+
+      FilteredOrders.get({"searchParam": $scope.searchedQuery,"columnName": $scope.selectedSearchOption.value,  page:page, supplyDepot: $scope.supplyDepot, program: $scope.program, period: $scope.period }, function (data) {
+
+         console.log(data);
+
+          if ((!data.orders || data.orders.length === 0) && $routeParams.page != 1) {
+            $location.search('page', 1);
+            return;
+          }
+            $scope.totalEmergency =  _.filter(data.orders, function (rnr) {
+                return (rnr.rnr.emergency === true);
+            });
+
+          $scope.totalRegular =  _.filter(data.orders, function (rnr) {
+                return (rnr.rnr.emergency === false);
+            });
+
+          //  $scope.orders = data.orders || [];$scope.search_orders = data || [];
+
+                        $scope.filteredOrders = data.orders || [];$scope.search_orders = data || [];
+                        $scope.orders = $scope.filteredOrders;
+                        $scope.pageSize = data.pageSize;
+                        $scope.numberOfPages = data.numberOfPages || 1;
+
+        },{});
+
+
+
+  }
+
 
 }
 
