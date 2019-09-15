@@ -183,4 +183,33 @@ public class OrderController extends BaseController {
     return response;
   }
 
+
+  @RequestMapping(value = "/filter-orders", method = GET)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_ORDER')")
+  public ResponseEntity<OpenLmisResponse> getFilteredOrdersForPage(
+          @RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
+          @RequestParam(value = "searchParam", required = false) String searchParam,
+          @RequestParam(value = "columnName") String columnName,
+          @RequestParam(value="supplyDepot", defaultValue = "0") Long supplyDepot,
+          @RequestParam(value="period", defaultValue = "0") Long period,
+          @RequestParam(value="program", defaultValue = "0") Long program,
+          HttpServletRequest request) {
+    ResponseEntity<OpenLmisResponse> response;
+    if(supplyDepot != 0 || program != 0){
+
+      response = response(ORDERS, getOrdersForView(orderService.getOrdersForPage(searchParam,columnName,page, loggedInUserId(request), VIEW_ORDER, supplyDepot, program, period)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getTotalNumberPagesByDepot(searchParam,columnName,loggedInUserId(request),VIEW_ORDER,supplyDepot, program,period));
+
+    }else {
+      response = response(ORDERS,
+              getOrdersForView(orderService.getOrdersForPage(searchParam,columnName,page, loggedInUserId(request), VIEW_ORDER)));
+      response.getBody().addData(PAGE_SIZE, orderService.getPageSize());
+      response.getBody().addData(NUMBER_OF_PAGES, orderService.getNumberOfPages());
+    }
+
+    return response;
+  }
+
+
 }

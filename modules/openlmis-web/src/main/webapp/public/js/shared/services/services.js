@@ -579,3 +579,6 @@ services.factory('GetRejectionByCategory', function ($resource) {
     return $resource('/requisitions/get-rejection-by-category.json', {}, {});
 });
 
+services.factory('FilteredOrders', function ($resource) {
+    return $resource('/filter-orders.json', {}, {});
+});

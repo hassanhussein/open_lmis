@@ -13,46 +13,42 @@
 <div class="app-form">
   <div class="row-fluid">
 
+  <div>
+ <!--   <div class="pull-left" ng-show="false" >
 
-
-  <div class="pull-right">
-    <div class="pull-left" ng-show="orders != undefined">
       <label for="search">Search</label>
       <input id="search" class="pull-right" ng-change="filterOrders()" type="text"
              ng-model="query" openlmis-message="placeholder.search.order"/>
-    </div>
-    <div class="pull-left">
+    </div>-->
+    <div class="span2" style="margin-right: 10px">
       <label for="program" openlmis-message="label.program"> <span class="label-required"> *</span></label>
       <select id="program" ng-change="OnProgramChanged();OnFilterChanged()" ng-model="program">
         <option ng-repeat="line in programs" value="{{line.id}}">{{line.name}}</option>
       </select>
     </div>
       
-    <div class="pull-left">
+    <div class="span2" style="margin-right: 10px">
       <label for="schedule" openlmis-message="label.schedule"> <span class="label-required"> *</span></label>
       <select id="schedule" ng-change="LoadPeriods()" ng-model="schedule">
         <option ng-repeat="line in schedules" value="{{line.id}}">{{line.name}}</option>
       </select>
     </div>
 
-    <div class="pull-left">
+    <div class="span2"  style="margin-right: 10px">
       <label for="year" openlmis-message="label.year"> <span class="label-required"> *</span></label>
       <select id="year" ng-change="LoadPeriods()" ng-model="year">
         <option ng-repeat="year in years" value="{{year}}">{{year}}</option>
       </select>
     </div>
 
-    <div class="pull-left">
+    <div class="span2"  style="margin-right: 10px">
       <label for="period" openlmis-message="label.period"> <span class="label-required"> *</span></label>
       <select id="period" ng-change="OnFilterChanged()" ng-model="period">
         <option ng-repeat="line in periods" value="{{line.id}}">{{line.name}}</option>
       </select>
     </div>
 
-
-   
-
-    <div class="pull-left">
+    <div class="span2">
       <label for="depot" openlmis-message="label.supplying.depot"> <span class="label-required">*</span></label>
       <select id="depot" ng-change="OnFilterChanged()" ng-model="supplyDepot">
         <option ng-repeat="line in supplylines" value="{{line.id}}">{{line.name}}</option>
@@ -60,7 +56,36 @@
     </div>
   </div>
 </div>
-  <div class="clear-both"></div>
+  <div class="row-fluid">
+    <div class="span12">
+      <div id="searchControl" >
+        <div class="span5 search-in-category">
+          <div class="input-append input-prepend">
+            <div class="btn-group">
+              <button id='searchOptionButton' class="btn dropdown-toggle">
+                <span id="selectedSearchOption" openlmis-message="selectedSearchOption.name"></span>
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li ng-repeat="searchOption in searchOptions">
+                  <a id="searchOption{{$index}}" href="" openlmis-message="searchOption.name"
+                     ng-click="selectSearchType(searchOption)"></a>
+                </li>
+              </ul>
+            </div>
+            <input id='searchFacility' type="text" class="span5" ng-model="query" maxlength="50"
+                   ng-keydown="triggerSearch($event)" autocomplete="off"/>
+            <button class="btn" ng-click="loadOrders(1)">
+              <i id='searchIcon' class="icon-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="clearfix"></div>
   <div ng-if="orders.length > 0">
     <span class="pull-right" style="color: #008F98">
 

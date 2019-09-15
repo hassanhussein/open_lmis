@@ -175,6 +175,19 @@ public class OrderService {
     return fillOrders(orders);
   }
 
+  public List<Order> getOrdersForPage(String searchParam,String columnName,int page, Long userId, String rightName) {
+    List<Order> orders = orderRepository.getOrdersForPage(searchParam,columnName,page, pageSize, userId, rightName);
+    return fillOrders(orders);
+  }
+
+  public List<Order> getOrdersForPage(String searchParam,String columnName,int page, Long userId, String right, Long supplyDepot, Long program, Long period) {
+    if(columnName.equals("facilityName")) {
+      List<Order> orders = orderRepository.getOrdersForPage(searchParam, page, pageSize, userId, right, supplyDepot, program, period);
+      return fillOrders(orders);
+    }
+    return null;
+  }
+
   public Order getOrder(Long id) {
     Order order = orderRepository.getById(id);
     if (order == null) {
@@ -318,5 +331,13 @@ public class OrderService {
   public List<Order> getOrdersByDepotWithoutPagination(Long userId, String right, Long supplyDepot, Long program, Long period) {
     List<Order> orders = orderRepository.getOrdersByDepotWithoutPagination(userId, right, supplyDepot, program, period);
     return fillOrders(orders);
+  }
+
+  public Integer getTotalNumberPagesByDepot(String searchParam,String columnName,Long userId, String right, Long supplyDepot, Long program, Long period) {
+
+    if(columnName.equals("facilityName")) {
+      return orderRepository.getTotalNumberPagesByDepot(searchParam, pageSize, userId, right, supplyDepot, program, period);
+    }
+    return null;
   }
 }

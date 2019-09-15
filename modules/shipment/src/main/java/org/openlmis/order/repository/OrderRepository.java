@@ -49,6 +49,14 @@ public class OrderRepository {
     return orderMapper.getOrdersByDepot(pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
   }
 
+ public List<Order> getOrdersForPage(String searchParam,String columnName,int page, int pageSize, Long userId, String rightName) {
+    return orderMapper.getOrdersBy(searchParam,pageSize, (page - 1) * pageSize, userId, rightName);
+  }
+
+  public List<Order> getOrdersForPage(String searchParam,int page, int pageSize, Long userId, String right, Long supplyDepot, Long program, Long period) {
+    return orderMapper.getOrdersByDepotBy(searchParam,pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
+  }
+
   public Order getById(Long id) {
     return orderMapper.getById(id);
   }
@@ -104,6 +112,11 @@ public class OrderRepository {
   public List<Order> getOrdersByDepotWithoutPagination(Long userId, String right, Long supplyDepot, Long program, Long period) {
     return orderMapper.getOrdersByDepotWithoutPagination(userId, right, supplyDepot, program, period);
   }
+
+  public Integer getTotalNumberPagesByDepot(String searchParam,int pageSize, Long userId, String right, Long supplyDepot, Long program, Long period) {
+        return orderMapper.getTotalNumberPagesByDepot(searchParam,pageSize, userId, right, supplyDepot, program, period);
+  }
+
 
 
 }
