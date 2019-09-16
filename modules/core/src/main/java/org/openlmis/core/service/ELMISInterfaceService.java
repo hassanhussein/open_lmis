@@ -264,4 +264,13 @@ public class ELMISInterfaceService {
     public void refreshViews() {
         repository.refreshMaterializedViews();
     }
+
+    public void runReviewed() {
+        System.out.println("passed");
+        new Thread(new Runnable() {
+            public void run(){
+                refreshViews();
+            }
+        }).start();
+    }
 }

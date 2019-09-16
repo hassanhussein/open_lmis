@@ -104,7 +104,7 @@ public class ELMISInterfacesController extends BaseController {
    @RequestMapping(value = "/rest-api/refresh-views", method = GET, headers = "Accept=application/json")
     public ResponseEntity<OpenLmisResponse> refreshMaterializedViews(HttpServletRequest request) {
 
-         elmisInterfaceService.refreshViews();
+         elmisInterfaceService.runReviewed();
         return OpenLmisResponse.response("refresh", "refreshed");
     }
 
