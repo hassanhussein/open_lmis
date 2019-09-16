@@ -192,4 +192,14 @@ public interface ELMISInterfaceMapper {
 
     @Select("select * from interface_apps where name = #{name}")
     ELMISInterface getByName(@Param("name") String name);
+
+
+    @Select(" \n" +
+            "Refresh materialized view mv_dashboard_consumption_summary;\n" +
+            "REFRESH MATERIALIZED VIEW  mv_dashboard_tracer_available_by_programs;\n" +
+            "REFRESH MATERIALIZED VIEW  mv_dashboard_tracer_reported_products_by_programs;\n" +
+            "REFRESH MATERIALIZED VIEW  mv_stock_imbalance_by_facility_report;\n" +
+            "REFRESH MATERIALIZED VIEW  mv_dashboard_wastage_line_items;\n" +
+            "REFRESH MATERIALIZED VIEW  mv_dashboard_timeliness_report; ")
+    void refreshMaterializedViews();
 }
