@@ -440,7 +440,6 @@ $scope.changeProductType=function(isVaccine){
                 }
             });
 
-
             asnLineItems.push({
                 asnLots: asnLots,
                 lotflag: true,
@@ -463,14 +462,7 @@ $scope.changeProductType=function(isVaccine){
             podate: $scope.poDate,
             ponumber: $scope.poNumber,
             portofarrival: $scope.portOfArrivalId,
-            purchaseDocuments: [{
-                "documentType": {
-                    "id": $scope.uploadTypeId,
-                    "description": "Testing",
-                    "name": "Testing"
-                },
-                "filelocation": "string"
-            }],
+            purchaseDocuments: $scope.documentDetails,
             status: status,
             supplierid: $scope.supplierId
         };
@@ -490,12 +482,15 @@ $scope.changeProductType=function(isVaccine){
               $scope.addNew = function(documentDetail) {
 
                   $scope.documentDetails.push({
-                        'id':"",
-                        'name': "",
-                        'fileType': "",
-                         'documentType':"",
-                         'file':""
+                         'documentType':{
+                                          "id": "",
+                                          "description": "",
+                                          "name": ""
+                                          },
+                         'fileLocation':""
                     });
+                    console.log($scope.documentDetails);
+
                     prepareSaveDocument($scope.documentDetails);
                 };
 
