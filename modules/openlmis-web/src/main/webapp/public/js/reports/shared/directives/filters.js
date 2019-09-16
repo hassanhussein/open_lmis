@@ -1533,7 +1533,7 @@ app.directive('dateRangeFilter', [function () {
                         $scope.perioderror = 'Period start date must be before or equal to end date';
 
                     else if (!angular.isUndefined($scope.periodRangeMax) && datediff > $scope.periodRangeMax)
-                        $scope.perioderror = 'Period start and end date selection are out of range';
+                        $scope.perioderror = 'Period start and end date selection are out of range ('+$scope.periodRangeMax+' days).';
 
                     /*else {
                         $scope.perioderror = "";
@@ -1632,7 +1632,7 @@ app.directive('staticPeriodFilter', [function () {
                         $scope.perioderror = 'Period start date must be before or equal to end date';
 
                     else if (!angular.isUndefined($scope.periodRangeMax) && datediff > $scope.periodRangeMax)
-                        $scope.perioderror = 'Period start and end date selection are out of range';
+                        $scope.perioderror = 'Period start and end date selection are out of range ('+$scope.periodRangeMax+' days).';
 
                     else {
                         $scope.perioderror = "";
