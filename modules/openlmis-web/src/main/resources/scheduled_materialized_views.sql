@@ -1,0 +1,6 @@
+REFRESH MATERIALIZED VIEW mv_stock_imbalance_by_facility_report;
+Refresh materialized view mv_dashboard_consumption_summary;
+REFRESH MATERIALIZED VIEW mv_dashboard_tracer_available_by_programs;
+REFRESH MATERIALIZED VIEW mv_dashboard_tracer_reported_products_by_programs;
+REFRESH MATERIALIZED VIEW mv_dashboard_wastage_line_items;
+REFRESH MATERIALIZED VIEW mv_dashboard_timeliness_report;
