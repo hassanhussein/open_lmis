@@ -190,4 +190,8 @@ public class ELMISInterfaceRepository {
     public ELMISInterface getByName(String name){
         return mapper.getByName(name);
     }
+
+    public void refreshMaterializedViews() {
+        mapper.refreshMaterializedViews();
+    }
 }

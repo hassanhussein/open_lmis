@@ -100,6 +100,14 @@ public class ELMISInterfacesController extends BaseController {
         return OpenLmisResponse.response("interfacesMapping", mapping);
     }
 
+
+   @RequestMapping(value = "/rest-api/refresh-views", method = GET, headers = "Accept=application/json")
+    public ResponseEntity<OpenLmisResponse> refreshMaterializedViews(@PathVariable Long facilityId, HttpServletRequest request) {
+
+         elmisInterfaceService.refreshViews();
+        return OpenLmisResponse.response("refresh", "refreshed");
+    }
+
    /* @RequestMapping(value = "/ELMISInterfacesMapping/getLLIN", method = GET, headers = "Accept=application/json")
     public ResponseEntity<OpenLmisResponse> getAllMosquitoData(HttpServletRequest request) {
         return OpenLmisResponse.response("llin", elmisInterfaceService.processMosquitoNetData());

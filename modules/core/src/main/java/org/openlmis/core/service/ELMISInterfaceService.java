@@ -260,4 +260,8 @@ public class ELMISInterfaceService {
         }
 
     }
+
+    public void refreshViews() {
+        repository.refreshMaterializedViews();
+    }
 }
