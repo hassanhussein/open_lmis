@@ -100,6 +100,12 @@ public class ELMISInterfacesController extends BaseController {
         return OpenLmisResponse.response("interfacesMapping", mapping);
     }
 
+    @RequestMapping(value = "/rest-api/refresh-views-by/{tableName}", method = GET, headers = "Accept=application/json")
+    public ResponseEntity<OpenLmisResponse> refreshBy(@PathVariable String tableName, HttpServletRequest request) {
+        elmisInterfaceService.refreshViewsBy(tableName);
+        return OpenLmisResponse.response("Processed", "Refreshed");
+    }
+
 
    @RequestMapping(value = "/rest-api/refresh-views", method = GET, headers = "Accept=application/json")
     public ResponseEntity<OpenLmisResponse> refreshMaterializedViews(HttpServletRequest request) {

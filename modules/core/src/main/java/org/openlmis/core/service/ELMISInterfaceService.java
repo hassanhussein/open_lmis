@@ -273,4 +273,14 @@ public class ELMISInterfaceService {
             }
         }).start();
     }
+
+    public void refreshViewsBy(String tableName) {
+
+        System.out.println("passed");
+        new Thread(new Runnable() {
+            public void run(){
+                repository.refreshViewsByName(tableName);
+            }
+        }).start();
+    }
 }

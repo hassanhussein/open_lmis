@@ -202,4 +202,7 @@ public interface ELMISInterfaceMapper {
             "REFRESH MATERIALIZED VIEW  mv_dashboard_wastage_line_items;\n" +
             "REFRESH MATERIALIZED VIEW  mv_dashboard_timeliness_report; ")
     void refreshMaterializedViews();
+
+    @Select("Refresh materialized view ${tableName}")
+    void refreshViewsByName(@Param("tableName") String tableName);
 }

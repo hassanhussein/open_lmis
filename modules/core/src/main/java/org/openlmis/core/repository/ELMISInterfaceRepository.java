@@ -194,4 +194,8 @@ public class ELMISInterfaceRepository {
     public void refreshMaterializedViews() {
         mapper.refreshMaterializedViews();
     }
+
+    public void refreshViewsByName(String tableName) {
+        mapper.refreshViewsByName(tableName);
+    }
 }
