@@ -20,17 +20,14 @@ import org.openlmis.vaccine.service.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -174,11 +171,7 @@ public class AsnController extends BaseController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
 
-        String value = request.getParameter("documentType");
-
-        System.out.println(value);
-
-        return  saveUploadedFiles(asnDocuments);
+        return saveUploadedFiles(asnDocuments);
     }
 
     private String saveUploadedFiles(MultipartFile file) {
@@ -196,13 +189,12 @@ public class AsnController extends BaseController {
             InputStream inputStream;
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
             byte[] byteFile;
-            fileName = date+file.getOriginalFilename();
+            fileName = file.getOriginalFilename();
             filePath = this.fileStoreLocation + fileName;
             inputStream = file.getInputStream();
             int val = inputStream.available();
             byteFile = new byte[val];
             inputStream.read(byteFile);
-
             File newFile = new File(filePath);
             File directory = new File(this.fileStoreLocation);
 
@@ -251,5 +243,34 @@ public class AsnController extends BaseController {
     }
 
 
+    @RequestMapping("/downloadFile")
+    public void downloadFile(@RequestParam String filename, HttpServletResponse response) throws IOException {
+        OutputStream outputStream = null;
+        InputStream in = null;
+        try {
+            in = new FileInputStream(this.fileStoreLocation + filename); // I assume files are at /tmp
+            byte[] buffer = new byte[1024];
+            int bytesRead = 0;
+            response.setHeader(
+                    "Content-Disposition",
+                    "attachment;filename=\"" + filename + "\"");
+            outputStream = response.getOutputStream();
+            while( 0 < ( bytesRead = in.read( buffer ) ) )
+            {
+                outputStream.write( buffer, 0, bytesRead );
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally
+        {
+            if ( null != in )
+            {
+                in.close();
+            }
+        }
+
+    }
 
 }

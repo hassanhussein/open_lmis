@@ -47,7 +47,7 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
   }else{
    return '';
   }
- }
+ };
 
 
   $scope.$on('$viewContentLoaded', function () {

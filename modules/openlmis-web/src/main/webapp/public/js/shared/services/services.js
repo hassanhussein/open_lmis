@@ -600,6 +600,11 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
                      return factory;
 
                      function saveDoc(file,documentType) {
+
+                        var file2 = angular.extend({},file);
+                        file.documentType = documentType;
+                      console.log(file);
+
                          var deferred = $q.defer();
                          var formData = new FormData();
                          formData.append('file', file);
@@ -625,7 +630,7 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
 
                   function findDoc(docId) {
                                          var deferred = $q.defer();
-                                         $http.get(urls.DOC_URL + '/'+docId)
+                                         $http.get('/rest-api/warehouse/'+'downloadFile' + '/'+docId)
                                              .then(
                                                  function (response) {
                                                      deferred.resolve(response.data);

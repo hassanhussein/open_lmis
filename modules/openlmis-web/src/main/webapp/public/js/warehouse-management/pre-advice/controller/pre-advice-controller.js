@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($scope,$filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController($window,$scope,$filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 ) {
     $scope.displayDocumentTypes =  documentTypes;
@@ -279,7 +279,7 @@ $scope.changeProductType=function(isVaccine){
             var previousProductLot=previousProduct.lots[previousProduct.lots.length-1];
             if(previousProductLot.quantity===0 && !previousProductLot.info){
 //            lot not defined so remove it from array
-              previousProduct.lots.splice(previousProduct.lots.length-1,1)
+              previousProduct.lots.splice(previousProduct.lots.length-1,1);
             }else{
             previousProductLot.displayCodeOnly=true;
             }
@@ -321,7 +321,7 @@ $scope.changeProductType=function(isVaccine){
 
     $scope.removeLot = function(productIndex, lotIndex) {
 
-    var productToRemoveLot=$scope.productsToAdd[productIndex]
+    var productToRemoveLot=$scope.productsToAdd[productIndex];
 
     if(productToRemoveLot.lots.length===1 && $scope.productsToAdd.length>=1){
 //        completely remove the product
@@ -649,9 +649,10 @@ $scope.removeProduct(productIndex);
       },2000);
 
 
-      $http.get("/rest-api/warehouse/upload").success(
+      $http.get("/rest-api/warehouse/downloadFile?filename="+file.name).success(
 
       function(response) {
+      console.log(response);
 
       $rootScope.docList = response;
 
@@ -662,6 +663,13 @@ $scope.removeProduct(productIndex);
 
 
 }
+
+$scope.downloadFile = function (file){
+
+var url ='/rest-api/warehouse/downloadFile?filename='+file.name;
+$window.open(url, '_blank');
+
+};
 
 }
 PreAdviceController.resolve = {

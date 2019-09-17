@@ -469,7 +469,7 @@
                             </div>
                         <div class="tab-pane" id="tab3">
                             <div class="form-row clearfix">
-                                <div class="span8">
+                                <div class="span12">
                                     <div class="panel panel-default">
                                         <div class="panel-body">
                                             <ng-form>
@@ -478,7 +478,8 @@
                                                     <tr>
                                                         <th>Upload Type </th>
                                                         <th>File </th>
-                                                        <th></th>
+                                                        <th style="width:200px!important"></th>
+
                                                     </tr>
                                                     </thead>
                                                     <tbody>
@@ -502,6 +503,10 @@
                                                         <td>
                                                             <input type="checkbox" ng-model="documentDetail.selected"/>
                                                         </td>
+                                                        <td style="min-width:200px !important" >
+                                                            <span ng-click="downloadFile(documentDetail.file)"><a href="" ng-show="documentDetail.documentType.disableSelectedRows">Download ({{documentDetail.documentType.name}})</a></span>
+
+
                                                     </tr>
                                                     </tbody>
                                                 </table>
