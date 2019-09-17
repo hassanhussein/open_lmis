@@ -530,6 +530,7 @@ $scope.removeProduct(productIndex);
 
         //            console.log(asn)
 
+
         Preadvice.save({}, asn, success, error);
 
     };
@@ -549,9 +550,9 @@ $scope.removeProduct(productIndex);
                                           },
                          'fileLocation':""
                     });
-                    console.log($scope.documentDetails);
 
                     prepareSaveDocument($scope.documentDetails);
+
                 };
 
                 $scope.remove = function(){
@@ -619,8 +620,10 @@ $scope.removeProduct(productIndex);
 
             selectedDocuments.forEach(function(document) {
 
+
                if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
                   removeItemFromList(document.documentType);
+                 document.fileLocation = document.file.name;
                  getFile(document.file, document.documentType);
 
                }
@@ -630,11 +633,7 @@ $scope.removeProduct(productIndex);
            }
 
 
-  function getFile(file,documentType){
-  var getFile = function(data,documentType){
-//       console.log(data);
-
-  var file = data;
+  function getFile(file,documentType) {
 
       docService.saveDoc(file, documentType).then(
 
@@ -660,7 +659,7 @@ $scope.removeProduct(productIndex);
       },
       function (errResponse) { });
 
-  }
+
 
 }
 

@@ -173,6 +173,11 @@ public class AsnController extends BaseController {
     //Upload file function
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
+
+        String value = request.getParameter("documentType");
+
+        System.out.println(value);
+
         return  saveUploadedFiles(asnDocuments);
     }
 
