@@ -1,0 +1,2 @@
+update rights set displayNameKey = 'label.rights.view.adjusted.facility.consumption.report' where name = 'VIEW_ADJSUTED_CONSUMPTION';
+update rights set displayNameKey = 'label.rights.view.dsipensed.facility.consumption.report' where name = 'VIEW_DISPENSED_CONSUMPTION';
