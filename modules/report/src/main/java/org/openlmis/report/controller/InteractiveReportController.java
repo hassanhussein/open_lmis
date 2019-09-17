@@ -827,6 +827,7 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/rejectedRnR", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REJECTED_RNRS_REPORT')")
     public Pages getRejected(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                              @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                              HttpServletRequest request
@@ -840,7 +841,6 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/facilityConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getFacilityConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                             @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
                                             HttpServletRequest request
@@ -857,7 +857,6 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/facilityConsumption-pdfJson", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public Pages getFacilityConsumptionDataPdfJson(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                    @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
                                                    HttpServletRequest request
@@ -874,7 +873,7 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/dailyConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DAILY_CONSUMPTION_REPORT')")
     public Pages getDailyConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                          @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                          HttpServletRequest request
