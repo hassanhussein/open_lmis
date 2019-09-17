@@ -37,12 +37,13 @@ public class MaterilizedViewConfController extends BaseController {
 @Autowired
     MaterilizedViewConfService service;
     @RequestMapping(value = "/unpopulated-materialized-views", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY, MANAGE_SUPERVISORY_NODE, MANAGE_REQUISITION_GROUP, MANAGE_SUPPLY_LINE, MANAGE_FACILITY_APPROVED_PRODUCT, MANAGE_USER')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'REFRESH_MATERIALIZED_VIEW')")
     public List<MaterializedView> loadUnpopulatedViews() {
         return service.loadUnPopulatedViews();
     }
 
     @RequestMapping(value = "/materialized-views/{viewName}",  method = RequestMethod.PUT, headers = "Accept=application/json")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'REFRESH_MATERIALIZED_VIEW')")
     public ResponseEntity<OpenLmisResponse> getByKey(@PathVariable(value = "viewName") String viewName ,HttpServletRequest request) {
         service.refreshView(viewName);
         return OpenLmisResponse.response(VIEW, "success");

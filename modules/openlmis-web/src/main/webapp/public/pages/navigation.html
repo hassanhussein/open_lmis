@@ -338,7 +338,7 @@
                     <a href="/public/pages/admin/setting/index.html"
                        openlmis-message="link.admin.configure.setting"></a>
                 </li>
-                  <li >
+                  <li ng-show="hasPermission('REFRESH_MATERIALIZED_VIEW')">
                       <a id='configureMvEdi' href="/public/pages/admin/edi/index.html#/configure-materialize-view"
                          openlmis-message="menu.admin.configure.materialize.view"></a>
                   </li>
