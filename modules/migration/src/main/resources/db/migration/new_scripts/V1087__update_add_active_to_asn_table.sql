@@ -1,0 +1,7 @@
+
+ALTER TABLE asns
+    DROP COLUMN IF EXISTS active;
+
+
+ALTER TABLE asns
+    ADD COLUMN active BOOLEAN;
