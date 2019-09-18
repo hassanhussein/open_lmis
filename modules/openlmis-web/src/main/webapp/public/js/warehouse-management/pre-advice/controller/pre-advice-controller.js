@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($window,$scope,$filter, $location, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController($window,$scope,$filter, $location,otherProducts, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 ) {
     $scope.displayDocumentTypes =  documentTypes;
@@ -24,24 +24,44 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
     $scope.productError = false;
     //console.log(configurations.productsConfiguration[0].product.id)
     $scope.configurations = configurations;
+    $scope.switchData=2;
+    $scope.otherProducts=otherProducts;
 
     $scope.asn = asn;
 
-    $scope.loadProducts = function(facilityId, programId) {
+    $scope.loadProducts = function(facilityId, programId,isVaccine=true) {
+
+        if(isVaccine && !$scope.asn){
         FacilityTypeAndProgramProducts.get({
-            facilityId: facilityId,
-            programId: programId
-        }, function(data) {
-            var allProducts = data.facilityProduct;
-            $scope.allProducts = _.sortBy(allProducts, function(product) {
-                return product.programProduct.product.id;
-            });
+                    facilityId: facilityId,
+                    programId: programId
+                }, function(data) {
+                    var allProducts = data.facilityProduct;
+//                    console.log(allProducts)
+                    $scope.allProducts = _.sortBy(allProducts, function(product) {
+                        return product.programProduct.product.id;
+                    });
 
 
-            $scope.productsToDisplay = $scope.allProducts;
-            //                       console.log($scope.allProducts)
+                    $scope.productsToDisplay = $scope.allProducts;
+                    //                       console.log($scope.allProducts)
 
-        });
+                });
+        }else{
+
+         VaccineProgramProducts.get({programId:82},function(data){
+
+                var otherProducts=_.filter(data.programProductList,function(product){
+                    return product.productCategory.id===51;
+                });
+               otherProducts=_.map(otherProducts,function(product){
+               return {programProduct:product}
+               })
+                 $scope.allProducts = otherProducts;
+                 $scope.productsToDisplay = $scope.allProducts;
+                });
+
+        }
 
 
     };
@@ -49,16 +69,37 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
     $scope.loadProducts($scope.homeFacilityId, 82);
     $scope.getProductFromId = function(productId) {
         var editProduct = {};
-        $scope.allProducts=[];
-        angular.forEach($scope.configurations.productsConfiguration, function(product, value) {
-            //        console.log(product.product.id)
-            if (productId == product.product.id) {
-                //        console.log('am here')
-                editProduct = product;
-            }
 
-            $scope.allProducts.push({programProduct:product});
-        });
+
+        if($scope.isVaccine){
+        $scope.allProducts=[];
+           angular.forEach($scope.configurations.productsConfiguration, function(product, value) {
+//                            console.log(product.product)
+                    if (productId == product.product.id) {
+//                                console.log('am here')
+                        editProduct = product;
+                    }
+
+
+                });
+        }else{
+           $scope.allProducts=[];
+        angular.forEach($scope.otherProducts.programProductList,function(product,value){
+//        console.log(product)
+        if(productId===product.product.id){
+        editProduct=product;
+
+        }
+        if(product.productCategory.id===51){
+
+                            $scope.allProducts.push({programProduct:product});
+                            }
+
+
+        })
+
+
+        }
         return editProduct.product;
 
     };
@@ -72,6 +113,8 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
             $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
                 return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
             });
+
+
 
 
 
@@ -95,9 +138,10 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
         $scope.supplierId = asn.supplierid;
         $scope.productsToAdd = [];
         $scope.supplierId = asn.supplier.id;
-         $scope.isVaccine=true;
+         $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
+
 
 
 
@@ -109,7 +153,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 //            console.log($scope.allProducts)
             var productLots = [];
             angular.forEach(product.asnLots, function(lot, value) {
-
+                $scope.isVaccine=true;
                 productLots.push({
                     quantity: lot.quantity,
                     displayCodeOnly: true,
@@ -122,6 +166,9 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
                 });
 
             });
+
+
+            if($scope.isVaccine){
 
             $scope.productsToAdd.push({
                 id: 0,
@@ -136,6 +183,24 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
                 unitPrice: product.unitprice,
 
             });
+            }else{
+            $scope.switchData=1
+             $scope.productsToAdd.push({
+                                    id: 0,
+                                    displayNameOnly:true,
+                                    programProduct: {
+                                    product:editProduct
+                                    },
+                                    maxMonthsOfStock: 0,
+                                    minMonthsOfStock: 0,
+                                    eop: null,
+                                    quantity:product.quantityexpected,
+                                    unitPrice: product.unitprice,
+
+                                });
+
+            }
+
 
 
 
@@ -174,7 +239,7 @@ $scope.updateProductsToDisplay();
 
 
 $scope.changeProductType=function(isVaccine){
-
+    $scope.isVaccine=isVaccine
         if(isVaccine){
         $scope.productsToAdd = [{
                         id: 0,
@@ -190,6 +255,7 @@ $scope.changeProductType=function(isVaccine){
                         unitPrice: 0
 
                     }];
+         $scope.loadProducts($scope.homeFacilityId, 82);
         }else{
         $scope.productsToAdd = [{
                         id: 0,
@@ -202,10 +268,31 @@ $scope.changeProductType=function(isVaccine){
                         unitPrice: 0
 
                     }];
+
+                    $scope.loadProducts($scope.homeFacilityId, 82,false);
         }
 
 };
 
+
+
+//    function programProduct(){
+//        VaccineProgramProducts.get({programId:82},function(data){
+//
+//        var otherProducts=_.filter(data.programProductList,function(product){
+//            return product.productCategory.id===51;
+//        });
+//        console.log(data)
+//otherProducts=_.map(otherProducts,function(product){
+//               return {programProduct:product}
+//               })
+//        console.log(otherProducts)
+//        });
+//
+//
+//    }
+//
+//    programProduct();
 
     $scope.updateLotsToDisplay = function() {
 
@@ -246,44 +333,78 @@ $scope.changeProductType=function(isVaccine){
     };
 
     $scope.validateProduct = function() {
+    if($scope.isVaccine){
         if (angular.equals($scope.productsToAdd[0].programProduct, {}) || !$scope.productsToAdd[0].unitPrice || !$scope.productsToAdd[0].lots[0].quantity) {
-            $scope.productError = true;
-            return;
-        }
+                $scope.productError = true;
+                return;
+            }
+    }else{
+    if (angular.equals($scope.productsToAdd[0].programProduct, {}) || !$scope.productsToAdd[0].unitPrice) {
+                    $scope.productError = true;
+                    return;
+                }
+    }
 
         $scope.productError = false;
     };
 
     $scope.addProduct = function() {
+
+//        console.log($scope.allProducts);
+
+       if($scope.isVaccine){
+
         $scope.productsToAdd.push({
-            id: 0,
-            displayNameOnly:false,
-            programProduct: {},
-            maxMonthsOfStock: 0,
-            minMonthsOfStock: 0,
-            eop: null,
-            lots: [{
-                quantity: 0,
-                displayCodeOnly: false
-            }],
-            unitPrice: 0
+                   id: 0,
+                   displayNameOnly:false,
+                   programProduct: {},
+                   maxMonthsOfStock: 0,
+                   minMonthsOfStock: 0,
+                   eop: null,
+                   lots: [{
+                       quantity: 0,
+                       displayCodeOnly: false
+                   }],
+                   unitPrice: 0
 
-        });
+               });
 
-        $scope.updateProductsToDisplay();
+               $scope.updateProductsToDisplay();
 
-//        lock the previous product and its last product if not locked
-            var previousProduct=$scope.productsToAdd[$scope.productsToAdd.length-2];
-            previousProduct.displayNameOnly=true;
-//            lock previous product lots
-            var previousProductLot=previousProduct.lots[previousProduct.lots.length-1];
-            if(previousProductLot.quantity===0 && !previousProductLot.info){
-//            lot not defined so remove it from array
-              previousProduct.lots.splice(previousProduct.lots.length-1,1);
-            }else{
-            previousProductLot.displayCodeOnly=true;
-            }
+       //        lock the previous product and its last product if not locked
+                   var previousProduct=$scope.productsToAdd[$scope.productsToAdd.length-2];
+                   previousProduct.displayNameOnly=true;
+       //            lock previous product lots
+                   var previousProductLot=previousProduct.lots[previousProduct.lots.length-1];
+                   if(previousProductLot.quantity===0 && !previousProductLot.info){
+       //            lot not defined so remove it from array
+                     previousProduct.lots.splice(previousProduct.lots.length-1,1);
+                   }else{
+                   previousProductLot.displayCodeOnly=true;
+                   }
 
+
+
+
+       }else{
+
+        $scope.productsToAdd.push ({
+                                       id: 0,
+                                       displayNameOnly:false,
+                                       programProduct: {},
+                                       maxMonthsOfStock: 0,
+                                       minMonthsOfStock: 0,
+                                       eop: null,
+                                       quantity:0,
+                                       unitPrice: 0
+
+                                   });
+
+                                   $scope.updateProductsToDisplay();
+                                   var previousProduct=$scope.productsToAdd[$scope.productsToAdd.length-2];
+                                   previousProduct.displayNameOnly=true;
+
+       }
 
 
 
@@ -296,20 +417,37 @@ $scope.changeProductType=function(isVaccine){
 
         $scope.productsToAdd.splice(productIndex, 1);
         if ($scope.productsToAdd.length + 1 === 1 && productIndex === 0) {
-            $scope.productsToAdd = [{
-                id: 0,
-                displayNameOnly:false,
-                programProduct: {},
-                maxMonthsOfStock: 0,
-                minMonthsOfStock: 0,
-                eop: null,
-                lots: [{
-                    quantity: 0,
-                    displayCodeOnly: false
-                }],
-                unitPrice: 0
+        if($scope.isVaccine){
 
-            }];
+        $scope.productsToAdd = [{
+                        id: 0,
+                        displayNameOnly:false,
+                        programProduct: {},
+                        maxMonthsOfStock: 0,
+                        minMonthsOfStock: 0,
+                        eop: null,
+                        lots: [{
+                            quantity: 0,
+                            displayCodeOnly: false
+                        }],
+                        unitPrice: 0
+
+                    }];
+
+        }else{
+         $scope.productsToAdd = [{
+                                id: 0,
+                                displayNameOnly:false,
+                                programProduct: {},
+                                maxMonthsOfStock: 0,
+                                minMonthsOfStock: 0,
+                                eop: null,
+                                quantity:0,
+                                unitPrice: 0
+
+                            }];
+        }
+
 
 
         }
@@ -478,33 +616,37 @@ $scope.removeProduct(productIndex);
             return;
         }*/
 
-        var lotflag = true;
+
         var asnLineItems = [];
-        console.log($scope.productsToAdd);
         angular.forEach($scope.productsToAdd, function(product, key) {
             var asnLots = [];
 
 
-            angular.forEach(product.lots, function(lot, key) {
-                if (lot.info) {
-                    asnLots.push({
-                        expirydate: lot.info.expirationDate,
-                        lotnumber: lot.info.lotCode,
-                        manufacturingdate: lot.info.manufactureDate,
-                        quantity: lot.quantity,
-                        serialnumber: 'string'
-                    });
+
+            if($scope.isVaccine){
+             angular.forEach(product.lots, function(lot, key) {
+                            if (lot.info) {
+                                asnLots.push({
+                                    expirydate: lot.info.expirationDate,
+                                    lotnumber: lot.info.lotCode,
+                                    manufacturingdate: lot.info.manufactureDate,
+                                    quantity: lot.quantity,
+                                    serialnumber: 'string'
+                                });
 
 
 
-                }
-            });
+                            }
+                        });
+            }
+
 
             asnLineItems.push({
                 asnLots: asnLots,
-                lotflag: true,
+                lotflag: $scope.isVaccine,
                 productid: product.programProduct.product.id,
-                unitprice:product.unitPrice
+                unitprice:product.unitPrice,
+                quantityexpected:($scope.isVaccine)?0:product.quantity
             });
 
 
@@ -526,10 +668,6 @@ $scope.removeProduct(productIndex);
             status: status,
             supplierid: $scope.supplierId
         };
-
-
-        //            console.log(asn)
-
 
         Preadvice.save({}, asn, success, error);
 
@@ -763,5 +901,15 @@ PreAdviceController.resolve = {
             });
         }, 100);
         return deferred.promise;
-    }
+    },
+    otherProducts: function($q, $timeout, $route,  VaccineProgramProducts) {
+            var deferred = $q.defer();
+
+            $timeout(function() {
+                 VaccineProgramProducts.get({programId:82},function(data) {
+                    deferred.resolve(data);
+                });
+            }, 100);
+            return deferred.promise;
+        },
 };
