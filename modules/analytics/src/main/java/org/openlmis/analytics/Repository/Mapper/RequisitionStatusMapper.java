@@ -66,7 +66,7 @@ public interface RequisitionStatusMapper {
             "       \n" +
             "        FROM requisitions r join programs p \n" +
             "            ON r.programId = p.id\n" +
-            "           and r.createdDate >= date_trunc('month', CURRENT_DATE) - INTERVAL '20 month'\n" +
+            "           and r.createdDate >= date_trunc('month', CURRENT_DATE) - INTERVAL '1 month'\n" +
             "        WHERE p.active = true\n" +
             "            AND r.status = 'RELEASED'\n" +
             "        GROUP BY p.name\n" +
