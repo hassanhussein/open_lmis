@@ -37,4 +37,6 @@ public interface FacilityTypeMapper {
             " JOIN interface_dataSet d ON LOWER(ft.code) = LOWER(d.dataSetId) and d.interfaceId = #{interfaceId} ")
     FacilityOperator getFacilityTypeByMappedOwner(@Param("code") String code, @Param("interfaceId") Long interfaceId);
 
+    @Select("select MAX(levelId) from facility_types")
+    Long getMaximumFacilityTypeLevel();
 }

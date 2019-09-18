@@ -36,4 +36,7 @@ public class FacilityTypeService {
     }
 
 
+    public Long getMaximumFacilityTypeLevel() {
+        return repository.getMaximumFacilityTypeLevel();
+    }
 }

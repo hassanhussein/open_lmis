@@ -179,6 +179,7 @@ public class RequisitionController extends BaseController {
             Rnr rnr = new Rnr(id);
             rnr.setModifiedBy(loggedInUserId(request));
             Rnr authorizedRnr = requisitionService.authorize(rnr);
+            requisitionService.skippApprovals(authorizedRnr);
             return success(messageService.message(requisitionService.getAuthorizeMessageBasedOnSupervisoryNode(
                     authorizedRnr.getFacility(), authorizedRnr.getProgram())));
         } catch (DataException e) {

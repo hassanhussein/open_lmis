@@ -137,6 +137,9 @@ public class RequisitionService {
   private PatientColumnService patientColumnService;
 
   @Autowired
+  private FacilityTypeService facilityTypeService;
+
+  @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
   }
@@ -1020,6 +1023,18 @@ public class RequisitionService {
 
   public List<RejectionReasonCategoryDTO> getRejectionByCategory(){
     return requisitionRepository.getRejectionByCategory();
+  }
+
+  public void skippApprovals(Rnr authorizedRnr) {
+
+    //Get program for redesigned program
+    Program enabledProgram = programService.getMonthlyEnabledProgram(authorizedRnr.getProgram().getId());
+    Long level = facilityTypeService.getMaximumFacilityTypeLevel();
+
+    if(enabledProgram != null && authorizedRnr.getFacility().getFacilityType().getLevelId() < level) {
+      approve(authorizedRnr,null);
+    }
+
   }
 }
 

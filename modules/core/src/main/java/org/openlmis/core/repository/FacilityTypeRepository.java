@@ -27,4 +27,8 @@ public class FacilityTypeRepository {
         return mapper.getFacilityTypeByMappedOwner(code,interfaceId);
 
     }
+
+    public Long getMaximumFacilityTypeLevel() {
+        return mapper.getMaximumFacilityTypeLevel();
+    }
 }
