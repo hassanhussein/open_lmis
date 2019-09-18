@@ -841,7 +841,7 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/facilityConsumption", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISPENSED_CONSUMPTION','VIEW_ADJSUTED_CONSUMPTION')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISPENSED_CONSUMPTION , VIEW_ADJSUTED_CONSUMPTION')")
     public Pages getFacilityConsumptionData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                             @RequestParam(value = "pageSize", required = false, defaultValue = "100") int pageSize,
                                             HttpServletRequest request
