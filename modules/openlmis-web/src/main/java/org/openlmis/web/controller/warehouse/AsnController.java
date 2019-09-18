@@ -248,7 +248,7 @@ public class AsnController extends BaseController {
         OutputStream outputStream = null;
         InputStream in = null;
         try {
-            in = new FileInputStream(this.fileStoreLocation + filename); // I assume files are at /tmp
+            in = new FileInputStream(this.fileStoreLocation + filename);
             byte[] buffer = new byte[1024];
             int bytesRead = 0;
             response.setHeader(

@@ -54,6 +54,8 @@ public class VaccineNotificationService {
     @Autowired
     private VaccineOrderRequisitionService requisitionService;
 
+    private final String FINALIZE_ASN_REPORT = "RECEIVE_FINALIZED_ASN_REPORT";
+
     public void sendOrderRequisitionStatusChangeNotification(VaccineOrderRequisition report, Long userId) {
 
         List<FacilitySupervisor> supervisorList = new ArrayList<>();
@@ -172,4 +174,29 @@ public class VaccineNotificationService {
 
         }
 
+    public void sendAsnFinalizeEmail() {
+
+       List<User>users = userService.getUsersWithRight(FINALIZE_ASN_REPORT);
+
+       for(User user : users) {
+
+           message = new SimpleMailMessage();
+
+           String emailMessage = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_FOR_ASN_REPORT).getValue();
+
+           emailMessage = emailMessage.replaceAll("\\{date_submitted\\}", new Date().toString());
+           message.setText(emailMessage);
+           message.setSubject("RECEIVE FINALIZED ASN REPORT");
+           message.setTo(user.getEmail());
+           try {
+               emailService.queueMessage(message);
+           } catch (Exception exp) {
+               LOGGER.error("Notification was not sent due to the following exception ...", exp);
+
+           }
+
+
+       }
+
+    }
 }
