@@ -29,7 +29,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
     $scope.asn = asn;
 
-    $scope.loadProducts = function(facilityId, programId,isVaccine=true) {
+    $scope.loadProducts = function(facilityId, programId,isVaccine) {
 
         if(isVaccine && !$scope.asn){
         FacilityTypeAndProgramProducts.get({
@@ -44,7 +44,6 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
 
                     $scope.productsToDisplay = $scope.allProducts;
-                    //                       console.log($scope.allProducts)
 
                 });
         }else{
@@ -55,8 +54,8 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
                     return product.productCategory.id===51;
                 });
                otherProducts=_.map(otherProducts,function(product){
-               return {programProduct:product}
-               })
+               return {programProduct:product};
+               });
                  $scope.allProducts = otherProducts;
                  $scope.productsToDisplay = $scope.allProducts;
                 });
@@ -66,7 +65,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
     };
 
-    $scope.loadProducts($scope.homeFacilityId, 82);
+    $scope.loadProducts($scope.homeFacilityId, 82,true);
     $scope.getProductFromId = function(productId) {
         var editProduct = {};
 
@@ -96,7 +95,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
                             }
 
 
-        })
+        });
 
 
         }
@@ -184,7 +183,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
             });
             }else{
-            $scope.switchData=1
+            $scope.switchData=1;
              $scope.productsToAdd.push({
                                     id: 0,
                                     displayNameOnly:true,
@@ -239,7 +238,7 @@ $scope.updateProductsToDisplay();
 
 
 $scope.changeProductType=function(isVaccine){
-    $scope.isVaccine=isVaccine
+    $scope.isVaccine=isVaccine;
         if(isVaccine){
         $scope.productsToAdd = [{
                         id: 0,
@@ -255,7 +254,7 @@ $scope.changeProductType=function(isVaccine){
                         unitPrice: 0
 
                     }];
-         $scope.loadProducts($scope.homeFacilityId, 82);
+         $scope.loadProducts($scope.homeFacilityId, 82,true);
         }else{
         $scope.productsToAdd = [{
                         id: 0,
@@ -401,8 +400,8 @@ $scope.changeProductType=function(isVaccine){
                                    });
 
                                    $scope.updateProductsToDisplay();
-                                   var previousProduct=$scope.productsToAdd[$scope.productsToAdd.length-2];
-                                   previousProduct.displayNameOnly=true;
+                                   var previousProductt=$scope.productsToAdd[$scope.productsToAdd.length-2];
+                                   previousProductt.displayNameOnly=true;
 
        }
 
