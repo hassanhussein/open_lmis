@@ -14,5 +14,7 @@ public class PurchaseDocument extends BaseModel {
 
     DocumentType documentType;
 
-    String filelocation;
+    String fileLocation;
+
+    Receive receive;
 }
