@@ -141,12 +141,12 @@
 
                 <div class="form-row clearfix">
 
-                    <div class="form-cell" ng-init="switch.Data=2">
+                    <div class="form-cell" >
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switch.Data"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
+                            <input type="radio" ng-model="switchData"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switch.Data"   value="1" ng-click="changeProductType(false)" > Other Items
+                            <input type="radio" ng-model="switchData"   value="1" ng-click="changeProductType(false)" > Other Items
                         </label>
 
                     </div>
@@ -168,7 +168,7 @@
 
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab1">
-                            <div ng-switch="switch.Data" id="wrapper">
+                            <div ng-switch="switchData" id="wrapper">
                                 <div ng-switch-when="1">
                                     <table class="table table-bordered receive">
                                         <thead>
@@ -184,16 +184,23 @@
                                         </tr>
                                         </thead>
                                         <tbody id="append-element">
-                                        <tr data-ng-repeat="product in productsToAdd">
-                                            <td>
-                                                <select>
+                                        <tr data-ng-repeat="product in productsToAdd" ng-init="productIndex=$index">
+                                            <td  class="cell-input" style="padding-left:15px;">
+                                                <select style="width:90% !important;" ui-select2
+                                                        ng-show="!product.displayNameOnly"
+                                                        ng-model="product.programProduct"
+                                                        ng-options="obj.programProduct  as obj.programProduct.product.primaryName for obj in productsToDisplay">
                                                     <option value="" openlmis-message="placeholder.select.product"></option>
-                                                    <option>Laptop</option>
-                                                    <option>Scanner</option>
                                                 </select>
+                                                <div class="row-fluid" ng-show="product.displayNameOnly">
+                                                    {{product.programProduct.product.primaryName}}
+                                                </div>
                                             </td>
                                             <td>
-
+                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ></span>
+                                                <span class="row-fluid" >
+                                                {{product.programProduct.dosageUnit.code}}
+                                            </span>
                                             </td>
                                             <td>
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="product.quantity">
@@ -203,7 +210,7 @@
                                             </td>
                                             <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
 
-                                            <td ><span class="btn btn-danger" ng-click="removeProduct('vaccine')"><i class="icon-remove"></i></i></span></td>
+                                            <td ><span class="btn btn-danger" ng-click="removeProduct(productIndex)"><i class="icon-remove"></i></i></span></td>
                                         </tr>
 
                                         </tbody>
@@ -211,7 +218,7 @@
                                         <tfoot>
                                         <tr>
                                             <td colspan="3">
-                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct('vaccine')">Add Product</button>
+                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct()">Add Product</button>
 
                                             </td>
 

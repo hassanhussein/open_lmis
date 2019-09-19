@@ -2,7 +2,7 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
 
   $scope.searchOptions = [
     {value: "ponumber", name: "PO Number"},
-    {value: "asnumber", name: "Asn Number"},
+    {value: "asnumber", name: "ASN Number"},
     {value: "supplier", name: "Supplier"}
   ];
 
