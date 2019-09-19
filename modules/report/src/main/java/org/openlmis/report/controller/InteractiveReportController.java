@@ -121,8 +121,8 @@ public class InteractiveReportController extends BaseController {
 
         Report report = reportManager.getReportByKey("non_reporting");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<MasterReport> reportList =
-                (List<MasterReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+        List<ReportingMasterReport> reportList =
+                (List<ReportingMasterReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, reportList);
     }

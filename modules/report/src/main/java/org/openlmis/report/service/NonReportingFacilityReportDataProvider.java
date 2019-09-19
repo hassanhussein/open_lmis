@@ -22,6 +22,7 @@ import org.openlmis.report.model.dto.ProcessingPeriod;
 import org.openlmis.report.model.params.NonReportingFacilityParam;
 import org.openlmis.report.model.report.MasterReport;
 import org.openlmis.report.model.report.NonReportingFacilityDetail;
+import org.openlmis.report.model.report.ReportingMasterReport;
 import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,8 +97,8 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         String periodListString = this.getPeriodParameter(nonReportingFacilityParam, rowBounds);
         nonReportingFacilityParam.setPeriodString(periodListString);
 
-        List<MasterReport> reportList = new ArrayList<>();
-        MasterReport report = new MasterReport();
+        List<ReportingMasterReport> reportList = new ArrayList<>();
+        ReportingMasterReport report = new ReportingMasterReport();
 
         List<NonReportingFacilityDetail> nonReportingFacilityDetails = reportMapper.getNonReportingFacilities(nonReportingFacilityParam, rowBounds, this.getUserId());
         Double nonReporting = Double.parseDouble(String.valueOf(nonReportingFacilityDetails.size()));
@@ -113,14 +114,16 @@ public class NonReportingFacilityReportDataProvider extends ReportDataProvider {
         summary.add(new NameCount(TOTAL_FACILITIES, totalFacilities.toString()));
         summary.add(new NameCount(TOTAL_NON_REPORTING, nonReporting.toString()));
         summary.add(new NameCount(REPORTING_FACILITIES, Double.toString(totalFacilities - nonReporting)));
-
+        report.setSummary(summary);
+        List<Map<String, Object>> periodsForChart=reportMapper.getPeriodsTicksForChart(nonReportingFacilityParam);
+        List<Map<String, Object>> chartData=reportMapper.getReportingStatusChartData(nonReportingFacilityParam, rowBounds, getUserId());
         report.setKeyValueSummary(new HashedMap(){{
-            put(PERIODS_FOR_CHART, reportMapper.getPeriodsTicksForChart(nonReportingFacilityParam));
-            put("chartData", reportMapper.getReportingStatusChartData(nonReportingFacilityParam, rowBounds, getUserId()));
+            put(PERIODS_FOR_CHART,periodsForChart );
+            put("chartData", chartData);
         }});
 
 
-        report.setSummary(summary);
+
         reportList.add(report);
 
         List<? extends ResultRow> list;

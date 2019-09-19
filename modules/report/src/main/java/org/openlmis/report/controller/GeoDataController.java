@@ -86,8 +86,8 @@ public class GeoDataController extends BaseController {
                                                                       HttpServletRequest request
     ) {
         Long userId = loggedInUserId(request);
-
-        return OpenLmisResponse.response(FACILITIES, this.geographicZoneReportMapper.getNonReportingFacilities(program, geoZoneId, period,schedule, userId));
+        List<GeoFacilityIndicator> nonReportingFacilities=this.geographicZoneReportMapper.getNonReportingFacilities(program, geoZoneId, period,schedule, userId);
+        return OpenLmisResponse.response(FACILITIES, nonReportingFacilities);
     }
 
     @RequestMapping(value = "/stock-status-facilities", method = GET, headers = BaseController.ACCEPT_JSON)
