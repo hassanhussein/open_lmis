@@ -11,9 +11,9 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($window,$scope,$filter, $location,otherProducts, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
-$rootScope,documentTypes,UploadFile,$http,docService, $timeout
-) {
+function ReceiveController($window,$scope,$filter, $location,otherProducts, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+                           $rootScope,documentTypes,UploadFile,$http,docService, $timeout){
+
     $scope.displayDocumentTypes =  documentTypes;
     $scope.homeFacilityId = homeFacility.id;
     $scope.userPrograms = configurations.programs;
@@ -809,8 +809,11 @@ $window.open(url, '_blank');
 
 };
 
+
 }
-PreAdviceController.resolve = {
+
+
+ReceiveController.resolve = {
 
    documentTypes: function ($q, $timeout, $route, DocumentTypes) {
          var deferred = $q.defer();
