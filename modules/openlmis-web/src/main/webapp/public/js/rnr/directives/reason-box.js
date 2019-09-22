@@ -133,11 +133,14 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                 return match;
             };
 
-            scope.sync = function(bool, item){
-                if(bool){
+            scope.sync = function(selected,reason, item) {
+
+                if(selected){
+
                     // add item
                    // scope.rejectionReasons.push(item);
                     scope.nowR.push(item);
+
                 } else {
                     // remove item
                     for(var i=0 ; i < scope.nowR.length; i++) {
@@ -149,7 +152,10 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                     }
                 }
 
+
             };
+
+
 
           /*  scope.addReasons = function(){
 
@@ -192,9 +198,11 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
             };*/
 
             scope.rejectRN = function () {
-                if (scope.nowR.length <= 0) {
+
+                if (scope.nowR.length === 0) {
                     return;
                 }
+                scope.$parent.rnr.rejectionReasons = scope.rejectionReasons;
                 scope.$parent.rejectRnR();
             };
 

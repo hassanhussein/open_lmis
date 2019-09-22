@@ -25,7 +25,7 @@
         <div class="span12">
 
 
-            <div  ng-repeat-start="res in  rejectionReasons">
+       <!--     <div  ng-repeat-start="res in  rejectionReasons">
 
             <div class="panel-group" id="accordion-{{$index}}">
 
@@ -36,7 +36,7 @@
                                 {{res.name}}
                             </a>
                         </h4>
-                    </div><!--/.panel-heading -->
+                    </div>&lt;!&ndash;/.panel-heading &ndash;&gt;
                     <div id="collapseOne" class="panel-collapse collapse in">
                         <div class="panel-body" ng-repeat="reason in res.rejections">
 
@@ -48,13 +48,13 @@
 
                             </li>
 
-                        </div><!--/.panel-body -->
-                    </div><!--/.panel-collapse -->
+                        </div>&lt;!&ndash;/.panel-body &ndash;&gt;
+                    </div>&lt;!&ndash;/.panel-collapse &ndash;&gt;
                 </div>
             </div>
 
             </div>
-            <div ng-repeat-end=""></div>
+            <div ng-repeat-end=""></div>-->
 
 
             <div  ng-repeat-start="res in  rejectionReasons">
@@ -65,7 +65,7 @@
                        <li><span>{{reason.name}}</span>
                            <span>
                             <input type="checkbox"
-                                   ng-change="sync(bool, res)" ng-model="bool" ng-init="bool=false" class="pull-right"/>
+                                   ng-change="sync(reason.selected,reason,res)" ng-model="reason.selected" ng-init="reason.selected=false" class="pull-right"/>
                         </span>
 
                        </li>
@@ -84,7 +84,7 @@
     <div ng-show="updatable">
 
         <div>
-            <input id="addButton" type="button" openlmis-message="button.reject" ng-click="rejectRN()" ng-disabled="bool"
+            <input id="addButton" type="button" openlmis-message="button.reject" ng-click="rejectRN()" ng-disabled="reason.selected"
                    class="btn btn-primary pull-right"/>
         </div>
 
