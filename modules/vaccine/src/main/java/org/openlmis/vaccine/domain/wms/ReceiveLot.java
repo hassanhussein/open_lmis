@@ -14,13 +14,12 @@ import java.util.Date;
 @NoArgsConstructor
 public class ReceiveLot extends BaseModel {
 
-    private Integer receiveDetailId;
     private Integer locationId;
     private String lotNumber;
     private String serialNumber;
     private Date expiryDate;
     private Date manufacturingDate;
     private Integer quantity;
-    private ReceiveDetail receiveDetail;
+    private ReceiveLineItem receiveLineItem;
 
 }

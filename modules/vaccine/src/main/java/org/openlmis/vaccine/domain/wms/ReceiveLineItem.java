@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReceiveDetail extends BaseModel {
+public class ReceiveLineItem extends BaseModel {
 
     private Integer receiveId;
     private Integer productId;
@@ -23,5 +24,6 @@ public class ReceiveDetail extends BaseModel {
     private Integer boxCounted;
     private boolean lotFlag;
     private Receive receive;
+    List<ReceiveLot> receiveLots;
 
 }
