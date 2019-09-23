@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ReceiveService {
 
@@ -49,5 +51,13 @@ public class ReceiveService {
             purchaseDocumentService.save(document);
         }*/
 
+    }
+
+    public List<Receive> getAll() {
+       return repository.getAll();
+    }
+
+    public Receive getById(Long id) {
+        return repository.getById(id);
     }
 }

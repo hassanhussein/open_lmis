@@ -6,6 +6,8 @@ import org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ReceiveRepository {
 
@@ -21,4 +23,11 @@ public class ReceiveRepository {
     }
 
 
+    public List<Receive> getAll() {
+        return mapper.getAll();
+    }
+
+    public Receive getById(Long id) {
+        return mapper.getById(id);
+    }
 }

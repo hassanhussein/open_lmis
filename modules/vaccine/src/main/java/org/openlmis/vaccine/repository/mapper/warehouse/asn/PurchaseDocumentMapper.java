@@ -43,4 +43,11 @@ public interface PurchaseDocumentMapper {
     })
     List<PurchaseDocument> getByAsnId(@Param("id") Long id);
 
+    @Select("SELECT * FROM purchase_documents where asnid = #{id}")
+    @Results(value = {
+            @Result(property = "documentType", column = "documenttype", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMapper.getById"))
+    })
+    List<PurchaseDocument> getByReceiveId(@Param("id") Long id);
+
 }
