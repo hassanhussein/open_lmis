@@ -52,10 +52,10 @@ public interface BudgetLineItemMapper {
   Integer insertBudget(BudgetDTO budgetDTO);
 
   @Insert({
-          "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes,budgetId,additive) ",
+          "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes,budgetId,additive, fundSourceCode) ",
           "VALUES (#{facilityId}, #{programId}, #{budgetFileId}, #{periodId}, #{periodDate}::date,  " +
                   " CAST (#{allocatedBudget} AS DOUBLE PRECISION) " +
-                  " , #{notes},#{budgetId},#{additive})"
+                  " , #{notes},#{budgetId},#{additive}, #{fundSourceCode})"
   })
   @Options(useGeneratedKeys = true)
     void insertBudgetLineItem(BudgetLineItemDTO lineItem);
