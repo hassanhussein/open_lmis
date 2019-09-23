@@ -31,7 +31,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
     $scope.loadProducts = function(facilityId, programId,isVaccine) {
 
-        if(isVaccine && !$scope.asn){
+        if(isVaccine){
         FacilityTypeAndProgramProducts.get({
                     facilityId: facilityId,
                     programId: programId
@@ -109,6 +109,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
             var toExclude = _.pluck(_.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'), 'primaryName');
 
+console.log($scope.allProducts)
             $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
                 return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
             });
