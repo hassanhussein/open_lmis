@@ -489,7 +489,7 @@ $scope.removeProduct(productIndex);
         if($scope.isVaccine){
 
           product.lots.forEach(function(lot) {
-                    sum += lot.quantity;
+                    sum += parseInt(lot.quantity);
                 });
         }else{
 

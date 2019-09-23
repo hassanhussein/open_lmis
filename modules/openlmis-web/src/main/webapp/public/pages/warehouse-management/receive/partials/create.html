@@ -238,6 +238,7 @@
                                             <th>Quantity</th>
                                             <th>Unit Price</th>
                                             <th>Total Cost</th>
+                                            <th>Location</th>
                                             <th>Action</th>
 
 
@@ -262,13 +263,24 @@
                                                 {{product.programProduct.dosageUnit.code}}
                                             </span>
                                             </td>
-                                            <td>
+                                            <td class="col-general">
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="product.quantity">
                                             </td>
-                                            <td>
+                                            <td class="col-general">
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice">
                                             </td>
+
                                             <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
+                                            <td>
+                                                <select>
+                                                    <option value="" >--Select Location--</option>
+
+                                                    <option>Location 1</option>
+                                                    <option>Location 2</option>
+                                                    <option>Location 3</option>
+
+                                                </select>
+                                            </td>
 
                                             <td ><span class="btn btn-danger" ng-click="removeProduct(productIndex)"><i class="icon-remove"></i></i></span></td>
                                         </tr>
@@ -304,7 +316,7 @@
                                             <th  style="width:250px !important;max-width:250px !important" class="col-product " openlmis-message="label.products"></th>
                                             <th class="col-product" style="max-width:160px !important; width:160px !important">
                                                 <span openlmis-message="label.unit.of.measure"></span></th>
-                                            <th style="width:300px !important;max-width:300px !important" class="col-lot" ><span openlmis-message="label.stock.batch"></span></th>
+                                            <th style="width:300px !important;max-width:300px !important" class="col-lot" >Batch</th>
                                             <th class="col-quantity" ><span
                                                     openlmis-message="label.stock.quantity"></span></th>
                                             <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Unit Price</th>
@@ -336,17 +348,20 @@
                                             </td>
 
                                             <td >
-                                                <div class="row-fluid" ng-if="!product.lots[0].displayCodeOnly" >
-                                                    <div  style="width:20%; float:left;margin-top:1px">
+
+                                                <div class="">
+                                                    <div class="span2">
                                                         <input type="button" ng-disabled="!product.programProduct.product"
                                                                class="btn btn-primary btn-small"
                                                                href ng-click="showNewLotModal(product.programProduct.product)"
                                                                openlmis-message="button.create"
+                                                               ng-if="!product.lots[0].displayCodeOnly"
                                                         />
+                                                        <div ng-if="product.lots[0].displayCodeOnly">Number:</div>
                                                     </div>
-                                                    <div style="width:80%; float:left">
-                                                        <select  ui-select2
-                                                                 style="min-width:200px !important"
+                                                    <div class="span10">
+                                                        <select ng-if="!product.lots[0].displayCodeOnly"
+
                                                                  ng-model="product.lots[0].info"
                                                                  ng-disabled="!product.programProduct.product"
                                                                  ng-options="obj.lotCode for obj in lotsToDisplay"
@@ -355,42 +370,49 @@
                                                             <option value="" openlmis-message="placeholder.select.batch"></option>
 
                                                         </select>
-                                                        <div class="row">
-                                                            <div class="span2">Location:</div>
-                                                            <div class="span2">
-                                                                <select  ui-select2
-                                                                         ng-model="product.lots[0].info"
-                                                                         ng-disabled="!product.programProduct.product"
-                                                                         ng-options="obj.lotCode for obj in lotsToDisplay"
+                                                        <div ng-if="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
+                                                    </div>
 
-                                                                >
-                                                                    <option value="" openlmis-message="placeholder.select.batch"></option>
 
-                                                                </select>
-                                                            </div>
-                                                        </div>
+                                                </div>
+
+                                                <div class="" style="margin-top:6px;">
+                                                    <div class="span2">Location: </div>
+                                                    <div class="span10">
+                                                        <select ng-disabled="!product.lots[0].info">
+                                                            <option value="" >--Select Location--</option>
+
+                                                            <option>Location 1</option>
+                                                            <option>Location 2</option>
+                                                            <option>Location 3</option>
+
+                                                        </select>
                                                     </div>
 
                                                 </div>
 
-                                                <div ng-show="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
+                                                <div class="">
+                                                    <div class="span2">Campaign:</div>
+                                                    <div class="span10"><input type="checkbox" ng-disabled="!product.lots[0].info"></div>
+
+                                                </div>
 
                                             </td>
-                                            <td>
+                                            <td class="cell-input col-general" style="padding-left:15px;" >
                                                 <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info" ng-model="product.lots[0].quantity" style="width:99px">
                                             </td>
-                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:1px;">
+                                            <td rowspan="{{product.lots.length}}" class="cell-input col-general" style="padding-left:1px;">
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity" style="width:99px">
                                             </td>
 
                                             <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;" >{{totalCostPerProduct(product) | number}}</td>
-                                            <td>
+                                            <td class="cell-input" style="padding-left:15px;" >
                                                 <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
                                                 <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
 
                                             </td>
 
-                                            <td rowspan="{{product.lots.length}}" >
+                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;"  >
                                                 <button class="btn btn-small btn-danger" ng-if="product && !$last && productsToAdd.length>1" ng-click="removeProduct(productIndex)"  type="button" >Remove</button>
                                                 <button class="btn btn-small btn-info" ng-click="addProduct()" ng-if="$last" ng-disabled="product.programProduct.product===undefined"   >Add</button>
                                             </td>
@@ -398,30 +420,56 @@
                                         </tr>
                                         <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
                                             <td>
-                                                <div class="row-fluid" ng-if="!lot.displayCodeOnly" >
-                                                    <div  style="width:20%; float:left;margin-top:1px">
-                                                        <input type="button"
+                                                <div class="">
+                                                    <div class="span2">
+                                                        <input type="button" ng-disabled="!product.programProduct.product"
                                                                class="btn btn-primary btn-small"
-                                                               href ng-click="showNewLotModal(product.programProduct.productconsole.log(ports)
-)"
-                                                               ng-disabled="!product.programProduct.product"
-                                                               openlmis-message="button.create"/>
+                                                               href ng-click="showNewLotModal(product.programProduct.product)"
+                                                               openlmis-message="button.create"
+                                                               ng-if="!lot.displayCodeOnly"
+
+                                                        />
+                                                        <div ng-if="lot.displayCodeOnly">Number:</div>
                                                     </div>
-                                                    <div style="width:80%; float:left" ng-if="!lot.displayCodeOnly">
-                                                        <select  ui-select2
-                                                                 style="min-width:200px !important"
-                                                                 ng-disabled="!product.programProduct.product"
-                                                                 ng-model="lot.info"
-                                                                 ng-options="obj.lotCode for obj in lotsToDisplay"
+                                                    <div class="span10">
+                                                        <select
+
+                                                                ng-model="lot.info"
+                                                                ng-disabled="!product.programProduct.product"
+                                                                ng-options="obj.lotCode for obj in lotsToDisplay"
+                                                                ng-if="!lot.displayCodeOnly"
+
                                                         >
                                                             <option value="" openlmis-message="placeholder.select.batch"></option>
+
+                                                        </select>
+                                                        <div ng-if="lot.displayCodeOnly">{{lot.info.lotCode}}</div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="" style="margin-top:6px;">
+                                                    <div class="span2">Location: </div>
+                                                    <div class="span10">
+                                                        <select ng-disabled="!lot.info">
+                                                            <option value="" >--Select Location--</option>
+
+                                                            <option>Location 1</option>
+                                                            <option>Location 2</option>
+                                                            <option>Location 3</option>
+
                                                         </select>
                                                     </div>
 
                                                 </div>
-                                                <div ng-if="lot.displayCodeOnly">{{lot.info.lotCode}}</div>
+
+                                                <div class="">
+                                                    <div class="span2">Campaign:</div>
+                                                    <div class="span10"><input type="checkbox" ng-disabled="!lot.info"></div>
+
+                                                </div>
                                             </td>
-                                            <td>
+                                            <td class="col-general">
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info" style="width:99px">
                                             </td>
                                             <td>

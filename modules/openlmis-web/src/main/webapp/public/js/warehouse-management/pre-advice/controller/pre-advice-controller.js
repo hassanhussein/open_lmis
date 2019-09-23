@@ -489,12 +489,15 @@ $scope.removeProduct(productIndex);
         if($scope.isVaccine){
 
           product.lots.forEach(function(lot) {
-                    sum += lot.quantity;
+//          console.log(lot.quantity)
+                    sum += parseInt(lot.quantity);
                 });
         }else{
 
-        sum=product.quantity;
+//        sum=product.quantity;
         }
+
+        console.log(sum);
 
         return sum;
     };
@@ -505,6 +508,8 @@ $scope.removeProduct(productIndex);
         $scope.message = "";
         $scope.error = "";
         $scope.showError = false;
+        $scope.$parent.asnId = false;
+        $scope.$parent.asnIdUpdate = false;
         $location.path('');
 
     };
@@ -526,6 +531,22 @@ $scope.removeProduct(productIndex);
         $scope.error = data.data.error;
         $scope.showError = true;
     };
+
+
+    var updateSuccess = function(data) {
+            $scope.error = "";
+            $scope.$parent.message = data.success;
+            $scope.$parent.asnIdUpdate = true;
+            $scope.showError = false;
+            $location.path('');
+        };
+
+
+        var udateError = function(data) {
+            $scope.$parent.message = "";
+            $scope.error = data.data.error;
+            $scope.showError = true;
+        };
 
 
     $scope.changeLotDisplay = function(lotId) {
@@ -669,8 +690,18 @@ $scope.removeProduct(productIndex);
             supplierid: $scope.supplierId
         };
 
-        Preadvice.save({}, asn, success, error);
+        if($scope.asn){
 
+
+                  Preadvice.update({id:$scope.asn.id}, asn, updateSuccess, updateError);
+                         console.log('update')
+
+        }else{
+
+        Preadvice.save({}, asn, success, error);
+                        console.log('save')
+
+        }
     };
 
 
