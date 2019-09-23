@@ -150,5 +150,9 @@ public interface UserMapper {
           " where u.id = #{userId} and ft.code in('cvs','rvs','dvs') limit 1 ")
   FacilityType facilityTypeForUser(@Param("userId") Long userId);
 
-
+    @Select("SELECT * FROM USERS u \n" +
+            "JOIN role_assignments ASIG ON U.ID = ASIG.USERID \n" +
+            "join role_rights rr on rR.ROLEID = ASIG.ROLEID \n" +
+            "where rr.rightName  = #{rightName}")
+    List<User> getUsersWithRight(@Param("rightName") String rightName);
 }

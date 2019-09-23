@@ -1,0 +1,1 @@
+ALTER TABLE receives RENAME COLUMN isforeignprocument TO isforeignprocurement;

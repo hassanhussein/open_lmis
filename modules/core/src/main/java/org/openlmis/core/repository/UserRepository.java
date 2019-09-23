@@ -171,4 +171,8 @@ public class UserRepository {
   public FacilityType facilityTypeForUser(Long userId){
     return userMapper.facilityTypeForUser(userId);
   }
+
+    public List<User> getUsersWithRight(String rightName) {
+      return userMapper.getUsersWithRight(rightName);
+    }
 }

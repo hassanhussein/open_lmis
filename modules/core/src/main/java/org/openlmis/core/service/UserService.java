@@ -243,4 +243,12 @@ public class UserService {
   public FacilityType facilityTypeForUser(Long userId){
     return userRepository.facilityTypeForUser(userId);
   }
+
+  public List<User> getUsersWithRight(String rightName) {
+    return userRepository.getUsersWithRight(rightName);
+  }
+
+  public void sendAsnEmail(User user) {
+
+  }
 }

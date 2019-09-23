@@ -1,9 +1,14 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.repository.warehouse.AsnRepository;
+import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,14 @@ public class AsnService {
     @Autowired
     PurchaseDocumentService purchaseDocumentService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    VaccineNotificationService notificationService;
+
+    private final String FINALIZE_ASN_REPORT = "RECEIVE_FINALIZED_ASN_REPORT";
+
     @Transactional
     public void save(Asn asn, Long userId) {
 
@@ -34,7 +47,7 @@ public class AsnService {
         }else {
             repository.update(asn);
         }
-
+        notificationService.sendAsnFinalizeEmail();
         List<AsnLineItem> asnLineItems = asn.getAsnLineItems();
 
         for(AsnLineItem lineItem : asnLineItems){
@@ -104,4 +117,5 @@ public class AsnService {
     public void deleteById(Long id) {
        repository.deleteById(id);
     }
+
 }

@@ -643,3 +643,14 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
                   }
                  }
  ]);
+
+
+ //Receive API
+
+ services.factory("Receive", function ($resource) {
+     return $resource('/rest-api/warehouse/receive/:id.json', {id: '@id'}, update);
+ });
+
+services.factory("ReceiveLookups", function ($resource) {
+    return $resource('/rest-api/warehouse/receive/template.json', {}, {});
+});
