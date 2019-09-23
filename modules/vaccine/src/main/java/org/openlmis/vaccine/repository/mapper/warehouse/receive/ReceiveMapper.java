@@ -50,7 +50,7 @@ public interface ReceiveMapper {
     @Select(" select * from receives")
     @Results(value = {
             @Result(column = "id", property = "id"),
-            @Result(property = "asnLineItems", column = "id", javaType = List.class,
+            @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
             @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
