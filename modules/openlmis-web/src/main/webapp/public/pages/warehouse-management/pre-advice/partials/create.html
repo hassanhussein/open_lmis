@@ -276,15 +276,15 @@
                                             </td>
 
                                             <td >
-                                                <div class="row-fluid" ng-if="!product.lots[0].displayCodeOnly" >
-                                                    <div  style="width:20%; float:left;margin-top:1px">
+                                                <div  ng-if="!product.lots[0].displayCodeOnly" >
+                                                    <div  class="span2">
                                                         <input type="button" ng-disabled="!product.programProduct.product"
                                                                class="btn btn-primary btn-small"
                                                                href ng-click="showNewLotModal(product.programProduct.product)"
                                                                openlmis-message="button.create"
                                                         />
                                                     </div>
-                                                    <div style="width:80%; float:left">
+                                                    <div class="span10">
                                                         <select  ui-select2
                                                                  style="min-width:200px !important"
                                                                  ng-model="product.lots[0].info"
@@ -324,15 +324,15 @@
                                         </tr>
                                         <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
                                             <td>
-                                                <div class="row-fluid" ng-if="!lot.displayCodeOnly" >
-                                                    <div  style="width:20%; float:left;margin-top:1px">
+                                                <div  ng-if="!lot.displayCodeOnly" >
+                                                    <div  class="span2">
                                                         <input type="button"
                                                                class="btn btn-primary btn-small"
                                                                href ng-click="showNewLotModal(product.programProduct.product)"
                                                                ng-disabled="!product.programProduct.product"
                                                                openlmis-message="button.create"/>
                                                     </div>
-                                                    <div style="width:80%; float:left" ng-if="!lot.displayCodeOnly">
+                                                    <div class="span10" ng-if="!lot.displayCodeOnly">
                                                         <select  ui-select2
                                                                  style="min-width:200px !important"
                                                                  ng-disabled="!product.programProduct.product"
