@@ -11,9 +11,9 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($window,$scope,$filter, $location,otherProducts, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
-$rootScope,documentTypes,UploadFile,$http,docService, $timeout
-) {
+function ReceiveController($window,$scope,$filter, $location,otherProducts, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+                           $rootScope,documentTypes,UploadFile,$http,docService, $timeout){
+
     $scope.displayDocumentTypes =  documentTypes;
     $scope.homeFacilityId = homeFacility.id;
     $scope.userPrograms = configurations.programs;
@@ -31,7 +31,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
     $scope.loadProducts = function(facilityId, programId,isVaccine) {
 
-        if(isVaccine){
+        if(isVaccine && !$scope.asn){
         FacilityTypeAndProgramProducts.get({
                     facilityId: facilityId,
                     programId: programId
@@ -109,7 +109,6 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
             var toExclude = _.pluck(_.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'), 'primaryName');
 
-console.log($scope.allProducts)
             $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
                 return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
             });
@@ -490,15 +489,12 @@ $scope.removeProduct(productIndex);
         if($scope.isVaccine){
 
           product.lots.forEach(function(lot) {
-//          console.log(lot.quantity)
                     sum += parseInt(lot.quantity);
                 });
         }else{
 
-//        sum=product.quantity;
+        sum=product.quantity;
         }
-
-        console.log(sum);
 
         return sum;
     };
@@ -509,8 +505,6 @@ $scope.removeProduct(productIndex);
         $scope.message = "";
         $scope.error = "";
         $scope.showError = false;
-        $scope.$parent.asnId = false;
-        $scope.$parent.asnIdUpdate = false;
         $location.path('');
 
     };
@@ -532,22 +526,6 @@ $scope.removeProduct(productIndex);
         $scope.error = data.data.error;
         $scope.showError = true;
     };
-
-
-    var updateSuccess = function(data) {
-            $scope.error = "";
-            $scope.$parent.message = data.success;
-            $scope.$parent.asnIdUpdate = true;
-            $scope.showError = false;
-            $location.path('');
-        };
-
-
-        var udateError = function(data) {
-            $scope.$parent.message = "";
-            $scope.error = data.data.error;
-            $scope.showError = true;
-        };
 
 
     $scope.changeLotDisplay = function(lotId) {
@@ -691,18 +669,8 @@ $scope.removeProduct(productIndex);
             supplierid: $scope.supplierId
         };
 
-        if($scope.asn){
-
-
-                  Preadvice.update({id:$scope.asn.id}, asn, updateSuccess, updateError);
-                         console.log('update')
-
-        }else{
-
         Preadvice.save({}, asn, success, error);
-                        console.log('save')
 
-        }
     };
 
 
@@ -841,8 +809,11 @@ $window.open(url, '_blank');
 
 };
 
+
 }
-PreAdviceController.resolve = {
+
+
+ReceiveController.resolve = {
 
    documentTypes: function ($q, $timeout, $route, DocumentTypes) {
          var deferred = $q.defer();
