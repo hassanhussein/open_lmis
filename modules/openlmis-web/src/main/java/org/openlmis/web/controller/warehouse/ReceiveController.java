@@ -110,5 +110,4 @@ public class ReceiveController extends BaseController {
         return OpenLmisResponse.response("receive", service.getById(id));
     }
 
-
 }

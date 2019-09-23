@@ -37,4 +37,6 @@ public interface ReceiveLineItemMapper {
     })
     List<ReceiveLineItem>  getByReceiveId(@Param("id") Long id);
 
+    @Select(" select * from receive_line_items")
+    List<ReceiveLineItem> getAll();
 }

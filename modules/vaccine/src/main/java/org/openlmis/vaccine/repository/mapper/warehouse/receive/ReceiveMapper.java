@@ -52,7 +52,7 @@ public interface ReceiveMapper {
             @Result(column = "id", property = "id"),
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
-            @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
+            @Result(property = "supplier", column = "supplierId", javaType = SupplyPartner.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByReceiveId"))
