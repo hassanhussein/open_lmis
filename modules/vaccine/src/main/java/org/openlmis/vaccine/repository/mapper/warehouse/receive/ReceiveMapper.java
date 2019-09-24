@@ -107,7 +107,7 @@ public interface ReceiveMapper {
             String searchParam = (String) params.get("searchParam");
             String column = (String) params.get("column");
             sql.append("SELECT A.*, M.* FROM receives A ");
-            sql.append("INNER JOIN manufacturers M on M.id = A.supplierid WHERE ");
+            sql.append("LEFT JOIN manufacturers M on M.id = A.supplierid WHERE ");
             if(column.equalsIgnoreCase("blawBnumber")) {
                 sql.append("(LOWER(A.blawBnumber) LIKE '%' || LOWER(#{searchParam}) || '%') ");
 
