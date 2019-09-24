@@ -10,14 +10,14 @@ import java.util.List;
 @Repository
 public interface ReceiveLotMapper {
 
-    @Insert(" INSERT INTO receive_lots (receiveLineItemId, lotNumber, serialnumber, expiryDate, manufacturingDate, quantity, unitPrice, " +
+    @Insert(" INSERT INTO receive_lots (receiveLineItemId, lotNumber, serialNumber, expiryDate, manufacturingDate, quantity,  " +
             "createdBy, createdDate,modifiedBy,modifiedDate) " +
-            " VALUES(#{receiveLineItem.id}, #{lotNumber}, #{serialnumber}, #{expiryDate}, #{manufacturingDate}, #{quantity}, #{unitPrice}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
+            " VALUES(#{receiveLineItem.id}, #{lotNumber}, #{serialNumber}, #{expiryDate}, #{manufacturingDate}, #{quantity}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer insert(ReceiveLot receiveLot);
 
-    @Update(" update receive_lots set  receiveLineItemId = #{receiveLineItem.id}, lotNumber = #{lotNumber}, serialnumber = #{serialnumber}, expiryDate = #{expiryDate}, " +
-            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}, unitPrice = #{unitPrice}, "+
+    @Update(" update receive_lots set  receiveLineItemId = #{receiveLineItem.id}, lotNumber = #{lotNumber}, serialNumber = #{serialNumber}, expiryDate = #{expiryDate}, " +
+            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}"+
             " modifiedDate = now(), " +
             " modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(ReceiveLot receiveLot);

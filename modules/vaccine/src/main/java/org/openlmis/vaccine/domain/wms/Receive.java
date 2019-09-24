@@ -57,6 +57,6 @@ public class Receive extends BaseModel {
 
     private List<ReceiveLineItem> receiveLineItems;
 
-    private List<PurchaseDocument> purchaseDocuments;
+   // private PurchaseDocument purchaseDocuments;
 
 }
