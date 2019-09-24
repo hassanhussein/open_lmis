@@ -109,7 +109,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
             var toExclude = _.pluck(_.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'), 'primaryName');
 
-console.log($scope.allProducts)
+
             $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
                 return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
             });
@@ -491,7 +491,7 @@ $scope.removeProduct(productIndex);
 
           product.lots.forEach(function(lot) {
 //          console.log(lot.quantity)
-                    sum += parseInt(lot.quantity);
+                    sum += parseInt(lot.quantity,10);
                 });
         }else{
 
@@ -695,12 +695,12 @@ $scope.removeProduct(productIndex);
 
 
                   Preadvice.update({id:$scope.asn.id}, asn, updateSuccess, updateError);
-                         console.log('update')
+
 
         }else{
 
         Preadvice.save({}, asn, success, error);
-                        console.log('save')
+
 
         }
     };

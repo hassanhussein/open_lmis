@@ -1,9 +1,8 @@
-function ReceiveSearchController($scope, Preadvice, $location, navigateBackService, $dialog){
+function ReceiveSearchController($scope, Receive, $location, navigateBackService, $dialog){
 
   $scope.searchOptions = [
-    {value: "ponumber", name: "PO Number"},
-    {value: "asnumber", name: "ASN Number"},
-    {value: "supplier", name: "Supplier"}
+    {value: "poNumber", name: "PO Number"},
+
   ];
 
 
@@ -19,7 +18,7 @@ function ReceiveSearchController($scope, Preadvice, $location, navigateBackServi
 
 
  // column to sort
- $scope.column = 'asnnumber';
+ $scope.column = 'poNumber';
 
  // sort ordering (Ascending or Descending). Set true for desending
  $scope.reverse = false;
@@ -74,8 +73,9 @@ function ReceiveSearchController($scope, Preadvice, $location, navigateBackServi
   function getPreadvice(page, query) {
     query = query.trim();
     $scope.searchedQuery = query;
-    Preadvice.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
-      $scope.asnList = data.asns;
+    Receive.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
+      $scope.asnList = data.receives;
+      console.log($scope.asnList);
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
@@ -91,6 +91,7 @@ function ReceiveSearchController($scope, Preadvice, $location, navigateBackServi
     $scope.showResults = false;
     angular.element("#searchPreadive").focus();
   };
+
 
   $scope.triggerSearch = function (event) {
     if (event.keyCode === 13) {
