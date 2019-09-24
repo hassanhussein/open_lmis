@@ -87,5 +87,9 @@ public interface ProcessingPeriodReportMapper {
             "         order by pp.startdate")
     List<ProcessingPeriod> getPeriodsForProgramBeetweeDates(@Param("program") Long program, @Param("startdate") String startDate,
                                                             @Param("enddate") String endDate);
+    @Select("SELECT id, name, startdate, enddate, description , scheduleid  " +
+            "   FROM " +
+            "       processing_periods where id =#{period}")
+    ProcessingPeriod getPeriodInfo(Long period);
 }
 

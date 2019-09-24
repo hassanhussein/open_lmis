@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function TimelinessReportController($scope, messageService, $window, getTimelinessReport, getTimelinessStatusData, getFacilityRnRTimelinessReportData, getTimelinessReportingDates) {
+function TimelinessReportController($scope,PeriodInfo, messageService, $window, getTimelinessReport, getTimelinessStatusData, getFacilityRnRTimelinessReportData, getTimelinessReportingDates) {
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
@@ -45,6 +45,12 @@ function TimelinessReportController($scope, messageService, $window, getTimeline
                 $scope.reportingDates = data.reportingDates;
 
             });
+            PeriodInfo.get({period: $scope.filter.period}, function (data) {
+
+                $scope.periodInfo = data.period;
+
+            });
+
 
         }
     };

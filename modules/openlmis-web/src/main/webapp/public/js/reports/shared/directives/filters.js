@@ -1504,7 +1504,12 @@ app.directive('dateRangeFilter', [function () {
 
         controller: function ($scope, SettingsByKey, $timeout) {
             $scope.periodRange = 0;
-            $scope.periodStartdate = $scope.periodEnddate = "";
+            if ($scope.periodStartdate === undefined ) {
+                $scope.periodStartdate="";
+            }
+            if ($scope.periodEnddate === undefined ) {
+                $scope.periodEnddate="";
+            }
 
             SettingsByKey.get({key: 'VACCINE_LATE_REPORTING_DAYS'}, function (data, er) {
                 $scope.cutoffdate = data.settings.value;

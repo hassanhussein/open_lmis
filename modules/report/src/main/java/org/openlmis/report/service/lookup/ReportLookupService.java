@@ -788,4 +788,9 @@ public class ReportLookupService {
     public GeographicLevel getGeoLevel(Long zoneId) {
     return this.geographicZoneMapper.GeographicLevel(zoneId);
     }
+
+    public ProcessingPeriod getPeriodById(Long period) {
+    return  processingPeriodMapper.getPeriodInfo(period);
+
+    }
 }

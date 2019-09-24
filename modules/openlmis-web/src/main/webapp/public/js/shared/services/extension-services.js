@@ -1553,3 +1553,7 @@ services.factory('UserDashboardPreference', function ($resource) {
 services.factory('UserDashboardPreferences', function ($resource) {
     return $resource('/dashboard/dashboard-preferences.json', {}, {});
 });
+
+services.factory('PeriodInfo', function ($resource) {
+    return $resource('/reports/period-info.json', {}, {});
+});
