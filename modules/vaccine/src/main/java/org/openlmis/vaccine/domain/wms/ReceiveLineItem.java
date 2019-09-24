@@ -24,6 +24,6 @@ public class ReceiveLineItem extends BaseModel {
     private Integer boxCounted;
     private boolean lotFlag;
     private Receive receive;
-    List<ReceiveLot> receiveLots;
+    private List<ReceiveLot> receiveLots;
 
 }

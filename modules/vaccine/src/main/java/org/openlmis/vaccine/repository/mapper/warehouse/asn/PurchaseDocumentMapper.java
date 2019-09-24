@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface PurchaseDocumentMapper {
 
-    @Insert("insert into purchase_documents(asnid, documenttype, filelocation, createdDate,createdBy, modifiedBy, modifiedDate) values(" +
-            "#{asn.id},#{documentType.id}, #{filelocation}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
+    @Insert("insert into purchase_documents(asnid,receiveId, documenttype, filelocation, createdDate,createdBy, modifiedBy, modifiedDate) values(" +
+            "#{asn.id},#{receive.id},#{documentType.id}, #{filelocation}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
             "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
     Integer insert(PurchaseDocument purchaseDocument);
@@ -25,7 +25,9 @@ public interface PurchaseDocumentMapper {
 
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMappper.getById")),
             @Result(property = "asn", column = "asnid", javaType = Integer.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnMapper.getById"))
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnMapper.getById")),
+            @Result(property = "receive", column = "receiveId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper.getById"))
     })
     List<PurchaseDocument> getAllPurchaseDocuments();
 
@@ -43,11 +45,14 @@ public interface PurchaseDocumentMapper {
     })
     List<PurchaseDocument> getByAsnId(@Param("id") Long id);
 
-    @Select("SELECT * FROM purchase_documents where asnid = #{id}")
+    @Select("SELECT * FROM purchase_documents where receiveId = #{id}")
     @Results(value = {
             @Result(property = "documentType", column = "documenttype", javaType = Integer.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMapper.getById"))
     })
     List<PurchaseDocument> getByReceiveId(@Param("id") Long id);
+
+
+
 
 }

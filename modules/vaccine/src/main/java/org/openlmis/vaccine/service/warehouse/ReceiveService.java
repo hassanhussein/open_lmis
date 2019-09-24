@@ -35,29 +35,35 @@ public class ReceiveService {
         }
         List<ReceiveLineItem> receiveLineItems = receive.getReceiveLineItems();
 
-        for(ReceiveLineItem lineItem : receiveLineItems) {
+        if(!receiveLineItems.isEmpty()) {
 
-            lineItem.setReceive(receive);
-            lineItem.setCreatedBy(userId);
-            lineItem.setModifiedBy(userId);
-            lineItemService.save(lineItem);
-            if(lineItem.isLotFlag()) {
-                for (ReceiveLot lot : lineItem.getReceiveLots()) {
-                    lot.setReceiveLineItem(lineItem);
-                    lot.setCreatedBy(userId);
-                    lot.setModifiedBy(userId);
-                    lotService.save(lot);
+            for (ReceiveLineItem lineItem : receiveLineItems) {
+
+                lineItem.setReceive(receive);
+                lineItem.setCreatedBy(userId);
+                lineItem.setModifiedBy(userId);
+                lineItemService.save(lineItem);
+                if (lineItem.isLotFlag()) {
+                    if(!lineItem.getReceiveLots().isEmpty())  {
+
+                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                        lot.setReceiveLineItem(lineItem);
+                        lot.setCreatedBy(userId);
+                        lot.setModifiedBy(userId);
+                        lotService.save(lot);
+                    }
+
+                    }
                 }
             }
         }
-
-        List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
+   /*     List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments) {
             document.setReceive(receive);
             document.setCreatedBy(userId);
             document.setModifiedBy(userId);
             purchaseDocumentService.save(document);
-        }
+        }*/
 
     }
 
