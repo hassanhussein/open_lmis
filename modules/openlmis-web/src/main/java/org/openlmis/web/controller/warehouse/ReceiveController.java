@@ -1,6 +1,7 @@
 package org.openlmis.web.controller.warehouse;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
@@ -10,6 +11,7 @@ import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
+import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.DocumentType;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
@@ -17,15 +19,18 @@ import org.openlmis.vaccine.service.warehouse.DocumentTypeService;
 import org.openlmis.vaccine.service.warehouse.PortService;
 import org.openlmis.vaccine.service.warehouse.ReceiveService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -109,4 +114,17 @@ public class ReceiveController extends BaseController {
         return OpenLmisResponse.response("receive", service.getById(id));
     }
 
+
+    @RequestMapping(value = "receive", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getReceiveByPagination(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                                               @RequestParam(value = "column") String column,
+                                                               @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                               @Value("${search.page.size}") String limit) {
+        Pagination pagination = new Pagination(page, parseInt(limit));
+        pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, column));
+        List<Receive> receives = service.searchBy(searchParam, column, pagination);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("receives", receives);
+        response.getBody().addData("pagination", pagination);
+        return response;
+    }
 }

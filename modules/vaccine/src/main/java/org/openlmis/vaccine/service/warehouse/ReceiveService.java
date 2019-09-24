@@ -1,5 +1,6 @@
 package org.openlmis.vaccine.service.warehouse;
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.repository.warehouse.ReceiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,4 +74,31 @@ public class ReceiveService {
     public Receive getById(Long id) {
         return repository.getById(id);
     }
+
+
+    public Integer getTotalSearchResultCount(String searchParam, String column) {
+
+        if(column.equals("blawBnumber")){
+            return repository.getTotalSearchResultCountByBlawBnumber(searchParam);
+        }
+        if(column.equals("poNumber")){
+            return repository.getTotalSearchResultCountByPonumber(searchParam);
+        }
+        if(column.equals("supplier")){
+            return repository.getTotalSearchResultCountBySupplier(searchParam);
+        }
+        if(column.equals("all")){
+            return repository.getTotalSearchResultCountAll();
+        }
+        return 0;
+    }
+
+    public List<Receive> searchBy(String searchParam, String column, Pagination pagination) {
+
+        if(column.equals("all")){
+            return repository.getAll();
+        }
+        return repository.searchBy(searchParam, column, pagination);
+    }
+
 }
