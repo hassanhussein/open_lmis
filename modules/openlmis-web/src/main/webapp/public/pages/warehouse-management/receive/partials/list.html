@@ -61,9 +61,9 @@
             </tr>
 
             <tr class="gradient-header" ng-show="asnList.length">
-                <th openlmis-message="header.asn.number" ng-click='sortColumn("asnnumber")' ng-class='sortClass("asnnumber")'></th>
-                <th  openlmis-message="header.asn.date" ng-click='sortColumn("asndate")' ng-class='sortClass("asndate")'></th>
-                <th  openlmis-message="header.asn.po.number" ng-click='sortColumn("ponumber")' ng-class='sortClass("ponumber")'></th>
+                <th  openlmis-message="header.asn.po.number" ng-click='sortColumn("poNumber")' ng-class='sortClass("poNumber")'></th>
+            <th ng-click='sortColumn("clearingAgent")' ng-class='sortClass("clearingAgent")'>Clearing Agent</th>
+                <th ng-click='sortColumn("expectedArrivalDate")' ng-class='sortClass("expectedArrivalDate")'>Expected  Arrival Date</th>
                 <th  openlmis-message="header.asn.supplier" ng-click='sortColumn("supplier.name")' ng-class='sortClass("supplier.name")'></th>
                 <th  openlmis-message="header.asn.status" ng-click='sortColumn("status")' ng-class='sortClass("status")'></th>
                 <th colspan="2" id="actionHeader" openlmis-message="header.asn.action"></th>
@@ -71,18 +71,17 @@
             </thead>
             <tbody>
             <tr ng-repeat="asn in asnList|orderBy:column:reverse" ng-init="arrayIndex=$index">
-
-                <td  ng-bind="asn.asnnumber"></td>
-                <td  ng-bind="asn.asndate"></td>
-                <td  ng-bind="asn.ponumber"></td>
+                <td  ng-bind="asn.poNumber"></td>
+                <td  ng-bind="asn.clearingAgent"></td>
+                <td  ng-bind="asn.expectedArrivalDate"></td>
                 <td  ng-bind="asn.supplier.name"></td>
                 <td  ng-bind="asn.status"></td>
                 <td>
-                    <a  href="" ng-click="edit(asn.id)" ng-if="asn.status=='Draft'" openlmis-message="update"></a>
+                    <a  href=""  ng-if="asn.status=='Draft'" openlmis-message="update"></a>
                     <a  href=""  ng-if="asn.status!='Draft'" >receive</a>
                 </td>
                 <td>
-                    <a  href="" ng-click="deleteAsn(asn.id,arrayIndex)" ng-if="asn.status=='Draft'" openlmis-message="delete"></a>
+                    <a  href=""  ng-if="asn.status=='Draft'" openlmis-message="delete"></a>
                 </td>
             </tr>
 

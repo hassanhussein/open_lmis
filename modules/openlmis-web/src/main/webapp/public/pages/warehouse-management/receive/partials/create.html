@@ -265,12 +265,16 @@
 
                                             <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
                                             <td>
-                                                <select>
-                                                    <option value="" >--Select Location--</option>
+                                                <select
 
-                                                    <option>Location 1</option>
-                                                    <option>Location 2</option>
-                                                    <option>Location 3</option>
+                                                >
+                                                    <option value="" >--Select Location--</option>
+                                                    <option ng-repeat="location in locations"
+                                                            value="{{ location.id }}">
+                                                        {{ location.name }}
+                                                    </option>
+
+
 
                                                 </select>
                                             </td>
@@ -375,12 +379,16 @@
                                                 <div class="" style="margin-top:6px;">
                                                     <div class="span2">Location: </div>
                                                     <div class="span10">
-                                                        <select ng-disabled="!product.lots[0].info">
+                                                        <select ng-disabled="!product.lots[0].info"
+                                                                ng-modal="product.lots[0].lot.locationId"
+                                                        >
                                                             <option value="" >--Select Location--</option>
 
-                                                            <option>Location 1</option>
-                                                            <option>Location 2</option>
-                                                            <option>Location 3</option>
+                                                            <option ng-repeat="location in locations"
+                                                                    value="{{ location.id }}">
+                                                                {{ location.name }}
+                                                            </option>
+
 
                                                         </select>
                                                     </div>
@@ -447,12 +455,16 @@
                                                 <div class="" style="margin-top:6px;">
                                                     <div class="span2">Location: </div>
                                                     <div class="span10">
-                                                        <select ng-disabled="!lot.info">
-                                                            <option value="" >--Select Location--</option>
+                                                        <select ng-disabled="!lot.info"
+                                                                ng-modal="lot.locationId">
 
-                                                            <option>Location 1</option>
-                                                            <option>Location 2</option>
-                                                            <option>Location 3</option>
+                                                            <option value="" >--Select Location--</option>
+                                                            <option ng-repeat="location in locations"
+                                                                    value="{{ location.id }}">
+                                                                {{ location.name }}
+                                                            </option>
+
+
 
                                                         </select>
                                                     </div>

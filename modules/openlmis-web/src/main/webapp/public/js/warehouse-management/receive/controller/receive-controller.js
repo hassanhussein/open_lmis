@@ -11,11 +11,13 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController($window,$scope,$filter, $location,otherProducts, asn, Receive, configurations, homeFacility, locations, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function ReceiveController($window,$scope,$filter, $location,otherProducts, asn, Receive, configurations, homeFacility,asnLookups, locations, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
                            $rootScope,documentTypes,UploadFile,$http,docService, $timeout){
 
     $scope.displayDocumentTypes =  documentTypes;
     $scope.homeFacilityId = homeFacility.id;
+    $scope.locations=locations.locationList;
+    console.log($scope.locations);
     $scope.userPrograms = configurations.programs;
     $scope.manufacturers = manufacturers;
     $scope.ports = asnLookups.ports;
@@ -227,7 +229,8 @@ $scope.updateProductsToDisplay();
             eop: null,
             lots: [{
                 quantity: 0,
-                displayCodeOnly: false
+                displayCodeOnly: false,
+                locationId:null,
             }],
             unitPrice: 0
 
@@ -608,7 +611,7 @@ $scope.removeProduct(productIndex);
     $scope.saveAsn = function(status) {
 
         $scope.validateProduct();
-        //                console.log($scope.asnForm)
+//                        console.log($scope.asnForm)
       if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
@@ -617,7 +620,7 @@ $scope.removeProduct(productIndex);
         }
 
 
-        var asnLineItems = [];
+        var receiveLineItems = [];
         angular.forEach($scope.productsToAdd, function(product, key) {
             var receiveLots = [];
 
@@ -632,7 +635,7 @@ $scope.removeProduct(productIndex);
                                     manufacturingDate: lot.info.manufactureDate,
                                     quantity: lot.quantity,
                                     serialnumber: 'string',
-                                    locationId:$scope.lot.locationId,
+                                    locationId:lot.locationId,
                                 });
 
 
@@ -663,7 +666,7 @@ $scope.removeProduct(productIndex);
             expecteddeliverydate:$scope.expectedDeliveryDate,
             actualArrivalDate:$scope.actualArrivalDate,
             flightVesselNumber: $scope.flightVesselNumber,
-            isForeignProcurement:$scpe.isForeignProcurement,
+            isForeignProcurement:$scope.isForeignProcurement,
             note: $scope.notes,
             description:$scope.descriptionOfProcurement,
             noteToSupplier:$scope.noteToSupplier,
@@ -675,6 +678,7 @@ $scope.removeProduct(productIndex);
             supplierId: $scope.supplierId
         };
 
+    console.log(receive);
         Receive.save({}, receive, success, error);
 
     };
@@ -906,12 +910,21 @@ ReceiveController.resolve = {
 
         $timeout(function() {
             LocationsLookup.get(function(data) {
-            console.log(data)
+//            console.log(data)
                 deferred.resolve(data);
             });
         }, 100);
         return deferred.promise;
-    },
+    },asnLookups: function($q, $timeout, $route, AsnLookups) {
+              var deferred = $q.defer();
+
+              $timeout(function() {
+                  AsnLookups.get(function(data) {
+                      deferred.resolve(data);
+                  });
+              }, 100);
+              return deferred.promise;
+          },
     otherProducts: function($q, $timeout, $route,  VaccineProgramProducts) {
             var deferred = $q.defer();
 
