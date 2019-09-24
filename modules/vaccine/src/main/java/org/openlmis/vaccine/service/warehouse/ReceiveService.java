@@ -43,17 +43,16 @@ public class ReceiveService {
                 lineItem.setCreatedBy(userId);
                 lineItem.setModifiedBy(userId);
                 lineItemService.save(lineItem);
-                if (lineItem.isLotFlag()) {
-                    if(!lineItem.getReceiveLots().isEmpty())  {
+                if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
 
-                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                       for (ReceiveLot lot : lineItem.getReceiveLots()) {
                         lot.setReceiveLineItem(lineItem);
                         lot.setCreatedBy(userId);
                         lot.setModifiedBy(userId);
                         lotService.save(lot);
                     }
 
-                    }
+
                 }
             }
         }
