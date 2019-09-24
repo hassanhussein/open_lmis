@@ -41,9 +41,9 @@ public interface ReceiveMapper {
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
             @Result(property = "supplier", column = "supplierId", javaType = SupplyPartner.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById"))/*,
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.PurchaseDocumentMapper.getByReceiveId"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.PurchaseDocumentMapper.getByReceiveId"))*/
     })
     Receive getById(@Param("id") Long id);
 
@@ -53,9 +53,9 @@ public interface ReceiveMapper {
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
             @Result(property = "supplier", column = "supplierId", javaType = SupplyPartner.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById"))/*,
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByReceiveId"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByReceiveId"))*/
     })
     List<Receive> getAll();
 
