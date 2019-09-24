@@ -10,7 +10,6 @@ import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.DocumentType;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
@@ -86,8 +85,8 @@ public class ReceiveController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "all",method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> retriveAllReceive() {
+    @RequestMapping(value = "getAll",method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllReceived() {
         return OpenLmisResponse.response("receive", service.getAll());
     }
 
@@ -106,7 +105,7 @@ public class ReceiveController extends BaseController {
     }
 
     @RequestMapping(value = "receive/{id}", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<OpenLmisResponse> getBy(@PathVariable Long id) {
         return OpenLmisResponse.response("receive", service.getById(id));
     }
 
