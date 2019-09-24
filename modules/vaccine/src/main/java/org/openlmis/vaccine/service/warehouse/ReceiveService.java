@@ -14,6 +14,15 @@ public class ReceiveService {
     @Autowired
     private ReceiveRepository repository;
 
+    @Autowired
+    private ReceiveLineItemService lineItemService;
+
+    @Autowired
+    private ReceiveLotService lotService;
+
+    @Autowired
+    private PurchaseDocumentService purchaseDocumentService;
+
     @Transactional
     public void save(Receive receive, Long userId) {
 
@@ -24,32 +33,31 @@ public class ReceiveService {
         }else {
             repository.update(receive);
         }
-   /*
-        List<AsnLineItem> asnLineItems = asn.getAsnLineItems();
+        List<ReceiveLineItem> receiveLineItems = receive.getReceiveLineItems();
 
-        for(AsnLineItem lineItem : asnLineItems){
+        for(ReceiveLineItem lineItem : receiveLineItems) {
 
-            lineItem.setAsn(asn);
+            lineItem.setReceive(receive);
             lineItem.setCreatedBy(userId);
             lineItem.setModifiedBy(userId);
-            asnLineItemService.save(lineItem);
-            if(lineItem.isLotflag()) {
-                for (AsnLot asnLot : lineItem.getAsnLots()) {
-                    asnLot.setAsnLineItem(lineItem);
-                    asnLot.setCreatedBy(userId);
-                    asnLot.setModifiedBy(userId);
-                    asnLotService.save(asnLot);
+            lineItemService.save(lineItem);
+            if(lineItem.isLotFlag()) {
+                for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                    lot.setReceiveLineItem(lineItem);
+                    lot.setCreatedBy(userId);
+                    lot.setModifiedBy(userId);
+                    lotService.save(lot);
                 }
             }
         }
 
-        List<PurchaseDocument> purchaseDocuments = asn.getPurchaseDocuments();
-        for(PurchaseDocument document : purchaseDocuments){
-            document.setAsn(asn);
+        List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
+        for(PurchaseDocument document : purchaseDocuments) {
+            document.setReceive(receive);
             document.setCreatedBy(userId);
             document.setModifiedBy(userId);
             purchaseDocumentService.save(document);
-        }*/
+        }
 
     }
 

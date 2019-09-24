@@ -108,7 +108,7 @@ public class AsnController extends BaseController {
         return OpenLmisResponse.response("ports", portService.getAll());
     }
     @RequestMapping(value = "all",method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> retriveAllAsns() {
+    public ResponseEntity<OpenLmisResponse> retriveAllAsNs() {
         return OpenLmisResponse.response("asns", asnService.getAll());
     }
     @RequestMapping(value = "asn/template",method = GET, headers = ACCEPT_JSON)
