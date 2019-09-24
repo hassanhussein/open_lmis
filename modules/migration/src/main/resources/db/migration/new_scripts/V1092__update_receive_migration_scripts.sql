@@ -1,5 +1,6 @@
 ALTER TABLE purchase_documents DROP CONSTRAINT IF EXISTS purchase_documents_receives_fkey;
 ALTER TABLE purchase_documents DROP COLUMN IF EXISTS receiveid;
+DROP TABLE IF EXISTS receive_details cascade;
 DROP TABLE IF EXISTS receive_lots;
 DROP TABLE IF EXISTS receive_line_items;
 DROP TABLE IF EXISTS receives;
