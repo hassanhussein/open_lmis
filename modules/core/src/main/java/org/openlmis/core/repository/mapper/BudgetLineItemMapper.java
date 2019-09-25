@@ -85,4 +85,16 @@ public interface BudgetLineItemMapper {
                                  @Param("programId") Long programId,
                                  @Param("periodId") Long periodId,
                                  @Param("allocatedBudget") String allocatedBudget);
+
+
+  @Update(" UPDATE public.budget_line_items\n" +
+          "   SET periodId=#{periodId}, budgetFileId=#{budgetfileId}, periodDate=#{periodDate}, allocatedBudget=#{allocatedBudget}, \n" +
+          "       notes=#{notes}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), \n" +
+          "       facilityId=#{facilityId}, programId=#{programId}, additive=#{additive}, fundSourceCode=#{fundSourceCode}, budgetId=#{budgetId}\n" +
+          " WHERE id = #{id}; ")
+  void updateBy(BudgetLineItemDTO budgetLineItem);
+
+
+  @Select("select * from public.budget_line_items where budgetId = #{id}")
+  Long getLineItemById(@Param("id") Long id);
 }

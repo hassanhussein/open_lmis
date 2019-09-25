@@ -74,10 +74,9 @@ public class RestBudgetService {
 
             if(!programs.isEmpty()){
 
-            for (ProgramSupported supported : programs) {
-                Program p  = programService.getById(supported.getProgram().getId());
+                Program p  = programService.getById(programs.get(0).getProgram().getId());
 
-                ProcessingPeriod period = processingScheduleService.getCurrentPeriodBySchedule(facility,p,supported.getStartDate());
+                ProcessingPeriod period = processingScheduleService.getCurrentPeriodBySchedule(facility,p,programs.get(0).getStartDate());
 
                 if(period != null){
 
@@ -85,7 +84,7 @@ public class RestBudgetService {
 
                         if (budget == null) {
 
-                            budgetDTO.setProgramId(supported.getProgram().getId());
+                            budgetDTO.setProgramId(programs.get(0).getProgram().getId());
                             budgetDTO.setPeriodId(period.getId());
                             budgetDTO.setCreatedBy(userId);
                             budgetDTO.setModifiedBy(userId);
@@ -96,7 +95,7 @@ public class RestBudgetService {
 
                         } else {
 
-                            budgetDTO.setProgramId(supported.getProgram().getId());
+                            budgetDTO.setProgramId(programs.get(0).getProgram().getId());
                             budgetDTO.setPeriodId(period.getId());
                             budgetDTO.setCreatedBy(userId);
                             budgetDTO.setModifiedBy(userId);
@@ -120,7 +119,6 @@ public class RestBudgetService {
                 }
 
 
-            }
         }
 
         }else {

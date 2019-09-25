@@ -56,30 +56,50 @@ public class BudgetLineItemRepository {
 
   public void insertBudget(BudgetDTO budgetDTO) {
       mapper.insertBudget(budgetDTO);
+      Long id = mapper.getLineItemById(budgetDTO.getId());
       mapper.deleteBudgetLineItems(budgetDTO.getId());
-      saveLineItem(budgetDTO);
+      saveLineItem(budgetDTO,id);
   }
 
-  private void saveLineItem(BudgetDTO budgetDTO) {
+  private void saveLineItem(BudgetDTO budgetDTO, Long id) {
 
-      for (BudgetLineItemDTO lineItem  : budgetDTO.getLineItem()) {
+      if(id == null) {
+        for (BudgetLineItemDTO lineItem  : budgetDTO.getLineItem()) {
 
-        lineItem.setProgramId(budgetDTO.getProgramId());
-        lineItem.setPeriodId(budgetDTO.getPeriodId());
-        lineItem.setBudgetFileId(1018L);
-        lineItem.setPeriodDate(budgetDTO.getReceivedDate());
-        lineItem.setBudgetId(budgetDTO.getId());
-        lineItem.setFacilityId(budgetDTO.getFacilityId());
-        mapper.deleteBy(budgetDTO.getFacilityId(),budgetDTO.getProgramId(),budgetDTO.getPeriodId());
-        mapper.insertBudgetLineItem(lineItem);
+          lineItem.setProgramId(budgetDTO.getProgramId());
+          lineItem.setPeriodId(budgetDTO.getPeriodId());
+          lineItem.setBudgetFileId(1018L);
+          lineItem.setPeriodDate(budgetDTO.getReceivedDate());
+          lineItem.setBudgetId(budgetDTO.getId());
+          lineItem.setFacilityId(budgetDTO.getFacilityId());
+          //mapper.deleteBy(budgetDTO.getFacilityId(),budgetDTO.getProgramId(),budgetDTO.getPeriodId());
+          mapper.insertBudgetLineItem(lineItem);
+        }
+
+      } else {
+
+        for (BudgetLineItemDTO lineItem  : budgetDTO.getLineItem()) {
+
+          lineItem.setProgramId(budgetDTO.getProgramId());
+          lineItem.setPeriodId(budgetDTO.getPeriodId());
+          lineItem.setBudgetFileId(1018L);
+          lineItem.setPeriodDate(budgetDTO.getReceivedDate());
+          lineItem.setBudgetId(budgetDTO.getId());
+          lineItem.setFacilityId(budgetDTO.getFacilityId());
+         // mapper.deleteBy(budgetDTO.getFacilityId(),budgetDTO.getProgramId(),budgetDTO.getPeriodId());
+          mapper.updateBy(lineItem);
+        }
+
       }
+
 
   }
 
   public void updateBudget(BudgetDTO budgetDTO) {
     mapper.updateBudget(budgetDTO);
-    mapper.deleteBudgetLineItems(budgetDTO.getId());
-    saveLineItem(budgetDTO);
+   // mapper.deleteBudgetLineItems(budgetDTO.getId());
+    Long id = mapper.getLineItemById(budgetDTO.getId());
+    saveLineItem(budgetDTO,id);
   }
 
   public void saveLineItemDTO(BudgetLineItemDTO dtos) {
@@ -91,4 +111,5 @@ public class BudgetLineItemRepository {
   public void updateBudgetInRequisition(Long facilityId, Long programId, Long periodId,String allocatedBudget) {
     mapper.updateBudgetInRequisition(facilityId,programId,periodId,allocatedBudget);
   }
+
 }
