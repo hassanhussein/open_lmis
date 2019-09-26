@@ -29,12 +29,12 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
                 filter.getCrossColumnHeader() +
                 " from CROSSTAB\n" +
                 "($$SELECT ARRAY[r.productDispalayName,r.productcode::text] code,  \n" +
-                " TO_CHAR(r.startdate, 'Mon YYYY') periodName,\n" +
+                " r.period periodName,\n" +
                 (filter.getAdjustedConsumption() ? CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT : CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT) +
                 " FROM mv_requisition r\n" +
                 writePredicateString(filter) +
                 " GROUP BY r.productcode, r.productDispalayName,\n" +
-                "r.startdate  order by r.productcode,r.startdate $$" +
+                "r.startdate,r.period  order by r.productcode,r.startdate $$" +
                 "," +
                 "$$ " +
                 getPeriods(filter)+
@@ -66,7 +66,7 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
                 "($$ SELECT ARRAY[r.facilityid::text, r.facilitycode,r.facility,\n" +
                 "r.facilitytype,r.facprodcode,\n" +
                 "r.productDispalayName::text,r.productcode::text] code, \n" +
-                " TO_CHAR(r.startdate, 'Mon YYYY') periodName,\n" +
+                " r.period periodName,\n" +
                 (filter.getAdjustedConsumption() ? CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT : CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT) +
                 " FROM mv_requisition r\n" +
                 writePredicateString(filter) +
