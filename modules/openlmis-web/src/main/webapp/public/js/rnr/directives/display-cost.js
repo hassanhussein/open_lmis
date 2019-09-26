@@ -24,8 +24,9 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
        scope.sourceOfFund = {};
 
 
-
+      if(!isUndefined(scope.$parent.$parent.$parent.rnr)) {
       scope.$parent.$parent.$parent.rnr.allowSubmissionIfNoSourceOfFundDefined = false;
+      }
 
 
 
@@ -39,6 +40,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
                         };
 
                    FundingSource.get(parameter, function (data) {
+                   console.log(data);
 
                             scope.fundingSources = data.sources;
 
@@ -112,8 +114,9 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
        fund.name = undefined;
 
        };
-
+      if(!isUndefined(scope.$parent.$parent.$parent.rnr)) {
       scope.$parent.$parent.$parent.rnr.continueWithSubmission = false;
+      }
 
       scope.saveFacilityFundingSources = function (sourceOfFunds) {
 
