@@ -46,7 +46,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
                            $scope.otherProducts=data;
                        });
 
-                       console.log('am working');
+//                       console.log('am working');
     }
 
     getAllLookups();
@@ -532,7 +532,7 @@ $scope.removeProduct(productIndex);
 //        sum=product.quantity;
         }
 
-        console.log(sum);
+//        console.log(sum);
 
         return sum;
     };
