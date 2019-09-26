@@ -125,7 +125,7 @@ function CreateRequisitionController($scope, requisitionData, comments , pageSiz
   $scope.authorizedFEReport = isAuthorizedFEReport();
 
   function isAuthorizedFEReport () {
-       return ($scope.rnr.status === 'AUTHORIZED' && $scope.rnr.sourceApplication === 'ELMIS_FE' &&
+       return ($scope.rnr.status === 'AUTHORIZED' && $scope.rnr.sourceApplication.toUpperCase() === 'ELMIS_FE'.toUpperCase() &&
        !isUndefined($scope.hasPermission('AUTHORIZE_REQUISITION')));
   }
 
