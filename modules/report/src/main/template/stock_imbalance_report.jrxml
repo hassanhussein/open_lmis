@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_imbalance_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="2.6620000000000017"/>
 	<property name="ireport.x" value="0"/>
-    <property name="ireport.y" value="0"/>
-    <property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="groupHeader"/>
-    <property name="net.sf.jasperreports.export.xls.exclude.origin.group.1" value="GroupBySupplyingFacility"/>
-    <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
-    <property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.group.1" value="GroupBySupplyingFacility"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.1" value="GroupBySupplyingFacility"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.group.1" value="GroupBySupplyingFacility"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -217,7 +218,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.physical.count}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="100" y="20" width="55" height="30" forecolor="#000000" backcolor="#333333" uuid="eef19c35-b027-4957-abe8-007ec34f527a">
+					<reportElement positionType="Float" mode="Transparent" x="120" y="20" width="35" height="30" forecolor="#000000" backcolor="#333333" uuid="eef19c35-b027-4957-abe8-007ec34f527a">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "PDF"]]></printWhenExpression>
 					</reportElement>
@@ -268,7 +269,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="55" y="20" width="45" height="30" forecolor="#000000" backcolor="#333333" uuid="a4bd7cd6-a30e-4ae2-ba62-b462c4a64bc5">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="55" y="20" width="65" height="30" forecolor="#000000" backcolor="#333333" uuid="a4bd7cd6-a30e-4ae2-ba62-b462c4a64bc5">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "PDF"]]></printWhenExpression>
 					</reportElement>
@@ -451,7 +452,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="100" y="0" width="55" height="20" uuid="52324282-0a32-4fd9-bf1e-f0552c289992">
+				<reportElement stretchType="RelativeToTallestObject" x="120" y="0" width="35" height="20" uuid="52324282-0a32-4fd9-bf1e-f0552c289992">
 					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
 					<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
@@ -526,7 +527,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$F{orderQuantity}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="55" y="0" width="45" height="20" uuid="95a200ea-e285-4d95-a78f-197a91337a69">
+				<reportElement stretchType="RelativeToTallestObject" x="55" y="0" width="65" height="20" uuid="95a200ea-e285-4d95-a78f-197a91337a69">
 					<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "PDF"]]></printWhenExpression>
 				</reportElement>
