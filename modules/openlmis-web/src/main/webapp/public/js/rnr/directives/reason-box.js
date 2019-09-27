@@ -38,7 +38,7 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                 {
                     scope.open[ind] = false;
                 }
-            }
+            };
 
 
             var commentContainer = document.getElementById('comments-list');
