@@ -16,6 +16,7 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
   $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.patientColumns = patientTemplate ? patientTemplate.columns : [];
+  $scope.viewSourceOfFund = true;
 
   $scope.showMaxStock = showMaxStock;
 
@@ -86,7 +87,7 @@ function ViewRnrController($scope, requisitionData , rnrColumns, regimenTemplate
 
   }
 
-       console.log(columnsAllowedToDisplay);
+       console.log($scope.rnr);
   $scope.visibleColumns = columnsAllowedToDisplay;
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;

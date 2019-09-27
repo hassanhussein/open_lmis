@@ -33,7 +33,25 @@
             </strong>
         </div>
 
-       <div ng-show="$parent.$parent.$parent.rnr.sourceOfFunds.length > 0 && ($parent.$parent.$parent.rnr.status == 'AUTHORIZED' && $parent.$parent.$parent.rnr.displayOtherSources == true)">
+       <div ng-show="$parent.rnr.sourceOfFunds.length > 0 && viewSourceOfFund == true)">
+           <h4>
+               <strong>Other Sources Of Fund</strong>
+           </h4>
+        <div ng-repeat ="source in $parent.rnr.sourceOfFunds">
+        <div>
+            <span class="rnr-cost" ng-bind="source.name"></span>&colon;
+            <strong class="pull-right">
+                <span openlmis-message="label.currency.symbol"></span>
+                <span class="cell-text" id="nonFullSupplyItemsCost"
+                      ng-bind="source.quantity | currency:''"></span>
+            </strong>
+
+        </div>
+
+        </div>
+        </div>
+
+        <div ng-show="$parent.$parent.$parent.rnr.sourceOfFunds.length > 0 && ($parent.$parent.$parent.rnr.status == 'AUTHORIZED' && $parent.$parent.$parent.rnr.displayOtherSources == true)">
            <h4>
                <strong>Other Sources Of Fund</strong>
            </h4>
