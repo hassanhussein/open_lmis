@@ -48,6 +48,9 @@ public class OrderSummaryReport implements ResultRow {
   @Column(name = "facility_code")
   private String facilityCode;
 
+  @Column(name = "facility_type_id")
+  private Integer facilityTypeId;
+
   private String region;
 
   private String fundSourceName;
