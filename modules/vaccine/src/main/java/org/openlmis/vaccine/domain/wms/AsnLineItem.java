@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Product;
 import org.openlmis.core.serializer.DateDeserializer;
 
 import java.util.Date;
@@ -37,5 +38,7 @@ public class AsnLineItem extends BaseModel {
     private boolean lotflag;
 
     List<AsnLot> asnLots;
+
+    List<Product> productList;
 
 }

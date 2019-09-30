@@ -5,6 +5,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.vaccine.domain.wms.Asn;
+import org.openlmis.vaccine.domain.wms.Port;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,7 +34,11 @@ public interface AsnMapper {
             @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId")),
+            @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId")),
+            @Result(property = "port", column = "portofarrival", javaType = Port.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById"))
     })
     Asn getById(@Param("id") Long id);
 
@@ -45,7 +50,9 @@ public interface AsnMapper {
             @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId")),
+            @Result(property = "port", column = "portofarrival", javaType = Port.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById"))
     })
     List<Asn> getAll();
 
