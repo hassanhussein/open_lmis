@@ -52,4 +52,7 @@ public class Asn extends BaseModel {
 
     private List<PurchaseDocument> purchaseDocuments;
 
+    private Port port;
+
+
 }

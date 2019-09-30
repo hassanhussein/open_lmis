@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.warehouse;
 
 import org.openlmis.vaccine.domain.wms.AsnLot;
 import org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLotMapper;
+import org.postgresql.largeobject.LargeObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,5 +28,9 @@ public class AsnLotRepository {
 
     public List<AsnLot> getAll(){
         return mapper.getAll();
+    }
+
+    public void deleteByAsnDetail(Long id) {
+        mapper.deleteByAsnDetail(id);
     }
 }

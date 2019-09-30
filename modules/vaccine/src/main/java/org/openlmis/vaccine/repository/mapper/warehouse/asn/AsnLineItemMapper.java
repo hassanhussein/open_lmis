@@ -25,7 +25,9 @@ public interface AsnLineItemMapper {
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(property = "asnLots", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLotMapper.getByAsnDetail"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLotMapper.getByAsnDetail")),
+            @Result(property = "productList", column = "productId", javaType = List.class,
+                    many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
     })
     AsnLineItem  getById(@Param("id") Long id);
 
@@ -33,7 +35,10 @@ public interface AsnLineItemMapper {
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(property = "asnLots", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLotMapper.getByAsnDetail"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLotMapper.getByAsnDetail")),
+            @Result(property = "productList", column = "productId", javaType = List.class,
+                    many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+
     })
     List<AsnLineItem>  getByAsnId(@Param("id") Long id);
 
