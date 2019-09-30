@@ -32,4 +32,10 @@ public class AsnLotService {
 
         return  repository.getAll();
     }
+
+    public void deleteByAsnDetail(Long id){
+
+        repository.deleteByAsnDetail(id);
+
+    }
 }

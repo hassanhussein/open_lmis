@@ -56,6 +56,7 @@ public class AsnService {
             lineItem.setCreatedBy(userId);
             lineItem.setModifiedBy(userId);
             asnLineItemService.save(lineItem);
+            asnLotService.deleteByAsnDetail(lineItem.getId());
             if(lineItem.isLotflag()) {
                 for (AsnLot asnLot : lineItem.getAsnLots()) {
                     asnLot.setAsnLineItem(lineItem);
