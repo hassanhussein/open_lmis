@@ -22,6 +22,8 @@ public class AsnRepository {
 
     public void update(Asn asn) {
         mapper.update(asn);
+        mapper.deleteByAsnDetail(asn.getId());
+        mapper.deleteByAsn(asn.getId());
     }
 
     public Asn getById (Long id){
@@ -57,5 +59,13 @@ public class AsnRepository {
 
     public void deleteById(Long id) {
         mapper.deleteById(id);
+    }
+
+    public void deleteByAsnDetail(Long id) {
+        this.mapper.deleteByAsnDetail(id);
+    }
+
+    public void deleteByAsn(Long id) {
+        this.mapper.deleteByAsn(id);
     }
 }

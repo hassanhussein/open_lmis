@@ -46,6 +46,7 @@ public class AsnService {
 
         }else {
             repository.update(asn);
+            repository.deleteBy(asn.getId());
         }
         notificationService.sendAsnFinalizeEmail();
         List<AsnLineItem> asnLineItems = asn.getAsnLineItems();

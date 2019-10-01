@@ -93,6 +93,12 @@ public interface AsnMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void uploadDocument(ASNDocument asnDocument);
 
+    @Delete("DELETE FROM asn_lots WHERE ASNDETAILID IN ( SELECT ID FROM asn_DETAILS WHERE AsnId = #{id}  )")
+    void deleteByAsnDetail(@Param("id") Long id);
+
+    @Delete("DELETE FROM ASN_DETAILS cascade where asnId = #{asnId} ")
+    void deleteByAsn(@Param("asnId") Long asnId);
+
     class SelectAsn {
         @SuppressWarnings(value = "unused")
         public static String getAsnCountBy(Map<String, Object> params) {
