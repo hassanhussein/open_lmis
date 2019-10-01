@@ -19,6 +19,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
     function getAllLookups(){
      AllVaccineInventoryConfigurations.get(function(data) {
                     $scope.configurations = data;
+                    console.log($scope.configurations)
                     $scope.userPrograms=data.programs;
 
                 });
@@ -46,7 +47,6 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
                            $scope.otherProducts=data;
                        });
 
-//                       console.log('am working');
     }
 
     getAllLookups();
@@ -143,7 +143,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
             var toExclude = _.pluck(_.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'), 'primaryName');
 
-
+//            console.log($scope.allProducts)
             $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
                 return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
             });
@@ -168,10 +168,10 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
         $scope.notes = asn.note;
         $scope.poDate = asn.podate;
         $scope.poNumber = asn.ponumber;
-        $scope.portOfArrivalId = asn.portofarrival;
-        $scope.supplierId = asn.supplierid;
+        $scope.portOfArrivalId = asn.port.id;
         $scope.productsToAdd = [];
-        $scope.supplierId = asn.supplier.id;
+        $scope.supplier = asn.supplier;
+        $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
@@ -183,8 +183,8 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
         $scope.productsToAdd = [];
         angular.forEach($scope.asn.asnLineItems, function(product, value) {
-            editProduct = $scope.getProductFromId(product.productid);
-//            console.log($scope.allProducts)
+            editProduct = product.productList[0];
+            console.log(editProduct)
             var productLots = [];
             angular.forEach(product.asnLots, function(lot, value) {
                 $scope.isVaccine=true;
@@ -244,7 +244,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
 
 
-$scope.updateProductsToDisplay();
+//$scope.updateProductsToDisplay();
 
 
 
@@ -577,7 +577,7 @@ $scope.removeProduct(productIndex);
         };
 
 
-        var udateError = function(data) {
+        var updateError = function(data) {
             $scope.$parent.message = "";
             $scope.error = data.data.error;
             $scope.showError = true;
