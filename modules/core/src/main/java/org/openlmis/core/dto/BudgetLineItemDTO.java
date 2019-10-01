@@ -15,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -41,7 +42,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 @JsonSerialize(include = NON_NULL)
 @EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
-public class BudgetLineItemDTO {
+public class BudgetLineItemDTO extends BaseModel {
 
   @JsonProperty("CustID")
   private String facilityCode;
@@ -85,5 +86,6 @@ public class BudgetLineItemDTO {
     if (isBlank(this.facilityCode) || isBlank(this.programCode) || isBlank(this.allocatedBudget) || isBlank(this.periodStartDate))
       throw new DataException(new OpenLmisMessage("error.mandatory.fields.missing"));
   }
+
 
 }

@@ -19,9 +19,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+
+import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
 /**
  * BudgetLineItemRepository is Repository class for BudgetLineItem related database operations.
@@ -56,9 +59,41 @@ public class BudgetLineItemRepository {
 
   public void insertBudget(BudgetDTO budgetDTO) {
       mapper.insertBudget(budgetDTO);
-      Long id = mapper.getLineItemById(budgetDTO.getId());
+      saveBudgetDetails(budgetDTO.getLineItem(),budgetDTO);
+   /*   Long id = mapper.getLineItemById(budgetDTO.getId());
       mapper.deleteBudgetLineItems(budgetDTO.getId());
-      saveLineItem(budgetDTO,id);
+      saveLineItem(budgetDTO,id);*/
+  }
+
+
+  public void saveBudgetDetails(List<BudgetLineItemDTO> items, BudgetDTO budget) {
+     mapper.deleteBudgetLineItems(budget.getId());
+    for(BudgetLineItemDTO lineItem : emptyIfNull(items)){
+
+      if (lineItem.getId() == null) {
+        lineItem.setId(budget.getId());
+
+        lineItem.setProgramId(budget.getProgramId());
+        lineItem.setPeriodId(budget.getPeriodId());
+        lineItem.setBudgetFileId(1018L);
+        lineItem.setPeriodDate(budget.getReceivedDate());
+        lineItem.setBudgetId(budget.getId());
+        lineItem.setFacilityId(budget.getFacilityId());
+
+        mapper.insertBudgetLineItem(lineItem);
+      } else {
+
+        lineItem.setProgramId(budget.getProgramId());
+        lineItem.setPeriodId(budget.getPeriodId());
+        lineItem.setBudgetFileId(1018L);
+        lineItem.setPeriodDate(budget.getReceivedDate());
+        lineItem.setBudgetId(budget.getId());
+        lineItem.setFacilityId(budget.getFacilityId());
+        mapper.updateBy(lineItem);
+      }
+    }
+
+
   }
 
   private void saveLineItem(BudgetDTO budgetDTO, Long id) {
@@ -98,8 +133,9 @@ public class BudgetLineItemRepository {
   public void updateBudget(BudgetDTO budgetDTO) {
     mapper.updateBudget(budgetDTO);
    // mapper.deleteBudgetLineItems(budgetDTO.getId());
-    Long id = mapper.getLineItemById(budgetDTO.getId());
-    saveLineItem(budgetDTO,id);
+/*    Long id = mapper.getLineItemById(budgetDTO.getId());
+    saveLineItem(budgetDTO,id);*/
+    saveBudgetDetails(budgetDTO.getLineItem(),budgetDTO);
   }
 
   public void saveLineItemDTO(BudgetLineItemDTO dtos) {
