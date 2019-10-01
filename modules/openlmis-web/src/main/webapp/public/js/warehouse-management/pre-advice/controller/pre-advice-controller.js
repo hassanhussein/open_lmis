@@ -19,7 +19,6 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
     function getAllLookups(){
      AllVaccineInventoryConfigurations.get(function(data) {
                     $scope.configurations = data;
-                    console.log($scope.configurations)
                     $scope.userPrograms=data.programs;
 
                 });
@@ -33,7 +32,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
        AsnLookups.get(function(data) {
 
-                          $scope.displayDocumentTypes =  data['documentTypes'];
+                          $scope.displayDocumentTypes =  data.documentTypes;
                               $scope.manufacturers = data.manufacturers;
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
@@ -184,7 +183,6 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
         $scope.productsToAdd = [];
         angular.forEach($scope.asn.asnLineItems, function(product, value) {
             editProduct = product.productList[0];
-            console.log(editProduct)
             var productLots = [];
             angular.forEach(product.asnLots, function(lot, value) {
                 $scope.isVaccine=true;
