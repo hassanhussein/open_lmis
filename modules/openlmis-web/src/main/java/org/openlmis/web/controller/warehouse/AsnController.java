@@ -118,7 +118,7 @@ public class AsnController extends BaseController {
         List<Port> ports = portService.getAll();
         List<Manufacturer> manufacturers = manufacturerService.getAll();
         List<SupplyPartner> supplyPartners = supplyPartnerService.getAll();
-        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("document-types", documentTypes);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("documentTypes", documentTypes);
         response.getBody().addData("ports", ports);
         response.getBody().addData("manufactures", manufacturers);
         response.getBody().addData("suppliers", supplyPartners);
