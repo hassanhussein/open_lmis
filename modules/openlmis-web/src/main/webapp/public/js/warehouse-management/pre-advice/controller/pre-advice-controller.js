@@ -11,21 +11,55 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($window,$scope,$filter, $location,otherProducts, asn, Preadvice, configurations, homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController($window,$scope,$filter, $location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 ) {
-    $scope.displayDocumentTypes =  documentTypes;
-    $scope.homeFacilityId = homeFacility.id;
-    $scope.userPrograms = configurations.programs;
-    $scope.manufacturers = manufacturers;
-    $scope.ports = asnLookups.ports;
-    $scope.documentTypes = documentTypes;
-    $scope.suppliers = asnLookups.suppliers;
+
+
+    function getAllLookups(){
+     AllVaccineInventoryConfigurations.get(function(data) {
+                    $scope.configurations = data;
+                    $scope.userPrograms=data.programs;
+
+                });
+
+               UserFacilityList.get({}, function(data) {
+//                      $scope.homeFacility = data.facilityList[0];
+                       $scope.homeFacilityId =data.facilityList[0].id;
+                           $scope.loadProducts($scope.homeFacilityId, 82,true);
+
+                  });
+
+       AsnLookups.get(function(data) {
+
+                          $scope.displayDocumentTypes =  data.documentTypes;
+                              $scope.manufacturers = data.manufacturers;
+                                  $scope.ports = data.ports;
+                                      $scope.suppliers = data.suppliers;
+
+
+
+
+                  });
+
+         VaccineProgramProducts.get({programId:82},function(data) {
+                           $scope.otherProducts=data;
+                       });
+
+    }
+
+    getAllLookups();
+//    $scope.homeFacilityId = homeFacility.id;
+//    $scope.userPrograms = configurations.programs;
+//    $scope.manufacturers = manufacturers;
+//    $scope.ports = asnLookups.ports;
+//    $scope.documentTypes = documentTypes;
+//    $scope.suppliers = asnLookups.suppliers;
     $scope.productError = false;
     //console.log(configurations.productsConfiguration[0].product.id)
-    $scope.configurations = configurations;
+//    $scope.configurations = configurations;
     $scope.switchData=2;
-    $scope.otherProducts=otherProducts;
+//    $scope.otherProducts=otherProducts;
 
     $scope.asn = asn;
 
@@ -65,7 +99,6 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
     };
 
-    $scope.loadProducts($scope.homeFacilityId, 82,true);
     $scope.getProductFromId = function(productId) {
         var editProduct = {};
 
@@ -109,7 +142,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
             var toExclude = _.pluck(_.pluck(_.pluck($scope.productsToAdd, 'programProduct'), 'product'), 'primaryName');
 
-
+//            console.log($scope.allProducts)
             $scope.productsToDisplay = $.grep($scope.allProducts, function(productObject) {
                 return $.inArray(productObject.programProduct.product.primaryName, toExclude) == -1;
             });
@@ -134,10 +167,10 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
         $scope.notes = asn.note;
         $scope.poDate = asn.podate;
         $scope.poNumber = asn.ponumber;
-        $scope.portOfArrivalId = asn.portofarrival;
-        $scope.supplierId = asn.supplierid;
+        $scope.portOfArrivalId = asn.port.id;
         $scope.productsToAdd = [];
-        $scope.supplierId = asn.supplier.id;
+        $scope.supplier = asn.supplier;
+        $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
@@ -149,8 +182,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
         $scope.productsToAdd = [];
         angular.forEach($scope.asn.asnLineItems, function(product, value) {
-            editProduct = $scope.getProductFromId(product.productid);
-//            console.log($scope.allProducts)
+            editProduct = product.productList[0];
             var productLots = [];
             angular.forEach(product.asnLots, function(lot, value) {
                 $scope.isVaccine=true;
@@ -210,7 +242,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
 
 
-$scope.updateProductsToDisplay();
+//$scope.updateProductsToDisplay();
 
 
 
@@ -498,7 +530,7 @@ $scope.removeProduct(productIndex);
 //        sum=product.quantity;
         }
 
-        console.log(sum);
+//        console.log(sum);
 
         return sum;
     };
@@ -543,7 +575,7 @@ $scope.removeProduct(productIndex);
         };
 
 
-        var udateError = function(data) {
+        var updateError = function(data) {
             $scope.$parent.message = "";
             $scope.error = data.data.error;
             $scope.showError = true;
@@ -846,31 +878,33 @@ PreAdviceController.resolve = {
 
    documentTypes: function ($q, $timeout, $route, DocumentTypes) {
          var deferred = $q.defer();
-         $timeout(function () {
-             DocumentTypes.get({},function (data) {
-
-                var documents = [];
-
-                  if(!isUndefined(data.documents)){
-                   documents = data.documents;
-                  }
-
-                 deferred.resolve(documents);
-             });
-         }, 100);
+//         $timeout(function () {
+//             DocumentTypes.get({},function (data) {
+//
+//                var documents = [];
+//
+//                  if(!isUndefined(data.documents)){
+//                   documents = data.documents;
+//                  }
+//
+//                 deferred.resolve(documents);
+//             });
+//         }, 100);
+deferred.resolve('data');
          return deferred.promise;
      },
 
 
     configurations: function($q, $timeout, AllVaccineInventoryConfigurations) {
         var deferred = $q.defer();
-        var configurations = {};
-        $timeout(function() {
-            AllVaccineInventoryConfigurations.get(function(data) {
-                configurations = data;
-                deferred.resolve(configurations);
-            });
-        }, 100);
+//        var configurations = {};
+//        $timeout(function() {
+//            AllVaccineInventoryConfigurations.get(function(data) {
+//                configurations = data;
+//                deferred.resolve(configurations);
+//            });
+//        }, 100);
+deferred.resolve('data');
         return deferred.promise;
     },
 
@@ -895,53 +929,57 @@ PreAdviceController.resolve = {
         var deferred = $q.defer();
         var homeFacility = {};
 
-        $timeout(function() {
-            UserFacilityList.get({}, function(data) {
-                homeFacility = data.facilityList[0];
-                StockCards.get({
-                    facilityId: homeFacility.id
-                }, function(data) {
-                    if (data.stockCards.length > 0) {
-                        homeFacility.hasStock = true;
-                    } else {
-                        homeFacility.hasStock = false;
-                    }
-                    deferred.resolve(homeFacility);
-                });
-
-            });
-
-        }, 100);
+//        $timeout(function() {
+//            UserFacilityList.get({}, function(data) {
+//                homeFacility = data.facilityList[0];
+//                StockCards.get({
+//                    facilityId: homeFacility.id
+//                }, function(data) {
+//                    if (data.stockCards.length > 0) {
+//                        homeFacility.hasStock = true;
+//                    } else {
+//                        homeFacility.hasStock = false;
+//                    }
+//                    deferred.resolve(homeFacility);
+//                });
+//
+//            });
+//
+//        }, 100);
+deferred.resolve('data');
         return deferred.promise;
     },
     manufacturers: function($q, $timeout, $route, ManufacturerList) {
         var deferred = $q.defer();
-
-        $timeout(function() {
-            ManufacturerList.get(function(data) {
-                deferred.resolve(data.manufacturers);
-            });
-        }, 100);
+//
+//        $timeout(function() {
+//            ManufacturerList.get(function(data) {
+//                deferred.resolve(data.manufacturers);
+//            });
+//        }, 100);
+deferred.resolve('data');
         return deferred.promise;
     },
     asnLookups: function($q, $timeout, $route, AsnLookups) {
         var deferred = $q.defer();
-
-        $timeout(function() {
-            AsnLookups.get(function(data) {
-                deferred.resolve(data);
-            });
-        }, 100);
+//
+//        $timeout(function() {
+//            AsnLookups.get(function(data) {
+//                deferred.resolve(data);
+//            });
+//        }, 100);
+deferred.resolve('data');
         return deferred.promise;
     },
     otherProducts: function($q, $timeout, $route,  VaccineProgramProducts) {
             var deferred = $q.defer();
-
-            $timeout(function() {
-                 VaccineProgramProducts.get({programId:82},function(data) {
-                    deferred.resolve(data);
-                });
-            }, 100);
+//
+//            $timeout(function() {
+//                 VaccineProgramProducts.get({programId:82},function(data) {
+//                    deferred.resolve(data);
+//                });
+//            }, 100);
+            deferred.resolve('data');
             return deferred.promise;
         },
 };
