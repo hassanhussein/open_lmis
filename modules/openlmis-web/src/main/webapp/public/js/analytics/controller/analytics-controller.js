@@ -32,7 +32,7 @@ DefaultProgram.get({}, function (data) {
         $rootScope.loadPercentageWastageData(params);
         $rootScope.loadGeoFacilityStockMap(params);
 
-         //$scope.loadConsumptionTrendsData(params);
+         $scope.loadConsumptionTrendsData(params);
          //$scope.loadStockStatusByProgram(params,'level1');
          $rootScope.loadStockStatusSummary(params);
          //$rootScope.loadStockStatusByProgramAndYearData(params);
@@ -1102,7 +1102,7 @@ $scope.loadConsumptionTrendsData = function (params){
 
 ConsumptionTrendsData.get(params).then(function(data){
 
-
+console.log(data);
 var groupA = _.where(data, {'schedule':45});
 var groupB = _.where(data, {'schedule':46});
 
