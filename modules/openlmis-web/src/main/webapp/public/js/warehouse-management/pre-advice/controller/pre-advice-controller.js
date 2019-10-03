@@ -660,9 +660,9 @@ $scope.removeProduct(productIndex);
 
 
     $scope.saveAsn = function(status) {
-
+    console.log($scope.documentDetails);
         $scope.validateProduct();
-        //                console.log($scope.asnForm)
+                        console.log($scope.asnForm)
       if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
