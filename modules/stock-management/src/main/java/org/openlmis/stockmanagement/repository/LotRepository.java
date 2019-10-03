@@ -30,30 +30,19 @@ public class LotRepository {
   }
 
   public Lot getOrCreateLot(Lot lot) {
-
-    Lot lot2 = new Lot();
-
-    if(lot != null) {
-
+    Lot l = mapper.getByObject(lot);
+    if (null == l) {
       Lot lotNumber  = mapper.getByCode(lot.getLotCode());
-
-     if(lotNumber == null) {
-
-       lot2 = mapper.getByObject(lot);
-       if (null == lot2) {
-         mapper.insert(lot);
-         lot2 = lot;
-       }
-     }
-     else {
-       return lot;
-
-     }
-
+      if(lotNumber == null) {
+        mapper.insert(lot);
+        l = lot;
+      } else {
+        mapper.update(lot);
+        l = lot;
+      }
     }
 
-
-    return lot2;
+    return l;
   }
 
   public void saveLotOnHand(LotOnHand lotOnHand) {
