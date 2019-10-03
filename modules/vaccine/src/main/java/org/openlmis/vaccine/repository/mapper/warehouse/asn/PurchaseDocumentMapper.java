@@ -9,19 +9,19 @@ import java.util.List;
 @Repository
 public interface PurchaseDocumentMapper {
 
-    @Insert("insert into purchase_documents(asnid,receiveId, documenttype, filelocation, createdDate,createdBy, modifiedBy, modifiedDate) values(" +
-            "#{asn.id},#{receive.id},#{documentType.id}, #{filelocation}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
+    @Insert("insert into purchase_documents(asnId,receiveId, documentType, fileLocation, createdDate,createdBy, modifiedBy, modifiedDate) values(" +
+            "#{asn.id},#{receive.id},#{documentType.id}, #{fileLocation}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
             "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
     @Options(useGeneratedKeys = true)
     Integer insert(PurchaseDocument purchaseDocument);
 
-    @Update("update  purchase_documents set documenttype = #{documentType.id}, filelocation = #{filelocation}, " +
+    @Update("update  purchase_documents set documentType = #{documentType.id}, fileLocation = #{fileLocation}, " +
             " modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
     void update(PurchaseDocument purchaseDocument);
 
     @Select("SELECT * FROM purchase_documents")
     @Results(value = {
-            @Result(property = "documentType", column = "documenttype", javaType = Integer.class,
+            @Result(property = "documentType", column = "documentType", javaType = Integer.class,
 
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMappper.getById")),
             @Result(property = "asn", column = "asnid", javaType = Integer.class,
