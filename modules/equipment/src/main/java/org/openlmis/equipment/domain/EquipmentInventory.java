@@ -58,6 +58,7 @@ public class EquipmentInventory extends BaseModel {
   private Long equipmentInventoryId;
   private Long isObsolete;
   private String remark;
+  private Boolean submittedDailyStatus = false;
 
 
   public String getDateLastAssessedString() {

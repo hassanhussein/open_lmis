@@ -34,7 +34,7 @@ public interface EquipmentInventoryMapper {
   })
   List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
 
-  @Select("SELECT ei.*" +
+  @Select("SELECT ei.*, (select count(ds.*) > 0 from equipment_daily_cold_trace_status ds where ds.equipmentInventoryId = ei.id) as submittedDailyStatus" +
       " FROM equipment_inventories ei" +
       " JOIN equipments e ON ei.equipmentId = e.id" +
       " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
@@ -145,7 +145,7 @@ public interface EquipmentInventoryMapper {
             " (LOWER(e.name) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(e.model) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(ei.serialNumber) LIKE '%' || LOWER(#{searchParam}) || '%') ")
     Integer getInventoryCountBySearch(@Param("searchParam") String searchParam,@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds);
 
-  @Select("SELECT ei.*" +
+  @Select("SELECT ei.*, (select count(ds.*) > 0 from equipment_daily_cold_trace_status ds where ds.equipmentInventoryId = ei.id) as submittedDailyStatus " +
           " FROM equipment_inventories ei" +
           " JOIN equipments e ON ei.equipmentId = e.id" +
           " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
