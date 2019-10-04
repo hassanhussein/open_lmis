@@ -835,8 +835,10 @@ $scope.removeProduct(productIndex);
 
 
   function getFile(file,documentType) {
+      //file.asnCode = $scope.asnCode;
+      //file.webkitRelativePath = $scope.asnCode;
 
-      docService.saveDoc(file, documentType).then(
+      docService.saveDoc(file, $scope.asnCode).then(
 
       function (response) {
 
@@ -850,7 +852,7 @@ $scope.removeProduct(productIndex);
       },2000);
 
 
-      $http.get("/rest-api/warehouse/downloadFile?filename="+file.name).success(
+      $http.get("/rest-api/warehouse/downloadFile?filename="+$scope.asnCode+file.name).success(
 
       function(response) {
       console.log(response);
@@ -865,9 +867,9 @@ $scope.removeProduct(productIndex);
 
 }
 
-$scope.downloadFile = function (file){
+$scope.downloadFile = function (file,asnCode){
 
-var url ='/rest-api/warehouse/downloadFile?filename='+file.name;
+var url ='/rest-api/warehouse/downloadFile?filename='+asnCode+file.name;
 $window.open(url, '_blank');
 
 };

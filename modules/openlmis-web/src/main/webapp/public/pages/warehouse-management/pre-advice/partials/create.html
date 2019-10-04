@@ -510,7 +510,7 @@
                                                             <input type="checkbox" ng-model="documentDetail.selected"/>
                                                         </td>
                                                         <td style="min-width:200px !important" >
-                                                            <span ng-click="downloadFile(documentDetail.file)"><a href="" ng-show="documentDetail.documentType.disableSelectedRows">Download ({{documentDetail.documentType.name}})</a></span>
+                                                            <span ng-click="downloadFile(documentDetail.file,asnCode)"><a href="" ng-show="documentDetail.documentType.disableSelectedRows">Download ({{documentDetail.documentType.name}})</a></span>
 
 
                                                     </tr>
@@ -520,7 +520,7 @@
                                                 <div class="button-row">
                                                     <span style="color:#276E72" ng-show="openMessage">{{message}}</span>
                                                     <input ng-hide="!documentDetails.length" type="button" class="btn btn-danger pull-right" ng-click="remove()" value="Remove">
-                                                    <input type="submit" ng-click="addNew(this);" style="margin-right:10px" class="btn btn-primary addnew pull-right btn-upload" value="Add New">
+                                                    <input ng-disabled="!asnCode" type="submit" ng-click="addNew(this);" style="margin-right:10px" class="btn btn-primary addnew pull-right btn-upload" value="Add New">
                                                 </div>
                                             </ng-form>
                                         </div>

@@ -171,10 +171,12 @@ public class AsnController extends BaseController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
 
-        return saveUploadedFiles(asnDocuments);
+        String asnNumber = request.getParameter("params");
+
+        return saveUploadedFiles(asnDocuments,asnNumber);
     }
 
-    private String saveUploadedFiles(MultipartFile file) {
+    private String saveUploadedFiles(MultipartFile file, String asnNumber) {
 
         String fileName;
         String filePath;
@@ -189,7 +191,7 @@ public class AsnController extends BaseController {
             InputStream inputStream;
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
             byte[] byteFile;
-            fileName = file.getOriginalFilename();
+            fileName = asnNumber+file.getOriginalFilename();
             filePath = this.fileStoreLocation + fileName;
             inputStream = file.getInputStream();
             int val = inputStream.available();
