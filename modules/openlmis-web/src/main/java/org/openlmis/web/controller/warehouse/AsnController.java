@@ -191,7 +191,7 @@ public class AsnController extends BaseController {
             InputStream inputStream;
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
             byte[] byteFile;
-            fileName = asnNumber+file.getOriginalFilename();
+            fileName = asnNumber+"-"+file.getOriginalFilename();
             filePath = this.fileStoreLocation + fileName;
             inputStream = file.getInputStream();
             int val = inputStream.available();

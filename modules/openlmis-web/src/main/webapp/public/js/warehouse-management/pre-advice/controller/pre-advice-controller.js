@@ -852,7 +852,7 @@ $scope.removeProduct(productIndex);
       },2000);
 
 
-      $http.get("/rest-api/warehouse/downloadFile?filename="+$scope.asnCode+file.name).success(
+      $http.get("/rest-api/warehouse/downloadFile?filename="+$scope.asnCode+'-'+file.name).success(
 
       function(response) {
       console.log(response);
@@ -869,7 +869,7 @@ $scope.removeProduct(productIndex);
 
 $scope.downloadFile = function (file,asnCode){
 
-var url ='/rest-api/warehouse/downloadFile?filename='+asnCode+file.name;
+var url ='/rest-api/warehouse/downloadFile?filename='+asnCode+'-'+file.name;
 $window.open(url, '_blank');
 
 };
