@@ -833,8 +833,17 @@ public class RequisitionService {
     Rnr rnr = this.getFullRequisitionById(rnrId);
     rnr.setModifiedBy(userId);
     rnr.setStatus(RnrStatus.INITIATED);
+    setApprovedNull(rnr);
     requisitionRepository.update(rnr);
     logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
+  }
+
+  private void setApprovedNull(Rnr rnr) {
+    for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
+      lineItem.setQuantityApproved(null);
+      lineItem.setCalculatedOrderQuantity(null);
+    }
+
   }
 
   public Integer findM(ProcessingPeriod period) {
