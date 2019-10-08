@@ -15,8 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class ReceiveLineItem extends BaseModel {
 
-    private Integer receiveId;
-    private Integer productId;
+    private Long receiveId;
+    private Long productId;
     private Date expiryDate;
     private Date manufacturingDate;
     private Integer quantityCounted;

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,7 +26,7 @@ public class ReceiveService {
     private PurchaseDocumentService purchaseDocumentService;
 
     @Transactional
-    public void save(Receive receive, Long userId) {
+    public void save(Receive receive, Long userId, Asn asn) {
 
         if (receive.getId() == null) {
 
@@ -34,29 +35,37 @@ public class ReceiveService {
         }else {
             repository.update(receive);
         }
-        List<ReceiveLineItem> receiveLineItems = receive.getReceiveLineItems();
+        if(receive.getReceiveLineItems() != null) {
 
-   /*     if(!receiveLineItems.isEmpty()) {
+            if(asn != null && (!receive.getReceiveLineItems().isEmpty())) {
 
-            for (ReceiveLineItem lineItem : receiveLineItems) {
+                for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
 
-                lineItem.setReceive(receive);
-                lineItem.setCreatedBy(userId);
-                lineItem.setModifiedBy(userId);
-                lineItemService.save(lineItem);
-                if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
+                    lineItem.setReceive(receive);
+                    lineItem.setCreatedBy(userId);
+                    lineItem.setModifiedBy(userId);
+                    lineItemService.save(lineItem);
+                    if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
 
-                       for (ReceiveLot lot : lineItem.getReceiveLots()) {
-                        lot.setReceiveLineItem(lineItem);
-                        lot.setCreatedBy(userId);
-                        lot.setModifiedBy(userId);
-                        lotService.save(lot);
+                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                            lot.setReceiveLineItem(lineItem);
+                            lot.setCreatedBy(userId);
+                            lot.setModifiedBy(userId);
+                            lotService.save(lot);
+                        }
+
+
                     }
-
-
                 }
             }
-        }*/
+
+        }
+
+
+
+
+
+
    /*     List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments) {
             document.setReceive(receive);
@@ -65,6 +74,46 @@ public class ReceiveService {
             purchaseDocumentService.save(document);
         }*/
 
+       if(asn != null && asn.getStatus().equals("Finalized")) {
+
+           for (AsnLineItem lineItem : asn.getAsnLineItems()) {
+
+               ReceiveLineItem receiveLineItem = new ReceiveLineItem();
+               receiveLineItem.setReceive(receive);
+               receiveLineItem.setReceiveId(receive.getId());
+               receiveLineItem.setProductId(lineItem.getProductid());
+               receiveLineItem.setExpiryDate(lineItem.getExpirydate());
+               receiveLineItem.setManufacturingDate(lineItem.getManufacturingdate());
+               receiveLineItem.setQuantityCounted(lineItem.getQuantityexpected());
+               receiveLineItem.setUnitPrice(lineItem.getUnitprice());
+               receiveLineItem.setBoxCounted(null);
+               receiveLineItem.setLotFlag(lineItem.isLotflag());
+               receiveLineItem.setCreatedBy(asn.getModifiedBy());
+               receiveLineItem.setModifiedBy(asn.getModifiedBy());
+               lineItemService.save(receiveLineItem);
+
+               if (receiveLineItem.isLotFlag() && (!lineItem.getAsnLots().isEmpty())) {
+
+                   for (AsnLot lot : lineItem.getAsnLots()) {
+                       ReceiveLot lot1 = new ReceiveLot();
+                       lot1.setExpiryDate(lot.getExpirydate());
+                       lot1.setLocationId(null);
+                       lot1.setLotNumber(lot.getLotnumber());
+                       lot1.setSerialNumber(lot.getSerialnumber());
+                       lot1.setManufacturingDate(lot.getManufacturingdate());
+                       lot1.setQuantity(lot.getQuantity());
+                       lot1.setCreatedBy(userId);
+                       lot1.setModifiedBy(userId);
+                       lot1.setReceiveLineItem(receiveLineItem);
+                       lotService.save(lot1);
+                   }
+
+
+               }
+
+           }
+
+       }
     }
 
     public List<Receive> getAll() {

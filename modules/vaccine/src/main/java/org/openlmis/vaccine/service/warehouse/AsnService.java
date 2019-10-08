@@ -116,7 +116,8 @@ public class AsnService {
             res.setIsForeignProcurement(true);
             res.setSupplyPartner(asn.getSupplier());
             res.setPurchaseOrderId(null);
-            receiveService.save(res, asn.getModifiedBy());
+            res.setReceiveLineItems(null);
+            receiveService.save(res, asn.getModifiedBy(),asn);
             notificationService.sendAsnFinalizeEmail();
 
         }
