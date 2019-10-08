@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController($window,$scope,$filter, AsnLookups, $location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, Lot,
+function ReceiveController($window,$scope,$filter, AsnLookups, $location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout){
 
 
@@ -659,10 +659,10 @@ $scope.removeProduct(productIndex);
         }
     };
 
+$scope.saveAsn = function(status) {
 
-    $scope.saveAsn = function(status) {
-    console.log($scope.documentDetails);
         $scope.validateProduct();
+//                        console.log($scope.asnForm)
       if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
@@ -671,21 +671,22 @@ $scope.removeProduct(productIndex);
         }
 
 
-        var asnLineItems = [];
+        var receiveLineItems = [];
         angular.forEach($scope.productsToAdd, function(product, key) {
-            var asnLots = [];
+            var receiveLots = [];
 
 
 
             if($scope.isVaccine){
              angular.forEach(product.lots, function(lot, key) {
                             if (lot.info) {
-                                asnLots.push({
+                                receiveLots.push({
                                     expirydate: lot.info.expirationDate,
-                                    lotnumber: lot.info.lotCode,
-                                    manufacturingdate: lot.info.manufactureDate,
+                                    lotNumber: lot.info.lotCode,
+                                    manufacturingDate: lot.info.manufactureDate,
                                     quantity: lot.quantity,
-                                    serialnumber: 'string'
+                                    serialnumber: 'string',
+                                    locationId:lot.locationId,
                                 });
 
 
@@ -695,49 +696,43 @@ $scope.removeProduct(productIndex);
             }
 
 
-            asnLineItems.push({
-                asnLots: asnLots,
-                lotflag: $scope.isVaccine,
-                productid: product.programProduct.product.id,
-                unitprice:product.unitPrice,
-                quantityexpected:($scope.isVaccine)?0:product.quantity
+            receiveLineItems.push({
+                receiveLots: receiveLots,
+                lotFlag: $scope.isVaccine,
+                productId: product.programProduct.product.id,
+                unitPrice:product.unitPrice,
+                boxCounted:product.boxCounted,
+                quantityCounted:($scope.isVaccine)?0:product.quantity
             });
 
 
         });
-        var asn = {
-            asnLineItems: asnLineItems,
-            asndate: $scope.asnReceiptDate,
-            asnnumber: $scope.asnCode,
-            blawbnumber: $scope.blAwbNumber,
-            clearingagent: $scope.clearingAgent,
-            expectedarrivaldate: $scope.expectedArrivalDate,
+        var receive = {
+            receiveLineItems: receiveLineItems,
+            receiveDate: $scope.receiveDate,
+//            asnnumber: $scope.asnCode,
+            blawBnumber: $scope.blAwbNumber,
+            clearingAgent: $scope.clearingAgent,
+            expectedArrivalDate: $scope.expectedArrivalDate,
             expecteddeliverydate:$scope.expectedDeliveryDate,
-            flightvesselnumber: $scope.flightVesselNumber,
+            actualArrivalDate:$scope.actualArrivalDate,
+            flightVesselNumber: $scope.flightVesselNumber,
+            isForeignProcurement:$scope.isForeignProcurement,
             note: $scope.notes,
-            podate: $scope.poDate,
-            ponumber: $scope.poNumber,
-            portofarrival: $scope.portOfArrivalId,
+            description:$scope.descriptionOfProcurement,
+            noteToSupplier:$scope.noteToSupplier,
+            poDate: $scope.poDate,
+            poNumber: $scope.poNumber,
+            portOfArrival: $scope.portOfArrivalId,
             purchaseDocuments: $scope.documentDetails,
             status: status,
-            supplierid: $scope.supplierId
+            supplierId: $scope.supplierId
         };
 
-        if($scope.asn){
+    console.log(receive);
+        Receive.save({}, receive, success, error);
 
-
-                  Preadvice.update({id:$scope.asn.id}, asn, updateSuccess, updateError);
-
-
-        }else{
-
-        Preadvice.save({}, asn, success, error);
-
-
-        }
     };
-
-
 
           $scope.documentDetails = [ ];
 
