@@ -77,8 +77,8 @@
                 <td  ng-bind="asn.supplier.name"></td>
                 <td  ng-bind="asn.status"></td>
                 <td>
-                    <a  href="" ng-click="edit(asn.id)"  ng-if="asn.status=='Draft'" openlmis-message="update"></a>
-                    <a  href=""  ng-if="asn.status!='Draft'" >receive</a>
+                    <a  href="" ng-click="edit(asn.id)"  ng-if="asn.status=='DRAFT'" openlmis-message="update"></a>
+<!--                    <a  href=""  ng-if="asn.status!='DRAFT'" >Recei</a>-->
                 </td>
                 <td>
                     <a  href=""  ng-if="asn.status=='Draft'" openlmis-message="delete"></a>

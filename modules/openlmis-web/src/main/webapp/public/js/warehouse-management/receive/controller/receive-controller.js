@@ -158,8 +158,8 @@ function ReceiveController($window,$scope,$filter, AsnLookups, $location,UserFac
 
     if ($scope.receive) {
         $scope.editMode = true;
-        $scope.asnReceiptDate = receive.receiveDate;
-//        $scope.asnCode = asn.asnnumber;
+        $scope.asnReceiptDate = receive.asnReceiveDate;
+        $scope.asnCode = receive.asnNumber;
         $scope.blAwbNumber = receive.blawBnumber;
         $scope.clearingAgent = receive.clearingAgent;
         $scope.expectedArrivalDate = receive.expectedArrivalDate;
@@ -168,10 +168,10 @@ function ReceiveController($window,$scope,$filter, AsnLookups, $location,UserFac
         $scope.notes = receive.note;
         $scope.poDate = receive.poDate;
         $scope.poNumber = receive.poNumber;
-        $scope.portOfArrivalId = receive.portOfArrival;
+        $scope.portOfArrivalId = receive.port.id;
         $scope.productsToAdd = [];
         $scope.supplier = receive.supplier;
-        $scope.supplierId=$scope.supplierId;
+//        $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
