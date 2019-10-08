@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.receive;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.SupplyPartner;
+import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
 import org.springframework.stereotype.Repository;
 
@@ -42,9 +43,11 @@ public interface ReceiveMapper {
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
             @Result(property = "supplier", column = "supplierId", javaType = SupplyPartner.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById"))/*,
-            @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.PurchaseDocumentMapper.getByReceiveId"))*/
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
+           /* @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.PurchaseDocumentMapper.getByReceiveId")),*/
+            @Result(property = "port", column = "portofarrival", javaType = Port.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById"))
     })
     Receive getById(@Param("id") Long id);
 

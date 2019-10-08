@@ -62,11 +62,7 @@ public class ReceiveService {
         }
 
 
-
-
-
-
-   /*     List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
+       /* List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments) {
             document.setReceive(receive);
             document.setCreatedBy(userId);

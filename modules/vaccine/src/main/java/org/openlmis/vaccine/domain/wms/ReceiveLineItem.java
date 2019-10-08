@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Product;
 
 import java.util.Date;
 import java.util.List;
@@ -25,5 +26,6 @@ public class ReceiveLineItem extends BaseModel {
     private boolean lotFlag;
     private Receive receive;
     private List<ReceiveLot> receiveLots;
+    private List<Product> productList;
 
 }

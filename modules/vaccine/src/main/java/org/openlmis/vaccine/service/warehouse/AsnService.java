@@ -114,7 +114,7 @@ public class AsnService {
             res.setCreatedBy(asn.getCreatedBy());
             res.setModifiedBy(asn.getModifiedBy());
             res.setIsForeignProcurement(true);
-            res.setSupplyPartner(asn.getSupplier());
+            res.setSupplier(asn.getSupplier());
             res.setPurchaseOrderId(null);
             res.setReceiveLineItems(null);
             receiveService.save(res, asn.getModifiedBy(),asn);

@@ -52,8 +52,11 @@ public class Receive extends BaseModel {
     private Long supplierId;
 
     private SupplyPartner supplyPartner;
+    private SupplyPartner supplier;
 
     private List<ReceiveLineItem> receiveLineItems;
+
+    private Port port;
 
     public void copyAsnValues(Asn asn) {
 
