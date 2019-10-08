@@ -11,7 +11,6 @@ import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.DocumentType;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
@@ -68,7 +67,7 @@ public class ReceiveController extends BaseController {
             Long userId = loggedInUserId(principal);
             receive.setCreatedBy(userId);
             receive.setModifiedBy(userId);
-            service.save(receive, userId);
+            service.save(receive, userId, null);
             return success("message.success.warehouse.created");
 
         } catch (DataException e) {
@@ -82,7 +81,7 @@ public class ReceiveController extends BaseController {
         try{
             receive.setId(id);
             receive.setModifiedBy(loggedInUserId(principal));
-            service.save(receive, loggedInUserId(principal));
+            service.save(receive, loggedInUserId(principal), null);
             return success("message.success.warehouse.updated");
 
         } catch (DataException e) {

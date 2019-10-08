@@ -25,7 +25,9 @@ public interface ReceiveLineItemMapper {
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(property = "receiveLots", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLotMapper.getByLineItem"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLotMapper.getByLineItem")),
+            @Result(property = "productList", column = "productId", javaType = List.class,
+                    many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
     })
     ReceiveLineItem  getById(@Param("id") Long id);
 
@@ -33,7 +35,9 @@ public interface ReceiveLineItemMapper {
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(property = "receiveLots", column = "id", javaType = List.class,
-                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLotMapper.getByLineItem"))
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLotMapper.getByLineItem")),
+            @Result(property = "productList", column = "productId", javaType = List.class,
+                    many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
     })
     List<ReceiveLineItem>  getByReceiveId(@Param("id") Long id);
 
