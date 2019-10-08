@@ -52,12 +52,14 @@ public class Receive extends BaseModel {
     private Long supplierId;
 
     private SupplyPartner supplyPartner;
+
     private SupplyPartner supplier;
 
     private List<ReceiveLineItem> receiveLineItems;
 
     private String asnNumber;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = DateDeserializer.class)
     private Date asnReceiveDate;
 
