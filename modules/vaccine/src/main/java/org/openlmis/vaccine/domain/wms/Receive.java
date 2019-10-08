@@ -56,6 +56,11 @@ public class Receive extends BaseModel {
 
     private List<ReceiveLineItem> receiveLineItems;
 
+    private String asnNumber;
+
+    @JsonDeserialize(using = DateDeserializer.class)
+    private Date asnReceiveDate;
+
     private Port port;
 
     public void copyAsnValues(Asn asn) {

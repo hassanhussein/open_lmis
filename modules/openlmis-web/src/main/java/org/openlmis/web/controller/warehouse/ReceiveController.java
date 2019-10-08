@@ -14,6 +14,7 @@ import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.vaccine.domain.wms.DocumentType;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
+import org.openlmis.vaccine.service.warehouse.AsnService;
 import org.openlmis.vaccine.service.warehouse.DocumentTypeService;
 import org.openlmis.vaccine.service.warehouse.PortService;
 import org.openlmis.vaccine.service.warehouse.ReceiveService;
@@ -55,6 +56,9 @@ public class ReceiveController extends BaseController {
     ManufacturerService manufacturerService;
     @Autowired
     SupplyPartnerService supplyPartnerService;
+
+    @Autowired
+    private AsnService asnService;
 
 
     public static final String ERROR = "error";
@@ -110,7 +114,11 @@ public class ReceiveController extends BaseController {
 
     @RequestMapping(value = "receive/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getBy(@PathVariable Long id) {
-        return OpenLmisResponse.response("receive", service.getById(id));
+
+        Receive receive = service.getById(id);
+        receive.setAsnNumber(asnService.getById(receive.getAsnId()).getAsnnumber());
+        receive.setAsnReceiveDate(asnService.getById(receive.getAsnId()).getAsndate());
+        return OpenLmisResponse.response("receive", receive);
     }
 
 
