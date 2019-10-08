@@ -51,7 +51,7 @@ public class Receive extends BaseModel {
 
     private Long supplierId;
 
-    private SupplyPartner supplyPartner;
+   // private SupplyPartner supplyPartner;
 
     private SupplyPartner supplier;
 
@@ -89,7 +89,7 @@ public class Receive extends BaseModel {
       res.setCreatedBy(asn.getCreatedBy());
       res.setModifiedBy(asn.getModifiedBy());
       res.setIsForeignProcurement(true);
-      res.setSupplyPartner(asn.getSupplier());
+      res.setSupplier(asn.getSupplier());
       res.setPurchaseOrderId(null);
 
     /*  for(AsnLineItem asnLineItem: asn.getAsnLineItems()){
