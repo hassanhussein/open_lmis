@@ -25,6 +25,10 @@ public class PurchaseDocumentRepository {
         return mapper.getById(id);
     }
 
+    public List<PurchaseDocument> getByAsnId (Long id){
+        return mapper.getByAsnId(id);
+    }
+
     public List<PurchaseDocument> getAll(){
         return mapper.getAllPurchaseDocuments();
     }

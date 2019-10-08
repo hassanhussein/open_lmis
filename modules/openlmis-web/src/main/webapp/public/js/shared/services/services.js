@@ -599,28 +599,25 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
 
                      return factory;
 
-                     function saveDoc(file,documentType) {
-
-                        var file2 = angular.extend({},file);
-                        file.documentType = documentType;
-                      console.log(file);
+                     function saveDoc(file,asnNumber) {
 
                          var deferred = $q.defer();
                          var formData = new FormData();
                          formData.append('file', file);
-                         formData.append('documentType', documentType);
-
+                         formData.append('params',asnNumber);
                          $http.post('/rest-api/warehouse/'+'upload', formData,{
-                             transformRequest : angular.identity,
+                         transformRequest : angular.identity,
                              headers : {
                                  'Content-Type' : undefined
                              }})
                              .then(
                                  function (response) {
+                                 console.log(response);
 
                                      deferred.resolve(response.data);
                                  },
                                  function (errResponse) {
+                                                                  console.log(errResponse);
 
                                      deferred.reject(errResponse);
                                  }

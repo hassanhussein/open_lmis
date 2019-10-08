@@ -1,5 +1,8 @@
 package org.openlmis.vaccine.service.warehouse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
@@ -12,6 +15,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -35,6 +39,9 @@ public class AsnService {
     @Autowired
     VaccineNotificationService notificationService;
 
+    @Autowired
+    private ReceiveService receiveService;
+
     private final String FINALIZE_ASN_REPORT = "RECEIVE_FINALIZED_ASN_REPORT";
 
     @Transactional
@@ -47,7 +54,7 @@ public class AsnService {
         }else {
             repository.update(asn);
         }
-        notificationService.sendAsnFinalizeEmail();
+
         List<AsnLineItem> asnLineItems = asn.getAsnLineItems();
 
         for(AsnLineItem lineItem : asnLineItems){
@@ -75,11 +82,52 @@ public class AsnService {
             purchaseDocumentService.save(document);
         }
 
+
+        if(asn.getStatus().equals("Finalized")) {
+
+            //Copy ASN to rceive
+
+          //  Receive receive = null;
+           // receive.copyAsnValues(getById(asn.getId()));
+
+
+
+            Receive res = new Receive();
+            res.setId(null);
+            res.setAsnId(asn.getId());
+            res.setPoNumber(asn.getPonumber());
+            res.setPoDate(asn.getAsndate());
+            res.setSupplierId(asn.getSupplierid());
+            res.setReceiveDate(asn.getAsndate());
+            res.setBlawBnumber(asn.getBlawbnumber());
+            res.setCountry("Tanzania");
+            res.setFlightVesselNumber(asn.getFlightvesselnumber());
+            res.setPortOfArrival(asn.getPortofarrival());
+            res.setExpectedArrivalDate(asn.getExpectedarrivaldate());
+            res.setActualArrivalDate(asn.getExpecteddeliverydate());
+            res.setClearingAgent(asn.getClearingagent());
+            res.setShippingAgent(null);
+            res.setStatus("DRAFT");
+            res.setNote(asn.getNote());
+            res.setNoteToSupplier(asn.getNote());
+            res.setDescription(null);
+            res.setCreatedBy(asn.getCreatedBy());
+            res.setModifiedBy(asn.getModifiedBy());
+            res.setIsForeignProcurement(true);
+            res.setSupplyPartner(asn.getSupplier());
+            res.setPurchaseOrderId(null);
+            receiveService.save(res, asn.getModifiedBy());
+            notificationService.sendAsnFinalizeEmail();
+
+        }
+
     }
 
     public Asn getById (Long id) {
-
-        return repository.getById(id);
+        Asn asn = repository.getById(id);
+        List<PurchaseDocument> purchaseDocumentList = purchaseDocumentService.getByAsnId(id);
+        asn.setPurchaseDocuments(purchaseDocumentList);
+        return asn;
 
     }
     public List<Asn> getAll(){

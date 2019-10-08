@@ -138,7 +138,9 @@ public class AsnController extends BaseController {
     }
     @RequestMapping(value = "asn/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
-        return OpenLmisResponse.response("asn", asnService.getById(id));
+         Asn list = asnService.getById(id);
+
+        return OpenLmisResponse.response("asn",list );
     }
     @RequestMapping(value = "asn/{id}", method =PUT, headers = ACCEPT_JSON)
     public ResponseEntity update(@RequestBody Asn asn, @PathVariable(value = "id") Long id,Principal principal) {
@@ -171,10 +173,12 @@ public class AsnController extends BaseController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
 
-        return saveUploadedFiles(asnDocuments);
+        String asnNumber = request.getParameter("params");
+
+        return saveUploadedFiles(asnDocuments,asnNumber);
     }
 
-    private String saveUploadedFiles(MultipartFile file) {
+    private String saveUploadedFiles(MultipartFile file, String asnNumber) {
 
         String fileName;
         String filePath;
@@ -189,7 +193,7 @@ public class AsnController extends BaseController {
             InputStream inputStream;
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
             byte[] byteFile;
-            fileName = file.getOriginalFilename();
+            fileName = asnNumber+"-"+file.getOriginalFilename();
             filePath = this.fileStoreLocation + fileName;
             inputStream = file.getInputStream();
             int val = inputStream.available();
@@ -247,6 +251,9 @@ public class AsnController extends BaseController {
     public void downloadFile(@RequestParam String filename, HttpServletResponse response) throws IOException {
         OutputStream outputStream = null;
         InputStream in = null;
+
+        System.out.println(filename);
+
         try {
             in = new FileInputStream(this.fileStoreLocation + filename);
             byte[] buffer = new byte[1024];
