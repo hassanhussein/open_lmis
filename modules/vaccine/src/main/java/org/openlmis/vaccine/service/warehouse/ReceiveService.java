@@ -36,7 +36,7 @@ public class ReceiveService {
         }
         List<ReceiveLineItem> receiveLineItems = receive.getReceiveLineItems();
 
-        if(!receiveLineItems.isEmpty()) {
+   /*     if(!receiveLineItems.isEmpty()) {
 
             for (ReceiveLineItem lineItem : receiveLineItems) {
 
@@ -56,7 +56,7 @@ public class ReceiveService {
 
                 }
             }
-        }
+        }*/
    /*     List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments) {
             document.setReceive(receive);

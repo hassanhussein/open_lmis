@@ -138,7 +138,9 @@ public class AsnController extends BaseController {
     }
     @RequestMapping(value = "asn/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
-        return OpenLmisResponse.response("asn", asnService.getById(id));
+         Asn list = asnService.getById(id);
+
+        return OpenLmisResponse.response("asn",list );
     }
     @RequestMapping(value = "asn/{id}", method =PUT, headers = ACCEPT_JSON)
     public ResponseEntity update(@RequestBody Asn asn, @PathVariable(value = "id") Long id,Principal principal) {
@@ -249,6 +251,9 @@ public class AsnController extends BaseController {
     public void downloadFile(@RequestParam String filename, HttpServletResponse response) throws IOException {
         OutputStream outputStream = null;
         InputStream in = null;
+
+        System.out.println(filename);
+
         try {
             in = new FileInputStream(this.fileStoreLocation + filename);
             byte[] buffer = new byte[1024];

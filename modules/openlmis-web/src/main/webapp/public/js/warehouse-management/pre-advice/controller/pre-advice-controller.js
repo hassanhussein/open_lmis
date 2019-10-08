@@ -824,7 +824,7 @@ $scope.removeProduct(productIndex);
 
                if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
                   removeItemFromList(document.documentType);
-                 document.fileLocation = document.file.name;
+                 document.fileLocation = $scope.asnCode+'-'+document.file.name;
                  getFile(document.file, document.documentType);
 
                }

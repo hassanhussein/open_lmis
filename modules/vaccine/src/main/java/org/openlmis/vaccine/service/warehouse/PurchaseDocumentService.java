@@ -29,6 +29,12 @@ public class PurchaseDocumentService {
         return repository.getById(id);
 
     }
+
+    public List<PurchaseDocument> getByAsnId (Long id) {
+
+        return repository.getByAsnId(id);
+
+    }
     public List<PurchaseDocument> getAll(){
 
         return  repository.getAll();
