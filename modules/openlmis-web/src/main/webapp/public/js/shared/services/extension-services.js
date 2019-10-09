@@ -1366,3 +1366,7 @@ services.factory('GetLocalMap', function ($resource) {
 services.factory('GetRejectedRnRByZoneReport', function ($resource) {
     return $resource('/reports/reportdata/zone-rejected-rnr', {}, {});
 });
+
+services.factory('FacilityFundUtilizationReport', function($resource){
+    return $resource('/reportdata/district-fund-utilization.json', {}, {});
+}) ;
