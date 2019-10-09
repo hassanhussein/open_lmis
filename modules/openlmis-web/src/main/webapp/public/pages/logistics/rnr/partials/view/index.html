@@ -32,7 +32,7 @@
               ng-show="viewRequisitionForm.selectFacility.$error.required && errorShown"
               openlmis-message="error.select.value"></span>
       </div>
-      <div class="span4">
+      <div class="span3">
         <label><span openlmis-message="label.program"></span></label>
         <select ui-select2 openlmis-message="programLabel" ng-disabled="emergencyRequisitionsOnly"
                 name="selectProgram" ng-model="selectedProgramId">
@@ -43,10 +43,14 @@
           </option>
         </select>
       </div>
-      <div class="span4">
+      <div class="span2">
         <label for="emergencyRequisitionsOnly"><span openlmis-message="label.emergency.orders"></span></label>
         <input id="emergencyRequisitionsOnly" type="checkbox" ng-model="emergencyRequisitionsOnly" ng-click="showEmergencyOnly();">
-    </div>
+      </div>
+      <div class="span3">
+        <label for="enableFEReportEdit"><span>Enable editing FE report's Lab data</span></label>
+        <input id="enableFEReportEdit" type="checkbox" ng-model="isFELABReportInEditMode">
+      </div>
     </div>
 
     <div class="row-fluid">

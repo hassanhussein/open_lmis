@@ -105,13 +105,24 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
 
     function redirectBasedOnFeatureToggle() {
         var url = "requisition/";
+        var supplyType = "supplyType";
+        var selectedFacilityIdUrlPart = "";
+
+        // make reports coming from FE for a LAB program, redirect to edit page that view
+        if($scope.isFELABReportInEditMode && $scope.selectedItems[0].programCode === "LAB" &&
+            $scope.selectedItems[0].sourceApplication.toUpperCase() === "ELMIS_FE") {
+            url = "create-rnr/";
+            selectedFacilityIdUrlPart = $scope.selectedItems[0].facilityId + "/";
+            supplyType = "equipment"
+        }
+
         var urlMapping = {"ESS_MEDS": "view-requisition-via/", "MMIA": "view-requisition-mmia/"};
         var viewToggleKey = {key: "new.rnr.view"};
         FeatureToggleService.get(viewToggleKey, function (result) {
             if (result.key) {
                 url = urlMapping[$scope.selectedItems[0].programCode];
             }
-            url += $scope.selectedItems[0].id + "/" + $scope.selectedItems[0].programId + "?supplyType=fullSupply&page=1";
+            url += $scope.selectedItems[0].id + "/" + selectedFacilityIdUrlPart + $scope.selectedItems[0].programId + "?supplyType="+supplyType+"&page=1";
             $location.url(url);
         });
     }
