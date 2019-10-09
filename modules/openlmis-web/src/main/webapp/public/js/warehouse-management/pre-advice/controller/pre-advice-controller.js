@@ -33,7 +33,8 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
        AsnLookups.get(function(data) {
 
                           $scope.displayDocumentTypes =  data.documentTypes;
-                              $scope.manufacturers = data.manufacturers;
+                              $scope.manufacturers = data.manufactures;
+                              console.log($scope.manufacturers)
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
 
