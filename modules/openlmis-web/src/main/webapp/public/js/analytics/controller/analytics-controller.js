@@ -41,6 +41,8 @@ DefaultProgram.get({}, function (data) {
          $rootScope.loadConsumptionTrendSummary(params);
          loadRegularEmergenceTrend(params);
 
+        $rootScope.loadDistrictFundUtilization(params);
+
 
 
 

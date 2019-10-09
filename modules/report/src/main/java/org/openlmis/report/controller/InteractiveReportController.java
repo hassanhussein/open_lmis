@@ -1033,4 +1033,18 @@ public class InteractiveReportController extends BaseController {
     }
 
 
+  @RequestMapping(value = "/reportdata/district-fund-utilization", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getDistrictFundUtilization(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                             HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("district_fund_utilization");
+
+        List<DistrictFundUtilizationReport> reportData =
+                (List<DistrictFundUtilizationReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+        return new Pages(page, max, reportData);
+    }
+
+
 }

@@ -586,6 +586,31 @@ services.factory('GetGeoStockStatusForMapData', function ($q, $timeout, $resourc
 
 });
 
+services.factory('GetDistrictFundUtilizationData', function ($q, $timeout, $resource,GetDistrictFundUtilization) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+
+         GetDistrictFundUtilization.get(params,
+                    function (data) {
+                    var stocks ={};
+                    if (data !== undefined) {
+                        stocks = data.financies;
+                    }
+                    deferred.resolve(stocks);
+
+                    });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 services.factory('GetNumberOfEmergency', function($resource){
     return $resource('/api//dashboard/getNumberOfEmergency.json',{}, {});
 });
@@ -693,4 +718,8 @@ services.factory("GetEmergencyAndRegularRnRTrends", function($resource){
 
 services.factory("GetGeoStockStatusForMap", function($resource){
     return $resource('/api/dashboard/getGeoStockStatusForMap.json',{},{});
+});
+
+services.factory("GetDistrictFundUtilization", function($resource){
+    return $resource('/api/dashboard/getDistrictFundUtilization.json',{},{});
 });

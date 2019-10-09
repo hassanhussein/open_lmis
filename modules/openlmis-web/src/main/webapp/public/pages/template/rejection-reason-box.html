@@ -20,9 +20,9 @@
 
     <!--<div ng-hide="rnrComments.length" class="note" openlmis-message="messages.commentBox.noComment">
     </div>-->
-    <div class="row-fluid">
+    <div class="row-fluid panel-body1">
 
-        <div class="span12">
+        <div class="span12 t1">
 
 
        <!--     <div  ng-repeat-start="res in  rejectionReasons">
@@ -56,24 +56,32 @@
             </div>
             <div ng-repeat-end=""></div>-->
 
+            <div class="t2">
+                <div ng-repeat-start="res in  rejectionReasons">
 
-            <div  ng-repeat-start="res in  rejectionReasons">
-
-                <button type="button" class="panel-group accordion reason-accordion" data-toggle="collapse" data-target="#open-list-{{$index}}">{{res.name}}</button>
-                <div id="open-list-{{$index}}" class="collapse">
-                   <ul ng-repeat="reason in res.rejections">
-                       <li><span>{{reason.name}}</span>
-                           <span>
+                    <button type="button" class="panel-group accordion reason-accordion" data-toggle="collapse" data-target="#open-list-{{$index}}">{{res.name}}</button>
+                    <div id="open-list-{{$index}}" class="collapse">
+                        <ul ng-repeat="reason in res.rejections">
+                            <li><span>{{reason.name}}</span>
+                                <span style="padding-left: 130px;">
                             <input type="checkbox"
-                                   ng-change="sync(reason.selected,reason,res)" ng-model="reason.selected" ng-init="reason.selected=false" class="pull-right"/>
+                                   ng-change="sync(reason.selected,reason,res)" ng-model="reason.selected" ng-init="reason.selected=false"/>
                         </span>
 
-                       </li>
-                   </ul>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
+                <div ng-repeat-end=""></div>
 
             </div>
-            <div ng-repeat-end=""></div>
+
+
+
+
+
+
         </div>
 
     </div>

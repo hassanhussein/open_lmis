@@ -695,6 +695,16 @@
                     <property name="version" value="1.0"/>
                 </bean>
 
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="district_fund_utilization"/>
+                    <property name="template" value="district-fund-utilization-report.jasper"/>
+                    <property name="reportDataProvider" ref="districtFundUtilizationReportDataProvider"/>
+                    <property name="id" value="RP-Reporting-Status"/>
+                    <property name="name" value="District Fund Utilization"/>
+                    <property name="title" value="District Fund Utilization"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
             </list>
         </constructor-arg>
     </bean>

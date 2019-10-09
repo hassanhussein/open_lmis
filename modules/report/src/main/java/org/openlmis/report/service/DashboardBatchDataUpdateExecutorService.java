@@ -28,7 +28,7 @@ public class DashboardBatchDataUpdateExecutorService {
     @Autowired
     private DashboardMapper mapper;
 
-    @Scheduled(cron = "${batch.job.dashboard.data.update.schedule}")
+  //  @Scheduled(cron = "${batch.job.dashboard.data.update.schedule}")
     public void startNightlyDashboardDataUpdate(){
         mapper.startDashboardDataBatchUpdate();
     }

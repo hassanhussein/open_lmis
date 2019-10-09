@@ -48,6 +48,9 @@ public class AnalyticsController extends BaseController {
     private DashboardConsumptionMapper consumptionMapper;
 
     @Autowired
+    private FinancialAnalyticMapper financialAnalyticMapper;
+
+    @Autowired
     private GeoFacilityStockStatusMapper stockStatusMapper;
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -252,6 +255,15 @@ public class AnalyticsController extends BaseController {
                                                                                        @Param("period") Long period,
                                                                                        HttpServletRequest request) {
         return OpenLmisResponse.response("stocks", this.stockStatusMapper.getGeoFacilityStockStatus(loggedInUserId(request),product,program,year,period));
+    }
+
+    @RequestMapping(value = "/getDistrictFundUtilization.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getDistrictFundUtilization(               @Param("program") Long program,
+                                                                                       @Param("zone") Long zone,
+                                                                                       @Param("year") Long year,
+                                                                                       @Param("period") Long period,
+                                                                                       HttpServletRequest request) {
+        return OpenLmisResponse.response("financies", this.financialAnalyticMapper.getDistrictFundUtilization(loggedInUserId(request),zone, program,year,period));
     }
 
 }
