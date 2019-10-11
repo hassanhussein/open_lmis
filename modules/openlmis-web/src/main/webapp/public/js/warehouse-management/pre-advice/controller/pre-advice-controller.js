@@ -56,6 +56,23 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 //    $scope.ports = asnLookups.ports;
 //    $scope.documentTypes = documentTypes;
 //    $scope.suppliers = asnLookups.suppliers;
+$scope.currency=[
+{
+ id:1,
+ code:'USD',
+ description:'United state dollar',
+ amount:2300
+
+},
+
+{
+ id:1,
+ code:'TZS',
+ description:'Tanzania',
+ amount:1
+
+}
+]
     $scope.productError = false;
     //console.log(configurations.productsConfiguration[0].product.id)
 //    $scope.configurations = configurations;
