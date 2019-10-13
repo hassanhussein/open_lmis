@@ -28,4 +28,8 @@ public class DocumentTypeRepository {
     public List<DocumentType> getAll(){
         return mapper.getAll();
     }
+
+    public DocumentType getByName(String documentType) {
+        return mapper.getByName(documentType);
+    }
 }

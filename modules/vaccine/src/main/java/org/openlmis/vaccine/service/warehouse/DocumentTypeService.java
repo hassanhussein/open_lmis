@@ -33,4 +33,8 @@ public class DocumentTypeService {
 
         return  repository.getAll();
     }
+
+    public DocumentType getByName(String documentType) {
+        return repository.getByName(documentType);
+    }
 }

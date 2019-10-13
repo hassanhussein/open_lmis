@@ -22,4 +22,7 @@ public interface DocumentTypeMapper {
 
     @Select(" select * from document_types")
     List<DocumentType> getAll();
+
+    @Select("select * from document_types where name = #{documentType}")
+    DocumentType getByName(@Param("documentType") String documentType);
 }

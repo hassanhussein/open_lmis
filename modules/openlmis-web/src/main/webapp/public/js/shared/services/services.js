@@ -599,12 +599,13 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
 
                      return factory;
 
-                     function saveDoc(file,asnNumber) {
-
+                     function saveDoc(file,asnNumber,documentType) {
+      console.log(documentType);
                          var deferred = $q.defer();
                          var formData = new FormData();
                          formData.append('file', file);
                          formData.append('params',asnNumber);
+                         formData.append('documentType',documentType);
                          $http.post('/rest-api/warehouse/'+'upload', formData,{
                          transformRequest : angular.identity,
                              headers : {
@@ -651,3 +652,11 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
 services.factory("ReceiveLookups", function ($resource) {
     return $resource('/rest-api/warehouse/receive/template.json', {}, {});
 });
+
+services.factory("DocumentList", function ($resource) {
+ return $resource('/rest-api/warehouse/documentList/:code.json', {code: '@code'}, {});
+});
+
+services.factory("DeleteDocument", function ($resource) {
+     return $resource('/rest-api/warehouse/deleteDocument/:id/:code.json', {id: '@id', code:'@code'},{});
+ });

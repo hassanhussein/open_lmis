@@ -1354,3 +1354,4 @@ services.factory('FacilityTypeByUserId', function ($resource) {
 services.factory('GetItemFillRateSummary', function ($resource) {
     return $resource('/dashboard/get-item-fill-rate-summary.json', {}, {});
 });
+

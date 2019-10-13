@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -73,14 +74,14 @@ public class AsnService {
                 }
             }
         }
-
-        List<PurchaseDocument> purchaseDocuments = asn.getPurchaseDocuments();
+        purchaseDocumentService.save(asn,userId);
+ /*       List<PurchaseDocument> purchaseDocuments = asn.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments){
             document.setAsn(asn);
             document.setCreatedBy(userId);
             document.setModifiedBy(userId);
-            purchaseDocumentService.save(document);
-        }
+
+        }*/
 
 
         if(asn.getStatus().equals("Finalized")) {
@@ -126,7 +127,20 @@ public class AsnService {
 
     public Asn getById (Long id) {
         Asn asn = repository.getById(id);
-        List<PurchaseDocument> purchaseDocumentList = purchaseDocumentService.getByAsnId(id);
+        List<PurchaseDocument> purchaseDocumentList = new ArrayList<>();
+
+        List<PurchaseDocument> purchaseDocumentLists = purchaseDocumentService.getByAsnId(id);
+
+        for(PurchaseDocument document: purchaseDocumentList) {
+            PurchaseDocument document1 = new PurchaseDocument();
+
+            document1.setFileLocation(document.getFileLocation());
+            document1.setDocumentType(document1.getDocumentType());
+
+
+        }
+
+
         asn.setPurchaseDocuments(purchaseDocumentList);
         return asn;
 
@@ -168,4 +182,7 @@ public class AsnService {
        repository.deleteById(id);
     }
 
+ /*   public void saveDocument(PurchaseDocument d) {
+        purchaseDocumentService.save(d);
+    }*/
 }

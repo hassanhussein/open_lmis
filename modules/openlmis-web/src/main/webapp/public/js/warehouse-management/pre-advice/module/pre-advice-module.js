@@ -30,7 +30,7 @@ var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','l
                             scope.upload({file:event.target.files[0]});
                             scope.$apply(function() {
                               ngModel.$setViewValue(el.val());
-                              ngModel.$render();
+                              //ngModel.$render();
                             });
                           });
                         }

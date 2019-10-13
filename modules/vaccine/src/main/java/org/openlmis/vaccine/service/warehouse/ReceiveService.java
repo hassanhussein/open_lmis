@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.repository.warehouse.ReceiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class ReceiveService {
 
     @Autowired
     private PurchaseDocumentService purchaseDocumentService;
+
+    @Autowired
+    private StockCardService stockCardService;
 
     @Transactional
     public void save(Receive receive, Long userId, Asn asn) {

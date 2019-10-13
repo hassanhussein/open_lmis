@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController($window,$scope,$filter, AsnLookups, $location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController($window,$scope,$filter, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout){
 
 
@@ -663,12 +663,12 @@ $scope.saveAsn = function(status) {
 
         $scope.validateProduct();
 //                        console.log($scope.asnForm)
-      if ($scope.asnForm.$error.required) {
+   /*   if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
             return;
-        }
+        }*/
 
 
         var receiveLineItems = [];

@@ -8,14 +8,11 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
-import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.vaccine.domain.wms.ASNDocument;
-import org.openlmis.vaccine.domain.wms.Asn;
-import org.openlmis.vaccine.domain.wms.DocumentType;
-import org.openlmis.vaccine.domain.wms.Port;
+import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.service.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,10 +28,10 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import javax.servlet.http.HttpServletRequest;
 
 import static java.lang.Integer.parseInt;
 import static org.openlmis.core.web.OpenLmisResponse.response;
@@ -69,6 +66,7 @@ public class AsnController extends BaseController {
     @Autowired
     MessageService messageService;
 
+
     public static final String ERROR = "error";
     public static final String SUCESS = "success";
 
@@ -76,7 +74,7 @@ public class AsnController extends BaseController {
 
     @Value("${wms.document.uploadLocation}")
     private String fileStoreLocation;
-    @Value("${help.document.accessBaseUrl}")
+    @Value("${wms.document.accessBaseUrl}")
     private String fileAccessBaseUrl;
 
 
@@ -86,7 +84,7 @@ public class AsnController extends BaseController {
 
 
     @RequestMapping(value = "asn", method = POST, headers = ACCEPT_JSON)
-    public ResponseEntity<RestResponse> save(@RequestBody Asn asn, Principal principal) {
+    public ResponseEntity<RestResponse> save(@RequestBody Asn asn, HttpServletRequest principal) {
         try {
             Long userId = loggedInUserId(principal);
             asn.setCreatedBy(userId);
@@ -139,16 +137,24 @@ public class AsnController extends BaseController {
     @RequestMapping(value = "asn/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
          Asn list = asnService.getById(id);
-
-        return OpenLmisResponse.response("asn",list );
+         List<PurchaseDocument> documentList;
+         String uriPath;
+         uriPath = this.fileAccessBaseUrl;
+         documentList = this.purchaseDocumentService.getByAsnId(id);
+         for(PurchaseDocument document: documentList) {
+             String documentUrl = document.getFileLocation();
+             document.setFileLocation(documentUrl);
+         }
+         list.setPurchaseDocuments(documentList);
+         return OpenLmisResponse.response("asn",list );
     }
     @RequestMapping(value = "asn/{id}", method =PUT, headers = ACCEPT_JSON)
-    public ResponseEntity update(@RequestBody Asn asn, @PathVariable(value = "id") Long id,Principal principal) {
+    public ResponseEntity update(@RequestBody Asn asn, @PathVariable(value = "id") Long id,HttpServletRequest request) {
 
        try{
         asn.setId(id);
-        asn.setModifiedBy(loggedInUserId(principal));
-        asnService.save(asn, loggedInUserId(principal));
+        asn.setModifiedBy(loggedInUserId(request));
+        asnService.save(asn, loggedInUserId(request));
         return success("message.success.warehouse.updated");
 
     } catch (DataException e) {
@@ -174,11 +180,11 @@ public class AsnController extends BaseController {
     public @ResponseBody String handleFileUpload(@RequestParam(value="file") MultipartFile asnDocuments, HttpServletRequest request) throws IOException {
 
         String asnNumber = request.getParameter("params");
-
-        return saveUploadedFiles(asnDocuments,asnNumber);
+        String documentType = request.getParameter("documentType");
+        return saveUploadedFiles(asnDocuments,asnNumber,documentType,loggedInUserId(request));
     }
 
-    private String saveUploadedFiles(MultipartFile file, String asnNumber) {
+    private String saveUploadedFiles(MultipartFile file, String asnNumber,String documentType,Long userId) {
 
         String fileName;
         String filePath;
@@ -193,10 +199,16 @@ public class AsnController extends BaseController {
             InputStream inputStream;
             String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd-"));
             byte[] byteFile;
+            Document document = new Document();
             fileName = asnNumber+"-"+file.getOriginalFilename();
             filePath = this.fileStoreLocation + fileName;
             inputStream = file.getInputStream();
             int val = inputStream.available();
+            document.setFileLocation(fileName);
+            document.setCreatedDate(new Date());
+            document.setCreatedBy(userId);
+            document.setDocumentType(documentTypeService.getByName(documentType));
+            document.setAsnNumber(asnNumber);
             byteFile = new byte[val];
             inputStream.read(byteFile);
             File newFile = new File(filePath);
@@ -219,6 +231,7 @@ public class AsnController extends BaseController {
                 outputStream.write(byteFile);
                 outputStream.flush();
                 outputStream.close();
+              this.purchaseDocumentService.saveDocument(document);
 
             } else {
                 return "No Permission To Upload At Specified Path";
@@ -279,5 +292,19 @@ public class AsnController extends BaseController {
         }
 
     }
+
+    @RequestMapping(value = "documentList/{code}", method =GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getDocumentList(@PathVariable(value = "code") String code,HttpServletRequest request) {
+
+            return OpenLmisResponse.response("list",purchaseDocumentService.getByASNCode(code));
+    }
+
+    @RequestMapping(value = "deleteDocument/{id}/{code}", method = GET)
+    public ResponseEntity<OpenLmisResponse> deleteFile(@PathVariable(value = "id") Long id,
+                                                       @PathVariable(value = "code") String code) {
+
+        return OpenLmisResponse.response("list", purchaseDocumentService.deleteById(id,code));
+    }
+
 
 }

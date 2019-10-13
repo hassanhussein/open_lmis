@@ -17,4 +17,7 @@ public class PurchaseDocument extends BaseModel {
     String fileLocation;
 
     Receive receive;
+
+    private String asnNumber;
+
 }

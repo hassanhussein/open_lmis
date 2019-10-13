@@ -11,8 +11,8 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController($window,$scope,$filter, $location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
-$rootScope,documentTypes,UploadFile,$http,docService, $timeout
+function PreAdviceController(DeleteDocument,$window,$scope,$filter, $location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+$rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
 
@@ -32,11 +32,24 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 
        AsnLookups.get(function(data) {
 
-                          $scope.displayDocumentTypes =  data.documentTypes;
+         $scope.displayDocumentTypes = [];
+
                               $scope.manufacturers = data.manufacturers;
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
+                                      if(!isUndefined(asn) && !isUndefined($scope.docList) ){
 
+
+                                      comparedDocumentTypes(data.documentTypes, $rootScope.docList);
+
+                                      } else {
+
+
+
+                                      $scope.displayDocumentTypes = data.documentTypes;
+
+
+                                      }
 
 
 
@@ -47,6 +60,36 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
                        });
 
     }
+
+
+    function comparedDocumentTypes(documentTypes, purchaseDocuments){
+
+              $scope.displayDocumentTypes = [];
+
+
+              for(var i=0; i< documentTypes.length; i++) {
+
+              if(purchaseDocuments[i] !== undefined && purchaseDocuments[i].documentType !== null && purchaseDocuments[i].documentType !== undefined) {
+               var filteredData = [];
+               filteredData = _.filter(documentTypes, function(data){
+
+                if(purchaseDocuments[i].documentType !== null) {
+
+                console.log(purchaseDocuments[i].documentType.name);
+                 return (data.name !== purchaseDocuments[i].documentType.name);
+
+                 }
+
+                 });
+                $scope.displayDocumentTypes = filteredData;
+                                 console.log(filteredData);
+
+                }
+
+              }
+
+    }
+
 
     getAllLookups();
 //    $scope.homeFacilityId = homeFacility.id;
@@ -62,7 +105,14 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout
 //    $scope.otherProducts=otherProducts;
 
     $scope.asn = asn;
+ if(!isUndefined(asn)) {
 
+
+    getListOfFilesByASNumber(asn.asnnumber);
+
+    $scope.documentDetails  = asn.purchaseDocuments;
+
+ }
     $scope.loadProducts = function(facilityId, programId,isVaccine) {
 
         if(isVaccine){
@@ -660,9 +710,9 @@ $scope.removeProduct(productIndex);
 
 
     $scope.saveAsn = function(status) {
-    console.log($scope.documentDetails);
+    console.log($scope.docList);
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required) {
+      if ($scope.asnForm.$error.required && $scope.docList.length < 0) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
@@ -717,7 +767,7 @@ $scope.removeProduct(productIndex);
             podate: $scope.poDate,
             ponumber: $scope.poNumber,
             portofarrival: $scope.portOfArrivalId,
-            purchaseDocuments: $scope.documentDetails,
+            purchaseDocuments: $scope.docList,
             status: status,
             supplierid: $scope.supplierId
         };
@@ -741,25 +791,12 @@ $scope.removeProduct(productIndex);
           $scope.documentDetails = [ ];
 
 
-              $scope.addNew = function(documentDetail) {
 
-                  $scope.documentDetails.push({
-                         'documentType':{
-                                          "id": "",
-                                          "description": "",
-                                          "name": ""
-                                          },
-                         'fileLocation':""
-                    });
-
-                    prepareSaveDocument($scope.documentDetails);
-
-                };
 
                 $scope.remove = function(){
                     var newDataList=[];
                     $scope.selectedAll = false;
-                    angular.forEach($scope.documentDetails, function(selected){
+                    angular.forEach($scope.asn.purchaseDocuments, function(selected){
                         if(!selected.selected){
                             newDataList.push(selected);
                         }else {
@@ -768,7 +805,7 @@ $scope.removeProduct(productIndex);
 
 
                     });
-                    $scope.documentDetails = newDataList;
+                    $scope.asn.purchaseDocuments= newDataList;
                 };
 
 
@@ -783,9 +820,17 @@ $scope.removeProduct(productIndex);
                 });
             };
 
-          $scope.loadDocumentDetails = function (data){};
+          $scope.loadDocumentDetails = function (data){
+          $scope.file = data.fileLocation;
+          console.log(data);
 
-          $scope.uploadFile = function(element) {};
+          };
+
+
+          $scope.uploadFile = function(element) {
+
+          console.log($scope.documentDetail.file);
+          };
 
           $scope.doUpload = function (document) {
 
@@ -804,6 +849,7 @@ $scope.removeProduct(productIndex);
 
             $scope.displayDocumentTypes[i].disableSelectedRows = false;
             var name = $scope.displayDocumentTypes[i];
+            console.log(name);
 
             if(document.name === name.name) {
 
@@ -833,15 +879,48 @@ $scope.removeProduct(productIndex);
 
            }
 
+         function findMatches(data, comparedTo){
+
+          $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentType.name !== comparedTo.documentType.name  });
+
+         }
+
+
+        $scope.removeFile = function(file) {
+        $scope.docList = [];
+
+        DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response){
+
+        $scope.docList = response.list;
+
+      $scope.displayDocumentTypes.push(file.documentType);
+
+        });
+
+        }
+
+        $scope.upload = function(document) {
+
+         if(document.documentType !== null && document.file !== null) {
+
+          document.fileLocation = document.file.name;
+          removeItemFromList(document.documentType);
+          getFile(document.file,document);
+
+          document.documentType = null;
+          document.file = null;
+          }
+
+ }
+
 
   function getFile(file,documentType) {
-      //file.asnCode = $scope.asnCode;
-      //file.webkitRelativePath = $scope.asnCode;
 
-      docService.saveDoc(file, $scope.asnCode).then(
+      docService.saveDoc(file, $scope.asnCode, documentType.documentType.name).then(
 
       function (response) {
 
+      console.log(response);
       $scope.openMessage = true;
       $scope.message = response;
 
@@ -851,25 +930,48 @@ $scope.removeProduct(productIndex);
 
       },2000);
 
+      getListOfFilesByASNumber($scope.asnCode);
 
+/*
       $http.get("/rest-api/warehouse/downloadFile?filename="+$scope.asnCode+'-'+file.name).success(
 
       function(response) {
       console.log(response);
 
-      $rootScope.docList = response;
 
-      });
+
+      });*/
+
+
+
+
       },
-      function (errResponse) { });
+      function (errResponse) {
+
+
+       });
 
 
 
 }
 
+function getListOfFilesByASNumber(asnNumber) {
+
+     DocumentList.get({code:asnNumber}, function(data){
+
+      $rootScope.docList = data.list;
+      if(data.list.length > 0) {
+      comparedDocumentTypes($scope.displayDocumentTypes, data.list);
+      }
+
+
+      });
+
+}
+
 $scope.downloadFile = function (file,asnCode){
 
-var url ='/rest-api/warehouse/downloadFile?filename='+asnCode+'-'+file.name;
+var url ='/rest-api/warehouse/downloadFile?filename='+file;
 $window.open(url, '_blank');
 
 };
