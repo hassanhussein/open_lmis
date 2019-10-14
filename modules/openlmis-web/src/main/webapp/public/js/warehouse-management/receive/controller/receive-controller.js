@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController(StockEvent,$window,$scope,$filter, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout){
 
 
@@ -773,105 +773,62 @@ $scope.saveAsn = function(status) {
 
     };
 
-          $scope.documentDetails = [ ];
+  $scope.upload = function(document) {
+
+        if(document.documentType !== null && document.file !== null) {
+
+            document.fileLocation = document.file.name;
+            removeItemFromList(document.documentType);
+            getFile(document.file,document);
+            document.documentType = null;
+            document.file = null;
+
+        }
+
+    }
 
 
-              $scope.addNew = function(documentDetail) {
+  $scope.removeFile = function(file) {
+        $scope.docList = [];
 
-                  $scope.documentDetails.push({
-                         'documentType':{
-                                          "id": "",
-                                          "description": "",
-                                          "name": ""
-                                          },
-                         'fileLocation':""
-                    });
+        DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response){
 
-                    prepareSaveDocument($scope.documentDetails);
+        $scope.docList = response.list;
 
-                };
+         $scope.displayDocumentTypes.push(file.documentType);
+        });
 
-                $scope.remove = function(){
-                    var newDataList=[];
-                    $scope.selectedAll = false;
-                    angular.forEach($scope.documentDetails, function(selected){
-                        if(!selected.selected){
-                            newDataList.push(selected);
-                        }else {
-                        $scope.displayDocumentTypes.push(selected.documentType);
-                        }
+  }
+
+  function removeItemFromList(document) {
 
 
-                    });
-                    $scope.documentDetails = newDataList;
-                };
+  var i = $scope.displayDocumentTypes.length;
+
+  while(i--) {
+
+  var name = $scope.displayDocumentTypes[i];
 
 
-            $scope.checkAll = function () {
-                if (!$scope.selectedAll) {
-                    $scope.selectedAll = true;
-                } else {
-                    $scope.selectedAll = false;
-                }
-                angular.forEach($scope.documentDetails, function(documentDetail) {
-                    documentDetail.selected = $scope.selectedAll;
-                });
-            };
+  if(document.name === name.name) {
 
-          $scope.loadDocumentDetails = function (data){};
+  $scope.displayDocumentTypes.splice(i,1);
 
-          $scope.uploadFile = function(element) {};
-
-          $scope.doUpload = function (document) {
-
-           $scope.file = document;
-
-          };
-
-          $scope.disableSelectedRows = false;
-
-          function removeItemFromList(document) {
+  }
+  }
+ }
 
 
-           var i = $scope.displayDocumentTypes.length;
+function getFile(file,documentType) {
 
-           while(i--) {
+     var asnNum;
+     if($scope.asnCode === null || $scope.asnCode === undefined) {
+        let today = new Date().toLocaleDateString();
+        asnNum = new Date(today).getTime();
+     }else
+       asnNum = $scope.asnCode;
 
-            $scope.displayDocumentTypes[i].disableSelectedRows = false;
-            var name = $scope.displayDocumentTypes[i];
-
-            if(document.name === name.name) {
-
-               $scope.displayDocumentTypes[i].disableSelectedRows = true;
-               $scope.displayDocumentTypes.splice(i,1);
-
-            }
-
-
-           }
-
-          }
-
-          function prepareSaveDocument(selectedDocuments) {
-
-            selectedDocuments.forEach(function(document) {
-
-
-               if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
-                  removeItemFromList(document.documentType);
-                 document.fileLocation = document.file.name;
-                 getFile(document.file, document.documentType);
-
-               }
-
-            });
-
-           }
-
-
-  function getFile(file,documentType) {
-
-      docService.saveDoc(file, documentType).then(
+      docService.saveDoc(file, asnNum, documentType.documentType.name).then(
 
       function (response) {
 
@@ -884,19 +841,49 @@ $scope.saveAsn = function(status) {
 
       },2000);
 
+      getListOfFilesByASNumber(asnNum);
 
-      $http.get("/rest-api/warehouse/downloadFile?filename="+file.name).success(
+/*
+      $http.get("/rest-api/warehouse/downloadFile?filename="+$scope.asnCode+'-'+file.name).success(
 
       function(response) {
       console.log(response);
 
-      $rootScope.docList = response;
 
-      });
+
+      });*/
+
+
+
+
       },
-      function (errResponse) { });
+      function (errResponse) {
 
 
+       });
+
+
+
+}
+
+function getListOfFilesByASNumber(asnNumber) {
+     console.log(asnNumber);
+     DocumentList.get({code:asnNumber}, function(data){
+
+      $rootScope.docList = data.list;
+      if(data.list.length > 0) {
+      $scope.findMatches($scope.displayDocumentTypes,data.list);
+      }
+    });
+}
+
+
+$scope.findMatches = function(data, comparedTo) {
+
+
+ $scope.displayDocumentTypes = _.filter(data, function(num,index){ return num.name !== comparedTo[index].documentType.name;  });
+
+   console.log($scope.displayDocumentTypes);
 
 }
 
@@ -912,10 +899,6 @@ $window.open(url, '_blank');
 
 
 ReceiveController.resolve = {
-
-
-
-
 
     receive: function($q, $route, $timeout, Receive) {
         if ($route.current.params.id === undefined) return undefined;

@@ -67,43 +67,6 @@ public class Receive extends BaseModel {
 
     private Long facilityId;
 
-    public void copyAsnValues(Asn asn) {
-
-      Receive res = new Receive();
-      res.setId(null);
-      res.setAsnId(asn.getId());
-      res.setPoNumber(asn.getPonumber());
-      res.setPoDate(asn.getAsndate());
-      res.setSupplierId(asn.getSupplier().getId());
-      res.setReceiveDate(asn.getAsndate());
-      res.setBlawBnumber(asn.getBlawbnumber());
-      res.setCountry("Tanzania");
-      res.setFlightVesselNumber(asn.getFlightvesselnumber());
-      res.setPortOfArrival(asn.getPortofarrival());
-      res.setExpectedArrivalDate(asn.getExpectedarrivaldate());
-      res.setActualArrivalDate(asn.getExpecteddeliverydate());
-      res.setClearingAgent(asn.getClearingagent());
-      res.setShippingAgent(null);
-      res.setStatus("DRAFT");
-      res.setNote(asn.getNote());
-      res.setNoteToSupplier(asn.getNote());
-      res.setDescription(null);
-      res.setCreatedBy(asn.getCreatedBy());
-      res.setModifiedBy(asn.getModifiedBy());
-      res.setIsForeignProcurement(true);
-      res.setSupplier(asn.getSupplier());
-      res.setPurchaseOrderId(null);
-
-    /*  for(AsnLineItem asnLineItem: asn.getAsnLineItems()){
-
-          ReceiveLineItem receiveLineItem = new ReceiveLineItem();
-          receiveLineItem.setReceive(res);
-          receiveLineItem.set
-
-      }
-*/
-
-    }
 
     // private PurchaseDocument purchaseDocuments;
 

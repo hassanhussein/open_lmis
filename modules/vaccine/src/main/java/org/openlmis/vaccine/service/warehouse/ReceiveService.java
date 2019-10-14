@@ -110,39 +110,6 @@ public class ReceiveService {
        }
 */
 
-       if(receive.getStatus().equals("Finalized")&& !receive.getReceiveLineItems().isEmpty()) {
-
-           for(ReceiveLineItem item : receive.getReceiveLineItems()) {
-               StockEventDTO eventDTO = new StockEventDTO();
-               Product product = productService.getById(item.getProductId());
-               eventDTO.setType(StockEventType.RECEIPT);
-               eventDTO.setFacilityId(receive.getFacilityId());
-               eventDTO.setProductCode(product.getCode());
-               eventDTO.setQuantity(Long.valueOf(item.getQuantityCounted()));
-               if (item.isLotFlag() && (!item.getReceiveLots().isEmpty())) {
-
-               Lot lot = new Lot();
-               for(ReceiveLot l : item.getReceiveLots()) {
-
-                lot.setLotCode(l.getLotNumber());
-                lot.setManufacturerName("INDIA");
-                lot.setProductId(product.getId());
-                lot.setProduct(product);
-                lot.setExpirationDate(l.getExpiryDate());
-
-                }
-               eventDTO.setLot(lot);
-               eventDTO.setOccurred(new Date());
-
-
-
-               }
-
-           }
-
-        }
-
-
        if(asn != null && asn.getStatus().equals("Finalized")) {
 
 
