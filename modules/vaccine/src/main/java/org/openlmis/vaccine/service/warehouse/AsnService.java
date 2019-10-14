@@ -84,7 +84,7 @@ public class AsnService {
         }*/
 
 
-        if(asn.getStatus().equals("Finalized")) {
+        if(asn.getStatus().equalsIgnoreCase("Finalized")) {
 
             //Copy ASN to rceive
 

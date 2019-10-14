@@ -110,7 +110,7 @@ public class ReceiveService {
        }
 */
 
-       if(asn != null && asn.getStatus().equals("Finalized")) {
+      /* if(asn != null && asn.getStatus().equalsIgnoreCase("Finalized")) {
 
 
            for (AsnLineItem lineItem : asn.getAsnLineItems()) {
@@ -150,7 +150,7 @@ public class ReceiveService {
 
            }
 
-       }
+       }*/
     }
 
     public List<Receive> getAll() {
