@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController($window,$scope,$filter, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(StockEvent,$window,$scope,$filter, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout){
 
 
@@ -673,14 +673,38 @@ $scope.saveAsn = function(status) {
 
 
         var receiveLineItems = [];
+
+        var events=[];
+
         angular.forEach($scope.productsToAdd, function(product, key) {
             var receiveLots = [];
-
-
 
             if($scope.isVaccine){
              angular.forEach(product.lots, function(lot, key) {
                             if (lot.info) {
+
+                             var event={};
+
+                             event.type="RECEIPT";
+                             event.facilityId=$scope.homeFacilityId;
+                             event.productCode=product.programProduct.product.code;
+                             event.quantity=parseInt(lot.quantity,10);
+
+                             event.lot={};
+                             event.lot.lotCode=lot.info.lotCode;
+                             event.lot.manufacturerName=lot.info.manufacturerName;
+                             event.lot.expirationDate=lot.info.expirationDate;
+                             event.occurred = new Date();
+                             event.customProps={};
+
+                             if(lot.vvmStatus !==undefined)
+                             {
+                             event.customProps.vvmStatus=lot.vvmStatus;
+                             }
+                             event.customProps.receivedFrom="WMS";
+
+                             events.push(event);
+
                                 receiveLots.push({
                                     expirydate: lot.info.expirationDate,
                                     lotNumber: lot.info.lotCode,
@@ -711,7 +735,7 @@ $scope.saveAsn = function(status) {
         var receive = {
             receiveLineItems: receiveLineItems,
             receiveDate: $scope.receiveDate,
-             facilityId: $scope.homeFacilityId,
+            facilityId: $scope.homeFacilityId,
 
 //            asnnumber: $scope.asnCode,
             blawBnumber: $scope.blAwbNumber,
@@ -730,12 +754,22 @@ $scope.saveAsn = function(status) {
             purchaseDocuments: $scope.documentDetails,
             status: status,
             supplierId: $scope.supplierId,
-            facilityId:$scope.homeFacilityId,
             programId:82
         };
 
-    console.log(receive);
-        Receive.save({}, receive, success, error);
+
+        Receive.save({}, receive, function (data) {
+
+        if(data.success && status === 'Received') {
+
+        StockEvent.update({facilityId:$scope.homeFacilityId},events, function (data) {
+          console.log(data);
+
+        });
+
+        }
+
+        });
 
     };
 

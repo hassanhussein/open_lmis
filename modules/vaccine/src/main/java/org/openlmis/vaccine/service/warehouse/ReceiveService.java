@@ -83,6 +83,7 @@ public class ReceiveService {
             document.setModifiedBy(userId);
             purchaseDocumentService.save(document);
         }*/
+/*
        if(receive.getReceiveLineItems() != null) {
 
             for(ReceiveLineItem rece: receive.getReceiveLineItems()) {
@@ -107,6 +108,7 @@ public class ReceiveService {
 
             }
        }
+*/
 
        if(receive.getStatus().equals("Finalized")&& !receive.getReceiveLineItems().isEmpty()) {
 
@@ -131,7 +133,7 @@ public class ReceiveService {
                 }
                eventDTO.setLot(lot);
                eventDTO.setOccurred(new Date());
-               eventDTO.getCustomProps().entrySet();
+
 
 
                }
