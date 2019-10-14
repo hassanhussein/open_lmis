@@ -44,7 +44,7 @@
                     <div class="span3">
                         <label for="asnCode">
                             <span >ASN Number</span>
-                            <span class="label-required"> *</span>
+
                         </label>
 
                         <div class="form-field">
@@ -57,7 +57,7 @@
                     <div class="span3">
                         <label for="receiptDate">
                             <span>ASN Receipt Date</span>
-                            <span class="label-required"> *</span>
+
                         </label>
 
                         <div class="form-field">
@@ -296,7 +296,7 @@
 
                                             <th >Grand Total</th>
 
-                                            <td colspan="3">{{grandTotal() | number}}</td>
+                                            <td colspan="3" style="text-align:right;">{{grandTotal() | number}}</td>
 
 
                                         </tr>
@@ -409,7 +409,7 @@
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity" style="width:99px">
                                             </td>
 
-                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;" >{{totalCostPerProduct(product) | number}}</td>
+                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px; text-align:right; padding-right:4px;" >{{totalCostPerProduct(product) | number}}</td>
                                             <td class="cell-input" style="padding-left:15px;" >
                                                 <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
                                                 <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
@@ -494,7 +494,7 @@
                                             <td colspan="4"></td>
                                             <th >Grand Total</th>
 
-                                            <td colspan="3">{{grandTotal() | number}}</td>
+                                            <td colspan="3" style="text-align:right;">{{grandTotal() | number}}</td>
 
 
                                         </tr>

@@ -15,6 +15,8 @@ var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','l
           when('/list', {controller: PreAdviceSearchController, templateUrl: 'partials/list.html'}).
           when('/create', {controller: PreAdviceController, templateUrl: 'partials/create.html', resolve: PreAdviceController.resolve}).
           when('/edit/:id', {controller: PreAdviceController, templateUrl: 'partials/create.html', resolve: PreAdviceController.resolve}).
+          when('/view/:id', {controller: PreAdviceController, templateUrl: 'partials/create.html', resolve: PreAdviceController.resolve}).
+
           otherwise({redirectTo: '/list'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.asnSelected = "selected";

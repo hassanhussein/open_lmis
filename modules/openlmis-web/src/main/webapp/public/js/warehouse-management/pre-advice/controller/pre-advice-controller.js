@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController(DeleteDocument,$window,$scope,$filter, $location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController(DeleteDocument,$window,$scope,$filter, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
@@ -227,6 +227,7 @@ $scope.currency=[
 
     if ($scope.asn) {
         $scope.editMode = true;
+        $scope.viewMode=($scope.$parent.asnViewMode)?true:false;
         $scope.asnReceiptDate = asn.asndate;
         $scope.asnCode = asn.asnnumber;
         $scope.blAwbNumber = asn.blawbnumber;
