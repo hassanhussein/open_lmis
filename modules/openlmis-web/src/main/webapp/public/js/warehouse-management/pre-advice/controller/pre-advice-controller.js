@@ -899,11 +899,11 @@ $scope.removeProduct(productIndex);
 
            }
 
-         function findMatches(data, comparedTo){
+function findMatches(data, comparedTo) {
 
-          $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentType.name !== comparedTo.documentType.name  });
+$scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentType.name !== comparedTo.documentType.name  });
 
-         }
+}
 
 
         $scope.removeFile = function(file) {
@@ -931,10 +931,10 @@ $scope.removeProduct(productIndex);
           document.file = null;
           }
 
- }
+         }
 
 
-  function getFile(file,documentType) {
+function getFile(file,documentType) {
 
       docService.saveDoc(file, $scope.asnCode, documentType.documentType.name).then(
 
