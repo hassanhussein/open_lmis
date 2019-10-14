@@ -8,7 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location, messageService, navigateBackService, FeatureToggleService) {
+function ViewRnrListController($scope, facilities, RequisitionsForViewing, ProgramsToViewRequisitions, $location,
+    messageService, navigateBackService, FeatureToggleService, ProgramCompleteList) {
     $scope.facilities = facilities;
     $scope.facilityLabel = (!$scope.facilities.length) ? messageService.get("label.none.assigned") : messageService.get("label.select.facility");
     $scope.programLabel = messageService.get("label.none.assigned");
@@ -38,8 +39,14 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
         });
     };
 
-    $scope.showEmergencyOnly = function() {
-        $scope.selectedProgramId = $scope.selectedFacilityId = undefined;
+    $scope.toggleEmergencyRequisitions = function() {
+        $scope.selectedFacilityId = $scope.programId = undefined;
+        if($scope.emergencyRequisitionsOnly) {
+
+            ProgramCompleteList.get(function(response){
+                $scope.programs = response.programs;
+            });
+         }
     };
 
     $scope.selectedFacilityId = navigateBackService.facilityId;

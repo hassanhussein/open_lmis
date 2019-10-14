@@ -45,10 +45,14 @@ public class EmergencyOnlyRequisitionSearch extends RequisitionSearchStrategy {
     @Override
     List<Rnr> findRequisitions() {
         List<Facility> facilities = new ArrayList<>();
-
+        Long programId = criteria.getProgramId();
         Long userId = criteria.getUserId();
+        List<Program> programs = new ArrayList<>();
 
-        List<Program> programs = programService.getProgramsForUserByRights(userId, VIEW_REQUISITION);
+        if(programId != null)
+            programs.add(new Program(programId));
+        else
+            programs = programService.getProgramsForUserByRights(userId, VIEW_REQUISITION);
 
         for(Program p : programs) {
             facilities.addAll(facilityService.getUserSupervisedFacilities(userId, p.getId(), VIEW_REQUISITION));
