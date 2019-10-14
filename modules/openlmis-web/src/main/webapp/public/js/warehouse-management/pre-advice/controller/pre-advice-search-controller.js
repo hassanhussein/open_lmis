@@ -7,6 +7,7 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
     {value: "supplier", name: "Supplier"}
   ];
 
+  $scope.$parent.asnViewMode=false;
 
 
 
@@ -60,11 +61,11 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
 //    navigateBackService.setData(data);
 //    console.log(id)
     if(!viewMode){
-                $scope.$parent.asnViewMode=false
+                $scope.$parent.asnViewMode=false;
         $location.path('edit/' + id);
 
     }else{
-            $scope.$parent.asnViewMode=true
+            $scope.$parent.asnViewMode=true;
         $location.path('view/' + id);
 
     }
