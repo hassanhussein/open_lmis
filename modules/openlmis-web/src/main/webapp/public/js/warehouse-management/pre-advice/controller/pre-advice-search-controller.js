@@ -1,8 +1,9 @@
 function PreAdviceSearchController($scope, Preadvice, $location, navigateBackService, $dialog){
 
   $scope.searchOptions = [
+  {value: "asnumber", name: "ASN Number"},
     {value: "ponumber", name: "PO Number"},
-    {value: "asnumber", name: "ASN Number"},
+
     {value: "supplier", name: "Supplier"}
   ];
 
@@ -54,11 +55,19 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
     $scope.query = navigateBackService.query;
   });
 
-  $scope.edit = function (id) {
+  $scope.edit = function (id,viewMode) {
 //    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
 //    navigateBackService.setData(data);
 //    console.log(id)
-    $location.path('edit/' + id);
+    if(!viewMode){
+                $scope.$parent.asnViewMode=false
+        $location.path('edit/' + id);
+
+    }else{
+            $scope.$parent.asnViewMode=true
+        $location.path('view/' + id);
+
+    }
   };
 
   $scope.$watch('currentPage', function () {

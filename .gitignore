@@ -74,3 +74,4 @@ test-modules/service-tests/
 
 .classpath
 /bin/
+wms/documents/*
