@@ -28,4 +28,16 @@ CREATE TABLE public.purchase_documents
   CONSTRAINT purchase_documents_receives_fkey FOREIGN KEY (receiveid)
       REFERENCES public.receives (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+
+DROP TABLE IF EXISTs public.documents;
+
+CREATE TABLE public.documents
+(
+  id serial,
+  asnnumber character varying(250),
+  documenttype integer,
+  filelocation character varying(250),
+  CONSTRAINT documents_pkey PRIMARY KEY (id)
 )
