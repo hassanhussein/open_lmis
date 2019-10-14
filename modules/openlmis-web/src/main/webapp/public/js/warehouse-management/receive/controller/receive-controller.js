@@ -729,7 +729,9 @@ $scope.saveAsn = function(status) {
             portOfArrival: $scope.portOfArrivalId,
             purchaseDocuments: $scope.documentDetails,
             status: status,
-            supplierId: $scope.supplierId
+            supplierId: $scope.supplierId,
+            facilityId:$scope.homeFacilityId,
+            programId:82
         };
 
     console.log(receive);

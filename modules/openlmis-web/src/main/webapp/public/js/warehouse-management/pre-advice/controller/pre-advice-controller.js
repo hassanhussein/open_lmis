@@ -35,6 +35,9 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
          $scope.displayDocumentTypes = [];
 
                               $scope.manufacturers = data.manufacturers;
+                          $scope.displayDocumentTypes =  data.documentTypes;
+                              $scope.manufacturers = data.manufactures;
+                              console.log($scope.manufacturers)
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
                                       if(!isUndefined(asn) && !isUndefined($scope.docList) ){
@@ -98,6 +101,23 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 //    $scope.ports = asnLookups.ports;
 //    $scope.documentTypes = documentTypes;
 //    $scope.suppliers = asnLookups.suppliers;
+$scope.currency=[
+{
+ id:1,
+ code:'USD',
+ description:'United state dollar',
+ amount:2300
+
+},
+
+{
+ id:1,
+ code:'TZS',
+ description:'Tanzania',
+ amount:1
+
+}
+]
     $scope.productError = false;
     //console.log(configurations.productsConfiguration[0].product.id)
 //    $scope.configurations = configurations;

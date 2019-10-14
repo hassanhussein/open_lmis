@@ -309,7 +309,7 @@
                                                 <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity" style="width:99px">
                                             </td>
 
-                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;" >{{totalCostPerProduct(product) | number}}</td>
+                                            <td rowspan="{{product.lots.length}}" class="cell-general" style="padding-left:15px; text-align:right;" >{{totalCostPerProduct(product) | number}}</td>
                                             <td>
                                                 <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
                                                 <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
@@ -363,7 +363,7 @@
                                             <td colspan="4"></td>
                                             <th >Grand Total</th>
 
-                                            <td colspan="3">{{grandTotal() | number}}</td>
+                                            <td colspan="3" style="text-align:right">{{grandTotal() | number}}</td>
 
 
                                         </tr>
@@ -592,7 +592,7 @@
     </form>
 
     <!--Lot Modal-->
-    <div id="popup-box" name="newLot"  modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
+    <div id="popup-box"  ng-form="newLotForm"  modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
         <div class="modal-header">
             <div class="row-fluid">
                 <div class="span4">
@@ -622,7 +622,6 @@
                     </label>
                     <span class="position-relative">
                                 <input ng-required="true" class="span12"
-                                       ng-required="true"
                                        id="newLot.expirationDate"
                                        name="expirationDate"
                                        type="text"
@@ -657,7 +656,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <input type="button" id="issueSubmit" class="btn btn-primary save-button"
+            <input type="button"  class="btn btn-primary save-button"
                    ng-click="createLot()"
                    ng-disabled="newLotForm.$invalid"
                    openlmis-message="button.create"/>
