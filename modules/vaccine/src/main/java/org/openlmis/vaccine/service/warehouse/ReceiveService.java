@@ -1,14 +1,21 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.service.ProductService;
+import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.dto.StockEventType;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.*;
+import org.openlmis.vaccine.domain.wms.dto.StockEventDTO;
 import org.openlmis.vaccine.repository.warehouse.ReceiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,6 +35,9 @@ public class ReceiveService {
 
     @Autowired
     private StockCardService stockCardService;
+
+    @Autowired
+    ProductService productService;
 
     @Transactional
     public void save(Receive receive, Long userId, Asn asn) {
@@ -73,8 +83,66 @@ public class ReceiveService {
             document.setModifiedBy(userId);
             purchaseDocumentService.save(document);
         }*/
+       if(receive.getReceiveLineItems() != null) {
+
+            for(ReceiveLineItem rece: receive.getReceiveLineItems()) {
+
+
+               Product product = productService.getById(rece.getProductId());
+                  StockCard stockCard = stockCardService.getOrCreateStockCard(receive.getFacilityId(), product.getCode());
+               for(ReceiveLot lot: rece.getReceiveLots()) {
+                Lot l = new Lot();
+                l.setId(lot.getId());
+                l.setProduct(product);
+                l.setExpirationDate(lot.getExpiryDate());
+                l.setLotCode(lot.getLotNumber());
+                l.setManufactureDate(lot.getManufacturingDate());
+                l.setProductId(product.getId());
+                l.setManufacturerName("INDIA");
+
+                stockCardService.getOrCreateLotOnHand(l,stockCard);
+
+
+               }
+
+            }
+       }
+
+       if(receive.getStatus().equals("Finalized")&& !receive.getReceiveLineItems().isEmpty()) {
+
+           for(ReceiveLineItem item : receive.getReceiveLineItems()) {
+               StockEventDTO eventDTO = new StockEventDTO();
+               Product product = productService.getById(item.getProductId());
+               eventDTO.setType(StockEventType.RECEIPT);
+               eventDTO.setFacilityId(receive.getFacilityId());
+               eventDTO.setProductCode(product.getCode());
+               eventDTO.setQuantity(Long.valueOf(item.getQuantityCounted()));
+               if (item.isLotFlag() && (!item.getReceiveLots().isEmpty())) {
+
+               Lot lot = new Lot();
+               for(ReceiveLot l : item.getReceiveLots()) {
+
+                lot.setLotCode(l.getLotNumber());
+                lot.setManufacturerName("INDIA");
+                lot.setProductId(product.getId());
+                lot.setProduct(product);
+                lot.setExpirationDate(l.getExpiryDate());
+
+                }
+               eventDTO.setLot(lot);
+               eventDTO.setOccurred(new Date());
+               eventDTO.getCustomProps().entrySet();
+
+
+               }
+
+           }
+
+        }
+
 
        if(asn != null && asn.getStatus().equals("Finalized")) {
+
 
            for (AsnLineItem lineItem : asn.getAsnLineItems()) {
 

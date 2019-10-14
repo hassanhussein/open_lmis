@@ -65,6 +65,8 @@ public class Receive extends BaseModel {
 
     private Port port;
 
+    private Long facilityId;
+
     public void copyAsnValues(Asn asn) {
 
       Receive res = new Receive();

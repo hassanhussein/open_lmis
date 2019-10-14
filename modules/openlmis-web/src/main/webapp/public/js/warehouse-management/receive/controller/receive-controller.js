@@ -158,6 +158,7 @@ function ReceiveController($window,$scope,$filter, AsnLookups, Receive,$location
 
     if ($scope.receive) {
         $scope.editMode = true;
+        $scope.facilityId = $scope.homeFacilityId;
         $scope.asnReceiptDate = receive.asnReceiveDate;
         $scope.asnCode = receive.asnNumber;
         $scope.blAwbNumber = receive.blawBnumber;
@@ -710,6 +711,8 @@ $scope.saveAsn = function(status) {
         var receive = {
             receiveLineItems: receiveLineItems,
             receiveDate: $scope.receiveDate,
+             facilityId: $scope.homeFacilityId,
+
 //            asnnumber: $scope.asnCode,
             blawBnumber: $scope.blAwbNumber,
             clearingAgent: $scope.clearingAgent,
