@@ -225,9 +225,15 @@ $scope.currency=[
         };
 
 
+        function isViewMode(){
+        var url=$location.url();
+        return url.split("/")[1]==="view"
+        }
+
+
     if ($scope.asn) {
         $scope.editMode = true;
-        $scope.viewMode=($scope.$parent.asnViewMode)?true:false;
+        $scope.viewMode=isViewMode();
         $scope.asnReceiptDate = asn.asndate;
         $scope.asnCode = asn.asnnumber;
         $scope.blAwbNumber = asn.blawbnumber;
