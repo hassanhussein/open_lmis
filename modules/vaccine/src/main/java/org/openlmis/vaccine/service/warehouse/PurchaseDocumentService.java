@@ -3,11 +3,12 @@ package org.openlmis.vaccine.service.warehouse;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.Document;
 import org.openlmis.vaccine.domain.wms.PurchaseDocument;
+import org.openlmis.vaccine.domain.wms.Receive;
 import org.openlmis.vaccine.repository.warehouse.PurchaseDocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.print.Doc;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,9 +17,21 @@ public class PurchaseDocumentService {
     @Autowired
     PurchaseDocumentRepository repository;
 
-    public void save(Asn asn, Long userId) {
-        deleteByAsnNumber(asn.getAsnnumber());
-        for (Document document : getByASNCode(asn.getAsnnumber())) {
+    public void save(Asn asn, Receive receive, Long userId) {
+
+        List<Document> documents  = new ArrayList<>();
+
+        if(asn !=null) {
+
+            deleteByAsnNumber(asn.getAsnnumber());
+            documents = getByASNCode(asn.getAsnnumber());
+        } else {
+
+            deleteByAsnNumber(receive.getAsnNumber());
+            documents = getByASNCode(receive.getAsnNumber());
+        }
+
+        for (Document document : documents) {
 
             PurchaseDocument doc = new PurchaseDocument();
             doc.setCreatedBy(userId);
@@ -26,7 +39,7 @@ public class PurchaseDocumentService {
             doc.setAsn(asn);
             doc.setDocumentType(document.getDocumentType());
             doc.setFileLocation(document.getFileLocation());
-            doc.setReceive(null);
+            doc.setReceive(receive);
             doc.setAsnNumber(document.getAsnNumber());
 
             if (getDocumentByFileLocation(doc.getFileLocation()) == null) {

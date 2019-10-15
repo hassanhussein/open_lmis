@@ -74,7 +74,7 @@ public class AsnService {
                 }
             }
         }
-        purchaseDocumentService.save(asn,userId);
+        purchaseDocumentService.save(asn,null,userId);
  /*       List<PurchaseDocument> purchaseDocuments = asn.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments){
             document.setAsn(asn);
@@ -131,7 +131,7 @@ public class AsnService {
 
         List<PurchaseDocument> purchaseDocumentLists = purchaseDocumentService.getByAsnId(id);
 
-        for(PurchaseDocument document: purchaseDocumentList) {
+        for(PurchaseDocument document: purchaseDocumentLists) {
             PurchaseDocument document1 = new PurchaseDocument();
 
             document1.setFileLocation(document.getFileLocation());
@@ -141,7 +141,7 @@ public class AsnService {
         }
 
 
-        asn.setPurchaseDocuments(purchaseDocumentList);
+        asn.setPurchaseDocuments(purchaseDocumentLists);
         return asn;
 
     }

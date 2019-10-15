@@ -170,6 +170,9 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
 
     if ($scope.receive) {
+       console.log($scope.receive.asnNumber);
+       if($scope.receive.asnNumber !== undefined)
+       getListOfFilesByASNumber($scope.receive.asnNumber);
         $scope.editMode = true;
         $scope.facilityId = $scope.homeFacilityId;
         $scope.viewMode=isViewMode();
@@ -676,7 +679,7 @@ $scope.removeProduct(productIndex);
     };
 
 $scope.saveAsn = function(status) {
-
+    console.log($scope.docList);
         $scope.validateProduct();
 //                        console.log($scope.asnForm)
    /*   if ($scope.asnForm.$error.required) {
@@ -752,7 +755,7 @@ $scope.saveAsn = function(status) {
             receiveDate: $scope.receiveDate,
             facilityId: $scope.homeFacilityId,
 
-//            asnnumber: $scope.asnCode,
+            asnNumber: $scope.asnCode,
             blawBnumber: $scope.blAwbNumber,
             clearingAgent: $scope.clearingAgent,
             expectedArrivalDate: $scope.expectedArrivalDate,
@@ -766,7 +769,7 @@ $scope.saveAsn = function(status) {
             poDate: $scope.poDate,
             poNumber: $scope.poNumber,
             portOfArrival: $scope.portOfArrivalId,
-            purchaseDocuments: $scope.documentDetails,
+            purchaseDocuments: $scope.docList,
             status: status,
             supplierId: $scope.supplierId,
             programId:82
@@ -896,7 +899,18 @@ function getListOfFilesByASNumber(asnNumber) {
 $scope.findMatches = function(data, comparedTo) {
 
 
- $scope.displayDocumentTypes = _.filter(data, function(num,index){ return num.name !== comparedTo[index].documentType.name;  });
+ $scope.displayDocumentTypes = _.filter(data, function(num,index){
+
+  if(comparedTo[index] !== undefined) {
+
+  return num.name !== comparedTo[index].documentType.name;
+
+  } else {
+
+  return null;
+  }
+
+  });
 
    console.log($scope.displayDocumentTypes);
 
