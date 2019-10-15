@@ -49,9 +49,8 @@ public class ReceiveService {
         }else {
             repository.update(receive);
         }
-        if(receive.getReceiveLineItems() != null) {
 
-            if(asn != null && (!receive.getReceiveLineItems().isEmpty())) {
+        if(receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {
 
                 for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
 
@@ -73,8 +72,9 @@ public class ReceiveService {
                 }
             }
 
-        }
 
+
+        purchaseDocumentService.save(asn,receive,userId);
 
        /* List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments) {
