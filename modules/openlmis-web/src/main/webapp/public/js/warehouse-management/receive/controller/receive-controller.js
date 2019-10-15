@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout){
 
 
@@ -30,6 +30,11 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
                            $scope.loadProducts($scope.homeFacilityId, 82,true);
 
                   });
+
+                  Locations.get({"searchParam": "%", "column": "name", "page": 1}, function (data) {
+                        $scope.locations = data.locations;
+
+                      }, {});
 
        AsnLookups.get(function(data) {
 
@@ -652,7 +657,8 @@ $scope.removeProduct(productIndex);
             }, function(data) {
                 $scope.allLots = data.lots;
                 //                              console.log(data.lots)
-                $scope.lotsToDisplay = $scope.allLots;
+                                $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
+
 
             });
 

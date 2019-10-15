@@ -422,6 +422,7 @@ $scope.changeProductType=function(isVaccine){
         $scope.lotsToDisplay = $.grep($scope.allLots, function(lotObject) {
             return $.inArray(lotObject.lotCode, toExclude) == -1;
         });
+//        console.log($scope.lotsToDisplay);
     };
 
 
@@ -727,7 +728,7 @@ $scope.removeProduct(productIndex);
             }, function(data) {
                 $scope.allLots = data.lots;
                 //                              console.log(data.lots)
-                $scope.lotsToDisplay = $scope.allLots;
+                $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
 
             });
 
