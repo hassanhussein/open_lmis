@@ -77,7 +77,7 @@ Highcharts.chart(id, {
         },
       events: {
       drillup: function (e) {
-      alert(e.seriesOptions.name);
+     // alert(e.seriesOptions.name);
       }
       },
 

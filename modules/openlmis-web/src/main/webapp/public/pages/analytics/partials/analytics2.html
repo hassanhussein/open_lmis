@@ -893,8 +893,8 @@ background:#fff;
                             </div>
 
 
-                            <div class="row orderFillRate">
-                                <div class="col s12 m4 l4" ng-controller="RnRQualityCheckController">
+                            <div class="row orderFillRate" ng-show="false">
+                          <!--      <div class="col s12 m4 l4" ng-controller="RnRQualityCheckController">
                                     <div class="card grey lighten-5 row2-height" overlay-section="RequisitionFormPercentage">
                                         <div class="card-action"  style="background-color: #17888f;">
                                             <span style="color:white">{{opentitle}}</span>
@@ -913,7 +913,7 @@ background:#fff;
 
                                     </div>
 
-                                </div>
+                                </div>-->
                                 <div class="col s12 m4 l4">
                                     <div class="card grey lighten-5 row2-height" overlay-section="percentageWastage" ng-controller="PercentageWastageController">
                                         <div class="card-action"  style="background-color: #17888f;">
@@ -973,27 +973,7 @@ background:#fff;
 
                             <div class="row">
 
-                                <div class="col s12 m6 l6" ng-controller="mosTrendWithSOHController">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="stockStatusOverTime" >
-                                        <div class="card-action"  style="background-color: #17888f;">
-                                            <span style="color:white">{{mos_soh_title}}</span>
-                                        </div>
-                                        <div class="card-content">
-                                            <div id="mos-soh-chart" style="margin: 0 auto;height: 300px !important;"></div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/custom-product-filter.html"'></ng-include>
-
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-                                <div class="col s12 m6 l6 grey lighten-4" ng-controller="RequisitionStatusSummaryController">
+                                <div class="col s12 m4 l4 grey lighten-4" ng-controller="RequisitionStatusSummaryController">
                                     <div class="card grey lighten-5 row2-height">
 
                                         <div class="card-action" style="background-color: #17888f;">
@@ -1071,6 +1051,47 @@ background:#fff;
                                 </div>
 
 
+                                <div class="col s12 m4 l4" ng-controller="mosTrendWithSOHController">
+                                    <div class="card grey lighten-5 row2-height" overlay-section="stockStatusOverTime" >
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">{{mos_soh_title}}</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <div id="mos-soh-chart" style="margin: 0 auto;height: 300px !important;"></div>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/custom-product-filter.html"'></ng-include>
+
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <div class="col s12 m4 l4" ng-controller="RnRQualityCheckController">
+                                    <div class="card grey lighten-5 row2-height" overlay-section="RequisitionFormPercentage">
+                                        <div class="card-action"  style="background-color: #17888f;">
+                                            <span style="color:white">{{opentitle}}</span>
+                                        </div>
+                                        <div class="card-content">
+
+                                            <div id="rnrPassedChart"  style="height: 300px;margin:0 auto "></div>
+
+                                        </div>
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
 
 
                             </div>
@@ -1131,7 +1152,7 @@ background:#fff;
                             </div>
 
 
-                            <div class="row" ng-show="true">
+                            <div class="row" ng-show="false">
                                 <div class="col s12 m6 l6">
                                     <div class="card">
                                         <div class="card-content">
