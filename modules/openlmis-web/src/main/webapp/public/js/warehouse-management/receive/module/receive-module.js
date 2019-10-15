@@ -14,6 +14,7 @@ var receiveModule = angular.module('receive', ['openlmis', 'ui.bootstrap.modal',
       $routeProvider.
           when('/list', {controller: ReceiveSearchController, templateUrl: 'partials/list.html'}).
           when('/create', {controller: ReceiveController, templateUrl: 'partials/create.html', resolve: ReceiveController.resolve}).
+          when('/view/:id', {controller: ReceiveController, templateUrl: 'partials/create.html', resolve: ReceiveController.resolve}).
           when('/edit/:id', {controller: ReceiveController, templateUrl: 'partials/create.html', resolve: ReceiveController.resolve}).
           otherwise({redirectTo: '/list'});
     }]).run(function ($rootScope, AuthorizationService) {

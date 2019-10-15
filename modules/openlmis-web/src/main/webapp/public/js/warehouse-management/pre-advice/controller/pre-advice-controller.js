@@ -37,7 +37,6 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
                               $scope.manufacturers = data.manufacturers;
                           $scope.displayDocumentTypes =  data.documentTypes;
                               $scope.manufacturers = data.manufactures;
-                              console.log($scope.manufacturers)
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
                                       if(!isUndefined(asn) && !isUndefined($scope.docList) ){

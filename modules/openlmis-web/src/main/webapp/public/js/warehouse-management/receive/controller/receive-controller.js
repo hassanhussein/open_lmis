@@ -161,9 +161,18 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
         };
 
 
+        function isViewMode(){
+                var url=$location.url();
+                return url.split("/")[1]==="view"
+                }
+
+
+
+
     if ($scope.receive) {
         $scope.editMode = true;
         $scope.facilityId = $scope.homeFacilityId;
+        $scope.viewMode=isViewMode();
         $scope.asnReceiptDate = receive.asnReceiveDate;
         $scope.asnCode = receive.asnNumber;
         $scope.blAwbNumber = receive.blawBnumber;
@@ -791,7 +800,7 @@ $scope.saveAsn = function(status) {
 
         }
 
-    }
+    };
 
 
   $scope.removeFile = function(file) {
@@ -804,7 +813,7 @@ $scope.saveAsn = function(status) {
          $scope.displayDocumentTypes.push(file.documentType);
         });
 
-  }
+  };
 
   function removeItemFromList(document) {
 
@@ -822,7 +831,7 @@ $scope.saveAsn = function(status) {
 
   }
   }
- }
+ };
 
 
 function getFile(file,documentType) {
@@ -870,7 +879,7 @@ function getFile(file,documentType) {
 
 
 
-}
+};
 
 function getListOfFilesByASNumber(asnNumber) {
      console.log(asnNumber);
