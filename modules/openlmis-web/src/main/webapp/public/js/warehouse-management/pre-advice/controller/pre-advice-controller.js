@@ -14,6 +14,10 @@
 function PreAdviceController(DeleteDocument,$window,$scope,$filter, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
+        // lets disable all messages
+        $scope.$parent.asnId = false;
+        $scope.$parent.asnIdUpdate = false;
+        $scope.$parent.asnIdFinalized = false;
 
 
     function getAllLookups(){
@@ -727,7 +731,7 @@ $scope.removeProduct(productIndex);
 
 
     $scope.saveAsn = function(status) {
-    console.log($scope.docList);
+    $scope.asnStatus=status;
         $scope.validateProduct();
       if ($scope.asnForm.$error.required && $scope.docList.length < 0) {
             $scope.showError = true;
@@ -797,7 +801,22 @@ $scope.removeProduct(productIndex);
 
         }else{
 
-        Preadvice.save({}, asn, success, error);
+        Preadvice.save({}, asn, function(){
+            if($scope.asnStatus==='FINALIZED'){
+                    $scope.$parent.asnIdFinalized = true;
+            }else{
+
+                    $scope.$parent.asnId = true;
+
+            }
+            $scope.error = "";
+//            $scope.$parent.message = data.success;
+            $scope.showError = false;
+            $location.path('');
+
+
+
+        }, error);
 
 
         }
