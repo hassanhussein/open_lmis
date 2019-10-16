@@ -307,4 +307,16 @@ public class AsnController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/asn/disable/{id}", method = PUT)
+    public ResponseEntity disableAsnBy(@PathVariable("id") Long id) {
+
+        try {
+            asnService.disableAsnBy(id);
+        } catch (DataIntegrityViolationException ex) {
+            return OpenLmisResponse.error("asn.data.already.in.use", HttpStatus.BAD_REQUEST);
+        }
+
+        return OpenLmisResponse.success("message.asn.deleted.success");
+    }
+
 }

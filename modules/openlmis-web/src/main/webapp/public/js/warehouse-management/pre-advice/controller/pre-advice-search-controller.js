@@ -1,4 +1,4 @@
-function PreAdviceSearchController($scope, Preadvice, $location, navigateBackService, $dialog){
+function PreAdviceSearchController($scope,DisableAsn, Preadvice, $location, navigateBackService, $dialog){
 
   $scope.searchOptions = [
   {value: "asnumber", name: "ASN Number"},
@@ -114,7 +114,12 @@ function PreAdviceSearchController($scope, Preadvice, $location, navigateBackSer
       {
            var callBack=function(results){
              if(results){
-                $scope.asnList.splice(index,1);
+             DisableAsn.update({id:parseInt(id,10)}, function(data){
+
+               $scope.search(1);
+             });
+
+
              }
            };
 

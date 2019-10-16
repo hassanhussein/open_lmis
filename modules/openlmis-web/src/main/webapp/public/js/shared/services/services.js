@@ -660,3 +660,7 @@ services.factory("DocumentList", function ($resource) {
 services.factory("DeleteDocument", function ($resource) {
      return $resource('/rest-api/warehouse/deleteDocument/:id/:code.json', {id: '@id', code:'@code'},{});
  });
+
+ services.factory("DisableAsn", function ($resource) {
+     return $resource('/rest-api/warehouse/asn/disable/:id.json', {id: '@id'}, update);
+ });

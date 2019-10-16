@@ -14,8 +14,8 @@ import java.util.Map;
 @Repository
 public interface AsnMapper {
     @Insert(" INSERT INTO asns (ponumber,podate,supplierid,asnnumber,asndate,blawbnumber,flightvesselnumber,portofarrival,expectedarrivaldate, " +
-            "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
-            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
+            "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate, active)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
+            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),true) ")
     @Options(useGeneratedKeys = true)
     Long insert(Asn asn);
 
@@ -40,7 +40,7 @@ public interface AsnMapper {
     })
     Asn getById(@Param("id") Long id);
 
-    @Select(" select * from asns")
+    @Select(" select * from asns where active = true ")
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
@@ -55,14 +55,14 @@ public interface AsnMapper {
     List<Asn> getAll();
 
     @Select("SELECT COUNT(*) FROM asns A " +
-            "WHERE (LOWER(A.asnnumber) LIKE '%' || LOWER(#{searchParam}) || '%')")
+            "WHERE (LOWER(A.asnnumber) LIKE '%' || LOWER(#{searchParam}) || '%') AND A.ACTIVE = TRUE ")
     Integer getTotalSearchResultCountByAsnumber(String searchParam);
     @Select("SELECT COUNT(*) FROM asns A " +
-            " WHERE (LOWER(A.ponumber) LIKE '%' || LOWER(#{searchParam}) || '%')")
+            " WHERE (LOWER(A.ponumber) LIKE '%' || LOWER(#{searchParam}) || '%') AND A.ACTIVE = TRUE ")
     Integer getTotalSearchResultCountByPonumber(String searchParam);
 
-    @Select("SELECT COUNT(*) FROM asns A INNER JOIN manufacturers M ON M.id = A.supplierid AND " +
-            "(LOWER(M.name) LIKE '%' || LOWER(#{searchParam}) || '%')")
+    @Select("SELECT COUNT(*) FROM asns A INNER JOIN manufacturers M ON M.id = A.supplierid " +
+            " WHERE (LOWER(M.name) LIKE '%' || LOWER(#{searchParam}) || '%') AND A.ACTIVE = TRUE ")
     Integer getTotalSearchResultCountBySupplier(String searchParam);
     @Select("SELECT COUNT(*) FROM asns ")
     Integer getTotalSearchResultCountAll();
@@ -97,11 +97,14 @@ public interface AsnMapper {
     @Delete("DELETE FROM ASN_DETAILS cascade where asnId = #{asnId} ")
     void deleteByAsn(@Param("asnId") Long asnId);
 
+    @Update("update asns set active = false where id = #{id}")
+    void disableAsnBy(@Param("id") Long id);
+
     class SelectAsn {
         @SuppressWarnings(value = "unused")
         public static String getAsnCountBy(Map<String, Object> params) {
             StringBuilder sql = new StringBuilder();
-            sql.append("SELECT COUNT(*) FROM asns L WHERE ");
+            sql.append("SELECT COUNT(*) FROM asns L WHERE active = true and ");
             return createQuery(sql, params).toString();
         }
 
@@ -113,14 +116,14 @@ public interface AsnMapper {
             sql.append("SELECT A.*, M.* FROM asns A ");
             sql.append("INNER JOIN manufacturers M on M.id = A.supplierid WHERE ");
             if(column.equalsIgnoreCase("asnumber")) {
-                sql.append("(LOWER(A.asnnumber) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+                sql.append("(LOWER(A.asnnumber) LIKE '%' || LOWER(#{searchParam}) || '%') AND A.ACTIVE = TRUE ");
 
             }
             else if(column.equalsIgnoreCase("ponumber")) {
-                sql.append(" (LOWER(A.ponumber) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+                sql.append(" (LOWER(A.ponumber) LIKE '%' || LOWER(#{searchParam}) || '%') AND A.ACTIVE = TRUE ");
             }
             else if(column.equalsIgnoreCase("supplier")) {
-                sql.append(" (LOWER(M.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+                sql.append(" (LOWER(M.name) LIKE '%' || LOWER(#{searchParam}) || '%') AND A.ACTIVE = TRUE ");
             }
             sql.append("ORDER BY LOWER(A.ponumber)");
             return sql.toString();
@@ -130,13 +133,13 @@ public interface AsnMapper {
             String searchParam = (String) params.get("searchParam");
             String column = (String) params.get("column");
             if(column.equalsIgnoreCase("asnumber")) {
-                sql.append("(LOWER(A.asnnumber) LIKE LOWER('%" + searchParam + "%') ");
+                sql.append("(LOWER(A.asnnumber) LIKE LOWER('%" + searchParam + "%') AND A.ACTIVE = TRUE ");
             }
             else if(column.equalsIgnoreCase("ponumber")) {
-                sql.append("LOWER(A.ponumber) LIKE LOWER('%" + searchParam + "%'))");
+                sql.append("LOWER(A.ponumber) LIKE LOWER('%" + searchParam + "%') AND A.ACTIVE = TRUE )");
             }
             else if(column.equalsIgnoreCase("supplier")) {
-                sql.append("LOWER(M.name) LIKE LOWER('%" + searchParam + "%'))");
+                sql.append("LOWER(M.name) LIKE LOWER('%" + searchParam + "%') AND A.ACTIVE = TRUE )");
             }
             return sql;
         }
