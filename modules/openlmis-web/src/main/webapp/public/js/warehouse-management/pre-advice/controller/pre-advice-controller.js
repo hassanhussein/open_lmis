@@ -216,7 +216,7 @@ $scope.currency=[
 
         function isViewMode(){
         var url=$location.url();
-        return url.split("/")[1]==="view"
+        return url.split("/")[1]==="view";
         }
 
 

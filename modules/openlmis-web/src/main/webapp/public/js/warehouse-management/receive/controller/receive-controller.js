@@ -163,7 +163,7 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
         function isViewMode(){
                 var url=$location.url();
-                return url.split("/")[1]==="view"
+                return url.split("/")[1]==="view";
                 }
 
 
@@ -682,7 +682,7 @@ $scope.removeProduct(productIndex);
 $scope.saveAsn = function(status) {
 //    console.log($scope.docList);
         $scope.validateProduct();
-                        console.log($scope.asnForm)
+//                        console.log($scope.asnForm)
     if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
@@ -776,7 +776,7 @@ $scope.saveAsn = function(status) {
             programId:82
         };
 
-        console.log(receive)
+//        console.log(receive)
 
 
         Receive.save({}, receive, function (data) {
@@ -852,7 +852,7 @@ $scope.saveAsn = function(status) {
 
   }
   }
- };
+ }
 
 
 function getFile(file,documentType) {
@@ -900,7 +900,7 @@ function getFile(file,documentType) {
 
 
 
-};
+}
 
 function getListOfFilesByASNumber(asnNumber) {
      console.log(asnNumber);
