@@ -182,6 +182,10 @@ public class AsnService {
        repository.deleteById(id);
     }
 
+    public void disableAsnBy(Long id) {
+        repository.disableAsnBy(id);
+    }
+
  /*   public void saveDocument(PurchaseDocument d) {
         purchaseDocumentService.save(d);
     }*/

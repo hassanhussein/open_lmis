@@ -65,7 +65,8 @@ public class AsnRepository {
         this.mapper.deleteByAsnDetail(id);
     }
 
-    public void deleteByAsn(Long id) {
-        this.mapper.deleteByAsn(id);
+
+    public void disableAsnBy(Long id) {
+        mapper.disableAsnBy(id);
     }
 }
