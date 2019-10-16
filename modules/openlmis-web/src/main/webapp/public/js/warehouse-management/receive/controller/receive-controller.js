@@ -935,7 +935,7 @@ $scope.findMatches = function(data, comparedTo) {
 
 $scope.downloadFile = function (file){
 
-var url ='/rest-api/warehouse/downloadFile?filename='+file.name;
+var url ='/rest-api/warehouse/downloadFile?filename='+file;
 $window.open(url, '_blank');
 
 };
