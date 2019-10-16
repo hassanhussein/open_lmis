@@ -35,15 +35,14 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
          $scope.displayDocumentTypes = [];
 
                               $scope.manufacturers = data.manufacturers;
-                          $scope.displayDocumentTypes =  data.documentTypes;
+                        //  $scope.displayDocumentTypes =  data.documentTypes;
                               $scope.manufacturers = data.manufactures;
-                              console.log($scope.manufacturers)
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
                                       if(!isUndefined(asn) && !isUndefined($scope.docList) ){
+                                      console.log(data.documentTypes);
+                                      $scope.findMatches(data.documentTypes,$rootScope.docList );
 
-
-                                      comparedDocumentTypes(data.documentTypes, $rootScope.docList);
 
                                       } else {
 
@@ -64,37 +63,27 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 
     }
 
-
-    function comparedDocumentTypes(documentTypes, purchaseDocuments){
-
-              $scope.displayDocumentTypes = [];
+$scope.findMatches = function(data, comparedTo) {
 
 
-              for(var i=0; i< documentTypes.length; i++) {
+ $scope.displayDocumentTypes = _.filter(data, function(num,index){
 
-              if(purchaseDocuments[i] !== undefined && purchaseDocuments[i].documentType !== null && purchaseDocuments[i].documentType !== undefined) {
-               var filteredData = [];
-               filteredData = _.filter(documentTypes, function(data){
+  if(comparedTo[index] !== undefined) {
 
-                if(purchaseDocuments[i].documentType !== null) {
+  return num.name !== comparedTo[index].documentType.name;
 
-                console.log(purchaseDocuments[i].documentType.name);
-                 return (data.name !== purchaseDocuments[i].documentType.name);
+  } else {
 
-                 }
+  return null;
+  }
 
-                 });
-                $scope.displayDocumentTypes = filteredData;
-                                 console.log(filteredData);
+  });
 
-                }
+   console.log($scope.displayDocumentTypes);
 
-              }
+};
 
-    }
-
-
-    getAllLookups();
+getAllLookups();
 //    $scope.homeFacilityId = homeFacility.id;
 //    $scope.userPrograms = configurations.programs;
 //    $scope.manufacturers = manufacturers;
@@ -117,7 +106,7 @@ $scope.currency=[
  amount:1
 
 }
-]
+];
     $scope.productError = false;
     //console.log(configurations.productsConfiguration[0].product.id)
 //    $scope.configurations = configurations;
@@ -900,11 +889,11 @@ $scope.removeProduct(productIndex);
 
            }
 
-function findMatches(data, comparedTo) {
+/*function findMatches(data, comparedTo) {
 
 $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentType.name !== comparedTo.documentType.name  });
 
-}
+}*/
 
 
         $scope.removeFile = function(file) {
@@ -918,7 +907,7 @@ $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentT
 
         });
 
-        }
+        };
 
         $scope.upload = function(document) {
 
@@ -932,7 +921,7 @@ $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentT
           document.file = null;
           }
 
-         }
+         };
 
 
 function getFile(file,documentType) {
@@ -982,7 +971,7 @@ function getListOfFilesByASNumber(asnNumber) {
 
       $rootScope.docList = data.list;
       if(data.list.length > 0) {
-      comparedDocumentTypes($scope.displayDocumentTypes, data.list);
+      $scope.findMatches($scope.displayDocumentTypes, data.list);
       }
 
 

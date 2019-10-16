@@ -789,7 +789,7 @@ $scope.saveAsn = function(status) {
 
         }
 
-    }
+    };
 
 
   $scope.removeFile = function(file) {
@@ -802,7 +802,7 @@ $scope.saveAsn = function(status) {
          $scope.displayDocumentTypes.push(file.documentType);
         });
 
-  }
+  };
 
   function removeItemFromList(document) {
 
@@ -827,7 +827,7 @@ function getFile(file,documentType) {
 
      var asnNum;
      if($scope.asnCode === null || $scope.asnCode === undefined) {
-        let today = new Date().toLocaleDateString();
+        var today = new Date().toLocaleDateString();
         asnNum = new Date(today).getTime();
      }else
        asnNum = $scope.asnCode;
@@ -898,9 +898,8 @@ $scope.findMatches = function(data, comparedTo) {
 
   });
 
-   console.log($scope.displayDocumentTypes);
 
-}
+};
 
 $scope.downloadFile = function (file){
 
