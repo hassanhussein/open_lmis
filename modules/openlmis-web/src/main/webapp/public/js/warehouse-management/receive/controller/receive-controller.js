@@ -859,7 +859,7 @@ function getFile(file,documentType) {
 
      var asnNum;
      if($scope.asnCode === null || $scope.asnCode === undefined) {
-        let today = new Date().toLocaleDateString();
+        var today = new Date().toLocaleDateString();
         asnNum = new Date(today).getTime();
      }else
        asnNum = $scope.asnCode;
@@ -930,9 +930,8 @@ $scope.findMatches = function(data, comparedTo) {
 
   });
 
-   console.log($scope.displayDocumentTypes);
 
-}
+};
 
 $scope.downloadFile = function (file){
 
