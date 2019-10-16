@@ -339,7 +339,7 @@
                                                 </div>
                                             </td>
 
-                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
+                                            <td rowspan="{{product.lots.length}}" class="cell-input col-general" style="padding-left:15px;">
 <!--                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ></span>-->
                                                 <span class="row-fluid" >
 <!--                                                {{product.programProduct.dosageUnit.code}}-->
@@ -720,7 +720,7 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="saveAsn('Draft')"/>
+                           openlmis-message="button.save" ng-click="saveAsn('DRAFT')"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
 
@@ -730,7 +730,7 @@
 
 
                     <input  type="button" class="btn btn-primary pull-right"
-                            ng-click="saveAsn('Received')" value="Receive" style="margin-left:10px;margin-right:10px"/>
+                            ng-click="saveAsn('RECEIVED')" value="Receive" style="margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>

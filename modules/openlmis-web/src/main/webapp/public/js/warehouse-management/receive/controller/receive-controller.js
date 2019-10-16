@@ -560,7 +560,8 @@ $scope.removeProduct(productIndex);
         $scope.message = "";
         $scope.error = "";
         $scope.showError = false;
-        $scope.$parent.asnId = false;
+        $scope.$parent.receiveSaved = false;
+        $scope.$parent.received = false;
         $scope.$parent.asnIdUpdate = false;
         $location.path('');
 
@@ -679,15 +680,15 @@ $scope.removeProduct(productIndex);
     };
 
 $scope.saveAsn = function(status) {
-    console.log($scope.docList);
+//    console.log($scope.docList);
         $scope.validateProduct();
-//                        console.log($scope.asnForm)
-   /*   if ($scope.asnForm.$error.required) {
+                        console.log($scope.asnForm)
+    if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
             return;
-        }*/
+        }
 
 
         var receiveLineItems = [];
@@ -775,15 +776,32 @@ $scope.saveAsn = function(status) {
             programId:82
         };
 
+        console.log(receive)
+
 
         Receive.save({}, receive, function (data) {
 
-        if(data.success && status === 'Received') {
 
+
+        if(data.success && status === 'Received') {
+        // receive only
         StockEvent.update({facilityId:$scope.homeFacilityId},events, function (data) {
-          console.log(data);
+             // saving only
+                   $scope.error = "";
+                          $scope.$parent.message = data.success;
+                          $scope.$parent.received = true;
+                          $scope.showError = false;
+                          $location.path('');
 
         });
+
+        }else{
+        // saving only
+         $scope.error = "";
+                $scope.$parent.message = data.success;
+                $scope.$parent.receiveSaved = true;
+                $scope.showError = false;
+                $location.path('');
 
         }
 
