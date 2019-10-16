@@ -19,7 +19,7 @@ function fundUtilizationController($scope,$rootScope,GetDistrictFundUtilizationD
     });
 
 
-  }
+  };
 
 
 function loadChart (category,dataV) {
