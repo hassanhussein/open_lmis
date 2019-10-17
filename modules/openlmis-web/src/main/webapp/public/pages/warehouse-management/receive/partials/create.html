@@ -36,6 +36,7 @@
                                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                     ui-date-format="yy-mm-dd"
                                     ng-model="receiveDate"
+                                    ng-disabled="viewMode"
                                     ng-required="true"/>
                             <span class="field-error" ng-show="receiveForm.receiveDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
@@ -49,8 +50,7 @@
 
                         <div class="form-field">
                             <input ng-model="asnCode" name="asnCode" ng-disabled="true" type="text" maxlength="50" />
-                            <span class="field-error" ng-show="asnForm.asnCode.$error.required && showError"
-                                  openlmis-message="missing.value"></span>
+
                         </div>
                     </div>
 
@@ -67,8 +67,7 @@
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
                                    ng-model="asnReceiptDate" name="asnReceiptDate" />
-                            <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
-                                  openlmis-message="missing.value"></span>
+
                         </div>
                     </div>
                     <div class="span3">
@@ -82,8 +81,9 @@
                                    type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="expectedDeliveryDate"
+                                   ng-model="expectedArrivalDate"
                                    ng-required="true"
+                                   ng-disabled="viewMode"
                             />
 
                             <span class="field-error" ng-show="asnForm.expectedDeliveryDate.$error.required && showError"
@@ -111,7 +111,7 @@
 
                         <div class="form-field row-fluid">
                             <select ui-select2="{width: '90%'}" class="span11" id="supplier"
-                                    openlmis-message="label.select.parent.zone"
+                                    openlmis-message="label.select.parent.zone" ng-disabled="viewMode"
                             ng-model="supplierId">
                                 <option value=""></option>
                                     <option ng-repeat="supplier in suppliers"
@@ -132,7 +132,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="poNumber"  type="text" maxlength="50" name="poNumber" ng-required="true"/>
+                            <input ng-model="poNumber" ng-disabled="viewMode"  type="text" maxlength="50" name="poNumber" ng-required="true"/>
                             <span class="field-error" ng-show="asnForm.poNumber.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
@@ -150,6 +150,7 @@
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
                                    ng-model="poDate"
+                                    ng-disabled="viewMode"
                                     ng-required="true"/>
                             <span class="field-error" ng-show="asnForm.poDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
@@ -167,7 +168,7 @@
                         </label>
 
                         <div class="form-field">
-                            <textarea rows="3" style="width: 425px;" ng-model="descriptionOfProcurement" ></textarea>
+                            <textarea rows="3" ng-disabled="viewMode" style="width: 425px;" ng-model="descriptionOfProcurement" ></textarea>
 
                         </div>
                     </div>
@@ -180,7 +181,7 @@
                         </label>
 
                         <div class="form-field">
-                            <textarea rows="3" style="width: 425px;" ng-model="notes" ></textarea>
+                            <textarea ng-disabled="viewMode" rows="3" style="width: 425px;" ng-model="notes" ></textarea>
 
                         </div>
                     </div>
@@ -193,13 +194,13 @@
 
                     <div class="form-cell" >
                         <label class="checkbox inline">
-                            <input type="checkbox" checked > Foreign Procurement
+                            <input type="checkbox" ng-disabled="viewMode" checked > Foreign Procurement
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData"   value="1" ng-click="changeProductType(false)" > Other Items
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode"   value="1" ng-click="changeProductType(false)" > Other Items
                         </label>
 
                     </div>
@@ -319,8 +320,8 @@
                                                     openlmis-message="label.stock.quantity"></span></th>
                                             <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Unit Price</th>
                                             <th  class="col-add-lot style="width:100px !important;max-width:100px !important">Total Cost</th>
-                                            <th style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
-                                            <th class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
+                                            <th ng-if="!viewMode" style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
+                                            <th ng-if="!viewMode" class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
 
                                         </tr>
                                         </thead>
@@ -338,7 +339,7 @@
                                                 </div>
                                             </td>
 
-                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
+                                            <td rowspan="{{product.lots.length}}" class="cell-input col-general" style="padding-left:15px;">
 <!--                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ></span>-->
                                                 <span class="row-fluid" >
 <!--                                                {{product.programProduct.dosageUnit.code}}-->
@@ -351,7 +352,7 @@
 
                                                 <div class="">
                                                     <div class="span2">
-                                                        <input type="button" ng-disabled="!product.programProduct.product"
+                                                        <input type="button" ng-disabled="!product.programProduct.product || viewMode"
                                                                class="btn btn-primary btn-small"
                                                                href ng-click="showNewLotModal(product.programProduct.product)"
                                                                openlmis-message="button.create"
@@ -719,7 +720,7 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="saveAsn('Draft')"/>
+                           openlmis-message="button.save" ng-click="saveAsn('DRAFT')"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
 
@@ -729,7 +730,7 @@
 
 
                     <input  type="button" class="btn btn-primary pull-right"
-                            ng-click="saveAsn('Received')" value="Receive" style="margin-left:10px;margin-right:10px"/>
+                            ng-click="saveAsn('RECEIVED')" value="Receive" style="margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>

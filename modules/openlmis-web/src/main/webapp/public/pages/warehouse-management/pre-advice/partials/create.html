@@ -208,10 +208,10 @@
                                             </span>
                                             </td>
                                             <td class="col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.quantity">
+                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="viewMode" ng-model="product.quantity">
                                             </td>
                                             <td class="col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice">
+                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="viewMode" ng-model="product.unitPrice">
                                             </td>
                                             <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
 
@@ -254,8 +254,8 @@
                                                     openlmis-message="label.stock.quantity"></span></th>
                                             <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Unit Price</th>
                                             <th  class="col-add-lot style="width:100px !important;max-width:100px !important">Total Cost</th>
-                                            <th style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
-                                            <th class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
+                                            <th ng-if="!viewMode" style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
+                                            <th ng-if="!viewMode" class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>
 
                                         </tr>
                                         </thead>
@@ -283,7 +283,7 @@
                                             <td >
                                                 <div  ng-if="!product.lots[0].displayCodeOnly" >
                                                     <div  class="span2">
-                                                        <input type="button" ng-disabled="!product.programProduct.product"
+                                                        <input type="button" ng-disabled="!product.programProduct.product || viewMode"
                                                                class="btn btn-primary btn-small"
                                                                href ng-click="showNewLotModal(product.programProduct.product)"
                                                                openlmis-message="button.create"
@@ -308,20 +308,20 @@
 
                                             </td>
                                             <td class="col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info" ng-model="product.lots[0].quantity" style="width:99px">
+                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info || viewMode" ng-model="product.lots[0].quantity" style="width:99px">
                                             </td>
                                             <td rowspan="{{product.lots.length}}" class="cell-input col-general" style="padding-left:1px;">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity" style="width:99px">
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity || viewMode" style="width:99px">
                                             </td>
 
                                             <td rowspan="{{product.lots.length}}" class="cell-general" style="padding-left:15px; text-align:right;" >{{totalCostPerProduct(product) | number}}</td>
-                                            <td>
-                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
+                                            <td ng-if="!viewMode">
+                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly" >Add</button>
                                                 <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
 
                                             </td>
 
-                                            <td rowspan="{{product.lots.length}}" >
+                                            <td rowspan="{{product.lots.length}}" ng-if="!viewMode" >
                                                 <button class="btn btn-small btn-danger" ng-if="product && !$last && productsToAdd.length>1" ng-click="removeProduct(productIndex)"  type="button" >Remove</button>
                                                 <button class="btn btn-small btn-info" ng-click="addProduct()" ng-if="$last" ng-disabled="product.programProduct.product===undefined"   >Add</button>
                                             </td>
@@ -352,9 +352,9 @@
                                                 <div ng-if="lot.displayCodeOnly">{{lot.info.lotCode}}</div>
                                             </td>
                                             <td class="col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info" style="width:99px">
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info || viewMode" style="width:99px">
                                             </td>
-                                            <td>
+                                            <td ng-if="!viewMode">
                                                 <button class="btn btn-small btn-info" ng-show="product.lots.indexOf(lot)+1==product.lots.length && !lot.displayCodeOnly" type="button" ng-click="addLot(product,lot)" >Add</button>
                                                 <button class="btn btn-small btn-danger" ng-if="lot && !$last || lot.displayCodeOnly" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
                                             </td>
@@ -481,7 +481,7 @@
                             </div>
                         <div class="tab-pane" id="tab3">
                             <div class="form-row clearfix">
-                                <div class="span4">
+                                <div class="span4" ng-if="!viewMode">
                                     <fieldset>
                                         <label for="model"><span>Document Type</span>:</label>
 
@@ -548,7 +548,7 @@
                                                 <span ng-click="downloadFile(document.fileLocation,asnCode)"><a href="" ng-show="!document.documentType.disableSelectedRows">Download ({{document.documentType.name}})</a></span>
                                             </td>
 
-                                            <td>
+                                            <td ng-if="!viewMode">
                                                 <input type="button" class="btn btn-danger pull-right" ng-click="removeFile(document)" value="Remove">
 
                                             </td>
@@ -577,8 +577,8 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="saveAsn('DRAFT')" ng-if="!asnViewMode"/>
-                    <input  class="btn btn-primary save-button" ng-if="asnViewMode"
+                           openlmis-message="button.save" ng-click="saveAsn('DRAFT')" ng-if="!viewMode"/>
+                    <input type="button"  class="btn btn-primary save-button" ng-if="viewMode"
                             value="Print"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
@@ -588,7 +588,7 @@
 
 
 
-                    <input  type="button" class="btn btn-primary pull-right" ng-if="!asnViewMode"
+                    <input  type="button" class="btn btn-primary pull-right" ng-if="!viewMode"
                             ng-click="saveAsn('FINALIZED')" value="Finalize" style="margin-left:10px;margin-right:10px"/>
                 </div>
 

@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout){
 
 
@@ -30,6 +30,11 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
                            $scope.loadProducts($scope.homeFacilityId, 82,true);
 
                   });
+
+                  Locations.get({"searchParam": "%", "column": "name", "page": 1}, function (data) {
+                        $scope.locations = data.locations;
+
+                      }, {});
 
        AsnLookups.get(function(data) {
 
@@ -156,12 +161,21 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
         };
 
 
+        function isViewMode(){
+                var url=$location.url();
+                return url.split("/")[1]==="view";
+                }
+
+
+
+
     if ($scope.receive) {
        console.log($scope.receive.asnNumber);
        if($scope.receive.asnNumber !== undefined)
        getListOfFilesByASNumber($scope.receive.asnNumber);
         $scope.editMode = true;
         $scope.facilityId = $scope.homeFacilityId;
+        $scope.viewMode=isViewMode();
         $scope.asnReceiptDate = receive.asnReceiveDate;
         $scope.asnCode = receive.asnNumber;
         $scope.blAwbNumber = receive.blawBnumber;
@@ -546,7 +560,8 @@ $scope.removeProduct(productIndex);
         $scope.message = "";
         $scope.error = "";
         $scope.showError = false;
-        $scope.$parent.asnId = false;
+        $scope.$parent.receiveSaved = false;
+        $scope.$parent.received = false;
         $scope.$parent.asnIdUpdate = false;
         $location.path('');
 
@@ -655,7 +670,8 @@ $scope.removeProduct(productIndex);
             }, function(data) {
                 $scope.allLots = data.lots;
                 //                              console.log(data.lots)
-                $scope.lotsToDisplay = $scope.allLots;
+                                $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
+
 
             });
 
@@ -664,15 +680,15 @@ $scope.removeProduct(productIndex);
     };
 
 $scope.saveAsn = function(status) {
-    console.log($scope.docList);
+//    console.log($scope.docList);
         $scope.validateProduct();
 //                        console.log($scope.asnForm)
-   /*   if ($scope.asnForm.$error.required) {
+    if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
             return;
-        }*/
+        }
 
 
         var receiveLineItems = [];
@@ -760,18 +776,34 @@ $scope.saveAsn = function(status) {
             programId:82
         };
 
+//        console.log(receive)
+
 
         Receive.save({}, receive, function (data) {
 
-  /*      if(data.success && status === 'Received') {
-        console.log(events);
 
+
+        if(data.success && status === 'Received') {
+        // receive only
         StockEvent.update({facilityId:$scope.homeFacilityId},events, function (data) {
-          console.log(data);
+             // saving only
+                   $scope.error = "";
+                          $scope.$parent.message = data.success;
+                          $scope.$parent.received = true;
+                          $scope.showError = false;
+                          $location.path('');
 
         });
 
-        }*/
+        }else{
+        // saving only
+         $scope.error = "";
+                $scope.$parent.message = data.success;
+                $scope.$parent.receiveSaved = true;
+                $scope.showError = false;
+                $location.path('');
+
+        }
 
         });
 
