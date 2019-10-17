@@ -103,9 +103,7 @@ public class ReceiveService {
 
         purchaseDocumentService.save(asn, receive, userId);
 
-        if (receive.getStatus().equalsIgnoreCase("Received")) {
-
-            if (receive.getReceiveLineItems() != null) {
+        if (receive.getStatus().equalsIgnoreCase("Received") && (receive.getReceiveLineItems() != null)) {
 
                 for (ReceiveLineItem rece : receive.getReceiveLineItems()) {
 
@@ -135,7 +133,7 @@ public class ReceiveService {
                     }
                     processStockCard(receive.getFacilityId(), events, userId);
                 }
-            }
+
         }
        if(asn != null && asn.getStatus().equalsIgnoreCase("Finalized")) {
 
