@@ -763,7 +763,7 @@ $scope.saveAsn = function(status) {
 
         Receive.save({}, receive, function (data) {
 
-        if(data.success && status === 'Received') {
+  /*      if(data.success && status === 'Received') {
         console.log(events);
 
         StockEvent.update({facilityId:$scope.homeFacilityId},events, function (data) {
@@ -771,7 +771,7 @@ $scope.saveAsn = function(status) {
 
         });
 
-        }
+        }*/
 
         });
 
