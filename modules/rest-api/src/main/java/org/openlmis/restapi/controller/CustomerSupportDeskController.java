@@ -86,7 +86,7 @@ public class CustomerSupportDeskController extends BaseController {
     public ResponseEntity<RestResponse> addNotificationSubscribers (@RequestParam(value = "chatId") String chatId, @RequestParam(value = "rnrId") Integer rnrId, @RequestParam(value = "label") String label)
     {
         try {
-            restSDService.addNotificationSubscribers(chatId, rnrId,label);
+            restSDService.addNotificationSubscribers(chatId, rnrId,label, "TELEGRAM");
             return RestResponse.success("message.success.subscriber.added");
 
         } catch (DataException e) {

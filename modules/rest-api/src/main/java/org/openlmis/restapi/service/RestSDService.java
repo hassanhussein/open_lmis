@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.StaticReferenceDataService;
 import org.openlmis.restapi.domain.SDIssue;
+import org.openlmis.rnr.repository.mapper.SubscriberNotificationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +32,8 @@ public class RestSDService {
     @Autowired
     private MessageService messageService;
 
-
-//    @Autowired
-//    private SubscriberNotificationMapper subscriberMapper;
+    @Autowired
+    private SubscriberNotificationMapper subscriberMapper;
 
 
     public String getArticlesBySearchKeyword(String query) {
@@ -94,9 +94,9 @@ public class RestSDService {
     }
 
 
-    public void addNotificationSubscribers(String chatId, Integer rnrId, String label)
+    public void addNotificationSubscribers(String chatId, Integer rnrId, String label, String source)
     {
-//         subscriberMapper.insert(chatId,  rnrId, label);
+         subscriberMapper.insert(chatId,  rnrId, label, source);
     }
 
 

@@ -110,4 +110,13 @@ public interface RequisitionStatusMapper {
                                                            @Param("program") Long program);
 
 
+
+    @Select("select  rsf.name,vwd.district_name,vwd.region_name,vwd.zone_name, sum(rsf.quantity) as total from requisition_source_of_funds rsf \n" +
+            "join requisitions r on r.id=rsf.rnrid \n" +
+            "join processing_periods pp on pp.id=r.periodid\n" +
+            "join facilities f on f.id=r.facilityid\n" +
+            "join geographic_zones gl on gl.id=f.geographiczoneid\n" +
+            "join vw_districts vwd on vwd.district_id=f.geographiczoneid \n" +
+            "group by  vwd.region_name, vwd.district_name,vwd.zone_name, rsf.name order by vwd.region_name, total desc")
+    List<HashMap<String,Object>>getSourceOfFundsByLocation();
 }
