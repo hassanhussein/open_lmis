@@ -125,7 +125,7 @@ public class ReceiveService {
                         l.setLotCode(lot.getLotNumber());
                         l.setManufactureDate(lot.getManufacturingDate());
                         l.setProductId(product.getId());
-                        l.setManufacturerName("INDIA");
+                        l.setManufacturerName(lot1.getManufacturerName());
                         event.setLotId(lot1.getId());
                         event.setLot(l);
                         event.setCustomProps(null);
