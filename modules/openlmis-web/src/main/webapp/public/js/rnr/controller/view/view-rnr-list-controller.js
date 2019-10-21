@@ -120,7 +120,7 @@ function ViewRnrListController($scope, facilities, RequisitionsForViewing, Progr
             $scope.selectedItems[0].sourceApplication.toUpperCase() === "ELMIS_FE") {
             url = "create-rnr/";
             selectedFacilityIdUrlPart = $scope.selectedItems[0].facilityId + "/";
-            supplyType = "equipment"
+            supplyType = "equipment";
         }
 
         var urlMapping = {"ESS_MEDS": "view-requisition-via/", "MMIA": "view-requisition-mmia/"};
