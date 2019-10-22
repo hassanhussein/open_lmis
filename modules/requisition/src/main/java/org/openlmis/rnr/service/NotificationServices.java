@@ -65,20 +65,18 @@ public class NotificationServices {
 
     List <Subscribers> subscribers = null;
     final String telegram_send_notification_base_url = "https://api.telegram.org/bot" +  staticReferenceDataService.getPropertyValue("bot.token") +"/sendMessage?chat_id=";
-    String telegram_content = null;
+    String support_content = null;
 
-//    subscribers = approverService.getListOfSubscribers(requisition.getId());
+    subscribers = approverService.getListOfSubscribers(requisition.getId());
 
     if(subscribers != null){
         for(Subscribers subscriber : subscribers)
         {
             try
             {
-              telegram_content = "RnR for facility " + requisition.getFacility().getName() + " " + requisition.getFacility().getFacilityType().getName() + " for period " + requisition.getPeriod().getName() + " " + requisition.getPeriod().getStringYear()  + " has been " + requisition.getStatus().name();
+              support_content = "RnR for facility " + requisition.getFacility().getName() + " " + requisition.getFacility().getFacilityType().getName() + " for period " + requisition.getPeriod().getName() + " " + requisition.getPeriod().getStringYear()  + " has been " + requisition.getStatus().name();
 
-
-              System.out.println(telegram_send_notification_base_url + subscriber.getChatId() + "&text=" + URLEncoder.encode(telegram_content, "UTF-8"));
-              URL url = new URL(telegram_send_notification_base_url + subscriber.getChatId() + "&text=" + URLEncoder.encode(telegram_content, "UTF-8"));
+              URL url = new URL(telegram_send_notification_base_url + subscriber.getChatId() + "&text=" + URLEncoder.encode(support_content, "UTF-8"));
               HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
               BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
               rd.close();

@@ -1588,7 +1588,7 @@ background:#fff;
                     </div>
 
                     <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
-                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('requisition');">
+                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('healthCommoditiesFinancing');">
                         <span>
                             <b>+</b><a id="" href="javascript:void(0);">Health Commodities Financing</a>
                         </span>
@@ -1600,14 +1600,15 @@ background:#fff;
                                 <div class="col s12 m12 l12" >
                                     <div class="card" style="background-color:lightgray">
                                         <div class="card-content" ng-controller="fundUtilizationController">
-
-                                            <div id="district-fund-ultilization" style="margin: 0 auto;height: 360px !important;" ></div>
-
+                                            <div id="sourceOfFundsByZones" style="margin: 0 auto;height: 360px !important;" ></div>
+                                            <div class="card-action grey lighten-4">
+                                                <ng-include src='"/public/pages/analytics/partials/shared/custom-filter.html"'></ng-include>
+                                            </div>
                                         </div>
-
                                     </div>
 
                                 </div>
+
 
                             </div>
 
@@ -1639,11 +1640,6 @@ background:#fff;
 
                         </div>
                     </div>
-
-
-
-
-
 
                 </div>
             </div>
