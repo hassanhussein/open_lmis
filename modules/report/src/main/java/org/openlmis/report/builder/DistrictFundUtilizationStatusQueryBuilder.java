@@ -1,7 +1,6 @@
 package org.openlmis.report.builder;
 
 import org.openlmis.report.model.params.DistrictFundUtilizationParam;
-import org.openlmis.report.model.params.DistrictSummaryReportParam;
 
 import java.util.Map;
 
@@ -27,13 +26,13 @@ public class DistrictFundUtilizationStatusQueryBuilder {
 
                 "         \n" +
                           //  writePredicates(filterCriteria, userId) +
-                "            group by f.name,fa.id\n" +
+                "            group by f.name ,fa.id\n" +
                 "            order by 1,2 $$\n" +
                 "            ) AS (id BIGINT, other BIGINT, userFees BIGINT \n" +
                 "            \n" +
                 "            ) )\n" +
                 "\n" +
-                "SELECT * , ft.name facilityType,f.code facilityCode FROM Q\n" +
+                "SELECT * ,f.name facilityName, ft.name facilityType,f.code facilityCode FROM Q\n" +
                 "JOIN facilities f ON f.id = Q.id\n" +
                 "JOIN vw_districts d ON f.geographiczoneId  = d.district_id " +
                 " JOIN facility_types ft ON f.typeId = FT.ID ";

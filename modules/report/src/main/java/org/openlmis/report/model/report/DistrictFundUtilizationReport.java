@@ -13,7 +13,7 @@ import org.openlmis.report.model.ResultRow;
 public class DistrictFundUtilizationReport implements ResultRow {
 
     private String region_name;
-    private String name;
+    private String facilityName;
     private String facilityType;
     private String zone_name;
     private String district_name;
