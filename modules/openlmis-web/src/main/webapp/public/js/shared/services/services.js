@@ -664,3 +664,7 @@ services.factory("DeleteDocument", function ($resource) {
  services.factory("DisableAsn", function ($resource) {
      return $resource('/rest-api/warehouse/asn/disable/:id.json', {id: '@id'}, update);
  });
+
+ services.factory("GetAllCurrencies", function ($resource) {
+     return $resource('/rest-api/warehouse/asn/all-currencies.json', {}, {});
+ });

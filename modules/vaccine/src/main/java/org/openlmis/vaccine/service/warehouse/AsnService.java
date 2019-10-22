@@ -7,6 +7,7 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.*;
+import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,6 +185,11 @@ public class AsnService {
 
     public void disableAsnBy(Long id) {
         repository.disableAsnBy(id);
+    }
+
+    public List<CurrencyDTO> getAllCurrencies(){
+
+        return repository.getAllCurrencies();
     }
 
  /*   public void saveDocument(PurchaseDocument d) {

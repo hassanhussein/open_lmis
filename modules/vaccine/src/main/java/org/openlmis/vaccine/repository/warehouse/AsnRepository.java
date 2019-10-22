@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.warehouse;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.vaccine.domain.wms.Asn;
+import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -68,5 +69,10 @@ public class AsnRepository {
 
     public void disableAsnBy(Long id) {
         mapper.disableAsnBy(id);
+    }
+
+    public List<CurrencyDTO> getAllCurrencies(){
+
+        return mapper.getAllCurrencies();
     }
 }

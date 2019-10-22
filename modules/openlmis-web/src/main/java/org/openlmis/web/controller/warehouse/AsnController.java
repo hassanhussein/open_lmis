@@ -13,6 +13,7 @@ import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.vaccine.domain.wms.*;
+import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.service.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -116,10 +117,12 @@ public class AsnController extends BaseController {
         List<Port> ports = portService.getAll();
         List<Manufacturer> manufacturers = manufacturerService.getAll();
         List<SupplyPartner> supplyPartners = supplyPartnerService.getAll();
+        List<CurrencyDTO> currencies = asnService.getAllCurrencies();
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("documentTypes", documentTypes);
         response.getBody().addData("ports", ports);
         response.getBody().addData("manufactures", manufacturers);
         response.getBody().addData("suppliers", supplyPartners);
+        response.getBody().addData("currencies", currencies);
         return response;
     }
     @RequestMapping(value = "asn", method = GET, headers = ACCEPT_JSON)
@@ -317,6 +320,12 @@ public class AsnController extends BaseController {
         }
 
         return OpenLmisResponse.success("message.asn.deleted.success");
+    }
+
+    @RequestMapping(value = "/all-currencies", method =GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllCurrencies(HttpServletRequest request) {
+
+        return OpenLmisResponse.response("list",asnService.getAllCurrencies());
     }
 
 }

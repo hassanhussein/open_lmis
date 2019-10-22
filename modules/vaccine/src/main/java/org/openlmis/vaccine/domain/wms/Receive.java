@@ -6,6 +6,7 @@ import lombok.*;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.serializer.DateDeserializer;
+import org.openlmis.vaccine.dto.CurrencyDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -67,6 +68,9 @@ public class Receive extends BaseModel {
 
     private Long facilityId;
 
+    private  Long currencyId;
+
+    private CurrencyDTO currency;
 
     // private PurchaseDocument purchaseDocuments;
 

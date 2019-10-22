@@ -22,6 +22,10 @@ services.factory('ColdTraceStatus', function ($resource) {
     return $resource('/equipment/cold-trace/status.json', {}, {});
 });
 
+services.factory('ColdTraceToken', function ($resource) {
+    return $resource('/rest-api/nexleaf-token');
+});
+
 services.factory('ColdTraceAlarms', function ($resource) {
     return $resource('/equipments/cold-trace/:facility/:program/:period/alarms.json', {
         facility: '@facility',

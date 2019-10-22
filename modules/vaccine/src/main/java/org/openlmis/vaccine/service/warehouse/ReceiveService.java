@@ -1,11 +1,18 @@
 package org.openlmis.vaccine.service.warehouse;
 
+import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.service.ProductService;
-import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.core.service.ProgramService;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.stockmanagement.domain.*;
+import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.dto.StockEventType;
+import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.domain.wms.dto.StockEventDTO;
@@ -14,13 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
+import org.apache.log4j.Logger;
 
 @Service
+@NoArgsConstructor
 public class ReceiveService {
-
+    private static Logger logger = Logger.getLogger(ReceiveService.class);
     @Autowired
     private ReceiveRepository repository;
 
@@ -37,7 +45,27 @@ public class ReceiveService {
     private StockCardService stockCardService;
 
     @Autowired
+    private FacilityRepository facilityRepository;
+
+    @Autowired
     ProductService productService;
+
+    @Autowired
+    private LotRepository lotRepository;
+
+    @Autowired
+    ProgramService programService;
+
+
+
+    ReceiveService(FacilityRepository facilityRepository, ProductService productService, LotRepository lotRepository, ProgramService programService, StockCardService stockCardService) {
+
+        this.facilityRepository = Objects.requireNonNull(facilityRepository);
+        this.productService = Objects.requireNonNull(productService);
+        this.stockCardService = Objects.requireNonNull(stockCardService);
+        this.lotRepository = Objects.requireNonNull(lotRepository);
+        this.programService = Objects.requireNonNull(programService);
+    }
 
     @Transactional
     public void save(Receive receive, Long userId, Asn asn) {
@@ -46,72 +74,68 @@ public class ReceiveService {
 
             repository.insert(receive);
 
-        }else {
+        } else {
             repository.update(receive);
         }
 
-        if(receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {
+        if (receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {
 
-                for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
+            for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
 
-                    lineItem.setReceive(receive);
-                    lineItem.setCreatedBy(userId);
-                    lineItem.setModifiedBy(userId);
-                    lineItemService.save(lineItem);
-                    if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
+                lineItem.setReceive(receive);
+                lineItem.setCreatedBy(userId);
+                lineItem.setModifiedBy(userId);
+                lineItemService.save(lineItem);
+                if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
 
-                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
-                            lot.setReceiveLineItem(lineItem);
-                            lot.setCreatedBy(userId);
-                            lot.setModifiedBy(userId);
-                            lotService.save(lot);
-                        }
-
-
+                    for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                        lot.setReceiveLineItem(lineItem);
+                        lot.setCreatedBy(userId);
+                        lot.setModifiedBy(userId);
+                        lotService.save(lot);
                     }
+
+
                 }
             }
+        }
 
 
+        purchaseDocumentService.save(asn, receive, userId);
 
-        purchaseDocumentService.save(asn,receive,userId);
+        if (receive.getStatus().equalsIgnoreCase("Received") && (receive.getReceiveLineItems() != null)) {
 
-       /* List<PurchaseDocument> purchaseDocuments = receive.getPurchaseDocuments();
-        for(PurchaseDocument document : purchaseDocuments) {
-            document.setReceive(receive);
-            document.setCreatedBy(userId);
-            document.setModifiedBy(userId);
-            purchaseDocumentService.save(document);
-        }*/
-/*
-       if(receive.getReceiveLineItems() != null) {
+                for (ReceiveLineItem rece : receive.getReceiveLineItems()) {
 
-            for(ReceiveLineItem rece: receive.getReceiveLineItems()) {
+                    List<StockEventDTO> events = new ArrayList<>();
 
+                    Product product = productService.getById(rece.getProductId());
 
-               Product product = productService.getById(rece.getProductId());
-                  StockCard stockCard = stockCardService.getOrCreateStockCard(receive.getFacilityId(), product.getCode());
-               for(ReceiveLot lot: rece.getReceiveLots()) {
-                Lot l = new Lot();
-                l.setId(lot.getId());
-                l.setProduct(product);
-                l.setExpirationDate(lot.getExpiryDate());
-                l.setLotCode(lot.getLotNumber());
-                l.setManufactureDate(lot.getManufacturingDate());
-                l.setProductId(product.getId());
-                l.setManufacturerName("INDIA");
+                    for (ReceiveLot lot : rece.getReceiveLots()) {
+                        StockEventDTO event = new StockEventDTO();
+                        event.setType(StockEventType.RECEIPT);
+                        event.setProductCode(product.getCode());
+                        event.setQuantity(Long.valueOf(lot.getQuantity()));
+                        event.setFacilityId(receive.getFacilityId());
+                        Lot lot1 = lotRepository.getByCode(lot.getLotNumber());
+                        Lot l = new Lot();
+                        l.setId(lot1.getId());
+                        l.setProduct(product);
+                        l.setExpirationDate(lot.getExpiryDate());
+                        l.setLotCode(lot.getLotNumber());
+                        l.setManufactureDate(lot.getManufacturingDate());
+                        l.setProductId(product.getId());
+                        l.setManufacturerName(lot1.getManufacturerName());
+                        event.setLotId(lot1.getId());
+                        event.setLot(l);
+                        event.setCustomProps(null);
+                        events.add(event);
+                    }
+                    processStockCard(receive.getFacilityId(), events, userId);
+                }
 
-                stockCardService.getOrCreateLotOnHand(l,stockCard);
-
-
-               }
-
-            }
-       }
-*/
-
+        }
        if(asn != null && asn.getStatus().equalsIgnoreCase("Finalized")) {
-
 
            for (AsnLineItem lineItem : asn.getAsnLineItems()) {
 
@@ -186,5 +210,73 @@ public class ReceiveService {
         }
         return repository.searchBy(searchParam, column, pagination);
     }
+
+    public String processStockCard(Long facilityId , List<StockEventDTO> events, Long userId) {
+
+        if(null == events || events.isEmpty()) {
+          return "Empty Events";
+        }
+
+        Facility facility = facilityRepository.getById(facilityId);
+        if(facility == null) {
+            return " Facility is not available ";
+        }
+
+        List<StockCardEntry> entries = new ArrayList<>();
+
+        for(StockEvent event : events) {
+            logger.debug("Processing event: " + event);
+
+            if(null == event.getProductCode() && event.getQuantity() < 0) {
+                return "Quantity of product is not valid";
+            }
+
+        String productCode = event.getProductCode();
+        Product product = productService.getByCode(productCode);
+
+            //Create Stock Cards
+         StockCard card = stockCardService.getOrCreateStockCard(facility.getId(), product.getCode());
+         if(card == null){
+             return "Stock is not created";
+         }
+
+            // get or create lot, if lot is being used
+            StringBuilder str = new StringBuilder();
+            Long lotId = event.getLotId();
+            Lot lotObj = event.getLot();
+            LotOnHand lotOnHand = stockCardService.getLotOnHand(lotId, lotObj, productCode, card, str);
+            if (!str.toString().equals("")) {
+                return "Lot Not created";
+            }
+
+            // create entry from event
+            StockCardEntryType entryType = StockCardEntryType.CREDIT;
+
+            Long onHand = (null != lotObj) ? lotOnHand.getQuantityOnHand() : card.getTotalQuantityOnHand();
+            if (!event.isValidIssueQuantity(onHand)) {
+                return "error.stock.quantity.invalid";
+            }
+
+            Date occurred = event.getOccurred();
+            String referenceNumber  = event.getReferenceNumber();
+
+            StockCardEntry entry = new StockCardEntry(card, entryType, event.getQuantity(), occurred, referenceNumber);
+            entry.setLotOnHand(lotOnHand);
+            Map<String, String> customProps = event.getCustomProps();
+            if (null != customProps) {
+                for (String k : customProps.keySet()) {
+                    entry.addKeyValue(k, customProps.get(k));
+                }
+            }
+            entry.setCreatedBy(userId);
+            entry.setModifiedBy(userId);
+            entries.add(entry);
+
+        }
+
+        stockCardService.addStockCardEntries(entries);
+        return "success.stock.adjusted";
+    }
+
 
 }
