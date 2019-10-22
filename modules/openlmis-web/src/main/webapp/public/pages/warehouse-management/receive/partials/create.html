@@ -348,7 +348,7 @@
 <!--                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ></span>-->
                                                 <span class="row-fluid" >
 <!--                                                {{product.programProduct.dosageUnit.code}}-->
-                                                   <input type="text" numeric-validator="positiveInteger" ng-model="product.boxCounted" name="boxCounted" ng-disabled="!product.programProduct.product" style="width:99px">
+                                                   <input type="text" numeric-validator="positiveInteger" ng-model="product.boxCounted"  ng-disabled="!product.programProduct.product" style="width:99px">
 
                                             </span>
                                             </td>
@@ -417,7 +417,7 @@
 
                                             <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px; text-align:right; padding-right:4px;" >{{totalCostPerProduct(product) | number}}</td>
                                             <td class="cell-input" style="padding-left:15px;" >
-                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice ||product.lots[0].quantity<1" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
+                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice ||product.lots[0].quantity<1 || !product.boxCounted" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
                                                 <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
 
                                             </td>
