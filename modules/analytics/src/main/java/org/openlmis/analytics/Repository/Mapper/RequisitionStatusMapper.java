@@ -117,7 +117,7 @@ public interface RequisitionStatusMapper {
             "join facilities f on f.id=r.facilityid\n" +
             "join geographic_zones gl on gl.id=f.geographiczoneid\n" +
             "join vw_districts vwd on vwd.district_id=f.geographiczoneid \n" +
-            "where r.programid= #{program} and pp.id= #{period}" +
+            "where r.programid= #{program} and pp.id= #{period} \n" +
             "group by  vwd.region_name, vwd.district_name,vwd.zone_name, rsf.name order by vwd.region_name, total desc")
     List<HashMap<String,Object>>getSourceOfFundsByLocation(@Param("program") Long program,
                                                            @Param("period") Long period);

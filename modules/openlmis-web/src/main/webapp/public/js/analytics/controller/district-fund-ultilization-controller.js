@@ -92,6 +92,7 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
             Period.get({
                 id: parseInt($location.search().period, 10)
             }, function(da) {
+
                 periodName = da.period.name;
 
                 $location.search().programName = programName;
@@ -114,9 +115,9 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
 
 
     $rootScope.loadHealthCommoditiesFinancing= function(params) {
+    console.log("loadHealthCommoditiesFinancing");
          GetSourceOfFundsByLocationData.get(params)
                 .then(function(data) {
-                console.log(data);
                 var title = 'Breakdown of source of funds used to purchase health commodities';
                 var value = _.pluck(data, 'Breakdown of source of funds used to purchase health commodities');
                 loadHealthCommoditiesFinancingChart(data, title, value, 'spline', 'Year and Month', '# of requisitions');});
@@ -184,7 +185,6 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                                     zone_name: zones[y]
                                 });
 
-                           // var sof_total = _.pluck(sof_obj, 'total').reduce((a, b) => a + b, 0);
                             var sof_total = get_sum(sof_obj);
 
                             var zone_obj = {
@@ -229,7 +229,7 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                                 if (sof_objs.length > 0) {
 
                                    // var sof_total = _.pluck(sof_objs, 'total').reduce((a, b) => a + b, 0);
-                                    var sof_total = get_sum(sof_obj);
+                                    var sof_total = get_sum(sof_objs);
 
                                     var region_obj = {
                                         name: regions[z],
@@ -282,7 +282,7 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                                     if (sof_objs.length > 0) {
 
                                        // var sof_total = _.pluck(sof_objs, 'total').reduce((a, b) => a + b, 0);
-                                       var sof_total = get_sum(sof_obj);
+                                       var sof_total = get_sum(sof_objs);
 
                                         var district_obj = {
                                             name: districts[a],
