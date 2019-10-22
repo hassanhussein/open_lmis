@@ -94,7 +94,7 @@ getAllLookups();
 //    $scope.ports = asnLookups.ports;
 //    $scope.documentTypes = documentTypes;
 //    $scope.suppliers = asnLookups.suppliers;
-$scope.currency=[
+$scope.currencies=[
 {
  id:1,
  code:'USD',
@@ -107,6 +107,14 @@ $scope.currency=[
  id:1,
  code:'TZS',
  description:'Tanzania',
+ amount:1
+
+},
+
+{
+ id:1,
+ code:'EUR',
+ description:'for Euro',
  amount:1
 
 }

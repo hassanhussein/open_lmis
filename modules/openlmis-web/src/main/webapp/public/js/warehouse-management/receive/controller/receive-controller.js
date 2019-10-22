@@ -15,6 +15,9 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
                            $rootScope,UploadFile,$http,docService, $timeout){
 
 
+ $scope.$parent.receiveSaved = false;
+                                   $scope.$parent.received = false;
+
 
 
     function getAllLookups(){
@@ -102,6 +105,31 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
         }
 
+
+    };
+
+
+    $scope.quantityVsBox=function(){
+//    get the total quantity
+if($scope.isVaccine){
+var total_lot_quantity = 0;
+//    this is safe because we have only one product per receive
+    var total_box_quantity=$scope.productsToAdd.boxCounted
+    angular.forEach($scope.productsToAdd,function(product,key){
+
+        angular.forEach(product.lots,function(lot,key){
+            total_lot_quantity+=parseInt(lot.quantity,10)
+        });
+    });
+
+    console.log(total_box_quantity)
+        console.log(total_lot_quantity)
+
+    return total_lot_quantity >= total_box_quantity;
+
+}else{
+ return true;
+}
 
     };
 
@@ -682,18 +710,29 @@ $scope.removeProduct(productIndex);
 $scope.saveAsn = function(status) {
 //    console.log($scope.docList);
         $scope.validateProduct();
+
+$scope.quantityBoxError=false;
+
+     if (!$scope.quantityVsBox()){
+        $scope.quantityBoxError=true;
+         return;
+     }else{
+     $scope.quantityBoxError=false;
+     }
+
 //                        console.log($scope.asnForm)
     if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
+            console.log($scope.asnForm.$error)
             return;
         }
 
 
+
         var receiveLineItems = [];
 
-        var events=[];
 
         angular.forEach($scope.productsToAdd, function(product, key) {
             var receiveLots = [];
@@ -702,27 +741,7 @@ $scope.saveAsn = function(status) {
              angular.forEach(product.lots, function(lot, key) {
                             if (lot.info) {
 
-                             var event={};
 
-                             event.type="RECEIPT";
-                             event.facilityId=$scope.homeFacilityId;
-                             event.productCode=product.programProduct.product.code;
-                             event.quantity=parseInt(lot.quantity,10);
-
-                             event.lot={};
-                             event.lot.lotCode=lot.info.lotCode;
-                             event.lot.manufacturerName=lot.info.manufacturerName;
-                             event.lot.expirationDate=lot.info.expirationDate;
-                             event.occurred = new Date();
-                             event.customProps={};
-
-                             if(lot.vvmStatus !==undefined)
-                             {
-                             event.customProps.vvmStatus=lot.vvmStatus;
-                             }
-                             event.customProps.receivedFrom="WMS";
-
-                             events.push(event);
 
                                 receiveLots.push({
                                     expirydate: lot.info.expirationDate,
@@ -778,34 +797,33 @@ $scope.saveAsn = function(status) {
 
 //        console.log(receive)
 
-
-        Receive.save({}, receive, function (data) {
-
-
-
-        if(data.success && status === 'Received') {
-        // receive only
-        StockEvent.update({facilityId:$scope.homeFacilityId},events, function (data) {
-             // saving only
-                   $scope.error = "";
-                          $scope.$parent.message = data.success;
-                          $scope.$parent.received = true;
-                          $scope.showError = false;
-                          $location.path('');
-
-        });
-
-        }else{
-        // saving only
+        if($scope.receive){
+         Receive.update({id:$scope.receive.id},receive,function(){
          $scope.error = "";
-                $scope.$parent.message = data.success;
-                $scope.$parent.receiveSaved = true;
-                $scope.showError = false;
-                $location.path('');
+          console.log('update');
+          if(status==='RECEIVED'){
+              $scope.$parent.received = true;
+          }else{
+          $scope.$parent.receiveSaved = true;
+          }
+          $scope.showError = false;
+          $location.path('');
+            })
+        }else{
+        Receive.save({}, receive, function (data) {
+            $scope.error = "";
+            console.log('save');
+              if(status==='DRAFT'){
+                          $scope.$parent.receiveSaved = true;
+                      }else{
+                      $scope.$parent.receive = true;
+                      }
+            $scope.showError = false;
+            $location.path('');
+
+                });
 
         }
-
-        });
 
     };
 
