@@ -175,11 +175,16 @@
                             <select ui-select2="{width: '90%'}" class="span11" id="currency"
                                     openlmis-message="label.select.parent.zone"
                                     ng-disabled="viewMode"
-                                    name="currency"
-                                    ng-model="currency"
-                                    ng-options="currency as currency.code for currency in currencies"
+
+                                    ng-model="currencyId"
+
                             >
                                 <option value=""></option>
+                                <option ng-repeat="currency in currencies"
+                                        value="{{ currency.id }}"
+                                        ng-selected="currencyId==currency.id"
+                                >
+                                    {{ currency.code }}
 
                             </select>
                             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"

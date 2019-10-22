@@ -114,16 +114,16 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 if($scope.isVaccine){
 var total_lot_quantity = 0;
 //    this is safe because we have only one product per receive
-    var total_box_quantity=$scope.productsToAdd.boxCounted
+    var total_box_quantity=$scope.productsToAdd[0].boxCounted;
     angular.forEach($scope.productsToAdd,function(product,key){
 
         angular.forEach(product.lots,function(lot,key){
-            total_lot_quantity+=parseInt(lot.quantity,10)
+            total_lot_quantity+=parseInt(lot.quantity,10);
         });
     });
 
-    console.log(total_box_quantity)
-        console.log(total_lot_quantity)
+//    console.log(total_box_quantity)
+//        console.log(total_lot_quantity)
 
     return total_lot_quantity >= total_box_quantity;
 
@@ -725,7 +725,7 @@ $scope.quantityBoxError=false;
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
-            console.log($scope.asnForm.$error)
+//            console.log($scope.asnForm.$error)
             return;
         }
 
@@ -808,7 +808,7 @@ $scope.quantityBoxError=false;
           }
           $scope.showError = false;
           $location.path('');
-            })
+            });
         }else{
         Receive.save({}, receive, function (data) {
             $scope.error = "";
