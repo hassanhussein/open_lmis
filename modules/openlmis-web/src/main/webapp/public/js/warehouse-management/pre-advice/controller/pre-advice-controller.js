@@ -41,6 +41,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
                               $scope.manufacturers = data.manufacturers;
                         //  $scope.displayDocumentTypes =  data.documentTypes;
                               $scope.manufacturers = data.manufactures;
+                              $scope.currencies=data.currencies;
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
                                       if(!isUndefined(asn) && !isUndefined($scope.docList) ){
@@ -94,31 +95,6 @@ getAllLookups();
 //    $scope.ports = asnLookups.ports;
 //    $scope.documentTypes = documentTypes;
 //    $scope.suppliers = asnLookups.suppliers;
-$scope.currencies=[
-{
- id:1,
- code:'USD',
- description:'United state dollar',
- amount:2300
-
-},
-
-{
- id:1,
- code:'TZS',
- description:'Tanzania',
- amount:1
-
-},
-
-{
- id:1,
- code:'EUR',
- description:'for Euro',
- amount:1
-
-}
-];
     $scope.productError = false;
     //console.log(configurations.productsConfiguration[0].product.id)
 //    $scope.configurations = configurations;
@@ -739,6 +715,7 @@ $scope.removeProduct(productIndex);
 
 
     $scope.saveAsn = function(status) {
+//    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();
       if ($scope.asnForm.$error.required && $scope.docList.length < 0) {
@@ -792,6 +769,7 @@ $scope.removeProduct(productIndex);
             expectedarrivaldate: $scope.expectedArrivalDate,
             expecteddeliverydate:$scope.expectedDeliveryDate,
             flightvesselnumber: $scope.flightVesselNumber,
+            currencyId:$scope.currency.id,
             note: $scope.notes,
             podate: $scope.poDate,
             ponumber: $scope.poNumber,

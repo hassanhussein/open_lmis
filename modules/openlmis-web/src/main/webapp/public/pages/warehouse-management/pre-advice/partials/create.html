@@ -186,37 +186,9 @@
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
-                    <div class="span4">
-                        <label for="exchangeRate">
-                            <span >Exchange Rate(TZS)</span>
-                            <span class="label-required"> *</span>
-                        </label>
 
-                        <div class="form-field">
-                            <input ng-model="exchangeRate" id="exchangeRate" type="text" ng-disabled="viewMode" maxlength="50" name="exchangeRate" ng-required="true"/>
-                            <span class="field-error" ng-show="asnForm.exchangeRate.$error.required && showError"
-                                  openlmis-message="missing.value"></span>
-                        </div>
-                    </div>
 
-                    <div class="span4">
-                        <label for="exchangeDate">
-                            <span >Exchange Date</span>
-                            <span class="label-required"> *</span>
-                        </label>
 
-                        <div class="form-field">
-                            <input  name="exchangeDate" id="exchangeDate"
-                                    type="text"
-                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
-                                    ui-date-format="yy-mm-dd"
-                                    ng-model="exchangeDate"
-                                    ng-disabled="viewMode"
-                                    ng-required="true"/>
-                            <span class="field-error" ng-show="asnForm.exchangeDate.$error.required && showError"
-                                  openlmis-message="missing.value"></span>
-                        </div>
-                    </div>
                 </div>
 
 
