@@ -1368,5 +1368,9 @@ services.factory('GetRejectedRnRByZoneReport', function ($resource) {
 });
 
 services.factory('FacilityFundUtilizationReport', function($resource){
-    return $resource('/reportdata/district-fund-utilization.json', {}, {});
+    return $resource('/reports/reportdata/district-fund-utilization.json', {}, {});
 }) ;
+
+services.factory('Re', function($resource){
+    return $resource('/facilities/:id.json', {id: '@id'}, update);
+});

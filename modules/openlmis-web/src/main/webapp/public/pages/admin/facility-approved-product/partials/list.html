@@ -173,6 +173,11 @@
                  class="btn btn-danger btn-small"
                  openlmis-message="button.delete"
                  ng-click="confirmDelete(facilityApprovedProduct)"/>
+
+          <input id="disableButton{{$index}}" ng-hide="facilityApprovedProduct.underEdit" type="button"
+                 class="btn btn-danger btn-small" ng-disabled="!facilityApprovedProduct.isActive"
+                 openlmis-message="button.disable"
+                 ng-click="confirmDisableProduct(facilityApprovedProduct)"/>
         </td>
       </tr>
       <tr ng-if="facilityApprovedProduct.underEdit" class="save-cancel-row">

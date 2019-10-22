@@ -61,4 +61,6 @@ public class FacilityTypeApprovedProduct extends BaseModel implements Importable
   public FacilityTypeApprovedProduct(String facilityTypeCode, ProgramProduct programProduct, Double maxMonthsOfStock) {
     this(new FacilityType(facilityTypeCode), programProduct, maxMonthsOfStock);
   }
+
+  private Boolean isActive;
 }

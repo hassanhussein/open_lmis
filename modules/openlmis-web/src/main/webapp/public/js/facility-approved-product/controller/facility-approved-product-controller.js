@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function FacilityApprovedProductController($scope, programs, facilityTypes, ProgramProductsFilter, FacilityTypeApprovedProducts, $dialog, messageService) {
+function FacilityApprovedProductController(DisableFacilityTypeApprovedProducts,$scope, programs, facilityTypes, ProgramProductsFilter, FacilityTypeApprovedProducts, $dialog, messageService) {
 
   $scope.programs = programs;
   $scope.facilityTypes = facilityTypes;
@@ -72,6 +72,28 @@ function FacilityApprovedProductController($scope, programs, facilityTypes, Prog
       }, {});
     }
   };
+
+ var disableFacilityApprovedProduct = function (result) {
+    if (result) {
+    console.log($scope.facilityApprovedProductToBeDisabled.id);
+      DisableFacilityTypeApprovedProducts.update({id: $scope.facilityApprovedProductToBeDisabled.id}, $scope.facilityApprovedProductToBeDisabled, function (data) {
+        $scope.message = messageService.get(data.success, $scope.facilityApprovedProductToBeDisabled.programProduct.product.primaryName);
+        $scope.loadProducts($scope.currentPage);
+      }, {});
+    }
+  };
+
+   $scope.confirmDisableProduct = function (facilityApprovedProduct) {
+      $scope.facilityApprovedProductToBeDisabled = facilityApprovedProduct;
+      var options = {
+        id: "confirmDialog",
+        header: "label.confirm.action",
+        body: messageService.get('msg.disable.facility.approved.product.confirmation',
+          $scope.facilityApprovedProductToBeDisabled.programProduct.product.primaryName, $scope.facilityType.name, $scope.program.name)
+      };
+      OpenLmisDialog.newDialog(options, disableFacilityApprovedProduct, $dialog);
+    };
+
 
   $scope.confirmDelete = function (facilityApprovedProduct) {
     $scope.facilityApprovedProductToBeDeleted = facilityApprovedProduct;

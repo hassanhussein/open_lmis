@@ -17,6 +17,8 @@ public class DistrictFundUtilizationParam extends BaseParam implements ReportPar
 
     private Long program;
 
+    private Long schedule;
+
     private Long zone;
 
     private String product;

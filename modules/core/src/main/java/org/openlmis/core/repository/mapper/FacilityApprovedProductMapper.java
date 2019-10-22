@@ -45,7 +45,7 @@ public interface FacilityApprovedProductMapper {
       "pp.programId = #{programId}",
       "AND f.id = #{facilityId}",
       "AND pp.fullSupply = TRUE",
-      "AND p.active = TRUE",
+      "AND p.active = TRUE and fap.isActive = TRUE ",
       "AND pp.active = TRUE",
       "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
   @Results(value = {
@@ -93,7 +93,7 @@ public interface FacilityApprovedProductMapper {
       "WHERE",
       "pp.programId = #{programId}",
       "AND f.id = #{facilityId}",
-      "AND pp.fullSupply = FALSE",
+      "AND pp.fullSupply = FALSE and fap.isActive = TRUE ",
       "AND p.active = TRUE",
       "AND pp.active = TRUE",
       "ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code"})
@@ -265,4 +265,7 @@ public interface FacilityApprovedProductMapper {
           @Result(property = "facilityType.id", column = "facilityTypeId")})
   FacilityTypeApprovedProduct getByProgramAndFacilityType(@Param("programProductId") Long programProductId,
                                                           @Param("facilityTypeCode") String facilityTypeCode);
+
+  @Update({ "UPDATE facility_approved_products SET isActive = false WHERE id = #{id}" })
+  void disable(Long id);
 }

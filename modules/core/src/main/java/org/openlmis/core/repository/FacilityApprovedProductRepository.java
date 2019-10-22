@@ -72,4 +72,8 @@ public class FacilityApprovedProductRepository {
   public FacilityTypeApprovedProduct get(Long id){
     return mapper.get(id);
   }
+
+    public void disable(Long id) {
+     mapper.disable(id);
+    }
 }

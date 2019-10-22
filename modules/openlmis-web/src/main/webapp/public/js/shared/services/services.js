@@ -582,3 +582,7 @@ services.factory('GetRejectionByCategory', function ($resource) {
 services.factory('FilteredOrders', function ($resource) {
     return $resource('/filter-orders.json', {}, {});
 });
+
+services.factory('DisableFacilityTypeApprovedProducts', function ($resource) {
+    return $resource('/facilityApprovedProducts/disable/:id.json', {id: '@id'}, update);
+});

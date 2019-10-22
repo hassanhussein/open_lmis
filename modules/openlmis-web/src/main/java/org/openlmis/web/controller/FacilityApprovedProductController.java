@@ -113,4 +113,11 @@ public class FacilityApprovedProductController extends BaseController {
     service.delete(id);
     return OpenLmisResponse.success("message.facility.approved.product.deleted.success");
   }
+
+  @RequestMapping(value = "/disable/{id}", method = PUT, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_FACILITY_APPROVED_PRODUCT')")
+  public ResponseEntity<OpenLmisResponse> disable(@PathVariable("id") Long id) {
+    service.disable(id);
+    return OpenLmisResponse.success("message.facility.approved.product.disable.success");
+  }
 }

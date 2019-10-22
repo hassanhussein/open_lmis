@@ -12,12 +12,13 @@ import org.openlmis.report.model.ResultRow;
 @AllArgsConstructor
 public class DistrictFundUtilizationReport implements ResultRow {
 
-    private String region;
-    private String facility;
+    private String region_name;
+    private String name;
     private String facilityType;
     private String zone_name;
-    private String district;
+    private String district_name;
     private Integer other;
     private Integer userFees;
+    private String facilityCode;
 
 }

@@ -105,4 +105,8 @@ public class FacilityApprovedProductService {
   public void delete(Long id) {
     repository.delete(id);
   }
+
+    public void disable(Long id) {
+     repository.disable(id);
+    }
 }
