@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function ViewIvdFormDetailController($scope, $location, report, discardingReasons, operationalStatuses, ColdTraceStatus, ColdTraceAlarms) {
+function ViewIvdFormDetailController($scope, $location, $window, report, discardingReasons, operationalStatuses, ColdTraceStatus, ColdTraceAlarms, ColdTraceToken) {
 
   // initial state of the display
   $scope.report = new VaccineReport(report);
@@ -28,9 +28,11 @@ function ViewIvdFormDetailController($scope, $location, report, discardingReason
     $scope.alarms = data.alarms;
   });
 
-  $scope.openColdraceDashboard = function (serialNumber, date) {
-    ColdtraceToken.get(function (token) {
-      var url = "https://tz.coldtrace.org/api/integrations/5b187c5461b32000017a67ae/cce/" + serialNumber + "/days/" + date + "?token=";
+  $scope.openColdTraceDashboard = function (serialNumber, date) {
+    ColdTraceToken.get(function (token) {
+      var month = date.substr(5,2);
+      var year = date.substr(0,4);
+      var url = "https://tz.coldtrace.org/api/integrations/5b187c5461b32000017a67ae/cce/" + serialNumber + "/days/"+ year + "/" + month + "?token=";
       url = url + token.token;
       $window.open(url);
     });
