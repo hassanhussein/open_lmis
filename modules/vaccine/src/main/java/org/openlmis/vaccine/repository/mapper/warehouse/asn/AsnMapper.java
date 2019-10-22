@@ -6,6 +6,7 @@ import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.Port;
+import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.Map;
 @Repository
 public interface AsnMapper {
     @Insert(" INSERT INTO asns (ponumber,podate,supplierid,asnnumber,asndate,blawbnumber,flightvesselnumber,portofarrival,expectedarrivaldate, " +
-            "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate, active)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
-            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),true) ")
+            "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate, active,currencyId)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
+            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),true), #{currencyId} ")
     @Options(useGeneratedKeys = true)
     Long insert(Asn asn);
 
@@ -23,7 +24,7 @@ public interface AsnMapper {
             " podate = #{podate}, supplierid = #{supplierid}, asnnumber =#{asnnumber}, asndate = #{asndate}," +
             " blawbnumber = #{blawbnumber}, flightvesselnumber = #{flightvesselnumber}, portofarrival =#{portofarrival}, expecteddeliverydate = #{expecteddeliverydate}, expectedarrivaldate = #{expectedarrivaldate}," +
             " clearingagent = #{clearingagent}, status = #{status}, note =#{note}, " +
-            " modifiedDate = now(), modifiedBy = #{modifiedBy}  where id = #{id} ")
+            " modifiedDate = now(), modifiedBy = #{modifiedBy}, currencyId = #{currencyId}  where id = #{id} ")
     void update(Asn asn);
 
     @Select("select * from asns where id = #{id}")
@@ -36,7 +37,10 @@ public interface AsnMapper {
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId")),
             @Result(property = "port", column = "portofarrival", javaType = Port.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById"))
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById")),
+            @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
+
     })
     Asn getById(@Param("id") Long id);
 
@@ -50,7 +54,10 @@ public interface AsnMapper {
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId")),
             @Result(property = "port", column = "portofarrival", javaType = Port.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById"))
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById")),
+            @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
+
     })
     List<Asn> getAll();
 
@@ -144,4 +151,7 @@ public interface AsnMapper {
             return sql;
         }
     }
+
+    @Select(" select * from  currencies")
+    List<CurrencyDTO> getAllCurrencies();
 }

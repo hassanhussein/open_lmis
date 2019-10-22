@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.serializer.DateDeserializer;
+import org.openlmis.vaccine.dto.CurrencyDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -53,6 +54,10 @@ public class Asn extends BaseModel {
     private List<PurchaseDocument> purchaseDocuments;
 
     private Port port;
+
+    private  Long currencyId;
+
+    private CurrencyDTO currency;
 
 
 }

@@ -5,6 +5,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
+import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,12 +19,12 @@ public interface ReceiveMapper {
          "            receiveDate,blawBnumber,country,flightVesselNumber, \n" +
          "            portOfArrival,expectedArrivalDate,actualArrivalDate, \n" +
          "            clearingAgent,shippingAgent,status,note,noteToSupplier,description, \n" +
-         "            isForeignProcurement,createdBy,createdDate,modifiedBy,modifiedDate)\n" +
+         "            isForeignProcurement,createdBy,createdDate,modifiedBy,modifiedDate,currencyId)\n" +
          "    VALUES (#{purchaseOrderId}, #{poDate},#{supplier.id}, #{poNumber},#{asnId}, \n" +
          "            #{receiveDate},#{blawBnumber},#{country},#{flightVesselNumber}, \n" +
          "            #{portOfArrival},#{expectedArrivalDate},#{actualArrivalDate}, \n" +
          "            #{clearingAgent}, #{shippingAgent},#{status},#{note},#{noteToSupplier},#{description},#{isForeignProcurement}, \n" +
-         "            #{createdBy}, NOW(),#{modifiedBy},NOW());")
+         "            #{createdBy}, NOW(),#{modifiedBy},NOW(), #{currencyId});")
     @Options(useGeneratedKeys = true)
     Integer insert(Receive receive);
 
@@ -32,7 +33,7 @@ public interface ReceiveMapper {
           "       asnId=#{asnId}, receiveDate=#{receiveDate}, blawBnumber=#{blawBnumber}, country=#{country}, flightVesselNumber=#{flightVesselNumber}, \n" +
           "       portOfArrival=#{portOfArrival}, expectedArrivalDate=#{expectedArrivalDate}, actualArrivalDate=#{actualArrivalDate}, \n" +
           "       clearingAgent=#{clearingAgent}, shippingAgent=#{shippingAgent},status=#{status}, note=#{note}, noteToSupplier=#{noteToSupplier}, \n" +
-          "       description=#{description}, isForeignProcurement=#{isForeignProcurement}, modifiedBy=#{modifiedBy}, modifiedDate=NOW()\n" +
+          "       description=#{description}, isForeignProcurement=#{isForeignProcurement}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), currencyId=#{currencyId}\n" +
           " WHERE id = #{id}")
   void update(Receive receive);
 
@@ -42,12 +43,15 @@ public interface ReceiveMapper {
             @Result(column = "id", property = "id"),
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
-            @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
+            @Result(property = "supplier", column = "supplierId", javaType = SupplyPartner.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
            /* @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.PurchaseDocumentMapper.getByReceiveId")),*/
             @Result(property = "port", column = "portofarrival", javaType = Port.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById"))
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById")),
+
+            @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
     })
     Receive getById(@Param("id") Long id);
 
@@ -57,7 +61,11 @@ public interface ReceiveMapper {
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
             @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById"))/*,
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
+            @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
+
+            /*,
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByReceiveId"))*/
     })
@@ -88,7 +96,10 @@ public interface ReceiveMapper {
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
             @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById"))/*,
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
+            @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
+            /*,
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId"))*/
     })
