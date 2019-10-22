@@ -36,6 +36,8 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 
        AsnLookups.get(function(data) {
 
+       console.log(data);
+
          $scope.displayDocumentTypes = [];
 
                               $scope.manufacturers = data.manufacturers;
@@ -790,7 +792,8 @@ $scope.removeProduct(productIndex);
             portofarrival: $scope.portOfArrivalId,
             purchaseDocuments: $scope.docList,
             status: status,
-            supplierid: $scope.supplierId
+            supplierid: $scope.supplierId,
+            currencyId: 1
         };
 
         if($scope.asn){

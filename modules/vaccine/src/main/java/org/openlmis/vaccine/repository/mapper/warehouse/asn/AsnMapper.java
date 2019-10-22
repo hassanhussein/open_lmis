@@ -16,7 +16,7 @@ import java.util.Map;
 public interface AsnMapper {
     @Insert(" INSERT INTO asns (ponumber,podate,supplierid,asnnumber,asndate,blawbnumber,flightvesselnumber,portofarrival,expectedarrivaldate, " +
             "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate, active,currencyId)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
-            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),true), #{currencyId} ")
+            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),true, #{currencyId}) ")
     @Options(useGeneratedKeys = true)
     Long insert(Asn asn);
 
