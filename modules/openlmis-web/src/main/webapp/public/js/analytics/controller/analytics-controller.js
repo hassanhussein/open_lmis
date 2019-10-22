@@ -1,220 +1,232 @@
-function AnalyticsFunction($stateParams,GetEmergencyAndRegularRnRTrendsData,leafletData,GetTrendOfEmergencyOrdersSubmittedPerMonthData,GetPercentageOfEmergencyOrderByProgramData,GetNumberOfEmergencyData,
-GetEmergencyOrderByProgramData,GetEmergencyOrderTrendsData,DashboardRnrTypes,RejectionCount,RnRStatusSummary,
-DefaultProgram,StockStatusByProgramData,FullProcessingPeriods,$rootScope,IndexOfAluStockAvailabilityData,RnrPassedQualityCheckData,$scope,messageService,GetLocalMap,ConsumptionTrendsData,DashboardStockStatusSummaryData,YearFilteredData) {
+function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
+    GetEmergencyOrderByProgramData, GetEmergencyOrderTrendsData, DashboardRnrTypes, RejectionCount, RnRStatusSummary,
+    DefaultProgram, StockStatusByProgramData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData) {
 
-//resourceLoadingConfig.hideReloadIcon = true;
-//resourceLoadingConfig.loadingDashlet = [];
-
-
-var params;
-
-DefaultProgram.get({}, function (data) {
-
-        if(!isUndefined(data)){
-
-         var program = data.program;
-
-        FullProcessingPeriods.get({program:0}, function (data) {
-
-        var period = data.period;
-
-         params ={product:parseInt(2434,0) ,year:parseInt(period.stringYear,0), program: parseInt(program.id,0),programName:program.name,period:parseInt(period.id ,10),periodName:period.name, schedule:period.scheduleId,zone:437};
-         $scope.$parent.params = params;
-         //start loading functions by applying parameters
-
-       $scope.loadMap(params);
-       $rootScope.initializeRequisitionSummary(params);
-
-        $rootScope.loadStockAvailableForPeriodData(params);
-        $rootScope.loadTimelinessReportingData(params);
-        $rootScope.loadOnTimeDelivery(params);
-        $rootScope.loadRnrPassedQualityCheckData(params);
-        $rootScope.loadPercentageWastageData(params);
-        $rootScope.loadGeoFacilityStockMap(params);
-
-         $scope.loadConsumptionTrendsData(params);
-         //$scope.loadStockStatusByProgram(params,'level1');
-         $rootScope.loadStockStatusSummary(params);
-         //$rootScope.loadStockStatusByProgramAndYearData(params);
-         $rootScope.loadStockAvailableByLevel(params);
-         $rootScope.loadStockStatusByProgramTrends(params,'level1');
-         $rootScope.loadConsumptionTrendSummary(params);
-         loadRegularEmergenceTrend(params);
-
-        $rootScope.loadDistrictFundUtilization(params);
+    //resourceLoadingConfig.hideReloadIcon = true;
+    //resourceLoadingConfig.loadingDashlet = [];
 
 
+    var params;
+
+    DefaultProgram.get({}, function(data) {
+
+        if (!isUndefined(data)) {
+
+            var program = data.program;
+
+            FullProcessingPeriods.get({
+                program: 0
+            }, function(data) {
+
+                var period = data.period;
+
+                params = {
+                    product: parseInt(2434, 0),
+                    year: parseInt(period.stringYear, 0),
+                    program: parseInt(program.id, 0),
+                    programName: program.name,
+                    period: parseInt(period.id, 10),
+                    periodName: period.name,
+                    schedule: period.scheduleId,
+                    zone: 437
+                };
+
+
+                $scope.$parent.params = params;
+                //start loading functions by applying parameters
+
+                $scope.loadMap(params);
+                $rootScope.initializeRequisitionSummary(params);
+
+                $rootScope.loadStockAvailableForPeriodData(params);
+                $rootScope.loadTimelinessReportingData(params);
+                $rootScope.loadOnTimeDelivery(params);
+                $rootScope.loadRnrPassedQualityCheckData(params);
+                $rootScope.loadPercentageWastageData(params);
+                $rootScope.loadGeoFacilityStockMap(params);
+
+                $scope.loadConsumptionTrendsData(params);
+                //$scope.loadStockStatusByProgram(params,'level1');
+                $rootScope.loadStockStatusSummary(params);
+                //$rootScope.loadStockStatusByProgramAndYearData(params);
+                $rootScope.loadStockAvailableByLevel(params);
+                $rootScope.loadStockStatusByProgramTrends(params, 'level1');
+                $rootScope.loadConsumptionTrendSummary(params);
+                loadRegularEmergenceTrend(params);
+
+                $rootScope.loadDistrictFundUtilization(params);
 
 
 
 
+            });
 
-});
-
- }
-});
-
-    function  loadRegularEmergenceTrend(params) {
-
-    GetEmergencyAndRegularRnRTrendsData.get(params).then(function(data){
-     if(data.length > 0) {
-      var categories = _.pluck(data,'Month');
-      var emergency = _.pluck(data,'Emergency Requisitions');
-      var regular = _.pluck(data,'Regular Requisitions');
-
-     console.log(regular);
-        loadChart(categories,emergency,regular);
-     }
-    });
-    }
-
- function loadChart(category,emergency,regular){
-
-Highcharts.chart('rnrSummary', {
-
-    title: {
-        text: ''
-    },
-
-    subtitle: {
-        text: ''
-    },
-   xAxis: {
-        categories: category
-    },
-    yAxis: {
-        title: {
-            text: ''
-        },
-        category:category
-    },
-     credits:{
-          enabled:false
-         },
-    legend: {
-        layout: 'horizontal',
-        verticalAlign: 'bottom'
-    },
-
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            }
         }
-    },
+    });
 
-    series: [{
-        name: 'Regular Requisitions',
-        data: regular
-    }, {
-        name: 'Emergency Requisitions',
-               data: emergency
-    }],
+    function loadRegularEmergenceTrend(params) {
 
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
-            },
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
+        GetEmergencyAndRegularRnRTrendsData.get(params).then(function(data) {
+            if (data.length > 0) {
+                var categories = _.pluck(data, 'Month');
+                var emergency = _.pluck(data, 'Emergency Requisitions');
+                var regular = _.pluck(data, 'Regular Requisitions');
+
+                loadChart(categories, emergency, regular);
             }
-        }]
+        });
     }
 
-});
+    function loadChart(category, emergency, regular) {
+
+        Highcharts.chart('rnrSummary', {
+
+            title: {
+                text: ''
+            },
+
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: category
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                },
+                category: category
+            },
+            credits: {
+                enabled: false
+            },
+            legend: {
+                layout: 'horizontal',
+                verticalAlign: 'bottom'
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    }
+                }
+            },
+
+            series: [{
+                name: 'Regular Requisitions',
+                data: regular
+            }, {
+                name: 'Emergency Requisitions',
+                data: emergency
+            }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
 
 
 
 
-/* Highcharts.chart('rnrSummary', {
+        /* Highcharts.chart('rnrSummary', {
 
-     credits:{
-      enabled:false
-     },
-     title: {
-         text: ''
+             credits:{
+              enabled:false
+             },
+             title: {
+                 text: ''
 
-     },
+             },
 
-    yAxis: {
-           title: {
-               text: 'Number of Employees'
-           }
-       },
-
-       plotOptions: {
-           series: {
-               label: {
-                   connectorAllowed: false
+            yAxis: {
+                   title: {
+                       text: 'Number of Employees'
+                   }
                },
-               pointStart: 2010
-           }
-       },
 
-     tooltip: {
-         shared: true
-     },
+               plotOptions: {
+                   series: {
+                       label: {
+                           connectorAllowed: false
+                       },
+                       pointStart: 2010
+                   }
+               },
 
-
-     legend: {
-         layout: 'horizontal',
-
-         verticalAlign: 'bottom',
-
-         backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255,255,255,0.25)'
-     },
-     series: [{
-                       name: 'Regular Requisitions',
-                       type: 'spline',
-                       data: regular,
-                       tooltip: {
-                           valueSuffix: ''
-                       }
-                   },
-          {
-         name: 'Emergency Requisitions',
-         type: 'spline',
-         yAxis: 1,
-         data: emergency,
-         tooltip: {
-             valueSuffix: ' '
-         }
-
-     }],
+             tooltip: {
+                 shared: true
+             },
 
 
-       responsive: {
-             rules: [{
-                 condition: {
-                     maxWidth: 500
-                 },
-                 chartOptions: {
-                     legend: {
-                         layout: 'horizontal',
-                         align: 'center',
-                         verticalAlign: 'bottom'
-                     }
+             legend: {
+                 layout: 'horizontal',
+
+                 verticalAlign: 'bottom',
+
+                 backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || 'rgba(255,255,255,0.25)'
+             },
+             series: [{
+                               name: 'Regular Requisitions',
+                               type: 'spline',
+                               data: regular,
+                               tooltip: {
+                                   valueSuffix: ''
+                               }
+                           },
+                  {
+                 name: 'Emergency Requisitions',
+                 type: 'spline',
+                 yAxis: 1,
+                 data: emergency,
+                 tooltip: {
+                     valueSuffix: ' '
                  }
-             }]
-         }
 
- });*/
+             }],
 
 
+               responsive: {
+                     rules: [{
+                         condition: {
+                             maxWidth: 500
+                         },
+                         chartOptions: {
+                             legend: {
+                                 layout: 'horizontal',
+                                 align: 'center',
+                                 verticalAlign: 'bottom'
+                             }
+                         }
+                     }]
+                 }
 
- }
- function loadRequisitionSection() {
+         });*/
 
-       // if($scope.dashletSectionsLoaded.includes('requisition')) return;
 
-        GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({associatedDashlets : ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']})
-        .then(function (data) {
+
+    }
+
+    function loadRequisitionSection() {
+
+        // if($scope.dashletSectionsLoaded.includes('requisition')) return;
+
+        GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({
+                associatedDashlets: ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']
+            })
+            .then(function(data) {
                 var chartId = 'trendOfEmergencyOrder';
                 var chartRegularId = 'trendOfRegualrOrder';
                 var category = _.pluck(data, 'ym');
@@ -222,24 +234,11 @@ Highcharts.chart('rnrSummary', {
                 var valueRegular = _.pluck(data, 'Regular Requisitions');
                 loadTheChart(category, value, chartId, 'spline', 'Year and Month', '', '# of requisitions');
                 loadTheChart(category, valueRegular, chartRegularId, 'spline', 'Year and Month', '', '# of requisitions');
-        });
+            });
 
-        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOfRegularOrders']}).then(function (data) {
-             var chartId = 'emergencyByProgram';
-             var chartRegularId = 'regularByProgram';
-             var category = _.pluck(data, 'Program Name');
-             var value = _.pluck(data, 'Emergency');
-             var valueRegular = _.pluck(data, 'Regular');
-             loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
-             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
-         });
-
-        RejectionCount.get({associatedDashlets : ['rejectedRnrTrends']}, function (data) {
-             var reject = _.pluck(data.rejections, 'Month');
-             var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
-             loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
-        });
-        GetPercentageOfEmergencyOrderByProgramData.get({associatedDashlets : ['percentageOrEmergencyOrders']}).then(function (data) {
+        GetPercentageOfEmergencyOrderByProgramData.get({
+            associatedDashlets: ['percentageOfRegularOrders']
+        }).then(function(data) {
             var chartId = 'emergencyByProgram';
             var chartRegularId = 'regularByProgram';
             var category = _.pluck(data, 'Program Name');
@@ -249,22 +248,45 @@ Highcharts.chart('rnrSummary', {
             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
         });
 
-        GetEmergencyOrderByProgramData.get({associatedDashlets : ['emergencyOrderByProgram', 'regularOrderByProgram']}).then(function (data) {
-             var chartId = 'emergencySubmittedByProgram';
-             var chartRegularId = 'regularSubmittedByProgram';
-             var category = _.pluck(data, 'Program Name');
-             var value = _.pluck(data, 'Emergency');
-             var valueRegular = _.pluck(data, 'Regular');
-             loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
-             loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        RejectionCount.get({
+            associatedDashlets: ['rejectedRnrTrends']
+        }, function(data) {
+            var reject = _.pluck(data.rejections, 'Month');
+            var rejectionCount = _.pluck(data.rejections, 'Rejected Count');
+            loadTheChart(reject, rejectionCount, 'rejectionCountId', 'line', 'Rejection Count', '', 'Rejection Count');
+        });
+        GetPercentageOfEmergencyOrderByProgramData.get({
+            associatedDashlets: ['percentageOrEmergencyOrders']
+        }).then(function(data) {
+            var chartId = 'emergencyByProgram';
+            var chartRegularId = 'regularByProgram';
+            var category = _.pluck(data, 'Program Name');
+            var value = _.pluck(data, 'Emergency');
+            var valueRegular = _.pluck(data, 'Regular');
+            loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+            loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
         });
 
-        GetNumberOfEmergencyData.get({associatedDashlets : ['provincesWithMostRegularOrders']}).then(function (data) {
+        GetEmergencyOrderByProgramData.get({
+            associatedDashlets: ['emergencyOrderByProgram', 'regularOrderByProgram']
+        }).then(function(data) {
+            var chartId = 'emergencySubmittedByProgram';
+            var chartRegularId = 'regularSubmittedByProgram';
+            var category = _.pluck(data, 'Program Name');
+            var value = _.pluck(data, 'Emergency');
+            var valueRegular = _.pluck(data, 'Regular');
+            loadTheChart(category, value, chartId, 'column', 'Program Name', '', 'Emergency');
+            loadTheChart(category, valueRegular, chartRegularId, 'column', 'Program Name', '', 'Regular');
+        });
+
+        GetNumberOfEmergencyData.get({
+            associatedDashlets: ['provincesWithMostRegularOrders']
+        }).then(function(data) {
             var chartId = 'emergencyByRegion';
             var data1 = _.pluck(data, 'Number Of EOs');
             var data2 = _.pluck(data, 'Province');
             var total = 0;
-            total = _.reduce(data1, function (memo, num) {
+            total = _.reduce(data1, function(memo, num) {
                 return memo + num;
             }, 0);
             var dataValues = _.zip(data2, data1);
@@ -272,22 +294,22 @@ Highcharts.chart('rnrSummary', {
         });
 
 
-       /* EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
-                $scope.emergencyOrderFrequentAppearingProducts = data.products;
-        });*/
+        /* EmergencyOrderFrequentAppearingProducts.get({associatedDashlets : ['emergencyOrderFrequentlyAppearingProducts']}, function (data) {
+                 $scope.emergencyOrderFrequentAppearingProducts = data.products;
+         });*/
 
-       /* FacilitiesReportingThroughFEAndCE.get({associatedDashlets: ['facilitiesReportingViaCEAndFE']}, function (data) {
-                $scope.facilitiesReportingViaCEAndFE = data.facilities;
-        });*/
+        /* FacilitiesReportingThroughFEAndCE.get({associatedDashlets: ['facilitiesReportingViaCEAndFE']}, function (data) {
+                 $scope.facilitiesReportingViaCEAndFE = data.facilities;
+         });*/
 
         DashboardRnrTypes.get({
             zoneId: $scope.filter.zoneId,
             periodId: $scope.filter.period,
             programId: $scope.filter.program,
-            associatedDashlets : ['regularAndEmergencyRequisition']
-        }, function (data) {
+            associatedDashlets: ['regularAndEmergencyRequisition']
+        }, function(data) {
             var rnrTypes = data.rnrTypes;
-            console.log(rnrTypes);
+
             var periods = _.pluck(rnrTypes, 'period');
             var series = [];
             var emergencyRnrs = _.pluck(rnrTypes, 'emergency');
@@ -382,93 +404,93 @@ Highcharts.chart('rnrSummary', {
 
         });
 
-   /*     RnRStatusSummary.get({
-                    zoneId: 437,
-                    periodId: $scope.filter.period,
-                    programId: $scope.filter.program,
-                    associatedDashlets: ['rnrStatusSummary']
-                },
-                function (data) {
+        /*     RnRStatusSummary.get({
+                         zoneId: 437,
+                         periodId: $scope.filter.period,
+                         programId: $scope.filter.program,
+                         associatedDashlets: ['rnrStatusSummary']
+                     },
+                     function (data) {
 
-                    var dataValues = [];
-                    var colors = {
-                        'RELEASED': 'lightblue',
-                        'IN_APPROVAL': 'lightgreen',
-                        'APPROVED': '#82A4EF',
-                        'AUTHORIZED': '#FF558F'
-                    };
-                    data.rnrStatus.forEach(function (d) {
-                        if (d.status === 'AUTHORIZED')
-                            dataValues.push({
-                                sliced: true,
-                                selected: true,
-                                'name': messageService.get('label.rnr.status.summary.' + d.status),
-                                'y': d.totalStatus,
-                                color: colors[d.status]
-                            });
-                        else
-                            dataValues.push({
-                                'name': messageService.get('label.rnr.status.summary.' + d.status),
-                                'y': d.totalStatus,
-                                color: colors[d.status]
-                            });
-                    });
+                         var dataValues = [];
+                         var colors = {
+                             'RELEASED': 'lightblue',
+                             'IN_APPROVAL': 'lightgreen',
+                             'APPROVED': '#82A4EF',
+                             'AUTHORIZED': '#FF558F'
+                         };
+                         data.rnrStatus.forEach(function (d) {
+                             if (d.status === 'AUTHORIZED')
+                                 dataValues.push({
+                                     sliced: true,
+                                     selected: true,
+                                     'name': messageService.get('label.rnr.status.summary.' + d.status),
+                                     'y': d.totalStatus,
+                                     color: colors[d.status]
+                                 });
+                             else
+                                 dataValues.push({
+                                     'name': messageService.get('label.rnr.status.summary.' + d.status),
+                                     'y': d.totalStatus,
+                                     color: colors[d.status]
+                                 });
+                         });
 
-                  //  $scope.loadRnRStatusSummary(dataValues);
-                    $scope.total = 0;
-                    $scope.RnRStatusPieChartData = [];
-                    $scope.dataRows = [];
-                    $scope.datarows = [];
+                       //  $scope.loadRnRStatusSummary(dataValues);
+                         $scope.total = 0;
+                         $scope.RnRStatusPieChartData = [];
+                         $scope.dataRows = [];
+                         $scope.datarows = [];
 
-                    console.log($scope.filter);
+                         console.log($scope.filter);
 
-                    if (!isUndefined(data.rnrStatus)) {
+                         if (!isUndefined(data.rnrStatus)) {
 
-                        $scope.dataRows = data.rnrStatus;
-                        if (isUndefined($scope.dataRows)) {
-                            $scope.message = 'No rnr status summary';
-                            return;
-                        }
-                        var statusData = _.pluck($scope.dataRows, 'status');
-                        var totalData = _.pluck($scope.dataRows, 'totalStatus');
-                        var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFA500', APPROVED: '#0000FF', RELEASED: '#008000'};
-                        $scope.value = 0;
-                        for (var i = 0; i < $scope.dataRows.length; i++) {
+                             $scope.dataRows = data.rnrStatus;
+                             if (isUndefined($scope.dataRows)) {
+                                 $scope.message = 'No rnr status summary';
+                                 return;
+                             }
+                             var statusData = _.pluck($scope.dataRows, 'status');
+                             var totalData = _.pluck($scope.dataRows, 'totalStatus');
+                             var color = {AUTHORIZED: '#FF0000', IN_APPROVAL: '#FFA500', APPROVED: '#0000FF', RELEASED: '#008000'};
+                             $scope.value = 0;
+                             for (var i = 0; i < $scope.dataRows.length; i++) {
 
-                            $scope.total += $scope.dataRows[i].totalStatus;
+                                 $scope.total += $scope.dataRows[i].totalStatus;
 
-                            var labelKey = 'label.rnr.status.summary.' + statusData[i];
-                            var label = messageService.get(labelKey);
-                            $scope.RnRStatusPieChartData[i] = {
-                                label: label,
-                                data: totalData[i],
-                                color: color[statusData[i]]
+                                 var labelKey = 'label.rnr.status.summary.' + statusData[i];
+                                 var label = messageService.get(labelKey);
+                                 $scope.RnRStatusPieChartData[i] = {
+                                     label: label,
+                                     data: totalData[i],
+                                     color: color[statusData[i]]
 
-                            };
+                                 };
 
-                        }
-                        $scope.rnrStatusPieChartOptionFunction();
-                        $scope.rnrStatusRenderedData = {
-                            status: _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus, 'status')))
+                             }
+                             $scope.rnrStatusPieChartOptionFunction();
+                             $scope.rnrStatusRenderedData = {
+                                 status: _.pairs(_.object(_.range(data.rnrStatus.length), _.pluck(data.rnrStatus, 'status')))
 
-                        };
+                             };
 
-                      //  bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
-                        //bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
+                           //  bindChartEvent("#rnr-status-report", "plotclick", rnrStatusChartClickHandler);
+                             //bindChartEvent("#rnr-status-report", flotChartHoverCursorHandler);
 
-                    } else {
-                        $scope.message = 'No rnr status summary';
-                    }
-                    //$scope.overAllTotal();
-                  //  $scope.paramsChanged($scope.tableParams);
-                });*/
-
-
-
-  }
+                         } else {
+                             $scope.message = 'No rnr status summary';
+                         }
+                         //$scope.overAllTotal();
+                       //  $scope.paramsChanged($scope.tableParams);
+                     });*/
 
 
-  $scope.rnrStatusPieChartOptionFunction = function () {
+
+    }
+
+
+    $scope.rnrStatusPieChartOptionFunction = function() {
 
         $scope.rnRStatusPieChartOption = {
             series: {
@@ -478,7 +500,7 @@ Highcharts.chart('rnrSummary', {
                     label: {
                         show: true,
                         radius: 2 / 4,
-                        formatter: function (label, series) {
+                        formatter: function(label, series) {
                             return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + Math.round(series.percent) + '%</div>';
                         },
                         threshold: 0.1
@@ -505,19 +527,19 @@ Highcharts.chart('rnrSummary', {
             },
             tooltip: true,
             exporting: {
-                          buttons: {
-                           customButton: {
-                           text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                           symbolStroke: "red",
-                           theme: {
-                           fill:"#28A2F3"
-                           },
-                           onclick: function () {
-                           $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
-                           }
-                           }
-                           }
-                           },
+                buttons: {
+                    customButton: {
+                        text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                        symbolStroke: "red",
+                        theme: {
+                            fill: "#28A2F3"
+                        },
+                        onclick: function() {
+                            $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                        }
+                    }
+                }
+            },
             tooltipOpts: {
                 content: "%p.0%, %s",
                 shifts: {
@@ -531,67 +553,75 @@ Highcharts.chart('rnrSummary', {
 
     };
 
-      $scope.loadRnRStatusSummary = function (summary) {
+    $scope.loadRnRStatusSummary = function(summary) {
 
-          var dataVal = [{name: 'Status', colorByPoint: false, data: summary}];
+        var dataVal = [{
+            name: 'Status',
+            colorByPoint: false,
+            data: summary
+        }];
 
-          Highcharts.chart('rnrSummary', {
-              chart: {
-                  plotBackgroundColor: null,
-                  plotBorderWidth: null,
-                  plotShadow: false,
-                  type: 'pie',
-                  height: '350px'
-              },
-              credits: {
-                  enabled: false
-              },
-              title: {
-                  text: '<span style="background-color:lightGray; font-size: x-small !important;color: #0c9083"></span>'
-              },
-              tooltip: {
-                  pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-              },exporting: {
-                              buttons: {
-                               customButton: {
-                               text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                               symbolStroke: "red",
-                               theme: {
-                               fill:"#28A2F3"
-                               },
-                               onclick: function () {
-                               $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
-                               }
-                               }
-                               }
-                               },
-              plotOptions: {
-                  pie: {
-                      allowPointSelect: false,
-                      cursor: 'pointer',
-                      dataLabels: {
-                          enabled: true
-                      },
-                      showInLegend: true,
-                      innerSize: "70%",
-                      size: 150
-                  }
-              },
-              series: dataVal
-          });
+        Highcharts.chart('rnrSummary', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie',
+                height: '350px'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: '<span style="background-color:lightGray; font-size: x-small !important;color: #0c9083"></span>'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            exporting: {
+                buttons: {
+                    customButton: {
+                        text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                        symbolStroke: "red",
+                        theme: {
+                            fill: "#28A2F3"
+                        },
+                        onclick: function() {
+                            $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                        }
+                    }
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: false,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true
+                    },
+                    showInLegend: true,
+                    innerSize: "70%",
+                    size: 150
+                }
+            },
+            series: dataVal
+        });
 
-      };
+    };
 
 
-  $scope.dashletSectionsLoaded = [];
+    $scope.dashletSectionsLoaded = [];
 
     $scope.loadDashletsBySectionNames = function(sectionName) {
-        switch(sectionName) {
+        switch (sectionName) {
             case 'stockStatus':
                 loadStockStatusSection();
                 break;
             case 'requisition':
                 loadRequisitionSection();
+                break;
+            case 'healthCommoditiesFinancing':
+                loadHealthCommoditiesFinancingSection();
                 break;
             default:
                 console.log('Dashboard section does not exist');
@@ -605,170 +635,174 @@ Highcharts.chart('rnrSummary', {
     };
 
 
-      function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {
-          Highcharts.chart(chartId, {
-              chart: {
-                  type: type
-              },
+    function loadTheChart(category, values, chartId, type, chartName, title, verticalTitle) {
+        Highcharts.chart(chartId, {
+            chart: {
+                type: type
+            },
 
-              title: {
-                  text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
-              }, credits: {
-                  enabled: false
-              },
-              subtitle: {
-                  text: ''
-              },
-              xAxis: {
-                  categories: category,
-                  crosshair: true
-              },
-              yAxis: {
-                  lineWidth: 1,
-                  gridLineColor: '',
-                  interval: 1,
+            title: {
+                text: ' <h2><span style="font-size: x-small;color:#0c9083">' + title + '</span></h2>'
+            },
+            credits: {
+                enabled: false
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: category,
+                crosshair: true
+            },
+            yAxis: {
+                lineWidth: 1,
+                gridLineColor: '',
+                interval: 1,
 
-                  tickWidth: 1,
+                tickWidth: 1,
 
 
-                  min: 0,
-                  title: {
-                      text: '<span style="font-size: x-small;color:#0c9083">' + verticalTitle + '</span>'
-                  }
-              },
-              tooltip: {
-                  /*
-                   headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                   */
-                  headerFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.key}</b></td></tr><br/>',
-                  pointFormat: '<tr><td style="color:{series.color};padding:0">' + verticalTitle + ':</td>' + '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
-                  footerFormat: '</table>',
-                  shared: true,
-                  useHTML: true
-              },
-              exporting: {
-                        buttons: {
-                        customButton: {
+                min: 0,
+                title: {
+                    text: '<span style="font-size: x-small;color:#0c9083">' + verticalTitle + '</span>'
+                }
+            },
+            tooltip: {
+                /*
+                 headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                 */
+                headerFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' + '<td style="padding:0"><b>{point.key}</b></td></tr><br/>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">' + verticalTitle + ':</td>' + '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            exporting: {
+                buttons: {
+                    customButton: {
                         text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
                         symbolStroke: "red",
                         theme: {
-                        fill:"#28A2F3"
+                            fill: "#28A2F3"
                         },
-                        onclick: function () {
-                                 $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
-                                 }
-                                 }
-                                 }
-                                 },
-              plotOptions: {
-                  column: {
-                      pointPadding: 0.2,
-                      borderWidth: 0
-                  }
-              },
-              series: [{
-                  name: chartName,
-                  data: values
+                        onclick: function() {
+                            $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
+                        }
+                    }
+                }
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [{
+                name: chartName,
+                data: values
 
-              }]
-          });
+            }]
+        });
 
-      }
-
-
-        function loadPieChart(chartId, dataValues, total) {
-
-              var chart = new Highcharts.Chart({
-                  chart: {
-                      renderTo: chartId,
-                      type: 'pie'
-
-                  },
-
-                  credits: {
-                      enabled: false
-                  }, title: {
-                      text: '<span style="font-size:20px">' + total + ' <br><span style="font-size:10px">TOTAL</span></span>',
-                      verticalAlign: 'middle',
-                      floating: true
-                  },
-
-                  plotOptions: {
-                      pie: {
-                          innerSize: '60%'
-                      }
-                  },
-                    exporting: {
-                                                  buttons: {
-                                                   customButton: {
-                                                   text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                                                   symbolStroke: "red",
-                                                   theme: {
-                                                   fill:"#28A2F3"
-                                                   },
-                                                   onclick: function () {
-                                                   $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
-                                                   }
-                                                   }
-                                                   }
-                                                   },
-                  series: [{
-                      data: dataValues
-                  }]
-              }/*,
-
-               function(chart) { // on complete
-               var textX = chart.plotLeft + (chart.plotWidth  * 0.5);
-               var textY = chart.plotTop  + (chart.plotHeight * 0.5);
-
-               var span = '<span id="pieChartInfoText" style="position:absolute; text-align:center;">';
-               span += '<span style="font-size: 32px">Upper</span><br>';
-               span += '<span style="font-size: 16px">Lower</span>';
-               span += '</span>';
-
-               $("#addText").append(span);
-               span = $('#pieChartInfoText');
-               span.css('left', textX + (span.width() * -0.5));
-               span.css('top', textY + (span.height() * -0.5));
-               }*/);
+    }
 
 
-          }
+    function loadPieChart(chartId, dataValues, total) {
+
+        var chart = new Highcharts.Chart({
+                chart: {
+                    renderTo: chartId,
+                    type: 'pie'
+
+                },
+
+                credits: {
+                    enabled: false
+                },
+                title: {
+                    text: '<span style="font-size:20px">' + total + ' <br><span style="font-size:10px">TOTAL</span></span>',
+                    verticalAlign: 'middle',
+                    floating: true
+                },
+
+                plotOptions: {
+                    pie: {
+                        innerSize: '60%'
+                    }
+                },
+                exporting: {
+                    buttons: {
+                        customButton: {
+                            text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                            symbolStroke: "red",
+                            theme: {
+                                fill: "#28A2F3"
+                            },
+                            onclick: function() {
+                                $rootScope.openDefinitionModal('GENERAL_INFO', 'General Information');
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    data: dataValues
+                }]
+            }
+            /*,
+
+                           function(chart) { // on complete
+                           var textX = chart.plotLeft + (chart.plotWidth  * 0.5);
+                           var textY = chart.plotTop  + (chart.plotHeight * 0.5);
+
+                           var span = '<span id="pieChartInfoText" style="position:absolute; text-align:center;">';
+                           span += '<span style="font-size: 32px">Upper</span><br>';
+                           span += '<span style="font-size: 16px">Lower</span>';
+                           span += '</span>';
+
+                           $("#addText").append(span);
+                           span = $('#pieChartInfoText');
+                           span.css('left', textX + (span.width() * -0.5));
+                           span.css('top', textY + (span.height() * -0.5));
+                           }*/
+        );
+
+
+    }
 
 
 
-$('ul.tabs').tabs().tabs('select_tab', 'tracer');
-$('.dropdown-trigger').dropdown();
+    $('ul.tabs').tabs().tabs('select_tab', 'tracer');
+    $('.dropdown-trigger').dropdown();
 
-$('li.dropdown.mega-dropdown').on('click', function (event) {
-    $(this).parent().toggleClass('open');
-});
-
-$("dropdown-menu mega-dropdown-menu").click(function(e){
-   e.stopPropagation();
-});
-
-$scope.stopPropagation = function(event,open){
-
-    return event.stopPropagation();
-};
-
-$scope.minimizePropagation = function(event,open){
-
-return 'dropdown-toggle';
-
-/*
- $("dropdown-toggle").click(function() {
-        $(this).dropdown("toggle");
-        return false;
+    $('li.dropdown.mega-dropdown').on('click', function(event) {
+        $(this).parent().toggleClass('open');
     });
-*/
+
+    $("dropdown-menu mega-dropdown-menu").click(function(e) {
+        e.stopPropagation();
+    });
+
+    $scope.stopPropagation = function(event, open) {
+
+        return event.stopPropagation();
+    };
+
+    $scope.minimizePropagation = function(event, open) {
+
+        return 'dropdown-toggle';
+
+        /*
+         $("dropdown-toggle").click(function() {
+                $(this).dropdown("toggle");
+                return false;
+            });
+        */
 
 
-};
+    };
 
 
- $scope.toggled = function (open) {
+    $scope.toggled = function(open) {
 
         $scope.open = true;
         var child = $scope.$$childHead;
@@ -780,54 +814,52 @@ return 'dropdown-toggle';
             child = child.$$nextSibling;
         }
     };
-   $("li.show > a").click(function(){
+    $("li.show > a").click(function() {
         $("li.hide").fadeToggle();
     });
 
 
 
-$rootScope.parameters = params;
+    $rootScope.parameters = params;
 
 
-//Not Used Function
+    //Not Used Function
 
 
-function loadIndexStockAvailability () {
+    function loadIndexStockAvailability() {
 
-IndexOfAluStockAvailabilityData.get(params).then(function(data) {
+        IndexOfAluStockAvailabilityData.get(params).then(function(data) {
 
- var value1 = ['Facilities with 1 Presentation',data[0].total];
- var value2 = ['Facilities with 2 Presentation',data[1].total];
- var value3 = ['Facilities with 3 Presentation',data[2].total];
- var value4 = ['Facilities with 4 Presentation',data[3].total];
-
-
-var dataV = [value1,value2,value3,value4];
-
-$scope.indexOfStockAvailable(dataV,'Index of Availability of ACTs on the Day of Visit, June, 2018');
-
-});
-}
+            var value1 = ['Facilities with 1 Presentation', data[0].total];
+            var value2 = ['Facilities with 2 Presentation', data[1].total];
+            var value3 = ['Facilities with 3 Presentation', data[2].total];
+            var value4 = ['Facilities with 4 Presentation', data[3].total];
 
 
+            var dataV = [value1, value2, value3, value4];
+
+            $scope.indexOfStockAvailable(dataV, 'Index of Availability of ACTs on the Day of Visit, June, 2018');
+
+        });
+    }
 
 
 
-//Start of Map
 
-  $scope.geojson = {};
+    //Start of Map
+
+    $scope.geojson = {};
 
     $scope.default_indicator = "period_over_expected";
 
-    $scope.expectedFilter = function (item) {
+    $scope.expectedFilter = function(item) {
         return item.expected > 0;
     };
 
-    $scope.style = function (feature) {
+    $scope.style = function(feature) {
         if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
             $scope.indicator_type = $scope.filter.indicator_type;
-        }
-        else {
+        } else {
             $scope.indicator_type = $scope.default_indicator;
         }
         var color = ($scope.indicator_type === 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type === 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
@@ -842,7 +874,7 @@ $scope.indexOfStockAvailable(dataV,'Index of Availability of ACTs on the Day of 
         };
     };
 
-    $scope.drawMap = function (json) {
+    $scope.drawMap = function(json) {
 
         angular.extend($scope, {
             geojson: {
@@ -858,9 +890,11 @@ $scope.indexOfStockAvailable(dataV,'Index of Availability of ACTs on the Day of 
     function getExportDataFunction(features) {
 
         var arr = [];
-        angular.forEach(features, function (value, key) {
+        angular.forEach(features, function(value, key) {
             if (value.expected > 0) {
-                var percentage = {'percentage': ((value.period / value.expected) * 100).toFixed(0) + ' %'};
+                var percentage = {
+                    'percentage': ((value.period / value.expected) * 100).toFixed(0) + ' %'
+                };
                 arr.push(angular.extend(value, percentage));
             }
         });
@@ -870,147 +904,147 @@ $scope.indexOfStockAvailable(dataV,'Index of Availability of ACTs on the Day of 
 
 
 
-/*
-   $scope.geojson = {};
+    /*
+       $scope.geojson = {};
 
-    $scope.default_indicator = "period_over_expected";
+        $scope.default_indicator = "period_over_expected";
 
-    $scope.expectedFilter = function (item) {
-        return item.expected > 0;
-    };
-
-    $scope.style = function (feature) {
-        if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
-            $scope.indicator_type = $scope.filter.indicator_type;
-        }
-        else {
-            $scope.indicator_type = $scope.default_indicator;
-        }
-        var color = ($scope.indicator_type === 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type === 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
-
-        return {
-            fillColor: color,
-            weight: 1,
-            opacity: 1,
-            color: 'white',
-            dashArray: '1',
-            fillOpacity: 0.7
+        $scope.expectedFilter = function (item) {
+            return item.expected > 0;
         };
-    };
+
+        $scope.style = function (feature) {
+            if ($scope.filter !== undefined && $scope.filter.indicator_type !== undefined) {
+                $scope.indicator_type = $scope.filter.indicator_type;
+            }
+            else {
+                $scope.indicator_type = $scope.default_indicator;
+            }
+            var color = ($scope.indicator_type === 'ever_over_total') ? interpolate(feature.ever, feature.total) : ($scope.indicator_type === 'ever_over_expected') ? interpolate(feature.ever, feature.expected) : interpolate(feature.period, feature.expected);
+
+            return {
+                fillColor: color,
+                weight: 1,
+                opacity: 1,
+                color: 'white',
+                dashArray: '1',
+                fillOpacity: 0.7
+            };
+        };
 
 
-        $scope.drawMap = function(json) {
-            angular.extend($scope, {
-                geojson: {
-                    data: json,
-                    style: $scope.style,
-                    onEachFeature: onEachFeature,
-                    resetStyleOnMouseout: true
+            $scope.drawMap = function(json) {
+                angular.extend($scope, {
+                    geojson: {
+                        data: json,
+                        style: $scope.style,
+                        onEachFeature: onEachFeature,
+                        resetStyleOnMouseout: true
+                    }
+                });
+
+                $scope.$apply();
+            };
+
+        function getExportDataFunction(features) {
+
+            var arr = [];
+            angular.forEach(features, function (value, key) {
+                if (value.expected > 0) {
+                    var percentage = {'percentage': ((value.period / value.expected) * 100).toFixed(0) + ' %'};
+                    arr.push(angular.extend(value, percentage));
                 }
             });
+            $scope.exportData = arr;
+        }
+    function interpolate(value, count) {
+        var val = parseFloat(value) / parseFloat(count);
+        var interpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
+        return interpolator(val).hex();
+    }
 
-            $scope.$apply();
-        };
-
-    function getExportDataFunction(features) {
-
-        var arr = [];
-        angular.forEach(features, function (value, key) {
-            if (value.expected > 0) {
-                var percentage = {'percentage': ((value.period / value.expected) * 100).toFixed(0) + ' %'};
-                arr.push(angular.extend(value, percentage));
+    function initiateMap(scope) {
+        angular.extend(scope, {
+            layers: {
+                baselayers: {
+                    googleTerrain: {
+                        name: 'Terrain',
+                        layerType: 'TERRAIN',
+                        type: 'google'
+                    },
+                    googleHybrid: {
+                        name: 'Hybrid',
+                        layerType: 'HYBRID',
+                        type: 'google'
+                    },
+                    googleRoadmap: {
+                        name: 'Streets',
+                        layerType: 'ROADMAP',
+                        type: 'google'
+                    }
+                }
+            },
+            legend: {
+                position: 'bottomleft',
+                colors: ['#FF0000', '#FFFF00', '#5eb95e', "#000000"],
+                labels: ['Non Reporting', 'Partial Reporting ', 'Fully Reporting', 'Not expected to Report']
             }
         });
-        $scope.exportData = arr;
-    }
-function interpolate(value, count) {
-    var val = parseFloat(value) / parseFloat(count);
-    var interpolator = chroma.interpolate.bezier(['red', 'yellow', 'green']);
-    return interpolator(val).hex();
-}
 
-function initiateMap(scope) {
-    angular.extend(scope, {
-        layers: {
-            baselayers: {
-                googleTerrain: {
-                    name: 'Terrain',
-                    layerType: 'TERRAIN',
-                    type: 'google'
-                },
-                googleHybrid: {
-                    name: 'Hybrid',
-                    layerType: 'HYBRID',
-                    type: 'google'
-                },
-                googleRoadmap: {
-                    name: 'Streets',
-                    layerType: 'ROADMAP',
-                    type: 'google'
-                }
+        scope.indicator_types = [
+            {
+                code: 'ever_over_total',
+                name: 'Ever Reported / Total Facilities'
+            },
+            {
+                code: 'ever_over_expected',
+                name: 'Ever Reported / Expected Facilities'
+            },
+            {
+                code: 'period_over_expected',
+                name: 'Reported during period / Expected Facilities'
             }
-        },
-        legend: {
-            position: 'bottomleft',
-            colors: ['#FF0000', '#FFFF00', '#5eb95e', "#000000"],
-            labels: ['Non Reporting', 'Partial Reporting ', 'Fully Reporting', 'Not expected to Report']
-        }
-    });
-
-    scope.indicator_types = [
-        {
-            code: 'ever_over_total',
-            name: 'Ever Reported / Total Facilities'
-        },
-        {
-            code: 'ever_over_expected',
-            name: 'Ever Reported / Expected Facilities'
-        },
-        {
-            code: 'period_over_expected',
-            name: 'Reported during period / Expected Facilities'
-        }
-    ];
+        ];
 
 
-    scope.viewOptins = [
-        {id: '0', name: 'Non Reporting Only'},
-        {id: '1', name: 'Reporting Only'},
-        {id: '2', name: 'All'}
-    ];
+        scope.viewOptins = [
+            {id: '0', name: 'Non Reporting Only'},
+            {id: '1', name: 'Reporting Only'},
+            {id: '2', name: 'All'}
+        ];
 
-}
+    }
 
-function popupFormat(feature) {
-    return '<table class="table table-bordered" style="width: 250px"><tr><th colspan="2"><b>' + feature.properties.name + '</b></th></tr>' +
-        '<tr><td>Expected Facilities</td><td class="number">' + feature.expected + '</td></tr>' +
-        '<tr><td>Reported This Period</td><td class="number">' + feature.period + '</td></tr>' +
-        '<tr><td>Ever Reported</td><td class="number">' + feature.ever + '</td></tr>' +
-        '<tr><td class="bold">Total Facilities</b></td><td class="number bold">' + feature.total + '</td></tr>';
-}
+    function popupFormat(feature) {
+        return '<table class="table table-bordered" style="width: 250px"><tr><th colspan="2"><b>' + feature.properties.name + '</b></th></tr>' +
+            '<tr><td>Expected Facilities</td><td class="number">' + feature.expected + '</td></tr>' +
+            '<tr><td>Reported This Period</td><td class="number">' + feature.period + '</td></tr>' +
+            '<tr><td>Ever Reported</td><td class="number">' + feature.ever + '</td></tr>' +
+            '<tr><td class="bold">Total Facilities</b></td><td class="number bold">' + feature.total + '</td></tr>';
+    }
 
-function onEachFeature(feature, layer) {
-    layer.bindPopup(popupFormat(feature));
-}
+    function onEachFeature(feature, layer) {
+        layer.bindPopup(popupFormat(feature));
+    }
 
 
-$scope.zoomMap = function(){
+    $scope.zoomMap = function(){
 
- $scope.centerL = {
-            lat: -6.397912857937015,
-            lng: 34.911609148190784,
-            zoom: 6
-          };
+     $scope.centerL = {
+                lat: -6.397912857937015,
+                lng: 34.911609148190784,
+                zoom: 6
+              };
 
-};
+    };
 
-$scope.zoomMap();*/
+    $scope.zoomMap();*/
 
 
 
 
-    $scope.centerJSON = function () {
-        leafletData.getMap().then(function (map) {
+    $scope.centerJSON = function() {
+        leafletData.getMap().then(function(map) {
 
 
             var latlngs = [];
@@ -1036,7 +1070,7 @@ $scope.zoomMap();*/
                 }
             }
 
-          map.fitBounds(latlngs);
+            map.fitBounds(latlngs);
 
         });
 
@@ -1044,458 +1078,685 @@ $scope.zoomMap();*/
 
     };
 
-console.log(params);
-$scope.filter = params;
-
-    initiateMap($scope);
-
-    $scope.onDetailClicked = function (feature) {
-
-        $scope.currentFeature = feature;
-        $scope.$broadcast('openDialogBox');
-    };
-
-
-  $scope.OnFilterChanged = function() {
-
-
-     $.getJSON('/gis/reporting-rate.json', $scope.filter, function (data) {
-               $scope.features = data.map;
-               getExportDataFunction($scope.features);
-               angular.forEach($scope.features, function (feature) {
-                   feature.geometry_text = feature.geometry;
-                   feature.geometry = JSON.parse(feature.geometry);
-                   feature.type = "Feature";
-                   feature.properties = {};
-                   feature.properties.name = feature.name;
-                   feature.properties.id = feature.id;
-               });
-
-               $scope.drawMap({
-                   "type": "FeatureCollection",
-                   "features": $scope.features
-               });
-
-               $scope.centerJSON();
-
-               //zoomAndCenterMap(leafletData, $scope);
-
-
-              // zoomAndCenterMap1(leafletData, $scope);
-           });
-};
-
-
-    $scope.loadMap = function(params){
     $scope.filter = params;
-    initiateMap($scope);
-    $scope.OnFilterChanged();
 
-    };
-/*
- $scope.onDetailClicked = function (feature) {
+    initiateMap($scope);
+
+    $scope.onDetailClicked = function(feature) {
+
         $scope.currentFeature = feature;
         $scope.$broadcast('openDialogBox');
     };
-*/
 
-$scope.consumptionTrends = [];
-$scope.loadConsumptionTrendsData = function (params){
 
-ConsumptionTrendsData.get(params).then(function(data){
+    $scope.OnFilterChanged = function() {
 
-console.log(data);
-var groupA = _.where(data, {'schedule':45});
-var groupB = _.where(data, {'schedule':46});
 
-    if(!isUndefined(data)) {
+        $.getJSON('/gis/reporting-rate.json', $scope.filter, function(data) {
+            $scope.features = data.map;
+            getExportDataFunction($scope.features);
+            angular.forEach($scope.features, function(feature) {
+                feature.geometry_text = feature.geometry;
+                feature.geometry = JSON.parse(feature.geometry);
+                feature.type = "Feature";
+                feature.properties = {};
+                feature.properties.name = feature.name;
+                feature.properties.id = feature.id;
+            });
 
-     var category = _.pluck(groupA, 'periodname');
-     var tle_consumption = _.pluck(groupA, 'tle_consumption');
-     var tld_consumption = _.pluck(groupA, 'tld_consumption');
-     var dolutegravir_consumption = _.pluck(groupA, 'dolutegravir_consumption');
+            $scope.drawMap({
+                "type": "FeatureCollection",
+                "features": $scope.features
+            });
 
-     var tle_consumptionB = _.pluck(groupB, 'tle_consumption');
-     var tld_consumptionB = _.pluck(groupB, 'tld_consumption');
-     var dolutegravir_consumptionB = _.pluck(groupB, 'dolutegravir_consumption');
+            $scope.centerJSON();
 
-     var chartTypeId = 'consumptionTrendsChartA';
-     var chartTypeId2 = 'consumptionTrendsChartB';
-     var categoryB = _.pluck(groupB, 'periodname');
+            //zoomAndCenterMap(leafletData, $scope);
 
-     $scope.consumptionTrends = data;
 
-     $scope.consumptionTrendsChart(chartTypeId, data,category,tle_consumption,tld_consumption,dolutegravir_consumption,'Consumption trends, 2019 - Group A');
-     $scope.consumptionTrendsChart(chartTypeId2, data,categoryB,tle_consumptionB,tld_consumptionB,dolutegravir_consumptionB,'Consumption trends, 2019 - Group B');
+            // zoomAndCenterMap1(leafletData, $scope);
+        });
+    };
+
+
+    $scope.loadMap = function(params) {
+        $scope.filter = params;
+        initiateMap($scope);
+        $scope.OnFilterChanged();
+
+    };
+    /*
+     $scope.onDetailClicked = function (feature) {
+            $scope.currentFeature = feature;
+            $scope.$broadcast('openDialogBox');
+        };
+    */
+
+    $scope.consumptionTrends = [];
+    $scope.loadConsumptionTrendsData = function(params) {
+
+        ConsumptionTrendsData.get(params).then(function(data) {
+
+            var groupA = _.where(data, {
+                'schedule': 45
+            });
+            var groupB = _.where(data, {
+                'schedule': 46
+            });
+
+            if (!isUndefined(data)) {
+
+                var category = _.pluck(groupA, 'periodname');
+                var tle_consumption = _.pluck(groupA, 'tle_consumption');
+                var tld_consumption = _.pluck(groupA, 'tld_consumption');
+                var dolutegravir_consumption = _.pluck(groupA, 'dolutegravir_consumption');
+
+                var tle_consumptionB = _.pluck(groupB, 'tle_consumption');
+                var tld_consumptionB = _.pluck(groupB, 'tld_consumption');
+                var dolutegravir_consumptionB = _.pluck(groupB, 'dolutegravir_consumption');
+
+                var chartTypeId = 'consumptionTrendsChartA';
+                var chartTypeId2 = 'consumptionTrendsChartB';
+                var categoryB = _.pluck(groupB, 'periodname');
+
+                $scope.consumptionTrends = data;
+
+                $scope.consumptionTrendsChart(chartTypeId, data, category, tle_consumption, tld_consumption, dolutegravir_consumption, 'Consumption trends, 2019 - Group A');
+                $scope.consumptionTrendsChart(chartTypeId2, data, categoryB, tle_consumptionB, tld_consumptionB, dolutegravir_consumptionB, 'Consumption trends, 2019 - Group B');
+
+            }
+
+
+        });
+
+    };
+
+
+
+    $scope.loadStockStatusByProgram = function(params, level) {
+        var stockSummary = [];
+        var getPromiseData = (level === 'level1') ? StockStatusByProgramData : DashboardStockStatusSummaryData;
+        var chartId = (level === 'level1') ? 'stock-by-program-and-period' : 'stockStatusOverTime';
+
+        /*StockStatusByProgramData.get(params).then(function(stocks){
+        var title = (level === 'level1')?'Stock Status by Program':''Stock Status Over Time for '+'Nevirapine''
+
+        var overstock = _.pluck(stocks, 'overstock');
+
+        console.log(stocks);
+
+        $scope.openStatusByProgramChart(null, 'Stock Status by Program');
+
+        });*/
+
+
+
+        var params2 = {
+            product: parseInt(2434, 0),
+            year: parseInt(2018, 0),
+            program: parseInt(1, 0),
+            period: parseInt(75, 10)
+        };
+        getPromiseData.get(params).then(function(data) {
+
+            $scope.stockStatuses = [];
+            if (!isUndefined(data)) {
+
+                stockSummary = data;
+                var category = _.uniq(_.pluck(stockSummary, 'period'));
+
+                var groupBySchedule = _.groupBy(stockSummary, function(schedule) {
+                    return schedule.schedule;
+                });
+
+                _.map(groupBySchedule, function(groupedData, index) {
+
+                    chartId = 'stock-by-program-and-period.' + index[index.length - 1];
+                    var category = _.uniq(_.pluck(groupedData, 'period'));
+                    var title = (level === 'level1') ? 'Stock Status for  ' + params.programName + ' ' + index + ',  ' + params.year : 'Stock Status Over Time for ' + params.periodName + ', ' + params.year;
+                    var dataV = [];
+                    dataV = groupedData;
+                    $rootScope.drawTheChart(dataV, chartId, title, category);
+
+                    return null;
+
+                });
+
+
+
+
+            }
+
+
+        });
+
+
+    };
+
+
+    $rootScope.drawTheChart = function(stockSummary, chartId, title, category, level, name) {
+
+
+        var so = _.pluck(stockSummary, 'so');
+        var os = _.pluck(stockSummary, 'os');
+        var sap = _.pluck(stockSummary, 'sp');
+        var us = _.pluck(stockSummary, 'us');
+        var uk = _.pluck(stockSummary, 'uk');
+        var total = _.pluck(stockSummary, 'total');
+
+        var summaries = [];
+
+        var totalZeroStock = [];
+        var totalLowStock = [];
+        var totalOverStock = [];
+        var totalUnknown = [];
+        var totalSufficientStock = [];
+
+        _.map(total, function(data, index) {
+
+            totalZeroStock.push({
+                y: so[index],
+                total: data
+            });
+            totalLowStock.push({
+                y: us[index],
+                total: data
+            });
+            totalOverStock.push({
+                y: os[index],
+                total: data
+            });
+            totalSufficientStock.push({
+                y: sap[index],
+                total: data
+            });
+            totalUnknown.push({
+                y: uk[index],
+                total: data
+            });
+            return null;
+
+        });
+
+        summaries = [{
+                name: 'Stocked Out',
+                data: totalZeroStock,
+                color: '#ff0d00'
+            },
+            {
+                name: 'Understocked',
+                data: totalLowStock,
+                color: 'orange'
+            },
+            {
+                name: 'OverStocked',
+                data: totalOverStock,
+                color: '#00B2EE'
+            },
+            {
+                name: 'Adequately stocked',
+                data: totalSufficientStock,
+                color: '#006600'
+            },
+            {
+                name: 'UnKnown',
+                data: totalUnknown,
+                color: 'gray'
+            }
+
+        ];
+        var numberOfIncidence = '<span style="font-size: 10px!important;color: #0c9083">Number of Incidences Reported</span>';
+
+        $rootScope.stockStatusesStackedColumnChart(chartId, 'line', title, category, numberOfIncidence, summaries, level, name);
+
+    };
+
+
+
+
+    $scope.openStatusByProgramChart = function(dataV, title) {
+
+        Highcharts.chart('stock-by-program-and-period', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: title
+            },
+            xAxis: {
+                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Total fruit consumption'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -30,
+                verticalAlign: 'top',
+                y: 25,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                headerFormat: '<b>{point.x}</b><br/>',
+                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series: [{
+                name: 'John',
+                data: [5, 3, 4, 7, 2]
+            }, {
+                name: 'Jane',
+                data: [2, 2, 3, 2, 1]
+            }, {
+                name: 'Joe',
+                data: [3, 4, 4, 2, 5]
+            }]
+        });
+
+
+
+    };
+
+
+
+
+    $rootScope.stockStatusesStackedColumnChart = function(id, chartType, title, category, yAxisTitle, data, level, name) {
+
+        Highcharts.chart(id, {
+            chart: {
+                type: chartType
+            },
+            title: {
+                text: '<span style="font-size: 15px!important;color: #0c9083">' + title + '</span>'
+            },
+            xAxis: {
+                categories: category,
+                labels: {
+                    align: 'right'
+                },
+                title: {
+                    text: '<span style="font-size: 10px!important;color: #0c9083">Processing Periods</span>'
+                }
+            },
+            yAxis: {
+                gridLineColor: '',
+                min: 0,
+                title: {
+                    text: yAxisTitle
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        color: ( // theme
+                            Highcharts.defaultOptions.title.style &&
+                            Highcharts.defaultOptions.title.style.color
+                        ) || 'gray'
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            legend: {
+                itemStyle: {
+
+
+                    fontSize: '10px'
+                },
+                align: 'center',
+                layout: 'horizontal',
+
+                verticalAlign: 'bottom',
+
+                floating: false,
+                backgroundColor: Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                borderColor: '#CCC',
+                borderWidth: 0,
+                shadow: false
+            },
+            tooltip: {
+                headerFormat: '<b>{point.x}</b><br/>',
+                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            },
+            exporting: {
+                buttons: {
+                    customButton: {
+                        text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                        symbolStroke: "red",
+                        theme: {
+                            fill: "#28A2F3"
+                        },
+                        onclick: function() {
+                            $rootScope.openDefinitionModal(level, name);
+                        }
+                    }
+                }
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            series: data
+        });
+
+
+
+
+    };
+
+
+    $scope.consumptionTrendsChart = function(chartTypeId, data, category, tle_consumption, tld_consumption, dolutegravir_consumption, group) {
+
+        Highcharts.chart(chartTypeId, {
+            chart: {
+                type: 'line'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: group
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: category
+            },
+            yAxis: {
+                title: {
+                    text: 'Average Monthly Consumption'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                name: 'TLE',
+                data: tle_consumption
+            }, {
+                name: 'TLD',
+                data: tld_consumption
+            }, {
+                name: 'Dolutegravir',
+                data: dolutegravir_consumption
+            }]
+        });
+
+
+    };
+
+
+
+
+    $scope.indexOfStockAvailable = function(dataV, title) {
+        new Highcharts.Chart({
+            chart: {
+                type: 'pie',
+                renderTo: 'indexOfALUAvailability'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: '<span style="font-size: 15px!important;color: #0c9083">' + title + '</span>'
+
+            },
+            /* title: {
+               verticalAlign: 'middle',
+               floating: true,
+               text: 'CENTERED<br>TEXT'
+             },*/
+            plotOptions: {
+                pie: {
+                    innerSize: '70%'
+                }
+            },
+
+            series: [{
+                data: dataV
+            }]
+        });
+    };
+
+
+
+
+    function loadHealthCommoditiesFinancingSection() {
+        GetSourceOfFundsByLocationData.get()
+            .then(function(data) {
+                var title = 'Breakdown of source of funds used to purchase health commodities';
+                var value = _.pluck(data, 'Breakdown of source of funds used to purchase health commodities');
+                loadHealthCommoditiesFinancingChart(data, title, value, 'spline', 'Year and Month', '# of requisitions');
+            });
+    }
+
+  function loadHealthCommoditiesFinancingChart(data, title, values, type, chartName, verticalTitle) {
+        Highcharts.chart('sourceOfFundsByZones', {
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Breakdown of source of funds used to purchase health commodities'
+            },
+            subtitle: {
+                text: 'Click on bar to see more'
+            },
+            xAxis: {
+               type: 'category'
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Tsh'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: createSeriesForSourceOfFundsByZones(data),
+            drilldown: {
+                series: getDrillDownsRegionSeries(data)
+            },
+        });
+
+    }
+
+    function get_sum(obj) {
+    return _.pluck(obj, 'total').reduce(function(acc, val) { return acc + val; }, 0);
+    }
+
+    function createSeriesForSourceOfFundsByZones(data) {
+        var zones = _.uniq(_.pluck(data, 'zone_name'));
+        var source_funds = _.uniq(_.pluck(data, 'name'));
+
+        var fund_array = [];
+        for (var x in source_funds) {
+            var zones_array = [];
+            for (var y in zones) {
+                var sof_obj = _.where(
+                    data, {
+                        name: source_funds[x],
+                        zone_name: zones[y]
+                    });
+
+               // var sof_total = _.pluck(sof_obj, 'total').reduce((a, b) => a + b, 0);
+                var sof_total = get_sum(sof_obj);
+
+                var zone_obj = {
+                    name: zones[y],
+                    y: sof_total,
+                    drilldown: zones[y] + '-' + source_funds[x]
+                };
+                zones_array.push(zone_obj);
+
+            }
+
+            var fund_obj = {
+                name: source_funds[x],
+                data: zones_array
+            };
+            fund_array.push(fund_obj);
+        }
+
+        return fund_array;
+
+    }
+
+    function getDrillDownsRegionSeries(data) {
+        var zones = _.uniq(_.pluck(data, 'zone_name'));
+        var source_funds = _.uniq(_.pluck(data, 'name'));
+        var regions = _.uniq(_.pluck(data, 'region_name'));
+
+        var fund_array = [];
+
+        for (var x in source_funds) {
+            var zone_array = [];
+            for (var y in zones) {
+                var region_array = [];
+                for (var z in regions) {
+                    var sof_objs = _.where(
+                        data, {
+                            name: source_funds[x],
+                            zone_name: zones[y],
+                            region_name: regions[z]
+                        });
+
+                    if (sof_objs.length > 0) {
+
+                       // var sof_total = _.pluck(sof_objs, 'total').reduce((a, b) => a + b, 0);
+                        var sof_total = get_sum(sof_obj);
+
+                        var region_obj = {
+                            name: regions[z],
+                            y: sof_total,
+                            drilldown: regions[z] + '-' + source_funds[x]
+                        };
+                        region_array.push(region_obj);
+                    }
+
+                }
+                if(region_array.length > 0)
+                {
+                var fund_obj = {
+                    name: source_funds[x],
+                    id: zones[y] + '-' + source_funds[x],
+                    data: region_array
+                };
+                fund_array.push(fund_obj);
+                }
+            }
+        }
+        return fund_array.concat(getDrillDownsDistrictSeries(data));
 
     }
 
 
-});
+    function getDrillDownsDistrictSeries(data) {
+        var zones = _.uniq(_.pluck(data, 'zone_name'));
+        var regions = _.uniq(_.pluck(data, 'region_name'));
+        var districts = _.uniq(_.pluck(data, 'district_name'));
+        var source_funds = _.uniq(_.pluck(data, 'name'));
 
-};
+        var fund_array = [];
 
+        for (var x in source_funds) {
+            var zone_array = [];
+            for (var y in zones) {
+                var region_array = [];
+                for (var z in regions) {
+                    var district_array = [];
+                    for (var a in districts) {
+                        var sof_objs = _.where(
+                            data, {
+                                name: source_funds[x],
+                                zone_name: zones[y],
+                                region_name: regions[z],
+                                district_name: districts[a]
+                            });
 
+                        if (sof_objs.length > 0) {
 
-$scope.loadStockStatusByProgram = function (params, level){
-var stockSummary = [];
-var getPromiseData = (level === 'level1')?StockStatusByProgramData:DashboardStockStatusSummaryData;
-var chartId =(level === 'level1')?'stock-by-program-and-period':'stockStatusOverTime';
+                           // var sof_total = _.pluck(sof_objs, 'total').reduce((a, b) => a + b, 0);
+                           var sof_total = get_sum(sof_obj);
 
-/*StockStatusByProgramData.get(params).then(function(stocks){
-var title = (level === 'level1')?'Stock Status by Program':''Stock Status Over Time for '+'Nevirapine''
+                            var district_obj = {
+                                name: districts[a],
+                                y: sof_total
+                            };
+                            district_array.push(district_obj);
+                        }
 
-var overstock = _.pluck(stocks, 'overstock');
+                    }
+                    var fund_obj = {
+                        name: source_funds[x],
+                        id: regions[z] + '-' + source_funds[x],
+                        data: district_array
+                    };
 
-console.log(stocks);
-
-$scope.openStatusByProgramChart(null, 'Stock Status by Program');
-
-});*/
-
-
-
-var params2 = {product:parseInt(2434,0) ,year:parseInt(2018,0), program: parseInt(1,0),period:parseInt(75,10)};
-getPromiseData.get(params).then(function(data) {
-
-$scope.stockStatuses   = [];
- if(!isUndefined(data)){
-
- stockSummary = data;
-  var category = _.uniq(_.pluck(stockSummary,'period'));
-
-             var groupBySchedule  = _.groupBy(stockSummary, function(schedule){
-                return schedule.schedule;
-             });
-
-             _.map(groupBySchedule, function(groupedData, index) {
-
-                  chartId = 'stock-by-program-and-period.'+index[index.length -1];
-                  var category = _.uniq(_.pluck(groupedData,'period'));
-                  var title = (level === 'level1')?'Stock Status for  '+params.programName+' '+index+',  '+params.year:'Stock Status Over Time for '+ params.periodName +', '+params.year;
-                  var dataV = [];
-                  dataV  = groupedData;
-                  $rootScope.drawTheChart(dataV,chartId,title,category);
-              console.log(groupedData);
-                 return null;
-
-              });
-
-
-
-
-
-
- }
-
-
-});
-
-
-};
-
-
- $rootScope.drawTheChart = function (stockSummary,chartId,title,category,level,name) {
-
-
-               var so = _.pluck(stockSummary, 'so');
-               var os = _.pluck(stockSummary, 'os');
-               var sap = _.pluck(stockSummary, 'sp');
-               var us = _.pluck(stockSummary, 'us');
-               var uk = _.pluck(stockSummary, 'uk');
-               var total = _.pluck(stockSummary, 'total');
-
-               var summaries = [];
-
-               var totalZeroStock = [];
-               var totalLowStock = [];
-               var totalOverStock = [];
-               var totalUnknown = [];
-               var totalSufficientStock = [];
-
-               _.map(total,function(data, index){
-
-             totalZeroStock.push({y:so[index],total:data});
-             totalLowStock.push({y:us[index],total:data});
-             totalOverStock.push({y:os[index],total:data});
-             totalSufficientStock.push({y:sap[index],total:data});
-             totalUnknown.push({y:uk[index],total:data});
-                 return null;
-
-               });
-
-               summaries = [
-                            {name:'Stocked Out', data:totalZeroStock, color:'#ff0d00'},
-                            {name:'Understocked', data:totalLowStock, color:'orange'},
-                            {name:'OverStocked', data:totalOverStock, color:'#00B2EE'},
-                            {name:'Adequately stocked', data:totalSufficientStock, color:'#006600'},
-                            {name:'UnKnown', data:totalUnknown, color:'gray'}
-
-                           ];
-              var numberOfIncidence = '<span style="font-size: 10px!important;color: #0c9083">Number of Incidences Reported</span>';
-
-              $rootScope.stockStatusesStackedColumnChart(chartId,'line' ,title,category, numberOfIncidence,summaries,level,name );
-
-              };
-
-
-
-
-$scope.openStatusByProgramChart= function(dataV,title) {
-
-Highcharts.chart('stock-by-program-and-period', {
-    chart: {
-        type: 'column'
-    },
-    title: {
-        text: title
-    },
-    xAxis: {
-        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
-    },
-    yAxis: {
-        min: 0,
-        title: {
-            text: 'Total fruit consumption'
-        },
-        stackLabels: {
-            enabled: true,
-            style: {
-                fontWeight: 'bold',
-                color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    if (fund_obj.data.length > 0) {
+                        fund_array.push(fund_obj);
+                    }
+                }
             }
         }
-    },
-    legend: {
-        align: 'right',
-        x: -30,
-        verticalAlign: 'top',
-        y: 25,
-        floating: true,
-        backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
-        borderColor: '#CCC',
-        borderWidth: 1,
-        shadow: false
-    },
-    tooltip: {
-        headerFormat: '<b>{point.x}</b><br/>',
-        pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-    },
-    plotOptions: {
-        column: {
-            stacking: 'normal',
-            dataLabels: {
-                enabled: true,
-                color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-            }
-        }
-    },
-    series: [{
-        name: 'John',
-        data: [5, 3, 4, 7, 2]
-    }, {
-        name: 'Jane',
-        data: [2, 2, 3, 2, 1]
-    }, {
-        name: 'Joe',
-        data: [3, 4, 4, 2, 5]
-    }]
-});
 
-
-
-};
-
-
-
-
-
-
- $rootScope.stockStatusesStackedColumnChart = function (id,chartType, title,category,yAxisTitle,data,level,name){
-
- Highcharts.chart(id, {
-     chart: {
-         type: chartType
-     },
-     title: {
-         text: '<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>'
-     },
-     xAxis: {
-         categories: category,
-         labels: {
-                     align: 'right'
-                 },
-             title: {
-                     text: '<span style="font-size: 10px!important;color: #0c9083">Processing Periods</span>'
-                 }
-     },
-     yAxis: {
-     gridLineColor: '',
-         min: 0,
-         title: {
-             text: yAxisTitle
-         },
-         stackLabels: {
-             enabled: true,
-             style: {
-                 fontWeight: 'bold',
-                 color: ( // theme
-                     Highcharts.defaultOptions.title.style &&
-                     Highcharts.defaultOptions.title.style.color
-                 ) || 'gray'
-             }
-         }
-     }, credits: {
-               enabled: false
-           },
-     legend: {
-      itemStyle: {
-
-
-                 fontSize: '10px'
-             },
-         align: 'center',
-          layout: 'horizontal',
-
-         verticalAlign: 'bottom',
-
-         floating: false,
-         backgroundColor:
-             Highcharts.defaultOptions.legend.backgroundColor || 'white',
-         borderColor: '#CCC',
-         borderWidth: 0,
-         shadow: false
-     },
-     tooltip: {
-         headerFormat: '<b>{point.x}</b><br/>',
-         pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-     }, exporting: {
-                             buttons: {
-                              customButton: {
-                              text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
-                              symbolStroke: "red",
-                              theme: {
-                              fill:"#28A2F3"
-                              },
-                              onclick: function () {
-                              $rootScope.openDefinitionModal(level,name);
-                              }
-                              }
-                              }
-                              },
-     plotOptions: {
-         column: {
-             stacking: 'normal',
-             dataLabels: {
-                 enabled: true
-             }
-         }
-     },
-     series:data
- });
-
-
-
-
- };
-
-
- $scope.consumptionTrendsChart = function (chartTypeId,data,category,tle_consumption,tld_consumption,dolutegravir_consumption,group){
-
- Highcharts.chart(chartTypeId, {
-     chart: {
-         type: 'line'
-     }, credits: {
-           enabled:false
-           },
-     title: {
-         text: group
-     },
-     subtitle: {
-         text: ''
-     },
-     xAxis: {
-         categories: category
-     },
-     yAxis: {
-         title: {
-             text: 'Average Monthly Consumption'
-         }
-     },
-     plotOptions: {
-         line: {
-             dataLabels: {
-                 enabled: true
-             },
-             enableMouseTracking: false
-         }
-     },
-     series: [{
-                     name: 'TLE',
-                     data: tle_consumption
-                 }, {
-                     name: 'TLD',
-                     data: tld_consumption
-                 }, {
-                     name: 'Dolutegravir',
-                     data: dolutegravir_consumption
-                 }]
- });
-
-
- };
-
-
-
-
-
-
-$scope.indexOfStockAvailable = function(dataV,title) {
-  new Highcharts.Chart({
-    chart: {
-      type: 'pie',
-      renderTo: 'indexOfALUAvailability'
-    },credits:{
-    enabled:false
-    },
-     title: {
-            text:'<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>'
-
-        },
-   /* title: {
-      verticalAlign: 'middle',
-      floating: true,
-      text: 'CENTERED<br>TEXT'
-    },*/
-    plotOptions: {
-      pie: {
-        innerSize: '70%'
-      }
-    },
-
-    series: [{
-      data: dataV
-    }]
-  });
-};
-
-
-
-
-
-
+ return fund_array;
+    }
 }
 
 AnalyticsFunction.resolve = {
 
-YearFilteredData: function ($q, $timeout, OperationYears) {
+    YearFilteredData: function($q, $timeout, OperationYears) {
         var deferred = $q.defer();
-        $timeout(function () {
-            OperationYears.get({}, function (data) {
+        $timeout(function() {
+            OperationYears.get({}, function(data) {
                 deferred.resolve(data.years);
             }, {});
         }, 100);
         return deferred.promise;
- }
- };
-
+    }
+};

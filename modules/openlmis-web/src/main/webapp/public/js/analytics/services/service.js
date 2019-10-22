@@ -723,3 +723,31 @@ services.factory("GetGeoStockStatusForMap", function($resource){
 services.factory("GetDistrictFundUtilization", function($resource){
     return $resource('/api/dashboard/getDistrictFundUtilization.json',{},{});
 });
+
+
+services.factory('GetSourceOfFundsByLocationData', function ($q, $timeout, $resource,GetSourceOfFundsByLocation) {
+    function get(params) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetSourceOfFundsByLocation.get(params, function (data) {
+                var sourceOfFunds ={};
+                if (data !== undefined) {
+                    sourceOfFunds = data.sourceOfFunds;
+                }
+                deferred.resolve(sourceOfFunds);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+
+services.factory('GetSourceOfFundsByLocation', function($resource){
+    return $resource('/api//dashboard/getSourceOfFundsByLocation.json',{}, {});
+});

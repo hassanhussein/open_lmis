@@ -266,4 +266,11 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("financies", this.financialAnalyticMapper.getDistrictFundUtilization(loggedInUserId(request),zone, program,year,period));
     }
 
+
+    @RequestMapping(value = "/getSourceOfFundsByLocation.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getSourceOfFundsByLocation(@Param("program") Long program,
+                                                                       @Param("period") Long period) {
+        return OpenLmisResponse.response("sourceOfFunds", this.requisitionStatusMapper.getSourceOfFundsByLocation(program, period));
+    }
+
 }
