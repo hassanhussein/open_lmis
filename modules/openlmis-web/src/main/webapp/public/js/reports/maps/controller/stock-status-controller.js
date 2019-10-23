@@ -277,13 +277,14 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
 
     ///////////
     loadStockStatusConsumptionData = function(){
+        $scope.inprogress=true;
         $scope.productsSelected = [];
         angular.forEach($scope.products, function(itm,idx){
             if(itm.selected){
                 $scope.productsSelected.push(itm.id);
             }
         });
-        $scope.inProgress=true;
+
         StockStatusProductConsumptionGraph.get({
             program: $scope.filter.program,
             product: $scope.productsSelected,
@@ -518,7 +519,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
     };
 
     $scope.centerJSON = function() {
-
+        $scope.inprogress=true;
         leafletData.getMap().then(function(map) {
             var latlngs = [];
             for (var c = 0; c < $scope.features.length; c++) {
@@ -546,6 +547,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
             thevar = latlngs;
             theMap = map;
             map.fitBounds(latlngs);
+            $scope.inprogress=false;
         });
     };
 
@@ -633,7 +635,7 @@ function StockStatusController( $scope, leafletData, StockStatusProductConsumpti
 
         $.getJSON('/gis/stock-status-products.json', $scope.filter, function(data) {
             var markSelectedProducts = null;
-
+            $scope.inprogress=true;
             if(!isUndefined(data.products)){
 
                 markSelectedProducts = _.map(data.products ,function(product){
