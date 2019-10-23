@@ -16,7 +16,6 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                 data: userFees
             }];
 
-            console.log(dataV);
 
             loadChart(category, dataV);
 
@@ -98,14 +97,11 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                 $location.search().programName = programName;
                 $location.search().periodName = periodName;
 
-                console.log($location.search());
 
 
                 $scope.$parent.params = $location.search();
 
                 $rootScope.loadHealthCommoditiesFinancing($location.search());
-
-
             });
 
 
@@ -115,25 +111,33 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
 
 
     $rootScope.loadHealthCommoditiesFinancing= function(params) {
-    console.log("loadHealthCommoditiesFinancing");
          GetSourceOfFundsByLocationData.get(params)
                 .then(function(data) {
                 var title = 'Breakdown of source of funds used to purchase health commodities';
                 var value = _.pluck(data, 'Breakdown of source of funds used to purchase health commodities');
-                loadHealthCommoditiesFinancingChart(data, title, value, 'spline', 'Year and Month', '# of requisitions');});
+                loadHealthCommoditiesFinancingChart(params,data, title, value, 'spline', 'Year and Month', '# of requisitions');});
         };
 
 
-        function loadHealthCommoditiesFinancingChart(data, title, values, type, chartName, verticalTitle) {
+        function loadHealthCommoditiesFinancingChart(params,data, title, values, type, chartName, verticalTitle) {
+
+             Highcharts.setOptions({
+                lang: {
+                drillUpText: '<< Go Back'
+                 }
+             });
                 Highcharts.chart('sourceOfFundsByZones', {
                     chart: {
                         type: 'column'
                     },
                     title: {
-                        text: 'Breakdown of source of funds used to purchase health commodities'
+                        text: 'Breakdown of source of funds used to purchase health commodities for ' +params.programName + ' ' + params.periodName+', ' + params.year
+                    },
+                    credits: {
+                        enabled: false
                     },
                     subtitle: {
-                        text: 'Click on bar to see more'
+                        text: 'Click columns to drill down to single series. Click categories to drill down both'
                     },
                     xAxis: {
                        type: 'category'
@@ -144,23 +148,25 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                             text: 'Tsh'
                         }
                     },
-                    tooltip: {
-                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                            '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-                        footerFormat: '</table>',
-                        shared: true,
-                        useHTML: true
-                    },
                     plotOptions: {
+
                         column: {
                             pointPadding: 0.2,
                             borderWidth: 0
-                        }
+                        },
+                         series: {cursor: 'pointer',
+                                        point: {
+                                            events: {
+                                                click: function () {
+                                                  location.href = this.options.url;
+                                                  }
+                                            }
+                                        }
+                    }
                     },
                     series: createSeriesForSourceOfFundsByZones(data),
                     drilldown: {
-                        series: getDrillDownsRegionSeries(data)
+                        series: getDrillDownsRegionSeries(data,params)
                     },
                 });
 
@@ -202,12 +208,11 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                         };
                         fund_array.push(fund_obj);
                     }
-
                     return fund_array;
 
                 }
 
-                function getDrillDownsRegionSeries(data) {
+                function getDrillDownsRegionSeries(data,params) {
                     var zones = _.uniq(_.pluck(data, 'zone_name'));
                     var source_funds = _.uniq(_.pluck(data, 'name'));
                     var regions = _.uniq(_.pluck(data, 'region_name'));
@@ -251,12 +256,12 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                             }
                         }
                     }
-                    return fund_array.concat(getDrillDownsDistrictSeries(data));
+                    return fund_array.concat(getDrillDownsDistrictSeries(data,params));
 
                 }
 
 
-                function getDrillDownsDistrictSeries(data) {
+                function getDrillDownsDistrictSeries(data, params) {
                     var zones = _.uniq(_.pluck(data, 'zone_name'));
                     var regions = _.uniq(_.pluck(data, 'region_name'));
                     var districts = _.uniq(_.pluck(data, 'district_name'));
@@ -280,13 +285,17 @@ function fundUtilizationController($scope, $rootScope, GetDistrictFundUtilizatio
                                         });
 
                                     if (sof_objs.length > 0) {
-
-                                       // var sof_total = _.pluck(sof_objs, 'total').reduce((a, b) => a + b, 0);
                                        var sof_total = get_sum(sof_objs);
+
+                                       params.zone = _.uniq(_.pluck(sof_objs, 'district_id'))[0];
+
+                                       var url = '../../../public/pages/reports/main/index.html#/commodity-financing?'+jQuery.param($scope.$parent.params);
 
                                         var district_obj = {
                                             name: districts[a],
-                                            y: sof_total
+                                            y: sof_total,
+                                            district_id: _.uniq(_.pluck(sof_objs, 'district_id')),
+                                            url: url
                                         };
                                         district_array.push(district_obj);
                                     }
