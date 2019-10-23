@@ -365,12 +365,12 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
     }
 ]);
 
-app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService',
-    function (TreeGeographicZoneList, TreeGeographicZoneListByProgram, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService) {
+app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService','$routeParams',
+    function ( TreeGeographicZoneList, TreeGeographicZoneListByProgram, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService,$routeParams) {
 
         var onCascadedVarsChanged = function ($scope, attr) {
             if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
-
+                $scope.$parent.filter= $scope.filter;
                 var service = TreeGeographicZoneListByProgram;
                 if (attr.nozone) {
                     service = TreeGeographicTreeByProgramNoZones;
@@ -622,7 +622,7 @@ app.directive('facilityFilter', ['FacilitiesByProgramParams', '$routeParams',
                 };
 
                 scope.subscribeOnChanged('facility', 'requisition-group', onChange, false);
-                scope.subscribeOnChanged('facility', 'zone', onChange, true);
+                scope.subscribeOnChanged('facility', 'zone-filter', onChange, true);
                 scope.subscribeOnChanged('facility', 'schedule', onChange, false);
                 scope.subscribeOnChanged('facility', 'facility-type', onChange, false);
                 scope.subscribeOnChanged('facility', 'program', onChange, true);
