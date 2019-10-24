@@ -60,7 +60,7 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
       $scope.filter.reportType = reportType;
     }
     $scope.applyUrl();
-    $scope.OnFilterChanged();
+
   };
 
   $scope.onToggleAll = function () {
