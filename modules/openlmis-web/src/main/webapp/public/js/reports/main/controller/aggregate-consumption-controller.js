@@ -9,22 +9,19 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function AggregateConsumptionReportController($scope,$q, $filter, $window, AggregateConsumptionReport, $timeout) {
+function AggregateConsumptionReportController($scope,$q, $window, AggregateConsumptionReport, $timeout) {
+
+    $scope.reportTypes = [{name: 'EM', value: 'EM', label: 'Emergency'}, {name: 'RE', value: 'RE', label: 'Regular'}];
+    $scope.isAll = false;
+    $scope.page = 1;
+    $scope.pageSize = 10;
 
         $scope.allPrinting = function(params){
-
                  var deferred = $q.defer();
-
                    AggregateConsumptionReport.get(params, function (data) {
-
                    if(data.openLmisResponse.rows.length  > 0){
-
                         deferred.resolve();
-                   }
-
-                   });
-
-
+                   }});
           return deferred.promise;
 
      };
@@ -32,14 +29,7 @@ function AggregateConsumptionReportController($scope,$q, $filter, $window, Aggre
 
 
 
-    $scope.reportTypes = [{name: 'EM', value: 'EM', label: 'Emergency'}, {name: 'RE', value: 'RE', label: 'Regular'}];
-    $scope.isAll = false;
-    $scope.page = 1;
-    $scope.pageSize = 10;
-
-
     $scope.selectAll = function () {
-
         if ($scope.isAll === false) {
             angular.forEach($scope.reportTypes, function (type) {
                 type.checked = true;
@@ -59,13 +49,13 @@ function AggregateConsumptionReportController($scope,$q, $filter, $window, Aggre
 
 
     $scope.toggleSingle = function () {
+
         var param = [];
         param = _.where($scope.reportTypes, {checked: true});
         if (parseInt(param.length, 10) === 2 || parseInt(param.length, 10) === 0) {
             $scope.allReportType = true;
             $scope.filter = {};
             $scope.filter.allReportType = true;
-            console.log($scope.filter);
             $scope.OnFilterChanged();
         }
         else {
@@ -87,18 +77,37 @@ function AggregateConsumptionReportController($scope,$q, $filter, $window, Aggre
 
 
     $scope.OnFilterChanged = function () {
-
-    };
-
-    $scope.searchReport = function () {
-
-        $scope.filter.page = $scope.page;
+       $scope.filter.page = $scope.page;
         $scope.filter.limit = $scope.pageSize;
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
 
-        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
+        $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
 
+
+            AggregateConsumptionReport.get($scope.getSanitizedParameter(), function (data) {
+                if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+                    $scope.pagination = data.openLmisResponse.pagination;
+                    $scope.totalItems = 1000;
+                    $scope.currentPage = $scope.pagination.page;
+                    $scope.tableParams.total = $scope.totalItems;
+                    $scope.data = data.openLmisResponse.rows;
+                    $scope.paramsChanged($scope.tableParams);
+                }
+            });
+
+    };
+
+    $scope.searchReport = function () {
+        $scope.filter.page = $scope.page;
+        $scope.filter.limit = $scope.pageSize;
+        $scope.data = $scope.datarows = [];
+        $scope.filter.max = 10000;
+        console.log($scope.filter);
+//        $scope.filter.products = $scope.filter.products[0].replace(',','')
+
+        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
+        console.log('After ' + allParams);
         //a variable to do manage rows count on UI
         $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
 
@@ -123,38 +132,28 @@ function AggregateConsumptionReportController($scope,$q, $filter, $window, Aggre
     };
 
     $scope.exportReport = function (type) {
-
-         $scope.filter.limit = 100000;
+         $scope.filter.limit = 1000000;
          $scope.filter.page  = 1;
-         var printWindow;
          var allow = $scope.allPrinting($scope.getSanitizedParameter());
 
          allow.then(function(){
-
             $scope.filter.pdformat = 1;
                  var url = '/reports/download/aggregate_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());
-                 printWindow.location.href = url;
+                 $window.open(url, '_blank');
          });
-
-          printWindow = $window.open('about:blank','_blank');
-
     };
-    $scope.showMoreFilters = false;
 
+    $scope.showMoreFilters = false;
     $scope.toggleMoreFilters = function () {
         $scope.showMoreFilters = true;
     };
 
     //lisent to currentPage value changes then update page params and call onFilterChanged() to fetch data
     $scope.$watch('currentPage', function() {
-    if($scope.page !== $scope.currentPage)
-    {
-        if ($scope.currentPage > 0) {
-            $scope.page = $scope.currentPage;
-            $timeout(function() {
-                $scope.searchReport();
-            }, 100);
-        }
-    }});
+		if ($scope.currentPage > 0) {
+			$scope.page = $scope.currentPage;
+			$scope.OnFilterChanged();
+		}
+});
 
 }
