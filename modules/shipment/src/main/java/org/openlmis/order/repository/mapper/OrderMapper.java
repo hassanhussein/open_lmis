@@ -183,7 +183,7 @@ public interface OrderMapper {
           "INNER JOIN requisitions r on r.id = O.id ",
           "INNER JOIN role_rights RR ON FRA.roleId = RR.roleId ",
           " INNER JOIN facilities f on f.id = r.facilityId ",
-          "WHERE ( LOWER(f.name) LIKE '%' || LOWER(#{searchParam} || '%') OR (LOWER(f.code) LIKE '%' || LOWER(#{searchParam}) || '%') ) and FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
+          "WHERE ( LOWER(f.name) LIKE '%' || LOWER(#{searchParam} || '%') OR (LOWER(f.code) LIKE '%' || LOWER(#{searchParam}) || '%')  OR (LOWER(O.orderNumber) LIKE '%' || LOWER(#{searchParam}) || '%')) and FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " +
                   "ORDER BY f.name ASC LIMIT #{limit} OFFSET #{offset}"})
   @Results({
           @Result(property = "id", column = "id"),
