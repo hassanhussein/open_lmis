@@ -57,6 +57,7 @@ public class RnrDTO {
   private List<RnrLineItemDTO> products;
   private String requisitionStatus;
   private Long modifiedBy;
+  private String sourceApplication;
 
   @Deprecated
   public static List<RnrDTO> prepareForListApproval(List<Rnr> requisitions) {
@@ -109,6 +110,7 @@ public class RnrDTO {
     rnrDTO.programCode = requisition.getProgram().getCode();
     rnrDTO.facilityCode = requisition.getFacility().getCode();
     rnrDTO.facilityName = requisition.getFacility().getName();
+    rnrDTO.sourceApplication = requisition.getSourceApplication();
 
     rnrDTO.facilityType = requisition.getFacility().getFacilityType().getName();
     rnrDTO.districtName = requisition.getFacility().getGeographicZone().getName();
