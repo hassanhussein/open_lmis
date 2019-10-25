@@ -12,7 +12,7 @@ function ViewOrderListController($scope,FilteredOrders,Orders,AllOrders,messageS
 
     $scope.searchOptions = [
       {value: "facilityName", name: "option.value.facility"},
-      {value: "district", name: "option.value.district.name"},
+     // {value: "district", name: "option.value.district.name"},
       {value: "orderNumber", name: "option.value.order.number"}
     ];
 
@@ -179,12 +179,11 @@ function ViewOrderListController($scope,FilteredOrders,Orders,AllOrders,messageS
     };
 
  $scope.loadOrders = function (page, lastQuery) {
- console.log($scope.query);
-    if (!($scope.query || lastQuery)) return;
     lastQuery ? getOrders(page, lastQuery) : getOrders(page, $scope.query);
   };
 
  function getOrders(page, query) {
+    if(!query) query=''
     query = query.trim();
     $scope.searchedQuery = query;
 

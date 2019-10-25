@@ -181,7 +181,7 @@ public class OrderService {
   }
 
   public List<Order> getOrdersForPage(String searchParam,String columnName,int page, Long userId, String right, Long supplyDepot, Long program, Long period) {
-      List<Order> orders = orderRepository.getOrdersForPage(searchParam, page, pageSize, userId, right, supplyDepot, program, period);
+      List<Order> orders = orderRepository.getOrdersForPage(searchParam, page, pageSize, userId, right, supplyDepot, program, period,columnName);
       return fillOrders(orders);
   }
 

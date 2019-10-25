@@ -53,9 +53,19 @@ public class OrderRepository {
     return orderMapper.getOrdersBy(searchParam,pageSize, (page - 1) * pageSize, userId, rightName);
   }
 
-  public List<Order> getOrdersForPage(String searchParam,int page, int pageSize, Long userId, String right, Long supplyDepot, Long program, Long period) {
-    return orderMapper.getOrdersByDepotBy(searchParam,pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
-  }
+  public List<Order> getOrdersForPage(String searchParam,int page, int pageSize, Long userId, String right, Long supplyDepot, Long program, Long period, String columnName) {
+      switch (columnName)
+      {
+          case "facilityName":
+              return orderMapper.getOrdersByDepotByFacility(searchParam, pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
+          case "orderNumber":
+              return orderMapper.getOrdersByDepotByOrderNumber(searchParam, pageSize, (page - 1) * pageSize, userId, right, supplyDepot, program, period);
+          default:
+           return null;
+      }
+
+
+      }
 
   public Order getById(Long id) {
     return orderMapper.getById(id);
