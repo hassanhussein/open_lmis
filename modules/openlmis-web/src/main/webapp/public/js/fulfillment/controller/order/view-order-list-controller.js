@@ -183,7 +183,7 @@ function ViewOrderListController($scope,FilteredOrders,Orders,AllOrders,messageS
   };
 
  function getOrders(page, query) {
-    if(!query) query=''
+    if(!query) query='';
     query = query.trim();
     $scope.searchedQuery = query;
 
