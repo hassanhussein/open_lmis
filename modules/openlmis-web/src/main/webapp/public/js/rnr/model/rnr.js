@@ -274,11 +274,17 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
   };
 
   Rnr.prototype.numberOfProductsOrdered = function() {
-   //  var rnr = this;
    return (this.fullSupplyLineItems.filter(function(lineItem) {
            return !lineItem.skipped && lineItem.packsToShip;}).length || 0) +
           (this.nonFullSupplyLineItems.filter(function(lineItem) {
                return !lineItem.skipped && lineItem.packsToShip;}).length || 0);
+  };
+
+  Rnr.prototype.numberOfAllProductsOrdered = function() {
+   return (this.fullSupplyLineItems.filter(function(lineItem) {
+           return !lineItem.skipped;}).length || 0) +
+          (this.nonFullSupplyLineItems.filter(function(lineItem) {
+               return !lineItem.skipped;}).length || 0);
   };
 
   Rnr.prototype.percentageOfProductsOrdered = function() {

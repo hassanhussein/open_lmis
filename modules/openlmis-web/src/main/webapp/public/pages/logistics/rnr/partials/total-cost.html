@@ -18,6 +18,11 @@
              <span ng-bind="rnr.allSupplyLineItems.length"></span>
              <span>( {{rnr.percentageOfProductsOrdered() }}%)</span>
             </span>
+            <span class="order-quantity cell-text">
+                <span>&nbsp;|&nbsp;</span>
+                <span openlmis-message="label.rnr.number.of.all.products.reported"></span>
+                <span ng-bind="rnr.numberOfAllProductsOrdered();"></span>
+            </span>
         </strong>
 
     <span ng-show="rnr.program.budgetingApplies && !rnr.emergency && rnr.costExceedsBudget && rnr.allocatedBudget"
