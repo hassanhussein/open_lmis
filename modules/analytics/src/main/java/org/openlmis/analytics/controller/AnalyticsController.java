@@ -273,4 +273,15 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("sourceOfFunds", this.requisitionStatusMapper.getSourceOfFundsByLocation(program, period));
     }
 
+    @RequestMapping(value = "/getGeoStockStatusDetails.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getGeoStockStatusDetails(               @Param("program") Long program,
+                                                                                   @Param("product") Long product,
+                                                                                   @Param("year") Long year,
+                                                                                   @Param("period") Long period,
+                                                                                   @Param("facility") Long facility,
+                                                                                   HttpServletRequest request) {
+        return OpenLmisResponse.response("stocks", this.stockStatusMapper.GeoFacilityStockStatusDetails(loggedInUserId(request),product,program,year,period, facility));
+    }
+
+
 }

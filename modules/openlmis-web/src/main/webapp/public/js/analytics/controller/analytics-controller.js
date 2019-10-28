@@ -45,6 +45,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 $rootScope.loadRnrPassedQualityCheckData(params);
                 $rootScope.loadPercentageWastageData(params);
                 $rootScope.loadGeoFacilityStockMap(params);
+                console.log("reached");
 
                 $scope.loadConsumptionTrendsData(params);
                 //$scope.loadStockStatusByProgram(params,'level1');

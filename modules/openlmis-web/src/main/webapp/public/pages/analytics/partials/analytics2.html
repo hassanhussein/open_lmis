@@ -94,6 +94,12 @@ background:#fff;
         margin: 0 auto;
     }
 
+    .map {
+        height: 500px !important;
+        margin: 0 auto !important;
+
+    }
+
     #indicator {
         margin-top: -1rem;
     }
@@ -172,6 +178,11 @@ background:#fff;
     height: 500px;
     width: 500px;
     z-index: 99;
+}
+
+#map {
+height:95% !important;
+width:97% !important;
 }
 
 </style>
@@ -1129,24 +1140,60 @@ background:#fff;
 
 
 
-                            <div class="row" ng-show="false">
+                            <div class="row" ng-show="true">
                                 <div class="col s12 m6 l6">
-                                    <div class="card grey lighten-5 row2-height" style="height:700px !important"  ng-controller="FacilityStockStatusMapController">
-                                      <div class="section" style="height:500px !important">
-                                          <span >
-                                             <div id="map" ></div>
-                                          </span>
+                                    <div class="card grey lighten-5 row2-height"  ng-controller="FacilityStockStatusMapController">
+                                        <div class="card-content">
+                                      <!--  <div class="section grey lighten-5">
 
-                                      </div>
-                                        <div class="clearfix"></div>
+                                            <div class="col s3 green lighten-1">
+                                                <p>
+                                                    Adequately Stocked
+                                                </p>
+                                            </div>
+                                            <div class="col s3 orange lighten-1">
+                                                <p> Inadequately Stocked</p>
+                                            </div>
 
-                                        <div class="card-action grey lighten-4">
+                                            <div class="col s3 blue lighten-1">
+                                                <p>Overstocked</p>
+                                            </div>
+                                            <div class="col s3 red lighten-1">
+                                                <p>Stocked Out</p>
+                                            </div>
 
-                                            <ng-include src='"/public/pages/analytics/partials/shared/map-filters.html"'></ng-include>
+
+                                        </div>-->
+                                        <div style=" height: 500px !important;margin: 0 auto !important;display: inline-block;width: fit-content; margin:0;">
+                                            <div id="map" class="map"></div>
+
+                                        </div>
+
+
 
                                         </div>
 
                                     </div>
+
+                                </div>
+                                <div class="col s12 m6 l6">
+                                    <div class="card grey lighten-5 row2-height">
+                                        <div class="card-content" style="height:507px">
+
+                                            <div class="span12">
+
+
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-action grey lighten-4">
+
+                                            <ng-include src='"/public/pages/analytics/partials/shared/custom-product-filter.html"'></ng-include>
+
+
+                                        </div>
 
                                 </div>
                             </div>
