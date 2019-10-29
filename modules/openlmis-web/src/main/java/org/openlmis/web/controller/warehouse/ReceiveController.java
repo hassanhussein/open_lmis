@@ -11,6 +11,7 @@ import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
 import org.openlmis.restapi.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
+import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.DocumentType;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;

@@ -762,7 +762,10 @@ $scope.removeProduct(productIndex);
 
 
         });
+         console.log('currency');
+                console.log($scope.currency);
         var asn = {
+
             asnLineItems: asnLineItems,
             asndate: $scope.asnReceiptDate,
             asnnumber: $scope.asnCode,
@@ -779,7 +782,6 @@ $scope.removeProduct(productIndex);
             purchaseDocuments: $scope.docList,
             status: status,
             supplierid: $scope.supplierId,
-            currencyId: 1
         };
 
         if($scope.asn){

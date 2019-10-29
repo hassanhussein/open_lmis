@@ -100,6 +100,8 @@ public class AsnService {
             res.setPoNumber(asn.getPonumber());
             res.setPoDate(asn.getAsndate());
             res.setSupplierId(asn.getSupplierid());
+            res.setSupplier(asn.getSupplier());
+            res.setCurrencyId(asn.getCurrencyId());
             res.setReceiveDate(asn.getAsndate());
             res.setBlawBnumber(asn.getBlawbnumber());
             res.setCountry("Tanzania");
@@ -120,7 +122,7 @@ public class AsnService {
             res.setPurchaseOrderId(null);
             res.setReceiveLineItems(null);
             receiveService.save(res, asn.getModifiedBy(),asn);
-            notificationService.sendAsnFinalizeEmail();
+           // notificationService.sendAsnFinalizeEmail();
 
         }
 
@@ -128,23 +130,8 @@ public class AsnService {
 
     public Asn getById (Long id) {
         Asn asn = repository.getById(id);
-        List<PurchaseDocument> purchaseDocumentList = new ArrayList<>();
-
-        List<PurchaseDocument> purchaseDocumentLists = purchaseDocumentService.getByAsnId(id);
-
-        for(PurchaseDocument document: purchaseDocumentLists) {
-            PurchaseDocument document1 = new PurchaseDocument();
-
-            document1.setFileLocation(document.getFileLocation());
-            document1.setDocumentType(document1.getDocumentType());
-
-
-        }
-
-
-        asn.setPurchaseDocuments(purchaseDocumentLists);
+        asn.setPurchaseDocuments(purchaseDocumentService.getByAsnId(id));
         return asn;
-
     }
     public List<Asn> getAll(){
 

@@ -4,6 +4,7 @@ import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.Document;
 import org.openlmis.vaccine.domain.wms.PurchaseDocument;
 import org.openlmis.vaccine.domain.wms.Receive;
+import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.openlmis.vaccine.repository.warehouse.PurchaseDocumentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class PurchaseDocumentService {
 
     @Autowired
     PurchaseDocumentRepository repository;
+
+
 
     public void save(Asn asn, Receive receive, Long userId) {
 

@@ -713,12 +713,12 @@ $scope.saveAsn = function(status) {
 
 $scope.quantityBoxError=false;
 
-     if (!$scope.quantityVsBox()){
+   /*  if (!$scope.quantityVsBox()){
         $scope.quantityBoxError=true;
          return;
      }else{
      $scope.quantityBoxError=false;
-     }
+     }*/
 
 //                        console.log($scope.asnForm)
     if ($scope.asnForm.$error.required) {

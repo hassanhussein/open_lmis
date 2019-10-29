@@ -16,6 +16,7 @@ import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.domain.wms.dto.StockEventDTO;
+import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.openlmis.vaccine.repository.warehouse.ReceiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,9 @@ public class ReceiveService {
     @Autowired
     ProgramService programService;
 
+    @Autowired
+    AsnRepository asnRepository;
+
 
 
     ReceiveService(FacilityRepository facilityRepository, ProductService productService, LotRepository lotRepository, ProgramService programService, StockCardService stockCardService) {
@@ -69,6 +73,15 @@ public class ReceiveService {
 
     @Transactional
     public void save(Receive receive, Long userId, Asn asn) {
+
+        if(receive.getAsnNumber() != null) {
+
+            asn = asnRepository.getByAsnNumber(receive.getAsnNumber());
+            receive.setSupplier(asn.getSupplier());
+            receive.setAsnId(asn.getId());
+
+
+        }
 
         if (receive.getId() == null) {
 
@@ -100,8 +113,9 @@ public class ReceiveService {
             }
         }
 
+        Asn asn1 = asnRepository.getByAsnNumber(receive.getAsnNumber());
 
-        purchaseDocumentService.save(asn, receive, userId);
+        purchaseDocumentService.save(asn1, receive, userId);
 
         if (receive.getStatus().equalsIgnoreCase("Received") && (receive.getReceiveLineItems() != null)) {
 
@@ -123,7 +137,7 @@ public class ReceiveService {
                         l.setProduct(product);
                         l.setExpirationDate(lot.getExpiryDate());
                         l.setLotCode(lot.getLotNumber());
-                        l.setManufactureDate(lot.getManufacturingDate());
+                        l.setManufactureDate(lot1.getManufactureDate());
                         l.setProductId(product.getId());
                         l.setManufacturerName(lot1.getManufacturerName());
                         event.setLotId(lot1.getId());
