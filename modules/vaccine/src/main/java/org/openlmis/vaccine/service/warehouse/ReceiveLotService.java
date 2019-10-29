@@ -14,6 +14,7 @@ public class ReceiveLotService {
     ReceiveLotRepository repository;
 
     public void save(ReceiveLot lot) {
+    //   ReceiveLot l = repository.getByLotNumber(lot.getLotNumber());
 
         if (lot.getId() == null) {
 
@@ -34,4 +35,7 @@ public class ReceiveLotService {
         return  repository.getAll();
     }
 
+    public List<ReceiveLot> getByLineItem(Long id) {
+        return repository.getByLotNumber(id);
+    }
 }

@@ -17,7 +17,7 @@ public interface ReceiveLotMapper {
     Integer insert(ReceiveLot receiveLot);
 
     @Update(" update receive_lots set  receiveLineItemId = #{receiveLineItem.id}, lotNumber = #{lotNumber}, serialNumber = #{serialNumber}, expiryDate = #{expiryDate}, " +
-            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}"+
+            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}, "+
             " modifiedDate = now(), " +
             " modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(ReceiveLot receiveLot);
@@ -30,4 +30,7 @@ public interface ReceiveLotMapper {
 
     @Select("select * from receive_lots where receiveLineItemId = #{id}")
     List<ReceiveLot>  getByLineItem(@Param("id") Long id);
+
+    @Select("select * from receive_lots where receiveLineItemId = #{id}")
+    List<ReceiveLot> getByLotNumber( @Param("id") Long id);
 }

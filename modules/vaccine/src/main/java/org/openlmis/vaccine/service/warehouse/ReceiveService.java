@@ -61,6 +61,9 @@ public class ReceiveService {
     AsnRepository asnRepository;
 
 
+    @Autowired
+     private ReceiveLotService receiveLotService;
+
 
     ReceiveService(FacilityRepository facilityRepository, ProductService productService, LotRepository lotRepository, ProgramService programService, StockCardService stockCardService) {
 
@@ -102,7 +105,12 @@ public class ReceiveService {
                 if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
 
                     for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                        Lot l = lotRepository.getByCode(lot.getLotNumber());
+                        lot.setId(l.getId());
                         lot.setReceiveLineItem(lineItem);
+                        lot.setExpiryDate(l.getExpirationDate());
+                        lot.setManufacturingDate(l.getManufactureDate());
+                        lot.setLotNumber(l.getLotCode());
                         lot.setCreatedBy(userId);
                         lot.setModifiedBy(userId);
                         lotService.save(lot);
@@ -125,25 +133,33 @@ public class ReceiveService {
 
                     Product product = productService.getById(rece.getProductId());
 
-                    for (ReceiveLot lot : rece.getReceiveLots()) {
+                    List<ReceiveLot> receiveLot = receiveLotService.getByLineItem(rece.getId());
+
+
+                    for (ReceiveLot lot : receiveLot) {
+
                         StockEventDTO event = new StockEventDTO();
                         event.setType(StockEventType.RECEIPT);
                         event.setProductCode(product.getCode());
                         event.setQuantity(Long.valueOf(lot.getQuantity()));
                         event.setFacilityId(receive.getFacilityId());
                         Lot lot1 = lotRepository.getByCode(lot.getLotNumber());
-                        Lot l = new Lot();
-                        l.setId(lot1.getId());
-                        l.setProduct(product);
-                        l.setExpirationDate(lot.getExpiryDate());
-                        l.setLotCode(lot.getLotNumber());
-                        l.setManufactureDate(lot1.getManufactureDate());
-                        l.setProductId(product.getId());
-                        l.setManufacturerName(lot1.getManufacturerName());
-                        event.setLotId(lot1.getId());
-                        event.setLot(l);
-                        event.setCustomProps(null);
-                        events.add(event);
+                        if(lot1 != null) {
+                            Lot l = new Lot();
+                            l.setId(lot.getId());
+                            l.setProduct(product);
+                            l.setExpirationDate(lot.getExpiryDate());
+                            l.setLotCode(lot.getLotNumber());
+                            l.setManufactureDate(lot1.getManufactureDate());
+                            l.setProductId(product.getId());
+                            l.setManufacturerName(lot1.getManufacturerName());
+
+                            event.setLotId(lot1.getId());
+                            event.setLot(l);
+                            event.setCustomProps(null);
+                            events.add(event);
+                        }
+
                     }
                     processStockCard(receive.getFacilityId(), events, userId);
                 }

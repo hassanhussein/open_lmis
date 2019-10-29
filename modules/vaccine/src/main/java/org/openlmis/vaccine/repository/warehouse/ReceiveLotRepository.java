@@ -30,4 +30,10 @@ public class ReceiveLotRepository {
     public List<ReceiveLot> getAll(){
         return mapper.getAll();
     }
+
+    public List<ReceiveLot> getByLotNumber(Long id) {
+
+       return mapper.getByLotNumber(id);
+
+    }
 }

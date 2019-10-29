@@ -69,9 +69,9 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 //    $scope.configurations = configurations;
     $scope.switchData=2;
 //    $scope.otherProducts=otherProducts;
-     if(receive !== null) {
+     if(receive !== null && !isUndefined(receive.supplier) && (receive.currency !== null) ) {
 
-     if(receive.supplierId === null || receive.currencyId === null) {
+     if((receive.supplierId !== null) && receive.currencyId !== null ) {
 
      receive.currencyId = receive.currency.id;
      receive.supplierId = receive.supplier.id;
