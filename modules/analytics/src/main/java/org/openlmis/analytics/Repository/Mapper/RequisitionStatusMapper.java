@@ -111,14 +111,14 @@ public interface RequisitionStatusMapper {
 
 
 
-    @Select("select  rsf.name,vwd.district_name,vwd.region_name,vwd.zone_name, sum(rsf.quantity) as total from requisition_source_of_funds rsf \n" +
+    @Select("select  rsf.name,vwd.district_id,vwd.district_name,vwd.region_name,vwd.zone_name, sum(rsf.quantity) as total from requisition_source_of_funds rsf \n" +
             "join requisitions r on r.id=rsf.rnrid \n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join geographic_zones gl on gl.id=f.geographiczoneid\n" +
             "join vw_districts vwd on vwd.district_id=f.geographiczoneid \n" +
             "where r.programid= #{program} and pp.id= #{period} \n" +
-            "group by  vwd.region_name, vwd.district_name,vwd.zone_name, rsf.name order by vwd.region_name, total desc")
+            "group by  vwd.region_name, vwd.district_name,vwd.zone_name, vwd.district_id, rsf.name order by vwd.region_name, total desc")
     List<HashMap<String,Object>>getSourceOfFundsByLocation(@Param("program") Long program,
                                                            @Param("period") Long period);
 }

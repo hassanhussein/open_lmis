@@ -181,11 +181,8 @@ public class OrderService {
   }
 
   public List<Order> getOrdersForPage(String searchParam,String columnName,int page, Long userId, String right, Long supplyDepot, Long program, Long period) {
-    if(columnName.equals("facilityName")) {
-      List<Order> orders = orderRepository.getOrdersForPage(searchParam, page, pageSize, userId, right, supplyDepot, program, period);
+      List<Order> orders = orderRepository.getOrdersForPage(searchParam, page, pageSize, userId, right, supplyDepot, program, period,columnName);
       return fillOrders(orders);
-    }
-    return null;
   }
 
   public Order getOrder(Long id) {

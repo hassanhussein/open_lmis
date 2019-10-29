@@ -103,7 +103,7 @@ return color;
 
 function mapFunc(map,data,params){
 
-var iconBase = '/public/images/'
+var iconBase = '/public/images/';
 
 var icons = {
            gray: {
@@ -155,17 +155,22 @@ for (var i = 0; i < featuresData.length; i++) {
  data:featuresData[i]
  });
 
+makeMarker(marker, i);
+
+}
+
+
+function makeMarker(marker, i) {
+
   google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
                 console.log(marker.data.data);
                 infoWindow.setContent(popupFormat(marker.data.data));
                 infoWindow.open(map, marker);
-            }
+            };
         })(marker, i));
 
 }
-
-
 
  function popupFormat(feature) {
       var totalCost = (feature.currentprice) * (feature.ordered - feature.required);

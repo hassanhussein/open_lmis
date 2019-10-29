@@ -82,7 +82,7 @@
 
                                 <label class="checkbox">
                                     <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
-                                           ng-change="searchReport()"/>
+                                           ng-change="OnFilterChanged()"/>
 
                                     <span  style="color:#078f97;" openlmis-message="label.report.view.disaggregated"></span>
                                 </label>
@@ -97,10 +97,8 @@
                             <div ng-hide="!showMoreFilters">
                                 <facility-type-filter class="form-cell horizontalFilters"></facility-type-filter>
                                 <facility-filter class="form-cell horizontalFilters"></facility-filter>
-
                                 <product-category-filter class="form-cell horizontalFilters"></product-category-filter>
                                 <product-multi-filter class="form-cell horizontalFilters"></product-multi-filter>
-
                                 <div class="clearfix form-cell horizontalFilters">
                                     <br/>
                                     <a class="button" href="javascript:void()" ng-click="toggleMoreFilters()">Less
@@ -109,7 +107,7 @@
                             </div>
                             <div class="clearfix padding2px"></div>
                             <div>
-    <span class="pull-right"><a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
+    <span class="pull-right"><a ng-click="OnFilterChanged()" class="waves-effect waves-light btn">Search</a>
  </span></div>
 
                         </div>
@@ -204,7 +202,7 @@
                         </tr>
                         </tbody>
                     </table>
-                    <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="searchReport()">
+                    <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="OnFilterChanged()">
                         <option value="10">10 per page</option>
                         <option value="20">20 per page</option>
                         <option value="50">50 per page</option>
