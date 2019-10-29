@@ -228,6 +228,8 @@ getAllLookups();
         $scope.supplier = asn.supplier;
         $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
+         $scope.currency=asn.currency;
+         $scope.currencyId=$scope.asn.currency.id;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
 
@@ -762,10 +764,7 @@ $scope.removeProduct(productIndex);
 
 
         });
-         console.log('currency');
-                console.log($scope.currency);
         var asn = {
-
             asnLineItems: asnLineItems,
             asndate: $scope.asnReceiptDate,
             asnnumber: $scope.asnCode,
@@ -774,7 +773,7 @@ $scope.removeProduct(productIndex);
             expectedarrivaldate: $scope.expectedArrivalDate,
             expecteddeliverydate:$scope.expectedDeliveryDate,
             flightvesselnumber: $scope.flightVesselNumber,
-            currencyId:$scope.currency.id,
+            currencyId:$scope.currencyId,
             note: $scope.notes,
             podate: $scope.poDate,
             ponumber: $scope.poNumber,
@@ -782,6 +781,7 @@ $scope.removeProduct(productIndex);
             purchaseDocuments: $scope.docList,
             status: status,
             supplierid: $scope.supplierId,
+
         };
 
         if($scope.asn){
