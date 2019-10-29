@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.dto.CurrencyDTO;
@@ -44,10 +46,17 @@ public class AsnService {
     @Autowired
     private ReceiveService receiveService;
 
+    @Autowired
+    private SupplyPartnerService supplyPartnerService;
+
     private final String FINALIZE_ASN_REPORT = "RECEIVE_FINALIZED_ASN_REPORT";
 
     @Transactional
     public void save(Asn asn, Long userId) {
+
+        SupplyPartner supplyPartner = supplyPartnerService.getById(asn.getSupplierid());
+        asn.setSupplier(supplyPartner);
+        asn.setSupplierid(supplyPartner.getId());
 
         if (asn.getId() == null) {
 
@@ -100,7 +109,6 @@ public class AsnService {
             res.setPoNumber(asn.getPonumber());
             res.setPoDate(asn.getAsndate());
             res.setSupplierId(asn.getSupplierid());
-            res.setSupplier(asn.getSupplier());
             res.setCurrencyId(asn.getCurrencyId());
             res.setReceiveDate(asn.getAsndate());
             res.setBlawBnumber(asn.getBlawbnumber());
