@@ -196,6 +196,46 @@ var total_lot_quantity = 0;
 
 
 
+         $scope.loadProductLots = function(product)
+
+            {
+
+                $scope.productError = false;
+
+                $scope.lotsToDisplay = {};
+
+                if (product !== null) {
+
+
+                    ProductLots.get({
+                        productId: product.id
+                    }, function(data) {
+                        $scope.allLots = data.lots;
+//                                                      console.log(data.lots)
+                                        $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
+
+
+                    });
+
+
+                }
+            };
+
+
+
+    $scope.addLot = function(product,lot) {
+        productIndex=_.indexOf($scope.productsToAdd,product);
+        productIndex=0;
+        $lotIndex = $scope.productsToAdd[productIndex].lots.length - 1;
+//        console.log($lotIndex);
+        $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
+        $scope.productsToAdd[productIndex].lots.push({
+            quantity: 0,
+            displayCodeOnly: false
+        });
+//        $scope.updateLotsToDisplay();
+    };
+
 
     if ($scope.receive) {
        console.log($scope.receive.asnNumber);
@@ -262,6 +302,11 @@ var total_lot_quantity = 0;
                 unitPrice: product.unitPrice,
 
             });
+
+
+            //lets also load the products lots here
+            $scope.loadProductLots(editProduct);
+            $scope.addLot(editProduct,'name');
             }else{
             $scope.switchData=1;
              $scope.productsToAdd.push({
@@ -399,17 +444,6 @@ $scope.changeProductType=function(isVaccine){
 
 
 
-    $scope.addLot = function(product,lot) {
-        productIndex=_.indexOf($scope.productsToAdd,product);
-        $lotIndex = $scope.productsToAdd[productIndex].lots.length - 1;
-//        console.log($lotIndex);
-        $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
-        $scope.productsToAdd[productIndex].lots.push({
-            quantity: 0,
-            displayCodeOnly: false
-        });
-        $scope.updateLotsToDisplay();
-    };
 
     $scope.validateProduct = function() {
     if($scope.isVaccine){
@@ -682,30 +716,7 @@ $scope.removeProduct(productIndex);
 
 
 
-    $scope.loadProductLots = function(product)
 
-    {
-
-        $scope.productError = false;
-
-        $scope.lotsToDisplay = {};
-
-        if (product !== null) {
-
-
-            ProductLots.get({
-                productId: product.id
-            }, function(data) {
-                $scope.allLots = data.lots;
-                //                              console.log(data.lots)
-                                $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
-
-
-            });
-
-
-        }
-    };
 
 $scope.saveAsn = function(status) {
 //    console.log($scope.docList);
