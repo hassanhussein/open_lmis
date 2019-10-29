@@ -43,6 +43,8 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
                           $scope.displayDocumentTypes =  data.documentTypes;
                               $scope.manufacturers = data.manufacturers;
+                                                            $scope.currencies=data.currencies;
+
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
 
@@ -69,17 +71,17 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 //    $scope.configurations = configurations;
     $scope.switchData=2;
 //    $scope.otherProducts=otherProducts;
-     if(receive !== null) {
-
-     if(receive.supplierId === null || receive.currencyId === null) {
-
-     receive.currencyId = receive.currency.id;
-     receive.supplierId = receive.supplier.id;
-
-     $scope.supplierId = receive.supplier.id;
-
-      }
-     }
+//     if(receive !== null) {
+//
+//     if(receive.supplierId === null || receive.currencyId === null) {
+//
+//     receive.currencyId = receive.currency.id;
+//     receive.supplierId = receive.supplier.id;
+//
+//     $scope.supplierId = receive.supplier.id;
+//
+//      }
+//     }
     $scope.receive = receive;
 
     console.log($scope.receive);
@@ -269,8 +271,11 @@ var total_lot_quantity = 0;
         $scope.portOfArrivalId = receive.port.id;
         $scope.productsToAdd = [];
         $scope.supplier = receive.supplier;
-//        $scope.supplierId=$scope.supplier.id;
+        $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
+             $scope.currency=receive.currency;
+                  $scope.selectedCurrency=$scope.currency.id;
+                  $scope.currencyId=$scope.receive.currency.id;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
 
@@ -429,6 +434,12 @@ $scope.changeProductType=function(isVaccine){
 //    }
 //
 //    programProduct();
+
+$scope.setCurrency=function(){
+
+$scope.currency=_.findWhere($scope.currencies,{'id':$scope.selectedCurrency});
+
+};
 
     $scope.updateLotsToDisplay = function() {
 
@@ -806,6 +817,7 @@ $scope.quantityBoxError=false;
             expecteddeliverydate:$scope.expectedDeliveryDate,
             actualArrivalDate:$scope.actualArrivalDate,
             flightVesselNumber: $scope.flightVesselNumber,
+             currencyId:$scope.selectedCurrency,
             isForeignProcurement:$scope.isForeignProcurement,
             note: $scope.notes,
             description:$scope.descriptionOfProcurement,

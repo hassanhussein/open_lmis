@@ -229,7 +229,7 @@ getAllLookups();
         $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
          $scope.currency=asn.currency;
-         $scope.selectedCurrency=$scope.currency.id
+         $scope.selectedCurrency=$scope.currency.id;
          $scope.currencyId=$scope.asn.currency.id;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
@@ -333,7 +333,7 @@ $scope.setCurrency=function(){
 
 $scope.currency=_.findWhere($scope.currencies,{'id':$scope.selectedCurrency});
 
-}
+};
 
 $scope.changeProductType=function(isVaccine){
     $scope.isVaccine=isVaccine;
