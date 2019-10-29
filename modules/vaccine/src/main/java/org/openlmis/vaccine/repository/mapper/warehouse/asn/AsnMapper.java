@@ -154,4 +154,22 @@ public interface AsnMapper {
 
     @Select(" select * from  currencies")
     List<CurrencyDTO> getAllCurrencies();
+
+
+    @Select("select * from asns where asnNumber = #{asnNumber} LIMIT 1")
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(property = "asnLineItems", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnLineItemMapper.getByAsnId")),
+            @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
+            @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId")),
+            @Result(property = "port", column = "portofarrival", javaType = Port.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById")),
+            @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
+
+    })
+    Asn getByAsnNumber(@Param("asnNumber") String asnNumber);
 }

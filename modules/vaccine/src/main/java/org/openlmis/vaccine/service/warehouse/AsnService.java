@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.dto.CurrencyDTO;
@@ -44,10 +46,17 @@ public class AsnService {
     @Autowired
     private ReceiveService receiveService;
 
+    @Autowired
+    private SupplyPartnerService supplyPartnerService;
+
     private final String FINALIZE_ASN_REPORT = "RECEIVE_FINALIZED_ASN_REPORT";
 
     @Transactional
     public void save(Asn asn, Long userId) {
+
+        SupplyPartner supplyPartner = supplyPartnerService.getById(asn.getSupplierid());
+        asn.setSupplier(supplyPartner);
+        asn.setSupplierid(supplyPartner.getId());
 
         if (asn.getId() == null) {
 
@@ -100,6 +109,7 @@ public class AsnService {
             res.setPoNumber(asn.getPonumber());
             res.setPoDate(asn.getAsndate());
             res.setSupplierId(asn.getSupplierid());
+            res.setCurrencyId(asn.getCurrencyId());
             res.setReceiveDate(asn.getAsndate());
             res.setBlawBnumber(asn.getBlawbnumber());
             res.setCountry("Tanzania");
@@ -120,7 +130,7 @@ public class AsnService {
             res.setPurchaseOrderId(null);
             res.setReceiveLineItems(null);
             receiveService.save(res, asn.getModifiedBy(),asn);
-            notificationService.sendAsnFinalizeEmail();
+           // notificationService.sendAsnFinalizeEmail();
 
         }
 
@@ -128,23 +138,8 @@ public class AsnService {
 
     public Asn getById (Long id) {
         Asn asn = repository.getById(id);
-        List<PurchaseDocument> purchaseDocumentList = new ArrayList<>();
-
-        List<PurchaseDocument> purchaseDocumentLists = purchaseDocumentService.getByAsnId(id);
-
-        for(PurchaseDocument document: purchaseDocumentLists) {
-            PurchaseDocument document1 = new PurchaseDocument();
-
-            document1.setFileLocation(document.getFileLocation());
-            document1.setDocumentType(document1.getDocumentType());
-
-
-        }
-
-
-        asn.setPurchaseDocuments(purchaseDocumentLists);
+        asn.setPurchaseDocuments(purchaseDocumentService.getByAsnId(id));
         return asn;
-
     }
     public List<Asn> getAll(){
 

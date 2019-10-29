@@ -726,6 +726,8 @@ $scope.removeProduct(productIndex);
 
 
     $scope.saveAsn = function(status) {
+
+
 //    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();

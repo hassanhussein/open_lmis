@@ -75,4 +75,9 @@ public class AsnRepository {
 
         return mapper.getAllCurrencies();
     }
+
+    public Asn getByAsnNumber(String asnNumber) {
+
+        return mapper.getByAsnNumber(asnNumber);
+    }
 }
