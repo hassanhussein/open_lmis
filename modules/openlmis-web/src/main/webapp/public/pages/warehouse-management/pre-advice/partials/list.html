@@ -83,7 +83,7 @@
             <tr ng-repeat="asn in asnList|orderBy:column:reverse" ng-init="arrayIndex=$index">
 
                 <td  ng-bind="asn.asnnumber"></td>
-                <td  ng-bind="asn.asndate"></td>
+                <td  ng-bind="(asn.asndate |  date:'dd-MM-yyyy')"></td>
                 <td  ng-bind="asn.ponumber"></td>
                 <td  ng-bind="asn.supplier.name"></td>
                 <td  ng-bind="asn.status"></td>

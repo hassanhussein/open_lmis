@@ -67,7 +67,8 @@
 
             <tr class="gradient-header" ng-show="asnList.length">
                 <th  openlmis-message="header.asn.po.number" ng-click='sortColumn("poNumber")' ng-class='sortClass("poNumber")'></th>
-            <th ng-click='sortColumn("clearingAgent")' ng-class='sortClass("clearingAgent")'>Clearing Agent</th>
+                <th   >ASN Number</th>
+                <th ng-click='sortColumn("clearingAgent")' ng-class='sortClass("clearingAgent")'>Clearing Agent</th>
                 <th ng-click='sortColumn("expectedArrivalDate")' ng-class='sortClass("expectedArrivalDate")'>Expected  Arrival Date</th>
                 <th  openlmis-message="header.asn.supplier" ng-click='sortColumn("supplier.name")' ng-class='sortClass("supplier.name")'></th>
                 <th  openlmis-message="header.asn.status" ng-click='sortColumn("status")' ng-class='sortClass("status")'></th>
@@ -77,13 +78,16 @@
             <tbody>
             <tr ng-repeat="asn in asnList|orderBy:column:reverse" ng-init="arrayIndex=$index">
                 <td  ng-bind="asn.poNumber"></td>
+                <td>Number</td>
                 <td  ng-bind="asn.clearingAgent"></td>
-                <td  ng-bind="asn.expectedArrivalDate"></td>
+                <td  ng-bind="(asn.expectedArrivalDate |  date:'dd-MM-yyyy')"></td>
                 <td  ng-bind="asn.supplier.name"></td>
                 <td  ng-bind="asn.status"></td>
                 <td>
-                    <a  href="" ng-click="edit(asn.id)"  ng-if="asn.status=='DRAFT'" openlmis-message="update"></a>
+                    <a  href="" ng-click="edit(asn.id,false)"  ng-if="asn.status=='DRAFT'" openlmis-message="update"></a>
 <!--                    <a  href=""  ng-if="asn.status!='DRAFT'" >Recei</a>-->
+                    <a  href="" ng-click="edit(asn.id,true)"  ng-if="asn.status!='DRAFT' && asn.status!='Draft'" >view</a>
+
                 </td>
 
             </tr>

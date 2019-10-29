@@ -229,6 +229,7 @@ getAllLookups();
         $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
          $scope.currency=asn.currency;
+         $scope.selectedCurrency=$scope.currency.id;
          $scope.currencyId=$scope.asn.currency.id;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
@@ -327,6 +328,12 @@ getAllLookups();
     }
 
 
+
+$scope.setCurrency=function(){
+
+$scope.currency=_.findWhere($scope.currencies,{'id':$scope.selectedCurrency});
+
+};
 
 $scope.changeProductType=function(isVaccine){
     $scope.isVaccine=isVaccine;
@@ -775,7 +782,7 @@ $scope.removeProduct(productIndex);
             expectedarrivaldate: $scope.expectedArrivalDate,
             expecteddeliverydate:$scope.expectedDeliveryDate,
             flightvesselnumber: $scope.flightVesselNumber,
-            currencyId:$scope.currencyId,
+            currencyId:$scope.selectedCurrency,
             note: $scope.notes,
             podate: $scope.poDate,
             ponumber: $scope.poNumber,

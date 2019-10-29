@@ -5,7 +5,7 @@ function ReceiveSearchController($scope, Receive, $location, navigateBackService
 
   ];
 
-
+  $scope.$parent.asnViewMode=false;
 
 
   $scope.showResults = false;
@@ -53,11 +53,16 @@ function ReceiveSearchController($scope, Receive, $location, navigateBackService
     $scope.query = navigateBackService.query;
   });
 
-  $scope.edit = function (id) {
-//    var data = {query: $scope.query, selectedSearchOption: $scope.selectedSearchOption};
-//    navigateBackService.setData(data);
-//    console.log(id)
-    $location.path('edit/' + id);
+  $scope.edit = function (id,viewMode) {
+if(!viewMode){
+                $scope.$parent.asnViewMode=false;
+        $location.path('edit/' + id);
+
+    }else{
+            $scope.$parent.asnViewMode=true;
+        $location.path('view/' + id);
+
+    }
   };
 
   $scope.$watch('currentPage', function () {

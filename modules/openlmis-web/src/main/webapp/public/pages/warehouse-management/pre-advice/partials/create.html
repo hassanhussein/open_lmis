@@ -100,7 +100,7 @@
                                 <option value=""></option>
                                     <option ng-repeat="supplier in suppliers"
                                             value="{{ supplier.id }}"
-                                            ng-selected="supplierId== supplier.id"
+                                            ng-selected="supplierId==supplier.id"
                                     >
                                         {{ supplier.name }}
                                     </option>
@@ -175,18 +175,19 @@
                             <select ui-select2="{width: '90%'}" class="span11" id="currency"
                                     openlmis-message="label.select.parent.zone"
                                     ng-disabled="viewMode"
-
-                                    ng-model="currencyId"
+                                    ng-model="selectedCurrency"
+                                    ng-change="setCurrency()"
+                                    ng-options="currency.id as currency.code for currency in currencies"
 
                             >
-                                <option value=""></option>
-                                <option ng-repeat="currency in currencies"
-                                        value="{{ currency.id }}"
-                                        ng-selected="currencyId==currency.id"
-                                >
-                                    {{ currency.code }}
+                                <option value="">--Select Currency--</option>
+<!--                                <option ng-repeat="c in currencies"-->
+<!--                                        value="{{c}}"-->
+<!--                                        ng-selected="currencyId==c.id"-->
+<!--                                >-->
+<!--                                    {{ c.code }}-->
 
-                            </select>
+           </select>
                             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
