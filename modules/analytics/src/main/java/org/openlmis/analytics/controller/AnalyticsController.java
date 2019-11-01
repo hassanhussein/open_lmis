@@ -53,6 +53,10 @@ public class AnalyticsController extends BaseController {
     @Autowired
     private GeoFacilityStockStatusMapper stockStatusMapper;
 
+
+    @Autowired
+    private StockOutRateMapper stockOutRateMapper;
+
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
         return OpenLmisResponse.response("rnr_list", service.getAllUsers());
@@ -283,5 +287,18 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("stocks", this.stockStatusMapper.GeoFacilityStockStatusDetails(loggedInUserId(request),product,program,year,period, facility));
     }
 
+
+    @RequestMapping(value = "/getStockOutRate.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockOutRate(@Param("program") Long program,
+                                                            @Param("period") Long period) {
+        return OpenLmisResponse.response("stockOutRates", this.stockOutRateMapper.getStockOutRate(program, period));
+    }
+
+    @RequestMapping(value = "/getStockStatusByLocation.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockStatusByLocation(@Param("program") Long program,
+                                                                     @Param("product") Long product,
+                                                                     @Param("period") Long period) {
+        return OpenLmisResponse.response("getStockStatusByLocation", this.stockOutRateMapper.getStockStatusByLocation(program, period, product));
+    }
 
 }

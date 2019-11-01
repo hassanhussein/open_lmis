@@ -780,3 +780,114 @@ services.factory('GetSourceOfFundsByLocation', function($resource){
 services.factory('GetGeoStockStatusDetails', function($resource){
     return $resource('/api//dashboard/getGeoStockStatusDetails.json',{}, {});
 });
+
+
+services.factory('StockOutRate', function ($resource) {
+    return $resource('/api/dashboard/getStockOutRate.json', {}, {});
+});
+
+services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutRate) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function () {
+            StockOutRate.get(params, function (data) {
+
+                var stockOutRates =[];
+                if (data !== undefined) {
+                    stockOutRates = data.stockOutRates;
+                }
+                deferred.resolve(stockOutRates);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+    });
+
+
+
+    services.factory('StockStatusByLocation', function ($resource) {
+        return $resource('/api/dashboard/getStockStatusByLocation.json', {}, {});
+    });
+
+    services.factory('StockStatusByLocationData', function ($q, $timeout, $resource,StockStatusByLocation) {
+        function get(params) {
+
+            var deferred = $q.defer();
+            $timeout(function () {
+                StockStatusByLocation.get(params, function (data) {
+
+                    var stockOutRates =[];
+                    if (data !== undefined) {
+                        stockOutRates = data.getStockStatusByLocation;
+                    }
+                    deferred.resolve(stockOutRates);
+
+                });
+
+            }, 100);
+            return deferred.promise;
+        }
+        return {
+            get: get
+        };
+});
+
+services.factory('GetTzRegionMap', function ($resource) {
+    return $resource('/public/js/reports/shared/tz-reg.json', {}, {});
+});
+
+
+    services.factory('GetTzRegionMapData', function ($q, $timeout, $resource,GetTzRegionMap) {
+        function get(params) {
+
+            var deferred = $q.defer();
+            $timeout(function () {
+                GetTzRegionMap.get(params, function (data) {
+
+                    deferred.resolve(data);
+
+                });
+
+            }, 100);
+            return deferred.promise;
+        }
+        return {
+            get: get
+        };
+});
+
+services.factory('GetTzDistrictMap', function ($resource) {
+    return $resource('/public/js/reports/shared/tz-arusha.json', {}, {});
+});
+
+
+    services.factory('GetTzDistrictMapData', function ($q, $timeout, $resource,GetTzDistrictMap) {
+        function get(params) {
+
+            var deferred = $q.defer();
+            $timeout(function () {
+                GetTzDistrictMap.get(params, function (data) {
+
+                    deferred.resolve(data);
+
+                });
+
+            }, 100);
+            return deferred.promise;
+        }
+        return {
+            get: get
+        };
+});
+
+
+
+services.factory('GetTzRegionMap', function ($resource) {
+    return $resource('/public/js/reports/shared/map.json', {}, {});
+});
