@@ -1092,6 +1092,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
 
         $.getJSON('/gis/reporting-rate.json', $scope.filter, function(data) {
+
             $scope.features = data.map;
             getExportDataFunction($scope.features);
             angular.forEach($scope.features, function(feature) {
@@ -1102,6 +1103,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 feature.properties.name = feature.name;
                 feature.properties.id = feature.id;
             });
+
+                      console.log(JSON.stringify($scope.features));
+
 
             $scope.drawMap({
                 "type": "FeatureCollection",

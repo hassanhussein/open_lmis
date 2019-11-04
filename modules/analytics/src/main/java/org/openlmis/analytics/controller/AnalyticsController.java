@@ -284,4 +284,21 @@ public class AnalyticsController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/getRegionalStockStatusSummary.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getRegionalStockStatusSummary(               @Param("program") Long program,
+                                                                                   @Param("product") Long product,
+                                                                                   @Param("year") Long year,
+                                                                                   @Param("period") Long period,
+                                                                                   @Param("facility") Long facility,
+                                                                                   HttpServletRequest request) {
+        return OpenLmisResponse.response("stocks", this.stockStatusMapper.getRegionalStockStatusSummary(loggedInUserId(request),product,program,year,period));
+    }
+
+
+    @RequestMapping(value = "/getGeoJsonInfo.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getGeoJsonInfo(HttpServletRequest request) {
+        return OpenLmisResponse.response("stocks", this.stockStatusMapper.getGeoJSONInfo());
+    }
+
+
 }
