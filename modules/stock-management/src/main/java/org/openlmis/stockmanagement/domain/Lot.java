@@ -45,4 +45,6 @@ public class Lot extends BaseModel implements Importable
             null != expirationDate);
     }
     private Long productId;
+
+    private String lotNumber;
 }
