@@ -129,7 +129,8 @@ public class ReceiveService {
 
                 }
             } else {
-                lineItemService.deleteByReceiveId(receive.getId());
+
+                //lineItemService.deleteByReceiveId(receive.getId());
 
                 for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
 

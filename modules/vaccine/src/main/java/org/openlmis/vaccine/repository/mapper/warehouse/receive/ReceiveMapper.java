@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.receive;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.SupplyPartner;
+import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
 import org.openlmis.vaccine.dto.CurrencyDTO;
@@ -98,7 +99,11 @@ public interface ReceiveMapper {
             @Result(property = "supplier", column = "supplierid", javaType = SupplyPartner.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.SupplyPartnerMapper.getById")),
             @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
-                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById")),
+
+            @Result(property = "asn", column = "asnId", javaType = Asn.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnMapper.getById")),
+
             /*,
             @Result(property = "purchaseDocuments", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PurchaseDocumentMapper.getByAsnId"))*/

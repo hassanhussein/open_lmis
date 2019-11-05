@@ -66,6 +66,8 @@ public class Receive extends BaseModel {
 
     private Port port;
 
+    private Asn asn;
+
     private Long facilityId;
 
     private  Long currencyId;
