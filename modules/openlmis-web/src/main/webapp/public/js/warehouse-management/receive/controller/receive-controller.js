@@ -45,6 +45,7 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
                               $scope.manufacturers = data.manufacturers;
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
+                                       $scope.currencies=data.currencies;
 
 
 
@@ -58,6 +59,31 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
     }
 
     getAllLookups();
+     $scope.loadProductLots = function(product)
+
+        {
+
+            $scope.productError = false;
+
+            $scope.lotsToDisplay = {};
+
+            if (product !== null) {
+
+        console.log(product)
+                ProductLots.get({
+                    productId: product.id
+                }, function(data) {
+                    $scope.allLots = data.lots;
+                    //                              console.log(data.lots)
+                                    $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
+
+
+                });
+
+
+            }
+        };
+
 //    $scope.homeFacilityId = homeFacility.id;
 //    $scope.userPrograms = configurations.programs;
 //    $scope.manufacturers = manufacturers;
@@ -69,16 +95,17 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 //    $scope.configurations = configurations;
     $scope.switchData=2;
 //    $scope.otherProducts=otherProducts;
-     if(receive !== null) {
+//console.log(receive)
+     if(receive) {
 
-     if(receive.supplierId === null || receive.currencyId === null) {
+//     if(receive.supplierId === null || receive.currencyId === null) {
 
      receive.currencyId = receive.currency.id;
      receive.supplierId = receive.supplier.id;
 
      $scope.supplierId = receive.supplier.id;
 
-      }
+//      }
      }
     $scope.receive = receive;
 
@@ -120,6 +147,25 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
     };
 
+
+    $scope.addLot = function(product,lot) {
+//    console.log(product)
+        productIndex=_.indexOf($scope.productsToAdd,product);
+        $lotIndex = $scope.productsToAdd[productIndex].lots.length - 1;
+//        console.log($lotIndex);
+        $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
+        $scope.productsToAdd[productIndex].lots.push({
+            quantity: 0,
+            displayCodeOnly: false
+        });
+//        $scope.updateLotsToDisplay();
+    };
+
+$scope.setCurrency=function(){
+
+$scope.currency=_.findWhere($scope.currencies,{'id':$scope.selectedCurrency});
+
+};
 
     $scope.quantityVsBox=function(){
 //    get the total quantity
@@ -211,7 +257,7 @@ var total_lot_quantity = 0;
 
     if ($scope.receive) {
        console.log($scope.receive.asnNumber);
-       if($scope.receive.asnNumber !== undefined)
+//       if($scope.receive.asnNumber !== undefined)
        getListOfFilesByASNumber($scope.receive.asnNumber);
         $scope.editMode = true;
         $scope.facilityId = $scope.homeFacilityId;
@@ -229,6 +275,9 @@ var total_lot_quantity = 0;
         $scope.portOfArrivalId = receive.port.id;
         $scope.productsToAdd = [];
         $scope.supplier = receive.supplier;
+         $scope.supplierId=$scope.supplier.id;
+        $scope.currency=receive.currency;
+        $scope.selectedCurrency=$scope.currency.id;
 //        $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
@@ -274,6 +323,9 @@ var total_lot_quantity = 0;
                 unitPrice: product.unitPrice,
 
             });
+
+            $scope.addLot($scope.productsToAdd[0],'ad');
+          $scope.loadProductLots($scope.productsToAdd[0].programProduct.product);
             }else{
             $scope.switchData=1;
              $scope.productsToAdd.push({
@@ -411,17 +463,6 @@ $scope.changeProductType=function(isVaccine){
 
 
 
-    $scope.addLot = function(product,lot) {
-        productIndex=_.indexOf($scope.productsToAdd,product);
-        $lotIndex = $scope.productsToAdd[productIndex].lots.length - 1;
-//        console.log($lotIndex);
-        $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
-        $scope.productsToAdd[productIndex].lots.push({
-            quantity: 0,
-            displayCodeOnly: false
-        });
-        $scope.updateLotsToDisplay();
-    };
 
     $scope.validateProduct = function() {
     if($scope.isVaccine){
@@ -694,30 +735,6 @@ $scope.removeProduct(productIndex);
 
 
 
-    $scope.loadProductLots = function(product)
-
-    {
-
-        $scope.productError = false;
-
-        $scope.lotsToDisplay = {};
-
-        if (product !== null) {
-
-
-            ProductLots.get({
-                productId: product.id
-            }, function(data) {
-                $scope.allLots = data.lots;
-                //                              console.log(data.lots)
-                                $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
-
-
-            });
-
-
-        }
-    };
 
 $scope.saveAsn = function(status) {
 
@@ -801,6 +818,7 @@ $scope.quantityBoxError=false;
             noteToSupplier:$scope.noteToSupplier,
             poDate: $scope.poDate,
             poNumber: $scope.poNumber,
+            currencyId:$scope.selectedCurrency,
             portOfArrival: $scope.portOfArrivalId,
             purchaseDocuments: $scope.docList,
             status: status,
