@@ -31,7 +31,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="asnCode" ng-disabled="viewMode" name="asnCode" id="asnCode" type="text" maxlength="50" ng-required="true"/>
+                            <input ng-model="asnCode" ng-disabled="viewMode || editMode" name="asnCode" id="asnCode" type="text" maxlength="50" ng-required="true"/>
                             <span class="field-error" ng-show="asnForm.asnCode.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>

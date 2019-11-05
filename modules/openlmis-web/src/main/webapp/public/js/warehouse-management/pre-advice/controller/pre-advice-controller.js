@@ -316,7 +316,7 @@ getAllLookups();
 
 
     } else {
-
+$scope.docList = [];
        $scope.isVaccine=true;
         $scope.productsToAdd = [{
             id: 0,
@@ -739,10 +739,11 @@ $scope.removeProduct(productIndex);
 //    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required && $scope.docList.length < 0) {
+      if ($scope.asnForm.$error.required && $scope.docList.length < 1) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
+//            console.log('dfas')
             return;
         }
 
