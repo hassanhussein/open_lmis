@@ -1,27 +1,39 @@
 package org.openlmis.web.controller.warehouse;
 
 import lombok.NoArgsConstructor;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRParameter;
 import org.apache.log4j.Logger;
+import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.ivdform.domain.Manufacturer;
 import org.openlmis.ivdform.service.ManufacturerService;
+import org.openlmis.report.util.Constants;
+import org.openlmis.reporting.model.Template;
+import org.openlmis.reporting.service.JasperReportsViewFactory;
+import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.vaccine.domain.wms.*;
 import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.service.warehouse.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.jasperreports.JasperReportsMultiFormatView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +58,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 @RequestMapping(value = "/rest-api/warehouse")
 public class AsnController extends BaseController {
+    private static final String PRINT_ASN = "Print Asn";
 
     @Autowired
     AsnService asnService;
@@ -67,6 +80,14 @@ public class AsnController extends BaseController {
     @Autowired
     MessageService messageService;
 
+    @Autowired
+    TemplateService templateService;
+
+    @Autowired
+    ConfigurationSettingService settingService;
+
+    @Autowired
+    private JasperReportsViewFactory jasperReportsViewFactory;
 
     public static final String ERROR = "error";
     public static final String SUCESS = "success";
@@ -326,6 +347,30 @@ public class AsnController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getAllCurrencies(HttpServletRequest request) {
 
         return OpenLmisResponse.response("list",asnService.getAllCurrencies());
+    }
+
+    @RequestMapping(value = "/print{id}/asn", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printOrder(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
+        Template orPrintTemplate = templateService.getByName(PRINT_ASN);
+
+        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("format", "pdf");
+
+        Locale currentLocale = messageService.getCurrentLocale();
+        map.put(JRParameter.REPORT_LOCALE, currentLocale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
+        Resource reportResource = new ClassPathResource("report");
+        Resource imgResource = new ClassPathResource("images");
+        ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
+        map.put(Constants.OPERATOR_NAME, configuration.getValue());
+
+        String separator = System.getProperty("file.separator");
+        map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
+        map.put("ORDER_ID", id.intValue());
+
+        return new ModelAndView(jasperView, map);
     }
 
 }

@@ -94,73 +94,73 @@ public class ReceiveService {
         }
 
          List<ReceiveLineItem> item = lineItemService.getByReceiveId(receive.getId());
+        if (receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {
+            if (item.isEmpty()) {
 
-        if(item.isEmpty()) {
+                for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
 
-            for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
+                    if (lineItem.getProductId() != null) {
 
-                if(lineItem.getProductId() != null) {
+                        lineItem.setReceive(receive);
+                        lineItem.setCreatedBy(userId);
+                        lineItem.setModifiedBy(userId);
+                        lineItemService.save(lineItem);
+                        if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
 
-                    lineItem.setReceive(receive);
-                    lineItem.setCreatedBy(userId);
-                    lineItem.setModifiedBy(userId);
-                    lineItemService.save(lineItem);
-                    if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
+                            lotService.deleteByLineItem(lineItem.getId());
 
-                        lotService.deleteByLineItem(lineItem.getId());
+                            for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                                Lot l = lotRepository.getByCode(lot.getLotNumber());
+                                if (l != null) {
+                                    lot.setReceiveLineItem(lineItem);
+                                    lot.setExpiryDate(l.getExpirationDate());
+                                    lot.setManufacturingDate(l.getManufactureDate());
+                                    lot.setLotNumber(l.getLotNumber());
+                                    lot.setLotNumber(l.getLotNumber());
+                                    lot.setCreatedBy(userId);
+                                    lot.setModifiedBy(userId);
+                                    lotService.save(lot);
+                                }
+                            }
 
-                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
-                            Lot l = lotRepository.getByCode(lot.getLotNumber());
-                            if (l != null) {
-                            lot.setReceiveLineItem(lineItem);
-                            lot.setExpiryDate(l.getExpirationDate());
-                            lot.setManufacturingDate(l.getManufactureDate());
-                            lot.setLotNumber(l.getLotNumber());
-                            lot.setLotNumber(l.getLotNumber());
-                            lot.setCreatedBy(userId);
-                            lot.setModifiedBy(userId);
-                            lotService.save(lot);
+
                         }
-                        }
-
 
                     }
 
                 }
+            } else {
+                lineItemService.deleteByReceiveId(receive.getId());
 
-            }
-        }  else {
-            lineItemService.deleteByReceiveId(receive.getId());
+                for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
 
-            for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
+                    if (lineItem.getProductId() != null) {
 
-                if(lineItem.getProductId() != null) {
+                        lineItem.setReceive(receive);
+                        lineItem.setCreatedBy(userId);
+                        lineItem.setModifiedBy(userId);
+                        lineItemService.save(lineItem);
+                        if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
 
-                    lineItem.setReceive(receive);
-                    lineItem.setCreatedBy(userId);
-                    lineItem.setModifiedBy(userId);
-                    lineItemService.save(lineItem);
-                    if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
+                            for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                                Lot l = lotRepository.getByCode(lot.getLotNumber());
+                                lot.setId(l.getId());
+                                lot.setReceiveLineItem(lineItem);
+                                lot.setExpiryDate(l.getExpirationDate());
+                                lot.setManufacturingDate(l.getManufactureDate());
+                                lot.setLotNumber(l.getLotCode());
+                                lot.setCreatedBy(userId);
+                                lot.setModifiedBy(userId);
+                                lotService.save(lot);
+                            }
 
-                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
-                            Lot l = lotRepository.getByCode(lot.getLotNumber());
-                            lot.setId(l.getId());
-                            lot.setReceiveLineItem(lineItem);
-                            lot.setExpiryDate(l.getExpirationDate());
-                            lot.setManufacturingDate(l.getManufactureDate());
-                            lot.setLotNumber(l.getLotCode());
-                            lot.setCreatedBy(userId);
-                            lot.setModifiedBy(userId);
-                            lotService.save(lot);
+
                         }
 
-
                     }
-
                 }
             }
         }
-
 
    /*     if (receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {
 
