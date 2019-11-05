@@ -113,4 +113,10 @@ public interface LotMapper {
 
     @Select("select * from lots where lower(lotnumber) = lower(#{lotCode}) limit 1")
     Lot getByCode(@Param("lotCode") String lotCode);
+
+
+
+
+
+
 }

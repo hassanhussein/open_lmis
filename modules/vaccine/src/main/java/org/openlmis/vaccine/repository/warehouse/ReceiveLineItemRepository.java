@@ -30,4 +30,11 @@ public class ReceiveLineItemRepository {
     }
 
 
+    public List<ReceiveLineItem> getByReceiveId(Long id) {
+        return mapper.getByReceiveId(id);
+    }
+
+    public void deleteByReceiveId(Long id) {
+        mapper.deleteByReceiveId(id);
+    }
 }

@@ -36,4 +36,8 @@ public class ReceiveLotRepository {
        return mapper.getByLotNumber(id);
 
     }
+
+    public void deleteByLineItem(Long id) {
+        mapper.deleteByLineItem(id);
+    }
 }

@@ -38,4 +38,8 @@ public class ReceiveLotService {
     public List<ReceiveLot> getByLineItem(Long id) {
         return repository.getByLotNumber(id);
     }
+
+    public void deleteByLineItem(Long id) {
+        repository.deleteByLineItem(id);
+    }
 }

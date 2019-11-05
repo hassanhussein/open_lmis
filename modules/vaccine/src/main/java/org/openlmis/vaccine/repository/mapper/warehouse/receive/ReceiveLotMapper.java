@@ -33,4 +33,7 @@ public interface ReceiveLotMapper {
 
     @Select("select * from receive_lots where receiveLineItemId = #{id}")
     List<ReceiveLot> getByLotNumber( @Param("id") Long id);
+
+    @Delete(" DELETE from receive_lots where receiveLineItemId = #{id}")
+    void deleteByLineItem(@Param("id") Long id);
 }

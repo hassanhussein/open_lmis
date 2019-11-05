@@ -28,4 +28,6 @@ public class ReceiveLineItem extends BaseModel {
     private List<ReceiveLot> receiveLots;
     private List<Product> productList;
 
+    private Product product;
+
 }

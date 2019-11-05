@@ -32,4 +32,12 @@ public class ReceiveLineItemService {
     }
 
 
+    public List<ReceiveLineItem> getByReceiveId(Long id) {
+
+        return repository.getByReceiveId(id);
+    }
+
+    public void deleteByReceiveId(Long id) {
+        repository.deleteByReceiveId(id);
+    }
 }

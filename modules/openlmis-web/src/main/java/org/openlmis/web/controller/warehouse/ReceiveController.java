@@ -72,7 +72,10 @@ public class ReceiveController extends BaseController {
             Long userId = loggedInUserId(principal);
             receive.setCreatedBy(userId);
             receive.setModifiedBy(userId);
-            service.save(receive, userId, null);
+            Receive savedReceive = service.save(receive, userId, null);
+            if(receive.getStatus().equalsIgnoreCase("Received")) {
+             service.updateStockCardDetails(savedReceive,userId);
+            }
             return success("message.success.warehouse.created");
 
         } catch (DataException e) {
@@ -86,7 +89,12 @@ public class ReceiveController extends BaseController {
         try{
             receive.setId(id);
             receive.setModifiedBy(loggedInUserId(principal));
-            service.save(receive, loggedInUserId(principal), null);
+            Receive savedReceive = service.save(receive, loggedInUserId(principal), null);
+
+            if(receive.getStatus().equalsIgnoreCase("Received")) {
+                service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
+            }
+
             return success("message.success.warehouse.updated");
 
         } catch (DataException e) {

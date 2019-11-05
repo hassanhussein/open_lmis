@@ -1,14 +1,13 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramService;
-import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.stockmanagement.domain.*;
 import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.dto.StockEventType;
@@ -75,7 +74,7 @@ public class ReceiveService {
     }
 
     @Transactional
-    public void save(Receive receive, Long userId, Asn asn) {
+    public Receive save(Receive receive, Long userId, Asn asn) {
 
         if(receive.getAsnNumber() != null) {
 
@@ -94,7 +93,76 @@ public class ReceiveService {
             repository.update(receive);
         }
 
-        if (receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {
+         List<ReceiveLineItem> item = lineItemService.getByReceiveId(receive.getId());
+
+        if(item.isEmpty()) {
+
+            for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
+
+                if(lineItem.getProductId() != null) {
+
+                    lineItem.setReceive(receive);
+                    lineItem.setCreatedBy(userId);
+                    lineItem.setModifiedBy(userId);
+                    lineItemService.save(lineItem);
+                    if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
+
+                        lotService.deleteByLineItem(lineItem.getId());
+
+                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                            Lot l = lotRepository.getByCode(lot.getLotNumber());
+                            if (l != null) {
+                            lot.setReceiveLineItem(lineItem);
+                            lot.setExpiryDate(l.getExpirationDate());
+                            lot.setManufacturingDate(l.getManufactureDate());
+                            lot.setLotNumber(l.getLotNumber());
+                            lot.setLotNumber(l.getLotNumber());
+                            lot.setCreatedBy(userId);
+                            lot.setModifiedBy(userId);
+                            lotService.save(lot);
+                        }
+                        }
+
+
+                    }
+
+                }
+
+            }
+        }  else {
+            lineItemService.deleteByReceiveId(receive.getId());
+
+            for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
+
+                if(lineItem.getProductId() != null) {
+
+                    lineItem.setReceive(receive);
+                    lineItem.setCreatedBy(userId);
+                    lineItem.setModifiedBy(userId);
+                    lineItemService.save(lineItem);
+                    if (lineItem.isLotFlag() && (!lineItem.getReceiveLots().isEmpty())) {
+
+                        for (ReceiveLot lot : lineItem.getReceiveLots()) {
+                            Lot l = lotRepository.getByCode(lot.getLotNumber());
+                            lot.setId(l.getId());
+                            lot.setReceiveLineItem(lineItem);
+                            lot.setExpiryDate(l.getExpirationDate());
+                            lot.setManufacturingDate(l.getManufactureDate());
+                            lot.setLotNumber(l.getLotCode());
+                            lot.setCreatedBy(userId);
+                            lot.setModifiedBy(userId);
+                            lotService.save(lot);
+                        }
+
+
+                    }
+
+                }
+            }
+        }
+
+
+   /*     if (receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {
 
             for (ReceiveLineItem lineItem : receive.getReceiveLineItems()) {
 
@@ -119,53 +187,14 @@ public class ReceiveService {
 
                 }
             }
-        }
+        }*/
 
         Asn asn1 = asnRepository.getByAsnNumber(receive.getAsnNumber());
 
         purchaseDocumentService.save(asn1, receive, userId);
 
-        if (receive.getStatus().equalsIgnoreCase("Received") && (receive.getReceiveLineItems() != null)) {
 
-                for (ReceiveLineItem rece : receive.getReceiveLineItems()) {
-
-                    List<StockEventDTO> events = new ArrayList<>();
-
-                    Product product = productService.getById(rece.getProductId());
-
-                    List<ReceiveLot> receiveLot = receiveLotService.getByLineItem(rece.getId());
-
-
-                    for (ReceiveLot lot : receiveLot) {
-
-                        StockEventDTO event = new StockEventDTO();
-                        event.setType(StockEventType.RECEIPT);
-                        event.setProductCode(product.getCode());
-                        event.setQuantity(Long.valueOf(lot.getQuantity()));
-                        event.setFacilityId(receive.getFacilityId());
-                        Lot lot1 = lotRepository.getByCode(lot.getLotNumber());
-                        if(lot1 != null) {
-                            Lot l = new Lot();
-                            l.setId(lot.getId());
-                            l.setProduct(product);
-                            l.setExpirationDate(lot.getExpiryDate());
-                            l.setLotCode(lot.getLotNumber());
-                            l.setManufactureDate(lot1.getManufactureDate());
-                            l.setProductId(product.getId());
-                            l.setManufacturerName(lot1.getManufacturerName());
-
-                            event.setLotId(lot1.getId());
-                            event.setLot(l);
-                            event.setCustomProps(null);
-                            events.add(event);
-                        }
-
-                    }
-                    processStockCard(receive.getFacilityId(), events, userId);
-                }
-
-        }
-       if(asn != null && asn.getStatus().equalsIgnoreCase("Finalized")) {
+       if(asn != null && asn.getStatus().equalsIgnoreCase("Finalized") && !(receive.getStatus().equalsIgnoreCase("received"))) {
 
            for (AsnLineItem lineItem : asn.getAsnLineItems()) {
 
@@ -205,6 +234,9 @@ public class ReceiveService {
            }
 
        }
+
+
+       return getById(receive.getId());
     }
 
     public List<Receive> getAll() {
@@ -274,7 +306,7 @@ public class ReceiveService {
             StringBuilder str = new StringBuilder();
             Long lotId = event.getLotId();
             Lot lotObj = event.getLot();
-            LotOnHand lotOnHand = stockCardService.getLotOnHand(lotId, lotObj, productCode, card, str);
+            LotOnHand lotOnHand = stockCardService.getLotOnHandFor(lotId, lotObj, productCode, card, str);
             if (!str.toString().equals("")) {
                 return "Lot Not created";
             }
@@ -309,4 +341,61 @@ public class ReceiveService {
     }
 
 
+    public void updateStockCardDetails(Receive receive, Long userId) {
+
+        if(receive.getId() != null) {
+
+            List<StockEventDTO> events = new ArrayList<>();
+
+            for (ReceiveLineItem rece : receive.getReceiveLineItems()) {
+
+
+                   if(rece.getProductId() != null ) {
+
+                       Product product = productService.getById(rece.getProductId());
+
+                       List<ReceiveLot> receiveLot = receiveLotService.getByLineItem(rece.getId());
+
+                       StockEventDTO event = new StockEventDTO();
+
+                       Map<String, String> customProps = new HashMap<String, String>();
+
+                       for (ReceiveLot lot : receiveLot) {
+
+
+                           event.setType(StockEventType.RECEIPT);
+                           event.setFacilityId(19075L);
+                           event.setProductCode(product.getCode());
+                           event.setQuantity(Long.valueOf(lot.getQuantity()));
+
+                           Lot newLot = lotRepository.getByCode(lot.getLotNumber());
+
+                           Lot lotToSave = new Lot();
+                           lotToSave.setLotCode(newLot.getLotNumber());
+                           lotToSave.setManufacturerName(newLot.getManufacturerName());
+                           lotToSave.setExpirationDate(newLot.getExpirationDate());
+
+                           customProps.put("vvmStatus", "1");
+                           event.setLotId(newLot.getId());
+                           event.setLot(lotToSave);
+                           event.setCustomProps(customProps);
+
+                           events.add(event);
+
+                           System.out.println(event);
+                       }
+                       receive.setFacilityId(19075L);
+                       processStockCard(receive.getFacilityId(), events, userId);
+
+                   }
+
+
+               }
+
+
+
+
+       }
+
+    }
 }

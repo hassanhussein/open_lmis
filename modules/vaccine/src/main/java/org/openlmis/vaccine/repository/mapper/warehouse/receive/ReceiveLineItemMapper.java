@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.repository.mapper.warehouse.receive;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Product;
 import org.openlmis.vaccine.domain.wms.ReceiveLineItem;
 import org.springframework.stereotype.Repository;
 
@@ -36,11 +37,18 @@ public interface ReceiveLineItemMapper {
             @Result(column = "id", property = "id"),
             @Result(property = "receiveLots", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLotMapper.getByLineItem")),
-            @Result(property = "productList", column = "productId", javaType = List.class,
-                    many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+       /*     @Result(property = "productList", column = "productId", javaType = List.class,
+                    many = @Many(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))*/
+            @Result(property = "productId", column = "productId"),
+            @Result(property = "product", column = "productId", javaType = Product.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById"))
+
     })
     List<ReceiveLineItem>  getByReceiveId(@Param("id") Long id);
 
     @Select(" select * from receive_line_items")
     List<ReceiveLineItem> getAll();
+
+    @Delete("DELETE from receive_line_items WHERE receiveId = #{id}")
+    void deleteByReceiveId(@Param("id") Long id);
 }
