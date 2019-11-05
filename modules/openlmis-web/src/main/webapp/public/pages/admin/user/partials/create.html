@@ -328,6 +328,10 @@
     <input id="resetPassword" type="button" class="btn btn-primary enable-button"
            openlmis-message="button.reset.password"
            ng-click="changePassword(user)" ng-show="user.id!=null"/>
+    <input id="userApplyFromOtherUser" type="button" class="btn btn-primary enable-button"
+           ng-show="user.active && user.id!=null"
+           ng-click="showApplyFromOtherUser()" openlmis-message="button.inherit.from.user"/>
+
   </div>
   <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
   <div class="toolbar-success" id="saveSuccessMsgDiv" openlmis-message="message" ng-show="message"></div>
@@ -336,3 +340,4 @@
 </form>
 </div>
 <ng-include src="'/public/pages/admin/user/partials/user-reset-password.html'"></ng-include>
+<ng-include src="'/public/pages/admin/user/partials/user-apply-permission.html'"></ng-include>

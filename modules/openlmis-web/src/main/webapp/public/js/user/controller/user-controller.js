@@ -208,6 +208,46 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
     $scope.error = data.error;
   };
 
+  $scope.showApplyFromOtherUser = function() {
+    $scope.applyPermissionModal = true;
+  };
+
+  $scope.applyPermissionChange = function() {
+
+  };
+
+  $scope.cancelApplyFromOtherUser = function() {
+    $scope.applyPermissionModal = false;
+  };
+
+  $scope.loadUsers = function (page, lastQuery) {
+    if (!($scope.query || lastQuery)) return;
+    lastQuery ? getUsers(page,lastQuery) : getUsers(page, $scope.query);
+  };
+
+  function getUsers(page, query) {
+    query = query.trim();
+    $scope.searchedQuery = query;
+    Users.get({"searchParam": $scope.searchedQuery, "page": page}, function (data) {
+      $scope.userList = data.userList;
+      $scope.pagination = data.pagination;
+      $scope.totalItems = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
+      $scope.showResults = true;
+    }, {});
+  }
+
+  $scope.$on('$viewContentLoaded', function () {
+    //$scope.query = navigateBackService.query;
+  });
+
+  $scope.triggerSearch = function (event) {
+    if (event.keyCode === 13) {
+      $scope.loadUsers(1);
+    }
+  };
+
+
   $scope.showConfirmUserDisableModal = function () {
     var dialogOpts = {
       id: "disableUserDialog",

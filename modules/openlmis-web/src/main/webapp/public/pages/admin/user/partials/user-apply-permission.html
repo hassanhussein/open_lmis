@@ -1,0 +1,68 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div id="applyPermission" modal="applyPermissionModal" options="{'backdrop':'static', 'escape':false}">
+  <form name="passwordForm">
+    <div class="modal-header">
+      <h3>
+        <span openlmis-message="message.inherit.apply.to.user"></span>&nbsp;<span ng-bind="user.firstName"></span>&nbsp;
+        <span ng-bind="user.lastName"></span>
+      </h3>
+    </div>
+
+    <div class="modal-body">
+
+      <div id="searchControl" class="row-fluid">
+        <div class="span5 search-in-category">
+          <div class="input-append input-prepend">
+            <input id='searchUser' type="text" class="span12" ng-model="$parent.query" maxlength="50" autocomplete="off"
+                   ng-keydown="triggerSearch($event)" openlmis-message="placeholder.user.search"/>
+            <button class="btn" ng-click="loadUsers(1)">
+              <i id='searchIcon' class="icon-search"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>Select</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Is Active</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="u in userList">
+            <td><input name="selectedUser" type="radio"/></td>
+            <td>{{u.userName}}</td>
+            <td>{{u.firstName}} {{u.lastName}}</td>
+            <td>{{u.email}}</td>
+            <td>{{u.active == true? 'Yes' : 'No'}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <input id="applyPermissionSaveButton" type="button" class="btn btn-primary" openlmis-message="button.done"
+             ng-click="applyPermissionChange()"/>
+      <input id="resetPasswordCancel" type="button" class="btn btn-cancel" openlmis-message="button.cancel"
+             ng-click="cancelApplyFromOtherUser()"/>
+    </div>
+
+  </form>
+</div>
