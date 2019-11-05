@@ -82,7 +82,6 @@ public class ReceiveService {
             receive.setSupplier(asn.getSupplier());
             receive.setAsnId(asn.getId());
 
-
         }
 
         if (receive.getId() == null) {

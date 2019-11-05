@@ -11,13 +11,21 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController(DeleteDocument,$window,$scope,$filter, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController(DeleteDocument,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
         // lets disable all messages
         $scope.$parent.asnId = false;
         $scope.$parent.asnIdUpdate = false;
         $scope.$parent.asnIdFinalized = false;
+
+
+      $scope.print = function (){
+console.log(parseInt($routeParams.id, 10));
+
+      var url = '/rest-api/warehouse/print/'+parseInt($routeParams.id, 10)+'/asn';
+       $window.open(url, '_blank');
+      };
 
 
     function getAllLookups(){

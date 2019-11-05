@@ -58,7 +58,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @NoArgsConstructor
 @RequestMapping(value = "/rest-api/warehouse")
 public class AsnController extends BaseController {
-    private static final String PRINT_ASN = "Print Asn";
+    private static final String PRINT_ASN = "ASN_REPORT";
 
     @Autowired
     AsnService asnService;
@@ -349,7 +349,7 @@ public class AsnController extends BaseController {
         return OpenLmisResponse.response("list",asnService.getAllCurrencies());
     }
 
-    @RequestMapping(value = "/print{id}/asn", method = GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/print/{id}/asn", method = GET, headers = ACCEPT_JSON)
     public ModelAndView printOrder(@PathVariable Long id) throws JRException, IOException, ClassNotFoundException {
         Template orPrintTemplate = templateService.getByName(PRINT_ASN);
 

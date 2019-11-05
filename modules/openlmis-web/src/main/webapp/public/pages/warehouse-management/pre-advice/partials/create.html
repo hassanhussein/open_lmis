@@ -615,7 +615,7 @@
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" class="btn btn-primary save-button"
                            openlmis-message="button.save" ng-click="saveAsn('DRAFT')" ng-if="!viewMode"/>
-                    <input type="button"  class="btn btn-primary save-button" ng-if="viewMode"
+                    <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"
                             value="Print"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
