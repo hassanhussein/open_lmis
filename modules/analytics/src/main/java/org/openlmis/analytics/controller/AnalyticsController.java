@@ -301,4 +301,11 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("getStockStatusByLocation", this.stockOutRateMapper.getStockStatusByLocation(program, period, product));
     }
 
+
+    @RequestMapping(value = "/getTLEAndTLDConsumption.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTLEAndTLDConsumption(@Param("year") Long year,
+                                                                     @Param("schedule") Long schedule) {
+        return OpenLmisResponse.response("TLEAndTLDConsumption", this.stockOutRateMapper.getTLEAndTLDConsumption(year, schedule));
+    }
+
 }

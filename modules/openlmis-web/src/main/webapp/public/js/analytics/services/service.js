@@ -891,3 +891,31 @@ services.factory('GetTzDistrictMap', function ($resource) {
 services.factory('GetTzRegionMap', function ($resource) {
     return $resource('/public/js/reports/shared/map.json', {}, {});
 });
+
+
+services.factory('GetTLEAndTLD', function ($resource) {
+  return $resource('/api/dashboard/getTLEAndTLDConsumption.json', {}, {});
+});
+
+
+
+    services.factory('GetTLEAndTLDData', function ($q, $timeout, $resource,GetTLEAndTLD) {
+        function get(params) {
+
+            var deferred = $q.defer();
+            $timeout(function () {
+                GetTLEAndTLD.get(params, function (data) {
+                      var TLEAndTLD =[];
+                      if (data !== undefined) {
+                          TLEAndTLD = data.TLEAndTLDConsumption;
+                      }
+                      deferred.resolve(TLEAndTLD);
+                });
+
+            }, 100);
+            return deferred.promise;
+        }
+        return {
+            get: get
+        };
+});
