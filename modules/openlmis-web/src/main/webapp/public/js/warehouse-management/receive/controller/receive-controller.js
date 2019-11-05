@@ -69,7 +69,7 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
             if (product !== null) {
 
-        console.log(product)
+//        console.log(product)
                 ProductLots.get({
                     productId: product.id
                 }, function(data) {
