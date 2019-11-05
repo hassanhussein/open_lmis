@@ -78,7 +78,7 @@
             <tbody>
             <tr ng-repeat="asn in asnList|orderBy:column:reverse" ng-init="arrayIndex=$index">
                 <td  ng-bind="asn.poNumber"></td>
-                <td>Number</td>
+                <td ng-bind="asn.asnNumber"></td>
                 <td  ng-bind="asn.clearingAgent"></td>
                 <td  ng-bind="(asn.expectedArrivalDate |  date:'dd-MM-yyyy')"></td>
                 <td  ng-bind="asn.supplier.name"></td>
