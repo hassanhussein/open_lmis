@@ -58,7 +58,10 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
                 $rootScope.loadHealthCommoditiesFinancing(params);
 
+                $rootScope.loadStockOutRate(params);
+                $rootScope.loadCommoditiesComparison(params);
 
+$rootScope.loadStockOutRateTrend(params);
 
 
             });

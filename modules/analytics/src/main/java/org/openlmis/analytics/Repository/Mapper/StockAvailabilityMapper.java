@@ -45,5 +45,8 @@ public interface StockAvailabilityMapper {
                                                               @Param("year") Long year);
 
 
+    List<HashMap<String,Object>> getStockStatusByLocation(@Param("program") Long program,
+                                                          @Param("period") Long period, @Param("product") Long product);
+
 
 }

@@ -53,6 +53,10 @@ public class AnalyticsController extends BaseController {
     @Autowired
     private GeoFacilityStockStatusMapper stockStatusMapper;
 
+
+    @Autowired
+    private StockOutRateMapper stockOutRateMapper;
+
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
         return OpenLmisResponse.response("rnr_list", service.getAllUsers());
@@ -284,21 +288,32 @@ public class AnalyticsController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/getRegionalStockStatusSummary.json", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getRegionalStockStatusSummary(               @Param("program") Long program,
-                                                                                   @Param("product") Long product,
-                                                                                   @Param("year") Long year,
-                                                                                   @Param("period") Long period,
-                                                                                   @Param("facility") Long facility,
-                                                                                   HttpServletRequest request) {
-        return OpenLmisResponse.response("stocks", this.stockStatusMapper.getRegionalStockStatusSummary(loggedInUserId(request),product,program,year,period));
+    @RequestMapping(value = "/getStockOutRate.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockOutRate(@Param("program") Long program,
+                                                            @Param("period") Long period) {
+        return OpenLmisResponse.response("stockOutRates", this.stockOutRateMapper.getStockOutRate(program, period));
+    }
+
+    @RequestMapping(value = "/getStockStatusByLocation.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockStatusByLocation(@Param("program") Long program,
+                                                                     @Param("product") Long product,
+                                                                     @Param("period") Long period) {
+        return OpenLmisResponse.response("getStockStatusByLocation", this.stockOutRateMapper.getStockStatusByLocation(program, period, product));
     }
 
 
-    @RequestMapping(value = "/getGeoJsonInfo.json", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getGeoJsonInfo(HttpServletRequest request) {
-        return OpenLmisResponse.response("stocks", this.stockStatusMapper.getGeoJSONInfo());
+    @RequestMapping(value = "/getTLEAndTLDConsumption.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTLEAndTLDConsumption(@Param("year") Long year,
+                                                                     @Param("schedule") Long schedule) {
+        return OpenLmisResponse.response("TLEAndTLDConsumption", this.stockOutRateMapper.getTLEAndTLDConsumption(year, schedule));
     }
 
+    @RequestMapping(value = "/getStockOutRateByProduct.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockOutRateByProduct(@Param("year") Long year,
+                                                                    @Param("schedule") Long schedule,
+                                                                     @Param("product") Long product,
+                                                                     @Param("program") Long program) {
+        return OpenLmisResponse.response("StockOutRateByProduct", this.stockOutRateMapper.getStockOutRateByProduct(year, schedule, product, program));
+    }
 
 }
