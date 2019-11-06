@@ -36,11 +36,11 @@ public interface  StockOutRateMapper {
 
 
 
-    @Select("select sum(normalizedconsumption) as totalConsumption,sum(stockinhand) as totalsTockinhand, pp.name, pp.id, rli.productcode from requisition_line_items rli\n" +
-            "join requisitions r on r.id=rli.rnrid\n" +
-            "join processing_periods pp on pp.id=r.periodid\n" +
-            "where extract(year from pp.startdate) = #{year}  and (rli.productcode='10010164AB' OR rli.productcode='10010022AB' ) and pp.scheduleid= #{schedule}\n" +
-            "group by pp.name ,pp.id, rli.productcode order by pp.id asc")
+    @Select(" select sum(cs.quantityDispensed) as  totalConsumption, cs.periodname as name, cs.productid as id, cs.productcode, cs.periodid\n" +
+            "             from mv_dashboard_consumption_summary cs\n" +
+            "             join processing_periods pp on pp.id=cs.periodid  \n" +
+            "             where productcode in  ('10010164AB' ,'10010022AB' ) and extract(year from pp.startdate) =  #{year} and cs.scheduleid= #{schedule}\n" +
+            "             group by cs.periodname, cs.productid, cs.productcode, cs.periodid order by cs.periodid desc")
     List<HashMap<String,Object>> getTLEAndTLDConsumption(@Param("year") Long year,
                                                          @Param("schedule") Long schedule);
 
