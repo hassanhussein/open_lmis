@@ -46,4 +46,17 @@ public interface  StockOutRateMapper {
 
 
 
+
+    @Select("    SELECT  SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as numerator, count(*) as denominator, \n" +
+            "  ROUND(100.0 * (SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) )/ COUNT(product),2) AS percentage, p.code, p.primaryname, a.processing_period_name, pp.id\n" +
+            " FROM ( SELECT * from mv_stock_imbalance_by_facility_report ) a\n" +
+            " join products p on p.code=a.productcode\n" +
+            " join processing_periods pp on pp.id=a.periodid\n" +
+            "where extract(year from pp.startdate) = #{year}  and p.id =#{product}  and pp.scheduleid= #{schedule}\n" +
+            "  group by p.code, p.primaryname, a.processing_period_name, pp.id order by pp.id asc")
+    List<HashMap<String,Object>> getStockOutRateByProduct(@Param("year") Long year,
+                                                 @Param("schedule") Long schedule,
+                                                          @Param("product") Long product,
+                                                          @Param("program") Long program);
+
 }

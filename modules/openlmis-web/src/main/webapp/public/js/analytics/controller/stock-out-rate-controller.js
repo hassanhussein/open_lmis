@@ -1,4 +1,8 @@
-function StockOutRateController($scope, $location, Program, Period, $rootScope, StockOutRateData, StockStatusByLocationData, GetTzDistrictMapData, GetTzRegionMapData) {
+function StockOutRateController($scope, $location, Program, Period, $rootScope, StockOutRateData, StockStatusByLocationData, GetTzDistrictMapData, GetTzRegionMapData, GetStockOutRateByProductData,GetProductById) {
+
+   $scope.year ='';
+   $scope.productName ='';
+
     $rootScope.loadStockOutRate = function(params) {
         StockStatusByLocationData.get(params).then(function(data) {
             GetTzRegionMapData.get(params).then(function(map) {
@@ -9,12 +13,85 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
 
             });
         });
-
     };
 
 
+    $rootScope.loadStockOutRateTrend = function(params) {
+           GetProductById.get({id:parseInt(params.product,10)}, function(productData){
+            GetStockOutRateByProductData.get(params).then(function(data) {
+            loadStockOutRateTrend(data, params, productData.productDTO.product.primaryName);
+            });
+        });
+    };
+
+    function loadStockOutRateTrend(data, params, productName) {
+        Highcharts.chart('stockOutRateTrend', {
+
+            title: {
+                text:  'Stock Out Rate for '+productName+' on '+params.year+'',
+            },
+
+            subtitle: {
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+             xAxis: {
+             categories: _.uniq(_.pluck(data, 'processing_period_name'))
+                },
+            yAxis: {
+                title: {
+                    text: 'Percentage'
+                },
+                min : 0,
+//                                        plotLines: [{
+//                                                     color: '#FF0000',
+//                                                     width: 2,
+//                                                     value: .5 // Need to set this probably as a var.
+//                                                 }]
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    }
+                }
+            },
+
+
+            series: [{
+                name: productName,
+                data:  _.uniq(_.pluck(data, 'percentage'))
+            }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
+
+    }
+
     function loadStockOutRateChart(map, districtMap, values, params, districtValues) {
-    console.log(values);
+        console.log(values);
         var data = Highcharts.geojson(map);
         $.each(data, function(i) {
             var key = this.properties['hc-key'];
@@ -37,22 +114,19 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
                             GetTzDistrictMapData.get(params).then(function(mapDis) {
 
                                 data = Highcharts.geojson(filterMap(mapDis, e.point.name));
-console.log(districtValues);
                                 $.each(data, function(i) {
-                                var sof_obj = _.where( districtValues, {
-                                         region_name: e.point.name,
-                                         district_name:data[i].name
-                                         });
-                                         console.log(e.point.name);
-                                         console.log(data[i].name);
-                                         console.log(sof_obj);
-                                           if(sof_obj.length>0)
-                                                  {
-                                           this.value = sof_obj[0].stockoutpercentage;
-                                                  }else
-                                                  {
-                                                  this.value =0;
-                                                  }
+                                    var sof_obj = _.where(districtValues, {
+                                        region_name: e.point.name,
+                                        district_name: data[i].name
+                                    });
+                                    console.log(e.point.name);
+                                    console.log(data[i].name);
+                                    console.log(sof_obj);
+                                    if (sof_obj.length > 0) {
+                                        this.value = sof_obj[0].stockoutpercentage;
+                                    } else {
+                                        this.value = 0;
+                                    }
 
 
 
@@ -147,6 +221,7 @@ console.log(districtValues);
 
 
 
+
     function createSeries(data) {
         var pp_name = _.uniq(_.pluck(data, 'processing_period_name'));
         var products_group_name = _.uniq(_.pluck(data, 'name'));
@@ -180,9 +255,11 @@ console.log(districtValues);
 
     }
 
-       function get_sum(obj, obj_name) {
-                    return _.pluck(obj, obj_name).reduce(function(acc, val) { return acc + val; }, 0);
-                    }
+    function get_sum(obj, obj_name) {
+        return _.pluck(obj, obj_name).reduce(function(acc, val) {
+            return acc + val;
+        }, 0);
+    }
 
     function addRegionData(data) {
 
@@ -198,7 +275,7 @@ console.log(districtValues);
             var average_understockpercentage = total_understockpercentage / sof_obj.length;
 
 
-            var total_overstockpercentage =  get_sum(sof_obj, 'overstockpercentage');
+            var total_overstockpercentage = get_sum(sof_obj, 'overstockpercentage');
             var average_overstockpercentage = total_overstockpercentage / sof_obj.length;
 
 
@@ -208,11 +285,11 @@ console.log(districtValues);
 
 
 
-            var total_unknownstockpercentage =  get_sum(sof_obj, 'unknownstockpercentage');
+            var total_unknownstockpercentage = get_sum(sof_obj, 'unknownstockpercentage');
             var average_unknownstockpercentage = total_unknownstockpercentage / sof_obj.length;
 
 
-            var total_stockoutpercentage =  get_sum(sof_obj, 'stockoutpercentage');
+            var total_stockoutpercentage = get_sum(sof_obj, 'stockoutpercentage');
             var average_stockoutpercentage = total_stockoutpercentage / sof_obj.length;
 
 
@@ -261,17 +338,17 @@ console.log(districtValues);
     }
 
 
-//    function manuver(params) {
-//
-//        GetTzDistrictMapData.get(params).then(function(data) {
-//
-//            for (var x in data.features) {
-//                data.features[x].properties["hc-key"] = data.features[x].properties.ADM2;
-//                data.features[x].properties["name"] = data.features[x].properties.ADM2;
-//            }
-//        });
-//
-//    }
+    //    function manuver(params) {
+    //
+    //        GetTzDistrictMapData.get(params).then(function(data) {
+    //
+    //            for (var x in data.features) {
+    //                data.features[x].properties["hc-key"] = data.features[x].properties.ADM2;
+    //                data.features[x].properties["name"] = data.features[x].properties.ADM2;
+    //            }
+    //        });
+    //
+    //    }
 
     $scope.onSelected = function(option) {
         if (option === 'Stock out rate') {
@@ -282,5 +359,10 @@ console.log(districtValues);
     $scope.onFilterChange = function(filter) {
         $rootScope.loadStockOutRate(filter);
     };
+
+    $scope.OnFilterChangeByProduct = function(filter) {
+        $rootScope.loadStockOutRateTrend(filter);
+    };
+
 
 }

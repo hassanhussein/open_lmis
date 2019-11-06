@@ -919,3 +919,31 @@ services.factory('GetTLEAndTLD', function ($resource) {
             get: get
         };
 });
+
+
+services.factory('GetStockOutRateByProduct', function ($resource) {
+  return $resource('/api/dashboard/getStockOutRateByProduct.json', {}, {});
+});
+
+
+
+    services.factory('GetStockOutRateByProductData', function ($q, $timeout, $resource,GetStockOutRateByProduct) {
+        function get(params) {
+
+            var deferred = $q.defer();
+            $timeout(function () {
+                GetStockOutRateByProduct.get(params, function (data) {
+                      var StockOutRateByProduct =[];
+                      if (data !== undefined) {
+                          StockOutRateByProduct = data.StockOutRateByProduct;
+                      }
+                      deferred.resolve(StockOutRateByProduct);
+                });
+
+            }, 100);
+            return deferred.promise;
+        }
+        return {
+            get: get
+        };
+});
