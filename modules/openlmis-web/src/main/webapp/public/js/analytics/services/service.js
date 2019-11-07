@@ -882,10 +882,6 @@ services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutR
         };
 });
 
-services.factory('GetTzRegionMap', function ($resource) {
-    return $resource('/public/js/reports/shared/tz-reg.json', {}, {});
-});
-
 
     services.factory('GetTzRegionMapData', function ($q, $timeout, $resource,GetTzRegionMap) {
         function get(params) {
@@ -907,7 +903,7 @@ services.factory('GetTzRegionMap', function ($resource) {
 });
 
 services.factory('GetTzDistrictMap', function ($resource) {
-    return $resource('/public/js/reports/shared/tz-arusha.json', {}, {});
+    return $resource('/public/js/reports/shared/tz-district.json', {}, {});
 });
 
 
@@ -933,7 +929,7 @@ services.factory('GetTzDistrictMap', function ($resource) {
 
 
 services.factory('GetTzRegionMap', function ($resource) {
-    return $resource('/public/js/reports/shared/map.json', {}, {});
+    return $resource('/public/js/reports/shared/tz-reg.json', {}, {});
 });
 
 
