@@ -40,7 +40,7 @@ public interface  StockOutRateMapper {
             "             from mv_dashboard_consumption_summary cs\n" +
             "             join processing_periods pp on pp.id=cs.periodid  \n" +
             "             where productcode in  ('10010164AB' ,'10010022AB' ) and extract(year from pp.startdate) =  #{year} and cs.scheduleid= #{schedule}\n" +
-            "             group by cs.periodname, cs.productid, cs.productcode, cs.periodid order by cs.periodid desc")
+            "             group by cs.periodname, cs.productid, cs.productcode, cs.periodid order by cs.periodid asc")
     List<HashMap<String,Object>> getTLEAndTLDConsumption(@Param("year") Long year,
                                                          @Param("schedule") Long schedule);
 

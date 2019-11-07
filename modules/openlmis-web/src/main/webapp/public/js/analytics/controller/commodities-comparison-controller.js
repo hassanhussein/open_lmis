@@ -1,9 +1,10 @@
 function CommoditiesComparisonController($scope, $location, Program, Period, $rootScope, GetTLEAndTLDData) {
 
+$scope.year = 2019;
 
 
     $rootScope.loadCommoditiesComparison = function(params) {
-
+$scope.year = params.year;
         GetTLEAndTLDData.get(params).then(function(data) {
             loadCommoditiesComparisonTLEvsTLDChart(getConsumptionData(data), data);
         });
@@ -179,6 +180,7 @@ function CommoditiesComparisonController($scope, $location, Program, Period, $ro
         var tld = _.where(data, {
             productcode: '10010164AB'
         });
+
         var tld_obj = {
             "name": "TLD",
             "data": _.pluck(tld, 'totalconsumption'),
@@ -191,9 +193,10 @@ function CommoditiesComparisonController($scope, $location, Program, Period, $ro
             productcode: '10010022AB'
         });
 
+
         var tle_obj = {
             "name": "TLE",
-            "data": _.pluck(tle_obj, 'totalconsumption'),
+            "data": _.pluck(tle, 'totalconsumption'),
             "unit": "Units",
             "type": "line",
             "valueDecimals": 1

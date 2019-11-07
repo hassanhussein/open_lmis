@@ -61,7 +61,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 $rootScope.loadStockOutRate(params);
                 $rootScope.loadCommoditiesComparison(params);
 
-$rootScope.loadStockOutRateTrend(params);
+                $rootScope.loadStockOutRateTrend(params);
 
 
             });
@@ -1107,7 +1107,7 @@ $rootScope.loadStockOutRateTrend(params);
                 feature.properties.id = feature.id;
             });
 
-                      console.log(JSON.stringify($scope.features));
+                  //    console.log(JSON.stringify($scope.features));
 
 
             $scope.drawMap({

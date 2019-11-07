@@ -5,10 +5,10 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
 
     $rootScope.loadStockOutRate = function(params) {
         StockStatusByLocationData.get(params).then(function(data) {
-            GetTzRegionMapData.get(params).then(function(map) {
+            GetTzRegionMapData.get(params).then(function(regionMap) {
                 GetTzDistrictMapData.get(params).then(function(districtMap) {
                     var dataWithRegion = addRegionData(data);
-                    loadStockOutRateChart(map, districtMap, computeMapData(dataWithRegion.region), params, data);
+                    loadStockOutRateChart(regionMap, districtMap, computeMapData(dataWithRegion.region), params, data);
                 });
 
             });
@@ -91,7 +91,6 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
     }
 
     function loadStockOutRateChart(map, districtMap, values, params, districtValues) {
-        console.log(values);
         var data = Highcharts.geojson(map);
         $.each(data, function(i) {
             var key = this.properties['hc-key'];
@@ -159,6 +158,9 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
             title: {
                 text: 'Health Commodities Map'
             },
+                        credits: {
+                            enabled: false
+                        },
             subtitle: {
                 text: 'Tanzania',
                 floating: true,
@@ -309,6 +311,7 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
         }
 
         data.region = reg_arry;
+
 
         return data;
     }

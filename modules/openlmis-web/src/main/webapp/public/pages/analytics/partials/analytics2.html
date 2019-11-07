@@ -1135,7 +1135,11 @@
                                     <div class="card" style="background-color:white">
 
                                         <div class="card-content" ng-controller="CommoditiesComparisonController">
-                                            <div> <div class="row" id="common">
+                                            <div class="card-action" style="background-color: #17888f;">
+                                                <span style="color:white">TLE vs TLD Consumption for {{year}}</span>
+                                            </div>
+                                            <div>
+                                                <div class="row" id="common">
                                                 <div class="col s4" >
                                                     <ng-include src='"/public/pages/analytics/partials/shared/commodities-comparison-filter.html"'></ng-include>
                                                 </div>
