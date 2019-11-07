@@ -41,6 +41,3 @@ CREATE MATERIALIZED VIEW public.mv_dashboard_consumption_summary AS
      JOIN facility_approved_products fap ON ft.id = fap.facilitytypeid AND fap.programproductid = pp.id
   WHERE COALESCE(i.stockinhand, 0) > 0 AND r.emergency = false AND i.skipped = false
 WITH NO DATA;
-
-
-REFRESH MATERIALIZED VIEW mv_dashboard_consumption_summary;

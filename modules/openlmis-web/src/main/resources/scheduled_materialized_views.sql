@@ -9,3 +9,4 @@ REFRESH MATERIALIZED VIEW mv_requisition_adjustment;
 REFRESH MATERIALIZED VIEW mv_dashboard_wastage_line_items;
 Refresh materialized view mv_dashboard_consumption_summary;
 REFRESH MATERIALIZED VIEW mv_dashboard_timeliness_report;
+REFRESH MATERIALIZED VIEW mv_dashboard_consumption_summary;

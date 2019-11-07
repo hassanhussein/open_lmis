@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_imbalance_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="stock_imbalance_report" language="groovy" pageWidth="1000" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="2.6620000000000017"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -8,6 +8,7 @@
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.group.1" value="GroupBySupplyingFacility"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="groupHeader"/>
 	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.group.1" value="GroupBySupplyingFacility"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
@@ -110,7 +111,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 		<groupHeader>
 			<band height="55">
 				<staticText>
-					<reportElement mode="Opaque" x="0" y="20" width="802" height="30" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<reportElement mode="Opaque" x="0" y="20" width="960" height="30" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
 					<text><![CDATA[]]></text>
@@ -167,7 +168,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.product.name}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement mode="Transparent" x="564" y="20" width="43" height="30" forecolor="#000000" backcolor="#333333" uuid="02228610-f504-4311-9507-9789162b9d2a">
+					<reportElement mode="Transparent" x="728" y="20" width="43" height="30" forecolor="#000000" backcolor="#333333" uuid="02228610-f504-4311-9507-9789162b9d2a">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -177,7 +178,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.amc}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement mode="Transparent" x="607" y="20" width="50" height="30" forecolor="#000000" backcolor="#333333" uuid="e7a60035-6a9c-4790-864c-7a3ee7ed516d">
+					<reportElement mode="Transparent" x="772" y="20" width="50" height="30" forecolor="#000000" backcolor="#333333" uuid="e7a60035-6a9c-4790-864c-7a3ee7ed516d">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -187,7 +188,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.mos}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="657" y="20" width="58" height="30" forecolor="#000000" backcolor="#333333" uuid="34cbbdc9-0c1d-4d6f-9fe3-30ec2b1d9b99">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="820" y="20" width="58" height="30" forecolor="#000000" backcolor="#333333" uuid="34cbbdc9-0c1d-4d6f-9fe3-30ec2b1d9b99">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -197,7 +198,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.order.quantity}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="715" y="20" width="87" height="30" forecolor="#000000" backcolor="#333333" uuid="3972ac75-7a8f-4290-977e-3cde3c555c64">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="872" y="20" width="87" height="30" forecolor="#000000" backcolor="#333333" uuid="3972ac75-7a8f-4290-977e-3cde3c555c64">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
 					<box leftPadding="2"/>
@@ -208,7 +209,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.status}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true">
-					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="512" y="20" width="52" height="30" forecolor="#000000" backcolor="#333333" uuid="fbfc75f4-6197-4923-8bac-68b3009c59e0">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="677" y="20" width="52" height="30" forecolor="#000000" backcolor="#333333" uuid="fbfc75f4-6197-4923-8bac-68b3009c59e0">
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
@@ -259,7 +260,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.zone}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="399" y="20" width="59" height="30" forecolor="#000000" backcolor="#333333" uuid="c50ee083-4f87-434f-8874-7af434e31662">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="399" y="20" width="181" height="30" forecolor="#000000" backcolor="#333333" uuid="c50ee083-4f87-434f-8874-7af434e31662">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Middle" rotation="None" markup="none">
@@ -280,7 +281,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 					<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="458" y="20" width="54" height="30" forecolor="#000000" backcolor="#333333" uuid="c6fbbcb5-6181-4995-9aa1-7412fad0d8c9">
+					<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="580" y="20" width="99" height="30" forecolor="#000000" backcolor="#333333" uuid="c6fbbcb5-6181-4995-9aa1-7412fad0d8c9">
 						<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "PDF"]]></printWhenExpression>
 					</reportElement>
 					<textElement verticalAlignment="Middle" rotation="None" markup="none">
@@ -319,7 +320,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 		<band height="79" splitType="Stretch">
 			<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
+				<reportElement x="0" y="0" width="960" height="79" isRemoveLineWhenBlank="true" uuid="c576bd49-9432-4ebb-a897-b64a7ec0183e">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -364,7 +365,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="802" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+				<reportElement mode="Opaque" x="0" y="0" width="960" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
 				<text><![CDATA[]]></text>
@@ -378,7 +379,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="19" width="802" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
+				<reportElement x="0" y="19" width="960" height="1" forecolor="#3D9297" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -386,14 +387,14 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				</graphicElement>
 			</line>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="564" y="0" width="43" height="20" uuid="873de690-e086-4f26-8f34-63807934ed39"/>
+				<reportElement stretchType="RelativeToTallestObject" x="728" y="0" width="43" height="20" uuid="873de690-e086-4f26-8f34-63807934ed39"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amc}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="715" y="0" width="87" height="20" uuid="bf911ea9-6984-4e09-a671-6c7f68ca77e7"/>
+				<reportElement stretchType="RelativeToTallestObject" x="872" y="0" width="87" height="20" uuid="bf911ea9-6984-4e09-a671-6c7f68ca77e7"/>
 				<box leftPadding="1"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
@@ -401,7 +402,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[str($F{status})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="512" y="0" width="52" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c0437e6c-491e-46ed-8439-313cc762e462"/>
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="679" y="0" width="50" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="c0437e6c-491e-46ed-8439-313cc762e462"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="10"/>
@@ -409,7 +410,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$F{physicalCount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="155" y="0" width="303" height="20" uuid="92e8a139-6275-4458-bf93-b5900a9100d8">
+				<reportElement stretchType="RelativeToTallestObject" x="155" y="0" width="425" height="20" uuid="92e8a139-6275-4458-bf93-b5900a9100d8">
 					<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
 					<property name="net.sf.jasperreports.export.xls.auto.fit.row" value="true"/>
 					<property name="net.sf.jasperreports.export.xls.auto.fit.column" value="true"/>
@@ -426,14 +427,14 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="657" y="0" width="58" height="20" uuid="ad6bdf5e-6728-45a7-94aa-c0a1cf580105"/>
+				<reportElement stretchType="RelativeToTallestObject" x="820" y="0" width="58" height="20" uuid="ad6bdf5e-6728-45a7-94aa-c0a1cf580105"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="10" rightIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{orderQuantity}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="607" y="0" width="50" height="20" uuid="ed08043f-f542-478d-8ced-736a103e45bb"/>
+				<reportElement stretchType="RelativeToTallestObject" x="772" y="0" width="50" height="20" uuid="ed08043f-f542-478d-8ced-736a103e45bb"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="10"/>
 				</textElement>
@@ -482,7 +483,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$F{regionName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement stretchType="RelativeToTallestObject" x="399" y="0" width="59" height="20" uuid="758a89a7-1f76-481b-8476-a27f5a9d5a86">
+				<reportElement stretchType="RelativeToTallestObject" x="399" y="0" width="181" height="20" uuid="758a89a7-1f76-481b-8476-a27f5a9d5a86">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() == "XLS"]]></printWhenExpression>
 				</reportElement>
 				<box leftPadding="2"/>
@@ -490,14 +491,14 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$F{districtName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="607" y="0" width="50" height="20" uuid="1f9ae58f-fb8e-42e4-b33c-abf3463d1b44"/>
+				<reportElement stretchType="RelativeToTallestObject" x="772" y="0" width="50" height="20" uuid="1f9ae58f-fb8e-42e4-b33c-abf3463d1b44"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[($F{months} != null)?new java.text.DecimalFormat("#,##0.0").format($F{months}):"0"]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="715" y="0" width="87" height="20" uuid="51fce8e7-6c96-4e97-af57-07b27c1f21a5"/>
+				<reportElement stretchType="RelativeToTallestObject" x="872" y="0" width="87" height="20" uuid="51fce8e7-6c96-4e97-af57-07b27c1f21a5"/>
 				<box leftPadding="1"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
@@ -505,7 +506,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[str($F{status})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="512" y="0" width="52" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5f945386-f902-46f5-bb9e-511705db6eb4"/>
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="679" y="0" width="50" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="5f945386-f902-46f5-bb9e-511705db6eb4"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single" leftIndent="10"/>
@@ -513,14 +514,14 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$F{physicalCount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="564" y="0" width="43" height="20" uuid="47ec517c-d917-4b06-a11e-811ee126df9f"/>
+				<reportElement stretchType="RelativeToTallestObject" x="728" y="0" width="43" height="20" uuid="47ec517c-d917-4b06-a11e-811ee126df9f"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="657" y="0" width="58" height="20" uuid="6ef385ee-0d38-418b-af01-5d2675127a00"/>
+				<reportElement stretchType="RelativeToTallestObject" x="820" y="0" width="58" height="20" uuid="6ef385ee-0d38-418b-af01-5d2675127a00"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="10" rightIndent="5"/>
 				</textElement>
@@ -535,7 +536,7 @@ WHERE status in ('NS','OS') ORDER BY supplyingFacility asc, facility asc, produc
 				<textFieldExpression><![CDATA[$F{facilityCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="458" y="0" width="54" height="20" uuid="21a125e6-5752-4f0b-b70f-952835749152">
+				<reportElement x="580" y="0" width="99" height="20" uuid="21a125e6-5752-4f0b-b70f-952835749152">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "PDF"]]></printWhenExpression>
 				</reportElement>
 				<textFieldExpression><![CDATA[$F{period}]]></textFieldExpression>

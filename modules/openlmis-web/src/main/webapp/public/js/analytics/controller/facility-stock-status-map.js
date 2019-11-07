@@ -1,4 +1,4 @@
-function FacilityStockStatusMapController ($scope,$rootScope,$compile,GetGeoStockStatusForMapData,GetGeoStockStatusDetailsData) {
+function FacilityStockStatusMapController ($scope,$rootScope,$compile,GetGeoStockStatusForMapData,GetGeoStockStatusDetailsData,GetRegionalStockStatusSummaryData, GetGeoJsonInfoData) {
 
 $scope.centerL = {
             lat: -6.397912857937015,
@@ -11,20 +11,24 @@ $rootScope.facility = {"id":14994,"code":"DM520269","name":"Chahwa","description
 $rootScope.loadGeoFacilityStockMap = function(params){
    params.period = parseInt(91,10);
 
-   GetGeoStockStatusForMapData.get(params).then (function(data){
+      createTheChart(null,params);
+
+  /* GetGeoStockStatusForMapData.get(params).then (function(data){
 
    $scope.facilityDetails = data;
 
    console.log(data);
 
-   initMap(data,params);
+
+
+  initMap(data,params);
 
 
     //google.maps.event.addDomListener(window, 'load', initialize(data));
 
 
 
-   });
+   });*/
 
 };
 
@@ -98,6 +102,659 @@ return color;
           center: {lat:  -6.397912857937015, lng: 34.911609148190784}
  });
  mapFunc(map,data,params);
+}
+
+
+function createTheChart(data1, params) {
+
+
+GetRegionalStockStatusSummaryData.get(params).then(function(dx){
+
+//console.log(data);
+
+   var stockSummary = [];
+            Highcharts.each(dx, function (code, i) {
+
+
+                 stockSummary.push({
+                    code: code.region_name,
+                    value: code.mos,
+                    color: checkGreaterThanZero(code)
+
+                });
+   });
+
+    startTheMap(stockSummary);
+
+
+});
+
+
+function startTheMap(summary) {
+
+                          console.log(summary);
+
+     var data = Highcharts.geojson(Highcharts.maps['countries/tz/tz-all']),
+              separators = Highcharts.geojson(Highcharts.maps['countries/tz/tz-all'], 'mapline'),
+              // Some responsiveness
+              small = $('#facility-stock-map').width() < 400;
+
+
+
+
+          // Set drilldown pointers
+          $.each(data, function (i) {
+              this.drilldown = this.properties['hc-key'];
+              this.value = i; // Non-random bogus data
+          });
+
+          // Instantiate the map
+          Highcharts.mapChart('facility-stock-map', {
+              chart: {
+              map: 'countries/tz/tz-all',
+               credits: {
+                      enabled:false
+                      },
+                  events: {
+                      drilldown: function (e) {
+                          if (!e.seriesOptions) {
+                              var chart = this,
+                                  mapKey = 'countries/tz/' + e.point.drilldown + '-all',
+                                  // Handle error, the timeout is cleared on success
+                                  fail = setTimeout(function () {
+                                      if (!Highcharts.maps[mapKey]) {
+                                          chart.showLoading('<i class="icon-frown"></i> Failed loading ' + e.point.name);
+                                          fail = setTimeout(function () {
+                                              chart.hideLoading();
+                                          }, 1000);
+                                      }
+                                  }, 3000);
+
+                              // Show the spinner
+                              chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>'); // Font Awesome spinner
+
+                              // Load the drilldown map
+                              $.getScript('https://code.highcharts.com/mapdata/' + mapKey + '.js', function () {
+
+                                  data = Highcharts.geojson(Highcharts.maps[mapKey]);
+
+                                  // Set a non-random bogus value
+                                  $.each(data, function (i) {
+                                      this.value = i;
+                                  });
+
+                                  // Hide loading and add series
+                                  chart.hideLoading();
+                                  clearTimeout(fail);
+                                  chart.addSeriesAsDrilldown(e.point, {
+                                      name: e.point.name,
+                                      data: data,
+                                      dataLabels: {
+                                          enabled: true,
+                                          format: '{point.name}'
+                                      }
+                                  });
+                              });
+                          }
+
+                          this.setTitle(null, { text: e.point.name });
+                      },
+                      drillup: function () {
+                          this.setTitle(null, { text: '' });
+                      }
+                  }
+              },credits: {
+                        enabled:false
+                        },
+
+              title: {
+                           text: '<span style="font-size: 15px!important;color: #0c9083">Facility Stock Status</span>',
+                           align:'left'
+
+                       },
+                       subtitle: {
+                           text: '<span style="font-size: 13px!important;color: #0c9083">Click the chart to view more details</span>'
+                       },
+
+
+              legend: small ? {} : {
+                  layout: 'vertical',
+                  align: 'right',
+                  verticalAlign: 'middle'
+              },
+
+              colorAxis: {
+                  min: 0,
+                  minColor: '#E6E7E8',
+                  maxColor: '#005645'
+              },
+
+              mapNavigation: {
+                  enabled: true,
+                  buttonOptions: {
+                      verticalAlign: 'bottom'
+                  }
+              },
+
+              plotOptions: {
+                  map: {
+                      states: {
+                          hover: {
+                              color: '#EEDD66'
+                          }
+                      }
+                  }
+              },
+
+              series: [{
+                  data: summary,
+                  joinBy: ['name', 'code'],
+                  name: 'Region',
+                  dataLabels: {
+                      enabled: true,
+                      format: '{point.properties.woe-name}'
+                  },shadow: false
+              }, {
+                  type: 'mapline',
+                  data: separators,
+                  color: 'silver',
+                  enableMouseTracking: false,
+                  animation: {
+                      duration: 500
+                  }
+              }],
+
+              drilldown: {
+                  activeDataLabelStyle: {
+                      color: '#FFFFFF',
+                      textDecoration: 'none',
+                      textOutline: '1px #000000'
+                  },
+                  drillUpButton: {
+                      relativeTo: 'spacingBox',
+                      position: {
+                          x: 0,
+                          y: 60
+                      }
+                  }
+              }
+          });
+
+
+
+
+}
+
+
+// Create the chart
+/*Highcharts.chart('facility-stock-summary', {
+    chart: {
+        type: 'pie'
+    },
+     credits: {
+        enabled:false
+        },
+       title: {
+              text: '<span style="font-size: 15px!important;color: #0c9083">Facility Stock Status</span>',
+              align:'left'
+
+          },
+          subtitle: {
+              text: '<span style="font-size: 13px!important;color: #0c9083">Click the chart to view more details</span>'
+          },
+     plotOptions: {
+         pie: {
+          innerSize: '50%',
+          size: '60%',
+          allowPointSelect: true,
+          cursor: 'pointer',
+
+              dataLabels: {
+                                         enabled: true,
+                                         format: '<b>  {point.percentage:.0f} %',
+
+                                         style: {
+                                             color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                             fontFamily: '\'Lato\', sans-serif', lineHeight: '18px', fontSize: '17px'
+                                         }
+                                     },
+                                     showInLegend: true,
+
+           point: {
+             events: {
+               click: function() {
+                 if(this.series !== null){
+                   $scope.openStockImbalanceReport(this);
+                  }
+
+                 }
+                 }
+             }
+
+         }
+},
+
+    series: [
+        {
+            name: "Browsers",
+            colorByPoint: true,
+            data: [
+                {
+                    name: "Chrome",
+                    y: 62.74,
+                    drilldown: "Chrome"
+                },
+                {
+                    name: "Firefox",
+                    y: 10.57,
+                    drilldown: "Firefox"
+                },
+                {
+                    name: "Internet Explorer",
+                    y: 7.23,
+                    drilldown: "Internet Explorer"
+                },
+                {
+                    name: "Safari",
+                    y: 5.58,
+                    drilldown: "Safari"
+                },
+                {
+                    name: "Edge",
+                    y: 4.02,
+                    drilldown: "Edge"
+                },
+                {
+                    name: "Opera",
+                    y: 1.92,
+                    drilldown: "Opera"
+                },
+                {
+                    name: "Other",
+                    y: 7.62,
+                    drilldown: null
+                }
+            ]
+        }
+    ],
+    drilldown: {
+        series: [
+            {
+                name: "Chrome",
+                id: "Chrome",
+                data: [
+                    [
+                        "v65.0",
+                        0.1
+                    ],
+                    [
+                        "v64.0",
+                        1.3
+                    ],
+                    [
+                        "v63.0",
+                        53.02
+                    ],
+                    [
+                        "v62.0",
+                        1.4
+                    ],
+                    [
+                        "v61.0",
+                        0.88
+                    ],
+                    [
+                        "v60.0",
+                        0.56
+                    ],
+                    [
+                        "v59.0",
+                        0.45
+                    ],
+                    [
+                        "v58.0",
+                        0.49
+                    ],
+                    [
+                        "v57.0",
+                        0.32
+                    ],
+                    [
+                        "v56.0",
+                        0.29
+                    ],
+                    [
+                        "v55.0",
+                        0.79
+                    ],
+                    [
+                        "v54.0",
+                        0.18
+                    ],
+                    [
+                        "v51.0",
+                        0.13
+                    ],
+                    [
+                        "v49.0",
+                        2.16
+                    ],
+                    [
+                        "v48.0",
+                        0.13
+                    ],
+                    [
+                        "v47.0",
+                        0.11
+                    ],
+                    [
+                        "v43.0",
+                        0.17
+                    ],
+                    [
+                        "v29.0",
+                        0.26
+                    ]
+                ]
+            },
+            {
+                name: "Firefox",
+                id: "Firefox",
+                data: [
+                    [
+                        "v58.0",
+                        1.02
+                    ],
+                    [
+                        "v57.0",
+                        7.36
+                    ],
+                    [
+                        "v56.0",
+                        0.35
+                    ],
+                    [
+                        "v55.0",
+                        0.11
+                    ],
+                    [
+                        "v54.0",
+                        0.1
+                    ],
+                    [
+                        "v52.0",
+                        0.95
+                    ],
+                    [
+                        "v51.0",
+                        0.15
+                    ],
+                    [
+                        "v50.0",
+                        0.1
+                    ],
+                    [
+                        "v48.0",
+                        0.31
+                    ],
+                    [
+                        "v47.0",
+                        0.12
+                    ]
+                ]
+            },
+            {
+                name: "Internet Explorer",
+                id: "Internet Explorer",
+                data: [
+                    [
+                        "v11.0",
+                        6.2
+                    ],
+                    [
+                        "v10.0",
+                        0.29
+                    ],
+                    [
+                        "v9.0",
+                        0.27
+                    ],
+                    [
+                        "v8.0",
+                        0.47
+                    ]
+                ]
+            },
+            {
+                name: "Safari",
+                id: "Safari",
+                data: [
+                    [
+                        "v11.0",
+                        3.39
+                    ],
+                    [
+                        "v10.1",
+                        0.96
+                    ],
+                    [
+                        "v10.0",
+                        0.36
+                    ],
+                    [
+                        "v9.1",
+                        0.54
+                    ],
+                    [
+                        "v9.0",
+                        0.13
+                    ],
+                    [
+                        "v5.1",
+                        0.2
+                    ]
+                ]
+            },
+            {
+                name: "Edge",
+                id: "Edge",
+                data: [
+                    [
+                        "v16",
+                        2.6
+                    ],
+                    [
+                        "v15",
+                        0.92
+                    ],
+                    [
+                        "v14",
+                        0.4
+                    ],
+                    [
+                        "v13",
+                        0.1
+                    ]
+                ]
+            },
+            {
+                name: "Opera",
+                id: "Opera",
+                data: [
+                    [
+                        "v50.0",
+                        0.96
+                    ],
+                    [
+                        "v49.0",
+                        0.82
+                    ],
+                    [
+                        "v12.1",
+                        0.14
+                    ]
+                ]
+            }
+        ]
+    },
+
+     tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        }, exporting: {
+                  buttons: {
+                   customButton: {
+                   text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+                   symbolStroke: "red",
+                   theme: {
+                   fill:"#28A2F3"
+                   },
+                   onclick: function () {
+                   $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+                   }
+                   }
+                   }
+                   }
+});*/
+
+
+
+
+
+/*Highcharts.chart('stock-summary-by-period-and-program', {
+    chart: {
+        type: 'pie'
+    },
+    credits: {
+    enabled:false
+    },
+   title: {
+          text: '<span style="font-size: 15px!important;color: #0c9083">'+title+'</span>',
+          align:'left'
+
+      },
+      subtitle: {
+          text: '<span style="font-size: 13px!important;color: #0c9083">'+subtitle+'</span>'
+      },
+    plotOptions: {
+       pie: {
+        size: '60%',
+        allowPointSelect: true,
+        cursor: 'pointer',
+
+            dataLabels: {
+                                       enabled: true,
+                                       format: '<b>  {point.percentage:.0f} %',
+
+                                       *//*
+                                                               format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                       *//*
+                                       style: {
+                                           color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                           fontFamily: '\'Lato\', sans-serif', lineHeight: '18px', fontSize: '17px'
+                                       }
+                                   },
+                                   showInLegend: true,
+
+         point: {
+           events: {
+             click: function() {
+               if(this.series !== null){
+                 $scope.openStockImbalanceReport(this);
+                }
+
+               }
+               }
+           }
+
+       },
+
+        series: {
+            dataLabels: {
+                enabled: true,
+                 useHTML: true,
+                    formatter: function () {
+                     return '<span style="color:' + this.point.color + '">' + this.point.name + ' : '+ this.point.y+'%</span>';
+                    }
+
+
+
+            }
+        }
+    },
+
+    tooltip: {
+        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+    }, exporting: {
+              buttons: {
+               customButton: {
+               text: '<span style="background-color:blue"><i class="material-icons md-18">Info</i></span>',
+               symbolStroke: "red",
+               theme: {
+               fill:"#28A2F3"
+               },
+               onclick: function () {
+               $rootScope.openDefinitionModal('DASHLET_STOCK_AVAILABILITY', 'Stock Availability');
+               }
+               }
+               }
+               },
+
+    series: [
+        {
+            name: "Summary",
+            colorByPoint: false,
+            data: dataToShow
+        }
+    ],
+    drilldown: {
+        series: [
+            {
+                name: "Available Incidence",
+                id: "Available Incidence",
+                type: 'pie',
+                 colors: [
+                     '#00B2EE',
+                     '#FFA500',
+                     '#808080',
+                     '#006600'
+
+                   ],
+
+                innerSize: '50%',
+                colorByPoint: true,
+                data: drilldownData
+            }
+
+        ],
+
+
+            plotOptions: {
+
+             pie:{
+                 size: '100%',
+              events: {
+                       click: function() {
+
+                       //$rootScope.openDefinitionModal();
+
+                        console.log(this);
+
+                        }
+                      },
+
+                            shadow: true,
+                                   cursor: 'pointer'
+
+             }
+            }
+    }
+});*/
+
+
+
+
 }
 
 

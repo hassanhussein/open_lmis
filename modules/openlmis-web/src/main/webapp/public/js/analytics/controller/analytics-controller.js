@@ -1095,6 +1095,7 @@ $rootScope.loadStockOutRateTrend(params);
 
 
         $.getJSON('/gis/reporting-rate.json', $scope.filter, function(data) {
+
             $scope.features = data.map;
             getExportDataFunction($scope.features);
             angular.forEach($scope.features, function(feature) {
@@ -1105,6 +1106,9 @@ $rootScope.loadStockOutRateTrend(params);
                 feature.properties.name = feature.name;
                 feature.properties.id = feature.id;
             });
+
+                      console.log(JSON.stringify($scope.features));
+
 
             $scope.drawMap({
                 "type": "FeatureCollection",

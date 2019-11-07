@@ -772,6 +772,50 @@ services.factory('GetSourceOfFundsByLocationData', function ($q, $timeout, $reso
 
 });
 
+services.factory('GetGeoJsonInfoData', function ($q, $timeout, $resource,GetGeoJsonInfo) {
+    function get(params) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetGeoJsonInfo.get(params, function (data) {
+                var sourceOfFunds ={};
+                if (data !== undefined) {
+                    sourceOfFunds = data.stocks;
+                }
+                deferred.resolve(sourceOfFunds);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
+services.factory('GetRegionalStockStatusSummaryData', function ($q, $timeout, $resource,GetRegionalStockStatusSummary) {
+    function get(params) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetRegionalStockStatusSummary.get(params, function (data) {
+                var sourceOfFunds ={};
+                if (data !== undefined) {
+                    sourceOfFunds = data.stocks;
+                }
+                deferred.resolve(sourceOfFunds);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+
 
 services.factory('GetSourceOfFundsByLocation', function($resource){
     return $resource('/api//dashboard/getSourceOfFundsByLocation.json',{}, {});
@@ -946,4 +990,12 @@ services.factory('GetStockOutRateByProduct', function ($resource) {
         return {
             get: get
         };
+});
+
+services.factory('GetGeoJsonInfo', function($resource){
+    return $resource('/api//dashboard/getGeoJsonInfo.json',{}, {});
+});
+
+services.factory('GetRegionalStockStatusSummary', function($resource){
+    return $resource('/api//dashboard/getRegionalStockStatusSummary.json',{}, {});
 });
