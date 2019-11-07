@@ -27,6 +27,7 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
 
   $scope.rolesMap = roles_map;
 
+
   function preparePrograms(programs) {
     if (programs) {
       $.each(programs, function (index, program) {
@@ -126,13 +127,34 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
       $scope.user.email = null;
     }
     if ($scope.user.id) {
+
+     checkReportingRole($scope.user);
+
       Users.update({id: $scope.user.id}, $scope.user, updateSuccessHandler, errorHandler);
+
     } else {
       Users.save({}, $scope.user, saveSuccessHandler, errorHandler);
     }
     return true;
   };
 
+   function checkReportingRole(user) {
+
+    if((user.adminRole !== null) && (user.reportRoles !== null) && !isUndefined(user.reportRoles) && (user.reportRoles.roleIds.length !== 0)) {
+
+      var filteredData = _.filter(user.reportRoles.roleIds, function(data){
+          return  data !== 1;
+      });
+      user.reportingRole = {roleIds:filteredData};
+
+      var filteredData2 = _.filter(user.reportingRole.roleIds, function(data){
+                return data !== 1;
+            });
+      user.reportRoles = {roleIds:filteredData2};
+
+    }
+
+   }
   $scope.validateUserName = function () {
     $scope.userNameInvalid = $scope.user.userName !== null && $scope.user.userName.trim().indexOf(' ') >= 0;
   };
@@ -310,6 +332,7 @@ UserController.resolve = {
 
   roles_map: function ($q, Roles, $timeout) {
     var deferred = $q.defer();
+
 
     $timeout(function () {
       Roles.get({}, function (data) {
