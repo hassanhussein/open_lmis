@@ -9,8 +9,7 @@
  */
 
 function ManagePODController($scope, OrdersForManagePOD, messageService,
-                             OrderPOD, PodProgramList, ManagePodFacilitiesForProgram, $location
-    , schedules, years, ReportPeriodsByScheduleAndYear) {
+                             OrderPOD, PodProgramList, ManagePodFacilitiesForProgram, $location, schedules, years, ReportPeriodsByScheduleAndYear) {
 
     $scope.option = {all: false};
 
@@ -26,7 +25,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService,
             year: $scope.year
         }, function (data) {
             $scope.periods = data.periods;
-            $scope.periods.push({id:0,name:'--All Periods--'})
+            $scope.periods.push({id:0,name:'--All Periods--'});
         });
     };
 
@@ -48,8 +47,7 @@ function ManagePODController($scope, OrdersForManagePOD, messageService,
     $scope.onFacilityChanged = function () {
         if (utils.isNumber($scope.filter.facility)) {
             OrdersForManagePOD.get({
-                program: $scope.filter.program, facility: $scope.filter.facility
-                , period: $scope.filter.period
+                program: $scope.filter.program, facility: $scope.filter.facility, period: $scope.filter.period
             }, function (data) {
                 $scope.orders = data.ordersForPOD;
             });
