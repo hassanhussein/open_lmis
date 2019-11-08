@@ -529,9 +529,9 @@ public class OrderServiceTest {
     when(commaSeparator.commaSeparateIds(facilities)).thenReturn("{}");
     when(roleAssignmentService.getFulfilmentRolesWithRight(3L, MANAGE_POD)).thenReturn(asList(new FulfillmentRoleAssignment(3L, 4l, new ArrayList<Long>())));
     when(requisitionService.getFullRequisitionById(13L)).thenReturn(new Rnr());
-    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L, commaSeparator.commaSeparateIds(facilities))).thenReturn(expectedOrders);
+    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L, commaSeparator.commaSeparateIds(facilities),0L)).thenReturn(expectedOrders);
 
-    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L);
+    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l, asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L,0L);
 
     assertThat(returnedOrders, is(expectedOrders));
   }
@@ -560,9 +560,9 @@ public class OrderServiceTest {
     when(requisitionService.getFullRequisitionById(2L)).thenReturn(rnrForHIV);
     when(requisitionService.getFullRequisitionById(4L)).thenReturn(rnrForTB);
     when(requisitionService.getFullRequisitionById(6L)).thenReturn(rnrForMalaria);
-    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L, "{}")).thenReturn(expectedOrders);
+    when(orderRepository.searchByWarehousesAndStatuses(asList(4l), asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L, "{}",0L)).thenReturn(expectedOrders);
 
-    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l,  asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L);
+    List<Order> returnedOrders = orderService.searchByStatusAndRight(3l,  asList(RELEASED, PACKED, TRANSFER_FAILED, READY_TO_PACK),1L,0L,0L);
 
     assertThat(returnedOrders.get(0).getId(), is(2L));
     assertThat(returnedOrders.get(1).getId(), is(6L));

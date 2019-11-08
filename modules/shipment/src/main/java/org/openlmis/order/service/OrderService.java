@@ -247,7 +247,7 @@ public class OrderService {
     this.pageSize = Integer.parseInt(pageSize);
   }
 
-  public List<Order> searchByStatusAndRight(Long userId, List<OrderStatus> statuses, Long programId, Long facilityId) {
+  public List<Order> searchByStatusAndRight(Long userId, List<OrderStatus> statuses, Long programId, Long facilityId,Long period) {
     List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, RightName.MANAGE_POD);
 
     List<Facility> managedFacilities = new ArrayList<>();
@@ -263,7 +263,7 @@ public class OrderService {
       public Object transform(Object o) {
         return ((FulfillmentRoleAssignment) o).getFacilityId();
       }
-    }), statuses, programId, facilityId, managedFacilityIds);
+    }), statuses, programId, facilityId, managedFacilityIds,period);
 
     orders = fillOrders(orders);
     sort(orders);

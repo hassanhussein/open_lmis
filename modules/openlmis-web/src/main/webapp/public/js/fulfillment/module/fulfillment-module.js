@@ -11,7 +11,7 @@
 angular.module('fulfillment', ['openlmis', 'ngGrid', 'ui.bootstrap.dialog', 'ui.bootstrap.accordion', 'ui.bootstrap.pagination', 'ui.bootstrap.dropdownToggle']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/view-orders', {controller: ViewOrderListController, templateUrl: 'order/partials/view-order.html', resolve: ViewOrderListController.resolve,  reloadOnSearch: false}).
-    when('/manage-pod-orders', {controller: ManagePODController, templateUrl: 'pod/partials/manage-pod.html'}).
+    when('/manage-pod-orders', {controller: ManagePODController, templateUrl: 'pod/partials/manage-pod.html', resolve:ManagePODController.resolve}).
     when('/pods/:id', {controller: PODController, templateUrl: 'pod/partials/pod.html', resolve: PODController.resolve, reloadOnSearch: false}).
     otherwise({redirectTo: '/view-orders'});
 }]).directive('select2Blur', function () {
