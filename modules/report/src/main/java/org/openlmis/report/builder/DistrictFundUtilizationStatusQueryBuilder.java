@@ -13,29 +13,21 @@ public class DistrictFundUtilizationStatusQueryBuilder {
         Long userId = (Long) params.get("userId");
 
 
-        return " WITH Q as (  SELECT * FROM crosstab ( \n" +
-                "            $$SELECT fa.id::BIGINT, f.name, sum(quantity)  quantity\n" +
-                "            \n" +
-                "             FROM requisition_source_of_funds f\n" +
-                "            \n" +
-                "            JOIN requisitions r on f.rnrid = r.id " +
-                "            JOIN processing_periods pd ON r.periodId = pd.id  \n" +
-                "            \n" +
-                "            JOIN facilities FA ON r.facilityId = fa.id\n" +
-                "            JOIN vw_districts d ON fA.geographiczoneId  = d.district_id " +
-
-                "         \n" +
-                          //  writePredicates(filterCriteria, userId) +
-                "            group by f.name ,fa.id\n" +
-                "            order by 1,2 $$\n" +
-                "            ) AS (id BIGINT, other BIGINT, userFees BIGINT \n" +
-                "            \n" +
-                "            ) )\n" +
-                "\n" +
-                "SELECT * ,f.name facilityName, ft.name facilityType,f.code facilityCode FROM Q\n" +
-                "JOIN facilities f ON f.id = Q.id\n" +
-                "JOIN vw_districts d ON f.geographiczoneId  = d.district_id " +
-                " JOIN facility_types ft ON f.typeId = FT.ID ";
+        return " \n" +
+                "                           SELECT fa.id::BIGINT,fa.name facilityName, f.name sourceofFundName, sum(quantity)  quantity,  ft.name facilityType,fa.code facilityCode,district_name, region_name, zone_name\n" +
+                "                            \n" +
+                "                             FROM requisition_source_of_funds f\n" +
+                "                            \n" +
+                "                            JOIN requisitions r on f.rnrid = r.id  \n" +
+                "                            JOIN processing_periods pd ON r.periodId = pd.id  \n" +
+                "                            \n" +
+                "                            JOIN facilities FA ON r.facilityId = fa.id\n" +
+                "                            JOIN vw_districts d ON fA.geographicZoneId  = d.district_id  \n" +
+                "                            JOIN facility_types ft ON fa.typeId = FT.ID\n" +
+                //writePredicates(filterCriteria, userId)+
+                "                            \n" +
+                "                            group by f.name,fa.name  ,fa.id,district_name, region_name, zone_name,fa.code,ft.name\n" +
+                "                            order by 1,2\n";
 
     }
 
@@ -44,8 +36,8 @@ public class DistrictFundUtilizationStatusQueryBuilder {
 
         if (filter != null) {
 
-            predicate = "where periodId =  " + filter.getPeriod() + " and ";
-            predicate = predicate + " r.facilityId in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + filter.getProgram() + ")";
+           // predicate = "where periodId =  " + filter.getPeriod() + " and ";
+            predicate = predicate + " where  r.facilityId in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + filter.getProgram() + ")";
             predicate = predicate + " and status in ('IN_APPROVAL','APPROVED','RELEASED') ";
 
             if (filter.getZone() != 0) {

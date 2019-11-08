@@ -26,7 +26,7 @@
 <div class="row-fluid">
     <div class="box span12">
         <div class="box-header">
-            <h2><span> District Fund Summary Report </span></h2>
+            <h2><span> Sources of Funds Summary  </span></h2>
 
             <div class="box-icon">
                 <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')" class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
@@ -42,10 +42,10 @@
                         <div filter-container class="clearfix">
 
                             <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                            <zone-filter class="form-cell horizontalFilters"></zone-filter>
                             <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                             <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                             <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
-                            <zone-filter class="form-cell horizontalFilters"></zone-filter>
 
                         </div>
                     </form>
@@ -57,11 +57,117 @@
                         <td>No data to show under selected filters</td>
                     </tr>
                 </table>
-                <div ng-show="datarows.length > 0">
+
+                <div class="tab-pane  clearboth" id="mos" style="background-color:lightgray">
+
+                    <div class="box-icon pull-right " ng-show="datarows.length > 0" style="padding-top: 20px;margin-right:5px">
+                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                        <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+                           class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
+                    </div>
+
+                    <div style="max-height:2px !important;" class="row-fluid clearboth" ng-show="datarows.length > 0">
+                        <strong>
+
+                            <span style=" float:left;margin:10px 10px 0 0; padding:5px 10px display:block;margin-left:10px">
+                         <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
+                                ng-change="searchReport()"/>
+                        </span><span  style="color:#078f97; float:left;margin:10px 10px 0 0; padding:5px 10px display:block;" openlmis-message="label.report.view.disaggregated"></span>
+
+                        </strong>
+                    </div>
+                    <br/>
+
+                    <table client-side-sort-pagination class="table table-bordered"
+                           ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+
+                    <div class="row-fluid rnr-table scrollable" ng-show="datarows.length > 0 ">
+
+                        <div class="clearfix"></div>
+
+                        <table class="table table-bordered table-striped scrollable" ng-table="tableParams">
+                            <thead>
+                            <tr>
+                                <th ng-if="filter.disaggregated==true"></th>
+                                <th ng-if="filter.disaggregated==true"></th>
+
+                                <th></th>
+                                <th></th>
+
+                                <th ng-repeat="header in headers" ng-bind="header"></th>
+
+                            </tr>
+                            <tr>
+                                <th ng-if="filter.disaggregated==true">Facility</th>
+                                <th ng-if="filter.disaggregated==true">Facility Type</th>
+
+                                <th openlmis-message="label.code" style="text-align: left"></th>
+                                <th openlmis-message="label.product.name" style="text-align: left"></th>
+                                <th ng-repeat="period in periods" openlmis-message="header.status.mos"
+                                    class="p-column"></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr ng-repeat="row in data">
+                                <td ng-if="filter.disaggregated==true"  ng-bind="row.facility"></td>
+                                <td  ng-if="filter.disaggregated==true" ng-bind="row.facilityType"></td>
+                                <td ng-bind="row.code"></td>
+
+                                <td ng-bind="row.product">
+                                </td>
+                                <td  ng-repeat="header in headers" ng-bind="row[header]" ng-style="ChangeColor(row[header])">{{ row.no }}</td>
+
+                            </tr>
+                            </tbody>
+
+                        </table>
+
+
+                        <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="searchReport()">
+                            <option value="10">10 per page</option>
+                            <option value="20">20 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+
+                        <div class="pull-right">
+                            <pagination total-items="totalItems" page="currentPage" max-size="10"
+                                        items-per-page="pagination.limit"
+                                        direction-links="false" class="pagination-sm"></pagination>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+
+                </div>
+
+
+
+               <!-- <div ng-show="datarows.length > 0">
                     <div client-side-sort-pagination class="pull-right legend">Page: {{tableParams.page}}, Showing records {{ ((tableParams.page - 1) *
                         tableParams.count) + 1 }} to {{ (tableParams.page ) * tableParams.count }} of {{tableParams.total}}
                     </div>
+
+
                     <table  ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+                        <thead>
+                            <tr>
+                                <th></th>
+
+                            </tr>
+
+                        </thead>
+
+
                         <tbody>
                         <tr ng-repeat="row in datarows">
                             <td data-title="'#'" class="number" style="width:5px">{{ row.no }}</td>
@@ -78,7 +184,7 @@
                         </tr>
                         </tbody>
                     </table>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>

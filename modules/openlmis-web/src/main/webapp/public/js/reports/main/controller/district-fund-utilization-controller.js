@@ -10,12 +10,53 @@ function FacilityFundUtilizationReportController ($scope, $window,FacilityFundUt
          FacilityFundUtilizationReport.get($scope.getSanitizedParameter(), function (data) {
          console.log(data);
              if (data.pages !== undefined && data.pages.rows !== undefined) {
-                 $scope.data = data.pages.rows;
+
+              var pivotedData = getPivotData(data.pages.rows, 'sourceofFundName');
+              console.log(pivotedData);
+
+                 $scope.data = pivotedData;
+                 $scope.headers = pivotedData.header;
+                // groupDataInColumns($scope.data);
                  console.log(JSON.stringify($scope.data));
                  $scope.paramsChanged($scope.tableParams);
              }
          });
      };
+
+
+     function getPivotData(dataArray, colName) {
+
+            var newCols = [];
+            var pivotData = [];
+            for (var i = 0; i < dataArray.length; i++) {
+                if (newCols.indexOf(dataArray[i][colName]) < 0) {
+
+                  newCols.push(dataArray[i][colName]);
+
+                }
+                var pivotRow = {};
+
+
+                    pivotRow = {
+                        "facility": dataArray[i].facilityName,
+                        "facilityType": dataArray[i].facilityType,
+                        "zone_name": dataArray[i].zone_name,
+                        "facilityCode": dataArray[i].facilityCode,
+                        "region": dataArray[i].region_name,
+                        "district": dataArray[i].district_name,
+
+                    };
+
+                    pivotData.push(pivotRow);
+
+
+                pivotRow[dataArray[i][colName]] = dataArray[i].quantity;
+
+
+
+            }
+            return {"header": newCols, "pivotData": pivotData};
+        }
 
      $scope.exportReport = function (type) {
          $scope.filter.pdformat = 1;
