@@ -88,7 +88,7 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
       $scope.filter.status = status;
     }
     $scope.applyUrl();
-    $scope.OnFilterChanged();
+
   };
 
   $scope.OnFilterChanged = function () {
