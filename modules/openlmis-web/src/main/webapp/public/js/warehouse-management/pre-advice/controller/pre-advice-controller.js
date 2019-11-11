@@ -933,13 +933,12 @@ $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentT
 
 
         $scope.removeFile = function(file) {
-        $scope.docList = [];
 
-        DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response){
+        DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response) {
 
-        $scope.docList = response.list;
+        getListOfFilesByASNumber(file.asnNumber);
 
-      $scope.displayDocumentTypes.push(file.documentType);
+        $scope.displayDocumentTypes.push(file.documentType);
 
         });
 
@@ -1002,16 +1001,43 @@ function getFile(file,documentType) {
 }
 
 function getListOfFilesByASNumber(asnNumber) {
-
+     var docLists = [];
      DocumentList.get({code:asnNumber}, function(data){
 
-      $rootScope.docList = data.list;
+       docLists = data.list;
       if(data.list.length > 0) {
-      $scope.findMatches($scope.displayDocumentTypes, data.list);
+
+      getOnlyMatchedDocumentTypes($scope.displayDocumentTypes,  docLists);
+
+      console.log(data.list);
+    // $scope.findMatches($scope.displayDocumentTypes, data.list);
       }
 
 
       });
+
+}
+
+function getOnlyMatchedDocumentTypes(documentTypes, docs) {
+
+ $scope.displayDocumentTypes = [];
+ docs.forEach(function(data) {
+
+     for(var i=0;i<documentTypes.length;i++){
+
+       if(documentTypes[i].name === data.documentType.name){
+        documentTypes[i].isAvailable = true;
+       }
+     }
+
+});
+
+var filteredData = [];
+filteredData = _.filter(documentTypes, function(dx){
+return dx.isAvailable !== true;
+});
+$scope.docLists = docs;
+$scope.displayDocumentTypes  = filteredData;
 
 }
 

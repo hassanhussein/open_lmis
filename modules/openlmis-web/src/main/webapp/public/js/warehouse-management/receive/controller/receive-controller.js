@@ -42,8 +42,9 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
        AsnLookups.get(function(data) {
 
                           $scope.displayDocumentTypes =  data.documentTypes;
-                          console.log(data.manufactures)
+
                               $scope.manufacturers = data.manufactures;
+
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
                                        $scope.currencies=data.currencies;
@@ -109,6 +110,16 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 //      }
      }
     $scope.receive = receive;
+
+
+     if(!isUndefined(receive)) {
+
+
+        getListOfFilesByASNumber(receive.asnNumber);
+
+       // $scope.documentDetails  = asn.purchaseDocuments;
+
+     }
 
     console.log($scope.receive);
 
@@ -290,7 +301,9 @@ var total_lot_quantity = 0;
 
 
         $scope.productsToAdd = [];
+
         angular.forEach($scope.receive.receiveLineItems, function(product, value) {
+            console.log(product);
             editProduct = product.productList[0];
             var productLots = [];
             angular.forEach(product.receiveLots, function(lot, value) {
@@ -874,17 +887,17 @@ $scope.quantityBoxError=false;
     };
 
 
-  $scope.removeFile = function(file) {
-        $scope.docList = [];
+      $scope.removeFile = function(file) {
 
-        DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response){
+         DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response) {
 
-        $scope.docList = response.list;
+         getListOfFilesByASNumber(file.asnNumber);
 
          $scope.displayDocumentTypes.push(file.documentType);
-        });
 
-  };
+         });
+
+         };
 
   function removeItemFromList(document) {
 
@@ -953,14 +966,43 @@ function getFile(file,documentType) {
 }
 
 function getListOfFilesByASNumber(asnNumber) {
-     console.log(asnNumber);
+    var docLists = [];
      DocumentList.get({code:asnNumber}, function(data){
 
-      $rootScope.docList = data.list;
+       docLists = data.list;
       if(data.list.length > 0) {
-      $scope.findMatches($scope.displayDocumentTypes,data.list);
+
+      getOnlyMatchedDocumentTypes($scope.displayDocumentTypes,  docLists);
+
+      console.log(data.list);
+    // $scope.findMatches($scope.displayDocumentTypes, data.list);
       }
-    });
+
+
+      });
+}
+
+function getOnlyMatchedDocumentTypes(documentTypes, docs) {
+
+ $scope.displayDocumentTypes = [];
+ docs.forEach(function(data) {
+
+     for(var i=0;i<documentTypes.length;i++){
+
+       if(documentTypes[i].name === data.documentType.name){
+        documentTypes[i].isAvailable = true;
+       }
+     }
+
+});
+
+var filteredData = [];
+filteredData = _.filter(documentTypes, function(dx){
+return dx.isAvailable !== true;
+});
+$scope.docLists = docs;
+$scope.displayDocumentTypes  = filteredData;
+
 }
 
 
