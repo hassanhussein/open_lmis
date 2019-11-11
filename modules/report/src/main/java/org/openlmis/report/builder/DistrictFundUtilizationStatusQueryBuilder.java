@@ -24,7 +24,7 @@ public class DistrictFundUtilizationStatusQueryBuilder {
                 "                            JOIN facilities FA ON r.facilityId = fa.id\n" +
                 "                            JOIN vw_districts d ON fA.geographicZoneId  = d.district_id  \n" +
                 "                            JOIN facility_types ft ON fa.typeId = FT.ID\n" +
-                //writePredicates(filterCriteria, userId)+
+                writePredicates(filterCriteria, userId)+
                 "                            \n" +
                 "                            group by f.name,fa.name  ,fa.id,district_name, region_name, zone_name,fa.code,ft.name\n" +
                 "                            order by 1,2\n";

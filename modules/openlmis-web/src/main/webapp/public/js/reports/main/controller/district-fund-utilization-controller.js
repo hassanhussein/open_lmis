@@ -14,11 +14,11 @@ function FacilityFundUtilizationReportController ($scope, $window,FacilityFundUt
               var pivotedData = getPivotData(data.pages.rows, 'sourceofFundName');
               console.log(pivotedData);
 
-                 $scope.data = pivotedData;
+                 $scope.data = pivotedData.pivotData;
                  $scope.headers = pivotedData.header;
                 // groupDataInColumns($scope.data);
                  console.log(JSON.stringify($scope.data));
-                 $scope.paramsChanged($scope.tableParams);
+                $scope.paramsChanged($scope.tableParams);
              }
          });
      };
