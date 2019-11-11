@@ -72,7 +72,7 @@ public class ReceiveController extends BaseController {
             Long userId = loggedInUserId(principal);
             receive.setCreatedBy(userId);
             receive.setModifiedBy(userId);
-            Receive savedReceive = service.save(receive, userId, null);
+            Receive savedReceive = service.save(receive, userId, null, false);
             if(receive.getStatus().equalsIgnoreCase("Received")) {
              service.updateStockCardDetails(savedReceive,userId);
             }
@@ -89,10 +89,16 @@ public class ReceiveController extends BaseController {
         try{
             receive.setId(id);
             receive.setModifiedBy(loggedInUserId(principal));
-            Receive savedReceive = service.save(receive, loggedInUserId(principal), null);
+
+            Receive savedReceive;
 
             if(receive.getStatus().equalsIgnoreCase("Received")) {
+                savedReceive = service.save(receive, loggedInUserId(principal), null,false);
                 service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
+            }else {
+
+                service.save(receive, loggedInUserId(principal), null,true);
+
             }
 
             return success("message.success.warehouse.updated");
