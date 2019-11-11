@@ -49,6 +49,14 @@ public interface ReceiveLineItemMapper {
     @Select(" select * from receive_line_items")
     List<ReceiveLineItem> getAll();
 
-    @Delete("DELETE from receive_line_items WHERE receiveId = #{id}")
+    @Delete("DELETE FROM receive_lots WHERE receiveLineItemId \n" +
+            "IN(\n" +
+            "SELECT ID FROM receive_line_items WHERE receiveId = #{id}\n" +
+            ");\n" +
+            " DELETE FROM receive_line_items WHERE receiveId = #{id};" +
+            " DELETE from purchase_documents WHERE RECEIVEID = #{id};\n" +
+            " DELETE FROM RECEIVES WHERE ID = #{id};" +
+            "" +
+            "")
     void deleteByReceiveId(@Param("id") Long id);
 }
