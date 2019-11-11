@@ -220,10 +220,10 @@
                             <input type="checkbox" ng-disabled="viewMode" checked > Foreign Procurement
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="viewMode" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && !isVaccine)" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="viewMode"   value="1" ng-click="changeProductType(false)" > Other Items
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && isVaccine)"   value="1" ng-click="changeProductType(false)" > Other Items
                         </label>
 
                     </div>
@@ -770,7 +770,7 @@
     </form>
 
     <!--Lot Modal-->
-    <div id="popup-box" name="newLot"  modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
+    <div id="popup-box"  ng-form="newLotForm"  modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
         <div class="modal-header">
             <div class="row-fluid">
                 <div class="span4">

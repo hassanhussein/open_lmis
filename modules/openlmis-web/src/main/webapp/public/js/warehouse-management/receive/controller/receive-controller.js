@@ -42,8 +42,9 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
        AsnLookups.get(function(data) {
 
                           $scope.displayDocumentTypes =  data.documentTypes;
-                          console.log(data.documentTypes);
-                              $scope.manufacturers = data.manufacturers;
+
+                              $scope.manufacturers = data.manufactures;
+
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
                                        $scope.currencies=data.currencies;
