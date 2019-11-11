@@ -238,7 +238,8 @@ getAllLookups();
          $scope.isVaccine=false;
          $scope.currency=asn.currency;
          $scope.selectedCurrency=$scope.currency.id;
-         $scope.currencyId=$scope.asn.currency.id;
+//         console.log($scope.selectedCurrency);
+//         $scope.currencyId=$scope.asn.currency.id;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
 

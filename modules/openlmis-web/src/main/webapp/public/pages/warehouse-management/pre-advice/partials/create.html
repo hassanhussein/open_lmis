@@ -148,10 +148,10 @@
 
                     <div class="form-cell" >
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="viewMode" value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && !isVaccine)" value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="viewMode"  value="1" ng-click="changeProductType(false)" > Other Items
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && isVaccine)"  value="1" ng-click="changeProductType(false)" > Other Items
                         </label>
 
                         <label>
