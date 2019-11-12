@@ -20,5 +20,8 @@ public class DistrictFundUtilizationReport implements ResultRow {
     private Integer other;
     private Integer userFees;
     private String facilityCode;
+    private String sourceofFundName;
+
+    private Double quantity;
 
 }
