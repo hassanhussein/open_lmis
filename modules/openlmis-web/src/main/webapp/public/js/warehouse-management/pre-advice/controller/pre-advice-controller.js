@@ -343,7 +343,7 @@ $scope.docList = [];
 
 $scope.setCurrency=function(){
 
-$scope.currency=_.findWhere($scope.currencies,{'id':$scope.selectedCurrency});
+$scope.currency=_.findWhere($scope.currencies,{'id':parseInt($scope.selectedCurrency,10)});
 
 };
 

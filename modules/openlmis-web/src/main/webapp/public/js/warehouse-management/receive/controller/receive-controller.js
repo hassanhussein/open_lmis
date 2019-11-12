@@ -164,21 +164,25 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
     $scope.addLot = function(product,lot) {
 //    console.log(product)
+       if(!$scope.viewMode){
         productIndex=_.indexOf($scope.productsToAdd,product);
-        $lotIndex = $scope.productsToAdd[productIndex].lots.length - 1;
-//        console.log($lotIndex);
-        $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
-        $scope.productsToAdd[productIndex].lots.push({
-            quantity: 0,
-            displayCodeOnly: false
-        });
+               $lotIndex = $scope.productsToAdd[productIndex].lots.length - 1;
+       //        console.log($lotIndex);
+               $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
+               $scope.productsToAdd[productIndex].lots.push({
+                   quantity: 0,
+                   displayCodeOnly: false
+               });
+       }
 //        $scope.updateLotsToDisplay();
     };
 
 $scope.setCurrency=function(){
 
-$scope.currency=_.findWhere($scope.currencies,{'id':$scope.selectedCurrency});
+if(!$scope.viewMode){
+$scope.currency=_.findWhere($scope.currencies,{'id':parseInt($scope.selectedCurrency,10)});
 
+}
 };
 
     $scope.quantityVsBox=function(){
@@ -286,15 +290,15 @@ var total_lot_quantity = 0;
         $scope.notes = receive.note;
         $scope.poDate = receive.poDate;
         $scope.poNumber = receive.poNumber;
+        $scope.descriptionOfProcurement=receive.description;
+        $scope.receiveDate = receive.receiveDate;
         $scope.portOfArrivalId = receive.port.id;
+        $scope.actualArrivalDate=receive.actualArrivalDate;
         $scope.productsToAdd = [];
         $scope.supplier = receive.supplier;
          $scope.supplierId=$scope.supplier.id;
         $scope.currency=receive.currency;
-        if($scope.currency !== null) {
         $scope.selectedCurrency=$scope.currency.id;
-        }
-//        $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
 //        $scope.allProducts=$scope.configurations.productsConfiguration;
@@ -307,7 +311,7 @@ var total_lot_quantity = 0;
         $scope.productsToAdd = [];
 
         angular.forEach($scope.receive.receiveLineItems, function(product, value) {
-            console.log(product);
+            var lineItem=product;
             editProduct = product.productList[0];
             var productLots = [];
             angular.forEach(product.receiveLots, function(lot, value) {
@@ -339,6 +343,7 @@ var total_lot_quantity = 0;
                 eop: null,
                 lots: productLots,
                 unitPrice: product.unitPrice,
+                boxCounted:lineItem.boxCounted,
 
             });
 
