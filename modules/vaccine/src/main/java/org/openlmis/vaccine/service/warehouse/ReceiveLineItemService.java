@@ -14,12 +14,17 @@ public class ReceiveLineItemService {
 
     public void save(ReceiveLineItem receiveLineItem) {
 
-        if (receiveLineItem.getId() == null) {
+        if (receiveLineItem.getId() != null) {
 
+            ReceiveLineItem exists = getById(receiveLineItem.getId());
+            if (exists == null){
+                repository.insert(receiveLineItem);
+            }else {
+                repository.update(receiveLineItem);
+            }
+        }else
             repository.insert(receiveLineItem);
-        }else {
-            repository.update(receiveLineItem);
-        }
+
 
     }
 

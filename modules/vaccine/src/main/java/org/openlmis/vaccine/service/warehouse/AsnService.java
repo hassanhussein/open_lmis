@@ -129,7 +129,7 @@ public class AsnService {
             res.setSupplier(asn.getSupplier());
             res.setPurchaseOrderId(null);
             res.setReceiveLineItems(null);
-            receiveService.save(res, asn.getModifiedBy(),asn);
+            receiveService.save(res, asn.getModifiedBy(),asn, false);
            // notificationService.sendAsnFinalizeEmail();
 
         }
