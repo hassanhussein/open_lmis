@@ -21,5 +21,6 @@ public class ReceiveLot extends BaseModel {
     private Date manufacturingDate;
     private Integer quantity;
     private ReceiveLineItem receiveLineItem;
+    private String manufacturerName;
 
 }

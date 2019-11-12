@@ -99,15 +99,17 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 //    $scope.otherProducts=otherProducts;
 //console.log(receive)
      if(receive) {
+     console.log(receive);
 
-//     if(receive.supplierId === null || receive.currencyId === null) {
-
+    //if(receive.supplier === null || receive.currencyId === null) {
+     if(receive.currency !== null)
      receive.currencyId = receive.currency.id;
+
      receive.supplierId = receive.supplier.id;
 
      $scope.supplierId = receive.supplier.id;
 
-//      }
+//     }
      }
     $scope.receive = receive;
 
@@ -289,7 +291,9 @@ var total_lot_quantity = 0;
         $scope.supplier = receive.supplier;
          $scope.supplierId=$scope.supplier.id;
         $scope.currency=receive.currency;
+        if($scope.currency !== null) {
         $scope.selectedCurrency=$scope.currency.id;
+        }
 //        $scope.supplierId=$scope.supplier.id;
          $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
