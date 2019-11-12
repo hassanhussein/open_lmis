@@ -666,7 +666,7 @@
                                         <br/>
                                         <br/>
                                         <label for="csvFile"><span openlmis-message="upload.label.file"></span>:</label>
-                                        <input name="csvFile" ngf-select  id="csvFile" ng-model="document.file" type="file" ngf-accept="'image/*,application/pdf'"
+                                        <input ng-disabled="!document.documentType" name="csvFile" ngf-select  id="csvFile" ng-model="document.file" type="file" ngf-accept="'image/*,application/pdf'"
                                                ng-change="clearMessages()"
                                                value="Choose CSV File to upload"/>
                                         <!--       <span class="field-error" ng-show="uploadForm.csvFile.errorMessage"
@@ -683,7 +683,7 @@
                                         </div>
                                         <br>
                                         <input id="uploadButton" ng-click="upload(document)" type="submit" openlmis-message="link.admin.upload" class="btn btn-primary"
-                                               ng-disabled="!asnCode">
+                                               ng-disabled="!document.documentType || !asnCode">
                                         <br/>
                                         <br/>
                                         <div class="clearfix"></div>
