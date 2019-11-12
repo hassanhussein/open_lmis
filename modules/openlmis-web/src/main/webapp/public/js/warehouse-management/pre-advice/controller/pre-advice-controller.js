@@ -1013,7 +1013,10 @@ function getListOfFilesByASNumber(asnNumber) {
        docLists = data.list;
       if(data.list.length > 0) {
 
-      getOnlyMatchedDocumentTypes($scope.displayDocumentTypes,  docLists);
+       $timeout(function(){
+             getOnlyMatchedDocumentTypes($scope.displayDocumentTypes,  docLists);
+
+       },1000);
 
       console.log(data.list);
     // $scope.findMatches($scope.displayDocumentTypes, data.list);

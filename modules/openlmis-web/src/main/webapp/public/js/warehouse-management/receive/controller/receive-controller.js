@@ -885,8 +885,9 @@ $scope.quantityBoxError=false;
     };
 
   $scope.upload = function(document) {
+        validateAnsNumber($scope.asnCode,document);
 
-        if(document.documentType !== null && document.file !== null) {
+        if(document.documentType !== null && document.file !== null && !isUndefined(document.file)) {
 
             document.fileLocation = document.file.name;
             removeItemFromList(document.documentType);
@@ -897,6 +898,16 @@ $scope.quantityBoxError=false;
         }
 
     };
+
+    function validateAnsNumber(asnCode,document) {
+
+    if(asnCode === undefined) {
+
+    $scope.asnCode = $scope.poNumber;
+           console.log($scope.asnCode);
+    }
+
+    }
 
 
       $scope.removeFile = function(file) {
@@ -984,7 +995,9 @@ function getListOfFilesByASNumber(asnNumber) {
        docLists = data.list;
       if(data.list.length > 0) {
 
+      $timeout(function(){
       getOnlyMatchedDocumentTypes($scope.displayDocumentTypes,  docLists);
+      },1000);
 
       console.log(data.list);
     // $scope.findMatches($scope.displayDocumentTypes, data.list);

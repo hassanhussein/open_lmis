@@ -138,8 +138,12 @@ public class AsnService {
 
     public Asn getById (Long id) {
         Asn asn = repository.getById(id);
-        asn.setPurchaseDocuments(purchaseDocumentService.getByAsnId(id));
-        return asn;
+        if(asn !=null) {
+            asn.setPurchaseDocuments(purchaseDocumentService.getByAsnId(id));
+
+            return asn;
+        }
+        return null;
     }
     public List<Asn> getAll(){
 
