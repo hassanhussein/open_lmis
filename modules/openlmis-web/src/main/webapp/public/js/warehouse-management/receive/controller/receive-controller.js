@@ -396,38 +396,41 @@ var total_lot_quantity = 0;
 
 
 $scope.changeProductType=function(isVaccine){
+    if($scope.isVaccine!==isVaccine){
+
     $scope.isVaccine=isVaccine;
-        if(isVaccine){
-        $scope.productsToAdd = [{
-                        id: 0,
-                        displayNameOnly:false,
-                        programProduct: {},
-                        maxMonthsOfStock: 0,
-                        minMonthsOfStock: 0,
-                        eop: null,
-                        lots: [{
-                            quantity: 0,
-                            displayCodeOnly: false
-                        }],
-                        unitPrice: 0
+            if(isVaccine){
+            $scope.productsToAdd = [{
+                            id: 0,
+                            displayNameOnly:false,
+                            programProduct: {},
+                            maxMonthsOfStock: 0,
+                            minMonthsOfStock: 0,
+                            eop: null,
+                            lots: [{
+                                quantity: 0,
+                                displayCodeOnly: false
+                            }],
+                            unitPrice: 0
 
-                    }];
-         $scope.loadProducts($scope.homeFacilityId, 82,true);
-        }else{
-        $scope.productsToAdd = [{
-                        id: 0,
-                        displayNameOnly:false,
-                        programProduct: {},
-                        maxMonthsOfStock: 0,
-                        minMonthsOfStock: 0,
-                        eop: null,
-                        quantity:0,
-                        unitPrice: 0
+                        }];
+             $scope.loadProducts($scope.homeFacilityId, 82,true);
+            }else{
+            $scope.productsToAdd = [{
+                            id: 0,
+                            displayNameOnly:false,
+                            programProduct: {},
+                            maxMonthsOfStock: 0,
+                            minMonthsOfStock: 0,
+                            eop: null,
+                            quantity:0,
+                            unitPrice: 0
 
-                    }];
+                        }];
 
-                    $scope.loadProducts($scope.homeFacilityId, 82,false);
-        }
+                        $scope.loadProducts($scope.homeFacilityId, 82,false);
+            }
+    }
 
 };
 
