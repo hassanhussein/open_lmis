@@ -298,6 +298,7 @@ var total_lot_quantity = 0;
         $scope.supplier = receive.supplier;
          $scope.supplierId=$scope.supplier.id;
         $scope.currency=receive.currency;
+        if($scope.currency !== null)
         $scope.selectedCurrency=$scope.currency.id;
          $scope.isVaccine=false;
 //        console.log($scope.configurations.productsConfiguration)
