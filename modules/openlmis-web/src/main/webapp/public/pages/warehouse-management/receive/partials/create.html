@@ -181,15 +181,16 @@
                                     ng-disabled="viewMode"
                                     ng-model="selectedCurrency"
                                     ng-change="setCurrency()"
-                                    ng-options="currency.id as currency.code for currency in currencies"
+<!--                                    ng-options="currency.id as currency.code for currency in currencies"-->
 
                             >
-                                <option value="">--Select Currency--</option>
-                                <!--                                <option ng-repeat="c in currencies"-->
-                                <!--                                        value="{{c}}"-->
-                                <!--                                        ng-selected="currencyId==c.id"-->
-                                <!--                                >-->
-                                <!--                                    {{ c.code }}-->
+                                < <option value="">--Select Currency--</option>
+                            <option ng-repeat="c in currencies"
+                                    value="{{c.id}}"
+                                    ng-selected="selectedCurrency.id===c.id"
+                            >
+                                                                    {{ c.code }}
+                            </option>
 
                             </select>
                             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
