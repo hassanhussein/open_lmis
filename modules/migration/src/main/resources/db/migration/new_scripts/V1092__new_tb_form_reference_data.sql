@@ -195,7 +195,7 @@ ALTER TABLE products
 ADD COLUMN patientCalculationFormula VARCHAR(255);
 
 
-----Insert program_products
+--Insert program_products
 --insert into program_products(programId, productId, fullSupply, dosesPerMonth, currentPrice, active, displayOrder, productCategoryId) values
 --((select id from programs where code='TB&LEPROSY'),(select id from products where code = '10010087AE'),'true',112,0.00,'true',455,(select id from product_categories where code='cgi')),
 --((select id from programs where code='TB&LEPROSY'),(select id from products where code = '10010086AE'),'true',112,0.00,'true',0,(select id from product_categories where code='cgi')),
@@ -208,7 +208,7 @@ ADD COLUMN patientCalculationFormula VARCHAR(255);
 --((select id from programs where code='TB&LEPROSY'),(select id from products where code = '10010255AE'),'true',112,0,'true',356,(select id from product_categories where code='cgi')),
 --((select id from programs where code='TB&LEPROSY'),(select id from products where code = '10010114AE'),'true',56,0,'true',356,(select id from product_categories where code='cgi')),
 --((select id from programs where code='TB&LEPROSY'),(select id from products where code = '10010089AE'),'true',28,0,'true',356,(select id from product_categories where code='cgi'));
---
+
 --
 --
 --Program prodcut mapping
