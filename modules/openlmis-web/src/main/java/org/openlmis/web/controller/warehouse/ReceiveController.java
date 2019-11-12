@@ -97,8 +97,8 @@ public class ReceiveController extends BaseController {
                 service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
             }else {
 
-              savedReceive=  service.save(receive, loggedInUserId(principal), null,true);
-                service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
+              service.save(receive, loggedInUserId(principal), null,true);
+               // service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
 
             }
 
