@@ -238,9 +238,9 @@ getAllLookups();
          $scope.isVaccine=false;
          $scope.currency=asn.currency;
          console.log(asn);
-         if($scope.currency !== null) {
+//         if($scope.currency !== null) {
          $scope.selectedCurrency=$scope.currency.id;
-         }
+//         }
 //         console.log($scope.selectedCurrency);
 //         $scope.currencyId=$scope.asn.currency.id;
 //        console.log($scope.configurations.productsConfiguration)
@@ -342,9 +342,9 @@ $scope.docList = [];
 
 
 $scope.setCurrency=function(){
-
+if(!$scope.viewMode){
 $scope.currency=_.findWhere($scope.currencies,{'id':parseInt($scope.selectedCurrency,10)});
-
+}
 };
 
 $scope.changeProductType=function(isVaccine){
