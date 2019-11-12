@@ -393,13 +393,13 @@ public class ReceiveService {
 
                        List<ReceiveLot> receiveLot = receiveLotService.getByLineItem(rece.getId());
 
-                       StockEventDTO event = new StockEventDTO();
+
 
                        Map<String, String> customProps = new HashMap<String, String>();
-                       Lot lotToSave = new Lot();
+
                        for (ReceiveLot lot : rece.getReceiveLots()) {
-
-
+                           StockEventDTO event = new StockEventDTO();
+                           Lot lotToSave = new Lot();
                            event.setType(StockEventType.RECEIPT);
                            event.setFacilityId(19075L);
                            event.setProductCode(product.getCode());
