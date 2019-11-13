@@ -956,7 +956,7 @@ public class RequisitionService {
 
     }
 
-    List<RejectionReasonDTO> rejectionReasonList = requisitionRepository.getRejectionsByRnrId(rnr.getId());
+   /* List<RejectionReasonDTO> rejectionReasonList = requisitionRepository.getRejectionsByRnrId(rnr.getId());
 
 
     StringBuilder stringBuilder = new StringBuilder();
@@ -965,7 +965,7 @@ public class RequisitionService {
       stringBuilder.append(" ").append(reason.getName()).append(" ").append(",");
     }
 
-    notificationServices.sendRejectedEmail(rnr,stringBuilder.toString());
+    notificationServices.sendRejectedEmail(rnr,stringBuilder.toString());*/
 
 
   }
