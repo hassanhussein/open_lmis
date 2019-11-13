@@ -927,9 +927,11 @@ public class RequisitionService {
     requisitionRepository.insertRejectionReason(reason);
   }
 
-  public void insertRejections(Rnr rnr, Long userId){
+  public void insertRejections(RnrRejectionDTO rnrRejectionDTO, Long userId){
 
-    for(RejectionDTO dto:rnr.getRejections()) {
+    Rnr rnr = getFullRequisitionById(rnrRejectionDTO.getRnrId());
+
+    for(RejectionDTO dto:rnrRejectionDTO.getRejections()) {
 
       RejectionReason reason = new RejectionReason();
       reason.setCreatedBy(userId);

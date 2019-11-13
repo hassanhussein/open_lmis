@@ -23,6 +23,7 @@ import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.dto.FundSourceDTO;
 import org.openlmis.rnr.dto.RnrDTO;
+import org.openlmis.rnr.dto.RnrRejectionDTO;
 import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.*;
@@ -439,7 +440,7 @@ public class RequisitionController extends BaseController {
 
     @RequestMapping(value = "/requisitions/reject-reasons", method = POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
-    public ResponseEntity<OpenLmisResponse> rejectionReasons(@RequestBody Rnr rnr, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> rejectionReasons(@RequestBody RnrRejectionDTO rnr, HttpServletRequest request) {
         requisitionService.insertRejections(rnr,loggedInUserId(request));
         return OpenLmisResponse.success(messageService.message("msg.rnr.returned"));
     }

@@ -11,7 +11,7 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('reasonBox',function (RequisitionRejection,RejectRequisitionReason,AllRejections, $routeParams,GetRejectionByCategory) {
+app.directive('reasonBox',function (RequisitionRejection,RejectRequisitionReason,AllRejections, $routeParams,GetRejectionByCategory,$q,$timeout) {
     return {
         restrict:'E',
         scope:{
@@ -196,6 +196,10 @@ app.directive('reasonBox',function (RequisitionRejection,RejectRequisitionReason
              console.log(scope.selectedItems);
             };*/
 
+
+
+
+
             scope.rejectRN = function () {
 
                 if (scope.nowR.length === 0) {
@@ -204,9 +208,10 @@ app.directive('reasonBox',function (RequisitionRejection,RejectRequisitionReason
                 scope.$parent.rnr.rejectionReasons = scope.rejectionReasons;
                 scope.$parent.rnr.rejections = scope.rejectionReasons;
 
-                scope.$parent.rejectRnR();
+                var rejectedRnR = {rnrId:scope.$parent.rnr.id, rejections:scope.rejectionReasons };
 
-
+                console.log(rejectedRnR);
+                  wait().then(function () {
 
                   var successHandler = function (data) {
                                     scope.comment = "";
@@ -219,11 +224,27 @@ app.directive('reasonBox',function (RequisitionRejection,RejectRequisitionReason
                                 };
 
 
-                 RejectRequisitionReason.save(scope.$parent.rnr, successHandler, errorHandler);
+
+                 RejectRequisitionReason.save(rejectedRnR, successHandler, errorHandler);
 
 
+
+});
             };
+            var wait = function() {
 
+             var deferred = $q.defer();
+
+              $timeout(function() {
+
+
+               scope.$parent.rejectRnR();
+
+               deferred.resolve();
+
+               },10);
+                return deferred.promise;
+              };
             // remove the selected row
             scope.removeReason = function(index){
 

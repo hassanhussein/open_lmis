@@ -45,13 +45,14 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
       $scope.disable = true;
   };
 
-  $scope.$parent.rejectRnR = function( ){
+  $scope.$parent.rejectRnR = function(){
 
       var callBack = function (result) {
 
       if (result) {
         // reject
         RejectRequisition.post({id: $scope.rnr.id},function(){
+
           OpenLmisDialog.newDialog({
             id: "confirmDialog",
             header: "label.confirm.action",
