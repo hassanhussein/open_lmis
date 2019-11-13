@@ -11,9 +11,7 @@ import org.openlmis.equipment.domain.EquipmentOperationalStatus;
 import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.equipment.service.EquipmentOperationalStatusService;
 import org.openlmis.rnr.domain.*;
-import org.openlmis.rnr.dto.FundSourceDTO;
-import org.openlmis.rnr.dto.RnrDTO;
-import org.openlmis.rnr.dto.SourceOfFundLineItemDTO;
+import org.openlmis.rnr.dto.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
@@ -111,6 +109,9 @@ public class RequisitionService {
   private EquipmentInventoryService equipmentInventoryService;
   @Autowired
   private ConfigurationSettingService configurationSettingsService;
+
+  @Autowired
+  private NotificationServices notificationServices;
 
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
 
@@ -924,6 +925,49 @@ public class RequisitionService {
 
   public void insertRejectionReason(RejectionReason reason) {
     requisitionRepository.insertRejectionReason(reason);
+  }
+
+  public void insertRejections(Rnr rnr, Long userId){
+
+    for(RejectionDTO dto:rnr.getRejections()) {
+
+      RejectionReason reason = new RejectionReason();
+      reason.setCreatedBy(userId);
+      reason.setModifiedBy(userId);
+      RejectionCategoryDTO categoryDTO = new RejectionCategoryDTO();
+      reason.setRnrId(rnr.getId());
+      categoryDTO.setName(dto.getName());
+      categoryDTO.setCode(dto.getCode());
+      categoryDTO.setRnrId(rnr.getId());
+      categoryDTO.setId(dto.getId());
+      reason.setRejectionCategory(categoryDTO);
+
+      for(ReasonDTO re : dto.getRejections()){
+
+        RejectionReasonDTO reasonDTO = new RejectionReasonDTO();
+        if(re.getSelected()) {
+          reasonDTO.setCode(re.getCode());
+          reasonDTO.setName(re.getName());
+          reasonDTO.setId(re.getId());
+          reason.setRejection(reasonDTO);
+          requisitionRepository.insertRejectionReason(reason);
+        }
+      }
+
+    }
+
+    List<RejectionReasonDTO> rejectionReasonList = requisitionRepository.getRejectionsByRnrId(rnr.getId());
+
+
+    StringBuilder stringBuilder = new StringBuilder();
+
+    for(RejectionReasonDTO reason: rejectionReasonList ){
+      stringBuilder.append(" ").append(reason.getName()).append(" ").append(",");
+    }
+
+    notificationServices.sendRejectedEmail(rnr,stringBuilder.toString());
+
+
   }
 
   public List<Map<String,Object>>getAllRejections(){

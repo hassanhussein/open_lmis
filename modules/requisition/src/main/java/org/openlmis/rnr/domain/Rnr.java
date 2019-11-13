@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.rnr.dto.RejectionDTO;
 
 import javax.persistence.Transient;
 import java.math.BigDecimal;
@@ -77,6 +78,8 @@ public class Rnr extends BaseModel {
   private List<ManualTestesLineItem> manualTestLineItems = new ArrayList<>();
 
   private List<RejectionReason> rejectionReasons = new ArrayList<>();
+
+  private List<RejectionDTO> rejections = new ArrayList<>();
 
   private List<Patient> patients;
   private List<PatientLineItem> patientLineItems = new ArrayList<>();

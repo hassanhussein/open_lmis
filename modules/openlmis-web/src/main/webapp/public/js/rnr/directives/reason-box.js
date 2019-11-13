@@ -96,7 +96,7 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                scope.rejectionReasons = [];
                if(!isUndefined(data.categories)) {
                scope.rejectionReasons = data.categories;
-               console.log(data.categories);
+
                }
 
             });
@@ -117,10 +117,9 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                 var selected;
                 selected = [];
                 scope.disableRejectionBtn = false;
-                console.log(data);
+
                 selected.push(data);
                 scope.selectedItems.selectedItem = selected;
-                console.log(scope.selectedItems);
             };
 
             scope.isChecked = function(id){
@@ -203,6 +202,8 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                     return;
                 }
                 scope.$parent.rnr.rejectionReasons = scope.rejectionReasons;
+                scope.$parent.rnr.rejections = scope.rejectionReasons;
+                console.log(scope.$parent.rnr);
                 scope.$parent.rejectRnR();
             };
 

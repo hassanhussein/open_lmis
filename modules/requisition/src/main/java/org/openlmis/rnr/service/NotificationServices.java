@@ -16,9 +16,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.Subscribers;
 import org.openlmis.core.domain.User;
-import org.openlmis.core.service.ApproverService;
-import org.openlmis.core.service.ConfigurationSettingService;
-import org.openlmis.core.service.StaticReferenceDataService;
+import org.openlmis.core.service.*;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
 import org.slf4j.Logger;
@@ -59,6 +57,9 @@ public class NotificationServices {
 
   @Autowired
   private StaticReferenceDataService staticReferenceDataService;
+
+  @Autowired
+  private UserService userService;
 
 
   public void notifyStatusChange(Rnr requisition) {
@@ -148,4 +149,40 @@ public class NotificationServices {
     }
   }
 
+
+  public void sendRejectedEmail(Rnr requisition, String reasons) {
+
+    List<User> users = userService.getUsersByHomeFacility(requisition.getFacility().getId());
+
+    if(!users.isEmpty()) {
+
+      for (User user : users) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        String emailMessage = configService.getByKey(ConfigurationSettingKey.EMAIL_TEMPLATE_REJECTION).getValue();
+
+        String approvalURL = String.format("%1$s/public/pages/logistics/rnr/index.html#/init-rnr", baseURL, requisition.getId(), requisition.getProgram().getId());
+
+        emailMessage = emailMessage.replaceAll("\\{facility_name\\}", requisition.getFacility().getName());
+        emailMessage = emailMessage.replaceAll("\\{program_name\\}", requisition.getProgram().getName());
+        emailMessage = emailMessage.replaceAll("\\{receiver_name\\}", user.getFirstName() + " " + user.getLastName());
+        emailMessage = emailMessage.replaceAll("\\{period\\}", requisition.getPeriod().getName());
+        emailMessage = emailMessage.replaceAll("\\{reasons\\}", reasons);
+        emailMessage = emailMessage.replaceAll("\\{link\\}", approvalURL);
+
+        message.setText(emailMessage);
+        message.setSubject(configService.getByKey(ConfigurationSettingKey.EMAIL_SUBJECT_APPROVAL).getValue());
+        message.setTo(user.getEmail());
+
+        try {
+          emailService.queueMessage(message);
+        } catch (Exception exp) {
+          LOGGER.error("Notification was not sent due to the following exception ...", exp);
+        }
+      }
+
+
+    }
+
+  }
 }

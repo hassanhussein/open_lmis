@@ -496,6 +496,10 @@ public class RequisitionRepository {
         return rejectionReasonMapper.getByRnrId(rnrId);
     }
 
+    public List<RejectionReasonDTO> getRejectionsByRnrId(Long rnrId) {
+        return rejectionReasonMapper.getRejectionsByRnrId(rnrId);
+    }
+
     public void insertRejectionReason(RejectionReason reason) {
         rejectionReasonMapper.insert(reason);
     }

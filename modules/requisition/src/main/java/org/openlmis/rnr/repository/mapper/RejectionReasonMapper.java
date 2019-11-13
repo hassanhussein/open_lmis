@@ -16,7 +16,7 @@ public interface RejectionReasonMapper {
     @Insert(" INSERT INTO public.requisition_rejections(\n" +
             "            rnrId, rejectionCategoryId, rejectionId, createdBy, createddate, \n" +
             "            modifiedBy, modifiedDate)\n" +
-            "    VALUES (#{rnrId}, #{rejectionCategory.id}, #{reason.id}, #{createdBy}, NOW(), \n" +
+            "    VALUES (#{rnrId}, #{rejectionCategory.id}, #{rejection.id}, #{createdBy}, NOW(), \n" +
             "            #{modifiedBy}, NOW());")
     @Options(useGeneratedKeys = true)
     int insert(RejectionReason rejectionReason);
@@ -73,6 +73,13 @@ public interface RejectionReasonMapper {
 
     })
     List<RejectionReasonCategoryDTO>getRejectionByCategory();
+
+
+    @Select("SELECT * FROM requisition_rejections s\n" +
+            "JOIN rejections r on s.rejectionId = r.id\n" +
+            "where rnrid = #{rnrId}")
+
+    List<RejectionReasonDTO> getRejectionsByRnrId(@Param("rnrId") Long rnrId);
 
 
 }

@@ -143,4 +143,7 @@ public interface UserMapper {
     "   join role_assignments ras on ras.roleid = rr.roleId " +
     "where r.righttype = 'REQUISITION' and ras.userId = #{userId}")
   List<String> getSupervisoryRights(@Param("userId") Long userId);
+
+    @Select("SELECT * FROM users where active = true and email is not null and facilityId = #{id}")
+    List<User> getUserByHomeFacility(@Param("id") Long id);
 }

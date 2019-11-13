@@ -319,10 +319,13 @@ public class RequisitionController extends BaseController {
 
     @RequestMapping(value = "/requisitions/reject/{id}", method = POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
-    public ResponseEntity<OpenLmisResponse> rejectRnR(@PathVariable("id") Long rnrId, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> rejectRnR(@RequestBody Rnr rnr, @PathVariable("id") Long rnrId, HttpServletRequest request) {
         requisitionService.rejectRnR(rnrId, loggedInUserId(request));
+        requisitionService.insertRejections(rnr,loggedInUserId(request));
+        System.out.println(rnr);
        return OpenLmisResponse.success(messageService.message("msg.rnr.returned"));
     }
+
 
     @RequestMapping(value = "/requisitions/reopen/{id}", method = POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION')")
