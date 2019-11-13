@@ -51,9 +51,12 @@ public class NotificationServicesTest {
   @Mock
   private StaticReferenceDataService staticReferenceDataService;
 
+
+
+
   @Before
   public void setUp() throws Exception {
-    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailServiceForSIMAM, staticReferenceDataService);
+    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailServiceForSIMAM, staticReferenceDataService, null);
   }
 
   @Test
