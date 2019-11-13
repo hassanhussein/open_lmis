@@ -96,6 +96,7 @@ public class StockImbalanceQueryBuilder {
         String reportType = filter.getReportType().replaceAll(",", "','").replaceAll("EM", "t").replaceAll("RE", "f");
 
         predicate += "  " + periodIsFilteredBy(" periodid ");
+        predicate += " AND fullSupply = true ";
         predicate += " AND " + programIsFilteredBy("programId");
         predicate += " AND " + userHasPermissionOnFacilityBy("facility_id");
         if (filter.getFacilityType() != 0) {
@@ -126,7 +127,7 @@ public class StockImbalanceQueryBuilder {
         StockImbalanceReportParam filter = (StockImbalanceReportParam) params.get(FILTER_CRITERIA_LABEL);
         BEGIN();
         SELECT(" count(*) totalRecords");
-        FROM(" mv_stock_imbalance_by_facility_report ");
+        FROM(" mv_stock_imbalance_by_facility_report where fullSupply = true ");
         getPredicate(filter);
         return SQL();
     }
