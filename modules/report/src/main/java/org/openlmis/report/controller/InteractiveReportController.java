@@ -1040,7 +1040,7 @@ public class InteractiveReportController extends BaseController {
 
     ) {
         Report report = reportManager.getReportByKey("district_fund_utilization");
-
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<DistrictFundUtilizationReport> reportData =
                 (List<DistrictFundUtilizationReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
         return new Pages(page, max, reportData);

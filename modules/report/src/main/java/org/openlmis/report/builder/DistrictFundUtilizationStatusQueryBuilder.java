@@ -37,22 +37,22 @@ public class DistrictFundUtilizationStatusQueryBuilder {
         if (filter != null) {
 
            // predicate = "where periodId =  " + filter.getPeriod() + " and ";
-            predicate = predicate + " where  r.facilityId in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + filter.getProgram() + ")";
-            predicate = predicate + " and status in ('IN_APPROVAL','APPROVED','RELEASED') ";
+           predicate = predicate + " where  r.facilityId in (select facility_id from vw_user_facilities where user_id = " + userId + " and program_id = " + filter.getProgram() + ")";
+           // predicate = predicate + " and status in ('IN_APPROVAL','APPROVED','RELEASED') ";
 
             if (filter.getZone() != 0) {
                 predicate = predicate + " and ( zone_id = " + filter.getZone() + " or parent = " + filter.getZone() + " or region_id = " + filter.getZone() + " or district_id = " + filter.getZone() + ") ";
             }
 
-            if (filter.getSchedule() != 0) {
+         /*   if (filter.getSchedule() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " scheduleId= " + filter.getSchedule();
-            }
+            }*/
 
-            if (filter.getProgram() != 0) {
+         /*   if (filter.getProgram() != 0) {
                 predicate = predicate.isEmpty() ? " where " : predicate + " and ";
                 predicate = predicate + " programId = " + filter.getProgram();
-            }
+            }*/
         }
         return predicate;
     }
