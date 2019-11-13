@@ -322,7 +322,6 @@ public class RequisitionController extends BaseController {
     public ResponseEntity<OpenLmisResponse> rejectRnR(@RequestBody Rnr rnr, @PathVariable("id") Long rnrId, HttpServletRequest request) {
         requisitionService.rejectRnR(rnrId, loggedInUserId(request));
         requisitionService.insertRejections(rnr,loggedInUserId(request));
-        System.out.println(rnr);
        return OpenLmisResponse.success(messageService.message("msg.rnr.returned"));
     }
 
