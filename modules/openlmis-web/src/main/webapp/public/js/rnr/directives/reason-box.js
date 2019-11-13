@@ -11,7 +11,7 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routeParams,GetRejectionByCategory) {
+app.directive('reasonBox',function (RequisitionRejection,RejectRequisitionReason,AllRejections, $routeParams,GetRejectionByCategory) {
     return {
         restrict:'E',
         scope:{
@@ -203,8 +203,25 @@ app.directive('reasonBox',function (RequisitionRejection,AllRejections, $routePa
                 }
                 scope.$parent.rnr.rejectionReasons = scope.rejectionReasons;
                 scope.$parent.rnr.rejections = scope.rejectionReasons;
-                console.log(scope.$parent.rnr);
+
                 scope.$parent.rejectRnR();
+
+
+
+                  var successHandler = function (data) {
+                                    scope.comment = "";
+                                    console.log(data);
+
+                   };
+
+                                var errorHandler = function (data) {
+                                    scope.error = data.error;
+                                };
+
+
+                 RejectRequisitionReason.save(scope.$parent.rnr, successHandler, errorHandler);
+
+
             };
 
             // remove the selected row

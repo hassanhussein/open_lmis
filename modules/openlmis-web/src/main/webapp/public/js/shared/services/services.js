@@ -586,3 +586,7 @@ services.factory('FilteredOrders', function ($resource) {
 services.factory('DisableFacilityTypeApprovedProducts', function ($resource) {
     return $resource('/facilityApprovedProducts/disable/:id.json', {id: '@id'}, update);
 });
+
+services.factory('RejectRequisitionReason', function ($resource) {
+    return $resource('/requisitions/reject-reasons.json', {}, {});
+});

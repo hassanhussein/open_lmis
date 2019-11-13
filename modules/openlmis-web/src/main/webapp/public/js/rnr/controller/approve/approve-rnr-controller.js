@@ -51,7 +51,7 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
 
       if (result) {
         // reject
-        RejectRequisition.post({id: $scope.rnr.id},$scope.rnr,function(){
+        RejectRequisition.post({id: $scope.rnr.id},function(){
           OpenLmisDialog.newDialog({
             id: "confirmDialog",
             header: "label.confirm.action",
