@@ -1,10 +1,10 @@
 function CommoditiesComparisonController($scope, $location, Program, Period, $rootScope, GetTLEAndTLDData) {
 
-$scope.year = 2019;
+//$scope.year = 2019;
 
 
     $rootScope.loadCommoditiesComparison = function(params) {
-$scope.year = params.year;
+        $scope.year = params.year;
         GetTLEAndTLDData.get(params).then(function(data) {
             loadCommoditiesComparisonTLEvsTLDChart(getConsumptionData(data), data);
         });
@@ -12,6 +12,7 @@ $scope.year = params.year;
 
 
     function loadCommoditiesComparisonTLEvsTLDChart(data, ogData) {
+    console.log(Highcharts.charts);
 
         ['mousemove', 'touchmove', 'touchstart'].forEach(function(eventType) {
             document.getElementById('common').addEventListener(
@@ -23,10 +24,13 @@ $scope.year = params.year;
                         event;
                     var container_charts = [];
                     for (var x in Highcharts.charts) {
+                    if(Highcharts.charts[x].userOptions) {
                         if (Highcharts.charts[x].userOptions.title.text == 'TLD' || Highcharts.charts[x].userOptions.title.text == 'TLE') {
                             container_charts.push(Highcharts.charts[x]);
                         }
-                    }
+                    }}
+
+                    console.log(container_charts);
 
                     for (i = 0; i < container_charts.length; i = i + 1) {
                         chart = container_charts[i];
@@ -214,14 +218,18 @@ $scope.year = params.year;
 
 
     $scope.onFilterChange = function(filter) {
+
         for (var x in Highcharts.charts) {
+         if(Highcharts.charts[x].userOptions) {
             if (Highcharts.charts[x].userOptions.title.text == 'TLD' || Highcharts.charts[x].userOptions.title.text == 'TLE') {
                 Highcharts.charts[x].destroy();
             }
         }
+        }
         Highcharts.charts.shift();
         Highcharts.charts.shift();
         Highcharts.charts.shift();
+        console.log(Highcharts.charts);
         $rootScope.loadCommoditiesComparison(filter);
     };
 

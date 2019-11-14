@@ -17,11 +17,14 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
 
 
     $rootScope.loadStockOutRateTrend = function(params) {
+    var productName= "";
            GetProductById.get({id:parseInt(params.product,10)}, function(productData){
-            GetStockOutRateByProductData.get(params).then(function(data) {
-            loadStockOutRateTrend(data, params, productData.productDTO.product.primaryName);
-            });
+           productName=productData.productDTO.product.primaryName;
         });
+
+         GetStockOutRateByProductData.get(params).then(function(data) {
+                    loadStockOutRateTrend(data, params, productName);
+          });
     };
 
     function loadStockOutRateTrend(data, params, productName) {

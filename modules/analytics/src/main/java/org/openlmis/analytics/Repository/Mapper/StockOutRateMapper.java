@@ -36,10 +36,10 @@ public interface  StockOutRateMapper {
 
 
 
-    @Select(" select sum(cs.quantityDispensed) as  totalConsumption, cs.periodname as name, cs.productid as id, cs.productcode, cs.periodid\n" +
+    @Select("select sum(cs.quantityDispensed) as  totalConsumption, cs.periodname as name, cs.productid as id, cs.productcode, cs.periodid\n" +
             "             from mv_dashboard_consumption_summary cs\n" +
             "             join processing_periods pp on pp.id=cs.periodid  \n" +
-            "             where productcode in  ('10010164AB' ,'10010022AB' ) and extract(year from pp.startdate) =  #{year} and cs.scheduleid= #{schedule}\n" +
+            "             where productcode in  ('10010164AB' ,'10010022AB' ) and extract(year from pp.startdate) =  #{year} and cs.scheduleid= #{schedule} and pp.enableorder=true\n" +
             "             group by cs.periodname, cs.productid, cs.productcode, cs.periodid order by cs.periodid asc")
     List<HashMap<String,Object>> getTLEAndTLDConsumption(@Param("year") Long year,
                                                          @Param("schedule") Long schedule);
@@ -47,7 +47,7 @@ public interface  StockOutRateMapper {
 
 
 
-    @Select("    SELECT  SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as numerator, count(*) as denominator, \n" +
+    @Select("SELECT  SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as numerator, count(*) as denominator, \n" +
             "  ROUND(100.0 * (SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) )/ COUNT(product),2) AS percentage, p.code, p.primaryname, a.processing_period_name, pp.id\n" +
             " FROM ( SELECT * from mv_stock_imbalance_by_facility_report ) a\n" +
             " join products p on p.code=a.productcode\n" +
