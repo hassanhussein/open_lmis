@@ -311,9 +311,8 @@ public class AnalyticsController extends BaseController {
     @RequestMapping(value = "/getStockOutRateByProduct.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getStockOutRateByProduct(@Param("year") Long year,
                                                                     @Param("schedule") Long schedule,
-                                                                     @Param("product") Long product,
-                                                                     @Param("program") Long program) {
-        return OpenLmisResponse.response("StockOutRateByProduct", this.stockOutRateMapper.getStockOutRateByProduct(year, schedule, product, program));
+                                                                     @Param("product") Long product) {
+        return OpenLmisResponse.response("StockOutRateByProduct", this.stockOutRateMapper.getStockOutRateByProduct(year, schedule, product));
     }
 
 }
