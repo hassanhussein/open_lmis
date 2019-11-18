@@ -3,12 +3,32 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
    $scope.year ='';
    $scope.productName ='';
 
+
+
     $rootScope.loadStockOutRate = function(params) {
+    console.log(params);
         StockStatusByLocationData.get(params).then(function(data) {
+
+           console.log($rootScope.stockIndicator);
+
             GetTzRegionMapData.get(params).then(function(regionMap) {
                 GetTzDistrictMapData.get(params).then(function(districtMap) {
                     var dataWithRegion = addRegionData(data);
-                    loadStockOutRateChart(regionMap, districtMap, computeMapData(dataWithRegion.region), params, data);
+
+
+
+                    if(params.indicator === 'Stock Availability By Location') {
+
+                    var prepareColors = ($rootScope.stockIndicator === 'overstockpercentage')?'#4bb1cf':($rootScope.stockIndicator==='stockoutpercentage')?'#dd514c':($rootScope.stockIndicator ==='adequatelystockpercentage')?'#5eb95e':($rootScope.stockIndicator === 'understockpercentage')?'#faa732':'gray';
+
+
+                    loadStockOutRateChart(regionMap, districtMap, computeMapData(dataWithRegion.region,$rootScope.stockIndicator), params, data, prepareColors);
+
+                   } else{
+
+                   loadStockOutRateChart(regionMap, districtMap, computeMapData(dataWithRegion.region, undefined), params, data);
+
+                   }
                 });
 
             });
@@ -93,7 +113,8 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
 
     }
 
-    function loadStockOutRateChart(map, districtMap, values, params, districtValues) {
+    function loadStockOutRateChart(map, districtMap, values, params, districtValues,colorSelection) {
+
         var data = Highcharts.geojson(map);
         $.each(data, function(i) {
             var key = this.properties['hc-key'];
@@ -181,7 +202,7 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
             colorAxis: {
                 min: 0,
                 minColor: '#E6E7E8',
-                maxColor: '#005645'
+                maxColor: (colorSelection === undefined)?'#005645':colorSelection
             },
             mapNavigation: {
                 enabled: true,
@@ -313,23 +334,38 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
             reg_arry.push(reg_obj);
         }
 
-        data.region = reg_arry;
+        console.log(reg_arry);
 
+        data.region = reg_arry;
 
         return data;
     }
 
-    function computeMapData(data) {
+    function computeMapData(data,indicator) {
         var data_arr = [];
+        var ind;
+        if(indicator === undefined) {
+        ind = 'stockoutpercentage';
+        } else {
+        ind = indicator;
+        }
+
         for (var x in data) {
             var obj = [];
             obj.push(data[x].region_name);
-            obj.push(data[x].stockoutpercentage);
+            obj.push(prepareValues(data,x,ind));
             data_arr.push(obj);
         }
+
+                console.log(data_arr);
         return data_arr;
     }
 
+    function prepareValues(data,x,ind){
+       var prepare = (ind === 'overstockpercentage')?data[x].overstockpercentage:(ind==='stockoutpercentage')?data[x].stockoutpercentage:(ind ==='adequatelystockpercentage')?data[x].adequatelystockpercentage:(ind === 'understockpercentage')?data[x].understockpercentage:data[x].unknownstockpercentage;
+
+       return prepare;
+    }
 
     function filterMap(map, region_name) {
 
@@ -357,10 +393,27 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
     //    }
 
     $scope.onSelected = function(option) {
-        if (option === 'Stock out rate') {
 
-        }
+
+    $scope.showStockStatus = false;
+
+     if(option === 'Stock Availability By Location') {
+
+     $scope.showStockStatus = true;
+
+     }
+
+      if (option === 'Stock out rate') {
+
+      }
     };
+
+      $scope.$watch('indicator.value', function(value) {
+
+        $rootScope.stockIndicator = value;
+
+      });
+
 
     $scope.onFilterChange = function(filter) {
         $rootScope.loadStockOutRate(filter);

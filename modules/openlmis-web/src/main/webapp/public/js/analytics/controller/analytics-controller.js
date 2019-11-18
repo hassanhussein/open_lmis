@@ -791,7 +791,13 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
     $scope.minimizePropagation = function(event, open) {
 
-        return 'dropdown-toggle';
+     if($rootScope.stockIndicator === undefined) {
+
+     $rootScope.stockIndicator  = 'so';
+
+     }
+
+     return 'dropdown-toggle';
 
         /*
          $("dropdown-toggle").click(function() {

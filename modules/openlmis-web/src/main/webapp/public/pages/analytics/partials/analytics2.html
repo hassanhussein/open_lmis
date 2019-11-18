@@ -1148,16 +1148,26 @@
                                                         </div>
                                                         <div class="col s6 pull-right">
 
-                                                            <div>
-                                                                <div class="custom-control custom-checkbox">
-                                                                    <input type="checkbox" class="custom-control-input" id="defaultUnchecked">
-                                                                    <label style="background-color:#dd514c;" class="custom-control-label" for="defaultUnchecked"><span>Stocked Out</span></label>
+                                                            <div ng-show="showStockStatus">
+                                                                <div class="custom-control custom-checkbox" style="background-color:#dd514c; color:white;width:200px!important">
+                                                                    <input type="radio" ng-model="indicator.value" value="stockoutpercentage" name="group1" ng-checked="true" class="custom-control-input" id="defaultUnchecked"/>
+                                                                    <label class="custom-control-label" for="defaultUnchecked"><span  style="color:white;">Stocked Out</span></label>
                                                                 </div>
-                                                            <!-- <div><span><input type="checkbox"/> </span><span style="background-color:#dd514c; width:200px">Stocked Out</span></div>
-                                                                <input type="radio"> <div style="background-color:#faa732;width:200px"><span><input type="checkbox"/></span><span>Under Stocked</span></div>
-                                                                <input type="radio"> <div style="background-color:#4bb1cf;width:200px"><span><input type="checkbox"/></span><span>Over Stocked</span></div>
-                                                                <div style="background-color:#5eb95e;width:200px"><span><input type="checkbox"/></span><span>Adequately Stocked</span></div>
--->
+
+                                                                <div class="custom-control custom-checkbox" style="background-color:#faa732; color:white;width:200px!important">
+                                                                    <input type="radio" ng-model="indicator.value" value="understockpercentage" name="group1" class="custom-control-input" id="defaultUnchecked2"/>
+                                                                    <label class="custom-control-label" for="defaultUnchecked2"><span  style="color:white;">Under Stocked</span></label>
+                                                                </div>
+
+                                                                <div class="custom-control custom-checkbox" style="background-color:#4bb1cf; color:white;width:200px!important">
+                                                                    <input type="radio" ng-model="indicator.value" value="overstockpercentage" name="group1" class="custom-control-input" id="defaultUnchecked3"/>
+                                                                    <label class="custom-control-label" for="defaultUnchecked3"><span  style="color:white;">Over Stocked</span></label>
+                                                                </div>
+
+                                                                <div class="custom-control custom-checkbox" style="background-color:#5eb95e; color:white;width:200px!important">
+                                                                    <input type="radio" ng-model="indicator.value" value="adequatelystockpercentage" name="group1" class="custom-control-input" id="defaultUnchecked4"/>
+                                                                    <label class="custom-control-label" for="defaultUnchecked4"><span  style="color:white;">Adequately Stocked</span></label>
+                                                                </div>
 
                                                             </div>
 
