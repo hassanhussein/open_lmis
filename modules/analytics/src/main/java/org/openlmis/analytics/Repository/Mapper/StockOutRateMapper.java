@@ -56,7 +56,6 @@ public interface  StockOutRateMapper {
             "  group by p.code, p.primaryname, a.processing_period_name, pp.id order by pp.id asc")
     List<HashMap<String,Object>> getStockOutRateByProduct(@Param("year") Long year,
                                                  @Param("schedule") Long schedule,
-                                                          @Param("product") Long product,
-                                                          @Param("program") Long program);
+                                                          @Param("product") Long product);
 
 }
