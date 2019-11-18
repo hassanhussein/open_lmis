@@ -1629,10 +1629,10 @@
                                 <div class="col s12 m12 l12">
                                     <div class="card" style="background-color:white">
                                         <div class="card-content" ng-controller="fundUtilizationController">
-                                            <div style="margin: 0 auto;height: 20px !important; color:white;text-align:center;font-style: italic;"><span>To be Added </span></div>
+                                            <div ng-show='false' style="margin: 0 auto;height: 20px !important; color:white;text-align:center;font-style: italic;"><span>To be Added </span></div>
 
-                                            <div ng-show='false' id="sourceOfFundsByZones" style="margin: 0 auto;height: 400px !important;"></div>
-                                            <div ng-show="false" class="card-action grey lighten-4">
+                                            <div ng-show='true' id="sourceOfFundsByZones" style="margin: 0 auto;height: 400px !important;"></div>
+                                            <div ng-show="true" class="card-action grey lighten-4">
                                                 <ng-include src='"/public/pages/analytics/partials/shared/custom-filter.html"'></ng-include>
                                             </div>
                                         </div>
