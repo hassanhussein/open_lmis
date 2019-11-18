@@ -57,5 +57,4 @@ public interface  StockOutRateMapper {
     List<HashMap<String,Object>> getStockOutRateByProduct(@Param("year") Long year,
                                                  @Param("schedule") Long schedule,
                                                           @Param("product") Long product);
-
 }
