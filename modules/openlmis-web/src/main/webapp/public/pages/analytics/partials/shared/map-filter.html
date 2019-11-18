@@ -5,11 +5,13 @@
              <div class="col s6">
                  <filter-container>
                      <div>
-                         <label for="drpProduct" class="labels" ><span openlmis-message="label.indicator"></span><span class="label-required">*</span></label><div>
+                         <label for="drpProduct" class="labels" ><span openlmis-message="label.indicator"></span><span class="label-required">*</span></label>
                          <select id="indicator" class="input-large" ng-model="filter.indicator" ng-change="onSelected(filter.indicator);">
                              <option  value="Stock Imbalance">Stock Imbalance</option>
                              <option  value="Commodities consumption">Commodities consumption</option>
                              <option  value="TLD vs TLE transition">TLD vs TLE transition</option>
+                             <option  value="Stock Availability By Location">Stock Availability By Location</option>
+
                          </select>
                      </div>
                      <program-without-select-filter class="form-cell horizontalFilters" required="true"></program-without-select-filter>
@@ -17,13 +19,15 @@
                     <year-without-select-filter class="form-cell horizontalFilters" required="true"></year-without-select-filter>
                          <period-without-select-filter class="form-cell horizontalFilters" required="true"></period-without-select-filter>
                          <product-without-select-filter class="form-cell horizontalFilters"></product-without-select-filter>
-     <button ng-class="minimizePropagation($event)" ng-click="onFilterChange(filter)">
-                                       Update Map
-                                   </button>
+     <button ng-class="minimizePropagation($event)" ng-click="onFilterChange(filter)">Update Map</button>
                  </filter-container>
 
              </div>
-             <div class="col s6"></div>
+             <div class="col s6">
+
+                 <span>label One</span>
+
+             </div>
          </div>
 
 

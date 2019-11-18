@@ -237,4 +237,8 @@ public class LookupService {
   public List<HashMap<String,Object>>getAllHFRFacilities(){
     return interfaceMapper.getAllHFRFacilities();
   }
+
+  public void refreshViewsBy(String view){
+    interfaceMapper.refreshViewsBy(view);
+  }
 }

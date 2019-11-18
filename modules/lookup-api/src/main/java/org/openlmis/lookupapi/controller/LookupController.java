@@ -351,4 +351,11 @@ public class LookupController {
         return RestResponse.response("facilities", lookupService.getAllHFRFacilities());
     }
 
+
+   @RequestMapping(value = "/rest-api/view/{view}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getRefreshView(@PathVariable("view") String view) {
+       lookupService.refreshViewsBy(view);
+        return RestResponse.response("views", "refreshed");
+    }
+
 }

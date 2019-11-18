@@ -58,4 +58,8 @@ public interface ILInterfaceMapper {
 
     @Select("select * from msd_stock_statuses where ilId=#{ilId} ")
     MSDStockDTO getByMSDILId(String ilId);
+
+
+    @Select("SELECT * FROM refresh_view_via_api(#{view}) ")
+    void refreshViewsBy(@Param("view") String view);
 }

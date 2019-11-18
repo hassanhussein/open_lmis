@@ -1117,7 +1117,56 @@
                                             <div> <div class="row">
                                                 <div id="stockOutRate" style="width:55%; margin-left:5%; float: left;; height: 400px !important;"></div>
                                                 <div class="col s4" >
+<!--
                                                     <ng-include src='"/public/pages/analytics/partials/shared/map-filter.html"'></ng-include>
+-->
+
+
+
+
+                                                    <div class="row" style="width: 490px">
+                                                        <div class="col s6">
+                                                            <filter-container>
+                                                                <div>
+                                                                    <label for="drpProduct" class="labels" ><span openlmis-message="label.indicator"></span><span class="label-required">*</span></label>
+                                                                    <select id="indicator" class="input-large" ng-model="filter.indicator" ng-change="onSelected(filter.indicator);">
+                                                                        <option  value="Stock Imbalance">Stock Imbalance</option>
+                                                                        <option  value="Commodities consumption">Commodities consumption</option>
+                                                                        <option  value="TLD vs TLE transition">TLD vs TLE transition</option>
+                                                                        <option  value="Stock Availability By Location">Stock Availability By Location</option>
+
+                                                                    </select>
+                                                                </div>
+                                                                <program-without-select-filter class="form-cell horizontalFilters" required="true"></program-without-select-filter>
+                                                                <schedule-without-select-filter class="form-cell horizontalFilters" required="true"></schedule-without-select-filter>
+                                                                <year-without-select-filter class="form-cell horizontalFilters" required="true"></year-without-select-filter>
+                                                                <period-without-select-filter class="form-cell horizontalFilters" required="true"></period-without-select-filter>
+                                                                <product-without-select-filter class="form-cell horizontalFilters"></product-without-select-filter>
+                                                                <button ng-class="minimizePropagation($event)" ng-click="onFilterChange(filter)">Update Map</button>
+                                                            </filter-container>
+
+                                                        </div>
+                                                        <div class="col s6 pull-right">
+
+                                                            <div>
+                                                                <div class="custom-control custom-checkbox">
+                                                                    <input type="checkbox" class="custom-control-input" id="defaultUnchecked">
+                                                                    <label style="background-color:#dd514c;" class="custom-control-label" for="defaultUnchecked"><span>Stocked Out</span></label>
+                                                                </div>
+                                                            <!-- <div><span><input type="checkbox"/> </span><span style="background-color:#dd514c; width:200px">Stocked Out</span></div>
+                                                                <input type="radio"> <div style="background-color:#faa732;width:200px"><span><input type="checkbox"/></span><span>Under Stocked</span></div>
+                                                                <input type="radio"> <div style="background-color:#4bb1cf;width:200px"><span><input type="checkbox"/></span><span>Over Stocked</span></div>
+                                                                <div style="background-color:#5eb95e;width:200px"><span><input type="checkbox"/></span><span>Adequately Stocked</span></div>
+-->
+
+                                                            </div>
+
+
+                                                        </div>
+                                                    </div>
+
+
+
                                                 </div>
                                             </div></div>
                                             <!--                                            <div id="stockOutRate" style="margin: 0 auto;height: 400px !important;"></div>-->
