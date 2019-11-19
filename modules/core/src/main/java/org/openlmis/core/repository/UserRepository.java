@@ -12,6 +12,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.UserRank;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.repository.mapper.UserMapper;
@@ -171,4 +172,25 @@ public class UserRepository {
     public List<User> getUserByHomeFacility(Long id) {
     return userMapper.getUserByHomeFacility(id);
     }
+
+    public Integer InserUserRank(UserRank userRank){
+
+    return  userMapper.insertUserRank(userRank);
+    }
+
+    public void updateUserRank(UserRank userRank){
+
+      userMapper.updateUserRank(userRank);
+    }
+
+    public List<UserRank>getAllUserRank() {
+      return userMapper.getAllRanks();
+    }
+
+    public UserRank getUserRankBy(String code) {
+      return userMapper.getUserRankBy(code);
+    }
+
+
+
 }

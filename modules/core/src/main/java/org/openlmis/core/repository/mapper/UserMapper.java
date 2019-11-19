@@ -15,6 +15,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.SupervisoryNode;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.dto.UserRank;
 import org.springframework.stereotype.Repository;
 
 import java.util.LinkedHashMap;
@@ -32,16 +33,16 @@ public interface UserMapper {
 
   @Insert({"INSERT INTO users",
     "(userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle,",
-          "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, createdBy, modifiedBy, modifiedDate,createdDate, verified, ismobileuser,receiveSupervisoryNotifications)",
+          "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, createdBy, modifiedBy, modifiedDate,createdDate, verified, ismobileuser,receiveSupervisoryNotifications,userRankId)",
     "VALUES",
     "(#{userName}, #{facilityId}, #{firstName}, #{lastName}, #{employeeId}, COALESCE(#{restrictLogin}, FALSE), #{jobTitle},",
     "#{primaryNotificationMethod}, #{officePhone}, #{cellPhone}, #{email}, #{supervisor.id}, ",
-          "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified}, #{isMobileUser}, #{receiveSupervisoryNotifications})"})
+          "#{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, NOW()),COALESCE(#{modifiedDate}, NOW()), #{verified}, #{isMobileUser}, #{receiveSupervisoryNotifications}, #{userRankId})"})
   @Options(useGeneratedKeys = true)
   Integer insert(User user);
 
   @Select(value = {"SELECT id, userName, facilityId, firstName, lastName, employeeId, restrictLogin, jobTitle, ",
-          "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, verified, active, modifiedDate, ismobileuser, receiveSupervisoryNotifications",
+          "primaryNotificationMethod, officePhone, cellPhone, email, supervisorId, verified, active, modifiedDate, ismobileuser, receiveSupervisoryNotifications,userRankId",
     " FROM users where LOWER(userName) = LOWER(#{userName}) AND active = TRUE"})
   @Results(
     @Result(property = "supervisor.id", column = "supervisorId")
@@ -63,13 +64,13 @@ public interface UserMapper {
   @Update("UPDATE users SET userName = #{userName}, firstName = #{firstName}, lastName = #{lastName}, " +
     "employeeId = #{employeeId},restrictLogin = #{restrictLogin}, facilityId=#{facilityId}, jobTitle = #{jobTitle}, " +
     "primaryNotificationMethod = #{primaryNotificationMethod}, officePhone = #{officePhone}, cellPhone = #{cellPhone}, " +
-    "email = #{email}, active = #{active}, " +
+    "email = #{email}, active = #{active}, userRankId = #{userRankId}, " +
           "verified = #{verified}, ismobileuser = #{isMobileUser}, receiveSupervisoryNotifications = #{receiveSupervisoryNotifications}, " +
     "modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(User user);
 
   @Select("SELECT id, userName, firstName, lastName, employeeId, restrictLogin, facilityId, jobTitle, officePhone, " +
-          "primaryNotificationMethod, cellPhone, email, verified, active, ismobileuser, receiveSupervisoryNotifications FROM users WHERE id=#{id}")
+          "primaryNotificationMethod, cellPhone, email, verified, active, ismobileuser, receiveSupervisoryNotifications, userRankId FROM users WHERE id=#{id}")
   User getById(Long id);
 
   @Insert("INSERT INTO user_password_reset_tokens (userId, token) VALUES (#{user.id}, #{token})")
@@ -146,4 +147,18 @@ public interface UserMapper {
 
     @Select("SELECT * FROM users where active = true and email is not null and facilityId = #{id}")
     List<User> getUserByHomeFacility(@Param("id") Long id);
+
+    @Insert("insert into user_ranks(name, code, displayOrder) Values (#{name}, #{code}, #{displayOrder})")
+    @Options(useGeneratedKeys = true)
+    Integer insertUserRank(UserRank rank);
+
+    @Update("update user_ranks set name =#{name}, code=#{code} where id = #{id}")
+    void updateUserRank(UserRank userRank);
+
+    @Select("SELECT * FROM USER_RANKS")
+    List<UserRank>getAllRanks();
+
+    @Select("SELECT * FROM user_ranks WHERE lower(code) = lower(#{code})")
+    UserRank getUserRankBy(@Param("code") String code);
+
 }

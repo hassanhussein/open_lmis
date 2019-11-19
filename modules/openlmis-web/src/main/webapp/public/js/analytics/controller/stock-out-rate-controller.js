@@ -13,8 +13,6 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
 
             $http.get('/public/js/reports/shared/tz-reg.json').success(function(regionMap) {
 
-
-
                 $http.get('/public/js/reports/shared/tz-district.json').success(function(districtMap) {
                                console.log(districtMap);
                     var dataWithRegion = addRegionData(data);

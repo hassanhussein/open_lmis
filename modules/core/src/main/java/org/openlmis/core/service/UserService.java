@@ -13,6 +13,7 @@ package org.openlmis.core.service;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.UserRank;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
 import org.openlmis.core.repository.UserRepository;
@@ -243,4 +244,24 @@ public class UserService {
   public List<User> getUsersByHomeFacility(Long id) {
     return userRepository.getUserByHomeFacility(id);
   }
+
+  public void saveUserRank(UserRank userRank){
+
+    if(userRank.getId() == null){
+      userRepository.InserUserRank(userRank);
+    } else {
+
+      userRepository.updateUserRank(userRank);
+    }
+
+  }
+
+  public List<UserRank>getAllUserRank() {
+    return userRepository.getAllUserRank();
+  }
+
+  public UserRank getUserRankBy(UserRank rank) {
+    return userRepository.getUserRankBy(rank.getCode());
+  }
+
 }

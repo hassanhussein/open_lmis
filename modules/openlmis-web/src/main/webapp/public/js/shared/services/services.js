@@ -590,3 +590,7 @@ services.factory('DisableFacilityTypeApprovedProducts', function ($resource) {
 services.factory('RejectRequisitionReason', function ($resource) {
     return $resource('/requisitions/reject-reasons.json', {}, {});
 });
+
+services.factory('GetUserRank', function ($resource) {
+    return $resource('/users/user-ranks.json', {}, {});
+});

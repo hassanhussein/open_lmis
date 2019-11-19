@@ -204,6 +204,26 @@
            href="" class="clear-search" ng-click="confirmFacilityDelete()"></a>
       </div>
     </div>
+
+
+    <div class="form-cell">
+      <label id="levelLabel">
+        <span>Rank</span>
+      </label>
+
+      <div class="form-field">
+        <select id="userRank" name="userRank" ng-model="user.userRankId"
+                ng-options="rank.id as rank.name for rank in userRanks"
+
+                ng-disabled="editMode">
+          <option value=""></option>
+        </select>
+        <span class="field-error" ng-show="!userRankId && showError"
+              openlmis-message="select.value"></span>
+      </div>
+    </div>
+
+
   </div>
 
   <div class="position-relative">

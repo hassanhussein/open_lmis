@@ -285,4 +285,10 @@ public class UserController extends BaseController {
     return response("facilities", facilityService.getUserSupervisedFacilities(loggedInUserId(request), programId,
         RightName.CREATE_IVD, RightName.VIEW_IVD, RightName.APPROVE_IVD, RightName.CREATE_REQUISITION, RightName.VIEW_REQUISITION, RightName.APPROVE_REQUISITION ));
   }
+
+
+  @RequestMapping(value = "/users/user-ranks.json", method= GET)
+  public ResponseEntity<OpenLmisResponse> getUserRanks(HttpServletRequest request){
+    return response("ranks", userService.getAllUserRank());
+  }
 }

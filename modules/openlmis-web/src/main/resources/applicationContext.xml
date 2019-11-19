@@ -461,6 +461,16 @@
                     </bean>
                 </entry>
 
+                <entry key="user-ranks">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="User Ranks"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.UserRank</value>
+                        </property>
+                        <property name="recordHandler" ref="userRanckPersistanceHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>

@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses, $timeout, UpdatePassword) {
+function UserController($scope,UserRanks, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses, $timeout, UpdatePassword) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -19,6 +19,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   $scope.$parent.userId = null;
   $scope.message = "";
   $scope.$parent.message = "";
+  $scope.userRanks = UserRanks;
+  console.log( $scope.user);
+
 
   var originalUser = $.extend(true, {}, user);
 
@@ -89,6 +92,9 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $scope.saveUser = function () {
+
+  console.log($scope.user);
+
     var successHandler = function (msgKey) {
       $scope.showError = false;
       $scope.error = "";
@@ -389,6 +395,20 @@ UserController.resolve = {
     $timeout(function () {
       EnabledWarehouse.get({}, function (data) {
         deferred.resolve(data.enabledWarehouses);
+      }, function () {
+      });
+    }, 100);
+
+    return deferred.promise;
+  },
+
+
+   UserRanks: function ($q, GetUserRank, $timeout) {
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      GetUserRank.get({}, function (data) {
+        deferred.resolve(data.ranks);
       }, function () {
       });
     }, 100);
