@@ -1,4 +1,4 @@
-function StockOutRateController($scope, $location, Program, Period, $rootScope, StockOutRateData, StockStatusByLocationData, GetTzDistrictMapData, GetTzRegionMapData, GetStockOutRateByProductData,GetProductById) {
+function StockOutRateController($scope, $http,$location, Program, Period, $rootScope, StockOutRateData, StockStatusByLocationData, GetTzDistrictMapData, GetTzRegionMapData, GetStockOutRateByProductData,GetProductById) {
 
    $scope.year ='';
    $scope.productName ='';
@@ -11,8 +11,12 @@ function StockOutRateController($scope, $location, Program, Period, $rootScope, 
 
            console.log($rootScope.stockIndicator);
 
-            GetTzRegionMapData.get(params).then(function(regionMap) {
-                GetTzDistrictMapData.get(params).then(function(districtMap) {
+            $http.get('/public/js/reports/shared/tz-reg.json').success(function(regionMap) {
+
+
+
+                $http.get('/public/js/reports/shared/tz-district.json').success(function(districtMap) {
+                               console.log(districtMap);
                     var dataWithRegion = addRegionData(data);
 
 
