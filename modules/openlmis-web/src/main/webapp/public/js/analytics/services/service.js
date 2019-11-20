@@ -903,7 +903,7 @@ services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutR
 });
 
 services.factory('GetTzDistrictMap', function ($resource) {
-    return $resource('/public/js/reports/shared/tz-district.json', {}, {});
+    return $resource('/api/dashboard/tz-district.json', {}, {});
 });
 
 
@@ -929,7 +929,7 @@ services.factory('GetTzDistrictMap', function ($resource) {
 
 
 services.factory('GetTzRegionMap', function ($resource) {
-    return $resource('/public/js/reports/shared/tz-reg.json', {}, {});
+    return $resource('/api/dashboard/tz-reg.json', {}, {});
 });
 
 

@@ -1,5 +1,6 @@
 package org.openlmis.analytics.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.annotations.Param;
 import org.openlmis.analytics.Repository.Mapper.*;
@@ -7,12 +8,20 @@ import org.openlmis.analytics.service.DashboardService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -313,6 +322,30 @@ public class AnalyticsController extends BaseController {
                                                                     @Param("schedule") Long schedule,
                                                                      @Param("product") Long product) {
         return OpenLmisResponse.response("StockOutRateByProduct", this.stockOutRateMapper.getStockOutRateByProduct(year, schedule, product));
+    }
+
+    @RequestMapping(value = "/tz-reg.json", method = GET, headers = ACCEPT_JSON)
+    public @ResponseBody Object getRegionMapJSON() {
+        ClassPathResource resource = new ClassPathResource("/static/tz-reg.json");
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(resource.getInputStream(), Object.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/tz-district.json", method = GET, headers = ACCEPT_JSON)
+    public @ResponseBody Object getDistrictMapJSON() {
+        ClassPathResource resource = new ClassPathResource("/static/tz-district.json");
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(resource.getInputStream(), Object.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
