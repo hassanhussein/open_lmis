@@ -431,6 +431,16 @@
                         <property name="recordHandler" ref="lotPersistenceHandler"/>
                     </bean>
                 </entry>
+
+                <entry key="elmis-zone">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Zone Location"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.vaccine.domain.wms.Zone</value>
+                        </property>
+                        <property name="recordHandler" ref="zonePercistanceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
