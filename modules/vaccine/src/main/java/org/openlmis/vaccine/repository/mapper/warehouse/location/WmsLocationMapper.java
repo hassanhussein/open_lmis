@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface LocationMapper {
+public interface WmsLocationMapper {
 
     @Insert("INSERT INTO public.wms_locations(\n" +
             "            wareHouseId, code, active, createdBy, createddate, modifiedBy, \n" +

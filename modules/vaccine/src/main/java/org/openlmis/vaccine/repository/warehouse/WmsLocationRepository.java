@@ -1,16 +1,16 @@
 package org.openlmis.vaccine.repository.warehouse;
 
 import org.openlmis.vaccine.domain.wms.Location;
-import org.openlmis.vaccine.repository.mapper.warehouse.location.LocationMapper;
+import org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class LocationRepository {
+public class WmsLocationRepository {
     @Autowired
-    private LocationMapper mapper;
+    private WmsLocationMapper mapper;
 
     public Integer insert(Location location) {
        return mapper.insert(location);

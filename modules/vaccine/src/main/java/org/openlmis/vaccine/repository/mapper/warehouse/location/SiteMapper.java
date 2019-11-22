@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.repository.mapper.warehouse.location;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.vaccine.domain.wms.Site;
 import org.springframework.stereotype.Repository;
 
@@ -22,13 +23,17 @@ public interface SiteMapper {
          " WHERE id= #{id};\n ")
  void update(Site site);
 
- @Select(" SELECT * FROM public.wms_sites where regionId= #{regionId}")
+ @Select("SELECT * FROM public.wms_sites where regionId= #{regionId}")
+ @Results(value = {
+         @Result(property = "region", column = "regionId", javaType = GeographicZone.class,
+                 one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
+ })
  List<Site> getAllBy(@Param("regionId") Long regionId);
 
  @Select("SELECT * FROM public.wms_sites where id = #{id}")
  @Results(value = {
-         @Result(property = "region", column = "regionId", javaType = Long.class,
-                 one = @One(select = " org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
+         @Result(property = "region", column = "regionId", javaType = GeographicZone.class,
+                 one = @One(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById"))
  })
  Site getAllById(@Param("id") Long id);
 

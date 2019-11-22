@@ -55,7 +55,7 @@ CREATE TABLE WMS_ZONES (
 ID SERIAL,
 code character varying(100) NOT NULL,
 name character varying(100) NOT NULL,
-description character varying(100) NOT NULL,
+description character varying(100),
 createdby integer,
 createddate timestamp without time zone DEFAULT now(),
 modifiedby integer,
