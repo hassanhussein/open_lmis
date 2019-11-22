@@ -13,6 +13,7 @@ angular.module('wms', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/list', {controller:WarehouseManagementController, templateUrl:'partials/list.html',reloadOnSearch:false}).
+            when('/create', {controller:WarehouseManagementController, templateUrl:'partials/create.html'}).
             otherwise({redirectTo:'/list'});
     }]).config(function(angularCombineConfigProvider) {
         angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
