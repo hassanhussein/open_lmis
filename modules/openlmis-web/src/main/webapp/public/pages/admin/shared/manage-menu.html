@@ -50,8 +50,13 @@
       <a id="productTab" href="/public/pages/admin/product/index.html"
          openlmis-message="header.products"></a>
     </li>
-    <li ng-show="hasPermission('MANAGE_LOCATION')" ng-class="locationSelected">
+  <!--  <li ng-show="hasPermission('MANAGE_LOCATION')" ng-class="locationSelected">
       <a id="locationTab" href="/public/pages/admin/location/index.html"
+         openlmis-message="header.locations"></a>
+    </li>
+-->
+    <li ng-show="hasPermission('MANAGE_LOCATION')" ng-class="locationSelected">
+      <a id="locationTab" href="/public/pages/admin/ware-house/index.html"
          openlmis-message="header.locations"></a>
     </li>
   </ul>
