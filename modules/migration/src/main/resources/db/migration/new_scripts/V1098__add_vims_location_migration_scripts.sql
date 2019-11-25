@@ -1,4 +1,4 @@
-// wms_sites
+--// wms_sites
 
 DROP TABLE IF EXISTS wms_sites;
 
@@ -24,7 +24,7 @@ CONSTRAINT wms_sites_region_fkey FOREIGN KEY (regionId)
 
 
 
-//Warehouse
+--//Warehouse
 
 DROP TABLE IF EXISTS wms_warehouses;
 
@@ -48,7 +48,7 @@ CONSTRAINT wms_sites_warehouses_fkey FOREIGN KEY (siteId)
 
 );
 
-//Zones
+--//Zones
 
 DROP TABLE IF EXISTS WMS_ZONES;
 CREATE TABLE WMS_ZONES (
@@ -66,7 +66,7 @@ CONSTRAINT WMS_ZONES_UNIQUE_KEY UNIQUE(code)
 );
 
 
-//Line Items
+--//Line Items
 
 
 DROP TABLE IF EXISTS wms_warehouse_line_items;
