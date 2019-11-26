@@ -77,43 +77,43 @@ var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','l
                                                    return len;
                                                }
                                                $element.bind('keypress', function(event){
-                                               	var charCode = (event.which) ? event.which : event.keyCode;
-                                               	var elem=document.getElementById($element.attr("id"));
-                                               	if (charCode == 45){
-                                                       var caretPosition=caret(elem);
-                                                       if(caretPosition==0){
-                                                       	if($element.val().charAt(0)!="-" ){
-                                                       		if($element.val() <=limit){
+                                                    var charCode=(event.which)?event.which:event.keyCode;
+                                                    var elem=document.getElementById($element.attr("id"));
+                                                    if (charCode === 45){
+                                                        var caretPosition=caret(elem);
+                                                            if(caretPosition===0){
+                                                        if($element.val().charAt(0)!="-" ){
+                                                        if($element.val() <=limit){
                                                                    $element.val("-"+$element.val());
                                                                }
                                                            }
                                                            if($element.val().indexOf("-")!=-1){
-                                                           	event.preventDefault();
+                                                            event.preventDefault();
                                                                return false;
                                                            }
                                                        }
                                                        else{
-                                                       	event.preventDefault();
+                                                        event.preventDefault();
                                                        }
                                                    }
-                                                   if (charCode == 46){
+                                                   if (charCode === 46){
                                                        if($element.val().length>limit-1){
-                                                       	event.preventDefault();
-                                                       	return false;
+                                                        event.preventDefault();
+                                                            return false;
                                                        }
                                                        if ($element.val().indexOf('.') !=-1){
-                                                       	event.preventDefault();
+                                                        event.preventDefault();
                                                            return false;
                                                        }
                                                        return true;
                                                    }
                                                    if (charCode != 45 && charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)){
-                                                   	event.preventDefault();
+                                                    event.preventDefault();
                                                        return false;
                                                    }
                                                    if($element.val().length>limit-1){
-                                                   	event.preventDefault();
-                                                   	return false;
+                                                    event.preventDefault();
+                                                    return false;
                                                    }
                                                    return true;
                                                });

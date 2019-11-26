@@ -36,8 +36,7 @@ $scope.regions=_.where(geoZone,{"levelId":3});
 
   $scope.save = function () {
     if ($scope.siteForm.$error.pattern || $scope.siteForm.$error.required) {
-    console.log($scope.siteForm)
-    console.log($scope.siteForm.name.$error.required)
+
       $scope.showError = true;
       $scope.error = 'form.error';
       $scope.message = "";
@@ -69,7 +68,7 @@ $scope.regions=_.where(geoZone,{"levelId":3});
       Sites.update({id: $scope.site.id}, $scope.site, success, error);
     }
     else {
-    console.log($scope.site)
+
       Sites.save({}, $scope.site, success, error);
     }
   };
