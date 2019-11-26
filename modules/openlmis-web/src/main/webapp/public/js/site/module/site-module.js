@@ -8,14 +8,14 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-var locationModule = angular.module('wms', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
+var siteModule = angular.module('site', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-         when('/search', {controller: WarehouseManagementController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
-          when('/create-location', {controller: WarehouseManagementController, templateUrl: 'partials/create.html', resolve: WarehouseManagementController.resolve}).
-          when('/edit/:id', {controller: WarehouseManagementController, templateUrl: 'partials/create.html', resolve: WarehouseManagementController.resolve}).
+          when('/search', {controller: SiteSearchController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
+          when('/create-site', {controller: SiteController, templateUrl: 'partials/create.html', resolve: SiteController.resolve}).
+          when('/edit/:id', {controller: SiteController, templateUrl: 'partials/create.html', resolve: SiteController.resolve}).
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
-      $rootScope.locationSelected = "selected";
-      //AuthorizationService.preAuthorize('MANAGE_LOCATION');
+      $rootScope.siteSelected = "selected";
+//      AuthorizationService.preAuthorize('MANAGE_LOCATION');
     });

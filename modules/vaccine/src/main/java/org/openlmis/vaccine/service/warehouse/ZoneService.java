@@ -1,6 +1,5 @@
 package org.openlmis.vaccine.service.warehouse;
 
-import org.openlmis.core.domain.BaseModel;
 import org.openlmis.vaccine.domain.wms.Zone;
 import org.openlmis.vaccine.repository.warehouse.ZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,22 @@
---// wms_sites
-
+DROP TABLE IF EXISTS wms_warehouse_line_items;
+DROP TABLE if exists wms_locations;
+DROP TABLE IF EXISTS wms_warehouses;
+DROP TABLE IF EXISTS wms_zones;
 DROP TABLE IF EXISTS wms_sites;
+
+CREATE TABLE WMS_ZONES (
+ID SERIAL,
+code character varying(100) NOT NULL,
+name character varying(100) NOT NULL,
+description character varying(100),
+createdby integer,
+createddate timestamp without time zone DEFAULT now(),
+modifiedby integer,
+modifieddate timestamp without time zone DEFAULT now(),
+CONSTRAINT WMS_ZONES_PKEY PRIMARY KEY(id),
+CONSTRAINT WMS_ZONES_UNIQUE_KEY UNIQUE(code)
+
+);
 
 CREATE TABLE wms_sites (
 
@@ -22,12 +38,6 @@ CONSTRAINT wms_sites_region_fkey FOREIGN KEY (regionId)
 
 );
 
-
-
---//Warehouse
-
-DROP TABLE IF EXISTS wms_warehouses;
-
 CREATE TABLE wms_warehouses (
 
 ID SERIAL,
@@ -47,29 +57,6 @@ CONSTRAINT wms_sites_warehouses_fkey FOREIGN KEY (siteId)
       ON UPDATE NO ACTION ON DELETE NO ACTION
 
 );
-
---//Zones
-
-DROP TABLE IF EXISTS WMS_ZONES;
-CREATE TABLE WMS_ZONES (
-ID SERIAL,
-code character varying(100) NOT NULL,
-name character varying(100) NOT NULL,
-description character varying(100),
-createdby integer,
-createddate timestamp without time zone DEFAULT now(),
-modifiedby integer,
-modifieddate timestamp without time zone DEFAULT now(),
-CONSTRAINT WMS_ZONES_PKEY PRIMARY KEY(id),
-CONSTRAINT WMS_ZONES_UNIQUE_KEY UNIQUE(code)
-
-);
-
-
---//Line Items
-
-
-DROP TABLE IF EXISTS wms_warehouse_line_items;
 
 CREATE TABLE wms_warehouse_line_items (
 
@@ -97,8 +84,6 @@ CONSTRAINT wms_warehouses_lineItem_fkey FOREIGN KEY (warehouseId)
 );
 
 
-DROP TABLE if exists wms_locations;
-
 CREATE TABLE public.wms_locations
 (
   id serial,
@@ -115,6 +100,15 @@ CREATE TABLE public.wms_locations
       REFERENCES public.wms_warehouses (id) MATCH SIMPLE
       ON UPDATE NO ACTION ON DELETE NO ACTION
 );
+
+
+
+
+
+
+
+
+
 
 
 

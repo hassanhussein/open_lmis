@@ -560,6 +560,8 @@ services.factory("LocationsLookup", function ($resource) {
 services.factory("Preadvice", function ($resource) {
     return $resource('/rest-api/warehouse/asn/:id.json', {id: '@id'}, update);
 });
+
+
 services.factory("PreadviceTemplate", function ($resource) {
     return $resource('/rest-api/warehouse/asn/template.json', {}, {});
 });
@@ -668,3 +670,7 @@ services.factory("DeleteDocument", function ($resource) {
  services.factory("GetAllCurrencies", function ($resource) {
      return $resource('/rest-api/warehouse/asn/all-currencies.json', {}, {});
  });
+
+services.factory("Sites", function ($resource) {
+    return $resource('/rest-api/warehouse/site/:id.json', {id: '@id'}, update);
+});

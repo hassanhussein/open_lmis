@@ -10,6 +10,7 @@
 
 function GeoZoneController($scope, geoLevels, geoZone, GeographicZonesAboveLevel, $location, GeographicZones) {
   $scope.levels = geoLevels;
+  console.log($scope.levels);
   $scope.geoZone = geoZone;
   $scope.$parent.message = "";
 
