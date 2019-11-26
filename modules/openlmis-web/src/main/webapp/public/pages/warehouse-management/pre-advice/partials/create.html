@@ -245,7 +245,7 @@
                                                 <input type="text" numeric-validator="positiveInteger" ng-disabled="viewMode" ng-model="product.quantity">
                                             </td>
                                             <td class="col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="viewMode" ng-model="product.unitPrice">
+                                                <input type="text" ng-decimal="2" ng-disabled="viewMode" ng-model="product.unitPrice">
                                             </td>
                                             <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
 
@@ -345,7 +345,7 @@
                                                 <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info || viewMode" ng-model="product.lots[0].quantity" style="width:99px">
                                             </td>
                                             <td rowspan="{{product.lots.length}}" class="cell-input col-general" style="padding-left:1px;">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity || viewMode" style="width:99px">
+                                                <input type="text" ng-decimal="5"  ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity || viewMode" style="width:99px">
                                             </td>
 
                                             <td rowspan="{{product.lots.length}}" class="cell-general" style="padding-left:15px; text-align:right;" >{{totalCostPerProduct(product) | number}}</td>
