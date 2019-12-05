@@ -36,7 +36,7 @@ JOIN vw_districts gz ON gz.district_id = f.geographiczoneid
 JOIN program_products pgp ON r.programid = pgp.programid AND p.id = pgp.productid
 JOIN facility_approved_products fap ON ft.id = fap.facilitytypeid AND fap.programproductid = pgp.id
 where rli.skipped=false and r.status='RELEASED'
-WITH DATA;
+WITH NO DATA;
 
 CREATE INDEX mv_productcode_index
   ON public.mv_commodities_details
