@@ -1,4 +1,6 @@
 function InspectionSearchController($scope,navigateBackService, $dialog,$location){
+$scope.problem=true;
+
 
   $scope.inspectionListFromServer=[
   {
@@ -7,9 +9,12 @@ function InspectionSearchController($scope,navigateBackService, $dialog,$locatio
       "limit": 10,
       "page": 1,
       "numberOfPages": 1,
-      "totalRecords": 2
+      "totalRecords": 1
     },
+  inspectionDate:'2019-12-3',
   asnNumber:'asn1',
+  supplierId:1,
+  portId:1,
   asnDate:'2019-10-10',
   receiptDate:'2019-10-10',
   receiptNumber:'rec1',
@@ -19,26 +24,33 @@ function InspectionSearchController($scope,navigateBackService, $dialog,$locatio
   blNumber:'blnumber',
   destionationPort:'Dar Es Salaam',
   vesselNumber:'6878789',
-  eta:'',
-  ata:'',
+  eta:'2019-02-10',
+  ata:'2019-02-10',
   shippingAgent:'Agent A',
   clearingAgent:'MSD',
   note:'This is a note',
+
   supplier:{
     id:1,
     name:'UNICEF'
     },
-  descriptionOfProcument:'This is the Description',
+  descriptionOfProcurement:'This is the Description',
   isVaccine:true,
   product:{
   name:'BCG',
-  oum:'Doses',
+  oum:'Vials',
+  shippedQty:1000,
+  countedQty:0,
+  passedQty:0,
+  failedQty:0,
   lots:[{
   code:'TT454',
+  quantity:343,
   expiryDate:'2019-10-1',
   },
   {
     code:'YY454',
+    quantity:343,
     expiryDate:'2019-10-11',
     }
 
@@ -52,9 +64,7 @@ function InspectionSearchController($scope,navigateBackService, $dialog,$locatio
 
 $scope.searchOptions = [
   {value: "asnNumber", name: "ASN Number"},
-    {value: "asnDate", name: "ASN DATE"},
      {value: "receiptNumber", name: "Receipt Number"},
-        {value: "receiptDate", name: "Receipt DATE"},
   ];
 
 
