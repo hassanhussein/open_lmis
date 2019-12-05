@@ -1092,5 +1092,18 @@ public class RequisitionService {
 
   }
 
+  public HashMap<String,Object>  runDataHealthCheck(Long rnrID){
+    Rnr rnr = getFullRequisitionById(rnrID);
+    HashMap<String,Object> content = new HashMap<>();
+    for( RnrLineItem item : rnr.getNonSkippedLineItems())
+    {
+      List<HashMap<String,Object>>   status =  requisitionRepository.runDataHealthCheckRules(rnr.getFacility().getId(),rnrID,item.getId(),item.getProductCode(),rnr.getProgram().getId(), item.getSkipped());
+
+      content.put(item.getProductCode(), status);
+    }
+    return content;
+
+  }
+
 }
 

@@ -37,6 +37,10 @@
             <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/view-requisitions"
                openlmis-message="link.requisition.view"></a>
           </li>
+            <li ng-show="hasPermission('VIEW_REQUISITION')">
+                <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/data-health-check"
+                   openlmis-message="link.requisition.health.check"></a>
+            </li>
           <li class="beak"></li>
         </ul>
       </div>
@@ -583,7 +587,6 @@ vertical-align: top !important;">
       <li>
           <a href="/public/pages/customer-support-desk/index.html#/main-desk" openlmis-message="link.support"></a>
       </li>
-
   </ul>
 </div>
 <div class="navigation-locale-bar">

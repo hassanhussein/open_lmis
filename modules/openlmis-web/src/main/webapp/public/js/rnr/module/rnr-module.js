@@ -17,7 +17,9 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
     when('/view-requisitions', {controller: ViewRnrListController, templateUrl: 'partials/view/index.html', resolve: ViewRnrListController.resolve}).
     when('/rnr-for-approval/:rnr/:program', {controller: ApproveRnrController, templateUrl: 'partials/approve/approve.html', resolve: ApproveRnrController.resolve, reloadOnSearch: false}).
     when('/requisition/:rnr/:program', {controller: ViewRnrController, templateUrl: 'partials/view/view.html', resolve: ViewRnrController.resolve, reloadOnSearch: false}).
+    when('/requisition-data-health-check/:rnr/:program', {controller: RnrHealthCheckController, templateUrl: 'partials/data-health-check/view.html', resolve: RnrHealthCheckController.resolve, reloadOnSearch: false}).
     when('/view-requisition-via/:rnr/:program', {controller: ViewRnrViaDetailController, templateUrl: 'partials/view/rnr-via-view.html', reloadOnSearch: false}).
     when('/view-requisition-mmia/:rnr/:program', {controller: ViewRnrMmiaController, templateUrl: 'partials/view/rnr-mmia-view.html', reloadOnSearch: false}).
+    when('/data-health-check', {controller: SearchRnrListController, templateUrl: 'partials/data-health-check/index.html', resolve: SearchRnrListController.resolve}).
     otherwise({redirectTo: '/init-rnr'});
 }]);

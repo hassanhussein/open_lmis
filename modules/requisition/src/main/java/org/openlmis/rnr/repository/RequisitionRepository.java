@@ -95,7 +95,8 @@ public class RequisitionRepository {
     @Autowired
     private PatientLineItemMapper patientLineItemMapper;
 
-
+@Autowired
+private DataHealthCheckMapper dataHealthCheckMapper;
 
 
     public void insert(Rnr requisition) {
@@ -617,5 +618,9 @@ public class RequisitionRepository {
 
     public List <RejectionReasonCategoryDTO> getRejectionByCategory(){
         return rejectionReasonMapper.getRejectionByCategory();
+    }
+
+    public List<HashMap<String,Object>>   runDataHealthCheckRules(Long facilityId, Long rnrId, Long lineItemId, String productCode, Long programId, boolean skipped){
+        return dataHealthCheckMapper.runDataHealthCheck(facilityId.intValue(),rnrId.intValue(), lineItemId.intValue() , productCode, programId.intValue(), skipped );
     }
 }

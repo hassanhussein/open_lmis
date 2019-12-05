@@ -1,0 +1,162 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~  
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+  -->
+
+<div ng-controller="ViewFullSupplyController">
+    <div>
+        <table class="table table-bordered" style="width: 40%">
+            <thead>
+            <tr>
+                <th>Rule</th>
+                <th>No of items failed</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="(key, value) in summary">
+                <td>{{key}}</td>
+                <td>{{value}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div ng-hide="page.fullSupply.length" class="alert alert-info" openlmis-message="label.no.products"></div>
+    <div id="viewRnr" ng-show="page.fullSupply.length" class="rnr-table rnr-approval" adjust-height>
+        <div class="float-left left-table parent">
+
+            <table id="fullSupplyFrozenTable" class="table table-bordered" fixed-table-header>
+                <thead>
+                <tr>
+                    <th class="col-skipped"  ng-bind="status">Status</th>
+                    <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.fixed" ng-bind="column.label"></th>
+                </tr>
+                </thead>
+
+                <tbody ng-repeat="rnrLineItem in page.fullSupply">
+                <tr>
+<!--                    <td class="cell-input"  ng-bind="status">Status</td>-->
+                    <td id="category_{{$index}}" class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length + 1}}" ng-show="showCategory($index)" ng-bind="rnrLineItem.productCategory"></td>
+                </tr>
+                <tr>
+
+                        <td  ng-show="showHealthCheckStatus"  class="cell-input col-{{ column.name }}"  ng-style="{'background-color': !checkHealthStatus(rnrLineItem.productCode)? '#e55039' : '#00b894'}">
+                            <span>
+                                <div ng-click="viewinformation(rnrLineItem.productCode, rnrLineItem.product )" class="ngCellText checked"><i  ng-class="{'icon-ok': checkHealthStatus(rnrLineItem.productCode), 'icon-info': !checkHealthStatus(rnrLineItem.productCode)}"></i></div>
+                            </span>
+                        </td>
+                        <td ng-show="!showHealthCheckStatus" class="cell-input col-{{ column.name }}"  style="background-color : null;">
+                    </td>
+
+                    <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+                            <span ng-switch on="column.name">
+              <span ng-switch-when="skipped">
+                <input ng-model="rnrLineItem[column.name]" id="skip_{{$parent.$parent.$index}}"
+                       ng-disabled="true" type="checkbox">
+              </span>
+                            <span ng-switch-default ng-bind="rnrLineItem[column.name]" id="{{getId(column.name, $parent)}}" class="cell-text"></span>
+                            </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="float-left right-table parent" custom-horizontal-scroll>
+            <table id="fullSupplyTable" fixed-table-header class="table table-bordered scrollable">
+                <thead>
+                <tr>
+                    <th class="col-{{column.name}}" ng-repeat="column in visibleColumns.fullSupply.scrollable" ng-bind="(column.label)"></th>
+                </tr>
+                </thead>
+                <tbody ng-repeat="rnrLineItem in page.fullSupply">
+                <tr>
+                    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length}}" ng-show="showCategory($index)"></td>
+                </tr>
+                <tr>
+                    <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.scrollable">
+                            <span ng-switch on="column.name">
+              <span ng-switch-when="lossesAndAdjustments">
+                <div>
+                    <a href="" ng-click="showLossesAndAdjustments(rnrLineItem)" class="rnr-adjustment">
+                        <span ng-bind="(rnrLineItem.totalLossesAndAdjustments)" class="adjustment-value"></span>
+                            </a>
+        </div>
+        </span>
+
+        <span ng-switch-when="price">
+                <span ng-bind="(rnrLineItem[column.name] | currency:currency)" id="{{getId(column.name, $parent)}}"
+
+                      class="cell-text"></span>
+        </span>
+
+        <span ng-switch-when="cost">
+                <span ng-bind='rnrLineItem[column.name] | currency:currency' id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
+        </span>
+        <span ng-switch-when="remarks">
+                <span ng-bind='rnrLineItem[column.name]' id="{{getId(column.name, $parent)}}"
+                      class="cell-text"></span>
+        </span>
+
+        <span ng-switch-default id="{{getId(column.name, $parent)}}" class="cell-text">
+                  <span ng-if="rnrLineItem[column.name]" ng-bind="rnrLineItem[column.name]"></span>
+        <span ng-if="!rnrLineItem[column.name]" ng-bind="'0'"></span>
+        </span>
+        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="clear-both"></div>
+    </div>
+
+    <ng-include src="'/public/pages/logistics/rnr/partials/approve/losses-and-adjustments.html'"></ng-include>
+
+
+    <form name="infoForm">
+        <div id="dataHealthCheckInfoModal" modal="dataHealthCheckInfoModal"
+             options="{ backdrop: 'static', escape: false}">
+            <div class="modal-header"><h3>{{productName}} - {{productCode}}</h3></div>
+            <div class="modal-body">
+                <div class="row-fluid">
+                    <div class="span12" style="max-height: 240px ; overflow:scroll">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="gradient-header">
+                                <th openlmis-message="label.rule"></th>
+                                <th openlmis-message="label.info.message"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat-start="row in issues_arry"></tr>
+                            <tr>
+                                <td class="cell-input">
+                                    <label for="skipped-row-{{row.id}}">
+                                        <span class="cell-text">{{row.rule}}</span>
+                                    </label>
+                                </td>
+                                <td class="cell-input">
+                                    <label for="skipped-row-{{row.id}}">
+                                        <span class="cell-text">{{row.message}}</span>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr ng-repeat-end></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="span12">
+                        <a href="" ng-click="dismiss()" class="btn btn-cancel">Dismiss</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
