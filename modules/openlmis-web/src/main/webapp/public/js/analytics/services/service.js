@@ -853,10 +853,55 @@ services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutR
     };
     });
 
+    services.factory('LatestReportedStockStatusByDistrictForTracer', function ($resource) {
+        return $resource('/api/dashboard/getLatestReportedStockStatusForAllTracerByDistrict.json', {}, {});
+    });
+
+    services.factory('LatestReportedStockStatusByDistrict', function ($resource) {
+            return $resource('/api/dashboard/getLatestReportedStockStatusForProductByDistrict.json', {}, {});
+     });
+
+    services.factory('LatestReportedStockStatusByDistrictData', function ($q, $timeout, $resource,LatestReportedStockStatusByDistrictForTracer, LatestReportedStockStatusByDistrict) {
+            function get(params) {
+
+                var deferred = $q.defer();
+                if(params.indicator=='allTracerProducts') {
+                $timeout(function () {
+                    LatestReportedStockStatusByDistrictForTracer.get(params, function (data) {
+
+                        var stockOutRates =[];
+                        if (data !== undefined) {
+                            stockOutRates = data.commoditiesDetailsByDistrict;
+                        }
+                        deferred.resolve(stockOutRates);
+
+                    });
+
+                }, 100);
+                }else {
+                  $timeout(function () {
+                                    LatestReportedStockStatusByDistrict.get(params, function (data) {
+
+                                        var stockOutRates =[];
+                                        if (data !== undefined) {
+                                            stockOutRates = data.commoditiesDetailsByDistrict;
+                                        }
+                                        deferred.resolve(stockOutRates);
+
+                                    });
+
+                                }, 100);
+                }
+                return deferred.promise;
+            }
+            return {
+                get: get
+            };
+    });
 
 
     services.factory('StockStatusByLocation', function ($resource) {
-        return $resource('/api/dashboard/getStockStatusByLocation.json', {}, {});
+        return $resource('/api/dashboard/getAllCommoditiesDetailsByDistrict.json', {}, {});
     });
 
     services.factory('StockStatusByLocationData', function ($q, $timeout, $resource,StockStatusByLocation) {
@@ -868,7 +913,7 @@ services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutR
 
                     var stockOutRates =[];
                     if (data !== undefined) {
-                        stockOutRates = data.getStockStatusByLocation;
+                        stockOutRates = data.commoditiesDetailsByDistrict;
                     }
                     deferred.resolve(stockOutRates);
 

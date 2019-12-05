@@ -1,5 +1,5 @@
 {
-  "title": "United Republic of Tanzania - Modified",
+  "title": "United Republic of Tanzania",
   "version": "1.1.2",
   "type": "FeatureCollection",
   "copyright": "Copyright (c) 2015 Highsoft AS, Based on data from Natural Earth",
@@ -22,8 +22,7 @@
       "yoffset": 9890953.44299
     }
   },
-  "features": [
-    {
+  "features": [{
     "type": "Feature",
     "id": "TZ.MW",
     "properties": {
@@ -514,7 +513,7 @@
       "hc-group": "admin1",
       "hc-middle-x": 0.40,
       "hc-middle-y": 0.68,
-      "hc-key": "Coast",
+      "hc-key": "Pwani",
       "hc-a2": "PW",
       "labelrank": "5",
       "hasc": "TZ.PW",
@@ -523,12 +522,12 @@
       "subregion": null,
       "fips": "TZ02",
       "postal-code": "PW",
-      "name": "Coast",
+      "name": "Pwani",
       "country": "United Republic of Tanzania",
       "type-en": "Region",
       "region": null,
       "longitude": "39.7491",
-      "woe-name": "Coast",
+      "woe-name": "Pwani",
       "latitude": "-7.86726",
       "woe-label": "Pwani, TZ, Tanzania",
       "type": "Mkoa"
@@ -2195,21 +2194,21 @@
       "hc-group": "admin1",
       "hc-middle-x": 0.55,
       "hc-middle-y": 0.50,
-      "hc-key": "Dar Es Salaam",
+      "hc-key": "Dar es Salaam",
       "hc-a2": "DS",
       "labelrank": "9",
       "hasc": "TZ.DS",
-      "alt-name": "Dar Es Salaam",
+      "alt-name": "Dar es Salaam",
       "woe-id": "2347374",
       "subregion": null,
       "fips": "TZ23",
       "postal-code": "DS",
-      "name": "Dar Es Salaam",
+      "name": "Dar-Es-Salaam",
       "country": "United Republic of Tanzania",
       "type-en": "Region",
       "region": null,
       "longitude": "39.2857",
-      "woe-name": "Dar Es Salaam",
+      "woe-name": "Dar-Es-Salaam",
       "latitude": "-6.89289",
       "woe-label": "Dar es Salaam, TZ, Tanzania",
       "type": "Mkoa"

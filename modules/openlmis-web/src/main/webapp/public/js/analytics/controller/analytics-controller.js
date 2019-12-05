@@ -29,6 +29,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                     period: parseInt(period.id, 10),
                     periodName: period.name,
                     schedule: period.scheduleId,
+                    indicator: 'allTracerProducts',
                     zone: 437
                 };
 
@@ -63,7 +64,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
                 $rootScope.loadStockOutRateTrend(params);
 
-
+                $rootScope.loadLatestReportedStockStatus(params);
             });
 
         }

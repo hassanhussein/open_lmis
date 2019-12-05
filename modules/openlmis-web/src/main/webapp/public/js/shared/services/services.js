@@ -594,3 +594,7 @@ services.factory('RejectRequisitionReason', function ($resource) {
 services.factory('GetUserRank', function ($resource) {
     return $resource('/users/user-ranks.json', {}, {});
 });
+
+services.factory('RunDataHealthCheck', function ($resource) {
+    return $resource('/requisitions/run-data-health-check.json', {}, {});
+});

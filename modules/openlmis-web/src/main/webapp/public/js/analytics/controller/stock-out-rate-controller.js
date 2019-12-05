@@ -1,36 +1,22 @@
-function StockOutRateController($scope, $http,$location, Program, Period, $rootScope, StockOutRateData, StockStatusByLocationData, GetTzDistrictMapData, GetTzRegionMapData, GetStockOutRateByProductData,GetProductById) {
+function StockOutRateController($scope, $http, $location, Program, Period, Products, $rootScope, StockOutRateData, StockStatusByLocationData, GetTzDistrictMapData, GetTzRegionMapData, GetStockOutRateByProductData, GetProductById, LatestReportedStockStatusByDistrictData) {
 
-   $scope.year ='';
-   $scope.productName ='';
+    $scope.year = '';
+    $scope.productName = '';
+    $rootScope.summary = {
+        content: null
+    };
+    $scope.productFilter = false;
 
 
-
-    $rootScope.loadStockOutRate = function(params) {
-    console.log(params);
-        StockStatusByLocationData.get(params).then(function(data) {
-
-           console.log($rootScope.stockIndicator);
-
+    $rootScope.loadLatestReportedStockStatus = function(params) {
+        LatestReportedStockStatusByDistrictData.get(params).then(function(data) {
             GetTzRegionMapData.get(params).then(function(regionMap) {
-
                 GetTzDistrictMapData.get(params).then(function(districtMap) {
-                               console.log(districtMap);
                     var dataWithRegion = addRegionData(data);
-
-
-
-                    if(params.indicator === 'Stock Availability By Location') {
-
-                    var prepareColors = ($rootScope.stockIndicator === 'overstockpercentage')?'#4bb1cf':($rootScope.stockIndicator==='stockoutpercentage')?'#dd514c':($rootScope.stockIndicator ==='adequatelystockpercentage')?'#5eb95e':($rootScope.stockIndicator === 'understockpercentage')?'#faa732':'gray';
-
-
-                    loadStockOutRateChart(regionMap, districtMap, computeMapData(dataWithRegion.region,$rootScope.stockIndicator), params, data, prepareColors);
-
-                   } else{
-
-                   loadStockOutRateChart(regionMap, districtMap, computeMapData(dataWithRegion.region, undefined), params, data);
-
-                   }
+                    var unit = "Facilities";
+                    var zeroColor = "#e74c3c"; //Red
+                    var title = "Latest Reported Stock Status";
+                    loadLatestReportedStockStatusMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                 });
 
             });
@@ -38,98 +24,51 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
     };
 
 
-    $rootScope.loadStockOutRateTrend = function(params) {
-    var productName= "";
-           GetProductById.get({id:parseInt(params.product,10)}, function(productData){
-           productName=productData.productDTO.product.primaryName;
-        });
+    function loadLatestReportedStockStatusMap(regionMap, districtMap, values, params, districtValues, regionData, title, unit, zeroColor) {
 
-         GetStockOutRateByProductData.get(params).then(function(data) {
-                    loadStockOutRateTrend(data, params, productName);
-          });
-    };
-
-    function loadStockOutRateTrend(data, params, productName) {
-        Highcharts.chart('stockOutRateTrend', {
-
-            title: {
-                text:  'Stock Out Rate for '+productName+' on '+params.year+'',
-            },
-
-            subtitle: {
-                text: ''
-            },
-            credits: {
-                enabled: false
-            },
-             xAxis: {
-             categories: _.uniq(_.pluck(data, 'processing_period_name'))
-                },
-            yAxis: {
-                title: {
-                    text: 'Percentage'
-                },
-                min : 0,
-//                                        plotLines: [{
-//                                                     color: '#FF0000',
-//                                                     width: 2,
-//                                                     value: .5 // Need to set this probably as a var.
-//                                                 }]
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle'
-            },
-
-            plotOptions: {
-                series: {
-                    label: {
-                        connectorAllowed: false
-                    }
-                }
-            },
-
-
-            series: [{
-                name: productName,
-                data:  _.uniq(_.pluck(data, 'percentage'))
-            }],
-
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    },
-                    chartOptions: {
-                        legend: {
-                            layout: 'horizontal',
-                            align: 'center',
-                            verticalAlign: 'bottom'
-                        }
-                    }
-                }]
-            }
-
-        });
-
-    }
-
-    function loadStockOutRateChart(map, districtMap, values, params, districtValues,colorSelection) {
-
-        var data = Highcharts.geojson(map);
+        var data = Highcharts.geojson(regionMap);
+        getLatestStockAvailabilityStatusSummary(regionData, params);
         $.each(data, function(i) {
             var key = this.properties['hc-key'];
             this.drilldown = key;
             var data_obj = values.filter(function(a) {
                 return a[0] === key;
             });
+
             if (data_obj.length > 0) {
-                this.value = data_obj[0][1];
+                var reg_obj = _.where(regionData, {
+                    region_name: data_obj[0][0]
+                })[0];
+                var stockOutPercentage = (reg_obj.total_stockoutincidence / reg_obj.total_incidence) * 100;
+                if (stockOutPercentage == 100) {
+                    this.y = stockOutPercentage;
+                    this.color = zeroColor;
+                    this.value = stockOutPercentage;
+                    this.totalIncidence = reg_obj.total_incidence;
+                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                } else if (stockOutPercentage < 100 && stockOutPercentage > 0) {
+                    this.y = stockOutPercentage;
+                    this.color = '#3498db';
+                    this.value = stockOutPercentage;
+                    this.totalIncidence = reg_obj.total_incidence;
+                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                } else if (stockOutPercentage === 0) {
+                    this.y = stockOutPercentage;
+                    this.color = '#62A44C';
+                    this.value = stockOutPercentage;
+                    this.totalIncidence = reg_obj.total_incidence;
+                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                }
+            } else {
+                this.y = 0;
+                this.color = '#b2bec3';
+                this.value = 0;
+                this.totalIncidence = 0;
+                this.stockOutIncidence = 0;
             }
         });
 
-        $('#stockOutRate').highcharts('Map', {
+        $('#latestReportedCommoditiesStockStatus').highcharts('Map', {
             chart: {
                 events: {
                     drilldown: function(e) {
@@ -144,20 +83,44 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
                                         region_name: e.point.name,
                                         district_name: data[i].name
                                     });
-                                    console.log(e.point.name);
-                                    console.log(data[i].name);
-                                    console.log(sof_obj);
+
+
                                     if (sof_obj.length > 0) {
-                                        this.value = sof_obj[0].stockoutpercentage;
+                                        var reg_obj = _.where(districtValues, {
+                                            district_name: sof_obj[0].district_name
+                                        })[0];
+                                        this.value = sof_obj[0].stockinhand;
+                                        var stockOutPercentage = (reg_obj.stockoutincidence / reg_obj.totalincidence) * 100;
+                                        if (stockOutPercentage == 100) {
+                                            this.y = stockOutPercentage;
+                                            this.color = zeroColor;
+                                            this.value = stockOutPercentage;
+                                            this.totalIncidence = reg_obj.totalincidence;
+                                            this.stockOutIncidence = reg_obj.stockoutincidence;
+                                        } else if (stockOutPercentage < 100 && stockOutPercentage > 0) {
+                                            this.y = stockOutPercentage;
+                                            this.color = '#3498db';
+                                            this.value = stockOutPercentage;
+                                            this.totalIncidence = reg_obj.totalincidence;
+                                            this.stockOutIncidence = reg_obj.stockoutincidence;
+                                        } else if (stockOutPercentage === 0) {
+                                            this.y = stockOutPercentage;
+                                            this.color = '#62A44C';
+                                            this.value = stockOutPercentage;
+                                            this.totalIncidence = reg_obj.totalincidence;
+                                            this.stockOutIncidence = reg_obj.stockoutincidence;
+                                        }
                                     } else {
+                                        this.y = 0;
+                                        this.color = '#b2bec3';
                                         this.value = 0;
+                                        this.totalIncidence = 0;
+                                        this.stockOutIncidence = 0;
                                     }
-
-
-
                                 });
-                                console.log(data);
+                                getLatestStockAvailabilityDrillDownSummary(districtValues, params, e.point.name);
                                 chart.hideLoading();
+
                                 chart.addSeriesAsDrilldown(e.point, {
                                     name: e.point.name,
                                     data: data,
@@ -172,7 +135,6 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
                         this.setTitle(null, {
                             text: e.point.name
                         });
-
                     },
                     drillup: function() {
                         this.setTitle(null, {
@@ -182,11 +144,11 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
                 }
             },
             title: {
-                text: 'Health Commodities Map'
+                text: title
             },
-                        credits: {
-                            enabled: false
-                        },
+            credits: {
+                enabled: false
+            },
             subtitle: {
                 text: 'Tanzania',
                 floating: true,
@@ -202,14 +164,34 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
                 verticalAlign: 'middle'
             },
             colorAxis: {
-                min: 0,
-                minColor: '#E6E7E8',
-                maxColor: (colorSelection === undefined)?'#005645':colorSelection
+                dataClasses: [{
+                        color: zeroColor,
+                        name: 'Total Stockout'
+                    }, {
+                        color: '#3498db',
+                        name: 'Partial Availability'
+                    },
+                    {
+                        color: '#62A44C',
+                        name: 'Full Availability'
+                    },
+                    {
+                        color: '#b2bec3',
+                        name: 'Never Reported'
+                    }
+                ]
             },
             mapNavigation: {
                 enabled: true,
                 buttonOptions: {
                     verticalAlign: 'bottom'
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return 'Region: ' + this.point.name +
+                        '<br/>Reported Products: ' + this.point.totalIncidence +
+                        '<br/>Stock out Products: ' + this.point.stockOutIncidence;
                 }
             },
             plotOptions: {
@@ -249,6 +231,483 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
 
 
 
+    $rootScope.loadStockOutRate = function(params) {
+        StockStatusByLocationData.get(params).then(function(data) {
+            GetTzRegionMapData.get(params).then(function(regionMap) {
+                GetTzDistrictMapData.get(params).then(function(districtMap) {
+                    var dataWithRegion = addRegionData(data);
+                    switch (params.indicator) {
+                        case "stockAvailability":
+                            var title = params.productName + " Stock Avaibility by Location, " + params.periodName + ", " + params.year;
+                            var unit = "Facilities";
+                            var zeroColor = "#e74c3c"; //Red
+                            loadCommoditiesMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                            return;
+                        case "consumptionQuantities":
+                             title = params.productName + " Stock Consumption Quantity by Location, " + params.periodName + ", " + params.year;
+                             unit = "Units";
+                             zeroColor = "#b2bec3"; //normal
+                            loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit), zeroColor;
+                            return;
+                        case "stockInHand":
+                             title = params.productName + " Stock on Hand Quantity by Location, " + params.periodName + ", " + params.year;
+                             unit = "Units";
+                             zeroColor = "#e74c3c"; //normal
+                            loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                            return;
+                        case "consumptionCost":
+                             title = params.productName + " Cost of Reported consumption by Location, " + params.periodName + ", " + params.year;
+                             unit = "Tsh";
+                             zeroColor = "#b2bec3"; //normal
+                            loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                            return;
+                        case "quantityReceived":
+                             title = params.productName + " Quantity Received from MSD by Location, " + params.periodName + ", " + params.year;
+                             unit = "Unit";
+                             zeroColor = "#b2bec3"; //normal
+                            loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                            return;
+                        case "quantityExpiredLostStolen":
+                             title = params.productName + " Quantity Lost/Expired/Stolen by Location, " + params.periodName + ", " + params.year;
+                             unit = "Unit";
+                             zeroColor = "#b2bec3"; //normal
+                            loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                            return;
+                        case "costQuantityExpiredLostStolen":
+                             title = params.productName + " Cost of Quantity Lost/Expired/Stolen by Location, " + params.periodName + ", " + params.year;
+                             unit = "Tsh";
+                             zeroColor = "#b2bec3"; //normal
+                            loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                            return;
+                        case "overStockQuantity":
+                             title = params.productName + " OverStock Quantity by Location, " + params.periodName + ", " + params.year;
+                             unit = "Unit";
+                             zeroColor = "#b2bec3"; //normal
+                            loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                            return;
+                        default:
+                            return;
+                    }
+                });
+
+            });
+        });
+    };
+
+
+    $rootScope.loadStockOutRateTrend = function(params) {
+        var productName = "";
+        GetProductById.get({
+            id: parseInt(params.product, 10)
+        }, function(productData) {
+            productName = productData.productDTO.product.primaryName;
+        });
+
+        GetStockOutRateByProductData.get(params).then(function(data) {
+            loadStockOutRateTrend(data, params, productName);
+        });
+    };
+
+    function loadStockOutRateTrend(data, params, productName) {
+        Highcharts.chart('stockOutRateTrend', {
+
+            title: {
+                text: 'Stock Out Rate for ' + productName + ' on ' + params.year + '',
+            },
+
+            subtitle: {
+                text: ''
+            },
+            credits: {
+                enabled: false
+            },
+            xAxis: {
+                categories: _.uniq(_.pluck(data, 'processing_period_name'))
+            },
+            yAxis: {
+                title: {
+                    text: 'Percentage'
+                },
+                min: 0,
+                //                                        plotLines: [{
+                //                                                     color: '#FF0000',
+                //                                                     width: 2,
+                //                                                     value: .5 // Need to set this probably as a var.
+                //                                                 }]
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    }
+                }
+            },
+
+
+            series: [{
+                name: productName,
+                data: _.uniq(_.pluck(data, 'percentage'))
+            }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        legend: {
+                            layout: 'horizontal',
+                            align: 'center',
+                            verticalAlign: 'bottom'
+                        }
+                    }
+                }]
+            }
+
+        });
+
+    }
+
+    function loadCommoditiesMap(regionMap, districtMap, values, params, districtValues, regionData, title, unit, zeroColor) {
+
+        var data = Highcharts.geojson(regionMap);
+        getSummary(regionData, params.indicator);
+        $.each(data, function(i) {
+            var key = this.properties['hc-key'];
+            this.drilldown = key;
+            var data_obj = values.filter(function(a) {
+                return a[0] === key;
+            });
+
+            if (data_obj.length > 0) {
+                var reg_obj = _.where(regionData, {
+                    region_name: data_obj[0][0]
+                })[0];
+                if (data_obj[0][1] > 0) {
+                    this.y = data_obj[0][1];
+                    this.color = '#16a085';
+                    this.value = data_obj[0][1];
+                    this.totalIncidence = reg_obj.total_incidence;
+                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                } else {
+                    this.y = 0;
+                    this.color = zeroColor;
+                    this.value = 0;
+                    this.totalIncidence = reg_obj.total_incidence;
+                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                }
+            } else {
+                this.y = 0;
+                this.color = '#b2bec3';
+                this.value = 0;
+                this.totalIncidence = 0;
+                this.stockOutIncidence = 0;
+            }
+        });
+
+        $('#commodities').highcharts('Map', {
+            chart: {
+                events: {
+                    drilldown: function(e) {
+                        if (!e.seriesOptions) {
+                            var chart = this;
+                            chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
+                            GetTzDistrictMapData.get(params).then(function(mapDis) {
+
+                                data = Highcharts.geojson(filterMap(mapDis, e.point.name));
+                                $.each(data, function(i) {
+                                    var sof_obj = _.where(districtValues, {
+                                        region_name: e.point.name,
+                                        district_name: data[i].name
+                                    });
+
+
+                                    if (sof_obj.length > 0) {
+                                        var reg_obj = _.where(districtValues, {
+                                            district_name: sof_obj[0].district_name
+                                        })[0];
+                                        this.value = sof_obj[0].stockinhand;
+                                        if (sof_obj[0].stockinhand > 0) {
+                                            this.y = sof_obj[0].stockinhand;
+                                            this.color = '#16a085';
+                                            this.value = sof_obj[0].stockinhand;
+                                            this.totalIncidence = reg_obj.totalincidence;
+                                            this.stockOutIncidence = reg_obj.stockoutincidence;
+                                        } else {
+                                            this.y = 0;
+                                            this.color = '#e74c3c';
+                                            this.value = 0;
+                                            this.totalIncidence = reg_obj.totalincidence;
+                                            this.stockOutIncidence = reg_obj.stockoutincidence;
+                                        }
+                                    } else {
+                                        this.y = 0;
+                                        this.color = '#b2bec3';
+                                        this.value = 0;
+                                        this.totalIncidence = 0;
+                                        this.stockOutIncidence = 0;
+                                    }
+                                });
+                                chart.hideLoading();
+                                getDrillDownSummary(districtValues, params.indicator, e.point.name);
+                                chart.addSeriesAsDrilldown(e.point, {
+                                    name: e.point.name,
+                                    data: data,
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '{point.name}'
+                                    }
+                                });
+                            });
+
+                        }
+                        this.setTitle(null, {
+                            text: e.point.name
+                        });
+                    },
+                    drillup: function() {
+                        this.setTitle(null, {
+                            text: 'Tanzania'
+                        });
+                    }
+                }
+            },
+            title: {
+                text: title
+            },
+            credits: {
+                enabled: false
+            },
+            subtitle: {
+                text: 'Tanzania',
+                floating: true,
+                align: 'right',
+                y: 50,
+                style: {
+                    fontSize: '16px'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+            colorAxis: {
+                dataClasses: [{
+                        color: '#e74c3c',
+                        name: 'Stock out'
+                    }, {
+                        color: '#16a085',
+                        name: 'Available'
+                    },
+                    {
+                        color: '#b2bec3',
+                        name: 'Not Reported'
+                    }
+                ]
+                //                min: 0,
+                //                minColor: '#F4C2C2',
+                //                maxColor: (colorSelection === undefined) ? '#FF0000' : colorSelection
+            },
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return 'Region: ' + this.point.name +
+                        '<br/>Reported Facilities: ' + this.point.totalIncidence +
+                        '<br/>Stock out Facilities: ' + this.point.stockOutIncidence;
+                }
+            },
+            plotOptions: {
+                map: {
+                    states: {
+                        hover: {
+                            color: '#EEDD66'
+                        }
+                    }
+                }
+            },
+            series: [{
+                data: data,
+                name: 'Tanzania',
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.properties.postal-code}'
+                }
+            }],
+            drilldown: {
+                activeDataLabelStyle: {
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    textShadow: '0 0 3px #000000'
+                },
+                drillUpButton: {
+                    relativeTo: 'spacingBox',
+                    position: {
+                        x: 0,
+                        y: 60
+                    }
+                }
+            }
+        });
+    }
+
+    function loadCommoditiesConsumptionMap(regionMap, districtMap, values, params, districtValues, regionData, title, unit, zeroColor) {
+
+        var data = Highcharts.geojson(regionMap);
+        getSummary(regionData, params.indicator);
+        $.each(data, function(i) {
+            var key = this.properties['hc-key'];
+            this.drilldown = key;
+            var data_obj = values.filter(function(a) {
+                return a[0] === key;
+            });
+
+            if (data_obj.length > 0) {
+                var reg_obj = _.where(regionData, {
+                    region_name: data_obj[0][0]
+                })[0];
+                if (data_obj[0][1] > 0) {
+                    this.value = data_obj[0][1];
+                } else {
+                    this.value = 0;
+                    this.color = zeroColor;
+                }
+            } else {
+                this.value = 0;
+                this.color = '#E6E7E8';
+            }
+        });
+        $('#commodities').highcharts('Map', {
+            chart: {
+                events: {
+                    drilldown: function(e) {
+                        if (!e.seriesOptions) {
+                            var chart = this;
+                            chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
+                            GetTzDistrictMapData.get(params).then(function(mapDis) {
+
+                                data = Highcharts.geojson(filterMap(mapDis, e.point.name));
+                                $.each(data, function(i) {
+                                    var sof_obj = _.where(districtValues, {
+                                        region_name: e.point.name,
+                                        district_name: data[i].name
+                                    });
+                                    if (sof_obj.length > 0) {
+                                        this.value = prepareValuesForDrillDown(sof_obj, 0, params.indicator);
+                                        if (this.value === 0) {
+                                            this.color = '#e74c3c';
+                                        }
+                                    } else {
+                                        this.value = 0;
+                                        this.color = '#E6E7E8';
+                                    }
+                                });
+                                chart.hideLoading();
+                                getDrillDownSummary(districtValues, params.indicator, e.point.name);
+                                chart.addSeriesAsDrilldown(e.point, {
+                                    name: e.point.name,
+                                    data: data,
+                                    dataLabels: {
+                                        enabled: true,
+                                        format: '{point.name}'
+                                    }
+                                });
+                            });
+
+                        }
+                        this.setTitle(null, {
+                            text: e.point.name
+                        });
+                    },
+                    drillup: function() {
+                        getSummary(regionData, params.indicator);
+                        this.setTitle(null, {
+                            text: 'Tanzania'
+                        });
+                    }
+                }
+            },
+            title: {
+                text: title
+            },
+            credits: {
+                enabled: false
+            },
+            subtitle: {
+                text: 'Tanzania',
+                floating: true,
+                align: 'right',
+                y: 50,
+                style: {
+                    fontSize: '16px'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle'
+            },
+            colorAxis: {
+                min: 0,
+                minColor: '#4b8e8d',
+                maxColor: '#396362'
+            },
+            mapNavigation: {
+                enabled: true,
+                buttonOptions: {
+                    verticalAlign: 'bottom'
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    return this.point.name +
+                        '<br/>' + this.point.value + ' ' + unit;
+                }
+            },
+            plotOptions: {
+                map: {
+                    states: {
+                        hover: {
+                            color: '#EEDD66'
+                        }
+                    }
+                }
+            },
+            series: [{
+                data: data,
+                name: 'Tanzania',
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.properties.postal-code}'
+                }
+            }],
+            drilldown: {
+                activeDataLabelStyle: {
+                    color: '#FFFFFF',
+                    textDecoration: 'none',
+                    textShadow: '0 0 3px #000000'
+                },
+                drillUpButton: {
+                    relativeTo: 'spacingBox',
+                    position: {
+                        x: 0,
+                        y: 60
+                    }
+                }
+            }
+        });
+    }
 
     function createSeries(data) {
         var pp_name = _.uniq(_.pluck(data, 'processing_period_name'));
@@ -290,7 +749,6 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
     }
 
     function addRegionData(data) {
-
         var regions = _.uniq(_.pluck(data, 'region_name'));
         var reg_arry = [];
         for (var x in regions) {
@@ -298,75 +756,107 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
                 region_name: regions[x]
             });
 
-            var total_understockpercentage = get_sum(sof_obj, 'understockpercentage');
-
-            var average_understockpercentage = total_understockpercentage / sof_obj.length;
-
-
-            var total_overstockpercentage = get_sum(sof_obj, 'overstockpercentage');
-            var average_overstockpercentage = total_overstockpercentage / sof_obj.length;
-
-
-
-            var total_adequatelystockpercentage = get_sum(sof_obj, 'adequatelystockpercentage');
-            var average_adequatelystockpercentage = total_adequatelystockpercentage / sof_obj.length;
-
-
-
-            var total_unknownstockpercentage = get_sum(sof_obj, 'unknownstockpercentage');
-            var average_unknownstockpercentage = total_unknownstockpercentage / sof_obj.length;
-
-
-            var total_stockoutpercentage = get_sum(sof_obj, 'stockoutpercentage');
-            var average_stockoutpercentage = total_stockoutpercentage / sof_obj.length;
-
-
+            var total_stockinhand = get_sum(sof_obj, 'stockinhand');
+            var total_beginningbalance = get_sum(sof_obj, 'beginningbalance');
+            var total_quantityreceived = get_sum(sof_obj, 'quantityreceived');
+            var total_quantityin = get_sum(sof_obj, 'quantityin');
+            var total_quantityout = get_sum(sof_obj, 'quantityout');
+            var total_quantityexpiredloststolen = get_sum(sof_obj, 'quantityexpiredloststolen');
+            var total_consumption = get_sum(sof_obj, 'consumption');
+            var total_costofreceived = get_sum(sof_obj, 'totalcostofreceived');
+            var total_costofquantityexpiredloststolen = get_sum(sof_obj, 'totalcostofquantityexpiredloststolen');
+            var total_costofquantitydispensed = get_sum(sof_obj, 'totalcostofquantitydispensed');
+            var total_stockoutincidence = get_sum(sof_obj, 'stockoutincidence');
+            var total_overstockincidence = get_sum(sof_obj, 'overstockincidence');
+            var total_incidence = get_sum(sof_obj, 'totalincidence');
+            var total_overstockquantity = get_sum(sof_obj, 'overstockquantity');
+            var total_stockoutquantity = get_sum(sof_obj, 'stockoutquantity');
 
 
             var reg_obj = {
                 product: sof_obj[0].product,
-                understockpercentage: average_understockpercentage,
-                overstockpercentage: average_overstockpercentage,
-                adequatelystockpercentage: average_adequatelystockpercentage,
-                unknownstockpercentage: average_unknownstockpercentage,
-                stockoutpercentage: average_stockoutpercentage,
+                total_stockinhand: total_stockinhand,
+                total_beginningbalance: total_beginningbalance,
+                total_quantityreceived: total_quantityreceived,
+                total_quantityin: total_quantityin,
+                total_quantityout: total_quantityout,
+                total_quantityexpiredloststolen: total_quantityexpiredloststolen,
+                total_consumption: total_consumption,
+                total_costofreceived: total_costofreceived,
+                total_costofquantityexpiredloststolen: total_costofquantityexpiredloststolen,
+                total_costofquantitydispensed: total_costofquantitydispensed,
+                total_stockoutincidence: total_stockoutincidence,
+                total_overstockincidence: total_overstockincidence,
+                total_incidence: total_incidence,
+                total_overstockquantity: total_overstockquantity,
+                total_stockoutquantity: total_stockoutquantity,
                 region_name: regions[x]
             };
 
             reg_arry.push(reg_obj);
         }
 
-        console.log(reg_arry);
-
         data.region = reg_arry;
 
         return data;
     }
 
-    function computeMapData(data,indicator) {
-        var data_arr = [];
-        var ind;
-        if(indicator === undefined) {
-        ind = 'stockoutpercentage';
-        } else {
-        ind = indicator;
-        }
 
+
+    function computeMapData(data, indicator) {
+        var data_arr = [];
         for (var x in data) {
             var obj = [];
             obj.push(data[x].region_name);
-            obj.push(prepareValues(data,x,ind));
+            obj.push(prepareValues(data, x, indicator));
             data_arr.push(obj);
         }
-
-                console.log(data_arr);
         return data_arr;
     }
 
-    function prepareValues(data,x,ind){
-       var prepare = (ind === 'overstockpercentage')?data[x].overstockpercentage:(ind==='stockoutpercentage')?data[x].stockoutpercentage:(ind ==='adequatelystockpercentage')?data[x].adequatelystockpercentage:(ind === 'understockpercentage')?data[x].understockpercentage:data[x].unknownstockpercentage;
+    function prepareValues(data, x, ind) {
 
-       return prepare;
+        var prepare = (ind === 'stockInHand') ? data[x].total_stockinhand :
+            (ind === 'beginningBalance') ? data[x].total_beginningbalance :
+            (ind === 'quantityReceived') ? data[x].total_quantityreceived :
+            (ind === 'quantityIn') ? data[x].total_quantityin :
+            (ind === 'quantityOut') ? data[x].total_quantityout :
+            (ind === 'quantityExpiredLostStolen') ? data[x].total_quantityexpiredloststolen :
+            (ind === 'consumptionQuantities') ? data[x].total_consumption :
+            (ind === 'costOfReceived') ? data[x].total_costofreceived :
+            (ind === 'costOfQuantityExpiredLostStolen') ? data[x].total_costofquantityexpiredloststolen :
+            (ind === 'consumptionCost') ? data[x].total_costofquantitydispensed :
+            (ind === 'overStockIncidence') ? data[x].total_overstockincidence :
+            (ind === 'totalIncidence') ? data[x].total_incidence :
+            (ind === 'overStockQuantity') ? data[x].total_overstockquantity :
+            (ind === 'stockOutQuantity') ? data[x].total_stockoutquantity :
+            (ind === 'stockAvailability') ? data[x].total_stockinhand :
+            data[x].total_stockinhand;
+
+        return prepare;
+    }
+
+
+    function prepareValuesForDrillDown(data, x, ind) {
+
+        var prepare = (ind === 'stockInHand') ? data[x].stockinhand :
+            (ind === 'consumptionQuantities') ? data[x].consumption :
+            (ind === 'quantityReceived') ? data[x].total_quantityreceived :
+            (ind === 'quantityIn') ? data[x].total_quantityin :
+            (ind === 'quantityOut') ? data[x].total_quantityout :
+            (ind === 'quantityExpiredLostStolen') ? data[x].total_quantityexpiredloststolen :
+            (ind === 'consumptionQuantities') ? data[x].total_consumption :
+            (ind === 'costOfReceived') ? data[x].total_costofreceived :
+            (ind === 'costQuantityExpiredLostStolen') ? data[x].total_costofquantityexpiredloststolen :
+            (ind === 'consumptionCost') ? data[x].total_costofquantitydispensed :
+            (ind === 'overStockIncidence') ? data[x].total_overstockincidence :
+            (ind === 'totalIncidence') ? data[x].total_incidence :
+            (ind === 'overStockQuantity') ? data[x].total_overstockquantity :
+            (ind === 'stockOutQuantity') ? data[x].total_stockoutquantity :
+            (ind === 'stockAvailability') ? data[x].total_stockinhand :
+            data[x].total_stockinhand;
+
+        return prepare;
     }
 
     function filterMap(map, region_name) {
@@ -376,54 +866,388 @@ function StockOutRateController($scope, $http,$location, Program, Period, $rootS
         });
 
         map.features = x;
-
         return map;
 
     }
 
-
-    //    function manuver(params) {
-    //
-    //        GetTzDistrictMapData.get(params).then(function(data) {
-    //
-    //            for (var x in data.features) {
-    //                data.features[x].properties["hc-key"] = data.features[x].properties.ADM2;
-    //                data.features[x].properties["name"] = data.features[x].properties.ADM2;
-    //            }
-    //        });
-    //
-    //    }
-
     $scope.onSelected = function(option) {
 
+        $scope.showStockStatus = false;
 
-    $scope.showStockStatus = false;
+        if (option === 'Stock Availability By Location') {
 
-     if(option === 'Stock Availability By Location') {
+            $scope.showStockStatus = true;
 
-     $scope.showStockStatus = true;
+        }
+        if (option === 'Stock out rate') {
 
-     }
-
-      if (option === 'Stock out rate') {
-
-      }
+        }
     };
 
-      $scope.$watch('indicator.value', function(value) {
+    $scope.$watch('indicator.value', function(value) {
 
         $rootScope.stockIndicator = value;
 
-      });
+    });
 
 
     $scope.onFilterChange = function(filter) {
-        $rootScope.loadStockOutRate(filter);
+
+        var programName = '';
+        Program.get({
+            id: parseInt($location.search().program, 10)
+        }, function(da) {
+            programName = da.program.name;
+
+            var periodName = '';
+            Period.get({
+                id: parseInt($location.search().period, 10)
+            }, function(da) {
+
+                periodName = da.period.name;
+
+                Products.get({
+                    id: parseInt($location.search().product, 10)
+                }, function(da) {
+
+                    filter.productName = da.productDTO.product.fullName;
+                    filter.programName = programName;
+                    filter.periodName = periodName;
+
+                    $scope.$parent.params = $location.search();
+
+                    $rootScope.loadStockOutRate(filter);
+                    //  $rootScope.loadLatestReportedStockStatus(filter);
+                });
+
+            });
+        });
+
     };
 
     $scope.OnFilterChangeByProduct = function(filter) {
-        $rootScope.loadStockOutRateTrend(filter);
+
+        if (filter.indicator == 'allTracerProducts') {
+            $rootScope.loadLatestReportedStockStatus(filter);
+            $scope.productFilter = false;
+        } else if (filter.indicator == 'productFilter') {
+            $scope.productFilter = true;
+            if (filter.product && filter.program) {
+                $rootScope.loadLatestReportedStockStatus(filter);
+            }
+        }
     };
 
+
+    function getLatestStockAvailabilityStatusSummary(data, params) {
+        var reg_arry = [];
+        var total_stockoutincidence;
+        var total_incidence;
+        var max_obj;
+        var min_obj ;
+
+
+        if (params.indicator == 'allTracerProducts') {
+             total_stockoutincidence = _.uniq(_.pluck(data, 'total_stockoutincidence'));
+             total_incidence = _.uniq(_.pluck(data, 'total_incidence'));
+             max_obj = {
+                key: "Stockout incidence",
+                value: _.reduce(total_stockoutincidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+             min_obj = {
+                key: "Reported incidence",
+                value: _.reduce(total_incidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+
+            reg_arry.push(max_obj);
+            reg_arry.push(min_obj);
+            $rootScope.summary.content = reg_arry;
+          //  $rootScope.$apply()
+            return;
+        } else if (params.indicator == 'productFilter') {
+             total_stockoutincidence = _.uniq(_.pluck(data, 'total_stockoutincidence'));
+             total_incidence = _.uniq(_.pluck(data, 'total_incidence'));
+             max_obj = {
+                key: "Facilities with stockout",
+                value: _.reduce(total_stockoutincidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+             min_obj = {
+                key: "Reported Facilities",
+                value: _.reduce(total_incidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+
+            reg_arry.push(min_obj);
+            reg_arry.push(max_obj);
+            $rootScope.summary.content = reg_arry;
+         //   $rootScope.$apply()
+            return;
+        }
+    }
+
+
+    function getSummary(data, indicator) {
+            var reg_arry = [];
+            var total_stockoutincidence;
+            var total_incidence;
+            var max_obj;
+            var min_obj ;
+        switch (indicator) {
+            case "stockAvailability":
+
+                 total_stockoutincidence = _.uniq(_.pluck(data, 'total_stockoutincidence'));
+                 total_incidence = _.uniq(_.pluck(data, 'total_incidence'));
+                 max_obj = {
+                    key: "Total Facilities with stockout",
+                    value: _.reduce(total_stockoutincidence, function(a, b) {
+                        return a + b;
+                    }, 0)
+                };
+                 min_obj = {
+                    key: "Total reported Facilities",
+                    value: _.reduce(total_incidence, function(a, b) {
+                        return a + b;
+                    }, 0)
+                };
+
+                reg_arry.push(max_obj);
+                reg_arry.push(min_obj);
+                $rootScope.summary.content = reg_arry;
+                $rootScope.$apply();
+                return;
+            case "consumptionQuantities":
+
+
+                 maxItem = _.max(data, function(data) {
+                    return data.total_consumption;
+                });
+                 minItem = _.min(data, function(data) {
+                    return data.total_consumption;
+                });
+                 total_consumption = _.uniq(_.pluck(data, 'total_consumption'));
+
+                 max_obj = {
+                    key: "Max Consumption",
+                    value: maxItem.region_name + " ( " + maxItem.total_consumption + " Units)"
+                };
+                 min_obj = {
+                    key: "Min Consumption",
+                    value: minItem.region_name + " (" + minItem.total_consumption + " Units)"
+                };
+                 total_obj = {
+                    key: "Total Reported Consumption",
+                    value: _.reduce(total_consumption, function(a, b) {
+                        return a + b;
+                    }, 0) + " Units"
+                };
+
+                reg_arry.push(max_obj);
+                reg_arry.push(min_obj);
+                reg_arry.push(total_obj);
+                $rootScope.summary.content = reg_arry;
+                $rootScope.$apply();
+                return;
+            case "stockInHand":
+
+                 maxItem = _.max(data, function(data) {
+                    return data.total_stockinhand;
+                });
+                 minItem = _.min(data, function(data) {
+                    return data.total_stockinhand;
+                });
+                 total_stockinhand = _.uniq(_.pluck(data, 'total_stockinhand'));
+
+                 max_obj = {
+                    key: "Max Stock on hand",
+                    value: maxItem.region_name + " ( " + maxItem.total_stockinhand + " Units)"
+                };
+                 min_obj = {
+                    key: "Min stock on hand",
+                    value: minItem.region_name + " (" + minItem.total_stockinhand + " Units)"
+                };
+                 total_obj = {
+                    key: "Total Reported Consumption",
+                    value: _.reduce(total_stockinhand, function(a, b) {
+                        return a + b;
+                    }, 0) + " Units"
+                };
+
+                reg_arry.push(max_obj);
+                reg_arry.push(min_obj);
+                reg_arry.push(total_obj);
+                $rootScope.summary.content = reg_arry;
+                $rootScope.$apply();
+                return;
+            default:
+                return;
+        }
+    }
+
+
+   function getLatestStockAvailabilityDrillDownSummary(data, params, region_name) {
+                   var reg_arry = [];
+                   var total_stockoutincidence;
+                   var total_incidence;
+                   var max_obj;
+                   var min_obj ;
+
+          data = _.where(data, {
+                    region_name: region_name
+                });
+
+        if (params.indicator == 'allTracerProducts') {
+             total_stockoutincidence = _.uniq(_.pluck(data, 'stockoutincidence'));
+             total_incidence = _.uniq(_.pluck(data, 'totalincidence'));
+             max_obj = {
+                key: "Stockout incidence",
+                value: _.reduce(total_stockoutincidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+             min_obj = {
+                key: "Reported incidence",
+                value: _.reduce(total_incidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+
+            reg_arry.push(max_obj);
+            reg_arry.push(min_obj);
+            $rootScope.summary.content = reg_arry;
+          //  $rootScope.$apply()
+            return;
+        } else if (params.indicator == 'productFilter') {
+             total_stockoutincidence = _.uniq(_.pluck(data, 'stockoutincidence'));
+             total_incidence = _.uniq(_.pluck(data, 'totalincidence'));
+             max_obj = {
+                key: "Facilities with stockout",
+                value: _.reduce(total_stockoutincidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+             min_obj = {
+                key: "Reported Facilities",
+                value: _.reduce(total_incidence, function(a, b) {
+                    return a + b;
+                }, 0)
+            };
+
+            reg_arry.push(min_obj);
+            reg_arry.push(max_obj);
+            $rootScope.summary.content = reg_arry;
+           // $rootScope.$apply()
+            return;
+        }
+    }
+
+    function getDrillDownSummary(data, indicator, region_name) {
+
+                          var reg_arry = [];
+                          var total_stockoutincidence;
+                          var total_incidence;
+                          var max_obj;
+                          var min_obj ;
+                          var maxItem;
+                          var minItem;
+                          var total_ob;
+        data = _.where(data, {
+            region_name: region_name
+        });
+        switch (indicator) {
+            case "stockAvailability":
+
+
+                 total_stockoutincidence = _.uniq(_.pluck(data, 'stockoutincidence'));
+                 total_incidence = _.uniq(_.pluck(data, 'totalincidence'));
+                 max_obj = {
+                    key: "Total Facilities with stockout",
+                    value: _.reduce(total_stockoutincidence, function(a, b) {
+                        return a + b;
+                    }, 0)
+                };
+                 min_obj = {
+                    key: "Total reported Facilities",
+                    value: _.reduce(total_incidence, function(a, b) {
+                        return a + b;
+                    }, 0)
+                };
+
+                reg_arry.push(max_obj);
+                reg_arry.push(min_obj);
+                $rootScope.summary.content = reg_arry;
+                return;
+            case "consumptionQuantities":
+
+
+                 maxItem = _.max(data, function(data) {
+                    return data.consumption;
+                });
+                 minItem = _.min(data, function(data) {
+                    return data.consumption;
+                });
+                 total_consumption = _.uniq(_.pluck(data, 'consumption'));
+
+                 max_obj = {
+                    key: "Max Consumption",
+                    value: maxItem.district_name + " ( " + maxItem.consumption + " Units)"
+                };
+                 min_obj = {
+                    key: "Min Consumption",
+                    value: minItem.district_name + " (" + minItem.consumption + " Units)"
+                };
+                 total_obj = {
+                    key: "Total Reported Consumption",
+                    value: _.reduce(total_consumption, function(a, b) {
+                        return a + b;
+                    }, 0) + " Units"
+                };
+
+                reg_arry.push(max_obj);
+                reg_arry.push(min_obj);
+                reg_arry.push(total_obj);
+                $rootScope.summary.content = reg_arry;
+                return;
+            case "stockInHand":
+
+
+                 maxItem = _.max(data, function(data) {
+                    return data.stockinhand;
+                });
+                 minItem = _.min(data, function(data) {
+                    return data.stockinhand;
+                });
+                 total_consumption = _.uniq(_.pluck(data, 'stockinhand'));
+
+                 max_obj = {
+                    key: "Max Stock on Hand",
+                    value: maxItem.district_name + " ( " + maxItem.consumption + " Units)"
+                };
+                 min_obj = {
+                    key: "Min Stock on Hand",
+                    value: minItem.district_name + " (" + minItem.consumption + " Units)"
+                };
+                 total_obj = {
+                    key: "Total Reported Stock on Hand",
+                    value: _.reduce(total_consumption, function(a, b) {
+                        return a + b;
+                    }, 0) + " Units"
+                };
+
+                reg_arry.push(max_obj);
+                reg_arry.push(min_obj);
+                reg_arry.push(total_obj);
+                $rootScope.summary.content = reg_arry;
+                return;
+            default:
+                return;
+        }
+    }
 
 }

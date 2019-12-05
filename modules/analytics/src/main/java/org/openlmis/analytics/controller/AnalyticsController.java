@@ -348,4 +348,26 @@ public class AnalyticsController extends BaseController {
         return null;
     }
 
+
+    @RequestMapping(value = "/getAllCommoditiesDetailsByDistrict.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllCommoditiesDetailsByDistrict(@Param("program") Long program,
+                                                                     @Param("product") Long product,
+                                                                     @Param("period") Long period) {
+       return OpenLmisResponse.response("commoditiesDetailsByDistrict", this.stockOutRateMapper.getAllCommoditiesDetailsByDistrict(program, period, product));
+
+    }
+
+
+    @RequestMapping(value = "/getLatestReportedStockStatusForAllTracerByDistrict.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getLatestReportedStockStatusByDistrict() {
+        return OpenLmisResponse.response("commoditiesDetailsByDistrict", this.stockOutRateMapper.getLatestReportedStockOnHandForTracer());
+
+
+    }
+
+    @RequestMapping(value = "/getLatestReportedStockStatusForProductByDistrict.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getLatestReportedStockOnHandForProductByDistrict(@Param("product") Long product) {
+        return OpenLmisResponse.response("commoditiesDetailsByDistrict", this.stockOutRateMapper.getLatestReportedStockOnHandForProductByDistrict(product));
+    }
+
 }
