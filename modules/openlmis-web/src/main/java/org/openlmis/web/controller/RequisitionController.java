@@ -449,7 +449,6 @@ public class RequisitionController extends BaseController {
     @RequestMapping(value = "/requisitions/run-data-health-check", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> runDataHealthCheck(@RequestParam("rnrid") Long rnrID) {
-        requisitionService.runDataHealthCheck(rnrID);
        return OpenLmisResponse.response("healthCheck", this.requisitionService.runDataHealthCheck(rnrID));
     }
 }

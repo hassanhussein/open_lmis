@@ -34,6 +34,7 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
 
 
     $scope.runHealthCheck = function() {
+    console.log($scope.rnr);
         $timeout(function() {
             RunDataHealthCheck.get({
                 rnrid: $scope.rnr.id
