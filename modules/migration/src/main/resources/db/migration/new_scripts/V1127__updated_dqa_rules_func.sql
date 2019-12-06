@@ -1,5 +1,5 @@
 --AMC
- -- DROP FUNCTION public.fn_amc(v_facility_id integer, v_program_id integer, v_product_id character varying) ;
+ DROP FUNCTION public.fn_amc(v_facility_id integer, v_program_id integer, v_product_id character varying);
 CREATE
 OR
 replace FUNCTION PUBLIC.fn_amc(v_facility_id integer, v_program_id integer, v_product_id character varying)
@@ -31,7 +31,7 @@ LANGUAGE plpgsql;
 
 
 
- -- DROP FUNCTION public.fn_stockout_days_rule(v_rnr_id integer) ;
+DROP FUNCTION public.fn_stockout_days_rule(v_rnr_line_id integer);
 CREATE
 OR
 replace FUNCTION PUBLIC.fn_stockout_days_rule(v_rnr_line_id integer)
@@ -51,7 +51,7 @@ LANGUAGE plpgsql;
 
 ---MAXIMUM STOCK
 
- -- DROP FUNCTION PUBLIC.fn_maximum_stock_rule(v_facility_id integer, v_rnr_id integer, v_program_id integer, v_product character varying);
+ DROP FUNCTION PUBLIC.fn_maximum_stock_rule(v_facility_id integer, v_rnr_id integer, v_program_id integer, v_product character varying) ;
 CREATE
 OR replace FUNCTION PUBLIC.fn_maximum_stock_rule(v_facility_id integer, v_rnr_id integer, v_program_id integer, v_product character varying) returns table ( maxStockRule boolean, message text) AS $$
 DECLARE result record;
@@ -94,10 +94,11 @@ $$ LANGUAGE plpgsql;
 
 
 
- -- DROP FUNCTION PUBLIC.fn_minimum_stock_rule(v_facility_id integer, v_rnr_id integer, v_program_id integer, v_product character varying);
+ DROP FUNCTION PUBLIC.fn_minimum_stock_rule(v_facility_id integer, v_rnr_id integer, v_program_id integer, v_product character varying);
 
 CREATE
-OR replace FUNCTION PUBLIC.fn_minimum_stock_rule(v_facility_id integer, v_rnr_id integer, v_program_id integer, v_product character varying) returns table ( maxStockRule boolean, message text) AS $$
+OR replace FUNCTION PUBLIC.fn_minimum_stock_rule(v_facility_id integer, v_rnr_id integer, v_program_id integer, v_product character varying)
+returns table ( maxStockRule boolean, message text) AS $$
 DECLARE result record;
 BEGIN
    RETURN QUERY
@@ -138,6 +139,7 @@ $$ LANGUAGE plpgsql;
 
 
 --Quantity received indivisible by MSD unit of measure (UOM).
+ DROP FUNCTION PUBLIC.fn_rule_received_stock_indivisible_by_msd_unit(v_rnr_item_id integer);
 CREATE
 OR
 replace FUNCTION PUBLIC.fn_rule_received_stock_indivisible_by_msd_unit(v_rnr_item_id integer)
@@ -160,7 +162,7 @@ LANGUAGE plpgsql;
 
 
 --Skipped manageable health commodities.
-
+DROP FUNCTION PUBLIC.fn_rule_skipped_manageable_health_commodities(v_facility_id integer, v_rnr_id integer, v_product character varying, skipped boolean) ;
 CREATE
 OR replace FUNCTION PUBLIC.fn_rule_skipped_manageable_health_commodities(v_facility_id integer, v_rnr_id integer, v_product character varying, skipped boolean) returns table ( maxStockRule boolean, message text) AS $$
 DECLARE result record;
@@ -225,6 +227,7 @@ $$ LANGUAGE plpgsql;
 
 --Questionable Losses & Adjustment (items, reason, quantity) THRESHOLD?.
 
+DROP FUNCTION PUBLIC.fn_rule_questionable_losses_and_adjustment(v_rnr_id integer, v_product_code character varying);
 CREATE
 OR replace FUNCTION PUBLIC.fn_rule_questionable_losses_and_adjustment(v_rnr_id integer, v_product_code character varying) returns table ( maxStockRule boolean, message text) AS $$
 DECLARE result record;
@@ -275,6 +278,7 @@ $$ LANGUAGE plpgsql;
 
 --Questionable consumption (too high/too low compared to previous orders). THRESHOLD?
 
+DROP FUNCTION PUBLIC.fn_rule_questionable_consumption(v_rnr_id integer, v_facility_id integer, v_product_code CHARACTER varying);
 CREATE
 OR REPLACE FUNCTION PUBLIC.fn_rule_questionable_consumption(v_rnr_id integer, v_facility_id integer, v_product_code CHARACTER varying) RETURNS TABLE (maxStockRule boolean, message text) AS $$
 DECLARE result record;
@@ -361,7 +365,7 @@ $$ LANGUAGE PLPGSQL;
 
 
 ----Too high or too low total R&R value. - THRESHOLD?
-
+DROP FUNCTION PUBLIC.fn_rule_total_cost(v_rnr_id integer,v_facility_id integer, v_product_code character varying);
 CREATE
 OR
 replace FUNCTION PUBLIC.fn_rule_total_cost(v_rnr_id integer,v_facility_id integer, v_product_code character varying)
@@ -381,7 +385,8 @@ LANGUAGE plpgsql;
 
 
 --MAIN FUNCTION
- -- DROP FUNCTION PUBLIC.fn_rnr_line_item_health_check(v_facility_id integer, v_rnr_id integer, v_rnr_item_id integer, v_program_id integer,v_product character varying);
+DROP FUNCTION PUBLIC.fn_rnr_line_item_health_check(v_facility_id integer, v_rnr_id integer, v_rnr_item_id integer, v_program_id integer,
+ v_product character varying, skipped boolean);
 CREATE OR REPLACE FUNCTION PUBLIC.fn_rnr_line_item_health_check(v_facility_id integer, v_rnr_id integer, v_rnr_item_id integer, v_program_id integer,
  v_product character varying, skipped boolean)
   returns table ( rule text, stockOutDaysRule boolean, message text)

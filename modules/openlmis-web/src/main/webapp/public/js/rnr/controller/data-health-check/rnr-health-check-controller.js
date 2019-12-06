@@ -22,6 +22,7 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
     $scope.healthCheckResults;
     $scope.fullSupplyTabError = false;
     $scope.summary;
+    $scope.showSummary=false;
 
     $scope.showMaxStock = showMaxStock;
 
@@ -58,7 +59,7 @@ $scope.dismiss = function ()
 
 function createSummary (){
 var summary=[];
-for(var key in Object.keys($scope.healthCheckResults))
+for(var key of Object.keys($scope.healthCheckResults))
 {
     var sof_objs = _.where($scope.healthCheckResults[key], {status: false});
    for(var x in sof_objs)
@@ -70,6 +71,7 @@ for(var key in Object.keys($scope.healthCheckResults))
 $scope.summary = _.countBy(summary, function(obj){
                                     return obj.rule;
                                 });
+$scope.showSummary=true;
 }
 
     $scope.checkHealthStatus = function(productCode) {
