@@ -451,6 +451,5 @@ public class RequisitionController extends BaseController {
     public ResponseEntity<OpenLmisResponse> runDataHealthCheck(@RequestParam("rnrid") Long rnrID) {
         requisitionService.runDataHealthCheck(rnrID);
        return OpenLmisResponse.response("healthCheck", this.requisitionService.runDataHealthCheck(rnrID));
-       // return OpenLmisResponse.success(messageService.message("msg.rnr.returned"));
     }
 }
