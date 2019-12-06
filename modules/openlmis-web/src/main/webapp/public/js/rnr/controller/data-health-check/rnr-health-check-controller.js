@@ -59,7 +59,7 @@ $scope.dismiss = function ()
 
 function createSummary (){
 var summary=[];
-for(var key of Object.keys($scope.healthCheckResults))
+for(var key in $scope.healthCheckResults)
 {
     var sof_objs = _.where($scope.healthCheckResults[key], {status: false});
    for(var x in sof_objs)
