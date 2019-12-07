@@ -16,6 +16,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     var unit = "Facilities";
                     var zeroColor = "#e74c3c"; //Red
                     var title = "Latest Reported Stock Status";
+                    districtMap.feature= districtMap.features;
                     loadLatestReportedStockStatusMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                 });
 
@@ -75,9 +76,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                         if (!e.seriesOptions) {
                             var chart = this;
                             chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
-                            GetTzDistrictMapData.get(params).then(function(mapDis) {
-
-                                data = Highcharts.geojson(filterMap(mapDis, e.point.name));
+                                data = Highcharts.geojson(filterMap(districtMap, e.point.name));
                                 $.each(data, function(i) {
                                     var sof_obj = _.where(districtValues, {
                                         region_name: e.point.name,
@@ -129,7 +128,6 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                                         format: '{point.name}'
                                     }
                                 });
-                            });
 
                         }
                         this.setTitle(null, {
@@ -860,11 +858,9 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     }
 
     function filterMap(map, region_name) {
-
-        var x = map.features.filter(function(a) {
+        var x = map.feature.filter(function(a) {
             return a.properties.ADM1 === region_name;
         });
-
         map.features = x;
         return map;
 
