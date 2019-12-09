@@ -37,7 +37,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 $scope.$parent.params = params;
                 //start loading functions by applying parameters
 
-                $scope.loadMap(params);
+               // $scope.loadMap(params);
                 $rootScope.initializeRequisitionSummary(params);
 
                 $rootScope.loadStockAvailableForPeriodData(params);
@@ -46,7 +46,6 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 $rootScope.loadRnrPassedQualityCheckData(params);
                 $rootScope.loadPercentageWastageData(params);
                 $rootScope.loadGeoFacilityStockMap(params);
-                console.log("reached");
 
                 $scope.loadConsumptionTrendsData(params);
                 //$scope.loadStockStatusByProgram(params,'level1');
@@ -54,15 +53,13 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 //$rootScope.loadStockStatusByProgramAndYearData(params);
                 $rootScope.loadStockAvailableByLevel(params);
                 $rootScope.loadStockStatusByProgramTrends(params, 'level1');
-                $rootScope.loadConsumptionTrendSummary(params);
+                //$rootScope.loadConsumptionTrendSummary(params);
                 loadRegularEmergenceTrend(params);
 
-                $rootScope.loadHealthCommoditiesFinancing(params);
+               // $rootScope.loadHealthCommoditiesFinancing(params);
 
-                $rootScope.loadStockOutRate(params);
+              //  $rootScope.loadStockOutRate(params);
                 $rootScope.loadCommoditiesComparison(params);
-
-                $rootScope.loadStockOutRateTrend(params);
 
                 $rootScope.loadLatestReportedStockStatus(params);
             });

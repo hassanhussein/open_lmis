@@ -83,21 +83,12 @@ public interface  StockOutRateMapper {
     List<HashMap<String,Object>> getAllCommoditiesDetailsByDistrict(@Param("program") Long program,
                                                           @Param("period") Long period, @Param("product") Long product);
 
-    @Select(" select \n" +
-            " SUM(stockinhand) as stockinhand,\n" +
-            " SUM(CASE WHEN stockinhand=0 THEN 1 ELSE 0 END) as stockOutIncidence,\n" +
-            " COUNT(*) as totalIncidence,\n" +
-            "  district_name, region_name , MAX(rli.periodid) as periodid, MAX(pp.name) as period_name\n" +
-            "  from mv_commodities_details  rli\n" +
-            " join products p on p.code=rli.productcode and p.tracer=true\n" +
-            " join requisitions r on r.id=rli.rnrid\n" +
-            " join processing_periods pp on pp.id=rli.periodid\n" +
-            " right join facilities f on f.id=r.facilityid\n" +
-            " where (r.periodid, r.facilityid)  in ( select MAX(r.periodid), rli.facilityid from mv_commodities_details rli\n" +
-            " join requisitions r on r.id=rli.rnrid\n" +
-            "  where rli.tracer=true \n" +
-            " group by rli.facilityid) and  rli.tracer=true \n" +
-            " group by district_name, region_name ")
+    @Select(" select a.district_name,  a.region_name, SUM(CASE WHEN a.stockOutIncidence>0 THEN 1 ELSE 0 END)  as stockOutIncidence,\n" +
+            "count(*) as totalIncidence\n" +
+            "from mv_latest_reported_stock_status  a\n" +
+            " where a.tracer=true\n" +
+            " group by a.district_name, a.region_name\n" +
+            "\n ")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForTracer();
 
 

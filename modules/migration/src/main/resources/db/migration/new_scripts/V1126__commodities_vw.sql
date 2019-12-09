@@ -29,7 +29,7 @@ rli.stockoutdays,rli.price,
         END AS status
  from requisition_line_items rli
 join requisitions r on r.id=rli.rnrid
-join requisition_line_item_losses_adjustments rlila on rlila.requisitionlineitemid=rli.id
+right join requisition_line_item_losses_adjustments rlila on rlila.requisitionlineitemid=rli.id
 JOIN facilities f ON f.id = r.facilityid
 JOIN facility_types ft ON ft.id = f.typeid
 JOIN products p on p.code=rli.productcode
@@ -37,7 +37,9 @@ JOIN programs pg ON pg.id = r.programid
 JOIN vw_districts gz ON gz.district_id = f.geographiczoneid
 JOIN program_products pgp ON r.programid = pgp.programid AND p.id = pgp.productid
 JOIN facility_approved_products fap ON ft.id = fap.facilitytypeid AND fap.programproductid = pgp.id
-where rli.skipped=false and r.status='RELEASED'
+where
+--rli.skipped=false and
+ r.status='RELEASED'
 WITH NO DATA;
 
 CREATE INDEX mv_productcode_index

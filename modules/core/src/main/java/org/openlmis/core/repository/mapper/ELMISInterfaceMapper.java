@@ -201,6 +201,7 @@ public interface ELMISInterfaceMapper {
             "REFRESH MATERIALIZED VIEW  mv_stock_imbalance_by_facility_report;\n" +
             "REFRESH MATERIALIZED VIEW  mv_dashboard_wastage_line_items;\n" +
             "REFRESH MATERIALIZED VIEW  mv_commodities_details;\n" +
+            "REFRESH MATERIALIZED VIEW  mv_latest_reported_stock_status;\n" +
             "REFRESH MATERIALIZED VIEW  mv_dashboard_timeliness_report; ")
     void refreshMaterializedViews();
 
