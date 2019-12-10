@@ -872,6 +872,16 @@ services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutR
                         var stockOutRates =[];
                         if (data !== undefined) {
                             stockOutRates = data.commoditiesDetailsByDistrict;
+                                //Merge region served by mutiple warehouses
+                                var originalMsg = JSON.stringify(stockOutRates);
+                                var updatedMsg = originalMsg
+                                .replace("Geita(Muleba Zone)", "Geita").
+                                replace("Geita(Mwanza Zone)", "Geita").
+                                replace("Njombe (Iringa Zone)", "Njombe")
+                                .replace("Ruvuma (Iringa Zone)", "Ruvuma")
+                                .replace("Njombe (Mbeya Zone)", "Njombe")
+                                .replace("Ruvuma (Mtwara Zone)", "Ruvuma");
+                                stockOutRates = JSON.parse(updatedMsg);
                         }
                         deferred.resolve(stockOutRates);
 
