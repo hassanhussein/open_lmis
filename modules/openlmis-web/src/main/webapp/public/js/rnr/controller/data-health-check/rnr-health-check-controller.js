@@ -7,7 +7,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, ReOpenRequisition, RejectRequisition, $dialog, $location, pageSize, $routeParams, requisitionService, patientTemplate, RunDataHealthCheck, $timeout) {
+function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, ReOpenRequisition, RejectRequisition, $dialog, $location, pageSize, $routeParams, requisitionService, patientTemplate, RunDataHealthCheck, $timeout, RunDataHealthCheckPerProduct, $q) {
 
     var PATIENT = 'patient';
     $scope.dataHealthCheckInfoModal = false;
@@ -19,10 +19,10 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
     $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
     $scope.patientColumns = patientTemplate ? patientTemplate.columns : [];
     $scope.viewSourceOfFund = true;
-    $scope.healthCheckResults;
+    $scope.healthCheckResults = {};
     $scope.fullSupplyTabError = false;
     $scope.summary;
-    $scope.showSummary=false;
+    $scope.showSummary = false;
 
     $scope.showMaxStock = showMaxStock;
 
@@ -34,21 +34,35 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
 
 
     $scope.runHealthCheck = function() {
-    console.log($scope.rnr);
-        $timeout(function() {
-            RunDataHealthCheck.get({
-                rnrid: $scope.rnr.id
-            }, function(data) {
-                $scope.healthCheckResults = data.healthCheck;
-                createSummary ();
-            });
-        }, 100);
+
+     function async (data, item){
+                var deferred = $q.defer();
+                setTimeout(function() {
+                    deferred.resolve(RunDataHealthCheckPerProduct.get({
+                        rnrid: data.id,
+                        rnrItemId: data.allSupplyLineItems[item].id
+                    }, function(data) {
+                        $scope.healthCheckResults = Object.assign({}, $scope.healthCheckResults, data.healthCheck);
+                        createSummary();
+                    }, {}));
+                }, 100);
+                return deferred.promise;
+            }
+
+
+        for (var item in $scope.rnr.allSupplyLineItems) {
+            async ($scope.rnr, item);
+        }
+
+        console.log(str);
     };
 
-$scope.dismiss = function ()
-{
- $scope.dataHealthCheckInfoModal = false;
-};
+
+
+
+    $scope.dismiss = function() {
+        $scope.dataHealthCheckInfoModal = false;
+    };
     $scope.viewinformation = function(productCode, productName) {
         $scope.dataHealthCheckInfoModal = true;
         $scope.productCode = productCode;
@@ -58,22 +72,24 @@ $scope.dismiss = function ()
         });
     };
 
-function createSummary (){
-var summary=[];
-for(var key in $scope.healthCheckResults)
-{
-    var sof_objs = _.where($scope.healthCheckResults[key], {status: false});
-   for(var x in sof_objs)
-   {
-   summary.push(sof_objs[x]);
-   }
-}
+    function createSummary() {
+        var summary = [];
+        console.log($scope.healthCheckResults);
+        for (var key in $scope.healthCheckResults) {
+            var sof_objs = _.where($scope.healthCheckResults[key], {
+                status: false
+            });
+            for (var x in sof_objs) {
+                summary.push(sof_objs[x]);
+            }
+        }
 
-$scope.summary = _.countBy(summary, function(obj){
-                                    return obj.rule;
-                                });
-$scope.showSummary=true;
-}
+        $scope.summary = _.countBy(summary, function(obj) {
+            return obj.rule;
+        });
+        $scope.showSummary = true;
+
+    }
 
     $scope.checkHealthStatus = function(productCode) {
         if ($scope.healthCheckResults) {

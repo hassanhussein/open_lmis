@@ -598,3 +598,7 @@ services.factory('GetUserRank', function ($resource) {
 services.factory('RunDataHealthCheck', function ($resource) {
     return $resource('/requisitions/run-data-health-check.json', {}, {});
 });
+
+services.factory('RunDataHealthCheckPerProduct', function ($resource) {
+    return $resource('/requisitions/run-data-health-check-per-product.json', {}, {});
+});
