@@ -17,6 +17,8 @@ import org.apache.log4j.Logger;
 import org.ict4h.atomfeed.server.service.Event;
 import org.ict4h.atomfeed.server.service.EventService;
 import org.joda.time.DateTime;
+import org.openlmis.core.audit.AuditAction;
+import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
@@ -77,6 +79,9 @@ public class FacilityService {
     @Autowired
     private FacilityTypeService facilityTypeService;
 
+    @Autowired
+    private AuditService auditService;
+
     @Transactional
     public void update(Facility facility) {
         save(facility);
@@ -119,6 +124,12 @@ public class FacilityService {
     @Transactional
     public void updateEnabledAndActiveFor(Facility facility) {
         facility = facilityRepository.updateEnabledAndActiveFor(facility);
+
+        if(facility.getEnabled())
+            auditService.logActivity(facility, AuditAction.ENABLE);
+        else
+            auditService.logActivity(facility, AuditAction.DISABLE);
+
         notify(asList(facility));
     }
 
@@ -134,6 +145,11 @@ public class FacilityService {
         Facility storedFacility = facilityRepository.getById(newFacility.getId());
 
         facilityRepository.save(newFacility);
+
+        if(storedFacility == null)
+            auditService.logActivity(newFacility, AuditAction.CREATE);
+        else
+            auditService.logActivity(newFacility, storedFacility);
 
         if (!newFacility.equals(storedFacility)) {
             notify(asList(newFacility));
@@ -178,7 +194,6 @@ public class FacilityService {
         if (homeFacility != null) userFacilities.add(homeFacility);
 
         return new ArrayList<>(userFacilities);
-
     }
 
     public FacilityType getFacilityTypeByCode(FacilityType facilityType) {

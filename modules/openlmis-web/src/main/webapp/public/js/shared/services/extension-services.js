@@ -1557,3 +1557,11 @@ services.factory('UserDashboardPreferences', function ($resource) {
 services.factory('PeriodInfo', function ($resource) {
     return $resource('/reports/period-info.json', {}, {});
 });
+
+services.factory('AuditReport', function ($resource) {
+    return $resource('/reports/reportdata/audit_trail.json', {}, {});
+});
+
+services.factory('AuditActions', function ($resource) {
+    return $resource('/reports/audit_actions.json', {}, {});
+});

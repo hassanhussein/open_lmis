@@ -887,4 +887,21 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, dailyConsumptionReportList);
     }
+
+    @RequestMapping(value = "reportdata/audit_trail", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AUDIT_TRAIL_REPORT')")
+    public Pages getAuditTrailReportData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                         @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                         @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                         HttpServletRequest request) {
+       Report report = reportManager.getReportByKey("audit_trail");
+       report.getReportDataProvider().setUserId(loggedInUserId(request));
+       List<AuditTrailReport> auditTrailList = (List<AuditTrailReport>) report.getReportDataProvider()
+               .getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
+
+       int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
+
+       return new Pages(page, totalCount, auditTrailList);
+    }
+
 }

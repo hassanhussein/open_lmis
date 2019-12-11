@@ -11,6 +11,8 @@
 package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.audit.AuditAction;
+import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProductGroupRepository;
@@ -47,6 +49,9 @@ public class ProductService {
   @Autowired
   private ProductFormService productFormService;
 
+  @Autowired
+  AuditService auditService;
+
   @Transactional
   public void save(Product product) {
 
@@ -63,12 +68,20 @@ public class ProductService {
 
     if (product.getId() == null) {
       repository.insert(product);
+      auditService.logActivity(product, AuditAction.CREATE);
       return;
     }
 
     List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
+    Boolean isStoredProductActive = isActive(product.getCode());
+
     repository.update(product);
+
+    if(isStoredProductActive && !product.getActive())
+      auditService.logActivity(product, AuditAction.DISABLE);
+    else if(!isStoredProductActive && product.getActive())
+      auditService.logActivity(product, AuditAction.ENABLE);
 
     notifyProgramCatalogChange(product, existingProgramProducts);
   }

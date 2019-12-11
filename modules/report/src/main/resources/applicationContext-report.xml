@@ -640,6 +640,15 @@
                     <property name="title" value="report.title.facility.consumption.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="audit_trail"/>
+                    <property name="template" value="audit_trail.jasper"/>
+                    <property name="reportDataProvider" ref="auditTrailReportDataProvider"/>
+                    <property name="id" value="AuditTrailReport"/>
+                    <property name="name" value="Audit Trail"/>
+                    <property name="title" value="report.title.audit.trail"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

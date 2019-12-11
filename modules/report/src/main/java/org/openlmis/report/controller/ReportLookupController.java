@@ -13,6 +13,7 @@
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.audit.AuditAction;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.service.*;
@@ -42,10 +43,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -686,5 +684,10 @@ public class ReportLookupController extends BaseController {
             HttpServletRequest request
     ) {
         return OpenLmisResponse.response(GEOLEVEL, reportLookupService.getGeoLevel(zoneId));
+    }
+
+    @RequestMapping(value = "/audit_actions", method = GET, headers = BaseController.ACCEPT_JSON)
+    public List<AuditAction> getAuditActions() {
+        return Arrays.asList(AuditAction.values());
     }
 }

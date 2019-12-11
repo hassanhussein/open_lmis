@@ -180,6 +180,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: DistributionSummaryReportController,
             templateUrl: 'partials/distribution-summary.html',
             reloadOnSearch: false
+        }).when('/audit_trail', {
+            controller: AuditTrailController,
+            templateUrl: 'partials/audit_trail.html',
+            reloadOnSearch: false
         }).otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');

@@ -365,8 +365,10 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
     }
 ]);
 
-app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram', 'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService','$routeParams',
-    function ( TreeGeographicZoneList, TreeGeographicZoneListByProgram, TreeGeographicTreeByProgramNoZones, GetUserUnassignedSupervisoryNode, messageService,$routeParams) {
+app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListByProgram',
+'TreeGeographicTreeByProgramNoZones', 'GetUserUnassignedSupervisoryNode', 'messageService','$routeParams',
+    function ( TreeGeographicZoneList, TreeGeographicZoneListByProgram, TreeGeographicTreeByProgramNoZones,
+    GetUserUnassignedSupervisoryNode, messageService,$routeParams) {
 
         var onCascadedVarsChanged = function ($scope, attr) {
             if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {

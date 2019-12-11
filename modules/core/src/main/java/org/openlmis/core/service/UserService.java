@@ -12,6 +12,8 @@ package org.openlmis.core.service;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.openlmis.core.audit.AuditAction;
+import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -45,6 +47,9 @@ public class UserService {
   @Autowired
   private MessageService messageService;
 
+  @Autowired
+  private AuditService auditService;
+
   public static String getCommaSeparatedIds(List<Long> idList) {
 
     return idList == null ? "{}" : idList.toString().replace("[", "").replace("]", "").replace(", ", ",");
@@ -53,6 +58,7 @@ public class UserService {
   @Transactional
   public void create(User user, String resetPasswordLink) {
     save(user);
+    auditService.logActivity(user, AuditAction.CREATE);
     if (!user.isMobileUser()) {
       sendUserCreationEmail(user, resetPasswordLink);
     }
@@ -67,8 +73,13 @@ public class UserService {
 
   @Transactional
   public void update(User user) {
+    User storedUser = getById(user.getId());
     user.validate();
     userRepository.update(user);
+
+    if(storedUser.getActive() != user.getActive())
+      auditService.logActivity(user, AuditAction.ENABLE);
+
     roleAssignmentService.saveRolesForUser(user);
   }
 
@@ -149,7 +160,12 @@ public class UserService {
 
   @Transactional
   public void disable(Long userId, Long modifiedBy) {
+    User user = getById(userId);
+    user.setModifiedBy(modifiedBy);
+
     userRepository.disable(userId, modifiedBy);
+
+    auditService.logActivity(user, AuditAction.DISABLE);
     userRepository.deletePasswordResetTokenForUser(userId);
   }
 
