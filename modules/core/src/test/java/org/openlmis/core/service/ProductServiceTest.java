@@ -16,8 +16,11 @@ import org.junit.experimental.categories.Category;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.audit.AuditAction;
+import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.domain.DosageUnit;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
@@ -65,6 +68,9 @@ public class ProductServiceTest {
 
   @InjectMocks
   private ProductService service;
+
+  @Mock
+  private AuditService auditService;
 
   @Test
   public void shouldStoreProduct() throws Exception {
@@ -142,6 +148,7 @@ public class ProductServiceTest {
     product.setCode("proCode");
     product.setPackSize(5);
     product.setMslPackSize(6);
+    product.setActive(true);
     when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
     List<ProgramProduct> programProducts = new ArrayList<>();

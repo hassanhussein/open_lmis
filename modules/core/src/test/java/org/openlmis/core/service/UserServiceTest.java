@@ -21,6 +21,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.hash.Encoder;
@@ -78,6 +79,9 @@ public class UserServiceTest {
 
   @InjectMocks
   private UserService userService;
+
+  @Mock
+  private AuditService auditService;
 
 
   @Before
@@ -255,9 +259,12 @@ public class UserServiceTest {
   @Test
   public void shouldUpdateUser() throws Exception {
     User user = new User();
+    user.setActive(true);
+    user.setId(1L);
     final RoleAssignment roleAssignment = new RoleAssignment(1L, 1L, 1L, new SupervisoryNode(1L));
     List<RoleAssignment> supervisorRoles = asList(roleAssignment);
     user.setSupervisorRoles(supervisorRoles);
+    when(userService.getById(1L)).thenReturn(user);
 
     userService.update(user);
 
@@ -349,7 +356,10 @@ public class UserServiceTest {
   @Test
   public void shouldDisableUser() {
     Long userId = 3l;
+    when(userService.getById(userId)).thenReturn(new User());
+
     userService.disable(userId, 1L);
+
     verify(userRepository).disable(userId, 1L);
     verify(userRepository).deletePasswordResetTokenForUser(userId);
   }
