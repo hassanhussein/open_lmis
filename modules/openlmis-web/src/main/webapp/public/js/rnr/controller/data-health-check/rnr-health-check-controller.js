@@ -19,7 +19,7 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
     $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
     $scope.patientColumns = patientTemplate ? patientTemplate.columns : [];
     $scope.viewSourceOfFund = true;
-    $scope.healthCheckResults = {};
+    $scope.healthCheckResults ;
     $scope.fullSupplyTabError = false;
     $scope.summary;
     $scope.showSummary = false;
@@ -34,7 +34,7 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
 
 
     $scope.runHealthCheck = function() {
-
+console.log($scope.rnr);
      function async (data, item){
                 var deferred = $q.defer();
                 setTimeout(function() {
@@ -50,11 +50,9 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
             }
 
 
-        for (var item in $scope.rnr.allSupplyLineItems) {
+        for (var item in $scope.rnr.nonSkippedLineItems) {
             async ($scope.rnr, item);
         }
-
-        console.log(str);
     };
 
 
@@ -74,7 +72,6 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
 
     function createSummary() {
         var summary = [];
-        console.log($scope.healthCheckResults);
         for (var key in $scope.healthCheckResults) {
             var sof_objs = _.where($scope.healthCheckResults[key], {
                 status: false
