@@ -15,8 +15,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     var dataWithRegion = addRegionData(data);
                     var unit = "Facilities";
                     var zeroColor = "#e74c3c"; //Red
-                    var title = params.indicator === 'allTracerProducts' ? 'Percentage of Tracer Availability': 'Percentage of Availability';
-                    districtMap.feature= districtMap.features;
+                    var title = params.indicator === 'allTracerProducts' ? 'Percentage of Tracer Availability' : 'Percentage of Availability';
+                    districtMap.feature = districtMap.features;
                     loadLatestReportedStockStatusMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                 });
 
@@ -28,7 +28,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     function loadLatestReportedStockStatusMap(regionMap, districtMap, values, params, districtValues, regionData, title, unit, zeroColor) {
 
         var data = Highcharts.geojson(regionMap);
-        var areaName= 'Region';
+        var areaName = 'Region';
         getLatestStockAvailabilityStatusSummary(regionData, params);
         $.each(data, function(i) {
             var key = this.properties['hc-key'];
@@ -42,24 +42,24 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     region_name: data_obj[0][0]
                 })[0];
                 var stockOutPercentage = Math.round((reg_obj.total_stockoutincidence / reg_obj.total_incidence) * 100);
+
+                this.y = stockOutPercentage;
+                this.value = stockOutPercentage;
+                this.stockAvailabilityPercentage = 100 - stockOutPercentage;
+                this.totalIncidence = reg_obj.total_incidence;
+                this.stockOutIncidence = reg_obj.total_stockoutincidence;
+
                 if (stockOutPercentage == 100) {
-                    this.y = stockOutPercentage;
-                    this.color = zeroColor;
-                    this.value = stockOutPercentage;
-                    this.totalIncidence = reg_obj.total_incidence;
-                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
-                } else if (stockOutPercentage < 100 && stockOutPercentage > 0) {
-                    this.y = stockOutPercentage;
-                    this.color = '#3498db';
-                    this.value = stockOutPercentage;
-                    this.totalIncidence = reg_obj.total_incidence;
-                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                    this.color = '#EC6B58'; //Red
+                } else if (stockOutPercentage < 100 && stockOutPercentage > 70) {
+                    this.color = '#F58F84'; //Mid-Red
+                } else if (stockOutPercentage <= 70 && stockOutPercentage > 30) {
+                    this.color = '#5D8CAE'; //Blue
+
+                } else if (stockOutPercentage <= 30 && stockOutPercentage > 0) {
+                    this.color = '#5DBCD2'; //Mid Blue
                 } else if (stockOutPercentage === 0) {
-                    this.y = stockOutPercentage;
-                    this.color = '#62A44C';
-                    this.value = stockOutPercentage;
-                    this.totalIncidence = reg_obj.total_incidence;
-                    this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                    this.color = '#1BBB9C'; //Green
                 }
             } else {
                 this.y = 0;
@@ -78,105 +78,117 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                             var chart = this;
                             areaName = 'District';
                             chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
-                                data = Highcharts.geojson(filterMap(districtMap, e.point.name));
-                                $.each(data, function(i) {
-                                    var sof_obj = _.where(districtValues, {
-                                        region_name: e.point.name,
-                                        district_name: data[i].name
-                                    });
-
-                                    if (sof_obj.length > 0) {
-                                        var reg_obj = _.where(districtValues, {
-                                            district_name: sof_obj[0].district_name
-                                        })[0];
-                                        this.value = sof_obj[0].stockinhand;
-                                        var stockOutPercentage = Math.round((reg_obj.stockoutincidence / reg_obj.totalincidence) * 100);
-                                        if (stockOutPercentage == 100) {
-                                            this.y = stockOutPercentage;
-                                            this.color = zeroColor;
-                                            this.value = stockOutPercentage;
-                                            this.totalIncidence = reg_obj.totalincidence;
-                                            this.stockOutIncidence = reg_obj.stockoutincidence;
-                                        } else if (stockOutPercentage < 100 && stockOutPercentage > 0) {
-                                            this.y = stockOutPercentage;
-                                            this.color = '#3498db';
-                                            this.value = stockOutPercentage;
-                                            this.totalIncidence = reg_obj.totalincidence;
-                                            this.stockOutIncidence = reg_obj.stockoutincidence;
-                                        } else if (stockOutPercentage === 0) {
-                                            this.y = stockOutPercentage;
-                                            this.color = '#62A44C';
-                                            this.value = stockOutPercentage;
-                                            this.totalIncidence = reg_obj.totalincidence;
-                                            this.stockOutIncidence = reg_obj.stockoutincidence;
-                                        }
-                                    } else {
-                                        this.y = 0;
-                                        this.color = '#b2bec3';
-                                        this.value = 0;
-                                        this.totalIncidence = 0;
-                                        this.stockOutIncidence = 0;
-                                    }
+                            data = Highcharts.geojson(filterMap(districtMap, e.point.name));
+                            $.each(data, function(i) {
+                                var sof_obj = _.where(districtValues, {
+                                    region_name: e.point.name,
+                                    district_name: data[i].name
                                 });
-                                getLatestStockAvailabilityDrillDownSummary(districtValues, params, e.point.name);
-                                chart.hideLoading();
 
-                                chart.addSeriesAsDrilldown(e.point, {
-                                    name: e.point.name,
-                                    data: data,
-                                    dataLabels: {
-                                        enabled: true,
-                                        format: '{point.name}'
+                                if (sof_obj.length > 0) {
+                                    var reg_obj = _.where(districtValues, {
+                                        district_name: sof_obj[0].district_name
+                                    })[0];
+                                    this.value = sof_obj[0].stockinhand;
+                                    var stockOutPercentage = Math.round((reg_obj.stockoutincidence / reg_obj.totalincidence) * 100);
+
+                                    this.y = stockOutPercentage;
+
+                                    this.value = stockOutPercentage;
+                                    this.totalIncidence = reg_obj.totalincidence;
+                                    this.stockOutIncidence = reg_obj.stockoutincidence;
+                                    this.stockAvailabilityPercentage = 100 - stockOutPercentage;
+
+
+                                    if (stockOutPercentage == 100) {
+                                        this.color = '#EC6B58'; //Red
+                                    } else if (stockOutPercentage < 100 && stockOutPercentage > 70) {
+                                        this.color = '#F58F84'; //Mid-Red
+                                    } else if (stockOutPercentage <= 70 && stockOutPercentage > 30) {
+                                        this.color = '#5D8CAE'; //Blue
+
+                                    } else if (stockOutPercentage <= 30 && stockOutPercentage > 0) {
+                                        this.color = '#5DBCD2'; //Mid Blue
+                                    } else if (stockOutPercentage === 0) {
+                                        this.color = '#1BBB9C'; //Green
                                     }
-                                });
+                                } else {
+                                    this.y = 0;
+                                    this.color = '#b2bec3';
+                                    this.value = 0;
+                                    this.totalIncidence = 0;
+                                    this.stockOutIncidence = 0;
+                                }
+                            });
+                            getLatestStockAvailabilityDrillDownSummary(districtValues, params, e.point.name);
+                            chart.hideLoading();
+
+                            chart.addSeriesAsDrilldown(e.point, {
+                                name: e.point.name,
+                                data: data,
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '{point.name}'
+                                }
+                            });
 
                         }
-                        this.setTitle(null, {
+                        this.setSubTitle(null, {
                             text: e.point.name
                         });
                     },
                     drillup: function() {
-                    areaName = 'Region';
-                    getLatestStockAvailabilityStatusSummary(regionData, params);
-                    this.setTitle(null, {
-                            text: 'Tanzania'
+                        areaName = 'Region';
+                        getLatestStockAvailabilityStatusSummary(regionData, params);
+                        this.setTitle(null, {
+                            text: 'Click Region  to see district'
                         });
                     }
                 }
             },
             title: {
-                text: title
+                text: "Percentage of Stock Availability by Location"
             },
+            subtitle: {
+                    text: 'Click Region  to see district'
+                },
             credits: {
                 enabled: false
             },
-            subtitle: {
-                text: 'Tanzania',
-                floating: true,
-                align: 'right',
-                y: 50,
-                style: {
-                    fontSize: '16px'
-                }
-            },
+//            subtitle: {
+//                text: 'Tanzania',
+//                floating: true,
+//                align: 'right',
+//                y: 50,
+//                style: {
+//                    fontSize: '16px'
+//                }
+//            },
             legend: {
-                layout: 'vertical',
-                align: 'right',
-                verticalAlign: 'middle'
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
             },
             colorAxis: {
                 dataClasses: [{
-                        color: zeroColor,
+                        color: '#EC6B58',
                         name: 'Total Stockout'
                     }, {
-                        color: '#3498db',
-                        name: 'Partial Availability'
+                        color: '#F58F84',
+                        name: '<30 % Stock Availability'
                     },
                     {
-                        color: '#62A44C',
-                        name: 'Full Availability'
+                        color: '#5D8CAE',
+                        name: '30% - 70% Stock Availability'
                     },
                     {
+                        color: '#5DBCD2',
+                        name: '<70% Stock Availability'
+                    },
+                    {
+                        color: '#1BBB9C',
+                        name: '100% Stock Availability'
+                    }, {
                         color: '#b2bec3',
                         name: 'Never Reported'
                     }
@@ -188,12 +200,25 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     verticalAlign: 'bottom'
                 }
             },
-            tooltip: {
-                formatter: function() {
-                    return areaName + ': ' + this.point.name +
-                        '<br/>' + title +  ': ' + (100-this.point.y) + '%' ;
-                }
-            },
+                    tooltip: {
+                        backgroundColor: 'none',
+                        borderWidth: 0,
+                        shadow: false,
+                        useHTML: true,
+                        padding: 0,
+                        pointFormat: '<span class="f32">' +
+                            '</span></span> {point.name}<br>' +
+                            '<span style="font-size:30px"> {point.stockAvailabilityPercentage}%</span>',
+                        positioner: function () {
+                            return { x: 0, y: 250 };
+                        }
+                    },
+//            tooltip: {
+//                formatter: function() {
+//                    return areaName + ': ' + this.point.name +
+//                        '<br/>' + title + ': ' + (100 - this.point.y) + '%';
+//                }
+//            },
             plotOptions: {
                 map: {
                     states: {
@@ -244,45 +269,45 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                             loadCommoditiesMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                             return;
                         case "consumptionQuantities":
-                             title = params.productName + " Stock Consumption Quantity by Location, " + params.periodName + ", " + params.year;
-                             unit = "Units";
-                             zeroColor = "#b2bec3"; //normal
+                            title = params.productName + " Stock Consumption Quantity by Location, " + params.periodName + ", " + params.year;
+                            unit = "Units";
+                            zeroColor = "#b2bec3"; //normal
                             loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit), zeroColor;
                             return;
                         case "stockInHand":
-                             title = params.productName + " Stock on Hand Quantity by Location, " + params.periodName + ", " + params.year;
-                             unit = "Units";
-                             zeroColor = "#e74c3c"; //normal
+                            title = params.productName + " Stock on Hand Quantity by Location, " + params.periodName + ", " + params.year;
+                            unit = "Units";
+                            zeroColor = "#e74c3c"; //normal
                             loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                             return;
                         case "consumptionCost":
-                             title = params.productName + " Cost of Reported consumption by Location, " + params.periodName + ", " + params.year;
-                             unit = "Tsh";
-                             zeroColor = "#b2bec3"; //normal
+                            title = params.productName + " Cost of Reported consumption by Location, " + params.periodName + ", " + params.year;
+                            unit = "Tsh";
+                            zeroColor = "#b2bec3"; //normal
                             loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                             return;
                         case "quantityReceived":
-                             title = params.productName + " Quantity Received from MSD by Location, " + params.periodName + ", " + params.year;
-                             unit = "Unit";
-                             zeroColor = "#b2bec3"; //normal
+                            title = params.productName + " Quantity Received from MSD by Location, " + params.periodName + ", " + params.year;
+                            unit = "Unit";
+                            zeroColor = "#b2bec3"; //normal
                             loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                             return;
                         case "quantityExpiredLostStolen":
-                             title = params.productName + " Quantity Lost/Expired/Stolen by Location, " + params.periodName + ", " + params.year;
-                             unit = "Unit";
-                             zeroColor = "#b2bec3"; //normal
+                            title = params.productName + " Quantity Lost/Expired/Stolen by Location, " + params.periodName + ", " + params.year;
+                            unit = "Unit";
+                            zeroColor = "#b2bec3"; //normal
                             loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                             return;
                         case "costQuantityExpiredLostStolen":
-                             title = params.productName + " Cost of Quantity Lost/Expired/Stolen by Location, " + params.periodName + ", " + params.year;
-                             unit = "Tsh";
-                             zeroColor = "#b2bec3"; //normal
+                            title = params.productName + " Cost of Quantity Lost/Expired/Stolen by Location, " + params.periodName + ", " + params.year;
+                            unit = "Tsh";
+                            zeroColor = "#b2bec3"; //normal
                             loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                             return;
                         case "overStockQuantity":
-                             title = params.productName + " OverStock Quantity by Location, " + params.periodName + ", " + params.year;
-                             unit = "Unit";
-                             zeroColor = "#b2bec3"; //normal
+                            title = params.productName + " OverStock Quantity by Location, " + params.periodName + ", " + params.year;
+                            unit = "Unit";
+                            zeroColor = "#b2bec3"; //normal
                             loadCommoditiesConsumptionMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
                             return;
                         default:
@@ -342,6 +367,13 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             },
 
             plotOptions: {
+                mappie: {
+                    borderColor: 'rgba(255,255,255,0.4)',
+                    borderWidth: 1,
+                    tooltip: {
+                        headerFormat: ''
+                    }
+                },
                 series: {
                     label: {
                         connectorAllowed: false
@@ -494,8 +526,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 }
             },
             legend: {
-                layout: 'vertical',
-                align: 'right',
+                layout: 'horizontal',
+                align: 'center',
                 verticalAlign: 'middle'
             },
             colorAxis: {
@@ -940,57 +972,63 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     function getLatestStockAvailabilityStatusSummary(data, params) {
         var reg_arry = [];
 
-            var full_items =_.filter( data, function(item){
-            var percentage = ((item.total_stockoutincidence/item.total_incidence) * 100);
-                if (percentage === 0)
-                {
-                    return item;
-                }
-            });
+        var full_items = _.filter(data, function(item) {
+            var percentage = ((item.total_stockoutincidence / item.total_incidence) * 100);
+            if (percentage === 0) {
+                return item;
+            }
+        });
 
-             var partial_items =_.filter( data, function(item){
-             var percentage = ((item.total_stockoutincidence/item.total_incidence) * 100);
-                            if (percentage > 0 && percentage < 100)
-                            {
-                                return item;
-                            }
-             });
+        var partial_items = _.filter(data, function(item) {
+            var percentage = ((item.total_stockoutincidence / item.total_incidence) * 100);
+            if (percentage > 0 && percentage < 100) {
+                return item;
+            }
+        });
 
-        var total_stockout_items =_.filter( data, function(item){
-             var percentage = ((item.total_stockoutincidence/item.total_incidence) * 100);
-                            if ( percentage === 100)
-                            {
-                                return item;
-                            }
-             });
+        var total_stockout_items = _.filter(data, function(item) {
+            var percentage = ((item.total_stockoutincidence / item.total_incidence) * 100);
+            if (percentage === 100) {
+                return item;
+            }
+        });
 
-            reg_arry.push({key: "Full Stock Availability",value: full_items.length + ' Region(s)'});
-            reg_arry.push({key: "Partial Stock Availability",value: partial_items.length + ' Region(s)'});
-            reg_arry.push({key: "Total Stockout",value: total_stockout_items.length + ' Region(s)'});
-            $rootScope.summary.content = reg_arry;
-            $rootScope.$apply();
-            return;
+        reg_arry.push({
+            key: "Full Stock Availability",
+            value: full_items.length + ' Region(s)'
+        });
+        reg_arry.push({
+            key: "Partial Stock Availability",
+            value: partial_items.length + ' Region(s)'
+        });
+        reg_arry.push({
+            key: "Total Stockout",
+            value: total_stockout_items.length + ' Region(s)'
+        });
+        $rootScope.summary.content = reg_arry;
+        $rootScope.$apply();
+        return;
     }
 
 
     function getSummary(data, indicator) {
-            var reg_arry = [];
-            var total_stockoutincidence;
-            var total_incidence;
-            var max_obj;
-            var min_obj ;
+        var reg_arry = [];
+        var total_stockoutincidence;
+        var total_incidence;
+        var max_obj;
+        var min_obj;
         switch (indicator) {
             case "stockAvailability":
 
-                 total_stockoutincidence = _.uniq(_.pluck(data, 'total_stockoutincidence'));
-                 total_incidence = _.uniq(_.pluck(data, 'total_incidence'));
-                 max_obj = {
+                total_stockoutincidence = _.uniq(_.pluck(data, 'total_stockoutincidence'));
+                total_incidence = _.uniq(_.pluck(data, 'total_incidence'));
+                max_obj = {
                     key: "Total Facilities with stockout",
                     value: _.reduce(total_stockoutincidence, function(a, b) {
                         return a + b;
                     }, 0)
                 };
-                 min_obj = {
+                min_obj = {
                     key: "Total reported Facilities",
                     value: _.reduce(total_incidence, function(a, b) {
                         return a + b;
@@ -1005,23 +1043,23 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             case "consumptionQuantities":
 
 
-                 maxItem = _.max(data, function(data) {
+                maxItem = _.max(data, function(data) {
                     return data.total_consumption;
                 });
-                 minItem = _.min(data, function(data) {
+                minItem = _.min(data, function(data) {
                     return data.total_consumption;
                 });
-                 total_consumption = _.uniq(_.pluck(data, 'total_consumption'));
+                total_consumption = _.uniq(_.pluck(data, 'total_consumption'));
 
-                 max_obj = {
+                max_obj = {
                     key: "Max Consumption",
                     value: maxItem.region_name + " ( " + maxItem.total_consumption + " Units)"
                 };
-                 min_obj = {
+                min_obj = {
                     key: "Min Consumption",
                     value: minItem.region_name + " (" + minItem.total_consumption + " Units)"
                 };
-                 total_obj = {
+                total_obj = {
                     key: "Total Reported Consumption",
                     value: _.reduce(total_consumption, function(a, b) {
                         return a + b;
@@ -1036,23 +1074,23 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 return;
             case "stockInHand":
 
-                 maxItem = _.max(data, function(data) {
+                maxItem = _.max(data, function(data) {
                     return data.total_stockinhand;
                 });
-                 minItem = _.min(data, function(data) {
+                minItem = _.min(data, function(data) {
                     return data.total_stockinhand;
                 });
-                 total_stockinhand = _.uniq(_.pluck(data, 'total_stockinhand'));
+                total_stockinhand = _.uniq(_.pluck(data, 'total_stockinhand'));
 
-                 max_obj = {
+                max_obj = {
                     key: "Max Stock on hand",
                     value: maxItem.region_name + " ( " + maxItem.total_stockinhand + " Units)"
                 };
-                 min_obj = {
+                min_obj = {
                     key: "Min stock on hand",
                     value: minItem.region_name + " (" + minItem.total_stockinhand + " Units)"
                 };
-                 total_obj = {
+                total_obj = {
                     key: "Total Reported Consumption",
                     value: _.reduce(total_stockinhand, function(a, b) {
                         return a + b;
@@ -1071,59 +1109,65 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     }
 
 
-   function getLatestStockAvailabilityDrillDownSummary(data, params, region_name) {
+    function getLatestStockAvailabilityDrillDownSummary(data, params, region_name) {
 
 
-          data = _.where(data, {
-                    region_name: region_name
-                });
+        data = _.where(data, {
+            region_name: region_name
+        });
 
-         var reg_arry = [];
+        var reg_arry = [];
 
 
-                   var full_items =_.filter( data, function(item){
-                   var percentage = ((item.stockoutincidence/item.totalincidence) * 100);
-                       if (percentage === 0)
-                       {
-                           return item;
-                       }
-                   });
+        var full_items = _.filter(data, function(item) {
+            var percentage = ((item.stockoutincidence / item.totalincidence) * 100);
+            if (percentage === 0) {
+                return item;
+            }
+        });
 
-                    var partial_items =_.filter( data, function(item){
-                    var percentage = ((item.stockoutincidence/item.totalincidence) * 100);
-                                   if (percentage > 0 && percentage < 100)
-                                   {
-                                       return item;
-                                   }
-                    });
+        var partial_items = _.filter(data, function(item) {
+            var percentage = ((item.stockoutincidence / item.totalincidence) * 100);
+            if (percentage > 0 && percentage < 100) {
+                return item;
+            }
+        });
 
-               var total_stockout_items =_.filter( data, function(item){
-                    var percentage = ((item.stockoutincidence/item.totalincidence) * 100);
-                                   if ( percentage === 100)
-                                   {
-                                       return item;
-                                   }
-                    });
+        var total_stockout_items = _.filter(data, function(item) {
+            var percentage = ((item.stockoutincidence / item.totalincidence) * 100);
+            if (percentage === 100) {
+                return item;
+            }
+        });
 
-                   reg_arry.push({key: "Full Stock Availability",value: full_items.length + ' Districts'});
-                   reg_arry.push({key: "Partial Stock Availability",value: partial_items.length +  ' Districts'});
-                   reg_arry.push({key: "Total Stockout",value: total_stockout_items.length +  ' Districts'});
-                   $rootScope.summary.content = reg_arry;
-                   $rootScope.$apply();
-                    return;
-        }
+        reg_arry.push({
+            key: "Full Stock Availability",
+            value: full_items.length + ' Districts'
+        });
+        reg_arry.push({
+            key: "Partial Stock Availability",
+            value: partial_items.length + ' Districts'
+        });
+        reg_arry.push({
+            key: "Total Stockout",
+            value: total_stockout_items.length + ' Districts'
+        });
+        $rootScope.summary.content = reg_arry;
+        $rootScope.$apply();
+        return;
+    }
 
 
     function getDrillDownSummary(data, indicator, region_name) {
 
-                          var reg_arry = [];
-                          var total_stockoutincidence;
-                          var total_incidence;
-                          var max_obj;
-                          var min_obj ;
-                          var maxItem;
-                          var minItem;
-                          var total_ob;
+        var reg_arry = [];
+        var total_stockoutincidence;
+        var total_incidence;
+        var max_obj;
+        var min_obj;
+        var maxItem;
+        var minItem;
+        var total_ob;
         data = _.where(data, {
             region_name: region_name
         });
@@ -1131,15 +1175,15 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             case "stockAvailability":
 
 
-                 total_stockoutincidence = _.uniq(_.pluck(data, 'stockoutincidence'));
-                 total_incidence = _.uniq(_.pluck(data, 'totalincidence'));
-                 max_obj = {
+                total_stockoutincidence = _.uniq(_.pluck(data, 'stockoutincidence'));
+                total_incidence = _.uniq(_.pluck(data, 'totalincidence'));
+                max_obj = {
                     key: "Total Facilities with stockout",
                     value: _.reduce(total_stockoutincidence, function(a, b) {
                         return a + b;
                     }, 0)
                 };
-                 min_obj = {
+                min_obj = {
                     key: "Total reported Facilities",
                     value: _.reduce(total_incidence, function(a, b) {
                         return a + b;
@@ -1153,23 +1197,23 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             case "consumptionQuantities":
 
 
-                 maxItem = _.max(data, function(data) {
+                maxItem = _.max(data, function(data) {
                     return data.consumption;
                 });
-                 minItem = _.min(data, function(data) {
+                minItem = _.min(data, function(data) {
                     return data.consumption;
                 });
-                 total_consumption = _.uniq(_.pluck(data, 'consumption'));
+                total_consumption = _.uniq(_.pluck(data, 'consumption'));
 
-                 max_obj = {
+                max_obj = {
                     key: "Max Consumption",
                     value: maxItem.district_name + " ( " + maxItem.consumption + " Units)"
                 };
-                 min_obj = {
+                min_obj = {
                     key: "Min Consumption",
                     value: minItem.district_name + " (" + minItem.consumption + " Units)"
                 };
-                 total_obj = {
+                total_obj = {
                     key: "Total Reported Consumption",
                     value: _.reduce(total_consumption, function(a, b) {
                         return a + b;
@@ -1184,23 +1228,23 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             case "stockInHand":
 
 
-                 maxItem = _.max(data, function(data) {
+                maxItem = _.max(data, function(data) {
                     return data.stockinhand;
                 });
-                 minItem = _.min(data, function(data) {
+                minItem = _.min(data, function(data) {
                     return data.stockinhand;
                 });
-                 total_consumption = _.uniq(_.pluck(data, 'stockinhand'));
+                total_consumption = _.uniq(_.pluck(data, 'stockinhand'));
 
-                 max_obj = {
+                max_obj = {
                     key: "Max Stock on Hand",
                     value: maxItem.district_name + " ( " + maxItem.consumption + " Units)"
                 };
-                 min_obj = {
+                min_obj = {
                     key: "Min Stock on Hand",
                     value: minItem.district_name + " (" + minItem.consumption + " Units)"
                 };
-                 total_obj = {
+                total_obj = {
                     key: "Total Reported Stock on Hand",
                     value: _.reduce(total_consumption, function(a, b) {
                         return a + b;

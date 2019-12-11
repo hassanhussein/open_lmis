@@ -20,7 +20,7 @@ select 'Questionable  losses and adjustment' as rule, * from fn_rule_questionabl
 ;
 END;
 $$
-LANGUAGE plpgsql
+LANGUAGE plpgsql;
 
 
 
