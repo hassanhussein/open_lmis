@@ -34,18 +34,17 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
 
 
     $scope.runHealthCheck = function() {
-console.log($scope.rnr);
      function async (data, item){
                 var deferred = $q.defer();
                 setTimeout(function() {
                     deferred.resolve(RunDataHealthCheckPerProduct.get({
                         rnrid: data.id,
-                        rnrItemId: data.allSupplyLineItems[item].id
+                        rnrItemId: data.nonSkippedLineItems[item].id
                     }, function(data) {
                         $scope.healthCheckResults = Object.assign({}, $scope.healthCheckResults, data.healthCheck);
                         createSummary();
                     }, {}));
-                }, 100);
+                }, 1000);
                 return deferred.promise;
             }
 
