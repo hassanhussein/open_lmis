@@ -10,7 +10,12 @@
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
     <div>
-        <h2>Add New ASN/Pre-advice</h2>
+        <h2 ng-if="!asn">Add New ASN/Pre-advice</h2>
+
+        <h2 ng-if="asn && !viewMode">Update ASN/Pre-advice</h2>
+
+
+        <h2 ng-if="viewMode">View ASN/Pre-advice</h2>
 
 
     </div>

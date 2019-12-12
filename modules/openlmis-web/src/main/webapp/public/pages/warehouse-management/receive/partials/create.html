@@ -10,7 +10,14 @@
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
     <div>
-        <h2>Receive Package</h2>
+        <h2 ng-if="!receive">Receive Consignment</h2>
+
+        <h2 ng-if="receive && !viewMode">Update Consignment</h2>
+        <h2 ng-if="viewMode">View Consignment</h2>
+
+
+
+
 
 
     </div>
