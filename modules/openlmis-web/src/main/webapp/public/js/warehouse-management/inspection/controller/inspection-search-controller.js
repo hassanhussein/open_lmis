@@ -1,6 +1,10 @@
 function InspectionSearchController($scope,navigateBackService, $dialog,$location){
 $scope.problem=true;
 
+$scope.searchOptions = [
+  {value: "asnNumber", name: "ASN Number"},
+     {value: "receiptNumber", name: "Receipt Number"},
+  ];
 
   $scope.inspectionListFromServer=[
   {
@@ -11,7 +15,7 @@ $scope.problem=true;
       "numberOfPages": 1,
       "totalRecords": 1
     },
-  inspectionDate:'2019-12-3',
+  inspectionDate:'2019-12-10',
   asnNumber:'asn1',
   supplierId:1,
   portId:1,
@@ -45,13 +49,23 @@ $scope.problem=true;
   failedQty:0,
   lots:[{
   code:'TT454',
-  quantity:343,
+  quantity:500,
   expiryDate:'2019-10-1',
+  passedQty:0,
+  failedQty:0,
+  passedLocation:0,
+  failedLocation:0,
+  vvm:0
   },
   {
     code:'YY454',
-    quantity:343,
+    quantity:500,
     expiryDate:'2019-10-11',
+    passedQty:0,
+    failedQty:0,
+    passedLocation:0,
+    failedLocation:0,
+    vvm:0
     }
 
   ]
@@ -62,10 +76,6 @@ $scope.problem=true;
 
 
 
-$scope.searchOptions = [
-  {value: "asnNumber", name: "ASN Number"},
-     {value: "receiptNumber", name: "Receipt Number"},
-  ];
 
 
     function getInspectionList(page, query) {
@@ -88,6 +98,13 @@ $scope.searchOptions = [
     $scope.showResults = true;
     $scope.showSearchResults = true;
     }
+  $scope.showResults = false;
+  $scope.currentPage = 1;
+  $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
+
+  $scope.selectSearchType = function (searchOption) {
+    $scope.selectedSearchOption = searchOption;
+  };
 
     // column to sort
      $scope.column = 'asnNumber';

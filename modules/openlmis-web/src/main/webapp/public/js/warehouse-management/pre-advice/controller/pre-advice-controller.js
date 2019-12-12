@@ -604,7 +604,7 @@ $scope.removeProduct(productIndex);
 
           product.lots.forEach(function(lot) {
 //          console.log(lot.quantity)
-                    sum += parseInt(lot.quantity,10);
+                    sum += parseInt(lot.quantity?lot.quantity:0,10);
                 });
         }else{
 
