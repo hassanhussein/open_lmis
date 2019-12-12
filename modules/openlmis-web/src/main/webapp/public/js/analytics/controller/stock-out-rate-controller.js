@@ -6,6 +6,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
         content: null
     };
     $scope.productFilter = false;
+    var drillDownState = false;
+    var drillDownIndex = 0;
 
 
     $rootScope.loadLatestReportedStockStatus = function(params) {
@@ -23,6 +25,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             });
         });
     };
+
 
 
     function loadLatestReportedStockStatusMap(regionMap, districtMap, values, params, districtValues, regionData, title, unit, zeroColor) {
@@ -70,15 +73,22 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             }
         });
 
-        $('#latestReportedCommoditiesStockStatus').highcharts('Map', {
+
+        var options = {
             chart: {
+                renderTo: 'latestReportedCommoditiesStockStatus',
                 events: {
                     drilldown: function(e) {
                         if (!e.seriesOptions) {
+                            drillDownState = true;
                             var chart = this;
                             areaName = 'District';
                             chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
+
+                            var regions = _.uniq(_.pluck(data, 'drilldown'));;
+                            drillDownIndex = regions.indexOf(e.point.name);
                             data = Highcharts.geojson(filterMap(districtMap, e.point.name));
+
                             $.each(data, function(i) {
                                 var sof_obj = _.where(districtValues, {
                                     region_name: e.point.name,
@@ -133,12 +143,13 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                             });
 
                         }
-                        this.setSubTitle(null, {
+                        this.setTitle(null, {
                             text: e.point.name
                         });
                     },
                     drillup: function() {
                         areaName = 'Region';
+                        drillDownState = false;
                         getLatestStockAvailabilityStatusSummary(regionData, params);
                         this.setTitle(null, {
                             text: 'Click Region  to see district'
@@ -150,20 +161,11 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 text: "Percentage of Stock Availability by Location"
             },
             subtitle: {
-                    text: 'Click Region  to see district'
-                },
+                text: 'Click Region  to see district'
+            },
             credits: {
                 enabled: false
             },
-//            subtitle: {
-//                text: 'Tanzania',
-//                floating: true,
-//                align: 'right',
-//                y: 50,
-//                style: {
-//                    fontSize: '16px'
-//                }
-//            },
             legend: {
                 layout: 'horizontal',
                 align: 'center',
@@ -200,25 +202,22 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     verticalAlign: 'bottom'
                 }
             },
-                    tooltip: {
-                        backgroundColor: 'none',
-                        borderWidth: 0,
-                        shadow: false,
-                        useHTML: true,
-                        padding: 0,
-                        pointFormat: '<span class="f32">' +
-                            '</span></span> {point.name}<br>' +
-                            '<span style="font-size:30px"> {point.stockAvailabilityPercentage}%</span>',
-                        positioner: function () {
-                            return { x: 0, y: 250 };
-                        }
-                    },
-//            tooltip: {
-//                formatter: function() {
-//                    return areaName + ': ' + this.point.name +
-//                        '<br/>' + title + ': ' + (100 - this.point.y) + '%';
-//                }
-//            },
+            tooltip: {
+                backgroundColor: 'none',
+                borderWidth: 0,
+                shadow: false,
+                useHTML: true,
+                padding: 0,
+                pointFormat: '<span class="f32">' +
+                    '</span></span> {point.name}<br>' +
+                    '<span style="font-size:30px"> {point.stockAvailabilityPercentage}%</span>',
+                positioner: function() {
+                    return {
+                        x: 0,
+                        y: 250
+                    };
+                }
+            },
             plotOptions: {
                 map: {
                     states: {
@@ -250,7 +249,12 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     }
                 }
             }
-        });
+        }
+
+        var chart = Highcharts.mapChart(options);
+        if (drillDownState) {
+            chart.series[0].data[drillDownIndex].doDrilldown(undefined, undefined, 1);
+        }
     }
 
 
@@ -971,7 +975,6 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
 
     function getLatestStockAvailabilityStatusSummary(data, params) {
         var reg_arry = [];
-
         var full_items = _.filter(data, function(item) {
             var percentage = ((item.total_stockoutincidence / item.total_incidence) * 100);
             if (percentage === 0) {

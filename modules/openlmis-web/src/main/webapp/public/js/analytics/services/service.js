@@ -1,11 +1,11 @@
-services.factory('DashboardStockStatusSummaryData', function ($q, $timeout, $resource,StockStatusSummary) {
+services.factory('DashboardStockStatusSummaryData', function($q, $timeout, $resource, StockStatusSummary) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            StockStatusSummary.get(params, function (data) {
+        $timeout(function() {
+            StockStatusSummary.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -23,14 +23,14 @@ services.factory('DashboardStockStatusSummaryData', function ($q, $timeout, $res
 });
 
 
-services.factory('StockAvailableForPeriodData', function ($q, $timeout, $resource,StockAvailableForPeriod) {
+services.factory('StockAvailableForPeriodData', function($q, $timeout, $resource, StockAvailableForPeriod) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            StockAvailableForPeriod.get(params, function (data) {
+        $timeout(function() {
+            StockAvailableForPeriod.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -47,14 +47,14 @@ services.factory('StockAvailableForPeriodData', function ($q, $timeout, $resourc
 
 });
 
-services.factory('StockAvailableByProgramAndPeriodData', function ($q, $timeout, $resource,StockAvailableByProgramAndPeriod) {
+services.factory('StockAvailableByProgramAndPeriodData', function($q, $timeout, $resource, StockAvailableByProgramAndPeriod) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            StockAvailableByProgramAndPeriod.get(params, function (data) {
+        $timeout(function() {
+            StockAvailableByProgramAndPeriod.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -71,14 +71,14 @@ services.factory('StockAvailableByProgramAndPeriodData', function ($q, $timeout,
 
 });
 
-services.factory('ConsumptionTrendsData', function ($q, $timeout, $resource,ConsumptionTrends) {
+services.factory('ConsumptionTrendsData', function($q, $timeout, $resource, ConsumptionTrends) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            ConsumptionTrends.get(params, function (data) {
+        $timeout(function() {
+            ConsumptionTrends.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -95,14 +95,14 @@ services.factory('ConsumptionTrendsData', function ($q, $timeout, $resource,Cons
 
 });
 
-services.factory('RnrPassedQualityCheckData', function ($q, $timeout, $resource,RnrPassedQualityCheck) {
+services.factory('RnrPassedQualityCheckData', function($q, $timeout, $resource, RnrPassedQualityCheck) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            RnrPassedQualityCheck.get(params, function (data) {
+        $timeout(function() {
+            RnrPassedQualityCheck.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -119,14 +119,14 @@ services.factory('RnrPassedQualityCheckData', function ($q, $timeout, $resource,
 
 });
 
-services.factory('IndexOfAluStockAvailabilityData', function ($q, $timeout, $resource,IndexOfAluStockAvailability) {
+services.factory('IndexOfAluStockAvailabilityData', function($q, $timeout, $resource, IndexOfAluStockAvailability) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            IndexOfAluStockAvailability.get(params, function (data) {
+        $timeout(function() {
+            IndexOfAluStockAvailability.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -143,14 +143,14 @@ services.factory('IndexOfAluStockAvailabilityData', function ($q, $timeout, $res
 
 });
 
-services.factory('PercentageWastageData', function ($q, $timeout, $resource,PercentageWastage) {
+services.factory('PercentageWastageData', function($q, $timeout, $resource, PercentageWastage) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            PercentageWastage.get(params, function (data) {
+        $timeout(function() {
+            PercentageWastage.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -167,14 +167,14 @@ services.factory('PercentageWastageData', function ($q, $timeout, $resource,Perc
 
 });
 
-services.factory('StockStatusByProgramData', function ($q, $timeout, $resource,StockStatusByProgram) {
+services.factory('StockStatusByProgramData', function($q, $timeout, $resource, StockStatusByProgram) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            StockStatusByProgram.get(params, function (data) {
+        $timeout(function() {
+            StockStatusByProgram.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -192,14 +192,14 @@ services.factory('StockStatusByProgramData', function ($q, $timeout, $resource,S
 });
 
 
-services.factory('FullProcessingPeriodData', function ($q, $timeout, $resource,FullProcessingPeriods1) {
+services.factory('FullProcessingPeriodData', function($q, $timeout, $resource, FullProcessingPeriods1) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            FullProcessingPeriods1.get(params, function (data) {
+        $timeout(function() {
+            FullProcessingPeriods1.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.period;
                 }
@@ -216,14 +216,14 @@ services.factory('FullProcessingPeriodData', function ($q, $timeout, $resource,F
 
 });
 
-services.factory('DefaultProgramData', function ($q, $timeout, $resource,DefaultProgram1) {
+services.factory('DefaultProgramData', function($q, $timeout, $resource, DefaultProgram1) {
     function get() {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            DefaultProgram1.get({}, function (data) {
+        $timeout(function() {
+            DefaultProgram1.get({}, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.program;
                 }
@@ -240,14 +240,14 @@ services.factory('DefaultProgramData', function ($q, $timeout, $resource,Default
 
 });
 
-services.factory('StockStatusSummaryByPeriodData', function ($q, $timeout, $resource,StockStatusSummaryByPeriod) {
+services.factory('StockStatusSummaryByPeriodData', function($q, $timeout, $resource, StockStatusSummaryByPeriod) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            StockStatusSummaryByPeriod.get(params, function (data) {
+        $timeout(function() {
+            StockStatusSummaryByPeriod.get(params, function(data) {
 
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
 
 
@@ -266,39 +266,13 @@ services.factory('StockStatusSummaryByPeriodData', function ($q, $timeout, $reso
 
 });
 
-services.factory('StockStatusByProgramAndYearData', function ($q, $timeout, $resource,StockStatusByProgramAndYear) {
+services.factory('StockStatusByProgramAndYearData', function($q, $timeout, $resource, StockStatusByProgramAndYear) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            StockStatusByProgramAndYear.get(params, function (data) {
-
-                var stocks =[];
-                if (data !== undefined) {
-                    stocks = data.stocks;
-                                    console.log(params);
-                }
-                deferred.resolve(stocks);
-
-            });
-
-        }, 100);
-        return deferred.promise;
-    }
-    return {
-        get: get
-    };
-
-});
-
-services.factory('StockAvailableByLevelData', function ($q, $timeout, $resource,StockAvailableByLevel) {
-    function get(params) {
-
-        var deferred = $q.defer();
-        $timeout(function () {
-            StockAvailableByLevel.get(params, function (data) {
-
-                var stocks =[];
+        $timeout(function() {
+            StockStatusByProgramAndYear.get(params, function(data) {
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -315,37 +289,14 @@ services.factory('StockAvailableByLevelData', function ($q, $timeout, $resource,
 
 });
 
-services.factory('TimelinessReportingData', function ($q, $timeout, $resource,TimelinessReporting) {
+services.factory('StockAvailableByLevelData', function($q, $timeout, $resource, StockAvailableByLevel) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            TimelinessReporting.get(params, function (data) {
+        $timeout(function() {
+            StockAvailableByLevel.get(params, function(data) {
 
-                var stocks =[];
-                if (data !== undefined) {
-                    stocks = data.stocks;
-                }
-                deferred.resolve(stocks);
-
-            });
-
-        }, 100);
-        return deferred.promise;
-    }
-    return {
-        get: get
-    };
-
-});
-services.factory('OntimeDeliveryReportData', function ($q, $timeout, $resource,OntimeDeliveryReport) {
-    function get(params) {
-
-        var deferred = $q.defer();
-        $timeout(function () {
-            OntimeDeliveryReport.get(params, function (data) {
-
-                var stocks =[];
+                var stocks = [];
                 if (data !== undefined) {
                     stocks = data.stocks;
                 }
@@ -362,19 +313,65 @@ services.factory('OntimeDeliveryReportData', function ($q, $timeout, $resource,O
 
 });
 
+services.factory('TimelinessReportingData', function($q, $timeout, $resource, TimelinessReporting) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            TimelinessReporting.get(params, function(data) {
+
+                var stocks = [];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
+services.factory('OntimeDeliveryReportData', function($q, $timeout, $resource, OntimeDeliveryReport) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            OntimeDeliveryReport.get(params, function(data) {
+
+                var stocks = [];
+                if (data !== undefined) {
+                    stocks = data.stocks;
+                }
+                deferred.resolve(stocks);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+
+});
 
 
 
 
 //API for Zambia Dashboard
-services.factory('GetNumberOfEmergencyData', function ($q, $timeout, $resource,GetNumberOfEmergency) {
+services.factory('GetNumberOfEmergencyData', function($q, $timeout, $resource, GetNumberOfEmergency) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            GetNumberOfEmergency.get(params, function (data) {
+        $timeout(function() {
+            GetNumberOfEmergency.get(params, function(data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.emergency;
                 }
@@ -390,14 +387,14 @@ services.factory('GetNumberOfEmergencyData', function ($q, $timeout, $resource,G
     };
 
 });
-services.factory('GetPercentageOfEmergencyOrderByProgramData', function ($q, $timeout, $resource,GetPercentageOfEmergencyOrderByProgram) {
+services.factory('GetPercentageOfEmergencyOrderByProgramData', function($q, $timeout, $resource, GetPercentageOfEmergencyOrderByProgram) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            GetPercentageOfEmergencyOrderByProgram.get(params, function (data) {
+        $timeout(function() {
+            GetPercentageOfEmergencyOrderByProgram.get(params, function(data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.emergency;
                 }
@@ -413,14 +410,14 @@ services.factory('GetPercentageOfEmergencyOrderByProgramData', function ($q, $ti
     };
 
 });
-services.factory('GetEmergencyOrderByProgramData', function ($q, $timeout, $resource,GetEmergencyOrderByProgram) {
+services.factory('GetEmergencyOrderByProgramData', function($q, $timeout, $resource, GetEmergencyOrderByProgram) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            GetEmergencyOrderByProgram.get(params, function (data) {
+        $timeout(function() {
+            GetEmergencyOrderByProgram.get(params, function(data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.emergency;
                 }
@@ -436,14 +433,14 @@ services.factory('GetEmergencyOrderByProgramData', function ($q, $timeout, $reso
     };
 
 });
-services.factory('GetTrendOfEmergencyOrdersSubmittedPerMonthData', function ($q, $timeout, $resource,GetTrendOfEmergencyOrdersSubmittedPerMonth) {
+services.factory('GetTrendOfEmergencyOrdersSubmittedPerMonthData', function($q, $timeout, $resource, GetTrendOfEmergencyOrdersSubmittedPerMonth) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            GetTrendOfEmergencyOrdersSubmittedPerMonth.get(params, function (data) {
+        $timeout(function() {
+            GetTrendOfEmergencyOrdersSubmittedPerMonth.get(params, function(data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.emergency;
                 }
@@ -459,14 +456,14 @@ services.factory('GetTrendOfEmergencyOrdersSubmittedPerMonthData', function ($q,
     };
 
 });
-services.factory('GetEmergencyOrderTrendsData', function ($q, $timeout, $resource,GetEmergencyOrderTrends) {
+services.factory('GetEmergencyOrderTrendsData', function($q, $timeout, $resource, GetEmergencyOrderTrends) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            GetEmergencyOrderTrends.get(params, function (data) {
+        $timeout(function() {
+            GetEmergencyOrderTrends.get(params, function(data) {
 
-                var stocks ={};
+                var stocks = {};
                 if (data !== undefined) {
                     stocks = data.emergency;
                 }
@@ -484,24 +481,25 @@ services.factory('GetEmergencyOrderTrendsData', function ($q, $timeout, $resourc
 });
 
 
-services.factory('RnRStatusSummaryData', function ($q, $timeout, $resource,RnRStatusSummary) {
+services.factory('RnRStatusSummaryData', function($q, $timeout, $resource, RnRStatusSummary) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
+        $timeout(function() {
 
-         RnRStatusSummary.get({zoneId: params.zone,
-                        periodId: params.period,
-                        programId: params.program
-                    },
-                    function (data) {
-                    var stocks ={};
+            RnRStatusSummary.get({
+                    zoneId: params.zone,
+                    periodId: params.period,
+                    programId: params.program
+                },
+                function(data) {
+                    var stocks = {};
                     if (data !== undefined) {
                         stocks = data.rnrStatus;
                     }
                     deferred.resolve(stocks);
 
-                    });
+                });
 
         }, 100);
         return deferred.promise;
@@ -511,21 +509,21 @@ services.factory('RnRStatusSummaryData', function ($q, $timeout, $resource,RnRSt
     };
 
 });
-services.factory('ConsumptionTrendSummaryData', function ($q, $timeout, $resource,ConsumptionTrendSummary) {
+services.factory('ConsumptionTrendSummaryData', function($q, $timeout, $resource, ConsumptionTrendSummary) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
+        $timeout(function() {
 
-         ConsumptionTrendSummary.get(params,
-                    function (data) {
-                    var stocks ={};
+            ConsumptionTrendSummary.get(params,
+                function(data) {
+                    var stocks = {};
                     if (data !== undefined) {
                         stocks = data.stocks;
                     }
                     deferred.resolve(stocks);
 
-                    });
+                });
 
         }, 100);
         return deferred.promise;
@@ -536,21 +534,21 @@ services.factory('ConsumptionTrendSummaryData', function ($q, $timeout, $resourc
 
 });
 
-services.factory('GetEmergencyAndRegularRnRTrendsData', function ($q, $timeout, $resource,GetEmergencyAndRegularRnRTrends) {
+services.factory('GetEmergencyAndRegularRnRTrendsData', function($q, $timeout, $resource, GetEmergencyAndRegularRnRTrends) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
+        $timeout(function() {
 
-         GetEmergencyAndRegularRnRTrends.get(params,
-                    function (data) {
-                    var stocks ={};
+            GetEmergencyAndRegularRnRTrends.get(params,
+                function(data) {
+                    var stocks = {};
                     if (data !== undefined) {
                         stocks = data.stocks;
                     }
                     deferred.resolve(stocks);
 
-                    });
+                });
 
         }, 100);
         return deferred.promise;
@@ -561,21 +559,21 @@ services.factory('GetEmergencyAndRegularRnRTrendsData', function ($q, $timeout, 
 
 });
 
-services.factory('GetGeoStockStatusForMapData', function ($q, $timeout, $resource,GetGeoStockStatusForMap) {
+services.factory('GetGeoStockStatusForMapData', function($q, $timeout, $resource, GetGeoStockStatusForMap) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
+        $timeout(function() {
 
-         GetGeoStockStatusForMap.get(params,
-                    function (data) {
-                    var stocks ={};
+            GetGeoStockStatusForMap.get(params,
+                function(data) {
+                    var stocks = {};
                     if (data !== undefined) {
                         stocks = data.stocks;
                     }
                     deferred.resolve(stocks);
 
-                    });
+                });
 
         }, 100);
         return deferred.promise;
@@ -586,21 +584,21 @@ services.factory('GetGeoStockStatusForMapData', function ($q, $timeout, $resourc
 
 });
 
-services.factory('GetDistrictFundUtilizationData', function ($q, $timeout, $resource,GetDistrictFundUtilization) {
+services.factory('GetDistrictFundUtilizationData', function($q, $timeout, $resource, GetDistrictFundUtilization) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
+        $timeout(function() {
 
-         GetDistrictFundUtilization.get(params,
-                    function (data) {
-                    var stocks ={};
+            GetDistrictFundUtilization.get(params,
+                function(data) {
+                    var stocks = {};
                     if (data !== undefined) {
                         stocks = data.financies;
                     }
                     deferred.resolve(stocks);
 
-                    });
+                });
 
         }, 100);
         return deferred.promise;
@@ -611,21 +609,21 @@ services.factory('GetDistrictFundUtilizationData', function ($q, $timeout, $reso
 
 });
 
-services.factory('GetGeoStockStatusDetailsData', function ($q, $timeout, $resource,GetGeoStockStatusDetails) {
+services.factory('GetGeoStockStatusDetailsData', function($q, $timeout, $resource, GetGeoStockStatusDetails) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
+        $timeout(function() {
 
-         GetGeoStockStatusDetails.get(params,
-                    function (data) {
-                    var stocks ={};
+            GetGeoStockStatusDetails.get(params,
+                function(data) {
+                    var stocks = {};
                     if (data !== undefined) {
                         stocks = data.stocks;
                     }
                     deferred.resolve(stocks);
 
-                    });
+                });
 
         }, 100);
         return deferred.promise;
@@ -636,126 +634,126 @@ services.factory('GetGeoStockStatusDetailsData', function ($q, $timeout, $resour
 
 });
 
-services.factory('GetNumberOfEmergency', function($resource){
-    return $resource('/api//dashboard/getNumberOfEmergency.json',{}, {});
+services.factory('GetNumberOfEmergency', function($resource) {
+    return $resource('/api//dashboard/getNumberOfEmergency.json', {}, {});
 });
-services.factory('GetPercentageOfEmergencyOrderByProgram', function($resource){
-    return $resource('/api//dashboard/getPercentageOfEmergencyOrderByProgram.json',{}, {});
+services.factory('GetPercentageOfEmergencyOrderByProgram', function($resource) {
+    return $resource('/api//dashboard/getPercentageOfEmergencyOrderByProgram.json', {}, {});
 });
-services.factory('GetEmergencyOrderByProgram', function($resource){
-    return $resource('/api//dashboard/getEmergencyOrderByProgram.json',{}, {});
+services.factory('GetEmergencyOrderByProgram', function($resource) {
+    return $resource('/api//dashboard/getEmergencyOrderByProgram.json', {}, {});
 });
-services.factory('GetTrendOfEmergencyOrdersSubmittedPerMonth', function($resource){
-    return $resource('/api//dashboard/getTrendOfEmergencyOrdersSubmittedPerMonth.json',{}, {});
+services.factory('GetTrendOfEmergencyOrdersSubmittedPerMonth', function($resource) {
+    return $resource('/api//dashboard/getTrendOfEmergencyOrdersSubmittedPerMonth.json', {}, {});
 });
-services.factory('GetEmergencyOrderTrends', function($resource){
-    return $resource('/api/dashboard/emergencyOrderTrends.json',{}, {});
+services.factory('GetEmergencyOrderTrends', function($resource) {
+    return $resource('/api/dashboard/emergencyOrderTrends.json', {}, {});
 });
 
 
 
-services.factory('StockStatusSummary', function ($resource) {
+services.factory('StockStatusSummary', function($resource) {
     return $resource('/api/dashboard/stock-status-summary.json', {}, {});
 });
-services.factory('StockAvailableForPeriod', function ($resource) {
+services.factory('StockAvailableForPeriod', function($resource) {
     return $resource('/api/dashboard/stock-available-for-period.json', {}, {});
 });
 
-services.factory('StockAvailableByProgramAndPeriod', function ($resource) {
+services.factory('StockAvailableByProgramAndPeriod', function($resource) {
     return $resource('/api/dashboard/stock-available-for-program-period.json', {}, {});
 });
 
-services.factory('ConsumptionTrends', function ($resource) {
+services.factory('ConsumptionTrends', function($resource) {
     return $resource('/api/dashboard/consumption-trend-year.json', {}, {});
 });
 
-services.factory('RnrPassedQualityCheck', function ($resource) {
+services.factory('RnrPassedQualityCheck', function($resource) {
     return $resource('/api/dashboard/rnr-passed-quality-check.json', {}, {});
 });
 
-services.factory('IndexOfAluStockAvailability', function ($resource) {
+services.factory('IndexOfAluStockAvailability', function($resource) {
     return $resource('/api/dashboard/index-stock-availability.json', {}, {});
 });
 
-services.factory('PercentageWastage', function ($resource) {
+services.factory('PercentageWastage', function($resource) {
     return $resource('/api/dashboard/percentage-wastage.json', {}, {});
 });
 
-services.factory('FullProcessingPeriods', function ($resource) {
+services.factory('FullProcessingPeriods', function($resource) {
     return $resource('/full-reported-period/:program.json', {}, {});
 });
 
-services.factory('DefaultProgram', function ($resource) {
+services.factory('DefaultProgram', function($resource) {
     return $resource('/default-program.json', {}, {});
 });
 
-services.factory('StockStatusByProgram', function ($resource) {
+services.factory('StockStatusByProgram', function($resource) {
     return $resource('/api/dashboard/stock-status-by-program-and-year.json', {}, {});
 });
 
-services.factory('StockStatusSummaryByPeriod', function ($resource) {
+services.factory('StockStatusSummaryByPeriod', function($resource) {
     return $resource('/api/dashboard/stock-availability-summary.json', {}, {});
 });
 
-services.factory('StockStatusByProgramAndYear', function ($resource) {
+services.factory('StockStatusByProgramAndYear', function($resource) {
     return $resource('/api/dashboard/stock-availability-trends-by-program-and-year.json', {}, {});
 });
 
-services.factory('StockAvailableByLevel', function ($resource) {
+services.factory('StockAvailableByLevel', function($resource) {
     return $resource('/api/dashboard/stock-availability-by-level.json', {}, {});
 });
 
-services.factory('TimelinessReporting', function ($resource) {
+services.factory('TimelinessReporting', function($resource) {
     return $resource('/api/dashboard/dashboard-timeliness-reporting.json', {}, {});
 });
 
-services.factory('OntimeDeliveryReport', function ($resource) {
+services.factory('OntimeDeliveryReport', function($resource) {
     return $resource('/api/dashboard/on-time-delivery.json', {}, {});
 });
 
-services.factory('RejectionCount', function($resource){
-    return $resource('/api/dashboard/getRejectionCount.json',{}, {});
+services.factory('RejectionCount', function($resource) {
+    return $resource('/api/dashboard/getRejectionCount.json', {}, {});
 });
 
-services.factory('DashboardRnrTypes', function ($resource) {
+services.factory('DashboardRnrTypes', function($resource) {
     return $resource('/dashboard/rnr-emergency-regular-types.json', {}, {});
 });
 
 
-services.factory("totalRnRCreatedByRequisitionGroup",function($resource){
-    return $resource('/dashboard//RnRCreateForRequisitionGroup',{},{});
+services.factory("totalRnRCreatedByRequisitionGroup", function($resource) {
+    return $resource('/dashboard//RnRCreateForRequisitionGroup', {}, {});
 });
-services.factory('RnRStatusSummary',function($resource){
-    return $resource('/dashboard/RnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
-  });
-
-services.factory("EmergencyRnRStatusSummary", function($resource){
-    return $resource('/dashboard/EmergencyRnRStatus/:zoneId/:periodId/:programId/rnrStatus.json',{},{});
+services.factory('RnRStatusSummary', function($resource) {
+    return $resource('/dashboard/RnRStatus/:zoneId/:periodId/:programId/rnrStatus.json', {}, {});
 });
 
-services.factory("ConsumptionTrendSummary", function($resource){
-    return $resource('/api/dashboard/getConsumptionSummaryTrends.json',{},{});
+services.factory("EmergencyRnRStatusSummary", function($resource) {
+    return $resource('/dashboard/EmergencyRnRStatus/:zoneId/:periodId/:programId/rnrStatus.json', {}, {});
 });
 
-services.factory("GetEmergencyAndRegularRnRTrends", function($resource){
-    return $resource('/api/dashboard/getEmergencyAndRegularRnRTrends.json',{},{});
+services.factory("ConsumptionTrendSummary", function($resource) {
+    return $resource('/api/dashboard/getConsumptionSummaryTrends.json', {}, {});
 });
 
-services.factory("GetGeoStockStatusForMap", function($resource){
-    return $resource('/api/dashboard/getGeoStockStatusForMap.json',{},{});
+services.factory("GetEmergencyAndRegularRnRTrends", function($resource) {
+    return $resource('/api/dashboard/getEmergencyAndRegularRnRTrends.json', {}, {});
 });
 
-services.factory("GetDistrictFundUtilization", function($resource){
-    return $resource('/api/dashboard/getDistrictFundUtilization.json',{},{});
+services.factory("GetGeoStockStatusForMap", function($resource) {
+    return $resource('/api/dashboard/getGeoStockStatusForMap.json', {}, {});
+});
+
+services.factory("GetDistrictFundUtilization", function($resource) {
+    return $resource('/api/dashboard/getDistrictFundUtilization.json', {}, {});
 });
 
 
-services.factory('GetSourceOfFundsByLocationData', function ($q, $timeout, $resource,GetSourceOfFundsByLocation) {
+services.factory('GetSourceOfFundsByLocationData', function($q, $timeout, $resource, GetSourceOfFundsByLocation) {
     function get(params) {
         var deferred = $q.defer();
-        $timeout(function () {
-            GetSourceOfFundsByLocation.get(params, function (data) {
-                var sourceOfFunds ={};
+        $timeout(function() {
+            GetSourceOfFundsByLocation.get(params, function(data) {
+                var sourceOfFunds = {};
                 if (data !== undefined) {
                     sourceOfFunds = data.sourceOfFunds;
                 }
@@ -772,12 +770,12 @@ services.factory('GetSourceOfFundsByLocationData', function ($q, $timeout, $reso
 
 });
 
-services.factory('GetGeoJsonInfoData', function ($q, $timeout, $resource,GetGeoJsonInfo) {
+services.factory('GetGeoJsonInfoData', function($q, $timeout, $resource, GetGeoJsonInfo) {
     function get(params) {
         var deferred = $q.defer();
-        $timeout(function () {
-            GetGeoJsonInfo.get(params, function (data) {
-                var sourceOfFunds ={};
+        $timeout(function() {
+            GetGeoJsonInfo.get(params, function(data) {
+                var sourceOfFunds = {};
                 if (data !== undefined) {
                     sourceOfFunds = data.stocks;
                 }
@@ -794,12 +792,12 @@ services.factory('GetGeoJsonInfoData', function ($q, $timeout, $resource,GetGeoJ
 
 });
 
-services.factory('GetRegionalStockStatusSummaryData', function ($q, $timeout, $resource,GetRegionalStockStatusSummary) {
+services.factory('GetRegionalStockStatusSummaryData', function($q, $timeout, $resource, GetRegionalStockStatusSummary) {
     function get(params) {
         var deferred = $q.defer();
-        $timeout(function () {
-            GetRegionalStockStatusSummary.get(params, function (data) {
-                var sourceOfFunds ={};
+        $timeout(function() {
+            GetRegionalStockStatusSummary.get(params, function(data) {
+                var sourceOfFunds = {};
                 if (data !== undefined) {
                     sourceOfFunds = data.stocks;
                 }
@@ -817,27 +815,27 @@ services.factory('GetRegionalStockStatusSummaryData', function ($q, $timeout, $r
 });
 
 
-services.factory('GetSourceOfFundsByLocation', function($resource){
-    return $resource('/api//dashboard/getSourceOfFundsByLocation.json',{}, {});
+services.factory('GetSourceOfFundsByLocation', function($resource) {
+    return $resource('/api//dashboard/getSourceOfFundsByLocation.json', {}, {});
 });
 
-services.factory('GetGeoStockStatusDetails', function($resource){
-    return $resource('/api//dashboard/getGeoStockStatusDetails.json',{}, {});
+services.factory('GetGeoStockStatusDetails', function($resource) {
+    return $resource('/api//dashboard/getGeoStockStatusDetails.json', {}, {});
 });
 
 
-services.factory('StockOutRate', function ($resource) {
+services.factory('StockOutRate', function($resource) {
     return $resource('/api/dashboard/getStockOutRate.json', {}, {});
 });
 
-services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutRate) {
+services.factory('StockOutRateData', function($q, $timeout, $resource, StockOutRate) {
     function get(params) {
 
         var deferred = $q.defer();
-        $timeout(function () {
-            StockOutRate.get(params, function (data) {
+        $timeout(function() {
+            StockOutRate.get(params, function(data) {
 
-                var stockOutRates =[];
+                var stockOutRates = [];
                 if (data !== undefined) {
                     stockOutRates = data.stockOutRates;
                 }
@@ -851,213 +849,221 @@ services.factory('StockOutRateData', function ($q, $timeout, $resource,StockOutR
     return {
         get: get
     };
-    });
+});
 
-    services.factory('LatestReportedStockStatusByDistrictForTracer', function ($resource) {
-        return $resource('/api/dashboard/getLatestReportedStockStatusForAllTracerByDistrict.json', {}, {});
-    });
+services.factory('LatestReportedStockStatusByDistrictForTracer', function($resource) {
+    return $resource('/api/dashboard/getLatestReportedStockStatusForAllTracerByDistrict.json', {}, {});
+});
 
-    services.factory('LatestReportedStockStatusByDistrict', function ($resource) {
-            return $resource('/api/dashboard/getLatestReportedStockStatusForProductByDistrict.json', {}, {});
-     });
+services.factory('LatestReportedStockStatusByDistrict', function($resource) {
+    return $resource('/api/dashboard/getLatestReportedStockStatusForProductByDistrict.json', {}, {});
+});
 
-    services.factory('LatestReportedStockStatusByDistrictData', function ($q, $timeout, $resource,LatestReportedStockStatusByDistrictForTracer, LatestReportedStockStatusByDistrict) {
-            function get(params) {
+services.factory('LatestReportedStockStatusByDistrictData', function($q, $timeout, $resource, LatestReportedStockStatusByDistrictForTracer, LatestReportedStockStatusByDistrict) {
+    function get(params) {
 
-                var deferred = $q.defer();
-                if(params.indicator=='allTracerProducts') {
-                $timeout(function () {
-                    LatestReportedStockStatusByDistrictForTracer.get(params, function (data) {
+        var deferred = $q.defer();
+        if (params.indicator == 'allTracerProducts') {
+            $timeout(function() {
+                LatestReportedStockStatusByDistrictForTracer.get(params, function(data) {
 
-                        var stockOutRates =[];
-                        if (data !== undefined) {
-                            stockOutRates = data.commoditiesDetailsByDistrict;
-                                //Merge region served by mutiple warehouses
-                                var originalMsg = JSON.stringify(stockOutRates);
-                                var updatedMsg = originalMsg
-                                .replace("Geita(Muleba Zone)", "Geita").
-                                replace("Geita(Mwanza Zone)", "Geita").
-                                replace("Njombe (Iringa Zone)", "Njombe")
-                                .replace("Ruvuma (Iringa Zone)", "Ruvuma")
-                                .replace("Njombe (Mbeya Zone)", "Njombe")
-                                .replace("Ruvuma (Mtwara Zone)", "Ruvuma");
-                                stockOutRates = JSON.parse(updatedMsg);
-                        }
-                        deferred.resolve(stockOutRates);
-
-                    });
-
-                }, 100);
-                }else {
-                  $timeout(function () {
-                                    LatestReportedStockStatusByDistrict.get(params, function (data) {
-
-                                        var stockOutRates =[];
-                                        if (data !== undefined) {
-                                            stockOutRates = data.commoditiesDetailsByDistrict;
-                                                                         //Merge region served by mutiple warehouses
-                                                                         var originalMsg = JSON.stringify(stockOutRates);
-                                                                         var updatedMsg = originalMsg
-                                                                         .replace("Geita(Muleba Zone)", "Geita").
-                                                                         replace("Geita(Mwanza Zone)", "Geita").
-                                                                         replace("Njombe (Iringa Zone)", "Njombe")
-                                                                         .replace("Ruvuma (Iringa Zone)", "Ruvuma")
-                                                                         .replace("Njombe (Mbeya Zone)", "Njombe")
-                                                                         .replace("Ruvuma (Mtwara Zone)", "Ruvuma");
-                                                                         stockOutRates = JSON.parse(updatedMsg);
-
-                                        }
-                                        deferred.resolve(stockOutRates);
-
-                                    });
-
-                                }, 100);
-                }
-                return deferred.promise;
-            }
-            return {
-                get: get
-            };
-    });
-
-
-    services.factory('StockStatusByLocation', function ($resource) {
-        return $resource('/api/dashboard/getAllCommoditiesDetailsByDistrict.json', {}, {});
-    });
-
-    services.factory('StockStatusByLocationData', function ($q, $timeout, $resource,StockStatusByLocation) {
-        function get(params) {
-
-            var deferred = $q.defer();
-            $timeout(function () {
-                StockStatusByLocation.get(params, function (data) {
-
-                    var stockOutRates =[];
+                    var stockOutRates = [];
                     if (data !== undefined) {
                         stockOutRates = data.commoditiesDetailsByDistrict;
+                        //Merge region served by mutiple warehouses
+                        String.prototype.replaceAll = function (find, replace) {
+                            var str = this;
+                            return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+                        };
+
+                        var originalMsg = JSON.stringify(stockOutRates);
+                        var updatedMsg = originalMsg.replaceAll("Geita(Mwanza Zone)", "Geita")
+                        .replaceAll("Geita(Muleba Zone)", "Geita")
+                        .replaceAll("Njombe (Iringa Zone)", "Njombe")
+                        .replaceAll("Ruvuma (Iringa Zone)", "Ruvuma")
+                         .replaceAll("Njombe (Mbeya Zone)", "Njombe")
+                         .replaceAll("Ruvuma (Mtwara Zone)", "Ruvuma");
+
+                        stockOutRates = JSON.parse(updatedMsg);
+                    }
+                    deferred.resolve(stockOutRates);
+                });
+
+            }, 100);
+        } else {
+            $timeout(function() {
+                LatestReportedStockStatusByDistrict.get(params, function(data) {
+
+                    var stockOutRates = [];
+                    if (data !== undefined) {
+                        stockOutRates = data.commoditiesDetailsByDistrict;
+                        //Merge region served by mutiple warehouses
+                        String.prototype.replaceAll = function (find, replace) {
+                            var str = this;
+                            return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
+                        };
+
+                        var originalMsg = JSON.stringify(stockOutRates);
+                        var updatedMsg = originalMsg.replaceAll("Geita(Mwanza Zone)", "Geita")
+                        .replaceAll("Geita(Muleba Zone)", "Geita")
+                        .replaceAll("Njombe (Iringa Zone)", "Njombe")
+                        .replaceAll("Ruvuma (Iringa Zone)", "Ruvuma")
+                         .replaceAll("Njombe (Mbeya Zone)", "Njombe")
+                         .replaceAll("Ruvuma (Mtwara Zone)", "Ruvuma");
+
+                        stockOutRates = JSON.parse(updatedMsg);
+
                     }
                     deferred.resolve(stockOutRates);
 
                 });
 
             }, 100);
-            return deferred.promise;
         }
-        return {
-            get: get
-        };
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
 });
 
 
-    services.factory('GetTzRegionMapData', function ($q, $timeout, $resource,GetTzRegionMap) {
-        function get(params) {
-
-            var deferred = $q.defer();
-            $timeout(function () {
-                GetTzRegionMap.get(params, function (data) {
-
-                    deferred.resolve(data);
-
-                });
-
-            }, 100);
-            return deferred.promise;
-        }
-        return {
-            get: get
-        };
+services.factory('StockStatusByLocation', function($resource) {
+    return $resource('/api/dashboard/getAllCommoditiesDetailsByDistrict.json', {}, {});
 });
 
-services.factory('GetTzDistrictMap', function ($resource) {
+services.factory('StockStatusByLocationData', function($q, $timeout, $resource, StockStatusByLocation) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            StockStatusByLocation.get(params, function(data) {
+
+                var stockOutRates = [];
+                if (data !== undefined) {
+                    stockOutRates = data.commoditiesDetailsByDistrict;
+                }
+                deferred.resolve(stockOutRates);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+
+services.factory('GetTzRegionMapData', function($q, $timeout, $resource, GetTzRegionMap) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetTzRegionMap.get(params, function(data) {
+                deferred.resolve(data);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+services.factory('GetTzDistrictMap', function($resource) {
     return $resource('/api/dashboard/tz-district.json', {}, {});
 });
 
 
-    services.factory('GetTzDistrictMapData', function ($q, $timeout, $resource,GetTzDistrictMap) {
-        function get(params) {
+services.factory('GetTzDistrictMapData', function($q, $timeout, $resource, GetTzDistrictMap) {
+    function get(params) {
 
-            var deferred = $q.defer();
-            $timeout(function () {
-                GetTzDistrictMap.get(params, function (data) {
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetTzDistrictMap.get(params, function(data) {
 
-                    deferred.resolve(data);
+                deferred.resolve(data);
 
-                });
+            });
 
-            }, 100);
-            return deferred.promise;
-        }
-        return {
-            get: get
-        };
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
 });
 
 
 
-services.factory('GetTzRegionMap', function ($resource) {
+services.factory('GetTzRegionMap', function($resource) {
     return $resource('/api/dashboard/tz-reg.json', {}, {});
 });
 
 
-services.factory('GetTLEAndTLD', function ($resource) {
-  return $resource('/api/dashboard/getTLEAndTLDConsumption.json', {}, {});
+services.factory('GetTLEAndTLD', function($resource) {
+    return $resource('/api/dashboard/getTLEAndTLDConsumption.json', {}, {});
 });
 
 
 
-    services.factory('GetTLEAndTLDData', function ($q, $timeout, $resource,GetTLEAndTLD) {
-        function get(params) {
+services.factory('GetTLEAndTLDData', function($q, $timeout, $resource, GetTLEAndTLD) {
+    function get(params) {
 
-            var deferred = $q.defer();
-            $timeout(function () {
-                GetTLEAndTLD.get(params, function (data) {
-                      var TLEAndTLD =[];
-                      if (data !== undefined) {
-                          TLEAndTLD = data.TLEAndTLDConsumption;
-                      }
-                      deferred.resolve(TLEAndTLD);
-                });
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetTLEAndTLD.get(params, function(data) {
+                var TLEAndTLD = [];
+                if (data !== undefined) {
+                    TLEAndTLD = data.TLEAndTLDConsumption;
+                }
+                deferred.resolve(TLEAndTLD);
+            });
 
-            }, 100);
-            return deferred.promise;
-        }
-        return {
-            get: get
-        };
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
 });
 
 
-services.factory('GetStockOutRateByProduct', function ($resource) {
-  return $resource('/api/dashboard/getStockOutRateByProduct.json', {}, {});
+services.factory('GetStockOutRateByProduct', function($resource) {
+    return $resource('/api/dashboard/getStockOutRateByProduct.json', {}, {});
 });
 
 
 
-    services.factory('GetStockOutRateByProductData', function ($q, $timeout, $resource,GetStockOutRateByProduct) {
-        function get(params) {
+services.factory('GetStockOutRateByProductData', function($q, $timeout, $resource, GetStockOutRateByProduct) {
+    function get(params) {
 
-            var deferred = $q.defer();
-            $timeout(function () {
-                GetStockOutRateByProduct.get(params, function (data) {
-                      var StockOutRateByProduct =[];
-                      if (data !== undefined) {
-                          StockOutRateByProduct = data.StockOutRateByProduct;
-                      }
-                      deferred.resolve(StockOutRateByProduct);
-                });
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetStockOutRateByProduct.get(params, function(data) {
+                var StockOutRateByProduct = [];
+                if (data !== undefined) {
+                    StockOutRateByProduct = data.StockOutRateByProduct;
+                }
+                deferred.resolve(StockOutRateByProduct);
+            });
 
-            }, 100);
-            return deferred.promise;
-        }
-        return {
-            get: get
-        };
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
 });
 
-services.factory('GetGeoJsonInfo', function($resource){
-    return $resource('/api//dashboard/getGeoJsonInfo.json',{}, {});
+services.factory('GetGeoJsonInfo', function($resource) {
+    return $resource('/api//dashboard/getGeoJsonInfo.json', {}, {});
 });
 
-services.factory('GetRegionalStockStatusSummary', function($resource){
-    return $resource('/api//dashboard/getRegionalStockStatusSummary.json',{}, {});
+services.factory('GetRegionalStockStatusSummary', function($resource) {
+    return $resource('/api//dashboard/getRegionalStockStatusSummary.json', {}, {});
 });
