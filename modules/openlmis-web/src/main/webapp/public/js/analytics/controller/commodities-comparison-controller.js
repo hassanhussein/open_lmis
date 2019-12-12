@@ -12,7 +12,6 @@ function CommoditiesComparisonController($scope, $location, Program, Period, $ro
 
 
     function loadCommoditiesComparisonTLEvsTLDChart(data, ogData) {
-    console.log(Highcharts.charts);
 
         ['mousemove', 'touchmove', 'touchstart'].forEach(function(eventType) {
             document.getElementById('common').addEventListener(
@@ -30,7 +29,6 @@ function CommoditiesComparisonController($scope, $location, Program, Period, $ro
                         }
                     }}
 
-                    console.log(container_charts);
 
                     for (i = 0; i < container_charts.length; i = i + 1) {
                         chart = container_charts[i];
@@ -229,7 +227,6 @@ function CommoditiesComparisonController($scope, $location, Program, Period, $ro
         Highcharts.charts.shift();
         Highcharts.charts.shift();
         Highcharts.charts.shift();
-        console.log(Highcharts.charts);
         $rootScope.loadCommoditiesComparison(filter);
     };
 

@@ -487,6 +487,7 @@
 
                     </div>
 
+                    <!--================== OVERVIEW ============----------->
                     <div id="accordion-fill-rate accordion" class="accordion-section accordion-fill-rate">
                         <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this)" ng-click="loadDashletsBySectionNames('overview');">
 
@@ -547,6 +548,7 @@
                                     </div>
                                 </div>
                             </div>-->
+                            <!--================== Stock Availability Status By Location ============----------->
                             <div class="row" ng-show="true">
 
                                 <div class="col s12 m12 l12">
@@ -614,6 +616,8 @@
                                 </div>
 
                             </div>
+
+                            <!--================== Reporting Rate (Muted) ============----------->
                             <div class="row" ng-show="false">
 
                                 <div class="col s12 m12 l12">
@@ -720,8 +724,10 @@
 
                             </div>
 
-                            <div class="row">
 
+
+                            <div class="row">
+                                <!--==================  Stock Availability of Health Commodities  ============----------->
                                 <div class="col s12 m4 l4" ng-controller="stockStatusSummaryController">
                                     <div class="card grey lighten-5 row2-height" overlay-section="stockSummaryByPeriod">
                                         <div class="card-action" style="background-color: #17888f;">
@@ -740,6 +746,7 @@
                                     </div>
                                 </div>
 
+                                <!--==================  Stock availability by Level  ============----------->
                                 <div class="col s12 m4 l4" ng-controller="StockAvailabilityByLevelController">
                                     <div class="card white lighten-5 row2-height" overlay-section="stockByLevel">
 
@@ -759,6 +766,7 @@
                                     </div>
                                 </div>
 
+                                <!--==================  Stock Availability per program  ============----------->
                                 <div class="col s12 m4 l4" ng-controller="stockAvailabilityPerProgramController">
                                     <div class="card grey lighten-5 row2-height" overlay-section="stockAvailableForProgram">
 
@@ -779,6 +787,7 @@
 
                             </div>
 
+                            <!--==================  Stock Available drill down ============----------->
                             <div class="row orderFillRate" ng-show="drillDownData.length" ng-controller="stockAvailabilityPerProgramController">
                                 <div class="col s12 m8 l8">
                                     <div class="card grey lighten-5 row3-height" overlay-section="stock-available-for-program-drill-down">
@@ -829,37 +838,9 @@
 
                             </div>
 
-                            <div class="row" ng-show="true">
-                                <div class="col s12 m6 l6">
-                                    <div class="card">
-                                        <div class="card-content">
+                            <!--==================  Reporting TImeliness ============----------->
 
-                                            <div style="margin: 0 auto;height: 360px !important;" id="consumptionTrendsChartA"></div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col s12 m6 l6" >
-                                    <div class="card">
-                                        <div class="card-content">
-
-                                            <div style="margin: 0 auto;height: 360px !important;" id="consumptionTrendsChartB"></div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-
-                            </div>
-
-
-                            <div class="row">
+                            <div class="row" ng-show="false">
                                 <div class="col s12 m4 l4" ng-controller="TimelinessReportingController">
                                     <div class="card grey lighten-5 row2-height" overlay-section="timelinessReporting">
                                         <div class="card-action" style="background-color: #17888f;">
@@ -1239,6 +1220,8 @@
 
                             </div>
 
+                            <!--================== TLE vs TLD Consumption ============----------->
+
                             <div class="row" ng-show="true">
 
                                 <div class="col s12 m12 l12">
@@ -1474,40 +1457,6 @@
                                     </div>
                                 </div>
 
-                                <!-- &lt;!&ndash; Regular & Emergency Requisitions &ndash;&gt;
-                                <div class="col s12 m6 l4">
-                                    <div class="section grey lighten-5 card row3-height" overlay-section="regularAndEmergencyRequisition">
-                                        <h2>
-                                            <span>Regular & Emergency Requisitions</span>
-                                            <a ng-click="setHelpContentKey('regularEmergencyRequisitionhelp')" data-target="modal1"
-                                               class="small-box-footer modal-trigger pull-right" >
-                                                <i class="material-icons md-18">info</i>
-                                            </a>
-                                        </h2>
-                                        <div id="regularEmergencyType" style="padding-top: 0rem !important;"></div>
-                                    </div>
-                                </div>
--->
-
-                                <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
-                                <div class="col s12 m4 l4">
-                                    <div class="grey lighten-5 card row2-height row1-height" overlay-section="provincesWithMostRegularOrders">
-
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">Regions with Most Emergency Orders (Past 3 Months)</span>
-                                            <!--   <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
-                                                   info
-                                               </i></a>-->
-                                        </div>
-
-                                        <div class="card-content">
-                                            <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
-
-                                            <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
-                                            <div id="addText" style="left:0px; top:0px;"></div>
-                                        </div>
-                                    </div>
-                                </div>
 
                                 <!-- R&R Status Summary -->
                                 <div class="col s12 m4 l4">
@@ -1519,51 +1468,6 @@
 
                                         <div class="card-content">
                                             <div id="rnrSummary" style="height: 300px;margin:0 auto"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Percentage of Emergency Orders by Program (all time) -->
-                            <div class="row orderFillRate">
-                                <div class="col s12 m4 l4">
-                                    <div class="grey lighten-5 card row2-height" overlay-section="percentageOrEmergencyOrders">
-
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">Percentage of Emergency Orders by Program (all time)</span>
-                                        </div>
-
-                                        <div class="card-content">
-                                            <div id="emergencyByProgram" style="height: 300px;margin:0 auto " />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--  Emergency Order By Program (Past 1 Month)  -->
-                                <div class="col s12 m4 l4">
-                                    <div class="grey lighten-5 card row2-height" overlay-section="emergencyOrderByProgram">
-
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">Emergency Order By Program (Past 1 Month)</span>
-                                        </div>
-
-                                        <div class="card-content">
-                                            <div id="emergencySubmittedByProgram" style="height: 300px;margin:0 auto "></div>
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <!-- Trend of Emergency Orders Submitted Per Month -->
-                                <div class="col s12 m4 l4">
-                                    <div class="grey lighten-5 card row2-height " overlay-section="trendOfEmergencyOrderPerMonth">
-
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">Trend of Emergency Orders Submitted Per Month</span>
-                                        </div>
-
-                                        <div class="card-content">
-                                            <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
                                         </div>
                                     </div>
                                 </div>
@@ -1706,6 +1610,7 @@
                         </div>
                     </div>
 
+                    <!--==================EMERGENCY ORDER ANALYSIS============----------->
                     <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
                         <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('requisition');">
 
@@ -1713,18 +1618,73 @@
 
                         </div>
                         <div class="accordion-body">
-                            <div class="row">
 
-                                <div class="col s12 m12 l12">
-                                    <div class="card" style="background-color:lightgray">
+
+
+                            <!-- Percentage of Emergency Orders by Program (all time) -->
+                            <div class="row orderFillRate">
+                                <div class="col s12 m4 l4">
+                                    <div class="grey lighten-5 card row2-height" overlay-section="percentageOrEmergencyOrders">
+
+                                        <div class="card-action" style="background-color: #17888f;">
+                                            <span style="color:white">Percentage of Emergency Orders by Program (all time)</span>
+                                        </div>
+
                                         <div class="card-content">
+                                            <div id="emergencyByProgram" style="height: 300px;margin:0 auto " />
+                                        </div>
+                                    </div>
+                                </div>
 
-                                            <div style="margin: 0 auto;height: 20px !important; color:white;text-align:center;font-style: italic;"><span>To be Added </span></div>
+                                <!--  Emergency Order By Program (Past 1 Month)  -->
+                                <div class="col s12 m4 l4">
+                                    <div class="grey lighten-5 card row2-height" overlay-section="emergencyOrderByProgram">
 
+                                        <div class="card-action" style="background-color: #17888f;">
+                                            <span style="color:white">Emergency Order By Program (Past 1 Month)</span>
+                                        </div>
+
+                                        <div class="card-content">
+                                            <div id="emergencySubmittedByProgram" style="height: 300px;margin:0 auto "></div>
                                         </div>
 
                                     </div>
+                                </div>
 
+                                <!-- Trend of Emergency Orders Submitted Per Month -->
+                                <div class="col s12 m4 l4">
+                                    <div class="grey lighten-5 card row2-height " overlay-section="trendOfEmergencyOrderPerMonth">
+
+                                        <div class="card-action" style="background-color: #17888f;">
+                                            <span style="color:white">Trend of Emergency Orders Submitted Per Month</span>
+                                        </div>
+
+                                        <div class="card-content">
+                                            <div id="trendOfEmergencyOrder" style="height: 300px;margin:0 auto "></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row orderFillRate">
+                                <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
+                                <div class="col s12 m4 l4">
+                                    <div class="grey lighten-5 card row2-height row1-height" overlay-section="provincesWithMostRegularOrders">
+
+                                        <div class="card-action" style="background-color: #17888f;">
+                                            <span style="color:white">Regions with Most Emergency Orders (Past 3 Months)</span>
+                                            <!--   <a ng-click="setHelpContentKey('rnrRejectionTrenhelp')" data-target="modal1" class="small-box-footer modal-trigger pull-right" ><i class="material-icons md-18">
+                                                   info
+                                               </i></a>-->
+                                        </div>
+
+                                        <div class="card-content">
+                                            <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
+
+                                            <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
+                                            <div id="addText" style="left:0px; top:0px;"></div>
+                                        </div>
+                                    </div>
                                 </div>
 
                             </div>

@@ -85,7 +85,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                             areaName = 'District';
                             chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
 
-                            var regions = _.uniq(_.pluck(data, 'drilldown'));;
+                            var regions = _.uniq(_.pluck(data, 'drilldown'));
                             drillDownIndex = regions.indexOf(e.point.name);
                             data = Highcharts.geojson(filterMap(districtMap, e.point.name));
 
@@ -249,7 +249,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     }
                 }
             }
-        }
+        };
 
         var chart = Highcharts.mapChart(options);
         if (drillDownState) {
