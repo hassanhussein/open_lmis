@@ -72,7 +72,7 @@ $scope.searchOptions = [
   }
 
   }
-  ]
+  ];
 
 
 

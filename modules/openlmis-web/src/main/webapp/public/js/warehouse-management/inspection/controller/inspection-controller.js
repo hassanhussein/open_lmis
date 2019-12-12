@@ -24,7 +24,7 @@ code:'code3'
 id:4,
 code:'code4'
 }
-]
+];
 
 
 $scope.suppliers=[{id:1,name:'UNICEF'}];
@@ -61,22 +61,22 @@ return;
 }
 
 //sum the passed lots
-$scope.inspection.product.passedQty=sumLots('passedQty')
+$scope.inspection.product.passedQty=sumLots('passedQty');
 
 //sum the failed lots
-$scope.inspection.product.failedQty=sumLots('failedQty')
+$scope.inspection.product.failedQty=sumLots('failedQty');
 
 
 //close the modal
-$scope.closeInspectLotModal()
+$scope.closeInspectLotModal();
 
-}
+};
 
 function sumLots(lotType){
 var sum = 0;
 angular.forEach($scope.inspection.product.lots,function(lot){
 sum+=parseInt(lot[lotType],10);
-})
+});
 return sum;
 }
 
@@ -87,18 +87,18 @@ return sum;
   $scope.lotsWithLocationError='';
   $scope.lotsWithVvmError='';
   angular.forEach($scope.inspection.product.lots,function(lot){
-  totalLotQty=parseInt(lot.passedQty) + parseInt(lot.failedQty)
+  totalLotQty=parseInt(lot.passedQty,10) + parseInt(lot.failedQty,10);
   if(totalLotQty!=lot.quantity){
-  $scope.lotsWithError+=lot.code+', '
+  $scope.lotsWithError+=lot.code+', ';
   }
   //location
   if(!lot.passedLocation || !lot.failedLocation){
-  $scope.lotsWithLocationError+=lot.code+', '
+  $scope.lotsWithLocationError+=lot.code+', ';
   }
 
     //vvm
     if(!lot.vvm){
-    $scope.lotsWithVvmError+=lot.code+', '
+    $scope.lotsWithVvmError+=lot.code+', ';
     }
   });
 
@@ -119,7 +119,7 @@ return sum;
   //validate vvm status
 
   return errors;
-  }
+  };
 
   $scope.save=function(){
 
@@ -132,11 +132,11 @@ if(!$scope.productValid()){
 return;
 }
    if ($scope.inspectionForm.$error.required) {
-   console.log('am here')
+
               $scope.showError = true;
               $scope.error = 'form.error';
               $scope.message = "";
               return;
           }
-  }
+  };
 }
