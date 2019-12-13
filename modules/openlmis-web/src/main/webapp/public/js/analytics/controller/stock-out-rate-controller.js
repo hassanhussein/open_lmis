@@ -46,11 +46,14 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 })[0];
                 var stockOutPercentage = Math.round((reg_obj.total_stockoutincidence / reg_obj.total_incidence) * 100);
 
+
                 this.y = stockOutPercentage;
                 this.value = stockOutPercentage;
                 this.stockAvailabilityPercentage = 100 - stockOutPercentage;
                 this.totalIncidence = reg_obj.total_incidence;
                 this.stockOutIncidence = reg_obj.total_stockoutincidence;
+                this.reported = reg_obj.reported;
+
 
                 if (stockOutPercentage == 100) {
                     this.color = '#EC6B58'; //Red
@@ -69,6 +72,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 this.value = 0;
                 this.totalIncidence = 0;
                 this.stockOutIncidence = 0;
+
             }
         });
 
@@ -107,6 +111,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                                     this.totalIncidence = reg_obj.totalincidence;
                                     this.stockOutIncidence = reg_obj.stockoutincidence;
                                     this.stockAvailabilityPercentage = 100 - stockOutPercentage;
+                                    this.reported = reg_obj.reported;
 
 
                                     if (stockOutPercentage == 100) {
@@ -157,7 +162,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 }
             },
             title: {
-                text: "Percentage of Stock Availability by Location"
+                text: "Percentage of Stock Availability by Location as Reported"
             },
             subtitle: {
                 text: 'Click Region  to see district'
@@ -209,7 +214,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 padding: 0,
                 pointFormat: '<span class="f32">' +
                     '</span></span> {point.name}<br>' +
-                    '<span style="font-size:30px"> {point.stockAvailabilityPercentage}%</span>',
+                    '<span style="font-size:30px"> {point.stockAvailabilityPercentage}%</span><br>' +
+                    '</span></span> As of {point.reported}<br>',
                 positioner: function() {
                     return {
                         x: 0,
@@ -810,6 +816,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
 
             var reg_obj = {
                 product: sof_obj[0].product,
+                reported: sof_obj[0].reported,
                 total_stockinhand: total_stockinhand,
                 total_beginningbalance: total_beginningbalance,
                 total_quantityreceived: total_quantityreceived,
@@ -843,6 +850,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
         for (var x in data) {
             var obj = [];
             obj.push(data[x].region_name);
+            obj.push(data[x].reported);
             obj.push(prepareValues(data, x, indicator));
             data_arr.push(obj);
         }
