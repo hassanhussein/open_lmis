@@ -643,6 +643,36 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
  ]);
 
 
+
+services.factory('GetSitesData', function ($q, $timeout, $resource, GetSites) {
+
+    function get(params) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetSites.get({
+                regionId: parseInt(params.regionId, 10)
+            }, function (data) {
+
+                var sites = {};
+                if (data !== undefined) {
+                    sites = data;
+                }
+                deferred.resolve(sites);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+
+
+
  //Receive API
 
  services.factory("Receive", function ($resource) {
@@ -668,3 +698,15 @@ services.factory("DeleteDocument", function ($resource) {
  services.factory("GetAllCurrencies", function ($resource) {
      return $resource('/rest-api/warehouse/asn/all-currencies.json', {}, {});
  });
+
+services.factory('SearchWareHouses', function ($resource) {
+    return $resource('/rest-api/warehouse/house.json', {}, {});
+});
+
+services.factory('GetSites', function ($resource) {
+    return $resource('/rest-api/warehouse/site/:regionId.json', {}, {});
+});
+
+services.factory('Warehouses', function ($resource) {
+    return $resource('/rest-api/warehouse/house/:id.json', {}, {});
+});

@@ -7,32 +7,27 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
-import java.util.List;
-
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
-
 
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WareHouse extends BaseModel {
+public class WareHouseAsleLineItem extends BaseModel {
 
-    private Site site;
 
-    private Long siteId;
+    private Zone zone;
 
-    private String code;
+    private Long zoneId;
 
-    private String name;
+    private String aisleCode;
 
-    private Long productTypeId;
+    private String binLocationFrom;
 
-    private boolean active;
+    private String binLocationTo;
 
-    private List<WareHouseLineItem> lineItem;
+    private String beamLevelFrom;
 
-    private List<WareHouseLineItem> lineItems;
-
+    private String beamLevelTo;
 }

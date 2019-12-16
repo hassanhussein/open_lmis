@@ -11,28 +11,21 @@ import java.util.List;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
-
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class WareHouse extends BaseModel {
+public class WareHouseZone extends BaseModel {
 
-    private Site site;
+    private WareHouse wareHouse;
 
-    private Long siteId;
+    private Long warehouseId;
 
-    private String code;
+    private Zone zone;
 
-    private String name;
+    private Long zoneId;
 
-    private Long productTypeId;
-
-    private boolean active;
-
-    private List<WareHouseLineItem> lineItem;
-
-    private List<WareHouseLineItem> lineItems;
+    private List<WareHouseAsleLineItem> aisleList;
 
 }
