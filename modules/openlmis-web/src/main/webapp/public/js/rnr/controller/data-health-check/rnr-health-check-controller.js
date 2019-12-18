@@ -19,10 +19,13 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
     $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
     $scope.patientColumns = patientTemplate ? patientTemplate.columns : [];
     $scope.viewSourceOfFund = true;
-    $scope.healthCheckResults ;
+    $scope.healthCheckResults;
     $scope.fullSupplyTabError = false;
     $scope.summary;
     $scope.showSummary = false;
+    var summary = [];
+    var pageNo = [];
+
 
     $scope.showMaxStock = showMaxStock;
 
@@ -34,24 +37,26 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
 
 
     $scope.runHealthCheck = function() {
-     function async (data, item){
-                var deferred = $q.defer();
-                setTimeout(function() {
-                    deferred.resolve(RunDataHealthCheckPerProduct.get({
-                        rnrid: data.id,
-                        rnrItemId: data.nonSkippedLineItems[item].id
-                    }, function(data) {
-                        $scope.healthCheckResults = Object.assign({}, $scope.healthCheckResults, data.healthCheck);
-                        createSummary();
-                    }, {}));
-                }, 1000);
-                return deferred.promise;
-            }
+        summary = [];
 
+        function async (data, item) {
+            var deferred = $q.defer();
+            setTimeout(function() {
+                deferred.resolve(RunDataHealthCheckPerProduct.get({
+                    rnrid: data.id,
+                    rnrItemId: data.nonSkippedLineItems[item].id
+                }, function(data) {
+                    $scope.healthCheckResults = Object.assign({}, $scope.healthCheckResults, data.healthCheck);
+                    createSummary(item, data.healthCheck);
+                }, {}));
+            }, 1000);
+            return deferred.promise;
+        }
 
         for (var item in $scope.rnr.nonSkippedLineItems) {
             async ($scope.rnr, item);
         }
+
     };
 
 
@@ -69,13 +74,22 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
         });
     };
 
-    function createSummary() {
-        var summary = [];
-        for (var key in $scope.healthCheckResults) {
-            var sof_objs = _.where($scope.healthCheckResults[key], {
+
+    $scope.getPageNumbers = function(rule) {
+        return _.uniq(_.pluck(_.where(summary, {
+            rule: rule
+        }), 'item'));
+    };
+
+    function createSummary(item, data) {
+
+        for (var key in data) {
+            var sof_objs = _.where(data[key], {
                 status: false
             });
+
             for (var x in sof_objs) {
+                sof_objs[x].item = Math.round(item / 10) + 1;
                 summary.push(sof_objs[x]);
             }
         }
@@ -83,11 +97,11 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
         $scope.summary = _.countBy(summary, function(obj) {
             return obj.rule;
         });
-        $scope.showSummary = true;
 
+        $scope.showSummary = true;
     }
 
-    $scope.checkHealthStatus = function(productCode) {
+    $scope.checkHealthStatus = function(productCode, index) {
         if ($scope.healthCheckResults) {
             $scope.showHealthCheckStatus = true;
             $scope.fullSupplyTabError = true;
@@ -106,12 +120,11 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
                         var message = {
                             productCode: productCode,
                             rule: prd_arry[x].rule,
-                            message: prd_arry[x].message
+                            message: prd_arry[x].message,
+                            page: Math.round(index / 10) + 1
                         };
                         $scope.healthCheckMessage.push(message);
                     }
-
-
                 }
             }
             return check_status;
