@@ -560,6 +560,8 @@ services.factory("LocationsLookup", function ($resource) {
 services.factory("Preadvice", function ($resource) {
     return $resource('/rest-api/warehouse/asn/:id.json', {id: '@id'}, update);
 });
+
+
 services.factory("PreadviceTemplate", function ($resource) {
     return $resource('/rest-api/warehouse/asn/template.json', {}, {});
 });
@@ -709,4 +711,7 @@ services.factory('GetSites', function ($resource) {
 
 services.factory('Warehouses', function ($resource) {
     return $resource('/rest-api/warehouse/house/:id.json', {}, {});
+});
+services.factory("Sites", function ($resource) {
+    return $resource('/rest-api/warehouse/site/:id.json', {id: '@id'}, update);
 });
