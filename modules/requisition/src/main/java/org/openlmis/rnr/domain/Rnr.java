@@ -59,6 +59,8 @@ public class Rnr extends BaseModel {
   private List<EquipmentLineItem> equipmentLineItems = new ArrayList<>();
   private List<PatientQuantificationLineItem> patientQuantifications = new ArrayList<>();
   private BigDecimal allocatedBudget;
+  private String creditValue;
+
   @Transient
   @JsonIgnore
   private List<RnrLineItem> allLineItems = new ArrayList<>();

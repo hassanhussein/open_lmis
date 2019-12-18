@@ -123,14 +123,16 @@ public class CustomerStatementService {
                 if(0 > allocatedBudget){
 
                     dtos.setAdditive(false);
-                    dtos.setAllocatedBudget("0");
+                    dtos.setAllocatedBudget(String.valueOf(allocatedBudget));
+
+                    // dtos.setAllocatedBudget("0");
                 }else{
                     dtos.setAdditive(true);
                     dtos.setAllocatedBudget(String.valueOf(allocatedBudget));
 
                 }
                 repository.saveLineItemDTO(dtos);
-                repository.updateBudgetInRequisition(dtos.getFacilityId(),programId,periodId,dtos.getAllocatedBudget());
+                repository.updateBudgetInRequisition(dtos.getFacilityId(),programId,periodId,dtos.getAllocatedBudget(),dtos.getCreditValue());
 
                 log.debug("Results  "+budget[0].getAllocatedBudget());
             } else {

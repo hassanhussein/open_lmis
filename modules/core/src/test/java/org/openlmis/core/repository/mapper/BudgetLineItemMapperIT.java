@@ -90,7 +90,7 @@ public class BudgetLineItemMapperIT {
     facility = make(a(defaultFacility, with(code, facilityCode)));
     facilityMapper.insert(facility);
 
-    budgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My good notes",true);
+    budgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My good notes",true,"Dr");
   }
 
   @Test
@@ -107,7 +107,7 @@ public class BudgetLineItemMapperIT {
   public void shouldUpdateBudgetLineItem() throws Exception {
     mapper.insert(budgetLineItem);
 
-    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My updated good notes",true);
+    BudgetLineItem duplicatedBudgetLineItem = new BudgetLineItem(facility.getId(), 1L, period.getId(), budgetFileInfo.getId(), new Date(), BigDecimal.valueOf(345.45), "My updated good notes",true,"Dr");
 
     duplicatedBudgetLineItem.setId(budgetLineItem.getId());
 

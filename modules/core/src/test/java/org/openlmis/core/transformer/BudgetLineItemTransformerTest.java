@@ -9,6 +9,7 @@
  */
 package org.openlmis.core.transformer;
 
+import org.apache.ibatis.jdbc.Null;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,7 +43,7 @@ public class BudgetLineItemTransformerTest {
   @Test
   public void shouldTransformBudgetLineItemDTOIntoBudgetLineItem() throws Exception {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "10/12/2013", "345.45", "My good notes","Test12",true,
-            "123",1L,2L,3L,4L,5L);
+            "123",1L,2L,3L,4L,5L,"Dr");
     String datePattern = "dd/MM/yyyy";
     SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
     Date date = dateFormat.parse("10/12/2013");
@@ -57,7 +58,7 @@ public class BudgetLineItemTransformerTest {
   @Test
   public void shouldTransformBudgetLineItemDTOWithoutParsingDateWhenPatternNotAvailable() throws Exception {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", null, "345.45", "My good notes","Test12",true,
-            "123",1L,2L,3L,4L,5L);
+            "123",1L,2L,3L,4L,5L,"Dr");
 
     BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, null, 1);
 
@@ -70,7 +71,7 @@ public class BudgetLineItemTransformerTest {
   @Test
   public void shouldThrowErrorIfDateIsInInvalidFormat() {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "1234-33-44", "345.45", "My good notes","Test12",true,
-            "123",1L,2L,3L,4L,5L);
+            "123",1L,2L,3L,4L,5L,"Dr");
     int rowNumber = 1;
     String datePattern = "MM/dd/yy";
 
@@ -83,7 +84,7 @@ public class BudgetLineItemTransformerTest {
   @Test
   public void shouldThrowErrorIfAllocatedBudgetIsNotValid() {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "12-12-2013", "345Word.45", "My good notes","Test12",true,
-            "123",1L,2L,3L,4L,5L);
+            "123",1L,2L,3L,4L,5L,"Dr");
     int rowNumber = 1;
     String datePattern = "MM-dd-yyyy";
 
@@ -96,7 +97,7 @@ public class BudgetLineItemTransformerTest {
   @Test
   public void shouldThrowErrorIfAllocatedBudgetIsNegative() {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", "12-12-2013", "-345.45", "My good notes","Test12",true,
-            "123",1L,2L,3L,4L,5L);
+            "123",1L,2L,3L,4L,5L,"Dr");
     int rowNumber = 1;
     String datePattern = "MM-dd-yyyy";
 
@@ -109,7 +110,7 @@ public class BudgetLineItemTransformerTest {
   @Test
   public void shouldFloorAllocatedBudgetIs() {
     BudgetLineItemDTO budgetLineItemDTO = new BudgetLineItemDTO("F10", "HIV", null, "345.466", "My good notes","Test12",true,
-            "123",1L,2L,3L,4L,5L);
+            "123",1L,2L,3L,4L,5L,"Dr");
 
     BudgetLineItem budgetLineItem = budgetLineItemTransformer.transform(budgetLineItemDTO, null, 1);
 
