@@ -52,10 +52,10 @@ public interface BudgetLineItemMapper {
   Integer insertBudget(BudgetDTO budgetDTO);
 
   @Insert({
-          "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes,budgetId,additive, fundSourceCode) ",
+          "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes,budgetId,additive, fundSourceCode,creditValue) ",
           "VALUES (#{facilityId}, #{programId}, #{budgetFileId}, #{periodId}, #{periodDate}::date,  " +
                   " CAST (#{allocatedBudget} AS DOUBLE PRECISION) " +
-                  " , #{notes},#{budgetId},#{additive}, #{fundSourceCode})"
+                  " , #{notes},#{budgetId},#{additive}, #{fundSourceCode}, #{creditValue})"
   })
   @Options(useGeneratedKeys = true)
     void insertBudgetLineItem(BudgetLineItemDTO lineItem);
@@ -79,12 +79,16 @@ public interface BudgetLineItemMapper {
                                         @Param("programId") Long programId,
                                         @Param("periodId") Long periodId);
 
-  @Update("update requisitions set allocatedBudget = CAST (#{allocatedBudget} AS DOUBLE PRECISION) where facilityId = #{facilityId} and " +
+  @Update("update requisitions set allocatedBudget = CAST (#{allocatedBudget} AS DOUBLE PRECISION)," +
+          " creditValue = #{creditValue}  where facilityId = #{facilityId} and " +
           " programId = #{programId} and periodId = #{periodId} ")
   void updateBudgetInRequisition(@Param("facilityId") Long facilityId,
                                  @Param("programId") Long programId,
                                  @Param("periodId") Long periodId,
-                                 @Param("allocatedBudget") String allocatedBudget);
+                                 @Param("allocatedBudget") String allocatedBudget,
+                                 @Param("creditValue") String creditValue
+
+                                 );
 
 
   @Update(" UPDATE public.budget_line_items\n" +

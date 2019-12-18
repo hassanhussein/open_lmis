@@ -44,4 +44,6 @@ public class BudgetLineItem extends BaseModel {
 
   private Boolean additive;
 
+  private String creditValue;
+
 }

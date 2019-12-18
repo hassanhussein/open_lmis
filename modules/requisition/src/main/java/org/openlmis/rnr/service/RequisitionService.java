@@ -271,6 +271,7 @@ public class RequisitionService {
       BudgetLineItem budgetLineItem = budgetLineItemService.get(requisition.getFacility().getId(), requisition.getProgram().getId(), requisition.getPeriod().getId());
       BigDecimal allocatedBudget = (budgetLineItem == null) ? null : budgetLineItem.getAllocatedBudget();
       requisition.setAllocatedBudget(allocatedBudget);
+      requisition.setCreditValue((budgetLineItem == null) ? null : budgetLineItem.getCreditValue());
     }
   }
 

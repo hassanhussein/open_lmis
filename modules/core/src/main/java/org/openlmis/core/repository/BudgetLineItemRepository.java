@@ -144,8 +144,8 @@ public class BudgetLineItemRepository {
 
   }
 
-  public void updateBudgetInRequisition(Long facilityId, Long programId, Long periodId,String allocatedBudget) {
-    mapper.updateBudgetInRequisition(facilityId,programId,periodId,allocatedBudget);
+  public void updateBudgetInRequisition(Long facilityId, Long programId, Long periodId,String allocatedBudget,String creditValue) {
+    mapper.updateBudgetInRequisition(facilityId,programId,periodId,allocatedBudget,creditValue);
   }
 
 }

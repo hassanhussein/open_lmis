@@ -54,6 +54,10 @@ public class BudgetLineItemDTO extends BaseModel {
   private String notes;
   private String fundSourceCode;
   private Boolean additive;
+
+  @JsonProperty("Dr/Cr")
+  private String creditValue;
+
   @JsonProperty("TranDate")
   private String periodDate;
   private Long periodId;

@@ -31,8 +31,8 @@ import java.util.Map;
 @Repository
 public interface RequisitionMapper {
 
-    @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, sourceApplication, emergency, allocatedBudget, modifiedBy, createdBy,totalSources) " +
-            "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy},#{totalSources})")
+    @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, sourceApplication, emergency, allocatedBudget, modifiedBy, createdBy,totalSources, creditValue) " +
+            "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy},#{totalSources}, #{creditValue})")
     @Options(useGeneratedKeys = true)
     void insert(Rnr requisition);
 
@@ -40,7 +40,7 @@ public interface RequisitionMapper {
             "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP, status = #{status},",
             "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
             "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
-            "supervisoryNodeId = #{supervisoryNodeId}, totalSources = #{totalSources} ",
+            "supervisoryNodeId = #{supervisoryNodeId}, totalSources = #{totalSources}, creditValue = #{creditValue} ",
             "WHERE id = #{id}"})
     void update(Rnr requisition);
 

@@ -33,9 +33,16 @@
           <span openlmis-message="label.currency.symbol"></span>
           <span id="allocatedBudgetAmount" class="cell-text" ng-bind="rnr.allocatedBudget | currency: ''"
                 ng-show="rnr.allocatedBudget==0 || rnr.allocatedBudget"></span>
+
+            <span ng-bind="rnr.creditValue"></span>
+
+            &nbsp;|&nbsp;
+
+
          <!-- <span id="allocatedBudgetNotApplicable" class="cell-text" openlmis-message="msg.budget.not.allocated"
                 ng-hide="rnr.allocatedBudget"></span>-->
-                &nbsp;|&nbsp;
+
+
             </strong>
 
 
