@@ -191,6 +191,19 @@ public interface RequisitionMapper {
     List<Rnr> getPostSubmitRequisitions(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
 
     @Select({"SELECT * FROM requisitions WHERE",
+            "facilityId = #{facility.id} AND",
+            "programId = #{program.id} AND ",
+            "periodId = ANY (#{periods}::INTEGER[])"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId")
+    })
+    List<Rnr> getAllStatusRequisitions(@Param("facility") Facility facility, @Param("program") Program program, @Param("periods") String periodIds);
+
+
+
+    @Select({"SELECT * FROM requisitions WHERE",
             "facilityId = #{facilityId} AND",
             "programId = #{programId} AND ",
             "periodId = #{periodId} AND ",

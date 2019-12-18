@@ -23,7 +23,8 @@ function SearchRnrListController($scope, facilities, RequisitionsForViewing, Pro
         var requisitionQueryParameters = {
             facilityId: $scope.selectedFacilityId,
             dateRangeStart: $scope.startDate,
-            dateRangeEnd: $scope.endDate
+            dateRangeEnd: $scope.endDate,
+            allStatus: true
         };
 
         if ($scope.selectedProgramId) requisitionQueryParameters.programId = $scope.selectedProgramId;

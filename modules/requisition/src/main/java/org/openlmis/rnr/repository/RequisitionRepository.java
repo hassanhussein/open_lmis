@@ -389,6 +389,10 @@ private DataHealthCheckMapper dataHealthCheckMapper;
         return requisitionMapper.getPostSubmitRequisitions(facility, program, commaSeparator.commaSeparateIds(periods));
     }
 
+    public List<Rnr> getAllStatusRequisitions(Facility facility, Program program, List<ProcessingPeriod> periods) {
+        return requisitionMapper.getAllStatusRequisitions(facility, program, commaSeparator.commaSeparateIds(periods));
+    }
+
     public Integer getCategoryCount(Rnr requisition, boolean fullSupply) {
         return rnrLineItemMapper.getCategoryCount(requisition, fullSupply);
     }
