@@ -10,17 +10,21 @@
 
 <div ng-controller="ViewFullSupplyController">
     <div>
-        <table class="table table-bordered" style="width: 40%" ng-show="showSummary">
+        <table class="table table-bordered" style="width: 50%" ng-show="showSummary">
             <thead>
             <tr>
                 <th>Rule</th>
                 <th>No of items failed</th>
+                <th>Pages</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="(key, value) in summary">
                 <td>{{key}}</td>
                 <td>{{value}}</td>
+                <td>
+                   <a  style="cursor: pointer;" ng-repeat="page in getPageNumbers(key)" ng-click="goToPage(page, $event)">{{page}}, </a>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -45,9 +49,9 @@
                 </tr>
                 <tr>
 
-                        <td  ng-show="showHealthCheckStatus"  class="cell-input col-{{ column.name }}"  ng-style="{'background-color': !checkHealthStatus(rnrLineItem.productCode)? '#e55039' : '#00b894'}">
+                        <td  ng-show="showHealthCheckStatus"  class="cell-input col-{{ column.name }}"  ng-style="{'background-color': !checkHealthStatus(rnrLineItem.productCode, {{$index}})? '#e55039' : '#00b894'}">
                             <span>
-                                <div ng-click="viewinformation(rnrLineItem.productCode, rnrLineItem.product )" class="ngCellText checked"><i  ng-class="{'icon-ok': checkHealthStatus(rnrLineItem.productCode), 'icon-info': !checkHealthStatus(rnrLineItem.productCode)}"></i></div>
+                                <div ng-click="viewinformation(rnrLineItem.productCode, rnrLineItem.product )" class="ngCellText checked"><i  ng-class="{'icon-ok': checkHealthStatus(rnrLineItem.productCode, {{$index}}), 'icon-info': !checkHealthStatus(rnrLineItem.productCode, {{$index}})}"></i></div>
                             </span>
                         </td>
                         <td ng-show="!showHealthCheckStatus" class="cell-input col-{{ column.name }}"  style="background-color : null;">
