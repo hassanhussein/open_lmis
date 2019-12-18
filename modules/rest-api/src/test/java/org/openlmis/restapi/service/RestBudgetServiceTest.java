@@ -43,7 +43,7 @@ public class RestBudgetServiceTest {
 
 
         BudgetLineItemDTO lineItemDTO = new BudgetLineItemDTO("", "P10", "10-12-2013", "32.67", "Notes","Test12",true,
-                "123",1L,2L,3L,4L,5L);
+                "123",1L,2L,3L,4L,5L,"Dr");
 
         expectedEx.expect(DataException.class);
         expectedEx.expectMessage("error.mandatory.fields.missing");
