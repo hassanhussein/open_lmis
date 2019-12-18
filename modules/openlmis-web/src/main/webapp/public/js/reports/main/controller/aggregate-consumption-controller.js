@@ -75,8 +75,41 @@ function AggregateConsumptionReportController($scope,$q, $window, AggregateConsu
         }
     };
 
+    $scope.loadPaginatedData = function () {
+
+    if (angular.isUndefined($scope.getSanitizedParameter().program) || $scope.getSanitizedParameter().program === null || angular.isUndefined($scope.getSanitizedParameter().year) || $scope.getSanitizedParameter().year === null ||  angular.isUndefined($scope.getSanitizedParameter().period) || $scope.getSanitizedParameter().period === null || angular.isUndefined($scope.getSanitizedParameter().schedule) || $scope.getSanitizedParameter().schedule === null) {
+                    return;
+           }
+
+           $scope.filter.page = $scope.page;
+            $scope.filter.limit = $scope.pageSize;
+            $scope.data = $scope.datarows = [];
+            $scope.filter.max = 10000;
+
+            $scope.countFactor = $scope.pageSize * ($scope.page - 1 );
+
+
+                AggregateConsumptionReport.get($scope.getSanitizedParameter(), function (data) {
+                    if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
+                        $scope.pagination = data.openLmisResponse.pagination;
+                        $scope.totalItems = 1000;
+                        $scope.currentPage = $scope.pagination.page;
+                        $scope.tableParams.total = $scope.totalItems;
+                        $scope.data = data.openLmisResponse.rows;
+                        $scope.paramsChanged($scope.tableParams);
+                    }
+                });
+
+
+
+    };
 
     $scope.OnFilterChanged = function () {
+
+   /*   if (angular.isUndefined($scope.getSanitizedParameter().program) || $scope.getSanitizedParameter().program === null || angular.isUndefined($scope.getSanitizedParameter().year) || $scope.getSanitizedParameter().year === null ||  angular.isUndefined($scope.getSanitizedParameter().period) || $scope.getSanitizedParameter().period === null || angular.isUndefined($scope.getSanitizedParameter().schedule) || $scope.getSanitizedParameter().schedule === null) {
+                return;
+       }
+
        $scope.filter.page = $scope.page;
         $scope.filter.limit = $scope.pageSize;
         $scope.data = $scope.datarows = [];
@@ -94,11 +127,20 @@ function AggregateConsumptionReportController($scope,$q, $window, AggregateConsu
                     $scope.data = data.openLmisResponse.rows;
                     $scope.paramsChanged($scope.tableParams);
                 }
-            });
+            });*/
 
     };
 
     $scope.searchReport = function () {
+
+    console.log('reached here');
+/*
+
+       if (angular.isUndefined($scope.getSanitizedParameter().program) || $scope.getSanitizedParameter().program === null || angular.isUndefined($scope.getSanitizedParameter().year) || $scope.getSanitizedParameter().year === null ||  angular.isUndefined($scope.getSanitizedParameter().period) || $scope.getSanitizedParameter().period === null || angular.isUndefined($scope.getSanitizedParameter().schedule) || $scope.getSanitizedParameter().schedule === null) {
+                    return;
+       }
+*/
+
         $scope.filter.page = $scope.page;
         $scope.filter.limit = $scope.pageSize;
         $scope.data = $scope.datarows = [];
@@ -152,7 +194,7 @@ function AggregateConsumptionReportController($scope,$q, $window, AggregateConsu
     $scope.$watch('currentPage', function() {
 		if ($scope.currentPage > 0) {
 			$scope.page = $scope.currentPage;
-			$scope.OnFilterChanged();
+			$scope.loadPaginatedData();
 		}
 });
 
