@@ -55,9 +55,6 @@ public class BudgetLineItemDTO extends BaseModel {
   private String fundSourceCode;
   private Boolean additive;
 
-  @JsonProperty("Dr/Cr")
-  private String creditValue;
-
   @JsonProperty("TranDate")
   private String periodDate;
   private Long periodId;
@@ -66,6 +63,9 @@ public class BudgetLineItemDTO extends BaseModel {
   private Long budgetId;
 
   private Long programId;
+
+  @JsonProperty("Dr/Cr")
+  private String creditValue;
 
   private static Logger logger = LoggerFactory.getLogger(BudgetLineItemDTO.class);
 
