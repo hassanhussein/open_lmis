@@ -1,4 +1,4 @@
-function InspectionSearchController($scope,navigateBackService, $dialog,$location){
+function InspectionSearchController($scope,SearchInspectionByPaged,navigateBackService, $dialog,$location){
 
   $scope.inspectionListFromServer=[
   {
@@ -49,7 +49,6 @@ function InspectionSearchController($scope,navigateBackService, $dialog,$locatio
   ];
 
 
-
 $scope.searchOptions = [
   {value: "asnNumber", name: "ASN Number"},
     {value: "asnDate", name: "ASN DATE"},
@@ -58,25 +57,32 @@ $scope.searchOptions = [
   ];
 
 
+  $scope.showResults = false;
+
+  $scope.currentPage = 1;
+  $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
+
+  $scope.selectSearchType = function (searchOption) {
+    $scope.selectedSearchOption = searchOption;
+  };
+
     function getInspectionList(page, query) {
-//      query = query.trim();
-//      $scope.searchedQuery = query;
-//      Preadvice.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
-//        $scope.asnList = data.asns;
-//        $scope.pagination = data.pagination;
-//        $scope.totalItems = $scope.pagination.totalRecords;
-//        $scope.currentPage = $scope.pagination.page;
-//        $scope.showResults = true;
-//        $scope.showSearchResults = true;
-//      }, {});
 
+     query = query.trim();
+     $scope.searchedQuery = query;
+     var inspectionList = [];
+      SearchInspectionByPaged.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
 
-    $scope.inspectionList=$scope.inspectionListFromServer;
-    $scope.pagination = $scope.inspectionList[0].pagination;
-    $scope.totalItems = $scope.pagination.totalRecords;
-    $scope.currentPage = $scope.pagination.page;
-    $scope.showResults = true;
-    $scope.showSearchResults = true;
+        inspectionList = data.inspections;
+
+        $scope.inspectionList=inspectionList
+        $scope.pagination = data.pagination;
+        $scope.totalItems = $scope.pagination.totalRecords;
+        $scope.currentPage = $scope.pagination.page;
+        $scope.showResults = true;
+        $scope.showSearchResults = true;
+    });
+
     }
 
     // column to sort
@@ -145,11 +151,14 @@ $scope.searchOptions = [
       };
 
 
-
       $scope.edit = function (inspection,viewMode) {
 
-          $scope.$parent.inspection=inspection;
-          $location.path('inspect/');
+      var path = '/edit/'+parseInt(inspection.id,10);
+
+       $location.path(path);
+
+         // $scope.$parent.inspection=inspection;
+          //$location.path('inspect/');
         };
 
 }

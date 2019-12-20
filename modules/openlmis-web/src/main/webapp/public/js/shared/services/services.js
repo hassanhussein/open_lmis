@@ -715,3 +715,11 @@ services.factory('Warehouses', function ($resource) {
 services.factory("Sites", function ($resource) {
     return $resource('/rest-api/warehouse/site/:id.json', {id: '@id'}, update);
 });
+
+services.factory('SearchInspectionByPaged', function ($resource) {
+    return $resource('/rest-api/warehouse/inspection', {}, {});
+});
+
+services.factory("GetInspectionById", function ($resource) {
+     return $resource('/rest-api/warehouse/inspection/:id.json', {id: '@id'}, {});
+ });
