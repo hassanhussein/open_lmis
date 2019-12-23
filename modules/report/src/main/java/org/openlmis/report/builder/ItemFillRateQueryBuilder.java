@@ -25,4 +25,51 @@ public class ItemFillRateQueryBuilder {
                         " and POD.programId = '"+filter.getProgram()+"' AND R.STATUS IN('RELEASED') and item.quantityApproved > 0 " ;
     }
 
+
+
+
+    public static String getQueryReport(Map params) {
+
+        ItemFillRateReportParam filter = (ItemFillRateReportParam) params.get("filterCriteria");
+
+        return "          SELECT l.productcode msdproductcode, CASE WHEN  (m.productCode is null) then l.productCode else m.productCode  end as eLMISProductCode ,m.product, coalesce(quantityApproved,0) quantityApproved,coalesce(quantityShipped,0) quantityShipped \n" +
+                "                        FROM (\n" +
+                "                       WITH Q AS (  SELECT p.packsize * quantityshipped as quantityshipped ,productcode, orderId from  POD\n" +
+
+                "                         JOIN pod_line_items item on pod.id = item.podId\n" +
+                "                         Join products p ON p.code = item.productcode\n" +
+                "                         where pod.orderId in (select r.id from requisitions r JOIN \n" +
+                "                         processing_periods pp on pp.id = r.periodID where programId = 1 and pp.id = 93 )\n" +
+
+                "                        ) \n" +
+                "                        SELECT  productcode, SUM(quantityshipped) quantityshipped FROM Q\n" +
+                "                        GROUP BY productcode\n" +
+                "                        \n" +
+                "                        )L FULL OUTER JOIN \n" +
+                "                        \n" +
+                "                    \n" +
+                "                       (\n" +
+                "                       \n" +
+                "                        WITH Q AS ( SELECT ITEM.productcode, item.product, sum(quantityApproved) quantityApproved\n" +
+                "                         \n" +
+                "                        \n" +
+                "                         FROM REQUISITIONS R \n" +
+                "\n" +
+                "                         JOIN requisition_line_items item on item.rnrid = R.ID \n" +
+                "                         \n" +
+                "                     \n" +
+                "                         WHERE  SKIPPED = false and status ='RELEASED' and  programId = 1 and periodid = 93 \n" +
+                "                         \n" +
+                "                         GROUP BY ITEM.productcode, item.product ) \n" +
+                "                         \n" +
+                "                         SELECT * FROM q\n" +
+                "                       \n" +
+                "                       ) M on M.productcode = l.productcode\n" +
+                "                        \n" +
+                "                        order by msdproductcode, eLMISProductCode ";
+
+
+
+    }
+
 }
