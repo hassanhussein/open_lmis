@@ -1,4 +1,4 @@
-function InspectionController($scope, inspection){
+function InspectionController($scope,$window, inspection){
 
    $scope.inspection = inspection;
 
@@ -14,6 +14,24 @@ function InspectionController($scope, inspection){
       $scope.closeInspectLotModal = function() {
           $scope.inspectLotModal = false;
       };
+
+
+      $scope.downloadFile = function (file,asnCode){
+
+      var url ='/rest-api/warehouse/downloadFile?filename='+file;
+      $window.open(url, '_blank');
+
+      };
+
+     $scope.cancel = function() {
+              $scope.message = "";
+              $scope.error = "";
+              $scope.showError = false;
+           //   $scope.$parent.asnId = false;
+            //  $scope.$parent.asnIdUpdate = false;
+              $location.path('');
+
+          };
 }
 
 
