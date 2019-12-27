@@ -63,13 +63,26 @@ public interface InspectionMapper {
             @Result(property = "receive", javaType = Receive.class, column = "receiveId",
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper.getById")),
             @Result(property = "receiveId", column = "receiveId"),
-            @Result(property = "user", javaType = User.class, column = "createdBy",
+            @Result(property = "user", javaType = User.class, column = "modifiedBy",
                     one = @One(select = "org.openlmis.core.repository.mapper.UserMapper.getById")),
-            @Result(property = "user.username", column = "inspectedBy"),
+            @Result(property = "inspectedBy", column = "inspectedBy"),
             @Result(property = "lineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.inspection.InspectionLineItemMapper.getLineItemsByInspectionId"))
     })
     Inspection getById(@Param("id") Long id);
+
+    @Insert("INSERT INTO public.inspections(\n" +
+            "            receiveId, inspectionDate, inspectionNote, inspectedBy, status, \n" +
+            "            createBy, createdDate, modifiedBy, modifiedDate,receiptNumber,descriptionOfInspection)\n" +
+            "    VALUES (#{receiveId}, #{inspectionDate}, #{inspectionNote}, #{inspectedBy}, #{status}, \n" +
+            "            #{createBy}, NOW(), #{modifiedBy}, NOW(), #{receiptNumber}, #{descriptionOfInspection});\n")
+    Integer insert(Inspection inspection);
+
+    @Update("UPDATE public.inspections\n" +
+            "   SET  receiveId=#{receive.id}, inspectionDate=#{inspectionDate}, inspectionNote=#{inspectionNote}, inspectedBy=#{inspectedBy}, \n" +
+            "       status=#{status},receiptNumber = #{receiptNumber}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), descriptionOfInspection=#{descriptionOfInspection}\n" +
+            " WHERE id = #{id};\n")
+    void update(Inspection inspection);
 
     class SelectInspection {
 

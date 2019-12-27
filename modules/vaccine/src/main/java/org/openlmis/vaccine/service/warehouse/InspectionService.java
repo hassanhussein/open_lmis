@@ -2,11 +2,14 @@ package org.openlmis.vaccine.service.warehouse;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
 import org.openlmis.vaccine.repository.warehouse.InspectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,6 +19,9 @@ public class InspectionService {
 
     @Autowired
     InspectionRepository repository;
+
+    @Autowired
+    private UserService userService;
 
     public Integer getTotalSearchResultCount(String searchParam, String column) {
 
@@ -47,5 +53,16 @@ public class InspectionService {
 
     public Inspection getById(Long id) {
         return repository.getById(id);
+    }
+
+    @Transactional
+    public void save(Inspection inspection, Long userId) {
+
+        User user = userService.getById(userId);
+        inspection.setInspectedBy(user.getFirstName()+" - "+ user.getLastName());
+        if(inspection.getId() == null) {
+            repository.insert(inspection);
+        }else
+             repository.update(inspection);
     }
 }

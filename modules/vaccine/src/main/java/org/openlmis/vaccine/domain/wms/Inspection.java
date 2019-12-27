@@ -31,6 +31,10 @@ public class Inspection extends BaseModel {
 
     private String status;
 
+    private String receiptNumber;
+
+    private String descriptionOfInspection;
+
     private User user;
 
     private List<InspectionLineItem> lineItems;

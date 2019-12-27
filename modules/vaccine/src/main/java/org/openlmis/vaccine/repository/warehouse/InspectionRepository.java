@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.warehouse;
 
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.Inspection;
+import org.openlmis.vaccine.domain.wms.InspectionLineItem;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.inspection.InspectionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ public class InspectionRepository {
 
    @Autowired
    InspectionMapper mapper;
+
+   @Autowired
+    InspectionLineItemRepository lineItemRepository;
 
     public Integer getTotalSearchResultCountByAsnNumber(String searchParam) {
         return mapper.getTotalSearchResultCountByAsnNumber(searchParam);
@@ -46,5 +50,23 @@ public class InspectionRepository {
 
     public Inspection getById(Long id) {
         return mapper.getById(id);
+    }
+
+    public Integer insert(Inspection inspection) {
+        return mapper.insert(inspection);
+    }
+
+    public void update(Inspection inspection) {
+        mapper.update(inspection);
+        if(!inspection.getLineItems().isEmpty()) {
+            updateLineItemDetails(inspection.getLineItems());
+        }
+    }
+
+    private void updateLineItemDetails(List<InspectionLineItem> lineItems) {
+
+        for(InspectionLineItem lineItem: lineItems) {
+            lineItemRepository.update(lineItem);
+        }
     }
 }

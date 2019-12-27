@@ -16,10 +16,17 @@ public interface InspectionLineItemMapper {
             @Result(property = "productId", column = "productId"),
             @Result(property = "product", javaType = Product.class, column = "productId",
                     one = @One(select = "org.openlmis.core.repository.mapper.ProductMapper.getById")),
-            @Result(property = "inspectionLotList", javaType = List.class, column = "inspectionLineItemId",
+            @Result(property = "inspectionLotList", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.inspection.InspectionLotMapper.getByLineItemId"))
     })
     List<InspectionLineItem> getLineItemsByInspectionId(@Param("inspectionId") Long inspectionId);
 
-
+    @Update(" UPDATE public.inspection_line_items\n" +
+            "   SET  inspectionId=#{inspectionId}, productId=#{productId}, quantityCounted=#{quantityCounted}, boxCounted=#{boxCounted}, \n" +
+            "       passQuantity=#{passQuantity}, passLocationId=#{passLocationId}, failQuantity=#{failQuantity}, failReason=#{failReason}, \n" +
+            "       failLocationId=#{failLocationId}, lotFlag=#{lotFlag}, dryIceFlag=#{dryIceFlag}, icePackFlag=#{icePackFlag}, vvmFlag=#{vvmFlag}, \n" +
+            "       ccCardFlag=#{ccCardFlag}, electronicDeviceFlag=#{electronicDeviceFlag}, otherMonitor=#{otherMonitor}, \n" +
+            "       modifiedBy=#{modifiedBy}, modifiedDate=NOW()\n" +
+            " WHERE id = #{id};")
+    void update(InspectionLineItem lineItem);
 }

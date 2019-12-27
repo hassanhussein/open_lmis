@@ -47,7 +47,8 @@ ALTER TABLE inspection_line_items ADD CONSTRAINT inspection_line_items_products_
 ---------- inspection_lots ------------
 CREATE TABLE inspection_lots (ID SERIAL PRIMARY KEY,
 inspectionlineitemid INTEGER,
-lotnumber VARCHAR (20),
+
+ VARCHAR (20),
 countedquantity INTEGER,
 passquantity INTEGER,
 passlocationid INTEGER,

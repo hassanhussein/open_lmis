@@ -33,4 +33,6 @@ public class InspectionLot extends BaseModel {
 
     private Long vvmStatus;
 
+    private Long inspectionLineItemId;
+
 }

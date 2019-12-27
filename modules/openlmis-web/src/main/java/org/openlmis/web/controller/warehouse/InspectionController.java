@@ -2,8 +2,11 @@ package org.openlmis.web.controller.warehouse;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.vaccine.domain.wms.Asn;
+import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
 import org.openlmis.vaccine.service.warehouse.InspectionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +14,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
+import static org.openlmis.restapi.response.RestResponse.error;
+import static org.openlmis.restapi.response.RestResponse.success;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @Controller
 @NoArgsConstructor
@@ -25,7 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class InspectionController extends BaseController {
 
     @Autowired
-    InspectionService service;
+   private InspectionService service;
 
     @RequestMapping(value = "inspection", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getInspectionByPagination(@RequestParam(value = "searchParam", required = false) String searchParam,
@@ -44,6 +53,21 @@ public class InspectionController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getById(@PathVariable Long id) {
 
         return OpenLmisResponse.response("inspection",service.getById(id) );
+    }
+
+
+    @RequestMapping(value = "inspection/{id}", method =PUT, headers = ACCEPT_JSON)
+    public ResponseEntity update(@RequestBody Inspection inspect, @PathVariable(value = "id") Long id, HttpServletRequest request) {
+
+        try{
+            inspect.setId(id);
+            inspect.setModifiedBy(loggedInUserId(request));
+            service.save(inspect, loggedInUserId(request));
+            return success("Inspection Updated Successiful");
+
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
     }
 
 }

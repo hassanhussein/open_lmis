@@ -1,4 +1,4 @@
-function InspectionController($scope,$window, inspection){
+function InspectionController($scope,$window, inspection, UpdateInspection,$location){
 
    $scope.inspection = inspection;
 
@@ -6,7 +6,11 @@ function InspectionController($scope,$window, inspection){
 
 
 
-     $scope.showInspectLotModal = function() {
+     $scope.showInspectLotModal = function(lineItem) {
+
+     $scope.inspectionLots = lineItem;
+
+     console.log(lineItem);
           $scope.inspectLotModal = true;
       };
 
@@ -32,6 +36,40 @@ function InspectionController($scope,$window, inspection){
               $location.path('');
 
           };
+
+  var success = function (data) {
+    $scope.error = "";
+    $scope.$parent.message = data.success;
+   // $scope.$parent.geoZoneId = data.geoZone.id;
+    $scope.showError = false;
+    $location.path('');
+  };
+
+  var error = function (data) {
+    $scope.$parent.message = "";
+    $scope.error = data.data.error;
+    $scope.showError = true;
+  };
+
+
+    $scope.save = function () {
+
+
+       if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
+         $scope.showError = true;
+         $scope.error = 'form.error';
+         $scope.message = "";
+         return;
+       }
+
+
+       if ($scope.inspection.id) {
+         $scope.inspection.status  = 'DRAFT';
+         console.log($scope.inspection);
+         UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
+       }
+
+     };
 }
 
 

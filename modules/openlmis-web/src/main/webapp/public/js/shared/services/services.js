@@ -723,3 +723,9 @@ services.factory('SearchInspectionByPaged', function ($resource) {
 services.factory("GetInspectionById", function ($resource) {
      return $resource('/rest-api/warehouse/inspection/:id.json', {id: '@id'}, {});
  });
+
+services.factory("UpdateInspection", function ($resource) {
+    return $resource('/rest-api/warehouse/inspection/:id.json', {id: '@id'}, update);
+});
+
+
