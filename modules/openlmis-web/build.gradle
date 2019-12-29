@@ -14,23 +14,23 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 //import org.akhikhl.gretty.*
 
-apply plugin: 'jetty'
+apply plugin: 'org.gretty'
 apply plugin: 'war'
 apply plugin: 'cobertura'
 //apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 
-//gretty {
-//    httpPort = 9091
-//    contextPath = '/'
-//    scanInterval = 1
-//    jvmArgs = ['-DdefaultLocale=en']
-//    managedClassReload=false
-//    loggingLevel='DEBUG'
-//    servletContainer = 'jetty9'
-//    onScanFilesChanged {
-//        System.out.println('Change detected! reloading classes!')
-//    }
-//}
+gretty {
+    httpPort = 9091
+    contextPath = '/'
+    scanInterval = 1
+    jvmArgs = ['-DdefaultLocale=en']
+    managedClassReload=false
+    loggingLevel='INFO'
+    servletContainer = 'tomcat9'
+    onScanFilesChanged {
+        System.out.println('Change detected! reloading classes!')
+    }
+}
 
 task npm(type: Exec) {
   group = "Build"
@@ -112,23 +112,6 @@ buildscript {
   }
 }
 
-war {
-  exclude "public/less/"
-  exclude "public/css/"
-  exclude "public/fonts/"
-  exclude "public/images/"
-  exclude "public/js/"
-  exclude "public/lib/"
-
-  doFirst {
-    prepareVersionedDirectory.execute();
-  }
-
-  doLast {
-    cleanWorkspace.execute()
-  }
-}
-
 task prepareVersionedDirectory(type: Copy) {
   ext.currentTime = System.properties.get('version', new Date().getTime() + "");
   from('src/main/webapp/public') {
@@ -137,6 +120,25 @@ task prepareVersionedDirectory(type: Copy) {
   into 'src/main/webapp/public/v' + ext.currentTime;
   includeEmptyDirs = false;
 }
+
+task cleanWorkspace(type: Delete) {
+  delete 'src/main/webapp/public/v' + prepareVersionedDirectory.currentTime + '/';
+}
+war {
+
+  exclude "public/less/"
+  exclude "public/css/"
+  exclude "public/fonts/"
+  exclude "public/images/"
+  exclude "public/js/"
+  exclude "public/lib/"
+
+  dependsOn prepareVersionedDirectory
+
+  finalizedBy cleanWorkspace
+}
+
+
 
 tasks.withType(War) {
   eachFile { FileCopyDetails fileCopy ->
@@ -156,15 +158,12 @@ tasks.withType(War) {
   }
 }
 
-task cleanWorkspace(type: Delete) {
-  delete 'src/main/webapp/public/v' + prepareVersionedDirectory.currentTime + '/';
-}
 
-build.doLast {
-//    karmaRun.execute()
-  jsHint.execute()
-  cleanWorkspace.execute()
-}
+
+karmaRun.mustRunAfter build
+jsHint.mustRunAfter build
+cleanWorkspace.mustRunAfter build
+
 
 dependencies {
     compile 'io.springfox:springfox-spi:2.6.0'
@@ -188,9 +187,7 @@ dependencies {
   compile 'org.ict4h:atomfeed-server:1.9.4'
   compile 'org.mybatis:mybatis:3.2.8'
   compile 'org.slf4j:slf4j-api:1.7.24'
-  testCompile 'org.mockito:mockito-all:1.10.19'
   testCompile 'junit:junit-dep:4.8.1'
-  testCompile 'org.powermock:powermock-core:1.6.2'
   testCompile 'joda-time:joda-time:2.7'
   testCompile 'org.aspectj:aspectjweaver:1.8.5'
   testCompile 'org.hamcrest:hamcrest-core:1.3'
@@ -238,14 +235,14 @@ sonarqube {
   }
 }
 
-jettyRun {
-  jettyRun.httpPort = 9091;
-  contextPath = ''
-  daemon = true;
-  jettyRun.scanIntervalSeconds = 1
-  System.properties.get('defaultLocale', 'en')
-  System.properties.get('jetty.host', '0.0.0.0')
-}
+//jettyRun {
+//  jettyRun.httpPort = 9091;
+//  contextPath = ''
+//  daemon = true;
+//  jettyRun.scanIntervalSeconds = 1
+//  System.properties.get('defaultLocale', 'en')
+//  System.properties.get('jetty.host', '0.0.0.0')
+//}
 
 def configureHttps(keystore, password) {
   ext.connectors = [jettyRun.class.classLoader.loadClass('org.mortbay.jetty.security.SslSocketConnector').newInstance()]
@@ -257,9 +254,11 @@ def configureHttps(keystore, password) {
   return ext.connectors;
 }
 
-task run(dependsOn: [jettyRun, lesswatch]) {
-  description = 'Runs the Jetty server and starts watching LESS files for changes'
+task run() {
+  description = 'Runs the tomcat server and starts watching LESS files for changes'
 }
+
+run.finalizedBy 'tomcatRun'
 
 task explodedWar(type: Copy) {
   description = 'Explodes WAR file'
