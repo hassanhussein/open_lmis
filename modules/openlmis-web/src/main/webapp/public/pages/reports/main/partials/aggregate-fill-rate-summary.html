@@ -135,6 +135,7 @@
 
     <div class="modal-header">
         <h3 style="text-align: center;">Facility Name:{{ allTheData.facilityName }},  Order Number: {{allTheData.orderList[0].orderNumber}}, Invoice Number # : {{allTheData.orderList[0].invoiceNumber}}</h3>
+
     </div>
     <div class="modal-body">
 
@@ -169,7 +170,7 @@
                     </tbody>
                 </table>
 
-                    <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="getDetails()">
+               <!--     <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="getDetails()">
                   <option value="10">10 per page</option>
                   <option value="20">20 per page</option>
                   <option value="50">50 per page</option>
@@ -180,7 +181,7 @@
                   <pagination total-items="totalItems" page="currentPage" max-size="10"
                               items-per-page="pagination.limit"
                               direction-links="false" class="pagination-sm"></pagination>
-              </div>
+              </div>-->
 
 
                 <div class="clearfix"></div>
@@ -194,6 +195,16 @@
     </div>
 
     <div class="modal-footer">
+             <span class="pull-left print-button" style="background-color:#4897BA !important;">
+    <a id="printButton" style="background-color:#4897BA !important;"
+
+       id="xls-button" href="" export export-data="allTheData.items"
+       export-keys="['elmisproductCode','product','quantityApproved','quantityShipped']"
+       export-headers="['Product Code','Product Name','Quantity Ordered','Quantity Received']"
+
+       class="btn-small btn-primary"
+       target="_blank">Export</a>
+         </span>
         <a class="btn btn-primary pull-right" ng-click="successModal=false;">Close</a>
 
     </div>

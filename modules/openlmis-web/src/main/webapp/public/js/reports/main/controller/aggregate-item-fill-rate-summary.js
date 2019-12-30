@@ -29,6 +29,8 @@ function AggregateItemFillRateSummaryController($scope, $window, AggregateItemFi
 
   $scope.successModal = false;
   $scope.allTheData = [];
+
+
   $scope.getDetails = function(rnr, row){
 
 
@@ -72,6 +74,7 @@ function AggregateItemFillRateSummaryController($scope, $window, AggregateItemFi
     $scope.data = $scope.datarows = [];
     $scope.filter.max = 10000;
     $scope.filter.page = 1;
+    $scope.filter.limit = 10000;
 
     AggregateItemFillRateSummary.get($scope.filter, function(data) {
 
