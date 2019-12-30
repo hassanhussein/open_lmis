@@ -38,6 +38,7 @@ public class RequisitionSearchCriteria {
   boolean withoutLineItems;
   String dateRangeStart;
   String dateRangeEnd;
+  boolean allStatus;
 
   @Getter(NONE)
   Boolean emergency = FALSE;
@@ -45,6 +46,11 @@ public class RequisitionSearchCriteria {
   public Boolean isEmergency() {
     return emergency;
   }
+
+  public Boolean isAllStatus() {
+    return allStatus;
+  }
+
 
   public Date getRangeStart() {
     Date rangeStartDate;

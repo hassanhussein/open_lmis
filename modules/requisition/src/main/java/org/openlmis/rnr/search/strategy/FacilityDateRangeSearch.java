@@ -67,7 +67,12 @@ public class FacilityDateRangeSearch extends RequisitionSearchStrategy {
         List<ProcessingPeriod> periods = processingScheduleService.getUsedPeriodsForDateRange(facility, program,
           criteria.getRangeStart(), criteria.getRangeEnd());
 
-        requisitions.addAll(requisitionRepository.getPostSubmitRequisitions(facility, program, periods));
+        if(criteria.isAllStatus())
+        {
+          requisitions.addAll(requisitionRepository.getAllStatusRequisitions(facility, program, periods));
+        }else {
+          requisitions.addAll(requisitionRepository.getPostSubmitRequisitions(facility, program, periods));
+        }
       }
     }
 
