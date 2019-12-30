@@ -196,6 +196,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
              controller: FacilityFundUtilizationReportController,
              templateUrl: 'partials/fund-utilization.html',
              reloadOnSearch: false
+         }).when('/aggregate-fill-rate', {
+             controller: AggregateItemFillRateSummaryController,
+             templateUrl: 'partials/aggregate-fill-rate-summary.html',
+             reloadOnSearch: false
          })
         .otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {

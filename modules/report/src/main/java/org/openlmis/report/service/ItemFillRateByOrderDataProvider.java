@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Component
 @NoArgsConstructor
-public class ItemFillRateSummaryDataProvider extends ReportDataProvider {
+public class ItemFillRateByOrderDataProvider extends ReportDataProvider {
 
     @Autowired
     private ItemFillRateReportMapper mapper;
@@ -25,7 +25,7 @@ public class ItemFillRateSummaryDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sorterCriteria, int page, int pageSize) {
         // RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return mapper.getFilteredFillRateReportData(getReportFilterData(filterCriteria), helper.getPagination(page), this.getUserId());
+        return mapper.getItemByRnr(getReportFilterData(filterCriteria), helper.getPagination(page), this.getUserId());
     }
 
     public ItemFillRateReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -36,4 +36,6 @@ public class ItemFillRateSummaryDataProvider extends ReportDataProvider {
     public String getFilterSummary(Map<String, String[]> params) {
         return getReportFilterData(params).toString();
     }
+
+
 }

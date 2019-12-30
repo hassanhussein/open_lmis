@@ -1046,5 +1046,38 @@ public class InteractiveReportController extends BaseController {
         return new Pages(page, max, reportData);
     }
 
+    @RequestMapping(value = "/reportdata/item-fill-rate-aggregate-summary", method = GET, headers = BaseController.ACCEPT_JSON)
+    public OpenLmisResponse getItemFillRateSummary(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                       @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
+                                                       HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("item_fill_rate_aggregate_report");
+        helper.setPageSize(limit);
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<ItemFillRateReport> itemFillRateReportList = (List<ItemFillRateReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page,parseInt(limit));
+        Pagination pagination = helper.getPagination(page);
+        OpenLmisResponse pages = new OpenLmisResponse("rows",itemFillRateReportList);
+        pages.addData("pagination", pagination);
+        return pages;
+    }
+
+    @RequestMapping(value = "/reportdata/item-fill-rate-by-order", method = GET, headers = BaseController.ACCEPT_JSON)
+    public OpenLmisResponse getByItemFillRateByOrder(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                       @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
+                                                       HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("item_fill_rate_by_order");
+        helper.setPageSize(limit);
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<ItemFillRateReport> itemFillRateReportList = (List<ItemFillRateReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page,parseInt(limit));
+        Pagination pagination = helper.getPagination(page);
+        OpenLmisResponse pages = new OpenLmisResponse("rows",itemFillRateReportList);
+        pages.addData("pagination", pagination);
+        return pages;
+    }
 
 }
