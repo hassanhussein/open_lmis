@@ -198,6 +198,10 @@ services.factory('UpdateUserPassword', function ($resource) {
   return $resource('/user/resetPassword/:token.json', {}, update);
 });
 
+services.factory('ApplyPermission', function($resource){
+  return $resource('/users/apply-permission/:fromUserId/:toUserId.json', {fromUserId: '@fromUserId', toUserId: '@toUserId'}, {update: {method: 'PUT'}})
+});
+
 services.factory('ValidatePasswordToken', function ($resource) {
   return $resource('/user/validatePasswordResetToken/:token.json', {}, {});
 });

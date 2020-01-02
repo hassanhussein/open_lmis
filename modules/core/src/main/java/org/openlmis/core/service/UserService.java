@@ -72,15 +72,15 @@ public class UserService {
     roleAssignmentService.saveRolesForUser(user);
   }
 
-  public LinkedHashMap getPreferences(Long userId){
-   List<LinkedHashMap> preferences =  userRepository.getPreferences(userId);
-   LinkedHashMap preference = new LinkedHashMap();
-   // transform the shape of the list
-   for(LinkedHashMap map: preferences){
-     preference.put(map.get("key"), map.get("value"));
-   }
+  public LinkedHashMap getPreferences(Long userId) {
+    List<LinkedHashMap> preferences = userRepository.getPreferences(userId);
+    LinkedHashMap preference = new LinkedHashMap();
+    // transform the shape of the list
+    for (LinkedHashMap map : preferences) {
+      preference.put(map.get("key"), map.get("value"));
+    }
 
-   return preference;
+    return preference;
   }
 
   public void sendForgotPasswordEmail(User user, String resetPasswordLink) {
@@ -95,7 +95,7 @@ public class UserService {
   }
 
   public List<User> searchUser(String searchParam, Pagination pagination) {
-    return userRepository.searchUser(searchParam,pagination);
+    return userRepository.searchUser(searchParam, pagination);
   }
 
   public User getUserWithRolesById(Long id) {
@@ -232,11 +232,58 @@ public class UserService {
 
   @Transactional
   public String updateUserPreferences(Long userId, User user, Long programId, Long facilityId, List<Long> products, Long geographicZoneId) {
-    return userRepository.updateUserPreferences(userId, user, programId, facilityId,geographicZoneId, getCommaSeparatedIds(products));
+    return userRepository.updateUserPreferences(userId, user, programId, facilityId, geographicZoneId, getCommaSeparatedIds(products));
 
   }
 
   public List<String> getSupervisoryRights(Long userId) {
     return userRepository.getSupervisoryRights(userId);
+  }
+
+  public void applyPermissions(Long fromUserId, Long toUserId) {
+    User fromUser = getUserWithRolesById(fromUserId);
+    User toUser = getUserWithRolesById(toUserId);
+
+    RoleAssignment adminRole = fromUser.getAdminRole();
+    adminRole.setUserId(toUserId);
+    toUser.setAdminRole(adminRole);
+
+    List<RoleAssignment> homeFacilityRoles = fromUser.getHomeFacilityRoles();
+    if (homeFacilityRoles != null) {
+      homeFacilityRoles.stream().forEach(hfr -> hfr.setUserId(toUserId));
+      toUser.setHomeFacilityRoles(homeFacilityRoles);
+    }
+
+    List<RoleAssignment> supervisoryRoles = fromUser.getSupervisorRoles();
+    if (supervisoryRoles != null) {
+      supervisoryRoles.stream().forEach(sr -> sr.setUserId(toUserId));
+      toUser.setSupervisorRoles(supervisoryRoles);
+    }
+
+    RoleAssignment reportRoles = fromUser.getReportRoles();
+    if (reportRoles != null) {
+      reportRoles.setUserId(toUserId);
+      toUser.setReportRoles(reportRoles);
+    }
+
+    RoleAssignment reportingRole = fromUser.getReportingRole();
+    if (reportingRole != null) {
+      reportingRole.setUserId(toUserId);
+      toUser.setReportingRole(reportingRole);
+    }
+
+    List<RoleAssignment> allocationRoles = fromUser.getAllocationRoles();
+    if (allocationRoles != null) {
+      allocationRoles.stream().forEach(ar -> ar.setUserId(toUserId));
+      toUser.setAllocationRoles(allocationRoles);
+    }
+
+    List<FulfillmentRoleAssignment> fulfillmentRoleAssignments = fromUser.getFulfillmentRoles();
+    if (fulfillmentRoleAssignments != null) {
+      fulfillmentRoleAssignments.stream().forEach(fra -> fra.setUserId(toUserId));
+      toUser.setFulfillmentRoles(fulfillmentRoleAssignments);
+    }
+
+    roleAssignmentService.saveRolesForUser(toUser);
   }
 }

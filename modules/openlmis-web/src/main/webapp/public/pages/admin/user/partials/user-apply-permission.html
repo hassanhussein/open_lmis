@@ -20,7 +20,6 @@
     </div>
 
     <div class="modal-body">
-
       <div id="searchControl" class="row-fluid">
         <div class="span5 search-in-category">
           <div class="input-append input-prepend">
@@ -35,22 +34,22 @@
       <div>
         <table class="table table-bordered">
           <thead>
-          <tr>
-            <th>Select</th>
-            <th>Username</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Is Active</th>
-          </tr>
+            <tr>
+              <th>Select</th>
+              <th>Username</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Is Active</th>
+            </tr>
           </thead>
           <tbody>
-          <tr ng-repeat="u in userList">
-            <td><input name="selectedUser" type="radio"/></td>
-            <td>{{u.userName}}</td>
-            <td>{{u.firstName}} {{u.lastName}}</td>
-            <td>{{u.email}}</td>
-            <td>{{u.active == true? 'Yes' : 'No'}}</td>
-          </tr>
+            <tr ng-repeat="u in userList">
+              <td><input ng-model="$parent.$parent.fromUserId" ng-value="u.id" type="radio"/></td>
+              <td>{{u.userName}}</td>
+              <td>{{u.firstName}} {{u.lastName}}</td>
+              <td>{{u.email}}</td>
+              <td>{{u.active == true? 'Yes' : 'No'}}</td>
+            </tr>
           </tbody>
         </table>
       </div>

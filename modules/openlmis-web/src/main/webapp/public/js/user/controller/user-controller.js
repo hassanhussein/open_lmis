@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses, $timeout, UpdatePassword) {
+function UserController($scope, $location, $dialog, Users, Facility, messageService, user, roles_map, programs, supervisoryNodes, deliveryZones, enabledWarehouses, $timeout, UpdatePassword, ApplyPermission) {
   $scope.userNameInvalid = false;
   $scope.showHomeFacilityRoleMappingError = false;
   $scope.showSupervisorRoleMappingError = false;
@@ -213,7 +213,13 @@ function UserController($scope, $location, $dialog, Users, Facility, messageServ
   };
 
   $scope.applyPermissionChange = function() {
-
+    ApplyPermission.update({toUserId: $scope.user.id, fromUserId: $scope.fromUserId},
+      function(data) {
+        $scope.cancelApplyFromOtherUser();
+        $scope.$parent.message = messageService.get('message.user.updated.success', $scope.user.firstName, $scope.user.lastName);
+        $scope.$parent.userId = $scope.user.id;
+        $location.path('');
+      });
   };
 
   $scope.cancelApplyFromOtherUser = function() {

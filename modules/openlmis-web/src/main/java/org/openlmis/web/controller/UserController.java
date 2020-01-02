@@ -87,7 +87,7 @@ public class UserController extends BaseController {
       openLmisResponse.addData("userId", userId);
       openLmisResponse.addData("rights", roleRightService.getRights(userId));
       openLmisResponse.addData("preferences", userService.getPreferences(userId));
-      openLmisResponse.addData("fullName", userObject.getFullName() );
+      openLmisResponse.addData("fullName", userObject.getFullName());
       openLmisResponse.addData("homePage", settingService.getConfigurationStringValue(ConfigurationSettingKey.LOGIN_SUCCESS_DEFAULT_LANDING_PAGE));
       return openLmisResponse.response(OK);
     } else {
@@ -237,52 +237,59 @@ public class UserController extends BaseController {
 
 
   @RequestMapping(value = "/user/preferences", method = GET)
-  public ResponseEntity<OpenLmisResponse> getUserPreferences(HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> getUserPreferences(HttpServletRequest request) {
     return response("preferences", userService.getPreferences(this.loggedInUserId(request)));
   }
 
   @RequestMapping(value = "/users/{userId}/preferences", method = GET)
-  public ResponseEntity<OpenLmisResponse> getUserPreferences(@PathVariable("userId") Long userId){
+  public ResponseEntity<OpenLmisResponse> getUserPreferences(@PathVariable("userId") Long userId) {
     return response("preferences", userService.getPreferences(userId));
   }
-    @RequestMapping(value = "/users/{userId}/preferences", method = PUT, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> updateUserPreferences(@PathVariable(value = "userId") Long userId, @RequestParam("programId") Long programId,
-                                                                  @RequestParam("facilityId") Long facilityId, @RequestParam("products") List<Long> productListId,
-                                                                  @RequestParam("geographicZoneId") Long geographicZoneId,
-                                                                  @RequestBody User user,
-                                                                  HttpServletRequest request) {
-      Long currentUser = loggedInUserId(request);
-      if (userId.equals(currentUser) || roleRightService.getRights(currentUser).contains(MANAGE_USER)){
-        user.setModifiedBy(currentUser);
-        user.setId(userId);
-        try {
-          userService.updateUserPreferences(userId, user, programId, facilityId, productListId,geographicZoneId);
-        } catch (DataException e) {
-          return error(e, BAD_REQUEST);
-        }
-        return success(messageService.message("user.preference.set.successfully"));
+
+  @RequestMapping(value = "/users/{userId}/preferences", method = PUT, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> updateUserPreferences(@PathVariable(value = "userId") Long userId, @RequestParam("programId") Long programId,
+                                                                @RequestParam("facilityId") Long facilityId, @RequestParam("products") List<Long> productListId,
+                                                                @RequestParam("geographicZoneId") Long geographicZoneId,
+                                                                @RequestBody User user,
+                                                                HttpServletRequest request) {
+    Long currentUser = loggedInUserId(request);
+    if (userId.equals(currentUser) || roleRightService.getRights(currentUser).contains(MANAGE_USER)) {
+      user.setModifiedBy(currentUser);
+      user.setId(userId);
+      try {
+        userService.updateUserPreferences(userId, user, programId, facilityId, productListId, geographicZoneId);
+      } catch (DataException e) {
+        return error(e, BAD_REQUEST);
       }
-      return new OpenLmisResponse().errorEntity(FORBIDDEN.getReasonPhrase(),FORBIDDEN);
+      return success(messageService.message("user.preference.set.successfully"));
     }
+    return new OpenLmisResponse().errorEntity(FORBIDDEN.getReasonPhrase(), FORBIDDEN);
+  }
 
 
   @RequestMapping(value = "/preference/users/{id}", method = GET)
   public User getUser(@PathVariable(value = "id") Long id, HttpServletRequest request) {
     Long userId = loggedInUserId(request);
-    if (id.equals(userId) || roleRightService.getRights(userId).contains(MANAGE_USER)){
+    if (id.equals(userId) || roleRightService.getRights(userId).contains(MANAGE_USER)) {
       return userService.getUserWithRolesById(id);
     }
     return null;
   }
 
-  @RequestMapping(value = "/users/supervisory/rights.json", method= GET)
-  public ResponseEntity<OpenLmisResponse> getRights(HttpServletRequest request){
+  @RequestMapping(value = "/users/supervisory/rights.json", method = GET)
+  public ResponseEntity<OpenLmisResponse> getRights(HttpServletRequest request) {
     return response("rights", userService.getSupervisoryRights(loggedInUserId(request)));
   }
 
   @RequestMapping(value = "/users/program/supervised/facilities.json")
-  public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(@RequestParam Long programId, HttpServletRequest request){
+  public ResponseEntity<OpenLmisResponse> getSupervisedFacilities(@RequestParam Long programId, HttpServletRequest request) {
     return response("facilities", facilityService.getUserSupervisedFacilities(loggedInUserId(request), programId,
-        RightName.CREATE_IVD, RightName.VIEW_IVD, RightName.APPROVE_IVD, RightName.CREATE_REQUISITION, RightName.VIEW_REQUISITION, RightName.APPROVE_REQUISITION ));
+        RightName.CREATE_IVD, RightName.VIEW_IVD, RightName.APPROVE_IVD, RightName.CREATE_REQUISITION, RightName.VIEW_REQUISITION, RightName.APPROVE_REQUISITION));
+  }
+
+  @RequestMapping(value = "/users/apply-permission/{fromUserId}/{toUserId}.json", method = PUT)
+  public ResponseEntity<OpenLmisResponse> applyPermission(@PathVariable("fromUserId") Long fromUserId, @PathVariable("toUserId") Long toUserId) {
+    userService.applyPermissions(fromUserId, toUserId);
+    return OpenLmisResponse.response("status", "success");
   }
 }
