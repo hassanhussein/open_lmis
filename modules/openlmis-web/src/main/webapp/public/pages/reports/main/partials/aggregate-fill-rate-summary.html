@@ -21,7 +21,7 @@
 
         width: 1000px;
         left: auto;
-        right: 190px;
+        right: 400px;
 
     }
     .black {
@@ -39,6 +39,42 @@
                 <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
                 <a ng-click="section(1)" ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
             </div>
+
+
+
+                <div class="form-cell span4">
+                    <div class="checkbox">
+                        <label for="allType"><input id="allType" class="checkbox" type="checkbox"
+                                                    value="allReportType"
+                                                    ng-change="onToggleReportTypeAll()"
+                                                    ng-model="allReportType">
+                            <span openlmis-message="label.all"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-cell span4">
+                    <div class="checkbox">
+                        <label for="emergency"><input id="emergency" class="checkbox" type="checkbox" value="EM"
+                                                      ng-change="onReportTypeCheckboxChanged()"
+                                                      ng-model="reportTypes.EM">
+                            <span openlmis-message="requisition.type.emergency"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-cell span4">
+                    <div class="checkbox">
+                        <label for="re"><input id="re" class="checkbox" type="checkbox" value="RE"
+                                               ng-checked="true"
+                                               ng-change="onReportTypeCheckboxChanged()"
+                                               ng-model="reportTypes.RE">
+                            <span openlmis-message="requisition.type.regular"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+
+
         </div>
         <div>
             <div class="app-form">
@@ -54,6 +90,19 @@
             </div>
         </div>
         <div class="content-body col-lg-6">
+
+
+            <div
+                    data-angular-treeview="true"
+                    data-tree-id="abc"
+                    data-tree-model="treedata"
+                    data-node-id="id"
+                    data-node-label="label"
+                    data-node-children="children" >
+            </div>
+
+
+
           <!--  <table class="table table-bordered">
 
                 <tr ng-show="data.length > 0" >
@@ -69,7 +118,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <h4 class="panel-title" style="height:30px !important">
-                                <a data-toggle="collapse" href="#myButton{{$index}}" ng-click="getApps(ownr)">   <span>Facility Name: {{row.facilityName}}</span>, <span>District: {{row.district}}</span>, <span>MSD Zone: {{row.msdZone}}</span>  , <span style="font-style: italic;">Aggregate Order Fill Rate: <strong>{{calculateAverageItemFillRate(row.orderList)}}%</strong></span></a>
+                                <a data-toggle="collapse" href="#myButton{{$index}}" aria-expanded="true">   <span>Facility Name: {{row.facilityName}}</span>, <span>District: {{row.district}}</span>, <span>MSD Zone: {{row.msdZone}}</span>  , <span style="font-style: italic;">Aggregate Order Fill Rate: <strong>{{calculateAverageItemFillRate(row.orderList)}}%</strong></span></a>
                             </h4>
                         </div>
                         <div id="myButton{{$index}}" class="panel-collapse collapse">
@@ -195,8 +244,8 @@
     </div>
 
     <div class="modal-footer">
-             <span class="pull-left print-button" style="background-color:#4897BA !important;">
-    <a id="printButton" style="background-color:#4897BA !important;"
+             <span class="pull-left" style="background-color:#4897BA !important;">
+    <a style="background-color:#4897BA !important;"
 
        id="xls-button" href="" export export-data="allTheData.items"
        export-keys="['elmisproductCode','product','quantityApproved','quantityShipped']"
@@ -210,4 +259,5 @@
     </div>
 
 </div>
+
 
