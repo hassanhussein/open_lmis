@@ -4,6 +4,7 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.InspectionLineItem;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
+import org.openlmis.vaccine.domain.wms.dto.VvmStatusDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.inspection.InspectionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -69,4 +70,9 @@ public class InspectionRepository {
             lineItemRepository.update(lineItem);
         }
     }
+
+    public List<VvmStatusDTO> getAllVvmStatuses() {
+        return mapper.getAllVvmStatuses();
+    }
+
 }

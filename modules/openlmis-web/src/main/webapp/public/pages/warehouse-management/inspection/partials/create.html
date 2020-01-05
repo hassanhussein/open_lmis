@@ -667,7 +667,7 @@
                     <h3>Inspect Lots</h3>&nbsp;&nbsp;
                 </div>
                 <div class="span4">
-                    <h3><span openlmis-message="label.product"></span>:{{inspectionLots.product.primaryName}}</h3>
+                    <h3><span openlmis-message="label.product"></span>:{{lineItem.product.primaryName}}</h3>
                 </div>
             </div>
         </div>
@@ -678,66 +678,102 @@
                 <tr class="gradient-header">
                     <th>Lot</th>
                     <th>Expiry Date</th>
-                    <th  ><span>Received Qty</span></th>
+                    <th><span>Received Qty</span></th>
                     <th >Passed Qty</th>
                     <th ng-show="false">Pass Location</th>
                     <th>Failed Qty</th>
+                    <th >VVM Status </th>
                     <th >Fail Location</th>
                     <th >Fail Reason</th>
-                    <th >VVM Status </th>
 
 
                 </tr>
                 </thead>
-                <tbody>
+                <tbody ng-repeat="lot in lineItem.lots">
                 <tr>
                     <td>
-HM56456
+                        <span>{{lot.lotNumber}}</span>
+
                     </td>
-                    <td>Date</td>
-                    <td>454</td>
-                    <td>454</td>
-                    <td>454</td>
-                    <td>454</td>
+                    <td><span>{{lot.expiryDate | date:'dd-MM-yyyy' }}</span></td>
+                    <td><span><input  ng-disabled="true" type="text" name="receivedQuantity" ng-model="lot.receivedQuantity"/></span></td>
+                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.passQuantity"/></span></td>
+                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.failQuantity"/></span></td>
+                    <td>
+                        <select style="max-width:130px !important;min-width:130px !important" ui-select2
+                                ng-options="i.value as i.name for i in vvmStatusList" name="vvm_0"
+                                 ng-model="lot.vvmStatus" maxlength="8"
+                                type="text">
+                            <option value="" openlmis-message="placeholder.select.vvmstatus"></option>
+                        </select>
+
+                    </td>
+                    <td>
+
+                        <select ui-select2="{width: '100%'}" ng-model="lot.failLocationId">
+                            <option value=""></option>
+                            <option ng-repeat="location in locations"
+                                    value="{{ location.id }}"
+                                    ng-selected="failLocationId==location.id"
+                            >
+                                {{ location.name }}
+                            </option>
+                        </select>
+
+
+                    </td>
                     <td ng-show="false">454</td>
-                    <td>Reason</td>
-                    <td>VVM</td>
+                    <td>
+
+                        <select ui-select2="{width: '100%'}" ng-model="lot.failReason">
+                            <option value=""></option>
+                            <option ng-repeat="reason in failReasons"
+                                    value="{{ reason.id }}"
+                                    ng-selected="failReason==reason.id"
+                            >
+                                {{ reason.name }}
+                            </option>
+                        </select>
+
+                    </td>
+
+
 
                 </tr>
                 </tbody>
             </table>
 
-<div class="form-row clearfix">
-    <div class="form-cell" >
-        <label class="checkbox inline">  Coolant Type Available: </label>
-        <label class="checkbox inline">
-            <input type="checkbox" > Dry Ice
-        </label>
-        <label class="checkbox inline">
-            <input type="checkbox"> Icepacks
-        </label>
-        <label class="checkbox inline">
-            <input type="checkbox"> No Coolant
-        </label>
+            <div class="form-row clearfix">
+                <div class="form-cell" >
+                    <label class="checkbox inline">  Coolant Type Available: </label>
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="lineItem.dryIceFlag"> Dry Ice
+                    </label>
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="lineItem.icePackFlag"> Icepacks
+                    </label>
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="lineItem.noCoolantFlag"> No Coolant
+                    </label>
 
-    </div>
-</div>
+                </div>
+            </div>
 
             <div class="form-row clearfix">
                 <div class="form-cell" >
                     <label class="checkbox inline">  Temperature Monitor Present: </label>
                     <label class="checkbox inline">
-                     <input type="checkbox" > VVM
+                     <input type="checkbox" ng-model="lineItem.vvmFlag" > VVM
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox"> Cold-chain Card
+                        <input type="checkbox" ng-model="lineItem.ccCardFlag"> Cold-chain Card
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox"> Electronic devices
+                        <input type="checkbox" ng-model="lineItem.electronicDeviceFlag"> Electronic devices
                     </label>
 
                     <label class="checkbox inline">
-                      Other Type  <input type="text">
+                      Other Type  <input type="text" ng-model="lineItem.otherMonitor">
                     </label>
 
                 </div>
@@ -816,7 +852,7 @@ HM56456
         </div>
         <div class="modal-footer">
             <input type="button" id="issueSubmit" class="btn btn-primary save-button"
-                   ng-click="inspectLot()"
+                   ng-click="inspectLot(lineItem)"
                    ng-disabled="newLotForm.$invalid"
                    value="Done"/>
             <input type="button" ng-click="closeInspectLotModal();" class="btn btn-cancel"

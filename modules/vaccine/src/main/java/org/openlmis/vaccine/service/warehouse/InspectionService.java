@@ -6,6 +6,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
+import org.openlmis.vaccine.domain.wms.dto.VvmStatusDTO;
 import org.openlmis.vaccine.repository.warehouse.InspectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,10 @@ public class InspectionService {
 
     public Inspection getById(Long id) {
         return repository.getById(id);
+    }
+
+    public List<VvmStatusDTO> getAllVVM() {
+        return repository.getAllVvmStatuses();
     }
 
     @Transactional

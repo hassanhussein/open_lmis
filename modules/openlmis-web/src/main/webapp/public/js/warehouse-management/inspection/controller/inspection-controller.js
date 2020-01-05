@@ -1,14 +1,22 @@
-function InspectionController($scope,$window, inspection, UpdateInspection,$location){
+function InspectionController($scope,$window, inspection, UpdateInspection,$location,vvmList){
 
    $scope.inspection = inspection;
+   $scope.vvmStatusList = vvmList;
 
-  console.log(inspection);
+   $scope.locations = [{"id":1,"name":'AA11'},{"id":2,"name":'BB11'},{"id":3,"name":'AA17'}];
+   $scope.failReasons = [{"id":1,"name":'Temperature'},{"id":2,"name":'Rain'},{"id":3,"name":'Opened Vial'}];
 
 
+
+
+    $scope.inspectLot = function(lineItem) {
+        console.log($scope.inspection);
+
+    }
 
      $scope.showInspectLotModal = function(lineItem) {
 
-     $scope.inspectionLots = lineItem;
+     $scope.lineItem = lineItem;
 
      console.log(lineItem);
           $scope.inspectLotModal = true;
@@ -85,6 +93,18 @@ InspectionController.resolve = {
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
         deferred.resolve(data.inspection);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  },
+
+   vvmList: function ($q, $route, $timeout, GetVVMStatusList) {
+
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      GetVVMStatusList.get({}, function (data) {
+        deferred.resolve(data.vvms);
       }, {});
     }, 100);
     return deferred.promise;

@@ -10,6 +10,7 @@ import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
+import org.openlmis.vaccine.domain.wms.dto.VvmStatusDTO;
 import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper;
 import org.springframework.stereotype.Repository;
@@ -108,4 +109,7 @@ public interface InspectionMapper {
             return sql;
         }
     }
+
+    @Select("SELECT * FROM vvm_statuses")
+    List<VvmStatusDTO> getAllVvmStatuses();
 }

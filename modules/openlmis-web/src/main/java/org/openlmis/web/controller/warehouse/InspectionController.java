@@ -55,7 +55,6 @@ public class InspectionController extends BaseController {
         return OpenLmisResponse.response("inspection",service.getById(id) );
     }
 
-
     @RequestMapping(value = "inspection/{id}", method =PUT, headers = ACCEPT_JSON)
     public ResponseEntity update(@RequestBody Inspection inspect, @PathVariable(value = "id") Long id, HttpServletRequest request) {
 
@@ -69,5 +68,14 @@ public class InspectionController extends BaseController {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
     }
+
+
+    @RequestMapping(value = "inspection/vvm-status", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllVVM() {
+
+        return OpenLmisResponse.response("vvms",service.getAllVVM() );
+    }
+
+
 
 }

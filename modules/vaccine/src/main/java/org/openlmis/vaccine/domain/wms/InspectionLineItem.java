@@ -49,8 +49,10 @@ public class InspectionLineItem extends BaseModel {
 
     private boolean electronicDeviceFlag;
 
+    private boolean noCoolantFlag;
+
     private String otherMonitor;
 
-    private List<InspectionLot> inspectionLotList;
+    private List<InspectionLot> lots;
 
 }

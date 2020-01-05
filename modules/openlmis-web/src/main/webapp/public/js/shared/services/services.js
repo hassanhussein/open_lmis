@@ -728,4 +728,8 @@ services.factory("UpdateInspection", function ($resource) {
     return $resource('/rest-api/warehouse/inspection/:id.json', {id: '@id'}, update);
 });
 
+services.factory("GetVVMStatusList", function ($resource) {
+    return $resource('/rest-api/warehouse/inspection/vvm-status.json', {}, {});
+});
+
 

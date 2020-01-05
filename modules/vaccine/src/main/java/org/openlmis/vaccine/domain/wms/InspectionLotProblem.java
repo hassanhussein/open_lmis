@@ -20,9 +20,9 @@ public class InspectionLotProblem extends BaseModel {
 
     private String lotNumber;
 
-    private boolean isAlarma;
+    private boolean isalarma;
 
-    private boolean isAlarmb;
+    private boolean isalarmb;
 
     private boolean isalarmc;
 
