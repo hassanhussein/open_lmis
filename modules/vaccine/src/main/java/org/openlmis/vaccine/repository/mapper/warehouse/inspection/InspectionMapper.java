@@ -13,6 +13,7 @@ import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
 import org.openlmis.vaccine.domain.wms.dto.VvmStatusDTO;
 import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public interface InspectionMapper {
             "JOIN receives r on i.receiveId = r.id \n" +
             "JOIN receive_LINE_ITEMS LI on r.id = li.receiveId\n" +
             "JOIN Asns A ON a.id = r.asnId \n" +
-            "WHERE (A.modifiedDate::text LIKE '%' || #{searchParam} || '%')")
+            "WHERE (A.poNumber::text LIKE '%' || #{searchParam} || '%')")
     Integer getTotalSearchResultCountByAsnDate(@Param("searchParam") String searchParam);
 
     Integer getTotalSearchResultCountByReceiptNumber(@Param("searchParam") String searchParam);
@@ -48,7 +49,7 @@ public interface InspectionMapper {
             "JOIN Asns A ON a.id = r.asnId \n")
     Integer getTotalSearchResultCountAll();
 
-    @Select("select i.id,asnNumber,A.modifiedDate asnDate, null receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
+    @Select("select i.id,asnNumber,A.modifiedDate asnDate, i.receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
             "JOIN receives r on i.receiveid = r.id \n" +
             "JOIN receive_LINE_ITEMS LI on r.id = li.receiveId\n" +
             "JOIN Asns A ON a.id = r.asnId ")
@@ -74,22 +75,29 @@ public interface InspectionMapper {
 
     @Insert("INSERT INTO public.inspections(\n" +
             "            receiveId, inspectionDate, inspectionNote, inspectedBy, status, \n" +
-            "            createBy, createdDate, modifiedBy, modifiedDate,receiptNumber,descriptionOfInspection)\n" +
+            "            createBy, createdDate, modifiedBy, modifiedDate,receiptNumber,descriptionOfInspection,isShippedProvided, isShipped, shippedComment, " +
+            " shippedProvidedComment,conditionOfBox, labelAttachedComment )\n" +
             "    VALUES (#{receiveId}, #{inspectionDate}, #{inspectionNote}, #{inspectedBy}, #{status}, \n" +
-            "            #{createBy}, NOW(), #{modifiedBy}, NOW(), #{receiptNumber}, #{descriptionOfInspection});\n")
+            "            #{createBy}, NOW(), #{modifiedBy}, NOW(), #{receiptNumber}, #{descriptionOfInspection}, #{isShippedProvided}, #{isShipped}," +
+            " #{shippedComment}, #{shippedProvidedComment}, #{conditionOfBox}, #{labelAttachedComment});\n")
     Integer insert(Inspection inspection);
 
     @Update("UPDATE public.inspections\n" +
             "   SET  receiveId=#{receive.id}, inspectionDate=#{inspectionDate}, inspectionNote=#{inspectionNote}, inspectedBy=#{inspectedBy}, \n" +
-            "       status=#{status},receiptNumber = #{receiptNumber}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), descriptionOfInspection=#{descriptionOfInspection}\n" +
+            "       status=#{status},receiptNumber = #{receiptNumber}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), " +
+            " descriptionOfInspection=#{descriptionOfInspection}, isShippedProvided = #{isShippedProvided}, isShipped=#{isShipped}," +
+            " shippedComment=#{shippedComment}, shippedProvidedComment=#{shippedProvidedComment}, conditionOfBox=#{conditionOfBox}, labelAttachedComment=#{labelAttachedComment} \n" +
             " WHERE id = #{id};\n")
     void update(Inspection inspection);
+
+    @Select("select * from fn_increment_stock(#{id}::int); ")
+    Integer updateStockCard(@Param("id") Long id);
 
     class SelectInspection {
 
         public static String getSearchBy(Map<String, Object> params) {
             StringBuilder sql = new StringBuilder();
-            sql.append("WITH Q AS (select i.id,asnNumber,A.modifiedDate asnDate, null receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
+            sql.append("WITH Q AS (select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
                     "JOIN receives r on i.receiveid = r.id \n" +
                     "JOIN receive_LINE_ITEMS LI on r.id = li.receiveid\n" +
                     "JOIN Asns A ON a.id = r.asnId )\n" +
@@ -103,8 +111,8 @@ public interface InspectionMapper {
             String column = (String) params.get("column");
             if (column.equalsIgnoreCase("asnNumber")) {
                 sql.append("(LOWER(Q.asnNumber) LIKE LOWER('%" + searchParam + "%') ) ");
-            } else if (column.equalsIgnoreCase("asnDate")) {
-                sql.append("(Q.asnDate::text LIKE '%" + searchParam + "%')");
+            } else if (column.equalsIgnoreCase("poNumber")) {
+                sql.append("(Q.poNumber LIKE '%" + searchParam + "%')");
             }
             return sql;
         }

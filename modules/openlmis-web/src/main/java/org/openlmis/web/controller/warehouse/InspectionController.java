@@ -62,6 +62,10 @@ public class InspectionController extends BaseController {
             inspect.setId(id);
             inspect.setModifiedBy(loggedInUserId(request));
             service.save(inspect, loggedInUserId(request));
+
+            if(inspect.getStatus().equalsIgnoreCase("RELEASED")) {
+                service.updateStockCard(inspect.getId());
+            }
             return success("Inspection Updated Successiful");
 
         } catch (DataException e) {

@@ -35,10 +35,7 @@ ALTER TABLE inspection_line_items
    INSERT INTO vvm_statuses(NAME) VALUES('VVM1'),('VVM2'),('VVM3'),('VVM4');
 
 
-    --Function
-
-
-
+    -- Update inspection tables Function
 
  DROP FUNCTION IF EXISTS fn_create_inpsection(p_id INTEGER) ;
 CREATE OR REPLACE FUNCTION fn_create_inpsection(p_id INTEGER)
@@ -75,7 +72,7 @@ DECLARE
 					join receive_line_items rli on r.id = rli.receiveid
 					left join receive_lots rl on rli.id = rl.receivelineitemid
 					left join lots t on t.lotnumber = rl.lotnumber
-					where r.id = p_id and status = 'DRAFT' order by productid;
+					where r.id = p_id and status = 'RECEIVED' order by productid;
 
 BEGIN
     v_cnt := 0;
@@ -141,6 +138,7 @@ EXCEPTION WHEN OTHERS THEN
 END; $$
 
 LANGUAGE plpgsql;
+
 
 
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
 import java.util.Date;
+import java.util.List;
 
 
 @EqualsAndHashCode(callSuper = false)
@@ -40,5 +41,7 @@ public class InspectionLot extends BaseModel {
     private Date expiryDate;
 
     private Integer receivedQuantity;
+
+    private List<InspectionLotProblem>problems;
 
 }

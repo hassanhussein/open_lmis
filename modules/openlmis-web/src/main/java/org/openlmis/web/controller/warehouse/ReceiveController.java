@@ -94,7 +94,10 @@ public class ReceiveController extends BaseController {
 
             if(receive.getStatus().equalsIgnoreCase("Received")) {
                 savedReceive = service.save(receive, loggedInUserId(principal), null,false);
-                service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
+
+                service.updateInspection(id);
+
+              //  service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
             }else {
 
                service.save(receive, loggedInUserId(principal), null,true);
@@ -148,5 +151,10 @@ public class ReceiveController extends BaseController {
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("receives", receives);
         response.getBody().addData("pagination", pagination);
         return response;
+    }
+
+    @RequestMapping(value = "get-id",method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getById(@RequestParam(value = "id") Long id) {
+        return OpenLmisResponse.response("ids", service.updateInspection(id));
     }
 }

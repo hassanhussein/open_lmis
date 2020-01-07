@@ -161,5 +161,8 @@ public interface ReceiveMapper {
         }
     }
 
+    @Select(" SELECT * FROM fn_create_inpsection(#{id}::int) ")
+    Integer updateInspection(@Param("id") Long id);
+
 
 }

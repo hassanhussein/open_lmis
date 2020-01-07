@@ -8,7 +8,7 @@
   ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+<div xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" tab-scroll>
     <div>
         <h2>Inspect Package</h2>
 
@@ -66,7 +66,7 @@
                                     type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="inspection.receive.asnReceiveDate" name="asnReceiveDate" />
+                                   ng-model="inspection.receive.asn.asndate" name="asnReceiveDate" />
 
                         </div>
                     </div>
@@ -330,11 +330,11 @@
                                     <table  class="table table-bordered receive">
                                         <thead>
                                         <tr class="gradient-header">
-                                            <th class="col-product " openlmis-message="label.products"></th>
-                                            <th class="col-product" style="max-width:160px !important; width:160px !important">
+                                            <th class="col-product" style="width:350px !important;" openlmis-message="label.products"></th>
+                                            <th class="col-product" style="width:100px !important;max-width:100px !important">
                                             Unit Of Measure
                                             </th>
-                                            <th  >Received Qty</th>
+                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important;">Received Qty</th>
                                             <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Passed Qty</th>
                                             <th  class="col-add-lot" style="width:100px !important; max-width:100px !important">Failed Qty</th>
                                             <th ng-if="!viewMode" style="width:100px !important;max-width:100px !important" class="col-add-lot"><span>Inspect</span></th>
@@ -345,13 +345,13 @@
 
                                         <tr>
                                             <td>
-                                                <span>{{lineItem.product.primaryName}}</span>
+                                                <span style="padding-left: 15px;">{{lineItem.product.primaryName}}</span>
                                             </td>
-                                            <td>{{lineItem.product.dosageUnit.code}}</td>
-                                            <td>{{lineItem.quantityCounted}}</td>
+                                            <td style="padding-left: 15px;">{{lineItem.product.dosageUnit.code}}</td>
+                                            <td style="text-align:right"><span ng-bind="lineItem.quantityCounted | number"></span></td>
                                             <td ng-show="false">{{lineItem.quantityCounted}}</td>
-                                            <td>{{lineItem.passQuantity}}</td>
-                                            <td>{{failQuantity}}</td>
+                                            <td style="text-align:right">{{lineItem.passQuantity | number}}</td>
+                                            <td style="text-align:right">{{lineItem.failQuantity | number }}</td>
                                             <td>
                                                 <a href="" ng-click="showInspectLotModal(lineItem)" class="btn btn-link">Lots</a>
                                             </td>
@@ -569,21 +569,12 @@
                             <div class="form-horizontal">
 
                                 <div class="row">
-                                    <div class="span6">
+                                    <div class="span12">
 
                                         <div class="control-group">
                                             <label class="control-label">Total box inspected</label>
                                             <div class="controls">
-                                                <input type="text">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="span6">
-
-                                        <div class="control-group">
-                                            <label class="control-label">What was the condition of boxes on arrival?</label>
-                                            <div class="controls">
-                                                <input type="text">
+                                                <input type="text" style="width:220px!important" ng-model="inspection.totalInspected">
                                             </div>
                                         </div>
                                     </div>
@@ -592,18 +583,46 @@
                                     <div class="span6">
 
                                         <div class="control-group">
-                                            <label class="control-label">Was quantity received as per shipping notification?</label>
-                                            <div class="controls">
-                                                <input type="text">
-                                            </div>
+                                            <br/>
+                                            <span style="font-size:12px">Was quantity received as per shipping notification?</span>
+
+                                        <span ng-init="inspection.isShipped" >
+                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShipped" ng-value="true" /> <strong>No</strong>
+                                            <input type="radio" ng-model="inspection.isShipped" ng-value="false"/>
+                                        </span>
+
                                         </div>
                                     </div>
                                     <div class="span6">
 
                                         <div class="control-group">
-                                            <label class="control-label">Were necessary labels attached to shipping boxes?</label>
-                                            <div class="controls">
-                                                <input type="text">
+                                            <label  for="notes">Comments</label>
+                                            <input type="text" ng-model="inspection.shippedComment" id="notes">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row" ng-show="inspection.isShipped==false">
+                                    <div class="span6">
+
+                                        <div class="control-group">
+
+                                            <span style="font-size:12px">If not, Were details of short-shipment provided prior to product arrival?</span>
+                                            <span ng-init="inspection.isShippedProvided" >
+                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShippedProvided" ng-value="true" /><strong>No</strong>
+                                            <input type="radio" ng-model="inspection.isShippedProvided" ng-value="false"/>
+                                        </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <label class="control-label"></label>
+                                            <div>
+                                                <input type="text" ng-model="inspection.shippedProvidedComment">
                                             </div>
                                         </div>
                                     </div>
@@ -613,9 +632,33 @@
                                     <div class="span6">
 
                                         <div class="control-group">
-                                            <label class="control-label">If not, were details of short-shipment provided prior to product arrival?</label>
-                                            <div class="controls">
-                                                <input type="text">
+                                            <span style="font-size:12px">What was the condition of boxes on arrival?</span>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <label class="control-label"></label>
+                                            <div>
+                                                <input type="text" ng-model="inspection.conditionOfBox">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <span style="font-size:12px">Were necessary labels attached to shipping boxes?</span>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <label class="control-label"></label>
+                                            <div>
+                                                <input type="text" ng-model="inspection.labelAttachedComment">
                                             </div>
                                         </div>
                                     </div>
@@ -648,7 +691,7 @@
 
 
 
-                    <input  type="button" class="btn btn-primary pull-right"
+                    <input  type="button" class="btn btn-primary pull-right" ng-click="save('RELEASED')"
                              ng-if="!viewMode" value="Finalize Inspection" style="margin-left:10px;margin-right:10px"/>
                 </div>
 
@@ -660,7 +703,7 @@
     </form>
 
     <!--Lot Modal-->
-    <div id="popup-box"  ng-form="inspectLotForm"  modal="inspectLotModal" options="{'backdrop':'static', 'escape':false}" style="width:80% !important;margin-left:-40% !important">
+    <div id="popup-box"  ng-form="inspectLotForm"  modal="inspectLotModal" options="{'backdrop':'static', 'escape':false}" style="width:97% !important;margin-left:-49% !important">
         <div class="modal-header">
             <div class="row-fluid">
                 <div class="span4">
@@ -673,16 +716,34 @@
         </div>
         <div class="modal-body">
 
+            <div  class="alert alert-danger" ng-show="lotError">
+                {{lotsWithError}} : Passed Qty + Failed Qty should be equal to Counted Qty
+            </div>
+
+            <div  class="alert alert-danger" ng-show="lotsWithLocationError">
+                {{lotsWithLocationError}} : Location(s) not selected!
+            </div>
+
+            <div  class="alert alert-danger" ng-show="lotsWithVvmError">
+                {{lotsWithVvmError}} : VVM Status not selected!
+            </div>
+
+
+<!--
+            <p ng-show="lotError"><strong>The following Batches has errors: </strong> <span style="color:red">{{lotsWithError}}</span>  <strong>Please revise them </strong></p>
+-->
+
+
             <table  class="table table-bordered receive">
                 <thead>
                 <tr class="gradient-header">
                     <th>Lot</th>
                     <th>Expiry Date</th>
-                    <th><span>Received Qty</span></th>
+                    <th >VVM Status </th>
+                    <th>Received Qty</th>
                     <th >Passed Qty</th>
                     <th ng-show="false">Pass Location</th>
                     <th>Failed Qty</th>
-                    <th >VVM Status </th>
                     <th >Fail Location</th>
                     <th >Fail Reason</th>
 
@@ -696,18 +757,43 @@
 
                     </td>
                     <td><span>{{lot.expiryDate | date:'dd-MM-yyyy' }}</span></td>
-                    <td><span><input  ng-disabled="true" type="text" name="receivedQuantity" ng-model="lot.receivedQuantity"/></span></td>
-                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.passQuantity"/></span></td>
-                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.failQuantity"/></span></td>
                     <td>
-                        <select style="max-width:130px !important;min-width:130px !important" ui-select2
-                                ng-options="i.value as i.name for i in vvmStatusList" name="vvm_0"
-                                 ng-model="lot.vvmStatus" maxlength="8"
-                                type="text">
-                            <option value="" openlmis-message="placeholder.select.vvmstatus"></option>
+                        <!--                 <select style="max-width:130px !important;min-width:130px !important" ui-select2
+                                                 ng-options="i.value as i.name for i in vvmStatusList" name="vvm_0"
+                                                  ng-model="lot.vvmStatus" maxlength="8"
+                                                 type="text">
+                                             <option value="" openlmis-message="placeholder.select.vvmStatus"></option>
+                                         </select>-->
+
+
+                        <select ui-select2="{width: '90%'}" ng-model="lot.vvmStatus" ng-required="true">
+                            <option value=""></option>
+                            <option ng-repeat="vvm in vvmStatusList"
+                                    value="{{ vvm.id }}"
+                                    ng-selected="vvmStatus==vvm.id"
+                            >
+                                {{ vvm.name }}
+                            </option>
                         </select>
 
+                        <span class="field-error" ng-show="lot.vvmStatus=='' "
+                              openlmis-message="missing.value"></span>
+
                     </td>
+                    <td><span><input  ng-disabled="true" type="text" name="receivedQuantity"  ng-model="lot.receivedQuantity"/></span></td>
+                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.passQuantity" />
+
+                          <span class="field-error" ng-show="inspectLotForm.inspectionDate.$error.required && showError"
+                                openlmis-message="missing.value"></span>
+
+                    </span></td>
+                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.failQuantity"/>
+
+                          <span class="field-error" ng-show="inspectionForm.inspectionDate.$error.required && showError"
+                                openlmis-message="missing.value"></span>
+
+                    </span></td>
+
                     <td>
 
                         <select ui-select2="{width: '100%'}" ng-model="lot.failLocationId">
@@ -780,12 +866,14 @@
             </div>
 
 
-            <h6>
+            <h6 ng-show="false">
                 PROVIDE DELOW DETAILS OF STATUS ONLY WHEN PROBLEMS ARE OBSERVED
             </h6>
+<!--
             <p>If different alarms are recorded, please provide comments in the Inspection findings Section</p>
+-->
 
-            <table  class="table table-bordered receive">
+            <table ng-show="false" class="table table-bordered receive">
 <!--                <thead>-->
                 <tr class="gradient-header">
                     <th rowspan="2" >Box Number</th>

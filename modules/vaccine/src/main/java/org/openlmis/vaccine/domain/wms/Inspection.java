@@ -39,4 +39,18 @@ public class Inspection extends BaseModel {
 
     private List<InspectionLineItem> lineItems;
 
+    //Additional Columns
+
+    private Boolean isShippedProvided;
+
+    private Boolean isShipped;
+
+    private String shippedComment;
+
+    private String shippedProvidedComment;
+
+    private String conditionOfBox;
+
+    private String labelAttachedComment;
+
 }

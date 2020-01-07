@@ -55,4 +55,5 @@ public class InspectionLineItem extends BaseModel {
 
     private List<InspectionLot> lots;
 
+
 }

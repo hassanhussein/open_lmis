@@ -29,7 +29,7 @@ public class InspectionService {
         if (column.equals("asnNumber")) {
             return repository.getTotalSearchResultCountByAsnNumber(searchParam);
         }
-        if (column.equals("asnDate")) {
+        if (column.equals("poNumber")) {
             return repository.getTotalSearchResultCountByAsnDate(searchParam);
         }
         if (column.equals("receiptNumber")) {
@@ -69,5 +69,9 @@ public class InspectionService {
             repository.insert(inspection);
         }else
              repository.update(inspection);
+    }
+
+    public Integer updateStockCard(Long id) {
+      return repository.updateStockCard(id);
     }
 }

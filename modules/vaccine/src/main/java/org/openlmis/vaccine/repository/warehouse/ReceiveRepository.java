@@ -50,4 +50,7 @@ public class ReceiveRepository {
         return mapper.search(searchParam, column, pagination);
     }
 
+    public Integer updateInspection(Long id) {
+       return mapper.updateInspection(id);
+    }
 }

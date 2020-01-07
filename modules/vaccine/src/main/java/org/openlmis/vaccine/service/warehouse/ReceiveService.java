@@ -1,7 +1,6 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
@@ -438,5 +437,10 @@ public class ReceiveService {
 
        }
 
+    }
+
+    public Integer updateInspection(Long id) {
+
+        return repository.updateInspection(id);
     }
 }

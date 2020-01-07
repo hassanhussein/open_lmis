@@ -1,4 +1,12 @@
-function InspectionSearchController($scope,SearchInspectionByPaged,navigateBackService, $dialog,$location){
+function InspectionSearchController($timeout,$scope,SearchInspectionByPaged,navigateBackService, $dialog,$location){
+
+if($scope.$parent.messageFlag) {
+
+   $timeout(function(){
+
+        $scope.messageFlag = false;
+    },4000);
+}
 
   $scope.inspectionListFromServer=[
   {
@@ -50,10 +58,8 @@ function InspectionSearchController($scope,SearchInspectionByPaged,navigateBackS
 
 
 $scope.searchOptions = [
-  {value: "asnNumber", name: "ASN Number"},
-    {value: "asnDate", name: "ASN DATE"},
-     {value: "receiptNumber", name: "Receipt Number"},
-        {value: "receiptDate", name: "Receipt DATE"},
+  {value: "poNumber", name: "PO Number"},
+  {value: "asnNumber", name: "ASN Number"}
   ];
 
 
@@ -74,8 +80,9 @@ $scope.searchOptions = [
       SearchInspectionByPaged.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
 
         inspectionList = data.inspections;
+        console.log(data.inspections);
 
-        $scope.inspectionList=inspectionList
+        $scope.inspectionList=inspectionList;
         $scope.pagination = data.pagination;
         $scope.totalItems = $scope.pagination.totalRecords;
         $scope.currentPage = $scope.pagination.page;

@@ -75,4 +75,7 @@ public class InspectionRepository {
         return mapper.getAllVvmStatuses();
     }
 
+    public Integer updateStockCard(Long id) {
+        return mapper.updateStockCard(id);
+    }
 }
