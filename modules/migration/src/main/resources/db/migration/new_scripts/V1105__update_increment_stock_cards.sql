@@ -116,18 +116,19 @@ LANGUAGE plpgsql;
 --Add seed location data
 
 
-INSERT INTO public.location_types(
-             code, name, description, active, createdby, createddate,
-            modifiedby, modifieddate)
-    VALUES ('TYPECO3', 'TYPEW', 'DESCRS', TRUE, 1, NOW(),
-            1, NOW());
+-- INSERT INTO public.location_types(
+  --           code, name, description, active, createdby, createddate,
+    --        modifiedby, modifieddate)
+    -- VALUES ('TYPECO3', 'TYPEW', 'DESCRS', TRUE, 1, NOW(),
+       --     1, NOW());
 
 
-            INSERT INTO public.locations(
-             code, name, active, typeid, zoneid, size, capacity, aisleid,
-            parentid, createdby, createddate, modifiedby, modifieddate, scrap)
-    VALUES ( '400L', '400L', true, 1, 1, 100, 3000, 2000,
-            NULL, 1,  NOW(), 1, now(), true);
+         --   INSERT INTO public.locations(
+           --  code, name, active, typeid, zoneid, size, capacity, aisleid,
+          --  parentid, createdby, createddate, modifiedby, modifieddate, scrap)
+   -- VALUES ( '400L', '400L', true, 1, 1, 100, 3000, 2000,
+       --     NULL, 1,  NOW(), 1, now(), true);
+
 
 
 
