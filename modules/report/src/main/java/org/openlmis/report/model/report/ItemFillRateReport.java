@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.report.model.ResultRow;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,6 +26,32 @@ public class ItemFillRateReport implements ResultRow {
     private Integer orderedQuantity;
     private Integer quantityReceived;
     private Integer itemFillRate;
+
+    private String msdProductCode;
+
+    private String eLMISProductCode;
+
+    private Integer quantityApproved;
+
+    private Integer quantityShipped;
+
+    private String msdZone;
+
+    private String orderNumber;
+
+    private boolean emergency;
+
+    private Integer rnrId;
+
+    private Integer approvedQuantity;
+
+    private Integer receivedQuantity;
+
+    private String invoiceNumber;
+
+    private Date invoiceDate;
+
+    private String periodName;
 
 
 }

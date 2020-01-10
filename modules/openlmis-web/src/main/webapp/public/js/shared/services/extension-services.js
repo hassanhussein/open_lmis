@@ -1374,3 +1374,11 @@ services.factory('FacilityFundUtilizationReport', function($resource){
 services.factory('Re', function($resource){
     return $resource('/facilities/:id.json', {id: '@id'}, update);
 });
+
+services.factory('AggregateItemFillRateSummary', function($resource){
+return $resource('/reports/reportdata/item-fill-rate-aggregate-summary.json', {}, {});
+});
+
+services.factory('AggregateItemFillRateByOrder', function($resource){
+return $resource('/reports/reportdata/item-fill-rate-by-order', {}, {});
+});

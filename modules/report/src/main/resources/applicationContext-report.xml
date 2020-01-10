@@ -705,6 +705,26 @@
                     <property name="version" value="1.0"/>
                 </bean>
 
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="item_fill_rate_aggregate_report"/>
+                    <property name="template" value="order-and-item-fill-rate.jasper"/>
+                    <property name="reportDataProvider" ref="itemFillRateSummaryDataProvider"/>
+                    <property name="id" value="item_fill_rate_aggregate_report"/>
+                    <property name="name" value="Item Fill Rate Aggregate Summary Report"/>
+                    <property name="title" value="Aggregated Item Fill Rate Summary"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="item_fill_rate_by_order"/>
+                    <property name="template" value="order-and-item-fill-rate.jasper"/>
+                    <property name="reportDataProvider" ref="itemFillRateByOrderDataProvider"/>
+                    <property name="id" value="item_fill_rate_aggregate_report"/>
+                    <property name="name" value="Item Fill Rate Order List"/>
+                    <property name="title" value="Item Fill Rate Order List"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
             </list>
         </constructor-arg>
     </bean>

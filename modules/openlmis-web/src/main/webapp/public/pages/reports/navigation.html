@@ -214,6 +214,11 @@
       <div class="submenu">
         <ul>
 
+          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#aggregate-fill-rate"
+            >Aggregate Fill Rate Report</a>
+          </li>
+
           <li ng-show="hasPermission('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#district-financial-summary"
                openlmis-message="menu.report.order.district.financial.compilation"></a>

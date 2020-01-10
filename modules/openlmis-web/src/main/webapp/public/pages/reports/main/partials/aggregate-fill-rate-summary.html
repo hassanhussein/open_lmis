@@ -1,0 +1,263 @@
+<!--
+~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+~
+~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+~
+~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<style>
+    .panel-group .panel-heading a.collapsed {
+    background: #60ACAF;
+    color: white;
+
+
+}
+
+  #popupModel {
+
+        width: 1000px;
+        left: auto;
+        right: 400px;
+
+    }
+    .black {
+     color:'black'
+    }
+    .red {
+    color:'red'
+    }
+</style>
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+        <div class="box-header">
+            <h2><i class="icon-edit"></i><span class="break">Aggregate Item Fill Rate Summary</span></h2>
+            <div class="box-icon">
+                <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                <a ng-click="section(1)" ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+            </div>
+
+
+
+                <div class="form-cell span4">
+                    <div class="checkbox">
+                        <label for="allType"><input id="allType" class="checkbox" type="checkbox"
+                                                    value="allReportType"
+                                                    ng-change="onToggleReportTypeAll()"
+                                                    ng-model="allReportType">
+                            <span openlmis-message="label.all"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-cell span4">
+                    <div class="checkbox">
+                        <label for="emergency"><input id="emergency" class="checkbox" type="checkbox" value="EM"
+                                                      ng-change="onReportTypeCheckboxChanged()"
+                                                      ng-model="reportTypes.EM">
+                            <span openlmis-message="requisition.type.emergency"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-cell span4">
+                    <div class="checkbox">
+                        <label for="re"><input id="re" class="checkbox" type="checkbox" value="RE"
+                                               ng-checked="true"
+                                               ng-change="onReportTypeCheckboxChanged()"
+                                               ng-model="reportTypes.RE">
+                            <span openlmis-message="requisition.type.regular"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+
+
+        </div>
+        <div>
+            <div class="app-form">
+                <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                    <div filter-container class="clearfix">
+                        <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                        <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                        <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+                        <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+                        <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="content-body col-lg-6">
+
+
+            <div
+                    data-angular-treeview="true"
+                    data-tree-id="abc"
+                    data-tree-model="treedata"
+                    data-node-id="id"
+                    data-node-label="label"
+                    data-node-children="children" >
+            </div>
+
+
+
+          <!--  <table class="table table-bordered">
+
+                <tr ng-show="data.length > 0" >
+                    <td >
+                        <a ng-show="filterForm.$valid" href="" ng-click="exportReport('CSV')" >Download <span>CSV</span></a>
+                    </td>
+
+                </tr>
+            </table>-->
+
+            <div ng-show="dataRow.length > 0" ng-repeat="row in dataRow">
+                <div class="panel-group">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title" style="height:30px !important">
+                                <a data-toggle="collapse" href="#myButton{{$index}}" aria-expanded="true">   <span>Facility Name: {{row.facilityName}}</span>, <span>District: {{row.district}}</span>, <span>MSD Zone: {{row.msdZone}}</span>  , <span style="font-style: italic;">Aggregate Order Fill Rate: <strong>{{calculateAverageItemFillRate(row.orderList)}}%</strong></span></a>
+                            </h4>
+                        </div>
+                        <div id="myButton{{$index}}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="col-xs-12">
+
+                                    <table class="table-bordered table table-striped" ng-table="">
+                                        <thead style="color:gray">
+                                        <th>#</th>
+                                        <th>eLMIS Order Number</th>
+                                        <th>Order Fill Rate</th>
+                                        <th>Period Name</th>
+                                        <th>Order Type</th>
+                                        <th>MSD Invoice #</th>
+                                        <th>Invoice Date</th>
+                                        <th></th>
+
+                                        </thead>
+                                        <tbody ng-repeat="order in row.orderList">
+
+                                        <tr>
+                                            <td>{{$index + 1}} </td>
+                                            <td> {{order.orderNumber}}</td>
+                                            <td style="text-align: right"><span>{{((order.receivedQuantity/order.approvedQuantity )*100).toFixed(0)}} %</span></td>
+                                            <td>{{order.periodName}}</td>
+                                            <td>{{(order.emergency)?'Emergency':'Regular'}}</td>
+                                            <td>{{order.invoiceNumber}}</td>
+                                            <td>{{order.invoiceDate | date}}</td>
+
+                                            <td> <span style="width:5px;">
+                                            <button class="btn btn-default text-blue" type="button"
+                                                    ng-click="getDetails(order.rnrId, row)">Item Fill Rate
+                                            </button></span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div ng-show="dataRow.length == 0"> No data to show under selected filters</div>
+
+
+
+            <br/><br/>
+            <p ng-show="dataRow.length > 0"> <i>Note: <strong> 'This Report'  </strong> apply only for the zones that have MSD Proof of Delivery Mobile Application </i></p>
+            <div class="clear-both"></div>
+
+        </div>
+
+    </div>
+</div>
+
+
+
+
+<div id="popupModel" modal="successModal">
+
+    <div class="modal-header">
+        <h3 style="text-align: center;">Facility Name:{{ allTheData.facilityName }},  Order Number: {{allTheData.orderList[0].orderNumber}}, Invoice Number # : {{allTheData.orderList[0].invoiceNumber}}</h3>
+
+    </div>
+    <div class="modal-body">
+
+
+        <div class="row-fluid">
+            <div class="span12">
+
+                <table ng-show="allTheData.items.length > 0" class="table-bordered table table-striped pull-right"
+                       ng-table="tableParams">
+                    <tbody>
+                    <tr ng-repeat="row in allTheData.items">
+
+                        <td data-title="'#'" class="number" style="width:20px">{{ $index+1 }}</td>
+                        <td data-title="getLocalMessage('label.product.code')" style="width:80px" sortable="productcode">{{row.substitutes.length}}{{
+                            row.elmisproductCode }}
+                        </td>
+                        <td data-title="getLocalMessage('label.product.name')" style="width:30%" sortable="product">{{ row.product }}
+                        </td>
+                        <td data-title="getLocalMessage('header.quantity.ordered')" class="number" style="width:80px"
+                            sortable="approved">{{ row.quantityApproved | number }}
+                        </td>
+                        <td data-title="getLocalMessage('Quantity Received')" class="number" style="width:80px"
+                            sortable="receipts">{{ row.quantityShipped | number }}
+                        </td>
+                        <td data-title="getLocalMessage('label.item.fill.rate')" class="number"
+                            style="width:120px" sortable="item_fill_rate">
+                            <div ng-style="getColor(getItemFillRate(row))" >
+                                {{ getItemFillRate(row) | number}} %
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+               <!--     <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="getDetails()">
+                  <option value="10">10 per page</option>
+                  <option value="20">20 per page</option>
+                  <option value="50">50 per page</option>
+                  <option value="100">100 per page</option>
+              </select>
+
+              <div class="pull-right">
+                  <pagination total-items="totalItems" page="currentPage" max-size="10"
+                              items-per-page="pagination.limit"
+                              direction-links="false" class="pagination-sm"></pagination>
+              </div>-->
+
+
+                <div class="clearfix"></div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+             <span class="pull-left" style="background-color:#4897BA !important;">
+    <a style="background-color:#4897BA !important;"
+
+       id="xls-button" href="" export export-data="allTheData.items"
+       export-keys="['elmisproductCode','product','quantityApproved','quantityShipped']"
+       export-headers="['Product Code','Product Name','Quantity Ordered','Quantity Received']"
+
+       class="btn-small btn-primary"
+       target="_blank">Export</a>
+         </span>
+        <a class="btn btn-primary pull-right" ng-click="successModal=false;">Close</a>
+
+    </div>
+
+</div>
+
+

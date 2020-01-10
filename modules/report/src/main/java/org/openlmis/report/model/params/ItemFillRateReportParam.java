@@ -20,4 +20,6 @@ public class ItemFillRateReportParam extends BaseParam implements ReportParamete
 
     private Long facility;
 
+    public Long orderId;
+
 }
