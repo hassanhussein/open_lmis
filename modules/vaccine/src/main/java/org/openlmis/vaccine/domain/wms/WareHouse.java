@@ -7,7 +7,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 
+import java.util.List;
+
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
+
 
 @Data
 @NoArgsConstructor
@@ -28,6 +31,8 @@ public class WareHouse extends BaseModel {
 
     private boolean active;
 
-    private WareHouseLineItem lineItem;
+    private List<WareHouseLineItem> lineItem;
+
+    private List<WareHouseLineItem> lineItems;
 
 }

@@ -28,4 +28,10 @@ public interface ZoneMapper {
             "       modifiedBy=#{modifiedBy}, modifiedDate=NOW()\n" +
             " WHERE id= #{id}\n")
     void update(Zone zone);
+
+    @Select("select * from wms_zones where id = #{id}")
+    Zone getById(@Param("id") Long id);
+
+    @Select("select * from wms_zones where id = #{id}")
+    Zone getByIdFor(@Param("id") Long id);
 }

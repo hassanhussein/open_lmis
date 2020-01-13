@@ -1,10 +1,389 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+<style>
 
-</body>
-</html>
+    #siteName, #typeName{
+        width: 200px !important;
+    }
+
+   .form-group .form-row input[type="text"] {
+    width: 90%;
+     }
+
+
+   .form-group .form-cell {
+    width: 20%;
+    float: left;
+    padding: 6px 10px 10px;
+}
+
+.form-row label {
+    margin-bottom: 2px;
+    font-size: 0.9em;
+}
+</style>
+
+<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+    <div ng-hide="house.id"><h2 id="addNewWarehouseHeader"> Create new warehouse </h2></div>
+    <div ng-show="house.id"><h2 id="editWarehouseHeader" >Edit warehouse</h2></div>
+
+    <form ng-submit="saveWareHouse()" name="warehouseForm" novalidate>
+        <div class="app-form">
+
+            <div id="geoZoneFormGroup" class="form-group clear-top">
+
+                <div class="form-row clearfix">
+
+                    <div class="form-cell">
+                        <label id="siteNameLabel">
+                            <span>Site</span>
+                            <span class="label-required"> *</span>
+                        </label>
+
+                        <div class="form-field">
+
+                            <select  name="siteName" id="site-name" ng-model="warehouse.site.code"
+                                    ng-options="i.code as i.name for i in sites" ng-required="true"
+                                     selected="warehouse.site.code == option.code"
+                            >
+                                <option value=""> --Select Site-- </option>
+                            </select>
+
+                            <span class="field-error" ng-show="!warehouse.site.name && showError"
+                                  openlmis-message="select.value"></span>
+                        </div>
+                    </div>
+                    <div class="form-cell">
+                        <label id="warehouseLabel" for="warehouse">
+                            <span>Warehouse Code</span>
+                            <span class="label-required"> *</span>
+                        </label>
+
+                        <div class="form-field">
+                            <input ng-model="warehouse.code" name="code" id="warehouse" type="text" maxlength="50" ng-required="true"/>
+                            <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-cell">
+                        <label id="warehouseNameLabel" for="warehouseName">
+                            <span>Warehouse Name</span>
+                            <span class="label-required"> *</span>
+                        </label>
+
+                        <div class="form-field">
+                            <input ng-model="warehouse.name" name="name" id="warehouseName" type="text" maxlength="50" ng-required="true"/>
+                            <span class="field-error" ng-show="warehouseForm.name.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-cell">
+                        <label id="typeNameLabel">
+                            <span>Product Type</span>
+                            <span class="label-required"> *</span>
+                        </label>
+
+                        <div class="form-field">
+                            <select id="typeName" name="typeName" ng-model="warehouse.productTypeId"
+                                    ng-options="type.id as type.name for type in productTypes" ng-selected="warehouse.productTypeId == type.id"
+                                    ng-disabled="editMode">
+                                <option value="">-- Select Product Type --</option>
+                            </select>
+                            <span class="field-error" ng-show="!warehouse.productType.name && showError"
+                                  openlmis-message="select.value"></span>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="form-row clearfix">
+
+                        <div>
+
+                            <table class="table table-bordered receive">
+                               <thead>
+                               <tr class="gradient-header">
+
+                                   <th>Zone</th>
+                                   <th>Aisle</th>
+                                   <th>Add/Remove Aisle</th>
+                                   <th>Add/Remove Zone</th>
+                               </tr>
+
+                               </thead>
+                                <tbody>
+                                <tr  ng-repeat-start="aisle in warehouse.lineItems"  ng-init="aisleIndex=$index">
+
+                                    <td  class="cell-input" style="padding-left:15px;" rowspan="{{aisle.zone.aisleList.length}}">
+                                        <select style="width:90% !important;"
+                                                ng-show="!aisle.displayNameOnly"
+                                                ng-model="aisle.zone.code"
+                                                ng-options="obj.programProduct  as obj.programProduct.product.primaryName for obj in productsToDisplay"
+                                                ng-selected="aisle.zone.code == type.id"
+                                        >
+                                            <option value="">--Select Zone--</option>
+                                        </select>
+
+                                    </td>
+
+                                   <!-- <td class="cell-input" style="padding-left:15px;" rowspan="{{aisle.zone.aisleList.length}}">{{aisle.zone.code}}
+                                    </td>-->
+                                    <td class="cell-input" style="padding-left:15px;">
+
+                                        <div class="row-fluid">
+                                         <span class="cell-text">Code</span>
+
+                                            <span style="padding-left:122px">
+                                                <input  ng-model="aisle.zone.aisleList[0].aisleCode" name="aisleCode" style="width:50%;" type="text" maxlength="50" ng-required="true"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                            </span>
+
+                                        </div>
+                                        <div class="row-fluid">
+                                        <span class="cell-text">Bin Location:</span>
+
+                                       <span style="padding-left:45px"><span class="cell-text">From</span><input ng-model="aisle.zone.aisleList[0].binLocationFrom" name="from" type="text" maxlength="50" ng-required="true" style="width: 23%;"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                       <span><span class="cell-text">To:</span>     <input ng-model="aisle.zone.aisleList[0].binLocationTo" name="binLocationTo" style="width: 21%;" type="text" maxlength="50" ng-required="true"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                        </div>
+
+                                        <div class="row-fluid">
+                                        <span class="cell-text">Bin Level:</span>
+
+                                       <span style="padding-left:57px"><span class="cell-text">From</span>     <input ng-model="aisle.zone.aisleList[0].beamLevelFrom" name="from" type="text" maxlength="50" ng-required="true" style="width: 23%;"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                       <span style="padding-left:2px"><span class="cell-text">To:</span><input ng-model="aisle.zone.aisleList[0].beamLevelTo" name="binLocationTo" style="width: 21%;" type="text" maxlength="50" ng-required="true"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                        </div>
+
+
+
+
+                                    </td>
+                                    <td rowspan="1" style="padding-top:40px;padding-left:50px;"> <span class="btn btn-danger cell-input" ng-click="removeProduct(productIndex)">Remove</span></td>
+                                    <td rowspan="{{aisle.zone.aisleList.length}}" style="padding-top:80px;padding-left:50px;"><button class="btn btn-small btn-info" type="button" ng-click="addProduct()">Add Zone</button></td>
+
+                                </tr>
+                                <tr ng-repeat-end ng-repeat="list in aisle.zone.aisleList" ng-show="!$first">
+
+                                    <td class="cell-input" style="padding-left:15px;">
+
+                                        <div class="row-fluid">
+                                            <span class="cell-text">Code</span>
+
+                                            <span style="padding-left:122px">
+                                                <input  ng-model="list.aisleCode" name="aisleCode" style="width:50%;" type="text" maxlength="50" ng-required="true"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                            </span>
+
+                                        </div>
+                                        <div class="row-fluid">
+                                            <span class="cell-text">Bin Location:</span>
+
+                                            <span style="padding-left:45px"><span class="cell-text">From</span><input ng-model="list.binLocationFrom" name="from" type="text" maxlength="50" ng-required="true" style="width: 23%;"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                            <span><span class="cell-text">To:</span>     <input ng-model="list.binLocationTo" name="binLocationTo" style="width: 21%;" type="text" maxlength="50" ng-required="true"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                        </div>
+
+                                        <div class="row-fluid">
+                                            <span class="cell-text">Bin Level:</span>
+
+                                            <span style="padding-left:57px"><span class="cell-text">From</span>     <input ng-model="list.beamLevelFrom" name="from" type="text" maxlength="50" ng-required="true" style="width: 23%;"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                            <span style="padding-left:2px"><span class="cell-text">To:</span><input ng-model="list.beamLevelTo" name="binLocationTo" style="width: 21%;" type="text" maxlength="50" ng-required="true"/>
+                                                <span class="field-error" ng-show="warehouseForm.code.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
+                                       </span>
+
+                                        </div>
+
+
+
+
+                                    </td>
+                                    <td style="padding-top:40px;padding-left:50px;"><button class="btn btn-small btn-info" type="button" ng-click="addProduct()">Add Aisle</button></td>
+
+                                </tr>
+
+
+                                </tbody>
+
+
+
+                            </table>
+
+
+
+
+                           <!-- <table class="table table-bordered receive">
+                                <thead>
+                                <tr class="gradient-header">
+                                    <th>Zone</th>
+                                    <th rowspan="2">Aisle</th>
+                                </tr>
+                                </thead>
+                                <tbody id="append-element">
+                                <tr ng-init="productIndex=$index" ng-repeat-start="aisle in warehouse.lineItems">
+                                    <td  class="cell-input" style="padding-left:15px;" rowspan="2" >
+                                        <select style="width:90% !important;"
+                                                ng-show="!aisle.displayNameOnly"
+                                                ng-model="aisle.zone.code"
+                                                ng-options="obj.programProduct  as obj.programProduct.product.primaryName for obj in productsToDisplay"
+                                                ng-selected="aisle.zone.code == type.id"
+                                        >
+                                            <option value="">&#45;&#45;Select Zone&#45;&#45;</option>
+                                        </select>
+
+                                    </td>
+
+
+
+
+                                </tr>
+
+                                <tr ng-repeat-end>
+
+                                </tr>
+
+
+                                </tbody >
+
+                            </table>-->
+                        </div>
+
+
+
+
+                </div>
+<!--
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+                        <label id="nameLabel" for="name">
+                            <span openlmis-message="header.name"></span>
+                            <span class="label-required"> *</span>
+                        </label>
+
+                        <div class="form-field">
+                            <input ng-model="geoZone.name" name="name" id="name" type="text" maxlength="50" ng-required="true"/>
+                            <span class="field-error" ng-show="geoZoneForm.name.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-cell">
+                        <label id="parentLabel" openlmis-message="header.parent"></label>
+
+                        <div class="form-field row-fluid">
+                            <select ui-select2="{width: '90%'}" class="span11" id="selectParentGeoZone" ng-model="geoZone.parent.code"
+                                    openlmis-message="label.select.parent.zone">
+                                <option value=""></option>
+                                <optgroup ng-repeat="geoZoneLevel in parentLevels" label="{{ geoZoneLevel }}">
+                                    <option ng-repeat="parentGeoZone in parentGeoZones" ng-if="parentGeoZone.level.name === geoZoneLevel"
+                                            value="{{ parentGeoZone.code }}">
+                                        {{ parentGeoZone.name }}
+                                    </option>
+                                </optgroup>
+                            </select>
+                            <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+                        <label id="populationLabel" for="catchment-population"
+                               openlmis-message="label.catchment.population"></label>
+
+                        <div class="form-field">
+                            <input ng-model="geoZone.catchmentPopulation" id="catchment-population" ng-pattern="/^\d{1,9}$/"
+                                   name="catchmentPopulation" type="text" maxlength="9"/>
+                            <span class="field-error" ng-show="geoZoneForm.catchmentPopulation.$error.pattern"
+                                  openlmis-message="integer.value">
+              </span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+                        <label id="latitudeLabel" for="latitude" openlmis-message="label.latitude"></label>
+
+                        <div class="form-field">
+                            <input ng-model="geoZone.latitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" id="latitude" type="text"
+                                   name="latitude" maxlength="10"/>
+                            <span class="field-error" ng-show="geoZoneForm.latitude.$error.pattern"
+                                  openlmis-message="label.latitude.value"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+                        <label id="longitudeLabel" for="longitude" openlmis-message="label.longitude"></label>
+
+                        <div class="form-field">
+                            <input ng-model="geoZone.longitude" ng-pattern="/^[+-]?0*\d{0,3}(\.\d{1,5}0*)?$/" name="longitude"
+                                   id="longitude" type="text" maxlength="10"/>
+                            <span class="field-error" ng-show="geoZoneForm.longitude.$error.pattern"
+                                  openlmis-message="label.longitude.value"></span>
+                        </div>
+                    </div>
+                </div>-->
+
+                <!-- /form-group -->
+
+            </div>
+            <div form-toolbar id="action_buttons" class="action-buttons">
+                <div class="form-cell button-row">
+                    <input id="saveButton" type="submit" class="btn btn-primary save-button"
+                           openlmis-message="button.save" ng-click="save()"/>
+                    <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                           ng-click="cancel()"/>
+                </div>
+
+                <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+

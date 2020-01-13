@@ -1,10 +1,12 @@
-function InspectionSearchController($scope,navigateBackService, $dialog,$location){
-$scope.problem=true;
+function InspectionSearchController($timeout,$scope,SearchInspectionByPaged,navigateBackService, $dialog,$location){
 
-$scope.searchOptions = [
-  {value: "asnNumber", name: "ASN Number"},
-     {value: "receiptNumber", name: "Receipt Number"},
-  ];
+if($scope.$parent.messageFlag) {
+
+   $timeout(function(){
+
+        $scope.messageFlag = false;
+    },4000);
+}
 
   $scope.inspectionListFromServer=[
   {
@@ -13,12 +15,9 @@ $scope.searchOptions = [
       "limit": 10,
       "page": 1,
       "numberOfPages": 1,
-      "totalRecords": 1
+      "totalRecords": 2
     },
-  inspectionDate:'2019-12-10',
   asnNumber:'asn1',
-  supplierId:1,
-  portId:1,
   asnDate:'2019-10-10',
   receiptDate:'2019-10-10',
   receiptNumber:'rec1',
@@ -28,44 +27,27 @@ $scope.searchOptions = [
   blNumber:'blnumber',
   destionationPort:'Dar Es Salaam',
   vesselNumber:'6878789',
-  eta:'2019-02-10',
-  ata:'2019-02-10',
+  eta:'',
+  ata:'',
   shippingAgent:'Agent A',
   clearingAgent:'MSD',
   note:'This is a note',
-
   supplier:{
     id:1,
     name:'UNICEF'
     },
-  descriptionOfProcurement:'This is the Description',
+  descriptionOfProcument:'This is the Description',
   isVaccine:true,
   product:{
   name:'BCG',
-  oum:'Vials',
-  shippedQty:1000,
-  countedQty:0,
-  passedQty:0,
-  failedQty:0,
+  oum:'Doses',
   lots:[{
   code:'TT454',
-  quantity:500,
   expiryDate:'2019-10-1',
-  passedQty:0,
-  failedQty:0,
-  passedLocation:0,
-  failedLocation:0,
-  vvm:0
   },
   {
     code:'YY454',
-    quantity:500,
     expiryDate:'2019-10-11',
-    passedQty:0,
-    failedQty:0,
-    passedLocation:0,
-    failedLocation:0,
-    vvm:0
     }
 
   ]
@@ -75,36 +57,40 @@ $scope.searchOptions = [
   ];
 
 
+$scope.searchOptions = [
+  {value: "poNumber", name: "PO Number"},
+  {value: "asnNumber", name: "ASN Number"}
+  ];
 
 
-
-    function getInspectionList(page, query) {
-//      query = query.trim();
-//      $scope.searchedQuery = query;
-//      Preadvice.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
-//        $scope.asnList = data.asns;
-//        $scope.pagination = data.pagination;
-//        $scope.totalItems = $scope.pagination.totalRecords;
-//        $scope.currentPage = $scope.pagination.page;
-//        $scope.showResults = true;
-//        $scope.showSearchResults = true;
-//      }, {});
-
-
-    $scope.inspectionList=$scope.inspectionListFromServer;
-    $scope.pagination = $scope.inspectionList[0].pagination;
-    $scope.totalItems = $scope.pagination.totalRecords;
-    $scope.currentPage = $scope.pagination.page;
-    $scope.showResults = true;
-    $scope.showSearchResults = true;
-    }
   $scope.showResults = false;
+
   $scope.currentPage = 1;
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
   $scope.selectSearchType = function (searchOption) {
     $scope.selectedSearchOption = searchOption;
   };
+
+    function getInspectionList(page, query) {
+
+     query = query.trim();
+     $scope.searchedQuery = query;
+     var inspectionList = [];
+      SearchInspectionByPaged.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
+
+        inspectionList = data.inspections;
+        console.log(data.inspections);
+
+        $scope.inspectionList=inspectionList;
+        $scope.pagination = data.pagination;
+        $scope.totalItems = $scope.pagination.totalRecords;
+        $scope.currentPage = $scope.pagination.page;
+        $scope.showResults = true;
+        $scope.showSearchResults = true;
+    });
+
+    }
 
     // column to sort
      $scope.column = 'asnNumber';
@@ -172,11 +158,14 @@ $scope.searchOptions = [
       };
 
 
-
       $scope.edit = function (inspection,viewMode) {
 
-          $scope.$parent.inspection=inspection;
-          $location.path('inspect/');
+      var path = '/edit/'+parseInt(inspection.id,10);
+
+       $location.path(path);
+
+         // $scope.$parent.inspection=inspection;
+          //$location.path('inspect/');
         };
 
 }

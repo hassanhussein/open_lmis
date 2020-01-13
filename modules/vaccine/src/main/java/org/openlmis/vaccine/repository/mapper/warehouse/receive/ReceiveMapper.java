@@ -42,6 +42,7 @@ public interface ReceiveMapper {
     @Select("select * from receives where id = #{id}")
     @Results(value = {
             @Result(column = "id", property = "id"),
+            @Result(column = "asnId", property = "asnId"),
             @Result(property = "receiveLineItems", column = "id", javaType = List.class,
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveLineItemMapper.getByReceiveId")),
             @Result(property = "supplier", column = "supplierId", javaType = SupplyPartner.class,
@@ -50,6 +51,9 @@ public interface ReceiveMapper {
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.receive.PurchaseDocumentMapper.getByReceiveId")),*/
             @Result(property = "port", column = "portofarrival", javaType = Port.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.PortMapper.getById")),
+
+            @Result(property = "asn", column = "asnId", javaType = Asn.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnMapper.getById")),
 
             @Result(property = "currency", column = "currencyId", javaType = CurrencyDTO.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.CurrencyMapper.getById"))
@@ -156,6 +160,9 @@ public interface ReceiveMapper {
             return sql;
         }
     }
+
+    @Select(" SELECT * FROM fn_create_inpsection(#{id}::int) ")
+    Integer updateInspection(@Param("id") Long id);
 
 
 }

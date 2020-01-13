@@ -645,6 +645,36 @@ services.factory('docService', ['$http', '$q', function ($http, $q) {
  ]);
 
 
+
+services.factory('GetSitesData', function ($q, $timeout, $resource, GetSites) {
+
+    function get(params) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetSites.get({
+                regionId: parseInt(params.regionId, 10)
+            }, function (data) {
+
+                var sites = {};
+                if (data !== undefined) {
+                    sites = data;
+                }
+                deferred.resolve(sites);
+
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+
+    return {
+        get: get
+    };
+
+});
+
+
+
  //Receive API
 
  services.factory("Receive", function ($resource) {
@@ -671,6 +701,35 @@ services.factory("DeleteDocument", function ($resource) {
      return $resource('/rest-api/warehouse/asn/all-currencies.json', {}, {});
  });
 
+services.factory('SearchWareHouses', function ($resource) {
+    return $resource('/rest-api/warehouse/house.json', {}, {});
+});
+
+services.factory('GetSites', function ($resource) {
+    return $resource('/rest-api/warehouse/site/:regionId.json', {}, {});
+});
+
+services.factory('Warehouses', function ($resource) {
+    return $resource('/rest-api/warehouse/house/:id.json', {}, {});
+});
 services.factory("Sites", function ($resource) {
     return $resource('/rest-api/warehouse/site/:id.json', {id: '@id'}, update);
 });
+
+services.factory('SearchInspectionByPaged', function ($resource) {
+    return $resource('/rest-api/warehouse/inspection', {}, {});
+});
+
+services.factory("GetInspectionById", function ($resource) {
+     return $resource('/rest-api/warehouse/inspection/:id.json', {id: '@id'}, {});
+ });
+
+services.factory("UpdateInspection", function ($resource) {
+    return $resource('/rest-api/warehouse/inspection/:id.json', {id: '@id'}, update);
+});
+
+services.factory("GetVVMStatusList", function ($resource) {
+    return $resource('/rest-api/warehouse/inspection/vvm-status.json', {}, {});
+});
+
+

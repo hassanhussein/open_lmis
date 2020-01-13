@@ -8,7 +8,7 @@
   ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-<div xmlns="http://www.w3.org/1999/html" tab-scroll>
+<div xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" tab-scroll>
     <div>
         <h2>Inspect Package</h2>
 
@@ -25,31 +25,31 @@
 
                 <div class="form-row clearfix">
                     <div class="span3">
-                        <label for="receiveDate">
+                        <label for="inspectionDate">
                             <span >Inspection Date</span>
                             <span class="label-required"> *</span>
                         </label>
 
                         <div class="form-field">
-                            <input
+                            <input id="inspectionDate" name="inspectionDate"
                                     type="text"
                                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                     ui-date-format="yy-mm-dd"
                                     ng-model="inspection.inspectionDate"
-
+                                    ng-disabled="false"
                                     ng-required="true"/>
-                            <span class="field-error" ng-show="asnForm.receiveDate.$error.required && showError"
+                            <span class="field-error" ng-show="inspectionForm.inspectionDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
                     <div class="span3">
-                        <label for="asnCode">
+                        <label for="receiptNumber">
                             <span >Receipt Number</span>
 
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="inspection.receiptNumber" ng-disabled="true" type="text" maxlength="50" />
+                            <input id="receiptNumber" ng-model="inspection.receiptNumber" ng-disabled="false" type="text" maxlength="50" />
 
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                                     type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="inspection.asnDate" name="asnReceiptDate" />
+                                   ng-model="inspection.receive.asn.asndate" name="asnReceiveDate" />
 
                         </div>
                     </div>
@@ -77,14 +77,14 @@
                         </label>
 
                         <div class="form-field">
-                            <input
+                            <input id="receiveDate"
                                     type="text"
                                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                     ui-date-format="yy-mm-dd"
-                                    ng-model="inspection.receiptDate"
+                                    ng-model="inspection.receive.receiveDate"
                                     ng-disabled="true"
                                     ng-required="true"/>
-                            <span class="field-error" ng-show="asnForm.receiveDate.$error.required && showError"
+                            <span class="field-error" ng-show="inspectionForm.receiveDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
@@ -103,45 +103,52 @@
 
                 <div class="form-row clearfix">
                     <div class="span3">
-                        <label for="asnCode">
+                        <label for="asnNumber">
                             <span >Asn Number</span>
 
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="inspection.asnNumber" name="asnCode" ng-disabled="true" type="text" maxlength="50" />
+                            <input id="asnNumber" ng-model="inspection.receive.asn.asnnumber" name="asnNumber" ng-disabled="true" type="text" maxlength="50" />
 
                         </div>
                     </div>
 
                     <div class="span3">
-                        <label for="supplier" >Supplier</label>
+                        <label for="supplierLabel">
+                            <span>Supplier</span>
+                        </label>
 
-                        <div class="form-field row-fluid">
+                        <div class="form-field">
+                            <input id="supplierLabel" ng-model="inspection.receive.supplier.name" name="supplier" ng-disabled="true" type="text" maxlength="50" />
+
+                        </div>
+
+                  <!--      <div class="form-field row-fluid">
                             <select ui-select2="{width: '100%'}" class="span11" id="supplier"
                                     openlmis-message="label.select.parent.zone" ng-disabled="true"
-                            ng-model="inspection.supplierId">
+                            ng-model="inspection.receive.supplier.name">
                                 <option value=""></option>
                                     <option ng-repeat="supplier in suppliers"
                                             value="{{ supplier.id }}"
-                                            ng-selected="inspection.supplierId==supplier.id"
+                                            ng-selected="supplierId==supplier.id"
                                     >
                                         {{ supplier.name }}
                                     </option>
                             </select>
-                            <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                            <span class="field-error" ng-show="inspectionForm..$error.required && showError"
                                   openlmis-message="missing.value"></span>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="span3">
-                        <label for="poNumber">
+                        <label for="poNumberLabel">
                             <span >PO Number</span>
                             <span class="label-required"> *</span>
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="inspection.poNumber" ng-disabled="true"  type="text" maxlength="50" ng-required="true"/>
-                            <span class="field-error" ng-show="asnForm.poNumber.$error.required && showError"
+                            <input id="poNumberLabel" ng-model="inspection.receive.poNumber" ng-disabled="true"  type="text" maxlength="50" name="poNumber" ng-required="true"/>
+                            <span class="field-error" ng-show="asnForm.inspection.poNumber.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
@@ -157,7 +164,7 @@
                                     type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="inspection.poDate"
+                                   ng-model="inspection.receive.poDate"
                                     ng-disabled="true"
                                     ng-required="true"/>
                             <span class="field-error" ng-show="asnForm.poDate.$error.required && showError"
@@ -170,17 +177,29 @@
 
                 <div class="form-row clearfix">
                     <div class="span6">
-                        <label id="codeLabel" for="code">
+                        <label id="descriptionLabel" for="description">
                             <span >Description of Procurement</span>
                             <!--                                        <span class="label-required"> *</span>-->
                         </label>
 
                         <div class="form-field">
-                            <textarea rows="3" ng-disabled="true" style="width: 425px;" ng-model="inspection.descriptionOfProcurement" ></textarea>
+                            <textarea id="description" rows="3" ng-disabled="viewMode" style="width: 425px;" ng-model="inspection.descriptionOfInspection" ></textarea>
 
                         </div>
                     </div>
 
+
+<!--                    <div class="span6">-->
+<!--                        <label id="codeLabel" for="code">-->
+<!--                            <span >Note to Supplier</span>-->
+<!--                            &lt;!&ndash;                                        <span class="label-required"> *</span>&ndash;&gt;-->
+<!--                        </label>-->
+
+<!--                        <div class="form-field">-->
+<!--                            <textarea ng-disabled="viewMode" rows="3" style="width: 425px;" ng-model="notes" ></textarea>-->
+
+<!--                        </div>-->
+<!--                    </div>-->
 
                 </div>
 
@@ -193,7 +212,7 @@
                             <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && !isVaccine)" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="true"   value="1" ng-click="changeProductType(false)" > Other Items
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && isVaccine)"   value="1" ng-click="changeProductType(false)" > Other Items
                         </label>
 
                     </div>
@@ -301,39 +320,40 @@
                                 </div>
 
                                 <div ng-switch-when="2">
-
-
                                     <div  class="alert alert-danger" ng-show="productError">
-                                        Product Not Inspected, Click on Lots in the inspection column
+                                        Atleast One product with atleast One batch is required
+                                    </div>
+
+                                    <div  class="alert alert-danger" ng-show="quantityBoxError">
+                                        Quantity should be greater or equal to Number of Boxes
                                     </div>
                                     <table  class="table table-bordered receive">
                                         <thead>
                                         <tr class="gradient-header">
-                                            <th class="col-product " openlmis-message="label.products"></th>
-                                            <th class="col-product" style="max-width:160px !important; width:160px !important">
+                                            <th class="col-product" style="width:350px !important;" openlmis-message="label.products"></th>
+                                            <th class="col-product" style="width:100px !important;max-width:100px !important">
                                             Unit Of Measure
                                             </th>
-                                            <th  >Shipped Qty</th>
-<!--                                            <th  ><span>Counted Qty</span></th>-->
+                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important;">Received Qty</th>
                                             <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Passed Qty</th>
-                                            <th  class="col-add-lot style="width:100px !important;max-width:100px !important">Failed Qty</th>
+                                            <th  class="col-add-lot" style="width:100px !important; max-width:100px !important">Failed Qty</th>
                                             <th ng-if="!viewMode" style="width:100px !important;max-width:100px !important" class="col-add-lot"><span>Inspect</span></th>
 
                                         </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody data-ng-repeat="lineItem in inspection.lineItems">
 
                                         <tr>
                                             <td>
-                                                {{inspection.product.name}}
+                                                <span style="padding-left: 15px;">{{lineItem.product.primaryName}}</span>
                                             </td>
-                                            <td>{{inspection.product.oum}}</td>
-                                            <td>{{inspection.product.shippedQty}}</td>
-<!--                                            <td>{{inspection.product.countedQty}}</td>-->
-                                            <td>{{inspection.product.passedQty}}</td>
-                                            <td>{{inspection.product.failedQty}}</td>
+                                            <td style="padding-left: 15px;">{{lineItem.product.dosageUnit.code}}</td>
+                                            <td style="text-align:right"><span ng-bind="lineItem.quantityCounted | number"></span></td>
+                                            <td ng-show="false">{{lineItem.quantityCounted}}</td>
+                                            <td style="text-align:right">{{lineItem.passQuantity | number}}</td>
+                                            <td style="text-align:right">{{lineItem.failQuantity | number }}</td>
                                             <td>
-                                                <a href="" ng-click="showInspectLotModal()" class="btn btn-link">Lots</a>
+                                                <a href="" ng-click="showInspectLotModal(lineItem)" class="btn btn-link">Lots</a>
                                             </td>
 
                                         </tr>
@@ -347,39 +367,37 @@
                             </div>
 
 
-
-
-
-
-
-
-
-
                         </div>
                         <div class="tab-pane" id="tab2">
                             <div class="form-row clearfix">
                                 <div class="span3">
-                                    <label id="codeLabel" for="code">
+                                    <label id="codeLabel" for="blawBnumber">
                                         <span >BL/AWB Number</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="inspection.blNumber" ng-disabled="true"  type="text"  maxlength="50" name="blAwbNumber" ng-required="true"/>
-                                        <span class="field-error" ng-show="asnForm.blAwbNumber.$error.required && showError"
+                                        <input id="blawBnumber" ng-model="inspection.receive.blawBnumber" ng-disabled="true"  type="text"  maxlength="50" name="blAwbNumber" ng-required="true"/>
+                                        <span class="field-error" ng-show="asnForm.inspection.receive.blawBnumber.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
 
                                 <div class="span3">
-                                    <label id="parentLabel" >Destination Airport/Port</label>
+                                    <label for="portOfArrival" >Destination Airport/Port</label>
 
-                                    <div class="form-field row-fluid">
-                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="true"
+                                    <div class="form-field">
+                                        <input id="portOfArrival" ng-model="inspection.receive.port.name" ng-disabled="true"  type="text"  maxlength="50" name="portOfArrival" ng-required="true"/>
+                                        <span class="field-error" ng-show="asnForm.inspection.receive.port.name.$error.required && showError"
+                                              openlmis-message="missing.value"></span>
+                                    </div>
+
+                                <!--    <div class="form-field row-fluid">
+                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="true"  ng-model="inspection.receive.port.name"
                                                 openlmis-message="label.select.parent.zone">
                                             <option value=""></option>
 
-                                                <option ng-repeat="port in ports" ng-selected="inspection.portId==port.id"
+                                                <option ng-repeat="port in ports"
                                                         value="{{ port.id }}">
                                                     {{ port.name }}
                                                 </option>
@@ -387,33 +405,33 @@
                                         </select>
                                         <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <div class="span3">
-                                    <label id="codeLabel" for="code">
+                                    <label id="codeLabel" for="flightVesselNumber">
                                         <span >Flight/Vessel Number</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="inspection.vesselNumber" ng-disabled="true"  type="text" maxlength="50" name="flightVesselNumber" ng-required="true"/>
+                                        <input id ="flightVesselNumber" ng-model="inspection.receive.flightVesselNumber" ng-disabled="true"  type="text" maxlength="50" name="flightVesselNumber" ng-required="true"/>
                                         <span class="field-error" ng-show="asnForm.flightVesselNumber.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
 
                                 <div class="span4">
-                                    <label id="levelLabel">
+                                    <label for="expectedArrivalDate">
                                         <span >Expected Arrival Date</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
-                                        <input name="expectedArrivalDate"
+                                        <input id="expectedArrivalDate" name="expectedArrivalDate"
                                                 type="text"
                                                ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                                ui-date-format="yy-mm-dd"
-                                               ng-model="inspection.eta"
+                                               ng-model="inspection.receive.expectedArrivalDate"
                                                ng-disabled="true"
                                                ng-required="true"/>
                                         <span class="field-error" ng-show="asnForm.expectedArrivalDate.$error.required && showError"
@@ -423,50 +441,51 @@
                         </div>
                             <div class="form-row clearfix">
                                 <div class="span6">
-                                    <label id="codeLabel" for="code">
+                                    <label  for="inspectionNote">
                                         <span >Notes</span>
 <!--                                        <span class="label-required"> *</span>-->
                                     </label>
 
                                     <div class="form-field">
-                                        <textarea rows="3" ng-disabled="true"  style="width: 425px;" ng-model="inspection.note" ></textarea>
+                                        <textarea rows="3" ng-disabled="false"  style="width: 425px;" ng-model="inspection.inspectionNote" id="inspectionNote" ></textarea>
 
                                     </div>
                                 </div>
                                 <div class="span3">
-                                    <label id="codeLabel" for="code">
+                                    <label for="clearingAgent">
                                         <span >Clearing Agent</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="inspection.clearingAgent" name="clearingAgent" ng-disabled="true"  type="text" maxlength="50" ng-required="true"/>
+                                        <input id="clearingAgent" ng-model="inspection.receive.clearingAgent" name="clearingAgent" ng-disabled="true"  type="text" maxlength="50" ng-required="true"/>
                                         <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
                                 <div class="span4">
-                                    <label id="levelLabel">
+                                    <label id="levelLabel" for="actualArrivalDate">
                                         <span >Actual Time of Arrival</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
-                                        <input name="actualArrivalDate"
+                                        <input id="actualArrivalDate" name="actualArrivalDate"
                                                type="text"
                                                ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                                ui-date-format="yy-mm-dd"
                                                ng-disabled="true"
-                                               ng-model="inspection.ata"
+                                               ng-model="inspection.receive.actualArrivalDate"
                                                ng-required="true"/>
-
+                                        <span class="field-error" ng-show="asnForm.actualArrivalDate.$error.required && showError"
+                                              openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
                             </div>
                             </div>
                         <div class="tab-pane" id="tab3">
                             <div class="form-row clearfix">
-                                <div class="span4" ng-if="!viewMode">
+                                <div class="span4" ng-if="!viewMode" ng-show="false">
                                     <fieldset>
                                         <label for="model"><span>Document Type</span>:</label>
 
@@ -507,7 +526,7 @@
                                     </fieldset>
                                 </div>
 
-                                <div class="span8" ng-show="docLists.length > 0">
+                                <div class="span8" ng-show="inspection.receive.asn.purchaseDocuments.length > 0">
                                     <h2>List of uploaded Document(s)</h2>
 
                                     <table class="table table-striped table-bordered">
@@ -521,7 +540,7 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr ng-repeat="document in docLists">
+                                        <tr ng-repeat="document in inspection.receive.asn.purchaseDocuments">
 
                                             <td>{{$index+1}}</td>
                                             <td>
@@ -531,11 +550,6 @@
 
                                             <td style="min-width:200px !important" >
                                                 <span ng-click="downloadFile(document.fileLocation,asnCode)"><a href="" ng-show="!document.documentType.disableSelectedRows">Download ({{document.documentType.name}})</a></span>
-                                            </td>
-
-                                            <td ng-if="!viewMode">
-                                                <input type="button" class="btn btn-danger pull-right" ng-click="removeFile(document)" value="Remove">
-
                                             </td>
 
                                         </tr>
@@ -553,98 +567,120 @@
                         </div>
                         <div class="tab-pane" id="tab4">
                             <div class="form-horizontal">
-                            <div class="form-row clearfix">
-                                    <div class="span6">
-                                        <label for="receiveDate">
-                                            <span >Total box inspected</span>
-                                            <span class="label-required"> *</span>
-                                            <span class="field-error" ng-show="inspectionForm.boxTotal.$error.required && showError"
-                                                  openlmis-message="missing.value"></span>
-                                        </label>
 
-                                        <div class="form-field">
-                                            <input type="text" ng-model="boxTotal" ng-required="true" name="boxTotal">
+                                <div class="row">
+                                    <div class="span12">
+
+                                        <div class="control-group">
+                                            <label class="control-label">Total box inspected</label>
+                                            <div class="controls">
+                                                <input type="text" style="width:220px!important" ng-model="inspection.totalInspected">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="span6">
-                                                <label id="codeLabel" for="code">
-                                                    <span >What was the condition of boxes on arrival?</span>
-                                                    <span class="label-required"> *</span>
-                                                    <span class="field-error" ng-show="inspectionForm.boxCondition.$error.required && showError"
-                                                          openlmis-message="missing.value"></span>
-                                                </label>
-
-                                                <div class="form-field">
-                                                    <textarea rows="3" ng-required="true" ng-model="boxCondition" name="boxCondition" style="width: 425px;"  ></textarea>
-
-                                                </div>
-
-                                </div>
-                            </div>
-                                <div class="form-row clearfix">
-                                    <div class="span6">
-                                        <label id="codeLabel" for="code">
-                                            <span >Was quantity received as per shipping notification?</span>
-                                            <span class="label-required"> *</span>
-                                            <span class="field-error" ng-show="inspectionForm.notification.$error.required && showError"
-                                                  openlmis-message="missing.value"></span>
-                                        </label>
-
-                                        <div class="form-field">
-                                            <textarea rows="3"  style="width: 425px;" ng-required="true" name="notification" ng-model="notification"  ></textarea>
-
-                                        </div>
-                                    </div>
-                                    <div class="span6">
-
-
-                                        <label id="codeLabel" for="code">
-                                            <span >Were necessary labels attached to shipping boxes?</span>
-                                            <span class="label-required"> *</span>
-                                            <span class="field-error" ng-show="inspectionForm.label.$error.required && showError"
-                                                  openlmis-message="missing.value"></span>
-                                        </label>
-
-                                        <div class="form-field">
-                                            <textarea rows="3"  style="width: 425px;" ng-model="label" ng-required="true" name="label" ></textarea>
-
-                                        </div>
-
-
                                     </div>
                                 </div>
-
-                                <div class="form-row clearfix">
+                                <div class="row">
                                     <div class="span6">
 
+                                        <div class="control-group">
+                                            <br/>
+                                            <span style="font-size:12px">Was quantity received as per shipping notification?</span>
 
-                                        <label id="codeLabel" for="code">
-                                            <span >If not, were details of short-shipment provided prior to product arrival?</span>
-                                            <span class="label-required"> *</span>
-                                            <span class="field-error" ng-show="inspectionForm.detail.$error.required && showError"
-                                                  openlmis-message="missing.value"></span>
-                                        </label>
+                                        <span ng-init="inspection.isShipped" >
+                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShipped" ng-value="true" /> <strong>No</strong>
+                                            <input type="radio" ng-model="inspection.isShipped" ng-value="false"/>
+                                        </span>
 
-                                        <div class="form-field">
-                                            <textarea rows="3" name="detail" ng-model="detail" ng-required="true"  style="width: 425px;" ></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <label  for="notes">Comments</label>
+                                            <input type="text" ng-model="inspection.shippedComment" id="notes">
 
                                         </div>
                                     </div>
                                 </div>
 
 
+                                <div class="row" ng-show="inspection.isShipped==false">
+                                    <div class="span6">
+
+                                        <div class="control-group">
+
+                                            <span style="font-size:12px">If not, Were details of short-shipment provided prior to product arrival?</span>
+                                            <span ng-init="inspection.isShippedProvided" >
+                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShippedProvided" ng-value="true" /><strong>No</strong>
+                                            <input type="radio" ng-model="inspection.isShippedProvided" ng-value="false"/>
+                                        </span>
+
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <label class="control-label"></label>
+                                            <div>
+                                                <input type="text" ng-model="inspection.shippedProvidedComment">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <span style="font-size:12px">What was the condition of boxes on arrival?</span>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <label class="control-label"></label>
+                                            <div>
+                                                <input type="text" ng-model="inspection.conditionOfBox">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <span style="font-size:12px">Were necessary labels attached to shipping boxes?</span>
+                                        </div>
+                                    </div>
+                                    <div class="span6">
+
+                                        <div class="control-group">
+                                            <label class="control-label"></label>
+                                            <div>
+                                                <input type="text" ng-model="inspection.labelAttachedComment">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                        </div>
 
                     </div>
                 </div>
+
+                </div>
+
 
 
                 <!-- /form-group -->
 
             </div>
             <div form-toolbar id="action_buttons" class="action-buttons">
-                <div class="button-row">
+                <div class="form-cell button-row">
                     <input id="saveButton" type="submit" ng-if="!viewMode" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="save()"/>
+                           openlmis-message="button.save" ng-click="save('DRAFT')"/>
                     <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"
                            value="Print"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
@@ -655,8 +691,8 @@
 
 
 
-                    <input  type="button" class="btn btn-primary pull-right"
-                             ng-if="!viewMode" ng-click="save()" value="Finalize Inspection" />
+                    <input  type="button" class="btn btn-primary pull-right" ng-click="save('RELEASED')"
+                             ng-if="!viewMode" value="Finalize Inspection" style="margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
@@ -667,19 +703,20 @@
     </form>
 
     <!--Lot Modal-->
-    <div id="popup-box"  ng-form="inspectLotForm"  modal="inspectLotModal" options="{'backdrop':'static', 'escape':false}" style="width:80% !important;margin-left:-40% !important">
+    <div id="popup-box"  ng-form="inspectLotForm"  modal="inspectLotModal" options="{'backdrop':'static', 'escape':false}" style="width:97% !important;margin-left:-49% !important">
         <div class="modal-header">
             <div class="row-fluid">
                 <div class="span4">
                     <h3>Inspect Lots</h3>&nbsp;&nbsp;
                 </div>
                 <div class="span4">
-                    <h3><span openlmis-message="label.product"></span>:BCG</h3>
+                    <h3><span openlmis-message="label.product"></span>:{{lineItem.product.primaryName}}</h3>
                 </div>
             </div>
         </div>
         <div class="modal-body">
-            <div  class="alert alert-danger" ng-show="totalQtyError">
+
+            <div  class="alert alert-danger" ng-show="lotError">
                 {{lotsWithError}} : Passed Qty + Failed Qty should be equal to Counted Qty
             </div>
 
@@ -690,202 +727,227 @@
             <div  class="alert alert-danger" ng-show="lotsWithVvmError">
                 {{lotsWithVvmError}} : VVM Status not selected!
             </div>
+
+
+<!--
+            <p ng-show="lotError"><strong>The following Batches has errors: </strong> <span style="color:red">{{lotsWithError}}</span>  <strong>Please revise them </strong></p>
+-->
+
+
             <table  class="table table-bordered receive">
                 <thead>
                 <tr class="gradient-header">
                     <th>Lot</th>
                     <th>Expiry Date</th>
-                    <th><span>Counted Qty</span></th>
-                    <th>Passed Qty</th>
-                    <th>Pass Location</th>
+                    <th >VVM Status </th>
+                    <th>Received Qty</th>
+                    <th >Passed Qty</th>
+                    <th ng-show="false">Pass Location</th>
                     <th>Failed Qty</th>
-                    <th>Fail Location</th>
-                    <th>Fail Reason</th>
-                    <th>VVM Status </th>
+                    <th >Fail Location</th>
+                    <th >Fail Reason</th>
 
 
                 </tr>
                 </thead>
-                <tbody>
-                <tr ng-repeat="lot in inspection.product.lots">
-                    <td ng-bind="lot.code">
+                <tbody ng-repeat="lot in lineItem.lots">
+                <tr>
+                    <td>
+                        <span>{{lot.lotNumber}}</span>
+
                     </td>
-                    <td ng-bind="lot.expiryDate"></td>
-                    <td class="cell-general">
-                        <input type="text" ng-model="lot.quantity" ng-disabled="true" numeric-validator="positiveInteger" style="width:99px">
+                    <td><span>{{lot.expiryDate | date:'dd-MM-yyyy' }}</span></td>
+                    <td>
+                        <!--                 <select style="max-width:130px !important;min-width:130px !important" ui-select2
+                                                 ng-options="i.value as i.name for i in vvmStatusList" name="vvm_0"
+                                                  ng-model="lot.vvmStatus" maxlength="8"
+                                                 type="text">
+                                             <option value="" openlmis-message="placeholder.select.vvmStatus"></option>
+                                         </select>-->
+
+
+                        <select ui-select2="{width: '90%'}" ng-model="lot.vvmStatus" ng-required="true">
+                            <option value=""></option>
+                            <option ng-repeat="vvm in vvmStatusList"
+                                    value="{{ vvm.id }}"
+                                    ng-selected="vvmStatus==vvm.id"
+                            >
+                                {{ vvm.name }}
+                            </option>
+                        </select>
+
+                        <span class="field-error" ng-show="lot.vvmStatus=='' "
+                              openlmis-message="missing.value"></span>
+
                     </td>
-                    <td class="cell-general">
-                        <input type="text" numeric-validator="positiveInteger" style="width:99px" ng-model="lot.passedQty">
-                    </td>
+                    <td><span><input  ng-disabled="true" type="text" name="receivedQuantity"  ng-model="lot.receivedQuantity"/></span></td>
+                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.passQuantity" />
+
+                          <span class="field-error" ng-show="inspectLotForm.inspectionDate.$error.required && showError"
+                                openlmis-message="missing.value"></span>
+
+                    </span></td>
+                    <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.failQuantity"/>
+
+                          <span class="field-error" ng-show="inspectionForm.inspectionDate.$error.required && showError"
+                                openlmis-message="missing.value"></span>
+
+                    </span></td>
+
                     <td>
 
-                        <select  ui-select2
-                                 style="width:80px !important"
-                                 ng-model="lot.passedLocation"
-                        >
+                        <select ui-select2="{width: '100%'}" ng-model="lot.failLocationId">
                             <option value=""></option>
-
                             <option ng-repeat="location in locations"
-                                    value="{{ location.id }}">
-                                {{ location.code}}
+                                    value="{{ location.id }}"
+                                    ng-selected="failLocationId==location.id"
+                            >
+                                {{ location.name }}
                             </option>
                         </select>
+
+
                     </td>
-                    <td><input type="text" numeric-validator="positiveInteger" style="width:99px" ng-model="lot.failedQty"></td>
+                    <td ng-show="false">454</td>
                     <td>
-                        <select  ui-select2
-                                 style="width:80px !important"
-                                 ng-model="lot.failedLocation"
-                        >
-                            <option value=""></option>
 
-                            <option ng-repeat="location in locations"
-                                    value="{{ location.id }}">
-                                {{ location.code}}
+                        <select ui-select2="{width: '100%'}" ng-model="lot.failReason">
+                            <option value=""></option>
+                            <option ng-repeat="reason in failReasons"
+                                    value="{{ reason.id }}"
+                                    ng-selected="failReason==reason.id"
+                            >
+                                {{ reason.name }}
                             </option>
                         </select>
 
                     </td>
-                    <td>Fail Reason</td>
-                    <td>
-                        <select  ui-select2
-                                 style="width:80px !important"
-                                 ng-model="lot.vvm"
-                        >
-                            <option value=""></option>
 
-                            <option ng-repeat="vvm in vvms"
-                                    value="{{ vvm.status }}">
-                                {{ vvm.status}}
-                            </option>
-                        </select>
-                    </td>
+
 
                 </tr>
                 </tbody>
             </table>
 
-<div class="form-row clearfix">
-    <div class="form-cell" >
-        <label class="checkbox inline">  Coolant Type Available:</label>
-        <label class="checkbox inline">
-            <input type="checkbox" > Dry Ice
-        </label>
-        <label class="checkbox inline">
-            <input type="checkbox"> Icepacks
-        </label>
-<!--        <label class="checkbox inline">-->
-<!--            <input type="checkbox"> No Coolant-->
-<!--        </label>-->
-
-    </div>
-</div>
-
-            <div class="form-row clearfix">
-
-                    <label class="checkbox inline">  Temperature Monitor Present<span class="label-required"> *</span>: </label>
-                    <label class="checkbox inline">
-                     <input type="checkbox" > VVM
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox"> Cold-chain Card
-                    </label>
-                    <label class="checkbox inline">
-                        <input type="checkbox"> Electronic devices
-                    </label>
-
-                    <label class="checkbox inline">
-                      Other Type  <input type="text">
-                    </label>
-
-
-            </div>
-
-
             <div class="form-row clearfix">
                 <div class="form-cell" >
-                    <label class="checkbox inline">  Any Problem Observed? </label>
+                    <label class="checkbox inline">  Coolant Type Available: </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="problem" >
+                        <input type="checkbox" ng-model="lineItem.dryIceFlag"> Dry Ice
                     </label>
-
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="lineItem.icePackFlag"> Icepacks
+                    </label>
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="lineItem.noCoolantFlag"> No Coolant
+                    </label>
 
                 </div>
             </div>
 
-<div ng-show="problem">
-    <h6>
-        PROVIDE DELOW DETAILS OF STATUS ONLY WHEN PROBLEMS ARE OBSERVED
-    </h6>
-    <p>If different alarms are recorded, please provide comments in the Inspection findings Section</p>
+            <div class="form-row clearfix">
+                <div class="form-cell" >
+                    <label class="checkbox inline">  Temperature Monitor Present: </label>
+                    <label class="checkbox inline">
+                     <input type="checkbox" ng-model="lineItem.vvmFlag" > VVM
+                    </label>
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="lineItem.ccCardFlag"> Cold-chain Card
+                    </label>
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="lineItem.electronicDeviceFlag"> Electronic devices
+                    </label>
 
-    <table  class="table table-bordered receive">
-        <!--                <thead>-->
-        <tr class="gradient-header">
-            <th rowspan="2" >Box Number</th>
-            <th  rowspan="2"><span>Lot Number</span></th>
-            <th colspan="4" >Alarm in electronic device</th>
-            <th colspan="4">Cold-chain monitor</th>
-        </tr>
-        <!--                </thead>-->
-        <!--                <tbody>-->
-        <tr class="gradient-header">
+                    <label class="checkbox inline">
+                      Other Type  <input type="text" ng-model="lineItem.otherMonitor">
+                    </label>
 
-            <th>>=45C</th>
-            <th>>=30C</th>
-            <th>>=10C</th>
-            <th><=0.5C</th>
-            <th>A</th>
-            <th>B</th>
-            <th>C</th>
-            <th>D</th>
-
-        </tr>
-        <tr ng-repeat="lot in inspection.product.lots">
-            <td style="width:99px">
-                <input type="text">
-            </td>
-            <td ng-bind="lot.code">
-
-            </td>
-            <td>
-                <input type="checkbox">
-            </td> <td>
-            <input type="checkbox">
-        </td> <td>
-            <input type="checkbox">
-        </td> <td>
-            <input type="checkbox">
-        </td> <td>
-            <input type="checkbox">
-        </td> <td>
-            <input type="checkbox">
-        </td>
-            <td>
-                <input type="checkbox">
-            </td>
-            <td>
-                <input type="checkbox">
-            </td>
-
-        </tr>
-
-        <!--                </tbody>-->
-    </table>
-
-</div>
-            <div class="modal-footer">
-                <input type="button" id="issueSubmit" class="btn btn-primary save-button"
-                       ng-click="inspectLot()"
-                       ng-disabled="newLotForm.$invalid"
-                       value="Done"/>
-                <input type="button" ng-click="closeInspectLotModal();" class="btn btn-cancel"
-                       openlmis-message="button.cancel"/>
+                </div>
             </div>
 
-        </div>
-</div>
 
+            <h6 ng-show="false">
+                PROVIDE DELOW DETAILS OF STATUS ONLY WHEN PROBLEMS ARE OBSERVED
+            </h6>
+<!--
+            <p>If different alarms are recorded, please provide comments in the Inspection findings Section</p>
+-->
+
+            <table ng-show="false" class="table table-bordered receive">
+<!--                <thead>-->
+                <tr class="gradient-header">
+                    <th rowspan="2" >Box Number</th>
+                    <th  rowspan="2"><span>Lot Number</span></th>
+                    <th colspan="4" >Alarm in electronic device</th>
+                    <th colspan="4">Cold-chain monitor</th>
+                </tr>
+<!--                </thead>-->
+<!--                <tbody>-->
+                <tr class="gradient-header">
+
+                    <th>>=45C</th>
+                    <th>>=30C</th>
+                    <th>>=10C</th>
+                    <th><=0.5C</th>
+                    <th>A</th>
+                    <th>B</th>
+                    <th>C</th>
+                    <th>D</th>
+
+                </tr>
+                <tr>
+                    <td>
+                        <input type="text">
+                    </td>
+                    <td>
+                        <select ui-select2="{width: '100%'}"
+
+                                >
+                            <option value=""></option>
+                            <option ng-repeat="supplier in suppliers"
+                                    value="{{ supplier.id }}"
+                                    ng-selected="supplierId==supplier.id"
+                            >
+                                {{ supplier.name }}
+                            </option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="checkbox">
+                    </td> <td>
+                        <input type="checkbox">
+                    </td> <td>
+                        <input type="checkbox">
+                    </td> <td>
+                        <input type="checkbox">
+                    </td> <td>
+                        <input type="checkbox">
+                    </td> <td>
+                        <input type="checkbox">
+                    </td>
+                    <td>
+                        <input type="checkbox">
+                    </td>
+                     <td>
+                        <input type="checkbox">
+                    </td>
+
+                </tr>
+
+<!--                </tbody>-->
+            </table>
+
+        </div>
+        <div class="modal-footer">
+            <input type="button" id="issueSubmit" class="btn btn-primary save-button"
+                   ng-click="inspectLot(lineItem)"
+                   ng-disabled="newLotForm.$invalid"
+                   value="Done"/>
+            <input type="button" ng-click="closeInspectLotModal();" class="btn btn-cancel"
+                   openlmis-message="button.cancel"/>
+        </div>
+
+    </div>
 
     <!--Lot Modal Ends-->
 </div>

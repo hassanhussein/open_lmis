@@ -11,8 +11,8 @@
 var locationModule = angular.module('wms', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-         when('/search', {controller: WarehouseManagementController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
-          when('/create-location', {controller: WarehouseManagementController, templateUrl: 'partials/create.html', resolve: WarehouseManagementController.resolve}).
+         when('/search', {controller: SearchWarehouseController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
+          when('/create-ware-house', {controller: WarehouseManagementController, templateUrl: 'partials/create.html', resolve: WarehouseManagementController.resolve}).
           when('/edit/:id', {controller: WarehouseManagementController, templateUrl: 'partials/create.html', resolve: WarehouseManagementController.resolve}).
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
