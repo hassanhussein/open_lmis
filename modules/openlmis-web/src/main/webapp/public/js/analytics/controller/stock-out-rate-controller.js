@@ -57,15 +57,16 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
 
                 if (stockOutPercentage == 100) {
                     this.color = '#EC6B58'; //Red
-                } else if (stockOutPercentage < 100 && stockOutPercentage > 70) {
+                } else if (stockOutPercentage < 100 && stockOutPercentage > 50) {
                     this.color = '#F58F84'; //Mid-Red
-                } else if (stockOutPercentage <= 70 && stockOutPercentage > 40) {
-                    this.color = '#5D8CAE'; //Blue
-                } else if (stockOutPercentage <= 40 && stockOutPercentage > 0) {
-                    this.color = '#5DBCD2'; //Mid Blue
-                } else if (stockOutPercentage === 0) {
-                    this.color = '#1BBB9C'; //Green
+                } else if (stockOutPercentage <= 50 && stockOutPercentage > 20) {
+                    this.color = '#65c6bb'; //Mid Green
+                } else if (stockOutPercentage <= 20 ) {
+                    this.color = '#2abb9b'; //Green
                 }
+//                else if (stockOutPercentage === 0) {
+//                    this.color = '#1BBB9C'; //Green
+//                }
             } else {
                 this.y = 0;
                 this.color = '#b2bec3';
@@ -113,20 +114,15 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                                     this.stockAvailabilityPercentage = 100 - stockOutPercentage;
                                     this.reported = reg_obj.reported;
 
-
-                                    if (stockOutPercentage == 100) {
-                                        this.color = '#EC6B58'; //Red
-                                    } else if (stockOutPercentage < 100 && stockOutPercentage > 70) {
-                                        this.color = '#F58F84'; //Mid-Red
-                                    } else if (stockOutPercentage <= 70 && stockOutPercentage > 40) {
-                                        this.color = '#5D8CAE'; //Blue
-
-                                    } else if (stockOutPercentage <= 40 && stockOutPercentage > 0) {
-                                        this.color = '#5DBCD2'; //Mid Blue
-                                    } else if (stockOutPercentage === 0) {
-                                        this.color = '#1BBB9C'; //Green
-                                    }
-                                } else {
+                              if (stockOutPercentage == 100) {
+                                   this.color = '#EC6B58'; //Red
+                               } else if (stockOutPercentage < 100 && stockOutPercentage > 50) {
+                                   this.color = '#F58F84'; //Mid-Red
+                               } else if (stockOutPercentage <= 50 && stockOutPercentage > 20) {
+                                   this.color = '#65c6bb'; //Mid Green
+                               } else if (stockOutPercentage <= 20 ) {
+                                   this.color = '#2abb9b'; //Green
+                               } }else {
                                     this.y = 0;
                                     this.color = '#b2bec3';
                                     this.value = 0;
@@ -181,22 +177,15 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                         name: 'Total Stockout'
                     }, {
                         color: '#F58F84',
-                        name: '<40 % Stock Availability'
+                        name: '<50 % Stock Availability'
                     },
                     {
-                        color: '#5D8CAE',
-                        name: '40% - 70% Stock Availability'
+                        color: '#4ecdc4',
+                        name: '51% - 80% Stock Availability'
                     },
                     {
-                        color: '#5DBCD2',
-                        name: '<70% Stock Availability'
-                    },
-                    {
-                        color: '#1BBB9C',
-                        name: '100% Stock Availability'
-                    }, {
-                        color: '#b2bec3',
-                        name: 'Never Reported'
+                        color: '#2abb9b', //'#5DBCD2',
+                        name: '>80% Stock Availability'
                     }
                 ]
             },
