@@ -1893,3 +1893,7 @@ services.factory('GetFacilityStockStatusSummaryByPeriodData', function ($resourc
 services.factory('GetVaccineDistrictCoverageForMap', function ($resource) {
     return $resource('/vaccine/dashboard/GetVaccineDistrictCoverageForMap.json', {}, {});
 });
+
+services.factory('GetLocationSummary', function ($resource) {
+    return $resource('/location-lookup.json', {}, {});
+});

@@ -12,7 +12,7 @@
  *
  */
 function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
-                           $rootScope,UploadFile,$http,docService, $timeout){
+                           $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary){
 
 
  $scope.$parent.receiveSaved = false;
@@ -21,6 +21,15 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
 
     function getAllLookups(){
+
+    GetLocationSummary.get({}, function(data){
+
+     $scope.locationList = data.locationList;
+
+     console.log(data.locationList);
+
+    });
+
      AllVaccineInventoryConfigurations.get(function(data) {
                     $scope.configurations = data;
                     $scope.userPrograms=data.programs;
