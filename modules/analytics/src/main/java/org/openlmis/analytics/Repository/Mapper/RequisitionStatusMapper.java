@@ -111,14 +111,24 @@ public interface RequisitionStatusMapper {
 
 
 
-    @Select("select  rsf.name,vwd.district_id,vwd.district_name,vwd.region_name,vwd.zone_name, sum(rsf.quantity) as total from requisition_source_of_funds rsf \n" +
+    @Select("select  rsf.name,vwd.district_id,vwd.district_name,vwd.region_name,vwd.zone_name, sum(rsf.quantity) as total  from requisition_source_of_funds  as rsf \n" +
             "join requisitions r on r.id=rsf.rnrid \n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join geographic_zones gl on gl.id=f.geographiczoneid\n" +
-            "join vw_districts vwd on vwd.district_id=f.geographiczoneid \n" +
-            "where r.programid= #{program} and pp.id= #{period} \n" +
-            "group by  vwd.region_name, vwd.district_name,vwd.zone_name, vwd.district_id, rsf.name order by vwd.region_name, total desc")
+            "join vw_districts vwd on vwd.district_id=f.geographiczoneid\n" +
+            "where r.programid= #{program} and pp.id= #{period}\n" +
+            "group by  vwd.region_name, vwd.district_name,vwd.zone_name, vwd.district_id, rsf.name \n" +
+            "\n" +
+            "union\n" +
+            "\n" +
+            "select  'Received in Kind',vwd.district_id,vwd.district_name,vwd.region_name,vwd.zone_name, sum((COALESCE(r.fullsupplyitemssubmittedcost,0) + COALESCE(r.nonfullsupplyitemssubmittedcost,0)) - COALESCE(r.totalsources,0) ) as total  from requisitions  as r \n" +
+            "join processing_periods pp on pp.id=r.periodid\n" +
+            "join facilities f on f.id=r.facilityid\n" +
+            "join geographic_zones gl on gl.id=f.geographiczoneid\n" +
+            "join vw_districts vwd on vwd.district_id=f.geographiczoneid\n" +
+            "where r.programid= #{program} and pp.id= #{period}\n" +
+            "group by  vwd.region_name, vwd.district_name,vwd.zone_name, vwd.district_id")
     List<HashMap<String,Object>>getSourceOfFundsByLocation(@Param("program") Long program,
                                                            @Param("period") Long period);
 }
