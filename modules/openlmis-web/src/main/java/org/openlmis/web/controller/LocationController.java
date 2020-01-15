@@ -48,7 +48,7 @@ public class LocationController extends BaseController {
         return response;
     }
     @RequestMapping(value = "/location-lookup", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_LOCATION')")
+   // @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_LOCATION')")
     public ResponseEntity<OpenLmisResponse> getLocationLookup() {
         List<Location> locations = service.getAllLocations();
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("locationList", locations);
