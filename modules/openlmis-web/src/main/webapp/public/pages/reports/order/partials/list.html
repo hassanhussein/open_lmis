@@ -9,6 +9,38 @@
 margin: 0px 2px 0;
 
 }
+
+
+.panel-group .panel-heading a:after {
+    content: '' !important;
+
+}
+
+
+ #popupModel {
+
+        width: 1000px;
+  bottom: -10px !important;
+
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+
+    }
+    .black {
+     color:'black'
+    }
+    .red {
+    color:'red'
+    }
+
+    .modal {
+
+     margin-top: '' !important;;
+     margin-left: '' !important;;
+
+
+    }
 </style>
 
 
@@ -18,12 +50,166 @@ margin: 0px 2px 0;
 
     <h3 id="podPageTitle"><span></span></h3>
     <div class="row-fluid span12">
-        <div class="row-fluid">
-            <div class="form-row pull-left" >
-                <div id="tree"></div>
-            </div>
-        </div>
+       <div class="span5">
+           <div class="row-fluid">
+               <div class="form-row pull-left" >
+                   <div id="tree"></div>
+
+
+               </div>
+           </div>
+
+       </div>
+
+       <div class="span7">
+           <div class="row-fluid">
+               <h2  ng-show="mappedFacilities.length > 0"><span>Order Fill Rate Details</span></h2>
+
+               <div  ng-repeat="row in mappedFacilities" ng-show="mappedFacilities.length > 0">
+
+                   <div class="panel-group">
+                       <div class="panel panel-default">
+                           <div class="panel-heading">
+                               <h4 class="panel-title" style="height:30px !important">
+                                   <a  href="#myButton{{$index}}">   <span>Facility Name: {{row.facilityName}}</span>, <span>District: {{row.district}}</span>, <!--<span>MSD Zone: {{row.msdZone}}</span>  ,--> <span style="font-style: italic;">Aggregate Order Fill Rate: <strong>{{calculateAverageItemFillRate(row.orderList)}}%</strong></span></a>
+                               </h4>
+                           </div>
+                           <div id="myButton{{$index}}" class="panel-collapse collapse in">
+                               <div class="panel-body">
+                                   <div class="col-xs-12">
+
+                                       <table class="table-bordered table table-striped" ng-table="">
+                                           <thead style="color:gray">
+                                           <th>#</th>
+                                           <th>eLMIS Order Number</th>
+                                           <th>Order Fill Rate</th>
+                                           <th>Period Name</th>
+                                           <th>Order Type</th>
+                                           <th>MSD Invoice #</th>
+                                           <th>Invoice Date</th>
+                                           <th></th>
+
+                                           </thead>
+                                           <tbody ng-repeat="order in row.orderList">
+
+                                           <tr>
+                                               <td>{{$index + 1}} </td>
+                                               <td> {{order.orderNumber}}</td>
+                                               <td style="text-align: right"><span>{{((order.receivedQuantity/order.approvedQuantity )*100).toFixed(0)}} %</span></td>
+                                               <td>{{order.periodName}}</td>
+                                               <td>{{(order.emergency)?'Emergency':'Regular'}}</td>
+                                               <td>{{order.invoiceNumber}}</td>
+                                               <td>{{order.invoiceDate | date}}</td>
+
+                                               <td> <span style="width:5px;">
+                                            <button class="btn btn-default text-blue" type="button"
+                                                    ng-click="getDetails(order.rnrId, row)">Item Fill Rate
+                                            </button></span>
+                                               </td>
+                                           </tr>
+                                           </tbody>
+                                       </table>
+
+
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+               <div ng-show="mappedFacilities.length <= 0"> No data to show under selected filters
+
+               </div>
+
+
+
+           </div>
+
+       </div>
+
     </div>
 
+
+</div>
+
+
+
+<div id="popupModel" modal="successModal">
+
+    <div class="modal-header">
+        <h3 style="text-align: center;">Facility Name:{{ allTheData.facilityName }},  Order Number: {{allTheData.orderList[0].orderNumber}}, Invoice Number # : {{allTheData.orderList[0].invoiceNumber}}</h3>
+
+    </div>
+    <div class="modal-body">
+
+
+        <div class="row-fluid">
+            <div class="span12">
+
+                <table ng-show="allTheData.items.length > 0" class="table-bordered table table-striped pull-right"
+                       ng-table="tableParams">
+                    <tbody>
+                    <tr ng-repeat="row in allTheData.items">
+
+                        <td data-title="'#'" class="number" style="width:20px">{{ $index+1 }}</td>
+                        <td data-title="getLocalMessage('label.product.code')" style="width:80px" sortable="productcode">{{row.substitutes.length}}{{
+                            row.elmisproductCode }}
+                        </td>
+                        <td data-title="getLocalMessage('label.product.name')" style="width:30%" sortable="product">{{ row.product }}
+                        </td>
+                        <td data-title="getLocalMessage('header.quantity.ordered')" class="number" style="width:80px"
+                            sortable="approved">{{ row.quantityApproved | number }}
+                        </td>
+                        <td data-title="getLocalMessage('Quantity Received')" class="number" style="width:80px"
+                            sortable="receipts">{{ row.quantityShipped | number }}
+                        </td>
+                        <td data-title="getLocalMessage('label.item.fill.rate')" class="number"
+                            style="width:120px" sortable="item_fill_rate">
+                            <div ng-style="getColor(getItemFillRate(row))" >
+                                {{ getItemFillRate(row) | number}} %
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!--     <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="getDetails()">
+                   <option value="10">10 per page</option>
+                   <option value="20">20 per page</option>
+                   <option value="50">50 per page</option>
+                   <option value="100">100 per page</option>
+               </select>
+
+               <div class="pull-right">
+                   <pagination total-items="totalItems" page="currentPage" max-size="10"
+                               items-per-page="pagination.limit"
+                               direction-links="false" class="pagination-sm"></pagination>
+               </div>-->
+
+
+                <div class="clearfix"></div>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+    <div class="modal-footer">
+             <span class="pull-left" style="background-color:#4897BA !important;">
+    <a style="background-color:#4897BA !important;"
+
+       id="xls-button" href="" export export-data="allTheData.items"
+       export-keys="['elmisproductCode','product','quantityApproved','quantityShipped']"
+       export-headers="['Product Code','Product Name','Quantity Ordered','Quantity Received']"
+
+       class="btn-small btn-primary"
+       target="_blank">Export</a>
+         </span>
+        <a class="btn btn-primary pull-right" ng-click="successModal=false;">Close</a>
+
+    </div>
 
 </div>
