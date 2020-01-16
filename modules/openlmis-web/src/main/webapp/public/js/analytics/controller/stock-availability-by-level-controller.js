@@ -87,7 +87,7 @@ var availableData =  [
 
                         ];
 
-    $scope.title_stock_by_level = 'Stock availability by Level for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
+    $scope.title_stock_by_level = 'Stock availability for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
 
     $scope.showTheChart(availableData,'','',categories,availableTracer,availableAll);
      }

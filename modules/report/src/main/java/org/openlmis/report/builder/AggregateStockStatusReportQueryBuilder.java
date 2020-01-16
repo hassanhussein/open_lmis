@@ -93,6 +93,7 @@ public class AggregateStockStatusReportQueryBuilder {
         WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
         WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));
         WHERE("li.skipped = false ");
+        WHERE("r.emergency = false");
         /*  if(filter.getFacility()!=null&&filter.getFacility()!=0) {
             WHERE(facilityIsFilteredBy("f.id"));
         }*/
