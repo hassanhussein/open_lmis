@@ -23,4 +23,6 @@ public class ReceiveLot extends BaseModel {
     private ReceiveLineItem receiveLineItem;
     private String manufacturerName;
 
+    private Location location;
+
 }
