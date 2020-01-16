@@ -59,7 +59,7 @@ if($scope.$parent.messageFlag) {
 
 $scope.searchOptions = [
   {value: "poNumber", name: "PO Number"},
-  {value: "asnNumber", name: "ASN Number"}
+  {value: "receiptNumber", name: "Receipt Number"}
   ];
 
 

@@ -54,22 +54,7 @@
                         </div>
                     </div>
 
-                    <div class="span3">
-                        <label for="receiptDate">
-                            <span>ASN Receipt Date</span>
 
-                        </label>
-
-                        <div class="form-field">
-                            <input id="receiptDate"
-                                   ng-disabled="true"
-                                    type="text"
-                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
-                                   ui-date-format="yy-mm-dd"
-                                   ng-model="inspection.receive.asn.asndate" name="asnReceiveDate" />
-
-                        </div>
-                    </div>
                     <div class="span3">
                         <label for="receiveDate">
                             <span >Receive Date</span>
@@ -104,12 +89,12 @@
                 <div class="form-row clearfix">
                     <div class="span3">
                         <label for="asnNumber">
-                            <span >Asn Number</span>
+                            <span >Invoice Number</span>
 
                         </label>
 
                         <div class="form-field">
-                            <input id="asnNumber" ng-model="inspection.receive.asn.asnnumber" name="asnNumber" ng-disabled="true" type="text" maxlength="50" />
+                            <input id="asnNumber" ng-model="inspection.receive.asn.asnnumber" name="invoiceNumber" ng-disabled="true" type="text" maxlength="50" />
 
                         </div>
                     </div>
@@ -335,8 +320,8 @@
                                             Unit Of Measure
                                             </th>
                                             <th  class="col-add-lot" style="width:100px !important;max-width:100px !important;">Received Qty</th>
-                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Passed Qty</th>
-                                            <th  class="col-add-lot" style="width:100px !important; max-width:100px !important">Failed Qty</th>
+                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" ng-if="lotInspected" >Passed Qty</th>
+                                            <th  class="col-add-lot" style="width:100px !important; max-width:100px !important" ng-if="lotInspected">Failed Qty</th>
                                             <th ng-if="!viewMode" style="width:100px !important;max-width:100px !important" class="col-add-lot"><span>Inspect</span></th>
 
                                         </tr>
@@ -350,8 +335,8 @@
                                             <td style="padding-left: 15px;">{{lineItem.product.dosageUnit.code}}</td>
                                             <td style="text-align:right"><span ng-bind="lineItem.quantityCounted | number"></span></td>
                                             <td ng-show="false">{{lineItem.quantityCounted}}</td>
-                                            <td style="text-align:right">{{lineItem.passQuantity | number}}</td>
-                                            <td style="text-align:right">{{lineItem.failQuantity | number }}</td>
+                                            <td style="text-align:right" ng-if="lotInspected">{{lineItem.passQuantity | number}}</td>
+                                            <td style="text-align:right" ng-if="lotInspected">{{lineItem.failQuantity | number }}</td>
                                             <td>
                                                 <a href="" ng-click="showInspectLotModal(lineItem)" class="btn btn-link">Lots</a>
                                             </td>
@@ -740,9 +725,9 @@
                     <th>Lot</th>
                     <th>Expiry Date</th>
                     <th >VVM Status </th>
+                    <th >No. of Boxes </th>
                     <th>Received Qty</th>
-                    <th >Passed Qty</th>
-                    <th ng-show="false">Pass Location</th>
+                    <th>Storage Location</th>
                     <th>Failed Qty</th>
                     <th >Fail Location</th>
                     <th >Fail Reason</th>
@@ -780,6 +765,7 @@
                               openlmis-message="missing.value"></span>
 
                     </td>
+                    <td>45</td>
                     <td><span><input  ng-disabled="true" type="text" name="receivedQuantity"  ng-model="lot.receivedQuantity"/></span></td>
                     <td><span><input type="text" numeric-validator="positiveInteger" ng-required="true" ng-model="lot.passQuantity" />
 
@@ -866,53 +852,55 @@
             </div>
 
 
-            <h6 ng-show="false">
-                PROVIDE DELOW DETAILS OF STATUS ONLY WHEN PROBLEMS ARE OBSERVED
-            </h6>
-<!--
-            <p>If different alarms are recorded, please provide comments in the Inspection findings Section</p>
--->
+            <div class="form-row clearfix">
+                <div class="form-cell" >
+                    <label class="checkbox inline">  Any Problem Observed? </label>
+                    <label class="checkbox inline">
+                        <input type="checkbox" ng-model="problem" >
+                    </label>
 
-            <table ng-show="false" class="table table-bordered receive">
-<!--                <thead>-->
-                <tr class="gradient-header">
-                    <th rowspan="2" >Box Number</th>
-                    <th  rowspan="2"><span>Lot Number</span></th>
-                    <th colspan="4" >Alarm in electronic device</th>
-                    <th colspan="4">Cold-chain monitor</th>
-                </tr>
-<!--                </thead>-->
-<!--                <tbody>-->
-                <tr class="gradient-header">
 
-                    <th>>=45C</th>
-                    <th>>=30C</th>
-                    <th>>=10C</th>
-                    <th><=0.5C</th>
-                    <th>A</th>
-                    <th>B</th>
-                    <th>C</th>
-                    <th>D</th>
+                </div>
+            </div>
 
-                </tr>
-                <tr>
-                    <td>
-                        <input type="text">
-                    </td>
-                    <td>
-                        <select ui-select2="{width: '100%'}"
+            <div ng-show="problem">
+                <h6>
+                    PROVIDE DELOW DETAILS OF STATUS ONLY WHEN PROBLEMS ARE OBSERVED
+                </h6>
+                <p>If different alarms are recorded, please provide comments in the Inspection findings Section</p>
 
-                                >
-                            <option value=""></option>
-                            <option ng-repeat="supplier in suppliers"
-                                    value="{{ supplier.id }}"
-                                    ng-selected="supplierId==supplier.id"
-                            >
-                                {{ supplier.name }}
-                            </option>
-                        </select>
-                    </td>
-                    <td>
+                <table  class="table table-bordered receive">
+                    <!--                <thead>-->
+                    <tr class="gradient-header">
+                        <th rowspan="2" >Box Number</th>
+                        <th  rowspan="2"><span>Lot Number</span></th>
+                        <th colspan="4" >Alarm in electronic device</th>
+                        <th colspan="4">Cold-chain monitor</th>
+                    </tr>
+                    <!--                </thead>-->
+                    <!--                <tbody>-->
+                    <tr class="gradient-header">
+
+                        <th>>=45C</th>
+                        <th>>=30C</th>
+                        <th>>=10C</th>
+                        <th><=0.5C</th>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>C</th>
+                        <th>D</th>
+
+                    </tr>
+                    <tr ng-repeat="lot in inspection.product.lots">
+                        <td style="width:99px">
+                            <input type="text">
+                        </td>
+                        <td ng-bind="lot.code">
+
+                        </td>
+                        <td>
+                            <input type="checkbox">
+                        </td> <td>
                         <input type="checkbox">
                     </td> <td>
                         <input type="checkbox">
@@ -922,20 +910,20 @@
                         <input type="checkbox">
                     </td> <td>
                         <input type="checkbox">
-                    </td> <td>
-                        <input type="checkbox">
                     </td>
-                    <td>
-                        <input type="checkbox">
-                    </td>
-                     <td>
-                        <input type="checkbox">
-                    </td>
+                        <td>
+                            <input type="checkbox">
+                        </td>
+                        <td>
+                            <input type="checkbox">
+                        </td>
 
-                </tr>
+                    </tr>
 
-<!--                </tbody>-->
-            </table>
+                    <!--                </tbody>-->
+                </table>
+
+            </div>
 
         </div>
         <div class="modal-footer">

@@ -1,6 +1,8 @@
 function InspectionController($scope,$window, inspection, UpdateInspection,$location,vvmList,$timeout){
 
+$scope.lotInspected=false;
    $scope.inspection = inspection;
+//   console.log(inspection);
    $scope.vvmStatusList = vvmList;
    console.log(inspection);
 
