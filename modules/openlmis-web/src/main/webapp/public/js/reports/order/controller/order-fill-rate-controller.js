@@ -33,11 +33,11 @@ function OrderFillRateControllerFunc($scope,GeoDistrictTree,AggregateItemFillRat
            var districtMappedData = _.map(groupByDistrictData, function(orders, index){
 
            var mapFacilities = _.map(orders, function(dt, ind){
-              return {'text':dt.facilityName+' : <strong>Aggregate Order Fill Rate</strong>: <strong>'+$scope.calculateAverageItemFillRate([dt])+'%</strong>','orderId':dt.rnrId,'facilityName':dt.facilityName}
+              return {'text':dt.facilityName+' : <strong>Aggregate Order Fill Rate</strong>: <strong>'+$scope.calculateAverageItemFillRate([dt])+'%</strong>','orderId':dt.rnrId,'facilityName':dt.facilityName};
            });
 
            var facilities  = _.each(orders, function(data){
-           return {'text':data.facilityName, 'nodes':[]}
+           return {'text':data.facilityName, 'nodes':[]};
            });
 
            return {'level':1,'text':index+' : <strong>Aggregate Order Fill Rate</strong>:<strong>'+$scope.calculateAverageItemFillRate(facilities)+'%</strong>', 'nodes':mapFacilities, 'region':facilities[0].region,'msdZone':facilities[0].msdZone,'total':$scope.calculateAverageItemFillRate(facilities)};
@@ -52,7 +52,7 @@ function OrderFillRateControllerFunc($scope,GeoDistrictTree,AggregateItemFillRat
                _.each(regions, function(data){
                  sum += data.total;
                });
-              return {'level':2,'text':index+' : <strong>Aggregate Order Fill Rate</strong>:<strong>'+Math.round(sum/regions.length)+'%</strong>', 'nodes':regions, 'msdZone':regions[0].msdZone, 'total': Math.round(sum/regions.length)}
+              return {'level':2,'text':index+' : <strong>Aggregate Order Fill Rate</strong>:<strong>'+Math.round(sum/regions.length)+'%</strong>', 'nodes':regions, 'msdZone':regions[0].msdZone, 'total': Math.round(sum/regions.length)};
           });
 
           var groupByZone = _.groupBy(mapRegion, 'msdZone');
@@ -139,7 +139,7 @@ function OrderFillRateControllerFunc($scope,GeoDistrictTree,AggregateItemFillRat
 
 
 
-        }
+        };
 
 
 
