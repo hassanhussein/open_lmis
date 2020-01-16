@@ -104,10 +104,8 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
     $scope.checkHealthStatus = function(productCode, index) {
         if ($scope.healthCheckResults) {
             $scope.showHealthCheckStatus = true;
-            $scope.fullSupplyTabError = true;
             var check_status = true;
             var prd_arry = $scope.healthCheckResults[productCode];
-
 
             for (var x in prd_arry) {
                 if (!prd_arry[x].status) {
@@ -125,6 +123,9 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
                         };
                         $scope.healthCheckMessage.push(message);
                     }
+                }else
+                {
+                 $scope.fullSupplyTabError = true;
                 }
             }
             return check_status;

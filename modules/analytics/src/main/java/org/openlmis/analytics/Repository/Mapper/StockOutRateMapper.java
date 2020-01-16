@@ -83,20 +83,19 @@ public interface  StockOutRateMapper {
     List<HashMap<String,Object>> getAllCommoditiesDetailsByDistrict(@Param("program") Long program,
                                                           @Param("period") Long period, @Param("product") Long product);
 
-    @Select("select a.district_name,  a.region_name, SUM(CASE WHEN a.stockOutIncidence>0 THEN 1 ELSE 0 END)  as stockOutIncidence,count(*) \n" +
-            "as totalIncidence, pp.name || ' ' || date_part('year', pp.startdate) as reported from mv_latest_reported_stock_status  a \n" +
-            "join processing_periods pp on pp.id=a.periodid\n" +
-            "where a.tracer=true \n" +
-            "group by a.district_name, a.region_name, pp.startdate, pp.name")
+    @Select("select a.district_name,  a.region_name, SUM( a.stockOutIncidence)  as stockOutIncidence,\n" +
+            "            SUM(totalIncidence) as totalIncidence , pp.name || ' ' || date_part('year', pp.startdate) as reported from mv_latest_reported_stock_status  a \n" +
+            "            join processing_periods pp on pp.id=a.periodid\n" +
+            "            where a.tracer=true \n" +
+            "            group by a.district_name, a.region_name, pp.startdate, pp.name")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForTracer();
 
 
 
-    @Select(" select a.district_name,  a.region_name, SUM(CASE WHEN a.stockOutIncidence>0 THEN 1 ELSE 0 END)  as stockOutIncidence,count(*) \n" +
-            "as totalIncidence, pp.name || ' ' || date_part('year', pp.startdate) as reported from mv_latest_reported_stock_status  a \n" +
+    @Select(" select a.district_name,  a.region_name, stockOutIncidence , \n" +
+            " totalIncidence, pp.name || ' ' || date_part('year', pp.startdate) as reported from mv_latest_reported_stock_status  a \n" +
             "join processing_periods pp on pp.id=a.periodid\n" +
-            "where a.productid=#{product}\n" +
-            "group by a.district_name, a.region_name, pp.startdate, pp.name ")
+            "where a.productid=#{product}")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForProductByDistrict( @Param("product") Long product);
 
 

@@ -14,21 +14,21 @@
         <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
             <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                openlmis-message="label.full.supply.products"></a></li>
-
-        <li ng-show="rnr.program.showNonFullSupplyTab" ng-class="{'selected': visibleTab == 'nonFullSupply'}">
-            <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
-               openlmis-message="label.non.full.supply.products"></a></li>
     </ul>
     <span class="pull-right">
     <a id="healthCheckButton" class="btn btn-primary"
        openlmis-message="button.health.check" ng-click="runHealthCheck()"
        target="_blank"></a>
   </span>
+    <span class="pull-right">
+    <a id="resizeViewButton" show-summary href="" class="btn">
+      View/Hide Summary
+    </a>
+  </span>
 </div>
-
-<span ng-show="visibleTab === 'nonFullSupply'">
-  <ng-include src="'/public/pages/logistics/rnr/partials/data-health-check/view-non-full-supply.html'"></ng-include>
-</span>
+<!--<span ng-show="visibleTab === 'nonFullSupply'">-->
+<!--  <ng-include src="'/public/pages/logistics/rnr/partials/data-health-check/view-non-full-supply.html'"></ng-include>-->
+<!--</span>-->
 <span ng-show="visibleTab === 'fullSupply'">
   <ng-include src="'/public/pages/logistics/rnr/partials/data-health-check/view-full-supply.html'"></ng-include>
 </span>
