@@ -1,0 +1,4 @@
+flyway:
+  baselineOnMigrate=true
+  flyway:
+  placeholderReplacement=false

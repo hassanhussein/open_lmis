@@ -32,11 +32,31 @@ dependencies {
     }
 }
 
+/*flyway {
+    println($reportDBName)
+    url = "$dbUrlPrefix$databaseHostName:$databasePort/$reportDBName"
+    driver = dbDriver
+    user = dbUser
+    password = dbPassword
+    schemas = ['public','atomfeed']
+    locations = ['filesystem:'+sourceSets.main.resources.srcDirs.first().getCanonicalPath()+'/db/migration']
+    sqlMigrationPrefix = ''
+    placeholderPrefix = '#['
+    placeholderSuffix = ']'
+}*/
+
 task setupExtensions() << {
+
     ext.flyway_classpath = files(configurations.flyway)
+    println(ext.flyway_classpath.asPath)
+    println('asassaa')
+    println(ext.flyway_classpath.asPath)
+
     ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
     ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: 'migration_schema_version'  )
+    ant.flywayInit(driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$reportDBName", user: dbUser, password: dbPassword, table: 'migration_schema_version'  )
     tasks.migrateExtensions.execute()
+
 }
 
 jar.doFirst {
@@ -51,5 +71,20 @@ task migrateExtensions() << {
     ant.flywayMigrate( driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$dbName", user: dbUser, password: dbPassword, table: 'migration_schema_version', baseDir: sourceSets.main.resources.srcDirs , basePackage: sourceSets.main.resources.srcDirs)
 }
 
+
+/*task migrateReportDB() << {
+    println("Migrating Report database...")
+
+      println(sourceSets.main.resources.srcDirs.first())
+
+    ext.flyway_classpath2 = sourceSets.main.resources.srcDirs.first().getCanonicalPath()+'/reportdata'
+    ext.flyway_classpath = files(sourceSets.main.resources.srcDirs.first().getCanonicalPath()) + files(configurations.flyway)
+    println(ext.flyway_classpath.asPath)
+
+    ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+    //ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
+    ant.flywayMigrate( driver: 'org.postgresql.Driver', url: "jdbc:postgresql://$databaseHostName:$databasePort/$reportDBName", user: dbUser, password: dbPassword, table: 'migration_schema_version', baseDir: 'reportdb/migration')
+
+}*/
 
 

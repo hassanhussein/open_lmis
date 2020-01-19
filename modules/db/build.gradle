@@ -30,6 +30,8 @@ dependencies {
   testCompile 'org.hamcrest:hamcrest-core:1.3'
 
   flyway 'com.googlecode.flyway:flyway-ant:1.7',
+          'org.flywaydb:flyway-core:6.1.4',
+          'org.flywaydb:flyway-gradle-plugin:6.1.4',
       'org.postgresql:postgresql:42.1.4'
 
   classpath 'org.postgresql:postgresql:42.1.4'
@@ -54,22 +56,31 @@ dependencies {
 String connectionString = "$dbUrlPrefix$databaseHostName:$databasePort/$dbName"
 connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
 
+String connectionString2 = "$dbUrlPrefix$databaseHostName:$databasePort/$reportDBName"
+connectionString2 += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
+
 
 task setupDB << {
   tasks.dropDB.execute()
   tasks.createDB.execute()
   executeSql('create schema atomfeed', true)
+  executeSql2('create schema atomfeed', true)
 
   ext.flyway_classpath = files(configurations.flyway)
   ant.taskdef(name: 'flywayInit', classname: 'com.googlecode.flyway.ant.InitTask', classpath: ext.flyway_classpath.asPath)
   ant.flywayInit(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword)
+  ant.flywayInit(driver: dbDriver, url: connectionString2, user: dbUser, password: dbPassword)
 
   tasks.migrateDB.execute()
+  tasks.migrateReportingDB.execute()
 }
 
 task createDB << {
   println("Creating Database..")
   executeSql("create database $dbName")
+
+  println("Create Report Database..")
+  executeSql("create database $reportDBName")
 }
 
 task dropDB << {
@@ -78,6 +89,7 @@ task dropDB << {
     closeActiveConnections("pid")
   }
   executeSql("DROP DATABASE IF EXISTS $dbName")
+  executeSql("DROP DATABASE IF EXISTS $reportDBName")
 }
 
 task dropSchemas << {
@@ -93,6 +105,7 @@ task createSchemas << {
 def boolean closeActiveConnections(String pid) {
   try {
     executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$dbName'")
+    executeSql("SELECT pg_terminate_backend($pid) FROM pg_stat_activity WHERE datname='$reportDBName'")
     return true
   } catch (Exception e) {
     return false
@@ -101,6 +114,7 @@ def boolean closeActiveConnections(String pid) {
 
 jar.doFirst {
   tasks.migrateDB.execute()
+  tasks.migrateReportingDB.execute()
 }
 
 task migrateDB() << {
@@ -108,6 +122,14 @@ task migrateDB() << {
   ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
   ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
   ant.flywayMigrate(driver: dbDriver, url: connectionString, user: dbUser, password: dbPassword, baseDir: '_db/migration')
+}
+
+task migrateReportingDB() << {
+  println("Migrating Report database..")
+  ext.flyway_classpath = files(sourceSets.main.resources.srcDirs) + files(configurations.flyway)
+  ant.taskdef(name: 'flywayMigrate', classname: 'com.googlecode.flyway.ant.MigrateTask', classpath: ext.flyway_classpath.asPath)
+  println("Migrate Report DB")
+  ant.flywayMigrate(driver: dbDriver, url: connectionString2, user: dbUser, password: dbPassword, baseDir: '_reportdb/migration')
 }
 
 task testSeed(type: Exec) {
@@ -133,8 +155,10 @@ task seed(type: Exec) {
 
 def executeSql(String statement, Boolean includeDbName = false) {
   def connectionString = "jdbc:postgresql://$databaseHostName:$databasePort/"
+  def connectionString2 = "jdbc:postgresql://$databaseHostName:$databasePort/"
 
   connectionString += (includeDbName) ? "$dbName" : ""
+  connectionString2 += (includeDbName) ? "$reportDBName" : ""
 
   connectionString += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
 
@@ -147,3 +171,20 @@ def executeSql(String statement, Boolean includeDbName = false) {
   Sql.newInstance(connectionString, dbUser, dbPassword, dbDriver).execute(statement)
 }
 
+
+def executeSql2(String statement, Boolean includeDbName = false) {
+  println("$reportDBName")
+  def connectionString2 = "jdbc:postgresql://$databaseHostName:$databasePort/"
+
+  connectionString2 += (includeDbName) ? "$reportDBName" : ""
+
+  connectionString2 += (dbSslEnabled == 'true') ? "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory" : ""
+
+  configurations.classpath.each { file ->
+    gradle.class.classLoader.addURL(file.toURI().toURL())
+  }
+
+  // Class.forName(dbDriver)
+
+  Sql.newInstance(connectionString2, dbUser, dbPassword, dbDriver).execute(statement)
+}
