@@ -87,27 +87,22 @@
                                        required="true">
                       </facility-filter>
 
-                      <static-period-Filter ng-if="fltr.name == 'period'"
+                      <static-year-month-filter ng-if="fltr.name == 'period'"
                                        class="form-cell horizontalFilters"
                                        required="true">
-                      </static-period-Filter>
+                      </static-year-month-filter>
 
                       <product-category-filter ng-if="fltr.name == 'product-category'"
                                                class="form-cell horizontalFilters"
                                                required="true">
                       </product-category-filter>
 
-                      <product-without-description-filter ng-if="fltr.name == 'product-w'"
+                      <product-without-description-filter ng-if="fltr.name == 'product'"
                                                class="form-cell horizontalFilters"
                                                required="true">
                       </product-without-description-filter>
 
-                      <product-filter ng-if="fltr.name == 'product'"
-                                      label="{{fltr.label? fltr.label: 'name'}}"
-                                      tracer="{{fltr.tracer? fltr.tracer :''}}"
-                                      required="true"
-                                      class="form-cell horizontalFilters">
-                      </product-filter>
+
                       <vaccine-product-filter
                           ng-if="fltr.name == 'vaccine-product'"
                           required="true"
@@ -118,16 +113,76 @@
                           required="true"
                           class="form-cell horizontalFilters">
                       </vaccine-zone-filter>
+
+
+
+                      <product-filter ng-if="fltr.name == 'productQ'"
+                                      label="{{fltr.label? fltr.label: 'name'}}"
+                                      tracer="{{fltr.tracer? fltr.tracer :''}}"
+                                      required="true"
+                                      class="form-cell horizontalFilters">
+                      </product-filter>
+
+
+
+
                     </div>
                     <div class="clearfix"></div>
                   </div>
+                  <div class="clearfix"></div>
+
+                  <div>
+
+
+                    <div class="horizontalFilters form-cell" >
+                      <label for="txtPeriodStartDate" class="labels" ><span openlmis-message="label.start.date"></span></label>
+                      <div>
+<!--
+                        <input id="txtPeriodStartDate" ng-model="periodStartDate"  ui-date ng-change="changeFilter()"/>
+-->
+
+
+                        <input  id="txtPeriodStartDate" style="width:90px !important; height:20px !important"
+                               name="searchDate"
+                               type="text"
+                                ui-date="dateOptions"
+                               ng-model="filterToDate"
+                               ui-date-format="yy-mm-dd" ng-change="changeFilter()"/>
+
+<!--
+                        <input ui-date="dateOptions" name="DateOfBirth" ui-date-format="DD, d MM, yy">
+-->
+
+                      </div>
+                    </div>
+
+                    <div class="horizontalFilters form-cell" >
+                      <label for="txtPeriodEnddate" class="labels" ><span openlmis-message="label.end.date"></span></label>
+                      <div>
+                        <input id="txtPeriodEnddate" ng-model="periodEndDate "  ui-date ng-change="changeFilter()"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="clearfix"></div>
+                  <div class="clearfix"></div>
+
+
+                  <br/>
+                  <div class="horizontalFilters" style="margin-left:150px!important;">
+
+                    <input type="submit" class="btn btn-primary" ng-click="searchReport()"
+                           title="Search" value="Search"
+                    >
+
+                  </div>
+
                 </div>
               </div>
               <div class="float-right" ng-class="{'content-body': report.currentFilters.length > 0}">
                 <div class="box" style="padding-top: 0px;margin-top:0px; ">
                   <div class="box-content" style="min-height: 400px;">
                     <h4>
-                      {{report.name}}
+                      {{selectedKey.name}}
                       <a class="pull-right btn btn-small btn-primary" ng-show="data.length > 0" href=""
                          ng-click="exportExcel();" ><span openlmis-message="button.export.excel"></span></a>
                     </h4>

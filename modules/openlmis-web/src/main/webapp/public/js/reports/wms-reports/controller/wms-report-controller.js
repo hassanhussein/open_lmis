@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function WmsReportController($scope, $sce, $window, $location, reports, $routeParams, $timeout) {
+function WmsReportController($scope,$filter, $sce, $window, $location, reports, $routeParams, $timeout) {
 
   $scope.categories = ['WMS reports'];
   $scope.report_list = [
@@ -19,7 +19,7 @@ function WmsReportController($scope, $sce, $window, $location, reports, $routePa
                      {'id':4,code:'par', name:'Product Arrival Report'}
                      ];
   $scope.report  = {};
-  $scope.report.currentFilters  = [{name:'product'},{name:'period'},{name:'program'},{name:'product-w'}];
+  $scope.report.currentFilters  = [{name:'program'},{name:'dateRange'},{name:'product'},{name:'search'}];
 
   var allMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -36,6 +36,9 @@ function WmsReportController($scope, $sce, $window, $location, reports, $routePa
 
   $scope.OnReportTypeChanged = function (value) {
     $scope.filter.report_key = value;
+    $scope.selectedKey = _.findWhere($scope.report_list,{code:value});
+
+    console.log($scope.filter);
     $scope.OnFilterChanged();
   };
 
@@ -153,6 +156,10 @@ function WmsReportController($scope, $sce, $window, $location, reports, $routePa
 
   $scope.OnFilterChanged = function () {
 
+
+
+
+
 /*    if (angular.isUndefined($scope.filter) || angular.isUndefined($scope.filter.report_key) || !$scope.isReady) {
       return;
     }
@@ -167,6 +174,32 @@ function WmsReportController($scope, $sce, $window, $location, reports, $routePa
       $scope.postProcess(data.values);
     });*/
   };
+
+
+  $scope.dateOptions = {
+    changeYear: true,
+    changeMonth: true,
+    yearRange: '1900:-0'
+    };
+
+  $scope.changeFilter = function () {
+
+
+
+
+  }
+
+  $scope.searchReport = function () {
+
+  console.log($scope.periodEndDate);
+
+  var starDate = $filter('date')($scope.filter.periodStartDate, 'YYYY-MM-DD');
+  var endDate = $filter('date')($scope.filter.periodEndDate, 'YYYY-MM-DD');
+  $scope.filter.starDate = starDate;
+  $scope.filter.endDate = endDate;
+    console.log($scope.filter);
+
+  }
 
   $scope.exportExcel = function () {
     var params = jQuery.param($scope.getSanitizedParameter());
