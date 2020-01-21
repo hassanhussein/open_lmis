@@ -35,6 +35,11 @@ public interface ReceiveLotMapper {
     List<ReceiveLot> getAll();
 
     @Select("select * from receive_lots where receiveLineItemId = #{id}")
+    @Results(value = {
+            @Result(property = "locationId", column = "locationId", javaType = Integer.class),
+            @Result(property = "location", column = "locationId", javaType = Location.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.LocationMapper.getById"))
+    })
     List<ReceiveLot>  getByLineItem(@Param("id") Long id);
 
     @Select("select * from receive_lots where receiveLineItemId = #{id}")
