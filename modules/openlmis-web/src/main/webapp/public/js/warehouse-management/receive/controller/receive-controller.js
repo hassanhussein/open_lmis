@@ -332,8 +332,10 @@ var total_lot_quantity = 0;
                     info: {
                         expirationDate: lot.expiryDate,
                         lotCode: lot.lotNumber,
-                        manufactureDate: lot.manufacturingDate
-                    }
+                        manufactureDate: lot.manufacturingDate,
+
+                    },
+                    locationId:lot.locationId
 
                 });
 
@@ -820,10 +822,12 @@ $scope.quantityBoxError=false;
 
 
 
+
                             }
                         });
             }
 
+console.log(receiveLots);
 
             receiveLineItems.push({
                 receiveLots: receiveLots,
