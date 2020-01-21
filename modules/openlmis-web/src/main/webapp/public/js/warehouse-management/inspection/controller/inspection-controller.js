@@ -264,12 +264,12 @@ return false;
 //check the outer form validations
 
 
-//       if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
-//         $scope.showError = true;
-//         $scope.error = 'form.error';
-//         $scope.message = "";
-//         return;
-//       }
+       if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
+         $scope.showError = true;
+         $scope.error = 'form.error';
+         $scope.message = "";
+         return;
+       }
 
 //check the inner form validation
 // if invalid add css class to blink it
