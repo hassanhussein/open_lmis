@@ -217,7 +217,7 @@ function WmsReportController($scope,$filter,$window, $sce, $window, $location, r
 
    $scope.print = function (inspectionId){
             console.log(inspectionId.id);
-             var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
+             var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.ins_id,10);
 
              $window.open(url, '_blank');
         };
