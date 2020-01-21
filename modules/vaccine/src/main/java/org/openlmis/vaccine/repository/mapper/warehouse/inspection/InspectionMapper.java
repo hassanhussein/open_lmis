@@ -16,6 +16,7 @@ import org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +93,12 @@ public interface InspectionMapper {
 
     @Select("select * from fn_increment_stock(#{id}::int); ")
     Integer updateStockCard(@Param("id") Long id);
+
+    @Select(" select * from inspections i\n" +
+            "JOIN inspection_line_items l on i.id = l.inspectionid\n" +
+            "\n" +
+            "WHERE i.MODIFIEDDATE::date <= #{endDate}::date and i.modifieddate::date > #{startDate}::date and status = 'DRAFT' ")
+    List<HashMap<String, Object>> getBy(@Param("product") String product,@Param("startDate") String startDate, @Param("endDate") String endDate, String year);
 
     class SelectInspection {
 

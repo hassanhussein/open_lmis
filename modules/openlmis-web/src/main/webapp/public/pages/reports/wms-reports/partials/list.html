@@ -133,35 +133,22 @@
 
                   <div>
 
-
                     <div class="horizontalFilters form-cell" >
                       <label for="txtPeriodStartDate" class="labels" ><span openlmis-message="label.start.date"></span></label>
                       <div>
-<!--
-                        <input id="txtPeriodStartDate" ng-model="periodStartDate"  ui-date ng-change="changeFilter()"/>
--->
-
-
-                        <input  id="txtPeriodStartDate" style="width:90px !important; height:20px !important"
-                               name="searchDate"
-                               type="text"
-                                ui-date="dateOptions"
-                               ng-model="filterToDate"
-                               ui-date-format="yy-mm-dd" ng-change="changeFilter()"/>
-
-<!--
-                        <input ui-date="dateOptions" name="DateOfBirth" ui-date-format="DD, d MM, yy">
--->
-
+                        <input id="txtPeriodStartDate" ng-model="filter.periodStartDate"  ui-date ng-change="OnFilterChanged()"/>
                       </div>
                     </div>
 
-                    <div class="horizontalFilters form-cell" >
+
+                      <div class="horizontalFilters form-cell" >
                       <label for="txtPeriodEnddate" class="labels" ><span openlmis-message="label.end.date"></span></label>
                       <div>
-                        <input id="txtPeriodEnddate" ng-model="periodEndDate "  ui-date ng-change="changeFilter()"/>
+                        <input id="txtPeriodEnddate" ng-model="filter.periodEndDate"  ui-date ng-change="OnFilterChanged()"/>
                       </div>
                     </div>
+
+
                   </div>
                   <div class="clearfix"></div>
                   <div class="clearfix"></div>
@@ -193,113 +180,52 @@
                     <div>
                       {{report.description}}
                     </div>
-                    <table ng-show="data.length == 0">
+                    <table ng-show="reportList.length == 0">
                       <tr>
                         <td>No data to show under selected filters</td>
                       </tr>
                     </table>
-                    <div client-side-sort-pagination ng-show="data.length > 0"
+                    <div client-side-sort-pagination ng-show="reportList.length > 0"
                          style=" overflow-x: auto;min-width: 100%;table-layout: fixed;">
                       <table ng-table="tableParams" class="table table-bordered ng-table">
                         <thead>
                         <tr>
                           <th class="header">#</th>
-                          <th ng-show="col.pivotValue != 'true' && col.pivotColumn != 'true' && col.visible!='false'"
-                              ng-repeat="col in report.columns" class="header {{col.formatting}}">{{col.displayName}}
-                          </th>
-                          <th ng-if="report.pivot" ng-repeat="col in report.pivotColumns" class="header number">
-                            {{col}}
-                          </th>
+                          <th class="header"> ASN Number</th>
+                          <th class="header"> Product</th>
+                          <th class="header"> Manufacturer</th>
+                          <th class="header"> Expiration Date</th>
+                          <th class="header"> </th>
                         </tr>
-
-
-                        <tr ng-show="report.pivot && report.pivotValueColumn.classification">
-                          <td colspan="20"><b>Summary</b></td>
-                        </tr>
-
-
-                        <tr ng-show="report.pivot && report.pivotValueColumn.classification"
-                            ng-repeat="v in report.pivotValueColumn.classLables">
-                          <td style="width: 20px; max-width: 30px" ng-bind="($index + 1)"></td>
-                          <td ng-show="col.pivotValue != 'true' && col.pivotColumn != 'true' && col.visible!='false'"
-                              class="span{{col.width}} {{col.formatting}} {{col.formatting == 'percent'? 'number': ''}}"
-                              colspan="2">
-                            {{v.label}}
-                          </td>
-                          <td ng-if="report.pivot" ng-repeat="col in report.pivotColumns"
-                              class="cell-input right-justified number"
-                              style="padding: 0;">
-                            <span
-                                ng-show="report.pivotSummary[v.group]['p'][col] && report.pivotValueColumn.classification"
-                                class="cell-text {{report.pivotSummary[v.group]['classification']}}">
-                              <span>{{report.pivotSummary[v.group]['p'][col] }}</span>
-                            </span>
-                          </td>
-                        </tr>
-
-
-                        <tr ng-show="report.pivot && report.pivotValueColumn.classification && !report.pivotValueColumn.classLables"
-                            ng-repeat="s in report.pivotSummaryArray">
-                          <td style="width: 20px; max-width: 30px" ng-bind="($index + 1)"></td>
-                          <td ng-show="col.pivotValue != 'true' && col.pivotColumn != 'true' && col.visible!='false'"
-                              class="span{{col.width}} {{col.formatting}} {{col.formatting == 'percent'? 'number': ''}}"
-                              colspan="2">
-                            {{s['classification']}}
-                          </td>
-                          <td ng-if="report.pivot" ng-repeat="col in report.pivotColumns"
-                              class="cell-input right-justified number"
-                              style="padding: 0;">
-                            <span
-                                ng-show="s['p'][col] && report.pivotValueColumn.classification"
-                                class="cell-text {{s['classification']}}">
-                              <span>{{ s['p'][col] }}</span>
-                            </span>
-                          </td>
-                        </tr>
-
-                        <tr ng-show="report.pivot && report.pivotValueColumn.classification">
-                          <td colspan="20">&nbsp;</td>
-                        </tr>
-
                         </thead>
                         <tbody>
-                        <tr ng-repeat="row in data">
+                        <tr ng-repeat="row in reportList">
                           <td style="width: 20px; max-width: 30px" ng-bind="($index + 1)"></td>
-                          <td style="min-width: 150px;" ng-show="col.pivotValue != 'true' && col.pivotColumn != 'true' && col.visible!='false'"
-                              class="span{{col.width}} {{col.formatting}} {{col.formatting == 'percent'? 'number': ''}}"
-                              ng-repeat="col in report.columns">
-                            <span
-                                ng-show="col.formatting != 'number' && col.formatting != 'percent'">
-                              <span ng-if="col.link">
-                                <a href="" ng-click="onLinkClicked(col, row);">{{row[col.name]}}</a>
-                              </span>
-                              <span ng-if="!col.link">
-                                {{row[col.name]}}
-                              </span>
-                            </span>
-                            <span ng-show="col.formatting == 'number'">{{row[col.name] | number}}</span>
-                            <span ng-show="col.formatting == 'percent'">{{row[col.name] | number}} %</span>
+                          <td style="min-width: 150px;" >
+                            {{row.createddate | date }}
                           </td>
-                          <td ng-if="report.pivot" ng-repeat="col in report.pivotColumns"
-                              class="cell-input right-justified number"
-                              style="padding: 0;">
-                            <span
-                                ng-show="row['p'][col][report.pivotValueColumn.name] != undefined && report.pivotValueColumn.classification"
-                                class="cell-text {{row['p'][col][report.pivotValueColumn.classification]}}">
-                              <span ng-show="report.pivotValueColumn.formatting == 'percent'">{{row['p'][col][report.pivotValueColumn.name]  | number : 2}}%</span>
-                              <span ng-show="report.pivotValueColumn.formatting != 'percent'">{{row['p'][col][report.pivotValueColumn.name]}}</span>
-                            </span>
-                            <span class="cell-text"
-                                  ng-show="row['p'][col][report.pivotValueColumn.name] != undefined && !report.pivotValueColumn.classification">
-                              <span ng-show="report.pivotValueColumn.formatting == 'percent'">{{row['p'][col][report.pivotValueColumn.name] | number : 2}}%</span>
-                              <span ng-show="report.pivotValueColumn.formatting != 'percent'">{{row['p'][col][report.pivotValueColumn.name] | number}}</span>
-                            </span>
+                          <td style="min-width: 150px;" >
+                            {{row.boxcounted }}
+                          </td>
+                          <td style="min-width: 150px;" >
+                            {{row.isshipped }}
+                          </td>
+                          <td style="min-width: 150px;" >
+                            {{row.status}}
+                          </td>
+                          <td style="min-width: 150px;" >
+                         <span class="print-button" style="background-color:#4897BA !important;">
+                          <a id="printButton" style="background-color:#4897BA !important;"
+                             class="btn btn-primary"
+                             openlmis-message="button.print" ng-click="print(row)"
+                             target="_blank"></a>
+                               </span>
+
                           </td>
                         </tr>
                         </tbody>
                       </table>
                     </div>
-                    <div ng-if="data" ng-bind-html="report.trusted_meta"></div>
                   </div>
                 </div>
               </div>

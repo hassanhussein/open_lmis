@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-angular.module('wms_reports', ['openlmis', 'ui.date','ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle','tree.dropdown','ngSanitize'])
+angular.module('wms_reports', ['openlmis', 'ngTable',  'ui.chart', 'angularCombine' ,'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle','tree.dropdown','ngSanitize'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:WmsReportController, templateUrl:'partials/list.html',reloadOnSearch:false, resolve: WmsReportController.resolve}).
@@ -18,3 +18,4 @@ angular.module('wms_reports', ['openlmis', 'ui.date','ngTable',  'ui.chart', 'an
         }]).config(function(angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
   });
+

@@ -9,6 +9,7 @@ import org.openlmis.vaccine.repository.mapper.warehouse.inspection.InspectionMap
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -77,5 +78,10 @@ public class InspectionRepository {
 
     public Integer updateStockCard(Long id) {
         return mapper.updateStockCard(id);
+    }
+
+    public List<HashMap<String, Object>> getBy(String product, String startDate, String endDate, String year) {
+        return mapper.getBy(product,startDate, endDate,year);
+
     }
 }

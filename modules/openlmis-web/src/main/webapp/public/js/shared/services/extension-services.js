@@ -1355,3 +1355,7 @@ services.factory('GetItemFillRateSummary', function ($resource) {
     return $resource('/dashboard/get-item-fill-rate-summary.json', {}, {});
 });
 
+services.factory('GetReportDataValue', function ($resource) {
+    return $resource('/rest-api/warehouse/inspection/reports.json', {}, {});
+});
+

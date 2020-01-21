@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -73,5 +74,12 @@ public class InspectionService {
 
     public Integer updateStockCard(Long id) {
       return repository.updateStockCard(id);
+    }
+
+    public List<HashMap<String, Object>> getBy(String product, String reportKey, String startDate, String endDate, String year) {
+          if(reportKey.equalsIgnoreCase("inspect")) {
+              return repository.getBy(product, startDate, endDate, year);
+          }
+          return null;
     }
 }
