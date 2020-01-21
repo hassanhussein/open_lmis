@@ -266,22 +266,22 @@ where i.id = $P{ORDER_ID}]]>
                     <reportElement x="10" y="50" width="813" height="60" forecolor="#FFFFFF" uuid="f8393a3c-824d-4231-a65b-a91bea730d44"/>
                 </rectangle>
                 <textField>
-                    <reportElement x="11" y="80" width="152" height="30" forecolor="#3D9297" backcolor="#3D9297" uuid="d69cf0b6-abad-46f6-a657-1e2d1786b7b2"/>
+                    <reportElement x="13" y="80" width="150" height="30" forecolor="#3D9297" backcolor="#3D9297" uuid="d69cf0b6-abad-46f6-a657-1e2d1786b7b2"/>
                     <box>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$R{header.report.number}]]></textFieldExpression>
                 </textField>
                 <textField>
-                    <reportElement x="11" y="51" width="152" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="a40f9203-ab63-4df0-81f4-49f2c9b8a5da"/>
+                    <reportElement x="13" y="51" width="150" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="a40f9203-ab63-4df0-81f4-49f2c9b8a5da"/>
                     <box>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$R{header.country}]]></textFieldExpression>
                 </textField>
@@ -305,33 +305,33 @@ where i.id = $P{ORDER_ID}]]>
                     </textElement>
                     <text><![CDATA[  :  ]]></text>
                 </staticText>
-                <textField>
+                <textField isBlankWhenNull="true">
                     <reportElement x="178" y="51" width="240" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="a87487c5-26e2-4152-afce-60260e8f9d1b"/>
                     <box>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$F{hdr_country}]]></textFieldExpression>
                 </textField>
-                <textField>
+                <textField isBlankWhenNull="true">
                     <reportElement x="178" y="80" width="240" height="30" forecolor="#3D9297" backcolor="#3D9297" uuid="6b747377-2121-4800-ab1f-ad6ae692ded7"/>
                     <box>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$F{hdr_reportnumber}]]></textFieldExpression>
                 </textField>
-                <textField>
+                <textField isBlankWhenNull="true">
                     <reportElement x="690" y="51" width="132" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="08d768d8-3f6d-4220-9f16-0ec6300df87e"/>
                     <box>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$F{hdr_dateofreport}]]></textFieldExpression>
                 </textField>
@@ -341,7 +341,7 @@ where i.id = $P{ORDER_ID}]]>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$R{header.date.of.report}]]></textFieldExpression>
                 </textField>
@@ -353,8 +353,8 @@ where i.id = $P{ORDER_ID}]]>
                     <box>
                         <pen lineWidth="0.25"/>
                     </box>
-                    <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                    <textElement textAlignment="Justified" verticalAlignment="Middle">
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$R{header.place.time.completion}]]></textFieldExpression>
                 </textField>
@@ -363,8 +363,8 @@ where i.id = $P{ORDER_ID}]]>
                     <box>
                         <pen lineWidth="0.25"/>
                     </box>
-                    <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                    <textElement textAlignment="Justified" verticalAlignment="Middle">
+                        <font size="9"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$F{hdr_completiontime}]]></textFieldExpression>
                 </textField>
@@ -374,7 +374,7 @@ where i.id = $P{ORDER_ID}]]>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$R{header.name.of.cold.store}]]></textFieldExpression>
                 </textField>
@@ -384,7 +384,7 @@ where i.id = $P{ORDER_ID}]]>
                         <pen lineWidth="0.25"/>
                     </box>
                     <textElement verticalAlignment="Middle">
-                        <font size="13"/>
+                        <font size="10"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$F{hdr_nameofcoldstore}]]></textFieldExpression>
                 </textField>
@@ -397,7 +397,7 @@ where i.id = $P{ORDER_ID}]]>
                 <textField isStretchWithOverflow="true">
                     <reportElement key="" style="table_CH" stretchType="RelativeToBandHeight" x="10" y="214" width="813" height="29" printWhenGroupChanges="Group by ProductCategory" forecolor="#0D0E0F" backcolor="#C2DAF4" uuid="21b3ef9d-bf82-4be7-96d6-a63e15bbc1c8"/>
                     <textElement textAlignment="Center" verticalAlignment="Middle">
-                        <font fontName="SansSerif" size="16" isUnderline="false"/>
+                        <font fontName="SansSerif" size="12" isUnderline="false"/>
                     </textElement>
                     <textFieldExpression><![CDATA[$R{header.flight.arrival.details}]]></textFieldExpression>
                 </textField>
@@ -607,24 +607,24 @@ where i.id = $P{ORDER_ID}]]>
                 <textFieldExpression><![CDATA[$F{rec_actualarrivaldate}]]></textFieldExpression>
             </textField>
         </band>
-        <band height="58">
+        <band height="38">
             <rectangle>
-                <reportElement x="13" y="0" width="811" height="50" forecolor="#FFFFFF" uuid="abc6f01c-fc51-4523-8f28-dec5f9c2c372"/>
+                <reportElement x="13" y="0" width="811" height="33" forecolor="#FFFFFF" uuid="abc6f01c-fc51-4523-8f28-dec5f9c2c372"/>
             </rectangle>
             <textField>
-                <reportElement x="12" y="3" width="190" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="79e8e7b9-e080-4ad1-9688-9908189f3046"/>
+                <reportElement x="12" y="3" width="188" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="79e8e7b9-e080-4ad1-9688-9908189f3046"/>
                 <box>
                     <pen lineWidth="0.25"/>
                 </box>
                 <textElement verticalAlignment="Middle">
-                    <font size="13"/>
+                    <font size="10"/>
                 </textElement>
                 <textFieldExpression><![CDATA[$R{label.name.of.clearance}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="203" y="3" width="15" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="d2ebadea-a71d-4bc2-9834-e4006cb71854"/>
                 <box>
-                    <pen lineWidth="0.25"/>
+                    <pen lineWidth="0.0"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="13" isBold="true"/>
@@ -632,15 +632,15 @@ where i.id = $P{ORDER_ID}]]>
                 <text><![CDATA[  :  ]]></text>
             </staticText>
             <line>
-                <reportElement x="219" y="31" width="210" height="1" forecolor="#3D9297" uuid="90564653-c0df-4d7c-9a7b-694a13b340fc"/>
+                <reportElement x="200" y="32" width="229" height="1" forecolor="#3D9297" uuid="90564653-c0df-4d7c-9a7b-694a13b340fc"/>
             </line>
             <line>
-                <reportElement x="640" y="32" width="180" height="1" forecolor="#3D9297" uuid="a2cdc1e7-78d2-4bd1-8162-a50a3b5c14cd"/>
+                <reportElement x="624" y="32" width="196" height="1" forecolor="#3D9297" uuid="a2cdc1e7-78d2-4bd1-8162-a50a3b5c14cd"/>
             </line>
             <staticText>
-                <reportElement x="624" y="3" width="15" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="ef1d9aeb-b6fc-4cc5-a3f3-7ba04e8e0d1d"/>
+                <reportElement x="624" y="3" width="26" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="ef1d9aeb-b6fc-4cc5-a3f3-7ba04e8e0d1d"/>
                 <box>
-                    <pen lineWidth="0.25"/>
+                    <pen lineWidth="0.0" lineColor="#FFFFFF"/>
                 </box>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="13" isBold="true"/>
@@ -648,7 +648,7 @@ where i.id = $P{ORDER_ID}]]>
                 <text><![CDATA[  :  ]]></text>
             </staticText>
             <textField>
-                <reportElement x="433" y="3" width="190" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="6c124839-1baa-4236-9bfd-9bc302898c89"/>
+                <reportElement x="433" y="3" width="191" height="29" forecolor="#3D9297" backcolor="#3D9297" uuid="6c124839-1baa-4236-9bfd-9bc302898c89"/>
                 <box>
                     <pen lineWidth="0.25"/>
                 </box>

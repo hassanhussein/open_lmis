@@ -877,6 +877,7 @@ $scope.quantityBoxError=false;
           $location.path('');
             });
         }else{
+
         Receive.save({}, receive, function (data) {
             $scope.error = "";
             console.log('save');
