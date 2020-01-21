@@ -158,6 +158,19 @@ $scope.searchOptions = [
       };
 
 
+        $scope.print = function (inspectionId){
+                  console.log(inspectionId.id);
+
+                  if(status === 'RELEASED') {
+                   var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.ins_id,10);
+
+                   $window.open(url, '_blank');
+
+                   }
+
+         };
+
+
       $scope.edit = function (inspection,viewMode) {
 
       var path = '/edit/'+parseInt(inspection.id,10);
