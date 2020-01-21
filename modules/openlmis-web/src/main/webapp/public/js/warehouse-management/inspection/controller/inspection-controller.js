@@ -16,18 +16,18 @@ GetLocationSummary.get({}, function(data){
 $scope.failReasons=data.reasons;
  console.log(data);
 
- })
+ });
 
 
 $scope.productSum=function(lineItem){
 
   var sum=0;
  angular.forEach(lineItem.lots,function(lot){
-    sum+=parseInt(lot.receivedQuantity);
+    sum+=parseInt(lot.receivedQuantity,10);
 
- })
+ });
  $scope.totalReceivedQty=sum;
-}
+};
 
 
 
@@ -63,7 +63,7 @@ $scope.vvmChanged=function(lot){
  lot.failReason='';
  }
 
-}
+};
 
 //"inspectionLotForm['vvmStatus[' + $index + ']'].$error.required"
 
@@ -111,7 +111,7 @@ if(lineItem.noCoolantFlag){
 lineItem.icePackFlag=false;
 lineItem.dryIceFlag=false;
 }
-}
+};
 
 $scope.coolant=function(lineItem){
 if(lineItem.icePackFlag || lineItem.dryIceFlag){
@@ -119,7 +119,7 @@ lineItem.noCoolantFlag=false;
 }
 
 
-}
+};
 
 $scope.hasExpired=function(lot){
 var today = new Date();
@@ -132,7 +132,7 @@ lot.failReason=1;
 return true;
 }
 return false;
-}
+};
 
 //$scope.hasExpired("2010-10-11");
 
@@ -303,7 +303,7 @@ var globalErrorFlag=false;
 if(!$scope.hasExpired(lot)){
 
        //check vvm
-        if(lot.vvmStatus==null || !lot.vvmStatus){
+        if(lot.vvmStatus===null || !lot.vvmStatus){
             lot.vvmError=true;
             globalErrorFlag=true;
         }else{
@@ -311,7 +311,7 @@ if(!$scope.hasExpired(lot)){
         }
             //only check if lot has not expired
        //check storage location
-        if((lot.passLocationId==null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity=='')){
+        if((lot.passLocationId===null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity==='')){
                lot.passLocationError=true;
                globalErrorFlag=true;
            }else{
@@ -336,7 +336,7 @@ if(!$scope.hasExpired(lot)){
 
    //check fail location
         //only if we have fail quantity
- if((lot.failLocationId==null|| !lot.failLocationId)&&lot.failQuantity!=='0' && lot.failQuantity){
+ if((lot.failLocationId===null|| !lot.failLocationId)&&lot.failQuantity!=='0' && lot.failQuantity){
                        lot.failLocationError=true;
                        globalErrorFlag=true;
                    }else{
@@ -346,7 +346,7 @@ if(!$scope.hasExpired(lot)){
 
 
 
-   })
+   });
 
     if(globalErrorFlag){
     return;
@@ -360,7 +360,7 @@ if(!$scope.hasExpired(lot)){
     lot.failQuantity=0;
     }
      lot.passQuantity=lot.receivedQuantity-parseInt(lot.failQuantity,10);
-   })
+   });
 
   $scope.totalPassQty=sumLots('passQuantity',lineItem);
   $scope.totalFailQty=sumLots('failQuantity',lineItem);
@@ -370,7 +370,7 @@ if(!$scope.hasExpired(lot)){
 
 
 
-     }
+     };
 
 
   inspectionLotFormValidator=function(){
@@ -384,7 +384,7 @@ if ($scope.inspectLotForm.$error.required) {
             $scope.message = "";
             return;
         }
-  }
+  };
 
 
 
