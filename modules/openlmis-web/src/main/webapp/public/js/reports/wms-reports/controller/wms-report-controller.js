@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function WmsReportController($scope,$filter,$window, $sce, $window, $location, reports, $routeParams, $timeout, GetReportDataValue) {
+function WmsReportController($scope,$filter,$window, $location, reports, $routeParams, $timeout, GetReportDataValue) {
 
   $scope.categories = ['WMS reports'];
   $scope.report_list = [
@@ -195,7 +195,7 @@ function WmsReportController($scope,$filter,$window, $sce, $window, $location, r
   console.log($scope.field.value);
   console.log(x);
 
-  }
+  };
 
   $scope.searchReport = function () {
 
@@ -212,7 +212,7 @@ function WmsReportController($scope,$filter,$window, $sce, $window, $location, r
     });
 
 
-  }
+  };
 
 
    $scope.print = function (inspectionId){
@@ -220,7 +220,7 @@ function WmsReportController($scope,$filter,$window, $sce, $window, $location, r
              var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.ins_id,10);
 
              $window.open(url, '_blank');
-        };
+   };
 
 
 
