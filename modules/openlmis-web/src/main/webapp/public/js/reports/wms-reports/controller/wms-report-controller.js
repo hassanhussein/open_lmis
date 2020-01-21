@@ -15,9 +15,9 @@ function WmsReportController($scope,$filter,$window, $sce, $window, $location, r
   $scope.report_list = [
                      {'id':1,code:'preAdvice', name:'Pre-Advice'},
                      {'id':2,code:'grn', name:'GRN'},
-                     {'id':3,code:'var', name:'Vaccine Arrival Report'},
+                     {'id':3,code:'inspect', name:'Vaccine Arrival Report'},
                      {'id':4,code:'par', name:'Product Arrival Report'},
-                     {'id':5,code:'inspect', name:'Inspection Report'}
+                     {'id':5,code:'var', name:'Inspection Report'}
                      ];
   $scope.report  = {};
   $scope.report.currentFilters  = [{name:'program'},{name:'dateRange2'},{name:'product'},{name:'search1'},{name:'year00'},{name:'custom'}];
@@ -200,21 +200,24 @@ function WmsReportController($scope,$filter,$window, $sce, $window, $location, r
   $scope.searchReport = function () {
 
       console.log($scope.getSanitizedParameter());
+/*
       $scope.reportList = [{"lotflag":true,"nocoolantflag":false,"productid":2418,"createddate":1578036904213,"icepackflag":false,"modifieddate":1578036904213,"boxcounted":0,"receiveid":16,"isshipped":true,"inspectionid":3,"isshippedprovided":true,"quantitycounted":0,"id":3,"status":"DRAFT"},{"nocoolantflag":true,"productid":2415,"createddate":1578371533682,"conditionofbox":"mammmaa","modifieddate":1578402699713,"inspectiondate":1574456400000,"receiveid":21,"inspectionid":5,"descriptionofinspection":"sasasa","passquantity":1200,"dryiceflag":true,"electronicdeviceflag":true,"id":5,"receiptnumber":"200","lotflag":true,"icepackflag":true,"shippedprovidedcomment":"no comment","labelattachedcomment":"ammmmaa","boxcounted":0,"shippedcomment":"comment","isshipped":true,"vvmflag":true,"cccardflag":true,"isshippedprovided":false,"modifiedby":307,"quantitycounted":1200,"inspectedby":"Vims - Admin","othermonitor":"type","status":"DRAFT","failquantity":0},{"nocoolantflag":true,"productid":2413,"createddate":1576738543247,"modifieddate":1578296657536,"inspectiondate":1576011600000,"receiveid":9,"inspectionid":1,"descriptionofinspection":"successiful updated","inspectionnote":"updateda","passquantity":600,"dryiceflag":true,"electronicdeviceflag":true,"id":1,"receiptnumber":"10000","lotflag":false,"icepackflag":true,"boxcounted":100,"isshipped":true,"vvmflag":true,"cccardflag":true,"isshippedprovided":true,"modifiedby":307,"inspectedby":"Vims - Admin","othermonitor":"6000L","status":"DRAFT","failquantity":500},{"lotflag":false,"nocoolantflag":false,"productid":2412,"createddate":1577188429586,"icepackflag":false,"modifieddate":1578305536077,"inspectiondate":1576702800000,"boxcounted":1009,"receiveid":7,"isshipped":true,"inspectionid":2,"vvmflag":false,"descriptionofinspection":"deacsacacaa","inspectionnote":"notes","cccardflag":false,"isshippedprovided":true,"dryiceflag":false,"modifiedby":307,"quantitycounted":0,"electronicdeviceflag":false,"id":2,"receiptnumber":"7991dda","inspectedby":"Vims - Admin","status":"DRAFT"},{"nocoolantflag":true,"productid":2413,"createddate":1578038414606,"modifieddate":1578329829558,"inspectiondate":1576357200000,"receiveid":15,"inspectionid":4,"passquantity":300,"dryiceflag":true,"electronicdeviceflag":true,"id":4,"receiptnumber":"3000","lotflag":true,"icepackflag":true,"boxcounted":0,"isshipped":true,"vvmflag":true,"cccardflag":true,"isshippedprovided":true,"modifiedby":307,"quantitycounted":500,"inspectedby":"Vims - Admin","othermonitor":"400K","status":"DRAFT","failquantity":200},{"nocoolantflag":true,"productid":2416,"createddate":1578404479593,"conditionofbox":"Yes","modifieddate":1578406189321,"inspectiondate":1578171600000,"receiveid":24,"inspectionid":7,"descriptionofinspection":"Inspection IN progress","passquantity":3000,"dryiceflag":true,"electronicdeviceflag":false,"id":7,"receiptnumber":"1277L","lotflag":true,"icepackflag":false,"shippedprovidedcomment":"some comments","labelattachedcomment":"No","boxcounted":0,"shippedcomment":"Some Comments","isshipped":false,"vvmflag":true,"cccardflag":false,"isshippedprovided":true,"modifiedby":307,"quantitycounted":4000,"inspectedby":"Vims - Admin","othermonitor":"some other type","status":"DRAFT","failquantity":1000}];
+*/
 
-  /*  GetReportDataValue.get($scope.getSanitizedParameter(), function(data) {
+    GetReportDataValue.get($scope.getSanitizedParameter(), function(data) {
 
+       $scope.reportList = data.reportList;
       console.log(JSON.stringify(data.reportList));
 
     });
-*/
+
 
   }
 
 
    $scope.print = function (inspectionId){
             console.log(inspectionId.id);
-             var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
+             var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.ins_id,10);
 
              $window.open(url, '_blank');
         };

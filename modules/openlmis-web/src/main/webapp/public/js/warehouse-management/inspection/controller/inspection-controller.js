@@ -248,10 +248,19 @@ return false;
     $scope.showError = true;
   };
 
+        $scope.print = function (inspectionId){
+                       console.log(inspectionId);
+                        var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
+
+                        $window.open(url, '_blank');
+                   };
+
+
 
 
     $scope.save = function (status) {
 //check the outer form validations
+
 
        if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
          $scope.showError = true;
@@ -268,6 +277,12 @@ return false;
          $scope.inspection.status  = status;
 
          UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
+           $scope.print = function (inspectionId){
+                     console.log(inspectionId.id);
+                      var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
+
+                      $window.open(url, '_blank');
+                 };
        }
 
      };

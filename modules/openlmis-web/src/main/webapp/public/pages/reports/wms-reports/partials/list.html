@@ -191,27 +191,31 @@
                         <thead>
                         <tr>
                           <th class="header">#</th>
-                          <th class="header"> ASN Number</th>
-                          <th class="header"> Product</th>
-                          <th class="header"> Manufacturer</th>
-                          <th class="header"> Expiration Date</th>
-                          <th class="header"> </th>
+                          <th class="header"> Receipt Number</th>
+                          <th class="header"> Inspection Date</th>
+                          <th class="header">product </th>
+                          <th class="header"> Total Quantity Counted</th>
+                          <th class="header"> Status</th>
+                          <th class="header"> Print</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr ng-repeat="row in reportList">
                           <td style="width: 20px; max-width: 30px" ng-bind="($index + 1)"></td>
                           <td style="min-width: 150px;" >
-                            {{row.createddate | date }}
+                            {{row.ins_receiptnumber | date }}
                           </td>
                           <td style="min-width: 150px;" >
-                            {{row.boxcounted }}
+                            {{row.ins_inspectiondate }}
                           </td>
                           <td style="min-width: 150px;" >
-                            {{row.isshipped }}
+                            {{row.product }}
                           </td>
                           <td style="min-width: 150px;" >
-                            {{row.status}}
+                            {{row.insi_quantitycounted }}
+                          </td>
+                          <td style="min-width: 150px;" >
+                            {{row.ins_status }}
                           </td>
                           <td style="min-width: 150px;" >
                          <span class="print-button" style="background-color:#4897BA !important;">

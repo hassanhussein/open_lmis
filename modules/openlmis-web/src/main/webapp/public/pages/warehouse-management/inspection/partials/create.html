@@ -671,9 +671,8 @@
                            ng-click="cancel()"/>
 
 
-
-
-
+                    <input  type="button" class="btn btn-primary pull-right" ng-click="print(inspection)"
+                             ng-if="!viewMode" value="Print" style="margin-left:10px;margin-right:10px"/>
 
                     <input  type="button" class="btn btn-primary pull-right" ng-click="save('RELEASED')"
                              ng-if="!viewMode" value="Finalize Inspection" style="margin-left:10px;margin-right:10px"/>
