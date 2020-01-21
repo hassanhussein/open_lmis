@@ -414,11 +414,11 @@
                                                     <div class="span2">Location: </div>
                                                     <div class="span10">
                                                         <select ng-disabled="!product.lots[0].info || viewMode"
-                                                                ng-modal="product.lots[0].lot.locationId"
+                                                                ng-model="product.lots[0].locationId"
                                                         >
                                                             <option value="" >--Select Location--</option>
 
-                                                            <option ng-repeat="location in locations"
+                                                            <option ng-repeat="location in locations" ng-selected="product.lots[0].locationId==location.id"
                                                                     value="{{ location.id }}">
                                                                 {{ location.name }}
                                                             </option>
@@ -489,14 +489,9 @@
                                                 <div class="" style="margin-top:6px;">
                                                     <div class="span2">Location: </div>
                                                     <div class="span10">
-                                                        <select ng-disabled="!lot.info"
-                                                                ng-modal="lot.locationId">
-
+                                                        <select ng-disabled="!lot.info" ng-model="lot.locationId">
                                                             <option value="" >--Select Location--</option>
-                                                            <option ng-repeat="location in locations"
-                                                                    value="{{ location.id }}">
-                                                                {{ location.name }}
-                                                            </option>
+                                                            <option ng-repeat="location in locations" value="{{ location.id }}" ng-selected="lot.locationId==location.id">{{ location.name }}</option>
 
 
 

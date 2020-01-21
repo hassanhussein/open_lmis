@@ -251,7 +251,7 @@ return false;
 
 
     $scope.save = function (status) {
-
+//check the outer form validations
 
        if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
          $scope.showError = true;
@@ -260,6 +260,9 @@ return false;
          return;
        }
 
+//check the inner form validation
+// if invalid add css class to blink it
+//    if()
 
        if ($scope.inspection.id) {
          $scope.inspection.status  = status;
