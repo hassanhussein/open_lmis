@@ -10,7 +10,7 @@
 
 <div xmlns="http://www.w3.org/1999/html">
     <h2>
-        <span id="searchGeoZoneHeader">Search</span>
+        <span id="searchGeoZoneHeader">Inspect</span>
 
     </h2>
 
@@ -62,8 +62,8 @@
             </tr>
 
             <tr class="gradient-header" ng-show="inspectionList.length">
-                <th   >ASN Number</th>
-                <th ng-click='sortColumn("asnNumber")' ng-class='sortClass("asnNumber")'>ASN Date</th>
+                <th   >PO Number</th>
+
                 <th ng-click='sortColumn("expectedArrivalDate")' ng-class='sortClass("receiptNumber")'>Receipt Number</th>
                 <th ng-click='sortColumn("expectedArrivalDate")' ng-class='sortClass("receiptDate")'>Receipt Date</th>
                 <th ng-click='sortColumn("status")' ng-class='sortClass("status")'>Status</th>
@@ -73,8 +73,8 @@
             </thead>
             <tbody>
             <tr ng-repeat="inspection in inspectionList|orderBy:column:reverse" ng-init="arrayIndex=$index">
-                <td ng-bind="inspection.asnNumber"></td>
-                <td  ng-bind="inspection.asnDate"></td>
+                <td ng-bind="inspection.poNumber"></td>
+
                 <td  ng-bind="inspection.receiptNumber"></td>
                 <td  ng-bind="inspection.receiptDate"></td>
                 <td  ng-bind="inspection.status"></td>

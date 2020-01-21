@@ -1,11 +1,71 @@
-function InspectionController($scope,$window, inspection, UpdateInspection,$location,vvmList,$timeout){
+function InspectionController($scope,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary){
 
+
+GetLocationSummary.get({}, function(data){
+
+     $scope.locations = data.locationList;
+
+     console.log(data.locationList);
+
+    });
+
+
+ VaccineDiscardingReasons.get({},function(data){
+
+
+$scope.failReasons=data.reasons;
+ console.log(data);
+
+ })
+
+
+$scope.productSum=function(lineItem){
+
+  var sum=0;
+ angular.forEach(lineItem.lots,function(lot){
+    sum+=parseInt(lot.receivedQuantity);
+
+ })
+ $scope.totalReceivedQty=sum;
+}
+
+
+
+
+$scope.lotInspected=false;
+//$scope.dryIceFlag=false;
+//$scope.icePackFlag=false;
+//$scope.noCoolantFlag=false;
    $scope.inspection = inspection;
+   console.log($scope.inspection);
+   $scope.lineItem=$scope.inspection.lineItems[0];
    $scope.vvmStatusList = vvmList;
-   console.log(inspection);
+   $scope.totalPassQty=0;
+   $scope.totalFailQty=0;
 
-   $scope.locations = [{"id":1,"name":'AA11'},{"id":2,"name":'BB11'},{"id":4,"name":'AA17'}];
+$scope.productSum($scope.lineItem);
+
+//   $scope.locations = [{"id":1,"name":'AA11'},{"id":2,"name":'BB11'},{"id":4,"name":'AA17'}];
    $scope.failReasons = [{"id":1,"name":'Temperature'},{"id":2,"name":'Rain'},{"id":3,"name":'Opened Vial'}];
+
+
+
+$scope.vvmChanged=function(lot){
+
+ if(lot.vvmStatus>2){
+
+   lot.failQuantity=1;
+   //make fail reason vvm
+   lot.failReason=4;
+
+ }else{
+ lot.failQuantity='';
+ lot.failReason='';
+ }
+
+}
+
+//"inspectionLotForm['vvmStatus[' + $index + ']'].$error.required"
 
 
      $scope.updatePassedQuantity = function (lineItem) {
@@ -18,14 +78,14 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
 
      };
 
-     $scope.updateReceivedQuantity = function (lineItem) {
-
-     var sum = 0;
-     angular.forEach(lineItem.lots, function(pass){
-      sum = parseInt(pass.passQuantity,10) + parseInt(pass.failQuantity,10);
-     });
-      return  sum;
-     };
+//     $scope.updateReceivedQuantity = function (lineItem) {
+//
+//     var sum = 0;
+//     angular.forEach(lineItem.lots, function(pass){
+//      sum = parseInt(pass.passQuantity,10) + parseInt(pass.failQuantity,10);
+//     });
+//      return  sum;
+//     };
 
      $scope.updateFailedQuantity = function (lineItem) {
 
@@ -33,19 +93,48 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
      angular.forEach(lineItem.lots, function(fail){
       sum = sum + parseInt(fail.failQuantity,10);
      });
-     // $scope.updateReceivedQuantity2(lineItem);
       return sum;
      };
 
 
-       $scope.updateReceivedQuantity2 = function (lineItem) {
+//       $scope.updateReceivedQuantity2 = function (lineItem) {
+//
+//          var sum = 0;
+//          angular.forEach(lineItem.lots, function(pass){
+//           sum = parseInt(pass.passQuantity,10) + parseInt(pass.failQuantity,10);
+//          });
+//           return sum;
+//        };
 
-          var sum = 0;
-          angular.forEach(lineItem.lots, function(pass){
-           sum = parseInt(pass.passQuantity,10) + parseInt(pass.failQuantity,10);
-          });
-           return sum;
-        };
+$scope.noCoolant=function(lineItem){
+if(lineItem.noCoolantFlag){
+lineItem.icePackFlag=false;
+lineItem.dryIceFlag=false;
+}
+}
+
+$scope.coolant=function(lineItem){
+if(lineItem.icePackFlag || lineItem.dryIceFlag){
+lineItem.noCoolantFlag=false;
+}
+
+
+}
+
+$scope.hasExpired=function(lot){
+var today = new Date();
+var expiryDate = new Date(lot.expiryDate);
+if(today>=expiryDate){
+//make fail quantity ==receive qty
+lot.failQuantity=lot.receivedQuantity;
+// make reason ==expiry
+lot.failReason=1;
+return true;
+}
+return false;
+}
+
+//$scope.hasExpired("2010-10-11");
 
     $scope.inspectLot = function(lineItem) {
 
@@ -53,20 +142,20 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
       if($scope.productValid(lineItem)){
       return;
       }
-          console.log(lineItem);
+//          console.log(lineItem);
      //$scope.updateReceivedQuantity(lineItem);
 
      //sum the passed lots
 
 
      //sum the failed lots
-     lineItem.passQuantity=sumLots('passQuantity',lineItem);
-     lineItem.failQuantity=sumLots('failQuantity',lineItem);
-
-     lineItem.quantityCounted=sumLots('receivedQuantity',lineItem);
-
-
-     $scope.inspectLotModal = false;
+//     lineItem.passQuantity=sumLots('passQuantity',lineItem);
+//     lineItem.failQuantity=sumLots('failQuantity',lineItem);
+//
+//     lineItem.quantityCounted=sumLots('receivedQuantity',lineItem);
+//
+//
+//     $scope.inspectLotModal = false;
 
 /*
             $scope.inspectLotModal = false;
@@ -76,7 +165,7 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
     };
 
     function sumLots(lotType,lineItem){
-    console.log(lineItem);
+
     var sum = 0;
     angular.forEach(lineItem.lots,function(lot){
     sum+=parseInt(lot[lotType],10);
@@ -117,11 +206,7 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
 
 
 
-     $scope.showInspectLotModal = function(lineItem) {
-
-     $scope.lineItem = lineItem;
-
-     console.log(lineItem);
+     $scope.showInspectLotModal = function() {
           $scope.inspectLotModal = true;
       };
 
@@ -142,8 +227,6 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
               $scope.message = "";
               $scope.error = "";
               $scope.showError = false;
-           //   $scope.$parent.asnId = false;
-            //  $scope.$parent.asnIdUpdate = false;
               $location.path('');
 
           };
@@ -154,15 +237,6 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
     $scope.$parent.messageToDisplay = "Inspection Successiful Finalized";
     $scope.$parent.messageFlag = true;
 
-/*    $timeout(function(){
-
-    console.log($scope);
-        $scope.$parent.messageFlag = false;
-    },2000);*/
-
-
-
-   // $scope.$parent.geoZoneId = data.geoZone.id;
     $scope.showError = false;
     $location.path('');
   };
@@ -189,11 +263,113 @@ function InspectionController($scope,$window, inspection, UpdateInspection,$loca
 
        if ($scope.inspection.id) {
          $scope.inspection.status  = status;
-         console.log($scope.inspection);
+
          UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
        }
 
      };
+
+
+
+     $scope.doneLotInspection=function(lineItem){
+
+//if ($scope.inspectLotForm.$error.required) {
+//            $scope.showError = true;
+//            $scope.error = 'form.error';
+//            $scope.message = "";
+//            return;
+//        }
+
+//console.log(lineItem);
+
+var globalErrorFlag=false;
+   angular.forEach(lineItem.lots,function(lot){
+//first lets check if batch is expired
+if(!$scope.hasExpired(lot)){
+
+       //check vvm
+        if(lot.vvmStatus==null || !lot.vvmStatus){
+            lot.vvmError=true;
+            globalErrorFlag=true;
+        }else{
+            lot.vvmError=false;
+        }
+            //only check if lot has not expired
+       //check storage location
+        if((lot.passLocationId==null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity=='')){
+               lot.passLocationError=true;
+               globalErrorFlag=true;
+           }else{
+               lot.passLocationError=false;
+           }
+       //check fail qty
+          if(lot.failQuantity>lot.receivedQuantity){
+               lot.failQuantityError=true;
+               globalErrorFlag=true;
+           }else{
+               lot.failQuantityError=false;
+           }
+       //check check fail reason
+            //only if we have fail quantity
+             if((lot.failQuantity!=='0' && lot.failQuantity)&&!lot.failReason){
+                       lot.failReasonError=true;
+                       globalErrorFlag=true;
+                   }else{
+                       lot.failReasonError=false;
+                   }
+}
+
+   //check fail location
+        //only if we have fail quantity
+ if((lot.failLocationId==null|| !lot.failLocationId)&&lot.failQuantity!=='0' && lot.failQuantity){
+                       lot.failLocationError=true;
+                       globalErrorFlag=true;
+                   }else{
+                       lot.failLocationError=false;
+                   }
+
+
+
+
+   })
+
+    if(globalErrorFlag){
+    return;
+    }else{
+    globalErrorFlag=false;
+    }
+
+   //process passed qty for all lots
+   angular.forEach(lineItem.lots,function(lot){
+    if(lot.failQuantity===''){
+    lot.failQuantity=0;
+    }
+     lot.passQuantity=lot.receivedQuantity-parseInt(lot.failQuantity,10);
+   })
+
+  $scope.totalPassQty=sumLots('passQuantity',lineItem);
+  $scope.totalFailQty=sumLots('failQuantity',lineItem);
+  $scope.totalReceivedQty=$scope.totalFailQty+$scope.totalPassQty;
+  $scope.inspectLotModal = false;
+  $scope.lotInspected=true;
+
+
+
+     }
+
+
+  inspectionLotFormValidator=function(){
+
+
+
+
+if ($scope.inspectLotForm.$error.required) {
+            $scope.showError = true;
+            $scope.error = 'form.error';
+            $scope.message = "";
+            return;
+        }
+  }
 
 
 

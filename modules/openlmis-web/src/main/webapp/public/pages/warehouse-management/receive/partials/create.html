@@ -10,7 +10,14 @@
 
 <div xmlns="http://www.w3.org/1999/html" tab-scroll>
     <div>
-        <h2>Receive Package</h2>
+        <h2 ng-if="!receive">Receive Consignment</h2>
+
+        <h2 ng-if="receive && !viewMode">Update Consignment</h2>
+        <h2 ng-if="viewMode">View Consignment</h2>
+
+
+
+
 
 
     </div>
@@ -31,7 +38,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input
+                            <input name="receiveDate"
                                     type="text"
                                     ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                     ui-date-format="yy-mm-dd"
@@ -111,7 +118,7 @@
 
                         <div class="form-field row-fluid">
                             <select ui-select2="{width: '90%'}" class="span11" id="supplier"
-                                    openlmis-message="label.select.parent.zone" ng-disabled="viewMode"
+                                    openlmis-message="label.select.parent.zone" ng-disabled="viewMode || editMode"
                             ng-model="supplierId">
                                 <option value=""></option>
                                     <option ng-repeat="supplier in suppliers"
@@ -505,10 +512,10 @@
                                                 </div>
                                             </td>
                                             <td class="col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info" style="width:99px">
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info  || viewMode" style="width:99px">
                                             </td>
                                             <td ng-if="!viewMode">
-                                                <button class="btn btn-small btn-info" ng-disabled="lot.quantity<1" ng-show="(product.lots.indexOf(lot)+1==product.lots.length && !lot.displayCodeOnly) || !viewMode" type="button" ng-click="addLot(product,lot)" >Add</button>
+                                                <button class="btn btn-small btn-info" ng-disabled="lot.quantity<1" ng-show="(product.lots.indexOf(lot)+1==product.lots.length && !lot.displayCodeOnly) || (!viewMode && !editMode)" type="button" ng-click="addLot(product,lot)" >Add</button>
                                                 <button class="btn btn-small btn-danger" ng-if="lot && !$last || lot.displayCodeOnly" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
                                             </td>
 
@@ -590,7 +597,7 @@
 
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Expected Arrival Date</span>
+                                        <span >Expected Time of Arrival</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
@@ -761,7 +768,7 @@
 
 
                     <input  type="button" class="btn btn-primary pull-right"
-                            ng-click="saveAsn('RECEIVED')" ng-if="!viewMode" value="Receive" style="margin-left:10px;margin-right:10px"/>
+                            ng-click="saveAsn('RECEIVED')" ng-if="!viewMode" value="Receive" style=margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
