@@ -1,5 +1,6 @@
 function InspectionController($scope,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary){
 
+$scope.globalErrorFlag=true;
 
 GetLocationSummary.get({}, function(data){
 
@@ -207,6 +208,7 @@ return false;
 
 
      $scope.showInspectLotModal = function() {
+        $scope.enabled=false;
           $scope.inspectLotModal = true;
       };
 
@@ -262,16 +264,21 @@ return false;
 //check the outer form validations
 
 
-       if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
-         $scope.showError = true;
-         $scope.error = 'form.error';
-         $scope.message = "";
-         return;
-       }
+//       if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
+//         $scope.showError = true;
+//         $scope.error = 'form.error';
+//         $scope.message = "";
+//         return;
+//       }
 
 //check the inner form validation
 // if invalid add css class to blink it
-//    if()
+    if($scope.globalErrorFlag){
+    $scope.enabled=true;
+    return;
+    }else{
+    $scope.enabled=false;
+    }
 
        if ($scope.inspection.id) {
          $scope.inspection.status  = status;
@@ -300,7 +307,7 @@ return false;
 
 //console.log(lineItem);
 
-var globalErrorFlag=false;
+$scope.globalErrorFlag=false;
    angular.forEach(lineItem.lots,function(lot){
 //first lets check if batch is expired
 if(!$scope.hasExpired(lot)){
@@ -308,7 +315,7 @@ if(!$scope.hasExpired(lot)){
        //check vvm
         if(lot.vvmStatus==null || !lot.vvmStatus){
             lot.vvmError=true;
-            globalErrorFlag=true;
+            $scope.globalErrorFlag=true;
         }else{
             lot.vvmError=false;
         }
@@ -316,14 +323,14 @@ if(!$scope.hasExpired(lot)){
        //check storage location
         if((lot.passLocationId==null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity=='')){
                lot.passLocationError=true;
-               globalErrorFlag=true;
+               $scope.globalErrorFlag=true;
            }else{
                lot.passLocationError=false;
            }
        //check fail qty
           if(lot.failQuantity>lot.receivedQuantity){
                lot.failQuantityError=true;
-               globalErrorFlag=true;
+               $scope.globalErrorFlag=true;
            }else{
                lot.failQuantityError=false;
            }
@@ -331,7 +338,7 @@ if(!$scope.hasExpired(lot)){
             //only if we have fail quantity
              if((lot.failQuantity!=='0' && lot.failQuantity)&&!lot.failReason){
                        lot.failReasonError=true;
-                       globalErrorFlag=true;
+                       $scope.globalErrorFlag=true;
                    }else{
                        lot.failReasonError=false;
                    }
@@ -341,7 +348,7 @@ if(!$scope.hasExpired(lot)){
         //only if we have fail quantity
  if((lot.failLocationId==null|| !lot.failLocationId)&&lot.failQuantity!=='0' && lot.failQuantity){
                        lot.failLocationError=true;
-                       globalErrorFlag=true;
+                       $scope.globalErrorFlag=true;
                    }else{
                        lot.failLocationError=false;
                    }
@@ -351,10 +358,10 @@ if(!$scope.hasExpired(lot)){
 
    })
 
-    if(globalErrorFlag){
+    if($scope.globalErrorFlag){
     return;
     }else{
-    globalErrorFlag=false;
+    $scope.globalErrorFlag=false;
     }
 
    //process passed qty for all lots

@@ -336,7 +336,7 @@
                                             <td >{{totalReceivedQty}}</td>
                                             <td style="text-align:right" ng-if="lotInspected">{{totalPassQty | number}}</td>
                                             <td style="text-align:right" ng-if="lotInspected">{{totalFailQty | number }}</td>
-                                            <td class="quadra" >
+                                            <td ng-class="{'quadrat':enabled}">
                                                 <a href="" ng-click="showInspectLotModal(lineItem)" class="btn btn-link">Lots</a>
                                             </td>
 
