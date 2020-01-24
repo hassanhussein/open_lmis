@@ -16,13 +16,16 @@ margin: 0px 2px 0;
 
 }
 
+.modal .modal-body {
+    max-height: 600px !important;
+}
 
  #popupModel {
 
         width: 1000px;
   bottom: -10px !important;
-
-  left: 50% !important;
+  height: 730px;
+  left: 80% !important;
   top: 50% !important;
   transform: translate(-50%, -50%) !important;
 
@@ -36,7 +39,7 @@ margin: 0px 2px 0;
 
     .modal {
 
-     margin-top: '' !important;;
+     margin-top: 100 !important;;
      margin-left: '' !important;;
 
 
@@ -49,6 +52,87 @@ margin: 0px 2px 0;
     <breadcrumbs item-display-name-resolver="myResolver(defaultResolver, state, isCurrent)"></breadcrumbs>
 
     <h3 id="podPageTitle"><span></span></h3>
+        <div class="app-form">
+            <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                <div filter-container class="clearfix">
+                    <!--
+                                       Additional Filters
+                    -->
+                    <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+                    <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+                    <zone-filter class="form-cell horizontalFilters"></zone-filter>
+                    <product-filter class="form-cell horizontalFilters"></product-filter>
+                    <!--
+                                        <period-session-by-year-filter class="form-cell horizontalFilters"></period-session-by-year-filter>
+                    -->
+                    <!-- <date-range-filter perioderror="error" year="staticYear" startdate="filter.periodStart"
+                                        enddate="filter.periodEnd"
+                                        class="form-cell horizontalFilters"></date-range-filter>-->
+
+                    <!--    <static-year-month-filter perioderror="error" startdate="filter.periodStart"  enddate="filter.periodEnd"
+                                           class="form-cell horizontalFilters"></static-year-month-filter>-->
+                    <static-year-monthly-filter perioderror="perioderror" year="year" startdate="filter.periodStart"
+                                                enddate="filter.periodEnd"></static-year-monthly-filter>
+
+
+                    <div class="form-cell horizontalFilters"
+                         style="padding-top: 30px;margin-left: 0px !important; width: 1px !important;">
+                        &nbsp; &nbsp; <span class="pull-right"><a ng-click="searchReport()"
+                                                                  class="waves-effect waves-light btn"
+                                                                  style="background-color: #348991;">Search</a></span>
+                    </div>
+                    <!--    <div class="form-cell horizontalFilters">
+                            <label for="startTime" class="labels">
+                                <span>Date</span>
+                                <span class="label-required"> *&nbsp;</span>
+
+                            </label>
+
+
+                            <div class="form-field">
+                                <input name="startTime" id="startTime" type="text"
+                                       ui-date="{dateFormat: 'dd/mm/yy',changeYear: true,maxDate:'today'}"
+                                       ng-model="filter.dateStatus"
+                                       ng-change="OnFilterChanged()"/>
+
+                            </div>
+                        </div>-->
+
+                    <div class="form-cell" ng-show="datarows.length > 0 && showIndicators">
+
+                        <label class="labels" style="float:right;">
+                            <span style="font-size: medium"><Strong>Indicators</Strong></span><br/>
+
+
+                            <span data-toggle="tooltip"
+                                  title="Indicate that you have Insufficient Stock in your stock ">&nbsp;&nbsp;&nbsp;&nbsp;
+                                <i class="icon-stop red fa-lg" aria-hidden="true"></i>Stocked out</span>&nbsp;&nbsp;&nbsp;
+
+
+                            <span data-toggle="tooltip" title="Indicate that you have enough stock ">
+                                   <i class="icon-stop green fa-lg" aria-hidden="true"></i>  Adequately Stocked</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <span data-toggle="tooltip" title="Indicate that your stock is nearlest to Reorder Level ">
+                                   <i class="icon-stop yellow fa-lg" aria-hidden="true"></i>  Under stocked</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <span data-toggle="tooltip"
+                                  title="Indicate that you have more than supposed to have."> <i
+                                    class="icon-stop blue fa-lg" aria-hidden="true"></i>  Over Stocked</span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+            </form>
+        </div>
+
+
+
     <div class="row-fluid span12">
        <div class="span5">
            <div class="row-fluid">
