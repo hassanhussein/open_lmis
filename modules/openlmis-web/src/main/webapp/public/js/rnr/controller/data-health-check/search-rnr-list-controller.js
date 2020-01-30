@@ -73,7 +73,8 @@ function SearchRnrListController($scope, facilities, RequisitionsForViewing, Pro
             {field: 'facilityName', displayName: messageService.get("option.value.facility.name")},
             {field: 'programName', displayName: messageService.get("program.header")},
             {field: 'stringSubmittedDate', displayName: messageService.get("label.date.submitted")},
-            {field: 'requisitionStatus', displayName: messageService.get("label.status")}
+            {field: 'requisitionStatus', displayName: messageService.get("label.status")},
+            {field: 'emergency', displayName: messageService.get("requisition.type.emergency")}
         ]
     };
 
