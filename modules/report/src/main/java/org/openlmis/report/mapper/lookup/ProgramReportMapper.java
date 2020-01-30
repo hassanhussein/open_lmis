@@ -29,7 +29,10 @@ public interface ProgramReportMapper {
 
   @Select("SELECT id, name, description, code " +
       "   FROM " +
-      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId}) " +
+      "       programs where id in (select program_id from vw_user_facilities where user_id = #{userId} UNION ALL \n" +
+          "select distinct ra.programid from users u \n" +
+          "join  role_assignments ra on ra.userid = u.id\n" +
+          " where u.id=#{userId} ) " +
       " order by name")
   List<Program> getAllForUser(@Param("userId") Long userId);
 
