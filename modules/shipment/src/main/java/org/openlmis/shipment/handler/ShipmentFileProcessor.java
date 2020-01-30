@@ -11,6 +11,7 @@
 package org.openlmis.shipment.handler;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.EDIFileColumn;
 import org.openlmis.core.domain.EDIFileTemplate;
@@ -121,6 +122,13 @@ public class ShipmentFileProcessor {
     while ((fieldsInOneRow = listReader.read()) != null) {
 
       ShipmentLineItemDTO dto = ShipmentLineItemDTO.populate(fieldsInOneRow, includedColumns);
+
+      if(StringUtils.isNumeric(dto.getOrderNumber())) {
+
+        dto.setOrderId(Long.valueOf(dto.getOrderNumber()));
+        Order o = orderService.getOrder(dto.getOrderId());
+        dto.setOrderNumber(o.getOrderNumber());
+      }
 
       status = addShippableOrder(orderSet, dto) && status;
 
