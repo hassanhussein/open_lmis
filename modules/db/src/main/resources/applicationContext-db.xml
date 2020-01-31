@@ -29,7 +29,7 @@
     <!--
       Report datasource
     -->
-<!--
+
 
     <bean id="openLmisTransactionManagerReport"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -76,7 +76,7 @@
         <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryReport"/>
     </bean>
--->
+
 
 
     <!--
