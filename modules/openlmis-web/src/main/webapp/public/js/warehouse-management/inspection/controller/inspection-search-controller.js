@@ -1,4 +1,4 @@
-function InspectionSearchController($timeout,$scope,SearchInspectionByPaged,navigateBackService, $dialog,$location){
+function InspectionSearchController($timeout,$scope,$window ,SearchInspectionByPaged,navigateBackService, $dialog,$location){
 
 if($scope.$parent.messageFlag) {
 
@@ -156,6 +156,19 @@ $scope.searchOptions = [
         if (!($scope.query || lastQuery)) return;
         lastQuery ? getInspectionList(page, lastQuery) : getInspectionList(page, $scope.query);
       };
+
+
+        $scope.print = function (inspectionId){
+                  console.log(inspectionId.id);
+
+
+                   var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
+
+                   $window.open(url, '_blank');
+
+
+
+         };
 
 
       $scope.edit = function (inspection,viewMode) {

@@ -34,7 +34,7 @@ public interface EquipmentInventoryMapper {
   })
   List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
 
-  @Select("SELECT ei.*, (select count(ds.*) > 0 from equipment_daily_cold_trace_status ds where ds.equipmentInventoryId = ei.id) as submittedDailyStatus" +
+  @Select("SELECT ei.*, (select count(ds.*) > 0 from equipment_daily_cold_trace_status ds where ds.serialnumber = ei.serialnumber) as submittedDailyStatus" +
       " FROM equipment_inventories ei" +
       " JOIN equipments e ON ei.equipmentId = e.id" +
       " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
