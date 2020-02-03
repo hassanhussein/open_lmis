@@ -31,7 +31,7 @@ import static org.openlmis.core.builder.SupplyLineBuilder.defaultSupplyLine;
 @ContextConfiguration(locations = "classpath:test-applicationContext-core.xml")
 @TransactionConfiguration(defaultRollback = true, transactionManager = "openLmisTransactionManager")
 @Ignore
-public class CoreTestContext extends AbstractTransactionalJUnit4SpringContextTests {
+public class CoreTestContext  {
   @Autowired
   protected ProcessingScheduleMapper processingScheduleMapper;
   @Autowired

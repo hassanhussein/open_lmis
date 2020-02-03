@@ -12,12 +12,16 @@ package org.openlmis.core.query;
 
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.*;
 
+@Primary
 @Repository
 @NoArgsConstructor
 public class QueryExecutor {
@@ -25,7 +29,8 @@ public class QueryExecutor {
   DataSource dataSource;
 
   @Autowired
-  public QueryExecutor(DataSource dataSource) {
+  public QueryExecutor(@Qualifier("openlmisDataSource") DataSource dataSource) {
+
     this.dataSource = dataSource;
   }
 

@@ -25,6 +25,8 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.query.QueryExecutor;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -53,6 +55,7 @@ public class DeliveryZoneProgramScheduleMapperIT {
   ProcessingScheduleMapper scheduleMapper;
   @Autowired
   ProgramMapper programMapper;
+
   @Autowired
   QueryExecutor queryExecutor;
 
