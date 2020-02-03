@@ -32,11 +32,8 @@ public class RequisitionPredicateHelper {
   }
 
   public static String userHasPermissionOnFacilityBy(String field) {
-//    return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program}) ", field);
-    return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program} " +
-            "UNION  \n" +
-            "select facilityid from users \n" +
-            " where id=#{userId} )", field);
+   // return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program})", field);
+    return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program}) OR  %s in (select facilityid from users where id = #{userId})", field, field);
   }
 
   public static String geoZoneIsFilteredBy(String viewAlias) {
