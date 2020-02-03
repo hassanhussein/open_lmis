@@ -31,51 +31,51 @@
     -->
 
 
-<!--    <bean id="openLmisTransactionManagerReport"-->
-<!--          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
-<!--        <property name="dataSource">-->
-<!--            <ref bean="openlmisReportDataSource"/>-->
-<!--        </property>-->
-<!--    </bean>-->
+    <bean id="openLmisTransactionManagerReport"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource">
+            <ref bean="openlmisReportDataSource"/>
+        </property>
+    </bean>
 
 
-<!--    <bean id="openlmisReportDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">-->
-<!--        <property name="driverClass" value="${jdbc.driverClassName}"/>-->
-<!--        <property name="jdbcUrl" value="${openlmis.report.jdbc.url}"/>-->
-<!--        <property name="user" value="${openlmis.jdbc.username}"/>-->
-<!--        <property name="password" value="${openlmis.jdbc.password}"/>-->
-<!--        <property name="maxPoolSize" value="${openlmis.conn.pool.maxPoolSize}"/>-->
-<!--        <property name="acquireIncrement" value="${openlmis.conn.pool.acquireIncrement}"/>-->
-<!--        <property name="acquireRetryAttempts" value="${openlmis.conn.pool.acquireRetryAttempts}"/>-->
-<!--        <property name="acquireRetryDelay" value="${openlmis.conn.pool.acquireRetryDelay}"/>-->
-<!--        <property name="debugUnreturnedConnectionStackTraces"-->
-<!--                  value="${openlmis.conn.pool.debugUnreturnedConnectionStackTraces}"/>-->
-<!--        <property name="idleConnectionTestPeriod" value="${openlmis.conn.pool.idleConnectionTestPeriod}"/>-->
-<!--        <property name="initialPoolSize" value="${openlmis.conn.pool.initialPoolSize}"/>-->
-<!--        <property name="maxConnectionAge" value="${openlmis.conn.pool.maxConnectionAge}"/>-->
-<!--        <property name="maxIdleTime" value="${openlmis.conn.pool.maxIdleTime}"/>-->
-<!--        <property name="maxIdleTimeExcessConnections" value="${openlmis.conn.pool.maxIdleTimeExcessConnections}"/>-->
-<!--        <property name="maxStatements" value="${openlmis.conn.pool.maxStatements}"/>-->
-<!--        <property name="maxStatementsPerConnection" value="${openlmis.conn.pool.maxStatementsPerConnection}"/>-->
-<!--        <property name="minPoolSize" value="${openlmis.conn.pool.minPoolSize}"/>-->
-<!--        <property name="numHelperThreads" value="${openlmis.conn.pool.numHelperThreads}"/>-->
-<!--        <property name="statementCacheNumDeferredCloseThreads"-->
-<!--                  value="${openlmis.conn.pool.statementCacheNumDeferredCloseThreads}"/>-->
-<!--        <property name="testConnectionOnCheckin" value="${openlmis.conn.pool.testConnectionOnCheckin}"/>-->
-<!--        <property name="unreturnedConnectionTimeout" value="${openlmis.conn.pool.unreturnedConnectionTimeout}"/>-->
-<!--    </bean>-->
+    <bean id="openlmisReportDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${openlmis.report.jdbc.url}"/>
+        <property name="user" value="${openlmis.jdbc.username}"/>
+        <property name="password" value="${openlmis.jdbc.password}"/>
+        <property name="maxPoolSize" value="${openlmis.conn.pool.maxPoolSize}"/>
+        <property name="acquireIncrement" value="${openlmis.conn.pool.acquireIncrement}"/>
+        <property name="acquireRetryAttempts" value="${openlmis.conn.pool.acquireRetryAttempts}"/>
+        <property name="acquireRetryDelay" value="${openlmis.conn.pool.acquireRetryDelay}"/>
+        <property name="debugUnreturnedConnectionStackTraces"
+                  value="${openlmis.conn.pool.debugUnreturnedConnectionStackTraces}"/>
+        <property name="idleConnectionTestPeriod" value="${openlmis.conn.pool.idleConnectionTestPeriod}"/>
+        <property name="initialPoolSize" value="${openlmis.conn.pool.initialPoolSize}"/>
+        <property name="maxConnectionAge" value="${openlmis.conn.pool.maxConnectionAge}"/>
+        <property name="maxIdleTime" value="${openlmis.conn.pool.maxIdleTime}"/>
+        <property name="maxIdleTimeExcessConnections" value="${openlmis.conn.pool.maxIdleTimeExcessConnections}"/>
+        <property name="maxStatements" value="${openlmis.conn.pool.maxStatements}"/>
+        <property name="maxStatementsPerConnection" value="${openlmis.conn.pool.maxStatementsPerConnection}"/>
+        <property name="minPoolSize" value="${openlmis.conn.pool.minPoolSize}"/>
+        <property name="numHelperThreads" value="${openlmis.conn.pool.numHelperThreads}"/>
+        <property name="statementCacheNumDeferredCloseThreads"
+                  value="${openlmis.conn.pool.statementCacheNumDeferredCloseThreads}"/>
+        <property name="testConnectionOnCheckin" value="${openlmis.conn.pool.testConnectionOnCheckin}"/>
+        <property name="unreturnedConnectionTimeout" value="${openlmis.conn.pool.unreturnedConnectionTimeout}"/>
+    </bean>
 
-<!--    <bean id="sqlSessionFactoryReport" class="org.mybatis.spring.SqlSessionFactoryBean">-->
-<!--        <property name="dataSource" ref="openlmisReportDataSource"/>-->
+    <bean id="sqlSessionFactoryReport" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="openlmisReportDataSource"/>
 
-<!--        <property name="typeHandlersPackage" value="org.openlmis.core.repository.typehandler"/>-->
-<!--    </bean>-->
+        <property name="typeHandlersPackage" value="org.openlmis.core.repository.typehandler"/>
+    </bean>
 
-<!--    <bean id="myBatisMapperScannerReport" class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
-<!--        <property name="basePackage" value="org.openlmis.analytics*"/>-->
-<!--        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>-->
-<!--        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryReport"/>-->
-<!--    </bean>-->
+    <bean id="myBatisMapperScannerReport" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.openlmis.analytics*"/>
+        <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryReport"/>
+    </bean>
 
 
 
