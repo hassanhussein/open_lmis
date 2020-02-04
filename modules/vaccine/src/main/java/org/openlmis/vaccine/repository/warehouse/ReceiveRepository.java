@@ -53,4 +53,8 @@ public class ReceiveRepository {
     public Integer updateInspection(Long id) {
        return mapper.updateInspection(id);
     }
+
+    public String getLastReceiptNumber() {
+        return mapper.getLastReceiptNumber();
+    }
 }

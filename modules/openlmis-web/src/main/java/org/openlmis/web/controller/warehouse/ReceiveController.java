@@ -157,4 +157,11 @@ public class ReceiveController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getById(@RequestParam(value = "id") Long id) {
         return OpenLmisResponse.response("ids", service.updateInspection(id));
     }
+
+  /*  @RequestMapping(value = "test-case",method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getTested() {
+        return OpenLmisResponse.response("receive", service.generateReceiveNumber());
+    }*/
+
+
 }

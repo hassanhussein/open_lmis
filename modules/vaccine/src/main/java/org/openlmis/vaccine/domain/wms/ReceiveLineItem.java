@@ -30,4 +30,6 @@ public class ReceiveLineItem extends BaseModel {
 
     private Product product;
 
+    private String receiveNumber;
+
 }
