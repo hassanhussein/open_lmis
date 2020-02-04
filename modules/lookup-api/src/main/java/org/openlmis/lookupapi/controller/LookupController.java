@@ -329,6 +329,8 @@ public class LookupController {
             @ApiResponse(code = 200, message = "Successful request", response = HealthFacilityDTO.class),
             @ApiResponse(code = 500, message = "Internal server error")}
     )
+
+
     @RequestMapping(value = "/rest-api/hfr-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity postTransaction(@RequestBody HealthFacilityDTO dto, HttpServletRequest request){
 
@@ -356,6 +358,19 @@ public class LookupController {
     public ResponseEntity getRefreshView(@PathVariable("view") String view) {
        lookupService.refreshViewsBy(view);
         return RestResponse.response("views", "refreshed");
+    }
+
+
+    @RequestMapping(value = "/rest-api/heath-facility-registry-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity saveHFRRecords(@RequestBody HealthFacilityDTO dto, HttpServletRequest request){
+
+        try {
+            interfaceService.receiveAndSendResponse(dto);
+            interfaceService.sendResponseToHIM(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(OK);
     }
 
 }

@@ -192,10 +192,12 @@ public class LookupService {
   public void saveHFR(HealthFacilityDTO dto){
 
     if(dto != null){
-        if(!dto.getIlIDNumber().isEmpty()) {
-            HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
-            //HealthFacilityDTO facilityDTO = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
-            if (hfr == null) {
+      //  if(!dto.getIlIDNumber().isEmpty()) {
+            //HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
+
+            HealthFacilityDTO savedFacility = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
+
+            if (savedFacility == null) {
                 //if(facilityDTO == null) {
                 interfaceMapper.insert(dto);
         /*}else
@@ -206,12 +208,11 @@ public class LookupService {
                 interfaceMapper.update(dto);
                 // }
             }
-        }
+       // }
 
     }
 
   }
-
 
 
   public ProgramReferenceData getProgramReferenceData(String code, String facilityCode) {
