@@ -19,6 +19,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
+import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.service.InterfaceService;
 import org.openlmis.lookupapi.service.LookupService;
@@ -366,7 +367,17 @@ public class LookupController {
 
         try {
             interfaceService.receiveAndSendResponse(dto);
-            interfaceService.sendResponseToHIM(dto);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(OK);
+    }
+
+    @RequestMapping(value = "/rest-api/activate-facility-by-msd-code", method = RequestMethod.PUT, headers = ACCEPT_JSON)
+    public ResponseEntity updateELMISFacility(@RequestBody FacilityMsdCodeDTO msd, HttpServletRequest request){
+
+        try {
+            interfaceService.activateByMSDFacilityCode(msd);
         } catch (Exception e) {
             e.printStackTrace();
         }

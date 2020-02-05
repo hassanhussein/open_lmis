@@ -382,12 +382,13 @@ public class FacilityService {
 
     @Transactional
     public void insertHfrMapping(HfrMappingDTO dto) {
-        GeographicZone zone = geographicZoneService.getByCodeFor(dto.getZoneCode());
-        dto.setVimsDistrict(zone.getId());
-        if (dto.getId() == null) {
-            facilityRepository.insertHfrMapping(dto);
-        } else
-            facilityRepository.updateHFRMapping(dto);
+        GeographicZone zone = geographicZoneService.getByCodeFor(dto.getCode());
+        if(zone != null) {
+            if (dto.getId() == null) {
+                facilityRepository.insertHfrMapping(dto);
+            } else
+                facilityRepository.updateHFRMapping(dto);
+        }
     }
 
     public List<HfrMappingDTO> getAllHfrMapping() {
@@ -399,7 +400,7 @@ public class FacilityService {
     }
 
     public HfrMappingDTO getAllHfrMappingByCouncil(HfrMappingDTO council) {
-        return facilityRepository.getAllHfrMappingByCouncil(council.getHfrDistrict());
+        return facilityRepository.getAllHfrMappingByCouncil(council.getHfrCode());
     }
 
     @Transactional

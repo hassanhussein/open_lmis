@@ -105,4 +105,8 @@ public class HealthFacilityDTO {
 
     public String ilIDNumber;
 
+    private Boolean activatedByMsd;
+
+    private String msdCode;
+
 }

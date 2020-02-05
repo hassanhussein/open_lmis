@@ -1,6 +1,7 @@
 package org.openlmis.lookupapi.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.MSDStockDTO;
 import org.springframework.stereotype.Repository;
@@ -62,4 +63,12 @@ public interface ILInterfaceMapper {
 
     @Select("SELECT * FROM refresh_view_via_api(#{view}) ")
     void refreshViewsBy(@Param("view") String view);
+
+
+    @Select("SELECT * FROM hfr_facilities WHERE facIdNumber = #{facIdNumber}")
+    List<FacilityMsdCodeDTO> getByHfrCode(@Param("facIdNumber") String facIdNumber);
+
+
+    @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
+    void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
 }

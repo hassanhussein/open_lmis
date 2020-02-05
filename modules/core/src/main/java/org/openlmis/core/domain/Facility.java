@@ -142,6 +142,9 @@ public class Facility extends BaseModel implements Importable {
   @ImportField(name = "Price Schedule", nested = "code")
   private PriceSchedule priceSchedule;
 
+  @ImportField(name = "Hfr Code")
+  private  String hfrCode;
+
   private List<ELMISInterfaceFacilityMapping> interfaceMappings = new ArrayList<>();
 
   private ELMISResponseMessageDTO messageDTO;

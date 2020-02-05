@@ -34,6 +34,14 @@
         <br/>
 
     </div>
+
+    <div class="col-sm-9" ng-show="displayMessage">
+        <div class="alert alert-danger">
+            <strong>Info!</strong>
+            This facility code {{facilityCode}} has not been updated in Epicor, Will not be updated in eLMIS Facility List
+        </div>
+    </div>
+
     <div>
 
 
@@ -43,24 +51,28 @@
                 <th class="col-row-number">#</th>
                 <th><span openlmis-message="label.name"></span></th>
                 <th><span openlmis-message="label.code"></span></th>
+                <th><span>MSD Code</span></th>
                 <th><span openlmis-message="header.geographic.zone"></span></th>
                 <th><span openlmis-message="header.facility.type"></span></th>
                 <th><span>Operating Status</span></th>
+                <th><span>Active in Epicor</span></th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="facility in facilities | filter : query">
                 <td>{{$index + 1}}</td>
-                <td><div>{{facility.name}}</div></td>
-                <td><a href="">{{facility.facidnumber}}</a></td>
-                <td>{{facility.council}}</td>
-                <td>{{facility.facilitytype}}</td>
-                <td><div>{{facility.operatingstatus}}</div></td>
+                <td style="text-align:center"><div>{{facility.name}}</div></td>
+                <td style="text-align:center"><a href="">{{facility.facidnumber}}</a></td>
+                <td style="text-align:center">{{facility.msdcode}}</td>
+                <td style="text-align:center">{{facility.council}}</td>
+                <td style="text-align:center">{{facility.facilitytype}}</td>
+                <td style="text-align:center"> <div>{{facility.operatingstatus}}</div></td>
+                <td style="text-align:center">{{(facility.activatedbymsd)?'Yes':'No'}}</td>
                 <td style="display: inline-block">
               <!--      <a id="facilityAddNew" class="pull-right btn btn-primary"
                        openlmis-message="button.add.new"></a>-->
-                    <input type="button" value="Approve"  class="pull-right btn btn-primary"/>
+                    <input type="button" value="Approve"  class="pull-right btn btn-primary" ng-click="activateFacilities(facility)"/>
                 </td>
             </tr>
             </tbody>

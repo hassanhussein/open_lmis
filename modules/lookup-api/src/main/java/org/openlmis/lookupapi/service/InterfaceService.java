@@ -10,6 +10,7 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.lookupapi.mapper.ILInterfaceMapper;
+import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HFRDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.MSDStockDTO;
@@ -29,6 +30,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Service
@@ -187,4 +189,14 @@ public class InterfaceService {
 
     }
 
+    public List<FacilityMsdCodeDTO> getByHfrCode(String facIdNumber) {
+
+        return interfaceMapper.getByHfrCode(facIdNumber);
+
+    }
+
+    public void activateByMSDFacilityCode(FacilityMsdCodeDTO msd) {
+
+        interfaceMapper.activateByMSDFacilityCode(msd);
+    }
 }

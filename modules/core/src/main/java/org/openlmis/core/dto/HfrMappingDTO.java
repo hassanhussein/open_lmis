@@ -9,12 +9,17 @@ import org.openlmis.upload.annotation.ImportField;
 public class HfrMappingDTO extends BaseModel  implements Importable {
 
     @ImportField(mandatory = true, name = "code")
-    private String zoneCode;
+    private String code;
 
-    @ImportField(mandatory = true, name = "HFR District")
     private String hfrDistrict;
     @ImportField(type = "boolean", mandatory = true, name = "Is Active")
     private Boolean active;
     private Long vimsDistrict;
+
+    @ImportField(mandatory = true, name = "HFR District Code")
+    private String hfrCode;
+
+    @ImportField(name = "HFR District Name")
+    private String description;
 
 }
