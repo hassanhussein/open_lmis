@@ -14,13 +14,19 @@ import lombok.Setter;
         "Comm_FacName",
         "Zone",
         "Region",
+        "DistrictCode",
         "District",
+        "CouncilCode",
         "Council",
         "Ward",
         "VillageMtaa",
+        "FacilityTypeGroupCode",
         "FacilityTypeGroup",
+        "FacilityTypeCode",
         "FacilityType",
+        "OwnershipGroupCode",
         "OwnershipGroup",
+        "OwnershipCode",
         "Ownership",
         "OperatingStatus",
         "Latitude",
@@ -30,8 +36,7 @@ import lombok.Setter;
         "UpdatedAt",
         "OSchangeOpenedtoClose",
         "OSchangeClosedtoOperational",
-        "PostorUpdate",
-        "IL_TransactionIDNumber"
+        "PostorUpdate"
 })
 
 @Data
@@ -84,9 +89,20 @@ public class HealthFacilityDTO {
     @JsonProperty("PostorUpdate")
     public String postorUpdate;
 
-    @JsonProperty("IL_TransactionIDNumber")
-    public String IlIDNumber;
-
     public String status;
+
+    @JsonProperty("DistrictCode")
+    public String districtCode;
+
+    @JsonProperty("CouncilCode")
+    public String councilCode;
+
+    @JsonProperty("FacilityTypeGroupCode")
+    public String facilityTypeGroupCode;
+
+    @JsonProperty("OwnershipCode")
+    public String ownershipCode;
+
+    public String ilIDNumber;
 
 }
