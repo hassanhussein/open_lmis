@@ -22,25 +22,25 @@
 </div>
 <form name="movementForm"  novalidate>
 
-    <div class="form-row clearfix">
+<!--    <div class="form-row clearfix">-->
 
 
 
-        <div class="span4">
-            <label for="receiptDate">
-                <span>Reference No</span>
-            </label>
+<!--        <div class="span4">-->
+<!--            <label for="receiptDate">-->
+<!--                <span>Reference No</span>-->
+<!--            </label>-->
 
-            <div class="form-field">
-                <input type="text" ng-model="referenceNoA" ng-disabled="true"/>
-                <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
-                      openlmis-message="missing.value"></span>
-            </div>
-        </div>
+<!--            <div class="form-field">-->
+<!--                <input type="text" ng-model="referenceNoA" ng-disabled="true"/>-->
+<!--                <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"-->
+<!--                      openlmis-message="missing.value"></span>-->
+<!--            </div>-->
+<!--        </div>-->
 
 
 
-    </div>
+<!--    </div>-->
 
 
 
@@ -143,20 +143,11 @@
             </label>
 
             <div class="form-field">
-                <input type="text" ng-disabled="!lot" ng-model="quantity"/>
+                <input type="text" ng-disabled="!lot" ng-model="quantity" style="width:95%"/>
                 <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
-
-    </div>
-
-
-
-
-
-
-    <div class="form-row clearfix">
 
         <div class="span4">
             <label for="currency" >Reason</label>
@@ -172,7 +163,14 @@
                       openlmis-message="missing.value"></span>
             </div>
         </div>
+
     </div>
+
+
+
+
+
+
 
 
 
