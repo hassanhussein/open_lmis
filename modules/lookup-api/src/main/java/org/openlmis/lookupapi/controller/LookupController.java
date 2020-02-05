@@ -373,7 +373,7 @@ public class LookupController {
         return ResponseEntity.ok(OK);
     }
 
-    @RequestMapping(value = "/rest-api/activate-facility-by-msd-code", method = RequestMethod.PUT, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/activate-facility-by-msd-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity updateELMISFacility(@RequestBody FacilityMsdCodeDTO msd, HttpServletRequest request){
 
         try {

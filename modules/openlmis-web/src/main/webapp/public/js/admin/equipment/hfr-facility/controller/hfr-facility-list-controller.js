@@ -27,5 +27,5 @@ function HFRControllerFunc($scope,$timeout, GetHFRFacilities) {
 
     console.log(facility.msdcode);
 
-    }
+    };
 }
