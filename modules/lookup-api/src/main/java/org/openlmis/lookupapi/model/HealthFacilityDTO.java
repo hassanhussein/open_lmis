@@ -13,13 +13,14 @@ import lombok.Setter;
         "Name",
         "Comm_FacName",
         "Zone",
+        "Region_Code",
         "Region",
-        "DistrictCode",
+        "District_Code",
         "District",
-        "CouncilCode",
+        "Council_Code",
         "Council",
         "Ward",
-        "VillageMtaa",
+        "Village",
         "FacilityTypeGroupCode",
         "FacilityTypeGroup",
         "FacilityTypeCode",
@@ -52,6 +53,10 @@ public class HealthFacilityDTO {
     public String commFacName;
     @JsonProperty("Zone")
     public String zone;
+
+    @JsonProperty("Region_Code")
+    public String regionCode;
+
     @JsonProperty("Region")
     public String region;
     @JsonProperty("District")
@@ -60,7 +65,7 @@ public class HealthFacilityDTO {
     public String council;
     @JsonProperty("Ward")
     public String ward;
-    @JsonProperty("VillageMtaa")
+    @JsonProperty("Village")
     public String villageMtaa;
     @JsonProperty("FacilityTypeGroup")
     public String facilityTypeGroup;
@@ -91,10 +96,10 @@ public class HealthFacilityDTO {
 
     public String status;
 
-    @JsonProperty("DistrictCode")
+    @JsonProperty("District_Code")
     public String districtCode;
 
-    @JsonProperty("CouncilCode")
+    @JsonProperty("Council_Code")
     public String councilCode;
 
     @JsonProperty("FacilityTypeGroupCode")

@@ -196,7 +196,9 @@ public class InterfaceService {
     }
 
     public void activateByMSDFacilityCode(FacilityMsdCodeDTO msd) {
-
-        interfaceMapper.activateByMSDFacilityCode(msd);
+        List<FacilityMsdCodeDTO> list = interfaceMapper.getByHfrCode(msd.getFacIdNumber());
+        if(list != null) {
+            interfaceMapper.activateByMSDFacilityCode(msd);
+        }
     }
 }
