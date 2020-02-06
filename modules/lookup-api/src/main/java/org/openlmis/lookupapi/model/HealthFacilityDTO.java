@@ -3,9 +3,13 @@ package org.openlmis.lookupapi.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_NULL;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
@@ -43,6 +47,7 @@ import lombok.Setter;
 @Data
 @Setter
 @Getter
+@JsonSerialize(include = NON_NULL)
 public class HealthFacilityDTO {
 
     @JsonProperty("Fac_IDNumber")
@@ -69,10 +74,18 @@ public class HealthFacilityDTO {
     public String villageMtaa;
     @JsonProperty("FacilityTypeGroup")
     public String facilityTypeGroup;
+
+    @JsonProperty("FacilityTypeCode")
+    private String facilityTypeCode;
+
     @JsonProperty("FacilityType")
     public String facilityType;
     @JsonProperty("OwnershipGroup")
     public String ownershipGroup;
+
+    @JsonProperty("OwnershipGroupCode")
+    public String ownershipGroupCode;
+
     @JsonProperty("Ownership")
     public String ownership;
     @JsonProperty("OperatingStatus")

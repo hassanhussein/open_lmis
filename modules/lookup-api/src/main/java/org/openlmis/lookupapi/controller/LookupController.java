@@ -12,6 +12,9 @@
 
 package org.openlmis.lookupapi.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,6 +22,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.service.InterfaceService;
@@ -38,7 +42,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 
+import java.io.IOException;
+
 import static javax.security.auth.callback.ConfirmationCallback.OK;
+import static org.openlmis.restapi.response.RestResponse.error;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @Controller
 @NoArgsConstructor
@@ -363,14 +371,39 @@ public class LookupController {
 
 
     @RequestMapping(value = "/rest-api/heath-facility-registry-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
-    public ResponseEntity saveHFRRecords(@RequestBody HealthFacilityDTO dto, HttpServletRequest request){
+    public ResponseEntity<RestResponse> saveHFRRecords(@RequestBody String jsonString, HttpServletRequest request){
 
-        try {
-            interfaceService.receiveAndSendResponse(dto);
-        } catch (Exception e) {
-            e.printStackTrace();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+           try {
+               objectMapper.readTree(jsonString);
+               objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+
+               if(jsonString != null && !jsonString.isEmpty() && !jsonString.equalsIgnoreCase("{}") &&  !jsonString.equalsIgnoreCase("{ }") ) {
+                   HealthFacilityDTO dto = objectMapper.readValue(jsonString, HealthFacilityDTO.class);
+                   interfaceService.receiveAndSendResponse(dto);
+                   return RestResponse.success("Successiful Inserted");
+               }else {
+
+                   return error("Empty Object", BAD_REQUEST);
+               }
+
+           } catch (DataException | IOException e) {
+
+               return error(e.getMessage(), BAD_REQUEST);
+
+           }
+
+    }
+
+    private static boolean isValidJSON(ObjectMapper objectMapper, final String json) throws IOException {
+        boolean valid = true;
+        try{
+            objectMapper.readTree(json);
+        } catch(JsonProcessingException e){
+            valid = false;
         }
-        return ResponseEntity.ok(OK);
+        return valid;
     }
 
     @RequestMapping(value = "/rest-api/activate-facility-by-msd-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
