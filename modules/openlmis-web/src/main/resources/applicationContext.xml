@@ -481,6 +481,16 @@
                     </bean>
                 </entry>
 
+                <entry key="hfr-upload-feature">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="HFR List Upload "/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.lookupapi.model.HealthFacilityDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="hfrUploadPersistenceHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>

@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.dto.HFRFacilityDTO;
 import org.openlmis.core.repository.RegimenRepository;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
@@ -242,4 +243,9 @@ public class LookupService {
   public void refreshViewsBy(String view){
     interfaceMapper.refreshViewsBy(view);
   }
+
+  public BaseModel getByHfrCode(HealthFacilityDTO hfr) {
+    return interfaceMapper.getByFacilityCode(hfr.facIDNumber);
+  }
+
 }

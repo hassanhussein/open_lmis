@@ -396,16 +396,6 @@ public class LookupController {
 
     }
 
-    private static boolean isValidJSON(ObjectMapper objectMapper, final String json) throws IOException {
-        boolean valid = true;
-        try{
-            objectMapper.readTree(json);
-        } catch(JsonProcessingException e){
-            valid = false;
-        }
-        return valid;
-    }
-
     @RequestMapping(value = "/rest-api/activate-facility-by-msd-code", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity updateELMISFacility(@RequestBody FacilityMsdCodeDTO msd, HttpServletRequest request){
 

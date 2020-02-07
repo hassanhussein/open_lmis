@@ -27,5 +27,22 @@ function HFRControllerFunc($scope,$timeout, GetHFRFacilities) {
 
     console.log(facility.msdcode);
 
+
+       $scope.showConfirmActivateFaicility = function () {
+            var dialogOpts = {
+                id: "enableConfirmModal",
+                header: "Creating new Facility",
+                body: "'{0}' / '{1}' will be enabled in the system.".format($scope.originalFacilityName, $scope.originalFacilityCode)
+            };
+            OpenLmisDialog.newDialog(dialogOpts, $scope.enableFacilityCallBack, $dialog);
+        };
+
+        $scope.enableFacilityCallBack = function (result) {
+            if (!result) return;
+            Facility.restore({id: $scope.facility.id}, successFunc, errorFunc);
+        };
+
+
+
     };
 }
