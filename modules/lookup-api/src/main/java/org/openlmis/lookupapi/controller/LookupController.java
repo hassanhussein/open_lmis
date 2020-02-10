@@ -25,6 +25,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
+import org.openlmis.lookupapi.model.ResponseMessage;
 import org.openlmis.lookupapi.service.InterfaceService;
 import org.openlmis.lookupapi.service.LookupService;
 import org.openlmis.report.model.dto.Facility;
@@ -371,7 +372,7 @@ public class LookupController {
 
 
     @RequestMapping(value = "/rest-api/heath-facility-registry-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
-    public ResponseEntity<RestResponse> saveHFRRecords(@RequestBody String jsonString, HttpServletRequest request){
+    public String saveHFRRecords(@RequestBody String jsonString, HttpServletRequest request){
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -380,17 +381,26 @@ public class LookupController {
                objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
 
                if(jsonString != null && !jsonString.isEmpty() && !jsonString.equalsIgnoreCase("{}") &&  !jsonString.equalsIgnoreCase("{ }") ) {
+
                    HealthFacilityDTO dto = objectMapper.readValue(jsonString, HealthFacilityDTO.class);
+
                    interfaceService.receiveAndSendResponse(dto);
-                   return RestResponse.success("Successiful Inserted");
+                   ResponseMessage message = new ResponseMessage();
+
+                   message.setFacilityCode(dto.getFacIDNumber());
+                   message.setFacilityName(dto.getName());
+                   message.setOperatingStatus(dto.getOperatingStatus());
+                   message.setMessage("Facility Received Successiful");
+                   return String.valueOf(message);
+
                }else {
 
-                   return error("Empty Object", BAD_REQUEST);
+                   return ("Empty Object "+ BAD_REQUEST);
                }
 
            } catch (DataException | IOException e) {
 
-               return error(e.getMessage(), BAD_REQUEST);
+               return (e.getMessage() + BAD_REQUEST);
 
            }
 
