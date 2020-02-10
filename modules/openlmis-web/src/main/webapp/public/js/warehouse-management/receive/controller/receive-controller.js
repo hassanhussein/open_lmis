@@ -844,7 +844,6 @@ console.log(receiveLots);
             receiveLineItems: receiveLineItems,
             receiveDate: $scope.receiveDate,
             facilityId: $scope.homeFacilityId,
-
             asnNumber: $scope.asnCode,
             blawBnumber: $scope.blAwbNumber,
             clearingAgent: $scope.clearingAgent,
