@@ -1359,3 +1359,7 @@ services.factory('GetReportDataValue', function ($resource) {
     return $resource('/rest-api/warehouse/inspection/reports.json', {}, {});
 });
 
+services.factory('GetGeoFacilityList', function ($resource) {
+    return $resource('/getAllGeoLocationFacilities.json', {}, {});
+});
+

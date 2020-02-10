@@ -9,7 +9,7 @@
  */
 
 
-function FacilityController($scope, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProductsISA, priceSchedules, $dialog, messageService, interfacesReferenceData) {
+function FacilityController($scope,GeoFacilityList, facilityReferenceData, $routeParams, facility, Facility, demographicCategories, $location, FacilityProgramProductsISA, priceSchedules, $dialog, messageService, interfacesReferenceData) {
 
     $scope.$parent.facilityId = null;
     $scope.message = "";
@@ -18,7 +18,8 @@ function FacilityController($scope, facilityReferenceData, $routeParams, facilit
     initialize();
 
     $scope.demographicCategories = demographicCategories; //Will be undefined if we aren't in VIMS
-
+    $scope.geoFacilityList = GeoFacilityList;
+    console.log(GeoFacilityList);
     $scope.modernBrowsers = [
         {icon: "<img src=[..]/opera.png.. />", name: "Opera", maker: "(Opera Software)", ticked: true},
         {
@@ -311,6 +312,15 @@ FacilityController.resolve = {
         $timeout(function () {
             PriceScheduleCategories.get({}, function (data) {
                 deferred.resolve(data.priceScheduleCategories);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    } ,
+       GeoFacilityList: function ($q, $route, $timeout, GetGeoFacilityList) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            GetGeoFacilityList.get({}, function (data) {
+                deferred.resolve(data.facilities);
             }, {});
         }, 100);
         return deferred.promise;

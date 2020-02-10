@@ -441,6 +441,16 @@
                         <property name="recordHandler" ref="zonePercistanceHandler"/>
                     </bean>
                 </entry>
+
+                <entry key="facility-geo-location">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Facility Geo Location Types"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.dto.FacilityGeoLocationDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="facilityGeoLocationPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

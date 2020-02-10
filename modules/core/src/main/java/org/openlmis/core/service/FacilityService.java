@@ -417,4 +417,22 @@ public class FacilityService {
     public List<Facility>searchVaccineStores(String searchParam){
         return facilityRepository.searchVaccineStores(searchParam);
     }
+
+    public void saveFacilityGeoLocation(FacilityGeoLocationDTO location){
+
+        if(getGeoLocationFacilities(location) == null) {
+            facilityRepository.insertFacilityGeoLocation(location);
+        } else {
+            facilityRepository.updateFacilityGeoLocation(location);
+        }
+
+    }
+
+    public FacilityGeoLocationDTO getGeoLocationFacilities(FacilityGeoLocationDTO location){
+        return facilityRepository.getGeoLocationFacilities(location.getCode());
+    }
+
+    public List<FacilityGeoLocationDTO> getAllGeoLocationFacilities(){
+        return facilityRepository.getAllGeoLocationFacilities();
+    }
 }
