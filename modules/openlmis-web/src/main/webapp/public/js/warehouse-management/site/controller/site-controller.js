@@ -10,12 +10,16 @@
 
 function SiteController($scope,siteBy,geoLevels, $location, SiteService) {
 if(!isUndefined(siteBy)) {
+
 var site = {};
 site.geographicZoneId = siteBy.geographicZone.id;
 site.region= siteBy.geographicZone.name;
 site.name = siteBy.name;
 site.code = siteBy.code;
 site.id = siteBy.id;
+site.active = siteBy.active;
+site.longitude = siteBy.longitude;
+site.latitude = siteBy.latitude;
 $scope.site = site;
 
 }

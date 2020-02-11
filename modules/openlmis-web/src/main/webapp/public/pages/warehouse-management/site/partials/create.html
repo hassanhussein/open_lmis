@@ -42,7 +42,7 @@
                         <span openlmis-message="header.active"></span>
                         <div class="form-field">
                             <input id="active" ng-model="site.active" type="checkbox" name="active"
-                                   ng-checked = "true"/>
+                                   ng-checked = "site.active"/>
                         </div>
                     </div>
                 </div>
@@ -87,7 +87,7 @@
                         </label>
                         <div class="form-field">
                 <span class="position-relative">
-                  <input ng-model="site.capacity" name="capacity"  id = "location-capacity" type="text"  numeric-validator="positiveNumericValueWithoutDelete,4,2"/>
+                  <input ng-model="site.latitude" name="capacity"  id = "location-capacity" type="text"  numeric-validator="positiveNumericValueWithoutDelete,4,2"/>
 
                 </span>
 
@@ -100,7 +100,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="site.size" name="size" id="size" type="text" maxlength="10"/>
+                            <input ng-model="site.longitude" name="size" id="size" type="text" maxlength="10"/>
                         </div>
                     </div>
                 </div>
