@@ -11,15 +11,15 @@ import java.util.List;
 public interface ReceiveLineItemMapper {
 
     @Insert(" INSERT INTO receive_line_items (receiveId, productId, expiryDate, manufacturingDate, quantityCounted,boxCounted, lotFlag, unitPrice, " +
-            "createdBy, createdDate,modifiedBy,modifiedDate) " +
-            " VALUES(#{receive.id}, #{productId}, #{expiryDate}, #{manufacturingDate}, #{quantityCounted},#{boxCounted}, #{lotFlag}, #{unitPrice}, #{createdBy}, NOW(), #{modifiedBy}, NOW()) ")
+            "createdBy, createdDate,modifiedBy,modifiedDate,receiveNumber) " +
+            " VALUES(#{receive.id}, #{productId}, #{expiryDate}, #{manufacturingDate}, #{quantityCounted},#{boxCounted}, #{lotFlag}, #{unitPrice}, #{createdBy}, NOW(), #{modifiedBy}, NOW(),#{receiveNumber}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(ReceiveLineItem lineItem);
 
     @Update(" update receive_line_items set  receiveId = #{receive.id}, productId = #{productId}, expiryDate = #{expiryDate}, " +
             " manufacturingDate = #{manufacturingDate}, quantityCounted = #{quantityCounted}, boxCounted=#{boxCounted},lotFlag = #{lotFlag}, unitPrice = {unitPrice}, "+
             " modifiedDate = now(), " +
-            " modifiedBy = #{modifiedBy}  where id = #{id} ")
+            " modifiedBy = #{modifiedBy}, receiveNumber = #{receiveNumber}  where id = #{id} ")
     void update(ReceiveLineItem asnLineItem);
 
     @Select("select * from receive_line_items where id = #{id}")

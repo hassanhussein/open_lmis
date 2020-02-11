@@ -164,5 +164,8 @@ public interface ReceiveMapper {
     @Select(" SELECT * FROM fn_create_inpsection(#{id}::int) ")
     Integer updateInspection(@Param("id") Long id);
 
+    @Select("SELECT receiveNumber from receive_line_Items order by id desc limit 1")
+    String getLastReceiptNumber();
+
 
 }

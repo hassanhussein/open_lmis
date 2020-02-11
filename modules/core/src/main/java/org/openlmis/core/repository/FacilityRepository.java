@@ -338,4 +338,20 @@ public class FacilityRepository {
     return mapper.searchVaccineStores(searchParam);
   }
 
+  public Integer insertFacilityGeoLocation(FacilityGeoLocationDTO location){
+    return mapper.insertFacilityGeoLocation(location);
+  }
+
+  public void updateFacilityGeoLocation(FacilityGeoLocationDTO location){
+         mapper.updateFacilityGeoLocation(location);
+  }
+
+  public FacilityGeoLocationDTO getGeoLocationFacilities(String code){
+    return mapper.getGeoLocationFacilities(code);
+  }
+
+  public List<FacilityGeoLocationDTO>getAllGeoLocationFacilities(){
+    return mapper.getAllGeoLocationFacilities();
+  }
+
 }

@@ -37,7 +37,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, parentFacilityId, hasElectricity, hasElectronicSCC, hasElectronicDAR, active," +
-    "goLiveDate, goDownDate, comment, virtualFacility, enabled, priceScheduleId, createdDate,createdBy, modifiedBy, modifiedDate,allowedToSend) " +
+    "goLiveDate, goDownDate, comment, virtualFacility, enabled, priceScheduleId, createdDate,createdBy, modifiedBy, modifiedDate,allowedToSend,geoLocationCategoryId) " +
     "VALUES(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -46,7 +46,7 @@ public interface FacilityMapper {
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicSCC}, #{hasElectronicDAR}, #{active}," +
     "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled}, #{priceSchedule.id} , COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
-    "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),#{allowedToSend})")
+    "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),#{allowedToSend}, #{geoLocationCategoryId})")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
 
@@ -128,7 +128,7 @@ public interface FacilityMapper {
     "hasElectricity = #{hasElectricity}, hasElectronicSCC = #{hasElectronicSCC}, " +
     "hasElectronicDAR = #{hasElectronicDAR}, active = #{active}, virtualFacility = #{virtualFacility}, " +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}, priceScheduleId = #{priceSchedule.id}, allowedToSend = #{allowedToSend},  " +
-    "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
+    "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, geoLocationCategoryId=#{geoLocationCategoryId}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 
   @Select("SELECT * FROM facility_types WHERE LOWER(code) = LOWER(#{code})")
@@ -621,6 +621,21 @@ Integer insertHfrMapping(HfrMappingDTO dto);
           " JOIN geographic_zones gz on f.geographiczoneid = gz.id" +
           " WHERE ft.code in('cvs','rvs','dvs') and (LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') ")
   List<Facility> searchVaccineStores(@Param(value = "searchParam") String searchParam);
+
+@Insert("INSERT INTO public.facility_geo_locations(\n" +
+        "             code, name)\n" +
+        "    VALUES (#{code}, #{name});")
+  @Options(useGeneratedKeys = true)
+  Integer insertFacilityGeoLocation(FacilityGeoLocationDTO facility);
+
+ @Update(" UPDATE facility_geo_locations SET code = #{code}, name = #{name} where id = #{id} ")
+ void updateFacilityGeoLocation(FacilityGeoLocationDTO facility);
+
+ @Select(" select * from  facility_geo_locations where code = #{code}")
+ FacilityGeoLocationDTO getGeoLocationFacilities(@Param("code") String code);
+
+ @Select(" select * from  facility_geo_locations ")
+ List<FacilityGeoLocationDTO> getAllGeoLocationFacilities();
 
 
 

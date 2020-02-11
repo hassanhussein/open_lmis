@@ -366,4 +366,9 @@ public class FacilityController extends BaseController {
         return response("facilities", facilityService.searchVaccineStores(searchParam));
     }
 
+  @RequestMapping(value = "/getAllGeoLocationFacilities", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllGeoLocationFacilities() {
+        return response("facilities", facilityService.getAllGeoLocationFacilities());
+    }
+
 }

@@ -28,7 +28,7 @@ public class WareHouseRepository {
         return mapper.getTotalSearchResultCount(param);
     }
 
-    public List<WareHouseDTO> searchByName(String searchParam, Pagination pagination) {
+    public List<WareHouse> searchByName(String searchParam, Pagination pagination) {
         return mapper.searchByName(searchParam, pagination);
     }
 

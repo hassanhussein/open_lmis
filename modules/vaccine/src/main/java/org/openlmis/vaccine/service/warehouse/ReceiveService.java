@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import lombok.NoArgsConstructor;
+import org.apache.commons.lang.RandomStringUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
@@ -103,6 +104,7 @@ public class ReceiveService {
                 lineItem.setReceive(receive);
                 lineItem.setCreatedBy(userId);
                 lineItem.setModifiedBy(userId);
+                lineItem.setReceiveNumber(generateReceiveNumber());
                 lineItemService.save(lineItem);
                 receiveLotService.deleteByLineItem(lineItem.getId());
                 if (lineItem.isLotFlag()) {
@@ -248,6 +250,7 @@ public class ReceiveService {
                    receiveLineItem.setLotFlag(lineItem.isLotflag());
                    receiveLineItem.setCreatedBy(asn.getModifiedBy());
                    receiveLineItem.setModifiedBy(asn.getModifiedBy());
+
                    lineItemService.save(receiveLineItem);
 
                    if (receiveLineItem.isLotFlag() && (!lineItem.getAsnLots().isEmpty())) {
@@ -276,6 +279,30 @@ public class ReceiveService {
 
 
        return getById(receive.getId());
+    }
+
+    private String generateReceiveNumber() {
+
+        String number = "RCPT-";
+        String lastReceiptNumber = repository.getLastReceiptNumber();
+        String serialString = "", numberString = "";
+
+        Long newSerial;
+
+        if(lastReceiptNumber != null) {
+
+            serialString = lastReceiptNumber.substring(lastReceiptNumber.lastIndexOf("-") + 1);
+
+            long serial = Long.parseLong(serialString);
+            newSerial = serial + 1;
+            numberString = number + newSerial;
+
+        } else {
+
+            numberString = number + 1L;
+        }
+        return numberString;
+
     }
 
     public List<Receive> getAll() {

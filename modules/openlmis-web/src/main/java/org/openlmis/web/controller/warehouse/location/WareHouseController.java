@@ -74,7 +74,7 @@ public class WareHouseController extends BaseController {
                                                    @RequestParam(value = "page", defaultValue = "1") Integer page) {
         Pagination pagination = service.getPagination(page);
         pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, columnName));
-        List<WareHouseDTO> wareHouses = service.searchBy(searchParam, columnName, page);
+        List<WareHouse> wareHouses = service.searchBy(searchParam, columnName, page);
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("houses", wareHouses);
         response.getBody().addData("pagination", pagination);
         return response;

@@ -147,4 +147,10 @@ public class GeographicZoneController extends BaseController {
   public List<GeoZoneMapDTO> getAllGeoMapData() {
     return service.getAllGeoMapData();
   }
+
+  @RequestMapping(value = "/geo-zone-by/{geoLevelCode}", method = GET, headers = ACCEPT_JSON)
+  public List<GeographicZone> getGeographicZonesByLevelCode(@PathVariable("geoLevelCode") String geographicLevelCode) {
+    GeographicLevel geographicLevel = new GeographicLevel(geographicLevelCode, null, null);
+    return service.getAllGeographicZonesByLevelCode(geographicLevel);
+  }
 }

@@ -8,11 +8,10 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function WarehouseSearchController($scope, $location, navigateBackService, $dialog) {
+function WarehouseSearchController($scope,GetWarehouses, $location, navigateBackService, $dialog) {
 
   $scope.searchOptions = [
-    {value: "name", name: "Name"},
-    {value: "type", name: "Code"}
+    {value: "name", name: "Name"}
   ];
 
   $scope.showResults = false;
@@ -46,8 +45,10 @@ function WarehouseSearchController($scope, $location, navigateBackService, $dial
   function getLocations(page, query) {
     query = query.trim();
     $scope.searchedQuery = query;
-    Locations.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
-      $scope.locationList = data.locations;
+    GetWarehouses.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+      console.log(data.houses);
+
+      $scope.locationList = data.houses;
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;

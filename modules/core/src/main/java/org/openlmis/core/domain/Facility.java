@@ -142,6 +142,8 @@ public class Facility extends BaseModel implements Importable {
   @ImportField(name = "Price Schedule", nested = "code")
   private PriceSchedule priceSchedule;
 
+  private Long geoLocationCategoryId;
+
   private List<ELMISInterfaceFacilityMapping> interfaceMappings = new ArrayList<>();
 
   //TODO : change supportedPrograms to programsSupported

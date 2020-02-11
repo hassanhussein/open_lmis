@@ -1359,3 +1359,46 @@ services.factory('GetReportDataValue', function ($resource) {
     return $resource('/rest-api/warehouse/inspection/reports.json', {}, {});
 });
 
+services.factory('GetGeoFacilityList', function ($resource) {
+    return $resource('/getAllGeoLocationFacilities.json', {}, {});
+});
+
+services.factory('GetGeoZoneByLevels', function ($resource) {
+    return $resource('/geo-zone-by/:geoLevelCode.json', {geoLevelCode:'@geoLevelCode'}, {});
+});
+
+services.factory('SiteService', function ($resource) {
+    return $resource('/rest-api/warehouse/site.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('GetSites', function ($resource) {
+    return $resource('/rest-api/warehouse/search.json', {}, {});
+});
+
+services.factory('GetSiteBy', function ($resource) {
+    return $resource('/rest-api/warehouse/sitesBy/:id.json', {id:'@id'}, {});
+});
+
+services.factory('SiteService', function ($resource) {
+    return $resource('/rest-api/warehouse/site/:id.json', {}, {update:{method:'PUT',params: {id: '@id'}}});
+});
+
+services.factory('GetSiteList', function ($resource) {
+    return $resource('/rest-api/warehouse/all-sites.json', {}, {});
+});
+
+services.factory('GetWarehouseService', function ($resource) {
+    return $resource('/rest-api/warehouse/house.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('GetWarehouseService', function ($resource) {
+    return $resource('/rest-api/warehouse/house/:id.json', {}, {update:{method:'PUT',params: {id: '@id'}}});
+});
+
+services.factory('GetWarehouses', function ($resource) {
+    return $resource('/rest-api/warehouse/house.json', {}, {});
+});
+
+services.factory('GetWarehouseBy', function ($resource) {
+    return $resource('/rest-api/warehouse/house/:id.json', {id:'@id'}, {});
+});

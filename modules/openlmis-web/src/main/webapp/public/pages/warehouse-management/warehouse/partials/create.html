@@ -12,7 +12,7 @@
     <div ng-hide="location.id"><h2 id="addLocationHeader">Add New Warehouse</h2></div>
     <div ng-show="location.id"><h2 id="editLocationHeader" openlmis-message="header.location.edit"></h2></div>
 
-    <form ng-submit="saveGeoZone()" name="locationForm" novalidate>
+    <form  name="locationForm" novalidate>
         <div class="app-form">
 
 
@@ -39,12 +39,12 @@
                                 </label>
 
                                 <div class="form-field">
-                                    <select id="locationType" name="locationType" ng-model="location.locationType.id"
+                                    <select id="warehouseSite" name="siteId" ng-model="warehouse.siteId"
                                             ng-options="type.id as type.name for type in types"
                                             ng-required="true">
                                         <option value="">Select Site</option>
                                     </select>
-                                    <span class="field-error" ng-show="locationForm.locationType.$error.required && showError"
+                                    <span class="field-error" ng-show="locationForm.siteId.$error.required && showError"
                                           openlmis-message="select.value"></span>
                                 </div>
                             </div>
@@ -53,8 +53,8 @@
                             <div class="form-cell">
                                 <span openlmis-message="header.active"></span>
                                 <div class="form-field">
-                                    <input id="active" ng-model="location.active" type="checkbox" name="active"
-                                           ng-required="false" ng-checked = "true"/>
+                                    <input id="active" ng-model="warehouse.active" type="checkbox" name="active"
+                                            ng-checked = "warehouse.active"/>
                                 </div>
                             </div>
                         </div>
@@ -67,7 +67,7 @@
                                 </label>
 
                                 <div class="form-field">
-                                    <input ng-model="location.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
+                                    <input ng-model="warehouse.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
                                     <span class="field-error" ng-show="locationForm.code.$error.required && showError"
                                           openlmis-message="missing.value"></span>
                                 </div>
@@ -80,7 +80,7 @@
                                 </label>
 
                                 <div class="form-field">
-                                    <input ng-model="location.name" name="name" id="name" type="text" maxlength="50" ng-required="true"/>
+                                    <input ng-model="warehouse.name" name="name" id="name" type="text" maxlength="50" ng-required="true"/>
                                     <span class="field-error" ng-show="locationForm.name.$error.required && showError"
                                           openlmis-message="missing.value"></span>
                                 </div>
