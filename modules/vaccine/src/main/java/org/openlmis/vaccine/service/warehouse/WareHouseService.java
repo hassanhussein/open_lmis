@@ -33,10 +33,10 @@ public class WareHouseService {
 
         if(house.getId() == null) {
             repository.insert(house);
-            lineItemService.save(house.getLineItem(), house);
+           // lineItemService.save(house.getLineItem(), house);
         }else {
             repository.update(house);
-            lineItemService.save(house.getLineItem(), house);
+            //lineItemService.save(house.getLineItem(), house);
         }
     }
 
