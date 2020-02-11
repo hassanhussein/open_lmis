@@ -13,16 +13,20 @@ import org.openlmis.core.domain.GeographicZone;
 @NoArgsConstructor
 public class Site extends BaseModel {
 
-    private GeographicZone region;
+    private GeographicZone geographicZone;
 
-    private Long regionId;
+    private Long geographicZoneId;
 
     private String name;
 
     private String code;
 
+    private String region;
+
     private String longitude;
 
     private String latitude;
+
+    private boolean active;
 
 }

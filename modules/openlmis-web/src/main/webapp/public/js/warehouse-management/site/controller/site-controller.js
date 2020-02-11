@@ -8,15 +8,22 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function SiteController($scope, locationTypes, location, GeographicZonesAboveLevel, $location, Locations, LocationsLookup) {
-  $scope.types = locationTypes;
-  $scope.location = location;
+function SiteController($scope,siteBy,geoLevels, $location, SiteService) {
+if(!isUndefined(siteBy)) {
+var site = {};
+site.geographicZoneId = siteBy.geographicZone.id;
+site.region= siteBy.geographicZone.name;
+site.name = siteBy.name;
+site.code = siteBy.code;
+site.id = siteBy.id;
+$scope.site = site;
+
+}
+  console.log($scope.site);
+
+
   $scope.$parent.message = "";
-
-    LocationsLookup.get({}, function (data) {
-      $scope.locations = data.locationList;
-    }, {});
-
+  $scope.geoLevels = geoLevels;
 
   $scope.cancel = function () {
     $scope.$parent.location = undefined;
@@ -27,7 +34,8 @@ function SiteController($scope, locationTypes, location, GeographicZonesAboveLev
   var success = function (data) {
     $scope.error = "";
     $scope.$parent.message = data.success;
-    $scope.$parent.locationId = data.location.id;
+    console.log(data);
+    ///$scope.$parent.locationId = data.site.id;
     $scope.showError = false;
     $location.path('');
   };
@@ -39,17 +47,19 @@ function SiteController($scope, locationTypes, location, GeographicZonesAboveLev
   };
 
   $scope.save = function () {
+  console.log($scope.site);
+
     if ($scope.locationForm.$error.pattern || $scope.locationForm.$error.required) {
       $scope.showError = true;
       $scope.error = 'form.error';
       $scope.message = "";
       return;
     }
-    if ($scope.location.id) {
-      Locations.update({id: $scope.location.id}, $scope.location, success, error);
+   if ($scope.site.id) {
+      SiteService.update({id: $scope.site.id}, $scope.site, success, error);
     }
     else {
-      Locations.save({}, $scope.location, success, error);
+      SiteService.save({}, $scope.site, success, error);
     }
   };
 }
@@ -65,15 +75,29 @@ SiteController.resolve = {
     return deferred.promise;
   },
 
-  location: function ($q, $route, $timeout, Locations) {
+  siteBy: function ($q, $route, $timeout, GetSiteBy) {
     if ($route.current.params.id === undefined) return undefined;
 
     var deferred = $q.defer();
     var id = $route.current.params.id;
 
     $timeout(function () {
-      Locations.get({id: id}, function (data) {
-        deferred.resolve(data.location);
+      GetSiteBy.get({id: id}, function (data) {
+        deferred.resolve(data.sites);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  } ,
+
+  geoLevels: function ($q, $route, $timeout, GetGeoZoneByLevels) {
+
+    var deferred = $q.defer();
+
+    $timeout(function () {
+      GetGeoZoneByLevels.get({geoLevelCode: "reg"}, function (data) {
+      console.log(data);
+
+        deferred.resolve(data.geographicZoneList);
       }, {});
     }, 100);
     return deferred.promise;

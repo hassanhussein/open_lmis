@@ -1363,3 +1363,22 @@ services.factory('GetGeoFacilityList', function ($resource) {
     return $resource('/getAllGeoLocationFacilities.json', {}, {});
 });
 
+services.factory('GetGeoZoneByLevels', function ($resource) {
+    return $resource('/geo-zone-by/:geoLevelCode.json', {geoLevelCode:'@geoLevelCode'}, {});
+});
+
+services.factory('SiteService', function ($resource) {
+    return $resource('/rest-api/warehouse/site.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('GetSites', function ($resource) {
+    return $resource('/rest-api/warehouse/search.json', {}, {});
+});
+
+services.factory('GetSiteBy', function ($resource) {
+    return $resource('/rest-api/warehouse/sitesBy/:id.json', {id:'@id'}, {});
+});
+
+services.factory('SiteService', function ($resource) {
+    return $resource('/rest-api/warehouse/site/:id.json', {}, {update:{method:'PUT',params: {id: '@id'}}});
+});

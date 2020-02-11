@@ -84,6 +84,9 @@ public class GeographicZoneService {
   public List<GeographicZone> getAllGeographicZonesAbove(GeographicLevel level) {
     return repository.getAllGeographicZonesAbove(level);
   }
+  public List<GeographicZone> getAllGeographicZonesByLevelCode(GeographicLevel level) {
+    return repository.getAllGeographicZonesByLevelCode(level);
+  }
 
   public Pagination getPagination(Integer page) {
     return new Pagination(page, pageSize);

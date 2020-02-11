@@ -165,4 +165,16 @@ public interface GeographicZoneMapper {
     List<GeoZoneMapDTO>getAllGeoMapData();
 
 
+    @Select({"SELECT GZ.*, GL.levelNumber AS levelNumber, GL.name AS levelName FROM geographic_zones GZ",
+            "INNER JOIN geographic_levels GL ON GZ.levelId = GL.id",
+            "WHERE GL.levelNumber = (Select levelNumber FROM geographic_levels where code = #{code})",
+            "ORDER BY GL.levelNumber, LOWER(GZ.name)"})
+    @Results({
+            @Result(column = "levelNumber", property = "level.levelNumber"),
+            @Result(column = "levelName", property = "level.name")
+    })
+    List<GeographicZone> getAllGeographicZonesByLevelCode(GeographicLevel geographicLevel);
+
+
+
 }

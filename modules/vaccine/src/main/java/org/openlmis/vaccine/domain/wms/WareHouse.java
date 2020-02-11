@@ -27,12 +27,4 @@ public class WareHouse extends BaseModel {
 
     private String name;
 
-    private Long productTypeId;
-
-    private boolean active;
-
-    private List<WareHouseLineItem> lineItem;
-
-    private List<WareHouseLineItem> lineItems;
-
 }

@@ -8,11 +8,10 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function SiteSearchController($scope, $location, navigateBackService, $dialog) {
+function SiteSearchController($scope, $location,GetSites,navigateBackService, $dialog) {
 
   $scope.searchOptions = [
-    {value: "name", name: "Name"},
-    {value: "type", name: "Code"}
+    {value: "name", name: "Name"}
   ];
 
   $scope.showResults = false;
@@ -46,8 +45,9 @@ function SiteSearchController($scope, $location, navigateBackService, $dialog) {
   function getLocations(page, query) {
     query = query.trim();
     $scope.searchedQuery = query;
-    Locations.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
-      $scope.locationList = data.locations;
+    GetSites.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
+      console.log(data);
+      $scope.siteList = data.sites;
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;

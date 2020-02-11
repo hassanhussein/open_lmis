@@ -97,6 +97,10 @@ public class GeographicZoneRepository {
     return mapper.getAllGeographicZonesAbove(geographicLevel);
   }
 
+  public List<GeographicZone> getAllGeographicZonesByLevelCode(GeographicLevel geographicLevel) {
+    return mapper.getAllGeographicZonesByLevelCode(geographicLevel);
+  }
+
   public Integer getTotalParentSearchResultCount(String param) {
     return mapper.getTotalParentSearchResultCount(param);
   }
