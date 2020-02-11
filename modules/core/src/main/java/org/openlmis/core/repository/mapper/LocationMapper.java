@@ -11,19 +11,18 @@ import java.util.Map;
 
 @Repository
 public interface LocationMapper {
-    @Insert("insert into locations(code, name, active, typeid, zoneid, size, capacity, aisleid, parentid, scrap, createdDate,createdBy, modifiedBy, modifiedDate) values(" +
-            "#{code}, #{name},#{active},#{locationType.id},#{zone},#{size},#{capacity},#{aisle},#{parent.id}, #{scrap}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
-            "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    @Insert("insert into locations(code, name, warehouseId, typeId) values(" +
+            "#{code}, #{name},#{warehouseId},#{typeId})")
     @Options(useGeneratedKeys = true)
      void insert(Location location);
 
-    @Update("update  locations set code = #{code}, name = #{name},active = #{active},typeid = #{locationType.id},zoneid = #{zone}, size = #{size}," +
-            "capacity = #{capacity},aisleid = #{aisle}, parentid = #{parent.id}, scrap = #{scrap}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
+    @Update("update  locations set code = #{code}, name = #{name}, warehouseId = #{warehouseId}, typeId = #{typeId} " +
+            " WHERE id = #{id}")
     void update(Location location);
 
     @Select("SELECT * FROM locations")
     @Results(value = {
-            @Result(property = "locationType", column = "typeid", javaType = Integer.class,
+            @Result(property = "locationType", column = "typeId", javaType = Integer.class,
                     one = @One(select = "getLocationTypeById"))
         })
     List<Location> getAllLocations();

@@ -20,7 +20,7 @@ public interface LocationTypeMapper {
             " modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(LocationType type);
 
-    @Select(" select * from location_types where code = #{code}")
+    @Select(" select * from wms_location_types where lower(code) = lower(#{code})")
     public LocationType getByCode(@Param("code") String code);
 
     @Select("select * from location_types where id = #{id}")

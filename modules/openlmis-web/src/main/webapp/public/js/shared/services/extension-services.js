@@ -1402,3 +1402,7 @@ services.factory('GetWarehouses', function ($resource) {
 services.factory('GetWarehouseBy', function ($resource) {
     return $resource('/rest-api/warehouse/house/:id.json', {id:'@id'}, {});
 });
+
+services.factory('GetAllLocationsById', function ($resource) {
+    return $resource('/rest-api/warehouse/getAllLocations/:id.json', {id:'@id'}, {});
+});

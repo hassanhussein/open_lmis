@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.upload.Importable;
 
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
@@ -15,7 +16,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @EqualsAndHashCode(callSuper = false)
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Location extends BaseModel {
+public class Location extends BaseModel implements Importable {
     private String code;
     private String name;
     private boolean active;

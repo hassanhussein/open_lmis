@@ -1,8 +1,12 @@
 package org.openlmis.vaccine.service.warehouse;
 
+import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.LocationType;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.service.LocationTypeService;
 import org.openlmis.vaccine.domain.wms.WareHouse;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.openlmis.vaccine.repository.warehouse.WareHouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +29,10 @@ public class WareHouseService {
 
     @Autowired
     private WareHouseRepository repository;
+
+    @Autowired
+    private LocationTypeService locationTypeService;
+
 
     @Autowired
     private WareHouseLineItemService lineItemService;
@@ -61,5 +69,38 @@ public class WareHouseService {
 
     public WareHouse getById(Long id) {
         return repository.getById(id);
+    }
+
+    public WareHouse getByC(String code) {
+        return repository.getByC(code);
+    }
+
+    public LocationDTO getBy(LocationDTO location) {
+
+        LocationType locationType = locationTypeService.getBy(location.getLocationTypeCode());
+
+        return repository.getBy(location.getCode(), getByC(location.getWarehouseCode()).getId(), locationType.getId());
+
+    }
+
+    public void saveLocations(LocationDTO location) {
+
+       LocationType locationType = locationTypeService.getBy(location.getLocationTypeCode());
+       WareHouse wareHouse = getByC(location.getWarehouseCode());
+       LocationDTO dto = repository.getBy(location.getCode(), getByC(location.getWarehouseCode()).getId(), locationType.getId());
+       location.setTypeId(locationType.getId());
+       location.setWarehouseId(wareHouse.getId());
+
+       if(dto == null) {
+           repository.saveLocation(location);
+       } else {
+           repository.updateLocation(location);
+       }
+
+    }
+
+    public List<LocationDTO> getAllLocations(Long id) {
+
+        return repository.getAllLocations(id);
     }
 }

@@ -31,5 +31,11 @@ public class LocationTypeService {
     }
 
 
+    public LocationType getBy(String type) {
 
+        if(type != null) {
+            return repository.getByCode(type);
+        }
+        return null;
+    }
 }
