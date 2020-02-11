@@ -33,10 +33,8 @@ public class WareHouseService {
 
         if(house.getId() == null) {
             repository.insert(house);
-           // lineItemService.save(house.getLineItem(), house);
         }else {
             repository.update(house);
-            //lineItemService.save(house.getLineItem(), house);
         }
     }
 
@@ -52,7 +50,7 @@ public class WareHouseService {
         return 0;
     }
 
-    public List<WareHouseDTO> searchBy(String searchParam, String columnName, Integer page) {
+    public List<WareHouse> searchBy(String searchParam, String columnName, Integer page) {
 
         if (columnName.equals("name")) {
             return repository.searchByName(searchParam, getPagination(page));

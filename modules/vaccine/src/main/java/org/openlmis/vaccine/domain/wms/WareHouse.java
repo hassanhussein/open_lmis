@@ -27,4 +27,6 @@ public class WareHouse extends BaseModel {
 
     private String name;
 
+    private boolean active;
+
 }

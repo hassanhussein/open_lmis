@@ -1382,3 +1382,23 @@ services.factory('GetSiteBy', function ($resource) {
 services.factory('SiteService', function ($resource) {
     return $resource('/rest-api/warehouse/site/:id.json', {}, {update:{method:'PUT',params: {id: '@id'}}});
 });
+
+services.factory('GetSiteList', function ($resource) {
+    return $resource('/rest-api/warehouse/all-sites.json', {}, {});
+});
+
+services.factory('GetWarehouseService', function ($resource) {
+    return $resource('/rest-api/warehouse/house.json', {}, {save:{method:'POST'}});
+});
+
+services.factory('GetWarehouseService', function ($resource) {
+    return $resource('/rest-api/warehouse/house/:id.json', {}, {update:{method:'PUT',params: {id: '@id'}}});
+});
+
+services.factory('GetWarehouses', function ($resource) {
+    return $resource('/rest-api/warehouse/house.json', {}, {});
+});
+
+services.factory('GetWarehouseBy', function ($resource) {
+    return $resource('/rest-api/warehouse/house/:id.json', {id:'@id'}, {});
+});

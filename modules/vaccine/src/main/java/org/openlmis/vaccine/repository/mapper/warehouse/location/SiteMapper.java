@@ -51,4 +51,7 @@ public interface SiteMapper {
          "WHERE LOWER(h.name) LIKE '%' || LOWER(#{searchParam} || '%') ",
          "ORDER BY LOWER(h.name)"})
  List<Site> searchByName(@Param(value = "searchParam") String searchParam, RowBounds rowBounds);
+
+ @Select("SELECT * FROM sites s where active = true")
+ List<Site> getAllSites();
 }

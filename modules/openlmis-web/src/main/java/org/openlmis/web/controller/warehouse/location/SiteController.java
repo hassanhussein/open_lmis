@@ -86,5 +86,10 @@ public class SiteController extends BaseController {
         return OpenLmisResponse.response("sites", service.getAllById(id));
     }
 
+    @RequestMapping(value = "all-sites", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getSites(HttpServletRequest request) {
+        return OpenLmisResponse.response("sites", service.getAllSites());
+    }
+
 
 }

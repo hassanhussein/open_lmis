@@ -15,31 +15,26 @@ import java.util.List;
 public interface WareHouseMapper {
 
     @Insert("INSERT INTO public.warehouses(\n" +
-            "            siteId, code, name)\n" +
-            "    VALUES (#{site.id}, #{code}, #{name});\n ")
+            "            siteId, code, name,active)\n" +
+            "    VALUES (#{siteId}, #{code}, #{name}, #{active});\n ")
     @Options(useGeneratedKeys = true)
     Integer insert(WareHouse house);
 
     @Update("UPDATE public.warehouses\n" +
-            "   SET  siteId=#{site.id}, code=#{code}, name=#{name} " +
+            "   SET  siteId=#{siteId}, code=#{code}, name=#{name}, active=#{active} " +
             " WHERE id=#{id}")
     void update(WareHouse house);
 
-    @Select({"SELECT COUNT(*) FROM wms_warehouse_line_items item\n" ,
-            "JOIN wms_warehouses  h ON item.warehouseId = h.id\n" ,
-            "JOIN wms_sites s ON h.siteId = s.Id\n" ,
-            "JOIN wms_zones z ON item.zoneId = Z.ID\n" ,
+    @Select({"SELECT COUNT(*) FROM public.warehouses h \n" ,
+            "JOIN sites s ON h.siteId = s.Id\n" ,
             "WHERE LOWER(h.name) LIKE '%' || LOWER(#{searchParam} || '%') "})
     Integer getTotalSearchResultCount(String param);
 
-    @Select({"SELECT h.id, h.name,gz.name region, s.name siteName, productTypeId,ACTIVE  FROM wms_warehouses h\n" ,
-            "JOIN wms_warehouse_line_items  item ON item.warehouseId = h.id\n" ,
-            "JOIN wms_sites s ON h.siteId = s.Id\n" ,
-            "JOIN wms_zones z ON item.zoneId = Z.ID\n" ,
-            "JOIN GEOGRAPHIC_ZONES gz ON  gz.id = S.regionId\n" ,
+    @Select({"SELECT h.id, h.name,h.code, h.ACTIVE  FROM warehouses h\n" ,
+            "JOIN sites s ON h.siteId = s.Id\n" ,
             "WHERE LOWER(h.name) LIKE '%' || LOWER(#{searchParam} || '%') ",
-            "ORDER BY LOWER(h.name), LOWER(s.name)"})
-    List<WareHouseDTO> searchByName(@Param(value = "searchParam") String searchParam, RowBounds rowBounds);
+            "ORDER BY LOWER(h.name)"})
+    List<WareHouse> searchByName(@Param(value = "searchParam") String searchParam, RowBounds rowBounds);
 
     @Select(" SELECT * FROM warehouses where id = #{id}")
     @Results(value = {

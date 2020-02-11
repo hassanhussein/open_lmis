@@ -8,14 +8,16 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function WarehouseController($scope, locationTypes, location, GeographicZonesAboveLevel, $location, Locations, LocationsLookup) {
-  $scope.types = locationTypes;
-  $scope.location = location;
+function WarehouseController($scope, siteList,warehouseBy,GetWarehouseService, $location) {
+  $scope.types = siteList;
   $scope.$parent.message = "";
 
-    LocationsLookup.get({}, function (data) {
-      $scope.locations = data.locationList;
-    }, {});
+  if(!isUndefined(warehouseBy)) {
+   warehouseBy.siteId = warehouseBy.site.id;
+   $scope.warehouse = warehouseBy;
+     console.log(warehouseBy);
+  }
+
 
 
   $scope.cancel = function () {
@@ -27,7 +29,7 @@ function WarehouseController($scope, locationTypes, location, GeographicZonesAbo
   var success = function (data) {
     $scope.error = "";
     $scope.$parent.message = data.success;
-    $scope.$parent.locationId = data.location.id;
+    //$scope.$parent.locationId = data.location.id;
     $scope.showError = false;
     $location.path('');
   };
@@ -39,41 +41,47 @@ function WarehouseController($scope, locationTypes, location, GeographicZonesAbo
   };
 
   $scope.save = function () {
+
     if ($scope.locationForm.$error.pattern || $scope.locationForm.$error.required) {
       $scope.showError = true;
       $scope.error = 'form.error';
       $scope.message = "";
       return;
     }
-    if ($scope.location.id) {
-      Locations.update({id: $scope.location.id}, $scope.location, success, error);
+
+
+
+    if ($scope.warehouse.id) {
+      GetWarehouseService.update({id: $scope.warehouse.id}, $scope.warehouse, success, error);
     }
     else {
-      Locations.save({}, $scope.location, success, error);
+          console.log('reached here');
+      GetWarehouseService.save({}, $scope.warehouse, success, error);
     }
   };
 }
 
 WarehouseController.resolve = {
-  locationTypes: function ($q, $timeout, LocationTypes) {
+  siteList: function ($q, $timeout, GetSiteList) {
     var deferred = $q.defer();
     $timeout(function () {
-      LocationTypes.get({}, function (data) {
-        deferred.resolve(data.locationTypeList);
+      GetSiteList.get({}, function (data) {
+        deferred.resolve(data.sites);
       }, {});
     }, 100);
     return deferred.promise;
   },
 
-  location: function ($q, $route, $timeout, Locations) {
+  warehouseBy: function ($q, $route, $timeout, GetWarehouseBy) {
     if ($route.current.params.id === undefined) return undefined;
 
     var deferred = $q.defer();
     var id = $route.current.params.id;
 
     $timeout(function () {
-      Locations.get({id: id}, function (data) {
-        deferred.resolve(data.location);
+      GetWarehouseBy.get({id: id}, function (data) {
+      console.log(data);
+        deferred.resolve(data.house);
       }, {});
     }, 100);
     return deferred.promise;

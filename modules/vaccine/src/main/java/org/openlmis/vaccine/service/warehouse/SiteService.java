@@ -62,4 +62,8 @@ public class SiteService {
         return emptyList();
 
     }
+
+    public List<Site> getAllSites() {
+        return repository.getAllSites();
+    }
 }

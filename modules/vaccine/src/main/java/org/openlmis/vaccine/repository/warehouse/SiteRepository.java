@@ -42,4 +42,8 @@ public class SiteRepository {
     public List<Site> searchByName(String searchParam, Pagination pagination) {
         return mapper.searchByName(searchParam, pagination);
     }
+
+    public List<Site> getAllSites() {
+        return mapper.getAllSites();
+    }
 }
