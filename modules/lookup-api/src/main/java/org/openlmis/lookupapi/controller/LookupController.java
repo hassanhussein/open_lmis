@@ -12,15 +12,16 @@
 
 package org.openlmis.lookupapi.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.json.JSONObject;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
@@ -46,8 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 import static javax.security.auth.callback.ConfirmationCallback.OK;
-import static org.openlmis.restapi.response.RestResponse.error;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @Controller
 @NoArgsConstructor
@@ -81,6 +81,7 @@ public class LookupController {
     public static final String REGIMEN_COMBINATION_CONSTITUENTS = "regimen-combination-constituents";
     public static final String REGIMEN_CONSTITUENT_DOSAGES = "regimen-constituent-dosages";
     private static final String PROGRAM_REFERENCE_DATA ="ProgramReferenceData" ;
+    private static final String RECEIVED_MESSAGE = "Facility Received Successful";
 
     @Autowired
     private LookupService lookupService;
@@ -372,7 +373,7 @@ public class LookupController {
 
 
     @RequestMapping(value = "/rest-api/heath-facility-registry-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
-    public String saveHFRRecords(@RequestBody String jsonString, HttpServletRequest request){
+    public ResponseEntity saveHFRRecords(@RequestBody String jsonString, HttpServletRequest request){
 
         ObjectMapper objectMapper = new ObjectMapper();
 
@@ -385,22 +386,25 @@ public class LookupController {
                    HealthFacilityDTO dto = objectMapper.readValue(jsonString, HealthFacilityDTO.class);
 
                    interfaceService.receiveAndSendResponse(dto);
+
                    ResponseMessage message = new ResponseMessage();
 
                    message.setFacilityCode(dto.getFacIDNumber());
                    message.setFacilityName(dto.getName());
                    message.setOperatingStatus(dto.getOperatingStatus());
-                   message.setMessage("Facility Received Successiful");
-                   return String.valueOf(message);
+                   message.setMessage(RECEIVED_MESSAGE);
+
+                   JSONObject jsonObject = new JSONObject(message);
+
+                   return ResponseEntity.ok(jsonObject.toString());
 
                }else {
-
-                   return ("Empty Object "+ BAD_REQUEST);
+                   return ResponseEntity.status(NO_CONTENT).body("Empty Object");
                }
 
            } catch (DataException | IOException e) {
 
-               return (e.getMessage() + BAD_REQUEST);
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 
            }
 

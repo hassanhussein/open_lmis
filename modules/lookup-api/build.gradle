@@ -13,6 +13,7 @@ dependencies {
     compile 'org.springframework:spring-context:4.1.5.RELEASE'
     compile 'org.springframework:spring-beans:4.1.5.RELEASE'
     compile 'io.swagger:swagger-annotations:1.5.18'
+    compile 'org.json:json:20171018'
     compile project(':modules:core')
     compile project(':modules:rest-api')
     compile project(':modules:report')

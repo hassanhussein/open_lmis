@@ -13,4 +13,15 @@ public class ResponseMessage {
 
     private String facilityName;
 
+  /*  @Override
+    public String toString() {
+
+        return new StringBuilder()
+                .append("facilityCode:"+facilityCode)
+                .append("facilityName:"+facilityName)
+                .append("operatingStatus:"+operatingStatus)
+                .append("message:"+"Facility Received Successful")
+                .toString();
+    }*/
+
 }
