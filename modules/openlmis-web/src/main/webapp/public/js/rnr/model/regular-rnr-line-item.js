@@ -377,6 +377,8 @@ var RegularRnrLineItem = base2.Base.extend({
             this.maxStockQuantity = this.normalizedConsumption * 3;
         } else if (maxStockColumnCalculationOption === 'DISPENSED_X_2') {
             this.maxStockQuantity = this.quantityDispensed * 2;
+        } else if (maxStockColumnCalculationOption === 'DISPENSED_X_3') {
+            this.maxStockQuantity = this.quantityDispensed * 3;
         } else if (maxStockColumnCalculationOption === 'MAXIMUM_REQUIREMENT') {
             this.maxStockQuantity = this.maxMonthsOfStock;
         } else {
