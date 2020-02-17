@@ -74,6 +74,8 @@ public class Receive extends BaseModel {
 
     private CurrencyDTO currency;
 
+    private String receiveNumber;
+
     // private PurchaseDocument purchaseDocuments;
 
 }
