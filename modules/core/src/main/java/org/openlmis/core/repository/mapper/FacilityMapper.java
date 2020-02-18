@@ -34,7 +34,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, parentFacilityId, hasElectricity, hasElectronicSCC, hasElectronicDAR, active," +
-    "goLiveDate, goDownDate, comment, virtualFacility, enabled, priceScheduleId, createdDate,createdBy, modifiedBy, modifiedDate) " +
+    "goLiveDate, goDownDate, comment, virtualFacility, enabled, priceScheduleId, createdDate,createdBy, modifiedBy, modifiedDate, hfrCode) " +
     "VALUES(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -43,7 +43,7 @@ public interface FacilityMapper {
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicSCC}, #{hasElectronicDAR}, #{active}," +
     "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled}, #{priceSchedule.id} , COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
-    "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{hfrCode})")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
 
@@ -123,7 +123,7 @@ public interface FacilityMapper {
     "hasElectricity = #{hasElectricity}, hasElectronicSCC = #{hasElectronicSCC}, " +
     "hasElectronicDAR = #{hasElectronicDAR}, active = #{active}, virtualFacility = #{virtualFacility}, " +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}, priceScheduleId = #{priceSchedule.id}, " +
-    "comment = #{comment}, enabled = #{enabled}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
+    "comment = #{comment}, enabled = #{enabled},hfrCode = #{hfrCode}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 
   @Select("SELECT * FROM facility_types WHERE LOWER(code) = LOWER(#{code})")
@@ -282,7 +282,7 @@ public interface FacilityMapper {
 
   @Select({"SELECT COUNT(*) FROM facilities",
     "WHERE (LOWER(code) LIKE '%' || LOWER(#{searchParam}) || '%')",
-    "OR (LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')"})
+    " OR (LOWER(name) LIKE '%' || LOWER(#{searchParam}) || '%')  OR (LOWER(hfrCode) LIKE '%' || LOWER(#{searchParam}) || '%')"})
   Integer getTotalSearchResultCount(String searchParam);
 
   @Select({"SELECT COUNT(*) FROM facilities F",
@@ -340,13 +340,13 @@ public interface FacilityMapper {
     public static String getFacilitiesBySearchParam(Map<String, Object> params){
       StringBuilder sql = new StringBuilder();
       String column = (String) params.get("column");
-      sql.append("SELECT F.id, F.code, F.name, GZ.name as geoZoneName, FT.name as facilityTypeName, F.active, F.enabled FROM facilities F ");
+      sql.append("SELECT F.id, F.code, F.name, GZ.name as geoZoneName, FT.name as facilityTypeName, F.active, F.enabled, hfrCode FROM facilities F ");
       sql.append("INNER JOIN geographic_zones GZ on GZ.id = F.geographicZoneId ");
       sql.append("INNER JOIN facility_types FT on FT.id = F.typeId WHERE ");
 
       if(column.equalsIgnoreCase("facility")){
-        sql.append("(LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
-        sql.append("ORDER BY LOWER(F.name), LOWER(F.code)");
+        sql.append(" (LOWER(F.hfrCode) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(F.code) LIKE '%' || LOWER(#{searchParam}) || '%') OR (LOWER(F.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+        sql.append(" ORDER BY LOWER(F.name), LOWER(F.code)");
       }
       else if(column.equalsIgnoreCase("geographicZone")){
         sql.append("(LOWER(GZ.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
@@ -580,7 +580,20 @@ public interface FacilityMapper {
         "    VALUES (#{vimsDistrict}, #{hfrDistrict}, #{active}, #{createdBy}, #{createdDate}, #{modifiedBy}, \n" +
         "            #{modifiedDate});")
 @Options(useGeneratedKeys = true)
+Integer insertHfrMapping1(HfrMappingDTO dto);
+
+
+@Insert("INSERT INTO public.elmis_hfr_districts(\n" +
+        "           code, hfrCode, description )\n" +
+        "    VALUES (#{code}, #{hfrCode}, #{description});")
+@Options(useGeneratedKeys = true)
 Integer insertHfrMapping(HfrMappingDTO dto);
+
+
+
+  @Update("update elmis_hfr_districts set code=#{code}, hfrCode =#{hfrCode}, description = #{description}  where id =#{id}")
+  void updateHFRMapping(HfrMappingDTO dto);
+
 
 @Select(" select * from vims_hfr_mappings")
  List<HfrMappingDTO>getAllHfrMapping();
@@ -589,10 +602,13 @@ Integer insertHfrMapping(HfrMappingDTO dto);
  List<HfrMappingDTO>getAllHfrMappingById(@Param("id")Long id);
 
 @Select(" select * from vims_hfr_mappings WHERE lower(hfrdistrict) = lower(#{council})")
- HfrMappingDTO getAllHfrMappingByCouncil(@Param("council") String dto);
+ HfrMappingDTO getAllHfrMappingByCouncil1(@Param("council") String dto);
+
+@Select(" select * from elmis_hfr_districts WHERE lower(hfrCode) = lower(#{hfrCode})")
+ HfrMappingDTO getAllHfrMappingByCouncil(@Param("hfrCode") String dto);
 
 @Update("update vims_hfr_mappings set hfrdistrict=#{hfrDistrict} ,vimsdistrict =#{vimsDistrict}  where id =#{id}")
-  void updateHFRMapping(HfrMappingDTO dto);
+  void updateHFRMapping1(HfrMappingDTO dto);
 
 @Insert("INSERT INTO public.vims_hfr_facility_types_mappings(\n" +
         "           vimscode, hfrFacilityType, createdby, createddate, \n" +

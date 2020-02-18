@@ -50,5 +50,10 @@
       <a id="productTab" href="/public/pages/admin/product/index.html"
          openlmis-message="header.products"></a>
     </li>
+
+    <li ng-show="hasPermission('MANAGE_PRODUCT')" ng-class="hfrSelected">
+      <a id="productTab" href="/public/pages/admin/equipment/hfr-facility/index.html"
+         >HFR Facilities</a>
+    </li>
   </ul>
 </div>

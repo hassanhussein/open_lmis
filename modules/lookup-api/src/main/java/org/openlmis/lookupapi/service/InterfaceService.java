@@ -10,6 +10,7 @@ import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.lookupapi.mapper.ILInterfaceMapper;
+import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HFRDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.MSDStockDTO;
@@ -29,6 +30,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 
 
 @Service
@@ -54,6 +56,44 @@ public class InterfaceService {
     private FacilityService facilityService;
     @Autowired
     private ProductService productService;
+
+    public void receiveAndSendResponse(HealthFacilityDTO d) {
+
+        lookupService.saveHFR(d);
+
+    }
+
+    public void  sendResponseToHIM(HealthFacilityDTO d) throws InterruptedException  {
+
+        String username = settingService.getByKey(IL_USERNAME).getValue();
+        System.out.println(username);
+        String password = settingService.getByKey(IL_PASSWORD).getValue();
+        System.out.println(password);
+        String il_url = settingService.getByKey(IL_URL).getValue();
+
+        if (d != null) {
+            HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(d.getIlIDNumber());
+
+            HealthFacilityDTO dto = new HealthFacilityDTO();
+            if (hfr != null) {
+                dto.setIlIDNumber(hfr.getIlIDNumber());
+                dto.setStatus("Success");
+                if (il_url != null && username != null && password != null)
+                    sendConfirmationMessage(username, password, il_url, dto.getStatus(), hfr.getIlIDNumber());
+
+            } else {
+                dto.setIlIDNumber(d.getIlIDNumber());
+                dto.setStatus("Fail");
+                if (il_url != null && username != null && password != null)
+                    sendConfirmationMessage(username, password, il_url, dto.getStatus(), dto.getIlIDNumber());
+
+                System.out.println("Failure Message");
+            }
+
+
+        }
+
+    }
 
     @Async("myExecutor")
     public void sendResponse(HealthFacilityDTO d) throws InterruptedException {
@@ -92,25 +132,6 @@ public class InterfaceService {
 
     }
 
-    @Async("myExecutor")
-    public void saveMsdStock(String[] dto){
-   /*     System.out.println("I'm second");
-        System.out.println(dto);
-        if(dto != null){
-            if(!dto.getIlId().isEmpty()) {
-
-                Facility facility = facilityService.getByCodeFor(dto.getPlant());
-                Product product = productService.getByCode(dto.getPartNum());
-                MSDStockDTO stockDTO = interfaceMapper.getByMSDILId(dto.getIlId());
-                if (stockDTO == null) {
-                    interfaceMapper.insertMsdStock(dto);
-
-                }
-            }
-
-        }*/
-
-    }
 
     private void sendConfirmationMessage(String username, String password, String il_url, String status, String transId) {
         ObjectMapper mapper = new ObjectMapper();
@@ -168,4 +189,16 @@ public class InterfaceService {
 
     }
 
+    public List<FacilityMsdCodeDTO> getByHfrCode(String facIdNumber) {
+
+        return interfaceMapper.getByHfrCode(facIdNumber);
+
+    }
+
+    public void activateByMSDFacilityCode(FacilityMsdCodeDTO msd) {
+        List<FacilityMsdCodeDTO> list = interfaceMapper.getByHfrCode(msd.getFacIdNumber());
+        if(list != null) {
+            interfaceMapper.activateByMSDFacilityCode(msd);
+        }
+    }
 }

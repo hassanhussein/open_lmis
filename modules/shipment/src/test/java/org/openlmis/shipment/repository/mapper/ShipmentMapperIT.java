@@ -154,14 +154,18 @@ public class ShipmentMapperIT {
   private ShipmentLineItem createShippedLineItem() {
     Product product = make(a(defaultProduct));
     Facility facility = make(a(defaultFacility));
+    facility.setId(null);
+    facility.setCode("F10018");
     facilityMapper.insert(facility);
     ProcessingSchedule processingSchedule = make(a(ProcessingScheduleBuilder.defaultProcessingSchedule));
+    processingSchedule.setCode("Q1stL");
     processingScheduleMapper.insert(processingSchedule);
 
     ProcessingPeriod period = make(a(ProcessingPeriodBuilder.defaultProcessingPeriod,
       with(ProcessingPeriodBuilder.scheduleId, processingSchedule.getId())));
     processingPeriodMapper.insert(period);
     Program program = make(a(defaultProgram));
+    program.setCode("YELL_FVL");
     programMapper.insert(program);
     Rnr requisition = make(a(defaultRequisition, with(RequisitionBuilder.facility, facility),
       with(RequisitionBuilder.periodId, period.getId())));
@@ -182,6 +186,7 @@ public class ShipmentMapperIT {
   private SupplyLine createSupplyLine(Facility facility, Program program) {
     SupervisoryNode supervisoryNode = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     supervisoryNode.setFacility(facility);
+    supervisoryNode.setCode("N10");
     supervisoryNodeMapper.insert(supervisoryNode);
 
     SupplyLine supplyLine = new SupplyLine();

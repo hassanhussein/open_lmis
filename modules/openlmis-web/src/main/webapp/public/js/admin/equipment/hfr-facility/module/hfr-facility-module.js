@@ -26,7 +26,7 @@ config(['$routeProvider', function ($routeProvider) {
     })
     .run(function ($rootScope, AuthorizationService) {
         $rootScope.hfrSelected = "selected";
-        AuthorizationService.preAuthorize('MANAGE_EQUIPMENT_SETTINGS');
+        AuthorizationService.preAuthorize('MANAGE_PRODUCT');
     });
 
 

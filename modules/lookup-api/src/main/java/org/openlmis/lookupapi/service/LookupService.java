@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.dto.HFRFacilityDTO;
 import org.openlmis.core.repository.RegimenRepository;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
@@ -192,10 +193,12 @@ public class LookupService {
   public void saveHFR(HealthFacilityDTO dto){
 
     if(dto != null){
-        if(!dto.getIlIDNumber().isEmpty()) {
-            HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
-            //HealthFacilityDTO facilityDTO = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
-            if (hfr == null) {
+      //  if(!dto.getIlIDNumber().isEmpty()) {
+            //HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
+
+            HealthFacilityDTO savedFacility = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
+
+            if (savedFacility == null) {
                 //if(facilityDTO == null) {
                 interfaceMapper.insert(dto);
         /*}else
@@ -206,12 +209,11 @@ public class LookupService {
                 interfaceMapper.update(dto);
                 // }
             }
-        }
+       // }
 
     }
 
   }
-
 
 
   public ProgramReferenceData getProgramReferenceData(String code, String facilityCode) {
@@ -241,4 +243,9 @@ public class LookupService {
   public void refreshViewsBy(String view){
     interfaceMapper.refreshViewsBy(view);
   }
+
+  public BaseModel getByHfrCode(HealthFacilityDTO hfr) {
+    return interfaceMapper.getByFacilityCode(hfr.facIDNumber);
+  }
+
 }

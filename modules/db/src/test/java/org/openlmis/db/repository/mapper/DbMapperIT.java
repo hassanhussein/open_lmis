@@ -16,9 +16,11 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openlmis.db.categories.IntegrationTests;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.sql.DataSource;
 import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -32,7 +34,9 @@ public class DbMapperIT {
   @Autowired
   DbMapper dbMapper;
 
+
   @Autowired
+  @Qualifier("openlmisDataSource")
   ComboPooledDataSource dataSource;
 
   @Test
