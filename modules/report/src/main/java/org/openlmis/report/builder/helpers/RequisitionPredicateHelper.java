@@ -27,13 +27,24 @@ public class RequisitionPredicateHelper {
     return null;
   }
 
+
+  public static String multiPeriodFilterBy(String period, String periodIdField) {
+     if (!period.isEmpty()) {
+      return String.format(" %2$s = ANY(array[ %1$s ]::INT[])", period, periodIdField);
+    }
+    return null;
+  }
+
   public static String productCategoryIsFilteredBy(String field) {
     return String.format("%s = #{filterCriteria.productCategory} ", field);
   }
 
   public static String userHasPermissionOnFacilityBy(String field) {
-   // return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program})", field);
-    return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program}) OR  %s in (select facilityid from users where id = #{userId})", field, field);
+   //return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program})", field);
+    return String.format("%s in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{filterCriteria.program} " +
+            "UNION ALL \n" +
+            "select facilityid from users \n" +
+            " where id=#{userId} )", field);
   }
 
   public static String geoZoneIsFilteredBy(String viewAlias) {

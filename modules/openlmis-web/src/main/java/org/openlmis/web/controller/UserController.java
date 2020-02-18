@@ -11,17 +11,12 @@
 package org.openlmis.web.controller;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.ConfigurationSettingKey;
-import org.openlmis.core.domain.Pagination;
-import org.openlmis.core.domain.RightName;
-import org.openlmis.core.domain.User;
+import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
-import org.openlmis.core.service.ConfigurationSettingService;
-import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.RoleRightsService;
-import org.openlmis.core.service.UserService;
+import org.openlmis.core.service.*;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.report.model.dto.RequisitionGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +68,8 @@ public class UserController extends BaseController {
   @Autowired
   private FacilityService facilityService;
   @Autowired
+  private RequisitionGroupMemberService requisitionGroupMemberService;
+  @Autowired
   private ConfigurationSettingService settingService;
 
   @RequestMapping(value = "/user-context", method = GET, headers = ACCEPT_JSON)
@@ -81,6 +78,8 @@ public class UserController extends BaseController {
     if (userId != null) {
       String userName = (String) httpServletRequest.getSession().getAttribute(USER);
       User userObject = userService.getById(userId);
+     // List<RequisitionGroupMember> requisitionGroupMember = requisitionGroupMemberService.getMembersBy(userObject.getFacilityId());
+
 
       OpenLmisResponse openLmisResponse = new OpenLmisResponse("name", userName);
       openLmisResponse.addData("authenticated", TRUE);
@@ -88,6 +87,9 @@ public class UserController extends BaseController {
       openLmisResponse.addData("rights", roleRightService.getRights(userId));
       openLmisResponse.addData("preferences", userService.getPreferences(userId));
       openLmisResponse.addData("fullName", userObject.getFullName() );
+      openLmisResponse.addData("homeFacilityId", userObject.getFacilityId());
+      //openLmisResponse.addData("homeFacilityRequisitionGroupId", requisitionGroupMember.get(0).getRequisitionGroup().getId());
+
       openLmisResponse.addData("homePage", settingService.getConfigurationStringValue(ConfigurationSettingKey.LOGIN_SUCCESS_DEFAULT_LANDING_PAGE));
       return openLmisResponse.response(OK);
     } else {

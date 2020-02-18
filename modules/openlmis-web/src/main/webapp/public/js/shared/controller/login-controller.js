@@ -46,6 +46,7 @@ function LoginController($scope, $http, localStorageService, messageService) {
       localStorageService.add(localStorageKeys.USERNAME, data.name);
       localStorageService.add(localStorageKeys.FULLNAME, data.fullName);
       localStorageService.add(localStorageKeys.USER_ID, data.userId);
+      localStorageService.add(localStorageKeys.HOME_FACILITY_ID, data.homeFacilityId);
 
       for (var prefKey in data.preferences) {
         localStorageService.add(prefKey, data.preferences[prefKey]);

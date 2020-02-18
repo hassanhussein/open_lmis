@@ -940,3 +940,13 @@ Updated Filters
     </div>
     </div>
 </script>
+
+<script type="text/ng-template" id="filter-period-multi-template">
+    <div>
+        <label for="periodMulti" class="labels" openlmis-message="label.period"><span ng-show="requiredFilters.period" class="label-required">*</span></label><div>
+        <select id="periodMulti" ui-select2="wideOption" multiple data-placeholder="-- Select Periods --" class="input-large" ng-model="filter.multiPeriods" ng-change="notifyFilterChanged('multi-period-changed');">
+            <option  ng-repeat="option in periods" value="{{ option.id }}" ng-selected="filter.multiPeriods == option.id">{{ option.name }}</option>
+        </select>
+    </div>
+    </div>
+</script>

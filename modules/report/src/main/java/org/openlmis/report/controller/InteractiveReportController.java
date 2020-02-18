@@ -1080,4 +1080,63 @@ public class InteractiveReportController extends BaseController {
         return pages;
     }
 
+
+
+    @RequestMapping(value = "/reportdata/stockImbalanceHomeFacility", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCK_IMBALANCE_REPORT')")
+    public OpenLmisResponse  getstockImbalanceHomeFacilityData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                               @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                               @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
+                                                               HttpServletRequest request
+    )  {
+
+
+        Report report = reportManager.getReportByKey("home_facility_stock_imbalance");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        helper.setPageSize(limit);
+        List<StockImbalanceReport> stockImbalanceReportList = (List<StockImbalanceReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        Pagination pagination = helper.getPagination(page);
+        OpenLmisResponse pages = new OpenLmisResponse("rows",stockImbalanceReportList);
+        pages.addData("pagination", pagination);
+        return pages;
+    }
+
+
+    @RequestMapping(value = "/reportdata/aggregateConsumptionHomeFacility", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    public OpenLmisResponse getAggregateConsumptionForHomeFacility(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+            @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
+            HttpServletRequest request
+
+    ) {
+
+        Report report = reportManager.getReportByKey("home_facility_aggregate_consumption");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        helper.setPageSize(limit);
+        List<DistrictConsumptionReport> districtConsumptionReportList =
+                (List<DistrictConsumptionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+
+        Pagination pagination = helper.getPagination(page);
+        OpenLmisResponse pages = new OpenLmisResponse("rows", districtConsumptionReportList);
+        pages.addData("pagination", pagination);
+        return pages;
+    }
+
+    @RequestMapping(value = "/reportdata/home_facility_quantification_extract", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    public OpenLmisResponse getQuantificationHomeFacilityReportSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                                           @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                                           @RequestParam(value = "limit", defaultValue="100") String limit,
+                                                                           HttpServletRequest request
+
+    ) {
+        Report report = reportManager.getReportByKey("home_facility_quantification_extract");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<QuantificationExtractReport> quantificationExtractReportList = (List<QuantificationExtractReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        OpenLmisResponse pages = new OpenLmisResponse("rows",quantificationExtractReportList);
+        return pages;
+    }
+
 }

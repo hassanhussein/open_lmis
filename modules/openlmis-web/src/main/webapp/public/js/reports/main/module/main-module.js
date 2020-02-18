@@ -200,7 +200,19 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularTreeview','angularC
              controller: AggregateItemFillRateSummaryController,
              templateUrl: 'partials/aggregate-fill-rate-summary.html',
              reloadOnSearch: false
-         })
+         }).when('/home-facility-consumption', {
+            controller: HomeFacilityConsumptionReportController,
+            templateUrl: 'partials/home-facility-consumption.html',
+            reloadOnSearch: false
+         }).when('/home-facility-stockimbalance', {
+            controller: HomeFacilityStockImbalanceController,
+            templateUrl: 'partials/home-facility-stock-imbalance.html',
+            reloadOnSearch: false
+         }).when('/home-facility-quantification-extract-report', {
+             controller: HomeFacilityQuantificationExtractController,
+             templateUrl: 'partials/home-facility-quantification-extract.html',
+              reloadOnSearch: false
+             })
         .otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');

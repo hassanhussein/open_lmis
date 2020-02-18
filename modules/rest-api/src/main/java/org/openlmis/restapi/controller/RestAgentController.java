@@ -22,14 +22,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.HashMap;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
  * This controller is responsible for handling API endpoints to create/update a CHW/Virtual facility/Agent.
@@ -65,5 +66,16 @@ public class RestAgentController extends BaseController {
     } catch (DataException e) {
       return error(e.getOpenLmisMessage(), BAD_REQUEST);
     }
+  }
+
+  @RequestMapping(value = "/rest-api/getScheduleDetailsByFacilityIdAndProgramId", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<RestResponse> getScheduleDetailsByFacilityIdAndProgramId(@RequestParam(value = "facilityId") Long facilityId, @RequestParam(value = "programId") Long programId) {
+    HashMap ProcessingScheduleDetails;
+    try {
+      ProcessingScheduleDetails = restAgentService.getScheduleDetailsByFacilityIdAndProgramId(facilityId, programId);
+    } catch (DataException e) {
+      return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
+    }
+    return RestResponse.response("ProcessingScheduleDetails", ProcessingScheduleDetails);
   }
 }

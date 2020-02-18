@@ -16,6 +16,7 @@ import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -96,4 +97,12 @@ public interface RequisitionGroupMemberMapper {
 
   @Delete({"DELETE FROM requisition_group_members where requisitionGroupId = #{requisitionGroupId}"})
   void deleteMemberForGroup(Long requisitionGroupId);
+
+
+  @Select("select rgm.facilityid, rgps.programid, ps.id, ps.code, ps.name, f.typeid, f.name as facilityName, f.code as facilityCode from requisition_group_members rgm\n" +
+          "join requisition_group_program_schedules rgps on rgps.requisitiongroupid=rgm.requisitiongroupid\n" +
+          "join processing_schedules ps on ps.id=rgps.scheduleid\n" +
+          "join facilities f on f.id=rgm.facilityid\n" +
+          "where  rgm.facilityid=#{facilityId} and rgps.programid=#{programId}")
+  HashMap<String,Object> getScheduleDetailsByFacilityIdAndProgramId(@Param("facilityId")Long facilityId, @Param("programId")Long programId);
 }

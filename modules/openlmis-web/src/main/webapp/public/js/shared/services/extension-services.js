@@ -1382,3 +1382,15 @@ return $resource('/reports/reportdata/item-fill-rate-aggregate-summary.json', {}
 services.factory('AggregateItemFillRateByOrder', function($resource){
 return $resource('/reports/reportdata/item-fill-rate-by-order', {}, {});
 });
+
+services.factory('AggregateConsumptionHomeFacilityReport', function ($resource) {
+  return $resource('/reports/reportdata/aggregateConsumptionHomeFacility.json', {}, {});
+});
+
+services.factory('StockImbalanceHomeFacilityReport', function ($resource) {
+  return $resource('/reports/reportdata/stockImbalanceHomeFacility.json', {}, {});
+});
+
+services.factory('QuantificationHomeFacilityExtractReport', function ($resource) {
+    return $resource('/reports/reportdata/home_facility_quantification_extract.json', {}, {});
+});

@@ -20,6 +20,7 @@ import org.openlmis.core.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static org.apache.commons.collections.ListUtils.intersection;
@@ -133,5 +134,11 @@ public class RequisitionGroupMemberService {
     member.getFacility().setId(facilityId);
     validateIfFacilityIsAlreadyAssignedToRequisitionGroupForProgram(member);
     requisitionGroupMemberRepository.insert(member);
+  }
+
+  public HashMap getScheduleDetailsByFacilityIdAndProgramId(Long facilityId, Long programId)
+  {
+    return requisitionGroupMemberRepository.getScheduleDetailsByFacilityIdAndProgramId(facilityId, programId);
+
   }
 }
