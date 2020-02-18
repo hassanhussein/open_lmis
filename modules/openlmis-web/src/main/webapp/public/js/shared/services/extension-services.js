@@ -1406,3 +1406,8 @@ services.factory('GetWarehouseBy', function ($resource) {
 services.factory('GetAllLocationsById', function ($resource) {
     return $resource('/rest-api/warehouse/getAllLocations/:id.json', {id:'@id'}, {});
 });
+
+
+services.factory('GetAllLocationsByType', function ($resource) {
+    return $resource('/location-by/:type.json', {type:'@type'}, {});
+});

@@ -1,6 +1,5 @@
 package org.openlmis.core.service;
 
-import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Location;
 import org.openlmis.core.domain.LocationType;
 import org.openlmis.core.domain.Pagination;
@@ -9,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -53,5 +53,10 @@ public class LocationService {
 
     public List<Location> searchBy(String searchParam, String column, Pagination pagination) {
         return repository.searchBy(searchParam, column, pagination);
+    }
+
+    public List<HashMap<String, Object>> getAllLocationsBy(String type) {
+        return  repository.getAllLocationsBy(type);
+
     }
 }

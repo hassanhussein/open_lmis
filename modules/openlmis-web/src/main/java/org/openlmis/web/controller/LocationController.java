@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
@@ -110,4 +111,12 @@ public class LocationController extends BaseController {
         OpenLmisResponse openLmisResponse = new OpenLmisResponse("location", location);
         return openLmisResponse.errorEntity(exception, BAD_REQUEST);
     }
+
+    @RequestMapping(value = "/location-by/{type}", method = GET, headers = ACCEPT_JSON)
+    // @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_LOCATION')")
+    public ResponseEntity<OpenLmisResponse> getLocationBy(@PathVariable(value = "type") String type) {
+        return OpenLmisResponse.response("locationList", service.getAllLocationsBy(type));
+    }
+
+
 }
