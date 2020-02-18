@@ -35,7 +35,6 @@ public class LocationController extends BaseController {
     LocationService service;
 
     @RequestMapping(value = "/locations", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_LOCATION')")
     public ResponseEntity<OpenLmisResponse> getLocations(@RequestParam(value = "searchParam", required = false) String searchParam,
                                                          @RequestParam(value = "column") String column,
                                                          @RequestParam(value = "page", defaultValue = "1") Integer page,

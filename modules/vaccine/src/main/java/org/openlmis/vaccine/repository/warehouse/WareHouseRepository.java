@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.warehouse;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.WareHouse;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.location.WareHouseMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,5 +35,25 @@ public class WareHouseRepository {
 
     public WareHouse getById(Long id) {
         return mapper.getById(id);
+    }
+
+    public LocationDTO getBy(String code, Long warehouseId, Long typeId) {
+        return mapper.getBy(code,warehouseId,typeId);
+    }
+
+    public WareHouse getByC(String code) {
+        return mapper.getByC(code);
+    }
+
+    public Integer saveLocation(LocationDTO location) {
+       return mapper.saveLocation(location);
+    }
+
+    public void updateLocation(LocationDTO location) {
+        mapper.updateLocation(location);
+    }
+
+    public List<LocationDTO> getAllLocations(Long id) {
+        return mapper.getAllLocations(id);
     }
 }

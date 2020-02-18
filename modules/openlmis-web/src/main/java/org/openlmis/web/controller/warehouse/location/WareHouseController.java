@@ -86,5 +86,9 @@ public class WareHouseController extends BaseController {
     }
 
 
+   @RequestMapping(value = "/getAllLocations/{id}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllLocations(@PathVariable Long id) {
+        return OpenLmisResponse.response("house", service.getAllLocations(id));
+    }
 
 }

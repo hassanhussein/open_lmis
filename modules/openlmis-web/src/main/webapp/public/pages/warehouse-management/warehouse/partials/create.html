@@ -109,9 +109,9 @@
 
 
                     <div class="table-container">
-                        <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
+                        <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="locationList.length > 0">
                             <thead>
-                            <tr class="gradient-header resultCountHeader">
+                    <!--        <tr class="gradient-header resultCountHeader">
                                 <th colspan="7">
             <span ng-switch on="totalItems">
             <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
@@ -121,9 +121,9 @@
               </span>
                                     <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
                                 </th>
-                            </tr>
-                            <tr class="gradient-header" ng-show="locationList.length">
-                                <th id="codeHeader" openlmis-message="header.location.code"> Bin Code</th>
+                            </tr>-->
+                            <tr class="gradient-header">
+                                <th id="codeHeader"> Bin Code</th>
                                 <th id="nameHeader" openlmis-message="header.location.name"> Active</th>
                                 <th id="levelHeader" openlmis-message="header.location.type"> Type</th>
                             </tr>
@@ -132,7 +132,7 @@
                             <tr ng-repeat="location in locationList">
                                 <td id="locationCode{{$index}}" ng-bind="location.code"></td>
                                 <td id="locationName{{$index}}" ng-bind="location.name"></td>
-                                <td id="locationTypeName{{$index}}" ng-bind="location.locationType.name"></td>
+                                <td id="locationTypeName{{$index}}" ng-bind="location.locationType"></td>
 
                             </tr>
                             </tbody>

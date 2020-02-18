@@ -451,6 +451,16 @@
                         <property name="recordHandler" ref="facilityGeoLocationPersistenceHandler"/>
                     </bean>
                 </entry>
+
+                <entry key="wms-location">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Wms Locations"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.vaccine.dto.LocationDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="locationPercistanceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

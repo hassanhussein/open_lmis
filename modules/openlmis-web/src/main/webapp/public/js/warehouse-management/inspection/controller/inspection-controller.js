@@ -282,10 +282,12 @@ return false;
 
        if ($scope.inspection.id) {
          $scope.inspection.status  = status;
+         $scope.inspection.receiptNumber = $scope.inspection.receive.receiveLineItems[0].receiveNumber;
+
 
          UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
            $scope.print = function (inspectionId){
-                     console.log(inspectionId.id);
+
                       var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
 
                       $window.open(url, '_blank');

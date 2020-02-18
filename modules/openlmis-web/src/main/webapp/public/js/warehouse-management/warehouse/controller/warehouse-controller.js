@@ -8,17 +8,28 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function WarehouseController($scope, siteList,warehouseBy,GetWarehouseService, $location) {
+function WarehouseController($scope, siteList,warehouseBy,GetWarehouseService, $location, GetAllLocationsById) {
   $scope.types = siteList;
   $scope.$parent.message = "";
 
   if(!isUndefined(warehouseBy)) {
    warehouseBy.siteId = warehouseBy.site.id;
    $scope.warehouse = warehouseBy;
-     console.log(warehouseBy);
+   loadLocations($scope.warehouse.id);
+     //console.log(warehouseBy);
   }
 
+  function loadLocations(params) {
 
+  GetAllLocationsById.get({'id':parseInt(params,10)}, function(data){
+
+  $scope.locationList = data.house;
+
+  console.log(data);
+
+  });
+
+  }
 
   $scope.cancel = function () {
     $scope.$parent.location = undefined;
