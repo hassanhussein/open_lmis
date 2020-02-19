@@ -121,7 +121,7 @@ function HomeFacilityConsumptionReportController($scope, $filter, $window, Aggre
             $scope.filter.pdformat = 1;
             $scope.filter.limit = 10;
             $scope.filter.max = 10000;
-            console.log($scope.filter);
+
             var params = jQuery.param($scope.getSanitizedParameter());
             var url = '/reports/download/home_facility_aggregate_consumption/' + type + '?' + params;
             $window.open(url, '_blank');

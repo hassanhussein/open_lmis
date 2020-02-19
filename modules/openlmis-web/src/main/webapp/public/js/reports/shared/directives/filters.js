@@ -191,7 +191,6 @@ app.directive('programFacilityFilter', ['ReportUserPrograms', 'ReportProgramsWit
                         scope.programs = scope.unshift(list, 'report.filter.select.program');
                     }
 
-                }
                 GetScheduleDetailsByFacilityIdAndProgramId.get({
                                         facilityId: localStorageService.get(localStorageKeys.HOME_FACILITY_ID),
                                         programId: scope.filter.program
@@ -208,6 +207,8 @@ app.directive('programFacilityFilter', ['ReportUserPrograms', 'ReportProgramsWit
                                             scope.filter.productCategory='' ;
                                             scope.notifyFilterChanged('schedule-changed');
                                     });
+                }
+
 
                 var Service = (attr.regimen) ? ReportRegimenPrograms : (attr.budget) ? ReportProgramsWithBudgeting : ReportUserPrograms;
                 Service.get(function (data) {
@@ -242,7 +243,7 @@ app.directive('yearFacilityFilter', ['OperationYears', 'ReportPeriodsByScheduleA
                     }
                 }
 
-var loadPeriods = function () {
+            var loadPeriods = function () {
                               if (scope.filter.year !== undefined) {
                                                 ReportPeriodsByScheduleAndYear.get({
                                                     scheduleId: scope.filter.schedule,
@@ -251,7 +252,7 @@ var loadPeriods = function () {
                                                     scope.periods = scope.unshift(data.periods, 'report.filter.select.period');
                                                 });
                                      }
-};
+              };
                 OperationYears.get(function (data) {
                     scope.years = data.years;
                     if (scope.filter.year === undefined) {

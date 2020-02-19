@@ -34,6 +34,7 @@ public class AggregateConsumptionHomeFacilityReportDataProvider extends ReportDa
 
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
+        paginationHelper.setPageSize(pageSize + "");
         return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
     }
 
