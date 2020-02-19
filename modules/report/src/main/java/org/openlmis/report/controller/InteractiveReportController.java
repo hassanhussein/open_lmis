@@ -1083,7 +1083,7 @@ public class InteractiveReportController extends BaseController {
 
 
     @RequestMapping(value = "/reportdata/stockImbalanceHomeFacility", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_STOCK_IMBALANCE_REPORT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
     public OpenLmisResponse  getstockImbalanceHomeFacilityData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                                                @RequestParam(value = "limit", defaultValue="${search.page.size}") String limit,
@@ -1103,7 +1103,7 @@ public class InteractiveReportController extends BaseController {
 
 
     @RequestMapping(value = "/reportdata/aggregateConsumptionHomeFacility", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
     public OpenLmisResponse getAggregateConsumptionForHomeFacility(
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "max", required = false, defaultValue = "10") int max,
@@ -1125,7 +1125,7 @@ public class InteractiveReportController extends BaseController {
     }
 
     @RequestMapping(value = "/reportdata/home_facility_quantification_extract", method = GET, headers = BaseController.ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_FACILITY_REPORT')")
     public OpenLmisResponse getQuantificationHomeFacilityReportSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                                                            @RequestParam(value = "limit", defaultValue="100") String limit,

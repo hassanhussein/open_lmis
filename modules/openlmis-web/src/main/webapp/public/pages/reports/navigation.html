@@ -105,19 +105,19 @@
       </div>
     </li>
 
-    <li class="has-children" >
+    <li class="has-children"  ng-show="hasPermission('VIEW_FACILITY_REPORT')">
       <a href="" openlmis-message="link.facility.report"></a>
       <div class="submenu">
         <ul>
-          <li>
+          <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
             <a href="/public/pages/reports/main/index.html#home-facility-consumption"
                openlmis-message="link.facility.report.consumption"></a>
           </li>
-          <li>
+          <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
             <a href="/public/pages/reports/main/index.html#home-facility-stockimbalance"
                openlmis-message="link.facility.report.stockimbalance"></a>
           </li>
-          <li>
+          <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
             <a href="/public/pages/reports/main/index.html#home-facility-quantification-extract-report"
                >Consumption Extract</a>
           </li>
@@ -158,7 +158,7 @@
       </div>
     </li>
 
-    <li class="has-children">
+    <li class="has-children" ng-show="hasReportingPermission()">
       <a href="javascript: void(0);" openlmis-message="menu.report.admin"></a>
 
       <div class="submenu">
@@ -385,7 +385,7 @@
       </div>
     </li>
 
-    <li class="has-children">
+    <li class="has-children" ng-show="hasReportingPermission()">
       <a href="javascript: void(0);" openlmis-message="menu.report.commodity.financing"></a>
       <div class="submenu">
         <ul>
@@ -401,7 +401,7 @@
 
       <!--<div><ng-include src="'/public/pages/reports/mozambique/reports.html'"/></div>-->
 
-    <li>
+    <li ng-show="hasReportingPermission()">
       <a ng-href="/public/pages/reports/custom/index.html" openlmis-message="menu.report.custom.reports"></a>
     </li>
 

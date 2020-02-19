@@ -31,6 +31,9 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
   $scope.hasReportingPermission = function () {
     if ($scope.rights !== undefined && $scope.rights !== null) {
       var rights = JSON.parse($scope.rights);
+       rights = _.filter(rights, function(right) {
+               return right.name !== "VIEW_FACILITY_REPORT";
+              });
       var rightTypes = _.pluck(rights, 'type');
       return rightTypes.indexOf('REPORTING') > -1;
     }
