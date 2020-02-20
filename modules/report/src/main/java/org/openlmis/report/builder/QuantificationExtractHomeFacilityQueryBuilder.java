@@ -49,10 +49,10 @@ return sql;
         }
 
 
-        predicate +=   " and (mv_quantification_extraction.parent = " + filter.getZone() + "::INT or  mv_quantification_extraction.region_id = " +  filter.getZone() + "::INT " +
-                " or  mv_quantification_extraction.district_id = " +  filter.getZone() + "::INT " +
-                " or  mv_quantification_extraction.zone_id = " +  filter.getZone() + "::INT " +
-                "  or  0 = " + filter.getZone() + "::INT) ";
+//        predicate +=   " and (mv_quantification_extraction.parent = " + filter.getZone() + "::INT or  mv_quantification_extraction.region_id = " +  filter.getZone() + "::INT " +
+//                " or  mv_quantification_extraction.district_id = " +  filter.getZone() + "::INT " +
+//                " or  mv_quantification_extraction.zone_id = " +  filter.getZone() + "::INT " +
+//                "  or  0 = " + filter.getZone() + "::INT) ";
 
         if (filter.getSchedule() != 0) {
             predicate += " AND " + scheduleFilteredBy("schedule");

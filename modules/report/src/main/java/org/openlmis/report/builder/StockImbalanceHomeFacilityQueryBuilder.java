@@ -46,9 +46,9 @@ public class StockImbalanceHomeFacilityQueryBuilder {
             WHERE(multiProductFilterBy(filter.getProducts(), "vw_stock_status.productId", "indicator_product"));
         }
 
-        if (filter.getZone() != 0) {
-            WHERE(geoZoneIsFilteredBy("d"));
-        }
+//        if (filter.getZone() != 0) {
+//            WHERE(geoZoneIsFilteredBy("d"));
+//        }
         ORDER_BY(QueryHelpers.getSortOrder(sortCriteria, StockImbalanceReport.class, "supplyingFacility asc, facility asc, product asc"));
         return SQL() + " limit 20000";
     }
@@ -87,7 +87,7 @@ public class StockImbalanceHomeFacilityQueryBuilder {
     //    predicate += "  " + periodIsFilteredBy(" periodid ");
         predicate += " fullSupply = true ";
         predicate += " AND " + programIsFilteredBy("programId");
-        predicate += " AND " + userHasPermissionOnFacilityBy("facility_id");
+//        predicate += " AND " + userHasPermissionOnFacilityBy("facility_id");
         if (filter.getFacilityType() != 0) {
             predicate += " AND " + facilityTypeIsFilteredBy("facility_type_id");
         }
@@ -102,9 +102,9 @@ public class StockImbalanceHomeFacilityQueryBuilder {
             predicate += " AND " + multiProductFilterBy(filter.getProducts(), "mv_stock_imbalance_by_facility_report.productId", "indicator_product");
         }
 
-        if (filter.getZone() != 0) {
-            predicate += " AND " + geoZoneIsFilteredBy("mv_stock_imbalance_by_facility_report");
-        }
+//        if (filter.getZone() != 0) {
+//            predicate += " AND " + geoZoneIsFilteredBy("mv_stock_imbalance_by_facility_report");
+//        }
 
         predicate += " AND " + multiPeriodFilterBy(filter.getMultiPeriods(), "periodid");
 

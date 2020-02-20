@@ -52,4 +52,6 @@ public class AggregateConsumptionReportParam
     private Boolean allReportType;
 
     private String multiPeriods;
+
+    private Long facility;
 }

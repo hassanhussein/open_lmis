@@ -70,7 +70,10 @@ public class AggregateConsumptionHomeFacilityQueryBuilder {
         WHERE(programIsFilteredBy("r.programId"));
         WHERE(multiPeriodFilterBy(filter.getMultiPeriods(), "r.periodId"));
 
-        WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+//        WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+        if (filter.getFacility() != 0) {
+            WHERE(facilityIsFilteredBy("r.facilityId"));
+        }
         WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));/*
     WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
     WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));*/
@@ -85,9 +88,9 @@ public class AggregateConsumptionHomeFacilityQueryBuilder {
             WHERE(multiProductFilterBy(filter.getProducts(), "p.id", "p.tracer"));
         }
 
-        if (filter.getZone() != 0) {
-            WHERE( geoZoneIsFilteredBy("d") );
-        }
+//        if (filter.getZone() != 0) {
+//            WHERE( geoZoneIsFilteredBy("d") );
+//        }
 
         if (filter.getAllReportType()) {
             WHERE("r.emergency in (true,false)");
