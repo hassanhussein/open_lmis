@@ -179,6 +179,25 @@ app.directive('programFacilityFilter', ['ReportUserPrograms', 'ReportProgramsWit
             restrict: 'E',
             require: '^filterContainer',
             link: function (scope, elm, attr) {
+            function onProgramChanged(scope) {
+            if(scope.filter.program){
+                              GetScheduleDetailsByFacilityIdAndProgramId.get({
+                                                      facilityId: localStorageService.get(localStorageKeys.HOME_FACILITY_ID),
+                                                      programId: scope.filter.program
+                                                  }, function (data) {
+
+                                                          scope.filter.schedule = data.ProcessingScheduleDetails.id;
+                                                          scope.filter.facilityType = data.ProcessingScheduleDetails.typeid;
+                                                          scope.filter.facility = data.ProcessingScheduleDetails.facilityid;
+                                                          scope.filter.products = 0;
+                                                          scope.filter.facilityName = data.ProcessingScheduleDetails.facilityname;
+                                                          scope.filter.facilityCode = data.ProcessingScheduleDetails.facilitycode;
+                                                          scope.filter.requisitionGroup = data.ProcessingScheduleDetails.name;
+                                                          scope.filter.productCategory='' ;
+                                                          scope.notifyFilterChanged('schedule-changed');
+                                                  });
+            }
+            }
                 scope.registerRequired('program', attr);
                 scope.program_filter_visible = attr.visible !== undefined ? attr.visible : true;
                 function bindPrograms(list) {
@@ -190,23 +209,6 @@ app.directive('programFacilityFilter', ['ReportUserPrograms', 'ReportProgramsWit
                     } else {
                         scope.programs = scope.unshift(list, 'report.filter.select.program');
                     }
-
-                GetScheduleDetailsByFacilityIdAndProgramId.get({
-                                        facilityId: localStorageService.get(localStorageKeys.HOME_FACILITY_ID),
-                                        programId: scope.filter.program
-                                    }, function (data) {
-
-                                            scope.filter.schedule = data.ProcessingScheduleDetails.id;
-                                            scope.filter.facilityType = data.ProcessingScheduleDetails.typeid;
-                                            scope.filter.facility = data.ProcessingScheduleDetails.facilityid;
-                                            scope.filter.facility = data.ProcessingScheduleDetails.facilityid;
-                                            scope.filter.products = 0;
-                                            scope.filter.facilityName = data.ProcessingScheduleDetails.facilityname;
-                                            scope.filter.facilityCode = data.ProcessingScheduleDetails.facilitycode;
-                                            scope.filter.requisitionGroup = data.ProcessingScheduleDetails.name;
-                                            scope.filter.productCategory='' ;
-                                            scope.notifyFilterChanged('schedule-changed');
-                                    });
                 }
 
 
@@ -214,6 +216,9 @@ app.directive('programFacilityFilter', ['ReportUserPrograms', 'ReportProgramsWit
                 Service.get(function (data) {
                     bindPrograms(data.programs);
                 });
+                scope.$on('program-changed', function () {
+                                    onProgramChanged(scope);
+                     });
             },
             templateUrl: 'filter-program-template'
         };
