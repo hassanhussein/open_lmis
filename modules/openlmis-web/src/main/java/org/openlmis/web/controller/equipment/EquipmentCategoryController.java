@@ -92,4 +92,10 @@ public class EquipmentCategoryController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/equipmentCategory-list", method = RequestMethod.GET)
+    public ResponseEntity getAllEquipmentCategoryList() {
+
+        return OpenLmisResponse.response("categories",service.getAllEquipmentCategory());
+    }
+
 }

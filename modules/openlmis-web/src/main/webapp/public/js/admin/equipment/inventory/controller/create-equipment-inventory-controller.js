@@ -10,15 +10,21 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function CreateEquipmentInventoryController($scope, $location, $routeParams,GetEquipmentByDesignation, EquipmentInventory,ColdChainDesignations, Donors, EquipmentsByType, SaveEquipmentInventory, UserFacilityList, EquipmentOperationalStatus,
+function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesList,$scope, $location, $routeParams,GetEquipmentByDesignation, EquipmentInventory,ColdChainDesignations, Donors, EquipmentsByType, SaveEquipmentInventory, UserFacilityList, EquipmentOperationalStatus,
                                             messageService, EquipmentType, EquipmentInventoryFacilities, EquipmentEnergyTypes,
                                             equipmentStatusHelp, EquipmentModelByEquipmentType) {
+
+
+  $scope.equipmentCategoryList = [];
+
+  $scope.equipmentCategoryList = GetEquipmentCategoriesList;
 
   $scope.$parent.message = $scope.$parent.error = '';
   $scope.equipmentStatusHelp=equipmentStatusHelp;
   $scope.max_year = new Date().getFullYear();
   $scope.submitted = false;
   $scope.showError = false;
+  $scope.categoryList = GetEquipmentCategoriesList;
 
   $scope.from = $routeParams.from;
   $scope.manufacturers = [];
@@ -32,13 +38,22 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams,GetE
     }
   });
 
+ $scope.populateManufacturer = function(equipment){
+
+
+ };
 
   EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
 
    if(!isUndefined(data.equipments) && data.equipments.length > 0) {
      $scope.equipments = data.equipments;
-console.log($scope.equipments);
+
      var designationList = _.pluck($scope.equipments, 'designation');
+
+     $scope.manufacturerList = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
+
+     console.log($scope.manufacturerList);
+
      $scope.designationList = _.uniq(designationList, 'name');
    }
   });
@@ -139,15 +154,53 @@ console.log($scope.equipments);
 
   $scope.equipmentModels = EquipmentModelByEquipmentType.query({id : $routeParams.equipmentType});
 
-  $scope.updateModels = function () {
+  $scope.changeModels = function () {
 
     $scope.models = _.pluck(_.where($scope.equipments, {manufacturer: $scope.selected.manufacturer,designationId:parseInt($scope.selected.designation,10)}), 'model');
+    console.log($scope.models);
     $scope.mod = _.pluck(_.where($scope.equipments, {manufacturer: $scope.selected.designation}), 'manufacturer');
     // Also reset equipment fields
 
     $scope.selected.model = "";
     $scope.inventory.equipment = undefined;
     $scope.inventory.equipmentId = undefined;
+  };
+
+
+function loadModel(model, manufacturer){
+
+GetByModel.get({'id':model, 'manufacturer':manufacturer}, function(data){
+  console.log(data);
+});
+
+
+}
+ $scope.displayModels = function () {
+
+     var modelList = _.where($scope.equipments, {manufacturer: $scope.selected.manufacturer,equipmentTypeId:parseInt($routeParams.equipmentType,10)});
+          console.log(modelList);
+    var dataV=_.uniq(_.pluck(_.where($scope.equipments, {manufacturer: $scope.selected.manufacturer,equipmentTypeId:parseInt($routeParams.equipmentType,10)}), 'model'));
+
+    $scope.dataValues = modelList;
+    console.log(dataV);
+
+   /* if(modelList.length > 0) {
+    var dataValues = [];
+     angular.forEach(modelList, function(data){
+       if(data !== null) {
+       dataValues.push({data});
+       }
+     });
+    // console.log(dataValues);
+    }*/
+
+
+    // loadModel($scope.selected.manufacturer);
+    // Also reset equipment fields
+
+    $scope.selected.model = "";
+    //$scope.inventory.equipment = undefined;
+    //$scope.inventory.equipmentId = undefined;
   };
 
   $scope.updateEquipmentInfo = function () {
@@ -237,6 +290,26 @@ console.log($scope.equipments);
 }
 
 CreateEquipmentInventoryController.resolve = {
+
+   GetEquipmentCategoriesList: function ($q, $timeout, GetEquipmentCategories) {
+   var deferred = $q.defer();
+   $timeout(function() {
+   var list = [];
+
+   GetEquipmentCategories.get({}, function(data){
+    if(!isUndefined(data)) {
+    list = data.categories;
+    }
+    deferred.resolve(list);
+   });
+
+   },100);
+
+   return deferred.promise;
+
+   },
+
+
     equipmentStatusHelp: function ($q, $timeout, SettingsByKey) {
         var deferred = $q.defer();
         var status_values = {};

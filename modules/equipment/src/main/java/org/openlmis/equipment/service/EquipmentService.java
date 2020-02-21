@@ -21,6 +21,7 @@ import org.openlmis.equipment.repository.EquipmentProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -143,5 +144,13 @@ public class EquipmentService {
 
   public Equipment getByTypeManufacturerAndModel(Long equipmentTypeId, String manufacturer, Long modelId, String model) {
     return repository.getByTypeManufacturerAndModel(equipmentTypeId, manufacturer, modelId, model);
+  }
+
+  public List<Equipment>getManufacturerByEquipmentType(Long equipmentTypeId){
+    return coldChainEquipmentRepository.getManufacturerByEquipmentType(equipmentTypeId);
+  }
+
+  public List<HashMap<String, Object>>getByModel(Long equipmentTypeId, String manufacturer){
+    return coldChainEquipmentRepository.getByModel(equipmentTypeId,manufacturer);
   }
 }

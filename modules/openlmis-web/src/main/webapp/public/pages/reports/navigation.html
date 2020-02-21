@@ -219,22 +219,22 @@
             >Aggregate Fill Rate Report</a>
           </li>
 
-          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
+       <!--   <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#aggregate-fill-rate"
             >Aggregate Fill Rate Report</a>
-          </li>
+          </li>-->
 
           <li ng-show="hasPermission('VIEW_DISTRICT_FINANCIAL_SUMMARY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#district-financial-summary"
                openlmis-message="menu.report.order.district.financial.compilation"></a>
           </li>
-
+<!--
           <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_SUMMARY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#order-fill-rate-summary"
                openlmis-message="menu.report.order.fill.rate.summary"></a>
           </li>
 
-          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT')">
+          <li ng-show="hasPermission('VIEW_ORDER_FILL_RATE_REPORT') = FALSE">
             <a ng-href="/public/pages/reports/main/index.html#item-fill-rate-report"
                >Item Fill Rate Report</a>
           </li>
@@ -246,16 +246,16 @@
 
           <li ng-show="hasPermission('VIEW_ORDER_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#order" openlmis-message="menu.report.order.report"></a>
-          </li>
+          </li>-->
 
-          <li ng-show="hasPermission('VIEW_RNR_FEEDBACK_REPORT')">
+      <!--    <li ng-show="hasPermission('VIEW_RNR_FEEDBACK_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#rnr-feedback" openlmis-message="menu.report.rnr.feedback"></a>
           </li>
 
           <li ng-show="hasPermission('VIEW_SEASONALITY_RATIONING_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#seasonality-rationing"
                openlmis-message="menu.report.seasonality.rationing"></a>
-          </li>
+          </li>-->
         </ul>
       </div>
     </li>

@@ -10,7 +10,23 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function CreateEquipmentController($scope, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService, ColdChainDesignations,ColdChainPqsStatus,EquipmentEnergyTypes, Donors,currentEquipmentTypeId) {
+function CreateEquipmentController($scope,EquipmentModelList,GetEquipmentCategories, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService, ColdChainDesignations,ColdChainPqsStatus,EquipmentEnergyTypes, Donors,currentEquipmentTypeId) {
+  $scope.modelList = [];
+  $scope.equipmentCategoryList = [];
+
+  GetEquipmentCategories.get({}, function(data){
+
+   $scope.equipmentCategoryList = data.categories;
+
+   console.log($scope.equipmentCategoryList);
+  });
+
+
+  EquipmentModelList.get({}, function(data){
+
+  $scope.modelList = data.models;
+
+  });
 
   $scope.currentEquipmentTypeId=currentEquipmentTypeId.get();
   if( $scope.currentEquipmentTypeId === undefined)
@@ -48,6 +64,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
       id: $routeParams.id,
       equipmentTypeId:$routeParams.type
     }, function (data) {
+     console.log(data);
       $scope.equipment = data.equipment;
       $scope.showError = true;
     });
@@ -73,6 +90,7 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
       $scope.error = messageService.get(data.data.error);
     };
 
+    console.log($scope.equipment);
     if(!$scope.equipmentForm.$invalid){
       if($scope.equipment.equipmentType.coldChain)
       {
@@ -81,7 +99,12 @@ function CreateEquipmentController($scope, $routeParams, $location, Equipment,Eq
       }
       else{
         $scope.equipment.equipmentTypeName = "equipment";
+        $scope.equipment.modelId=$scope.equipment.equipmentModel.id;
+
+        console.log($scope.equipment);
+/*
         $scope.equipment.designationId=$scope.equipment.designation.id;
+*/
       }
       SaveEquipment.save($scope.equipment, onSuccess, onError);
     }
