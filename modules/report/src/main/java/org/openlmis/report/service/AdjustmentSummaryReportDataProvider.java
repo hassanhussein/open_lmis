@@ -56,7 +56,7 @@ public class AdjustmentSummaryReportDataProvider extends ReportDataProvider {
     all.add(report);
     return all;
     */
-
+    paginationHelper.setPageSize(pageSize + "");
     return reportMapper.getFilteredSortedPagedAdjustmentSummaryReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
 
   }

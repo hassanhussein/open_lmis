@@ -602,3 +602,7 @@ services.factory('RunDataHealthCheck', function ($resource) {
 services.factory('RunDataHealthCheckPerProduct', function ($resource) {
     return $resource('/requisitions/run-data-health-check-per-product.json', {}, {});
 });
+
+services.factory('GetScheduleDetailsByFacilityIdAndProgramId', function ($resource) {
+    return $resource('/rest-api/getScheduleDetailsByFacilityIdAndProgramId.json', {}, {});
+});

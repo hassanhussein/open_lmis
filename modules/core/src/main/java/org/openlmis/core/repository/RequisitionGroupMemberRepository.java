@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -82,5 +83,10 @@ public class RequisitionGroupMemberRepository {
 
   public void deleteMembersForGroup(Long requisitionGroupId) {
     mapper.deleteMemberForGroup(requisitionGroupId);
+  }
+
+  public HashMap getScheduleDetailsByFacilityIdAndProgramId(Long facilityId, Long programId)
+  {
+   return  mapper.getScheduleDetailsByFacilityIdAndProgramId(facilityId,programId);
   }
 }

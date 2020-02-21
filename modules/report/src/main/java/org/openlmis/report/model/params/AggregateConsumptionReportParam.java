@@ -50,4 +50,8 @@ public class AggregateConsumptionReportParam
     private String reportType;
 
     private Boolean allReportType;
+
+    private String multiPeriods;
+
+    private Long facility;
 }

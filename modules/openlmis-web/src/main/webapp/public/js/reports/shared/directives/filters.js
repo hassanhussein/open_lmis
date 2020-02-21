@@ -21,7 +21,6 @@ app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'mess
                 $scope.$broadcast(event);
                 $scope.$broadcast('filter-changed');
             };
-
             $scope.subscribeOnChanged = function (subscriber, propertyToSubscribe, func, initialize) {
                 $scope.$on(propertyToSubscribe + '-changed', func);
                 if (initialize && $routeParams[propertyToSubscribe]) {
@@ -39,17 +38,32 @@ app.directive('filterContainer', ['$routeParams', '$location', '$timeout', 'mess
                 var params = angular.copy($scope.filter);
 
                 //properly serialize the multi product filter
+
                 if (params.products && params.products.length > 0) {
                     var numericArray = [];
                     for (var i = 0; i < params.products.length; i++) {
                         numericArray.push(parseInt(params.products[i], 10));
                     }
                     params.products = JSON.stringify(numericArray).replace('[', '').replace(']', '');
+
                 } else if (params.products && params.products.length === 0) {
                     params.products = 0;
                 }
+
+                //properly serialize the multi periods filter
+                if (params.multiPeriods && params.multiPeriods.length > 0) {
+                    var multiPeriodArray = [];
+                    for (var y = 0; y < params.multiPeriods.length; y++) {
+                        multiPeriodArray.push(parseInt(params.multiPeriods[y], 10));
+                    }
+                    params.multiPeriods = JSON.stringify(multiPeriodArray).replace('[', '').replace(']', '');
+                     params.period = 10;
+                } else if (params.multiPeriods && params.multiPeriods.length === 0) {
+                    params.multiPeriods = 0;
+                }
+
                 return params;
-                //end of multi product stuff
+                //end of multi periods stuff
             };
 
             $scope.$parent.getUrlParams = function () {
@@ -159,6 +173,104 @@ app.directive('programFilter', ['ReportUserPrograms', 'ReportProgramsWithBudgeti
     }
 ]);
 
+app.directive('programFacilityFilter', ['ReportUserPrograms', 'ReportProgramsWithBudgeting', 'ReportRegimenPrograms', '$routeParams', 'GetScheduleDetailsByFacilityIdAndProgramId', 'localStorageService',
+    function (ReportUserPrograms, ReportProgramsWithBudgeting, ReportRegimenPrograms, $routeParams, GetScheduleDetailsByFacilityIdAndProgramId, localStorageService) {
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+            function onProgramChanged(scope) {
+            if(scope.filter.program){
+                              GetScheduleDetailsByFacilityIdAndProgramId.get({
+                                                      facilityId: localStorageService.get(localStorageKeys.HOME_FACILITY_ID),
+                                                      programId: scope.filter.program
+                                                  }, function (data) {
+
+                                                          scope.filter.schedule = data.ProcessingScheduleDetails.id;
+                                                          scope.filter.facilityType = data.ProcessingScheduleDetails.typeid;
+                                                          scope.filter.facility = data.ProcessingScheduleDetails.facilityid;
+                                                          scope.filter.products = 0;
+                                                          scope.filter.facilityName = data.ProcessingScheduleDetails.facilityname;
+                                                          scope.filter.facilityCode = data.ProcessingScheduleDetails.facilitycode;
+                                                          scope.filter.requisitionGroup = data.ProcessingScheduleDetails.name;
+                                                          scope.filter.productCategory='' ;
+                                                          scope.notifyFilterChanged('schedule-changed');
+                                                  });
+            }
+            }
+                scope.registerRequired('program', attr);
+                scope.program_filter_visible = attr.visible !== undefined ? attr.visible : true;
+                function bindPrograms(list) {
+                    if (list.length === 1 && !$routeParams.program) {
+                        scope.filter.program = list[0].id;
+                    }
+                    if (!attr.required && !$routeParams.program) {
+                        scope.programs = scope.unshift(list, 'report.filter.all.programs');
+                    } else {
+                        scope.programs = scope.unshift(list, 'report.filter.select.program');
+                    }
+                }
+
+
+                var Service = (attr.regimen) ? ReportRegimenPrograms : (attr.budget) ? ReportProgramsWithBudgeting : ReportUserPrograms;
+                Service.get(function (data) {
+                    bindPrograms(data.programs);
+                });
+                scope.$on('program-changed', function () {
+                                    onProgramChanged(scope);
+                     });
+            },
+            templateUrl: 'filter-program-template'
+        };
+    }
+]);
+
+app.directive('yearFacilityFilter', ['OperationYears', 'ReportPeriodsByScheduleAndYear', 'localStorageService',
+    function (OperationYears, ReportPeriodsByScheduleAndYear, localStorageService) {
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+                scope.registerRequired('year', attr);
+
+                if (attr.visible !== undefined && attr.visible === 'false') {
+                    scope.year_filter_visible = false;
+                } else {
+                    scope.year_filter_visible = true;
+                }
+
+                if (attr.default) {
+                    if (attr.default == 'current') {
+                        var d = new Date();
+                        scope.filter.year = d.getFullYear();
+                    } else {
+                        scope.filter.year = attr.default;
+                    }
+                }
+
+            var loadPeriods = function () {
+                              if (scope.filter.year !== undefined) {
+                                                ReportPeriodsByScheduleAndYear.get({
+                                                    scheduleId: scope.filter.schedule,
+                                                    year: scope.filter.year
+                                                }, function (data) {
+                                                    scope.periods = scope.unshift(data.periods, 'report.filter.select.period');
+                                                });
+                                     }
+              };
+                OperationYears.get(function (data) {
+                    scope.years = data.years;
+                    if (scope.filter.year === undefined) {
+                        scope.filter.year = data.years[data.years.length - 1];
+                    }
+                });
+
+                scope.subscribeOnChanged('program','year', loadPeriods, true);
+            },
+            templateUrl: 'filter-year-template'
+        };
+    }
+]);
 app.directive('yearFilter', ['OperationYears',
     function (OperationYears) {
         return {
@@ -892,6 +1004,44 @@ app.directive('productMultiFilter', ['ReportProductsByProgram',
 
             },
             templateUrl: 'filter-product-multi-template'
+        };
+    }
+]);
+
+app.directive('periodMultiFilter', ['ReportPeriods', 'ReportPeriodsByScheduleAndYear', '$routeParams',
+    function (ReportPeriods, ReportPeriodsByScheduleAndYear, $routeParams) {
+
+        var onPgCascadedVarsChanged = function ($scope) {
+
+            if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0)
+                return;
+
+           var program = (angular.isDefined($scope.filter) && angular.isDefined($scope.filter.program)) ? $scope.filter.program : 0;
+
+           ReportPeriodsByScheduleAndYear.get({
+                              scheduleId: $scope.filter.schedule,
+                              year: $scope.filter.year
+                          }, function (data) {
+                              $scope.periods = $scope.unshift(data.periods, 'report.filter.select.period');
+                          });
+
+        };
+
+        return {
+            restrict: 'E',
+            link: function (scope, elm, attr) {
+                scope.registerRequired('multi-period', attr);
+
+                var onFiltersChanged = function () {
+                    onPgCascadedVarsChanged(scope);
+                };
+
+                scope.subscribeOnChanged('multi-period', 'program', onFiltersChanged, false);
+                scope.subscribeOnChanged('multi-period', 'year', onFiltersChanged, true);
+//                scope.subscribeOnChanged('period', 'schedule', onFiltersChanged, true);
+
+            },
+            templateUrl: 'filter-period-multi-template'
         };
     }
 ]);
@@ -1932,7 +2082,6 @@ app.directive('staticYearMonthFilter', ['StaticYears', 'SettingsByKey', function
                 }
             });
             StaticYears.get({}, function (data) {
-                console.log(data);
 
                 data.years.forEach(function (value) {
                     $scope.years.push(value);
@@ -2583,8 +2732,7 @@ app.directive('periodSessionByYearFilter', ['ReportPeriods', 'ReportPeriodsByYea
         };
 
     }
-])
-;
+]);
 
 
 app.directive('productCategory2WithoutProgramFilter', ['ProductCategoriesWithoutProgram', '$routeParams',
@@ -2909,7 +3057,6 @@ app.directive('staticYearMonthlyFilter', ['OperationYears', 'SettingsByKey', fun
                     $scope.years.push(value);
                 });
                 var reverseYear = $scope.years.reverse();
-                //console.log();
                 $scope.staticYear = reverseYear[0];
 
             });

@@ -19,6 +19,8 @@ public class QuantificationExtractReportParam extends BaseParam implements Repor
     private Long schedule;
     private String periodStart;
     private String periodEnd;
+    private String multiPeriods;
+    private Long facility;
 
  public void setPeriodStart(String periodStart) {
   this.periodStart = periodStart;

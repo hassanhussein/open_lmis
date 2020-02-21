@@ -46,4 +46,7 @@ public class StockImbalanceReportParam
 
   private String status;
   private String reportType;
+
+  private String multiPeriods;
+
 }
