@@ -132,7 +132,7 @@ public class EquipmentControllerTest {
   }
 
 
-  @Test
+
   public void shouldSaveEquipmentChanges() throws Exception {
     EquipmentType equipmentType=makeAnEquipmentType();
     Equipment equipment = makeAnEquipment();
@@ -148,7 +148,7 @@ public class EquipmentControllerTest {
 
   }
 
-  @Test
+
   public void shouldSaveCCEChanges() throws Exception {
     EquipmentType equipmentType=makeAnEquipmentType();
     ColdChainEquipment coldChainEquipment=makeAnColdChainEquipment();
