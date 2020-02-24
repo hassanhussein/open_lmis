@@ -13,10 +13,12 @@ package org.openlmis.equipment.repository;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.ColdChainEquipment;
+import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.repository.mapper.ColdChainEquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -60,5 +62,13 @@ public class ColdChainEquipmentRepository {
 
   public List<ColdChainEquipment>getEquipmentBy(Long equipmentTypeId){
     return mapper.getEquipmentBy(equipmentTypeId);
+  }
+
+  public List<Equipment>getManufacturerByEquipmentType(Long equipmentTypeId){
+    return mapper.getManufacturerByEquipmentType(equipmentTypeId);
+  }
+
+  public List<HashMap<String, Object>>getByModel(Long equipmentTypeId, String manufacturer){
+    return mapper.getByModel(equipmentTypeId,manufacturer);
   }
 }

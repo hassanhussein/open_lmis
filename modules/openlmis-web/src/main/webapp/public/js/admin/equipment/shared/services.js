@@ -352,3 +352,21 @@ services.factory('EquipmentTestItems', function ($resource) {
     return $resource('/equipmentTestItems/:id', {id: '@_id'}, {update: {method: 'PUT' }});
 });
 
+
+
+services.factory('GetEquipmentCategories', function($resource){
+    return $resource('/equipmentCategory-list',{},{});
+});
+
+services.factory('GetManufacturerByEquipmentType', function($resource){
+    return $resource('/equipment/manage/getManufacturerByEquipmentType/:id.json',{id:'@id'},{});
+});
+
+services.factory('GetByModel', function($resource){
+    return $resource('/equipment/manage/getManufacturerByEquipmentType/:id/:manufacturer.json',{id:'@id',manufacturer:'@manufacturer'},{});
+});
+
+
+services.factory('EquipmentModelList', function($resource){
+    return $resource('/equipment/model/models',{},{});
+});

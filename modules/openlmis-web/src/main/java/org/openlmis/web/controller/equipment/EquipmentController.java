@@ -18,7 +18,9 @@ import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.equipment.domain.ColdChainEquipment;
 import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentModel;
 import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.service.EquipmentModelService;
 import org.openlmis.equipment.service.EquipmentService;
 import org.openlmis.equipment.service.EquipmentTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,9 @@ public class EquipmentController extends BaseController {
 
     @Autowired
     EquipmentTypeService equipmentTypeService;
+
+    @Autowired
+    EquipmentModelService equipmentModelService;
 
   @RequestMapping(method = RequestMethod.GET, value = "id")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')")
@@ -125,6 +130,10 @@ public class EquipmentController extends BaseController {
       equipment.setModifiedBy(userId);
       EquipmentType equipmentType=equipmentTypeService.getTypeById(equipment.getEquipmentTypeId());
       equipment.setEquipmentType(equipmentType);
+
+      EquipmentModel equipmentModel = equipmentModelService.getEquipmentModelById(equipment.getModelId());
+      equipment.setEquipmentModel(equipmentModel);
+      equipment.setModel(equipmentModel.getName());
       ColdChainEquipment coldChainEquipment;
         try{
             if(equipment.getId()==null) {
@@ -191,6 +200,19 @@ public class EquipmentController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
     public ResponseEntity<OpenLmisResponse> getEquipmentBy(@PathVariable(value="id") Long equipmentId){
         return OpenLmisResponse.response(EQUIPMENT_BY,service.getEquipmenentBy(equipmentId));
+    }
+
+
+    @RequestMapping(value="getManufacturerByEquipmentType/{id}",method = GET,headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getManufacturerByEquipmentType(@PathVariable(value="id") Long equipmentId){
+        return OpenLmisResponse.response(EQUIPMENT_BY,service.getManufacturerByEquipmentType(equipmentId));
+    }
+
+
+    @RequestMapping(value="getByModel/{id}/{manufacturer}",method = GET,headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getByModel(@PathVariable(value="id") Long equipmentId,
+                                                       @PathVariable(value="manufacturer") String manufacturer){
+        return OpenLmisResponse.response(EQUIPMENT_BY,service.getByModel(equipmentId,manufacturer));
     }
 
 }

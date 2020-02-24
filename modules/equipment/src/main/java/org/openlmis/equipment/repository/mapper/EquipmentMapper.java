@@ -164,15 +164,15 @@ public interface EquipmentMapper {
       " WHERE p.id = #{programId}")
   List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
 
-  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, modelId, energyTypeId) " +
+  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, modelId, energyTypeId, equipmentCategoryId) " +
       "values " +
-      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model}, #{equipmentModel.id}, #{energyTypeId})")
+      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model}, #{equipmentModel.id}, #{energyTypeId}, #{equipmentCategoryId})")
   @Options(useGeneratedKeys = true)
   void insert(Equipment equipment);
 
   @Update("UPDATE equipments " +
       "set " +
-      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, modelId = #{equipmentModel.id}, energyTypeId = #{energyTypeId} " +
+      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, modelId = #{equipmentModel.id}, energyTypeId = #{energyTypeId}, equipmentCategoryId = #{equipmentCategoryId} " +
       "WHERE id = #{id}")
   void update(Equipment equipment);
 

@@ -14,6 +14,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.equipment.domain.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -121,5 +122,15 @@ public interface ColdChainEquipmentMapper {
             @Result(property = "designationId", column = "designationId")
     })
     List<ColdChainEquipment>getEquipmentBy(@Param("equipmentTypeId") Long equipmentTypeId);
+
+    @Select(" select distinct on(manufacturer) * from equipments where equipmentTypeID in(#{type})\n")
+    List<Equipment>getManufacturerByEquipmentType(@Param("type") Long type);
+
+
+    @Select(" \n" +
+            " select distinct modelId,M.NAME MODEL, E.name, E.ID equipmentId from equipments e\n" +
+            " JOIN equipment_model m ON e.modelId = m.id\n" +
+            " where e.equipmentTypeId = #{equipmentTypeId} and LOWER(manufacturer) = LOWER(#{manufacturer}) \n")
+    List<HashMap<String,Object>>getByModel(@Param("equipmentTypeId") Long equipmentTypeId,@Param("manufacturer") String manufacturer);
 
 }

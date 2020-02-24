@@ -208,7 +208,7 @@
             <ul class="nav nav-tabs">
                 <li class="active" ><a href="#soh" data-toggle="tab" ng-click="tabToggle('soh')"><span openlmis-message="label.stock.on.hand"></span></a></li>
                 <li><a href="#mos" data-toggle="tab"><span openlmis-message="label.mos" ng-click="tabToggle('mos')"></span></a></li>
-                <li><a href="#graph" data-toggle="tab" ng-click="tabToggle('graphs')"  ng-show="false"><span openlmis-message="label.graphs"></span></a></li>
+                <li><a href="#graph" data-toggle="tab" ng-click="tabToggle('graphs')"  ng-show="true"><span openlmis-message="label.consumption"></span></a></li>
             </ul>
 
 
@@ -404,7 +404,105 @@
                     </div>
 
 
-                <div class="tab-pane" id="graph">Graphs Goes Here</div>
+                <div class="tab-pane" id="graph" style="background-color:lightgray">{{datarows}}
+
+                    <div class="box-icon pull-right " ng-show="datarows.length > 0" style="padding-top: 20px;margin-right:5px">
+                        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+                        <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+                           class='btn-small btn-info'><span openlmis-message="label.export.excel"></span></a>
+                    </div>
+
+                    <div style="max-height:2px !important;" class="row-fluid clearboth" ng-show="datarows.length > 0">
+                        <strong>
+
+                            <span style=" float:left;margin:10px 10px 0 0; padding:5px 10px display:block;margin-left:10px">
+                         <input class="checkbox" type="checkbox" ng-model="filter.disaggregated"
+                                ng-change="searchReport()"/>
+                        </span><span  style="color:#078f97; float:left;margin:10px 10px 0 0; padding:5px 10px display:block;" openlmis-message="label.report.view.disaggregated"></span>
+
+                        </strong>
+                    </div>
+                    <br/>
+
+                    <table client-side-sort-pagination class="table table-bordered"
+                           ng-show="data == undefined || data.length == 0">
+                        <tr>
+                            <td>No data to show under selected filters</td>
+                        </tr>
+                    </table>
+
+                    <div class="row-fluid rnr-table" ng-show="datarows.length > 0 ">
+
+                        <div class="clearfix"></div>
+
+                        <table class="table table-bordered table-striped" ng-table="tableParams">
+                            <thead>
+                            <tr>
+                                <th ng-if="filter.disaggregated==true"></th>
+                                <th ng-if="filter.disaggregated==true"></th>
+
+                                <th></th>
+                                <th></th>
+
+                                <th ng-repeat="period in periods" ng-bind="period"></th>
+
+                            </tr>
+                            <tr>
+                                <th ng-if="filter.disaggregated==true">Facility</th>
+                                <th ng-if="filter.disaggregated==true">Facility Type</th>
+
+                                <th openlmis-message="label.code" style="text-align: left"></th>
+                                <th openlmis-message="label.product.name" style="text-align: left"></th>
+                                <th ng-repeat="period in periods" openlmis-message="header.status.mos"
+                                    class="p-column"></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            <tr ng-repeat="row in data">
+                                <td ng-if="filter.disaggregated==true"  ng-bind="row.facility"></td>
+                                <td  ng-if="filter.disaggregated==true" ng-bind="row.facilityType"></td>
+                                <td ng-bind="row.code"></td>
+
+                                <td ng-bind="row.product">
+                                </td>
+                                <td  ng-repeat="period in periods" ng-bind="row[period]" ng-style="ChangeColor(row[period])">{{ row.no }}</td>
+
+                            </tr>
+                            </tbody>
+
+                        </table>
+
+
+                        <select ui-select2 class="pull-left" ng-model="pageSize" ng-change="searchReport()">
+                            <option value="10">10 per page</option>
+                            <option value="20">20 per page</option>
+                            <option value="50">50 per page</option>
+                            <option value="100">100 per page</option>
+                        </select>
+
+                        <div class="pull-right">
+                            <pagination total-items="totalItems" page="currentPage" max-size="10"
+                                        items-per-page="pagination.limit"
+                                        direction-links="false" class="pagination-sm"></pagination>
+                        </div>
+
+
+                        <div class="clearfix"></div>
+
+                    </div>
+
+
+
+
+
+
+                </div>
+
+
+
+
             </div>
 
 

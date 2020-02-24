@@ -51,6 +51,8 @@ public class Equipment extends BaseModel {
 
   private List<Product> relatedProducts;
 
+  private Long modelId;
+
   public boolean equalsByMakeAndModel(Equipment other) {
     return other.manufacturer != null && other.equipmentModel != null && equipmentModel.getId() != null
         && other.manufacturer.equalsIgnoreCase(manufacturer) && other.equipmentModel.getId() == equipmentModel.getId();
@@ -65,4 +67,6 @@ public class Equipment extends BaseModel {
   private Long designationId;
 
   private EquipmentModel equipmentModel;
+
+  private Long equipmentCategoryId;
 }

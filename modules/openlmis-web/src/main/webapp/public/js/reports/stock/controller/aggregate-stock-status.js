@@ -85,7 +85,7 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
         AggregateStockStatusReport.get(allParams, function (data) {
 
             if (data.pages.rows !== undefined || null !== data.pages) {
-            console.log(data);
+            console.log(data.pages.rows);
 
            /*   $scope.facilityStocks = data.pages.rows;
               var groupByFacility = _.groupBy(data.pages.rows, function (f) {
