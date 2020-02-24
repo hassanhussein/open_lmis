@@ -1,18 +1,4 @@
 
-
-<!--
-  ~ This program is part of the OpenLMIS logistics management information system platform software.
-  ~ Copyright © 2013 VillageReach
-  ~
-  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-  ~
-  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
-  -->
-
-
-
-
 <div class="manage-nav" ng-controller="ManageMenuController">
     <ul class="clearfix">
         <li ng-class="siteSelected">
@@ -32,18 +18,22 @@
 </div>
 
 
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
 <div xmlns="http://www.w3.org/1999/html">
     <h2>
-        <span id="searchGeoZoneHeader" >Search Warehouse</span>
-        <a id="add-new-geo-zone" href="#/create" class="pull-right btn btn-primary"
-           openlmis-message="button.add.new"></a>
+        <span id="searchGeoZoneHeader" >Bin Location</span>
+
     </h2>
-    <div class="alert alert-success" id="deleteSuccessMsgDiv" ng-show="message">
-        <span ng-bind="message"></span>&nbsp;&nbsp;
-    </div>
-    <div class="alert alert-error" id="deleteErrorMsgDiv" ng-show="error">
-        <span ng-bind="error"></span>&nbsp;&nbsp;
-    </div>
+
 
     <div id="searchControl" class="row-fluid">
         <div class="span5 search-in-category">
@@ -84,21 +74,20 @@
                     <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
                 </th>
             </tr>
-            <tr class="gradient-header" ng-show="locationList.length">
+            <tr class="gradient-header" ng-show="siteList.length">
                 <th id="codeHeader">Code</th>
                 <th id="nameHeader">Name</th>
-                <th id="parentHeader">Active</th>
+                <th id="parentHeader">Region</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="location in locationList">
-
+            <tr ng-repeat="location in siteList">
                 <td>
-                    <a id="update{{$index}}" href="" ng-click="edit(location.id)" ng-bind="location.code">Code</a>
+                    <a id="update{{$index}}" href="" ng-click="edit(location.id)" ng-bind="location.code"></a>
                 </td>
-
                 <td id="locationName{{$index}}" ng-bind="location.name"></td>
-                <td id="locationZone{{$index}}" ng-bind="(location.active)?'Yes':'No'"></td>
+                <td id="locationZone{{$index}}" ng-bind="location.region"></td>
+
 
             </tr>
             </tbody>
