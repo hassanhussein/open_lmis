@@ -30,10 +30,37 @@
 
 <div xmlns="http://www.w3.org/1999/html">
     <h2>
-        <span id="searchGeoZoneHeader" >Bin Location</span>
+        <span id="searchGeoZoneHeader" >Bin Location Maintenance</span>
 
     </h2>
 
+    <div class="row clear-fix">
+        <div class="span3">
+            <label id="parentLabel" >Select Warehouse</label>
+
+            <div class="form-field row-fluid">
+                <select ui-select2="{width: '90%'}" class="span11"
+                        ng-model="warehouseId" ng-change="updateLocations()">
+                    <option value=""></option>
+
+                    <option ng-repeat="warehouse in warehouses"
+                            value="{{ warehouse.id }}">
+                        {{ warehouse.name }}
+                    </option>
+
+                </select>
+                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                      openlmis-message="missing.value"></span>
+            </div>
+        </div>
+    </div>
+
+<div ng-show="warehouseId">
+    <h2>
+        <span >Bin Location Details</span>
+        <a id="add-new-geo-zone" ng-click="showNewLocationModal()" class="pull-right btn btn-primary"
+        > Add Bin Location</a>
+    </h2>
 
     <div id="searchControl" class="row-fluid">
         <div class="span5 search-in-category">
@@ -59,7 +86,6 @@
         </div>
 
     </div>
-
     <div class="table-container">
         <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults">
             <thead>
@@ -74,20 +100,47 @@
                     <a id="closeButton" class="close-btn" href="" ng-click="clearSearch()" tabindex="-1"></a>
                 </th>
             </tr>
-            <tr class="gradient-header" ng-show="siteList.length">
+            <tr class="gradient-header" ng-show="locationList.length">
                 <th id="codeHeader">Code</th>
                 <th id="nameHeader">Name</th>
-                <th id="parentHeader">Region</th>
+                <th>Type</th>
+                <th id="parentHeader">Active</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="location in siteList">
-                <td>
-                    <a id="update{{$index}}" href="" ng-click="edit(location.id)" ng-bind="location.code"></a>
-                </td>
-                <td id="locationName{{$index}}" ng-bind="location.name"></td>
-                <td id="locationZone{{$index}}" ng-bind="location.region"></td>
+            <tr ng-repeat="location in locationList">
 
+                <td ng-show="!location.editMode">
+                    <a ng-bind="location.code"></a>
+                </td>
+                <td ng-show="location.editMode">
+                    <input type="text" ng-model="location.code">
+                </td>
+
+                <td ng-show="!location.editMode" ng-bind="location.name"></td>
+                <td ng-show="location.editMode">
+                    <input type="text" ng-model="location.name">
+                </td>
+
+                <td ng-show="!location.editMode" ng-bind="(location.displayOrder)==1?'Storage':'Receiving'"></td>
+                <td ng-show="location.editMode">
+                    <select ng-model="location.displayOrder" style="width:90% !important;" class="span12">
+                        <option value="1" ng-selected="location.displayOrder==1">Storage</option>
+                        <option value="2" ng-selected="location.displayOrder==2">Receiving</option>
+                    </select>
+                </td>
+                <td ng-show="!location.editMode" id="locationZone{{$index}}" ng-bind="(location.active)?'Yes':'No'"></td>
+                <td ng-show="location.editMode" > <input type="checkbox" ng-model="location.active"></td>
+
+                <td ng-show="!location.editMode" >
+                    <a href="" ng-click="enterEditMode(location)">edit</a>
+                </td>
+
+                <td ng-show="location.editMode"  >
+                    <a href="" ng-click="editBin(location)">save</a>
+                    <a href="" ng-click="clearEditMode(location)">cancel</a>
+                </td>
 
             </tr>
             </tbody>
@@ -96,4 +149,75 @@
 
     <pagination total-items="totalItems" page="currentPage" max-size="5" items-per-page="pagination.limit"
                 direction-links="false" ng-show="locationList.length" class="pagination-sm"></pagination>
+
+    <div id="popup-box"  ng-form="newLocationForm"  modal="newLocationModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
+        <div class="modal-header">
+            <div class="row-fluid">
+                <div class="span4">
+                    <h3 >Add New Bin</h3>&nbsp;&nbsp;
+                </div>
+                <div class="span4">
+                    <!--                    <h3><span openlmis-message="label.product"></span>:{{newLot.product.primaryName}}</h3>-->
+                </div>
+            </div>
+        </div>
+        <div class="modal-body">
+            <div class="row-fluid ">
+                <div class="span3">
+                    <label  for="newLot.lotCode">
+                        <span >Code</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <span class="position-relative">
+                                    <input  ng-required="true" class="span12" type="text" ng-model="newLocation.code" />
+                                </span>
+                </div>
+
+                <div class="span3">
+                    <label>
+                        <span >Name</span>
+                        <span class="label-required">*</span>
+                    </label>
+                    <span class="position-relative">
+                                    <input  ng-required="true" class="span12" type="text" ng-model="newLocation.name" />
+                                </span>
+                </div>
+
+                <div class="span3">
+                    <label>Type  <span class="label-required">*</span></label>
+
+                    <select ng-required="true" ng-model="newLocation.type" style="width:90% !important;" class="span12">
+                        <option value="1">Storage</option>
+                        <option value="2">Receiving</option>
+                    </select>
+                </div>
+
+<!--                <div class="span3">-->
+<!--                    <label></label>-->
+<!--                    <label class="checkbox inline">-->
+<!--                        <input type="checkbox" ng-model="newLocation.active"> Active-->
+<!--                    </label>-->
+<!--                </div>-->
+
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <input type="button"  class="btn btn-primary save-button"
+                   ng-click="createLocation()"
+                   ng-disabled="newLocationForm.$invalid"
+                   openlmis-message="button.create"/>
+            <input type="button" ng-click="closeNewLocationModal();" class="btn btn-cancel"
+                   openlmis-message="button.cancel"/>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+
 </div>
