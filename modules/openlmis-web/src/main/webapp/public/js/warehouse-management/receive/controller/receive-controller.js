@@ -341,7 +341,8 @@ var total_lot_quantity = 0;
                         manufactureDate: lot.manufacturingDate,
 
                     },
-                    locationId:lot.locationId
+                    locationId:lot.locationId,
+                    boxCounted:lot.boxNumber
 
                 });
 
@@ -360,8 +361,8 @@ var total_lot_quantity = 0;
                 minMonthsOfStock: 0,
                 eop: null,
                 lots: productLots,
-                unitPrice: product.unitPrice,
-                boxCounted:lineItem.boxCounted,
+                unitPrice: product.unitPrice
+//                boxCounted:lineItem.boxCounted,
 
             });
 
@@ -823,6 +824,7 @@ $scope.quantityBoxError=false;
                                     lotNumber: lot.info.lotCode,
                                     manufacturingDate: lot.info.manufactureDate,
                                     quantity: lot.quantity,
+                                    boxNumber:lot.boxCounted,
                                     serialnumber: 'string',
                                     locationId:parseInt(lot.locationId,10),
                                 });
