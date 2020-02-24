@@ -12,12 +12,12 @@ public interface ReceiveLotMapper {
 
     @Insert(" INSERT INTO receive_lots (receiveLineItemId,locationId, lotNumber, serialNumber, expiryDate, manufacturingDate, quantity,  " +
             "createdBy, createdDate,modifiedBy,modifiedDate, packSize, boxNumber) " +
-            " VALUES(#{receiveLineItem.id},#{locationId}, #{lotNumber}, #{serialNumber}, #{expiryDate}, #{manufacturingDate}, #{quantity}, #{createdBy}, NOW(),#{modifiedBy}, NOW(), #{packSize}, #{boxNumber}) ")
+            " VALUES(#{receiveLineItem.id},#{locationId}, #{lotNumber}, #{serialNumber}, #{expiryDate}, #{manufacturingDate}, #{quantity}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),  #{boxNumber}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(ReceiveLot receiveLot);
 
     @Update(" update receive_lots set  receiveLineItemId = #{receiveLineItem.id},locationId=#{locationId}, lotNumber = #{lotNumber}, serialNumber = #{serialNumber}, expiryDate = #{expiryDate}, " +
-            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}, packSize = #{packSize}, boxNumber = #{boxNumber}, "+
+            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}, boxNumber = #{boxNumber}, "+
             " modifiedDate = now(), " +
             " modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(ReceiveLot receiveLot);
