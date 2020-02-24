@@ -40,7 +40,7 @@
           <div class="form-field">
 
             <select ui-select2="{width: '90%'}" name="equipmentCategoryId" id="equipmentCategoryId" ng-model="equipment.equipmentCategoryId"  openlmis-message="label.select.parent.zone">
-              <option value="{{category.id}}" ng-repeat="category in equipmentCategoryList" ng-selected="category.id == equipment.equipmentCategoryId">{{category.name}}</option>
+              <option value="{{category.id}}" ng-repeat="category in equipmentCategoryList" ng-selected="category.id == equipment.equipmentCategoryId">{{category.code}}</option>
             </select>
 
             <span class="field-error" ng-show="equipmentForm.equipmentCategoryId.$error.required && showError" openlmis-message="missing.value"></span>

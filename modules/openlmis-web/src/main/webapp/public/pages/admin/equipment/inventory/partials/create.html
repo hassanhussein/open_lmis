@@ -106,7 +106,20 @@
                                 <span openlmis-message="label.equipment.equipment"></span>
                                 <!--<span class="label-required">*</span>-->
                             </label>
-                            <div class="form-field">
+
+
+                            <div class="form-field" ng-show="true">
+                                <select style="width: 250px;" ui-select2 ng-model="inventory.equipment.id" id="equipmentName"
+                                        name="equipmentName" ng-required="true">
+                                    <option value="{{equipment.id}}" ng-repeat="equipment in equipmentList | orderBy: 'id'"
+                                            ng-selected="equipment.id == inventory.equipment.id">{{equipment.name}}
+                                    </option>
+                                </select>
+                                <span class="field-error" ng-show="inventoryForm.equipmentName.$error.required && showError"
+                                      openlmis-message="missing.value"></span>
+                            </div>
+
+                            <div class="form-field" ng-hide="true">
                                 <input type="text" ng-model="inventory.equipment.name" readonly="readonly" />
                                 <input type="hidden" ng-model="inventory.equipmentId" id="type" name="type" ng-required="true" />
                                 <span class="field-error" ng-show="inventoryForm.type.$error.required && showError"
@@ -339,7 +352,19 @@
                             <span openlmis-message="label.equipment.equipment"></span>
                             <!--<span class="label-required">*</span>-->
                         </label>
-                        <div class="form-field">
+
+                        <div class="form-field" ng-show="equipmentLists.length > 1">
+                            <select style="width: 250px;" ui-select2 ng-model="inventory.equipment.id" id="equipmentName"
+                                    name="equipmentName" ng-required="true">
+                                <option value="{{equipment.id}}" ng-repeat="equipment in equipmentLists | orderBy: 'id'"
+                                        ng-selected="equipment.id == inventory.equipment.id">{{equipment.name}}
+                                </option>
+                            </select>
+                            <span class="field-error" ng-show="inventoryForm.equipmentName.$error.required && showError"
+                                  openlmis-message="missing.value"></span>
+                        </div>
+
+                        <div class="form-field" ng-hide="equipmentLists.length > 1">
                             <input type="text" ng-model="inventory.equipment.name" readonly="readonly" />
                             <input type="hidden" ng-model="inventory.equipment.id" id="type" name="type" ng-required="true" />
                             <span class="field-error" ng-show="inventoryForm.type.$error.required && showError"
@@ -386,7 +411,7 @@
 
                         <div class="form-field">
                             <select style="width: 250px;" ui-select2 ng-model="inventory.equipment.equipmentModel.id" id="model"
-                                    name="model"  ng-required="false">
+                                    name="model"  ng-required="false" ng-change="displayEquipment(inventory.equipment)">
                                 <option ng-repeat="model in dataValues" ng-selected="model.modelId == inventory.equipment.equipmentModel.id"
                                         value="{{model.modelId}}">
                                     {{model.model}}
@@ -429,7 +454,7 @@
                 </div>
                 <!-- ====== -->
                 <div class="form-row clearfix">
-                    <div class="form-cell">
+                    <div class="form-cell" ng-show="false">
                         <label for="manufacturer">
                             <span openlmis-message="label.equipment.manufacturer"></span>
                             <span class="label-required">*</span>
