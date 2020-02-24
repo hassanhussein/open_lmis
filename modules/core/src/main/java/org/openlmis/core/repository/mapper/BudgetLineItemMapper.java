@@ -15,6 +15,7 @@ import org.openlmis.core.dto.BudgetDTO;
 import org.openlmis.core.dto.BudgetLineItemDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -101,4 +102,13 @@ public interface BudgetLineItemMapper {
 
   @Select("select * from public.budget_line_items where budgetId = #{id}")
   Long getLineItemById(@Param("id") Long id);
+
+  @Select("SELECT * FROM budgets")
+  List<HashMap<String, Object>> getBudgetList();
+
+  @Select("select * from public.budget_line_items ")
+  List<HashMap<String, Object>> getBudgetLineItemsList();
+
+  @Select(" SELECT * FROM source_of_funds ")
+  List<HashMap<String, Object>> getSourceOfFundList();
 }

@@ -19,10 +19,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 import static org.apache.commons.collections4.ListUtils.emptyIfNull;
 
@@ -148,4 +145,17 @@ public class BudgetLineItemRepository {
     mapper.updateBudgetInRequisition(facilityId,programId,periodId,allocatedBudget,creditValue);
   }
 
+    public List<HashMap<String, Object>> getBudgetList() {
+          return mapper.getBudgetList();
+    }
+
+  public List<HashMap<String, Object>> getBudgetLineItemsList() {
+
+    return mapper.getBudgetLineItemsList();
+  }
+
+  public List<HashMap<String, Object>> getSourceOfFundList() {
+
+    return mapper.getSourceOfFundList();
+  }
 }

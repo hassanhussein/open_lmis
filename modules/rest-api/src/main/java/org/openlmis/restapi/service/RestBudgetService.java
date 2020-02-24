@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -140,6 +141,24 @@ public class RestBudgetService {
 
     public void sendResponse(BudgetDTO dto, SourceOfFundDTO fund) {
         interfaceService.postBudgetToHIM(dto,fund);
+
+    }
+
+    public List<HashMap<String,Object>> getBudgets(){
+
+       return lineItemRepository.getBudgetList();
+
+    }
+
+    public List<HashMap<String,Object>> getBudgetLineItemsList(){
+
+       return lineItemRepository.getBudgetLineItemsList();
+
+    }
+
+    public List<HashMap<String,Object>> getSourceOfFundList(){
+
+       return lineItemRepository.getSourceOfFundList();
 
     }
 

@@ -14,10 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -66,6 +68,21 @@ public class RestBudgetController extends BaseController{
         } catch (DataException e) {
             return RestResponse.error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/rest-api/budget-list", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getBugetss() {
+        return RestResponse.response("budgets", restBudgetService.getBudgets());
+    }
+
+  @RequestMapping(value = "/rest-api/budget-line-items", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getBudgetLineItems() {
+        return RestResponse.response("items", restBudgetService.getBudgetLineItemsList());
+    }
+
+    @RequestMapping(value = "/rest-api/budget-sources", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity getSourceList() {
+        return RestResponse.response("budgets", restBudgetService.getSourceOfFundList());
     }
 
 
