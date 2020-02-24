@@ -33,5 +33,7 @@ public class AsnLot extends BaseModel {
 
     private Integer quantity;
 
+    private String packSize;
+
 
 }

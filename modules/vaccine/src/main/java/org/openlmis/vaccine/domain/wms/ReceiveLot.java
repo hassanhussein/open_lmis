@@ -25,4 +25,6 @@ public class ReceiveLot extends BaseModel {
 
     private Location location;
 
+    private String packSize;
+
 }

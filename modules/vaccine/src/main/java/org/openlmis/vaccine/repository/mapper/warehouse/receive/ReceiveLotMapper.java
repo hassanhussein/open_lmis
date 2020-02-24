@@ -11,13 +11,13 @@ import java.util.List;
 public interface ReceiveLotMapper {
 
     @Insert(" INSERT INTO receive_lots (receiveLineItemId,locationId, lotNumber, serialNumber, expiryDate, manufacturingDate, quantity,  " +
-            "createdBy, createdDate,modifiedBy,modifiedDate) " +
-            " VALUES(#{receiveLineItem.id},#{locationId}, #{lotNumber}, #{serialNumber}, #{expiryDate}, #{manufacturingDate}, #{quantity}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
+            "createdBy, createdDate,modifiedBy,modifiedDate, packSize) " +
+            " VALUES(#{receiveLineItem.id},#{locationId}, #{lotNumber}, #{serialNumber}, #{expiryDate}, #{manufacturingDate}, #{quantity}, #{createdBy}, NOW(),#{modifiedBy}, NOW(), #{packSize}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(ReceiveLot receiveLot);
 
     @Update(" update receive_lots set  receiveLineItemId = #{receiveLineItem.id},locationId=#{locationId}, lotNumber = #{lotNumber}, serialNumber = #{serialNumber}, expiryDate = #{expiryDate}, " +
-            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}, "+
+            " manufacturingDate = #{manufacturingDate}, quantity = #{quantity}, packSize = #{packSize} "+
             " modifiedDate = now(), " +
             " modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(ReceiveLot receiveLot);
