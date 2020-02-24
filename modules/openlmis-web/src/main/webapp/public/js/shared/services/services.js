@@ -737,3 +737,14 @@ services.factory("WareHouseList", function ($resource) {
 });
 
 
+services.factory('SaveBinLocation', function ($resource) {
+    return $resource('/rest-api/warehouse/bin-location.json', {}, {post: {method: 'POST', isArray: false}});
+});
+
+services.factory("updateBinLocation", function ($resource) {
+    return $resource('/rest-api/warehouse/bin-location/:id.json', {id: '@id'}, update);
+});
+
+services.factory('SearchBinByPaged', function ($resource) {
+    return $resource('/rest-api/warehouse/bin-location/search', {}, {});
+});

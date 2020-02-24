@@ -29,5 +29,6 @@ public interface LocationTypeMapper {
     @Select(" select * from location_types")
     List<LocationType> getAll();
 
-
+    @Select(" select * from location_types where displayOrder = #{displayOrder} ")
+    LocationType getByDisplayOrder(Long displayOrder);
 }

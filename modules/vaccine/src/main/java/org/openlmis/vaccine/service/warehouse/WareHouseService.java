@@ -11,6 +11,7 @@ import org.openlmis.vaccine.repository.warehouse.WareHouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -106,5 +107,35 @@ public class WareHouseService {
 
     public List<WareHouse> getAllWarehouses() {
         return repository.getAllWarehouses();
+    }
+
+    @Transactional
+    public void saveLocationFromUI(LocationDTO location){
+
+        LocationType type = locationTypeService.getByDisplayOrder(location.getDisplayOrder());
+        location.setTypeId(type.getId());
+
+        if(location.getId() == null) {
+            repository.saveLocation(location);
+        }else {
+            repository.updateLocation(location);
+        }
+    }
+
+    public Integer getTotalBinsSearchResultCount(String searchParam, String columnName) {
+
+        if (columnName.equals("code")) {
+            return repository.getTotalBinsSearchResultCount(searchParam);
+        }
+        return 0;
+    }
+
+    public List<LocationDTO> searchBinBy(String searchParam, String columnName, Integer page) {
+
+        if (columnName.equals("code")) {
+            return repository.searchBinBy(searchParam, getPagination(page));
+        }
+        return emptyList();
+
     }
 }

@@ -38,4 +38,8 @@ public class LocationTypeService {
         }
         return null;
     }
+
+    public LocationType getByDisplayOrder(Long displayOrder) {
+        return repository.getByDisplayOrder(displayOrder);
+    }
 }

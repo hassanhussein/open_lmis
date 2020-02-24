@@ -4,6 +4,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.location;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 
+import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.Site;
 import org.openlmis.vaccine.domain.wms.WareHouse;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
@@ -52,12 +53,12 @@ public interface WareHouseMapper {
     @Select(" SELECT * FROM warehouses where code = #{code}")
     WareHouse getByC(@Param("code") String code);
 
-    @Update("UPDATE wms_locations SET code = #{code}, name=#{name}, warehouseId = #{warehouseId}, typeId= #{typeId} WHERE ID = #{id}")
+    @Update("UPDATE wms_locations SET code = #{code}, name=#{name}, warehouseId = #{warehouseId}, typeId= #{typeId}, active = #{active} WHERE ID = #{id}")
     void updateLocation(LocationDTO location);
 
     @Insert("INSERT INTO public.wms_locations(\n" +
-            "             code, name, warehouseId, typeId)\n" +
-            "    VALUES ( #{code}, #{name}, #{warehouseId}, #{typeId});")
+            "             code, name, warehouseId, typeId,active)\n" +
+            "    VALUES ( #{code}, #{name}, #{warehouseId}, #{typeId}, #{active});")
     Integer saveLocation(LocationDTO location);
 
     @Select(" \n" +
@@ -79,4 +80,18 @@ public interface WareHouseMapper {
 
     })
     List<WareHouse>getAllWarehouses();
+
+    @Select({"SELECT COUNT(*) FROM public.wms_locations h \n" ,
+            " WHERE LOWER(h.code) LIKE '%' || LOWER(#{searchParam} || '%') "})
+    Integer getTotalBinsSearchResultCount(@Param("searchParam") String searchParam);
+
+
+    @Select({"     SELECT l.code, l.name, type.name locationType,displayOrder, l.active FROM public.wms_locations L\n" ,
+            "            \n" +
+            "            JOIN wms_location_types type ON l.typeId = type.id\n" ,
+            "            \n" +
+            "            JOIN WAREHOUSES H ON L.warehouseId = H.ID ",
+            " WHERE LOWER(L.code) LIKE '%' || LOWER(#{searchParam} || '%') ",
+            " ORDER BY L.id desc "})
+    List<LocationDTO> searchBinBy(@Param("searchParam") String searchParam, RowBounds rowBounds);
 }

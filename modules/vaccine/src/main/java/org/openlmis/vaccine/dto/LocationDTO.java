@@ -34,4 +34,8 @@ public class LocationDTO extends BaseModel implements Importable {
     @ImportField(mandatory = true, name = "location Type Code")
     private String locationTypeCode;
 
+    private Long displayOrder;
+
+    private Boolean active;
+
 }

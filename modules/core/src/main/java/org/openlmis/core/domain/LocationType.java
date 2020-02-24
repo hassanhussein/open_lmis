@@ -19,4 +19,6 @@ public class LocationType extends BaseModel implements Importable {
     @ImportField(name = "Active")
     private boolean active;
 
+    private Integer displayOrder;
+
 }

@@ -24,5 +24,7 @@ public LocationType getByCode (String code){
    return mapper.getByCode(code);
 }
 
-
+public LocationType getByDisplayOrder(Long displayOrder) {
+    return mapper.getByDisplayOrder(displayOrder);
+}
 }

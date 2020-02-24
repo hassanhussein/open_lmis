@@ -1,19 +1,16 @@
 package org.openlmis.web.controller.warehouse.location;
 
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.GeographicZone;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.restapi.response.RestResponse;
-import org.openlmis.vaccine.domain.wms.Site;
 import org.openlmis.vaccine.domain.wms.WareHouse;
-import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.openlmis.vaccine.service.warehouse.WareHouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +23,6 @@ import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.success;
-import static org.openlmis.web.controller.GeographicZoneController.GEO_ZONES;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -96,4 +92,46 @@ public class WareHouseController extends BaseController {
         return OpenLmisResponse.response("house", service.getAllWarehouses());
     }
 
+    @RequestMapping(value = "/bin-location", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> saveBinLocation(@RequestBody LocationDTO binLocation, HttpServletRequest request) {
+        try {
+            Long userId = loggedInUserId(request);
+            binLocation.setCreatedBy(userId);
+            binLocation.setModifiedBy(userId);
+            service.saveLocationFromUI(binLocation);
+            return success("message.success.bin.created");
+
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+    }
+
+
+    @RequestMapping(value = "/bin-location/{id}", method = PUT, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> updateBinLocation(@RequestBody LocationDTO binLocation, @PathVariable(value = "id") Long id, HttpServletRequest request) {
+        try {
+            binLocation.setId(id);
+            Long userId = loggedInUserId(request);
+            binLocation.setCreatedBy(userId);
+            binLocation.setModifiedBy(userId);
+            service.saveLocationFromUI(binLocation);
+            return success("message.success.bin.created");
+
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+    }
+
+
+    @RequestMapping(value = "/bin-location/search", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> searchBin(@RequestParam(value = "searchParam") String searchParam,
+                                                   @RequestParam(value = "columnName") String columnName,
+                                                   @RequestParam(value = "page", defaultValue = "1") Integer page) {
+        Pagination pagination = service.getPagination(page);
+        pagination.setTotalRecords(service.getTotalBinsSearchResultCount(searchParam, columnName));
+        List<LocationDTO> bins = service.searchBinBy(searchParam, columnName, page);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("bins", bins);
+        response.getBody().addData("pagination", pagination);
+        return response;
+    }
 }
