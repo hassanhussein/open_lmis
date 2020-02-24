@@ -11,10 +11,11 @@ function OrderFillRateControllerFunc($scope,GeoDistrictTree,AggregateItemFillRat
 
     var filter = {};
 
-    filter.schedule=2; filter.period=91; filter.year=2019; filter.program=1; filter.max=10000;filter.page=1; filter.limit=10000;
+   // filter.schedule=2; filter.period=91; filter.year=2019; filter.program=1; filter.max=10000;filter.page=1; filter.limit=10000;
 
+     console.log($scope.filter);
      $scope.dataRow =$scope.filteredFacilityData =[];
-     $scope.filter = filter;
+     //$scope.filter = filter;
       $scope.OnFilterChanged = function() {
 
         $scope.data = $scope.datarows = [];
@@ -24,7 +25,7 @@ function OrderFillRateControllerFunc($scope,GeoDistrictTree,AggregateItemFillRat
 
         var filteredFacilityData = [];
 
-        AggregateItemFillRateSummary.get(filter, function(data) {
+        AggregateItemFillRateSummary.get($scope.filter, function(data) {
 
            filteredFacilityData = data.openLmisResponse.rows;
 
