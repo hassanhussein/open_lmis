@@ -27,4 +27,6 @@ public class ReceiveLot extends BaseModel {
 
     private String packSize;
 
+    private String boxNumber;
+
 }
