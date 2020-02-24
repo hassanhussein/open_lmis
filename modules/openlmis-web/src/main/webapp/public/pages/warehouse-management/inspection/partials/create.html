@@ -624,7 +624,15 @@
                                         <div class="control-group">
                                             <label class="control-label"></label>
                                             <div>
-                                                <input type="text" ng-model="inspection.conditionOfBox">
+<!--                                                <input type="text" ng-model="inspection.conditionOfBox">-->
+                                                <select ng-model="inspection.conditionOfBox" >
+<!--                                                    <option value=""></option>-->
+                                                    <option value="Good Condition">Good Condition</option>
+                                                    <option value="Partially damaged">Partially damaged</option>
+                                                    <option value="Damaged">Damaged</option>
+
+
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -642,7 +650,15 @@
                                         <div class="control-group">
                                             <label class="control-label"></label>
                                             <div>
-                                                <input type="text" ng-model="inspection.labelAttachedComment">
+<!--                                                <input type="text" ng-model="inspection.labelAttachedComment">-->
+                                                <select ng-model="inpection.labelAttachedComment" >
+<!--                                                    <option value=""></option>-->
+                                                    <option value="All labels were attached">All labels were attached</option>
+                                                    <option value="Some boxes missing labels">Some boxes missing labels</option>
+                                                    <option value="No labels were attached">No labels were attached</option>
+
+
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
