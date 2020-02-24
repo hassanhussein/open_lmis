@@ -38,4 +38,6 @@ public class LocationDTO extends BaseModel implements Importable {
 
     private Boolean active;
 
+    private Boolean editMode;
+
 }
