@@ -732,4 +732,8 @@ services.factory("GetVVMStatusList", function ($resource) {
     return $resource('/rest-api/warehouse/inspection/vvm-status.json', {}, {});
 });
 
+services.factory("WareHouseList", function ($resource) {
+    return $resource('/rest-api/warehouse/house/list.json', {}, {});
+});
+
 

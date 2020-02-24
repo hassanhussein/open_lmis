@@ -56,4 +56,8 @@ public class WareHouseRepository {
     public List<LocationDTO> getAllLocations(Long id) {
         return mapper.getAllLocations(id);
     }
+
+    public List<WareHouse> getAllWarehouses() {
+        return mapper.getAllWarehouses();
+    }
 }

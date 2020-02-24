@@ -103,4 +103,8 @@ public class WareHouseService {
 
         return repository.getAllLocations(id);
     }
+
+    public List<WareHouse> getAllWarehouses() {
+        return repository.getAllWarehouses();
+    }
 }

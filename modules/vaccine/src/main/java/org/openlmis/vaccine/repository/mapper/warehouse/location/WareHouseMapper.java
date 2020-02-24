@@ -69,4 +69,14 @@ public interface WareHouseMapper {
             "\n" +
             "where warehouseId = #{warehouseId} ")
     List<LocationDTO> getAllLocations(@Param("warehouseId") Long warehouseId);
+
+
+    @Select(" SELECT * FROM warehouses")
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(property = "site", column = "siteId", javaType = Site.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.SiteMapper.getAllById"))
+
+    })
+    List<WareHouse>getAllWarehouses();
 }

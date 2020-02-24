@@ -53,7 +53,6 @@ public class WareHouseController extends BaseController {
     }
 
 
-
     @RequestMapping(value = "house/{id}", method =PUT, headers = ACCEPT_JSON)
     public ResponseEntity update(@RequestBody WareHouse house, @PathVariable(value = "id") Long id, HttpServletRequest request) {
 
@@ -89,6 +88,12 @@ public class WareHouseController extends BaseController {
    @RequestMapping(value = "/getAllLocations/{id}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllLocations(@PathVariable Long id) {
         return OpenLmisResponse.response("house", service.getAllLocations(id));
+    }
+
+
+    @RequestMapping(value = "/house/list", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllWarehouses() {
+        return OpenLmisResponse.response("house", service.getAllWarehouses());
     }
 
 }
