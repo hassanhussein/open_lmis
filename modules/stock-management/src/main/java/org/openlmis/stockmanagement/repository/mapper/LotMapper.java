@@ -65,10 +65,10 @@ public interface LotMapper {
 
   @Insert("INSERT into lots " +
       " (productId, lotNumber, manufacturerName, manufactureDate, expirationDate" +
-      ", createdBy, createdDate, modifiedBy, modifiedDate) " +
+      ", createdBy, createdDate, modifiedBy, modifiedDate,packSize) " +
       "values " +
       " (#{product.id}, #{lotCode}, #{manufacturerName}, #{manufactureDate}, #{expirationDate}" +
-      ", #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      ", #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{packSize})")
   @Options(useGeneratedKeys = true)
   void insert(Lot lot);
 
@@ -79,6 +79,7 @@ public interface LotMapper {
       ", expirationDate = #{expirationDate}" +
       ", modifiedBy = #{modifiedBy}" +
       ", modifiedDate = NOW()" +
+          ", packSize = #{packSize}" +
       "WHERE id = #{id}")
   int update(Lot lot);
 
