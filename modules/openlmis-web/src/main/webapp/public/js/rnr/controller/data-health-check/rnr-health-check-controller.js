@@ -13,7 +13,7 @@ function RnrHealthCheckController($scope, requisitionData, rnrColumns, regimenTe
     $scope.dataHealthCheckInfoModal = false;
     $scope.showHealthCheckStatus = false;
     $scope.healthCheckMessage = [];
-    $scope.rnrColumns = rnrColumns;dataTables.min.js;
+    $scope.rnrColumns = rnrColumns;
     $scope.pageSize = pageSize;
     $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
     $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
