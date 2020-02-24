@@ -10,7 +10,7 @@ import java.util.List;
 public interface AsnLotMapper {
 
     @Insert(" INSERT INTO asn_lots (asndetailid, lotnumber, serialnumber, expirydate, manufacturingdate, quantity, unitprice, " +
-            "createdBy, createdDate,modifiedBy,modifiedDate, packSize) " +
+            "createdBy, createdDate,modifiedBy,modifiedDate) " +
             " VALUES(#{asnLineItem.id}, #{lotnumber}, #{serialnumber}, #{expirydate}, #{manufacturingdate}, #{quantity}, #{unitprice}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer insert(AsnLot asnLot);
