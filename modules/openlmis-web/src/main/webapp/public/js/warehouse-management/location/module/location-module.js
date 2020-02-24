@@ -12,8 +12,8 @@ var locationModule = angular.module('bin-location', ['openlmis', 'ui.bootstrap.m
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/search', {controller: LocationSearchController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
-          when('/create', {controller: LocationController, templateUrl: 'partials/create.html', resolve: LocationController.resolve}).
-          when('/edit/:id', {controller: LocationController, templateUrl: 'partials/create.html', resolve: LocationController.resolve}).
+          when('/create', {controller: LocationFunctionController, templateUrl: 'partials/create.html', resolve: LocationFunctionController.resolve}).
+          when('/edit/:id', {controller: LocationFunctionController, templateUrl: 'partials/create.html', resolve: LocationFunctionController.resolve}).
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.locationSelected = "selected";

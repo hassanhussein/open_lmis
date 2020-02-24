@@ -1,4 +1,4 @@
 ALTER TABLE receive_lots
-    DROP COLUMN IF EXISTS packSize;
+    DROP COLUMN IF EXISTS boxNumber;
 ALTER TABLE receive_lots
     ADD COLUMN boxNumber CHARACTER VARYING(200) DEFAULT NULL;
