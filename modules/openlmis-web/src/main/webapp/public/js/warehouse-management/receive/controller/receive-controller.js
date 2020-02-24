@@ -769,6 +769,7 @@ $scope.removeProduct(productIndex);
         newLot.product = $scope.newLot.product;
         newLot.lotCode = $scope.newLot.lotCode;
         newLot.manufacturerName = $scope.newLot.manufacturerName;
+        newLot.packSize=$scope.newLot.packSize;
         newLot.expirationDate = $filter('date')($scope.newLot.expirationDate, "yyyy-MM-dd");
         Lot.create(newLot, function(data) {
             $scope.newLotModal = false;
