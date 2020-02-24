@@ -86,7 +86,7 @@ public interface WareHouseMapper {
     Integer getTotalBinsSearchResultCount(@Param("searchParam") String searchParam);
 
 
-    @Select({"     SELECT l.code, l.name, type.name locationType,displayOrder, l.active FROM public.wms_locations L\n" ,
+    @Select({"     SELECT l.id, l.code, l.name, type.name locationType,displayOrder, l.active FROM public.wms_locations L\n" ,
             "            \n" +
             "            JOIN wms_location_types type ON l.typeId = type.id\n" ,
             "            \n" +
