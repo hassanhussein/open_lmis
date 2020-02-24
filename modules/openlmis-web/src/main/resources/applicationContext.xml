@@ -454,7 +454,7 @@
 
                 <entry key="wms-location">
                     <bean class="org.openlmis.web.model.UploadBean">
-                        <property name="displayName" value="Wms Locations"/>
+                        <property name="displayName" value="Bin Location"/>
                         <property name="importableClass">
                             <value type="java.lang.Class">org.openlmis.vaccine.dto.LocationDTO</value>
                         </property>
