@@ -7,6 +7,7 @@ import org.openlmis.core.repository.mapper.LocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -58,5 +59,9 @@ public class LocationRepository {
 
     public List<Location> searchBy(String searchParam, String column,  Pagination pagination){
         return mapper.search(searchParam, column, pagination);
+    }
+
+    public List<HashMap<String, Object>> getAllLocationsBy(String type) {
+        return mapper.getAllLocationsBy(type);
     }
 }

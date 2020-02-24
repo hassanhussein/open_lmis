@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary){
 
 
@@ -30,6 +30,8 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
     });
 
+
+
      AllVaccineInventoryConfigurations.get(function(data) {
                     $scope.configurations = data;
                     $scope.userPrograms=data.programs;
@@ -43,10 +45,14 @@ function ReceiveController(DeleteDocument,DocumentList,StockEvent,$window,$scope
 
                   });
 
-                  Locations.get({"searchParam": "%", "column": "name", "page": 1}, function (data) {
-                        $scope.locations = data.locations;
 
-                      }, {});
+              GetAllLocationsByType.get({type:'A'}, function(data){
+
+                   $scope.locations = data.locationList;
+
+                   console.log(data.locationList);
+
+                  });
 
        AsnLookups.get(function(data) {
 
@@ -817,7 +823,7 @@ $scope.quantityBoxError=false;
                                     manufacturingDate: lot.info.manufactureDate,
                                     quantity: lot.quantity,
                                     serialnumber: 'string',
-                                    locationId:lot.locationId,
+                                    locationId:parseInt(lot.locationId,10),
                                 });
 
 

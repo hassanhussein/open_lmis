@@ -10,14 +10,14 @@ import java.util.List;
 public interface AsnLotMapper {
 
     @Insert(" INSERT INTO asn_lots (asndetailid, lotnumber, serialnumber, expirydate, manufacturingdate, quantity, unitprice, " +
-            "createdBy, createdDate,modifiedBy,modifiedDate) " +
-            " VALUES(#{asnLineItem.id}, #{lotnumber}, #{serialnumber}, #{expirydate}, #{manufacturingdate}, #{quantity}, #{unitprice}, #{createdBy}, NOW(),#{modifiedBy}, NOW()) ")
+            "createdBy, createdDate,modifiedBy,modifiedDate, packSize) " +
+            " VALUES(#{asnLineItem.id}, #{lotnumber}, #{serialnumber}, #{expirydate}, #{manufacturingdate}, #{quantity}, #{unitprice}, #{createdBy}, NOW(),#{modifiedBy}, NOW(), #{packSize}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(AsnLot asnLot);
 
     @Update(" update asn_lots set  asndetailid = #{asnLineItem.id}, lotnumber = #{lotnumber}, serialnumber = #{serialnumber}, expirydate = #{expirydate}, " +
             " manufacturingdate = #{manufacturingdate}, quantity = #{quantity}, unitprice = #{unitprice}, "+
-            " modifiedDate = now(), " +
+            " modifiedDate = now(), packSize=#{packSize}, " +
             " modifiedBy = #{modifiedBy}  where id = #{id} ")
     void update(AsnLot asnLot);
     @Select("select * from asn_lots where id = #{id}")

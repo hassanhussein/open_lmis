@@ -6,6 +6,7 @@ import org.openlmis.core.domain.Location;
 import org.openlmis.core.domain.LocationType;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -69,7 +70,7 @@ public interface LocationMapper {
     List<Location> search(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
                           RowBounds rowBounds);
 
-     class SelectLocations {
+    class SelectLocations {
         @SuppressWarnings(value = "unused")
         public static String getLocationsCountBy(Map<String, Object> params) {
             StringBuilder sql = new StringBuilder();
@@ -118,4 +119,11 @@ public interface LocationMapper {
             return sql;
         }
     }
+
+    @Select(" select l.id, L.code, L.name, t.name typeName from wms_locations L\n" +
+            "\n" +
+            "JOIN wms_location_types t ON l.typeID = t.id\n" +
+            "\n" +
+            "WHERE lower(t.name) = lower(#{type})  ")
+    List<HashMap<String,Object>> getAllLocationsBy(@Param("type") String type);
 }

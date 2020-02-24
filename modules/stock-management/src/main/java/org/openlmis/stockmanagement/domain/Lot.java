@@ -47,4 +47,6 @@ public class Lot extends BaseModel implements Importable
     private Long productId;
 
     private String lotNumber;
+
+    private String packSize;
 }
