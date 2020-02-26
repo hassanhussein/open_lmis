@@ -50,7 +50,7 @@
             <div class="input-append input-prepend">
                 <div class="btn-group">
                     <button id='searchOptionButton' class="btn dropdown-toggle">
-                        <span id="selectedSearchOption" openlmis-message="selectedSearchOption.name"></span>
+                         <span id="selectedSearchOption" openlmis-message="selectedSearchOption.name"></span>
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
@@ -87,7 +87,10 @@
             <tr class="gradient-header" ng-show="locationList.length">
                 <th id="codeHeader">Code</th>
                 <th id="nameHeader">Name</th>
+                <th>Type</th>
+
                 <th id="parentHeader">Active</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -98,7 +101,9 @@
                 </td>
 
                 <td id="locationName{{$index}}" ng-bind="location.name"></td>
+                <td>Type</td>
                 <td id="locationZone{{$index}}" ng-bind="(location.active)?'Yes':'No'"></td>
+                <td>edit</td>
 
             </tr>
             </tbody>

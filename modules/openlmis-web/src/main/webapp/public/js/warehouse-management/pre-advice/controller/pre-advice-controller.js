@@ -342,6 +342,10 @@ getAllLookups();
 
 
     } else {
+        $scope.fiiCost=0;
+            $scope.tfcCost=0;
+            $scope.hCost=0;
+            $scope.cCost=0;
 $scope.docList = [];
        $scope.isVaccine=true;
         $scope.productsToAdd = [{
@@ -708,6 +712,9 @@ $scope.removeProduct(productIndex);
 
 
         });
+
+console.log($scope.fiiCost);
+//        sum+=($scope.fiiCost?parseFloat($scope.fiiCost):0)+($scope.tfcCost?parseFloat($scope.tfcCost):0)+($scope.hCost?parseFloat($scope.hCost):0)+($scope.cCost?parseFloat($scope.cCost):0)
         return sum;
     };
 
