@@ -50,7 +50,7 @@ function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesLis
 
  $scope.loadManufacturerByEquipment = function(equipment, equipments){
 
-   var manufacturer = _.where(equipments, {id:parseInt(equipment.id,10)});
+   var manufacturer = _.where(equipments, {id:parseInt(equipment,10)});
 
    $scope.inventory.equipment.manufacturer = manufacturer[0].manufacturer;
    $scope.inventory.equipment.model = manufacturer[0].model;
