@@ -14,6 +14,28 @@
 function PreAdviceController(DeleteDocument,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
+
+    function convert(str) {
+        var month, day, year, hours, minutes, seconds;
+        var date = new Date(str),
+        month = ("0" + (date.getMonth() + 1)).slice(-2),
+        day = ("0" + date.getDate()).slice(-2);
+        hours = ("0" + date.getHours()).slice(-2);
+        minutes = ("0" + date.getMinutes()).slice(-2);
+        seconds = ("0" + date.getSeconds()).slice(-2);
+
+        var selectedDate = [date.getFullYear(), month, day].join("-");
+        var  selectedTime = [hours, minutes, seconds].join(":");
+        return [selectedDate, selectedTime].join(" ");
+    }
+
+    $('#datetimepicker2').datetimepicker({
+      language: 'en',
+      pick12HourFormat: false
+    }).on('changeDate', function(e) {
+     $scope.expectedArrivalDate   = convert(e.localDate.toString());
+     });
+
         // lets disable all messages
         $scope.$parent.asnId = false;
         $scope.$parent.asnIdUpdate = false;
@@ -742,6 +764,9 @@ $scope.removeProduct(productIndex);
 
 
     $scope.saveAsn = function(status) {
+
+console.log($scope.expectedArrivalDate);
+
 
 
 //    console.log($scope.currency)

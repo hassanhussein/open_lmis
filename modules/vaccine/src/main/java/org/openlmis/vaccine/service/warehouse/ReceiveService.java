@@ -283,23 +283,31 @@ public class ReceiveService {
 
     private String generateReceiveNumber() {
 
-        String number = "RCPT-";
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+
+        String number = "GRN-IVD-".concat(String.valueOf(year)).concat("-");
         String lastReceiptNumber = repository.getLastReceiptNumber();
-        String serialString = "", numberString = "";
+        String serialString = "", numberString = "", yearString = "";
 
         Long newSerial;
 
         if(lastReceiptNumber != null) {
+           serialString = lastReceiptNumber.split("-")[3];
 
-            serialString = lastReceiptNumber.substring(lastReceiptNumber.lastIndexOf("-") + 1);
+           yearString = lastReceiptNumber.split("-")[2];
 
-            long serial = Long.parseLong(serialString);
-            newSerial = serial + 1;
-            numberString = number + newSerial;
+           if(Integer.valueOf(yearString).equals(year)) {
+
+               long serial = Long.parseLong(serialString);
+               newSerial = serial + 1;
+               numberString = number + newSerial;
+           } else {
+               numberString = number + String.format("%05d",1L);
+           }
+
 
         } else {
-
-            numberString = number + 1L;
+            numberString = number + String.format("%05d",1L);
         }
         return numberString;
 
