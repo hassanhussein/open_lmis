@@ -1,7 +1,7 @@
 
 
 
-
+DELETE FROM document_types;
 
 INSERT INTO public.document_types(
             name, description, createdby, createddate, modifiedby, modifieddate)
