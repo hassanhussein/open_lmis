@@ -297,6 +297,7 @@ var total_lot_quantity = 0;
         $scope.viewMode=isViewMode();
         $scope.asnReceiptDate = receive.asnReceiveDate;
         $scope.asnCode = receive.asnNumber;
+        $scope.invoiceNumber = asn.invoiceNumber;
         $scope.blAwbNumber = receive.blawBnumber;
         $scope.clearingAgent = receive.clearingAgent;
         $scope.expectedArrivalDate = receive.expectedArrivalDate;
@@ -854,6 +855,7 @@ console.log(receiveLots);
             receiveDate: $scope.receiveDate,
             facilityId: $scope.homeFacilityId,
             asnNumber: $scope.asnCode,
+            invoiceNumber:$scope.invoiceNumber,
             blawBnumber: $scope.blAwbNumber,
             clearingAgent: $scope.clearingAgent,
             expectedArrivalDate: $scope.expectedArrivalDate,

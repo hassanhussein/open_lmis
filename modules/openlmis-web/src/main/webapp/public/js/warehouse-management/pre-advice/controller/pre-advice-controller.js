@@ -15,6 +15,9 @@ function PreAdviceController(DeleteDocument,$window,$scope,$filter,$routeParams,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
+
+
+
     function convert(str) {
         var month, day, year, hours, minutes, seconds;
         var date = new Date(str),
@@ -31,7 +34,7 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 
     $('#datetimepicker2').datetimepicker({
       language: 'en',
-      pick12HourFormat: false
+      pick12HourFormat: true
     }).on('changeDate', function(e) {
      $scope.expectedArrivalDate   = convert(e.localDate.toString());
      });
@@ -245,6 +248,7 @@ getAllLookups();
         $scope.viewMode=isViewMode();
         $scope.asnReceiptDate = asn.asndate;
         $scope.asnCode = asn.asnnumber;
+        $scope.invoiceNumber = asn.invoiceNumber;
         $scope.blAwbNumber = asn.blawbnumber;
         $scope.clearingAgent = asn.clearingagent;
         $scope.expectedArrivalDate = asn.expectedarrivaldate;
@@ -342,6 +346,8 @@ getAllLookups();
 
 
     } else {
+var today = new Date();
+    $scope.asnCode='asn_'+today.getFullYear()+'_'+today.getMonth()+'_'+today.getTime();
         $scope.fiiCost=0;
             $scope.tfcCost=0;
             $scope.hCost=0;
@@ -825,7 +831,8 @@ console.log($scope.expectedArrivalDate);
         var asn = {
             asnLineItems: asnLineItems,
             asndate: $scope.asnReceiptDate,
-            asnnumber: $scope.asnCode,
+            invoiceNumber:$scope.invoiceNumber,
+
             blawbnumber: $scope.blAwbNumber,
             clearingagent: $scope.clearingAgent,
             expectedarrivaldate: $scope.expectedArrivalDate,
