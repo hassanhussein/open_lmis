@@ -31,24 +31,40 @@ function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesLis
   $scope.models = [];
   $scope.selected = {};
 
-  GetEquipmentByDesignation.get({id:1}, function(data){
 
-    if(!isUndefined(data.equipment_designations)){
-      $scope.equipments = data.equipment_designations;
+ $scope.loadEquipments = function(){
+
+   EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
+
+    if(!isUndefined(data.equipments) && data.equipments.length > 0) {
+      $scope.equipments = data.equipments;
+      console.log($scope.equipments);
+
+      //$scope.manufacturerList = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
+
     }
-  });
+   });
 
-  EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
+ };
 
-   if(!isUndefined(data.equipments) && data.equipments.length > 0) {
-     $scope.equipments = data.equipments;
 
-     var designationList = _.pluck($scope.equipments, 'designation');
+ $scope.loadManufacturerByEquipment = function(equipment, equipments){
 
-     //$scope.manufacturerList = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
+   var manufacturer = _.where(equipments, {id:parseInt(equipment.id,10)});
 
-   }
-  });
+   $scope.inventory.equipment.manufacturer = manufacturer[0].manufacturer;
+   $scope.inventory.equipment.model = manufacturer[0].model;
+
+
+
+  console.log(manufacturer);
+
+  //console.log(equipments);
+
+ };
+
+
+
 
 
    $scope.populateManufacturer = function(equipment) {
