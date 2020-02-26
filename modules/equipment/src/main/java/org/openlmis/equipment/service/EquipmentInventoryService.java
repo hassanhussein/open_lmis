@@ -91,11 +91,12 @@ public class EquipmentInventoryService {
       // Check to see if equipment already exists in db
      // List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
 
-      Equipment existingEquipment = equipmentService.getByTypeManufacturerAndModel(equipmentTypeId,
+     /* Equipment existingEquipment = equipmentService.getByTypeManufacturerAndModel(equipmentTypeId,
               equipment.getManufacturer(),
               equipment.getEquipmentModel().getId(),
-              equipment.getModel());
+              equipment.getModel());*/
 
+      Equipment existingEquipment = equipmentService.getById(equipment.getId());
       //equipment = existingEquipment == null ? equipment : existingEquipment;
 
       equipment.setModifiedBy(inventory.getModifiedBy());
