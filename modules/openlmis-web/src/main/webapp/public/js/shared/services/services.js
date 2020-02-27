@@ -750,5 +750,5 @@ services.factory('SearchBinByPaged', function ($resource) {
 });
 
 services.factory('GetBinLocationByCategory', function ($resource) {
-    return $resource('/rest-api/warehouse/binLocationByCategory/:category', {@category:'category'}, {});
+    return $resource('/rest-api/warehouse/binLocationByCategory/:category', {category:'@category'}, {});
 });
