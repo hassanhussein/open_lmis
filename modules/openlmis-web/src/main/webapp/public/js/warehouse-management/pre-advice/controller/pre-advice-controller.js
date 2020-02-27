@@ -16,6 +16,9 @@ $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
 
+var today = new Date();
+    $scope.asnCode='asn_'+today.getFullYear()+'_'+today.getMonth()+'_'+today.getTime();
+
 
 
     function convert(str) {
@@ -346,8 +349,7 @@ getAllLookups();
 
 
     } else {
-var today = new Date();
-    $scope.asnCode='asn_'+today.getFullYear()+'_'+today.getMonth()+'_'+today.getTime();
+
         $scope.fiiCost=0;
             $scope.tfcCost=0;
             $scope.hCost=0;
@@ -778,7 +780,9 @@ console.log($scope.fiiCost);
 
     $scope.saveAsn = function(status) {
 
-console.log($scope.expectedArrivalDate);
+//    console.log($scope.asnCode);
+
+//console.log($scope.expectedArrivalDate);
 
 
 
