@@ -832,7 +832,7 @@ console.log($scope.expectedArrivalDate);
             asnLineItems: asnLineItems,
             asndate: $scope.asnReceiptDate,
             invoiceNumber:$scope.invoiceNumber,
-
+            asnNumber: $scope.asnCode,
             blawbnumber: $scope.blAwbNumber,
             clearingagent: $scope.clearingAgent,
             expectedarrivaldate: $scope.expectedArrivalDate,

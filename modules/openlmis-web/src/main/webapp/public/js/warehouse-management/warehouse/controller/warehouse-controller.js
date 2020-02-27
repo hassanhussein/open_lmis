@@ -54,9 +54,7 @@ function WarehouseController($scope, siteList,warehouseBy,GetWarehouseService, $
   $scope.save = function () {
 
     if ($scope.locationForm.$error.pattern || $scope.locationForm.$error.required) {
-      $scope.showError = true;
-      $scope.error = 'form.error';
-      $scope.message = "";
+      $scope.showError = true; $scope.error = 'form.error'; $scope.message = "";
       return;
     }
 

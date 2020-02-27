@@ -121,6 +121,9 @@ $scope.warehouses=data.house;
               SaveBinLocation.save(newLocation, function(data) {
                   $scope.newLocationModal = false;
                   console.log(data);
+                   $scope.newLocation.code="";
+                   $scope.newLocation.name="";
+                   $scope.newLocation.type="";
               });
           };
 }
