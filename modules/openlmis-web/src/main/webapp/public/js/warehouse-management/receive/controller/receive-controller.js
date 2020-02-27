@@ -192,6 +192,16 @@ function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,Sto
 //        $scope.updateLotsToDisplay();
     };
 
+
+$scope.print=function(){
+
+console.log('adfsdfsfs');
+
+
+}
+
+
+
 $scope.setCurrency=function(){
 
 if(!$scope.viewMode){
