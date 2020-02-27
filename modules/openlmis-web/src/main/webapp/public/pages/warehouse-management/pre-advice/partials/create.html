@@ -77,7 +77,7 @@
                     <div class="span4">
                         <label for="expectedDeliveryDate">
                             <span >Expected Delivery Date</span>
-                            <span class="label-required"> *</span>
+<!--                            <span class="label-required"> *</span>-->
                         </label>
 
                         <div class="form-field">
@@ -86,7 +86,7 @@
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                    ui-date-format="yy-mm-dd"
                                    ng-model="expectedDeliveryDate"
-                                   ng-required="true"
+
                                    ng-disabled="viewMode"
                             />
 
@@ -494,7 +494,7 @@
 
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Expected Arrival Date</span>
+                                        <span >Expected Time of Arrival (ETA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
                                     <div class="form-field">
@@ -502,7 +502,7 @@
 
                                         <div>
                                         <div id="datetimepicker2" class="input-append">
-                                            <input data-format="dd/MM/yyyy HH:mm:ss PP" type="text"
+                                            <input  type="datetime-local"
                                                    ng-model="expectedArrivalDate" ng-disabled="viewMode"
                                                    ng-required="true"
                                             />

@@ -81,7 +81,7 @@
                     <div class="span3">
                         <label for="expectedDeliveryDate">
                             <span >Expected Delivery Date</span>
-                            <span class="label-required"> *</span>
+<!--                            <span class="label-required"> *</span>-->
                         </label>
 
                         <div class="form-field">
@@ -595,15 +595,13 @@
 
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Expected Time of Arrival</span>
+                                        <span >Expected Time of Arrival (ETA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
                                         <input name="expectedArrivalDate"
-                                                type="text"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
-                                               ui-date-format="yy-mm-dd"
+                                                type="datetime-local"
                                                ng-model="expectedArrivalDate"
                                                ng-disabled="viewMode"
                                                ng-required="true"/>
@@ -638,15 +636,13 @@
                                 </div>
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Actual Time of Arrival</span>
+                                        <span >Actual Time of Arrival (ATA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
                                         <input name="actualArrivalDate"
-                                               type="text"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
-                                               ui-date-format="yy-mm-dd"
+                                               type="datetime-local"
                                                ng-disabled="viewMode"
                                                ng-model="actualArrivalDate"
                                                ng-required="true"/>
