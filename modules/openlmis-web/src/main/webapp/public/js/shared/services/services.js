@@ -752,3 +752,7 @@ services.factory('SearchBinByPaged', function ($resource) {
 services.factory('GetBinLocationByCategory', function ($resource) {
     return $resource('/rest-api/warehouse/binLocationByCategory/:category', {category:'@category'}, {});
 });
+
+services.factory('GenerateGrnReport', function ($resource) {
+    return $resource('/rest-api/warehouse/grn-report/:id/print', {id:'@id'}, {});
+});

@@ -22,3 +22,5 @@ ALTER TABLE receives
         DROP COLUMN IF EXISTS invoiceNumber;
     ALTER TABLE asns
         ADD COLUMN invoiceNumber CHARACTER VARYING (250);
+
+        ALTER TABLE receive_lots DROP CONSTRAINT IF EXISTS receive_lots_locations_fkey

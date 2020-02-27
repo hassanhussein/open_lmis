@@ -106,6 +106,7 @@ public class AsnService {
             Receive res = new Receive();
             res.setId(null);
             res.setAsnId(asn.getId());
+            res.setInvoiceNumber(asn.getInvoiceNumber());
             res.setPoNumber(asn.getPonumber());
             res.setPoDate(asn.getAsndate());
             res.setSupplierId(asn.getSupplierid());

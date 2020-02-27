@@ -836,7 +836,7 @@ console.log($scope.fiiCost);
             asnLineItems: asnLineItems,
             asndate: $scope.asnReceiptDate,
             invoiceNumber:$scope.invoiceNumber,
-            asnNumber: $scope.asnCode,
+            asnnumber: $scope.asnCode,
             blawbnumber: $scope.blAwbNumber,
             clearingagent: $scope.clearingAgent,
             expectedarrivaldate: $scope.expectedArrivalDate,
