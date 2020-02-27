@@ -1,7 +1,7 @@
 function PreAdviceSearchController($scope,DisableAsn, Preadvice, $location, navigateBackService, $dialog){
 
   $scope.searchOptions = [
-  {value: "asnumber", name: "ASN Number"},
+//  {value: "asnumber", name: "ASN Number"},
     {value: "ponumber", name: "PO Number"},
 
     {value: "supplier", name: "Supplier"}

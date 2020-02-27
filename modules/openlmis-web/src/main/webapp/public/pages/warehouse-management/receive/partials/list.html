@@ -67,7 +67,7 @@
 
             <tr class="gradient-header" ng-show="asnList.length">
                 <th  openlmis-message="header.asn.po.number" ng-click='sortColumn("poNumber")' ng-class='sortClass("poNumber")'></th>
-                <th   >ASN Number</th>
+<!--                <th   >ASN Number</th>-->
                 <th ng-click='sortColumn("clearingAgent")' ng-class='sortClass("clearingAgent")'>Clearing Agent</th>
                 <th ng-click='sortColumn("expectedArrivalDate")' ng-class='sortClass("expectedArrivalDate")'>Expected  Arrival Date</th>
                 <th  openlmis-message="header.asn.supplier" ng-click='sortColumn("supplier.name")' ng-class='sortClass("supplier.name")'></th>
@@ -78,7 +78,7 @@
             <tbody>
             <tr ng-repeat="asn in asnList|orderBy:column:reverse" ng-init="arrayIndex=$index">
                 <td  ng-bind="asn.poNumber"></td>
-                <td ng-bind="asn.asn.asnnumber"></td>
+<!--                <td ng-bind="asn.asn.asnnumber"></td>-->
                 <td  ng-bind="asn.clearingAgent"></td>
                 <td  ng-bind="(asn.expectedArrivalDate |  date:'dd-MM-yyyy')"></td>
                 <td  ng-bind="asn.supplier.name"></td>

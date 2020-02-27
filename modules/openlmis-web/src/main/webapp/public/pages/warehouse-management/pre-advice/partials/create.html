@@ -42,16 +42,19 @@
                 <div class="form-row clearfix">
                     <div class="span4">
                         <label for="asnCode">
-                            <span >ASN Number</span>
+                            <span >Invoice Number</span>
                             <span class="label-required"> *</span>
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="asnCode" ng-disabled="viewMode || editMode" name="asnCode" id="asnCode" type="text" maxlength="50" ng-required="true"/>
-                            <span class="field-error" ng-show="asnForm.asnCode.$error.required && showError"
+                            <input ng-model="invoiceNumber" ng-disabled="viewMode || editMode" name="invoiceNumber"  type="text" ng-required="true"/>
+                            <span class="field-error" ng-show="asnForm.invoiceNumber.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
+
+                    <input ng-model="asnCode" name="asnCode"  type="hidden"/>
+
 
                     <div class="span4">
                         <label for="receiptDate">
@@ -74,7 +77,7 @@
                     <div class="span4">
                         <label for="expectedDeliveryDate">
                             <span >Expected Delivery Date</span>
-                            <span class="label-required"> *</span>
+<!--                            <span class="label-required"> *</span>-->
                         </label>
 
                         <div class="form-field">
@@ -83,7 +86,7 @@
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
                                    ui-date-format="yy-mm-dd"
                                    ng-model="expectedDeliveryDate"
-                                   ng-required="true"
+
                                    ng-disabled="viewMode"
                             />
 
@@ -423,56 +426,10 @@
 
 
                                         </tr>
-                                        <tr>
-
-                                            <td colspan="3"></td>
-                                            <th colspan="2">Freight, Insurance & Inspection Cost  {{currency.code?'('+currency.code+')':''}}</th>
-
-                                            <td  class="col-general cell-input" style="padding-left:15px; text-align:right;"><input type="text" ng-model="fiiCost" ng-decimal="5"  ng-disabled="viewMode"/></td>
-                                            <td style="border-left: 0px solid white;"></td>
 
 
-                                        </tr>
-                                        <tr>
-
-                                            <td colspan="3"></td>
-                                            <th colspan="2" >Terminal freight & customs clearance   {{currency.code?'('+currency.code+')':''}}</th>
-
-                                            <td  class="col-general cell-input" style="padding-left:15px; text-align:right;"><input type="text" ng-model="tfcCost" ng-decimal="5"  ng-disabled="viewMode"/></td>
-                                            <td style="border-left: 0px solid white;">{{fiiCost}}</td>
 
 
-                                        </tr>
-                                        <tr>
-
-                                            <td colspan="3"></td>
-                                            <th colspan="2">Handling fee   {{currency.code?'('+currency.code+')':''}}</th>
-
-                                            <td  class="col-general cell-input" style="padding-left:15px; text-align:right;"><input type="text" ng-model="hCost" ng-decimal="5"  ng-disabled="viewMode"/></td>
-                                            <td style="border-left: 0px solid white;"></td>
-
-
-                                        </tr>
-                                        <tr>
-
-                                            <td colspan="3"></td>
-                                            <th colspan="2" >Clearance fee   {{currency.code?'('+currency.code+')':''}}</th>
-
-                                            <td  class="col-general cell-input" style="padding-left:15px; text-align:right;"><input type="text" ng-model="cCost" ng-decimal="5"  ng-disabled="viewMode"/></td>
-                                            <td style="border-left: 0px solid white;"></td>
-
-
-                                        </tr>
-                                        <tr>
-
-                                            <td colspan="3"></td>
-                                            <th colspan="2" >Grand Total   {{currency.code?'('+currency.code+')':''}}</th>
-
-                                            <td  class="cell-general" style="padding-left:15px; text-align:right;">{{grandTotal() | number}}</td>
-                                            <td style="border-left: 0px solid white;"></td>
-
-
-                                        </tr>
                                         </tfoot>
                                     </table>
                                 </div>
@@ -537,15 +494,15 @@
 
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Expected Arrival Date</span>
+                                        <span >Expected Time of Arrival (ETA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
                                     <div class="form-field">
 
 
-                                        <div class="well">
+                                        <div>
                                         <div id="datetimepicker2" class="input-append">
-                                            <input data-format="dd/MM/yyyy HH:mm:ss PP" type="text"
+                                            <input  type="datetime-local"
                                                    ng-model="expectedArrivalDate" ng-disabled="viewMode"
                                                    ng-required="true"
                                             />

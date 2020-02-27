@@ -51,12 +51,13 @@
                     </div>
                     <div class="span3">
                         <label for="asnCode">
-                            <span >ASN Number</span>
+                            <span >Invoice Number</span>
 
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="asnCode" name="asnCode" ng-disabled="true" type="text" maxlength="50" />
+                            <input ng-model="invoiceNumber" name="invoice" ng-disabled="true" type="text" maxlength="50" />
+                            <input type="hidden" ng-model="asnCode" name="invoice"  />
 
                         </div>
                     </div>
@@ -80,18 +81,11 @@
                     <div class="span3">
                         <label for="expectedDeliveryDate">
                             <span >Expected Delivery Date</span>
-                            <span class="label-required"> *</span>
+<!--                            <span class="label-required"> *</span>-->
                         </label>
 
                         <div class="form-field">
-                            <input name="expectedDeliveryDate" id="expectedDeliveryDate"
-                                   type="text"
-                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
-                                   ui-date-format="yy-mm-dd"
-                                   ng-model="expectedArrivalDate"
-                                   ng-required="true"
-                                   ng-disabled="viewMode"
-                            />
+                            <input/>
 
                             <span class="field-error" ng-show="asnForm.expectedDeliveryDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
@@ -601,15 +595,13 @@
 
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Expected Time of Arrival</span>
+                                        <span >Expected Time of Arrival (ETA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
                                         <input name="expectedArrivalDate"
-                                                type="text"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
-                                               ui-date-format="yy-mm-dd"
+                                                type="datetime-local"
                                                ng-model="expectedArrivalDate"
                                                ng-disabled="viewMode"
                                                ng-required="true"/>
@@ -644,15 +636,13 @@
                                 </div>
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Actual Time of Arrival</span>
+                                        <span >Actual Time of Arrival (ATA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
                                         <input name="actualArrivalDate"
-                                               type="text"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today'}"
-                                               ui-date-format="yy-mm-dd"
+                                               type="datetime-local"
                                                ng-disabled="viewMode"
                                                ng-model="actualArrivalDate"
                                                ng-required="true"/>

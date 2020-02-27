@@ -32,9 +32,8 @@
 
                         <div class="form-field">
                             <input id="inspectionDate" name="inspectionDate"
-                                    type="text"
-                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
-                                    ui-date-format="yy-mm-dd"
+                                    type="datetime-local"
+
                                     ng-model="inspection.inspectionDate"
                                     ng-disabled="false"
                                     ng-required="true"/>
@@ -44,7 +43,7 @@
                     </div>
                     <div class="span3">
                         <label for="receiptNumber">
-                            <span >Good Receipt Note</span>
+                            <span >GRN Number</span>
 
                         </label>
 
