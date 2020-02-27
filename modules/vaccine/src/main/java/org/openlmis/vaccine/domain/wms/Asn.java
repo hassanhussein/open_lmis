@@ -59,5 +59,7 @@ public class Asn extends BaseModel {
 
     private CurrencyDTO currency;
 
+    private String invoiceNumber;
+
 
 }

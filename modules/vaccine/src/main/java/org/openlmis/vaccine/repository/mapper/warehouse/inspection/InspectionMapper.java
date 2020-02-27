@@ -77,17 +77,17 @@ public interface InspectionMapper {
     @Insert("INSERT INTO public.inspections(\n" +
             "            receiveId, inspectionDate, inspectionNote, inspectedBy, status, \n" +
             "            createBy, createdDate, modifiedBy, modifiedDate,receiptNumber,descriptionOfInspection,isShippedProvided, isShipped, shippedComment, " +
-            " shippedProvidedComment,conditionOfBox, labelAttachedComment )\n" +
+            " shippedProvidedComment,conditionOfBox, labelAttachedComment,invoiceNumber, varNumber )\n" +
             "    VALUES (#{receiveId}, #{inspectionDate}, #{inspectionNote}, #{inspectedBy}, #{status}, \n" +
             "            #{createBy}, NOW(), #{modifiedBy}, NOW(), #{receiptNumber}, #{descriptionOfInspection}, #{isShippedProvided}, #{isShipped}," +
-            " #{shippedComment}, #{shippedProvidedComment}, #{conditionOfBox}, #{labelAttachedComment});\n")
+            " #{shippedComment}, #{shippedProvidedComment}, #{conditionOfBox}, #{labelAttachedComment},#{invoiceNumber}, #{varNumber});\n")
     Integer insert(Inspection inspection);
 
     @Update("UPDATE public.inspections\n" +
             "   SET  receiveId=#{receive.id}, inspectionDate=#{inspectionDate}, inspectionNote=#{inspectionNote}, inspectedBy=#{inspectedBy}, \n" +
             "       status=#{status},receiptNumber = #{receiptNumber}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), " +
             " descriptionOfInspection=#{descriptionOfInspection}, isShippedProvided = #{isShippedProvided}, isShipped=#{isShipped}," +
-            " shippedComment=#{shippedComment}, shippedProvidedComment=#{shippedProvidedComment}, conditionOfBox=#{conditionOfBox}, labelAttachedComment=#{labelAttachedComment} \n" +
+            " shippedComment=#{shippedComment}, shippedProvidedComment=#{shippedProvidedComment}, conditionOfBox=#{conditionOfBox}, labelAttachedComment=#{labelAttachedComment}, invoiceNumber=#{invoiceNumber}, varNumber=#{varNumber} \n" +
             " WHERE id = #{id};\n")
     void update(Inspection inspection);
 

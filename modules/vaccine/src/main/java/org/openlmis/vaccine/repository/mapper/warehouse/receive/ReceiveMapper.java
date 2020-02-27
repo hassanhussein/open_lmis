@@ -20,12 +20,12 @@ public interface ReceiveMapper {
          "            receiveDate,blawBnumber,country,flightVesselNumber, \n" +
          "            portOfArrival,expectedArrivalDate,actualArrivalDate, \n" +
          "            clearingAgent,shippingAgent,status,note,noteToSupplier,description, \n" +
-         "            isForeignProcurement,createdBy,createdDate,modifiedBy,modifiedDate,currencyId)\n" +
+         "            isForeignProcurement,createdBy,createdDate,modifiedBy,modifiedDate,currencyId, invoiceNumber)\n" +
          "    VALUES (#{purchaseOrderId}, #{poDate},#{supplier.id}, #{poNumber},#{asnId}, \n" +
          "            #{receiveDate},#{blawBnumber},#{country},#{flightVesselNumber}, \n" +
          "            #{portOfArrival},#{expectedArrivalDate},#{actualArrivalDate}, \n" +
          "            #{clearingAgent}, #{shippingAgent},#{status},#{note},#{noteToSupplier},#{description},#{isForeignProcurement}, \n" +
-         "            #{createdBy}, NOW(),#{modifiedBy},NOW(), #{currencyId});")
+         "            #{createdBy}, NOW(),#{modifiedBy},NOW(), #{currencyId}, #{invoiceNumber});")
     @Options(useGeneratedKeys = true)
     Integer insert(Receive receive);
 
@@ -34,7 +34,7 @@ public interface ReceiveMapper {
           "       asnId=#{asnId}, receiveDate=#{receiveDate}, blawBnumber=#{blawBnumber}, country=#{country}, flightVesselNumber=#{flightVesselNumber}, \n" +
           "       portOfArrival=#{portOfArrival}, expectedArrivalDate=#{expectedArrivalDate}, actualArrivalDate=#{actualArrivalDate}, \n" +
           "       clearingAgent=#{clearingAgent}, shippingAgent=#{shippingAgent},status=#{status}, note=#{note}, noteToSupplier=#{noteToSupplier}, \n" +
-          "       description=#{description}, isForeignProcurement=#{isForeignProcurement}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), currencyId=#{currencyId}\n" +
+          "       description=#{description}, isForeignProcurement=#{isForeignProcurement}, modifiedBy=#{modifiedBy}, modifiedDate=NOW(), currencyId=#{currencyId}, invoiceNumber=#{invoiceNumber}\n" +
           " WHERE id = #{id}")
   void update(Receive receive);
 

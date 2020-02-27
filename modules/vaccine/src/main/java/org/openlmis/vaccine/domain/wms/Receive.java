@@ -76,6 +76,8 @@ public class Receive extends BaseModel {
 
     private String receiveNumber;
 
-    // private PurchaseDocument purchaseDocuments;
+    private String invoiceNumber;
+
+    // private PurchaseDocument purchaseDocuments;N
 
 }

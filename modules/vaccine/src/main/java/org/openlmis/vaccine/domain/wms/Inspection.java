@@ -53,4 +53,8 @@ public class Inspection extends BaseModel {
 
     private String labelAttachedComment;
 
+    private String invoiceNumber;
+
+    private String varNumber;
+
 }

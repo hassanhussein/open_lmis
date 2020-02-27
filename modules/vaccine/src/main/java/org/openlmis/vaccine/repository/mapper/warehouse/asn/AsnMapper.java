@@ -15,15 +15,15 @@ import java.util.Map;
 @Repository
 public interface AsnMapper {
     @Insert(" INSERT INTO asns (ponumber,podate,supplierid,asnnumber,asndate,blawbnumber,flightvesselnumber,portofarrival,expectedarrivaldate, " +
-            "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate, active,currencyId)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
-            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),true, #{currencyId}) ")
+            "clearingagent, expecteddeliverydate, status,note,createdBy, createdDate,modifiedBy,modifiedDate, active,currencyId, invoiceNumber)  VALUES(#{ponumber}, #{podate}, #{supplierid}, #{asnnumber}, #{asndate}, #{blawbnumber}, " +
+            "#{flightvesselnumber}, #{portofarrival}, #{expectedarrivaldate}, #{clearingagent}, #{expecteddeliverydate}, #{status},#{note}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),true, #{currencyId}, #{invoiceNumber}) ")
     @Options(useGeneratedKeys = true)
     Long insert(Asn asn);
 
     @Update(" update asns set  ponumber = #{ponumber}, " +
             " podate = #{podate}, supplierid = #{supplierid}, asnnumber =#{asnnumber}, asndate = #{asndate}," +
-            " blawbnumber = #{blawbnumber}, flightvesselnumber = #{flightvesselnumber}, portofarrival =#{portofarrival}, expecteddeliverydate = #{expecteddeliverydate}, expectedarrivaldate = #{expectedarrivaldate}," +
-            " clearingagent = #{clearingagent}, status = #{status}, note =#{note}, " +
+            " blawbnumber = #{blawbnumber}, flightvesselnumber = #{flightvesselnumber}, portofarrival =#{portofarrival}, expecteddeliverydate = #{expecteddeliverydate}, expectedarrivaldate = #{expectedarrivaldate}, invoiceNumber= #{invoiceNumber}" +
+            " ,clearingagent = #{clearingagent}, status = #{status}, note =#{note}, " +
             " modifiedDate = now(), modifiedBy = #{modifiedBy}, currencyId = #{currencyId}  where id = #{id} ")
     void update(Asn asn);
 
