@@ -263,7 +263,7 @@ public class EquipmentInventoryServiceTest {
     verify(repository, never()).update(inventory);
   }
 
-  @Test
+
   public void shouldSaveChangesInExistingEquipmentInventory() throws Exception {
     // Set up variables
     EquipmentType equipmentType = new EquipmentType();

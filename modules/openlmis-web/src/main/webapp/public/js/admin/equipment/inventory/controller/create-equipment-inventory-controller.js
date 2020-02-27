@@ -31,24 +31,41 @@ function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesLis
   $scope.models = [];
   $scope.selected = {};
 
-  GetEquipmentByDesignation.get({id:1}, function(data){
 
-    if(!isUndefined(data.equipment_designations)){
-      $scope.equipments = data.equipment_designations;
+ $scope.loadEquipments = function(){
+
+   EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
+
+    if(!isUndefined(data.equipments) && data.equipments.length > 0) {
+      $scope.equipments = data.equipments;
+      console.log($scope.equipments);
+
+      //$scope.manufacturerList = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
+
     }
-  });
+   });
 
-  EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
+ };
 
-   if(!isUndefined(data.equipments) && data.equipments.length > 0) {
-     $scope.equipments = data.equipments;
 
-     var designationList = _.pluck($scope.equipments, 'designation');
+ $scope.loadManufacturerByEquipment = function(equipment, equipments){
 
-     //$scope.manufacturerList = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
+   var manufacturer = _.where(equipments, {id:parseInt(equipment,10)});
 
-   }
-  });
+   $scope.inventory.equipment.manufacturer = manufacturer[0].manufacturer;
+   $scope.inventory.equipment.model = manufacturer[0].model;
+
+   $scope.inventory.equipment.energyTypeId = manufacturer[0].energyTypeId;
+
+  $scope.inventory.equipment = manufacturer[0];
+
+
+  //console.log(equipments);
+
+ };
+
+
+
 
 
    $scope.populateManufacturer = function(equipment) {
@@ -244,8 +261,6 @@ GetByModel.get({'id':model, 'manufacturer':manufacturer}, function(data){
     var operationalStatus = _.where($scope.cceOperationalStatusList, {id: parseInt($scope.inventory.operationalStatusId, 10)})[0];
     $scope.badStatusSelected = operationalStatus.isBad;
   };
-            console.log($scope.inventory);
-
 
   $scope.saveInventory = function () {
     $scope.error = '';
@@ -264,12 +279,12 @@ GetByModel.get({'id':model, 'manufacturer':manufacturer}, function(data){
 
 
 
-      if (!$scope.inventory.equipment.name) {
+      /*if (!$scope.inventory.equipment.name) {
           var equipmentModelName = _.pluck(_.where($scope.equipmentModels, {id :parseInt($scope.inventory.equipment.equipmentModel.id, 10)}), 'name')[0];
 
          $scope.inventory.equipment.name = $scope.inventory.equipment.manufacturer + " / " + equipmentModelName;
 
-      }
+      }*/
 
       // When saving, need to make sure date fields are set from string date fields
       // Do this by parsing date string and add timezone offset seconds
