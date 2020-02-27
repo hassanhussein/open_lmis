@@ -748,3 +748,7 @@ services.factory("updateBinLocation", function ($resource) {
 services.factory('SearchBinByPaged', function ($resource) {
     return $resource('/rest-api/warehouse/bin-location/search', {}, {});
 });
+
+services.factory('GetBinLocationByCategory', function ($resource) {
+    return $resource('/rest-api/warehouse/binLocationByCategory/:category', {@category:'category'}, {});
+});
