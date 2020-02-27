@@ -12,7 +12,7 @@
  *
  */
 function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
-                           $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary){
+                           $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory){
 
 
  $scope.$parent.receiveSaved = false;
@@ -22,11 +22,11 @@ function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,Sto
 
     function getAllLookups(){
 
-    GetLocationSummary.get({}, function(data){
+    GetBinLocationByCategory.get({category:'receiving'}, function(data){
 
-     $scope.locationList = data.locationList;
+     $scope.locationList = data.bins;
 
-     console.log(data.locationList);
+//     console.log(data);
 
     });
 
@@ -46,13 +46,13 @@ function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,Sto
                   });
 
 
-              GetAllLocationsByType.get({type:'A'}, function(data){
-
-                   $scope.locations = data.locationList;
-
-                   console.log(data.locationList);
-
-                  });
+//              GetAllLocationsByType.get({type:'A'}, function(data){
+//
+//                   $scope.locations = data.locationList;
+//
+//                   console.log(data.locationList);
+//
+//                  });
 
        AsnLookups.get(function(data) {
 
