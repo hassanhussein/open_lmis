@@ -134,4 +134,10 @@ public class WareHouseController extends BaseController {
         response.getBody().addData("pagination", pagination);
         return response;
     }
+
+
+    @RequestMapping(value = "/binLocationByCategory/{category}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllLocationsByType(@PathVariable(value = "category") String category ) {
+        return OpenLmisResponse.response("bins", service.getAllLocationsByCategory(category));
+    }
 }

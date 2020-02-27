@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.dto.LocationDTO;
 
 import java.util.Date;
 
@@ -23,7 +24,7 @@ public class ReceiveLot extends BaseModel {
     private ReceiveLineItem receiveLineItem;
     private String manufacturerName;
 
-    private Location location;
+    private LocationDTO location;
 
     private String packSize;
 

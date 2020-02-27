@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.location;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.Location;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,4 +38,13 @@ public interface WmsLocationMapper {
 
     @Select("select * from public.wms_locations where wareHouseId = #{wareHouseId}")
     List<Location> getByWareHouse(@Param("wareHouseId") Long wareHouseId);
+
+    @Select("SELECT * FROM wms_locations WHERE id=#{id}")
+    @Results(value = {
+            @Result(property = "locationType", column = "typeId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.LocationTypeMapper.getById")),
+            @Result(property = "house", column = "warehouseId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WareHouseMapper.getById"))
+    })
+    LocationDTO getByLocationId(Long id);
 }

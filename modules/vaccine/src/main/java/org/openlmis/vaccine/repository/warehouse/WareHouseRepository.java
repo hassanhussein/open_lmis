@@ -69,4 +69,8 @@ public class WareHouseRepository {
 
         return mapper.searchBinBy(searchParam,pagination);
     }
+
+    public List<LocationDTO> getAllLocationsByCategory(String category) {
+        return mapper.getAllLocationsByCategory(category);
+    }
 }

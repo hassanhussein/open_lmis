@@ -94,4 +94,13 @@ public interface WareHouseMapper {
             " WHERE LOWER(L.code) LIKE '%' || LOWER(#{searchParam} || '%') ",
             " ORDER BY L.id desc "})
     List<LocationDTO> searchBinBy(@Param("searchParam") String searchParam, RowBounds rowBounds);
+
+    @Select({"     SELECT l.id, l.code, l.name, type.name locationType,displayOrder, l.active, false as editMode FROM public.wms_locations L\n" ,
+            "            \n" +
+                    "            JOIN wms_location_types type ON l.typeId = type.id\n" ,
+            "            \n" +
+                    "            JOIN WAREHOUSES H ON L.warehouseId = H.ID ",
+            " WHERE  type.code = #{category} ",
+            " ORDER BY L.id desc "})
+    List<LocationDTO> getAllLocationsByCategory(@Param("category") String category);
 }

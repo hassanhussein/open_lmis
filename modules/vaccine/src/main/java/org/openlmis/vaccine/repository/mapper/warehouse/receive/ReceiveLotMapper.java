@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.receive;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.Location;
 import org.openlmis.vaccine.domain.wms.ReceiveLot;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public interface ReceiveLotMapper {
     @Select("select * from receive_lots where receiveLineItemId = #{id}")
     @Results(value = {
             @Result(property = "locationId", column = "locationId", javaType = Integer.class),
-            @Result(property = "location", column = "locationId", javaType = Location.class,
-                    one = @One(select = "org.openlmis.core.repository.mapper.LocationMapper.getById"))
+            @Result(property = "location", column = "locationId", javaType = LocationDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper.getByLocationId"))
     })
     List<ReceiveLot>  getByLineItem(@Param("id") Long id);
 
