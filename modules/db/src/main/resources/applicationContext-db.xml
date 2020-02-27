@@ -72,7 +72,7 @@
     </bean>
 
     <bean id="myBatisMapperScannerReport" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="org.openlmis.analytics*"/>
+        <property name="basePackage" value="org.openlmis.analytics.xx*"/>
         <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryReport"/>
     </bean>
