@@ -13,66 +13,33 @@
 
 
 <div>
-    <h2>Stock Adjustment</h2>
+    <h2>Product Putaway</h2>
 </div>
 
-<div class="page-header">
-
-    <h4>Adjustment Details:</h4>
-</div>
-<form name="movementForm"  novalidate>
-
-<!--    <div class="form-row clearfix">-->
-
-
-
-<!--        <div class="span4">-->
-<!--            <label for="receiptDate">-->
-<!--                <span>Reference No</span>-->
-<!--            </label>-->
-
-<!--            <div class="form-field">-->
-<!--                <input type="text" ng-model="referenceNoA" ng-disabled="true"/>-->
-<!--                <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"-->
-<!--                      openlmis-message="missing.value"></span>-->
-<!--            </div>-->
-<!--        </div>-->
-
-
-
-<!--    </div>-->
-
-
+<form name="putawayForm"  novalidate>
 
     <div class="form-row clearfix">
-        <div class="span4">
-            <label for="currency" >Warehouse</label>
+        <div class="span6">
+
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="warehouseId" openlmis-message="label.select.parent.zone">
-                    <option value="">--Select Warehouse--</option>
-                    <option value="1">Warehouse 1</option>
-                    <option value="2"> Warehouse 2</option>
-
-                </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
-                      openlmis-message="missing.value"></span>
+                <label>Product</label>
+                <p>BCG</p>
             </div>
         </div>
 
 
-        <div class="span4">
-            <label for="currency" >Bin Location</label>
+        <div class="span6">
+            <label>Lot</label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="binLocationId" ng-disabled="!warehouseId" openlmis-message="label.select.parent.zone">
-                    <option value="">--Select Bin Location--</option>
+                <select ui-select2="{width: '100%'}" >
+                    <option value="">--Select Lot--</option>
                     <option value="1">AAAA</option>
                     <option value="2"> BBBB</option>
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
-                      openlmis-message="missing.value"></span>
+
             </div>
         </div>
 
@@ -81,120 +48,143 @@
     </div>
 
 
-
-
     <div class="form-row clearfix">
-        <div class="span4">
-            <label for="currency" >Item</label>
+        <div class="span6 well">
+            <h4>From:</h4>
+            <div class="form-row clearfix">
 
-            <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-disabled="!binLocationId" ng-model="itemId" openlmis-message="label.select.parent.zone">
-                    <option value="">--Select Item--</option>
-                    <option value="1">BCG</option>
-                    <option value="2"> HPV</option>
+                <label for="receiptDate">
+                    <span>Warehouse</span>
+                </label>
 
-                </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
-                      openlmis-message="missing.value"></span>
-            </div>
-        </div>
+                <div class="form-field">
+                    <input type="text" ng-disabled="true"/>
+
+                </div>
 
 
-        <div class="span4">
-            <label for="currency" >Lot</label>
+</div>
 
-            <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-disabled="!itemId" ng-model="lot" openlmis-message="label.select.parent.zone">
-                    <option value="">--Select Lot--</option>
-                    <option value="1">ASDFAD</option>
-                    <option value="2"> FDFDFDF</option>
+            <div class="form-row clearfix">
 
-                </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
-                      openlmis-message="missing.value"></span>
-            </div>
-        </div>
-
-
-
-        <div class="span4">
             <label for="receiptDate">
-                <span>SOH</span>
+                <span>Bin Location</span>
             </label>
 
             <div class="form-field">
                 <input type="text" ng-disabled="true"/>
-                <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
-                      openlmis-message="missing.value"></span>
+
             </div>
+
+        </div>
+
+            <div class="form-row clearfix">
+
+                <label for="receiptDate">
+                    <span>Passed Quantity</span>
+                </label>
+
+                <div class="form-field">
+                    <input type="text" ng-disabled="true"/>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="span6 well">
+            <h4>To:</h4>
+            <div class="form-row clearfix">
+
+                <label for="receiptDate">
+                    <span>Warehouse</span>
+                </label>
+
+                <div class="form-field">
+                    <input type="text" ng-disabled="true"/>
+
+                </div>
+
+
+            </div>
+
+            <div class="form-row clearfix">
+
+                <label for="receiptDate">
+                    <span>Bin Location</span>
+                </label>
+
+                <div class="form-field">
+                    <input type="text" ng-disabled="true"/>
+
+                </div>
+
+            </div>
+
+            <div class="form-row clearfix">
+
+                <label for="receiptDate">
+                    <span>Putaway Quantity</span>
+                </label>
+
+                <div class="form-field">
+                    <input type="text" ng-disabled="true"/>
+
+                </div>
+
+            </div>
+
         </div>
 
 
 
     </div>
-
 
 
     <div class="form-row clearfix">
-
-        <div class="span4">
-            <label for="receiptDate">
-                <span>Quantity to Adjust</span>
-            </label>
-
-            <div class="form-field">
-                <input type="text" ng-disabled="!lot" ng-model="quantity" style="width:95%"/>
-                <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
-                      openlmis-message="missing.value"></span>
-            </div>
-        </div>
-
-        <div class="span4">
-            <label for="currency" >Reason</label>
-
-            <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-disabled="!quantity || quantity==0" openlmis-message="label.select.parent.zone">
-                    <option value="">--Select Reason--</option>
-                    <option value="1">Reason 1</option>
-                    <option value="2"> Reason 2</option>
-
-                </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
-                      openlmis-message="missing.value"></span>
-            </div>
-        </div>
+<div class="span6">
 
     </div>
+        <div class="span6">
+
+            <input  type="button" class="btn btn-primary pull-right"
+                    value="Add" style="margin-left:10px;margin-right:10px"/>
+
+        </div>
+</div>
+
+
+    <div class="form-row clearfix">
+        <table class="table table-bordered receive">
+            <thead>
+            <tr class="gradient-header">
+                <th>Lot</th>
+
+                <th>Quantity</th>
+                <th>From Warehouse</th>
+                <th>From Bin</th>
+                <th>To Bin</th>
+                <th>To Bin</th>
+
+
+            </tr>
+            </thead>
 
 
 
-
-
-
-
-
-
-
-
-
-
+        </table>
+    </div>
 
 
     <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
-
             <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" value="Clear"
                    ng-click="cancel()"/>
-
-
-
-
-
-
             <input  type="button" class="btn btn-primary pull-right"
-                    value="Adjust" style="margin-left:10px;margin-right:10px"/>
+                    value="Generate Movement" style="margin-left:10px;margin-right:10px"/>
         </div>
-
         <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
     </div>
 </form>
