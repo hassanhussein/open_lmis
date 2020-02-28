@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -66,10 +67,47 @@ public class InspectionService {
 
         User user = userService.getById(userId);
         inspection.setInspectedBy(user.getFirstName()+" - "+ user.getLastName());
+
+        if(inspection.getStatus().equalsIgnoreCase("RELEASED")) {
+            inspection.setVarNumber(generateVarNumber());
+        }
+
         if(inspection.getId() == null) {
             repository.insert(inspection);
         }else
              repository.update(inspection);
+    }
+
+    private String generateVarNumber() {
+
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+
+        String number = "TAN-VAR-".concat(String.valueOf(year)).concat("-");
+        String lastVarNumber = repository.getLastVarNumber();
+        String serialString = "", numberString = "", yearString = "";
+
+        Long newSerial;
+
+        if(lastVarNumber != null) {
+            serialString = lastVarNumber.split("-")[3];
+
+            yearString = lastVarNumber.split("-")[2];
+
+            if(Integer.valueOf(yearString).equals(year)) {
+
+                long serial = Long.parseLong(serialString);
+                newSerial = serial + 1;
+                numberString = number + newSerial;
+            } else {
+                numberString = number + String.format("%05d",1L);
+            }
+
+
+        } else {
+            numberString = number + String.format("%05d",1L);
+        }
+        return numberString;
+
     }
 
     public Integer updateStockCard(Long id) {

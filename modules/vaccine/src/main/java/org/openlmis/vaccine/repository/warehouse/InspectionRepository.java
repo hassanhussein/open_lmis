@@ -84,4 +84,9 @@ public class InspectionRepository {
         return mapper.getBy(product,startDate, endDate,year);
 
     }
+
+    public String getLastVarNumber() {
+
+        return mapper.generateVarNumber();
+    }
 }

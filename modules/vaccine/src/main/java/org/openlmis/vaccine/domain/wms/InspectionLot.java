@@ -44,4 +44,6 @@ public class InspectionLot extends BaseModel {
 
     private List<InspectionLotProblem>problems;
 
+    private String boxNumber;
+
 }

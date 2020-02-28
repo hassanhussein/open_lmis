@@ -222,6 +222,9 @@ public interface InspectionMapper {
             "WHERE i.MODIFIEDDATE::date <= #{endDate}::date and i.modifieddate::date > #{startDate}::date")
     List<HashMap<String, Object>> getBy(@Param("product") String product,@Param("startDate") String startDate, @Param("endDate") String endDate, String year);
 
+    @Select("SELECT varNumber FROM inspections order by id desc limit 1")
+    String generateVarNumber();
+
     class SelectInspection {
 
         public static String getSearchBy(Map<String, Object> params) {

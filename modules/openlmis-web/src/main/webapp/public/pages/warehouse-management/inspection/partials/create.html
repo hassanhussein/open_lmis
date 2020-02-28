@@ -93,7 +93,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input id="asnNumber" ng-model="inspection.receive.asn.asnnumber" name="invoiceNumber" ng-disabled="true" type="text" maxlength="50" />
+                            <input id="asnNumber" ng-model="inspection.invoiceNumber" name="invoiceNumber" ng-disabled="true" type="text" maxlength="50" />
 
                         </div>
                     </div>
@@ -778,7 +778,7 @@
                               openlmis-message="missing.value"></span>
 
                     </td>
-                    <td style="text-align:right">45</td>
+                    <td style="text-align:right">{{lot.boxNumber}}</td>
                     <td style="text-align:right"><input  ng-disabled="true" ng-model="lot.receivedQuantity" type="text"/></td>
                     <td>
 

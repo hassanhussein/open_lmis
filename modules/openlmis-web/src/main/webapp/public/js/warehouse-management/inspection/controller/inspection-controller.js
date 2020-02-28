@@ -286,12 +286,7 @@ return false;
 
 
          UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
-           $scope.print = function (inspectionId){
 
-                      var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
-
-                      $window.open(url, '_blank');
-                 };
        }
 
      };

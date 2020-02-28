@@ -193,12 +193,12 @@ function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,Sto
     };
 
 
-$scope.print=function(){
+$scope.print=function() {
 
-console.log('adfsdfsfs');
+var url = '/rest-api/warehouse/grn-report/'+parseInt($scope.receive.id, 10)+'/print';
+$window.open(url, '_blank');
 
-
-}
+};
 
 
 
