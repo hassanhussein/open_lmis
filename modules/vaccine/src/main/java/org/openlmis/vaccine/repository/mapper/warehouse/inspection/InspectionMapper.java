@@ -239,7 +239,7 @@ public interface InspectionMapper {
             "                    Join wms_locations loc ON lot.passLocationId = loc.ID\n" +
             "                    Join wms_location_types lt On loc.typeId = lt.id\n" +
             "                    JOIN warehouses house On loc.warehouseId = house.id\n" +
-            "                    where (i.poNumber::text LIKE '%' || #{searchParam} || '%') and i.status='IN-PUTAWAY'")
+            "                    where (R.poNumber::text LIKE '%' || #{searchParam} || '%') and i.status='IN-PUTAWAY'")
     Integer getTotalSearchResultCountForPutAway(@Param("searchParam") String searchParam);
 
     @Select(" select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +
@@ -271,7 +271,7 @@ public interface InspectionMapper {
 
         public static String getSearchForPutAway(Map<String, Object> params) {
             StringBuilder sql = new StringBuilder();
-            sql.append("WITH Q AS (select i.id,asnNumber,i.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +
+            sql.append("WITH Q AS (select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +
                     "loc.name binLocation, house.name warehouseName, inspectionDate\n" +
                     "from inspections i\n" +
                     "                JOIN receives r on i.receiveid = r.id \n" +

@@ -15,7 +15,7 @@ public interface InspectionLotMapper {
             @Result(column = "id", property = "id"),
             @Result(property = "inspectionLineItemId", column = "inspectionLineItemId"),
 
-            @Result(property = "passLocationId", column = "locationId", javaType = Integer.class),
+            @Result(property = "passLocationId", column = "location.id", javaType = Integer.class),
             @Result(property = "location", column = "passLocationId", javaType = LocationDTO.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper.getByLocationId")),
             @Result(property = "problems", javaType = List.class, column = "id",
