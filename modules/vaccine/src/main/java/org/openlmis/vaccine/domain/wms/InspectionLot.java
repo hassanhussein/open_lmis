@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.vaccine.dto.LocationDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -32,8 +33,6 @@ public class InspectionLot extends BaseModel {
 
     private Long failLocationId;
 
-    private Location location;
-
     private Long vvmStatus;
 
     private Long inspectionLineItemId;
@@ -45,5 +44,9 @@ public class InspectionLot extends BaseModel {
     private List<InspectionLotProblem>problems;
 
     private String boxNumber;
+
+    private LocationDTO location;
+
+    private Integer locationId;
 
 }

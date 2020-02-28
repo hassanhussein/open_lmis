@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.inspection;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.InspectionLot;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public interface InspectionLotMapper {
             @Result(column = "id", property = "id"),
             @Result(property = "inspectionLineItemId", column = "inspectionLineItemId"),
 
+            @Result(property = "passLocationId", column = "locationId", javaType = Integer.class),
+            @Result(property = "location", column = "passLocationId", javaType = LocationDTO.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper.getByLocationId")),
             @Result(property = "problems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.inspection.InspectionLotProblemMapper.getByLot"))
     })
