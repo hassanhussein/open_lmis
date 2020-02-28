@@ -263,7 +263,6 @@ return false;
 
     $scope.save = function (status) {
 //check the outer form validations
-$scope.inspection.inspectionDate='25/10/2019'; //remove this after testing
 
 
        if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
@@ -320,12 +319,12 @@ if(!$scope.hasExpired(lot)){
         }
             //only check if lot has not expired
        //check storage location
-        if((lot.passLocationId===null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity==='')){
-               lot.passLocationError=true;
-               $scope.globalErrorFlag=true;
-           }else{
-               lot.passLocationError=false;
-           }
+//        if((lot.passLocationId===null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity==='')){
+//               lot.passLocationError=true;
+//               $scope.globalErrorFlag=true;
+//           }else{
+//               lot.passLocationError=false;
+//           }
        //check fail qty
           if(lot.failQuantity>lot.receivedQuantity){
                lot.failQuantityError=true;

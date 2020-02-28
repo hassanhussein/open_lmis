@@ -68,7 +68,7 @@ modules/vaccine/.sonar/
 modules/vaccine/src/main/.sonar/
 sshipment/
 test-modules/service-tests/
-
+modules/openlmis-web/wms/documents/*
 .classpath
 /bin/
 wms/documents/*
