@@ -753,6 +753,6 @@ services.factory('GetBinLocationByCategory', function ($resource) {
     return $resource('/rest-api/warehouse/binLocationByCategory/:category', {category:'@category'}, {});
 });
 
-services.factory('GenerateGrnReport', function ($resource) {
-    return $resource('/rest-api/warehouse/grn-report/:id/print', {id:'@id'}, {});
+services.factory('SearchPutAway', function ($resource) {
+    return $resource('/rest-api/warehouse/inspection/put-away', {}, {});
 });

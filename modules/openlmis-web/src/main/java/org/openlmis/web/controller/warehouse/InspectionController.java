@@ -16,6 +16,7 @@ import org.openlmis.reporting.service.TemplateService;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
+import org.openlmis.vaccine.domain.wms.dto.PutAwayDTO;
 import org.openlmis.vaccine.service.warehouse.InspectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -136,6 +137,18 @@ public class InspectionController extends BaseController {
         return new ModelAndView(jasperView, map);
     }
 
+    @RequestMapping(value = "inspection/put-away", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> searchPutAwayBy(@RequestParam(value = "searchParam", required = false) String searchParam,
+                                                                      @RequestParam(value = "column") String column,
+                                                                      @RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                                      @Value("${search.page.size}") String limit) {
+        Pagination pagination = new Pagination(page, parseInt(limit));
+        pagination.setTotalRecords(service.getTotalSearchResultCountForPutAway(searchParam, column));
+        List<PutAwayDTO> inspectList = service.searchPutAwayBy(searchParam, column, pagination);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("aways", inspectList);
+        response.getBody().addData("pagination", pagination);
+        return response;
+    }
 
 
 }

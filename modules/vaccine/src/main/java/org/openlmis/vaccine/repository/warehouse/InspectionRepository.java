@@ -4,6 +4,7 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.InspectionLineItem;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
+import org.openlmis.vaccine.domain.wms.dto.PutAwayDTO;
 import org.openlmis.vaccine.domain.wms.dto.VvmStatusDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.inspection.InspectionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,5 +89,17 @@ public class InspectionRepository {
     public String getLastVarNumber() {
 
         return mapper.generateVarNumber();
+    }
+
+    public Integer getTotalSearchResultCountForPutAwayByPoNumber(String searchParam) {
+        return mapper.getTotalSearchResultCountForPutAway(searchParam);
+    }
+
+    public List<PutAwayDTO> searchPutAwayBy(String searchParam, String column, Pagination pagination) {
+        return  mapper.searchPutAwayBy(searchParam,column,pagination);
+    }
+
+    public List<PutAwayDTO> searchedAllPutAway() {
+       return mapper.searchedAllPutAway();
     }
 }
