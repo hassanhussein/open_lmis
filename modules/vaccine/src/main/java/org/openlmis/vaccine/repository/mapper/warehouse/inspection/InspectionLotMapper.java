@@ -13,9 +13,8 @@ public interface InspectionLotMapper {
     @Select(" SELECT * FROM inspection_lots WHERE inspectionLineItemId = #{lineItemId} ")
     @Results(value = {
             @Result(column = "id", property = "id"),
+            @Result(column = "passLocationId", property = "passLocationId"),
             @Result(property = "inspectionLineItemId", column = "inspectionLineItemId"),
-
-            @Result(property = "passLocationId", column = "location.id", javaType = Integer.class),
             @Result(property = "location", column = "passLocationId", javaType = LocationDTO.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper.getByLocationId")),
             @Result(property = "problems", javaType = List.class, column = "id",
