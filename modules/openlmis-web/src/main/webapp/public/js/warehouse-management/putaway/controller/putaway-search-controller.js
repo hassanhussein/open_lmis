@@ -7,7 +7,18 @@
  *  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
-function PutawaySearchController($scope, Receive, $location, navigateBackService, $dialog,SearchPutAway){
+function PutawaySearchController($scope, $location,putaway, navigateBackService, $dialog,SearchPutAway){
+
+
+      $scope.putawayList =putaway.aways ;
+      $scope.pagination = putaway.pagination;
+      $scope.totalItems = $scope.pagination.totalRecords;
+      $scope.currentPage = $scope.pagination.page;
+      $scope.showResults = true;
+      $scope.showSearchResults = true;
+
+
+
 
   $scope.searchOptions = [
     {value: "poNumber", name: "PO Number"},
@@ -17,7 +28,7 @@ function PutawaySearchController($scope, Receive, $location, navigateBackService
   $scope.$parent.putawayViewMode=false;
 
 
-  $scope.showResults = false;
+//  $scope.showResults = false;
   $scope.currentPage = 1;
   $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
@@ -64,26 +75,35 @@ function PutawaySearchController($scope, Receive, $location, navigateBackService
 
 
 
+   $scope.edit = function (id) {
+
+          $location.path('create/'+id);
+    };
+
+
+
   $scope.$watch('currentPage', function () {
     if ($scope.currentPage !== 0)
       $scope.search($scope.currentPage, $scope.searchedQuery);
   });
 
   $scope.search = function (page, lastQuery) {
+   console.log('am here');
     if (!($scope.query || lastQuery)) return;
-    lastQuery ? getPreadvice(page, lastQuery) : getPreadvice(page, $scope.query);
+    lastQuery ? getPutaway(page, lastQuery) : getPutaway(page, $scope.query);
   };
 
-  function getPreadvice(page, query) {
+  function getPutaway(page, query) {
     query = query.trim();
     $scope.searchedQuery = query;
-    Receive.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
-      $scope.asnList = data.receives;
-      console.log($scope.asnList);
+    SearchPutAway.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
+      $scope.putawayList = data.aways;
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
+      console.log($scope.putawayList);
+
       $scope.showSearchResults = true;
     }, {});
   }
@@ -109,7 +129,7 @@ function PutawaySearchController($scope, Receive, $location, navigateBackService
 
 PutawaySearchController.resolve = {
 
-    receive: function($q, $route, $timeout, SearchPutAway) {
+    putaway: function($q, $route, $timeout, SearchPutAway) {
 
 
         var deferred = $q.defer();
@@ -120,6 +140,7 @@ PutawaySearchController.resolve = {
 
                 deferred.resolve(data);
                 console.log(data);
+
             }, {});
         }, 100);
         return deferred.promise;
