@@ -601,7 +601,9 @@
 
                                     <div class="form-field">
                                         <input name="expectedArrivalDate"
-                                                type="datetime-local"
+                                                type="text"
+                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today',maxDate:period.stringStartDate}"
+                                               ui-date-format="yy-mm-dd"
                                                ng-model="expectedArrivalDate"
                                                ng-disabled="viewMode"
                                                ng-required="true"/>
@@ -642,9 +644,11 @@
 
                                     <div class="form-field">
                                         <input name="actualArrivalDate"
-                                               type="datetime-local"
-                                               ng-disabled="viewMode"
+                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today',maxDate:period.stringStartDate}"
+                                               ui-date-format="yy-mm-dd"
                                                ng-model="actualArrivalDate"
+                                               ng-disabled="viewMode"
+                                               type="text"
                                                ng-required="true"/>
                                         <span class="field-error" ng-show="asnForm.actualArrivalDate.$error.required && showError"
                                               openlmis-message="missing.value"></span>

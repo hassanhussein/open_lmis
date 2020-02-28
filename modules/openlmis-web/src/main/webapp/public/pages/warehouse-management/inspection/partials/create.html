@@ -32,8 +32,9 @@
 
                         <div class="form-field">
                             <input id="inspectionDate" name="inspectionDate"
-                                    type="datetime-local"
-
+                                    type="text"
+                                   ui-date-format="yy-mm-dd"
+                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
                                     ng-model="inspection.inspectionDate"
                                     ng-disabled="false"
                                     ng-required="true"/>
@@ -780,19 +781,11 @@
                     </td>
                     <td style="text-align:right">{{lot.boxNumber}}</td>
                     <td style="text-align:right"><input  ng-disabled="true" ng-model="lot.receivedQuantity" type="text"/></td>
-                    <td>
+                    <td ng-bind="lot.location.code">
 
-                        <select ui-select2="{width: '100%'}" ng-model="lot.passLocationId" name="passLocationId" ng-required="lot.failQuantity<lot.receivedQuantity || lot.failQuantity==''" ng-disabled="lot.failQuantity>=lot.receivedQuantity || hasExpired(lot)">
-                            <option value=""></option>
-                            <option ng-repeat="location in locations"
-                                    value="{{ location.id }}"
-                                    ng-selected="passLocationId==location.id"
-                            >
-                                {{ location.code }}
-                            </option>
-                        </select>
-                        <span class="field-error" ng-show="lot.passLocationError"
-                              openlmis-message="missing.value"></span>
+
+
+
                     </td>
                     <td><input type="text" numeric-validator="positiveInteger" ng-model="lot.failQuantity" ng-disabled="hasExpired(lot)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
 
