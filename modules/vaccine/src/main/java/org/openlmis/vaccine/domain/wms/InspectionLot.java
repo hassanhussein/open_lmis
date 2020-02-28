@@ -47,6 +47,4 @@ public class InspectionLot extends BaseModel {
 
     private LocationDTO location;
 
-    private Integer locationId;
-
 }
