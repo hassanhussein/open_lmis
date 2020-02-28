@@ -6,6 +6,7 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
+import org.openlmis.vaccine.domain.wms.dto.PutAwayDTO;
 import org.openlmis.vaccine.domain.wms.dto.VvmStatusDTO;
 import org.openlmis.vaccine.repository.warehouse.InspectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +46,13 @@ public class InspectionService {
         }
         return 0;
     }
+    public Integer getTotalSearchResultCountForPutAway(String searchParam, String column) {
 
+        if (column.equals("poNumber")) {
+            return repository.getTotalSearchResultCountForPutAwayByPoNumber(searchParam);
+        }
+        return 0;
+    }
     public List<InspectionDTO> searchBy(String searchParam, String column, Pagination pagination) {
 
         if (column.equals("all")) {
@@ -68,7 +75,7 @@ public class InspectionService {
         User user = userService.getById(userId);
         inspection.setInspectedBy(user.getFirstName()+" - "+ user.getLastName());
 
-        if(inspection.getStatus().equalsIgnoreCase("RELEASED")) {
+        if(inspection.getStatus().equalsIgnoreCase("IN-PUTAWAY")) {
             inspection.setVarNumber(generateVarNumber());
         }
 
@@ -119,5 +126,12 @@ public class InspectionService {
               return repository.getBy(product, startDate, endDate, year);
           }
           return null;
+    }
+
+    public List<PutAwayDTO> searchPutAwayBy(String searchParam, String column, Pagination pagination) {
+        if (column.equals("all")) {
+            return repository.searchedAllPutAway();
+        }
+        return repository.searchPutAwayBy(searchParam, column, pagination);
     }
 }

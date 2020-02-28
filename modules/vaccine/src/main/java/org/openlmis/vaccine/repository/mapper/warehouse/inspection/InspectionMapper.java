@@ -10,6 +10,7 @@ import org.openlmis.vaccine.domain.wms.Inspection;
 import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.domain.wms.Receive;
 import org.openlmis.vaccine.domain.wms.dto.InspectionDTO;
+import org.openlmis.vaccine.domain.wms.dto.PutAwayDTO;
 import org.openlmis.vaccine.domain.wms.dto.VvmStatusDTO;
 import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper;
@@ -59,6 +60,10 @@ public interface InspectionMapper {
     @SelectProvider(type = InspectionMapper.SelectInspection.class, method = "getSearchBy")
     List<InspectionDTO> searchBy(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
                                  RowBounds rowBounds);
+
+    @SelectProvider(type = InspectionMapper.SelectInspection.class, method = "getSearchForPutAway")
+    List<PutAwayDTO> searchPutAwayBy(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
+                                     RowBounds rowBounds);
 
     @Select(" SELECT * FROM inspections where id = #{id}")
     @Results(value = {
@@ -225,6 +230,32 @@ public interface InspectionMapper {
     @Select("SELECT varNumber FROM inspections order by id desc limit 1")
     String generateVarNumber();
 
+    @Select(" SELECT count(*) FROM inspections i\n" +
+            "                    JOIN receives r on i.receiveid = r.id \n" +
+            "                    JOIN receive_LINE_ITEMS LI on r.id = li.receiveid\n" +
+            "                    JOIN Asns A ON a.id = r.asnId\n" +
+            "                    JOIN inspection_line_items item on i.id = item.inspectionId\n" +
+            "                    JOIN inspection_lots Lot ON item.id = lot.inspectionlineitemId \n" +
+            "                    Join wms_locations loc ON lot.passLocationId = loc.ID\n" +
+            "                    Join wms_location_types lt On loc.typeId = lt.id\n" +
+            "                    JOIN warehouses house On loc.warehouseId = house.id\n" +
+            "                    where (i.poNumber::text LIKE '%' || #{searchParam} || '%') and i.status='IN-PUTAWAY'")
+    Integer getTotalSearchResultCountForPutAway(@Param("searchParam") String searchParam);
+
+    @Select(" select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +
+            "loc.name binLocation, house.name warehouseName, inspectionDate\n" +
+            "from inspections i\n" +
+            "                JOIN receives r on i.receiveid = r.id \n" +
+            "                    JOIN receive_LINE_ITEMS LI on r.id = li.receiveid\n" +
+            "                    JOIN Asns A ON a.id = r.asnId\n" +
+            "                    JOIN inspection_line_items item on i.id = item.inspectionId\n" +
+            "                    JOIN inspection_lots Lot ON item.id = lot.inspectionlineitemId \n" +
+            "                    Join wms_locations loc ON lot.passLocationId = loc.ID\n" +
+            "                    Join wms_location_types lt On loc.typeId = lt.id\n" +
+            "                    JOIN warehouses house On loc.warehouseId = house.id" +
+            "                     where I.STATUS = 'IN-PUTAWAY' ")
+    List<PutAwayDTO> searchedAllPutAway();
+
     class SelectInspection {
 
         public static String getSearchBy(Map<String, Object> params) {
@@ -234,6 +265,26 @@ public interface InspectionMapper {
                     "JOIN receive_LINE_ITEMS LI on r.id = li.receiveid\n" +
                     "JOIN Asns A ON a.id = r.asnId )\n" +
                     "SELECT * FROM Q WHERE ");
+            return createQuery(sql, params).toString();
+        }
+
+
+        public static String getSearchForPutAway(Map<String, Object> params) {
+            StringBuilder sql = new StringBuilder();
+            sql.append("WITH Q AS (select i.id,asnNumber,i.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +
+                    "loc.name binLocation, house.name warehouseName, inspectionDate\n" +
+                    "from inspections i\n" +
+                    "                JOIN receives r on i.receiveid = r.id \n" +
+                    "                    JOIN receive_LINE_ITEMS LI on r.id = li.receiveid\n" +
+                    "                    JOIN Asns A ON a.id = r.asnId\n" +
+                    "                    JOIN inspection_line_items item on i.id = item.inspectionId\n" +
+                    "                    JOIN inspection_lots Lot ON item.id = lot.inspectionlineitemId \n" +
+                    "                    Join wms_locations loc ON lot.passLocationId = loc.ID\n" +
+                    "                    Join wms_location_types lt On loc.typeId = lt.id\n" +
+                    "                    JOIN warehouses house On loc.warehouseId = house.id\n" +
+                    "                  \n" +
+                    "                     )\n" +
+                    "                    select * from q where status='IN-PUTAWAY' AND  ");
             return createQuery(sql, params).toString();
         }
 
