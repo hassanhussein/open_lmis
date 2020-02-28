@@ -1,5 +1,6 @@
 function InspectionController($scope,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary){
 
+
 $scope.globalErrorFlag=true;
 
 GetLocationSummary.get({}, function(data){
@@ -262,6 +263,7 @@ return false;
 
     $scope.save = function (status) {
 //check the outer form validations
+$scope.inspection.inspectionDate='25/10/2019'; //remove this after testing
 
 
        if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
