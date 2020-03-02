@@ -11,8 +11,8 @@
 var putawayModule = angular.module('putaway', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-          when('/search', {controller: PutawayController, templateUrl: 'partials/search.html', reloadOnSearch: false}).
-          when('/create', {controller: PutawaySearchController, templateUrl: 'partials/create.html'}).
+          when('/search', {controller: PutawaySearchController, templateUrl: 'partials/search.html',resolve: PutawaySearchController.resolve, reloadOnSearch: false}).
+          when('/create/:id', {controller: PutawayController,resolve:PutawayController.resolve, templateUrl: 'partials/create.html'}).
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
 //      $rootScope.warehouseSelected = "selected";

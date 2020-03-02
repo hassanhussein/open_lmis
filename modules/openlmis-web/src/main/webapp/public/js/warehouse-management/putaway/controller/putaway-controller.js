@@ -8,10 +8,32 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function PutawayController($scope, $location) {
+function PutawayController($scope, $location,GetInspectionById,putaway) {
   var today = new Date();
   $scope.referenceNo='IVD/SM/'+today.getFullYear()+'/'+today.getMonth()+'/'+today.getTime();
   $scope.referenceNoA='IVD/SA/'+today.getFullYear()+'/'+today.getMonth()+'/'+today.getTime();
 
 }
+
+
+
+
+PutawayController.resolve = {
+
+  putaway: function ($q, $route, $timeout, GetInspectionById) {
+    if ($route.current.params.id === undefined) return undefined;
+
+    var deferred = $q.defer();
+    var inspectionId = $route.current.params.id;
+
+    $timeout(function () {
+      GetInspectionById.get({id: inspectionId}, function (data) {
+      console.log(data.inspection)
+        deferred.resolve(data.inspection);
+      }, {});
+    }, 100);
+    return deferred.promise;
+  }
+
+};
 
