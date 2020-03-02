@@ -47,4 +47,13 @@ public interface WmsLocationMapper {
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WareHouseMapper.getById"))
     })
     LocationDTO getByLocationId(Long id);
+
+    @Select("SELECT * FROM wms_locations WHERE warehouseId=#{id}")
+    @Results(value = {
+            @Result(property = "type", column = "typeId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.LocationTypeMapper.getById")),
+            @Result(property = "house", column = "warehouseId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WareHouseMapper.getById"))
+    })
+    List<LocationDTO> getByWarehouseId(Long id);
 }

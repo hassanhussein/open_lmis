@@ -140,4 +140,9 @@ public class WareHouseController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getAllLocationsByType(@PathVariable(value = "category") String category ) {
         return OpenLmisResponse.response("bins", service.getAllLocationsByCategory(category));
     }
+
+    @RequestMapping(value = "/house/locations", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getWarehousesWithLocation() {
+        return OpenLmisResponse.response("binLocations", service.getWarehouseByBinLocation());
+    }
 }

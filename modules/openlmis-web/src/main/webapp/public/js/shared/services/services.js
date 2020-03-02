@@ -756,3 +756,7 @@ services.factory('GetBinLocationByCategory', function ($resource) {
 services.factory('SearchPutAway', function ($resource) {
     return $resource('/rest-api/warehouse/inspection/put-away', {}, {});
 });
+
+services.factory('GetWarehouseLocations', function ($resource) {
+    return $resource('/rest-api/warehouse/house/locations', {}, {});
+});

@@ -9,6 +9,7 @@ import org.openlmis.vaccine.domain.wms.Site;
 import org.openlmis.vaccine.domain.wms.WareHouse;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
 import org.openlmis.vaccine.dto.LocationDTO;
+import org.openlmis.vaccine.dto.WarehouseLocationDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -103,4 +104,14 @@ public interface WareHouseMapper {
             " WHERE  type.code = #{category} ",
             " ORDER BY L.id desc "})
     List<LocationDTO> getAllLocationsByCategory(@Param("category") String category);
+
+    @Select(" SELECT * FROM warehouses")
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(property = "site", column = "siteId", javaType = Site.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.SiteMapper.getAllById")),
+            @Result(property = "locations", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper.getByWarehouseId"))
+    })
+    List<WarehouseLocationDTO> getWarehouseByBinLocation();
 }

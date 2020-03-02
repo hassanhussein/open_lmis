@@ -7,6 +7,7 @@ import org.openlmis.core.service.LocationTypeService;
 import org.openlmis.vaccine.domain.wms.WareHouse;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
 import org.openlmis.vaccine.dto.LocationDTO;
+import org.openlmis.vaccine.dto.WarehouseLocationDTO;
 import org.openlmis.vaccine.repository.warehouse.WareHouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -141,5 +142,9 @@ public class WareHouseService {
 
     public List<LocationDTO> getAllLocationsByCategory(String category) {
         return  repository.getAllLocationsByCategory(category);
+    }
+
+    public List<WarehouseLocationDTO> getWarehouseByBinLocation() {
+        return repository.getWarehouseByBinLocation();
     }
 }
