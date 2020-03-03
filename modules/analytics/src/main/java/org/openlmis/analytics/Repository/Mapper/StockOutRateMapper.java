@@ -84,10 +84,10 @@ public interface  StockOutRateMapper {
                                                           @Param("period") Long period, @Param("product") Long product);
 
     @Select("select a.district_name,  a.region_name, SUM( a.stockOutIncidence)  as stockOutIncidence,\n" +
-            "            SUM(totalIncidence) as totalIncidence , pp.name || ' ' || date_part('year', pp.startdate) as reported from mv_latest_reported_stock_status  a \n" +
+            "            SUM(totalIncidence) as totalIncidence , MAX(pp.name) || ' ' || date_part('year', MAX(pp.startdate)) as reported from mv_latest_reported_stock_status  a \n" +
             "            join processing_periods pp on pp.id=a.periodid\n" +
             "            where a.tracer=true \n" +
-            "            group by a.district_name, a.region_name, pp.startdate, pp.name")
+            "            group by a.district_name, a.region_name")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForTracer();
 
 

@@ -88,9 +88,9 @@ public class StockImbalanceHomeFacilityQueryBuilder {
         predicate += " fullSupply = true ";
         predicate += " AND " + programIsFilteredBy("programId");
 //        predicate += " AND " + userHasPermissionOnFacilityBy("facility_id");
-        if (filter.getFacilityType() != 0) {
-            predicate += " AND " + facilityTypeIsFilteredBy("facility_type_id");
-        }
+//        if (filter.getFacilityType() != 0) {
+//            predicate += " AND " + facilityTypeIsFilteredBy("facility_type_id");
+//        }
 
         if (filter.getFacility() != 0) {
             predicate += " AND " + facilityIsFilteredBy("facility_id");
