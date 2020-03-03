@@ -24,7 +24,7 @@
 
             <div class="form-field row-fluid">
                 <label>Product</label>
-                <p>BCG</p>
+                <p ng-bind="lineItem.product.primaryName"></p>
             </div>
         </div>
 
@@ -33,10 +33,10 @@
             <label>Lot</label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" >
+                <select ui-select2="{width: '100%'}" ng-model="fromLot" ng-options="lot as lot.lotNumber for lot in lineItem.lots">
                     <option value="">--Select Lot--</option>
-                    <option value="1">AAAA</option>
-                    <option value="2"> BBBB</option>
+<!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
+
 
                 </select>
 
@@ -58,7 +58,7 @@
                 </label>
 
                 <div class="form-field">
-                    <input type="text" ng-disabled="true"/>
+                    <input type="text" ng-model="fromLot.location.house.name" ng-disabled="true"/>
 
                 </div>
 
@@ -72,7 +72,7 @@
             </label>
 
             <div class="form-field">
-                <input type="text" ng-disabled="true"/>
+                <input type="text" ng-model="fromLot.location.code" ng-disabled="true"/>
 
             </div>
 
@@ -85,7 +85,7 @@
                 </label>
 
                 <div class="form-field">
-                    <input type="text" ng-disabled="true"/>
+                    <input type="text" ng-model="fromLot.passQuantity" ng-disabled="true"/>
 
                 </div>
 
@@ -102,8 +102,13 @@
                     <span>Warehouse</span>
                 </label>
 
-                <div class="form-field">
-                    <input type="text" ng-disabled="true"/>
+                <div class="form-field row-fluid">
+                    <select ui-select2="{width: '100%'}" ng-disabled="!fromLot" ng-model="toLot.warehouse" ng-options="warehouse as warehouse.name for warehouse in warehouseList">
+                        <option value="">--Select Warehouse--</option>
+                        <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
+
+
+                    </select>
 
                 </div>
 
@@ -116,8 +121,13 @@
                     <span>Bin Location</span>
                 </label>
 
-                <div class="form-field">
-                    <input type="text" ng-disabled="true"/>
+                <div class="form-field row-fluid">
+                    <select ui-select2="{width: '100%'}" ng-disabled="!toLot.warehouse" ng-model="toLot.binLocation" ng-options="location as location.code for location in toLot.warehouse.locations">
+                        <option value="">--Select Bin Location--</option>
+                        <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
+
+
+                    </select>
 
                 </div>
 
@@ -130,7 +140,7 @@
                 </label>
 
                 <div class="form-field">
-                    <input type="text" ng-disabled="true"/>
+                    <input type="text" ng-model="toLot.passQuantity" numeric-validator="positiveInteger" ng-disabled="!toLot.binLocation"/>
 
                 </div>
 
@@ -149,7 +159,7 @@
     </div>
         <div class="span6">
 
-            <input  type="button" class="btn btn-primary pull-right"
+            <input ng-disabled="!toLot.passQuantity || toLot.passQuantity==0" type="button" class="btn btn-primary pull-right" ng-click="addToQueue()"
                     value="Add" style="margin-left:10px;margin-right:10px"/>
 
         </div>
@@ -157,6 +167,7 @@
 
 
     <div class="form-row clearfix">
+        <div  class="alert alert-danger" ng-show="quantityError">Putaway Quantity Should be less or equal to remaining Passed Quantity</div>
         <table class="table table-bordered receive">
             <thead>
             <tr class="gradient-header">
@@ -165,12 +176,27 @@
                 <th>Quantity</th>
                 <th>From Warehouse</th>
                 <th>From Bin</th>
-                <th>To Bin</th>
+                <th>To Warehouse</th>
                 <th>To Bin</th>
 
 
             </tr>
             </thead>
+
+
+            <tbody>
+
+                <tr ng-repeat="movement in movementQueue">
+                    <td ng-bind="movement.lotNumber"></td>
+                    <td ng-bind="movement.quantity"></td>
+                    <td ng-bind="movement.fromWarehouse"></td>
+                    <td ng-bind="movement.fromBinLocation"></td>
+                    <td ng-bind="movement.toWarehouse"></td>
+                    <td ng-bind="movement.toBinLocation"></td>
+
+
+                </tr>
+            </tbody>
 
 
 

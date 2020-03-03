@@ -8,10 +8,58 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function PutawayController($scope, $location,GetInspectionById,putaway) {
-  var today = new Date();
-  $scope.referenceNo='IVD/SM/'+today.getFullYear()+'/'+today.getMonth()+'/'+today.getTime();
-  $scope.referenceNoA='IVD/SA/'+today.getFullYear()+'/'+today.getMonth()+'/'+today.getTime();
+function PutawayController($scope, $location,GetInspectionById,putaway,GetWarehouseLocations) {
+
+ GetWarehouseLocations.get(function(data) {
+               console.log(data.binLocations);
+                $scope.warehouseList=data.binLocations;
+                });
+$scope.movementQueue=[];
+$scope.lineItem=putaway.lineItems[0];
+
+
+
+$scope.addToQueue=function(){
+
+$scope.quantityError=false;
+
+
+//validate if putaway quantity is less than passed quantity
+if(parseInt($scope.toLot.passQuantity,10)>parseInt($scope.fromLot.passQuantity,10)){
+$scope.quantityError=true;
+ return;
+}
+
+$scope.movementQueue.push(
+    {
+    lotNumber:$scope.fromLot.lotNumber,
+    lotId:$scope.fromLot.id,
+    quantity:$scope.toLot.passQuantity,
+    fromWarehouse:$scope.fromLot.location.house.name,
+    fromBinLocation:$scope.fromLot.location.code,
+    toWarehouse:$scope.toLot.warehouse.name,
+    toBinLocation:$scope.toLot.binLocation.code,
+    toBinLocationId:$scope.toLot.binLocation.id
+
+}
+);
+//deduct the quantity
+$scope.fromLot.passQuantity-=parseInt($scope.toLot.passQuantity,10);
+//if quantity == 0 remove that lot from list
+if($scope.fromLot.passQuantity==0){
+    $scope.lineItem.lots.splice($scope.lineItem.lots.indexOf($scope.fromLot),1);
+    $scope.fromLot='';
+    $scope.toLot.warehouse='';
+    $scope.toLot.binLocation='';
+
+}
+$scope.toLot.passQuantity='';
+}
+
+
+
+
+
 
 }
 
