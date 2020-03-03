@@ -24,17 +24,19 @@ public interface EquipmentEnergyTypeMapper {
   @Select("SELECT * from equipment_energy_types where id = #{id}")
   EquipmentEnergyType getById(@Param("id") Long id);
 
-  @Insert("INSERT into equipment_energy_types (name,createdby, createddate, modifiedby, modifieddate) " +
+  @Insert("INSERT into equipment_energy_types (code,name,createdby, createddate, modifiedby, modifieddate) " +
       "values " +
-      "(#{name},#{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      "(#{code},#{name},#{createdBy}, NOW(), #{modifiedBy}, NOW())")
   @Options(useGeneratedKeys = true)
   void insert(EquipmentEnergyType equipmentEnergyType);
 
   @Update("UPDATE equipment_energy_types " +
       "set " +
+      "  code = #{code}, " +
       "name = #{name},modifiedBy = #{modifiedBy}, modifieddate = NOW() " +
       "WHERE id = #{id}")
   void update(EquipmentEnergyType equipmentEnergyType);
 
-
+  @Select(" SELECT * FROM equipment_energy_types WHERE lower(code) = lower(#{code})")
+  EquipmentEnergyType getByCode(@Param("code") String code);
 }

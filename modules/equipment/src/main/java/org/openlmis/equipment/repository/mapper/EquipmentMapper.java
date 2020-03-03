@@ -16,6 +16,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Product;
 import org.openlmis.equipment.domain.*;
+import org.openlmis.equipment.dto.EquipmentDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -164,15 +165,15 @@ public interface EquipmentMapper {
       " WHERE p.id = #{programId}")
   List<EquipmentType> getTypesByProgram(@Param("programId") Long programId);
 
-  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, modelId, energyTypeId, equipmentCategoryId) " +
+  @Insert("INSERT into equipments (name, equipmentTypeId, createdBy, createdDate, modifiedBy, modifiedDate, manufacturer, model, modelId, energyTypeId, equipmentCategoryId, code) " +
       "values " +
-      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model}, #{equipmentModel.id}, #{energyTypeId}, #{equipmentCategoryId})")
+      "(#{name}, #{equipmentType.id}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{manufacturer},#{model}, #{equipmentModel.id}, #{energyTypeId}, #{equipmentCategoryId}, #{code})")
   @Options(useGeneratedKeys = true)
   void insert(Equipment equipment);
 
   @Update("UPDATE equipments " +
       "set " +
-      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model}, modelId = #{equipmentModel.id}, energyTypeId = #{energyTypeId}, equipmentCategoryId = #{equipmentCategoryId} " +
+      " name = #{name}, equipmentTypeId = #{equipmentType.id}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), manufacturer = #{manufacturer}, model = #{model},code=#{code}, modelId = #{equipmentModel.id}, energyTypeId = #{energyTypeId}, equipmentCategoryId = #{equipmentCategoryId} " +
       "WHERE id = #{id}")
   void update(Equipment equipment);
 
@@ -194,4 +195,7 @@ public interface EquipmentMapper {
 
   @Select("select * from manual_test_types")
   List<ManualTestTypes> getManualTestTypes();
+
+  @Select(" SELECT * FROM equipments where lower(code) = lower(#{code}) ")
+  EquipmentDTO getByCode(@Param("code") String code);
 }

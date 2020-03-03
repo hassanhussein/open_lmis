@@ -22,23 +22,26 @@ import java.util.List;
 @Component
 public class EquipmentTypeService {
 
-  @Autowired
-  private EquipmentTypeRepository repository;
+    @Autowired
+    private EquipmentTypeRepository repository;
 
-  public List<EquipmentType> getAll(){
-    return repository.getAll();
-  }
-
-  public EquipmentType getTypeById(Long id){
-    return repository.getEquipmentTypeById(id);
-  }
-
-  public void save(EquipmentType type){
-    if(type.getId() == null){
-      repository.insert(type);
-    } else {
-      repository.update(type);
+    public List<EquipmentType> getAll() {
+        return repository.getAll();
     }
-  }
 
+    public EquipmentType getTypeById(Long id) {
+        return repository.getEquipmentTypeById(id);
+    }
+
+    public void save(EquipmentType type) {
+        if (type.getId() == null) {
+            repository.insert(type);
+        } else {
+            repository.update(type);
+        }
+    }
+
+    public EquipmentType getTypeByCode(String code) {
+        return repository.getTypeByCode(code);
+    }
 }

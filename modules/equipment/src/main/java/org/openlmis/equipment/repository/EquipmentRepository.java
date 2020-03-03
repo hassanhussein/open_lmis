@@ -16,6 +16,7 @@ package org.openlmis.equipment.repository;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.*;
+import org.openlmis.equipment.dto.EquipmentDTO;
 import org.openlmis.equipment.repository.mapper.EquipmentMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -80,4 +81,8 @@ public class EquipmentRepository {
   public Equipment getByTypeManufacturerAndModel(Long equipmentTypeId, String manufacturer, Long modelId, String model) {
     return mapper.getByTypeManufacturerAndModel(equipmentTypeId, manufacturer, modelId, model);
   }
+
+    public EquipmentDTO getByCode(String code) {
+    return mapper.getByCode(code);
+    }
 }

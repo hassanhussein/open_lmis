@@ -46,4 +46,8 @@ public class EquipmentModelService {
     public List<EquipmentModel> getByEquipmentTypeId(Long equipmentTypeId){
         return repository.getByEquipmentTypeId(equipmentTypeId);
     }
+
+    public EquipmentModel getByCode(String code) {
+        return repository.getByCode(code);
+    }
 }

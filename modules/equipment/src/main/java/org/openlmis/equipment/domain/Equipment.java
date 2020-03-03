@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
+import org.openlmis.equipment.dto.EquipmentDTO;
 
 import java.util.List;
 
@@ -69,4 +70,10 @@ public class Equipment extends BaseModel {
   private EquipmentModel equipmentModel;
 
   private Long equipmentCategoryId;
+
+  private String code;
+
+  private EquipmentDTO equipmentDTO;
+
+  private Long manufacturerId;
 }

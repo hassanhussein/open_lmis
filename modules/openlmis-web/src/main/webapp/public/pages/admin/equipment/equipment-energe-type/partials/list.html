@@ -32,12 +32,14 @@
             <thead>
             <tr class="gradient-header">
                 <th class="col-row-number">#</th>
+                <th><span>Code</span></th>
                 <th><span>Name</span></th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat="status in energyTypes | filter : query">
                 <td>{{$index + 1}}</td>
+                <td><a href="" ng-click="editEnergyType(status.id)">{{status.code}}</a></td>
                 <td><a href="" ng-click="editEnergyType(status.id)">{{status.name}}</a></td>
             </tr>
             </tbody>

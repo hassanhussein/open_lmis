@@ -21,4 +21,6 @@ public class EquipmentEnergyType extends BaseModel{
 
   private String name;
 
+  private String code;
+
 }

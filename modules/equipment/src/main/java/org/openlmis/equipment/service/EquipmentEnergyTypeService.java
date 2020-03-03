@@ -39,4 +39,7 @@ public class EquipmentEnergyTypeService {
     }
   }
 
+    public EquipmentEnergyType getByCode(String code) {
+    return repository.getByCode(code);
+    }
 }

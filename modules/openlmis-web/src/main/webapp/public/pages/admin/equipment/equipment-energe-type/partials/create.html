@@ -24,6 +24,23 @@
                     <div class="form-cell">
                         <div class="span12">
 
+                            <label for="code">
+                                <span>Code</span>
+                                <span class="label-required"> *</span>
+                            </label>
+
+                            <div class="form-field">
+                                <input ng-model="energyType.code" name="code" id="code" type="text"
+                                       maxlength="30" width="200px" ng-required="true"/>
+                                <span class="field-error" ng-show="energyTypeForm.code.$error.required && showError"
+                                      openlmis-message="missing.value">
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="span12">
+
                             <label for="name">
                                 <span>Name</span>
                                 <span class="label-required"> *</span>

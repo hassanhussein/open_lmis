@@ -40,4 +40,7 @@ public class EquipmentCategoryService {
     public void associateEquipmentTypes(List<EquipmentCategory> categoryList) { repository.associateEquipmentTypes(categoryList);
     }
 
+    public EquipmentCategory getByCode(String code) {
+        return repository.getByCategory(code);
+    }
 }

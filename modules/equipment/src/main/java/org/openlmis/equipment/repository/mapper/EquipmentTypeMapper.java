@@ -12,10 +12,7 @@
 
 package org.openlmis.equipment.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.stereotype.Repository;
 
@@ -41,4 +38,7 @@ public interface EquipmentTypeMapper {
       "name = #{name}, code = #{code}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(),isColdChain = #{isColdChain}, IsBioChemistry = #{isBioChemistry} " +
       " WHERE id = #{id}")
   void update(EquipmentType type);
+
+  @Select("select * from equipment_types where lower(code) = lower(#{code})")
+  EquipmentType getTypeByCode(@Param("code") String code);
 }

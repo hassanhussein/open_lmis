@@ -12,9 +12,13 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.core.domain.Manufacturer;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.ManufactureService;
 import org.openlmis.equipment.domain.*;
+import org.openlmis.equipment.dto.EquipmentDTO;
 import org.openlmis.equipment.repository.ColdChainEquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.openlmis.equipment.repository.EquipmentProductRepository;
@@ -38,6 +42,17 @@ public class EquipmentService {
 
   @Autowired
   ColdChainEquipmentRepository coldChainEquipmentRepository;
+
+  @Autowired
+  ManufactureService manufactureService;
+
+  @Autowired
+  EquipmentEnergyTypeService energyTypeService;
+  @Autowired
+  EquipmentCategoryService categoryService;
+
+  @Autowired
+  private EquipmentModelService equipmentModelService;
 
   public List<Equipment> getAll(){
       return repository.getAll();
@@ -152,5 +167,48 @@ public class EquipmentService {
 
   public List<HashMap<String, Object>>getByModel(Long equipmentTypeId, String manufacturer){
     return coldChainEquipmentRepository.getByModel(equipmentTypeId,manufacturer);
+  }
+
+  public EquipmentDTO getByCode(EquipmentDTO code) {
+    return repository.getByCode(code.getCode());
+  }
+
+  public void uploadEquipment(EquipmentDTO record) {
+
+    EquipmentType type = equipmentTypeService.getTypeByCode(record.getEquipmentType().getCode());
+    Manufacturer manufacturer = manufactureService.getByCode(record.getFacturer());
+    EquipmentEnergyType energyType = energyTypeService.getByCode(record.getEnergyType().getCode());
+    EquipmentModel model = equipmentModelService.getByCode(record.getEquipmentModel().getCode());
+    EquipmentCategory category = categoryService.getByCode(record.getEquipmentCategory().getCode());
+    if(category != null && type != null && manufacturer !=null && energyType != null&& model != null) {
+
+      Equipment e = new Equipment();
+      e.setEquipmentType(type);
+      e.setEquipmentTypeId(type.getId());
+      e.setManufacturer(manufacturer.getName());
+      e.setManufacturerId(manufacturer.getId());
+      e.setModel(model.getName());
+      e.setModelId(model.getId());
+      e.setEnergyTypeId(energyType.getId());
+      e.setEquipmentDTO(record);
+      e.setCreatedBy(1L);
+      e.setModifiedBy(1L);
+      e.setName(record.getName());
+      e.setCode(record.getCode());
+      e.setEnergyType(energyType);
+      e.setEquipmentModel(model);
+      e.setEquipmentCategoryId(category.getId());
+
+      if(record.getId() == null) {
+        repository.insert(e);
+      } else {
+        e.setId(record.getId());
+        repository.update(e);
+      }
+
+    } else {
+       throw new DataException("Empty Manufacturer or Equipment or Energy");
+    }
+
   }
 }

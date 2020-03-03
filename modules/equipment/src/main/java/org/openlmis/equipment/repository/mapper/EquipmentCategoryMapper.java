@@ -48,4 +48,7 @@ public interface EquipmentCategoryMapper {
 
     @Update("update equipment_functional_test_types set  equipmentcategoryid = #{equipmentCategoryId} where id = #{functionalTestTypeId}")
     void associateFunctionalTestTypes(@Param("equipmentCategoryId") Long equipmentCategoryId, @Param("functionalTestTypeId") Long functionalTestTypeId);
+
+    @Select(" SELECT * FROM equipment_category WHERE lower(code) = lower(#{code})")
+    EquipmentCategory getByCode(@Param("code") String code);
 }

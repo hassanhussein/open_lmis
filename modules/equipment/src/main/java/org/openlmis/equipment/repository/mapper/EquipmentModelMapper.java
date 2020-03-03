@@ -45,4 +45,7 @@ public interface EquipmentModelMapper {
 
     @Select("select * from equipment_model where equipmenttypeid = #{equipmentTypeId}")
     List<EquipmentModel> getByEquipmentTypeId(Long equipmentTypeId);
+
+    @Select(" select * from equipment_model where lower(code) = lower(#{code}) ")
+    EquipmentModel getByCode(@Param("code") String code);
 }

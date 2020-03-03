@@ -14,6 +14,8 @@ package org.openlmis.equipment.service;
 import org.openlmis.equipment.domain.ServiceContract;
 import org.openlmis.equipment.dto.ContractDetail;
 import org.openlmis.equipment.repository.ServiceContractRepository;
+import org.openlmis.equipment.repository.mapper.EquipmentMapper;
+import org.openlmis.equipment.repository.mapper.EquipmentTypeMapper;
 import org.openlmis.equipment.repository.mapper.ServiceContractMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,9 @@ public class ServiceContractService {
 
   @Autowired
   private ServiceContractMapper mapper;
+
+  @Autowired
+  private EquipmentMapper equipmentMapper;
 
   public List<ServiceContract> getAll(){
     return repository.getAll();
@@ -66,6 +71,7 @@ public class ServiceContractService {
       mapper.deleteEquipments(contract.getId());
       for(ContractDetail detail: contract.getEquipments()){
         if(detail.getIsActive()){
+
           mapper.insertEquipment(contract.getId(), detail.getId());
         }
       }
