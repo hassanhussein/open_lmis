@@ -187,6 +187,7 @@
             <tbody>
 
                 <tr ng-repeat="movement in movementQueue">
+                    <td ng-hide="true" ng-bind="movement.selected" ng-value="true"></td>
                     <td ng-bind="movement.lotNumber"></td>
                     <td ng-bind="movement.quantity"></td>
                     <td ng-bind="movement.fromWarehouse"></td>
@@ -208,7 +209,7 @@
         <div class="form-cell button-row">
             <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" value="Clear"
                    ng-click="cancel()"/>
-            <input  type="button" class="btn btn-primary pull-right"
+            <input  type="button" class="btn btn-primary pull-right" ng-click="generateMovement(movementQueue)"
                     value="Generate Movement" style="margin-left:10px;margin-right:10px"/>
         </div>
         <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>

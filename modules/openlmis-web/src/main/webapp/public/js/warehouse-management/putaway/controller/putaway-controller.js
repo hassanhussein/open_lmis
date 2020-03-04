@@ -32,12 +32,17 @@ $scope.quantityError=true;
 
 $scope.movementQueue.push(
     {
+
+    inspectionId:$scope.lineItem.inspectionId,
+    productId:$scope.lineItem.product.id,
     lotNumber:$scope.fromLot.lotNumber,
     lotId:$scope.fromLot.id,
     quantity:$scope.toLot.passQuantity,
     fromWarehouse:$scope.fromLot.location.house.name,
+    fromWarehouseId:$scope.fromLot.location.house.id,
     fromBinLocation:$scope.fromLot.location.code,
     toWarehouse:$scope.toLot.warehouse.name,
+    toWarehouseId:$scope.toLot.warehouse.id,
     toBinLocation:$scope.toLot.binLocation.code,
     toBinLocationId:$scope.toLot.binLocation.id
 
@@ -57,7 +62,11 @@ $scope.toLot.passQuantity='';
 }
 
 
+$scope.generateMovement = function(movement){
+console.log('Reached here');
+console.log(JSON.stringify(movement));
 
+}
 
 
 
