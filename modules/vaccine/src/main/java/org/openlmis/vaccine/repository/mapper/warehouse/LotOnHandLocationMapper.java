@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
+import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -34,4 +35,18 @@ public interface LotOnHandLocationMapper {
 
     @Delete(" DELETE FROM putaway_line_items WHERE inspectionId = #{inspectionId} ")
     void deleteExistingPutAway(@Param("inspectionId") Long inspectionId);
+
+    @Delete(" DELETE FROM lot_on_hand_locations WHERE lotOnHandId = #{id} and locationId=#{toBinLocationId} ")
+    void deleteExistingByLot(@Param("id") Long id,@Param("toBinLocationId") Long toBinLocationId);
+
+    @Insert("INSERT INTO public.stock_card_locations(\n" +
+            "             stockCardId, locationId, createdBy, createdDate, modifiedBy, \n" +
+            "            modifiedDate)\n" +
+            "    VALUES ( #{stockCardId}, #{locationId}, #{createdBy}, NOW(), #{modifiedBy}, \n" +
+            "            NOW());")
+    Integer insertLocationsWIthoutLots(StockCardLocationDTO stockCard);
+
+    @Delete(" DELETE FROM stock_card_locations WHERE stockCardId = #{id} and locationId=#{toBinLocationId} ")
+    void deleteExistingStockCardLocation(@Param("id") Long id,@Param("toBinLocationId") Long toBinLocationId);
+
 }

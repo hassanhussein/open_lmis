@@ -91,4 +91,8 @@ public class StockCardRepository {
     public void updateTotalStockOnHand(Long id, Long total) {
        mapper.updateTotalStockOnHand(id,total);
     }
+
+  public Integer insertStockCard(StockCard stockCard) {
+    return mapper.insert(stockCard);
+  }
 }

@@ -38,6 +38,7 @@ public class StockEvent {
   private Lot lot;
   private String reasonName;
   private String referenceNumber;
+  private Long toBinLocationId;
 
   private Map<String, String> customProps;
 

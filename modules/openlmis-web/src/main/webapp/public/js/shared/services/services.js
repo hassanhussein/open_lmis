@@ -760,3 +760,7 @@ services.factory('SearchPutAway', function ($resource) {
 services.factory('GetWarehouseLocations', function ($resource) {
     return $resource('/rest-api/warehouse/house/locations', {}, {});
 });
+
+services.factory('SavePutAwaDetails', function ($resource) {
+    return $resource('/rest-api/lotLocation/inspection/put-away', {}, {});
+});

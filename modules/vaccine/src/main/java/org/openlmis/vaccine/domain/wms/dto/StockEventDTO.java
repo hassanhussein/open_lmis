@@ -6,5 +6,4 @@ import org.openlmis.stockmanagement.dto.StockEvent;
 @Data
 public class StockEventDTO extends StockEvent{
 
-
 }

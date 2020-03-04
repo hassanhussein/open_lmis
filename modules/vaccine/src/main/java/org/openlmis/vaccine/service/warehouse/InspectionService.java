@@ -134,4 +134,8 @@ public class InspectionService {
         }
         return repository.searchPutAwayBy(searchParam, column, pagination);
     }
+
+    public void updateStatus(String status, Long inspectionId) {
+        repository.updateStatus(status,inspectionId );
+    }
 }
