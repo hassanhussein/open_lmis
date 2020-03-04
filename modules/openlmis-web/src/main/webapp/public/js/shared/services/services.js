@@ -761,6 +761,8 @@ services.factory('GetWarehouseLocations', function ($resource) {
     return $resource('/rest-api/warehouse/house/locations', {}, {});
 });
 
-services.factory('SavePutAwayDetails', function ($resource) {
-    return $resource('/rest-api/warehouse/inspection/put-away', {}, {post:{method:'POST'}});
+
+services.factory('SavePutAwaDetails', function ($resource) {
+    return $resource('/rest-api/lotLocation/inspection/put-away', {}, {});
+
 });

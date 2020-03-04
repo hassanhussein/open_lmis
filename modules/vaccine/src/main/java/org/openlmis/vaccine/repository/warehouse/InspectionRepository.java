@@ -102,4 +102,8 @@ public class InspectionRepository {
     public List<PutAwayDTO> searchedAllPutAway() {
        return mapper.searchedAllPutAway();
     }
+
+    public void updateStatus(String status, Long inspectionId) {
+         mapper.updateStatus(status,inspectionId);
+    }
 }

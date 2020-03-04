@@ -255,6 +255,8 @@ public interface InspectionMapper {
             "                    JOIN warehouses house On loc.warehouseId = house.id" +
             "                     where I.STATUS = 'IN-PUTAWAY' ")
     List<PutAwayDTO> searchedAllPutAway();
+    @Update(" update inspections set status = #{status} WHERE id=#{id} ")
+    void updateStatus(@Param("status") String status,@Param("id") Long inspectionId);
 
     class SelectInspection {
 

@@ -435,4 +435,8 @@ public class FacilityService {
     public List<FacilityGeoLocationDTO> getAllGeoLocationFacilities(){
         return facilityRepository.getAllGeoLocationFacilities();
     }
+
+    public List<Facility> getAllByFacilityTypeCode(String code){
+        return facilityRepository.getAllByFacilityTypeCode(code);
+    }
 }

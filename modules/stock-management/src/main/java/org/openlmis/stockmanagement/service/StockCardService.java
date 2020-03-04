@@ -84,6 +84,10 @@ public class StockCardService {
     return lotOnHand;
   }
 
+  public LotOnHand getLotOnHandByStockCardAndLot(Long stockCardId, Long lotId) {
+
+    return lotRepository.getLotOnHandByStockCardAndLot(stockCardId, lotId);
+  }
 
 
   public LotOnHand getLotOnHand(Long lotId, Lot lotObj, String productCode, StockCard card, StringBuilder str) {
@@ -146,5 +150,17 @@ public class StockCardService {
 
   public void updateTotalStockOnHand(Long id, Long total) {
     repository.updateTotalStockOnHand(id,total);
+  }
+
+  public StockCard getStockCardByFacilityAndProduct(long facilityId, String productCode) {
+    return repository.getStockCardByFacilityAndProduct(facilityId, productCode);
+  }
+
+  public Integer insertStockCard(StockCard stockCard) {
+    return repository.insertStockCard(stockCard);
+  }
+
+  public void updateStockCard(StockCard stockCard) {
+    repository.updateStockCard(stockCard);
   }
 }
