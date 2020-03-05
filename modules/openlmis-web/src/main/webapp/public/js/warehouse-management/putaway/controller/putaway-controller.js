@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function PutawayController($scope, $location,GetInspectionById,putaway,GetWarehouseLocations) {
+function PutawayController($scope, $location,GetInspectionById,putaway,GetWarehouseLocations,SavePutAwayDetails) {
 
  GetWarehouseLocations.get(function(data) {
                console.log(data.binLocations);
@@ -63,10 +63,29 @@ $scope.toLot.passQuantity='';
 
 
 $scope.generateMovement = function(movement){
-console.log('Reached here');
+ SavePutAwayDetails.save({}, $scope.movementQueue, success,error)
 console.log(JSON.stringify(movement));
 
 };
+
+
+
+  var success = function (data) {
+    $scope.error = "";
+    $scope.$parent.message = data.success;
+    $scope.$parent.messageToDisplay = "Lots Moved Successfully";
+    $scope.$parent.messageFlag = true;
+    console.log('done')
+    $scope.showError = false;
+    $location.path('');
+  };
+
+  var error = function (data) {
+    $scope.$parent.message = "";
+     console.log(data);
+    $scope.error = data.data.error;
+    $scope.showError = true;
+  };
 
 
 
