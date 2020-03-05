@@ -51,7 +51,7 @@ $scope.movementQueue.push(
 //deduct the quantity
 $scope.fromLot.passQuantity-=parseInt($scope.toLot.passQuantity,10);
 //if quantity == 0 remove that lot from list
-if($scope.fromLot.passQuantity==0){
+if($scope.fromLot.passQuantity===0){
     $scope.lineItem.lots.splice($scope.lineItem.lots.indexOf($scope.fromLot),1);
     $scope.fromLot='';
     $scope.toLot.warehouse='';
@@ -59,14 +59,14 @@ if($scope.fromLot.passQuantity==0){
 
 }
 $scope.toLot.passQuantity='';
-}
+};
 
 
 $scope.generateMovement = function(movement){
 console.log('Reached here');
 console.log(JSON.stringify(movement));
 
-}
+};
 
 
 
@@ -85,7 +85,7 @@ PutawayController.resolve = {
 
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
-      console.log(data.inspection)
+      console.log(data.inspection);
         deferred.resolve(data.inspection);
       }, {});
     }, 100);
