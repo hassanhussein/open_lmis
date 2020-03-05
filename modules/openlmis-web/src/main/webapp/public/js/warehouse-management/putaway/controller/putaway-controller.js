@@ -48,6 +48,9 @@ $scope.movementQueue.push(
 
 }
 );
+
+console.log($scope.movementQueue);
+
 //deduct the quantity
 $scope.fromLot.passQuantity-=parseInt($scope.toLot.passQuantity,10);
 //if quantity == 0 remove that lot from list
