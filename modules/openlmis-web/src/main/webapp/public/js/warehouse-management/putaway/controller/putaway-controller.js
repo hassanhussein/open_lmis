@@ -63,8 +63,6 @@ $scope.toLot.passQuantity='';
 
 
 $scope.generateMovement = function(movement){
-console.log('Reached here');
-
  SavePutAwayDetails.save({}, $scope.movementQueue, success,error)
 console.log(JSON.stringify(movement));
 
@@ -75,7 +73,7 @@ console.log(JSON.stringify(movement));
   var success = function (data) {
     $scope.error = "";
     $scope.$parent.message = data.success;
-    $scope.$parent.messageToDisplay = "Lots Moves Successfully";
+    $scope.$parent.messageToDisplay = "Lots Moved Successfully";
     $scope.$parent.messageFlag = true;
     console.log('done')
     $scope.showError = false;
