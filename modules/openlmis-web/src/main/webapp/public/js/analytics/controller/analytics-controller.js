@@ -62,6 +62,8 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 $rootScope.loadCommoditiesComparison(params);
 
                 $rootScope.loadLatestReportedStockStatus(params);
+              //  $rootScope.loadStockImbalance(params);
+                $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
             });
 
         }
