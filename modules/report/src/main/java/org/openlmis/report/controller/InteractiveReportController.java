@@ -1139,4 +1139,44 @@ public class InteractiveReportController extends BaseController {
         return pages;
     }
 
+
+
+    @RequestMapping(value = "/reportdata/aggregateStockStatusReport/amc", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
+    public Pages getAggregateStockStatusReportAMC(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                  @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                  HttpServletRequest request
+
+    ) {
+
+        //String key = ()?'status':'status_aggregate';
+
+        Report report = reportManager.getReportByKey("amc_status");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<AggregateStockStatusReport> aggregateStockStatusReportList =
+                (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, aggregateStockStatusReportList);
+    }
+
+
+    @RequestMapping(value = "/reportdata/aggregateStockStatusReport/amc_disaggregated", method = GET, headers = BaseController.ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REDESIGNED_STOCK_STATUS_REPORT')")
+    public Pages getAggregateStockStatusReportAMCDisaggregated(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                               @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                               HttpServletRequest request
+
+    ) {
+
+        //String key = ()?'status':'status_aggregate';
+
+        Report report = reportManager.getReportByKey("amc_status_disaggregated");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<AggregateStockStatusReport> aggregateStockStatusReportList =
+                (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, aggregateStockStatusReportList);
+    }
+
+
 }

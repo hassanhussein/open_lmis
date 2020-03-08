@@ -58,7 +58,7 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
   $scope.OnFilterChanged = function () {
 
     };
-
+  $scope.showConsumption = false;
   $scope.showIndicators = false;
   $scope.tabToggle = function(data){
 
@@ -68,10 +68,19 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
     $scope.searchReport();
 
   }else if(data === 'soh'){
+  console.log($scope.filter.vewConsumption);
       $scope.showIndicators = false;
       $scope.searchReport();
   }
 
+  };
+$scope.showConsumption = false;
+
+  $scope.searchConsumption = function(){
+     console.log($scope.filter.vewConsumption);
+        $scope.showIndicators = false;
+           $scope.showConsumption= $scope.filter.vewConsumption;
+                 $scope.searchReport();
   };
 
 
@@ -80,6 +89,7 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
        var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
         var selectDisggregate = $scope.filter.disaggregated;
         var showIndicators = $scope.showIndicators;
+         var showConsumption = $scope.showConsumption;
         $scope.stockStatuses =  $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
         AggregateStockStatusReport.get(allParams, function (data) {
@@ -102,7 +112,7 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
                 //Adding new functions to pivot the data
 
-                    var output = getPivotData(data.pages.rows, "periodName", "code", selectDisggregate,showIndicators);
+                    var output = getPivotData(data.pages.rows, "periodName", "code", selectDisggregate,showIndicators,showConsumption);
                      $scope.data = output.pivotData;
 
                      $scope.periods = output.periods;
@@ -138,7 +148,7 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
       };
 
-    function getPivotData(dataArray, colName, dataIndex, disaggregated,showIndicators) {
+    function getPivotData(dataArray, colName, dataIndex, disaggregated,showIndicators,showConsumption) {
 
         var newCols = [];
         var pivotData = [];
@@ -174,11 +184,15 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
 
                 pivotData.push(pivotRow);
             }
-            if(!showIndicators) {
+            if(!showIndicators && !showConsumption) {
 
             pivotRow[dataArray[i][colName]] = dataArray[i].soh;
 
-            }else {
+            }else if(!showIndicators && showConsumption){
+
+            pivotRow[dataArray[i][colName]] = dataArray[i].amc;
+
+            } else  {
 
             pivotRow[dataArray[i][colName]] = dataArray[i].mos;
 
@@ -194,9 +208,12 @@ function AggregateStockStatusReportFunction($window,$scope, AggregateStockStatus
     $scope.filter.pdformat = 1;
     var params = jQuery.param($scope.getSanitizedParameter());
      var url = '/reports/download/status';
-    if($scope.showIndicators !== true){
+    if($scope.showIndicators !== true && !$scope.showConsumption){
          url = url + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + params;
          console.log(url);
+    }else if($scope.showIndicators !== true && $scope.showConsumption){
+         var url2 = '/reports/download/';
+         url = url2 + (($scope.filter.disaggregated === true) ? 'amc_status_disaggregated' :'amc_status')+'/' + type + '?' + params;
     }else{
          url = url + (($scope.filter.disaggregated === true) ? '_mos_disaggregated' :'_mos')+'/' + type + '?' + params;
     }

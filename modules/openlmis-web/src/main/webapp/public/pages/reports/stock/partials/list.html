@@ -208,7 +208,7 @@
             <ul class="nav nav-tabs">
                 <li class="active" ><a href="#soh" data-toggle="tab" ng-click="tabToggle('soh')"><span openlmis-message="label.stock.on.hand"></span></a></li>
                 <li><a href="#mos" data-toggle="tab"><span openlmis-message="label.mos" ng-click="tabToggle('mos')"></span></a></li>
-                <li><a href="#graph" data-toggle="tab" ng-click="tabToggle('graphs')"  ng-show="true"><span openlmis-message="label.consumption"></span></a></li>
+                <li><a href="#graph" data-toggle="tab" ng-click="tabToggle('graphs')"  ng-show="false"><span openlmis-message="label.consumption"></span></a></li>
             </ul>
 
 
@@ -237,6 +237,16 @@
                         </span><span  style="color:#078f97; float:left;margin:10px 10px 0 0; padding:5px 10px display:block;" openlmis-message="label.report.view.disaggregated"></span>
 
                         </strong>
+
+                        <strong ng-show="datarows.length > 0 && !showIndicators">
+
+                            <span style=" float:left;margin:10px 10px 0 0; padding:5px 10px display:block;margin-left:10px">
+                         <input class="checkbox" type="checkbox" ng-model="filter.vewConsumption"
+                                ng-change="searchConsumption()"/>
+                        </span><span  style="color:#078f97; float:left;margin:10px 10px 0 0; padding:5px 10px display:block;">View Consumption</span>
+
+                        </strong>
+
                     </div>
                     <br/>
 
@@ -269,7 +279,9 @@
 
                                 <th openlmis-message="label.code" style="text-align: left"></th>
                                 <th openlmis-message="label.product.name" style="text-align: left"></th>
-                                <th ng-repeat="period in periods" openlmis-message="header.status.soh"
+                                <th ng-if="!filter.vewConsumption" ng-repeat="period in periods" openlmis-message="header.status.soh"
+                                    class="p-column"></th>
+                                <th ng-if="filter.vewConsumption" ng-repeat="period in periods" openlmis-message="menu.report.consumption"
                                     class="p-column"></th>
                             </tr>
                             </thead>
