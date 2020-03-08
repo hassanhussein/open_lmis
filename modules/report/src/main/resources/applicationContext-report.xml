@@ -617,7 +617,7 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="monthly_stock"/>
-                    <property name="template" value="daily-consumption.jasper"/>
+                    <property name="template" value="monthly-stock-status.jasper"/>
                     <property name="reportDataProvider" ref="monthlyStockStatusReportDataProvider"/>
                     <property name="id" value="monthly_stock"/>
                     <property name="name" value="Monthly Stock Status Report"/>
@@ -751,6 +751,26 @@
                     <property name="id" value="quantification_extract_report"/>
                     <property name="name" value="Quantification Extract Report"/>
                     <property name="title" value="report.title.quantification.extract.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="amc_status"/>
+                    <property name="template" value="facility_amc_pivot.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
+                    <property name="id" value="RP_aggregate_stock_status_report"/>
+                    <property name="name" value="Aggregate Stock Status Report"/>
+                    <property name="title" value="report.title.monthly.stock.status.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="amc_status_disaggregated"/>
+                    <property name="template" value="facility_amc__pivot_disaggregated.jasper"/>
+                    <property name="reportDataProvider" ref="aggregateStockStatusReportDataProvider"/>
+                    <property name="id" value="RP_disaggregated Stock Status Report"/>
+                    <property name="name" value="RP_disaggregated Stock Status Report"/>
+                    <property name="title" value="report.title.monthly.stock.status.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
             </list>

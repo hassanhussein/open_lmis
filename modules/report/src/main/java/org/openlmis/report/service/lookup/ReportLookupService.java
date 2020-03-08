@@ -781,7 +781,8 @@ public class ReportLookupService {
   }
 
   public Pagination getPagination(Integer page) {
-    return new Pagination(page, pageSize);
+    int pageSize2 = 3000;
+    return new Pagination(page, pageSize2);
   }
 
 }

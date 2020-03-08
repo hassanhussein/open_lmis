@@ -1,4 +1,4 @@
-function MonthlyStockStatusController($scope,MonthlyStockStatus, $timeout) {
+function MonthlyStockStatusController($scope,$window,MonthlyStockStatus, $timeout) {
 
     $scope.pages = 1;
     $scope.pageSize = 10;

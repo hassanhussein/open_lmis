@@ -24,7 +24,7 @@ public class AggregateStockStatusReportQueryBuilder {
         SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
         SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
         SELECT(" CASE WHEN COALESCE(SUM(li.amc), 0) = 0 THEN 0::numeric ELSE round((SUM(li.stockInhand::double precision) / SUM(li.amc::double precision))::numeric, 1) END AS mos");
-
+        SELECT("sum(li.amc) amc");
         FROM("requisition_line_items li");
         INNER_JOIN("requisitions r on r.id = li.rnrid");
         INNER_JOIN("facilities f on r.facilityId = f.id ");
