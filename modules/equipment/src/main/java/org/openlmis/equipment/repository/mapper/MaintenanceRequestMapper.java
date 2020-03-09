@@ -40,7 +40,7 @@ public interface MaintenanceRequestMapper {
   @Select("select r.*, e.name as equipmentName, f.name as facilityName " +
       "from " +
       "  equipment_maintenance_requests r " +
-      "  join facility_program_equipments i on i.id = r.inventoryId " +
+      "  join equipment_INVENTORIES i on i.id = r.inventoryId " +
       "  join equipments e on e.id = i.equipmentId " +
       "  join facilities f on f.id = r.facilityId " +
       " where " +
