@@ -124,9 +124,13 @@
                 <thead>
                 <tr class="gradient-header">
                     <th class="col-row-number">#</th>
+                    <th openlmis-message="label.equipment.region"></th>
+                    <th openlmis-message="label.equipment.district"></th>
+                    <th openlmis-message="label.equipment.facility"></th>
                     <th openlmis-message="label.equipment.equipment"></th>
                     <th openlmis-message="label.equipment.manufacturer"></th>
                     <th openlmis-message="label.equipment.model"></th>
+                    <th openlmis-message="label.equipment.status"></th>
                     <th openlmis-message="label.equipment.source.of.fund"></th>
                     <th openlmis-message="label.equipment.actions"></th>
                 </tr>
@@ -134,9 +138,22 @@
                 <tbody>
                 <tr ng-repeat="item in inventory">
                     <td>{{$index + 1}}</td>
+                    <td>{{item.facility.geographicZone.parent.name}}</td>
+                    <td>{{item.facility.geographicZone.name}}</td>
+                    <td>{{item.facility.name}}</td>
                     <td><a ng-href="#/edit/{{selectedType}}/{{item.programId}}/{{selectedEquipmentType.id}}/{{item.id}}/{{currentPage}}">{{item.equipment.name}}</a></td>
                     <td>{{item.equipment.manufacturer}}</td>
                     <td>{{item.equipment.model}}</td>
+                    <td>
+                        <select ui-select2 ng-model="item.operationalStatusId" ng-change="updateStatus(item)">
+                            <option value="{{status.id}}" ng-repeat="status in operationalStatusList | orderBy: 'displayOrder'"
+                                    ng-selected="status.id == item.operationalStatusId">{{status.name}}
+                            </option>
+                        </select>
+                        <br/>
+                        <span class="fadeout" ng-show="item.showSuccess == true"
+                              openlmis-message="label.equipment.inventory.status.saved"></span>
+                    </td>
                     <td>{{item.sourceOfFund}}</td>
                     <td>
                         <span class="btn-mini" ng-show="!item.isActive" openlmis-message="label.equipment.status.decommissioned"></span>

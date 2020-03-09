@@ -38,7 +38,6 @@ function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesLis
 
     if(!isUndefined(data.equipments) && data.equipments.length > 0) {
       $scope.equipments = data.equipments;
-      console.log($scope.equipments);
 
       //$scope.manufacturerList = _.uniq(_.pluck($scope.equipments, 'manufacturer'));
 
@@ -47,10 +46,17 @@ function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesLis
 
  };
 
+  $scope.$watch("inventory.equipment.id", function(data){
+
+  console.log('updated');
+
+  });
 
  $scope.loadManufacturerByEquipment = function(equipment, equipments){
-
+   console.log('LOaded');
    var manufacturer = _.where(equipments, {id:parseInt(equipment,10)});
+
+
 
    $scope.inventory.equipment.manufacturer = manufacturer[0].manufacturer;
    $scope.inventory.equipment.model = manufacturer[0].model;
@@ -161,8 +167,9 @@ function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesLis
 //       $scope.selected.designation=data.inventory.equipment.designation.id;
 //      $scope.updateManufacturer();
 
-      $scope.inventory = data.inventory;
 
+      $scope.inventory = data.inventory;
+      console.log($scope.inventory);
       if ($routeParams.from === "0") {
         // Edit inventory at my facility, show facility as readonly
         // Facility is already set, so just set the display name
@@ -275,7 +282,10 @@ GetByModel.get({'id':model, 'manufacturer':manufacturer}, function(data){
         } else {
           $scope.inventory.equipment.equipmentTypeName = "equipment";
         }
+      }else{
+         $scope.inventory.equipment.equipmentTypeName = "equipment";
       }
+
 
 
 

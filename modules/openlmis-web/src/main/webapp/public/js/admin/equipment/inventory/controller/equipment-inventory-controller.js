@@ -156,6 +156,8 @@ function EquipmentInventoryController($scope,NumberOfYears,DeleteEquipmentInvent
     }
   };
   $scope.saveModal = function () {
+
+   console.log($scope.modalItem);
     $scope.modalError = '';
     if (!$scope.notFunctionalForm.$invalid) {
       SaveEquipmentInventory.save($scope.modalItem, function () {
@@ -241,8 +243,9 @@ function EquipmentInventoryController($scope,NumberOfYears,DeleteEquipmentInvent
   $scope.loadPrograms(true);
 
   EquipmentOperationalStatus.get(function(data){
-    $scope.operationalStatusList = _.where(data.status, {category: 'CCE'});
-    $scope.notFunctionalStatusList = _.where(data.status, {category: 'CCE Not Functional'});
+   console.log(data);
+    $scope.operationalStatusList = _.where(data.status, {category: 'LAB'});
+    $scope.notFunctionalStatusList = _.where(data.status, {name: 'Not Functional'});
   });
 
   $scope.deleteInventory=function(id){

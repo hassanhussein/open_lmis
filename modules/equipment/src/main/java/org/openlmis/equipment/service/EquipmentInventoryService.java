@@ -100,7 +100,7 @@ public class EquipmentInventoryService {
       //equipment = existingEquipment == null ? equipment : existingEquipment;
 
       equipment.setModifiedBy(inventory.getModifiedBy());
-      equipment.setModel(null);
+      //equipment.setModel(null);
       if (existingEquipment == null) {
         equipment.setCreatedBy(inventory.getCreatedBy());
         equipmentRepository.insert(equipment);
