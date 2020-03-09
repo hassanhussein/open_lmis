@@ -93,8 +93,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
 
                              $rootScope.loadStockOutRateTrendForTracer(params, e.point.name);
 
-                              var nationalTrendData = groupDataInQuarter(stockOutRateTrendForTracerData, e.point.name);
-
+                             var trendData = getTrendData(stockOutRateTrendForTracerData, e.point.name);
 
                             var regions = _.uniq(_.pluck(data, 'drilldown'));
                             drillDownIndex = regions.indexOf(e.point.name);
@@ -130,6 +129,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                                 }
                             });
                             getLatestStockAvailabilityDrillDownSummary(districtValues, params, e.point.name);
+                            chart.hideLoading();
 
                             chart.addSeriesAsDrilldown(e.point, {
                                 name: e.point.name,
@@ -140,10 +140,9 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                                 }
                             });
 
-                            $scope.stockAvailabilityTrend('stockAvailabilityTrend', nationalTrendData.region);
-                           var imbalanceData = getImbalanceData(region_data);
+                            $scope.stockAvailabilityTrend('stockAvailabilityTrend', trendData.avaibilityRate);
+                            var imbalanceData = getImbalanceData(region_data);
                             $scope.stockImbalanceChart('stockImbalanceByLocation', imbalanceData.imbalance);
-                             chart.hideLoading();
                         }
                         this.setTitle(null, {
                             text: e.point.name
@@ -159,8 +158,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                       var imbalanceData = getImbalanceData(districtValues);
                       $scope.stockImbalanceChart('stockImbalanceByLocation', imbalanceData.imbalance);
 
-                        var nationalTrendData = groupDataInQuarter(stockOutRateTrendForTracerData, "Tz");
-                        $scope.stockAvailabilityTrend('stockAvailabilityTrend', nationalTrendData.region);
+                        var trendData = getTrendData(stockOutRateTrendForTracerData, "Tz");
+                        $scope.stockAvailabilityTrend('stockAvailabilityTrend', trendData.avaibilityRate);
                     }
                 }
             },
@@ -292,37 +291,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
         return data;
     }
 
-    function groupDataInQuarter(data, gzLevel) {
-
-        var first_quater = {
-            startDate: new Date(new Date().getFullYear() + "-01-01"),
-            endDate: new Date(new Date().getFullYear() + "-03-31"),
-            name: "March"
-
-        };
-        var second_quater = {
-            startDate: new Date(new Date().getFullYear() + "-04-01"),
-            endDate: new Date(new Date().getFullYear() + "-06-31"),
-            name: "June"
-        };
-        var third_quater = {
-            startDate: new Date(new Date().getFullYear() + "-07-01"),
-            endDate: new Date(new Date().getFullYear() + "-09-31"),
-            name: "Sept"
-        };
-        var fourth_quater = {
-            startDate: new Date(new Date().getFullYear() + "-10-01"),
-            endDate: new Date(new Date().getFullYear() + "-12-31"),
-            name: "Dec"
-        };
-
-        var allQuater = [];
-        allQuater.push(first_quater);
-        allQuater.push(second_quater);
-        allQuater.push(third_quater);
-        allQuater.push(fourth_quater);
-
-console.log(allQuater);
+    function getTrendData(data, gzLevel) {
 
 if(gzLevel != "Tz")
 {
@@ -333,45 +302,46 @@ if(gzLevel != "Tz")
 }
 
 
-        var reg_arry = [];
+       var trend_arry = [];
 
-        for (var x in allQuater) {
+       var reportedmonth = _.uniq(_.pluck(data, 'reportedmonth'));
+        for (var x in reportedmonth) {
 
-         //   var sof_obj = data.filter(function(a) {
-                aDate = new Date(data.reported);
-                var sof_obj = aDate >= allQuater[x].startDate && aDate <= allQuater[x].endDate;
-         //   });
+       var sof_obj = _.where(data, {
+                    reportedmonth: reportedmonth[x]
+                });
 
-            var percentage = get_sum(sof_obj, 'percentage');
+            var percentage = get_sum(sof_obj, 'availabilitypercentage');
             var reg_obj;
             if (sof_obj.length > 0) {
                  reg_obj = {
-                    product: sof_obj[0].product,
-                    reported: allQuater[x].name,
-                    percentage: Math.round(100 - (percentage/sof_obj.length))
+                    code: reportedmonth[x],
+                    value: Math.round(percentage/sof_obj.length)
                 };
             } else {
                   reg_obj = {
-                    product: "Tracer",
-                    reported: allQuater[x].name,
-                    total_stockoutincidence: 0,
-                    total_incidence: 0,
-                    percentage: 0
+                    code: reportedmonth[x],
+                    value: 0
                 };
             }
-            reg_arry.push(reg_obj);
+            trend_arry.push(reg_obj);
         }
 
-        data.region = reg_arry;
-        data.region.sort(comp);
+      trend_arry =  sortByMonth(trend_arry);
+
+        data.avaibilityRate = trend_arry;
 
         return data;
 
     }
 
+    function sortByMonth(arr) {
+      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      arr.sort(function(a, b){
+          return months.indexOf(a.code) - months.indexOf(b.code);
+      });
 
-    function comp(a, b) {
-        return new Date(a.reported).getTime() - new Date(b.reported).getTime();
+      return arr;
     }
 
     function prepareValues(data, x, ind) {
@@ -540,31 +510,24 @@ var total_incidence = get_sum(data, 'totalincidence');
 
         params.year = new Date().getFullYear();
 
-     //  params.year = 2017;
-
         if (params.indicator == 'allTracerProducts') {
             GetStockOutRateTrendOfTracerProductsData.get(params).then(function(data) {
-
-            stockOutRateTrendForTracerData = data;
-                var nationalTrendData = groupDataInQuarter(data, gzLevel);
-
-                $scope.stockAvailabilityTrend('stockAvailabilityTrend', nationalTrendData.region);
+                stockOutRateTrendForTracerData = data;
+                var trendData = getTrendData(data, gzLevel);
+                $scope.stockAvailabilityTrend('stockAvailabilityTrend', trendData.avaibilityRate);
             });
         } else if (params.indicator == 'productFilter') {
             GetStockOutRateTrendOfProductsData.get(params).then(function(data) {
-            stockOutRateTrendForTracerData = data;
-                var nationalTrendData = groupDataInQuarter(data, gzLevel);
-
-                $scope.stockAvailabilityTrend('stockAvailabilityTrend', nationalTrendData.region);
+                stockOutRateTrendForTracerData = data;
+                var trendData = getTrendData(data, gzLevel);
+                $scope.stockAvailabilityTrend('stockAvailabilityTrend', trendData.avaibilityRate);
             });
         }
     };
 
-    $scope.stockAvailabilityTrend = function(chartTypeId, nationalTrendData) {
+    $scope.stockAvailabilityTrend = function(chartTypeId, trendData) {
+
         Highcharts.chart(chartTypeId, {
-            chart: {
-                type: 'area'
-            },
             credits: {
                 enabled: false
             },
@@ -572,12 +535,14 @@ var total_incidence = get_sum(data, 'totalincidence');
                 text: 'Stock Availability Trend'
             },
             xAxis: {
-                categories: ['March', 'June', 'Sept', 'Dec'],
+                categories: _.pluck(trendData, 'code'),
                 title: {
                     enabled: false
                 }
             },
             yAxis: {
+            minValue: 0,
+            maxValue:100,
                 title: {
                     text: 'Stock Availability'
                 },
@@ -605,7 +570,7 @@ var total_incidence = get_sum(data, 'totalincidence');
             },
             series: [{
                 name: '% of Stock Availability',
-                data: _.pluck(nationalTrendData, 'percentage')
+                data: _.pluck(trendData, 'value')
             }]
         });
     };
