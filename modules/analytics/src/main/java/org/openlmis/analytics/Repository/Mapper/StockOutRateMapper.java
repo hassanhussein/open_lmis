@@ -59,6 +59,25 @@ public interface  StockOutRateMapper {
                                                           @Param("product") Long product);
 
 
+    @Select("  SELECT  district_name,region_name, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockoutIncidence, count(*) as totalIncidence, \n" +
+            " ROUND(100.0 * (SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) )/ COUNT(product),2) AS percentage, a.processing_period_name, pp.enddate as reported \n" +
+            "FROM ( SELECT * from mv_stock_imbalance_by_facility_report ) a\n" +
+            " join processing_periods pp on pp.id=a.periodid\n" +
+            "where extract(year from pp.enddate) = #{year} and tracer=true \n" +
+            "  group by district_name,region_name, a.processing_period_name, pp.enddate order by district_name ")
+    List<HashMap<String,Object>> getStockOutRateTrendOfTracerProducts(@Param("year") Long year);
+
+
+    @Select("   SELECT  district_name,region_name, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockoutIncidence, count(*) as totalIncidence, \n" +
+            " ROUND(100.0 * (SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) )/ COUNT(product),2) AS percentage, a.processing_period_name, pp.enddate as reported \n" +
+            "FROM ( SELECT * from mv_stock_imbalance_by_facility_report ) a\n" +
+            " join processing_periods pp on pp.id=a.periodid\n" +
+            " join products p on p.code=a.productcode\n" +
+            "where extract(year from pp.enddate) = #{year} and p.id =#{product} \n" +
+            "  group by district_name,region_name, a.processing_period_name, pp.enddate order by district_name  ")
+    List<HashMap<String,Object>> getStockOutRateTrendOfProducts(@Param("year") Long year, @Param("product") Long product);
+
+
 
     @Select("SELECT  a.product, a.region_name,a.district_name,\n" +
             "SUM(a.stockinhand) as stockinhand,\n" +
@@ -83,20 +102,57 @@ public interface  StockOutRateMapper {
     List<HashMap<String,Object>> getAllCommoditiesDetailsByDistrict(@Param("program") Long program,
                                                           @Param("period") Long period, @Param("product") Long product);
 
-    @Select("select a.district_name,  a.region_name, SUM( a.stockOutIncidence)  as stockOutIncidence,\n" +
-            "            SUM(totalIncidence) as totalIncidence , MAX(pp.name) || ' ' || date_part('year', MAX(pp.startdate)) as reported from mv_latest_reported_stock_status  a \n" +
-            "            join processing_periods pp on pp.id=a.periodid\n" +
-            "            where a.tracer=true \n" +
-            "            group by a.district_name, a.region_name")
+    @Select(" select  district_name, region_name, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence," +
+            "            SUM(CASE WHEN status='UK' THEN 1 ELSE 0 END) as unknownIncidence,\n" +
+            "            SUM(CASE WHEN status='OS' THEN 1 ELSE 0 END) as overStockIncidence,\n" +
+            "            SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
+            "            SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence," +
+            " count(*) as totalIncidence,\n" +
+            "            MAX(processing_period_name) || ' ' || Max(year) as reported  \n" +
+            "             from mv_stock_imbalance_by_facility_report  msifr\n" +
+            "             inner join (\n" +
+            "       select productid, max(periodid) from mv_stock_imbalance_by_facility_report\n" +
+            "       where tracer=true\n" +
+            "             group by productid\n" +
+            ") a on a.productid=msifr.productid\n" +
+            "             where tracer=true\n" +
+            "             group by district_name, region_name")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForTracer();
 
 
 
-    @Select(" select a.district_name,  a.region_name, stockOutIncidence , \n" +
-            " totalIncidence, pp.name || ' ' || date_part('year', pp.startdate) as reported from mv_latest_reported_stock_status  a \n" +
-            "join processing_periods pp on pp.id=a.periodid\n" +
-            "where a.productid=#{product}")
+    @Select(" select  district_name, region_name, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence," +
+            "            SUM(CASE WHEN status='UK' THEN 1 ELSE 0 END) as unknownIncidence,\n" +
+            "            SUM(CASE WHEN status='OS' THEN 1 ELSE 0 END) as overStockIncidence,\n" +
+            "            SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
+            "            SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence," +
+            " count(*) as totalIncidence,\n" +
+            "            MAX(processing_period_name) || ' ' || Max(year) as reported  \n" +
+            "             from mv_stock_imbalance_by_facility_report  msifr\n" +
+            "             inner join (\n" +
+            "       select productid, max(periodid) from mv_stock_imbalance_by_facility_report\n" +
+            "       where productid=#{product}\n" +
+            "             group by productid\n" +
+            ") a on a.productid=msifr.productid\n" +
+            "             where msifr.productid=#{product}\n" +
+            "             group by district_name, region_name")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForProductByDistrict( @Param("product") Long product);
+
+
+    @Select("select district_name, region_name, status, count(*) as totalIncidence from mv_stock_imbalance_by_facility_report where periodid in (\n" +
+            "select periodid from mv_latest_reported_stock_status\n" +
+            "where tracer=true)\n" +
+            "and tracer=true\n" +
+            "group by status, district_name, region_name")
+    List<HashMap<String,Object>> getLatestStockImbalanceReportByDistrictForTracer();
+
+
+    @Select("select district_name, region_name, status, count(*) as totalIncidence  from mv_stock_imbalance_by_facility_report where periodid in (\n" +
+            "select periodid from mv_latest_reported_stock_status\n" +
+            "where productid=#{product})\n" +
+            "and  productid=#{product}\n" +
+            "group by status, district_name, region_name")
+    List<HashMap<String,Object>> getLatestStockImbalanceReportByDistrictForProduct(@Param("product") Long product );
 
 
 }

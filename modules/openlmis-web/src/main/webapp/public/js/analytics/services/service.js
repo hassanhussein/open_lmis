@@ -1033,23 +1033,51 @@ services.factory('GetTLEAndTLDData', function($q, $timeout, $resource, GetTLEAnd
 });
 
 
-services.factory('GetStockOutRateByProduct', function($resource) {
-    return $resource('/api/dashboard/getStockOutRateByProduct.json', {}, {});
+services.factory('GetStockOutRateTrendOfTracerProducts', function($resource) {
+    return $resource('/api/dashboard/getStockOutRateTrendOfTracerProducts.json', {}, {});
 });
 
 
 
-services.factory('GetStockOutRateByProductData', function($q, $timeout, $resource, GetStockOutRateByProduct) {
+services.factory('GetStockOutRateTrendOfTracerProductsData', function($q, $timeout, $resource, GetStockOutRateTrendOfTracerProducts) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function() {
-            GetStockOutRateByProduct.get(params, function(data) {
-                var StockOutRateByProduct = [];
+            GetStockOutRateTrendOfTracerProducts.get(params, function(data) {
+                var stockOutRateTrendOfTracerProducts = [];
                 if (data !== undefined) {
-                    StockOutRateByProduct = data.StockOutRateByProduct;
+                    stockOutRateTrendOfTracerProducts = data.StockOutRateTrendOfTracerProducts;
                 }
-                deferred.resolve(StockOutRateByProduct);
+                deferred.resolve(stockOutRateTrendOfTracerProducts);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+
+services.factory('GetStockOutRateTrendOfProducts', function($resource) {
+    return $resource('/api/dashboard/getStockOutRateTrendOfProducts.json', {}, {});
+});
+
+
+
+services.factory('GetStockOutRateTrendOfProductsData', function($q, $timeout, $resource, GetStockOutRateTrendOfProducts) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetStockOutRateTrendOfProducts.get(params, function(data) {
+                var stockOutRateTrendOfProducts = [];
+                if (data !== undefined) {
+                    stockOutRateTrendOfProducts = data.StockOutRateTrendOfProducts;
+                }
+                deferred.resolve(stockOutRateTrendOfProducts);
             });
 
         }, 100);
@@ -1066,4 +1094,60 @@ services.factory('GetGeoJsonInfo', function($resource) {
 
 services.factory('GetRegionalStockStatusSummary', function($resource) {
     return $resource('/api//dashboard/getRegionalStockStatusSummary.json', {}, {});
+});
+
+
+services.factory('GetLatestStockImbalanceReportByDistrictForTracer', function($resource) {
+    return $resource('/api/dashboard/getLatestStockImbalanceReportByDistrictForTracer.json', {}, {});
+});
+
+
+
+services.factory('GetLatestStockImbalanceReportByDistrictForTracerData', function($q, $timeout, $resource, GetLatestStockImbalanceReportByDistrictForTracer) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetLatestStockImbalanceReportByDistrictForTracer.get(params, function(data) {
+                var stockImbalanceByDistrict = [];
+                if (data !== undefined) {
+                    stockImbalanceByDistrict = data.stockImbalanceByDistrict;
+                }
+                deferred.resolve(stockImbalanceByDistrict);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+
+services.factory('GetLatestStockImbalanceReportByDistrictForProduct', function($resource) {
+    return $resource('/api/dashboard/getLatestStockImbalanceReportByDistrictForProduct.json', {}, {});
+});
+
+
+
+services.factory('GetLatestStockImbalanceReportByDistrictForProductData', function($q, $timeout, $resource, GetLatestStockImbalanceReportByDistrictForProduct) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetLatestStockImbalanceReportByDistrictForProduct.get(params, function(data) {
+                var stockImbalanceByDistrict = [];
+                if (data !== undefined) {
+                    stockImbalanceByDistrict = data.stockImbalanceByDistrict;
+                }
+                deferred.resolve(stockImbalanceByDistrict);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
 });

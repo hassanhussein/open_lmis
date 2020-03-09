@@ -558,7 +558,7 @@
                                         </div>
                                         <div class="card-content" ng-controller="StockOutRateController">
 
-                                            <div> <div class="row" style=" height: 650px;">
+                                            <div> <div class="row" style=" height: 600px;">
 
                                                 <div class="col s2" >
                                                     <div class="row">
@@ -580,7 +580,7 @@
                                                     </div>
                                                 </div>
                                                 <div id="latestReportedCommoditiesStockStatus" class="col s7" style=" height: 600px;"></div>
-                                                <div class="col s3" style=" height: 400px;">
+                                                <div class="col s3" style=" height: 500px;">
                                                     <div class="row">
                                                         <div>
                                                             <filter-container>
@@ -608,7 +608,34 @@
                                                     </div>
                                                 </div>
                                             </div></div>
-                                            <!--                                            <div id="stockOutRate" style="margin: 0 auto;height: 400px !important;"></div>-->
+                                            <div class="col s12 m8 l6">
+                                                <div class="card grey lighten-5 row3-height" overlay-section="stock-available-for-program-drill-down">
+
+                                                    <div class="card-action" style="background-color: #17888f;">
+                                                        <span style="color:white">Stock Availability Trend</span>
+                                                    </div>
+
+                                                    <div class="card-content">
+
+                                                        <div id="stockAvailabilityTrend" style="margin: 0 auto;height: 450px !important;"></div>
+
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col s12 m8 l6">
+                                                <div class="card grey lighten-5 row3-height" overlay-section="stock-available-for-program-drill-down">
+
+                                                    <div class="card-action" style="background-color: #17888f;">
+                                                        <span style="color:white">Stock Imbalance</span>
+                                                    </div>
+
+                                                    <div class="card-content">
+                                                        <div id="stockImbalanceByLocation" style="margin: 0 auto;height: 450px !important;"></div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
                                         </div>
 
                                     </div>
@@ -724,10 +751,9 @@
 
                             </div>
 
+                            <!--==================  Stock Availability of Health Commodities  ============----------->
 
-
-                            <div class="row">
-                                <!--==================  Stock Availability of Health Commodities  ============----------->
+                            <div class="row" ng-show="false">
                                 <div class="col s12 m6 l6" ng-controller="stockStatusSummaryController">
                                     <div class="card grey lighten-5 row2-height" overlay-section="stockSummaryByPeriod">
                                         <div class="card-action" style="background-color: #17888f;">
@@ -788,7 +814,7 @@
                             </div>
 
                             <!--==================  Stock Available drill down ============----------->
-                            <div class="row orderFillRate" ng-show="drillDownData.length" ng-controller="stockAvailabilityPerProgramController">
+                            <div class="row" ng-show="false" ng-controller="stockAvailabilityPerProgramController">
                                 <div class="col s12 m8 l8">
                                     <div class="card grey lighten-5 row3-height" overlay-section="stock-available-for-program-drill-down">
 
@@ -951,7 +977,7 @@
 
                             </div>
 
-                            <div class="row">
+                            <div class="row" ng-show="false">
 
                                 <div class="col s12 m7 l7 grey lighten-4" ng-controller="RequisitionStatusSummaryController">
                                     <div class="card grey lighten-5 row2-height">

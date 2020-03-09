@@ -324,6 +324,17 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("StockOutRateByProduct", this.stockOutRateMapper.getStockOutRateByProduct(year, schedule, product));
     }
 
+
+    @RequestMapping(value = "/getStockOutRateTrendOfTracerProducts.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockOutRateTrendOfTracerProducts(@Param("year") Long year) {
+        return OpenLmisResponse.response("StockOutRateTrendOfTracerProducts", this.stockOutRateMapper.getStockOutRateTrendOfTracerProducts(year));
+    }
+
+    @RequestMapping(value = "/getStockOutRateTrendOfProducts.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockOutRateTrendOfProducts(@Param("year") Long year, @Param("product") Long product) {
+        return OpenLmisResponse.response("StockOutRateTrendOfProducts", this.stockOutRateMapper.getStockOutRateTrendOfProducts(year, product));
+    }
+
     @RequestMapping(value = "/tz-reg.json", method = GET, headers = ACCEPT_JSON)
     public @ResponseBody Object getRegionMapJSON() {
         ClassPathResource resource = new ClassPathResource("/static/tz-reg.json");
@@ -368,6 +379,17 @@ public class AnalyticsController extends BaseController {
     @RequestMapping(value = "/getLatestReportedStockStatusForProductByDistrict.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getLatestReportedStockOnHandForProductByDistrict(@Param("product") Long product) {
         return OpenLmisResponse.response("commoditiesDetailsByDistrict", this.stockOutRateMapper.getLatestReportedStockOnHandForProductByDistrict(product));
+    }
+
+    @RequestMapping(value = "/getLatestStockImbalanceReportByDistrictForTracer.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getLatestStockImbalanceReportByDistrictForTracer() {
+        return OpenLmisResponse.response("stockImbalanceByDistrict", this.stockOutRateMapper.getLatestStockImbalanceReportByDistrictForTracer());
+    }
+
+
+    @RequestMapping(value = "/getLatestStockImbalanceReportByDistrictForProduct.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getLatestStockImbalanceReportByDistrictForProduct(@Param("product") Long product) {
+        return OpenLmisResponse.response("stockImbalanceByDistrict", this.stockOutRateMapper.getLatestStockImbalanceReportByDistrictForProduct(product));
     }
 
 }
