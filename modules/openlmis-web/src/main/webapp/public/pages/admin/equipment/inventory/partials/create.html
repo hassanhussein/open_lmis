@@ -392,7 +392,7 @@
 
                         <div class="form-field" ng-show="equipments.length > 0">
                             <select style="width: 250px;" ui-select2 ng-model="inventory.equipment.id" id="equipmentName"
-                                    name="equipmentName" ng-required="true" ng-change="loadManufacturerByEquipment(inventory.equipment.id, equipments)">
+                                    name="equipmentName" ng-required="false" ng-change="loadManufacturerByEquipment(inventory.equipment.id, equipments)">
                                 <option value="{{equipment.id}}" ng-repeat="equipment in equipments | orderBy: 'id'"
                                         ng-selected="equipment.id == inventory.equipment.id">{{equipment.name}}
                                 </option>
