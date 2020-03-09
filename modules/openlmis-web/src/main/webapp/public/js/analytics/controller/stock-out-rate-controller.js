@@ -173,22 +173,11 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             credits: {
                 enabled: false
             },
-            colorAxis: {
-                min: 1,
-                type: 'logarithmic',
-                stops: [
-                    [0, '#EC6B58'],
-                    [0.2, Highcharts.color('#EC6B58').brighten(0.6).get()],
-                    [0.3, Highcharts.color('#EC6B58').brighten(0.5).get()],
-                    [0.4, Highcharts.color('#EC6B58').brighten(0.4).get()],
-                    [0.5, Highcharts.color('#2abb9b').brighten(0.7).get()],
-                    [0.6, Highcharts.color('#2abb9b').brighten(0.6).get()],
-                    [0.7, Highcharts.color('#2abb9b').brighten(0.4).get()],
-                    [0.8, Highcharts.color('#2abb9b').brighten(0.3).get()],
-                    [0.9, Highcharts.color('#2abb9b').brighten(0.2).get()],
-                    [1, '#2abb9b']
-                ]
-            },
+                colorAxis: {
+                    min: 0,
+                    minColor: '#E6E7E8',
+                    maxColor: '#2abb9b'
+                },
             mapNavigation: {
                 enabled: true,
                 buttonOptions: {
@@ -467,15 +456,15 @@ if(gzLevel != "Tz")
         });
 
         reg_arry.push({
-            key: "Full Stock Availability",
+            key: "Full Stock",
             value: full_items.length + ' Region(s)'
         });
         reg_arry.push({
-            key: "Partial Stock Availability",
+            key: "Partial Stock",
             value: partial_items.length + ' Region(s)'
         });
         reg_arry.push({
-            key: "Total Stockout",
+            key: "Full Stockout",
             value: total_stockout_items.length + ' Region(s)'
         });
         reg_arry.push({
@@ -524,15 +513,15 @@ var total_incidence = get_sum(data, 'totalincidence');
         });
 
         reg_arry.push({
-            key: "Full Stock Availability",
+            key: "Full Stock",
             value: full_items.length + ' Districts'
         });
         reg_arry.push({
-            key: "Partial Stock Availability",
+            key: "Partial Stock",
             value: partial_items.length + ' Districts'
         });
         reg_arry.push({
-            key: "Total Stockout",
+            key: "Full Stockout",
             value: total_stockout_items.length + ' Districts'
         });
                 reg_arry.push({
