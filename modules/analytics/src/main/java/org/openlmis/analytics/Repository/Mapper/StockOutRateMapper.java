@@ -72,7 +72,7 @@ public interface  StockOutRateMapper {
             "(select  asmonth, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence, district_name, region_name,\n" +
             "count(*) as totalIncidence\n" +
             "from mv_stock_imbalance_by_facility_report\n" +
-            "where tracer=true and year=#{year} and p.id =#{product}\n" +
+            "where  year=#{year} and productid=#{product}\n" +
             "group by asmonth, district_name, region_name ) as a")
     List<HashMap<String,Object>> getStockOutRateTrendOfProducts(@Param("year") Long year, @Param("product") Long product);
 

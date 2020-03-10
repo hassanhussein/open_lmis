@@ -19,11 +19,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             GetTzRegionMapData.get(params).then(function(regionMap) {
                 GetTzDistrictMapData.get(params).then(function(districtMap) {
                     var dataWithRegion = getRegionDataFromDistrictData(data);
-                    var unit = "Facilities";
-                    var zeroColor = "#e74c3c"; //Red
-                    var title = params.indicator === 'allTracerProducts' ? 'Percentage of Tracer Availability' : 'Percentage of Availability';
                     districtMap.feature = districtMap.features;
-                    loadLatestReportedStockStatusMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region, title, unit, zeroColor);
+                    loadLatestReportedStockStatusMap(regionMap, districtMap, computeMapData(dataWithRegion.region, params.indicator), params, data, dataWithRegion.region);
                     var imbalanceData = getImbalanceData(data);
                     $scope.stockImbalanceChart('stockImbalanceByLocation', imbalanceData.imbalance);
                 });
@@ -45,11 +42,13 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     }
 
 
-    function loadLatestReportedStockStatusMap(regionMap, districtMap, values, params, districtValues, regionData, title, unit, zeroColor) {
+    function loadLatestReportedStockStatusMap(regionMap, districtMap, values, params, districtValues, regionData) {
 
         var data = Highcharts.geojson(regionMap);
         var areaName = 'Region';
         getLatestStockAvailabilityStatusSummary(regionData, params);
+        $rootScope.stockImbalanceTitle = "Stock Imbalance for Tanzania";
+
         $.each(data, function(i) {
             var key = this.properties['hc-key'];
             this.drilldown = key;
@@ -88,13 +87,16 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                             var chart = this;
                             areaName = 'District';
                             chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
-                            var region_data = _.where(districtValues, {region_name: e.point.name });
-
-                             var trendData = getTrendData(stockOutRateTrendForTracerData, e.point.name);
+                            var region_data = _.where(districtValues, {
+                                region_name: e.point.name
+                            });
+                            var trendData = getTrendData(stockOutRateTrendForTracerData, e.point.name);
 
                             var regions = _.uniq(_.pluck(data, 'drilldown'));
                             drillDownIndex = regions.indexOf(e.point.name);
                             data = Highcharts.geojson(filterMap(districtMap, e.point.name));
+                            $rootScope.stockImbalanceTitle = "Stock Imbalance for " + e.point.name;
+                            $rootScope.$apply();
 
                             $.each(data, function(i) {
                                 var sof_obj = _.where(districtValues, {
@@ -108,6 +110,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                                     })[0];
                                     this.value = sof_obj[0].stockinhand;
                                     var stockOutPercentage = Math.round((reg_obj.stockoutincidence / reg_obj.totalincidence) * 100);
+
+
 
                                     this.y = stockOutPercentage;
 
@@ -147,13 +151,14 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                     },
                     drillup: function() {
                         areaName = 'Region';
+                        $rootScope.stockImbalanceTitle = "Stock Imbalance for Tanzania";
                         drillDownState = false;
                         getLatestStockAvailabilityStatusSummary(regionData, params);
                         this.setTitle(null, {
-                            text: 'Click Region  to see district'
+                            text: 'Select any region to drill down'
                         });
-                      var imbalanceData = getImbalanceData(districtValues);
-                      $scope.stockImbalanceChart('stockImbalanceByLocation', imbalanceData.imbalance);
+                        var imbalanceData = getImbalanceData(districtValues);
+                        $scope.stockImbalanceChart('stockImbalanceByLocation', imbalanceData.imbalance);
 
                         var trendData = getTrendData(stockOutRateTrendForTracerData, "Tz");
                         $scope.stockAvailabilityTrend('stockAvailabilityTrend', trendData.avaibilityRate);
@@ -169,11 +174,11 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             credits: {
                 enabled: false
             },
-                colorAxis: {
-                    min: 0,
-                    minColor: '#E6E7E8',
-                    maxColor: '#2abb9b'
-                },
+            colorAxis: {
+                min: 0,
+                minColor: '#E6E7E8',
+                maxColor: '#2abb9b'
+            },
             mapNavigation: {
                 enabled: true,
                 buttonOptions: {
@@ -290,33 +295,41 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
 
     function getTrendData(data, gzLevel) {
 
-if(gzLevel != "Tz")
-{
+        if (gzLevel == "Tz") {
+            $rootScope.stockAvailabilityTrendTitle = "Stock Availability Trend for Tanzania on " + new Date().getFullYear();
+            $rootScope.$apply();
+        } else {
+            $rootScope.stockAvailabilityTrendTitle = "Stock Availability Trend for " + gzLevel + " on " + new Date().getFullYear();
+            $rootScope.$apply();
+        }
 
-   data = _.where(data, {
-                    region_name: gzLevel
-                });
-}
+
+        if (gzLevel != "Tz") {
+
+            data = _.where(data, {
+                region_name: gzLevel
+            });
+        }
 
 
-       var trend_arry = [];
+        var trend_arry = [];
 
-       var reportedmonth = _.uniq(_.pluck(data, 'reportedmonth'));
+        var reportedmonth = _.uniq(_.pluck(data, 'reportedmonth'));
         for (var x in reportedmonth) {
 
-       var sof_obj = _.where(data, {
-                    reportedmonth: reportedmonth[x]
-                });
+            var sof_obj = _.where(data, {
+                reportedmonth: reportedmonth[x]
+            });
 
             var percentage = get_sum(sof_obj, 'availabilitypercentage');
             var reg_obj;
             if (sof_obj.length > 0) {
-                 reg_obj = {
+                reg_obj = {
                     code: reportedmonth[x],
-                    value: Math.round(percentage/sof_obj.length)
+                    value: Math.round(percentage / sof_obj.length)
                 };
             } else {
-                  reg_obj = {
+                reg_obj = {
                     code: reportedmonth[x],
                     value: 0
                 };
@@ -324,7 +337,7 @@ if(gzLevel != "Tz")
             trend_arry.push(reg_obj);
         }
 
-      trend_arry =  sortByMonth(trend_arry);
+        trend_arry = sortByMonth(trend_arry);
 
         data.avaibilityRate = trend_arry;
 
@@ -333,12 +346,12 @@ if(gzLevel != "Tz")
     }
 
     function sortByMonth(arr) {
-      var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun","Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      arr.sort(function(a, b){
-          return months.indexOf(a.code) - months.indexOf(b.code);
-      });
+        var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        arr.sort(function(a, b) {
+            return months.indexOf(a.code) - months.indexOf(b.code);
+        });
 
-      return arr;
+        return arr;
     }
 
     function prepareValues(data, x, ind) {
@@ -380,14 +393,14 @@ if(gzLevel != "Tz")
         if (filter.indicator == 'allTracerProducts') {
             $rootScope.loadLatestReportedStockStatus(filter);
             $rootScope.loadStockOutRateTrendForTracer(filter, "Tz");
-         //   $rootScope.loadStockImbalance(filter);
+            //   $rootScope.loadStockImbalance(filter);
             $scope.productFilter = false;
         } else if (filter.indicator == 'productFilter') {
             $scope.productFilter = true;
             if (filter.product && filter.program) {
                 $rootScope.loadLatestReportedStockStatus(filter);
                 $rootScope.loadStockOutRateTrendForTracer(filter, "Tz");
-             //   $rootScope.loadStockImbalance(filter);
+                //   $rootScope.loadStockImbalance(filter);
             }
         }
     };
@@ -398,7 +411,7 @@ if(gzLevel != "Tz")
 
         var total_incidence = get_sum(data, 'total_incidence');
         var total_stockoutincidence = get_sum(data, 'total_stockoutincidence');
-         var availability_percentage = Math.round(100 - ((total_stockoutincidence/total_incidence ) * 100));
+        var availability_percentage = Math.round(100 - ((total_stockoutincidence / total_incidence) * 100));
 
 
         var full_items = _.filter(data, function(item) {
@@ -435,11 +448,11 @@ if(gzLevel != "Tz")
             value: total_stockout_items.length + ' Region(s)'
         });
         reg_arry.push({
-                    key: "Availability Percentage",
-                    value: availability_percentage + "%"
+            key: "Availability Percentage",
+            value: availability_percentage + "%"
         });
-        $rootScope.summary.content = reg_arry;
-        $rootScope.$apply();
+        $scope.summary.content = reg_arry;
+        // $rootScope.$apply();
         return;
     }
 
@@ -452,9 +465,9 @@ if(gzLevel != "Tz")
         });
 
 
-var total_incidence = get_sum(data, 'totalincidence');
+        var total_incidence = get_sum(data, 'totalincidence');
         var total_stockoutincidence = get_sum(data, 'stockoutincidence');
-         var availability_percentage = Math.round(100 - ((total_stockoutincidence/total_incidence ) * 100));
+        var availability_percentage = Math.round(100 - ((total_stockoutincidence / total_incidence) * 100));
         var reg_arry = [];
 
 
@@ -491,12 +504,12 @@ var total_incidence = get_sum(data, 'totalincidence');
             key: "Full Stockout",
             value: total_stockout_items.length + ' Districts'
         });
-                reg_arry.push({
-                            key: "Availability Percentage",
-                            value: availability_percentage + "%"
-                });
-        $rootScope.summary.content = reg_arry;
-        $rootScope.$apply();
+        reg_arry.push({
+            key: "Availability Percentage",
+            value: availability_percentage + "%"
+        });
+        $scope.summary.content = reg_arry;
+        // $rootScope.$apply();
         return;
     }
 
@@ -505,12 +518,15 @@ var total_incidence = get_sum(data, 'totalincidence');
     // Stock Out Rate Graph
     $rootScope.loadStockOutRateTrendForTracer = function(params, gzLevel) {
 
-        params.year = new Date().getFullYear();
+        //  params.year = new Date().getFullYear();
+
+        params.year = 2017;
 
         if (params.indicator == 'allTracerProducts') {
             GetStockOutRateTrendOfTracerProductsData.get(params).then(function(data) {
                 stockOutRateTrendForTracerData = data;
                 var trendData = getTrendData(data, gzLevel);
+
                 $scope.stockAvailabilityTrend('stockAvailabilityTrend', trendData.avaibilityRate);
             });
         } else if (params.indicator == 'productFilter') {
@@ -529,7 +545,7 @@ var total_incidence = get_sum(data, 'totalincidence');
                 enabled: false
             },
             title: {
-                text: 'Stock Availability Trend'
+                text: null
             },
             xAxis: {
                 categories: _.pluck(trendData, 'code'),
@@ -538,8 +554,8 @@ var total_incidence = get_sum(data, 'totalincidence');
                 }
             },
             yAxis: {
-            minValue: 0,
-            maxValue:100,
+                minValue: 0,
+                maxValue: 100,
                 title: {
                     text: 'Stock Availability'
                 },
@@ -585,7 +601,7 @@ var total_incidence = get_sum(data, 'totalincidence');
                 enabled: false
             },
             title: {
-                text: 'Stock Imbalance'
+                text: null
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -620,50 +636,50 @@ var total_incidence = get_sum(data, 'totalincidence');
 
         var imbalance_arry = [];
 
-            var overstock_incidence = get_sum(data, 'overstockincidence');
-                var overstock_incidence_obj = {
-                    name: "Over Stocked",
-                    y: overstock_incidence,
-                    color: getStatusColor("OS")
-                };
+        var overstock_incidence = get_sum(data, 'overstockincidence');
+        var overstock_incidence_obj = {
+            name: "Over Stocked",
+            y: overstock_incidence,
+            color: getStatusColor("OS")
+        };
 
-            imbalance_arry.push(overstock_incidence_obj);
+        imbalance_arry.push(overstock_incidence_obj);
 
-            var adeliquate_stock_incidence = get_sum(data, 'adeliquatestockincidence');
-                var adeliquate_stock_incidence_obj = {
-                    name: "Adequately Stocked",
-                    y: adeliquate_stock_incidence ,
-                    color: getStatusColor("SP")
-                };
-            imbalance_arry.push(adeliquate_stock_incidence_obj);
-
-
-      var unknown_incidence = get_sum(data, 'unknownincidence');
-                  var unknown_incidence_obj = {
-                      name: "Unknown",
-                      y: unknown_incidence ,
-                      color: getStatusColor("UK")
-                  };
-              imbalance_arry.push(unknown_incidence_obj);
-
-      var understock_incidence = get_sum(data, 'understockincidence');
-                  var understock_incidence_obj = {
-                      name: "Under Stocked",
-                      y: understock_incidence ,
-                      color: getStatusColor("US")
-                  };
-              imbalance_arry.push(understock_incidence_obj);
+        var adeliquate_stock_incidence = get_sum(data, 'adeliquatestockincidence');
+        var adeliquate_stock_incidence_obj = {
+            name: "Adequately Stocked",
+            y: adeliquate_stock_incidence,
+            color: getStatusColor("SP")
+        };
+        imbalance_arry.push(adeliquate_stock_incidence_obj);
 
 
-      var stockout_incidence = get_sum(data, 'stockoutincidence');
-                  var stockout_incidence_obj = {
-                      name: "Stock Out",
-                      y: stockout_incidence ,
-                      sliced: true,
-                      selected: true,
-                      color: getStatusColor("SO")
-                  };
-              imbalance_arry.push(stockout_incidence_obj);
+        var unknown_incidence = get_sum(data, 'unknownincidence');
+        var unknown_incidence_obj = {
+            name: "Unknown",
+            y: unknown_incidence,
+            color: getStatusColor("UK")
+        };
+        imbalance_arry.push(unknown_incidence_obj);
+
+        var understock_incidence = get_sum(data, 'understockincidence');
+        var understock_incidence_obj = {
+            name: "Under Stocked",
+            y: understock_incidence,
+            color: getStatusColor("US")
+        };
+        imbalance_arry.push(understock_incidence_obj);
+
+
+        var stockout_incidence = get_sum(data, 'stockoutincidence');
+        var stockout_incidence_obj = {
+            name: "Stock Out",
+            y: stockout_incidence,
+            sliced: true,
+            selected: true,
+            color: getStatusColor("SO")
+        };
+        imbalance_arry.push(stockout_incidence_obj);
 
         data.imbalance = imbalance_arry;
 
