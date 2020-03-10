@@ -451,8 +451,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             key: "Availability Percentage",
             value: availability_percentage + "%"
         });
-        $scope.summary.content = reg_arry;
-        // $rootScope.$apply();
+        $rootScope.summary.content = reg_arry;
+         $rootScope.$apply();
         return;
     }
 
@@ -508,8 +508,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             key: "Availability Percentage",
             value: availability_percentage + "%"
         });
-        $scope.summary.content = reg_arry;
-        // $rootScope.$apply();
+        $rootScope.summary.content = reg_arry;
+         $rootScope.$apply();
         return;
     }
 
@@ -518,9 +518,9 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     // Stock Out Rate Graph
     $rootScope.loadStockOutRateTrendForTracer = function(params, gzLevel) {
 
-        //  params.year = new Date().getFullYear();
+         params.year = new Date().getFullYear();
 
-        params.year = 2017;
+      //  params.year = 2017;
 
         if (params.indicator == 'allTracerProducts') {
             GetStockOutRateTrendOfTracerProductsData.get(params).then(function(data) {
@@ -625,7 +625,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             series: [{
                 name: 'Status',
                 colorByPoint: true,
-                data: imbalanceData
+                data: imbalanceData,
+                innerSize: '40%'
             }]
         });
 
