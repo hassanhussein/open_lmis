@@ -107,7 +107,7 @@ public interface  StockOutRateMapper {
             "            SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
             "            SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence," +
             " count(*) as totalIncidence,\n" +
-            "            MAX(processing_period_name) || ' ' || year as reported  \n" +
+            "            MAX(processing_period_name) || ' ' || MIN(year) as reported  \n" +
             "             from mv_stock_imbalance_by_facility_report  msifr\n" +
             "             inner join (\n" +
             "       select productid, max(periodid) from mv_stock_imbalance_by_facility_report\n" +
@@ -115,7 +115,7 @@ public interface  StockOutRateMapper {
             "             group by productid\n" +
             ") a on a.productid=msifr.productid\n" +
             "             where tracer=true\n" +
-            "             group by district_name, region_name, year")
+            "             group by district_name, region_name")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForTracer();
 
 
@@ -126,7 +126,7 @@ public interface  StockOutRateMapper {
             "            SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
             "            SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence," +
             " count(*) as totalIncidence,\n" +
-            "            MAX(processing_period_name) || ' ' || year as reported  \n" +
+            "            MAX(processing_period_name) || ' ' || MIN(year) as reported  \n" +
             "             from mv_stock_imbalance_by_facility_report  msifr\n" +
             "             inner join (\n" +
             "       select productid, max(periodid) from mv_stock_imbalance_by_facility_report\n" +
@@ -134,7 +134,7 @@ public interface  StockOutRateMapper {
             "             group by productid\n" +
             ") a on a.productid=msifr.productid\n" +
             "             where msifr.productid=#{product}\n" +
-            "             group by district_name, region_name, year")
+            "             group by district_name, region_name")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForProductByDistrict( @Param("product") Long product);
 
 

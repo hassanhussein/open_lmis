@@ -63,7 +63,6 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 })[0];
                 var stockOutPercentage = Math.round((reg_obj.total_stockoutincidence / reg_obj.total_incidence) * 100);
 
-
                 this.y = stockOutPercentage;
                 this.value = ((100 - stockOutPercentage) <= 0) ? 1 : 100 - stockOutPercentage;
                 this.stockAvailabilityPercentage = Math.round(100 - stockOutPercentage);
@@ -90,8 +89,6 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                             areaName = 'District';
                             chart.showLoading('<i class="icon-spinner icon-spin icon-3x"></i>');
                             var region_data = _.where(districtValues, {region_name: e.point.name });
-
-                             $rootScope.loadStockOutRateTrendForTracer(params, e.point.name);
 
                              var trendData = getTrendData(stockOutRateTrendForTracerData, e.point.name);
 
