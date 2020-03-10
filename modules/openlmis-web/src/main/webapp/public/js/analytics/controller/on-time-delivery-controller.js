@@ -40,6 +40,10 @@ new Highcharts.Chart({
     text:'<span style="font-size: 15px!important;color: #0c9083">'+title+' </span>'
 
     },
+    subtitle: {
+        text:'<span style="font-size: 15px!important;color: #0c9083">Note: <i>This Indicator applies only for Zones that has Implementation of MSD POD App </i> </span>'
+
+    },
     credits:{enabled:false},
     legend:{
     enabled:false
