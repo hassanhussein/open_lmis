@@ -176,6 +176,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             },
             colorAxis: {
                 min: 0,
+                max: 100,
                 minColor: '#E6E7E8',
                 maxColor: '#2abb9b'
             },
