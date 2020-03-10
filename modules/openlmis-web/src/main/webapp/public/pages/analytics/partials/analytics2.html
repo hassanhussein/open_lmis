@@ -751,67 +751,6 @@
 
                             </div>
 
-                            <!--==================  Stock Availability of Health Commodities  ============----------->
-
-                            <div class="row" ng-show="false">
-                                <div class="col s12 m6 l6" ng-controller="stockStatusSummaryController">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="stockSummaryByPeriod">
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{titleStockSummary}}</span>
-                                        </div>
-                                        <div class="card-content">
-
-                                            <div id="stock-summary-by-period-and-program" style="margin: 0 auto;height: 360px !important;"></div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--==================  Stock availability by Level  ============----------->
-                                <div class="col s12 m6 l6" ng-controller="StockAvailabilityByLevelController">
-                                    <div class="card white lighten-5 row2-height" overlay-section="stockByLevel">
-
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{title_stock_by_level}}</span>
-                                        </div>
-
-                                        <div class="card-content">
-                                            <div id="stock-by-level" style="margin: 0 auto;height: 360px !important;"></div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--==================  Stock Availability per program  ============----------->
-                                <div class="col s12 m4 l4" ng-controller="stockAvailabilityPerProgramController" ng-show="false">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="stockAvailableForProgram">
-
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{title_stock_by_program}}</span>
-                                        </div>
-                                        <div class="card-content">
-                                            <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
 
                             <!--==================  Stock Available drill down ============----------->
                             <div class="row" ng-show="false" ng-controller="stockAvailabilityPerProgramController">
@@ -864,45 +803,7 @@
 
                             </div>
 
-                            <!--==================  Reporting TImeliness ============----------->
 
-                            <div class="row" ng-show="false">
-                                <div class="col s12 m4 l4" ng-controller="TimelinessReportingController">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="timelinessReporting">
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{title_reporting_timeliness}}</span>
-                                        </div>
-                                        <div class="card-content">
-                                            <div id="timeliness-reporting" style="margin: 0 auto;height: 300px !important;"></div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col s12 m8 l8" ng-controller="StockStatusOverTimeFunctionController">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="stockStatusOverTime">
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{stockStatusesTitle}}</span>
-                                        </div>
-                                        <div class="card-content">
-                                            <div id="stockStatusOverTime" style="margin: 0 auto;height: 300px !important;"></div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/custom-product-filter.html"'></ng-include>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
 
                             <div class="row orderFillRate" ng-show="false">
                                 <!--      <div class="col s12 m4 l4" ng-controller="RnRQualityCheckController">
@@ -924,56 +825,7 @@
                                     </div>
 
                                 </div>-->
-                                <div class="col s12 m4 l4">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="percentageWastage" ng-controller="PercentageWastageController">
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{wastageTitle}}</span>
-                                        </div>
-                                        <div class="card-content" ng-show="percentageWastage.length > 0">
-                                            <a id="back" ng-hide="true" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i>Back to Wastage Percentage</a>
-                                            <div id="container-speed" style="height: 300px;margin:0 auto " class="chart-container"></div>
 
-                                        </div>
-                                        <div class="card-content" ng-show="percentageWastage == 0">
-                                            <div style="text-align:center;height: 300px !important;">No data to show under selected filters</div>
-
-                                        </div>
-
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col s12 m4 l4">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="on-time-delivery" ng-controller="OnTimeDeliveryController">
-
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{titleOnTimeDelivery}}</span>
-                                        </div>
-
-                                        <div class="card-content" ng-show="dataToDisplay.length != 0">
-                                            <span>
-                                                <div id="on-time-delivery" style="height: 300px;margin:0 auto " ></div>
-
-                                            </span>
-
-                                        </div>
-                                        <div class="card-content" ng-show="dataToDisplay.length == 0">
-                                            <div style="text-align:center;height: 300px !important;">No data to show under selected filter</div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-                                        </div>
-                                    </div>
-                                </div>
 
                             </div>
 
@@ -1069,25 +921,7 @@
 
                                 </div>
 
-                                <div class="col s12 m5 l5" ng-controller="RnRQualityCheckController">
-                                    <div class="card grey lighten-5 row2-height" overlay-section="RequisitionFormPercentage">
-                                        <div class="card-action" style="background-color: #17888f;">
-                                            <span style="color:white">{{opentitle}}</span>
-                                        </div>
-                                        <div class="card-content">
 
-                                            <div id="rnrPassedChart" style="height: 300px;margin:0 auto "></div>
-
-                                        </div>
-                                        <div class="card-action grey lighten-4">
-
-                                            <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
 
                             </div>
 
@@ -1294,6 +1128,205 @@
 
 
                     </div>
+
+
+
+
+
+                    <!--==========================================KPI Manual=========================================-->
+                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
+                        <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('requisition');">
+                            <b>+</b><a id="kpiManual" href="javascript:void(0);">SC KPIs Manual</a>
+                        </div>
+                        <div class="accordion-body">
+
+
+                                <!--==================  Stock Availability of Health Commodities  ============----------->
+
+                                <div class="row" ng-show="true">
+                                    <div class="col s12 m6 l6" ng-controller="stockStatusSummaryController">
+                                        <div class="card grey lighten-5 row2-height" overlay-section="stockSummaryByPeriod">
+                                            <div class="card-action" style="background-color: #17888f;">
+                                                <span style="color:white">{{titleStockSummary}}</span>
+                                            </div>
+                                            <div class="card-content">
+
+                                                <div id="stock-summary-by-period-and-program" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                            </div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--==================  Stock availability by Level  ============----------->
+                                    <div class="col s12 m6 l6" ng-controller="StockAvailabilityByLevelController">
+                                        <div class="card white lighten-5 row2-height" overlay-section="stockByLevel">
+
+                                            <div class="card-action" style="background-color: #17888f;">
+                                                <span style="color:white">{{title_stock_by_level}}</span>
+                                            </div>
+
+                                            <div class="card-content">
+                                                <div id="stock-by-level" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                            </div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!--==================  Stock Availability per program  ============----------->
+                                    <div class="col s12 m4 l4" ng-controller="stockAvailabilityPerProgramController" ng-show="false">
+                                        <div class="card grey lighten-5 row2-height" overlay-section="stockAvailableForProgram">
+
+                                            <div class="card-action" style="background-color: #17888f;">
+                                                <span style="color:white">{{title_stock_by_program}}</span>
+                                            </div>
+                                            <div class="card-content">
+                                                <div id="stock-available-for-program" style="margin: 0 auto;height: 360px !important;"></div>
+
+                                            </div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            <!--==========================Percentage of Wastage && on-time delivery ===================================-------->
+                                <div class="row" ng-show="true">
+
+                                    <div class="col s12 m6 l6">
+                                        <div class="card grey lighten-5 row2-height" overlay-section="percentageWastage" ng-controller="PercentageWastageController">
+                                            <div class="card-action" style="background-color: #17888f;">
+                                                <span style="color:white">{{wastageTitle}}</span>
+                                            </div>
+                                            <div class="card-content" ng-show="percentageWastage.length > 0">
+                                                <a id="back" ng-hide="true" style="display: none;" class="waves-effect waves-light btn"><i class="material-icons left">arrow_back</i>Back to Wastage Percentage</a>
+                                                <div id="container-speed" style="height: 300px;margin:0 auto " class="chart-container"></div>
+
+                                            </div>
+                                            <div class="card-content" ng-show="percentageWastage == 0">
+                                                <div style="text-align:center;height: 300px !important;">No data to show under selected filters</div>
+
+                                            </div>
+
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col s12 m6 l6">
+                                        <div class="card grey lighten-5 row2-height" overlay-section="on-time-delivery" ng-controller="OnTimeDeliveryController">
+
+                                            <div class="card-action" style="background-color: #17888f;">
+                                                <span style="color:white">{{titleOnTimeDelivery}}</span>
+                                            </div>
+
+                                            <div class="card-content" ng-show="dataToDisplay.length != 0">
+                                            <span>
+                                                <div id="on-time-delivery" style="height: 300px;margin:0 auto " ></div>
+
+                                            </span>
+
+                                            </div>
+                                            <div class="card-content" ng-show="dataToDisplay.length == 0">
+                                                <div style="text-align:center;height: 300px !important;">No data to show under selected filter</div>
+
+                                            </div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row" ng-show="true">
+
+                                    <div class="col s12 m6 l6" ng-controller="RnRQualityCheckController">
+                                        <div class="card grey lighten-5 row2-height" overlay-section="RequisitionFormPercentage">
+                                            <div class="card-action" style="background-color: #17888f;">
+                                                <span style="color:white">{{opentitle}}</span>
+                                            </div>
+                                            <div class="card-content">
+
+                                                <div id="rnrPassedChart" style="height: 300px;margin:0 auto "></div>
+
+                                            </div>
+                                            <div class="card-action grey lighten-4">
+
+                                                <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <!--==================  Reporting TImeliness ============----------->
+
+                                    <div class="row" ng-show="true">
+                                        <div class="col s12 m6 l6" ng-controller="TimelinessReportingController">
+                                            <div class="card grey lighten-5 row2-height" overlay-section="timelinessReporting">
+                                                <div class="card-action" style="background-color: #17888f;">
+                                                    <span style="color:white">{{title_reporting_timeliness}}</span>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div id="timeliness-reporting" style="margin: 0 auto;height: 300px !important;"></div>
+
+                                                </div>
+                                                <div class="card-action grey lighten-4">
+
+                                                    <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col s12 m8 l8" ng-controller="StockStatusOverTimeFunctionController" ng-show="false">
+                                            <div class="card grey lighten-5 row2-height" overlay-section="stockStatusOverTime">
+                                                <div class="card-action" style="background-color: #17888f;">
+                                                    <span style="color:white">{{stockStatusesTitle}}</span>
+                                                </div>
+                                                <div class="card-content">
+                                                    <div id="stockStatusOverTime" style="margin: 0 auto;height: 300px !important;"></div>
+
+                                                </div>
+                                                <div class="card-action grey lighten-4">
+
+                                                    <ng-include src='"/public/pages/analytics/partials/shared/custom-product-filter.html"'></ng-include>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                        </div>
+                    </div>
+
 
                     <!--================== REQUISITION ============----------->
                     <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
@@ -1583,7 +1616,7 @@
 
                     <!--================== STOCK STATUS ============----------->
 
-                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
+                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate" ng-show="false">
                         <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('requisitiony');">
 
                             <b>+</b><a id="" href="javascript:void(0);">Stock Status</a>
@@ -1609,7 +1642,7 @@
                         </div>
                     </div>
 
-                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
+                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate" ng-show="false">
                         <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('healthCommoditiesFinancing');">
                             <b>+</b><a id="" href="javascript:void(0);">Health Commodities Financing</a>
                         </div>
@@ -1637,7 +1670,7 @@
                     </div>
 
                     <!--==================EMERGENCY ORDER ANALYSIS============----------->
-                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate">
+                    <div id="accordion-fill-rate" class="accordion-section accordion-fill-rate" ng-show="false">
                         <div class="accordion-heading" onClick="accordion.expandCollapseToggle(this); " ng-click="loadDashletsBySectionNames('requisition');">
 
                             <b>+</b><a id="" href="javascript:void(0);">Emergency Order Analysis </a>

@@ -61,6 +61,7 @@ function TimelinessReportingController($scope,$location,Program,Period,$rootScop
 
 
 $rootScope.loadTimelinessReportingData = function (params) {
+    $rootScope.title_reporting_timeliness =   '#8: Reporting Timeliness for '+params.programName+' ('+params.periodName+' ,'+params.year+')';
 
 TimelinessReportingData.get(params).then(function(data){
    console.log(data);
@@ -78,7 +79,7 @@ TimelinessReportingData.get(params).then(function(data){
        //dataToShow = [dx.not_reported, dx.unscheduled, dx.reportedlate, dx.reportedontime];
     });
 
-    $rootScope.title_reporting_timeliness =   'Reporting Timeliness for '+params.programName+' ('+params.periodName+' ,'+params.year+')';
+
     console.log($scope.title_reporting_timeliness);
     loadChart(chartId,dataToShow,' ',' ',data[0].totalexpected,' ');
 

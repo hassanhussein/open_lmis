@@ -36,7 +36,7 @@ $rootScope.loadRnrPassedQualityCheckData =  function (params) {
 function loadChartSummary(params,drillDownData) {
 
 
-  $scope.opentitle = 'R&R passed data quality check '+params.periodName+' ,'+params.year;
+  $scope.opentitle = '#7: R&R passed data quality check '+params.periodName+' ,'+params.year;
 
     RnrPassedQualityCheckData.get(params).then(function(data){
 

@@ -14,7 +14,7 @@ PercentageWastageData.get(params).then(function(dataValues) {
 var data = [];
 data = dataValues;
 $scope.percentageWastage = [];
-$rootScope.wastageTitle = 'Percentage of wastage for '+params.programName+'  ( '+params.periodName+', '+params.year+' )';
+$rootScope.wastageTitle = '#5: Percentage of wastage for '+params.programName+'  ( '+params.periodName+', '+params.year+' )';
 
 console.log(data);
 if(!isUndefined(data) && data.length > 0) {

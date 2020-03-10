@@ -9,6 +9,9 @@ function calculatePercentage (num, den) {
 
 $rootScope.loadStockAvailableByLevel = function(params){
 
+    $scope.title_stock_by_level = '#4: Stock availability for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
+
+
     StockAvailableByLevelData.get(params).then(function(data) {
 
 if(data.length > 0 && !isUndefined(data)) {
@@ -87,7 +90,6 @@ var availableData =  [
 
                         ];
 
-    $scope.title_stock_by_level = 'Stock availability for '+params.programName+' '+'( '+params.periodName+', '+params.year+' )';
 
     $scope.showTheChart(availableData,'','',categories,availableTracer,availableAll);
      }
