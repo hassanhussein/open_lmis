@@ -59,22 +59,21 @@ public interface  StockOutRateMapper {
                                                           @Param("product") Long product);
 
 
-    @Select("  SELECT  district_name,region_name, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockoutIncidence, count(*) as totalIncidence, \n" +
-            " ROUND(100.0 * (SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) )/ COUNT(product),2) AS percentage, a.processing_period_name, pp.enddate as reported \n" +
-            "FROM ( SELECT * from mv_stock_imbalance_by_facility_report ) a\n" +
-            " join processing_periods pp on pp.id=a.periodid\n" +
-            "where extract(year from pp.enddate) = #{year} and tracer=true \n" +
-            "  group by district_name,region_name, a.processing_period_name, pp.enddate order by district_name ")
+    @Select("select 100 - (((a.stockOutIncidence::float/a.totalIncidence::float)::float) * 100)::float as availabilityPercentage, asmonth as reportedMonth, district_name, region_name from \n" +
+            "(select  asmonth, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence,district_name, region_name,\n" +
+            "count(*) as totalIncidence\n" +
+            "from mv_stock_imbalance_by_facility_report\n" +
+            "where tracer=true and year=#{year}\n" +
+            "group by asmonth, district_name, region_name ) as a")
     List<HashMap<String,Object>> getStockOutRateTrendOfTracerProducts(@Param("year") Long year);
 
 
-    @Select("   SELECT  district_name,region_name, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockoutIncidence, count(*) as totalIncidence, \n" +
-            " ROUND(100.0 * (SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) )/ COUNT(product),2) AS percentage, a.processing_period_name, pp.enddate as reported \n" +
-            "FROM ( SELECT * from mv_stock_imbalance_by_facility_report ) a\n" +
-            " join processing_periods pp on pp.id=a.periodid\n" +
-            " join products p on p.code=a.productcode\n" +
-            "where extract(year from pp.enddate) = #{year} and p.id =#{product} \n" +
-            "  group by district_name,region_name, a.processing_period_name, pp.enddate order by district_name  ")
+    @Select( "select 100 - (((a.stockOutIncidence::float/a.totalIncidence::float)::float) * 100)::float as availabilityPercentage, asmonth as reportedMonth, district_name, region_name from \n" +
+            "(select  asmonth, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence, district_name, region_name,\n" +
+            "count(*) as totalIncidence\n" +
+            "from mv_stock_imbalance_by_facility_report\n" +
+            "where  year=#{year} and productid=#{product}\n" +
+            "group by asmonth, district_name, region_name ) as a")
     List<HashMap<String,Object>> getStockOutRateTrendOfProducts(@Param("year") Long year, @Param("product") Long product);
 
 
@@ -108,7 +107,7 @@ public interface  StockOutRateMapper {
             "            SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
             "            SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence," +
             " count(*) as totalIncidence,\n" +
-            "            MAX(processing_period_name) || ' ' || Max(year) as reported  \n" +
+            "            MAX(processing_period_name) || ' ' || MIN(year) as reported  \n" +
             "             from mv_stock_imbalance_by_facility_report  msifr\n" +
             "             inner join (\n" +
             "       select productid, max(periodid) from mv_stock_imbalance_by_facility_report\n" +
@@ -127,7 +126,7 @@ public interface  StockOutRateMapper {
             "            SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
             "            SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence," +
             " count(*) as totalIncidence,\n" +
-            "            MAX(processing_period_name) || ' ' || Max(year) as reported  \n" +
+            "            MAX(processing_period_name) || ' ' || MIN(year) as reported  \n" +
             "             from mv_stock_imbalance_by_facility_report  msifr\n" +
             "             inner join (\n" +
             "       select productid, max(periodid) from mv_stock_imbalance_by_facility_report\n" +
