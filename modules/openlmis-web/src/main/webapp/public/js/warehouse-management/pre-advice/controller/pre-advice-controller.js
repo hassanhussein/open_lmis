@@ -840,7 +840,7 @@ console.log($scope.fiiCost);
             blawbnumber: $scope.blAwbNumber,
             clearingagent: $scope.clearingAgent,
             expectedarrivaldate: $scope.expectedArrivalDate,
-            expecteddeliverydate:$scope.expectedDeliveryDate,
+            expecteddeliverydate:'2014-08-18',
             flightvesselnumber: $scope.flightVesselNumber,
             currencyId:$scope.selectedCurrency,
             note: $scope.notes,
