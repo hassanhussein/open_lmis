@@ -2,9 +2,7 @@ function PreAdviceSearchController($scope,DisableAsn, Preadvice, $location, navi
 
   $scope.searchOptions = [
 //  {value: "asnumber", name: "ASN Number"},
-    {value: "ponumber", name: "PO Number"},
-
-    {value: "supplier", name: "Supplier"}
+    {value: "ponumber", name: "PO Number"}
   ];
 
   $scope.$parent.asnViewMode=false;
