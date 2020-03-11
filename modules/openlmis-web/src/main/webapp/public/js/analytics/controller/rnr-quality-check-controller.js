@@ -1,23 +1,26 @@
 function RnRQualityCheckController (GetRejectedRnRByZoneReport,$scope,$location,$state,$window,Program,Period,$rootScope,RnrPassedQualityCheckData){
 
-$rootScope.loadRnrPassedQualityCheckData =  function (params) {
+$rootScope.loadRnrPassedQualityCheckData =  function (param) {
+      console.log(param);
 
-         params.status='INITIATED';
-         params.max=10000;
-         params.page=1;
+        $scope.opentitle = '#7: R&R passed data quality check '+param.periodName+' ,'+param.year;
+
+         param.status='INITIATED';
+         param.max=10000;
+         param.page=1;
          var dataV = [];
-        GetRejectedRnRByZoneReport.get(params, function (data) {
+        GetRejectedRnRByZoneReport.get(param, function (data) {
                       console.log(data.pages.rows);
            if(data.pages !== undefined && !isUndefined(data.pages.rows)){
            // dataValue=data.pages.rows;
 
             dataV = $scope.getRejectionRate(data.pages.rows);
 
-           loadChartSummary(params,dataV);
+           loadChartSummary(param,dataV);
 
            } else {
 
-            loadChartSummary(params,null);
+            loadChartSummary(param,null);
 
           }
 
@@ -29,6 +32,7 @@ $rootScope.loadRnrPassedQualityCheckData =  function (params) {
         });
 
 
+      console.log(param);
 
 };
 
@@ -36,7 +40,7 @@ $rootScope.loadRnrPassedQualityCheckData =  function (params) {
 function loadChartSummary(params,drillDownData) {
 
 
-  $scope.opentitle = '#7: R&R passed data quality check '+params.periodName+' ,'+params.year;
+
 
     RnrPassedQualityCheckData.get(params).then(function(data){
 

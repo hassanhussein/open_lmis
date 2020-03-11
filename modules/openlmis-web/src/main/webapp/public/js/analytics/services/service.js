@@ -192,12 +192,12 @@ services.factory('StockStatusByProgramData', function($q, $timeout, $resource, S
 });
 
 
-services.factory('FullProcessingPeriodData', function($q, $timeout, $resource, FullProcessingPeriods1) {
+services.factory('FullProcessingPeriodData', function($q, $timeout, $resource, FullProcessingPeriods) {
     function get(params) {
 
         var deferred = $q.defer();
         $timeout(function() {
-            FullProcessingPeriods1.get(params, function(data) {
+            FullProcessingPeriods.get(params, function(data) {
 
                 var stocks = [];
                 if (data !== undefined) {

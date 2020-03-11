@@ -61,6 +61,7 @@ function TimelinessReportingController($scope,$location,Program,Period,$rootScop
 
 
 $rootScope.loadTimelinessReportingData = function (params) {
+   console.log(params);
     $rootScope.title_reporting_timeliness =   '#8: Reporting Timeliness for '+params.programName+' ('+params.periodName+' ,'+params.year+')';
 
 TimelinessReportingData.get(params).then(function(data){

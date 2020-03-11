@@ -1,6 +1,6 @@
 function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
     GetEmergencyOrderByProgramData, GetEmergencyOrderTrendsData, DashboardRnrTypes, RejectionCount, RnRStatusSummary,
-    DefaultProgram, StockStatusByProgramData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData) {
+    DefaultProgram, StockStatusByProgramData,FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData) {
 
     //resourceLoadingConfig.hideReloadIcon = true;
     //resourceLoadingConfig.loadingDashlet = [];
@@ -15,55 +15,50 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
         if (!isUndefined(data)) {
             var program = data.program;
 
-            FullProcessingPeriods.get({
-                program: 0
-            }, function(data) {
+            FullProcessingPeriodData.get({program:parseInt(0,10)}).then(function(data){
+            console.log(data);
 
-                var period = data.period;
+                var period = data;
 
-                params = {
-                    product: parseInt(2434, 0),
-                    year: parseInt(period.stringYear, 0),
-                    program: parseInt(program.id, 0),
+               var newParam = {
+                    product: parseInt(2434, 10),
+                    year: parseInt(data.stringYear, 10),
+                    program: parseInt(program.id, 10),
                     programName: program.name,
-                    period: parseInt(period.id, 10),
-                    periodName: period.name,
+                    period: parseInt(data.id, 10),
+                    periodName: data.name,
                     schedule: period.scheduleId,
                     indicator: 'allTracerProducts',
                     zone: 437
                 };
 
+                params = newParam;
 
-                $scope.$parent.params = params;
-                //start loading functions by applying parameters
+               // $scope.$parent.params = par;
+
+                //start loading functions by applying default parameters
 
                // $scope.loadMap(params);
-                $rootScope.initializeRequisitionSummary(params);
 
-                $rootScope.loadStockAvailableForPeriodData(params);
-                $rootScope.loadTimelinessReportingData(params);
-                $rootScope.loadOnTimeDelivery(params);
-                $rootScope.loadRnrPassedQualityCheckData(params);
-                $rootScope.loadPercentageWastageData(params);
-                $rootScope.loadGeoFacilityStockMap(params);
+                //$rootScope.loadGeoFacilityStockMap($scope.$parent.params);
 
-                $scope.loadConsumptionTrendsData(params);
+               // $scope.loadConsumptionTrendsData($scope.$parent.params);
                 //$scope.loadStockStatusByProgram(params,'level1');
-                $rootScope.loadStockStatusSummary(params);
+               // $rootScope.loadStockStatusSummary($scope.$parent.params);
                 //$rootScope.loadStockStatusByProgramAndYearData(params);
-                $rootScope.loadStockAvailableByLevel(params);
-                $rootScope.loadStockStatusByProgramTrends(params, 'level1');
+                //$rootScope.loadStockAvailableByLevel($scope.$parent.params);
+              //  $rootScope.loadStockStatusByProgramTrends($scope.$parent.params, 'level1');
                 //$rootScope.loadConsumptionTrendSummary(params);
                 loadRegularEmergenceTrend(params);
 
                // $rootScope.loadHealthCommoditiesFinancing(params);
 
               //  $rootScope.loadStockOutRate(params);
-                $rootScope.loadCommoditiesComparison(params);
+                //$rootScope.loadCommoditiesComparison($scope.$parent.params);
 
                 $rootScope.loadLatestReportedStockStatus(params);
-              //  $rootScope.loadStockImbalance(params);
-                $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
+               //$rootScope.loadStockImbalance(params);
+                $rootScope.loadStockOutRateTrendForTracer($scope.$parent.params, "Tz");
             });
 
         }
@@ -224,6 +219,23 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
     }
 
+    function loadKpiSection(parameters) {
+    console.log(parameters);
+
+     $rootScope.initializeRequisitionSummary(parameters);
+
+     $rootScope.loadStockAvailableForPeriodData(parameters);
+
+     $rootScope.loadOnTimeDelivery(parameters);
+
+     $rootScope.loadRnrPassedQualityCheckData(parameters);
+
+     $rootScope.loadPercentageWastageData(parameters);
+
+     $rootScope.loadTimelinessReportingData(parameters);
+
+    }
+
     function loadRequisitionSection() {
 
         // if($scope.dashletSectionsLoaded.includes('requisition')) return;
@@ -307,8 +319,8 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                  $scope.facilitiesReportingViaCEAndFE = data.facilities;
          });*/
 
-        DashboardRnrTypes.get({
-            zoneId: $scope.filter.zoneId,
+      /*  DashboardRnrTypes.get({
+            zoneId: 437,
             periodId: $scope.filter.period,
             programId: $scope.filter.program,
             associatedDashlets: ['regularAndEmergencyRequisition']
@@ -407,7 +419,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 series: series
             });
 
-        });
+        });*/
 
         /*     RnRStatusSummary.get({
                          zoneId: 437,
@@ -625,6 +637,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
             case 'requisition':
                 loadRequisitionSection();
                 break;
+            case 'kpi':
+                  loadKpiSection(params);
+                  break;
             default:
                 console.log('Dashboard section does not exist');
         }

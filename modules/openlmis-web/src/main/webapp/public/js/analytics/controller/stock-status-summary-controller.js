@@ -2,7 +2,7 @@ function stockStatusSummaryController(Program,Period,$document,$scope,$location,
 
 
 $rootScope.loadStockStatusSummary = function(params) {
-
+console.log(params);
 StockStatusSummaryByPeriodData.get(params).then(function(data){
 var title = '#4:'+' Stock Availability of Health Commodities for  '+params.programName + ' '+params.periodName+', '+params.year+' ';
 $scope.titleStockSummary = title;
