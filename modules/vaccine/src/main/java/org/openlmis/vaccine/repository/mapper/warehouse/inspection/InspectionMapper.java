@@ -61,7 +61,7 @@ public interface InspectionMapper {
     List<InspectionDTO> searchBy(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
                                  RowBounds rowBounds);
 
-    @SelectProvider(type = InspectionMapper.SelectInspection.class, method = "getSearchForPutAway")
+    @SelectProvider(type = InspectionMapper.SelectInspection1.class, method = "getSearchForPutAway")
     List<PutAwayDTO> searchPutAwayBy(@Param(value = "searchParam") String searchParam, @Param(value = "column") String column,
                                      RowBounds rowBounds);
 
@@ -270,7 +270,20 @@ public interface InspectionMapper {
             return createQuery(sql, params).toString();
         }
 
+        private static StringBuilder createQuery(StringBuilder sql, Map<String, Object> params) {
 
+            String searchParam = (String) params.get("searchParam");
+            String column = (String) params.get("column");
+            if (column.equalsIgnoreCase("asnNumber")) {
+                sql.append("(LOWER(Q.asnNumber) LIKE LOWER('%" + searchParam + "%') ) ");
+            } else if (column.equalsIgnoreCase("poNumber")) {
+                sql.append("(Q.poNumber LIKE '%" + searchParam + "%')");
+            }
+            return sql;
+        }
+    }
+
+        class SelectInspection1 {
         public static String getSearchForPutAway(Map<String, Object> params) {
             StringBuilder sql = new StringBuilder();
             sql.append("WITH Q AS (select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +

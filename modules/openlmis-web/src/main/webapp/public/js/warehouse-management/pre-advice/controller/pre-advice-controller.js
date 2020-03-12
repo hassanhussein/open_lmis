@@ -22,9 +22,9 @@ var today = new Date();
 
 
     function convert(str) {
-        var month, day, year, hours, minutes, seconds;
+        var  day, year, hours, minutes, seconds;
         var date = new Date(str),
-        month = ("0" + (date.getMonth() + 1)).slice(-2),
+        month = ("0" + (date.getMonth() + 1)).slice(-2);
         day = ("0" + date.getDate()).slice(-2);
         hours = ("0" + date.getHours()).slice(-2);
         minutes = ("0" + date.getMinutes()).slice(-2);

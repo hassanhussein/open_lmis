@@ -84,17 +84,17 @@ $scope.warehouses=data.house;
 
       $scope.updateLocations=function(){
 
-      }
+      };
 
       $scope.clearEditMode=function(location){
 
       location.editMode=false;
-      }
+      };
 
        $scope.enterEditMode=function(location){
 
             location.editMode=true;
-            }
+            };
 
 
       $scope.editBin=function(row){
@@ -109,7 +109,7 @@ $scope.warehouses=data.house;
                         row.editMode=false;
                     });
 
-      }
+      };
 
        $scope.createLocation = function() {
               var newLocation = {};

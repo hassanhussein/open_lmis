@@ -22,4 +22,6 @@ public class PutAwayLineItemDTO extends BaseModel {
 
     private Long productId;
 
+    private String lotNumber;
+
 }

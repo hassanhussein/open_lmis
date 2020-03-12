@@ -80,8 +80,8 @@ public class LotOnHandLocationService {
 */
             StockEventDTO event = new StockEventDTO();
             Lot newLot = null;
-            if(dto.getLotId() != null)  {
-               newLot = lotRepository.getById(dto.getLotId());
+            if(dto.getLotNumber() != null)  {
+               newLot = lotRepository.getById(lotRepository.getByCode(dto.getLotNumber()).getId());
                 event.setLotId(newLot.getId());
                 event.setLot(newLot);
             } else {
