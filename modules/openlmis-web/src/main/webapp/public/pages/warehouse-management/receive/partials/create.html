@@ -89,7 +89,7 @@
                                     name="supplier"
                                     openlmis-message="label.select.parent.zone" ng-disabled="viewMode || editMode"
                                     ng-model="supplierId">
-                                <option value=""></option>
+                                <option value="">--Select Supplier--</option>
                                 <option ng-repeat="supplier in suppliers"
                                         value="{{ supplier.id }}"
                                         ng-selected="supplierId==supplier.id"
@@ -413,7 +413,7 @@
 
                                             </td>
                                             <td class="cell-input col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info || viewMode" ng-model="product.lots[0].quantity" style="width:110px">
+                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].boxCounted || product.lots[0].boxCounted==0 || viewMode" ng-model="product.lots[0].quantity" style="width:110px">
                                             </td>
                                             <td rowspan="{{product.lots.length}}" class="cell-input col-general" style="padding-left:1px;">
                                                 <input type="text"  ng-decimal="5" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity || viewMode" style="width:99px">
@@ -487,7 +487,7 @@
 
                                             </td>
                                             <td class="col-general cell-input">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.info  || viewMode" style="width:110px">
+                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.boxCounted ||lot.boxCounted==0  || viewMode" style="width:110px">
                                             </td>
                                             <td ng-if="!viewMode">
                                                 <button class="btn btn-small btn-info" ng-disabled="lot.quantity<1" ng-show="(product.lots.indexOf(lot)+1==product.lots.length && !lot.displayCodeOnly) && (!viewMode && !editMode)" type="button" ng-click="addLot(product,lot)" >Add</button>

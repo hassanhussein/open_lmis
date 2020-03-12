@@ -364,10 +364,10 @@ $scope.docList = [];
             minMonthsOfStock: 0,
             eop: null,
             lots: [{
-                quantity: 0,
+                quantity: '',
                 displayCodeOnly: false
             }],
-            unitPrice: 0
+            unitPrice: ''
 
         }];
 
@@ -394,10 +394,10 @@ $scope.changeProductType=function(isVaccine){
                             minMonthsOfStock: 0,
                             eop: null,
                             lots: [{
-                                quantity: 0,
+                                quantity: '',
                                 displayCodeOnly: false
                             }],
-                            unitPrice: 0
+                            unitPrice: ''
 
                         }];
              $scope.loadProducts($scope.homeFacilityId, 82,true);
@@ -409,8 +409,8 @@ $scope.changeProductType=function(isVaccine){
                             maxMonthsOfStock: 0,
                             minMonthsOfStock: 0,
                             eop: null,
-                            quantity:0,
-                            unitPrice: 0
+                            quantity:'',
+                            unitPrice: ''
 
                         }];
 
@@ -473,7 +473,7 @@ $scope.changeProductType=function(isVaccine){
 //        console.log($lotIndex);
         $scope.productsToAdd[productIndex].lots[$lotIndex].displayCodeOnly = true;
         $scope.productsToAdd[productIndex].lots.push({
-            quantity: 0,
+            quantity: '',
             displayCodeOnly: false
         });
         $scope.updateLotsToDisplay();
