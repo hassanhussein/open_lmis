@@ -84,6 +84,7 @@
                 <th id="codeHeader">Code</th>
                 <th id="nameHeader">Name</th>
                 <th id="parentHeader">Region</th>
+                <th>Active</th>
             </tr>
             </thead>
             <tbody>
@@ -93,6 +94,7 @@
                 </td>
                 <td id="locationName{{$index}}" ng-bind="location.name"></td>
                 <td id="locationZone{{$index}}" ng-bind="location.region"></td>
+                <td>{{location.active?"Yes":"No"}}</td>
 
 
             </tr>

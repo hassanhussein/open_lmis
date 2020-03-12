@@ -48,6 +48,7 @@ function SiteSearchController($scope, $location,GetSites,navigateBackService, $d
     GetSites.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
       console.log(data);
       $scope.siteList = data.sites;
+      console.log(data.sites);
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
