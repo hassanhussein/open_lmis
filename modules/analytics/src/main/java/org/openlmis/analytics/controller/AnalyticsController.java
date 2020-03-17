@@ -392,4 +392,9 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("stockImbalanceByDistrict", this.stockOutRateMapper.getLatestStockImbalanceReportByDistrictForProduct(product));
     }
 
+    @RequestMapping(value = "/getStockImbalanceSummary.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockImbalanceSummary() {
+        return OpenLmisResponse.response("imbalances", this.stockOutRateMapper.getStockImbalanceSummary());
+    }
+
 }

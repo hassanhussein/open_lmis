@@ -18,6 +18,7 @@ import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.restapi.domain.Report;
+import org.openlmis.restapi.domain.ReportDTO;
 import org.openlmis.restapi.request.RequisitionSearchRequest;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestRequisitionService;
@@ -239,21 +240,21 @@ public class RestRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "/rest-api/initiate-tz-sdp-requisitions", method = POST, headers = ACCEPT_JSON)
-    public ResponseEntity<RestResponse> InitiateRequisition(@RequestParam("agentCode") String facilityCode,
+    public ResponseEntity<RestResponse> InitiateRequisition(@RequestParam("facilityCode") String facilityCode,
                                                             @RequestParam("programCode") String programCode,
                                                             @RequestParam("sourceApplication") String sourceApplication,
                                                             Principal principal,
                                                             @RequestParam("emergence") boolean emergence
 
                                                             ) {
-        Report requisition;
+        ReportDTO requisition;
 
         try {
           /*  if(delete && rnrId != null){
                 restRequisitionService.deleteRnR(rnrId);
                 return response("rnr","deleted Successfully");
             }else {*/
-                requisition = restRequisitionService.initiateSDPReport(facilityCode,programCode, loggedInUserId(principal),emergence,sourceApplication);
+                requisition = restRequisitionService.initiatingSDPReport(facilityCode,programCode, loggedInUserId(principal),emergence,sourceApplication);
                 return response(RNR, requisition, CREATED);
             //}
         } catch (DataException e) {
@@ -278,6 +279,18 @@ public class RestRequisitionController extends BaseController {
         } catch (DataException e) {
             return error(e, CONFLICT);
         }
+    }
+
+    @RequestMapping(value = "/rest-api/requisitions/save", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> submitFacilityRequisition(@RequestBody ReportDTO report, Principal principal) {
+        Rnr requisition;
+
+        try {
+            requisition = restRequisitionService.submitFacilityLevelReport(report, loggedInUserId(principal));
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+        return response(RNR, requisition.getId(), CREATED);
     }
 
 

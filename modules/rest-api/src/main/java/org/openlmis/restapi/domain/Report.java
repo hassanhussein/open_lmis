@@ -25,6 +25,7 @@ import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.LineItemDTO;
 import org.postgresql.largeobject.LargeObject;
 
 import java.text.ParseException;
@@ -50,6 +51,7 @@ public class Report {
 
     private List<RnrLineItem> products;
     private List<RnrLineItem> nonFullSupplyProducts;
+    private List<RnrLineItem> fullSupplyProducts;
     private List<RegimenLineItem> regimens;
     private List<PatientQuantificationLineItem> patientQuantifications;
     private Map<String, OpenLmisMessage> errorMap = new HashMap<>();
@@ -114,6 +116,36 @@ public class Report {
         report.setSourceOrderId(null);
         report.setStatus(String.valueOf(rnr.getStatus()));
         return report;
+    }
+
+    public static Report prepareFeedBack(final Rnr rnr,String sourceApplication) {
+
+        Report report = new Report();
+        report.setAgentCode(rnr.getFacility().getCode());
+        report.setProgramCode(rnr.getProgram().getCode());
+        report.setRnrId(rnr.getId());
+        report.setApproverName(null);
+        report.setClientSubmittedNotes(null);
+
+        report.setEmergency(rnr.isEmergency());
+        report.setSourceApplication(sourceApplication);
+        report.setSourceApplication(null);
+        report.setPeriodId(rnr.getPeriod().getId());
+        report.setSourceOrderId(null);
+        report.setStatus(String.valueOf(rnr.getStatus()));
+
+        ArrayList<RnrLineItem> nonFullSupplyProducts = new ArrayList<RnrLineItem>() {{
+            addAll(rnr.getNonFullSupplyLineItems());
+        }};
+        report.setNonFullSupplyProducts(nonFullSupplyProducts);
+
+        ArrayList<RnrLineItem> fullSupplyProducts = new ArrayList<RnrLineItem>() {{
+            addAll(rnr.getFullSupplyLineItems());
+        }};
+        report.setFullSupplyProducts(fullSupplyProducts);
+
+        return report;
+
     }
 
     public void validate() {

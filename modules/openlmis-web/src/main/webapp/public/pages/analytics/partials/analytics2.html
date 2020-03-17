@@ -1157,6 +1157,7 @@
                                             <div class="card-action grey lighten-4">
 
                                                 <ng-include src='"/public/pages/analytics/partials/shared/stock-available-filter.html"'></ng-include>
+                                                <span ng-show="filteredData" class="pull-right"><button class="btn" ng-click="showSummaryStockAvailability(params, false)">Go to Summary</button></span>
 
                                             </div>
                                         </div>
@@ -1460,7 +1461,7 @@
                             <div class="row orderFillRate">
 
                                 <!-- Trend of Regular Orders Submitted Per Month chart report -->
-                                <div class="col s12 m4 l4">
+                                <div class="col s12 m6 l6">
                                     <div class="grey lighten-5 card row2-height" overlay-section="trendOfRegularOrdersSubmittedPerMonth">
 
                                         <div class="card-action" style="background-color: #17888f;">
@@ -1483,7 +1484,7 @@
                                 </div>
 
                                 <!-- Percentage of Regular Orders by Program (all time) -->
-                                <div class="col s12 m4 l4">
+                                <div class="col s12 m6 l6">
                                     <div class="grey lighten-5 card row2-height" overlay-section="percentageOfRegularOrders">
 
                                         <div class="card-action" style="background-color: #17888f;">
@@ -1506,7 +1507,7 @@
                                 </div>
 
                                 <!--  Regular Order By Program (Past 1 Month) -->
-                                <div class="col s12 m4 l4">
+                                <div class="col s12 m6 l6" ng-show="false">
                                     <div class="grey lighten-5 card row2-height" overlay-section="regularOrderByProgram">
                                         <div class="card-action" style="background-color: #17888f;">
                                             <span style="color:white">Regular Order By Program (Past 1 Month)</span>
@@ -1531,7 +1532,7 @@
                             <div class="row orderFillRate">
 
                                 <!-- RnR Rejection Trends chart-->
-                                <div class="col s12 m6 l4">
+                                <div class="col s12 m6 l6">
                                     <div class="grey lighten-5 card row3-height" overlay-section="rejectedRnrTrends">
                                         <!--     <h2 style="background-color: #17888f;
     font-size: 15px !important;
@@ -1555,7 +1556,7 @@
 
 
                                 <!-- R&R Status Summary -->
-                                <div class="col s12 m4 l4">
+                                <div class="col s12 m6 l6">
                                     <div class="grey lighten-5 card row3-height " overlay-section="rnrStatusSummary">
 
                                         <div class="card-action" style="background-color: #17888f;">
@@ -1569,7 +1570,7 @@
                                 </div>
                             </div>
 
-                            <div class="row orderFillRate" ng-show="false">
+                            <div class="row orderFillRate" ng-show="true">
 
                                 <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
                                 <div class="col s12 m4 l4">

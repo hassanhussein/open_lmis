@@ -158,4 +158,32 @@ public interface  StockOutRateMapper {
     List<HashMap<String,Object>> getLatestStockImbalanceReportByDistrictForProduct(@Param("product") Long product );
 
 
+    @Select("    SELECT  \n" +
+            "           SUM(stockOutIncidence)stockOutIncidence,\n" +
+            "           SUM(unknownIncidence)unknownIncidence,\n" +
+            "\n" +
+            "           SUM(overStockIncidence)overStockIncidence,\n" +
+            "           SUM(underStockIncidence)underStockIncidence,\n" +
+            "           SUM(adeliquateStockIncidence)adeliquateStockIncidence,\n" +
+            "           SUM(totalIncidence)totalIncidence,\n" +
+            "\t   reported\n" +
+            "           FROM ( select  msifr.district_name, region_name, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence,\n" +
+            "            SUM(CASE WHEN status='UK' THEN 1 ELSE 0 END) as unknownIncidence,\n" +
+            "             SUM(CASE WHEN status='OS' THEN 1 ELSE 0 END) as overStockIncidence,\n" +
+            "            SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
+            "            SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence,\n" +
+            "             count(*) as totalIncidence,\n" +
+            "            MAX(processing_period_name) || ' ' || MAX(a.year) as reported  \n" +
+            "            from mv_stock_imbalance_by_facility_report  msifr\n" +
+            "            inner join (\n" +
+            "            select productid, max(periodid), district_name, max(year) as year  from mv_stock_imbalance_by_facility_report\n" +
+            "            where tracer=true\n" +
+            "            group by productid, district_name\n" +
+            "            ) a on a.productid=msifr.productid and a.district_name=msifr.district_name\n" +
+            "            join processing_periods pp on pp.id=msifr.periodid\n" +
+            "             where tracer=true\n" +
+            "            group by msifr.district_name, region_name\n" +
+            "            order by reported desc ) X\n" +
+            "            GROUP BY reported")
+    List<HashMap<String,Object>>getStockImbalanceSummary();
 }

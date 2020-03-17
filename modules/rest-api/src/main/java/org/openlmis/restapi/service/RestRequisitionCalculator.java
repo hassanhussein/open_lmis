@@ -19,6 +19,7 @@ import org.openlmis.pod.domain.OrderPODLineItem;
 import org.openlmis.pod.service.PODService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrLineItem;
+import org.openlmis.rnr.dto.LineItemDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,23 @@ public class RestRequisitionCalculator {
       throw new DataException("error.rnr.already.submitted.for.this.period");
     }
   }
+//Refactor this after testing
+  public void validateProductList(List<LineItemDTO> products, Rnr savedRequisition) {
+    if (products == null) {
+      return;
+    }
 
+    List<String> invalidProductCodes = new ArrayList<>();
+    for (final RnrLineItem product : products) {
+      RnrLineItem correspondingLineItem = savedRequisition.findCorrespondingLineItem(product);
+      if (correspondingLineItem == null) {
+        invalidProductCodes.add(product.getProductCode());
+      }
+    }
+    if (!invalidProductCodes.isEmpty()) {
+      throw new DataException("invalid.product.codes", invalidProductCodes.toString());
+    }
+  }
   public void validateProducts(List<RnrLineItem> products, Rnr savedRequisition) {
     if (products == null) {
       return;

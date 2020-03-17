@@ -1129,6 +1129,10 @@ services.factory('GetLatestStockImbalanceReportByDistrictForProduct', function($
     return $resource('/api/dashboard/getLatestStockImbalanceReportByDistrictForProduct.json', {}, {});
 });
 
+services.factory('GetStockImbalanceSummary', function($resource) {
+    return $resource('/api/dashboard/getStockImbalanceSummary.json', {}, {});
+});
+
 
 
 services.factory('GetLatestStockImbalanceReportByDistrictForProductData', function($q, $timeout, $resource, GetLatestStockImbalanceReportByDistrictForProduct) {
@@ -1140,6 +1144,27 @@ services.factory('GetLatestStockImbalanceReportByDistrictForProductData', functi
                 var stockImbalanceByDistrict = [];
                 if (data !== undefined) {
                     stockImbalanceByDistrict = data.stockImbalanceByDistrict;
+                }
+                deferred.resolve(stockImbalanceByDistrict);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+services.factory('GetStockImbalanceSummaryData', function($q, $timeout, $resource, GetStockImbalanceSummary) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetStockImbalanceSummary.get(params, function(data) {
+                var stockImbalanceByDistrict = [];
+                if (data !== undefined) {
+                    stockImbalanceByDistrict = data.imbalances;
                 }
                 deferred.resolve(stockImbalanceByDistrict);
             });

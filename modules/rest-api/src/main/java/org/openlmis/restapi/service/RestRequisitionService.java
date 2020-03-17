@@ -26,8 +26,10 @@ import org.openlmis.core.service.*;
 import org.openlmis.order.service.OrderService;
 import org.openlmis.restapi.domain.ReplenishmentDTO;
 import org.openlmis.restapi.domain.Report;
+import org.openlmis.restapi.domain.ReportDTO;
 import org.openlmis.restapi.request.RequisitionSearchRequest;
 import org.openlmis.rnr.domain.*;
+import org.openlmis.rnr.dto.LineItemDTO;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.service.RequisitionService;
 import org.openlmis.rnr.service.RnrTemplateService;
@@ -92,6 +94,21 @@ public class RestRequisitionService {
     @Autowired
     private ProcessingScheduleService processingScheduleService;
 
+
+    @Transactional
+    public Rnr initiateSDP(Report report, Long userId) {
+
+        report.validate();
+
+        Facility reportingFacility = facilityService.getOperativeFacilityByCode(report.getAgentCode());
+        Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
+
+        restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
+
+        return requisitionService.initiate(reportingFacility, reportingProgram, userId, EMERGENCY, null, SOURCE_APPLICATION_OTHER);
+
+    }
+
     @Transactional
     public Rnr submitReport(Report report, Long userId) {
         report.validate();
@@ -121,6 +138,75 @@ public class RestRequisitionService {
 
         rnr = requisitionService.submit(rnr);
 
+        return requisitionService.authorize(rnr);
+    }
+
+
+    @Transactional
+    public Rnr submitFacilityLevelReport(ReportDTO report, Long userId) {
+        report.validate();
+
+        Facility reportingFacility = facilityService.getFacilityByCode(report.getFacilityCode());
+        Program reportingProgram = programService.getValidatedProgramByCode(report.getProgramCode());
+        ProcessingPeriod period = processingPeriodService.getById(valueOf(report.getPeriodId()));
+
+
+        Rnr rnr;
+        List<Rnr> rnrs = null;
+
+        RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+        searchCriteria.setProgramId(reportingProgram.getId());
+        searchCriteria.setFacilityId(reportingFacility.getId());
+        searchCriteria.setWithoutLineItems(true);
+        searchCriteria.setUserId(userId);
+
+        if (report.getPeriodId() != null) {
+            //check if the requisition has already been initiated / submitted / authorized.
+            restRequisitionCalculator.validateCustomPeriod(reportingFacility, reportingProgram, period, userId);
+            rnrs = requisitionService.getRequisitionsFor(searchCriteria, asList(period));
+        }
+
+
+        if (rnrs != null && rnrs.size() > 0) {
+            rnr = requisitionService.getFullRequisitionById(rnrs.get(0).getId());
+
+        } else {
+            //by default, this API is being called from ELMIS_FE
+            //if not, the application would have specified it's name.
+            String sourceApplication = Strings.isNullOrEmpty(report.getSourceApplication()) ? SOURCE_APPLICATION_ELMIS_FE : report.getSourceApplication();
+            rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, report.getEmergency(), period, sourceApplication);
+        }
+
+        List<LineItemDTO> fullSupplyProducts = new ArrayList<>();
+        List<LineItemDTO> nonFullSupplyProducts = new ArrayList<>();
+
+        fullSupplyFacilityTypeApprovedProducts = facilityApprovedProductService.getFullSupplyFacilityApprovedProductByFacilityAndProgram(reportingFacility.getId(), reportingProgram.getId());
+        nonFullSupplyFacilityApprovedProducts = facilityApprovedProductService.getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(reportingFacility.getId(), reportingProgram.getId());
+
+        Collection<String> fullSupplyProductCodes = (Collection<String>) CollectionUtils.collect(fullSupplyFacilityTypeApprovedProducts, input -> ((FacilityTypeApprovedProduct) input).getProgramProduct().getProduct().getCode());
+        Collection<String> nonFullSupplyProductCodes = (Collection<String>) CollectionUtils.collect(nonFullSupplyFacilityApprovedProducts, input -> ((FacilityTypeApprovedProduct) input).getProgramProduct().getProduct().getCode());
+
+        fullSupplyProducts = report.getFullSupplyProducts().stream()
+                .filter(p -> fullSupplyProductCodes.contains(p.getProductCode()))
+                .collect(Collectors.toList());
+
+        nonFullSupplyProducts = report.getNonFullSupplyProducts().stream()
+                .filter(p -> nonFullSupplyProductCodes.contains(p.getProductCode()))
+                .collect(Collectors.toList());
+
+        for (RnrLineItem li : nonFullSupplyProducts) {
+            setNonFullSupplyCreatorFields(li);
+        }
+
+        report.setFullSupplyProducts(fullSupplyProducts);
+        report.setNonFullSupplyProducts(nonFullSupplyProducts);
+
+        restRequisitionCalculator.validateProductList(report.getFullSupplyProducts(), rnr);
+
+        markSkippedLineItemList(rnr, report);
+
+        requisitionService.save(rnr);
+        rnr = requisitionService.submit(rnr);
         return requisitionService.authorize(rnr);
     }
 
@@ -208,6 +294,23 @@ public class RestRequisitionService {
     }
 
     private void setNonFullSupplyCreatorFields(final RnrLineItem lineItem) {
+
+        FacilityTypeApprovedProduct facilityTypeApprovedProduct = (FacilityTypeApprovedProduct) find(nonFullSupplyFacilityApprovedProducts, new Predicate() {
+            @Override
+            public boolean evaluate(Object product) {
+                return ((FacilityTypeApprovedProduct) product).getProgramProduct().getProduct().getCode().equals(lineItem.getProductCode());
+            }
+        });
+        if (facilityTypeApprovedProduct == null) {
+            return;
+        }
+        lineItem.populateFromProduct(facilityTypeApprovedProduct.getProgramProduct());
+        lineItem.setMaxMonthsOfStock(facilityTypeApprovedProduct.getMaxMonthsOfStock());
+    }
+
+//Refactor this code after testing is done
+
+    private void setNonFullSupplyCreator(final LineItemDTO lineItem) {
 
         FacilityTypeApprovedProduct facilityTypeApprovedProduct = (FacilityTypeApprovedProduct) find(nonFullSupplyFacilityApprovedProducts, new Predicate() {
             @Override
@@ -321,6 +424,46 @@ public class RestRequisitionService {
         }
 
     }
+
+    private void markSkippedLineItemList(Rnr rnr, ReportDTO report) {
+
+        ProgramRnrTemplate rnrTemplate = rnrTemplateService.fetchProgramTemplateForRequisition(rnr.getProgram().getId());
+
+        List<RnrLineItem> savedLineItems = rnr.getFullSupplyLineItems();
+        List<LineItemDTO> reportedProducts = report.getFullSupplyProducts();
+
+        for (final RnrLineItem savedLineItem : savedLineItems) {
+            RnrLineItem reportedLineItem = (RnrLineItem) find(reportedProducts, new Predicate() {
+                @Override
+                public boolean evaluate(Object product) {
+                    return ((RnrLineItem) product).getProductCode().equals(savedLineItem.getProductCode());
+                }
+            });
+
+            copyInto(savedLineItem, reportedLineItem, rnrTemplate);
+        }
+
+
+        savedLineItems = rnr.getNonFullSupplyLineItems();
+        reportedProducts = report.getNonFullSupplyProducts();
+        if (reportedProducts != null) {
+            for (final RnrLineItem reportedLineItem : reportedProducts) {
+                RnrLineItem savedLineItem = (RnrLineItem) find(savedLineItems, new Predicate() {
+                    @Override
+                    public boolean evaluate(Object product) {
+                        return ((RnrLineItem) product).getProductCode().equals(reportedLineItem.getProductCode());
+                    }
+                });
+                if (savedLineItem == null && reportedLineItem != null) {
+                    rnr.getNonFullSupplyLineItems().add(reportedLineItem);
+                } else {
+                    copyInto(savedLineItem, reportedLineItem, rnrTemplate);
+                }
+            }
+        }
+
+    }
+
 
     private void copyInto(RnrLineItem savedLineItem, RnrLineItem reportedLineItem, ProgramRnrTemplate rnrTemplate) {
         if (reportedLineItem == null) {
@@ -591,14 +734,18 @@ public class RestRequisitionService {
 
     }
 
-    public Report initiateSDPReport(String facilityCode, String programCode, Long userId, Boolean emergence, String sourceApplication) {
+    public ReportDTO initiatingSDPReport(String facilityCode, String programCode, Long userId, Boolean emergence, String sourceApplication) {
 
         if (isEmpty(facilityCode) || isEmpty(programCode)) {
             throw new DataException("error.mandatory.fields.missing");
         }
-
+        Facility reportingFacility;
         //Check if Facility Code Exists
-        Facility reportingFacility = facilityService.getOperativeSdpFacilityByCode(facilityCode);
+        if(!sourceApplication.equalsIgnoreCase("GOTHOMIS")) {
+            reportingFacility = facilityService.getOperativeSdpFacilityByCode(facilityCode);
+        }else {
+            reportingFacility = facilityService.getByCodeFor(facilityCode);
+        }
 
         Program reportingProgram = programService.getValidatedProgramByCode(programCode);
         if (reportingFacility != null) {
@@ -610,8 +757,41 @@ public class RestRequisitionService {
 
         Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, emergence, null, sourceApp);
 
+        return ReportDTO.prepareFeedBack(rnr,sourceApplication);
 
-        return Report.prepareForREST(rnr);
+    }
+
+    public Report initiateSDPReport(String facilityCode, String programCode, Long userId, Boolean emergence, String sourceApplication) {
+
+        if (isEmpty(facilityCode) || isEmpty(programCode)) {
+            throw new DataException("error.mandatory.fields.missing");
+        }
+        Facility reportingFacility;
+        //Check if Facility Code Exists
+        if(!sourceApplication.equalsIgnoreCase("GOTHOMIS")) {
+            reportingFacility = facilityService.getOperativeSdpFacilityByCode(facilityCode);
+        }else {
+            reportingFacility = facilityService.getByCodeFor(facilityCode);
+        }
+
+        Program reportingProgram = programService.getValidatedProgramByCode(programCode);
+        if (reportingFacility != null) {
+            reportingFacility.setVirtualFacility(false);
+
+        restRequisitionCalculator.validatePeriod(reportingFacility, reportingProgram);
+        }
+        String sourceApp = (sourceApplication == null)?SOURCE_APPLICATION_OTHER:sourceApplication;
+
+        Rnr rnr = requisitionService.initiate(reportingFacility, reportingProgram, userId, emergence, null, sourceApp);
+        Report rep;
+        if(!sourceApplication.equalsIgnoreCase("GOTHOMIS")) {
+            rep = Report.prepareFeedBack(rnr,sourceApplication);
+        }else {
+            rep = Report.prepareForREST(rnr);
+
+        }
+
+        return rep;
 
     }
 

@@ -29,12 +29,12 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                     periodName: data.name,
                     schedule: period.scheduleId,
                     indicator: 'allTracerProducts',
-                    zone: 437
+                    zoneId: 437
                 };
 
                 params = newParam;
 
-               // $scope.$parent.params = par;
+                $scope.$parent.params = params;
 
                 //start loading functions by applying default parameters
 
@@ -58,7 +58,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
                 $rootScope.loadLatestReportedStockStatus(params);
                //$rootScope.loadStockImbalance(params);
-                $rootScope.loadStockOutRateTrendForTracer($scope.$parent.params, "Tz");
+                $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
             });
 
         }
@@ -222,7 +222,7 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
     function loadKpiSection(parameters) {
     console.log(parameters);
 
-     $rootScope.initializeRequisitionSummary(parameters);
+    $rootScope.loadStockStatusSummary(parameters,false);
 
      $rootScope.loadStockAvailableForPeriodData(parameters);
 
@@ -232,7 +232,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
      $rootScope.loadPercentageWastageData(parameters);
 
-     $rootScope.loadTimelinessReportingData(parameters);
+    // $rootScope.loadTimelinessReportingData(parameters);
+
+     $rootScope.initializeRequisitionSummary(parameters);
 
     }
 
