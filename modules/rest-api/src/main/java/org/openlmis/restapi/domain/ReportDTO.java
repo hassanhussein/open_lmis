@@ -68,6 +68,7 @@ public class ReportDTO {
          item.setFullSupply(true);
          item.setStockOutDays(r.getStockOutDays());
          item.setLossesAndAdjustments(r.getLossesAndAdjustments());
+         item.setProduct(r.getProduct());
 
          fullSupplyProducts.add(item);
 
@@ -85,6 +86,7 @@ public class ReportDTO {
             item.setFullSupply(false);
             item.setStockOutDays(r.getStockOutDays());
             item.setLossesAndAdjustments(r.getLossesAndAdjustments());
+            item.setProduct(r.getProduct());
 
             nonFullSupplyProducts.add(item);
 
