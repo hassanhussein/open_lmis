@@ -3,6 +3,7 @@ package org.openlmis.vaccine.service.warehouse;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.LocationType;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.LocationTypeService;
 import org.openlmis.vaccine.domain.wms.WareHouse;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
@@ -11,6 +12,8 @@ import org.openlmis.vaccine.dto.WarehouseLocationDTO;
 import org.openlmis.vaccine.repository.warehouse.WareHouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,12 +43,19 @@ public class WareHouseService {
     private WareHouseLineItemService lineItemService;
 
     public void save(WareHouse house) {
+         try {
+             if (house.getId() == null) {
+                 repository.insert(house);
+                 return;
+             }
+             repository.update(house);
+         }
+         catch (DuplicateKeyException e) {
+             throw new DataException("error.duplicate.warehouse.code");
+         } catch (DataIntegrityViolationException e) {
+             throw new DataException("error.incorrect.length");
+         }
 
-        if(house.getId() == null) {
-            repository.insert(house);
-        }else {
-            repository.update(house);
-        }
     }
 
     public Pagination getPagination(Integer page) {
@@ -115,11 +125,18 @@ public class WareHouseService {
 
         LocationType type = locationTypeService.getByDisplayOrder(location.getDisplayOrder());
         location.setTypeId(type.getId());
+        try {
 
-        if(location.getId() == null) {
-            repository.saveLocation(location);
-        }else {
+            if (location.getId() == null) {
+                repository.saveLocation(location);
+                return;
+            }
             repository.updateLocation(location);
+        }
+        catch (DuplicateKeyException e) {
+            throw new DataException("error.duplicate.bin.location.code");
+        } catch (DataIntegrityViolationException e) {
+            throw new DataException("error.incorrect.length");
         }
     }
 

@@ -82,8 +82,13 @@ public interface WareHouseMapper {
     })
     List<WareHouse>getAllWarehouses();
 
-    @Select({"SELECT COUNT(*) FROM public.wms_locations h \n" ,
-            " WHERE LOWER(h.code) LIKE '%' || LOWER(#{searchParam} || '%') "})
+    @Select({"     SELECT count(*) FROM public.wms_locations L\n" ,
+            "            \n" +
+                    "            JOIN wms_location_types type ON l.typeId = type.id\n" ,
+            "            \n" +
+                    "            JOIN WAREHOUSES H ON L.warehouseId = H.ID ",
+            " WHERE LOWER(L.code) LIKE '%' || LOWER(#{searchParam} || '%') ",
+            "  "})
     Integer getTotalBinsSearchResultCount(@Param("searchParam") String searchParam);
 
 
