@@ -92,7 +92,7 @@ public class HealthFacilityDTO  extends BaseModel implements Importable {
     @JsonProperty("Village")
     public String villageMtaa;
 
-    @ImportField(name = "Region Code")
+    @ImportField(name = "Facility Type Group")
     @JsonProperty("FacilityTypeGroup")
     public String facilityTypeGroup;
 
@@ -156,7 +156,7 @@ public class HealthFacilityDTO  extends BaseModel implements Importable {
 
     public String status;
 
-    @ImportField(name = "PostorUpdate")
+    @ImportField(name = "District Code")
     @JsonProperty("District_Code")
     public String districtCode;
 
