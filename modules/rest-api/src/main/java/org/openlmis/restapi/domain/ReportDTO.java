@@ -60,7 +60,7 @@ public class ReportDTO {
 
          LineItemDTO item = new LineItemDTO();
          item.setRnrId(r.getRnrId());
-         item.setBeginningBalance(r.getBeginningBalance());
+         item.setBeginningBalance((r.getBeginningBalance()==null)?0:r.getBeginningBalance());
          item.setQuantityReceived(r.getQuantityReceived());
          item.setStockInHand(r.getStockInHand());
          item.setSkipped(r.getSkipped());
@@ -78,7 +78,7 @@ public class ReportDTO {
 
             LineItemDTO item = new LineItemDTO();
             item.setRnrId(r.getRnrId());
-            item.setBeginningBalance(r.getBeginningBalance());
+            item.setBeginningBalance((r.getBeginningBalance()==null)?0:r.getBeginningBalance());
             item.setQuantityReceived(r.getQuantityReceived());
             item.setStockInHand(r.getStockInHand());
             item.setSkipped(r.getSkipped());
