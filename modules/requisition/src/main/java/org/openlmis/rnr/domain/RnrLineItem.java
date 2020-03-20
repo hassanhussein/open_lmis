@@ -198,8 +198,8 @@ public class RnrLineItem extends LineItem {
 
         for (String fieldName : nonNullableFields) {
             if (template.columnsVisible(fieldName) &&
-                    !template.columnsCalculated(fieldName)
-                   // (getValueFor(fieldName) == null || (Integer) getValueFor(fieldName) < 0)
+                    !template.columnsCalculated(fieldName) &&
+                    (getValueFor(fieldName) == null || (Integer) getValueFor(fieldName) < 0)
             )
             {
                 throw new DataException(RNR_VALIDATION_ERROR);
