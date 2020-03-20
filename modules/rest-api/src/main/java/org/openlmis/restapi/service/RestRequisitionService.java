@@ -202,13 +202,15 @@ public class RestRequisitionService {
         report.setNonFullSupplyProducts(nonFullSupplyProducts);
 
         restRequisitionCalculator.validateProductList(report.getFullSupplyProducts(), rnr);
-
+        copyLineItems(rnr,report);
         markSkippedLineItemList(rnr, report);
 
+
         requisitionService.save(rnr);
-        rnr = requisitionService.submit(rnr);
-        return requisitionService.authorize(rnr);
+         rnr = requisitionService.submit(rnr);
+        return  requisitionService.authorize(rnr);
     }
+
 
     private void updateClientFields(Report report, Rnr rnr) {
         Date clientSubmittedTime = report.getClientSubmittedTime();
@@ -336,6 +338,22 @@ public class RestRequisitionService {
             }
         }
     }
+    private void copyLineItems(Rnr rnr, ReportDTO report) {
+
+      if(report != null) {
+
+       for(RnrLineItem lineItem : report.getFullSupplyProducts()) {
+
+           RnrLineItem correspondingFullSupplyLineItem = rnr.findCorrespondingLineItem(lineItem);
+
+           if (correspondingFullSupplyLineItem == null)
+               throw new DataException("error.invalid.line.items");
+           correspondingFullSupplyLineItem.populate(lineItem);
+       }
+
+      }
+
+    }
 
     private void insertPatientQuantificationLineItems(Report report, Rnr rnr) {
         if (report.getPatientQuantifications() != null) {
@@ -446,7 +464,7 @@ public class RestRequisitionService {
 
         savedLineItems = rnr.getNonFullSupplyLineItems();
         reportedProducts = report.getNonFullSupplyProducts();
-        if (reportedProducts != null) {
+        if ( !report.getNonFullSupplyProducts().isEmpty() && report.getNonFullSupplyProducts() != null ) {
             for (final RnrLineItem reportedLineItem : reportedProducts) {
                 RnrLineItem savedLineItem = (RnrLineItem) find(savedLineItems, new Predicate() {
                     @Override

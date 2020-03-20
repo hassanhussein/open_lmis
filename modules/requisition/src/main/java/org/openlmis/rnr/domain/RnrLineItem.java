@@ -198,8 +198,10 @@ public class RnrLineItem extends LineItem {
 
         for (String fieldName : nonNullableFields) {
             if (template.columnsVisible(fieldName) &&
-                    !template.columnsCalculated(fieldName) &&
-                    (getValueFor(fieldName) == null || (Integer) getValueFor(fieldName) < 0)) {
+                    !template.columnsCalculated(fieldName)
+                   // (getValueFor(fieldName) == null || (Integer) getValueFor(fieldName) < 0)
+            )
+            {
                 throw new DataException(RNR_VALIDATION_ERROR);
             }
         }
@@ -584,4 +586,13 @@ public class RnrLineItem extends LineItem {
         return lossAndAdjustmentTypeFromList.getAdditive();
     }
 
+    public void populate(RnrLineItem lineItem) {
+
+        this.beginningBalance = lineItem.getBeginningBalance();
+        this.quantityReceived = lineItem.getQuantityReceived();
+        this.quantityDispensed = lineItem.getQuantityDispensed();
+        this.stockInHand = lineItem.getStockInHand();
+        this.newPatientCount = lineItem.getNewPatientCount();
+
+    }
 }

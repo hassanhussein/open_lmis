@@ -79,7 +79,7 @@
             </h4>
             <span>
 
-                     <div class="row-fluid scrollable pull-left clearfix " style="width:250px" >
+                     <div class="row-fluid scrollable pull-left clearfix " style="width:250px" ng-show="false">
 
                             <table class="table-bordered" style="width:250px">
                                 <tr>
@@ -121,10 +121,84 @@
                     </div>
 
                        <div class="row-fluid pull-left" style="width:100% !important;max-height: 150px !important;">
-                        <ul style="list-style: none; height: 150px; overflow: auto">
+                                       <!-- New List -->
+
+      <ul style="list-style: none; height: 150px; overflow: auto;    margin: 0;padding: 0;width: 100%;" ng-show="true">
+          <li style="text-decoration: none;">
+
+              <div class="span12 row-fluid" ng-repeat="source in sourceOfFundList" style="border-bottom: 1px solid #ccc;">
+
+                <div class="span4" style="border-bottom: 0px solid #ccc; !important">
+                    <span class="pull-left" style="float: left; display: block; width: 100px;height: 20px;">{{source.name}}</span>
+                </div>
+                <div class="span4" style="border-bottom: 0px solid #ccc; !important">
+
+               <span class="pull-left" style="float: left; display: block; width: 100px; height: 20px;"><span>( {{source.total}} )</span></span>
+
+                </div>
+                <div class="span4" style="border-bottom: 0px solid #ccc; !important">
+
+                       <span class="pull-left" style="float: left; display: block; width: 50px;height: 20px;">
+
+                           <input keyboard="true"
+                                  style="width:80px !important;height:15px;"
+
+                                  type="text" ng-model="source.quantity"  ng-disabled="formDisabled"  numeric-validator="positiveInteger" placeholder="Quantity"/>
+                    <!--       <input keyboard="true" maxlength="8"
+
+                                  name="{{source.quantity}}"
+                     ng-change="reEvaluateTotalSourceOfFund(); resetModalErrorAndSetFormDirty()"
+                     ng-class="highlightRequiredFieldInModal(source.quantity)"
+                     ng-disabled="formDisabled"
+                     ng-model="source.quantity"
+                     ng-required="true"
+                     numeric-validator="positiveInteger"
+                     openlmis-message="placeholder.quantity"
+                     style="width:100px !important"
+                     type="text"
+              />-->
+
+              </span>
+
+
+
+                </div>
+
+              </div>
+
+
+         <!--     <span class="pull-left" style="float: left; display: block; width: 100px;">{{source.name}}</span>
+              <span class="pull-left" style="float: left; display: block; width: 50px;"><span>( {{source.total}} )</span></span>
+              <span class="pull-left" style="float: left; display: block; width: 50px;">
+
+              <input keyboard="true" maxlength="8"
+                     name="{{source.quantity}}"
+                     ng-change="reEvaluateTotalSourceOfFund(); resetModalErrorAndSetFormDirty()"
+                     ng-class="highlightRequiredFieldInModal(source.quantity)"
+                     ng-disabled="formDisabled"
+                     ng-model="source.quantity"
+                     ng-required="true"
+                     numeric-validator="positiveInteger"
+                     openlmis-message="placeholder.quantity"
+                     style="width:100px !important"
+                     type="text"
+              />
+
+              </span>-->
+
+
+          </li>
+
+
+       </ul>
+
+
+
+
+                        <ul style="list-style: none; height: 150px; overflow: auto" ng-show="false">
           <li ng-repeat="adjustment in sourceOfFund.sourceOfFunds">
 
-                   <span class="pull-left" style="float: left; display: block; width: 100px;">{{adjustment.name}}</span>
+              <span class="pull-left" style="float: left; display: block; width: 100px;">{{adjustment.name}}</span>
 
             <span style="width:100px !important">
 

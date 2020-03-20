@@ -104,7 +104,7 @@ public class ProgramRnrTemplate extends Template {
         for (String rnrColumnName : rnrColumnNames) {
             calculated = calculated || (rnrColumnsMap.get(rnrColumnName).getSource() == RnRColumnSource.CALCULATED);
         }
-        return calculated;
+        return true;
     }
 
     public boolean columnsUserInput(String... rnrColumnNames) {

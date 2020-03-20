@@ -28,6 +28,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
       scope.$parent.$parent.$parent.rnr.allowSubmissionIfNoSourceOfFundDefined = false;
       }
 
+    scope.sourceOfFundList = [{name:'User Fees', code:'UF', total:500000,quantity:0}, {name:'RBF Fees', code:'rbf',total:2000, quantity:0}];
 
 
      scope.loadOtherSource = function(){
