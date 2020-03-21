@@ -89,14 +89,13 @@ public class NotificationServices {
 
   public void notifyRequisitionToFacilityLvelSystems(Rnr requisition){
 
-
     String username = configService.getByKey(GOTHOMIS_USERNAME).getValue();
     String password = configService.getByKey(GOTHOMIS_PASSWORD).getValue();
     String url = configService.getByKey(GOTHOMIS_URL).getValue();
-    String got_url = configService.getByKey(URL_POST_GOTHMIS).getValue();
-    String grant_type = configService.getByKey(GRANT_TYPE).getValue();
-    String token_access_username = configService.getByKey(TOKEN_ACCESS_USERNAME).getValue();
-    String token_access_password = configService.getByKey(TOKEN_ACCESS_PASSWORD).getValue();
+    String gotUrl = configService.getByKey(URL_POST_GOTHMIS).getValue();
+    String grantType = configService.getByKey(GRANT_TYPE).getValue();
+    String tokenAccessUsername = configService.getByKey(TOKEN_ACCESS_USERNAME).getValue();
+    String tokenAccessPassword = configService.getByKey(TOKEN_ACCESS_PASSWORD).getValue();
 
 
     String authStr = username+":"+password;
@@ -106,23 +105,23 @@ public class NotificationServices {
     headers.add("Authorization", "Basic " + base64Creds);
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-    map.add("grant_type", grant_type);
-    map.add("username", token_access_username);
-    map.add("password", token_access_password);
+    map.add("grant_type", grantType);
+    map.add("username", tokenAccessUsername);
+    map.add("password", tokenAccessPassword);
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
     ResponseEntity<String> response = new RestTemplate().postForEntity( url, request , String.class );
 
     System.out.println(response.getBody());
-     sendToFacility(got_url, response.getBody(), requisition);
-
-   // sendDataToFacility(username, password,url,values);
+     sendToFacility(gotUrl, response.getBody(), requisition);
 
   }
 
   private void sendToFacility(String url, String tocken, Rnr rnr) {
     ObjectMapper mapper = new ObjectMapper();
+
+    User user =  userService.getById(rnr.getModifiedBy());
 
     try {
 
@@ -137,6 +136,7 @@ public class NotificationServices {
       map.add("access_token", statusData.getAccessToken());
       map.add("status", rnr.getStatus().toString());
       map.add("rnrId", rnr.getId().toString());
+      map.add("approverName", user.getFirstName() +" "+user.getLastName());
       //map.add("username", "matoto@gmail.com");
       // map.add("password", "12345678");
 
@@ -144,8 +144,6 @@ public class NotificationServices {
 
       ResponseEntity<String> response = new RestTemplate().postForEntity( baseUrl, request , String.class );
 
-
-      System.out.println("Posted ");
       System.out.println(response.getBody());
 
 
@@ -153,57 +151,6 @@ public class NotificationServices {
       e.printStackTrace();
     }
   }
-
-  private void sendDataToFacility(String username, String password, String url, HashMap<String,String> data) {
-    ObjectMapper mapper = new ObjectMapper();
-    java.net.URL obj = null;
-    try {
-      obj = new URL(url);
-      HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-      String jsonInString ="";
-
-      jsonInString = mapper.writeValueAsString(data);
-
-      System.out.println(jsonInString);
-
-      String userCredentials = username + ":" + password;
-      //String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
-
-      String encoded = Base64.getEncoder().encodeToString((username+":"+password).getBytes(StandardCharsets.UTF_8));  //Java 8
-
-      con.setRequestProperty("Authorization", "Basic "+encoded);
-      con.setRequestMethod("POST");
-      con.setRequestProperty("Content-Type", "multipart/form-data");
-      con.setDoOutput(true);
-      OutputStream wr = con.getOutputStream();
-      wr.write(jsonInString.getBytes("UTF-8"));
-
-      wr.flush();
-      wr.close();
-
-      int responseCode = con.getResponseCode();
-
-      BufferedReader in = new BufferedReader(
-              new InputStreamReader(con.getInputStream()));
-      String inputLine;
-      StringBuilder response = new StringBuilder();
-
-      while ((inputLine = in.readLine()) != null) {
-        response.append(inputLine);
-      }
-      in.close();
-      System.out.println(response);
-      //print result
-
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-
-  }
-
 
 
   public void notifyStatusChange(Rnr requisition) {

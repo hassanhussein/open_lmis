@@ -60,7 +60,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
        scope.totalSourceOfFund = 0;
      scope.updateTotalQuantity = function(source, sourceOfFundList) {
                         console.log(source.quantity);
-            if(source.quantity === null){
+            if(isUndefined(source.quantity)){
               source.quantity = 0;
             }
 
