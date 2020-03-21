@@ -59,14 +59,14 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
      var totalAmount = 0;
        scope.totalSourceOfFund = 0;
      scope.updateTotalQuantity = function(source, sourceOfFundList) {
+                        console.log(source.quantity);
             if(source.quantity === null){
-               console.log('is null')
               source.quantity = 0;
             }
 
             source.quantity = parseInt(source.quantity,10);
 
-              console.log(sourceOfFundList);
+
      };
 //totalSources
 console.log(totalAmount);
