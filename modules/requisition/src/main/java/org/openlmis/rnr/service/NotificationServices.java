@@ -106,9 +106,9 @@ public class NotificationServices {
     headers.add("Authorization", "Basic " + base64Creds);
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
-    map.add("grant_type", GRANT_TYPE);
-    map.add("username", TOKEN_ACCESS_USERNAME);
-    map.add("password", TOKEN_ACCESS_PASSWORD);
+    map.add("grant_type", grant_type);
+    map.add("username", token_access_username);
+    map.add("password", token_access_password);
 
     HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
