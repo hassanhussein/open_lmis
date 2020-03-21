@@ -11,6 +11,8 @@
  */
 package org.openlmis.rnr.service;
 
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ConfigurationSettingKey;
@@ -19,18 +21,31 @@ import org.openlmis.core.domain.User;
 import org.openlmis.core.service.*;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.dto.FacilityLevelRequisitionStatusDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.io.OutputStream;
+import java.net.*;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -39,6 +54,14 @@ import java.util.List;
 public class NotificationServices {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServices.class);
+  private static final String GOTHOMIS = "GOTHOMIS";
+  private static final String GOTHOMIS_USERNAME = "GOTHOMIS_USERNAME";
+  private static final String GOTHOMIS_PASSWORD = "GOTHOMIS_PASSWORD";
+  private static final String GOTHOMIS_URL = "GOTHOMIS_URL";
+  private static final String GRANT_TYPE = "GRANT_TYPE";
+  private static final String URL_POST_GOTHMIS = "URL_POST_GOTHMIS";
+  private static final String TOKEN_ACCESS_USERNAME = "TOKEN_ACCESS_USERNAME";
+  private static final String TOKEN_ACCESS_PASSWORD = "TOKEN_ACCESS_PASSWORD";
 
   @Value("${mail.base.url}")
   String baseURL;
@@ -62,7 +85,129 @@ public class NotificationServices {
   private UserService userService;
 
 
+  RestTemplate restTemplate;
+
+  public void notifyRequisitionToFacilityLvelSystems(Rnr requisition){
+
+
+    String username = configService.getByKey(GOTHOMIS_USERNAME).getValue();
+    String password = configService.getByKey(GOTHOMIS_PASSWORD).getValue();
+    String url = configService.getByKey(GOTHOMIS_URL).getValue();
+    String got_url = configService.getByKey(URL_POST_GOTHMIS).getValue();
+    String grant_type = configService.getByKey(GRANT_TYPE).getValue();
+    String token_access_username = configService.getByKey(TOKEN_ACCESS_USERNAME).getValue();
+    String token_access_password = configService.getByKey(TOKEN_ACCESS_PASSWORD).getValue();
+
+
+    String authStr = username+":"+password;
+    String base64Creds = Base64.getEncoder().encodeToString(authStr.getBytes());
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Authorization", "Basic " + base64Creds);
+    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+    MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+    map.add("grant_type", GRANT_TYPE);
+    map.add("username", TOKEN_ACCESS_USERNAME);
+    map.add("password", TOKEN_ACCESS_PASSWORD);
+
+    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+
+    ResponseEntity<String> response = new RestTemplate().postForEntity( url, request , String.class );
+
+    System.out.println(response.getBody());
+     sendToFacility(got_url, response.getBody(), requisition);
+
+   // sendDataToFacility(username, password,url,values);
+
+  }
+
+  private void sendToFacility(String url, String tocken, Rnr rnr) {
+    ObjectMapper mapper = new ObjectMapper();
+
+    try {
+
+      FacilityLevelRequisitionStatusDTO statusData = mapper.readValue(tocken, FacilityLevelRequisitionStatusDTO.class);
+      System.out.println(statusData.getAccessToken());
+      String baseUrl = url + "?access_token="+statusData.getAccessToken();
+      System.out.println(baseUrl);
+      HttpHeaders headers = new HttpHeaders();
+      // headers.add("Authorization", "Basic " + base64Creds);
+      headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+      MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+      map.add("access_token", statusData.getAccessToken());
+      map.add("status", rnr.getStatus().toString());
+      map.add("rnrId", rnr.getId().toString());
+      //map.add("username", "matoto@gmail.com");
+      // map.add("password", "12345678");
+
+      HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+
+      ResponseEntity<String> response = new RestTemplate().postForEntity( baseUrl, request , String.class );
+
+
+      System.out.println("Posted ");
+      System.out.println(response.getBody());
+
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void sendDataToFacility(String username, String password, String url, HashMap<String,String> data) {
+    ObjectMapper mapper = new ObjectMapper();
+    java.net.URL obj = null;
+    try {
+      obj = new URL(url);
+      HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+      String jsonInString ="";
+
+      jsonInString = mapper.writeValueAsString(data);
+
+      System.out.println(jsonInString);
+
+      String userCredentials = username + ":" + password;
+      //String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
+
+      String encoded = Base64.getEncoder().encodeToString((username+":"+password).getBytes(StandardCharsets.UTF_8));  //Java 8
+
+      con.setRequestProperty("Authorization", "Basic "+encoded);
+      con.setRequestMethod("POST");
+      con.setRequestProperty("Content-Type", "multipart/form-data");
+      con.setDoOutput(true);
+      OutputStream wr = con.getOutputStream();
+      wr.write(jsonInString.getBytes("UTF-8"));
+
+      wr.flush();
+      wr.close();
+
+      int responseCode = con.getResponseCode();
+
+      BufferedReader in = new BufferedReader(
+              new InputStreamReader(con.getInputStream()));
+      String inputLine;
+      StringBuilder response = new StringBuilder();
+
+      while ((inputLine = in.readLine()) != null) {
+        response.append(inputLine);
+      }
+      in.close();
+      System.out.println(response);
+      //print result
+
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+
+  }
+
+
+
   public void notifyStatusChange(Rnr requisition) {
+
 
     List <Subscribers> subscribers = null;
     final String telegram_send_notification_base_url = "https://api.telegram.org/bot" +  staticReferenceDataService.getPropertyValue("bot.token") +"/sendMessage?chat_id=";

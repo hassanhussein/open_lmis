@@ -126,8 +126,8 @@
       <ul style="list-style: none; height: 150px; overflow: auto;    margin: 0;padding: 0;width: 100%;" ng-show="true">
           <li style="text-decoration: none;">
 
-              <div class="span12 row-fluid" ng-repeat="source in sourceOfFundList" style="border-bottom: 1px solid #ccc;">
-
+              <div class="span12 row-fluid"  style="border-bottom: 1px solid #ccc;">
+                <div ng-repeat="source in sourceOfFundList">
                 <div class="span4" style="border-bottom: 0px solid #ccc; !important">
                     <span class="pull-left" style="float: left; display: block; width: 100px;height: 20px;">{{source.name}}</span>
                 </div>
@@ -143,7 +143,7 @@
                            <input keyboard="true"
                                   style="width:80px !important;height:15px;"
 
-                                  type="text" ng-model="source.quantity"  ng-disabled="formDisabled"  numeric-validator="positiveInteger" placeholder="Quantity"/>
+                                  type="text" ng-model="source.quantity" ng-change="updateTotalQuantity(source,sourceOfFundList)"  ng-disabled="formDisabled"  numeric-validator="positiveInteger" placeholder="Quantity"/>
                     <!--       <input keyboard="true" maxlength="8"
 
                                   name="{{source.quantity}}"
@@ -164,6 +164,20 @@
 
                 </div>
 
+              </div>
+                  <div>
+                      <div class="pull-right"  style="border-bottom: 0px solid #ccc; !important">
+
+                           <input class="btn btn-primary" id="addLossesAndAdjustment1"
+                                  ng-click="addRow(sourceOfFund)"
+                                  ng-disabled="!(sourceOfFund.name && sourceOfFund.quantity)"
+                                  openlmis-message="button.add"
+                                  type="button"/>
+
+
+                      </div>
+
+                  </div>
               </div>
 
 
@@ -234,7 +248,7 @@
                        ng-show="sourceOfFund.sourceOfFunds.length > 0">
                       <span class="pull-left" style="float: left; display: block; width: 3px;" openlmis-message="label.losses.total"></span>
 
-                      <span class="pull-right" ng-bind="totalSources | number"></span>
+                      <span class="pull-right" ng-bind="totalSourceOfFund | number"></span>
                </div>
 
                    <div class="modal-footer">
