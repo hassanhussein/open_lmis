@@ -17,6 +17,7 @@ import org.openlmis.db.categories.UnitTests;
 import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.domain.RnrStatus;
+import org.springframework.web.client.RestTemplate;
 
 import static com.natpryce.makeiteasy.MakeItEasy.a;
 import static com.natpryce.makeiteasy.MakeItEasy.make;
@@ -51,12 +52,15 @@ public class NotificationServicesTest {
   @Mock
   private StaticReferenceDataService staticReferenceDataService;
 
+  @Mock
+  RestTemplate restTemplate;
+
 
 
 
   @Before
   public void setUp() throws Exception {
-    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailServiceForSIMAM, staticReferenceDataService, null);
+    notificationServices = new NotificationServices("emailBaseURL", configService, emailService, approverService, requisitionEmailServiceForSIMAM, staticReferenceDataService, null,restTemplate);
   }
 
   @Test
