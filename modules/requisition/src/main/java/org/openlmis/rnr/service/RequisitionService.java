@@ -400,9 +400,9 @@ public class RequisitionService {
     requisitionRepository.approve(savedRnr);
     logStatusChangeAndNotify(savedRnr, notifyStatusChange, name);
 
-    //if(savedRnr.getSourceApplication().equalsIgnoreCase("GOTHOMIS")) {
+    if(savedRnr.getSourceApplication().equalsIgnoreCase("GOTHOMIS")) {
       notificationServices.notifyRequisitionToFacilityLvelSystems(savedRnr);
-   // }
+    }
     return savedRnr;
   }
 
@@ -976,7 +976,7 @@ public class RequisitionService {
 
     //if(rnr.getSourceApplication().equalsIgnoreCase("GOTHOMIS")) {
       notificationServices.notifyRequisitionToFacilityLvelSystems(rnr);
-   // }
+  // }
 
 
   }

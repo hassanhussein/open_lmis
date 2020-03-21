@@ -126,8 +126,8 @@
       <ul style="list-style: none; height: 150px; overflow: auto;    margin: 0;padding: 0;width: 100%;" ng-show="true">
           <li style="text-decoration: none;">
 
-              <div class="span12 row-fluid"  style="border-bottom: 1px solid #ccc;">
-                <div ng-repeat="source in sourceOfFundList">
+
+              <div ng-repeat="source in sourceOfFundList" class="span12 row-fluid"  style="border-bottom: 1px solid #ccc;">
                 <div class="span4" style="border-bottom: 0px solid #ccc; !important">
                     <span class="pull-left" style="float: left; display: block; width: 100px;height: 20px;">{{source.name}}</span>
                 </div>
@@ -165,8 +165,8 @@
                 </div>
 
               </div>
-                  <div>
-                      <div class="pull-right"  style="border-bottom: 0px solid #ccc; !important">
+
+                      <div class=" span12 row-fluid pull-right"  style="border-bottom: 0px solid #ccc; !important" >
 
                            <input class="btn btn-primary" id="addLossesAndAdjustment1"
                                   ng-click="addRow(sourceOfFund)"
@@ -177,8 +177,7 @@
 
                       </div>
 
-                  </div>
-              </div>
+
 
 
          <!--     <span class="pull-left" style="float: left; display: block; width: 100px;">{{source.name}}</span>
