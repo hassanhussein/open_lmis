@@ -73,7 +73,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
 
             scope.totalSourceOfFund = totalAmount;
               console.log(source.total - parseInt(source.quantity,10));
-     }
+     };
 //totalSources
 console.log(totalAmount);
 
