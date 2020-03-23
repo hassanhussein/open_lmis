@@ -12,6 +12,7 @@ import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
+import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
 import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
 import org.openlmis.vaccine.domain.wms.dto.StockEventDTO;
 import org.openlmis.vaccine.repository.warehouse.LotOnHandLocationRepository;
@@ -206,6 +207,10 @@ public class LotOnHandLocationService {
 
         stockCardService.addStockCardEntries(entries);
         return "success.stock.adjusted";
+    }
+
+    public List<SohReportDTO> getSOHReport(Long facilityId, Long warehouseId) {
+        return repository.getSOHReport(facilityId, warehouseId);
     }
 
 }

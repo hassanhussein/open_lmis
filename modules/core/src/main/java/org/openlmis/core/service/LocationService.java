@@ -59,4 +59,5 @@ public class LocationService {
         return  repository.getAllLocationsBy(type);
 
     }
+
 }

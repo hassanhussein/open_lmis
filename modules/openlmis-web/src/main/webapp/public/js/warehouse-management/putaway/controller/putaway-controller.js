@@ -78,7 +78,6 @@ console.log(JSON.stringify(movement));
     $scope.$parent.message = data.success;
     $scope.$parent.messageToDisplay = "Lots Moved Successfully";
     $scope.$parent.messageFlag = true;
-
     $scope.showError = false;
     $location.path('');
   };

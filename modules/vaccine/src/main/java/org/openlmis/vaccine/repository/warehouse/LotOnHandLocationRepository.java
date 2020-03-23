@@ -2,10 +2,13 @@ package org.openlmis.vaccine.repository.warehouse;
 
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
+import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
 import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.LotOnHandLocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class LotOnHandLocationRepository {
@@ -39,5 +42,10 @@ public class LotOnHandLocationRepository {
 
     public void insertLocationsWIthoutLots(StockCardLocationDTO stockCardLocationDTO) {
         mapper.insertLocationsWIthoutLots(stockCardLocationDTO);
+    }
+
+
+    public List<SohReportDTO> getSOHReport(Long facilityId, Long warehouseId) {
+        return mapper.getSohReport(facilityId, warehouseId);
     }
 }

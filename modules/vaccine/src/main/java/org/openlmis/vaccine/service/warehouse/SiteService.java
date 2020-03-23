@@ -1,11 +1,14 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.vaccine.domain.wms.Site;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
 import org.openlmis.vaccine.repository.warehouse.SiteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,11 +29,18 @@ public class SiteService {
  private SiteRepository repository;
 
     public void save(Site site, Long userId) {
+        try {
+            if (site.getId() == null) {
+                repository.insert(site);
+                return;
+            }
+               repository.update(site);
 
-        if(site.getId() == null) {
-           repository.insert(site);
-        }else {
-            repository.update(site);
+        }
+        catch (DuplicateKeyException e) {
+            throw new DataException("error.duplicate.site.code");
+        } catch (DataIntegrityViolationException e) {
+            throw new DataException("error.incorrect.length");
         }
     }
 
