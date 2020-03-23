@@ -768,5 +768,5 @@ services.factory('SavePutAwayDetails', function ($resource) {
 });
 
 services.factory('GetSohReport', function ($resource) {
-    return $resource('/rest-api/lotLocation/soh-report', {}, {});
+    return $resource('/rest-api/lotLocation/soh-report/:facilityId/:warehouseId',{facilityId:'@facilityId', warehouseId:'@warehouseId'}, {});
 });
