@@ -3,6 +3,10 @@ function StockOnHandControllerFunc($scope,$state,$window, homeFacilityId,$locati
     $scope.homeFacility = homeFacilityId;
     $scope.facilityCode = facilityTypeCode;
 
+    if(homeFacilityId==19075){
+    $scope.cvs=true;
+    }
+
     $scope.showMyFacility = facilityTypeCode === 'dvs';
 
     $scope.stockCards = [];
