@@ -766,3 +766,7 @@ services.factory('SavePutAwayDetails', function ($resource) {
     return $resource('/rest-api/lotLocation/inspection/put-away', {}, {post: {method: 'POST', isArray: true}});
 
 });
+
+services.factory('GetSohReport', function ($resource) {
+    return $resource('/rest-api/lotLocation/soh-report', {}, {});
+});

@@ -1,13 +1,19 @@
 package org.openlmis.vaccine.repository.mapper.warehouse;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Param;
+import org.apache.camel.language.SpEL;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.core.domain.Product;
+import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.stockmanagement.domain.LotOnHand;
+import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
+import org.openlmis.vaccine.domain.wms.dto.LotOnHandLocationDTO;
 import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
+import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
 import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface LotOnHandLocationMapper {
@@ -48,5 +54,18 @@ public interface LotOnHandLocationMapper {
 
     @Delete(" DELETE FROM stock_card_locations WHERE stockCardId = #{id} and locationId=#{toBinLocationId} ")
     void deleteExistingStockCardLocation(@Param("id") Long id,@Param("toBinLocationId") Long toBinLocationId);
+
+
+    @Select(" SELECT S.ID stockCardId, s.productId, p.primaryName product, totalQuantityonhand, LotNumber,\n" +
+            " to_char(lot.expirationDate, 'dd-MM-yyyy') expirationDate,\n" +
+            "to_char(l.effectiveDate, 'dd-MM-yyyy') lastUpdated, loc.name binLocation\n" +
+            "FROM stock_cards s  \n" +
+            "JOIN lots_on_hand L on L.stockcardId = s.ID \n" +
+            "JOIN lot_on_hand_locations lo ON l.id = lo.lotonhandId\n" +
+            "JOIN wms_locations loc ON lo.locationId = LOC.ID\n" +
+            "JOIN products p ON S.PRODUCTid = P.ID\n" +
+            "JOIN lots lot ON lot.id = l.lotId\n" +
+            "WHERE S.FACILITYiD = #{facilityId} and warehouseId = #{warehouseId}")
+    List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
 }

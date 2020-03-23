@@ -44,6 +44,7 @@ $scope.sumStockOnHand = function(c){
     if (GetStockCards !== undefined)
         $scope.stockCards = GetStockCards.stockCards;
 
+    console.log(GetStockCards.stockCards);
 
    /* if(GetStockRequirements !== undefined)
         $scope.stockRequirements = GetStockRequirements;*/
