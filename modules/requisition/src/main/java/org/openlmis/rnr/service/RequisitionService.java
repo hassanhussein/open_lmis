@@ -974,9 +974,9 @@ public class RequisitionService {
 
     notificationServices.sendRejectedEmail(rnr,stringBuilder.toString());
 
-    //if(rnr.getSourceApplication().equalsIgnoreCase("GOTHOMIS")) {
+    if(rnr.getSourceApplication().equalsIgnoreCase("GOTHOMIS")) {
       notificationServices.notifyRequisitionToFacilityLvelSystems(rnr);
-  // }
+   }
 
 
   }
