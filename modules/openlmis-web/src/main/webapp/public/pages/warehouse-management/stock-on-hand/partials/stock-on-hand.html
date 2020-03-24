@@ -90,8 +90,14 @@
         <tbody>
 
 
+        <tr ng-repeat="(key, value) in soh | groupBy: 'product'">
+
+    <td>{{key}}</td>
+        </tr>
+
+
         </tbody>
-        <tbody></tbody>
+
     </table>
 
 

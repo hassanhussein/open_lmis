@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-var stockOnHandModule = angular.module('stock-on-hand', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
+var stockOnHandModule = angular.module('stock-on-hand', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable','angular.filter']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
            when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html'});
