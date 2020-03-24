@@ -1,0 +1,99 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+<h2>
+    <span>Stock On Hand</span>
+
+</h2>
+
+
+<div class="row clear-fix">
+    <div class="span3">
+        <label id="parentLabel" >Select Warehouse</label>
+
+        <div class="form-field row-fluid">
+            <select ui-select2="{width: '90%'}" class="span11"
+                    ng-model="warehouseId" ng-change="getSoh()">
+                <option value="">--Select Warehouse--</option>
+
+                <option ng-repeat="warehouse in warehouses"
+                        value="{{ warehouse.id }}">
+                    {{ warehouse.name }}
+                </option>
+
+            </select>
+            <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                  openlmis-message="missing.value"></span>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="clear-fix rnr-table">
+
+    <table id="equipmentTable" fixed-table-header class="table-bordered scrollable">
+        <thead>
+        <tr>
+
+            <th class="col-product">
+                <div class="regimen-heading">
+                    <span>Product</span>
+                </div>
+            </th>
+            <th class="span1">
+                <div class="regimen-heading">
+                    <span>Batch #</span>
+                </div>
+            </th>
+            <th class="col-quantity">
+                <div class="regimen-heading">
+                    <span>Quantity/Batch (Vials)</span>
+                </div>
+            </th>
+            <th class="span1">
+                <div class="regimen-heading">
+                    <span>Expiry Date</span>
+                </div>
+            </th>
+            <th class="span1">
+                <div class="regimen-heading">
+                    <span>Bin Location</span>
+                </div>
+            </th>
+            <th class="span1">
+                <div class="regimen-heading">
+                    <span>Last Updated</span>
+                </div>
+            </th>
+
+            <th class="span1">
+                <div class="regimen-heading">
+                    <span>Total Quantity (Vials)</span>
+                </div>
+            </th>
+            <th class="span1">
+                <div class="regimen-heading">
+                    <span>Action</span>
+                </div>
+            </th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+
+        </tbody>
+        <tbody></tbody>
+    </table>
+
+
+
+</div>

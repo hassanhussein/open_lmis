@@ -8,14 +8,10 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-var stockModule = angular.module('stock', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
+var stockOnHandModule = angular.module('stock-on-hand', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-          when('/movement', {controller: StockController, templateUrl: 'partials/movement.html', reloadOnSearch: false}).
-          when('/adjustment', {controller: StockController, templateUrl: 'partials/adjustment.html', resolve: StockController.resolve}).
-          when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html').
-
-          otherwise({redirectTo: '/search'});
+           when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.warehouseSelected = "selected";
 //      AuthorizationService.preAuthorize('MANAGE_LOCATION');
