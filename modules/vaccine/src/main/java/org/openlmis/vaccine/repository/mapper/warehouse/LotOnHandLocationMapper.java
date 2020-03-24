@@ -58,7 +58,7 @@ public interface LotOnHandLocationMapper {
 
     @Select(" SELECT S.ID stockCardId, s.productId, p.primaryName product, totalQuantityonhand, LotNumber,\n" +
             " to_char(lot.expirationDate, 'dd-MM-yyyy') expirationDate,\n" +
-            "to_char(l.effectiveDate, 'dd-MM-yyyy') lastUpdated, loc.name binLocation\n" +
+            "to_char(l.effectiveDate, 'dd-MM-yyyy') lastUpdated, loc.name binLocation, lo.quantityOnHand\n" +
             "FROM stock_cards s  \n" +
             "JOIN lots_on_hand L on L.stockcardId = s.ID \n" +
             "JOIN lot_on_hand_locations lo ON l.id = lo.lotonhandId\n" +

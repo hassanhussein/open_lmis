@@ -21,4 +21,6 @@ public class SohReportDTO {
 
     private String expirationDate;
 
+    private Integer quantityOnHand;
+
 }
