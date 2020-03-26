@@ -11,7 +11,8 @@
 var stockOnHandModule = angular.module('stock-on-hand', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable','angular.filter']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
-           when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html'});
+           when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html'}).
+            otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.warehouseSelected = "selected";
 //      AuthorizationService.preAuthorize('MANAGE_LOCATION');

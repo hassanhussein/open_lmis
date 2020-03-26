@@ -8,6 +8,7 @@
   ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
+
 <h2>
     <span>Stock On Hand</span>
 
@@ -39,7 +40,7 @@
 
 <div class="clear-fix rnr-table">
 
-    <table id="equipmentTable" fixed-table-header class="table-bordered scrollable">
+    <table id="equipmentTable" fixed-table-header class="table-bordered table table-striped scrollable">
         <thead>
         <tr>
 
@@ -90,10 +91,44 @@
         <tbody>
 
 
-        <tr ng-repeat="(key, value) in soh | groupBy: 'product'">
+        <tr ng-repeat-start="(product_name,product) in products">
 
-    <td>{{key}}</td>
+    <td rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px">{{product_name}}</td>
+
+            <td class="col-lot cell-input  disabled padding2px">{{product[0].lotNumber}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{product[0].quantityOnHand}}</td>
+
+            <td class="col-lot cell-input  disabled padding2px">{{product[0].expirationDate}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{product[0].binLocation}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{product[0].lastUpdated}}</td>
+
+
+            <td rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px"></td>
+
+
+            <td rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px"> <a class="btn btn-primary">
+                View</a></td>
+
+
+
+
+
+
+
         </tr>
+
+        <tr ng-repeat-end  ng-repeat="lot in product" ng-if="$index > 0">
+            <td class="col-lot cell-input  disabled padding2px">{{lot.lotNumber}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{lot.quantityOnHand}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{lot.expirationDate}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{lot.binLocation}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{lot.lastUpdated}}</td>
+
+
+
+
+        </tr>
+
 
 
         </tbody>

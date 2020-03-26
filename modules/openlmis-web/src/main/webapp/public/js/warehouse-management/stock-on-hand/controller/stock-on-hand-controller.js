@@ -22,12 +22,24 @@ GetSohReport.get({facilityId:19075, warehouseId:$scope.warehouseId},function(dat
 
 
 console.log(data);
-$scope.soh=data.soh;
 
-})
+var soh=data.soh;
+
+$scope.products=_.groupBy(soh,'product');
+
+console.log($scope.products);
+
+});
 
 
-}
+
+
+
+
+
+
+
+};
 
 }
 
