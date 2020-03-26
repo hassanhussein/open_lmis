@@ -126,10 +126,11 @@ public class WareHouseController extends BaseController {
     @RequestMapping(value = "/bin-location/search", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> searchBin(@RequestParam(value = "searchParam") String searchParam,
                                                    @RequestParam(value = "columnName") String columnName,
+                                                   @RequestParam(value = "wareHouseId") Long wareHouseId,
                                                    @RequestParam(value = "page", defaultValue = "1") Integer page) {
         Pagination pagination = service.getPagination(page);
-        pagination.setTotalRecords(service.getTotalBinsSearchResultCount(searchParam, columnName));
-        List<LocationDTO> bins = service.searchBinBy(searchParam, columnName, page);
+        pagination.setTotalRecords(service.getTotalBinsSearchResultCount(searchParam, columnName,wareHouseId));
+        List<LocationDTO> bins = service.searchBinBy(searchParam, columnName, page,wareHouseId);
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("bins", bins);
         response.getBody().addData("pagination", pagination);
         return response;

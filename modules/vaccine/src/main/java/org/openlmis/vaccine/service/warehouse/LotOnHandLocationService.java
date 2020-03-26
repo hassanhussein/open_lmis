@@ -213,4 +213,8 @@ public class LotOnHandLocationService {
         return repository.getSOHReport(facilityId, warehouseId);
     }
 
+    public List<HashMap<String, Object>> getAllLedgers() {
+        return repository.getAllLedgers();
+    }
+
 }
