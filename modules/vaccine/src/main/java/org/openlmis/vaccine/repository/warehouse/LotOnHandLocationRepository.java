@@ -1,5 +1,6 @@
 package org.openlmis.vaccine.repository.warehouse;
 
+import net.sf.jasperreports.engine.json.expression.member.ObjectKeyExpression;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
 import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
@@ -8,6 +9,7 @@ import org.openlmis.vaccine.repository.mapper.warehouse.LotOnHandLocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -47,5 +49,9 @@ public class LotOnHandLocationRepository {
 
     public List<SohReportDTO> getSOHReport(Long facilityId, Long warehouseId) {
         return mapper.getSohReport(facilityId, warehouseId);
+    }
+
+    public List<HashMap<String, Object>> getAllLedgers() {
+        return mapper.getAllLedgers();
     }
 }

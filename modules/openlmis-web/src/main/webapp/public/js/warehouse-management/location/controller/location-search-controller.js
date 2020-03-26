@@ -10,7 +10,7 @@
 
 function LocationSearchController($scope,WareHouseList,navigateBackService,SaveBinLocation,updateBinLocation,SearchBinByPaged) {
 
-
+console.log( $scope.newLocation);
 
 WareHouseList.get({},function(data){
 
@@ -39,15 +39,16 @@ $scope.warehouses=data.house;
     });
 
     $scope.search = function (page, lastQuery) {
+    console.log($scope.warehouseId);
       if (!($scope.query || lastQuery)) return;
       lastQuery ? getLocations(page, lastQuery) : getLocations(page, $scope.query);
     };
 
     function getLocations(page, query) {
       query = query.trim();
+      var warehouseId = $scope.warehouseId;
       $scope.searchedQuery = query;
-      SearchBinByPaged.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page}, function (data) {
-        console.log(data);
+      SearchBinByPaged.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page,"wareHouseId":warehouseId}, function (data) {
         $scope.locationList = data.bins;
         $scope.pagination = data.pagination;
         $scope.totalItems = $scope.pagination.totalRecords;

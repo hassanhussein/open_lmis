@@ -140,18 +140,18 @@ public class WareHouseService {
         }
     }
 
-    public Integer getTotalBinsSearchResultCount(String searchParam, String columnName) {
+    public Integer getTotalBinsSearchResultCount(String searchParam, String columnName,Long wareHouseId) {
 
         if (columnName.equals("code")) {
-            return repository.getTotalBinsSearchResultCount(searchParam);
+            return repository.getTotalBinsSearchResultCount(searchParam,wareHouseId);
         }
         return 0;
     }
 
-    public List<LocationDTO> searchBinBy(String searchParam, String columnName, Integer page) {
+    public List<LocationDTO> searchBinBy(String searchParam, String columnName, Integer page, Long wareHouseId) {
 
         if (columnName.equals("code")) {
-            return repository.searchBinBy(searchParam, getPagination(page));
+            return repository.searchBinBy(searchParam, getPagination(page),wareHouseId);
         }
         return emptyList();
 

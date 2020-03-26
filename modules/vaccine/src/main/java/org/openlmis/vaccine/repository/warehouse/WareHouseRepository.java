@@ -62,13 +62,13 @@ public class WareHouseRepository {
         return mapper.getAllWarehouses();
     }
 
-    public Integer getTotalBinsSearchResultCount(String searchParam) {
-        return mapper.getTotalBinsSearchResultCount(searchParam);
+    public Integer getTotalBinsSearchResultCount(String searchParam,Long wareHouseId) {
+        return mapper.getTotalBinsSearchResultCount(searchParam,wareHouseId);
     }
 
-    public List<LocationDTO> searchBinBy(String searchParam, Pagination pagination) {
+    public List<LocationDTO> searchBinBy(String searchParam, Pagination pagination, Long wareHouseId) {
 
-        return mapper.searchBinBy(searchParam,pagination);
+        return mapper.searchBinBy(searchParam,pagination,wareHouseId);
     }
 
     public List<LocationDTO> getAllLocationsByCategory(String category) {
