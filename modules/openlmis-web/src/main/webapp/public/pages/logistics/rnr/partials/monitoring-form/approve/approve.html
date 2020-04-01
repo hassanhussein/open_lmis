@@ -30,7 +30,7 @@
                     &nbsp;<span
                         id='emergencyOrderPoint'>
 
-                     <input ng-disabled="report.editable"
+                     <input ng-disabled="!report.editable"
                             type="text"
                             style="width: 140px; height:15px"
                             ng-model="report.reportedDate"
@@ -46,23 +46,23 @@
 
                 <div class="span3">
                     <strong id='reportingPeriodLabel'>Number of Staff (CTC)</strong>:&nbsp;<span
-                        id='reportingPeriod'><input type="text" style="width:100px" ng-model="report.numberOfStaff"/></span>
+                        id='reportingPeriod'><input  ng-disabled="!report.editable" type="text" style="width:100px" ng-model="report.numberOfStaff"/></span>
                 </div>
             </div>
             <div class="row-fluid">
                 <div class="span3">
                     <strong><span id='geographicZoneLabel' >Name of HIDTU’s</span>:
-                    </strong><span><span ng-disabled='true' style="width:180px" ng-bind="report.facility.name"/></span>
+                    </strong><span><span  ng-disabled="!report.editable" style="width:180px" ng-bind="report.facility.name"/></span>
                 </div>
                 <div class="span3">
                     <strong><span id='parentLevelLabel'>Number of HIDTU’s</span>:
                     </strong><span
-                        id='parentLevel'><input type="text" style="width:120px" ng-model="report.numberOfHidTu"/></span>
+                        id='parentLevel'><input  ng-disabled="!report.editable" type="text" style="width:120px" ng-model="report.numberOfHidTu"/></span>
                 </div>
 
                 <div class="span3">
                     <strong id='sourceLabel' >Number of Patients</strong>:&nbsp;<span
-                        id='source'><input ng-change="changeCummulativeCases(report)" type="text" style="width:120px" ng-model="report.patientOnTreatment"/></span>
+                        id='source'><input  ng-disabled="!report.editable" ng-change="changeCummulativeCases(report)" type="text" style="width:120px" ng-model="report.patientOnTreatment"/></span>
                 </div>
                 <div class="span3">
                     <strong id='caseLabel' >Number of Cumulative cases</strong>:&nbsp;<span
@@ -123,19 +123,19 @@
 
             <span
                     class="input-error-parent-cell">
-                    <input
-                      ng-required="true"
-                      maxlength="8"
-                      ng-model="product.stockOnHand"
-                      numeric-validator="positiveInteger"
-                      type="text"/>
+                    <input   ng-disabled="!report.editable"
+                            ng-required="true"
+                            maxlength="8"
+                            ng-model="product.stockOnHand"
+                            numeric-validator="positiveInteger"
+                            type="text"/>
             </span>
                             </td>
 
                             <td class="cell-input col-beginningBalance">
             <span
                     class="input-error-parent-cell">
-              <input
+              <input  ng-disabled="!report.editable"
                       maxlength="8"
                       ng-model="product.quantityRequested"
                       numeric-validator="positiveInteger"
@@ -155,7 +155,7 @@
                             <th class="span1" ng-repeat-end="">
                                 {{column.label}}
                             </th>
-                       </tr>
+                        </tr>
                         </thead>
                         <tbody>
                         <tr class="productCategory" ng-repeat-start="product in report.lineItems"
@@ -189,7 +189,7 @@
                       type="text"/>
             </span>
                             </td>
-                          <td ng-if="false" ng-repeat-end=""></td>
+                            <td ng-if="false" ng-repeat-end=""></td>
 
                         </tr>
                         </tbody>
@@ -213,11 +213,12 @@
 
 <div form-toolbar id="action_buttons" class="action-buttons">
     <div class="form-cell button-row">
-        <input  ng-show="!report.editable" id="saveButton" type="submit" id="save-button" class="btn btn-primary save-button"
-                openlmis-message="button.save" ng-click="saveForm()"/>
-        <input  ng-show="!report.editable" id="submitButton" type="submit" id="submit-button" class="btn btn-primary save-button"
-                openlmis-message="button.submit" ng-click="submit()"/>
-        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+        <input id="saveButton" type="submit" id="approve-button" class="btn btn-primary save-button"
+               openlmis-message="button.approve" ng-click="approve()"/>
+        <input id="submitButton" ng-show="false" type="submit" class="btn btn-danger save-button"
+               openlmis-message="button.reject" ng-click="rejectDialog=true;"/>
+        <input id="cancelButton" type="button" class="btn btn-cancel cancel-button"
+               openlmis-message="button.cancel"
                ng-click="cancel()"/>
     </div>
 

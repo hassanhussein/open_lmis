@@ -22,7 +22,13 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'angularCombine','u
     when('/view-requisition-mmia/:rnr/:program', {controller: ViewRnrMmiaController, templateUrl: 'partials/view/rnr-mmia-view.html', reloadOnSearch: false}).
     when('/data-health-check', {controller: SearchRnrListController, templateUrl: 'partials/data-health-check/index.html', resolve: SearchRnrListController.resolve}).
     when('/create-monitoring-form', {controller: CreateMonitoringFormController, templateUrl: 'partials/monitoring-form/index.html', resolve: CreateMonitoringFormController.resolve}).
-    when('/create-form/:zoneId/:program', {controller: MonitoringFormController, templateUrl: 'partials/monitoring-form/create.html', resolve: MonitoringFormController.resolve, reloadOnSearch: false}).
+    when('/create-form/:reportId', {controller: MonitoringFormController, templateUrl: 'partials/monitoring-form/create.html', resolve: MonitoringFormController.resolve, reloadOnSearch: false}).
+    when('/approve-monitoring-form', {controller: ApproveMonitoringFormController, templateUrl: 'partials/monitoring-form/approve/index.html', resolve: ApproveMonitoringFormController.resolve}).
+    when('/approve-monitoring-form/:id', {
+                    controller : ApproveMonitoringFormDetailController,
+                    templateUrl: 'partials/monitoring-form/approve/approve.html',
+                    resolve: ApproveMonitoringFormDetailController.resolve
+                }).
     otherwise({redirectTo: '/init-rnr'});
 }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');

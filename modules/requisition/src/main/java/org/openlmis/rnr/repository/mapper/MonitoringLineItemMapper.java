@@ -22,7 +22,7 @@ Integer insert(MonitoringReportLineItem lineItem);
 @Update("UPDATE public.monitoring_report_line_items\n" +
         "   SET productCode = #{productCode}, reportId=#{reportId}, productId=#{productId}, product=#{product},packSize=#{packSize},dispensingUnit=#{dispensingUnit}, productCategoryId=#{productCategoryId}, \n" +
         "       stockOnHand=#{stockOnHand}, quantityRequested=#{quantityRequested},  \n" +
-        "       modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedBy}\n" +
+        "       modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate}\n" +
         " WHERE id = #{id}\n ")
 void update(MonitoringReportLineItem lineItem);
 

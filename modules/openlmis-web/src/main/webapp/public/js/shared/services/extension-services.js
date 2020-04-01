@@ -1400,9 +1400,25 @@ services.factory('GetDistrictsBy', function ($resource) {
 });
 
 services.factory('GetInitiatedForm', function ($resource) {
-    return $resource('/rest-api/monitoring-report/initiate/:zoneId/:programId.json', {zoneId:'@zoneId',programId:'@programId'}, {});
+    return $resource('/rest-api/monitoring-report/initiate/:facilityId/:programId/:reportedDate.json', {facilityId:'@facilityId',programId:'@programId', reportedDate:'@reportedDate'}, {post: {method: 'POST'}});
 });
 
 services.factory('saveMonitoringReport', function($resource){
     return $resource('/rest-api/monitoring-report/save/:id.json', {id:'@id'}, update);
+});
+
+services.factory('GetMonitoringReport', function($resource){
+    return $resource('/rest-api/monitoring-report/get/:id.json', {id:'@id'}, {});
+});
+
+services.factory('MonitoringReportSubmit', function($resource){
+    return $resource('/rest-api/monitoring-report/submit.json', {}, update);
+});
+
+services.factory('GetApprovalPendingIvds', function($resource){
+    return $resource('/rest-api/monitoring-report/pendingForApproval/:programId.json', {programId:'@programId'}, {});
+});
+
+services.factory('MonitoringReportApprove', function($resource){
+    return $resource('/rest-api/monitoring-report/approve.json', {}, update);
 });

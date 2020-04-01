@@ -1,6 +1,50 @@
-function CreateMonitoringFormController($location,$scope,programs,CreateRequisitionProgramList,UserFacilityList,navigateBackService,GetDistrictsBy,UserSupervisedFacilitiesForProgramForMonitoringForm) {
+function CreateMonitoringFormController($location,$scope,programs,CreateRequisitionProgramList,UserFacilityList,navigateBackService,GetDistrictsBy,UserSupervisedFacilitiesForProgramForMonitoringForm,GetInitiatedForm) {
 
  $scope.programList = programs;
+
+$scope.showProceedButton  = false;
+var params = {};
+$scope.loadBasicDetails = function (){
+
+
+  if(!isUndefined($scope.selectedProgram)) {
+
+  params.programId = parseInt($scope.selectedProgram.id,10);
+
+  params.facilityId = parseInt($scope.selectedFacilityId,10);
+
+   $scope.showProceedButton = true;
+
+}else{
+return;
+}
+
+};
+
+
+ $scope.initiate = function () {
+
+     if(!isNaN(params.facilityId) && !isNaN(params.programId)) {
+        console.log(params);
+
+         GetInitiatedForm.save({
+             facilityId: params.facilityId,
+             programId: params.programId,
+             reportedDate:'2020-03-01'
+           }, function (data) {
+           console.log(data);
+            $location.path('/create-form/' + data.monitoringData.id);
+
+           });
+
+       } else {
+         return;
+       }
+
+
+  };
+
+
 
 
  $scope.OnFilterChanged = function() {
@@ -14,7 +58,7 @@ function CreateMonitoringFormController($location,$scope,programs,CreateRequisit
   GetDistrictsBy.get({programId:parseInt($scope.filter.program,10)}, function (data) {
     $scope.districtList = [data.districts];
     console.log(data.districts);
-  })
+  });
  }
 
  $scope.openMonitoringForm = function() {
@@ -29,7 +73,7 @@ function CreateMonitoringFormController($location,$scope,programs,CreateRequisit
 
 var createRnrPath = '/create-form/' + params.zoneId +'/' + params.programId;
    $location.url(createRnrPath);
- }
+ };
 
 var resetRnrData = function () {
     $scope.periodGridData = [];
@@ -129,4 +173,4 @@ CreateMonitoringFormController.resolve = {
     }
 
 
-}
+};

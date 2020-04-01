@@ -52,9 +52,13 @@
                             <a href="/public/pages/logistics/rnr/index.html#/create-monitoring-form"
                                >Create Monitoring Form</a>
                         </li>
-                        <li>
-                            <a href="/public/pages/logistics/rnr/index.html#/create-monitoring-form"
+                        <li ng-show="hasPermission('APPROVE_MONITORING_REPORT')">
+                            <a href="/public/pages/logistics/rnr/index.html#/approve-monitoring-form"
                             >Approve</a>
+                        </li>
+                        <li ng-show="hasPermission('VIEW_MONITORING_REPORT')">
+                            <a href="/public/pages/logistics/rnr/index.html#/vew-monitoring-form"
+                            >View</a>
                         </li>
                         <li class="beak"></li>
                     </ul>

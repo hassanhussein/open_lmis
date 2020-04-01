@@ -3,6 +3,7 @@ package org.openlmis.rnr.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.rnr.domain.MonitoringReport;
+import org.openlmis.rnr.dto.MonitoringReportDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
@@ -13,9 +14,9 @@ public interface MonitoringMapper {
 
     @Insert(" INSERT INTO public.monitoring_reports(\n" +
             "            facilityId,programId,supervisoryNodeId, status,nameOfHidTu,numberOfHidTu, numberOfCumulativeCases, \n" +
-            "            patientOnTreatment, numberOfStaff, reportedDate, createdBy, createddate, \n" +
+            "            patientOnTreatment, numberOfStaff, reportedDate, createdBy, createdDate, \n" +
             "            modifiedBy, modifiedDate)\n" +
-            "    VALUES (#{districtId},#{programId},#{supervisoryNodeId},#{status}, #{nameOfHidTu}, #{numberOfHidTu}, #{numberOfCumulativeCases}, \n" +
+            "    VALUES (#{facilityId},#{programId},#{supervisoryNodeId},#{status}, #{nameOfHidTu}, #{numberOfHidTu}, #{numberOfCumulativeCases}, \n" +
             "            #{patientOnTreatment}, #{numberOfStaff}, #{reportedDate}, #{createdBy}, NOW(), \n" +
             "            #{modifiedBy}, NOW());\n ")
     @Options(useGeneratedKeys = true)
@@ -48,5 +49,28 @@ public interface MonitoringMapper {
 
     })
     MonitoringReport getReportById(@Param("id") Long id);
+
+    @Select("select * from monitoring_reports where programId = #{programId} and facilityId = #{facilityId} and status='INITIATED'")
+    MonitoringReport getReportByProgramAndFacility(@Param("facilityId") Long facilityId,@Param("programId") Long programId);
+
+    @Select("select * from monitoring_reports where programId = #{programId} and facilityId = #{facilityId} and status = 'INITIATED'")
+    MonitoringReport getDraftReport(@Param("facilityId") Long facilityId,@Param("programId") Long programId);
+
+    @Select("select * from monitoring_reports where reportedDate = #{reportedDate}::date and  programId = #{programId} and facilityId = #{facilityId}")
+    MonitoringReport getAlreadySubmittedReport(@Param("facilityId") Long facilityId,@Param("programId") Long programId, @Param("reportedDate") String reportDate);
+
+    @Select("select * from monitoring_reports where  programId = #{programId} and facilityId = #{facilityId} order by id desc limit 1")
+    MonitoringReport getPreviousReport(@Param("facilityId") Long facilityId,@Param("programId") Long programId,@Param("reportedDate") String reportedDate);
+
+
+    @Select("SELECT " +
+            "   r.id, f.name as facilityName, f.code as facilityCode, z.name as districtName, r.status, r.modifiedDate submissionDate, r.reportedDate " +
+            "from monitoring_reports r " +
+            "join facilities f on f.id = r.facilityId " +
+            "join geographic_zones z on z.id = f.geographicZoneId " +
+            "where " +
+            "r.status = 'SUBMITTED' " +
+            "and facilityId = ANY( #{facilityIds}::INT[] )")
+    List<MonitoringReportDTO> pendingForApproval(@Param("facilityIds") String facilityIds);
 
 }

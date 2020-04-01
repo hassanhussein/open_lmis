@@ -52,7 +52,7 @@ public class MonitoringReport extends BaseModel {
 
     private Program program;
 
-    public void initializeLineItems(List<ProgramProduct> programProducts, MonitoringReport previousReport, Boolean defaultFieldsToZero) {
+    public void initializeLineItems(List<ProgramProduct> programProducts, MonitoringReport previousReport) {
 
         lineItems = new ArrayList<>();
    /*     Map<String, MonitoringReportLineItem> previousLineItemMap = new HashMap<>();

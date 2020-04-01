@@ -1,0 +1,37 @@
+<div>
+    <h2>
+        <span>Approve report submissions</span>
+    </h2>
+
+    <div ng-show="pending.length == 0">
+        <div class="alert alert-info" > No pending Report</div>
+    </div>
+    <div class="parent" ng-show="pending.length > 0">
+        <table fixed-table-header class="table table-bordered">
+            <thead>
+            <tr class="gradient-header">
+                <th style="width: 20px;">#</th>
+                <th style="width: 30px;">Code</th>
+                <th>Name of HIDTU’s</th>
+                <th openlmis-message="label.ivd.form.district.name"></th>
+                <th openlmis-message="label.ivd.form.submission.date"></th>
+                <th openlmis-message="label.ivd.form.status"></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="r in pending">
+                <td>{{$index + 1}}</td>
+                <td>{{r.facilityCode}}</td>
+                <td>{{r.facilityName}}</td>
+                <td>{{r.districtName}}</td>
+                <td>{{r.submissionDate}}</td>
+                <td>{{r.status}}</td>
+                <td><a href="#approve-monitoring-form/{{r.id}}" openlmis-message="link.ivd.form.review.approve"></a></td>
+                <td ng-show="false"><a href="#preview/{{r.id}}" openlmis-message="link.ivd.form.print.preview"></a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

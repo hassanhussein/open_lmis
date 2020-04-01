@@ -58,14 +58,16 @@
             </div>
         </div>
         <div class="row-fluid">
+
             <select ui-select2 placeholder="{{ programOptionMessage() }}"
                     id="programListMyFacility" class="span3"
-                    ng-model="selectedProgram.id" ng-change="loadPeriods()">
+                    ng-model="selectedProgram.id" ng-change="loadBasicDetails()">
                 <option value=""></option>
                 <option ng-repeat="program in programs | orderBy: 'name'"
                         value="{{ program.id }}">{{ program.name }}
                 </option>
             </select>
+            <span ng-show="showProceedButton" ng-click="initiate()" style="padding:20px"><input type="button" class="btn btn-primary save-button" value="Create"/></span>
         </div>
 
     </div>
@@ -98,7 +100,7 @@
         </div>
         <div class="row-fluid">
             <select ui-select2 placeholder="{{ facilityOptionMessage() }}"
-                    class="span3" id="facilityList" ng-change="loadPeriods()"
+                    class="span3" id="facilityList" ng-change="loadBasicDetails()"
                     ng-model="selectedFacilityId">
                 <option value=""></option>
                 <option ng-repeat="facility in facilities | orderBy : 'name'"
@@ -106,6 +108,8 @@
                     facility.name }}
                 </option>
             </select>
+            <span ng-show="showProceedButton" ng-click="initiate()" style="padding:20px"><input type="button" class="btn btn-primary save-button" value="Create"/></span>
+
         </div>
 
     </div>
