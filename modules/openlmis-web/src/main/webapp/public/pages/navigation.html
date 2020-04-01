@@ -41,6 +41,26 @@
                 <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/data-health-check"
                    openlmis-message="link.requisition.health.check"></a>
             </li>
+
+            <li ng-show="hasPermission('CREATE_MONITORING_REPORT')">
+
+                <a href="javascript: void(0);"
+                  >Monitoring Form</a>
+                <div class="submenu">
+                    <ul>
+                        <li ng-show="hasPermission('CREATE_MONITORING_REPORT')">
+                            <a href="/public/pages/logistics/rnr/index.html#/create-monitoring-form"
+                               >Create Monitoring Form</a>
+                        </li>
+                        <li>
+                            <a href="/public/pages/logistics/rnr/index.html#/create-monitoring-form"
+                            >Approve</a>
+                        </li>
+                        <li class="beak"></li>
+                    </ul>
+                </div>
+            </li>
+
           <li class="beak"></li>
         </ul>
       </div>

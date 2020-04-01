@@ -12,6 +12,7 @@ package org.openlmis.core.repository;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.dto.SupervisoryNodeDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SupervisoryNodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,5 +142,12 @@ public class SupervisoryNodeRepository {
   public Long getTotalUnassignedSupervisoryNodeOfUserBy(Long userId, Long programId) {
     return supervisoryNodeMapper.getTotalUnassignedSupervisoryNodeOfUserBy(userId, programId);
   }
+
+
+  public SupervisoryNodeDTO getByuserAndRightName(Long userId, Long programId, String... rightNames) {
+    return supervisoryNodeMapper.getByuserAndRightName(userId, programId,
+            commaSeparateRightNames(rightNames));
+  }
+
 
 }

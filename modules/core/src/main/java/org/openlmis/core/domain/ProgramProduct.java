@@ -57,6 +57,8 @@ public class ProgramProduct extends BaseModel implements Importable {
 
   ProgramProductISA programProductIsa;
 
+  private Boolean isCovidIndicator;
+
   private Money currentPrice;
 
   public ProgramProduct(Long id) {

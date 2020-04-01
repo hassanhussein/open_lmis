@@ -1394,3 +1394,15 @@ services.factory('StockImbalanceHomeFacilityReport', function ($resource) {
 services.factory('QuantificationHomeFacilityExtractReport', function ($resource) {
     return $resource('/reports/reportdata/home_facility_quantification_extract.json', {}, {});
 });
+
+services.factory('GetDistrictsBy', function ($resource) {
+    return $resource('/rest-api/monitoring-report/district/:programId.json', {programId:'@programId'}, {});
+});
+
+services.factory('GetInitiatedForm', function ($resource) {
+    return $resource('/rest-api/monitoring-report/initiate/:zoneId/:programId.json', {zoneId:'@zoneId',programId:'@programId'}, {});
+});
+
+services.factory('saveMonitoringReport', function($resource){
+    return $resource('/rest-api/monitoring-report/save/:id.json', {id:'@id'}, update);
+});

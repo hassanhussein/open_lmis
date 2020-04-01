@@ -24,7 +24,10 @@
       <div class="span1">
         <div id="fullSupplyHeader" class="fluid-grid-cell" openlmis-message="label.product.fullSupply"></div>
       </div>
-      <div class="span3">
+      <div class="span1">
+        <div id="covid19IndicatoriHeader" class="fluid-grid-cell">Covid Indicator</div>
+      </div>
+      <div class="span2">
         <div class="row-fluid">
           <div class="span4">
             <div id="displayOrderHeader" class="fluid-grid-cell" openlmis-message="label.display.order"></div>
@@ -82,8 +85,16 @@
                        ng-show="programProduct.underEdit"/>
             </div>
         </div>
+        <div class="span1">
+            <div class="fluid-grid-cell">
+                <i id="covid19Indicator{{$index}}" class="icon icon-ok"
+                   ng-show="programProduct.isCovidIndicator && !programProduct.underEdit"></i>
+                <input type="checkbox" id="covidIndicator{{$index}}" ng-model="programProduct.isCovidIndicator"
+                       ng-show="programProduct.underEdit"/>
+            </div>
+        </div>
 
-        <div class="span3">
+        <div class="span2">
             <div class="row-fluid">
                 <div class="span4">
                     <div class="fluid-grid-cell">
@@ -182,8 +193,11 @@
       <div class="span1 fluid-grid-cell">
         <input type="checkbox" id="fullSupply" ng-model="newProgramProduct.fullSupply" ng-false-value="false"/>
       </div>
+      <div class="span1 fluid-grid-cell">
+        <input type="checkbox" id="covidIndicator" ng-model="newProgramProduct.isCovidIndicator" ng-false-value="false"/>
+      </div>
 
-      <div class="span3">
+      <div class="span2">
         <div class="row-fluid">
           <div class="span4 fluid-grid-cell">
             <div class="position-relative">

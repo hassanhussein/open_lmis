@@ -25,9 +25,9 @@ import java.util.List;
 @Repository
 public interface ProgramProductMapper {
 
-  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, fullSupply, currentprice, createdBy, modifiedBy, modifiedDate)",
+  @Insert({"INSERT INTO program_products(programId, productId, dosesPerMonth, active, productCategoryId, displayOrder, fullSupply, currentprice, createdBy, modifiedBy, modifiedDate,isCovidIndicator)",
     "VALUES (#{program.id},",
-    "#{product.id}, #{dosesPerMonth}, #{active}, #{productCategory.id}, #{displayOrder}, #{fullSupply}, #{currentPrice}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))"})
+    "#{product.id}, #{dosesPerMonth}, #{active}, #{productCategory.id}, #{displayOrder}, #{fullSupply}, #{currentPrice}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),#{isCovidIndicator})"})
   @Options(useGeneratedKeys = true)
   Integer insert(ProgramProduct programProduct);
 
@@ -49,7 +49,7 @@ public interface ProgramProductMapper {
 
   @Update({"UPDATE program_products SET dosesPerMonth = #{dosesPerMonth}, productCategoryId = #{productCategory.id}, ",
     "displayOrder = #{displayOrder}, active = #{active}, modifiedBy = #{modifiedBy}, fullSupply = #{fullSupply}, currentprice = #{currentPrice}, ",
-    "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP) ",
+    "modifiedDate = COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP),isCovidIndicator=#{isCovidIndicator} ",
     "WHERE programId = #{program.id} AND productId = #{product.id}"})
     void update(ProgramProduct programProduct);
 

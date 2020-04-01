@@ -14,6 +14,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.dto.SupervisoryNodeDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -198,4 +199,18 @@ public interface SupervisoryNodeMapper {
     @Param(value="userId") Long userId,
     @Param(value="programId") Long programId
   );
+
+  @Select(" \n" +
+          " SELECT DISTINCT s.id, s.code, s.id, s.name, f.id FacilityId FROM  \n" +
+          "        supervisory_nodes s \n" +
+          "           INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId \n" +
+          "           INNER JOIN role_rights rr ON ra.roleId = rr.roleId " +
+          "           JOIN Facilities f ON s.facilityId = f.id  \n" +
+          "           WHERE rr.rightName = 'CREATE_MONITORING_REPORT' \n" +
+          "           AND ra.userId =#{userId}\n" +
+          "           AND ra.programId = #{programId} limit 1 ")
+  SupervisoryNodeDTO getByuserAndRightName(@Param(value = "userId") Long userId, @Param(value = "programId") Long programId,
+                                           @Param(value = "commaSeparatedRights") String commaSeparatedRights);
+
+
 }

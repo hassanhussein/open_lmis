@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.dialog', 'angular.filter']).config(['$routeProvider', function ($routeProvider) {
+var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'angularCombine','ui.bootstrap.modal', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.dialog', 'angular.filter']).config(['$routeProvider', function ($routeProvider) {
   $routeProvider.
     when('/init-rnr', {controller: InitiateRnrController, templateUrl: 'partials/create/init.html', resolve: InitiateRnrController.resolve}).
     when('/create-rnr/:rnr/:facility/:program', {controller: CreateRequisitionController, templateUrl: 'partials/create/index.html', resolve: CreateRequisitionController.resolve, reloadOnSearch: false}).
@@ -21,5 +21,9 @@ var rnrModule = angular.module('rnr', ['openlmis', 'ngGrid', 'ui.bootstrap.modal
     when('/view-requisition-via/:rnr/:program', {controller: ViewRnrViaDetailController, templateUrl: 'partials/view/rnr-via-view.html', reloadOnSearch: false}).
     when('/view-requisition-mmia/:rnr/:program', {controller: ViewRnrMmiaController, templateUrl: 'partials/view/rnr-mmia-view.html', reloadOnSearch: false}).
     when('/data-health-check', {controller: SearchRnrListController, templateUrl: 'partials/data-health-check/index.html', resolve: SearchRnrListController.resolve}).
+    when('/create-monitoring-form', {controller: CreateMonitoringFormController, templateUrl: 'partials/monitoring-form/index.html', resolve: CreateMonitoringFormController.resolve}).
+    when('/create-form/:zoneId/:program', {controller: MonitoringFormController, templateUrl: 'partials/monitoring-form/create.html', resolve: MonitoringFormController.resolve, reloadOnSearch: false}).
     otherwise({redirectTo: '/init-rnr'});
-}]);
+}]).config(function (angularCombineConfigProvider) {
+    angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
+});
