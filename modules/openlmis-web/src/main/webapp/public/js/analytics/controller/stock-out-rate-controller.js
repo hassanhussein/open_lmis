@@ -519,9 +519,9 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     // Stock Out Rate Graph
     $rootScope.loadStockOutRateTrendForTracer = function(params, gzLevel) {
 
-         params.year = new Date().getFullYear();
+//         params.year = new Date().getFullYear();
 
-      //  params.year = 2017;
+         params.year = 2019;
 
         if (params.indicator == 'allTracerProducts') {
             GetStockOutRateTrendOfTracerProductsData.get(params).then(function(data) {
