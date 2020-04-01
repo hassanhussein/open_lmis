@@ -22,7 +22,7 @@ DROP TABLE if exists public.monitoring_reports;
 CREATE TABLE public.monitoring_reports
 (
   id serial,
-  districtId integer NOT NULL,
+  facilityId integer NOT NULL,
   programId Integer,
   supervisoryNodeId integer,
   status character varying(250),
@@ -37,7 +37,11 @@ CREATE TABLE public.monitoring_reports
   modifiedby integer,
   modifieddate timestamp without time zone DEFAULT now(),
 
-  CONSTRAINT monitoring_reports_pkey PRIMARY KEY (id)
+  CONSTRAINT monitoring_reports_pkey PRIMARY KEY (id),
+
+  CONSTRAINT  monitoring_reports_facilityId_fkey FOREIGN KEY (facilityId)
+      REFERENCES public.facilities (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE public.monitoring_report_line_items
@@ -86,6 +90,16 @@ CREATE TABLE public.monitoring_report_status_changes
 
 
 DELETE from role_rights where rightName = 'CREATE_MONITORING_REPORT';
+DELETE from role_rights where rightName = 'APPROVE_MONITORING_REPORT';
+DELETE from role_rights where rightName = 'VIEW_MONITORING_REPORT';
 DELETE FROM rights where name = 'CREATE_MONITORING_REPORT';
+DELETE FROM rights where name = 'APPROVE_MONITORING_REPORT';
+DELETE FROM rights where name = 'VIEW_MONITORING_REPORT';
 INSERT INTO rights (name, rightType, displayNameKey, displayOrder, description) VALUES
 ('CREATE_MONITORING_REPORT','REQUISITION','right.create.monitoring.report', 107,'Permission to Create Monitoring Report');
+
+INSERT INTO rights (name, rightType, displayNameKey, displayOrder, description) VALUES
+('APPROVE_MONITORING_REPORT','REQUISITION','right.approve.monitoring.report', 108,'Permission to Approve Monitoring Report');
+
+INSERT INTO rights (name, rightType, displayNameKey, displayOrder, description) VALUES
+('VIEW_MONITORING_REPORT','REQUISITION','right.view.monitoring.report', 109,'Permission to view Monitoring Report');

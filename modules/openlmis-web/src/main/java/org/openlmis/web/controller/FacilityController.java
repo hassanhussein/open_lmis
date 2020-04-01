@@ -361,4 +361,12 @@ public class FacilityController extends BaseController {
         return response("facility", facilityService.getAllHfrMappingById(id));
     }
 
+
+  @RequestMapping(value = "/create/monitoringForm/supervised/{programId}/facilities.json", method = GET)
+  public ResponseEntity<ModelMap> getUserSupervisedFacilitiesSupportingProgramForMonitoringForm(@PathVariable(value = "programId") Long programId,
+                                                                               HttpServletRequest request) {
+    Long userId = loggedInUserId(request);
+    return new ResponseEntity<>(getFacilityResponse(programId, userId,CREATE_MONITORING_FORM), HttpStatus.OK);
+  }
+
 }

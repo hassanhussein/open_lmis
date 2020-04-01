@@ -606,3 +606,7 @@ services.factory('RunDataHealthCheckPerProduct', function ($resource) {
 services.factory('GetScheduleDetailsByFacilityIdAndProgramId', function ($resource) {
     return $resource('/rest-api/getScheduleDetailsByFacilityIdAndProgramId.json', {}, {});
 });
+
+services.factory('UserSupervisedFacilitiesForProgramForMonitoringForm', function ($resource) {
+    return $resource('/create/monitoringForm/supervised/:programId/facilities.json', {}, {});
+});

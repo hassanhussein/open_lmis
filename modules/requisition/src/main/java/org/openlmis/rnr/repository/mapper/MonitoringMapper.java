@@ -12,7 +12,7 @@ import java.util.List;
 public interface MonitoringMapper {
 
     @Insert(" INSERT INTO public.monitoring_reports(\n" +
-            "            districtId,programId,supervisoryNodeId, status,nameOfHidTu,numberOfHidTu, numberOfCumulativeCases, \n" +
+            "            facilityId,programId,supervisoryNodeId, status,nameOfHidTu,numberOfHidTu, numberOfCumulativeCases, \n" +
             "            patientOnTreatment, numberOfStaff, reportedDate, createdBy, createddate, \n" +
             "            modifiedBy, modifiedDate)\n" +
             "    VALUES (#{districtId},#{programId},#{supervisoryNodeId},#{status}, #{nameOfHidTu}, #{numberOfHidTu}, #{numberOfCumulativeCases}, \n" +
@@ -23,26 +23,26 @@ public interface MonitoringMapper {
 
 
     @Update("UPDATE public.monitoring_reports\n" +
-            "   SET programId=#{programId}, supervisoryNodeId=#{supervisoryNodeId},status = #{status}, districtId=#{districtId}, nameofhidtu=#{nameOfHidTu}, numberOfHidTu=#{numberOfHidTu}, numberOfCumulativeCases=#{numberOfCumulativeCases}, \n" +
+            "   SET programId=#{programId}, supervisoryNodeId=#{supervisoryNodeId},status = #{status}, facilityId=#{facilityId}, nameofhidtu=#{nameOfHidTu}, numberOfHidTu=#{numberOfHidTu}, numberOfCumulativeCases=#{numberOfCumulativeCases}, \n" +
             "       patientOnTreatment=#{patientOnTreatment}, numberOfStaff=#{numberOfStaff}, reportedDate=#{reportedDate} \n" +
             "        ,modifiedBy=#{modifiedBy}, modifiedDate=NOW()\n" +
             " WHERE id = #{id}; ")
     void update(MonitoringReport report);
 
-    @Select("SELECT * FROM monitoring_reports WHERE programId = #{programId} and status ='INITIATED' and districtId = #{zoneId} ")
-    MonitoringReport getBy(@Param("zoneId") Long zoneId,@Param("programId") Long programId, Long userId,@Param("reportedDate") String reportedDate);
+    @Select("SELECT * FROM monitoring_reports WHERE programId = #{programId} and status ='INITIATED' and facilityId = #{facilityId} ")
+    MonitoringReport getBy(@Param("facilityId") Long facilityId,@Param("programId") Long programId, Long userId,@Param("reportedDate") String reportedDate);
 
     @Select(" select * from monitoring_reports where id = #{id} ")
     @Results(value = {
             @Result(property = "id", column = "id"),
-            @Result(property = "districtId", column = "districtId"),
+            @Result(property = "facilityId", column = "facilityId"),
             @Result(property = "programId", column = "programId"),
             @Result(property = "lineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.MonitoringLineItemMapper.getLineItems")),
             @Result(property = "reportStatusChanges", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.MonitoringReportStatusChangeMapper.getChangeLogByReportId")),
-            @Result(property = "geographicZone", javaType = GeographicZone.class, column = "districtId",
-                    many = @Many(select = "org.openlmis.core.repository.mapper.GeographicZoneMapper.getWithParentById")),
+            @Result(property = "facility", javaType = Facility.class, column = "facilityId",
+                    many = @Many(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
             @Result(property = "program", javaType = Program.class, column = "programId",
                     many = @Many(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
 

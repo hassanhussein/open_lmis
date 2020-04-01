@@ -81,7 +81,7 @@ public class MonitoringReportService {
        MonitoringReport report = new MonitoringReport();
        Date date = new Date();
        SimpleDateFormat form = new SimpleDateFormat("MM-dd-YYYY");
-       report.setDistrictId(zoneId);
+       report.setFacilityId(zoneId);
        report.setProgramId(programId);
        report.setNameOfHidTu(null);
        report.setNumberOfHidTu(0L);

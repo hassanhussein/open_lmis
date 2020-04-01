@@ -24,7 +24,7 @@ public class MonitoringReport extends BaseModel {
 
     private Long programId;
 
-    private Long districtId;
+    private Long facilityId;
 
     private String nameOfHidTu;
 
@@ -48,7 +48,7 @@ public class MonitoringReport extends BaseModel {
 
     private List<ReportStatusChange> reportStatusChanges;
 
-    private GeographicZone geographicZone;
+    private Facility facility;
 
     private Program program;
 
