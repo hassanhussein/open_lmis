@@ -77,6 +77,9 @@ public class RequisitionRepositoryTest {
   private CommaSeparator separator;
 
   @Mock
+  private PatientRecordMapper patientRecordMapper;
+
+  @Mock
   private RequisitionStatusChangeMapper requisitionStatusChangeMapper;
   @Mock
   private RegimenLineItemMapper regimenLineItemMapper;
@@ -264,6 +267,17 @@ public class RequisitionRepositoryTest {
   }
 
   @Test
+  public void updatePatientRecord() throws Exception{
+    Rnr rnr = new Rnr();
+    PatientRecord record = new PatientRecord();
+    record.setId(1L);
+    record.setRnrId(1L);
+    rnr.setPatientRecord(record);
+    requisitionRepository.updatePatientRecord(rnr.getPatientRecord());
+    verify(patientRecordMapper).update(rnr.getPatientRecord());
+  }
+
+  @Test
   public void shouldUpdateOnApprovalExistingNonFullSupplyLineItems() throws Exception {
     long rnrId = 1L;
     rnr.setId(rnrId);
@@ -282,6 +296,10 @@ public class RequisitionRepositoryTest {
     rnrLineItem2.setQuantityRequested(3);
 
     rnr.setStatus(IN_APPROVAL);
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+    rnr.setProgram(program);
+
     requisitionRepository.update(rnr);
 
     verify(rnrLineItemMapper).updateOnApproval(rnr.getFullSupplyLineItems().get(0));

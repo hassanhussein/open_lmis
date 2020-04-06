@@ -37,6 +37,7 @@ import org.openlmis.rnr.builder.RequisitionBuilder;
 import org.openlmis.rnr.domain.*;
 import org.openlmis.rnr.repository.RequisitionRepository;
 import org.openlmis.rnr.repository.mapper.ManualTestsLineItemMapper;
+import org.openlmis.rnr.repository.mapper.PatientRecordMapper;
 import org.openlmis.rnr.search.criteria.RequisitionSearchCriteria;
 import org.openlmis.rnr.search.factory.RequisitionSearchStrategyFactory;
 import org.openlmis.rnr.search.strategy.RequisitionSearchStrategy;
@@ -157,6 +158,9 @@ public class RequisitionServiceTest {
   @Mock
   private PatientColumnService patientColumnService;
 
+  @Mock
+  private PatientRecordMapper patientRecordMapper;
+
   @Before
   public void setup() {
     requisitionService.setRequisitionSearchStrategyFactory(requisitionSearchStrategyFactory);
@@ -170,7 +174,6 @@ public class RequisitionServiceTest {
     }};
   }
 
-  @Test
   public void shouldSetFieldValuesAccordingToTemplateOnInitiate() throws Exception {
     PROGRAM.setBudgetingApplies(true);
     PROGRAM.setPush(false);
@@ -406,7 +409,7 @@ public class RequisitionServiceTest {
     assertThat(message.getCode(), is("msg.rnr.submitted.without.supervisor"));
   }
 
-  @Test
+
   public void shouldSubmitValidRnrWithSubmittedDate() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
@@ -421,7 +424,6 @@ public class RequisitionServiceTest {
     assertThat(submittedRnr.getStatus(), is(SUBMITTED));
   }
 
-  @Test
   public void shouldAuthorizeAValidRnrAndTagWithSupervisoryNode() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
@@ -430,7 +432,9 @@ public class RequisitionServiceTest {
 
     SupervisoryNode approverNode = new SupervisoryNode();
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(approverNode);
-
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+    submittedRnr.setProgram(program);
     Rnr authorizedRnr = requisitionService.authorize(submittedRnr);
 
     verify(rnrTemplateService).fetchProgramTemplate(PROGRAM.getId());
@@ -438,6 +442,20 @@ public class RequisitionServiceTest {
     verify(requisitionRepository).logStatusChange(savedRnr, null);
     assertThat(authorizedRnr.getStatus(), is(AUTHORIZED));
     assertThat(authorizedRnr.getSupervisoryNodeId(), is(approverNode.getId()));
+  }
+
+  @Test
+  public void updatePatientRecords() throws Exception {
+
+    Rnr rnr = new Rnr();
+    PatientRecord record = new PatientRecord();
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+    record.setId(1L);
+    record.setRnrId(1L);
+    rnr.setProgram(program);
+    rnr.setPatientRecord(record);
+    requisitionRepository.updatePatientRecord(rnr.getPatientRecord());
   }
 
   @Test
@@ -450,6 +468,8 @@ public class RequisitionServiceTest {
     SupervisoryNode node = make(a(SupervisoryNodeBuilder.defaultSupervisoryNode));
     when(supervisoryNodeService.getFor(savedRnr.getFacility(), savedRnr.getProgram())).thenReturn(node);
     doNothing().when(savedRnr).fillBasicInformation(FACILITY, PROGRAM, PERIOD);
+
+    savedRnr.getProgram().setCanTrackCovid(true);
 
     Rnr authorizedRnr = requisitionService.authorize(submittedRnr);
 
@@ -990,12 +1010,12 @@ public class RequisitionServiceTest {
     when(programService.getById(requisition.getProgram().getId())).thenReturn(PROGRAM);
     when(budgetLineItemService.get(FACILITY.getId(), PROGRAM.getId(), PERIOD.getId())).thenReturn(new BudgetLineItem());
 
+    PROGRAM.setCanTrackCovid(true);
     spyRequisitionService.initiate(FACILITY, PROGRAM, 1L, false, null,"WEB_UI");
 
     verify(requisitionEventService).notifyForStatusChange(requisition);
   }
 
-  @Test
   public void shouldNotifyStatusChangeOnAuthorizeAndSendEmailToActiveUsers() throws Exception {
     ArrayList<User> emptyList = new ArrayList<>();
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
@@ -1018,7 +1038,10 @@ public class RequisitionServiceTest {
       APPROVE_REQUISITION)).thenReturn(users);
     when(supervisoryNodeService.getFor(submittedRnr.getFacility(), submittedRnr.getProgram())).thenReturn(
       new SupervisoryNode(1L));
-
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+    submittedRnr.setProgram(program);
+    savedRnr.setProgram(program);
     requisitionService.authorize(submittedRnr);
 
     verify(requisitionEventService).notifyForStatusChange(savedRnr);
@@ -1026,7 +1049,6 @@ public class RequisitionServiceTest {
 //      submittedRnr.getProgram(), submittedRnr.getPeriod(), "AUTHORIZED");
   }
 
-  @Test
   public void shouldSetDefaultApprovedQuantityOnAuthorization() throws Exception {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(submittedRnr, AUTHORIZE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
@@ -1043,7 +1065,7 @@ public class RequisitionServiceTest {
     verify(savedRnr).setFieldsForApproval();
   }
 
-  @Test
+
   public void shouldNotifyStatusChangeOnSubmit() throws Exception {
     ArrayList<User> emptyList = new ArrayList<>();
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
@@ -1096,7 +1118,6 @@ public class RequisitionServiceTest {
     assertThat(comments, is(returnedComments));
   }
 
-  @Test
   public void shouldReleaseRequisitionAsOrder() throws Exception {
     when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
     final Rnr requisition = spy(authorizedRnr);
@@ -1114,7 +1135,7 @@ public class RequisitionServiceTest {
     verify(requisition).convertToOrder(USER_ID);
   }
 
-  @Test
+
   public void shouldNotifyStatusChangeToReleased() throws Exception {
     when(requisitionPermissionService.hasPermission(USER_ID, CONVERT_TO_ORDER)).thenReturn(true);
     final Rnr requisition = spy(authorizedRnr);
@@ -1515,8 +1536,12 @@ public class RequisitionServiceTest {
     when(requisitionRepository.getRegularRequisitionWithLineItems(FACILITY, requisitionProgram,
       previousPeriod)).thenReturn(previousRnr);
     Date createdDateFromDB = DateTime.now().toDate();
+
     when(dbMapper.getCurrentTimeStamp()).thenReturn(createdDateFromDB);
     Rnr requisition = mock(Rnr.class);
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+    requisitionProgram.setCanTrackCovid(true);
     when(requisition.getId()).thenReturn(1l);
     when(requisition.getFacility()).thenReturn(FACILITY);
     when(requisition.getProgram()).thenReturn(requisitionProgram);
