@@ -23,6 +23,7 @@ dependencies {
   compile 'org.aspectj:aspectjweaver:1.8.5'
   compile 'org.apache.commons:commons-lang3:3.1'
   compile 'org.springframework:spring-beans:4.1.5.RELEASE'
+  compile 'org.javers:javers-core:5.8.12'
   compile project(':modules:db')
   compile project(':modules:upload')
   compile project(':modules:email')

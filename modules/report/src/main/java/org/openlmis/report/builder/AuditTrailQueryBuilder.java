@@ -18,8 +18,8 @@ public class AuditTrailQueryBuilder {
         SELECT("action, userfullname as actionPerformedBy, identity, identityvalue");
         SELECT("oldvalue, newvalue, createddate");
         FROM("audit_trails");
-        WHERE(startDateFilteredBy("createddate", filter.getPeriodStart()));
-        WHERE(endDateFilteredBy("createddate", filter.getPeriodEnd()));
+        WHERE(startDateFilteredBy("createddate::date", filter.getPeriodStart()));
+        WHERE(endDateFilteredBy("createddate::date", filter.getPeriodEnd()));
 
         if (filter.getAction() != null) {
             WHERE("split_part(action, '.', 2) = #{filterCriteria.action}");

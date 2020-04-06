@@ -25,6 +25,7 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.builder.FacilityBuilder;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.FacilityFeedDTO;
@@ -99,6 +100,9 @@ public class FacilityServiceTest {
 
   @InjectMocks
   private FacilityService facilityService;
+
+  @Mock
+  private AuditService auditService;
 
   private static Matcher<Event> eventMatcher(final UUID uuid, final String title, final DateTime timestamp,
                                              final String uri, final String content, final String category) {

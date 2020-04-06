@@ -149,7 +149,9 @@
           <li ng-show="hasPermission('VIEW_USER_SUMMARY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#user-summary" openlmis-message="menu.report.user.summary"></a>
           </li>
-
+          <li ng-show="hasPermission('VIEW_AUDIT_TRAIL_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#audit_trail" openlmis-message="report.title.audit.trail"></a>
+          </li>
           <li class="beak"></li>
         </ul>
       </div>

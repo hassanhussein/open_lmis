@@ -266,10 +266,11 @@ public class RequisitionService {
 
     // FE users can't submit equipment and manual test types. This is a makeshift solution for
     // updating equipment and manual test types of AUTHORIZED FE reports
-    if(isPartialFEReportUpdate(rnr.getModifiedBy(), savedRnr))
+    if(isPartialFEReportUpdate(rnr.getModifiedBy(), savedRnr)) {
       requisitionRepository.updateEquipmentStatusAndManualTestTypes(savedRnr);
-    else
-      requisitionRepository.update(savedRnr);
+    }
+
+    requisitionRepository.update(savedRnr);
 
     return savedRnr;
   }
