@@ -76,13 +76,18 @@ public class ProductService {
 
     Boolean isStoredProductActive = isActive(product.getCode());
 
+    Product existingProduct = repository.getById(product.getId());
+
     repository.update(product);
 
     if(isStoredProductActive && !product.getActive())
       auditService.logActivity(product, AuditAction.DISABLE);
     else if(!isStoredProductActive && product.getActive())
       auditService.logActivity(product, AuditAction.ENABLE);
+    else
+      auditService.logActivity(product, existingProduct); //track change of two objects
 
+    existingProduct = null;
     notifyProgramCatalogChange(product, existingProgramProducts);
   }
 

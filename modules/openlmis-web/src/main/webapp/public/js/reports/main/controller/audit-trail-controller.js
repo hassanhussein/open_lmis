@@ -33,4 +33,11 @@ function AuditTrailController($scope, AuditReport, AuditActions, $q,  ngTablePar
             });
             return deferred.promise;
         };
+
+        $scope.exportReport   = function (type){
+                $scope.filter.pdformat = 1;
+                var params = jQuery.param($scope.getSanitizedParameter());
+                var url = '/reports/download/audit_trail/' + type +'?' + params;
+                window.open(url, '_BLANK');
+        };
 }
