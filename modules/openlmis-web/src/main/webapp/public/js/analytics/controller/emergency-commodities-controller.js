@@ -22,8 +22,6 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                   $scope.titleStockForProgramAvailable = '<span style="font-size: 13px!important;color: #0c9083">List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year+'</span>';
 
                   $scope.drillDownData = data;
-                  console.log($scope.drillDownData )
-
                  });
        };
 
@@ -92,7 +90,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
           }]
 
       });
-       }
+       };
        $scope.stockAvailabilityByDesignatedHospital = function(chartTypeId) {
               Highcharts.chart(chartTypeId, {
                   chart: {
@@ -150,7 +148,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                       data: [107, 31, 635, 203, 2, 31, 635, 203, 2]
                   }]
               });
-              }
+              };
        $scope.stockAvailabilityForEmergencyCommodities = function(chartTypeId) {
   Highcharts.chart(chartTypeId, {
        chart: {
@@ -198,9 +196,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
           }]
       }]
   });
-
-
-              }
+};
        $scope.casesPerDesignatedFacilities = function(chartTypeId) {
   Highcharts.chart(chartTypeId, {
        chart: {
@@ -258,9 +254,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
           ]
       }]
   });
-
-
-              }
+ };
 
 
 
