@@ -17,12 +17,17 @@
             <label for="warehouse" ><strong>Warehouse</strong><span class="label-required"> *</span></label>
 
             <div class="form-field row-fluid" >
-                <select  ui-select2="{width: '100%'}" ng-model="warehouseId" name="warehouse" id="warehouse" openlmis-message="label.select.parent.zone">
+                <select  ui-select2="{width: '100%'}"
+                         ng-model="stockMovement.warehouseId" name="warehouse"
+                         id="warehouse" ng-required="true"
+                         ng-options="warehouse as warehouse.name for warehouse in stockMovement.warehouseList"
+
+                         ng-change="loadBinLocation(stockMovement.warehouseId)"
+                >
+
                     <option value="">--Select Warehouse--</option>
-                    <option value="1">Warehouse 1</option>
-                    <option value="2"> Warehouse 2</option>
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="movementForm.stockMovement.warehouseId.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
@@ -31,13 +36,16 @@
             <label for="binLocation" ><strong>Bin Location</strong></label>
 
             <div class="form-field row-fluid">
-                <select name="binLocation" id="binLocation" ui-select2="{width: '100%'}" ng-model="binLocationId" ng-disabled="!warehouseId" openlmis-message="label.select.parent.zone">
+                <select name="binLocation" id="binLocation" ui-select2="{width: '100%'}" ng-model="stockMovement.binLocationId" ng-disabled="!stockMovement.warehouseId"
+
+                        ng-options="location as location.name for location in stockMovement.locations.locations"
+
+                >
                     <option value="">--Select Bin Location--</option>
-                    <option value="1">AAAA</option>
-                    <option value="2"> BBBB</option>
+
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="stockMovement.binLocationId.parent.code.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
@@ -52,13 +60,17 @@
             <label for="item" ><strong>Item</strong></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" name="item" id="item" ng-disabled="!binLocationId" ng-model="itemId" openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}" name="item" id="item" ng-model="stockMovement.productId"
+                        ng-options="product as product.product.primaryName for product in stockMovement.products"
+                        ng-change="loadProductLots(stockMovement.productId)"
+
+
+                >
                     <option value="">--Select Item--</option>
-                    <option value="1">BCG</option>
-                    <option value="2"> HPV</option>
+
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="stockMovement.productId.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
@@ -68,13 +80,14 @@
             <label for="lot" ><strong>Lot</strong></label>
 
             <div class="form-field row-fluid">
-                <select id="lot" name="lot" ui-select2="{width: '100%'}" ng-disabled="!itemId" ng-model="lot" openlmis-message="label.select.parent.zone">
+                <select id="lot" name="lot" ui-select2="{width: '100%'}" ng-disabled="!stockMovement.productId" ng-model="stockMovement.lotId" ng-change="showSOH(stockMovement.lotId)"
+                        ng-options="lot as lot.lotCode for lot in lotsToDisplay"
+
+                >
                     <option value="">--Select Lot--</option>
-                    <option value="1">ASDFAD</option>
-                    <option value="2"> FDFDFDF</option>
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="stockMovement.lotId.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>

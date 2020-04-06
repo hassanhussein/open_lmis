@@ -8,10 +8,82 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function StockController($scope, $location) {
-  var today = new Date();
-  $scope.referenceNo='IVD/SM/'+today.getFullYear()+'/'+today.getMonth()+'/'+today.getTime();
-  $scope.referenceNoA='IVD/SA/'+today.getFullYear()+'/'+today.getMonth()+'/'+today.getTime();
+function StockController($scope, $location, GetWarehouseLocations,vaccineProducts,ProductLots) {
+                    console.log(vaccineProducts);
+
+
+$scope.stockMovement = {};
+$scope.stockMovement.products = [];
+
+$scope.stockMovement.products = vaccineProducts;
+
+ GetWarehouseLocations.get(function(data) {
+
+  $scope.warehouseList = data.binLocations;
+  $scope.stockMovement.warehouseList = data.binLocations;
+
+ });
+
+$scope.loadBinLocation = function(wareHouse) {
+
+$scope.stockMovement.locations = wareHouse;
+console.log($scope.stockMovement.locations);
+
+}
+
+$scope.loadProductLots = function(product) {
+
+            $scope.lotsToDisplay = {};
+
+            if (product !== null) {
+
+//        console.log(product)
+                ProductLots.get({
+                    productId: product.product.id
+                }, function(data) {
+                    $scope.allLots = data.lots;
+                                console.log(data.lots);
+                    //                              console.log(data.lots)
+                    $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
+
+
+                });
+
+
+            }
+        };
+
+$scope.showSOH = function(data){
+
+
+console.log(data);
+
+}
+
+}
+
+
+StockController.resolve =  {
+
+
+    vaccineProducts: function ($q, $timeout, VaccineProgramProducts, $routeParams,$rootScope) {
+        var deferred = $q.defer();
+        $timeout(function () {
+
+                VaccineProgramProducts.get({programId: 82},
+
+                    function (data) {
+
+                        if (!isUndefined(data.programProductList) || data.programProductList.length > 0)
+                            deferred.resolve(data.programProductList);
+                        });
+
+
+
+        }, 100);
+
+        return deferred.promise;
+    }
 
 }
 
