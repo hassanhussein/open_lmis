@@ -64,7 +64,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
     },
     fillConsumptionOrStockInHand: function() {
-        if (this.reportOnlyPeriod) {
+        if (this.reportOnlyPeriod && !this.program.canTrackCovid) {
             this.beginningBalance = utils.getValueFor(this.beginningBalance);
             this.quantityReceived = utils.getValueFor(this.quantityReceived);
             this.quantityDispensed = utils.getValueFor(this.quantityDispensed);
@@ -165,7 +165,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
 
         var stockInHand = utils.parseIntWithBaseTen(this.stockInHand);
-        if (this.programRnrColumnList !== undefined && this.programRnrColumnList[0].formulaValidationRequired && this.reportOnlyPeriod) {
+        if (this.programRnrColumnList !== undefined && this.programRnrColumnList[0].formulaValidationRequired && this.reportOnlyPeriod && !this.program.canTrackCovid) {
 
             var beginningBalance = utils.parseIntWithBaseTen(this.beginningBalance);
             var quantityReceived = utils.parseIntWithBaseTen(this.quantityReceived);
@@ -174,7 +174,7 @@ var RegularRnrLineItem = base2.Base.extend({
             return (utils.isNumber(quantityDispensed) && utils.isNumber(beginningBalance) && utils.isNumber(quantityReceived) &&
                     utils.isNumber(totalLossesAndAdjustments) && utils.isNumber(stockInHand)) ?
                 quantityDispensed != (beginningBalance + quantityReceived + totalLossesAndAdjustments - stockInHand) : null;
-        } else if (!this.reportOnlyPeriod) {
+        } else if (!this.reportOnlyPeriod && !this.program.canTrackCovid) {
 
             if (this.period !== undefined) {
 
@@ -186,6 +186,10 @@ var RegularRnrLineItem = base2.Base.extend({
                  }*/
                 // return utils.isNumber(stockInHand)?false:true;
             }
+        } else if(this.program.canTrackCovid) {
+
+                return (utils.getValueFor(this.stockInHand) === null) ? true:false;
+
         }
 
         return false;
@@ -468,7 +472,7 @@ var RegularRnrLineItem = base2.Base.extend({
             }
             return valid;
         });
-        if (!this.reportOnlyPeriod) {
+        if (!this.reportOnlyPeriod || this.program.canTrackCovid) {
             valid = !isUndefined(this.stockInHand);
             return valid;
         }
@@ -476,6 +480,7 @@ var RegularRnrLineItem = base2.Base.extend({
     },
 
     getErrorMessage: function() {
+    console.log(this.quantityDispensed);
         if (this.skipped) return "";
         if (this.stockInHand < 0) return "error.stock.on.hand.negative";
         if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";

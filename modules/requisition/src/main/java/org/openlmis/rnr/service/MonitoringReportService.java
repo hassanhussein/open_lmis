@@ -106,7 +106,7 @@ public class MonitoringReportService {
        report.setNameOfHidTu(facility.getName());
        report.setNumberOfHidTu(0L);
        report.setNumberOfStaff(null);
-       report.setNumberOfCumulativeCases((previousReport != null)?previousReport.getPatientOnTreatment():0);
+       report.setNumberOfCumulativeCases(0);
        report.setPatientOnTreatment(null);
        report.setStatus("INITIATED");
        report.setReportedDate(new Date());

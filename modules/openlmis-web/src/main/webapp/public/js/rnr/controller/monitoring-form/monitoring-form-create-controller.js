@@ -1,14 +1,13 @@
 function MonitoringFormController($dialog,$scope,report,$location,saveMonitoringReport, MonitoringReportSubmit){
   report.columnTemplate = [{name:'stockOnHand',label:'In stock at Council level'}, {name:'quantityRequested', label:'Requested'}];
-  var oldCase = report.numberOfCumulativeCases;
   $scope.report  = report;
    console.log(report);
 
-    $scope.report.oldCase  =
+    $scope.report.oldCase  = report.numberOfCumulativeCases;
 
     $scope.changeCummulativeCases  = function(report) {
-       console.log(oldCase);
-       var totalCases  = parseInt(report.patientOnTreatment,10) + oldCase ;
+
+       var totalCases  = parseInt(report.patientOnTreatment,10) + $scope.report.oldCase ;
        report.numberOfCumulativeCases = totalCases;
 
     };

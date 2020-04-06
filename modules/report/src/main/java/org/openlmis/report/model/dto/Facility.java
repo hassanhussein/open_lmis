@@ -62,4 +62,6 @@ public class Facility {
   private Integer satelliteParentId;
   private String comment;
   private Boolean dataReportable;
+  private Integer numberOfStaff;
+  private Boolean isHidTu;
 }
