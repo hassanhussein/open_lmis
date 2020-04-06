@@ -43,7 +43,9 @@ services.factory('SupplyStatusReport', function ($resource) {
 services.factory('NonReportingFacilities', function ($resource) {
     return $resource('/reports/reportdata/non_reporting.json', {}, {});
 });
-
+services.factory('EmergencyRequests', function ($resource) {
+    return $resource('/reports/reportdata/emergencyRequest.json', {}, {});
+});
 services.factory('RequisitionGroupsByProgramSchedule', function ($resource) {
     return $resource('/reports/reporting_groups_by_program_schedule.json', {}, {});
 });

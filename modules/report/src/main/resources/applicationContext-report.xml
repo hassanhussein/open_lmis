@@ -558,6 +558,15 @@
                     <property name="version" value="1.0"/>
                 </bean>
                 <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="reporting_emergency_request"/>
+                    <property name="template" value="reporting-emergency.jasper"/>
+                    <property name="reportDataProvider" ref="emergencyRequestReportDataProvider"/>
+                    <property name="id" value="Reporting-Emergency-Request"/>
+                    <property name="name" value="Emergency Request"/>
+                    <property name="title" value="header.report.reporting.emergency"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+                <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="rejected_rnr"/>
                     <property name="template" value="reporting-status.jasper"/>
                     <property name="reportDataProvider" ref="rejectedRnRReportDataProvider"/>
