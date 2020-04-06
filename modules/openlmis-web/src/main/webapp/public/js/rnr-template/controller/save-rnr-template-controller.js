@@ -11,6 +11,7 @@
 function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageService, $routeParams, RnRColumnList, UpdateProgram,
                                    $location) {
   $scope.rnrColumns = rnrTemplateForm.rnrColumns;
+
   $scope.sources = rnrTemplateForm.sources;
   $scope.validateFormula = $scope.rnrColumns[0].formulaValidationRequired;
   $scope.program = program;
@@ -25,6 +26,8 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
       return rnrColumn.position;
     });
 
+
+
   var setRnRTemplateValidateFlag = function () {
     $.each($scope.rnrColumns, function (index, column) {
       column.formulaValidationRequired = $scope.validateFormula;
@@ -36,6 +39,11 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
   };
 
   $scope.rnrColumns.forEach(function(column) {
+
+    if(column.name === 'totalRequirement' && program.canTrackCovid) {
+     column.mandatory = false;
+     column.formulaValidationRequired = false;
+    }
 
     if(column.rnrColumnOptions) {
       column.configuredOption = column.configuredOption ? _.findWhere(column.rnrColumnOptions, {name: column.configuredOption.name}) : column.rnrColumnOptions[0];

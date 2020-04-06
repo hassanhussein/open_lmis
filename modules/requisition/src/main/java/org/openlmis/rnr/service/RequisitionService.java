@@ -209,10 +209,36 @@ public class RequisitionService {
       populateManualTests(requisition);
     }
 
+
     requisition.setSourceApplication(sourceApplication);
     insert(requisition);
+
+    if(program.getCanTrackCovid()){
+      populatePatientRecords(requisition,facility,program);
+      insertPatientRecord(requisition);
+    }
     requisition = requisitionRepository.getById(requisition.getId());
+
     return fillSupportingInfo(requisition);
+  }
+
+  private void populatePatientRecords(Rnr requisition, Facility facility, Program program) {
+
+    PatientRecord lastPatientRecord = requisitionRepository.getLastRequisitionWithPatientRecoord(facility, program);
+    PatientRecord patientRecord = new PatientRecord();
+    if(lastPatientRecord != null) {
+      patientRecord.setNumberOfCumulativeCases(lastPatientRecord.getNumberOfCumulativeCases());
+    } else {
+      patientRecord.setNumberOfCumulativeCases(0);
+    }
+    patientRecord.setRnrId(requisition.getId());
+    patientRecord.setNewConfirmedCase(0);
+    patientRecord.setTotalDeath(0);
+    patientRecord.setTransfer(0);
+    patientRecord.setTotalRecovered(0);
+    patientRecord.setPatientOnTreatment(0);
+    requisition.setPatientRecord(patientRecord);
+
   }
 
   public void populateProductsPriceBasedOnPriceSchedule(Long facilityId, Long programId, List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts) {
@@ -297,6 +323,7 @@ public class RequisitionService {
       savedRnr.setEquipmentLineItems(rnr.getEquipmentLineItems());
       savedRnr.setManualTestLineItems(rnr.getManualTestLineItems());
       savedRnr.setPatientLineItems(rnr.getPatientLineItems());
+      savedRnr.setPatientRecord(rnr.getPatientRecord());
     }
 
     requisitionRepository.update(savedRnr);
@@ -323,7 +350,6 @@ public class RequisitionService {
     if(savedRnr.getPeriod().getEnableOrder()) {
       calculationService.perform(savedRnr, template);
     }
-
     return update(savedRnr);
   }
 
@@ -672,6 +698,9 @@ public class RequisitionService {
   private Rnr update(Rnr requisition) {
     requisitionRepository.update(requisition);
     logStatusChangeAndNotify(requisition, true, null);
+    if(requisition.getProgram().getCanTrackCovid()) {
+      requisitionRepository.updatePatientRecord(requisition.getPatientRecord());
+    }
     return requisition;
   }
 
@@ -1129,6 +1158,16 @@ public class RequisitionService {
     }
     return content;
 
+  }
+
+  private void insertPatientRecord(Rnr rnr) {
+
+      requisitionRepository.insertPatientRecord(rnr.getPatientRecord());
+  }
+
+  public PatientRecord getPatientRecordByRnrId(Long rnrId) {
+
+    return  requisitionRepository.getPatientByRnrID(rnrId);
   }
 
 }

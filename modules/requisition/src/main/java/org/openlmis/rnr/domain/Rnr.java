@@ -60,6 +60,9 @@ public class Rnr extends BaseModel {
   private List<PatientQuantificationLineItem> patientQuantifications = new ArrayList<>();
   private BigDecimal allocatedBudget;
   private String creditValue;
+  private Integer patientOnTreatment;
+  private Integer numberOfCumulativeCases;
+  private PatientRecord patientRecord;
 
   @Transient
   @JsonIgnore
@@ -111,6 +114,7 @@ public class Rnr extends BaseModel {
     fillActiveRegimenLineItems(regimens);
     fillPatientLineItems(patients);
   }
+
 
   public Rnr(Facility facility, Program program, ProcessingPeriod period) {
     this.facility = facility;

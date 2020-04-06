@@ -13,6 +13,7 @@ package org.openlmis.rnr.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.message.OpenLmisMessage;
 
 import java.util.ArrayList;
@@ -124,12 +125,14 @@ public class ProgramRnrTemplate extends Template {
     }
 
 
-    public Map<String, OpenLmisMessage> validateToSave() {
+    public Map<String, OpenLmisMessage> validateToSave(Program program) {
         validateColumnsTobeCheckedIfUserInput();
         validateCalculatedColumnHasDependentChecked(STOCK_IN_HAND, QUANTITY_DISPENSED);
         validateCalculatedColumnHasDependentChecked(QUANTITY_DISPENSED, STOCK_IN_HAND);
         validateQuantityDispensedAndStockInHandCannotBeCalculatedAtSameTime();
+       if(!program.getCanTrackCovid())
         validateQuantityRequested();
+
         return errorMap;
     }
 

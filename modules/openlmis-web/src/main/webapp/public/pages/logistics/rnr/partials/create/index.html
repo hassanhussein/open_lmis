@@ -9,6 +9,100 @@
   -->
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
+
+<div class="row-fluid" ng-show="rnr.facility.isHidTu">
+    <div class="span6">
+        <div class="rnr-table" style="width:800px !important">
+            <table class="table table-bordered" style="margin-bottom: 0px; padding-bottom: 0px">
+                <thead>
+                <tr class="text-row">
+                    <th colspan="6">Patient Records</th>
+                </tr>
+                <tr class="text-row">
+                    <th class="span2"> New confirmed cases</th>
+                    <th class="span2">Recovered</th>
+                    <th class="span2" >Death</th>
+                    <th class="span2">Transfer</th>
+                    <th class="span2">Comulative cases</th>
+                    <th ng-show="false" class="span2">On Treatment</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="cell-input col-general">
+              <span
+                      class="input-error-parent-cell">
+                    <input ng-disabled="formDisabled"
+                           ng-required="true"
+                           ng-class="highlightRequired(report.validate, report.fixedImmunizationSessions, false)"
+
+                           maxlength="8"
+                           ng-model="rnr.patientRecord.newConfirmedCase"
+                           numeric-validator="positiveInteger" ng-change="changeCummulativeCases(rnr)"
+                           type="text">
+                </span>
+                    </td>
+                    <td class="cell-input col-general">
+              <span
+                      class="input-error-parent-cell">
+                    <input  ng-disabled="formDisabled" ng-required="true"
+                            ng-class="highlightRequired(report.validate, report.plannedOutreachImmunizationSessions, false)"
+                            maxlength="8"
+                            ng-model="rnr.patientRecord.totalRecovered"
+                            numeric-validator="positiveInteger"
+                            type="text">
+                </span>
+                    </td>
+                    <td class="cell-input col-general">
+              <span
+                      class="input-error-parent-cell">
+                    <input
+                            ng-required="true"
+                            ng-class="highlightRequired(report.validate, report.outreachImmunizationSessions, false)"
+                            ng-disabled="formDisabled"
+                            maxlength="8"
+                            ng-model="rnr.patientRecord.totalDeath"
+                            numeric-validator="positiveInteger"
+                            type="text">
+                </span>
+                    </td>
+
+                    <td class="cell-input col-general">
+              <span
+                      class="input-error-parent-cell">
+                    <input
+                            ng-required="true"
+                            ng-disabled="formDisabled"
+
+                            ng-class="highlightRequired(report.validate, report.outreachImmunizationSessions, false)"
+
+                            maxlength="8"
+                            ng-model="rnr.patientRecord.transfer"
+                            numeric-validator="positiveInteger"
+                            type="text">
+                </span>
+                    </td>
+                    <td class="cell-input col-general">
+               <span
+                       class="input-error-parent-cell">
+                <input disabled readonly type="text"
+                       value="{{rnr.patientRecord.numberOfCumulativeCases}}">
+
+                  </span>
+                    </td>
+                    <td class="cell-input col-general number" ng-show="false">
+              <span
+                      class="input-error-parent-cell">
+                <input disabled readonly type="text"
+                       value="{{rnr.patientRecord.patientOnTreatment }}"/>
+              </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <div xmlns="http://www.w3.org/1999/html">
 
     <div class="rnr-tabs clearfix">
@@ -18,8 +112,14 @@
                 <a href="" ng-click="switchSupplyType('patient')" id="patientTab" openlmis-message="label.patients"></a>
             </li>
             <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
-                <a href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
-                   openlmis-message="label.full.supply.products"></a></li>
+                <a ng-if="!rnr.program.canTrackCovid"  href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+                   openlmis-message="label.full.supply.products"></a>
+
+                <a ng-if="rnr.program.canTrackCovid" href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+                   openlmis-message="label.covid.products"></a>
+
+
+            </li>
             <li ng-show="rnr.program.showNonFullSupplyTab" ng-class="{'selected': visibleTab == 'nonFullSupply', 'has-error': nonFullSupplyTabError}">
                 <a href="" ng-click="switchSupplyType('nonFullSupply')" id="nonFullSupplyTab"
                    openlmis-message="label.non.full.supply.products"></a></li>
@@ -75,8 +175,10 @@
                                  check-error-on-page="checkErrorOnPage(page)"></openlmis-pagination>
         </div>
 
+
+
         <div form-toolbar id="action_buttons" class="action-buttons">
-            <span ng-if="rnr.period.enableOrder"><ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include></span>
+            <span ng-if="rnr.period.enableOrder && !rnr.facility.isHidTu"><ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include></span>
             <div class="form-cell button-row">
                 <input ng-show="hasPermission('DELETE_REQUISITION') && rnr.status == 'INITIATED'"  type="button" class="btn btn-primary submit-button" ng-click="deleteRnR();" openlmis-message="button.delete" />
                 <input ng-show="rnr.status == 'INITIATED' && rnr.program.enableSkipPeriod" type="button" class="btn btn-primary submit-button" ng-click="skipRnR();" openlmis-message="button.skip.period" />

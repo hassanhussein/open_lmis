@@ -145,6 +145,10 @@ public class Facility extends BaseModel implements Importable {
   @ImportField(name = "Hfr Code")
   private  String hfrCode;
 
+  private Integer numberOfStaff;
+
+  private Boolean isHidTu;
+
   private List<ELMISInterfaceFacilityMapping> interfaceMappings = new ArrayList<>();
 
   private ELMISResponseMessageDTO messageDTO;
@@ -156,7 +160,7 @@ private  List<FacilityOwner> owners= new ArrayList<>();
     this.id = id;
   }
 
-  public Facility(Long id, String code, String name, FacilityOperator operatedBy, GeographicZone geographicZone, FacilityType facilityType, boolean virtualFacility) {
+  public Facility(Long id, String code, String name, FacilityOperator operatedBy, GeographicZone geographicZone, FacilityType facilityType, boolean virtualFacility, Boolean isHidTu, Integer numberOfStaff) {
     this.id = id;
     this.code = code;
     this.name = name;
@@ -164,6 +168,8 @@ private  List<FacilityOwner> owners= new ArrayList<>();
     this.geographicZone = geographicZone;
     this.facilityType = facilityType;
     this.virtualFacility = virtualFacility;
+    this.isHidTu = isHidTu;
+    this.numberOfStaff = numberOfStaff;
   }
 
   public Facility(Long id, boolean enabled, boolean active, Long modifiedBy) {
@@ -186,7 +192,7 @@ private  List<FacilityOwner> owners= new ArrayList<>();
   }
 
   public Facility basicInformation() {
-    return new Facility(id, code, name, operatedBy, geographicZone, facilityType, virtualFacility);
+    return new Facility(id, code, name, operatedBy, geographicZone, facilityType, virtualFacility,isHidTu,numberOfStaff);
   }
 
   public static Facility createFacilityToBeDeleted(Long facilityId, Long modifiedBy) {

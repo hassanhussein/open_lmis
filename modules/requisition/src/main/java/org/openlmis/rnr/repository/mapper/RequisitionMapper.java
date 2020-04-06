@@ -15,6 +15,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.InterfaceResponseDTO;
 import org.openlmis.core.dto.RequisitionStatusDTO;
 import org.openlmis.core.dto.ResponseExtDTO;
+import org.openlmis.rnr.domain.PatientRecord;
 import org.openlmis.rnr.domain.Rnr;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
@@ -31,8 +32,8 @@ import java.util.Map;
 @Repository
 public interface RequisitionMapper {
 
-    @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, sourceApplication, emergency, allocatedBudget, modifiedBy, createdBy,totalSources, creditValue) " +
-            "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy},#{totalSources}, #{creditValue})")
+    @Insert("INSERT INTO requisitions(facilityId, programId, periodId, status, sourceApplication, emergency, allocatedBudget, modifiedBy, createdBy,totalSources, creditValue,patientOnTreatment,numberOfCumulativeCases) " +
+            "VALUES (#{facility.id}, #{program.id}, #{period.id}, #{status}, #{sourceApplication}, #{emergency}, #{allocatedBudget}, #{modifiedBy}, #{createdBy},#{totalSources}, #{creditValue},#{patientOnTreatment},#{numberOfCumulativeCases})")
     @Options(useGeneratedKeys = true)
     void insert(Rnr requisition);
 
@@ -40,7 +41,8 @@ public interface RequisitionMapper {
             "modifiedBy = #{modifiedBy}, modifiedDate = CURRENT_TIMESTAMP, status = #{status},",
             "fullSupplyItemsSubmittedCost = #{fullSupplyItemsSubmittedCost},",
             "nonFullSupplyItemsSubmittedCost = #{nonFullSupplyItemsSubmittedCost},",
-            "supervisoryNodeId = #{supervisoryNodeId}, totalSources = #{totalSources}, creditValue = #{creditValue} ",
+            "supervisoryNodeId = #{supervisoryNodeId}, totalSources = #{totalSources}, creditValue = #{creditValue}, " +
+                    " numberOfCumulativeCases=#{numberOfCumulativeCases}, patientOnTreatment=#{patientOnTreatment} ",
             "WHERE id = #{id}"})
     void update(Rnr requisition);
 
@@ -50,6 +52,8 @@ public interface RequisitionMapper {
             @Result(property = "program.id", column = "programId"),
             @Result(property = "facility.id", column = "facilityId"),
             @Result(property = "period.id", column = "periodId"),
+            @Result(property = "patientRecord", javaType = PatientRecord.class, column = "id",
+                    one = @One(select = "org.openlmis.rnr.repository.mapper.PatientRecordMapper.getByRnrId")),
             @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
             @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
@@ -111,6 +115,8 @@ public interface RequisitionMapper {
             @Result(property = "facility.id", column = "facilityId"),
             @Result(property = "program.id", column = "programId"),
             @Result(property = "period.id", column = "periodId"),
+            @Result(property = "patientRecord", javaType = PatientRecord.class, column = "id",
+                    one = @One(select = "org.openlmis.rnr.repository.mapper.PatientRecordMapper.getByRnrId")),
             @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
             @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
@@ -130,6 +136,8 @@ public interface RequisitionMapper {
             @Result(property = "program", javaType = Program.class, column = "programId",
                     one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById")),
             @Result(property = "period.id", column = "periodId"),
+            @Result(property = "patientRecord", javaType = PatientRecord.class, column = "id",
+                    one = @One(select = "org.openlmis.rnr.repository.mapper.PatientRecordMapper.getByRnrId")),
             @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getNonSkippedRnrLineItemsByRnrId")),
             @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
@@ -236,6 +244,8 @@ public interface RequisitionMapper {
             @Result(property = "facility.id", column = "facilityId"),
             @Result(property = "program.id", column = "programId"),
             @Result(property = "period.id", column = "periodId"),
+            @Result(property = "patientRecord", javaType = PatientRecord.class, column = "id",
+                    one = @One(select = "org.openlmis.rnr.repository.mapper.PatientRecordMapper.getByRnrId")),
             @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsByRnrId")),
     })
@@ -327,6 +337,20 @@ public interface RequisitionMapper {
             "and r.status = 'APPROVED'"})
     List<Rnr> getUnreleasedPreviousRequisitions(@Param("rnr") Rnr rnr);
 
+    @Select({"SELECT rec.* FROM requisitions r  JOIN patient_records rec ON r.id = rec.rnrId join processing_periods pr on pr.id = r.periodId WHERE r.facilityId = #{facility.id} AND r.programId = #{program.id} ",
+            "ORDER BY r.id DESC LIMIT 1"})
+    @Results(value = {
+            @Result(property = "facility.id", column = "facilityId"),
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "period.id", column = "periodId"),
+            @Result(property = "patientRecord", javaType = PatientRecord.class, column = "id",
+                    one = @One(select = "org.openlmis.rnr.repository.mapper.PatientRecordMapper.getByRnrId"))
+
+    })
+    PatientRecord getLastRequisitionWithPatientRecoord(@Param("facility") Facility facility, @Param("program") Program program);
+
+
+
     public class ApprovedRequisitionSearch {
 
         @SuppressWarnings("UnusedDeclaration")
@@ -410,6 +434,8 @@ public interface RequisitionMapper {
             @Result(property = "program.id", column = "programId"),
             @Result(property = "facility.id", column = "facilityId"),
             @Result(property = "period.id", column = "periodId"),
+            @Result(property = "patientRecord", javaType = PatientRecord.class, column = "id",
+                    one = @One(select = "org.openlmis.rnr.repository.mapper.PatientRecordMapper.getByRnrId")),
             @Result(property = "fullSupplyLineItems", javaType = List.class, column = "id",
                     many = @Many(select = "org.openlmis.rnr.repository.mapper.RnrLineItemMapper.getRnrLineItemsWithoutSkippedItemsByRnrId")),
             @Result(property = "nonFullSupplyLineItems", javaType = List.class, column = "id",
@@ -499,6 +525,8 @@ public interface RequisitionMapper {
             " ORDER BY periodId DESC LIMIT 1"})
     @Results(value = {
             @Result(property = "id", column = "id"),
+            @Result(property = "patientRecord", javaType = PatientRecord.class, column = "id",
+                    one = @One(select = "org.openlmis.rnr.repository.mapper.PatientRecordMapper.getByRnrId")),
             @Result(property = "facility", javaType = Facility.class, column = "facilityId",
                     one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
             @Result(property = "program", javaType = Program.class, column = "programId",

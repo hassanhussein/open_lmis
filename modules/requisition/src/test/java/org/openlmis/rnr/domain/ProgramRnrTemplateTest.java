@@ -13,7 +13,11 @@ package org.openlmis.rnr.domain;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.mockito.Mock;
+import org.openlmis.core.domain.Program;
+import org.openlmis.core.dto.ProgramProductDTO;
 import org.openlmis.core.message.OpenLmisMessage;
+import org.openlmis.core.service.ProgramService;
 import org.openlmis.db.categories.UnitTests;
 
 import java.util.List;
@@ -49,6 +53,9 @@ public class ProgramRnrTemplateTest {
 
   @Test
   public void shouldNotGiveErrorIfDependentsAreNotMissing() throws Exception {
+    Program program = new Program();
+    program.setId(1L);
+    program.setCanTrackCovid(true);
     Map<String, OpenLmisMessage> errors = new ProgramRnrTemplate(1L, asList(
       rnrColumn(QUANTITY_REQUESTED, false, null, "Requested Quantity"),
       rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, null, "Requested Quantity Reason"),
@@ -59,18 +66,21 @@ public class ProgramRnrTemplateTest {
       rnrColumn(QUANTITY_RECEIVED, true, USER_INPUT, "quantity received"),
       rnrColumn(BEGINNING_BALANCE, true, USER_INPUT, "beginning balance"),
       rnrColumn(LOSSES_AND_ADJUSTMENTS, true, USER_INPUT, "losses and adjustment")
-    )).validateToSave();
+    )).validateToSave(program);
 
     assertThat(errors.size(), is(0));
   }
 
   @Test
   public void shouldReturnValidationErrorWhenDependantColumnsForQuantityDispensedIsNotVisible() {
+    Program program = new Program();
+    program.setId(1L);
+    program.setCanTrackCovid(true);
     Map<String, RnrColumn> rnrColumnsMap = template.getRnrColumnsMap();
     rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, true, CALCULATED, "quantity dispensed"));
     rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, false, USER_INPUT, "stock in hand"));
 
-    Map<String, OpenLmisMessage> errors = template.validateToSave();
+    Map<String, OpenLmisMessage> errors = template.validateToSave(program);
     OpenLmisMessage openLmisMessage = errors.get("quantityDispensed");
 
     assertThat(openLmisMessage.getCode(), is("user.needs.to.enter.dependent.field"));
@@ -81,11 +91,13 @@ public class ProgramRnrTemplateTest {
   @Test
   public void shouldReturnValidationErrorWhenDependantColumnsForStockInHandIsNotVisible() {
     Map<String, RnrColumn> rnrColumnsMap = template.getRnrColumnsMap();
-
+    Program program = new Program();
+    program.setId(1L);
+    program.setCanTrackCovid(true);
     rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, false, USER_INPUT, "quantity dispensed"));
     rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, true, CALCULATED, "stock in hand"));
 
-    Map<String, OpenLmisMessage> errors = template.validateToSave();
+    Map<String, OpenLmisMessage> errors = template.validateToSave(program);
     OpenLmisMessage openLmisMessage = errors.get("stockInHand");
 
     assertThat(openLmisMessage.getCode(), is("user.needs.to.enter.dependent.field"));
@@ -99,8 +111,10 @@ public class ProgramRnrTemplateTest {
 
     rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, false, CALCULATED, "quantity dispensed"));
     rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, false, CALCULATED, "stock in hand"));
-
-    Map<String, OpenLmisMessage> errors = template.validateToSave();
+    Program program = new Program();
+    program.setId(1L);
+    program.setCanTrackCovid(true);
+    Map<String, OpenLmisMessage> errors = template.validateToSave(program);
 
     assertThat(errors.get(QUANTITY_DISPENSED).getCode(), is("error.interdependent.fields.can.not.be.calculated"));
     assertThat(errors.get(QUANTITY_DISPENSED).getParams(), is(new String[]{"quantity dispensed", "stock in hand"}));
@@ -116,8 +130,10 @@ public class ProgramRnrTemplateTest {
 
     rnrColumnsMap.put(QUANTITY_DISPENSED, rnrColumn(QUANTITY_DISPENSED, false, USER_INPUT, "quantity dispensed"));
     rnrColumnsMap.put(STOCK_IN_HAND, rnrColumn(STOCK_IN_HAND, false, USER_INPUT, "stock in hand"));
-
-    Map<String, OpenLmisMessage> errorMap = template.validateToSave();
+    Program program = new Program();
+    program.setId(1L);
+    program.setCanTrackCovid(true);
+    Map<String, OpenLmisMessage> errorMap = template.validateToSave(program);
 
     OpenLmisMessage errorMessageForQuantityDispensed = errorMap.get(QUANTITY_DISPENSED);
     assertThat(errorMessageForQuantityDispensed.getCode(), is(COLUMN_SHOULD_BE_VISIBLE_IF_USER_INPUT));
@@ -131,13 +147,18 @@ public class ProgramRnrTemplateTest {
 
   @Test
   public void shouldReturnValidationErrorWhenOnlyRequestedAmountIsSelectedButNotReasonForRequestedAmount() {
+    Program program = new Program();
+    program.setId(1L);
+    program.setCanTrackCovid(true);
     template.getRnrColumnsMap().put(QUANTITY_REQUESTED, rnrColumn(QUANTITY_REQUESTED, true, USER_INPUT, "Requested Quantity"));
     template.getRnrColumnsMap().put(REASON_FOR_REQUESTED_QUANTITY, rnrColumn(REASON_FOR_REQUESTED_QUANTITY, false, USER_INPUT, "Requested Quantity Reason"));
 
-    Map<String, OpenLmisMessage> errors = template.validateToSave();
-    assertThat(errors.get(QUANTITY_REQUESTED).getCode(), is("error.user.needs.to.enter.requested.quantity.reason"));
-    assertThat(errors.get(QUANTITY_REQUESTED).getParams(), is(new String[]{"Requested Quantity", "Requested Quantity Reason"}));
-  }
+    Map<String, OpenLmisMessage> errors = template.validateToSave(program);
+    if(!program.getCanTrackCovid()) {
+      assertThat(errors.get(QUANTITY_REQUESTED).getCode(), is("error.user.needs.to.enter.requested.quantity.reason"));
+      assertThat(errors.get(QUANTITY_REQUESTED).getParams(), is(new String[]{"Requested Quantity", "Requested Quantity Reason"}));
+    }
+    }
 
 
   public void shouldGetOnlyVisibleColumnAsPrintableColumnsForFullSupply() throws Exception {

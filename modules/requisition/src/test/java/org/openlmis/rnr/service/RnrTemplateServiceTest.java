@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProgramService;
@@ -59,8 +60,8 @@ public class RnrTemplateServiceTest {
     List<? extends Column> rnrColumns = new ArrayList<>();
     doReturn(rnrColumns).when(programRnrTemplate).getColumns();
     when(programRnrTemplate.getProgramId()).thenReturn(1L);
-
-    when(programRnrTemplate.validateToSave()).thenReturn(new HashMap<String, OpenLmisMessage>());
+    Program program = programService.getById(programRnrTemplate.getProgramId());
+    when(programRnrTemplate.validateToSave(program)).thenReturn(new HashMap<String, OpenLmisMessage>());
     service.saveRnRTemplateForProgram(programRnrTemplate);
     verify(repository).saveProgramRnrTemplate(programRnrTemplate);
     verify(programService).setTemplateConfigured(1L);
@@ -71,10 +72,10 @@ public class RnrTemplateServiceTest {
     ProgramRnrTemplate programRnrTemplate = mock(ProgramRnrTemplate.class);
     ArrayList<? extends RnrColumn> rnrColumns = new ArrayList<>();
     doReturn(rnrColumns).when(programRnrTemplate).getColumns();
-
+    Program program = programService.getById(programRnrTemplate.getProgramId());
     HashMap<String, OpenLmisMessage> errors = new HashMap<>();
     errors.put("error-code", new OpenLmisMessage("error-message"));
-    when(programRnrTemplate.validateToSave()).thenReturn(errors);
+    when(programRnrTemplate.validateToSave(program)).thenReturn(errors);
     service.saveRnRTemplateForProgram(programRnrTemplate);
     verify(repository, never()).saveProgramRnrTemplate(programRnrTemplate);
   }

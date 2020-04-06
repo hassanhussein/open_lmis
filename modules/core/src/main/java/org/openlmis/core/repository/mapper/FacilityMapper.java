@@ -34,7 +34,7 @@ public interface FacilityMapper {
     "geographicZoneId, typeId, catchmentPopulation, latitude, longitude, altitude, operatedById," +
     "coldStorageGrossCapacity, coldStorageNetCapacity, suppliesOthers, sdp, online," +
     "satellite, parentFacilityId, hasElectricity, hasElectronicSCC, hasElectronicDAR, active," +
-    "goLiveDate, goDownDate, comment, virtualFacility, enabled, priceScheduleId, createdDate,createdBy, modifiedBy, modifiedDate, hfrCode) " +
+    "goLiveDate, goDownDate, comment, virtualFacility, enabled, priceScheduleId, createdDate,createdBy, modifiedBy, modifiedDate, hfrCode,numberOfStaff, isHidTu) " +
     "VALUES(#{code}, #{name}, #{description}, #{gln}, #{mainPhone}, #{fax}, #{address1}, #{address2}," +
     "#{geographicZone.id}," +
     "#{facilityType.id}," +
@@ -43,7 +43,7 @@ public interface FacilityMapper {
     "#{coldStorageGrossCapacity}, #{coldStorageNetCapacity}, #{suppliesOthers}, #{sdp},#{online}," +
     "#{satellite}, #{parentFacilityId}, #{hasElectricity}, #{hasElectronicSCC}, #{hasElectronicDAR}, #{active}," +
     "#{goLiveDate}, #{goDownDate}, #{comment}, #{virtualFacility}, #{enabled}, #{priceSchedule.id} , COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}, " +
-    "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{hfrCode})")
+    "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{hfrCode},#{numberOfStaff}, #{isHidTu})")
   @Options(useGeneratedKeys = true)
   Integer insert(Facility facility);
 
@@ -123,7 +123,7 @@ public interface FacilityMapper {
     "hasElectricity = #{hasElectricity}, hasElectronicSCC = #{hasElectronicSCC}, " +
     "hasElectronicDAR = #{hasElectronicDAR}, active = #{active}, virtualFacility = #{virtualFacility}, " +
     "goLiveDate = #{goLiveDate}, goDownDate = #{goDownDate}, priceScheduleId = #{priceSchedule.id}, " +
-    "comment = #{comment}, enabled = #{enabled},hfrCode = #{hfrCode}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
+    "comment = #{comment}, enabled = #{enabled},hfrCode = #{hfrCode},isHidTu=#{isHidTu}, numberOfStaff=#{numberOfStaff}, modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id=#{id}")
   void update(Facility facility);
 
   @Select("SELECT * FROM facility_types WHERE LOWER(code) = LOWER(#{code})")

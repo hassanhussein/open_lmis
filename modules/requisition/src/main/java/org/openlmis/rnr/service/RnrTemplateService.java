@@ -11,6 +11,7 @@
 package org.openlmis.rnr.service;
 
 import org.openlmis.core.domain.ConfigurationSettingKey;
+import org.openlmis.core.domain.Program;
 import org.openlmis.core.message.OpenLmisMessage;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ProgramService;
@@ -48,7 +49,9 @@ public class RnrTemplateService {
 
   @Transactional
   public Map<String, OpenLmisMessage> saveRnRTemplateForProgram(ProgramRnrTemplate programTemplate) {
-    Map<String, OpenLmisMessage> errors = programTemplate.validateToSave();
+    Program program = programService.getById(programTemplate.getProgramId());
+
+    Map<String, OpenLmisMessage> errors = programTemplate.validateToSave(program);
 
     if (errors.isEmpty()) {
       rnrRepository.saveProgramRnrTemplate(programTemplate);

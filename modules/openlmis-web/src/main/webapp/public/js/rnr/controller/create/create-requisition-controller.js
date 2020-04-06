@@ -22,6 +22,27 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
     $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, equipmentOperationalStatus);
     $scope.rnrComments = comments;
     $scope.rnrFacilityFundSources = facilityFundSources;
+     var oldCase = 0;
+      if($scope.rnr.program.canTrackCovid && !isUndefined($scope.rnr.patientRecord)){
+          oldCase = $scope.rnr.patientRecord.numberOfCumulativeCases;
+      }
+             console.log($scope.rnr);
+      $scope.changeCummulativeCases  = function(rnr) {
+
+             if(!isUndefined(rnr.patientRecord) && isUndefined(rnr.patientRecord.newConfirmedCase)){
+
+                            rnr.patientRecord.newConfirmedCase = 0;
+             }
+
+             rnr.patientRecord.numberOfCumulativeCases = 0;
+             var totalCases = 0;
+
+           totalCases  = parseInt(rnr.patientRecord.newConfirmedCase,10) + oldCase ;
+          rnr.patientRecord.numberOfCumulativeCases = totalCases;
+
+      };
+
+
 
     $scope.deleteRnR = function() {
 
@@ -173,6 +194,8 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
 
     $scope.saveRnr = function(preventMessage) {
 
+
+
         var deferred = $q.defer();
         if (!$scope.saveRnrForm || !$scope.saveRnrForm.$dirty) {
             deferred.resolve();
@@ -180,6 +203,10 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
         }
         resetFlags();
         var rnr = removeExtraDataForPostFromRnr();
+
+        if($scope.rnr.program.canTrackCovid){
+          rnr.patientRecord = $scope.rnr.patientRecord;
+        }
         Requisitions.update({
             id: $scope.rnr.id,
             operation: "save"

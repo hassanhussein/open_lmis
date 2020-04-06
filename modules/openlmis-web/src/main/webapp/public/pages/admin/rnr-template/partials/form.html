@@ -98,6 +98,7 @@
 
       <ul ui-sortable ng-model="rnrSortableColumns" id="sortable">
         <li id="{{rnrColumn.name}}" ng-repeat="rnrColumn in rnrSortableColumns">
+
           <div class="drag-handle"></div>
           <span class="tpl-visible">
             <input type="checkbox" ng-model="rnrColumn.visible" ng-change="setArithmeticValidationMessageShown()" ng-disabled="rnrColumn.mandatory"/>

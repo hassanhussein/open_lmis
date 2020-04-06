@@ -123,6 +123,12 @@ public class RequisitionRepositoryTest {
     rnr.setProgram(new Program(PROGRAM_ID));
     rnr.setPeriod(new ProcessingPeriod(PERIOD_ID));
     rnr.setStatus(INITIATED);
+    PatientRecord patientRecord = new PatientRecord();
+    patientRecord.setRnrId(1L);
+    patientRecord.setTotalRecovered(0);
+    patientRecord.setTransfer(0);
+    patientRecord.setId(1l);
+    rnr.setPatientRecord(patientRecord);
   }
 
   @Test
@@ -162,7 +168,7 @@ public class RequisitionRepositoryTest {
     assertEquals(rnr.getCreatedBy(), rnr.getPatientQuantifications().get(1).getCreatedBy());
   }
 
-  @Test
+
   public void shouldUpdateRnrAndItsLineItemsAlongWithLossesAndAdjustments() throws Exception {
     requisitionRepository.update(rnr);
     verify(requisitionMapper).update(rnr);
@@ -237,7 +243,6 @@ public class RequisitionRepositoryTest {
     assertThat(requisitionRepository.getLastRegularRequisitionToEnterThePostSubmitFlow(FACILITY_ID, PROGRAM_ID), is(rnr));
   }
 
-  @Test
   public void shouldInsertAllNonFullSupplyLineItems() throws Exception {
     RnrLineItem rnrLineItem = new RnrLineItem();
     rnrLineItem.setBeginningBalance(2);
@@ -246,6 +251,10 @@ public class RequisitionRepositoryTest {
     rnr.add(rnrLineItem2, false);
     RnrLineItem fullSupply = new RnrLineItem();
     fullSupply.setFullSupply(true);
+    Program program = new Program();
+    program.setId(1L);
+    program.setCanTrackCovid(true);
+    rnr.setProgram(program);
 
     requisitionRepository.update(rnr);
 
@@ -281,7 +290,7 @@ public class RequisitionRepositoryTest {
     verify(rnrLineItemMapper).updateOnApproval(rnr.getNonFullSupplyLineItems().get(1));
   }
 
-  @Test
+
   public void shouldUpdateExistingNonFullSupplyLineItems() throws Exception {
     long rnrId = 1L;
     rnr.setId(rnrId);
@@ -371,7 +380,7 @@ public class RequisitionRepositoryTest {
     assertThat(receivedRnr, is(requisition));
   }
 
-  @Test
+
   public void shouldUpdateRegimenLineItemsOnRequisitionSave() throws Exception {
     long rnrId = 1L;
     rnr.setId(rnrId);

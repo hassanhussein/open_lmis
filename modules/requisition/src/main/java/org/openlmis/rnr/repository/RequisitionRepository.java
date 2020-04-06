@@ -95,6 +95,9 @@ public class RequisitionRepository {
     @Autowired
     private PatientLineItemMapper patientLineItemMapper;
 
+    @Autowired
+    private PatientRecordMapper patientRecordMapper;
+
 @Autowired
 private DataHealthCheckMapper dataHealthCheckMapper;
 
@@ -246,6 +249,10 @@ private DataHealthCheckMapper dataHealthCheckMapper;
         }else if(rnr.getStatus() == IN_APPROVAL && rnr.getPatientLineItems().size()>0)
         {
             updateFullSupplyLineItemsForTBMonthlyProgram(rnr);
+        }
+
+        if(rnr.getProgram().getCanTrackCovid()) {
+            updatePatientRecord(rnr.getPatientRecord());
         }
     }
 
@@ -627,4 +634,22 @@ private DataHealthCheckMapper dataHealthCheckMapper;
     public List<HashMap<String,Object>>   runDataHealthCheckRules(Long facilityId, Long rnrId, Long lineItemId, String productCode, Long programId, boolean skipped){
         return dataHealthCheckMapper.runDataHealthCheck(facilityId.intValue(),rnrId.intValue(), lineItemId.intValue() , productCode, programId.intValue(), skipped );
     }
+
+
+    public PatientRecord getPatientByRnrID(Long rnrId) {
+        return patientRecordMapper.getByRnrId(rnrId);
+    }
+
+    public void insertPatientRecord(PatientRecord patientRecord) {
+        patientRecordMapper.insert(patientRecord);
+    }
+
+    public void updatePatientRecord(PatientRecord patientRecord) {
+      patientRecordMapper.update(patientRecord);
+    }
+
+    public PatientRecord getLastRequisitionWithPatientRecoord(Facility facility, Program program) {
+        return requisitionMapper.getLastRequisitionWithPatientRecoord(facility, program);
+    }
+
 }
