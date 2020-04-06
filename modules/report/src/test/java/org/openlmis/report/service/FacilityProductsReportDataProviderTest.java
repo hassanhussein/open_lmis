@@ -99,9 +99,9 @@ public class FacilityProductsReportDataProviderTest {
 
   @Test
   public void shouldGetOnlyHealthFacilities() {
-    Facility healthFacility = new Facility(1L, "HF", "facility1", null, null, new FacilityType("HF"), false);
-    Facility DDMFacility = new Facility(1L, "DDM", "facility2", null, null, new FacilityType("DDM"), false);
-    Facility DPMFacility = new Facility(1L, "DPM", "facility3", null, null, new FacilityType("DPM"), false);
+    Facility healthFacility = new Facility(1L, "HF", "facility1", null, null, new FacilityType("HF"), false,false, 1);
+    Facility DDMFacility = new Facility(1L, "DDM", "facility2", null, null, new FacilityType("DDM"), false,false, 1);
+    Facility DPMFacility = new Facility(1L, "DPM", "facility3", null, null, new FacilityType("DPM"), false,false, 1);
 
     List<Facility> facilities = asList(healthFacility, DDMFacility, DPMFacility);
     when(facilityMapper.getAllReportFacilities()).thenReturn(facilities);
