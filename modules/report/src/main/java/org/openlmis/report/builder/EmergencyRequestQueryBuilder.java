@@ -1,11 +1,12 @@
 package org.openlmis.report.builder;
 
-import org.apache.ibatis.annotations.Select;
 import org.openlmis.report.model.params.NonReportingFacilityParam;
 
 import java.util.Map;
 
 import static org.apache.ibatis.jdbc.SqlBuilder.*;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.periodIsFilteredBy;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.programIsFilteredBy;
 
 
 public class EmergencyRequestQueryBuilder {
@@ -16,6 +17,7 @@ public class EmergencyRequestQueryBuilder {
         NonReportingFacilityParam nonReportingFacilityParam = (NonReportingFacilityParam) params.get(FILTER_CRITERIA);
         return getQueryString(nonReportingFacilityParam);
     }
+
     private static String getQueryString(NonReportingFacilityParam filterParam) {
         BEGIN();
         SELECT_DISTINCT("r.rnrid");
@@ -38,8 +40,22 @@ public class EmergencyRequestQueryBuilder {
         SELECT_DISTINCT("r.enddate");
         FROM("mv_requisition r");
         WHERE("emergency = TRUE");
-
+        writePredicates(filterParam);
         String query = SQL();
         return query;
+    }
+
+    private static void writePredicates(NonReportingFacilityParam filterParams) {
+
+        WHERE(programIsFilteredBy("r.programid"));
+        if (filterParams.getZone() != 0) {
+            WHERE("(r.zoneid =#{filterCriteria.zone}" +
+                    " or r.districtid= #{filterCriteria.zone} or " +
+                    " r.provinceid= #{filterCriteria.zone})");
+        }
+        if (filterParams.getPeriod() != 0) {
+            WHERE(periodIsFilteredBy("r.periodid"));
+        }
+
     }
 }
