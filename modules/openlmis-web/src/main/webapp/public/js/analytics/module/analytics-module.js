@@ -31,6 +31,13 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider,$htt
             ncyBreadcrumb: {
                 label: 'Supply Chain Dashboard'
             }
+        } ,
+           {
+            name: 'emergency',
+            url: '/emergency',
+            templateUrl: 'partials/analytics_emergency.html',
+            controller:AnalyticsFunction,
+            resolve:AnalyticsFunction.resolve
         },  {
                       name: 'rejectionByZoneView',
                       url: '/zone:zone/:value/:status/:period/:program',
