@@ -43,4 +43,8 @@ public class UserAuthenticationService {
 
     return new UserToken(fetchedUser.getUserName(), fetchedUser.getId(), AUTHENTICATION_SUCCESSFUL);
   }
+
+  public void trackUserLoginDate(Long userId) {
+    userService.trackUserLoginDate(userId);
+  }
 }

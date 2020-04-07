@@ -41,6 +41,7 @@ public class RestLoginService {
         UserToken userToken = userAuthenticationService.authenticateUser(user);
 
         if (userToken.isAuthenticated()) {
+            userAuthenticationService.trackUserLoginDate(userToken.getUserId());
             return userToken;
         } else {
             throw new BadCredentialsException(messageService.message("error.authentication.failed"));

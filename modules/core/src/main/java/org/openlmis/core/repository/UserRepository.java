@@ -167,4 +167,12 @@ public class UserRepository {
   public List<String> getSupervisoryRights(Long userId) {
     return userMapper.getSupervisoryRights(userId);
   }
+
+  public void trackUserLoginDate(Long userId) {
+    userMapper.updateLastLoginDate(userId);
+  }
+
+  public void disableInactiveUsers() {
+    userMapper.disableInactiveUsers();
+  }
 }
