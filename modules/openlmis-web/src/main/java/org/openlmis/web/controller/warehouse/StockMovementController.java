@@ -27,15 +27,18 @@ public class StockMovementController extends BaseController {
 
     @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Transfer item, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        item.setCreatedBy(userId);
+        item.setModifiedBy(userId);
         return OpenLmisResponse.response("trans",transferService.save(item,loggedInUserId(request)));
 
     }
 
-    @RequestMapping(value = "update", method = PUT, headers = ACCEPT_JSON)
+    /*@RequestMapping(value = "update", method = PUT, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> update(@RequestBody Transfer item, HttpServletRequest request) {
         transferService.update(item,loggedInUserId(request));
         return OpenLmisResponse.response("trans","updated");
-    }
+    }*/
 
     @RequestMapping(value = "SearchBy", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getBy(@RequestParam(value = "searchParam") String searchParam) {

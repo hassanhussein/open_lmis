@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function StockController($scope, $location, GetWarehouseLocations,vaccineProducts,ProductLots) {
+function StockController($scope,$timeout, TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots) {
                     console.log(vaccineProducts);
 
 
@@ -16,6 +16,9 @@ $scope.stockMovement = {};
 $scope.stockMovement.products = [];
 
 $scope.stockMovement.products = vaccineProducts;
+$scope.reasons = reasonsForAdjustments;
+
+ console.log(reasonsForAdjustments);
 
  GetWarehouseLocations.get(function(data) {
 
@@ -24,12 +27,14 @@ $scope.stockMovement.products = vaccineProducts;
 
  });
 
-$scope.loadBinLocation = function(wareHouse) {
 
-$scope.stockMovement.locations = wareHouse;
+$scope.loadBinLocation = function(wareHouseId, warehouseList) {
+var binLocations = [];
+binLocations  = _.where(warehouseList, {id:wareHouseId});
+$scope.stockMovement.locations = binLocations[0].locations;
 console.log($scope.stockMovement.locations);
 
-}
+};
 
 $scope.loadProductLots = function(product) {
 
@@ -39,7 +44,7 @@ $scope.loadProductLots = function(product) {
 
 //        console.log(product)
                 ProductLots.get({
-                    productId: product.product.id
+                    productId: product
                 }, function(data) {
                     $scope.allLots = data.lots;
                                 console.log(data.lots);
@@ -56,9 +61,48 @@ $scope.loadProductLots = function(product) {
 $scope.showSOH = function(data){
 
 
-console.log(data);
 
-}
+};
+
+
+$scope.submit = function (stockMovement) {
+console.log($scope.movementForm);
+
+   if ($scope.movementForm.$error.required) {
+            $scope.showError = true;
+            $scope.error = 'form.error';
+            $scope.message = "";
+//            console.log($scope.asnForm.$error)
+            return;
+        }
+
+
+stockMovement.notify = true;
+TransferRecords.save({}, stockMovement, function(data) {
+console.log(data);
+$scope.showMessage = true;
+$scope.message = "Successiful Saved";
+
+$timeout( function(){
+ $scope.showMessage = false;
+ $scope.showError = false;
+ $scope.error = false;
+ stockMovement.lotId = null;
+ stockMovement.productId = null;
+ stockMovement.soh= null;
+ stockMovement.fromWarehouseId = null;
+ stockMovement.toWarehouseId = null;
+ stockMovement.fromBin = null;
+ stockMovement.toBin= null;
+ stockMovement.reason = null;
+ stockMovement.quantity = null;
+ }, 1000);
+
+
+});
+
+};
+
 
 }
 
@@ -83,7 +127,26 @@ StockController.resolve =  {
         }, 100);
 
         return deferred.promise;
+    },
+
+    reasonsForAdjustments: function ($q, $timeout, GetLossAndAdjustments, $routeParams) {
+        var deferred = $q.defer();
+        $timeout(function () {
+
+                GetLossAndAdjustments.get({},
+
+                    function (data) {
+
+                        if (!isUndefined(data.lossAdjustmentTypes) || data.lossAdjustmentTypes.length > 0)
+                            deferred.resolve(data.lossAdjustmentTypes);
+                        });
+
+
+
+        }, 100);
+
+        return deferred.promise;
     }
 
-}
+};
 

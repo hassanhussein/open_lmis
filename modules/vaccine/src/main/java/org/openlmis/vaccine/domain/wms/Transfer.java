@@ -9,21 +9,21 @@ import java.util.Date;
 @Data
 public class Transfer extends BaseModel {
 
-    private WareHouse fromWarehouseId;
+    private Long fromWarehouseId;
 
-    private WareHouse toWarehouseId;
+    private Long toWarehouseId;
 
-    private LocationDTO fromBin;
+    private Long fromBin;
 
-    private LocationDTO toBin;
+    private Long toBin;
 
     private Long productId;
 
     private Date transferDate;
 
-    private Long reasonId;
+    private String reason;
 
-    private String lotNumber;
+    private Long lotId;
 
     private Integer quantity;
 

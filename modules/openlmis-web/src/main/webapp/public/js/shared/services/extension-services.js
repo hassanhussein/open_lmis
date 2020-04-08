@@ -1411,3 +1411,11 @@ services.factory('GetAllLocationsById', function ($resource) {
 services.factory('GetAllLocationsByType', function ($resource) {
     return $resource('/location-by/:type.json', {type:'@type'}, {});
 });
+
+services.factory('GetLossAndAdjustments', function ($resource) {
+    return $resource('/requisitions/lossAndAdjustments/reference-data-for-vims.json', {}, {});
+});
+
+services.factory('TransferRecords', function ($resource) {
+    return $resource('/rest-api/transfer/save.json', {}, {save:{method:'POST'}});
+});

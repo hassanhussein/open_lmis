@@ -1,6 +1,8 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.vaccine.domain.wms.Transfer;
+import org.openlmis.vaccine.repository.warehouse.TransferRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,14 +11,21 @@ import java.util.List;
 @Service
 public class TransferService {
 
+    @Autowired
+    private TransferRepository repository;
+
     @Transactional
     public Transfer save(Transfer item, Long loggedInUserId) {
-        return item;
+
+       if(item.getId() == null) {
+           repository.insert(item);
+       }else
+           repository.update(item);
+
+       return item;
+
     }
 
-    public void update(Transfer item, Long loggedInUserId) {
-
-    }
 
     public List<Transfer> search(String searchParam) {
         return null;

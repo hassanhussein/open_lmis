@@ -337,4 +337,12 @@ public class RequisitionController extends BaseController {
    return response(LAB_REFRENCE_DATA, requisitionService.getLabEquipmentReferenceData());
   }
 
+
+  @RequestMapping(value = "/requisitions/lossAndAdjustments/reference-data-for-vims", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getLosesAndAdjustmentsForVIMS() {
+    OpenLmisResponse referenceData = new OpenLmisResponse();
+    referenceData.addData(LOSS_ADJUSTMENT_TYPES, requisitionService.getLossesAndAdjustmentsTypes());
+    return referenceData.response(OK);
+  }
+
 }
