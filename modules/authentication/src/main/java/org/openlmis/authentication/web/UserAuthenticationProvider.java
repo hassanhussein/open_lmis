@@ -50,6 +50,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
       Map<String, String> userDetails = new HashMap<>();
       userDetails.put(UserAuthenticationSuccessHandler.USER, userToken.getUserName());
       usernamePasswordAuthenticationToken.setDetails(userDetails);
+      userAuthenticationService.trackUserLoginDate(userToken.getUserId());
       return usernamePasswordAuthenticationToken;
     } else {
       return null;

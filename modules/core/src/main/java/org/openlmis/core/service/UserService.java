@@ -22,6 +22,7 @@ import org.openlmis.email.exception.EmailException;
 import org.openlmis.email.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -255,4 +256,15 @@ public class UserService {
   public List<String> getSupervisoryRights(Long userId) {
     return userRepository.getSupervisoryRights(userId);
   }
+
+  public void trackUserLoginDate(Long userId) {
+    userRepository.trackUserLoginDate(userId);
+  }
+
+  @Scheduled(cron = "${cron.disable.inactive.users}")
+  public void disableInactiveUsers(){
+    userRepository.disableInactiveUsers();
+  }
+
+
 }

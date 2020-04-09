@@ -143,4 +143,23 @@ public interface UserMapper {
     "   join role_assignments ras on ras.roleid = rr.roleId " +
     "where r.righttype = 'REQUISITION' and ras.userId = #{userId}")
   List<String> getSupervisoryRights(@Param("userId") Long userId);
+
+  @Update("update users set lastLoggedInDate = now() where id = #{userId}")
+  void updateLastLoginDate(Long userId);
+
+  @Update("UPDATE users  " +
+          "SET    active = false  " +
+          "WHERE  id IN  " +
+          "       (  " +
+          "              SELECT id  " +
+          "              FROM   users  " +
+          "              WHERE  (extract(year from (Age(now(), lastloggedindate::timestamp))) * 12 + " +
+          "                         extract(month from (Age(now(), lastloggedindate::timestamp)))) >= " +
+          "                     (  " +
+          "                            SELECT value::int  " +
+          "                            FROM   configuration_settings  " +
+          "                            WHERE  KEY = 'MONTH_INACTIVE_USER_WILL_DEACTIVATED')  " +
+          "              AND    active IS true " +
+          "         )")
+  void disableInactiveUsers();
 }
