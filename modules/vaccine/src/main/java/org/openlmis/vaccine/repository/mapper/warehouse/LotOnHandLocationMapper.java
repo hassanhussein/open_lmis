@@ -137,4 +137,13 @@ public interface LotOnHandLocationMapper {
             "                             ) AS ledger order by id ")
     List<HashMap<String, Object>>getAllLedgers(@Param("facilityId") Long facilityId, @Param("productId") Long productId,@Param("warehouseId") Long warehouseId, @Param("year") Long year);
 
+    @Select("SELECT PUT.*,P.PRIMARYnAME FROM lot_on_hand_locations H\n" +
+            "\n" +
+            "RIGHT JOIN putaway_line_items PUT ON H.locationId = PUT.fromBinLocationId\n" +
+            "join PRODUCTS P ON PUT.productId = P.ID\n" +
+            " WHERE fromWarehouseId = #{fromWarehouseId} and fromBinLocationId = #{fromBinLocationId}")
+    List<HashMap<String, Object>>getAllByWareHouseAndBinLocation(@Param("fromWarehouseId") Long fromWarehouseId, @Param("fromBinLocationId") Long fromBinLocationId);
+
+
+
 }

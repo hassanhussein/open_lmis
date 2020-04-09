@@ -49,5 +49,11 @@ public class LotLocationController extends BaseController {
         return OpenLmisResponse.response("ledgers",lotOnHandLocationService.getAllLedgers(facilityId,warehouseId,productId,year));
     }
 
+    @RequestMapping(value = "stock-products", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllByWareHouseAndBinLocation(@RequestParam(value = "fromWarehouseId") Long fromWarehouseId,
+                                                         @RequestParam(value = "fromBinLocationId") Long fromBinLocationId) {
+        return OpenLmisResponse.response("products",lotOnHandLocationService.getAllByWareHouseAndBinLocation(fromWarehouseId,fromBinLocationId));
+    }
+
 
 }

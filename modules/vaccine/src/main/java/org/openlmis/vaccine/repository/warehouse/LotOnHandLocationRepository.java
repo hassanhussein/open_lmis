@@ -54,4 +54,8 @@ public class LotOnHandLocationRepository {
     public List<HashMap<String, Object>> getAllLedgers(Long facilityId, Long productId, Long warehouseId, Long year) {
         return mapper.getAllLedgers(facilityId,productId,warehouseId,year);
     }
+
+    public List<HashMap<String,Object>>getAllByWareHouseAndBinLocation(Long fromWarehouseId, Long fromBinLocationId){
+        return mapper.getAllByWareHouseAndBinLocation(fromWarehouseId,fromBinLocationId);
+    }
 }

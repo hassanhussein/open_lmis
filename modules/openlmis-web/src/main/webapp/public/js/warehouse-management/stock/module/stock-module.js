@@ -13,7 +13,7 @@ var stockModule = angular.module('stock', ['openlmis', 'ui.bootstrap.modal','lea
       $routeProvider.
           when('/movement', {controller: StockController, templateUrl: 'partials/movement.html',resolve: StockController.resolve, reloadOnSearch: false}).
           when('/adjustment', {controller: StockController, templateUrl: 'partials/adjustment.html', resolve: StockController.resolve}).
-          when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html'}).
+          when('/stock-on-hand', {controller: StockController, templateUrl: 'partials/stock-on-hand.html'}).
 
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {

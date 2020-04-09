@@ -223,4 +223,8 @@ public class LotOnHandLocationService {
         return repository.getAllLedgers(facilityId,productId,warehouseId,year);
     }
 
+    public List<HashMap<String,Object>>getAllByWareHouseAndBinLocation(Long fromWarehouseId, Long fromBinLocationId){
+        return repository.getAllByWareHouseAndBinLocation(fromWarehouseId,fromBinLocationId);
+    }
+
 }

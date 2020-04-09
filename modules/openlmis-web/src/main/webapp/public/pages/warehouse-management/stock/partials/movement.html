@@ -38,6 +38,7 @@
             <div class="form-field row-fluid">
                 <select  ui-select2="{width: '100%'}" ng-model="stockMovement.fromBin" name="fromBin" id="fromBin" ng-disabled="!stockMovement.fromWarehouseId"
 
+                        ng-change="loadProductByWarehouse(stockMovement);"
                          ng-required="true"   ng-options="location.id as location.name for location in stockMovement.locations"
 
                 >
@@ -61,7 +62,7 @@
 
             <div class="form-field row-fluid">
                 <select ui-select2="{width: '100%'}" name="productId" id="productId" ng-model="stockMovement.productId"
-                        ng-required="true"    ng-options="product.product.id as product.product.primaryName for product in stockMovement.products"
+                        ng-required="true"    ng-options="product.id as product.primaryname for product in productList"
                         ng-change="loadProductLots(stockMovement.productId)"
 
 

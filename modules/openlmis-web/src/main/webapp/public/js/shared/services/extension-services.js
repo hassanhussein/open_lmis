@@ -1419,3 +1419,7 @@ services.factory('GetLossAndAdjustments', function ($resource) {
 services.factory('TransferRecords', function ($resource) {
     return $resource('/rest-api/transfer/save.json', {}, {save:{method:'POST'}});
 });
+
+services.factory('GetStockProducts', function ($resource) {
+    return $resource('/rest-api/lotLocation/stock-products', {}, {});
+});
