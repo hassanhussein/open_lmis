@@ -1312,6 +1312,9 @@ services.factory('GetProductById', function ($resource) {
 services.factory('GetRejectedRnRReport', function ($resource) {
     return $resource('/reports/reportdata/rejectedRnR', {}, {});
 });
+services.factory('DetailRejectedRnRReport', function ($resource) {
+    return $resource('/reports/reportdata/detail-rejected-rnrs', {}, {});
+});
 services.factory('GetMsdStockStatusReport', function ($resource) {
     return $resource('/dashboard/msdStock.json', {}, {});
 });

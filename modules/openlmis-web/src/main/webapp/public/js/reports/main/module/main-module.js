@@ -188,6 +188,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: ReportingEmergency,
             templateUrl: 'partials/reporting-emergency.html',
             reloadOnSearch: false
+        }).when('/reporting-rejected-rnrs', {
+            controller: ReportingRejectedRnrController,
+            templateUrl: 'partials/reporting-rejected-rnrs.html',
+            reloadOnSearch: false
         }).otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');

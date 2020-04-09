@@ -1,0 +1,80 @@
+<!--
+~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+~
+~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+~
+~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+~
+~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+~
+~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="row-fluid sortable ui-sortable">
+  <div class="box span12">
+    <div class="box-header">
+      <h2>
+        <span openlmis-message="header.report.reporting.rejected.detailed.rnrs"></span>
+      </h2>
+      <div class="box-icon">
+        <a ng-click="section(0)" ng-show="show(1)" class="btn-minimize"><i class="icon-chevron-up"></i></a>
+        <a ng-click="section(1)" ng-show="show(0)" class="btn-minimize"><i class="icon-chevron-down"></i></a>
+         <a id="pdf-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('PDF')"
+             class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+         <a id="xls-button" ng-show="filterForm.$valid" href="" ng-click="exportReport('XLS')"
+            class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+      </div>
+    </div>
+    <div>
+      <div class="app-form">
+        <form ng-submit="filterGrid()" name="filterForm" novalidate>
+          <div filter-container class="clearfix">
+            <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
+            <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
+            <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
+            <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+            <zone-filter class="form-cell horizontalFilters"></zone-filter>
+            <facility-owner-filter class="form-cell horizontalFilters"></facility-owner-filter>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div ng-show="responseData  != undefined">
+      <div class="container-fluid">
+        <div class="row">
+
+          <div class="span12">
+            <br />
+            <div top-right-table-summary></div>
+            <div >Showing Rejected RnRs</div>
+
+            <table client-side-sort-pagination class="table table-bordered" ng-show="data == undefined || data.length == 0">
+              <tr>
+                <td>No data to show under selected filters</td>
+              </tr>
+            </table>
+            <table ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
+              <tbody>
+              <tr ng-repeat="row in datarows">
+                <td data-title="'#'" class="number" >{{ row.no }}</td>
+                <td data-title="getLocalMessage('label.facility.code')" sortable="code">{{ row.facilitycode }} </td>
+                <td data-title="getLocalMessage('label.facility.name')"  sortable="name">{{ row.facility }}</td>
+                <td data-title="getLocalMessage('label.district')" >{{ row.district }}</td>
+                <td data-title="getLocalMessage('label.province')"  >{{ row.province }}</td>
+
+                <td  data-title="getLocalMessage('label.start.date')" >{{ row.startdate }}</td>
+                <td  data-title="getLocalMessage('label.end.date')" >{{ row.enddate }}</td>
+                <td  data-title="getLocalMessage('label.date.submitted')">{{row.createddate}}</td>
+                <td data-title="getLocalMessage('label.program')"  sortable="location">{{ row.program }}</td>
+                <td  data-title="getLocalMessage('label.date.rejected')">{{row.rejectiondate}}</td>
+                <td data-title="getLocalMessage('label.rnr.rejection.reason')" >{{ row.commenttext }}</td>
+                <!-- td ng-show="reporting" data-title="getLocalMessage('label.reported.date')" style="width:30%" sortable="location">{{ row.createdDate | date : 'dd MMM, yyyy'}}</td -->
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

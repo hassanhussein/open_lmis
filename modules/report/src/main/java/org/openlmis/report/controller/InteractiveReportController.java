@@ -920,5 +920,21 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, reportList);
     }
+    @RequestMapping(value = "/reportdata/detail-rejected-rnrs", method = GET, headers = BaseController.ACCEPT_JSON)
+    public Pages getDetailRejectedRNRReportData( //@PathVariable(value = "reportKey") String reportKey,
+                                                @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                                HttpServletRequest request
+    ) {
+
+
+        Report report = reportManager.getReportByKey("detail-rejected-rnrs");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<EmergencyRequistionReport> reportList =
+                (List<EmergencyRequistionReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, reportList);
+    }
 
 }

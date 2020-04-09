@@ -8,6 +8,7 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.builder.RejectedRnRReportQueryBuilder;
 import org.openlmis.report.model.ReportParameter;
 
+import org.openlmis.report.model.report.DetailRejectedRnRReport;
 import org.openlmis.report.model.report.RejectedRnRReport;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +24,10 @@ public interface RejectedRnRReportMapper {
                                                   @Param("SortCriteria") Map<String, String[]> sortCriteria,
                                                   @Param("RowBounds") RowBounds rowBounds,
                                                   @Param("userId") Long userId);
+    @SelectProvider(type=RejectedRnRReportQueryBuilder.class, method="getRejectedQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<DetailRejectedRnRReport> getRejectedReportDetail(@Param("filterCriteria") ReportParameter filterCriteria,
+                                                                 @Param("SortCriteria") Map<String, String[]> sortCriteria,
+                                                                 @Param("RowBounds") RowBounds rowBounds,
+                                                                 @Param("userId") Long userId);
 }

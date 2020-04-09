@@ -282,6 +282,10 @@
             <a ng-href="/public/pages/reports/main/index.html#reporting-emergency"
                openlmis-message="menu.report.reporting.emergency"></a>
           </li>
+          <li ng-show="hasPermission('VIEW_REPORTING_STATUS_FACILITIES')">
+            <a ng-href="/public/pages/reports/main/index.html#reporting-rejected-rnrs"
+               openlmis-message="menu.report.reporting.rejected.detail.rnrs"></a>
+          </li>
           <li ng-show="hasPermission('VIEW_REPORTING_RATE_REPORT')">
             <a ng-href="/public/pages/reports/maps/index.html#reporting-rate" openlmis-message="menu.report.reporting.rate"></a>
           </li>
