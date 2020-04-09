@@ -39,8 +39,14 @@ public class LotLocationController extends BaseController {
     }
 
    @RequestMapping(value = "stock-ledgers", method = GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getAllLedgers() {
-        return OpenLmisResponse.response("ledgers",lotOnHandLocationService.getAllLedgers());
+    public ResponseEntity<OpenLmisResponse> getAllLedgers(@RequestParam(value = "facilityId") Long facilityId,
+
+                                                          @RequestParam(value = "warehouseId") Long warehouseId,
+
+                                                          @RequestParam(value = "productId") Long productId,
+                                                          @RequestParam(value = "year") Long year
+                                                          ) {
+        return OpenLmisResponse.response("ledgers",lotOnHandLocationService.getAllLedgers(facilityId,warehouseId,productId,year));
     }
 
 
