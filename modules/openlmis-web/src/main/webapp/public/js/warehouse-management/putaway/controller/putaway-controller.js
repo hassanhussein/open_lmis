@@ -39,10 +39,11 @@ $scope.movementQueue.push(
     lotId:$scope.fromLot.id,
     quantity:$scope.toLot.passQuantity,
     fromWarehouse:$scope.fromLot.location.house.name,
-    fromWarehouseId:$scope.fromLot.location.house.id,
+    fromWareHouseId:$scope.fromLot.location.house.id,
+    fromBinLocationId:$scope.fromLot.location.id,
     fromBinLocation:$scope.fromLot.location.code,
     toWarehouse:$scope.toLot.warehouse.name,
-    toWarehouseId:$scope.toLot.warehouse.id,
+    toWareHouseId:$scope.toLot.warehouse.id,
     toBinLocation:$scope.toLot.binLocation.code,
     toBinLocationId:$scope.toLot.binLocation.id
 
@@ -66,8 +67,10 @@ $scope.toLot.passQuantity='';
 
 
 $scope.generateMovement = function(movement){
- SavePutAwayDetails.save({}, $scope.movementQueue, success,error);
 console.log(JSON.stringify(movement));
+
+ SavePutAwayDetails.save({}, $scope.movementQueue, success,error);
+
 
 };
 

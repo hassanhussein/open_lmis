@@ -58,16 +58,16 @@ public interface LotOnHandLocationMapper {
     void deleteExistingStockCardLocation(@Param("id") Long id,@Param("toBinLocationId") Long toBinLocationId);
 
 
-    @Select(" SELECT S.ID stockCardId, s.productId, p.primaryName product, totalQuantityonhand, LotNumber,\n" +
-            " to_char(lot.expirationDate, 'dd-MM-yyyy') expirationDate,\n" +
-            "to_char(l.effectiveDate, 'dd-MM-yyyy') lastUpdated, loc.name binLocation, l.quantityOnHand\n" +
-            "FROM stock_cards s  \n" +
-            "JOIN lots_on_hand L on L.stockcardId = s.ID \n" +
-            "JOIN lot_on_hand_locations lo ON l.id = lo.lotonhandId\n" +
-            "JOIN wms_locations loc ON lo.locationId = LOC.ID\n" +
-            "JOIN products p ON S.PRODUCTid = P.ID\n" +
-            "JOIN lots lot ON lot.id = l.lotId\n" +
-            "WHERE S.FACILITYiD = #{facilityId} and warehouseId = #{warehouseId}")
+    @Select("  \n" +
+            " SELECT S.ID stockCardId,s.productId, p.primaryName product, QUANTITY quantityOnHand, lotID,\n" +
+            " s.modifieddate lastUpdated\n" +
+            " ,LotNumber,to_char(lot.expirationDate, 'dd-MM-yyyy') expirationDate\n" +
+            "    FROM stock_cards s  \n" +
+            "LEFT JOIN putaway_line_items put on s.productID = PUT.productId\n" +
+            "JOIN products p on s.productID = p.id\n" +
+            "LEFT JOIN lots lot ON lot.id = put.lotId\n" +
+            "\n" +
+            "WHERE s.facilityId = #{facilityId} and toWarehouseId = #{warehouseId}")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("Select bin, primaryname product,id,date , facility storeName, received, issued, adjustment,total,lotnumber,voucherNumber,manufacturerName,expirationdate,vvm vvmStatus, (SUM(total) over(partition by lotnumber order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +

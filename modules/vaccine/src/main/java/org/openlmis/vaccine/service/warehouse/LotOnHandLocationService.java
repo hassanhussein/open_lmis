@@ -73,8 +73,7 @@ public class LotOnHandLocationService {
 /*
             SAVE PutAway
 */
-            dto.setCreatedBy(userId);
-            repository.insertPutAwayDetails(dto);
+
 
 /*
             set stock events
@@ -83,8 +82,15 @@ public class LotOnHandLocationService {
             Lot newLot = null;
             if(dto.getLotNumber() != null)  {
                newLot = lotRepository.getById(lotRepository.getByCode(dto.getLotNumber()).getId());
-                event.setLotId(newLot.getId());
+
+               //save PutAway
+                dto.setCreatedBy(userId);
+                dto.setLotId(newLot.getId());
+                repository.insertPutAwayDetails(dto);
+
+               event.setLotId(newLot.getId());
                 event.setLot(newLot);
+
             } else {
                 event.setLot(null);
             }
