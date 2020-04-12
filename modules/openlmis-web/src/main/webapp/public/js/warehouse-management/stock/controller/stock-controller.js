@@ -32,7 +32,6 @@ $scope.loadBinLocation = function(wareHouseId, warehouseList) {
 var binLocations = [];
 binLocations  = _.where(warehouseList, {id:wareHouseId});
 $scope.stockMovement.locations = binLocations[0].locations;
-console.log($scope.stockMovement.locations);
 
 };
 
@@ -41,8 +40,11 @@ $scope.loadProductByWarehouse = function (movement) {
 
 
    GetStockProducts.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocationId:movement.fromBin },function(data){
+   var groupedData =  _.groupBy('productid',data.products);
 
-    $scope.productList = data;
+   console.log(JSON.stringify(groupedData));
+
+    $scope.productList = data.products;
 
    });
 
