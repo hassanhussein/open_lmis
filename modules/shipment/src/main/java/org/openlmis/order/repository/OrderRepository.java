@@ -13,6 +13,7 @@ import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.order.dto.InBoundDTO;
 import org.openlmis.order.repository.mapper.OrderMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -127,6 +128,16 @@ public class OrderRepository {
         return orderMapper.getTotalNumberPagesByDepot(searchParam,pageSize, userId, right, supplyDepot, program, period);
   }
 
+  public Integer insertInBoundUpload(InBoundDTO inBound){
+      return orderMapper.InsertInBoundUpload(inBound);
+  }
 
+  public void updateInBoundUpload(InBoundDTO inBound){
+      orderMapper.updateInBoundUpload(inBound);
+  }
+
+  public InBoundDTO getByPoNumber(String poNumber){
+      return orderMapper.getByPoNumber(poNumber);
+  }
 
 }

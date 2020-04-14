@@ -519,6 +519,15 @@
                         <property name="recordHandler" ref="uploadEquipmentPercistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="upload-in-bound">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="In-bounds"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.order.dto.InBoundDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="inBoundPercistenceHandler"/>
+                    </bean>
+                </entry>
 
             </map>
         </constructor-arg>

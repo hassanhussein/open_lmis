@@ -18,6 +18,7 @@ import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.order.dto.InBoundDTO;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
@@ -221,5 +222,22 @@ public interface OrderMapper {
           " INNER JOIN facilities f on f.id = r.facilityId ",
           "WHERE ( LOWER(f.name) LIKE '%' || LOWER(#{searchParam} || '%') OR (LOWER(f.code) LIKE '%' || LOWER(#{searchParam}) || '%') ) and FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " })
   Integer getTotalNumberPagesByDepot(@Param(value = "searchParam") String searchParam,@Param("pageSize") int pageSize, @Param("userId") Long userId, @Param("rightName") String rightName, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
+
+  @Insert("INSERT INTO public.in_bounds(\n" +
+          "            poNumber, expectedArrivalDate, status, receivingLocationCode, \n" +
+          "            createdBy, createdDate, modifiedBy, modifiedDate)\n" +
+          "    VALUES ( #{poNumber}, #{expectedArrivalDate}::date, #{status}, #{receivingLocationCode}, \n" +
+          "            #{createdBy}, NOW(), #{modifiedBy}, NOW());")
+  @Options(useGeneratedKeys = true)
+  Integer InsertInBoundUpload(InBoundDTO inBound);
+
+  @Update("UPDATE public.in_bounds\n" +
+          "   SET poNumber=#{poNumber}, expectedArrivalDate=#{expectedArrivalDate}::date, status=#{status}, \n" +
+          "   receivingLocationCode=#{receivingLocationCode}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate}\n" +
+          " WHERE id = #{id}")
+  void updateInBoundUpload(InBoundDTO inBound);
+
+  @Select("SELECT * FROM in_bounds WHERE lower(poNumber) = lower(#{poNumber})")
+  InBoundDTO getByPoNumber(@Param("poNumber") String poNumber);
 
 }
