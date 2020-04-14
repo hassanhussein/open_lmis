@@ -25,7 +25,8 @@ public class VaccineStockStatusQueryBuilder {
                         "    SELECT ROW_NUMBER() OVER (PARTITION BY facilityId,productId ORDER BY LastUpdate desc) AS r, t.*    \n" +
                         "    FROM  (                             " +
                         "    SELECT  facilityId, s.productId, f.name facilityName,district_id districtId, district_name district,region_id regionId, region_name region,  \n" +
-                        "    p.primaryName product,sum(h.quantityOnHand) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
+                        "    p.primaryName product," +
+                                " sum(h.quantityOnHand) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
                         "    e.modifiedDate::timestamp lastUpdate   \n" +
                         "    FROM stock_cards s   \n" +
                         "    JOIN stock_card_entries e ON e.stockCardId = s.id  " +
