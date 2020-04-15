@@ -1,6 +1,7 @@
+DROP TABLE IF EXISTS public.in_bound_details;
+
 DROP TABLE IF EXISTS public.in_bounds;
 
-DROP TABLE IF EXISTS public.in_bound_details;
 
 CREATE TABLE public.in_bound_details
 (
