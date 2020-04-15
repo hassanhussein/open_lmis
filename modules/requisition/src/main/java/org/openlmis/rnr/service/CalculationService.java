@@ -206,7 +206,7 @@ public class CalculationService {
     Integer numberOfMonths = processingScheduleService.findM(requisition.getPeriod());
 
     for (RnrLineItem lineItem : requisition.getNonSkippedLineItems()) {
-     if(!requisition.getProgram().getCode().equalsIgnoreCase("covid19"))
+     if(!requisition.getProgram().getCanTrackCovid())
       lineItem.validateMandatoryFields(template);
 
       lineItem.calculateForFullSupply(template, requisition.getStatus(), lossesAndAdjustmentsTypes, numberOfMonths);
