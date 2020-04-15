@@ -26,11 +26,12 @@ public class VaccineStockStatusQueryBuilder {
                         "    FROM  (                             " +
                         "    SELECT  facilityId, s.productId, f.name facilityName,district_id districtId, district_name district,region_id regionId, region_name region,  \n" +
                         "    p.primaryName product," +
-                                " sum(e.quantity) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
-                        "    e.modifiedDate::timestamp lastUpdate   \n" +
+                                " sum(h.quantityOnHand) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
+                     //           " sum(e.quantity) OVER (PARTITION BY s.facilityId, s.productId) soh,    \n" +
+                        "    h.modifiedDate::timestamp lastUpdate   \n" +
                         "    FROM stock_cards s   \n" +
-                        "    JOIN stock_card_entries e ON e.stockCardId = s.id  " +
-                                " JOIN lots_on_hand h on e.lotOnHandId = h.id\n   \n" +
+                      //  "    JOIN stock_card_entries e ON e.stockCardId = s.id  " +
+                                " JOIN lots_on_hand h on s.id = h.stockCardId\n   \n" +
                         "    JOIN program_products pp ON s.productId = pp.productId    \n" +
                         "    JOIN programs ON pp.programId = programs.id    \n" +
                         "    JOIN products p ON pp.productId = p.id      \n" +
@@ -40,7 +41,7 @@ public class VaccineStockStatusQueryBuilder {
                         "  " + writePredicates(filter) +
                         "   AND d.district_id in (select district_id from vw_user_facilities where user_id = '" + userId + "'::INT and program_id = fn_get_vaccine_program_id())  "+
 
-                                "    ORDER BY e.modifiedDate ) t) x \n" +
+                                "    ORDER BY h.modifiedDate ) t) x \n" +
                         "    JOIN stock_requirements r on r.facilityid=x.facilityid and r.productid=x.productid\n" +
                         "    WHERE  x.r <= 1 and r.year = (SELECT date_part('YEAR', #{filterCriteria.statusDate}::date ))         " +
                         "    ORDER BY facilityId,productId )  \n" +
@@ -59,7 +60,7 @@ public class VaccineStockStatusQueryBuilder {
         String predicate = " ";
 
         predicate += " where programs.id = fn_get_vaccine_program_id()";
-        predicate += " and e.modifiedDate::DATE <= #{filterCriteria.statusDate}::date";
+        predicate += " and h.modifiedDate::DATE <= #{filterCriteria.statusDate}::date";
         predicate += " and pp.productCategoryId = " + params.getProductCategory();
         predicate += " and facilityId = ANY (#{filterCriteria.facilityIds}::INT[])";
 
