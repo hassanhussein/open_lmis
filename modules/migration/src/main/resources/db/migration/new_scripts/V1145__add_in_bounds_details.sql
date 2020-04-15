@@ -5,8 +5,8 @@ DROP TABLE IF EXISTS public.in_bound_details;
 CREATE TABLE public.in_bound_details
 (
   id serial,
-  productcode timestamp without time zone,
-  productname character varying(20),
+  productcode character varying(200),
+  productname character varying(200),
   uom character varying(200),
   quantityordered integer,
   source character varying(200),

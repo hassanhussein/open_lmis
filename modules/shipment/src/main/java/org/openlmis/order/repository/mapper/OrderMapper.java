@@ -240,7 +240,7 @@ public interface OrderMapper {
           " WHERE id=#{id};\n")
   void updateInBoundUpload(InBoundDTO inBound);
 
-  @Select("SELECT * FROM in_bound_details WHERE lower(productCode)=lower(#{productCode}) and expectedArrivalDate=#{expectedArrivalDate}::date")
+  @Select("SELECT * FROM in_bound_details WHERE lower(productCode)=lower(#{productCode}) and expectedArrivalDate::date=#{expectedArrivalDate}::date")
   InBoundDTO getByProductAndExpectedDate(@Param("productCode") String productCode,@Param("expectedArrivalDate") String expectedArrivalDate );
 
 }
