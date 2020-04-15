@@ -39,7 +39,7 @@ public class VaccineStockStatusQueryBuilder {
                         "    JOIN vw_districts d ON f.geographiczoneId = d.district_id  \n" +
                         "    JOIN facility_types  ON f.typeId = facility_types.Id   \n" +
                         "  " + writePredicates(filter) +
-                        "   AND d.district_id in (select district_id from vw_user_facilities where user_id = '" + userId + "'::INT and program_id = fn_get_vaccine_program_id())  "+
+                        "   AND h.QuantityOnHand > 0 AND d.district_id in (select district_id from vw_user_facilities where user_id = '" + userId + "'::INT and program_id = fn_get_vaccine_program_id())  "+
 
                                 "    ORDER BY h.modifiedDate ) t) x \n" +
                         "    JOIN stock_requirements r on r.facilityid=x.facilityid and r.productid=x.productid\n" +
