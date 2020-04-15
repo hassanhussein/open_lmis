@@ -741,7 +741,15 @@ public class RequisitionService {
     rnr.setModifiedBy(userId);
     rnr.setStatus(RnrStatus.INITIATED);
     requisitionRepository.update(rnr);
+    notifyRejectedRnR(rnr);
     logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
+  }
+
+  private void notifyRejectedRnR(Rnr rnr) {
+    // find out who to send the email to.
+    // find the template and generate the email message.
+    // send the email messages
+    // log this message in a table so that the notification can be seen on screen.
   }
 
   public Integer findM(ProcessingPeriod period) {
