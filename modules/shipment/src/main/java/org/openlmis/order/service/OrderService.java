@@ -348,8 +348,8 @@ public class OrderService {
     }
   }
 
-  public InBoundDTO getByPoNumber(String poNumber){
-    return orderRepository.getByPoNumber(poNumber);
+  public InBoundDTO getByProductAndExpectedDate(String code, String expectedDate){
+    return orderRepository.getByProductAndExpectedDate(code,expectedDate);
   }
 
 

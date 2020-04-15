@@ -16,7 +16,7 @@ public class InBoundPercistenceHandler extends AbstractModelPersistenceHandler {
 
     @Override
     protected BaseModel getExisting(BaseModel record) {
-        return orderService.getByPoNumber(((InBoundDTO) record).getPoNumber());
+        return orderService.getByProductAndExpectedDate(((InBoundDTO) record).getProductCode(),((InBoundDTO) record).getExpectedArrivalDate());
     }
 
     @Override
@@ -26,6 +26,6 @@ public class InBoundPercistenceHandler extends AbstractModelPersistenceHandler {
 
     @Override
     public String getMessageKey() {
-        return "error.duplicate.po.number";
+        return "error.duplicate.product.code";
     }
 }

@@ -223,21 +223,24 @@ public interface OrderMapper {
           "WHERE ( LOWER(f.name) LIKE '%' || LOWER(#{searchParam} || '%') OR (LOWER(f.code) LIKE '%' || LOWER(#{searchParam}) || '%') ) and FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " })
   Integer getTotalNumberPagesByDepot(@Param(value = "searchParam") String searchParam,@Param("pageSize") int pageSize, @Param("userId") Long userId, @Param("rightName") String rightName, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
 
-  @Insert("INSERT INTO public.in_bounds(\n" +
-          "            poNumber, expectedArrivalDate, status, receivingLocationCode, \n" +
-          "            createdBy, createdDate, modifiedBy, modifiedDate)\n" +
-          "    VALUES ( #{poNumber}, #{expectedArrivalDate}::date, #{status}, #{receivingLocationCode}, \n" +
-          "            #{createdBy}, NOW(), #{modifiedBy}, NOW());")
+  @Insert("INSERT INTO public.in_bound_details(\n" +
+          "             productCode, productName, uom, quantityOrdered, source, fundValues, \n" +
+          "            createdBy, createdDate, modifiedBy, modifiedDate, expectedArrivalDate, \n" +
+          "            receivingLocationCode)\n" +
+          "    VALUES ( #{productCode}, #{productName}, #{uom}, #{quantityOrdered}, #{source}, #{fundValues}, \n" +
+          "            #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{expectedArrivalDate}::date, \n" +
+          "            #{receivingLocationCode});")
   @Options(useGeneratedKeys = true)
   Integer InsertInBoundUpload(InBoundDTO inBound);
 
-  @Update("UPDATE public.in_bounds\n" +
-          "   SET poNumber=#{poNumber}, expectedArrivalDate=#{expectedArrivalDate}::date, status=#{status}, \n" +
-          "   receivingLocationCode=#{receivingLocationCode}, modifiedBy=#{modifiedBy}, modifiedDate=#{modifiedDate}\n" +
-          " WHERE id = #{id}")
+  @Update("UPDATE public.in_bound_details\n" +
+          "   SET  productCode=#{productCode}, productName=#{productName}, uom=#{uom}, quantityOrdered=#{quantityOrdered}, \n" +
+          "       source=#{source}, fundValues=#{fundValues},  modifiedBy=#{modifiedBy}, \n" +
+          "       modifiedDate=NOW(), expectedArrivalDate=#{expectedArrivalDate}::date, receivingLocationCode=#{receivingLocationCode}\n" +
+          " WHERE id=#{id};\n")
   void updateInBoundUpload(InBoundDTO inBound);
 
-  @Select("SELECT * FROM in_bounds WHERE lower(poNumber) = lower(#{poNumber})")
-  InBoundDTO getByPoNumber(@Param("poNumber") String poNumber);
+  @Select("SELECT * FROM in_bound_details WHERE lower(productCode)=lower(#{productCode}) and expectedArrivalDate=#{expectedArrivalDate}::date")
+  InBoundDTO getByProductAndExpectedDate(@Param("productCode") String productCode,@Param("expectedArrivalDate") String expectedArrivalDate );
 
 }
