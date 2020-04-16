@@ -49,8 +49,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 //$rootScope.loadStockAvailableByLevel($scope.$parent.params);
               //  $rootScope.loadStockStatusByProgramTrends($scope.$parent.params, 'level1');
                 //$rootScope.loadConsumptionTrendSummary(params);
+              $rootScope.loadPipelineReport(params);
                $rootScope.loadEmergencyCommoditiesDashlets(params);
-                loadRegularEmergenceTrend(params);
+               loadRegularEmergenceTrend(params);
 
                // $rootScope.loadHealthCommoditiesFinancing(params);
 
