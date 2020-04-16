@@ -210,7 +210,7 @@ public class CalculationService {
       lineItem.validateMandatoryFields(template);
 
       lineItem.calculateForFullSupply(template, requisition.getStatus(), lossesAndAdjustmentsTypes, numberOfMonths);
-      if(requisition.getPeriod().getEnableOrder() && !requisition.getProgram().getCode().equalsIgnoreCase("covid19")) {
+      if(requisition.getPeriod().getEnableOrder() && !requisition.getProgram().getCanTrackCovid()) {
         lineItem.validateCalculatedFields(template);
       }
 
