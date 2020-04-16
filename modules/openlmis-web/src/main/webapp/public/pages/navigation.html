@@ -75,6 +75,11 @@
       <a id="orders-menu" href="javascript: void(0)" openlmis-message="link.orders"></a>
       <div class="submenu">
         <ul>
+            <li ng-show="hasPermission('UPLOAD_SHIPMENT_DETAILS')">
+                <a id='uploadInBound' href="/public/pages/logistics/fulfillment/index.html#/upload-shipment"
+                   >Upload In-bound</a>
+            </li>
+
           <li ng-show="hasPermission('VIEW_ORDER')">
             <a id='viewOrder'
                href="/public/pages/logistics/fulfillment/index.html#/view-orders?page=1"

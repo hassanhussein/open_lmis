@@ -56,20 +56,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
           return deferred.promise;
 
      };
-     var totalAmount = 0;
-       scope.totalSourceOfFund = 0;
-     scope.updateTotalQuantity = function(source, sourceOfFundList) {
-                        console.log(source.quantity);
-            if(isUndefined(source.quantity)){
-              source.quantity = 0;
-            }
 
-            source.quantity = parseInt(source.quantity,10);
-
-
-     };
-//totalSources
-console.log(totalAmount);
 
        $rootScope.$on('loadSourceOfFunds', function (event,data) {
            var loadOther = scope.loadOtherSource();

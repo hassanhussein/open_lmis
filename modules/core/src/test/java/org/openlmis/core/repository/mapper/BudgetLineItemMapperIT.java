@@ -117,9 +117,9 @@ public class BudgetLineItemMapperIT {
     assertThat(resultSet.getString("notes"), is("My updated good notes"));
   }
 
-  @Test
   public void shouldGetBudgetLineItemByFacilityIdProgramIdAndPeriodId() {
     mapper.insert(budgetLineItem);
+    assertThat(budgetLineItem.getId(), is(notNullValue()));
 
     BudgetLineItem savedLineItem = mapper.get(facility.getId(), 1L, period.getId());
 

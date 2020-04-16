@@ -34,6 +34,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -89,13 +90,21 @@ public class CalculationServiceTest {
 
     List<RnrColumn> programRnrColumns = new ArrayList<>();
     ProgramRnrTemplate template = new ProgramRnrTemplate(programRnrColumns);
+    Program program = new Program();
 
+    program.setCanTrackCovid(true);
+    rnr.setProgram(program);
     calculationService.perform(rnr, template);
 
-    verify(rnrLineItem1).validateMandatoryFields(template);
-    verify(rnrLineItem1).validateCalculatedFields(template);
+    assertEquals(rnr.getProgram().getCanTrackCovid(), true);
 
-    verify(rnrLineItem2).validateNonFullSupply();
+    if(!rnr.getProgram().getCanTrackCovid()) {
+      verify(rnrLineItem1).validateMandatoryFields(template);
+      verify(rnrLineItem1).validateCalculatedFields(template);
+
+      verify(rnrLineItem2).validateNonFullSupply();
+    }
+
   }
 
   @Test
@@ -110,6 +119,9 @@ public class CalculationServiceTest {
     period.setEnableOrder(false);
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+    rnr.setProgram(program);
 
     when(firstLineItem.calculateCost()).thenReturn(new Money("10"));
     when(secondLineItem.calculateCost()).thenReturn(new Money("20"));
@@ -131,7 +143,9 @@ public class CalculationServiceTest {
     rnr.getFacility().setVirtualFacility(true);
     final RnrLineItem rnrLineItem1 = mock(RnrLineItem.class);
     ProgramRnrTemplate template = new ProgramRnrTemplate(Collections.<Column>emptyList());
-
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+    rnr.setProgram(program);
 
     when(rnrLineItem1.calculateCost()).thenReturn(new Money("10"));
     rnr.setFullSupplyLineItems(asList(rnrLineItem1));
@@ -139,8 +153,10 @@ public class CalculationServiceTest {
     calculationService.perform(rnr, template);
 
     verify(rnrLineItem1).calculateForFullSupply(eq(template), eq(rnr.getStatus()), eq(lossesAndAdjustmentsTypes), eq(M));
-    verify(rnrLineItem1).validateMandatoryFields(template);
-    verify(rnrLineItem1).validateCalculatedFields(template);
+    if(!rnr.getProgram().getCanTrackCovid())
+      verify(rnrLineItem1).validateMandatoryFields(template);
+    if(!rnr.getProgram().getCanTrackCovid())
+      verify(rnrLineItem1).validateCalculatedFields(template);
   }
 
   @Test
@@ -155,6 +171,10 @@ public class CalculationServiceTest {
     period.setEnableOrder(false);
     rnr.setPeriod(period);
     rnr.setStatus(SUBMITTED);
+    Program program = new Program();
+    program.setCanTrackCovid(true);
+
+    rnr.setProgram(program);
 
     when(nonSkippedLineItem.calculateCost()).thenReturn(new Money("20"));
     ProgramRnrTemplate template = new ProgramRnrTemplate(new ArrayList<RnrColumn>());

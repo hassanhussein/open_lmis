@@ -20,6 +20,7 @@ import org.openlmis.fulfillment.shared.FulfillmentPermissionService;
 import org.openlmis.order.domain.DateFormat;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.order.dto.InBoundDTO;
 import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.repository.OrderRepository;
 import org.openlmis.rnr.domain.Rnr;
@@ -337,4 +338,19 @@ public class OrderService {
     }
     return null;
   }
+
+  public void saveInBounds(InBoundDTO inBound){
+
+    if(inBound.getId() == null){
+      orderRepository.insertInBoundUpload(inBound);
+    }else {
+      orderRepository.updateInBoundUpload(inBound);
+    }
+  }
+
+  public InBoundDTO getByProductAndExpectedDate(String code, String expectedDate){
+    return orderRepository.getByProductAndExpectedDate(code,expectedDate);
+  }
+
+
 }

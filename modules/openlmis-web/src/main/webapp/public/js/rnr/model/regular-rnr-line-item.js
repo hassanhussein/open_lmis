@@ -188,7 +188,7 @@ var RegularRnrLineItem = base2.Base.extend({
             }
         } else if(this.program.canTrackCovid) {
 
-                return (utils.getValueFor(this.stockInHand) === null) ? true:false;
+         return false;
 
         }
 

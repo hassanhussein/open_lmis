@@ -18,6 +18,7 @@ import org.openlmis.core.domain.SupplyLine;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderFileColumn;
 import org.openlmis.order.domain.OrderStatus;
+import org.openlmis.order.dto.InBoundDTO;
 import org.openlmis.shipment.domain.ShipmentFileInfo;
 import org.springframework.stereotype.Repository;
 
@@ -221,5 +222,25 @@ public interface OrderMapper {
           " INNER JOIN facilities f on f.id = r.facilityId ",
           "WHERE ( LOWER(f.name) LIKE '%' || LOWER(#{searchParam} || '%') OR (LOWER(f.code) LIKE '%' || LOWER(#{searchParam}) || '%') ) and FRA.userid = #{userId} AND RR.rightName = #{rightName} and S.supplyingFacilityId = #{supplyDepot} and r.programId = #{program} and r.periodId = #{period} " })
   Integer getTotalNumberPagesByDepot(@Param(value = "searchParam") String searchParam,@Param("pageSize") int pageSize, @Param("userId") Long userId, @Param("rightName") String rightName, @Param("supplyDepot") Long supplyDepot, @Param("program") Long program, @Param("period") Long period);
+
+  @Insert("INSERT INTO public.in_bound_details(\n" +
+          "             productCode, productName, uom, quantityOrdered, source, fundValues, \n" +
+          "            createdBy, createdDate, modifiedBy, modifiedDate, expectedArrivalDate, \n" +
+          "            receivingLocationCode)\n" +
+          "    VALUES ( #{productCode}, #{productName}, #{uom}, #{quantityOrdered}, #{source}, #{fundValues}, \n" +
+          "            #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{expectedArrivalDate}::date, \n" +
+          "            #{receivingLocationCode});")
+  @Options(useGeneratedKeys = true)
+  Integer InsertInBoundUpload(InBoundDTO inBound);
+
+  @Update("UPDATE public.in_bound_details\n" +
+          "   SET  productCode=#{productCode}, productName=#{productName}, uom=#{uom}, quantityOrdered=#{quantityOrdered}, \n" +
+          "       source=#{source}, fundValues=#{fundValues},  modifiedBy=#{modifiedBy}, \n" +
+          "       modifiedDate=NOW(), expectedArrivalDate=#{expectedArrivalDate}::date, receivingLocationCode=#{receivingLocationCode}\n" +
+          " WHERE id=#{id};\n")
+  void updateInBoundUpload(InBoundDTO inBound);
+
+  @Select("SELECT * FROM in_bound_details WHERE lower(productCode)=lower(#{productCode}) and expectedArrivalDate::date=#{expectedArrivalDate}::date")
+  InBoundDTO getByProductAndExpectedDate(@Param("productCode") String productCode,@Param("expectedArrivalDate") String expectedArrivalDate );
 
 }
