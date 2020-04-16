@@ -38,7 +38,7 @@ public interface BudgetLineItemMapper {
   void update(BudgetLineItem budgetLineItem);
 
   @Select({
-    "SELECT * FROM budget_line_items WHERE facilityId = #{facilityId} AND programId = #{programId} AND periodId = #{periodId}"
+    "SELECT * FROM budget_line_items WHERE facilityId = #{facilityId} AND programId = #{programId} AND periodId = #{periodId} and budgetFileId is null limit 1"
   })
   BudgetLineItem get(@Param("facilityId") Long facilityId, @Param("programId") Long programId, @Param("periodId") Long periodId);
 
