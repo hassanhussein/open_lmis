@@ -66,7 +66,7 @@
                 <td data-title="getLocalMessage('label.province')"  sortable="location">{{ row.province }}</td>
                 <td data-title="getLocalMessage('label.program')"  sortable="location">{{ row.program }}</td>
                 <td  data-title="getLocalMessage('label.period')" sortable="location">{{ row.period || '-' }}</td>
-                <td  data-title="getLocalMessage('label.stock.order.number')"  sortable="location"></td>
+                <td  data-title="getLocalMessage('label.stock.order.number')"  sortable="location">{{row.ordernumber}}</td>
                 <td data-title="getLocalMessage('label.status')"  sortable="location">{{ row.status }}</td>
                 <!-- td ng-show="reporting" data-title="getLocalMessage('label.reported.date')" style="width:30%" sortable="location">{{ row.createdDate | date : 'dd MMM, yyyy'}}</td -->
               </tr>

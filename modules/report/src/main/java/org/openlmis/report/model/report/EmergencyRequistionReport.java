@@ -40,7 +40,7 @@ public class EmergencyRequistionReport implements ResultRow {
     private String period;
     private String startdate;
     private String enddate;
-    private Long ordernumber;
+    private String ordernumber;
 
 
 }
