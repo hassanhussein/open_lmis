@@ -67,7 +67,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 this.stockAvailabilityPercentage = Math.round(100 - stockOutPercentage);
                 this.totalIncidence = reg_obj.total_incidence;
                 this.stockOutIncidence = reg_obj.total_stockoutincidence;
-                this.reported = reg_obj.reported.split(" ")[2] + " " + reg_obj.reported.split(" ")[3];
+                this.reported = reg_obj.reported;
             } else {
                 this.y = 0;
                 this.value = 1;
@@ -119,7 +119,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                                     this.totalIncidence = reg_obj.totalincidence;
                                     this.stockOutIncidence = reg_obj.stockoutincidence;
                                     this.stockAvailabilityPercentage = Math.round(100 - stockOutPercentage);
-                                    this.reported = reg_obj.reported.split(" ")[2] + " " + reg_obj.reported.split(" ")[3];
+                                    this.reported = reg_obj.reported;
 
                                 } else {
                                     this.y = 0;
