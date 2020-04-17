@@ -1,4 +1,35 @@
 <style>
+    .ngRow.odd {
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(212,212,212);
+    }
+    .ngRow.even {
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(212,212,212);
+    }
+.vl {
+  border-left: 6px solid green;
+  height: 100px;
+}
+.text-card {
+font-size:40px;
+color:#17888f
+font-weight:bold;
+}
+.card-box {
+    padding: 20px;
+    border-radius: 3px;
+    margin-bottom: 30px;
+    background-color: #fff;
+}
+.text-muted {
+    color: black!important;
+    font-size: 13px;
+}
+
+.font-13 {
+    font-size: 13px!important;
+}
 .tabs-left, .tabs-right {
   border-bottom: none;
   padding-top: 2px;
@@ -49,9 +80,9 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs tabs-left sideways">
             <li class="active"><a href="#stock-status" data-toggle="tab">Commodities Stock Status</a></li>
-            <li><a href="#cases" data-toggle="tab">Number of cases</a></li>
-            <li><a href="#national" data-toggle="tab">National Report: Essential Health Commodities for Management of COVID</a></li>
-            <li><a href="#regional" data-toggle="tab">Regional Report: Essential Health Commodities for Management of COVID </a></li>
+            <li><a href="#summary" data-toggle="tab">Designated Facilities Summary Report</a></li>
+            <li><a href="#inbound" data-toggle="tab">Inbound Reports</a></li>
+            <li><a href="#cases" data-toggle="tab">Cases/Patients</a></li>
         </ul>
     </div>
 
@@ -135,31 +166,135 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="national">
+            <div class="tab-pane" id="summary" style="background:white;">
                 <div class="grey lighten-5 card row2-height"  >
+                    <div class="row" style="float:top; padding:10px">
+                        <form>
+                            <div class="form-row">
+                                <div class="form-cell horizontalFilters">
+                                    <div class="col">
+                                        <label for="status" class="labels">Designated Facility</label>
+                                        <div>
+                                            <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
+                                                <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
+                                                        value="{{type.code}}">{{type.name}}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <br>
+                                        <div>
+                                               <span class="pull-right">
+                                                   <a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
+                                               </span>
+                                        </div>
+                                    </div>
+                                </div>
 
-                     <div class="card-action" style="background-color: #17888f;">
-                          <span style="color:white">Percentage of Regular Orders by Program (all timNational Report: Essential Health Commodities for Management of COVID</span>
-                      </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div  style=" padding:3px margin-top:3px">
+                        <div class="row" style="background:white;">
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one">
+                                    <div class="vl col-sm-3"></div>
+                                    <div class="col-sm-9">
+                                        <i class="icon-layers float-right text-muted"></i>
+                                        <h6 class="text-muted text-uppercase mt-0">Items Reported</h6>
+                                        <h3 class="text-card">47</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
+                                    <h6 class="text-muted text-uppercase mt-0"># of StockOut</h6>
+                                    <h3 class="text-card">17</h3>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
+                                    <h6 class="text-muted text-uppercase mt-0">Availability(%)</h6>
+                                    <h3 class="text-card">89%</h3>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
+                                    <h6 class="text-muted text-uppercase mt-0">Reporting Compliance(%)</h6>
+                                    <h3 class="text-card">89%</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 <div class="card-content" ng-controller="EmergencyCommoditiesController">
-                    <div style="height: 400px !important;">
-                        <div ng-show="drillDownData.length" style="height: 350px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
+                    <div style="height: 600px !important;">
+                        <div class="card-action" style="background-color: #17888f; ; padding:8px"">
+                            <span style="color:white">Facility Item List</span>
+                        </div>
+                        <div ng-show="drillDownData.length" style="height: 550px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
                     </div>
                 </div>
             </div>
             </div>
-            <div class="tab-pane" id="regional">
-<!--                <div class="grey lighten-5 card row2-height"  >-->
+            <div class="tab-pane" id="inbound">
+                <div class="row" style="float:top; padding:10px; background:white">
+                    <form>
+                        <div class="form-row">
+                            <div class="form-cell horizontalFilters">
+                                <div class="col">
+                                    <label for="status" class="labels">Product</label>
+                                    <div>
+                                        <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
+                                            <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
+                                                    value="{{type.code}}">{{type.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label for="status" class="labels">Status</label>
+                                    <div>
+                                        <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
+                                            <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
+                                                    value="{{type.code}}">{{type.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <label for="status" class="labels">Source</label>
+                                    <div>
+                                        <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
+                                            <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
+                                                    value="{{type.code}}">{{type.name}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <br>
+                                    <div>
+                                               <span class="pull-right">
+                                                   <a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
+                                               </span>
+                                    </div>
+                                </div>
+                            </div>
 
-<!--                <div class="card-action" style="background-color: #17888f;">-->
-<!--                    <span style="color:white">Percentage of Regular Orders by Program (all time)</span>-->
-<!--                </div>-->
-<!--                <div class="card-content" ng-controller="EmergencyCommoditiesController">-->
-<!--                    <div style="height: 400px !important;">-->
-<!--                        <div ng-show="drillDownData.length" style="height: 400px !important;" id="ordersGrids_b" class="gridStyle" ng-grid="gridOptions_b"  ui-grid-exporter></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+                        </div>
+                    </form>
+                </div>
+                <div id="pipeline"></div>
+                <div class="card-content" ng-controller="TestController" style="padding:10px; background:white;">
+                    <div style="height: 600px !important;">
+                        <div class="card-action" style="background-color: #17888f; padding:8px">
+                            <span style="color:white; ">Inbound List</span>
+                        </div>
+                        <div ng-show="pipelineData.length" style="height: 550px !important;" id="pipelineGrid" class="gridStyle" ng-grid="gridPipelineOptions"  ui-grid-exporter></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -107,7 +107,7 @@ public interface  StockOutRateMapper {
             "SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
             "SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence,\n" +
             " count(*) as totalIncidence,\n" +
-            "MAX(processing_period_name) || ' ' || MAX(a.year) as reported  \n" +
+            "to_char((select enddate from processing_periods where  id=MAX(periodid)) , 'yyyy-mm') as reported \n" +
             "from mv_stock_imbalance_by_facility_report  msifr\n" +
             "inner join (\n" +
             "select productid, max(periodid), district_name, max(year) as year  from mv_stock_imbalance_by_facility_report\n" +
@@ -128,7 +128,7 @@ public interface  StockOutRateMapper {
             "SUM(CASE WHEN status='US' THEN 1 ELSE 0 END) as underStockIncidence,\n" +
             "SUM(CASE WHEN status='SP' THEN 1 ELSE 0 END) as adeliquateStockIncidence,\n" +
             " count(*) as totalIncidence,\n" +
-            "MAX(processing_period_name) || ' ' || MAX(a.year) as reported  \n" +
+            "to_char((select enddate from processing_periods where  id=MAX(periodid)) , 'yyyy-mm') as reported  \n" +
             "from mv_stock_imbalance_by_facility_report  msifr\n" +
             "inner join (\n" +
             "select productid, max(periodid), district_name, max(year) as year  from mv_stock_imbalance_by_facility_report\n" +

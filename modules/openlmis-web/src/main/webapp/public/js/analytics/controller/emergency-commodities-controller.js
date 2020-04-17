@@ -7,8 +7,125 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
         $scope.stockAvailabilityForEmergencyCommodities('stockAvailabilityForEmergencyCommodities');
         $scope.casesPerDesignatedFacilities('patientPerRegion');
         $scope.cumulativePatientTrend('cumulativePatientTrend');
+        $scope.pipeline('pipeline');
     };
 
+
+$scope.pipeline = function(chartTypeId) {
+Highcharts.chart(chartTypeId, {
+    chart: {
+        zoomType: 'x',
+        type: 'timeline'
+    },
+    xAxis: {
+        type: 'datetime',
+        visible: false
+    },
+    yAxis: {
+        gridLineWidth: 1,
+        title: null,
+        labels: {
+            enabled: false
+        }
+    },
+    legend: {
+        enabled: false
+    },
+    title: {
+        text: 'Inbound Timeline'
+    },
+    credits: {
+     enabled: false
+    },
+    tooltip: {
+        style: {
+            width: 300
+        }
+    },
+    series: [{
+        dataLabels: {
+            allowOverlap: false,
+            format: '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > ' +
+                '{point.x:%d %b %Y}</span><br/>{point.label}<br/>{point.status}'
+        },
+        marker: {
+            symbol: 'circle'
+        },
+        data: [{
+            x: Date.UTC(2020, 9, 4),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 5, 4),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 3, 12),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 1, 3),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 6, 20),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 3, 19),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 11, 2),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 3, 17),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 11, 4),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 1, 19),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 7, 8),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }, {
+            x: Date.UTC(2020, 10, 20),
+            name: 'Ordered by GOT',
+            label: 'Tracking #: 1XHYX044MTZ',
+            status: 'Status : SHIPPED',
+            description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
+        }]
+    }]
+});
+};
        $scope.table = function(params){
                   program = 1;
                   params.programName = 'ILS';
@@ -26,7 +143,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
        };
 
        $scope.gridOptions = { data: 'drillDownData',
-                                                            showFooter: true,
+                                                            showFooter: false,
                                                             enableGridMenu: true,
                                                             exporterMenuCsv: true,
                                                             showFilter: false,
@@ -35,11 +152,11 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                                                                exporterCsvFilename: 'myFile.csv',
                                                                 exporterPdfDefaultStyle: {fontSize: 9},
                                                             columnDefs: [
-                                                              {field: 'SN', displayName: '#',cellTemplate: '<div style="text-align: center !important;">{{row.rowIndex + 1}}</div>', width: 15},
-                                                              {field: 'productname', displayName: messageService.get("label.product"), width: 200},
-                                                              {field: 'soh', displayName: 'SOH'},
-                                                              {field: 'amc', displayName: 'AMC'},
-                                                              {field: 'mos', displayName: 'MOS'}
+                                                              {field: 'SN', displayName: '#',cellTemplate: '<div style="text-align: center !important;">{{row.rowIndex + 1}}</div>', width: 25},
+                                                              {field: 'productname', displayName: 'Item Description', width: 400},
+                                                              {field: 'soh', displayName: 'Last Update'},
+                                                              {field: 'amc', displayName: 'Stock on Hand'},
+                                                              {field: 'mos', displayName: 'Quantity on Order'}
 
                                                             ]
         };
@@ -144,8 +261,8 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                       enabled: false
                   },
                   series: [{
-                      name: 'Year 1800',
-                      data: [107, 31, 635, 203, 2, 31, 635, 203, 2]
+                      name: 'Facilities',
+                      data: [60, 78, 67, 30, 100, 90, 87, 56, 22]
                   }]
               });
               };
@@ -255,9 +372,46 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
       }]
   });
  };
-
-
-
-
-
 }
+
+app.controller('TestController',function($rootScope,$scope, StockAvailableByProgramAndPeriodData){
+
+        $rootScope.loadPipelineReport = function(params) {
+            $scope.pipelineReport(params);
+            console.log($scope.pipelineData );
+        };
+           $scope.pipelineReport = function(params){
+                      program = 1;
+                      params.programName = 'ILS';
+                      params.program = 1;
+                      params.schedule = 2;
+                      params.year = 2017;
+                      params.period = 69;
+                     var allParams = angular.extend(params, {program:program});
+                     StockAvailableByProgramAndPeriodData.get(params).then(function(data){
+                      $scope.titleStockForProgramAvailable = '<span style="font-size: 13px!important;color: #0c9083">List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year+'</span>';
+                      $scope.pipelineData = data;
+                     });
+           };
+
+          $scope.gridPipelineOptions = { data: 'pipelineData',
+                                           showFooter: false,
+                                                                enableGridMenu: true,
+                                                                exporterMenuCsv: true,
+                                                                showFilter: false,
+                                                                enableColumnResize: true,
+                                                                enableSorting: false,
+                                                                   exporterCsvFilename: 'myFile.csv',
+                                                                    exporterPdfDefaultStyle: {fontSize: 9},
+                                                                columnDefs: [
+                                                                  {field: 'SN', displayName: '#',cellTemplate: '<div style="text-align: center !important;">{{row.rowIndex + 1}}</div>', width: 25},
+                                                                  {field: 'productname', displayName: 'Item Name', width: 400},
+                                                                  {field: 'soh', displayName: 'Last Update'},
+                                                                  {field: 'amc', displayName: 'Description (UOM)'},
+                                                                  {field: 'mos', displayName: 'Quantity on Order'},
+                                                                  {field: 'mos', displayName: 'Expected Arrival Date'},
+                                                                  {field: 'mos', displayName: 'Status'}
+
+                                                                ]
+            };
+});
