@@ -29,6 +29,7 @@ import org.openlmis.equipment.domain.EquipmentModel;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
+import org.openlmis.equipment.repository.mapper.EquipmentInventoryChangeLogMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,9 @@ public class EquipmentInventoryServiceTest {
 
   @Mock
   private EquipmentService equipmentService;
+
+  @Mock
+  private EquipmentInventoryChangeLogMapper inventoryChangeLogMapper;
 
   @InjectMocks
   private EquipmentInventoryService service;
