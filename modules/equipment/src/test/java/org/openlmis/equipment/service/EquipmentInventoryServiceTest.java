@@ -224,6 +224,10 @@ public class EquipmentInventoryServiceTest {
     inventory.setSerialNumber("123");
     inventory.setEquipment(equipment);
 
+    EquipmentInventory equipment2 = new EquipmentInventory();
+    equipment2.setSerialNumber("123");
+    when(repository.getInventoryById(1L)).thenReturn(equipment2);
+
     // Do the call
     service.save(inventory);
 
@@ -291,6 +295,10 @@ public class EquipmentInventoryServiceTest {
     equipments.add(equipment);
     when(equipmentService.getAllByType(1L)).thenReturn(equipments);
     when(equipmentService.getByTypeManufacturerAndModel(1L, "Manu", 1L, "123")).thenReturn(new Equipment());
+
+    EquipmentInventory equipment2 = new EquipmentInventory();
+    equipment2.setSerialNumber("123");
+    when(repository.getInventoryById(1L)).thenReturn(equipment2);
 
     // Do the call
     service.save(inventory);
