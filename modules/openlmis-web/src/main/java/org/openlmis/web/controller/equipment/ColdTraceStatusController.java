@@ -20,6 +20,7 @@ import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
 import org.openlmis.equipment.dto.*;
 import org.openlmis.equipment.service.ColdChainEquipmentTemperatureAlarmService;
 import org.openlmis.equipment.service.DailyColdTraceStatusService;
+import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.restapi.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +49,9 @@ public class ColdTraceStatusController extends BaseController {
 
   @Autowired
   private ColdChainEquipmentTemperatureAlarmService alarmService;
+
+  @Autowired
+  private EquipmentInventoryService equipmentInventoryService;
 
   @ApiOperation(
       value = "submit monthly status",
@@ -176,6 +181,20 @@ public class ColdTraceStatusController extends BaseController {
                                                            @RequestParam(value = "verified", defaultValue = "") Boolean verified) {
     return OpenLmisResponse.response(EQUIPMENTS, dailyColdTraceStatusService.getEquipmentList(regionCode, verified));
   }
+
+
+  @ApiOperation(value = "returns list of equipments serial number and active status changes",
+      notes = "<p>accepts a date as a parameter for starting from when the change log is returned." +
+          "</p>",
+      response = EquipmentChangeLogDto.class, responseContainer = "List"
+
+  )
+  @RequestMapping(value = "/rest-api/equipment/cold-trace/equipment-changes", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getEquipmentChangeLogs(@RequestParam("lastDate") Date date) {
+    return OpenLmisResponse.response("changes", equipmentInventoryService.getEquipmentLogDtos(date));
+  }
+
+
 
   @ApiOperation(
       value = "return list of monthly status",
