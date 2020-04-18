@@ -31,6 +31,8 @@ public interface EquipmentInventoryChangeLogMapper {
   void insert(EquipmentInventoryChangeLog changeLog);
 
 
-  @Select("select *, createdDate as eventDate from equipment_inventory_change_logs where createdDate >= #{date}")
+  @Select("select l.*, l.createdDate as eventDate, i.serialNumber FROM equipment_inventory_change_logs l " +
+      " join equipment_inventories i ON i.id = l.equipmentInventoryId " +
+      " WHERE l.createdDate >= #{date}")
   List<EquipmentChangeLogDto> getChangeLogsAfterDate(@Param("date") Date date);
 }

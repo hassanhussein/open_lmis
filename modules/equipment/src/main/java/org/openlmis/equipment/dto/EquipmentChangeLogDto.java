@@ -23,6 +23,10 @@ public class EquipmentChangeLogDto {
 
   private String serialNumber;
 
+  private String changeType;
+
+  private String fieldName;
+
   private String previousValue;
 
   private String newValue;
