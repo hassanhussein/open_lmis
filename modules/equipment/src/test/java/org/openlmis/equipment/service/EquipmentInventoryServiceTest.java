@@ -222,11 +222,13 @@ public class EquipmentInventoryServiceTest {
     EquipmentInventory inventory = new EquipmentInventory();
     inventory.setId(1L);
     inventory.setSerialNumber("123");
+    inventory.setIsActive(true);
     inventory.setEquipment(equipment);
 
-    EquipmentInventory equipment2 = new EquipmentInventory();
-    equipment2.setSerialNumber("123");
-    when(repository.getInventoryById(1L)).thenReturn(equipment2);
+    EquipmentInventory persistedInventory = new EquipmentInventory();
+    persistedInventory.setSerialNumber("123");
+    persistedInventory.setIsActive(true);
+    when(repository.getInventoryById(inventory.getId())).thenReturn(persistedInventory);
 
     // Do the call
     service.save(inventory);
@@ -288,6 +290,7 @@ public class EquipmentInventoryServiceTest {
     EquipmentInventory inventory = new EquipmentInventory();
     inventory.setId(1L);
     inventory.setSerialNumber("123");
+    inventory.setIsActive(true);
     inventory.setEquipment(equipment);
 
     // Set up mock calls
@@ -296,9 +299,10 @@ public class EquipmentInventoryServiceTest {
     when(equipmentService.getAllByType(1L)).thenReturn(equipments);
     when(equipmentService.getByTypeManufacturerAndModel(1L, "Manu", 1L, "123")).thenReturn(new Equipment());
 
-    EquipmentInventory equipment2 = new EquipmentInventory();
-    equipment2.setSerialNumber("123");
-    when(repository.getInventoryById(1L)).thenReturn(equipment2);
+    EquipmentInventory persistedInventory = new EquipmentInventory();
+    persistedInventory.setSerialNumber("123");
+    persistedInventory.setIsActive(true);
+    when(repository.getInventoryById(inventory.getId())).thenReturn(persistedInventory);
 
     // Do the call
     service.save(inventory);
