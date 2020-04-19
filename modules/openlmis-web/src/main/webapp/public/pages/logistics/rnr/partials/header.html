@@ -11,12 +11,15 @@
 <div id="requisition-header" class="toggleFullScreen">
     <h2>
     <span ng-show="rnr.period.enableOrder">
-        <span id='requisitionHeaderLabel' ng-if="rnr.facility.isHidTu"
+        <span id='requisitionHeaderLabel' ng-if="rnr.program.canTrackCovid"
               >Monitoring Form for</span>
+
+        <span id='requisitionHeaderLabel' ng-if="rnr.program.isMonthlyCovid"
+              ></span>
 
         <span ng-if="!rnr.facility.isHidTu" id='requisitionHeaderLabel'
                                                  openlmis-message="label.requisition"></span>&nbsp;<span
-            ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span></span>
+            ng-bind="rnr.program.name + ' (' + rnr.facility.facilityType.name + ')'"></span></span> &nbsp;<span ng-if="rnr.program.isMonthlyCovid">R&R</span>
 
         <span ng-show="!rnr.period.enableOrder"><span id='requisitionHeaderLabel'
                                                       openlmis-message="label.requisition.report"></span>&nbsp;<span
@@ -104,7 +107,7 @@
                         id='source' ng-bind="rnr.sourceApplication"></span>
                 </div>
 
-                <div class="span3" ng-if="rnr.program.canTrackCovid">
+                <div class="span3" ng-if="rnr.program.canTrackCovid || rnr.program.isMonthlyCovid">
                     <strong id='numberOfStaffLabel' openlmis-message="create.facility.numberOfStaff"></strong>:&nbsp;<span
                         id='staff' ng-bind="rnr.facility.numberOfStaff"></span>
                 </div>

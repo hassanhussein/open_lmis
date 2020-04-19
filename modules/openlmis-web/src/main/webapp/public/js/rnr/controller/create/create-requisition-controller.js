@@ -204,7 +204,7 @@ function CreateRequisitionController($timeout, $scope, $rootScope, requisitionDa
         resetFlags();
         var rnr = removeExtraDataForPostFromRnr();
 
-        if($scope.rnr.program.canTrackCovid){
+        if($scope.rnr.program.canTrackCovid || $scope.rnr.program.isMonthlyCovid){
           rnr.patientRecord = $scope.rnr.patientRecord;
         }
         Requisitions.update({
