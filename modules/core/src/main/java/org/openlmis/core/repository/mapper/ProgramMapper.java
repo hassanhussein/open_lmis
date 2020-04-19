@@ -24,8 +24,8 @@ import java.util.List;
 @Repository
 public interface ProgramMapper {
 
-  @Insert({"INSERT INTO programs(code, name, description, active, push, templateConfigured, regimenTemplateConfigured,enableMonthlyReporting,canTrackCovid)",
-    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push}, #{templateConfigured}, #{regimenTemplateConfigured},#{enableMonthlyReporting},#{canTrackCovid})"})
+  @Insert({"INSERT INTO programs(code, name, description, active, push, templateConfigured, regimenTemplateConfigured,enableMonthlyReporting,canTrackCovid,isMonthlyCovid)",
+    "VALUES (#{code}, #{name}, #{description}, #{active}, #{push}, #{templateConfigured}, #{regimenTemplateConfigured},#{enableMonthlyReporting},#{canTrackCovid},#{isMonthlyCovid})"})
   @Options(useGeneratedKeys = true)
   Integer insert(Program program);
 
@@ -178,7 +178,8 @@ public interface ProgramMapper {
     "budgetingApplies = #{budgetingApplies}, " +
     "usepriceschedule = #{usePriceSchedule}," +
     " enableMonthlyReporting = #{enableMonthlyReporting}," +
-    " canTrackCovid = #{canTrackCovid} " +
+    " canTrackCovid = #{canTrackCovid}, " +
+    " isMonthlyCovid = #{isMonthlyCovid} " +
     "WHERE id = #{id}")
   void update(Program program);
 

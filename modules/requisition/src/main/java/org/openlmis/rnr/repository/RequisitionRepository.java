@@ -251,7 +251,7 @@ private DataHealthCheckMapper dataHealthCheckMapper;
             updateFullSupplyLineItemsForTBMonthlyProgram(rnr);
         }
 
-        if(rnr.getProgram().getCanTrackCovid()) {
+        if(rnr.getProgram().getCanTrackCovid() || rnr.getProgram().getIsMonthlyCovid()) {
             updatePatientRecord(rnr.getPatientRecord());
         }
     }

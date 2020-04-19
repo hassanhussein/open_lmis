@@ -44,6 +44,7 @@ public class Program extends BaseModel {
   private Boolean usePriceSchedule;
   private Boolean enableMonthlyReporting;
   private Boolean canTrackCovid;
+  private Boolean isMonthlyCovid;
 
   public Program(Long id) {
     this.id = id;
