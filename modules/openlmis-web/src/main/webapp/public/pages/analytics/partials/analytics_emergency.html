@@ -92,54 +92,30 @@ font-weight:bold;
             <div class="tab-pane active" id="stock-status">
                 <div class="card-content" ng-controller="EmergencyCommoditiesController">
                     <div class="row" style="float:top;background:white; padding:10px">
+                        <filter-container>
                         <form>
                             <div class="form-row">
                                    <div class="form-cell horizontalFilters">
                                        <div class="col">
-                                             <label for="status" class="labels">Category</label>
-                                             <div>
-                                                 <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
-                                                 <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
-                                                         value="{{type.code}}">{{type.name}}
-                                                 </option>
-                                                 </select>
-                                             </div>
+                                             <covid-product-filter class="form-cell horizontalFilters"></covid-product-filter>
                                          </div>
                                        <div class="col">
-                                             <label for="status" class="labels" >Product</label>
-                                             <div>
-                                                 <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
-                                                 <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
-                                                         value="{{type.code}}">{{type.name}}
-                                                 </option>
-                                                 </select>
-                                             </div>
-                                         </div>
-                                       <div class="col">
-                                           <label for="status" class="labels" >Start Date</label>
+                                           <label for="startDate" class="labels" >Start Date *</label>
                                            <div>
-                                               <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
-                                                   <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
-                                                           value="{{type.code}}">{{type.name}}
-                                                   </option>
-                                               </select>
+                                               <input type="date" id="startDate" ng-model="filter.startDate" ng-required="true" />
                                            </div>
                                        </div>
                                        <div class="col">
-                                           <label for="status" class="labels" >End Date</label>
+                                           <label for="endDate" class="labels" >End Date *</label>
                                            <div>
-                                               <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
-                                                   <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
-                                                           value="{{type.code}}">{{type.name}}
-                                                   </option>
-                                               </select>
+                                               <input type="date" id="endDate" ng-model="filter.endDate"  ng-required="true" />
                                            </div>
                                        </div>
                                        <div class="col">
                                            <br>
                                            <div>
                                                <span class="pull-right">
-                                                   <a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
+                                                   <a ng-click="loadEmergencyCommoditiesDashlets(filter)" class="waves-effect waves-light btn">Search</a>
                                                </span>
                                            </div>
                                        </div>
@@ -147,6 +123,7 @@ font-weight:bold;
 
                             </div>
                         </form>
+                        </filter-container>
                     </div>
                     <div class="row" style="float:top;">
                             <div id="stockAvailabilityForEmergencyCommodities"  style=" height: 300px;"></div>

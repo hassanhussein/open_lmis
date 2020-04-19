@@ -1176,3 +1176,28 @@ services.factory('GetStockImbalanceSummaryData', function($q, $timeout, $resourc
         get: get
     };
 });
+
+services.factory("GetCOVIDStockStatus", function($resource) {
+    return $resource('/api/dashboard/getCOVIDStockStatus.json', {}, {});
+});
+
+services.factory('GetCOVIDStockStatusData', function($q, $timeout, $resource, GetCOVIDStockStatus) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCOVIDStockStatus.get(params, function(data) {
+                var stockStatus = [];
+                if (data !== undefined) {
+                    stockStatus = data.COVIDStockStatus;
+                }
+                deferred.resolve(stockStatus);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
