@@ -44,7 +44,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 displayName: 'Stock on Hand'
             },
             {
-                field: 'orderd',
+                field: 'ordered',
                 displayName: 'Quantity on Order'
             }
 
@@ -139,21 +139,17 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 }
             },
             series: [{
-                name: 'Brands',
+                name: 'Percentage',
                 colorByPoint: true,
                 innerSize: '40%',
                 data: [{
                     name: 'Available',
-                    y: _.reduce(_.pluck(data, 'availabilitypercentage'), function(memo, val) {
-                        return memo + val;
-                    }, 0) / _.pluck(data, 'availabilitypercentage').length,
+                    y: _.pluck(data, 'availabilitypercentage').reduce(function(a, b) {return a + b;}, 0)/data.length,
                     sliced: true,
                     selected: true
                 }, {
                     name: 'StockOut',
-                    y: _.reduce(_.pluck(data, 'stockoutpercentage'), function(memo, val) {
-                        return memo + val;
-                    }, 0) / _.pluck(data, 'stockoutpercentage').length,
+                    y: _.pluck(data, 'stockoutpercentage').reduce(function(a, b) {return a + b;}, 0)/data.length,
                 }]
             }]
         });

@@ -81,7 +81,7 @@ font-weight:bold;
         <ul class="nav nav-tabs tabs-left sideways">
             <li class="active"><a href="#stock-status" data-toggle="tab">Commodities Stock Status</a></li>
             <li><a href="#summary" data-toggle="tab">Designated Facilities Summary Report</a></li>
-            <li><a href="#inbound" data-toggle="tab">Inbound Reports</a></li>
+            <li><a href="#inbound" data-toggle="tab">Inbound Shipments</a></li>
             <li><a href="#cases" data-toggle="tab">Cases/Patients</a></li>
         </ul>
     </div>
@@ -210,7 +210,7 @@ font-weight:bold;
 
                 <div class="card-content" ng-controller="EmergencyCommoditiesController">
                     <div style="height: 600px !important;">
-                        <div class="card-action" style="background-color: #17888f; ; padding:8px"">
+                        <div class="card-action" style="background-color: #17888f; ; padding:8px">
                             <span style="color:white">{{title}}</span>
                         </div>
                         <div ng-show="drillDownData.length" style="height: 550px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>

@@ -23,7 +23,7 @@ public interface COVIDMapper {
             "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')\n" +
            "and pr.id=#{product}  and  pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
             "group by r.facilityid, f.name ")
-    List<HashMap<String,Object>> getStockStatusperProduct(@Param("product") Long product,
+    List<HashMap<String,Object>> getStockStatusPerProduct(@Param("product") Long product,
                                                  @Param("startDate") String startDate,
                                                  @Param("endDate") String endDate
                                                 );
@@ -47,7 +47,7 @@ public interface COVIDMapper {
 
 
     @Select("select product as product, a.enddate::DATE as last_update,  stockinhand as stockOnHand,\n" +
-            "quantityrequested as orderd\n" +
+            "quantityrequested as ordered\n" +
             "from requisition_line_items rli\n" +
             "join ( select pp.id , pp.enddate, r.id as rnrid from  requisitions r \n" +
             "join programs p on p.id=r.programid\n" +
@@ -59,7 +59,7 @@ public interface COVIDMapper {
     );
 
     @Select("select product as product, MAX(a.enddate::DATE) as last_update,  SUM(stockinhand) as stockOnHand,\n" +
-            "SUM(quantityrequested) as orderd\n" +
+            "SUM(quantityrequested) as ordered\n" +
             "from requisition_line_items rli\n" +
             "join ( select pp.id , pp.enddate, r.id as rnrid from  requisitions r \n" +
             "join programs p on p.id=r.programid\n" +

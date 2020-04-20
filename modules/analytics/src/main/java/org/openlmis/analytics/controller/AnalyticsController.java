@@ -409,7 +409,7 @@ public class AnalyticsController extends BaseController {
        if(product==0)
         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getAllStockStatus(startDate, endDate));
      else
-         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getStockStatusperProduct(product, startDate, endDate));
+         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getStockStatusPerProduct(product, startDate, endDate));
     }
 
     @RequestMapping(value = "/getCOVIDReportByFacility.json", method = GET, headers = ACCEPT_JSON)
