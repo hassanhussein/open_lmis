@@ -848,6 +848,36 @@ app.directive('productFilter', ['ReportProductsByProgram', 'messageService', '$r
     }
 ]);
 
+app.directive('covidProductFilter', ['ReportProductsByProgram', 'GetYearSchedulePeriodTree', '$routeParams', 'ReportUserPrograms',
+    function (ReportProductsByProgram, GetYearSchedulePeriodTree, $routeParams, ReportUserPrograms) {
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+             ReportUserPrograms.get({}, function (userProgram) {
+                         scope.filter.product = (isUndefined($routeParams.product) || $routeParams.product === '') ? 0 : $routeParams.product;
+
+
+                    var program = _.where(userProgram.programs, {code: "COVID-19"})[0].id;
+                                               scope.$evalAsync(function () {
+                                                   ReportProductsByProgram.get({
+                                                                   programId: program
+                                                               }, function (data) {
+                                                       scope.products = data.productList;
+                                                       scope.products.unshift({
+                                                                           'name': '-- All Products --',
+                                                                           id: 0
+                                                                       });
+                                                   });
+
+                                               });
+                                });
+            },
+            templateUrl: 'filter-product-template'
+        };
+    }
+]);
+
 app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeriodTree', '$routeParams',
     function (RmnchProducts, GetYearSchedulePeriodTree, $routeParams) {
         return {

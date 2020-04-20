@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -65,6 +66,10 @@ public class AnalyticsController extends BaseController {
 
     @Autowired
     private StockOutRateMapper stockOutRateMapper;
+
+    @Autowired
+    private COVIDMapper covidMapper;
+
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
@@ -397,4 +402,13 @@ public class AnalyticsController extends BaseController {
         return OpenLmisResponse.response("imbalances", this.stockOutRateMapper.getStockImbalanceSummary());
     }
 
+
+    @RequestMapping(value = "/getCOVIDStockStatus.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCOVIDStockStatus(@Param("product") Long product,
+                                                                               @Param("startdate") String startDate, @Param("enddate") String endDate ) throws Exception {
+       if(product==0)
+        return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getAllStockStatus(startDate, endDate));
+     else
+         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getStockStatusperProduct(product, startDate, endDate));
+    }
 }

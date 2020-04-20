@@ -1,15 +1,148 @@
-function EmergencyCommoditiesController($scope, $http, $location, $rootScope, messageService, StockAvailableByProgramAndPeriodData) {
+function EmergencyCommoditiesController($scope, $http, $location, $rootScope, messageService, StockAvailableByProgramAndPeriodData, GetCOVIDStockStatusData) {
 
 
     $rootScope.loadEmergencyCommoditiesDashlets = function(params) {
+        $scope.stockSection(params);
         $scope.table(params);
-        $scope.stockAvailabilityByDesignatedHospital('stockAvailabilityByDesignatedHospital');
-        $scope.stockAvailabilityForEmergencyCommodities('stockAvailabilityForEmergencyCommodities');
         $scope.casesPerDesignatedFacilities('patientPerRegion');
         $scope.cumulativePatientTrend('cumulativePatientTrend');
         $scope.pipeline('pipeline');
     };
 
+$scope.stockSection = function(params){
+
+if(!params.startDate && !params.endDate)
+{
+var currentDate= new Date();
+currentDate.setDate(currentDate.getDate());
+params.endDate= currentDate.toISOString().slice(0,10);
+
+var pastDate= new Date();
+pastDate.setDate(pastDate.getDate() - 21);
+params.startDate= pastDate.toISOString().slice(0,10);
+
+params.product=0;
+}
+
+var subTitle = "From " + params.startDate + " to " + params.endDate;
+
+        var allParams = angular.extend(params);
+        GetCOVIDStockStatusData.get(params).then(function(data) {
+          $scope.stockAvailabilityByDesignatedHospital('stockAvailabilityByDesignatedHospital', data, subTitle);
+          $scope.stockAvailabilityForEmergencyCommodities('stockAvailabilityForEmergencyCommodities', data, subTitle);
+        });
+};
+
+       $scope.stockAvailabilityForEmergencyCommodities = function(chartTypeId, data, subTitle) {
+  Highcharts.chart(chartTypeId, {
+       chart: {
+                      plotBackgroundColor: null,
+                      plotBorderWidth: null,
+                      plotShadow: false,
+                      type: 'pie'
+      },
+      title: {
+          text: 'Overall Availability'
+      },
+      tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
+      subtitle: {
+                         text: subTitle
+      },
+      credits: {
+                      enabled: false
+                  },
+      accessibility: {
+          point: {
+              valueSuffix: '%'
+          }
+      },
+      plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: true,
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+              }
+          }
+      },
+      series: [{
+          name: 'Brands',
+          colorByPoint: true,
+          innerSize: '40%',
+          data: [{
+              name: 'Available',
+              y:  _.reduce(_.pluck(data, 'availabilitypercentage'), function(memo, val) {  return memo + val; }, 0) / _.pluck(data, 'availabilitypercentage').length,
+              sliced: true,
+              selected: true
+          }, {
+              name: 'StockOut',
+              y:  _.reduce(_.pluck(data, 'stockoutpercentage'), function(memo, val) {  return memo + val; }, 0) / _.pluck(data, 'stockoutpercentage').length,
+          }]
+      }]
+  });
+};
+
+  $scope.stockAvailabilityByDesignatedHospital = function(chartTypeId, data, subTitle) {
+              Highcharts.chart(chartTypeId, {
+                  chart: {
+                      type: 'bar'
+                  },
+                  title: {
+                      text: 'Stock Availability By Designated Hospitals'
+                  },
+                  subtitle: {
+                   text: subTitle
+                  },
+                  xAxis: {
+                      categories: _.pluck(data, 'name'),
+                      title: {
+                          text: null
+                      }
+                  },
+                  yAxis: {
+                      min: 0,
+                      title: {
+                          text: 'Population (millions)',
+                          align: 'high'
+                      },
+                      labels: {
+                          overflow: 'justify'
+                      }
+                  },
+                  tooltip: {
+                      valueSuffix: ' millions'
+                  },
+                  plotOptions: {
+                      bar: {
+                          dataLabels: {
+                              enabled: true
+                          }
+                      }
+                  },
+                  legend: {
+                      layout: 'vertical',
+                      align: 'right',
+                      verticalAlign: 'top',
+                      x: -40,
+                      y: 80,
+                      floating: true,
+                      borderWidth: 1,
+                      backgroundColor:
+                          Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
+                      shadow: true
+                  },
+                  credits: {
+                      enabled: false
+                  },
+                  series: [{
+                      name: 'Facilities',
+                      data: _.pluck(data, 'availabilitypercentage')
+                  }]
+              });
+              };
 
 $scope.pipeline = function(chartTypeId) {
 Highcharts.chart(chartTypeId, {
@@ -127,19 +260,13 @@ Highcharts.chart(chartTypeId, {
 });
 };
        $scope.table = function(params){
-                  program = 1;
-                  params.programName = 'ILS';
-                  params.program = 1;
-                  params.schedule = 2;
-                  params.year = 2017;
-                  params.period = 69;
-                 var allParams = angular.extend(params, {program:program});
-                 StockAvailableByProgramAndPeriodData.get(params).then(function(data){
-
-                  $scope.titleStockForProgramAvailable = '<span style="font-size: 13px!important;color: #0c9083">List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year+'</span>';
-
-                  $scope.drillDownData = data;
-                 });
+//                 var allParams = angular.extend(params, {program:program});
+//                 GetCOVIDStockStatusData.get(params).then(function(data){
+//
+//                  $scope.titleStockForProgramAvailable = '<span style="font-size: 13px!important;color: #0c9083">List of Available Tracer Items for '+name +' in '+params.periodName+', '+params.year+'</span>';
+//
+//                  $scope.drillDownData = data;
+//                 });
        };
 
        $scope.gridOptions = { data: 'drillDownData',
@@ -208,112 +335,8 @@ Highcharts.chart(chartTypeId, {
 
       });
        };
-       $scope.stockAvailabilityByDesignatedHospital = function(chartTypeId) {
-              Highcharts.chart(chartTypeId, {
-                  chart: {
-                      type: 'bar'
-                  },
-                  title: {
-                      text: 'Stock Availability By Designated Hospitals'
-                  },
-                  subtitle: {
-                      text: 'Source: <a href="https://en.wikipedia.org/wiki/World_population">Wikipedia.org</a>'
-                  },
-                  xAxis: {
-                      categories: ['Mt. Meru ', 'Mloganzila', 'Tumbi RRH (Kibaha)', 'Kagera RRH', 'Temeke Hospital', 'Mloganzila', 'Tumbi RRH (Kibaha)', 'Kagera RRH', 'Temeke Hospital'],
-                      title: {
-                          text: null
-                      }
-                  },
-                  yAxis: {
-                      min: 0,
-                      title: {
-                          text: 'Population (millions)',
-                          align: 'high'
-                      },
-                      labels: {
-                          overflow: 'justify'
-                      }
-                  },
-                  tooltip: {
-                      valueSuffix: ' millions'
-                  },
-                  plotOptions: {
-                      bar: {
-                          dataLabels: {
-                              enabled: true
-                          }
-                      }
-                  },
-                  legend: {
-                      layout: 'vertical',
-                      align: 'right',
-                      verticalAlign: 'top',
-                      x: -40,
-                      y: 80,
-                      floating: true,
-                      borderWidth: 1,
-                      backgroundColor:
-                          Highcharts.defaultOptions.legend.backgroundColor || '#FFFFFF',
-                      shadow: true
-                  },
-                  credits: {
-                      enabled: false
-                  },
-                  series: [{
-                      name: 'Facilities',
-                      data: [60, 78, 67, 30, 100, 90, 87, 56, 22]
-                  }]
-              });
-              };
-       $scope.stockAvailabilityForEmergencyCommodities = function(chartTypeId) {
-  Highcharts.chart(chartTypeId, {
-       chart: {
-                      plotBackgroundColor: null,
-                      plotBorderWidth: null,
-                      plotShadow: false,
-                      type: 'pie'
-      },
-      title: {
-          text: 'Overall Availability'
-      },
-      tooltip: {
-          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-      },
-      credits: {
-                      enabled: false
-                  },
-      accessibility: {
-          point: {
-              valueSuffix: '%'
-          }
-      },
-      plotOptions: {
-          pie: {
-              allowPointSelect: true,
-              cursor: 'pointer',
-              dataLabels: {
-                  enabled: true,
-                  format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-              }
-          }
-      },
-      series: [{
-          name: 'Brands',
-          colorByPoint: true,
-          innerSize: '40%',
-          data: [{
-              name: 'Available',
-              y: 8,
-              sliced: true,
-              selected: true
-          }, {
-              name: 'StockOut',
-              y: 2
-          }]
-      }]
-  });
-};
+
+
        $scope.casesPerDesignatedFacilities = function(chartTypeId) {
   Highcharts.chart(chartTypeId, {
        chart: {
@@ -378,7 +401,6 @@ app.controller('TestController',function($rootScope,$scope, StockAvailableByProg
 
         $rootScope.loadPipelineReport = function(params) {
             $scope.pipelineReport(params);
-            console.log($scope.pipelineData );
         };
            $scope.pipelineReport = function(params){
                       program = 1;
