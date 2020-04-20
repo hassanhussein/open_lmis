@@ -181,7 +181,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Population (millions)',
+                    text: 'Availability (Percentage)',
                     align: 'high'
                 },
                 labels: {
@@ -189,7 +189,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 }
             },
             tooltip: {
-                valueSuffix: ' millions'
+                valueSuffix: ' %'
             },
             plotOptions: {
                 bar: {
@@ -213,7 +213,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 enabled: false
             },
             series: [{
-                name: 'Facilities',
+                name: 'Availability',
                 data: _.pluck(data, 'availabilitypercentage')
             }]
         });
