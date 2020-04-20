@@ -1227,3 +1227,30 @@ services.factory('getCOVIDReportByFacilityData', function($q, $timeout, $resourc
         get: get
     };
 });
+
+
+
+services.factory("GetInboundReports", function($resource) {
+    return $resource('/api/dashboard/getInboundReports.json', {}, {});
+});
+
+services.factory('GetInboundReportsData', function($q, $timeout, $resource, GetInboundReports) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetInboundReports.get(params, function(data) {
+                var inboundReports = [];
+                if (data !== undefined) {
+                    inboundReports = data.inboundReports;
+                }
+                deferred.resolve(inboundReports);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});

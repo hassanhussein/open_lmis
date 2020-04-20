@@ -77,4 +77,16 @@ public interface COVIDMapper {
             "join programs p on p.id=ps.programid\n" +
             "where p.code='COVID-19' ")
     List<HashMap<String,Object>> getCOVIDDesignatedFacilities( );
+
+
+    @Select("select productname as product, uom, quantityordered, source, status, expectedarrivaldate::DATE, receivinglocationcode, trackingnumber, modifieddate::DATE\n" +
+            " from in_bound_details where expectedarrivaldate > now()")
+    List<HashMap<String,Object>> getInboundReports( );
+
+
+    @Select("select productname as product, uom, quantityordered, source, status, expectedarrivaldate::DATE, receivinglocationcode, trackingnumber, bd.modifieddate::DATE\n" +
+            " from in_bound_details  bd\n" +
+            " join products p on p.code=bd.productcode\n" +
+            " where expectedarrivaldate > now() and p.id=#{product}")
+    List<HashMap<String,Object>> getInboundByProductReports(@Param("product") Long product );
 }

@@ -426,4 +426,13 @@ public class AnalyticsController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getCOVIDDesignatedFacilities() {
         return OpenLmisResponse.response("getCOVIDDesignatedFacilities", this.covidMapper.getCOVIDDesignatedFacilities());
     }
+
+
+    @RequestMapping(value = "/getInboundReports.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getInboundReports(@Param("product") Long product) {
+        if(product==0)
+            return OpenLmisResponse.response("inboundReports", this.covidMapper.getInboundReports());
+        else
+            return OpenLmisResponse.response("inboundReports", this.covidMapper.getInboundByProductReports(product));
+    }
 }
