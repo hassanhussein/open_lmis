@@ -40,7 +40,7 @@ function SaveRnrTemplateController($scope, rnrTemplateForm, program, messageServ
 
   $scope.rnrColumns.forEach(function(column) {
 
-    if(column.name === 'totalRequirement' && program.canTrackCovid) {
+    if((column.name === 'totalRequirement' && program.canTrackCovid) || (column.name === 'totalRequirement' && program.isMonthlyCovid)) {
      column.mandatory = false;
      column.formulaValidationRequired = false;
     }
