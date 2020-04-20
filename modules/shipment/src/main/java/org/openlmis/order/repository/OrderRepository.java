@@ -136,8 +136,8 @@ public class OrderRepository {
       orderMapper.updateInBoundUpload(inBound);
   }
 
-  public InBoundDTO getByProductAndExpectedDate(String code, String expectedDate){
-      return orderMapper.getByProductAndExpectedDate(code,expectedDate);
+  public InBoundDTO getByProductAndExpectedDate(String code, String trackingNumber){
+      return orderMapper.getByProductAndExpectedDate(code,trackingNumber);
   }
 
 }

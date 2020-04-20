@@ -8,6 +8,8 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.upload.Importable;
 import org.openlmis.upload.annotation.ImportField;
 
+import java.math.BigDecimal;
+
 import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
 @Data
@@ -15,6 +17,9 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 public class InBoundDTO extends BaseModel implements Importable {
+
+    @ImportField(mandatory = true, name = "Tracking #")
+    private String trackingNumber;
 
     @ImportField(mandatory = true, name = "Item Code")
     private String productCode;
@@ -38,6 +43,9 @@ public class InBoundDTO extends BaseModel implements Importable {
     private String source;
 
     @ImportField(name = "Value")
-    private Long fundValues;
+    private BigDecimal fundValues;
+
+    @ImportField(name = "Status")
+    private String status;
 
 }
