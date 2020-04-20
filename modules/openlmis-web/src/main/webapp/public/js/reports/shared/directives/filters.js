@@ -878,6 +878,22 @@ app.directive('covidProductFilter', ['ReportProductsByProgram', 'GetYearSchedule
     }
 ]);
 
+app.directive('covidFacilityFilter', ['$routeParams', 'GetCOVIDDesignatedFacilities',
+    function ($routeParams, GetCOVIDDesignatedFacilities) {
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+             GetCOVIDDesignatedFacilities.get({}, function (designatedFacilities) {
+              scope.filter.facility = (isUndefined($routeParams.facility) || $routeParams.facility === '') ? 0 : $routeParams.facility;
+              scope.facilities = designatedFacilities.getCOVIDDesignatedFacilities;
+              scope.facilities.unshift({'name': '-- All Facilities --',id: 0});
+            });},
+            templateUrl: 'filter-covid-designated-facilities-template'
+        };
+    }
+]);
+
 app.directive('rmnchProductPeriodFilter', ['RmnchProducts', 'GetYearSchedulePeriodTree', '$routeParams',
     function (RmnchProducts, GetYearSchedulePeriodTree, $routeParams) {
         return {

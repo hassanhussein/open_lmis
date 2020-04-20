@@ -20,7 +20,7 @@ public interface COVIDMapper {
             "join programs p on p.id=r.programid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
-            "where p.code='COVID-19' and r.status='APPROVED'\n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')\n" +
            "and pr.id=#{product}  and  pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
             "group by r.facilityid, f.name ")
     List<HashMap<String,Object>> getStockStatusperProduct(@Param("product") Long product,
@@ -38,10 +38,43 @@ public interface COVIDMapper {
             "join programs p on p.id=r.programid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
-            "where p.code='COVID-19' and r.status='APPROVED'\n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')\n" +
             "  and pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
             "group by r.facilityid, f.name ")
     List<HashMap<String,Object>> getAllStockStatus( @Param("startDate") String startDate,
                                                           @Param("endDate") String endDate
     );
+
+
+    @Select("select product as product, a.enddate::DATE as last_update,  stockinhand as stockOnHand,\n" +
+            "quantityrequested as orderd\n" +
+            "from requisition_line_items rli\n" +
+            "join ( select pp.id , pp.enddate, r.id as rnrid from  requisitions r \n" +
+            "join programs p on p.id=r.programid\n" +
+            "join facilities f on f.id=r.facilityid\n" +
+            "join processing_periods pp on pp.id=r.periodid\n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')  and r.facilityid =#{facility} \n" +
+            "order by pp.enddate desc limit 1) a on a.rnrid=rli.rnrid ")
+    List<HashMap<String,Object>> getCOVIDReportByFacility( @Param("facility") Long facility
+    );
+
+    @Select("select product as product, MAX(a.enddate::DATE) as last_update,  SUM(stockinhand) as stockOnHand,\n" +
+            "SUM(quantityrequested) as orderd\n" +
+            "from requisition_line_items rli\n" +
+            "join ( select pp.id , pp.enddate, r.id as rnrid from  requisitions r \n" +
+            "join programs p on p.id=r.programid\n" +
+            "join facilities f on f.id=r.facilityid\n" +
+            "join processing_periods pp on pp.id=r.periodid\n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')  \n" +
+            "order by pp.enddate desc limit 1) a on a.rnrid=rli.rnrid\n" +
+            "group by product ")
+    List<HashMap<String,Object>> getCOVIDReportForAllFacilities( );
+
+
+
+    @Select("select f.name, f.id from programs_supported ps\n" +
+            "join facilities f on f.id=ps.facilityid\n" +
+            "join programs p on p.id=ps.programid\n" +
+            "where p.code='COVID-19' ")
+    List<HashMap<String,Object>> getCOVIDDesignatedFacilities( );
 }

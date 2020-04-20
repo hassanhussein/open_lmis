@@ -1201,3 +1201,29 @@ services.factory('GetCOVIDStockStatusData', function($q, $timeout, $resource, Ge
         get: get
     };
 });
+
+
+services.factory("GetCOVIDReportByFacility", function($resource) {
+    return $resource('/api/dashboard/getCOVIDReportByFacility.json', {}, {});
+});
+
+services.factory('getCOVIDReportByFacilityData', function($q, $timeout, $resource, GetCOVIDReportByFacility) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCOVIDReportByFacility.get(params, function(data) {
+                var stockStatus = [];
+                if (data !== undefined) {
+                    stockStatus = data.COVIDReportByFacility;
+                }
+                deferred.resolve(stockStatus);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
