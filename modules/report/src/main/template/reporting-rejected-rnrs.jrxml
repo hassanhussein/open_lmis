@@ -66,6 +66,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 	<field name="enddate" class="java.lang.String"/>
 	<field name="rejectiondate" class="java.lang.String"/>
 	<field name="commenttext" class="java.lang.String"/>
+	<field name="emergency" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -120,15 +121,17 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 			</staticText>
 			<textField>
 				<reportElement x="0" y="0" width="40" height="32" uuid="bd93dec5-6d79-489a-a417-b20d9ad9fe08"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="40" y="0" width="58" height="32" uuid="dd539b8b-94c9-44ad-82a1-744516ede0fb"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="238" y="0" width="59" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="e268b6f3-c02e-43cb-823b-bbef5370279b"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
@@ -136,7 +139,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="344" y="0" width="61" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="aeada5ce-4e93-46e8-b533-effeee34485a"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
@@ -144,15 +147,15 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="451" y="0" width="59" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="8a35ebf3-7667-4510-9bfe-9e601dd8920c"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.end.date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="628" y="0" width="144" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="655b3344-7710-46a4-807b-0e4eface5ff6"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="664" y="0" width="108" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="655b3344-7710-46a4-807b-0e4eface5ff6"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
@@ -160,7 +163,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="405" y="0" width="46" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="34855237-577e-4855-9c8c-35455750d400"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
@@ -168,7 +171,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
 				<reportElement mode="Transparent" x="297" y="0" width="47" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="18806adb-d12b-4192-9e1f-7e805f31d6a9"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
@@ -176,23 +179,32 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 			</textField>
 			<textField>
 				<reportElement x="98" y="0" width="140" height="32" uuid="7d10ecb6-9860-405d-a20b-7195a66e5a35"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$R{label.facility}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="510" y="0" width="59" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="88bf9ae1-4e52-48a1-ac65-1cd82572046b"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="510" y="0" width="48" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="88bf9ae1-4e52-48a1-ac65-1cd82572046b"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.date.submitted}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="569" y="0" width="59" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="3ace1400-2da8-4189-9afc-010b65c2f337"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+				<reportElement mode="Transparent" x="617" y="0" width="47" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="3ace1400-2da8-4189-9afc-010b65c2f337"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.date.rejected}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="558" y="0" width="59" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="567ef2c2-802c-4f4c-b52a-1990ed7e8763"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" rotation="None" markup="none">
+					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{label.report.type}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
@@ -258,8 +270,8 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{startdate}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="628" y="0" width="144" height="30" uuid="f02cb463-d7f7-4ec0-8270-e9b893b84e3a"/>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="664" y="0" width="108" height="30" uuid="f02cb463-d7f7-4ec0-8270-e9b893b84e3a"/>
 				<box bottomPadding="1">
 					<bottomPen lineWidth="0.5" lineColor="#009999"/>
 				</box>
@@ -294,18 +306,25 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="MM/dd/yyyy">
-				<reportElement stretchType="RelativeToTallestObject" x="510" y="0" width="59" height="30" uuid="cc42ade5-791b-4bca-b9f1-c7d19b50f257"/>
+				<reportElement stretchType="RelativeToTallestObject" x="510" y="0" width="48" height="30" uuid="cc42ade5-791b-4bca-b9f1-c7d19b50f257"/>
 				<box bottomPadding="1">
 					<bottomPen lineWidth="0.5" lineColor="#009999"/>
 				</box>
 				<textFieldExpression><![CDATA[$F{createddate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="MM/dd/yyyy">
-				<reportElement stretchType="RelativeToTallestObject" x="569" y="0" width="59" height="30" uuid="064638b1-1b15-46e7-b359-4fd3d1eeb455"/>
+				<reportElement stretchType="RelativeToTallestObject" x="617" y="0" width="47" height="30" uuid="064638b1-1b15-46e7-b359-4fd3d1eeb455"/>
 				<box bottomPadding="1">
 					<bottomPen lineWidth="0.5" lineColor="#009999"/>
 				</box>
 				<textFieldExpression><![CDATA[$F{rejectiondate}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="MM/dd/yyyy">
+				<reportElement stretchType="RelativeToTallestObject" x="558" y="0" width="59" height="30" uuid="8868cf6a-febb-4c6f-a82d-12c326b92552"/>
+				<box bottomPadding="1">
+					<bottomPen lineWidth="0.5" lineColor="#009999"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{emergency}=='f'? "Regular" : "Emergency"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

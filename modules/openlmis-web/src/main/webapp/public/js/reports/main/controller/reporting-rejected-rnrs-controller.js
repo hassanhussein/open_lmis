@@ -36,10 +36,10 @@ function ReportingRejectedRnrController($scope, DetailRejectedRnRReport) {
 
     DetailRejectedRnRReport.get($scope.getSanitizedParameter(), function (data) {
       if (data.pages !== undefined && data.pages.rows !== undefined) {
-        $scope.summaries = data.pages.rows[0].summary;
+        // --$scope.summaries = data.pages.rows[0].summary;
         $scope.responseData = data;
         $scope.updateFacilityList();
-        $scope.updateSummaries();
+       // $scope.updateSummaries();
         $scope.nonReportingFacilitiesPieChartData = [];
 
         $scope.nonReportingFacilitiesPieChartData.push({

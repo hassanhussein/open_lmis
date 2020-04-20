@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.report.model.ResultRow;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,9 +15,9 @@ import org.openlmis.report.model.ResultRow;
 public class DetailRejectedRnRReport implements ResultRow {
     private Long rnrid;
     private String status;
-    private String  createddate;
+    private Date  createddate;
     private String  createdby;
-    private String modifieddate;
+    private Date modifieddate;
     private Long modifiedby;
     private String  emergency;
     private String clientsubmittedtime;
@@ -34,11 +36,11 @@ public class DetailRejectedRnRReport implements ResultRow {
     private Long  programid;
     private Long  periodid;
     private String period;
-    private String startdate;
-    private String enddate;
+    private Date startdate;
+    private Date enddate;
     private String facilitycode;
     private Long  facilityid;
-    private String  rejectiondate;
+    private Date  rejectiondate;
     private String  statuschange;
     private String commenttext;
 }

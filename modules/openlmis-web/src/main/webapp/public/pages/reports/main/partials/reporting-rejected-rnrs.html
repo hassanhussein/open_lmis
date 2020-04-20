@@ -62,11 +62,14 @@
                 <td data-title="getLocalMessage('label.district')" >{{ row.district }}</td>
                 <td data-title="getLocalMessage('label.province')"  >{{ row.province }}</td>
 
-                <td  data-title="getLocalMessage('label.start.date')" >{{ row.startdate }}</td>
-                <td  data-title="getLocalMessage('label.end.date')" >{{ row.enddate }}</td>
-                <td  data-title="getLocalMessage('label.date.submitted')">{{row.createddate}}</td>
+                <td  data-title="getLocalMessage('label.start.date')" >{{ row.startdate|date:'MM/dd/yyyy' }}</td>
+                <td  data-title="getLocalMessage('label.end.date')" >{{ row.enddate|date:'MM/dd/yyyy' }}</td>
+                <td  data-title="getLocalMessage('label.date.submitted')">{{row.createddate|date:'MM/dd/yyyy'}}</td>
+                <td  data-title="getLocalMessage('label.report.type')">
+                  <span ng-if="row.emergency==='f'">Regular</span>
+                  <span ng-if="row.emergency==='t'">Emergency</span></td>
                 <td data-title="getLocalMessage('label.program')"  sortable="location">{{ row.program }}</td>
-                <td  data-title="getLocalMessage('label.date.rejected')">{{row.rejectiondate}}</td>
+                <td  data-title="getLocalMessage('label.date.rejected')">{{row.rejectiondate|date:'MM/dd/yyyy'}}</td>
                 <td data-title="getLocalMessage('label.rnr.rejection.reason')" >{{ row.commenttext }}</td>
                 <!-- td ng-show="reporting" data-title="getLocalMessage('label.reported.date')" style="width:30%" sortable="location">{{ row.createdDate | date : 'dd MMM, yyyy'}}</td -->
               </tr>
