@@ -12,8 +12,8 @@ import java.util.List;
 public interface COVIDMapper {
 
     @Select("select r.facilityid , f.name,\n" +
-            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand<1 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
-            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand>0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
+            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand = 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
+            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand != 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
             "from requisition_line_items rli\n" +
             "join requisitions r on r.id=rli.rnrid\n" +
             "join products pr on pr.code=rli.productcode\n" +
@@ -31,8 +31,8 @@ public interface COVIDMapper {
 
 
     @Select("select r.facilityid , f.name,\n" +
-            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand<1 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
-            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand>0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
+            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand = 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
+            "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand != 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
             "from requisition_line_items rli\n" +
             "join requisitions r on r.id=rli.rnrid\n" +
             "join programs p on p.id=r.programid\n" +

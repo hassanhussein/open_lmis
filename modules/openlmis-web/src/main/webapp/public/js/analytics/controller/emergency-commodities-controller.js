@@ -104,6 +104,8 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
 
 
     $scope.stockAvailabilityForEmergencyCommodities = function(chartTypeId, data, subTitle) {
+    var availability =_.pluck(data, 'availabilitypercentage').reduce(function(a, b) {return a + b;}, 0)/data.length;
+    var stockout =_.pluck(data, 'stockoutpercentage').reduce(function(a, b) {return a + b;}, 0)/data.length;
         Highcharts.chart(chartTypeId, {
             chart: {
                 plotBackgroundColor: null,
@@ -144,12 +146,12 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 innerSize: '40%',
                 data: [{
                     name: 'Available',
-                    y: _.pluck(data, 'availabilitypercentage').reduce(function(a, b) {return a + b;}, 0)/data.length,
+                    y: (_.pluck(data, 'availabilitypercentage').reduce(function(a, b) {return a + b;}, 0)/data.length),
                     sliced: true,
                     selected: true
                 }, {
                     name: 'StockOut',
-                    y: _.pluck(data, 'stockoutpercentage').reduce(function(a, b) {return a + b;}, 0)/data.length,
+                    y: (_.pluck(data, 'stockoutpercentage').reduce(function(a, b) {return a + b;}, 0)/data.length)
                 }]
             }]
         });
@@ -176,6 +178,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
             },
             yAxis: {
                 min: 0,
+                max: 100,
                 title: {
                     text: 'Availability (Percentage)',
                     align: 'high'
