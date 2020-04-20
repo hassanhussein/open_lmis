@@ -20,7 +20,7 @@ public interface COVIDMapper {
             "join programs p on p.id=r.programid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
-            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED')\n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')\n" +
            "and pr.id=#{product}  and  pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
             "group by r.facilityid, f.name ")
     List<HashMap<String,Object>> getStockStatusperProduct(@Param("product") Long product,
@@ -38,7 +38,7 @@ public interface COVIDMapper {
             "join programs p on p.id=r.programid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
-            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED')\n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')\n" +
             "  and pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
             "group by r.facilityid, f.name ")
     List<HashMap<String,Object>> getAllStockStatus( @Param("startDate") String startDate,
@@ -53,7 +53,7 @@ public interface COVIDMapper {
             "join programs p on p.id=r.programid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
-            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED')  and r.facilityid =#{facility} \n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')  and r.facilityid =#{facility} \n" +
             "order by pp.enddate desc limit 1) a on a.rnrid=rli.rnrid ")
     List<HashMap<String,Object>> getCOVIDReportByFacility( @Param("facility") Long facility
     );
@@ -65,7 +65,7 @@ public interface COVIDMapper {
             "join programs p on p.id=r.programid\n" +
             "join facilities f on f.id=r.facilityid\n" +
             "join processing_periods pp on pp.id=r.periodid\n" +
-            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED')  \n" +
+            "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED')  \n" +
             "order by pp.enddate desc limit 1) a on a.rnrid=rli.rnrid\n" +
             "group by product ")
     List<HashMap<String,Object>> getCOVIDReportForAllFacilities( );
