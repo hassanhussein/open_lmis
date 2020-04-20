@@ -151,6 +151,16 @@
     </div>
 </script>
 
+<script type="text/ng-template" id="filter-covid-designated-facilities-template">
+    <div>
+        <label for="covidFacilities" class="labels" ><span openlmis-message="label.facility"></span><span  class="label-required">*</span></label><div>
+        <select id="covidFacilities" ui-select2 class="input-large" ng-model="filter.facility" ng-change="notifyFilterChanged('facility-changed');">
+            <option ng-repeat="option in facilities " value="{{ option.id }}" ng-selected="filter.facility == option.id">{{ option.name }}</option>
+        </select>
+    </div>
+    </div>
+</script>
+
 <script type="text/ng-template" id="filter-product-multi-template">
     <div>
         <label for="productMulti" class="labels" openlmis-message="label.product"><span ng-show="requiredFilters.product" class="label-required">*</span></label><div>

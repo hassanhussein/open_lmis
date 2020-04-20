@@ -143,27 +143,23 @@ font-weight:bold;
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="summary" style="background:white;">
-                <div class="grey lighten-5 card row2-height"  >
+            <div class="tab-pane" id="summary" style="background:white;" ng-controller="EmergencyCommoditiesController">
+                <div class="grey lighten-5 card row2-height"   >
                     <div class="row" style="float:top; padding:10px">
+                        <filter-container>
                         <form>
                             <div class="form-row">
                                 <div class="form-cell horizontalFilters">
                                     <div class="col">
-                                        <label for="status" class="labels">Designated Facility</label>
                                         <div>
-                                            <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
-                                                <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
-                                                        value="{{type.code}}">{{type.name}}
-                                                </option>
-                                            </select>
+                                            <covid-facility-filter class="form-cell horizontalFilters"></covid-facility-filter>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <br>
                                         <div>
                                                <span class="pull-right">
-                                                   <a ng-click="searchReport()" class="waves-effect waves-light btn">Search</a>
+                                                   <a ng-click="facilityReporting(filter)" class="waves-effect waves-light btn">Search</a>
                                                </span>
                                         </div>
                                     </div>
@@ -171,44 +167,51 @@ font-weight:bold;
 
                             </div>
                         </form>
+                        </filter-container>
                     </div>
-                    <div  style=" padding:3px margin-top:3px">
+                    <div  style=" padding:3px margin-top:3px" >
                         <div class="row" style="background:white;">
                             <div class="col-sm-3" >
                                 <div class="card-box tilebox-one">
                                     <div class="vl col-sm-3"></div>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9" >
                                         <i class="icon-layers float-right text-muted"></i>
                                         <h6 class="text-muted text-uppercase mt-0">Items Reported</h6>
-                                        <h3 class="text-card">47</h3>
+                                        <h3 class="text-card" >{{items}}</h3>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-sm-3" >
                                 <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
                                     <h6 class="text-muted text-uppercase mt-0"># of StockOut</h6>
-                                    <h3 class="text-card">17</h3>
+                                    <h3 class="text-card">{{stockOutItems}}</h3>
                                 </div>
                             </div>
                             <div class="col-sm-3" >
                                 <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
                                     <h6 class="text-muted text-uppercase mt-0">Availability(%)</h6>
-                                    <h3 class="text-card">89%</h3>
+                                    <h3 class="text-card">{{availability || 0}}%</h3>
                                 </div>
                             </div>
                             <div class="col-sm-3" >
                                 <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
                                     <h6 class="text-muted text-uppercase mt-0">Reporting Compliance(%)</h6>
-                                    <h3 class="text-card">89%</h3>
+                                    <h3 class="text-card">100%</h3>
                                 </div>
                             </div>
+<!--                            <div class="col-sm-3" >-->
+<!--                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>-->
+<!--                                    <h6 class="text-muted text-uppercase mt-0">Reporting Compliance(%)</h6>-->
+<!--                                    <h3 class="text-card">100%</h3>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                     </div>
 
                 <div class="card-content" ng-controller="EmergencyCommoditiesController">
                     <div style="height: 600px !important;">
                         <div class="card-action" style="background-color: #17888f; ; padding:8px"">
-                            <span style="color:white">Facility Item List</span>
+                            <span style="color:white">{{title}}</span>
                         </div>
                         <div ng-show="drillDownData.length" style="height: 550px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
                     </div>
@@ -221,9 +224,9 @@ font-weight:bold;
                         <div class="form-row">
                             <div class="form-cell horizontalFilters">
                                 <div class="col">
-                                    <label for="status" class="labels">Product</label>
+                                    <label for="product" class="labels">Product</label>
                                     <div>
-                                        <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
+                                        <select id ="product" ui-select2 class="input-large"  ng-model="filter.product" ng-change="OnFilterChanged()">
                                             <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
                                                     value="{{type.code}}">{{type.name}}
                                             </option>
@@ -241,9 +244,9 @@ font-weight:bold;
                                     </div>
                                 </div>
                                 <div class="col">
-                                    <label for="status" class="labels">Source</label>
+                                    <label for="source" class="labels">Source</label>
                                     <div>
-                                        <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">
+                                        <select id ="source" ui-select2 class="input-large"  ng-model="filter.source" ng-change="OnFilterChanged()">
                                             <option ng-repeat="type in statuses" ng-selected="type.code == default_status"
                                                     value="{{type.code}}">{{type.name}}
                                             </option>

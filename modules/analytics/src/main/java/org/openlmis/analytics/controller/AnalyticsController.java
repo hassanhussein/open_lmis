@@ -405,10 +405,25 @@ public class AnalyticsController extends BaseController {
 
     @RequestMapping(value = "/getCOVIDStockStatus.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getCOVIDStockStatus(@Param("product") Long product,
-                                                                               @Param("startdate") String startDate, @Param("enddate") String endDate ) throws Exception {
+                                                                               @Param("startdate") String startDate, @Param("enddate") String endDate )  {
        if(product==0)
         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getAllStockStatus(startDate, endDate));
      else
          return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getStockStatusperProduct(product, startDate, endDate));
+    }
+
+    @RequestMapping(value = "/getCOVIDReportByFacility.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCOVIDStockStatus(@Param("facility") Long facility ) {
+        if(facility==0)
+            return OpenLmisResponse.response("COVIDReportByFacility", this.covidMapper.getCOVIDReportForAllFacilities());
+      else
+            return OpenLmisResponse.response("COVIDReportByFacility", this.covidMapper.getCOVIDReportByFacility(facility));
+
+
+    }
+
+    @RequestMapping(value = "/getCOVIDDesignatedFacilities.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCOVIDDesignatedFacilities() {
+        return OpenLmisResponse.response("getCOVIDDesignatedFacilities", this.covidMapper.getCOVIDDesignatedFacilities());
     }
 }

@@ -1422,3 +1422,7 @@ services.factory('GetApprovalPendingIvds', function($resource){
 services.factory('MonitoringReportApprove', function($resource){
     return $resource('/rest-api/monitoring-report/approve.json', {}, update);
 });
+
+services.factory('GetCOVIDDesignatedFacilities', function($resource){
+    return $resource('/api/dashboard/getCOVIDDesignatedFacilities.json', {}, update);
+});
