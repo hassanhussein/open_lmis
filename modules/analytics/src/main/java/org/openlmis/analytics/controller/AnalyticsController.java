@@ -409,7 +409,7 @@ public class AnalyticsController extends BaseController {
        if(product==0)
         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getAllStockStatus(startDate, endDate));
      else
-         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getStockStatusperProduct(product, startDate, endDate));
+         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getStockStatusPerProduct(product, startDate, endDate));
     }
 
     @RequestMapping(value = "/getCOVIDReportByFacility.json", method = GET, headers = ACCEPT_JSON)
@@ -425,5 +425,14 @@ public class AnalyticsController extends BaseController {
     @RequestMapping(value = "/getCOVIDDesignatedFacilities.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getCOVIDDesignatedFacilities() {
         return OpenLmisResponse.response("getCOVIDDesignatedFacilities", this.covidMapper.getCOVIDDesignatedFacilities());
+    }
+
+
+    @RequestMapping(value = "/getInboundReports.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getInboundReports(@Param("product") Long product) {
+        if(product==0)
+            return OpenLmisResponse.response("inboundReports", this.covidMapper.getInboundReports());
+        else
+            return OpenLmisResponse.response("inboundReports", this.covidMapper.getInboundByProductReports(product));
     }
 }

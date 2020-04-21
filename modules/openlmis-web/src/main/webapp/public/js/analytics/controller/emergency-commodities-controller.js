@@ -7,7 +7,6 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
         $scope.facilityReporting(params);
         $scope.casesPerDesignatedFacilities('patientPerRegion');
         $scope.cumulativePatientTrend('cumulativePatientTrend');
-        $scope.pipeline('pipeline');
 
     };
 
@@ -45,7 +44,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 displayName: 'Stock on Hand'
             },
             {
-                field: 'orderd',
+                field: 'ordered',
                 displayName: 'Quantity on Order'
             }
 
@@ -105,6 +104,8 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
 
 
     $scope.stockAvailabilityForEmergencyCommodities = function(chartTypeId, data, subTitle) {
+    var availability =_.pluck(data, 'availabilitypercentage').reduce(function(a, b) {return a + b;}, 0)/data.length;
+    var stockout =_.pluck(data, 'stockoutpercentage').reduce(function(a, b) {return a + b;}, 0)/data.length;
         Highcharts.chart(chartTypeId, {
             chart: {
                 plotBackgroundColor: null,
@@ -140,21 +141,17 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 }
             },
             series: [{
-                name: 'Brands',
+                name: 'Percentage',
                 colorByPoint: true,
                 innerSize: '40%',
                 data: [{
                     name: 'Available',
-                    y: _.reduce(_.pluck(data, 'availabilitypercentage'), function(memo, val) {
-                        return memo + val;
-                    }, 0) / _.pluck(data, 'availabilitypercentage').length,
+                    y: (_.pluck(data, 'availabilitypercentage').reduce(function(a, b) {return a + b;}, 0)/data.length),
                     sliced: true,
                     selected: true
                 }, {
                     name: 'StockOut',
-                    y: _.reduce(_.pluck(data, 'stockoutpercentage'), function(memo, val) {
-                        return memo + val;
-                    }, 0) / _.pluck(data, 'stockoutpercentage').length,
+                    y: (_.pluck(data, 'stockoutpercentage').reduce(function(a, b) {return a + b;}, 0)/data.length)
                 }]
             }]
         });
@@ -181,8 +178,9 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
             },
             yAxis: {
                 min: 0,
+                max: 100,
                 title: {
-                    text: 'Population (millions)',
+                    text: 'Availability (Percentage)',
                     align: 'high'
                 },
                 labels: {
@@ -190,7 +188,7 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 }
             },
             tooltip: {
-                valueSuffix: ' millions'
+                valueSuffix: ' %'
             },
             plotOptions: {
                 bar: {
@@ -214,127 +212,13 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
                 enabled: false
             },
             series: [{
-                name: 'Facilities',
+                name: 'Availability',
                 data: _.pluck(data, 'availabilitypercentage')
             }]
         });
     };
 
-    $scope.pipeline = function(chartTypeId) {
-        Highcharts.chart(chartTypeId, {
-            chart: {
-                zoomType: 'x',
-                type: 'timeline'
-            },
-            xAxis: {
-                type: 'datetime',
-                visible: false
-            },
-            yAxis: {
-                gridLineWidth: 1,
-                title: null,
-                labels: {
-                    enabled: false
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            title: {
-                text: 'Inbound Timeline'
-            },
-            credits: {
-                enabled: false
-            },
-            tooltip: {
-                style: {
-                    width: 300
-                }
-            },
-            series: [{
-                dataLabels: {
-                    allowOverlap: false,
-                    format: '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > ' +
-                        '{point.x:%d %b %Y}</span><br/>{point.label}<br/>{point.status}'
-                },
-                marker: {
-                    symbol: 'circle'
-                },
-                data: [{
-                    x: Date.UTC(2020, 9, 4),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 5, 4),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 3, 12),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 1, 3),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 6, 20),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 3, 19),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 11, 2),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 3, 17),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 11, 4),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 1, 19),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 7, 8),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }, {
-                    x: Date.UTC(2020, 10, 20),
-                    name: 'Ordered by GOT',
-                    label: 'Tracking #: 1XHYX044MTZ',
-                    status: 'Status : SHIPPED',
-                    description: "PEP: 2345 Unit, Alcohol Base Sanitizer (I Litre) (Septosider-Plus): 455 Units, N95 Facse Masks: 9000 Units"
-                }]
-            }]
-        });
-    };
+
 
 
 
@@ -448,22 +332,59 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
     };
 }
 
-app.controller('TestController', function($rootScope, $scope, StockAvailableByProgramAndPeriodData) {
+app.controller('StockInboundController', function($rootScope, $scope, GetInboundReportsData) {
 
-    $rootScope.loadPipelineReport = function(params) {
+    $rootScope.loadInboundReport = function(params) {
         $scope.pipelineReport(params);
     };
+
+    $scope.inbound = function(chartTypeId, data) {
+            Highcharts.chart(chartTypeId, {
+                chart: {
+                    zoomType: 'x',
+                    type: 'timeline'
+                },
+                xAxis: {
+                    type: 'datetime',
+                    visible: false
+                },
+                yAxis: {
+                    gridLineWidth: 1,
+                    title: null,
+                    labels: {
+                        enabled: false
+                    }
+                },
+                legend: {
+                    enabled: false
+                },
+                title: {
+                    text: 'Inbound Timeline'
+                },
+                credits: {
+                    enabled: false
+                },
+                tooltip: {
+                    style: {
+                        width: 300
+                    }
+                },
+                series: [{
+                    dataLabels: {
+                        allowOverlap: false,
+                        format: '<span style="color:{point.color}">● </span><span style="font-weight: bold;" > ' +
+                            '{point.x:%d %b %Y}</span><br/>{point.label}<br/><b>{point.status}</b>'
+                    },
+                    marker: {
+                        symbol: 'circle'
+                    },
+                    data: data
+                }]
+            });
+        };
     $scope.pipelineReport = function(params) {
-        program = 1;
-        params.programName = 'ILS';
-        params.program = 1;
-        params.schedule = 2;
-        params.year = 2017;
-        params.period = 69;
-        var allParams = angular.extend(params, {
-            program: program
-        });
-        StockAvailableByProgramAndPeriodData.get(params).then(function(data) {
+        GetInboundReportsData.get(params).then(function(data) {
+            $scope.inbound('pipeline', computeDate(data));
             $scope.titleStockForProgramAvailable = '<span style="font-size: 13px!important;color: #0c9083">List of Available Tracer Items for ' + name + ' in ' + params.periodName + ', ' + params.year + '</span>';
             $scope.pipelineData = data;
         });
@@ -488,31 +409,47 @@ app.controller('TestController', function($rootScope, $scope, StockAvailableByPr
                 width: 25
             },
             {
-                field: 'productname',
+                field: 'product',
                 displayName: 'Item Name',
                 width: 400
             },
             {
-                field: 'soh',
+                field: 'modifieddate',
                 displayName: 'Last Update'
             },
             {
-                field: 'amc',
+                field: 'uom',
                 displayName: 'Description (UOM)'
             },
             {
-                field: 'mos',
+                field: 'quantityordered',
                 displayName: 'Quantity on Order'
             },
             {
-                field: 'mos',
+                field: 'expectedarrivaldate',
                 displayName: 'Expected Arrival Date'
             },
             {
-                field: 'mos',
+                field: 'source',
+                displayName: 'Source'
+            },
+            {
+                field: 'status',
                 displayName: 'Status'
             }
 
         ]
+    };
+
+
+    var computeDate = function(inbounds) {
+
+       var inboundData=[];
+       for (var x in inbounds) {
+       var expectedarrivaldate = new Date(inbounds[x].expectedarrivaldate);
+       inboundObj = { "x":Date.UTC(expectedarrivaldate.getUTCFullYear(), expectedarrivaldate.getUTCMonth(), expectedarrivaldate.getUTCDate()), "name":"Ordered by " + inbounds[x].receivinglocationcode, "label":"TRACK No " + inbounds[x].trackingnumber, status:"STATUS: " + inbounds[x].status.toUpperCase() };
+       inboundData.push(inboundObj);
+       }
+       return inboundData;
     };
 });
