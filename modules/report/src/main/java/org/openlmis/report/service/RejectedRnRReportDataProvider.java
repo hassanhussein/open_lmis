@@ -33,7 +33,8 @@ public class RejectedRnRReportDataProvider  extends ReportDataProvider {
     }
 
     public ReportParameter getReportFilterData(Map<String, String[]> filterCriteria) {
-        return ParameterAdaptor.parse(filterCriteria, RejectedRnRReportParam.class);
+        ReportParameter reportParameter=ParameterAdaptor.parse(filterCriteria, RejectedRnRReportParam.class);
+        return reportParameter;
     }
 
     @Override
