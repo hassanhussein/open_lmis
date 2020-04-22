@@ -90,4 +90,29 @@ public interface COVIDMapper {
             " join products p on p.code=bd.productcode\n" +
             " where expectedarrivaldate > now() and p.id=#{product}")
     List<HashMap<String,Object>> getInboundByProductReports(@Param("product") Long product );
+
+    @Select("\n" +
+            "select to_char(pp.startdate, 'Month') amonth, extract('year' from pp.startdate) ayear, pp.name period, sum(pr.numberofcumulativecases) totalComulative from requisitions r \n" +
+            "\n" +
+            "JOIN processing_periods pp on r.periodId = PP.ID\n" +
+            "Join programs p ON p.id = r.programId\n" +
+            "Join patient_records pr ON r.id = pr.rnrId\n" +
+            "\n" +
+            "Where p.cantrackCovid = true and status NOT IN('INITITATED,SUBMITTED')\n" +
+            "\n" +
+            "group by pp.name, pp.id order by pp.id asc")
+    List<HashMap<String,Object>> getCummulativeCasesTrend();
+
+    @Select("select f.name facilityName,  Max(pr.numberofcumulativecases) totalComulative from requisitions r \n" +
+            "\n" +
+            "JOIN processing_periods pp on r.periodId = PP.ID\n" +
+            "Join programs p ON p.id = r.programId\n" +
+            "Join patient_records pr ON r.id = pr.rnrId\n" +
+            "JOIN facilities f ON r.facilityId = f.id\n" +
+            "\n" +
+            "Where p.cantrackCovid = true and status NOT IN('INITITATED,SUBMITTED, SKIPPED')\n" +
+            "\n" +
+            "group by f.name ")
+    List<HashMap<String,Object>>getCasesPerDesignatedFacilities();
+
 }

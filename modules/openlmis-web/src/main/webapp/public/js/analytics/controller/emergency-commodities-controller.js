@@ -1,12 +1,9 @@
-function EmergencyCommoditiesController($scope, $http, $location, $rootScope, messageService, StockAvailableByProgramAndPeriodData, GetCOVIDStockStatusData, getCOVIDReportByFacilityData) {
-
-
+function EmergencyCommoditiesController($scope, $http, $location, $rootScope, messageService, StockAvailableByProgramAndPeriodData, GetCOVIDStockStatusData, getCOVIDReportByFacilityData,
+GetCummulativeCasesTrendData, GetCasesPerDesignatedFacilitiesData) {
 
     $rootScope.loadEmergencyCommoditiesDashlets = function(params) {
         $scope.stockSection(params);
         $scope.facilityReporting(params);
-        $scope.casesPerDesignatedFacilities('patientPerRegion');
-        $scope.cumulativePatientTrend('cumulativePatientTrend');
 
     };
 
@@ -219,11 +216,45 @@ function EmergencyCommoditiesController($scope, $http, $location, $rootScope, me
     };
 
 
+    $('.nav-tabs a').on('show.bs.tab', function(e) {
+console.log(e);
+
+    });
 
 
+    $("a[href='#cases']").on('shown.bs.tab', function(e) {
+        var tab = $(e.target);
+
+    var contentId = tab.attr("href");
+
+    //This check if the tab is active
+    if (tab.parent().hasClass('active')) {
+         console.log('the tab with the content id ' + contentId + ' is visible');
+    } else {
+         console.log('the tab with the content id ' + contentId + ' is NOT visible');
+    }
+/*     loadCumulativeTrend({});
+     $scope.casesPerDesignatedFacilities('patientPerRegion');*/
+     });
+
+
+   function loadCumulativeTrend(params) {
+
+      GetCummulativeCasesTrendData.get(params).then(function(data){
+
+      $scope.cumulativePatientTrend('cumulativePatientTrend');
+
+
+
+      });
+
+   }
 
 
     $scope.cumulativePatientTrend = function(chartTypeId) {
+
+
+
         Highcharts.chart(chartTypeId, {
 
             title: {

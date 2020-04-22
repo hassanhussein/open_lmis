@@ -107,7 +107,6 @@ public class ELMISInterfaceService {
         String url = settingService.getByKey(OOS_HIM_URL).getValue();
 
         if (username != null && password != null && url != null) {
-
             sendBedNetData(username, password, url, null, null,null,null,null,response);
         }
 
