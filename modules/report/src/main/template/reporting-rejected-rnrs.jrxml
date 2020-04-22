@@ -126,7 +126,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$R{label.facility.code}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="202" y="0" width="59" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="e268b6f3-c02e-43cb-823b-bbef5370279b"/>
+				<reportElement mode="Transparent" x="192" y="0" width="60" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="e268b6f3-c02e-43cb-823b-bbef5370279b"/>
 				<box leftPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -135,7 +135,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$R{label.province}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="321" y="0" width="50" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="aeada5ce-4e93-46e8-b533-effeee34485a"/>
+				<reportElement mode="Transparent" x="313" y="0" width="58" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="aeada5ce-4e93-46e8-b533-effeee34485a"/>
 				<box leftPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -171,7 +171,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$R{label.start.date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="261" y="0" width="60" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="18806adb-d12b-4192-9e1f-7e805f31d6a9"/>
+				<reportElement mode="Transparent" x="252" y="0" width="61" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="18806adb-d12b-4192-9e1f-7e805f31d6a9"/>
 				<box leftPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -180,7 +180,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="76" y="0" width="126" height="32" uuid="7d10ecb6-9860-405d-a20b-7195a66e5a35"/>
+				<reportElement x="76" y="0" width="116" height="32" uuid="7d10ecb6-9860-405d-a20b-7195a66e5a35"/>
 				<box leftPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[$R{label.facility}]]></textFieldExpression>
@@ -230,7 +230,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="202" y="0" width="59" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="192" y="0" width="60" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -255,7 +255,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="321" y="0" width="50" height="30" uuid="2272c411-0906-483c-9221-b1104e0532b7"/>
+				<reportElement stretchType="RelativeToTallestObject" x="313" y="0" width="58" height="30" uuid="2272c411-0906-483c-9221-b1104e0532b7"/>
 				<box topPadding="3" bottomPadding="1">
 					<bottomPen lineWidth="0.5" lineColor="#009999"/>
 				</box>
@@ -299,7 +299,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{commenttext}!=null ?$F{commenttext}:""]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="261" y="0" width="60" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="5cffd7f1-db04-434e-85b7-8cba3cbfbcc9">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="252" y="0" width="61" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="5cffd7f1-db04-434e-85b7-8cba3cbfbcc9">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -313,7 +313,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="76" y="0" width="126" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="76" y="0" width="116" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
