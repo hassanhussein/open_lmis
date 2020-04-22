@@ -153,7 +153,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$R{label.end.date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="687" y="0" width="83" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="655b3344-7710-46a4-807b-0e4eface5ff6"/>
+				<reportElement mode="Transparent" x="699" y="0" width="71" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="655b3344-7710-46a4-807b-0e4eface5ff6"/>
 				<box leftPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -195,7 +195,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$R{label.date.submitted}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="615" y="0" width="72" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="3ace1400-2da8-4189-9afc-010b65c2f337"/>
+				<reportElement mode="Transparent" x="627" y="0" width="72" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="3ace1400-2da8-4189-9afc-010b65c2f337"/>
 				<box leftPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -204,7 +204,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$R{label.date.rejected}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="568" y="0" width="47" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="567ef2c2-802c-4f4c-b52a-1990ed7e8763"/>
+				<reportElement mode="Transparent" x="568" y="0" width="59" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="567ef2c2-802c-4f4c-b52a-1990ed7e8763"/>
 				<box leftPadding="3" bottomPadding="3"/>
 				<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
@@ -288,7 +288,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{startdate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="687" y="0" width="85" height="30" uuid="f02cb463-d7f7-4ec0-8270-e9b893b84e3a"/>
+				<reportElement stretchType="RelativeToTallestObject" x="699" y="0" width="73" height="30" uuid="f02cb463-d7f7-4ec0-8270-e9b893b84e3a"/>
 				<box topPadding="3" bottomPadding="1">
 					<bottomPen lineWidth="0.5" lineColor="#009999"/>
 				</box>
@@ -338,7 +338,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{createddate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="615" y="0" width="72" height="30" uuid="064638b1-1b15-46e7-b359-4fd3d1eeb455"/>
+				<reportElement stretchType="RelativeToTallestObject" x="627" y="0" width="72" height="30" uuid="064638b1-1b15-46e7-b359-4fd3d1eeb455"/>
 				<box topPadding="3" bottomPadding="1">
 					<bottomPen lineWidth="0.5" lineColor="#009999"/>
 				</box>
@@ -349,7 +349,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{rejectiondate}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" x="568" y="0" width="47" height="30" uuid="8868cf6a-febb-4c6f-a82d-12c326b92552"/>
+				<reportElement stretchType="RelativeToTallestObject" x="568" y="0" width="59" height="30" uuid="8868cf6a-febb-4c6f-a82d-12c326b92552"/>
 				<box topPadding="3" bottomPadding="1">
 					<bottomPen lineWidth="0.5" lineColor="#009999"/>
 				</box>
