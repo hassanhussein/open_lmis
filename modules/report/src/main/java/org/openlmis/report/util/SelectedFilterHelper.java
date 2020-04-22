@@ -91,7 +91,7 @@ public class SelectedFilterHelper {
             }
         }
         if (periodObject != null) {
-            filterSummary += String.format("%nPeriod: %s, %s", periodObject.getName(), periodObject.getStringYear());
+            filterSummary += String.format("%nPeriod: %s", periodObject.getName());
         }
         if (zoneObject == null && userId != null && program != null) {
             // Lets determine the user's supervisory node is either National or not
