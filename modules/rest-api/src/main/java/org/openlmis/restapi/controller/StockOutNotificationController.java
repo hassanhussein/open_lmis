@@ -40,6 +40,7 @@ private StockNotificationService service;
         } catch (SQLException exception) {
             throw new DataException(exception.getMessage());
         }
+        service.sendResponse(notification);
         return OpenLmisResponse.success("Saved Successiful!");
     }
 }

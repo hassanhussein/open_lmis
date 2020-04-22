@@ -1,5 +1,7 @@
 package org.openlmis.core.service;
 
+import org.openlmis.core.dto.NotificationResponseDTO;
+import org.openlmis.core.dto.ResponseExtDTO;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
 import org.openlmis.core.repository.StockNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ public class StockNotificationService {
 
  @Autowired
  private StockNotificationRepository repository;
+
+ @Autowired
+ private ELMISInterfaceService elmisInterfaceService;
 
  @Transactional
  public StockOutNotificationDTO save(StockOutNotificationDTO notification) throws SQLException {
@@ -34,5 +39,10 @@ public class StockNotificationService {
  }
 
 
-
+    public void sendResponse(StockOutNotificationDTO notification) {
+        NotificationResponseDTO notificationResponse = new NotificationResponseDTO();
+        notificationResponse.setInvoiceNumber(notification.getInvoiceNumber());
+        notificationResponse.setMessage("Received Successful");
+        elmisInterfaceService.processAndSendOutOfStockResponseData(notificationResponse);
+    }
 }
