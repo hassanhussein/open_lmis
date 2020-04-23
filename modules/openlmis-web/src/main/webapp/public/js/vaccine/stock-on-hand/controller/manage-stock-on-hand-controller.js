@@ -5,6 +5,17 @@ function ManageStockOnHandControllerFunc($window, $scope, $state, StockCards, $s
         $window.open(url, "_BLANK");
     };
 
+      $scope.sumQuantity = function (data) {
+      console.log(data);
+           var sum = 0;
+           for (var i = 0; i < data.length; i++) {
+
+               sum += data[i].quantityOnHand;
+           }
+           return sum;
+
+       };
+
     $scope.stateParams = $stateParams;
     $scope.stockCards = [];
     $scope.facilityName = $stateParams.facilityName;

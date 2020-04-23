@@ -18,13 +18,17 @@ import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureStatusDTO;
+import org.openlmis.equipment.dto.EquipmentChangeLogDto;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
+import org.openlmis.equipment.repository.mapper.EquipmentInventoryChangeLogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 
@@ -40,6 +44,9 @@ public class EquipmentInventoryService {
   private EquipmentService equipmentService;
   @Autowired
   private EquipmentRepository equipmentRepository;
+  @Autowired
+  private EquipmentInventoryChangeLogMapper changeLogMapper;
+
 
   public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
     return repository.getFacilityInventory(facilityId, programId);
@@ -110,12 +117,64 @@ public class EquipmentInventoryService {
       // Make sure equipmentId is set for the inventory save, equipment.id is filled in after insert
       inventory.setEquipmentId(equipment.getId());
     }
+    EquipmentInventoryChangeLog changeLog = null;
+    if (inventory.getId() == null) {
 
-    if(inventory.getId() == null){
       repository.insert(inventory);
-    } else{
+      changeLog = EquipmentInventoryChangeLog.builder()
+          .changeType("ADD")
+          .fieldName("ALL")
+          .newValue(null)
+          .equipmentInventoryId(inventory.getId())
+          .build();
+    } else {
+      changeLog = getChangeLog(inventory);
       repository.update(inventory);
     }
+    if (changeLog != null) {
+      changeLog.setCreatedBy(inventory.getCreatedBy());
+      changeLog.setCreatedDate(new Date());
+      changeLogMapper.insert(changeLog);
+    }
+  }
+
+  private EquipmentInventoryChangeLog getChangeLog(EquipmentInventory inventory) {
+    EquipmentInventory persistedInventory = repository.getInventoryById(inventory.getId());
+
+    if (!Objects.equals(persistedInventory.getSerialNumber(), inventory.getSerialNumber())) {
+      // this is a changed serial number.
+      return EquipmentInventoryChangeLog.builder()
+          .changeType("CHANGE_SERIAL_NUMBER")
+          .equipmentInventoryId(inventory.getId())
+          .fieldName("SERIAL_NUMBER")
+          .newValue(inventory.getSerialNumber())
+          .previousValue(persistedInventory.getSerialNumber())
+          .build();
+    } else if (persistedInventory.getIsActive() && !inventory.getIsActive()) {
+      // This is deleted or deactivated.
+      return EquipmentInventoryChangeLog.builder()
+          .changeType("DEACTIVATE")
+          .equipmentInventoryId(inventory.getId())
+          .previousValue("true")
+          .newValue("false")
+          .fieldName("IS_ACTIVE")
+          .previousValue(persistedInventory.getIsActive().toString())
+          .build();
+    } else if (!persistedInventory.getIsActive() && inventory.getIsActive()) {
+      return EquipmentInventoryChangeLog.builder()
+          .changeType("ACTIVATE")
+          .previousValue("false")
+          .newValue("true")
+          .fieldName("IS_ACTIVE")
+          .equipmentInventoryId(inventory.getId())
+          .previousValue(persistedInventory.getIsActive().toString())
+          .build();
+    }
+    return null;
+  }
+
+  public List<EquipmentChangeLogDto> getEquipmentLogDtos(Date date) {
+    return changeLogMapper.getChangeLogsAfterDate(date);
   }
 
   public void updateStatus(EquipmentInventory inventory){

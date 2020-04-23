@@ -29,6 +29,7 @@ import org.openlmis.equipment.domain.EquipmentModel;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
+import org.openlmis.equipment.repository.mapper.EquipmentInventoryChangeLogMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +58,9 @@ public class EquipmentInventoryServiceTest {
 
   @Mock
   private EquipmentService equipmentService;
+
+  @Mock
+  private EquipmentInventoryChangeLogMapper inventoryChangeLogMapper;
 
   @InjectMocks
   private EquipmentInventoryService service;
@@ -218,7 +222,13 @@ public class EquipmentInventoryServiceTest {
     EquipmentInventory inventory = new EquipmentInventory();
     inventory.setId(1L);
     inventory.setSerialNumber("123");
+    inventory.setIsActive(true);
     inventory.setEquipment(equipment);
+
+    EquipmentInventory persistedInventory = new EquipmentInventory();
+    persistedInventory.setSerialNumber("123");
+    persistedInventory.setIsActive(true);
+    when(repository.getInventoryById(inventory.getId())).thenReturn(persistedInventory);
 
     // Do the call
     service.save(inventory);
@@ -280,6 +290,7 @@ public class EquipmentInventoryServiceTest {
     EquipmentInventory inventory = new EquipmentInventory();
     inventory.setId(1L);
     inventory.setSerialNumber("123");
+    inventory.setIsActive(true);
     inventory.setEquipment(equipment);
 
     // Set up mock calls
@@ -287,6 +298,11 @@ public class EquipmentInventoryServiceTest {
     equipments.add(equipment);
     when(equipmentService.getAllByType(1L)).thenReturn(equipments);
     when(equipmentService.getByTypeManufacturerAndModel(1L, "Manu", 1L, "123")).thenReturn(new Equipment());
+
+    EquipmentInventory persistedInventory = new EquipmentInventory();
+    persistedInventory.setSerialNumber("123");
+    persistedInventory.setIsActive(true);
+    when(repository.getInventoryById(inventory.getId())).thenReturn(persistedInventory);
 
     // Do the call
     service.save(inventory);

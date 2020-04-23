@@ -50,8 +50,6 @@
 
         <div class="col-sm-9" style="background-color:whitesmoke;">
 
-            <button>test</button>
-
             <div class="row">
 
                 <div id="pod" class="rnr-table" tab-scroll bottom-offset="180">
@@ -138,7 +136,7 @@
 
                             <td ng-if="$index == 0" class="cell-input padding2px" rowspan="{{c.lotsOnHand.length * 2}}">
                   <span class="col-product cell-text">
-                    <span ng-bind="sumQuantity(c.lotsOnHand) " class="padding2px"></span>
+                    <span ng-bind="sumQuantity(c.lotsOnHand) | number" class="padding2px"></span>
                   </span>
                             </td>
                             <td ng-if="$index == 0" class="cell-input padding2px" rowspan="{{c.lotsOnHand.length * 2}}">
