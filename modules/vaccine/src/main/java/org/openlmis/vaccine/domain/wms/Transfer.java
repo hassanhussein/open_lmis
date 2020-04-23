@@ -33,6 +33,7 @@ public class Transfer extends BaseModel {
 
     private Long stockCardId;
 
+    private Long soh;
 
 
 }

@@ -72,4 +72,12 @@ public class LotRepository {
     public Lot getByCode(String lotCode) {
     return mapper.getByCode(lotCode);
     }
+
+    public LotOnHand getLotOnHandBy(Long stockCardId, Long lotId) {
+     return mapper.getLotOnHandBy(stockCardId,lotId);
+    }
+
+  public void updateLotOnHand(LotOnHand lotOnHand) {
+    mapper.updateLotOnHand(lotOnHand);
+  }
 }

@@ -115,9 +115,6 @@ public interface LotMapper {
     @Select("select * from lots where lower(lotnumber) = lower(#{lotCode}) limit 1")
     Lot getByCode(@Param("lotCode") String lotCode);
 
-
-
-
-
-
+    @Select("select * from lots_on_hand where stockcardid = #{stockCardId} and lotId = #{lotId} ")
+    LotOnHand getLotOnHandBy(@Param("stockCardId") Long stockCardId,@Param("lotId") Long lotId);
 }

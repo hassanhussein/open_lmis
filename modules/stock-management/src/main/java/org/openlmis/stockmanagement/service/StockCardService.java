@@ -163,4 +163,13 @@ public class StockCardService {
   public void updateStockCard(StockCard stockCard) {
     repository.updateStockCard(stockCard);
   }
+
+  public LotOnHand getLotOnHandBy(Long stockCardId, Long lotId) {
+    return lotRepository.getLotOnHandBy(stockCardId,lotId);
+  }
+
+  public void updateLotOnHand(LotOnHand lotOnHand) {
+    lotRepository.updateLotOnHand(lotOnHand);
+  }
+
 }

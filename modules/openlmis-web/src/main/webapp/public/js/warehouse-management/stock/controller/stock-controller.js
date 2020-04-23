@@ -97,7 +97,6 @@ $scope.submit = function (stockMovement) {
 stockMovement.stockCardId = $scope.productToDisplay[0].stockCardId;
 
 console.log(stockMovement);
-return;
 
     if($scope.isGreater) {
     $scope.errorMessage = 'The Quantity is greater than SOH';

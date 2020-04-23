@@ -20,4 +20,10 @@ public class LotOnHandLocation extends BaseModel {
 
    private Long fromBinLocationId;
 
+   private Long soh;
+
+   private Long stockCardId;
+
+   private Long lotId;
+
 }
