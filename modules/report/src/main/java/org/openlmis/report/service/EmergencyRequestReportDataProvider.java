@@ -75,7 +75,10 @@ public class EmergencyRequestReportDataProvider extends ReportDataProvider {
         return ParameterAdaptor.parse(params, NonReportingFacilityParam.class);
     }
 
-
+    @Override
+    public String getFilterSummary(Map<String, String[]> params) {
+        return filterHelper.getProgramPeriodGeoZone(params);
+    }
 
 
 }
