@@ -770,3 +770,7 @@ services.factory('SavePutAwayDetails', function ($resource) {
 services.factory('GetSohReport', function ($resource) {
     return $resource('/rest-api/lotLocation/soh-report',{facilityId:'@facilityId', warehouseId:'@warehouseId'}, {});
 });
+
+services.factory('GetTransferDetails', function ($resource) {
+    return $resource('/rest-api/lotLocation/get-transfer-details',{fromWarehouseId:'@fromWarehouseId', fromBinLocationId:'@fromBinLocationId'}, {});
+});

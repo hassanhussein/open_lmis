@@ -7,10 +7,7 @@ import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.domain.StockCard;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
-import org.openlmis.vaccine.domain.wms.dto.LotOnHandLocationDTO;
-import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
-import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
-import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
+import org.openlmis.vaccine.domain.wms.dto.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -22,15 +19,15 @@ public interface LotOnHandLocationMapper {
 
     @Insert("INSERT INTO public.lot_on_hand_locations(\n" +
             "          lotOnHandId, locationId, quantityOnHand, createdBy, createdDate, \n" +
-            "            modifiedBy, modifiedDate)\n" +
+            "            modifiedBy, modifiedDate,fromBinLocationId)\n" +
             "    VALUES (#{lotOnHandId}, #{locationId}, #{quantityOnHand}, #{createdBy}, NOW(), \n" +
-            "            #{modifiedBy}, now());")
+            "            #{modifiedBy}, now(),#{fromBinLocationId});")
     @Options(useGeneratedKeys = true)
     Integer insert(LotOnHandLocation location);
 
     @Insert("UPDATE public.lot_on_hand_locations\n" +
             "   SET  lotOnHandId=#{lotOnHandId}, locationId=#{locationId}, quantityOnHand=#{quantityOnHand},\n" +
-            "    modifiedBy=#{modifiedBy}, modifiedDate=NOW()\n" +
+            "    modifiedBy=#{modifiedBy}, modifiedDate=NOW(), fromBinLocationId=#{fromBinLocationId}\n" +
             " WHERE id= #{id}; ")
     void update(LotOnHandLocation location);
 
@@ -145,5 +142,16 @@ public interface LotOnHandLocationMapper {
     List<HashMap<String, Object>>getAllByWareHouseAndBinLocation(@Param("fromWarehouseId") Long fromWarehouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
 
+    @Select("select lotOnHandId, h.lotId, lotNumber, sum(l.quantityOnHand) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
+            "join WMS_LOCATIONS Lsc ON L.frombinLocationId = LSC.ID \n" +
+            "\n" +
+            "JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
+            "JOIN lots LO ON Lo.id = h.lotId\n" +
+            "JOIN products P on lo.productID = p.id\n" +
+            "\n" +
+            "WHERE LSC.warehouseId = #{wareHouseId} AND lsc.ID = #{fromBinLocationId}\n" +
+            "\n" +
+            "group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber ")
+    List<TransferDTO> getTransferDetailsBy(@Param("wareHouseId") Long wareHouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
 }

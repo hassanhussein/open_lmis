@@ -5,6 +5,7 @@ import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
 import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
 import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
+import org.openlmis.vaccine.domain.wms.dto.TransferDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.LotOnHandLocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,5 +58,9 @@ public class LotOnHandLocationRepository {
 
     public List<HashMap<String,Object>>getAllByWareHouseAndBinLocation(Long fromWarehouseId, Long fromBinLocationId){
         return mapper.getAllByWareHouseAndBinLocation(fromWarehouseId,fromBinLocationId);
+    }
+
+    public List<TransferDTO>getTransferDetailsBy(Long wareHouseId, Long fromBinLocationId) {
+        return mapper.getTransferDetailsBy(wareHouseId,fromBinLocationId);
     }
 }

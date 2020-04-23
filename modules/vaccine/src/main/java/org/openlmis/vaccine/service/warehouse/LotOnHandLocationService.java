@@ -11,10 +11,7 @@ import org.openlmis.stockmanagement.dto.StockEventType;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
-import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
-import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
-import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
-import org.openlmis.vaccine.domain.wms.dto.StockEventDTO;
+import org.openlmis.vaccine.domain.wms.dto.*;
 import org.openlmis.vaccine.repository.warehouse.LotOnHandLocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -103,6 +100,7 @@ public class LotOnHandLocationService {
 
             event.setCustomProps(customProps);
             event.setToBinLocationId(dto.getToBinLocationId());
+            event.setFromBinLocationId(dto.getFromBinLocationId());
 
             events.add(event);
 
@@ -186,9 +184,10 @@ public class LotOnHandLocationService {
             LotOnHandLocation location = new LotOnHandLocation();
             location.setCreatedBy(userId);
             location.setModifiedBy(userId);
-            location.setQuantityOnHand(onHand.intValue());
+            location.setQuantityOnHand(event.getQuantity());
             location.setLotOnHandId(l.getId());
             location.setLocationId(event.getToBinLocationId());
+            location.setFromBinLocationId(event.getFromBinLocationId());
             repository.deleteExistingByLot(lotOnHand.getId(),event.getToBinLocationId());
 
             //Insert Lot locations
@@ -227,4 +226,7 @@ public class LotOnHandLocationService {
         return repository.getAllByWareHouseAndBinLocation(fromWarehouseId,fromBinLocationId);
     }
 
+    public List<TransferDTO>getTransferDetailsBy(Long wareHouseId, Long fromBinLocationId) {
+        return repository.getTransferDetailsBy(wareHouseId,fromBinLocationId);
+    }
 }

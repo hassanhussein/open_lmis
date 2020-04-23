@@ -31,6 +31,8 @@ public class Transfer extends BaseModel {
 
     private Boolean notify;
 
+    private Long stockCardId;
+
 
 
 }

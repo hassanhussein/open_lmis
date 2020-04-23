@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function StockController($scope,$timeout, TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots,GetStockProducts) {
+function StockController($scope,$timeout, TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots,GetStockProducts,GetTransferDetails) {
                     console.log(vaccineProducts);
 
 
@@ -36,53 +36,75 @@ $scope.stockMovement.locations = binLocations[0].locations;
 };
 
 
-$scope.loadProductByWarehouse = function (movement) {
+$scope.loadProductLotDetails = function (movement) {
+ $scope.productToDisplay = [];
+ $scope.lotsToDisplay = [];
+ $scope.stockMovement.soh = undefined;
+
+GetTransferDetails.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocationId:movement.fromBin}, function(data){
 
 
-   GetStockProducts.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocationId:movement.fromBin },function(data){
-   var groupedData =  _.groupBy('productid',data.products);
+    $scope.productToDisplay = data.products;
 
-   console.log(JSON.stringify(groupedData));
-
-    $scope.productList = data.products;
-
-   });
+})
 
 };
 
-$scope.loadProductLots = function(product) {
 
-            $scope.lotsToDisplay = {};
+$scope.loadProductLots = function(productId) {
 
-            if (product !== null) {
+    $scope.lotsToDisplay = [];
 
-//        console.log(product)
-                ProductLots.get({
-                    productId: product
-                }, function(data) {
-                    $scope.allLots = data.lots;
-                                console.log(data.lots);
-                    //                              console.log(data.lots)
-                    $scope.lotsToDisplay = _.sortBy($scope.allLots,'lotCode');
+     if($scope.productToDisplay.length > 0) {
 
-
-                });
-
-
-            }
-        };
-
-$scope.showSOH = function(data){
-
+     $scope.lotsToDisplay = _.where($scope.productToDisplay,{"productId":productId});
+     console.log($scope.lotsToDisplay);
+     }
 
 
 };
 
+$scope.showSOH = function(lotId) {
+
+     $scope.stockMovement.soh = undefined;
+
+ if($scope.lotsToDisplay.length > 0 && !isUndefined($scope.productToDisplay) && !isUndefined(lotId)) {
+ //quantityOnHand
+
+  $scope.stockMovement.soh = _.where($scope.productToDisplay,{"lotId":lotId})[0].quantityOnHand;
+     console.log( _.where($scope.productToDisplay,{"lotId":lotId})[0].quantityOnHand);
+  }
+
+};
+
+$scope.validateQuantity  = function (movement){
+
+ $scope.isGreater = false;
+
+ if(movement.quantity > movement.soh) {
+   $scope.errorMessage = 'The Quantity is greater than SOH';
+   $scope.showError = true;
+   return $scope.isGreater = true;
+ }
+ else {
+    return $scope.isGreater;
+ }
+
+}
 
 $scope.submit = function (stockMovement) {
-console.log($scope.movementForm);
 
-   if ($scope.movementForm.$error.required) {
+stockMovement.stockCardId = $scope.productToDisplay[0].stockCardId;
+
+console.log(stockMovement);
+return;
+
+    if($scope.isGreater) {
+    $scope.errorMessage = 'The Quantity is greater than SOH';
+     return;
+    }
+
+   if ($scope.movementForm.$error.required ) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
@@ -94,6 +116,8 @@ console.log($scope.movementForm);
 stockMovement.notify = true;
 TransferRecords.save({}, stockMovement, function(data) {
 console.log(data);
+
+
 $scope.showMessage = true;
 $scope.message = "Successiful Saved";
 

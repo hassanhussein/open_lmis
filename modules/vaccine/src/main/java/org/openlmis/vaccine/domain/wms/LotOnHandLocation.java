@@ -14,8 +14,10 @@ public class LotOnHandLocation extends BaseModel {
 
    private Long lotOnHandId;
 
-   private Integer quantityOnHand;
+   private Long quantityOnHand;
 
    private LocationDTO location;
+
+   private Long fromBinLocationId;
 
 }
