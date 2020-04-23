@@ -117,7 +117,7 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
  limit:10,
  }
 
- }
+ };
 
 // end of server data structure simulation
 
@@ -245,8 +245,8 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
     $scope.$parent.orders=[];
 
    angular.forEach($scope.orderList,function(order){
-   if(order.issue==true){
-   $scope.$parent.orders.push(order)
+   if(order.issue===true){
+   $scope.$parent.orders.push(order);
    }
    });
 
@@ -254,7 +254,7 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
            $location.path('create');
 
 
-  }
+  };
 
 
 

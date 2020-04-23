@@ -22,7 +22,7 @@ $scope.requstions=$scope.$parent.orders;
 
 
   $scope.checkIssue=function(){
-    if ($scope.issueAll==true){
+    if ($scope.issueAll===true){
     $scope.issueAll=false;
 
 
@@ -33,7 +33,7 @@ $scope.requstions=$scope.$parent.orders;
 
 
     }
-  }
+  };
 
 
 
@@ -42,10 +42,10 @@ var region =$scope.requstions[regionIndex];
 // console.log(region.ordered)
 var ordered = _.findWhere(region.ordered,{productId:product});
 
-if (ordered!=undefined) {
-  return ordered.amount
+if (ordered!==undefined) {
+  return ordered.amount;
 }
-}
+};
 
   $scope.soh=[{
     product:"BCG",
@@ -79,7 +79,7 @@ if (ordered!=undefined) {
     }]
   }
 
-]
+];
 
 
 }
