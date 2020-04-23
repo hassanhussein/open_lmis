@@ -46,7 +46,7 @@ GetTransferDetails.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocation
 
     $scope.productToDisplay = data.products;
 
-})
+});
 
 };
 
@@ -84,13 +84,14 @@ $scope.validateQuantity  = function (movement){
  if(movement.quantity > movement.soh) {
    $scope.errorMessage = 'The Quantity is greater than SOH';
    $scope.showError = true;
-   return $scope.isGreater = true;
+   $scope.isGreater = true;
+   return;
  }
  else {
     return $scope.isGreater;
  }
 
-}
+};
 
 $scope.submit = function (stockMovement) {
 
