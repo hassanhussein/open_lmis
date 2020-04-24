@@ -1254,3 +1254,54 @@ services.factory('GetInboundReportsData', function($q, $timeout, $resource, GetI
         get: get
     };
 });
+
+services.factory("GetCasesPerDesignatedFacilities", function($resource) {
+    return $resource('/api/dashboard/getCasesPerDesignatedFacilities.json', {}, {});
+});
+
+services.factory('GetCasesPerDesignatedFacilitiesData', function($q, $timeout, $resource, GetCasesPerDesignatedFacilities) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCasesPerDesignatedFacilities.get(params, function(data) {
+                var cases = [];
+                if (data !== undefined) {
+                    cases = data.cases;
+                }
+                deferred.resolve(cases);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+
+services.factory("GetCummulativeCasesTrend", function($resource) {
+    return $resource('/api/dashboard/getCummulativeCasesTrend.json', {}, {});
+});
+
+services.factory('GetCummulativeCasesTrendData', function($q, $timeout, $resource, GetCummulativeCasesTrend) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCummulativeCasesTrend.get(params, function(data) {
+                var cases = [];
+                if (data !== undefined) {
+                    cases = data.cases;
+                }
+                deferred.resolve(cases);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});

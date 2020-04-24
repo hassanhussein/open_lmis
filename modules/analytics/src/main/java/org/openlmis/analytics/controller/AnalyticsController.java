@@ -435,4 +435,16 @@ public class AnalyticsController extends BaseController {
         else
             return OpenLmisResponse.response("inboundReports", this.covidMapper.getInboundByProductReports(product));
     }
+
+    @RequestMapping(value = "/getCummulativeCasesTrend.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCummulativeCasesTrend() {
+            return OpenLmisResponse.response("cases", this.covidMapper.getCummulativeCasesTrend());
+    }
+
+   @RequestMapping(value = "/getCasesPerDesignatedFacilities.json", method = GET, headers = ACCEPT_JSON)
+   public ResponseEntity<OpenLmisResponse> getCasesPerDesignatedFacilities() {
+
+       return OpenLmisResponse.response("cases", this.covidMapper.getCasesPerDesignatedFacilities());
+   }
+
 }
