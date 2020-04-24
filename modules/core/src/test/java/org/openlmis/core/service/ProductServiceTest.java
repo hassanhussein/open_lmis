@@ -173,7 +173,7 @@ public class ProductServiceTest {
     final ProgramProduct existingProgramProduct = make(a(defaultProgramProduct, with(active, true), with(productActive, true)));
     when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
-    when(programProductService.getByProductCode(productCode)).thenReturn(asList(existingProgramProduct));
+    when(programProductService.getByProductId(product.getId())).thenReturn(asList(existingProgramProduct));
 
     service.save(product);
 
@@ -195,7 +195,7 @@ public class ProductServiceTest {
     final ProgramProduct hivProduct = make(a(defaultProgramProduct, with(programCode, "HIV"), with(active, true), with(productActive, false)));
     when(productGroupService.validateAndReturn(product.getProductGroup())).thenReturn(null);
     when(productFormService.validateAndReturn(product.getForm())).thenReturn(null);
-    when(programProductService.getByProductCode(productCode)).thenReturn(asList(hivProduct, tbProduct));
+    when(programProductService.getByProductId(product.getId())).thenReturn(asList(hivProduct, tbProduct));
 
     service.save(product);
 
