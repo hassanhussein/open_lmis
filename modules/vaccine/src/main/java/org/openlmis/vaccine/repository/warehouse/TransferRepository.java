@@ -1,9 +1,12 @@
 package org.openlmis.vaccine.repository.warehouse;
 
 import org.openlmis.vaccine.domain.wms.Transfer;
+import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.openlmis.vaccine.repository.mapper.warehouse.TransferMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class TransferRepository {
@@ -19,4 +22,15 @@ public class TransferRepository {
         mapper.update(transfer);
     }
 
+    public AdjustmentReasonExDTO getReasonByCode(String code) {
+        return mapper.getReasonByCode(code);
+    }
+
+    public Integer insertReason(AdjustmentReasonExDTO reason) {
+        return mapper.insertReasons(reason);
+    }
+
+    public void updateReason(AdjustmentReasonExDTO reason){
+        mapper.updateReason(reason);
+    }
 }

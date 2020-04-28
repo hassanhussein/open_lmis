@@ -5,6 +5,7 @@ import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.Transfer;
+import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.openlmis.vaccine.repository.warehouse.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,29 @@ public class TransferService {
 
     }
 
+    @Transactional
+    public void  insertReason(AdjustmentReasonExDTO reason) {
+
+        AdjustmentReasonExDTO getAll = repository.getReasonByCode(reason.getCode());
+
+        if(getAll != null) {
+
+            repository.insertReason(reason);
+
+        } else {
+
+            repository.updateReason(reason);
+        }
+
+    }
+
+    public AdjustmentReasonExDTO getAllAdjumentReasons(AdjustmentReasonExDTO reason) {
+
+        if(reason.getCode() != null) {
+            return repository.getReasonByCode(reason.getCode());
+        }
+        return null;
+    }
 
     public List<Transfer> search(String searchParam) {
         return null;

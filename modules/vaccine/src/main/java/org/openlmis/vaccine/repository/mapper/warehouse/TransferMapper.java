@@ -1,10 +1,11 @@
 package org.openlmis.vaccine.repository.mapper.warehouse;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.Transfer;
+import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface TransferMapper {
@@ -26,5 +27,17 @@ public interface TransferMapper {
             " WHERE id = #{id};\n")
     void update(Transfer transfer);
 
+
+    @Insert("INSERT INTO public.wms_reasons(\n" +
+            "             code, reasonName)\n" +
+            "    VALUES (#{code}, #{reasonName}); ")
+    @Options(useGeneratedKeys = true)
+    Integer insertReasons(AdjustmentReasonExDTO reason);
+
+    @Update("UPDATE wms_reasons SET code = #{code}, reasonName=#{reasonName} WHERE id =#{id}")
+    void updateReason(AdjustmentReasonExDTO reason);
+
+    @Select(" SELECT * FROM wms_reasons WHERE lower(code) = lower(#{code})")
+    AdjustmentReasonExDTO getReasonByCode(@Param("code") String code);
 
 }
