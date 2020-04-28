@@ -13,7 +13,7 @@ public interface LotMapper {
 
   @Select("SELECT *" +
       " FROM lots" +
-      " WHERE id = #{id}")
+      " WHERE id = #{id} limit 1")
   @Results({
       @Result(
           property = "product", column = "productId", javaType = Product.class,
@@ -36,7 +36,7 @@ public interface LotMapper {
   })
   Lot getByObject(Lot lot);
 
-  @Select("SELECT *" +
+  @Select("SELECT DISTINCT ON(lots_on_hand.lotId) *" +
       " FROM lots_on_hand" +
       " WHERE stockcardid = #{stockCardId}" +
       "   AND lotid = #{lotId}")
@@ -47,7 +47,7 @@ public interface LotMapper {
   })
   LotOnHand getLotOnHandByStockCardAndLot(@Param("stockCardId")Long stockCardId, @Param("lotId")Long lotId);
 
-  @Select("SELECT *" +
+  @Select("SELECT  DISTINCT ON(loh.lotId) *" +
       " FROM lots_on_hand loh" +
       "   JOIN lots l ON l.id = loh.lotid" +
       " WHERE loh.stockcardid = #{stockCardId}" +
