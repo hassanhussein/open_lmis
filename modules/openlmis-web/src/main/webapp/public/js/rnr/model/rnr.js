@@ -105,6 +105,8 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
 
         function validateRequiredFields(lineItem) {
 
+            if(rnr.program.canTrackCovid) return false;
+
             if (lineItem.validateRequiredFieldsForFullSupply()) return true;
             errorMessage = "error.rnr.validation";
 

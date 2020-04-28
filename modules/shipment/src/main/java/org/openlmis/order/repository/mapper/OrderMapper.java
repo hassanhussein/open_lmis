@@ -226,21 +226,22 @@ public interface OrderMapper {
   @Insert("INSERT INTO public.in_bound_details(\n" +
           "             productCode, productName, uom, quantityOrdered, source, fundValues, \n" +
           "            createdBy, createdDate, modifiedBy, modifiedDate, expectedArrivalDate, \n" +
-          "            receivingLocationCode)\n" +
+          "            receivingLocationCode,status,trackingNumber)\n" +
           "    VALUES ( #{productCode}, #{productName}, #{uom}, #{quantityOrdered}, #{source}, #{fundValues}, \n" +
           "            #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{expectedArrivalDate}::date, \n" +
-          "            #{receivingLocationCode});")
+          "            #{receivingLocationCode},#{status}, #{trackingNumber});")
   @Options(useGeneratedKeys = true)
   Integer InsertInBoundUpload(InBoundDTO inBound);
 
   @Update("UPDATE public.in_bound_details\n" +
           "   SET  productCode=#{productCode}, productName=#{productName}, uom=#{uom}, quantityOrdered=#{quantityOrdered}, \n" +
           "       source=#{source}, fundValues=#{fundValues},  modifiedBy=#{modifiedBy}, \n" +
-          "       modifiedDate=NOW(), expectedArrivalDate=#{expectedArrivalDate}::date, receivingLocationCode=#{receivingLocationCode}\n" +
+          "       modifiedDate=NOW(), expectedArrivalDate=#{expectedArrivalDate}::date, receivingLocationCode=#{receivingLocationCode}," +
+          "  trackingNumber = #{trackingNumber}, status=#{status}\n" +
           " WHERE id=#{id};\n")
   void updateInBoundUpload(InBoundDTO inBound);
 
-  @Select("SELECT * FROM in_bound_details WHERE lower(productCode)=lower(#{productCode}) and expectedArrivalDate::date=#{expectedArrivalDate}::date")
-  InBoundDTO getByProductAndExpectedDate(@Param("productCode") String productCode,@Param("expectedArrivalDate") String expectedArrivalDate );
+  @Select("SELECT * FROM in_bound_details WHERE lower(productCode)=lower(#{productCode}) and trackingNumber=#{trackingNumber}")
+  InBoundDTO getByProductAndExpectedDate(@Param("productCode") String productCode,@Param("trackingNumber") String trackingNumber );
 
 }

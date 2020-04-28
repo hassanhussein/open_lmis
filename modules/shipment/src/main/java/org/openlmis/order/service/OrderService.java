@@ -348,8 +348,8 @@ public class OrderService {
     }
   }
 
-  public InBoundDTO getByProductAndExpectedDate(String code, String expectedDate){
-    return orderRepository.getByProductAndExpectedDate(code,expectedDate);
+  public InBoundDTO getByProductAndExpectedDate(String code, String trackingNumber){
+    return orderRepository.getByProductAndExpectedDate(code,trackingNumber);
   }
 
 

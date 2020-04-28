@@ -213,7 +213,7 @@ public class RequisitionService {
     requisition.setSourceApplication(sourceApplication);
     insert(requisition);
 
-    if(program.getCanTrackCovid()){
+    if(program.getCanTrackCovid() || program.getIsMonthlyCovid()){
       populatePatientRecords(requisition,facility,program);
       insertPatientRecord(requisition);
     }

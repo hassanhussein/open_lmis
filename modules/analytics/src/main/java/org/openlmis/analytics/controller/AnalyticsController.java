@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -65,6 +66,10 @@ public class AnalyticsController extends BaseController {
 
     @Autowired
     private StockOutRateMapper stockOutRateMapper;
+
+    @Autowired
+    private COVIDMapper covidMapper;
+
 
     @RequestMapping(value = "/requisition-report", method = GET, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> requisitionRepor() {
@@ -396,5 +401,50 @@ public class AnalyticsController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getStockImbalanceSummary() {
         return OpenLmisResponse.response("imbalances", this.stockOutRateMapper.getStockImbalanceSummary());
     }
+
+
+    @RequestMapping(value = "/getCOVIDStockStatus.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCOVIDStockStatus(@Param("product") Long product,
+                                                                               @Param("startdate") String startDate, @Param("enddate") String endDate )  {
+       if(product==0)
+        return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getAllStockStatus(startDate, endDate));
+     else
+         return OpenLmisResponse.response("COVIDStockStatus", this.covidMapper.getStockStatusPerProduct(product, startDate, endDate));
+    }
+
+    @RequestMapping(value = "/getCOVIDReportByFacility.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCOVIDStockStatus(@Param("facility") Long facility ) {
+        if(facility==0)
+            return OpenLmisResponse.response("COVIDReportByFacility", this.covidMapper.getCOVIDReportForAllFacilities());
+      else
+            return OpenLmisResponse.response("COVIDReportByFacility", this.covidMapper.getCOVIDReportByFacility(facility));
+
+
+    }
+
+    @RequestMapping(value = "/getCOVIDDesignatedFacilities.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCOVIDDesignatedFacilities() {
+        return OpenLmisResponse.response("getCOVIDDesignatedFacilities", this.covidMapper.getCOVIDDesignatedFacilities());
+    }
+
+
+    @RequestMapping(value = "/getInboundReports.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getInboundReports(@Param("product") Long product) {
+        if(product==0)
+            return OpenLmisResponse.response("inboundReports", this.covidMapper.getInboundReports());
+        else
+            return OpenLmisResponse.response("inboundReports", this.covidMapper.getInboundByProductReports(product));
+    }
+
+    @RequestMapping(value = "/getCummulativeCasesTrend.json", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCummulativeCasesTrend() {
+            return OpenLmisResponse.response("cases", this.covidMapper.getCummulativeCasesTrend());
+    }
+
+   @RequestMapping(value = "/getCasesPerDesignatedFacilities.json", method = GET, headers = ACCEPT_JSON)
+   public ResponseEntity<OpenLmisResponse> getCasesPerDesignatedFacilities() {
+
+       return OpenLmisResponse.response("cases", this.covidMapper.getCasesPerDesignatedFacilities());
+   }
 
 }

@@ -61,7 +61,9 @@ public class ELMISInterfaceService {
     private static final String IL_BUDGET_USERNAME = "IL_BUDGET_USERNAME";
     private static final String IL_BUDGET_PASSWORD = "IL_BUDGET_PASSWORD";
     private static final String IL_BUDGET_URL = "IL_BUDGET_URL";
-
+    private static final String HIM_USERNAME = "HIM_USERNAME";
+    private static final String HIM_PASSWORD = "HIM_PASSWORD";
+    public static final String OOS_HIM_URL = "OOS_HIM_URL";
 
 
     public ELMISInterface get(long interfaceId) {
@@ -98,6 +100,17 @@ public class ELMISInterfaceService {
         repository.updateFacilityInterfaceMapping(facility);
     }
 
+    public void processAndSendOutOfStockResponseData(NotificationResponseDTO response) {
+        //Populate Data
+        String username = settingService.getByKey(HIM_USERNAME).getValue();
+        String password = settingService.getByKey(HIM_PASSWORD).getValue();
+        String url = settingService.getByKey(OOS_HIM_URL).getValue();
+
+        if (username != null && password != null && url != null) {
+            sendBedNetData(username, password, url, null, null,null,null,null,response);
+        }
+
+    }
 
     // @Scheduled(cron = "${batch.job.send.bed.net.data}")
     // @Scheduled(fixedRate = 900000)
@@ -106,13 +119,13 @@ public class ELMISInterfaceService {
         // repository.refreshMaterializedView();
         String username = settingService.getByKey(USERNAME).getValue();
         String password = settingService.getByKey(PASSWORD).getValue();
-        String url = settingService.getByKey(URL2).getValue();
+        String url = settingService.getByKey(URL).getValue();
 
         ELMISInterfaceDTO dto = new ELMISInterfaceDTO();
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetReportingRateData());
-            sendBedNetData(username, password, url, dto, null,null,null,null);
+            sendBedNetData(username, password, url, dto, null,null,null,null,null);
         }
 
     }
@@ -130,12 +143,12 @@ public class ELMISInterfaceService {
 
         if (username != null & password != null & url != null) {
             dto.setDataValues(repository.getMosquitoNetData());
-            sendBedNetData(username, password, url, dto, null,null,null,null);
+            sendBedNetData(username, password, url, dto, null,null,null,null,null);
         }
 
     }
 
-    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data, InterfaceResponseDTO sdp,ResponseExtDTO dto,BudgetDTO budget,SourceOfFundDTO fund) {
+    private void sendBedNetData(String username, String password, String url, ELMISInterfaceDTO data, InterfaceResponseDTO sdp,ResponseExtDTO dto,BudgetDTO budget,SourceOfFundDTO fund,NotificationResponseDTO oosRes) {
         ObjectMapper mapper = new ObjectMapper();
         java.net.URL obj = null;
         try {
@@ -143,16 +156,22 @@ public class ELMISInterfaceService {
             HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
             String jsonInString ="";
 
-            if(budget == null){
-             if(fund == null) {
-                 jsonInString = mapper.writeValueAsString((sdp == null) ? data : dto);
-             }else {
+            if(oosRes != null) {
+                jsonInString = mapper.writeValueAsString(oosRes);
+            } else {
 
-                 jsonInString = mapper.writeValueAsString(fund);
-             }
-            }else {
-            jsonInString = mapper.writeValueAsString(budget);
+                if (budget == null) {
 
+                    if (fund == null) {
+                        jsonInString = mapper.writeValueAsString((sdp == null) ? data : dto);
+                    } else {
+
+                        jsonInString = mapper.writeValueAsString(fund);
+                    }
+                } else {
+                    jsonInString = mapper.writeValueAsString(budget);
+
+                }
             }
 
             System.out.println(jsonInString);
@@ -254,7 +273,7 @@ public class ELMISInterfaceService {
 
         if (username != null && password != null && url != null) {
 
-                sendBedNetData(username, password, url, null, null,null,dto,fund);
+                sendBedNetData(username, password, url, null, null,null,dto,fund,null);
 
 
         }

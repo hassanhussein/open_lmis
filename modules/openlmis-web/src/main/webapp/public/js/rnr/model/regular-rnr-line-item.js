@@ -64,6 +64,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
     },
     fillConsumptionOrStockInHand: function() {
+    console.log(this.program.canTrackCovid);
         if (this.reportOnlyPeriod && !this.program.canTrackCovid) {
             this.beginningBalance = utils.getValueFor(this.beginningBalance);
             this.quantityReceived = utils.getValueFor(this.quantityReceived);
@@ -85,7 +86,7 @@ var RegularRnrLineItem = base2.Base.extend({
 
 
     calculateTBReporting: function() {
-    if(this.stockInHand){
+    if(this.stockInHand && !this.program.canTrackCovid){
         this.totalRequirement = this.nextMonthPatient * this.dosesPerMonth;
         this.totalQuantityNeededByHF = (this.totalRequirement * 2);
         this.quantityToIssue = this.totalQuantityNeededByHF - this.stockInHand;
@@ -432,7 +433,13 @@ var RegularRnrLineItem = base2.Base.extend({
     },
     canSkip: function() {
         var rnrLineItem = this;
-        var visibleColumns = ['beginningBalance', 'quantityReceived', 'quantityDispensed', 'stockInHand', 'quantityRequested'];
+        var visibleColumns = [];
+        if(this.program.canTrackCovid) {
+        visibleColumns = ['stockInHand'];
+        }
+         else {
+        visibleColumns = ['beginningBalance', 'quantityReceived', 'quantityDispensed', 'stockInHand', 'quantityRequested'];
+         }
         var skip = true;
         $(visibleColumns).each(function(i, column) {
             if (!isUndefined(rnrLineItem[column]) && rnrLineItem[column] !== 0) {
@@ -447,6 +454,7 @@ var RegularRnrLineItem = base2.Base.extend({
                 name: 'quantityRequested'
             }).visible) {
             return true;
+
             //Should return the validation
             //!(isUndefined(this.quantityRequested) || isUndefined(this.reasonForRequestedQuantity) || this.reportOnlyPeriod);
         }
@@ -460,6 +468,7 @@ var RegularRnrLineItem = base2.Base.extend({
         var visibleColumns = _.where(this.programRnrColumnList, {
             "visible": true
         });
+
         $(visibleColumns).each(function(i, column) {
             var nonMandatoryColumns = ["reasonForRequestedQuantity", "remarks", "lossesAndAdjustments", "quantityApproved", "skipped", "stockInHand", "stockOutDays"];
             if (column.source.name != 'USER_INPUT' || _.contains(nonMandatoryColumns, column.name) || this.reportOnlyPeriod) return;
@@ -470,8 +479,10 @@ var RegularRnrLineItem = base2.Base.extend({
             } else {
                 valid = !isUndefined(rnrLineItem[column.name]);
             }
+
             return valid;
         });
+
         if (!this.reportOnlyPeriod || this.program.canTrackCovid) {
             valid = !isUndefined(this.stockInHand);
             return valid;
@@ -483,7 +494,7 @@ var RegularRnrLineItem = base2.Base.extend({
     console.log(this.quantityDispensed);
         if (this.skipped) return "";
         if (this.stockInHand < 0) return "error.stock.on.hand.negative";
-        if (this.quantityDispensed < 0) return "error.quantity.consumed.negative";
+        if (this.quantityDispensed < 0 && !this.program.canTrackCovid) return "error.quantity.consumed.negative";
         //if (isUndefined(this.stockInHand) && !this.reportOnlyPeriod) return "error.quantity.consumed.negative";
         if (this.arithmeticallyInvalid()) return "error.arithmetically.invalid";
         if (this.isStockoutDaysInvalid()) return "error.stock.out.days.not.valid";

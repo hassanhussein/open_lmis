@@ -16,7 +16,7 @@ public class InBoundPercistenceHandler extends AbstractModelPersistenceHandler {
 
     @Override
     protected BaseModel getExisting(BaseModel record) {
-        return orderService.getByProductAndExpectedDate(((InBoundDTO) record).getProductCode(),((InBoundDTO) record).getExpectedArrivalDate());
+        return orderService.getByProductAndExpectedDate(((InBoundDTO) record).getProductCode(),((InBoundDTO) record).getTrackingNumber());
     }
 
     @Override

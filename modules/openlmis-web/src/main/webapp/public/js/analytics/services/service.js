@@ -1176,3 +1176,132 @@ services.factory('GetStockImbalanceSummaryData', function($q, $timeout, $resourc
         get: get
     };
 });
+
+services.factory("GetCOVIDStockStatus", function($resource) {
+    return $resource('/api/dashboard/getCOVIDStockStatus.json', {}, {});
+});
+
+services.factory('GetCOVIDStockStatusData', function($q, $timeout, $resource, GetCOVIDStockStatus) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCOVIDStockStatus.get(params, function(data) {
+                var stockStatus = [];
+                if (data !== undefined) {
+                    stockStatus = data.COVIDStockStatus;
+                }
+                deferred.resolve(stockStatus);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+
+services.factory("GetCOVIDReportByFacility", function($resource) {
+    return $resource('/api/dashboard/getCOVIDReportByFacility.json', {}, {});
+});
+
+services.factory('getCOVIDReportByFacilityData', function($q, $timeout, $resource, GetCOVIDReportByFacility) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCOVIDReportByFacility.get(params, function(data) {
+                var stockStatus = [];
+                if (data !== undefined) {
+                    stockStatus = data.COVIDReportByFacility;
+                }
+                deferred.resolve(stockStatus);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+
+
+services.factory("GetInboundReports", function($resource) {
+    return $resource('/api/dashboard/getInboundReports.json', {}, {});
+});
+
+services.factory('GetInboundReportsData', function($q, $timeout, $resource, GetInboundReports) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetInboundReports.get(params, function(data) {
+                var inboundReports = [];
+                if (data !== undefined) {
+                    inboundReports = data.inboundReports;
+                }
+                deferred.resolve(inboundReports);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+services.factory("GetCasesPerDesignatedFacilities", function($resource) {
+    return $resource('/api/dashboard/getCasesPerDesignatedFacilities.json', {}, {});
+});
+
+services.factory('GetCasesPerDesignatedFacilitiesData', function($q, $timeout, $resource, GetCasesPerDesignatedFacilities) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCasesPerDesignatedFacilities.get(params, function(data) {
+                var cases = [];
+                if (data !== undefined) {
+                    cases = data.cases;
+                }
+                deferred.resolve(cases);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});
+
+
+services.factory("GetCummulativeCasesTrend", function($resource) {
+    return $resource('/api/dashboard/getCummulativeCasesTrend.json', {}, {});
+});
+
+services.factory('GetCummulativeCasesTrendData', function($q, $timeout, $resource, GetCummulativeCasesTrend) {
+    function get(params) {
+
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetCummulativeCasesTrend.get(params, function(data) {
+                var cases = [];
+                if (data !== undefined) {
+                    cases = data.cases;
+                }
+                deferred.resolve(cases);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
+});

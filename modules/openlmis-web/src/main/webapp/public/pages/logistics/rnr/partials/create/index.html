@@ -112,10 +112,10 @@
                 <a href="" ng-click="switchSupplyType('patient')" id="patientTab" openlmis-message="label.patients"></a>
             </li>
             <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
-                <a ng-if="!rnr.program.canTrackCovid"  href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+                <a ng-show="!rnr.program.isMonthlyCovid && !rnr.program.canTrackCovid"  href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                    openlmis-message="label.full.supply.products"></a>
 
-                <a ng-if="rnr.program.canTrackCovid" href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
+                <a ng-show="rnr.program.canTrackCovid || rnr.program.isMonthlyCovid" href="" ng-click="switchSupplyType('fullSupply')" id="fullSupplyTab"
                    openlmis-message="label.covid.products"></a>
 
 
@@ -178,7 +178,7 @@
 
 
         <div form-toolbar id="action_buttons" class="action-buttons">
-            <span ng-if="rnr.period.enableOrder && !rnr.facility.isHidTu"><ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include></span>
+            <span ng-if="rnr.period.enableOrder && !rnr.facility.isHidTu || rnr.program.isMonthlyCovid"><ng-include src="'/public/pages/logistics/rnr/partials/total-cost.html'"></ng-include></span>
             <div class="form-cell button-row">
                 <input ng-show="hasPermission('DELETE_REQUISITION') && rnr.status == 'INITIATED'"  type="button" class="btn btn-primary submit-button" ng-click="deleteRnR();" openlmis-message="button.delete" />
                 <input ng-show="rnr.status == 'INITIATED' && rnr.program.enableSkipPeriod" type="button" class="btn btn-primary submit-button" ng-click="skipRnR();" openlmis-message="button.skip.period" />
