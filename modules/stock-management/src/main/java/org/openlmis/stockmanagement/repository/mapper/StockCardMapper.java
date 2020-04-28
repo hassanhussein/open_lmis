@@ -91,9 +91,9 @@ public interface StockCardMapper {
           " WHERE stockcardentryid = #{stockCardEntryId}")
   List<StockCardEntryKV> getEntryKeyValues(@Param("stockCardEntryId")Long stockCardEntryId);
 
-  @Select("SELECT loh.*" +
+  @Select("SELECT DISTINCT ON (loh.lotId) loh.*" +
           " FROM lots_on_hand loh" +
-          " WHERE loh.stockcardid = #{stockCardId}")
+          " WHERE loh.stockcardid = #{stockCardId} ")
   @Results({@Result(property = "lotId", column = "lotId"),
       @Result(
           property = "keyValues", column = "id", javaType = List.class,

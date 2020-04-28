@@ -161,7 +161,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
                    {
                          $scope.message=data.success;
                          $timeout(function(){
-                           $window.location='/public/pages/vaccine/dashboard/index3.html#/dashboard';
+                           $window.location='/public/pages/vaccine/dash/index3.html#/home';
                          },900);
                    }
                 });
@@ -176,7 +176,7 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
           OpenLmisDialog.newDialog(options, callBack, $dialog);
      };
      $scope.cancel=function(){
-        $window.location='/public/pages/vaccine/dashboard/index3.html#/dashboard';
+        $window.location='/public/pages/vaccine/dash/index3.html#/home';
      };
 
      $scope.reasonChange=function(){
