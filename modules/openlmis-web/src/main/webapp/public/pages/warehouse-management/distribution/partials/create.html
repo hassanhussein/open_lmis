@@ -96,13 +96,13 @@
                             <td >Exp Date</td>
                             <td >SOH</td>
                         </tr>
-                        <tr ng-repeat-end ng-repeat="lot in p.lots">
+                        <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index">
                             <td >{{lot.number}}</td>
                             <td >{{lot.vvm}}</td>
                             <td >{{lot.expiry}}</td>
                             <td >{{lot.amount}}</td>
                             <td class="cell-input"  ng-repeat="req in requstions" >
-                                <input ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" type="text">
+                                <input ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="lotIndex>0 && p.lots[lotIndex-1].amount>0" type="text">
                             </td>
 
                         </tr>
