@@ -11,30 +11,19 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
                 ordered:[{
                   productId:343,
                   product:"BCG",
-                  amount:353
+                  amount:353,
+                  gap:'',
+                  given:[]
                 },
                 {
                   productId:34,
                   product:"PCV",
-                  amount:316
+                  amount:316,
+                  gap:'',
+                  given:[]
                 }
 
               ],
-                issued:[{
-                  product:"BCG",
-                  lots:[{
-                    lotNumber:"abc",
-                    given:45
-                  }]
-                },
-                {
-                  product:"PCV",
-                  lots:[{
-                    lotNumber:"abc",
-                    given:45
-                  }]
-                }
-              ]
 
               },
               {
@@ -47,31 +36,19 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
                 ordered:[{
                   productId:343,
                   product:"BCG",
-                  amount:753
+                  amount:753,
+                  gap:'',
+                  given:[]
                 },
                 {
                   productId:34,
                   product:"PCV",
-                  amount:300
+                  amount:300,
+                  gap:'',
+                  given:[]
                 }
 
               ],
-                issued:[{
-                  product:"BCG",
-                  lots:[{
-                    lotNumber:"abc",
-                    given:45
-                  }]
-                },
-                {
-                  product:"PCV",
-                  lots:[{
-                    lotNumber:"abc",
-                    given:45
-                  }]
-                }
-              ]
-
               },
               {
                               orderNumber:"IVD0003",
@@ -83,30 +60,21 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
                               ordered:[{
                                 productId:343,
                                 product:"BCG",
-                                amount:853
+                                amount:853,
+                                gap:'',
+                                given:[]
                               },
                               {
                                 productId:34,
                                 product:"PCV",
-                                amount:456
+                                amount:456,
+                                gap:'',
+                                given:[]
+
                               }
 
                             ],
-                              issued:[{
-                                product:"BCG",
-                                lots:[{
-                                  lotNumber:"abc",
-                                  given:45
-                                }]
-                              },
-                              {
-                                product:"PCV",
-                                lots:[{
-                                  lotNumber:"abc",
-                                  given:45
-                                }]
-                              }
-                            ]
+
 
                             }
 

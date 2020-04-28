@@ -74,35 +74,35 @@
                     <table class="table table-bordered receive" style="display:block;overflow-x:auto;"  >
                         <tr class="gradient-header">
                             <th class="tg-lboi" colspan="4">Distribute to:</th>
-                            <th class="tg-0pky" ng-repeat="req in requstions" colspan="3">{{req.name}}</th>
+                            <th  ng-repeat="req in requstions" colspan="3">{{req.name}}</th>
                         </tr>
                         <tr class="gradient-header">
-                            <th class="tg-0pky" colspan="4"></th>
-                            <th class="tg-c3ow" ng-repeat-start="req in requstions">Qty Ordered</th>
-                            <th class="tg-c3ow">Qty to Issue</th>
-                            <th class="tg-c3ow" ng-repeat-end>Gap</th>
+                            <th  colspan="4"></th>
+                            <th  ng-repeat-start="req in requstions">Qty Ordered</th>
+                            <th >Qty to Issue</th>
+                            <th  ng-repeat-end>Gap</th>
                         </tr>
                         <!-- done -->
 
                         <tr ng-repeat-start="p in soh">
-                            <td class="tg-c3ow" colspan="4">{{p.product}}</td>
-                            <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+2}}">{{getOrderedQuanity($index,p.productId)}}</td>
-                            <td class="tg-0pky" rowspan="2"></td>
-                            <td class="cell-input" style="padding-left: 15px;" rowspan="{{p.lots.length+2}}" ng-repeat-end>region {{$index+1}} gap</td>
+                            <td  colspan="4">{{p.product}}</td>
+                            <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+2}}">{{getOrderedQuantity($index,p.productId)}}</td>
+                            <td  rowspan="2"></td>
+                            <td class="cell-input" style="padding-left: 15px;" rowspan="{{p.lots.length+2}}" ng-repeat-end>{{getGap($index,p)}}</td>
                         </tr>
-                        <tr >
-                            <td class="tg-0pky">Batch</td>
-                            <td class="tg-0pky">VVM</td>
-                            <td class="tg-0pky">Exp Date</td>
-                            <td class="tg-0pky">SOH</td>
+                        <tr class="gradient-header">
+                            <td >Batch</td>
+                            <td >VVM</td>
+                            <td >Exp Date</td>
+                            <td >SOH</td>
                         </tr>
                         <tr ng-repeat-end ng-repeat="lot in p.lots">
-                            <td class="tg-0pky">{{lot.number}}</td>
-                            <td class="tg-0pky">{{lot.vvm}}</td>
-                            <td class="tg-0pky">{{lot.expiry}}</td>
-                            <td class="tg-0pky">{{lot.amount}}</td>
-                            <td class="tg-0pky" ng-repeat="req in requstions" >
-                                <input type="number">
+                            <td >{{lot.number}}</td>
+                            <td >{{lot.vvm}}</td>
+                            <td >{{lot.expiry}}</td>
+                            <td >{{lot.amount}}</td>
+                            <td class="cell-input"  ng-repeat="req in requstions" >
+                                <input ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" type="text">
                             </td>
 
                         </tr>
