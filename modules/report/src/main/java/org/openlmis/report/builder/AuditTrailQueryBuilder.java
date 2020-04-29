@@ -15,16 +15,25 @@ public class AuditTrailQueryBuilder {
         AuditTrailReportParam filter = (AuditTrailReportParam) params.get("filterCriteria");
 
         BEGIN();
-        SELECT("action, userfullname as actionPerformedBy, identity, identityvalue");
-        SELECT("oldvalue, newvalue, createddate");
-        FROM("audit_trails");
-        WHERE(startDateFilteredBy("createddate::date", filter.getPeriodStart()));
-        WHERE(endDateFilteredBy("createddate::date", filter.getPeriodEnd()));
+        SELECT("at.action");
+        SELECT("at.userfullname  as actionPerformedBy");
+        SELECT("at.userid");
+        SELECT("at.oldvalue");
+        SELECT("at.newvalue");
+        SELECT("at.createddate");
+        SELECT("case when identity = 'USERNAME' then identity else 'CODE' end as identity");
+        SELECT("concat(p.code, f.code, (case when identity = 'USERNAME' then identityvalue else '' end)) as identityvalue");
+        FROM("audit_trails at");
+        LEFT_OUTER_JOIN("products p on (split_part(at.action, '.', 1) = 'Product') and identityvalue = p.id::varchar");
+        LEFT_OUTER_JOIN("facilities f on (split_part(at.action, '.', 1) = 'Facility') and identityvalue = f.id::varchar");
+
+        WHERE(startDateFilteredBy("at.createddate::date", filter.getPeriodStart()));
+        WHERE(endDateFilteredBy("at.createddate::date", filter.getPeriodEnd()));
 
         if (filter.getAction() != null) {
-            WHERE("split_part(action, '.', 2) = #{filterCriteria.action}");
+            WHERE("split_part(at.action, '.', 2) = #{filterCriteria.action}");
         }
-        ORDER_BY("createddate desc");
+        ORDER_BY("at.createddate desc");
 
         String query = SQL();
         query = query +
