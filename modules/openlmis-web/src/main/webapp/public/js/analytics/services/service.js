@@ -861,9 +861,8 @@ services.factory('LatestReportedStockStatusByDistrict', function($resource) {
 
 services.factory('LatestReportedStockStatusByDistrictData', function($q, $timeout, $resource, LatestReportedStockStatusByDistrictForTracer, LatestReportedStockStatusByDistrict) {
     function get(params) {
-
         var deferred = $q.defer();
-        if (params.indicator == 'allTracerProducts') {
+        if (params.indicator == 'allTracerProducts' || !params.indicator) {
             $timeout(function() {
                 LatestReportedStockStatusByDistrictForTracer.get(params, function(data) {
 

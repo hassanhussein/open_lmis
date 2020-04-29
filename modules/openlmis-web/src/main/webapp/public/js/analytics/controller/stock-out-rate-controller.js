@@ -453,7 +453,6 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
             value: availability_percentage + "%"
         });
         $rootScope.summary.content = reg_arry;
-         $rootScope.$apply();
         return;
     }
 
@@ -519,9 +518,10 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     // Stock Out Rate Graph
     $rootScope.loadStockOutRateTrendForTracer = function(params, gzLevel) {
 
-         params.year = new Date().getFullYear();
-
-        if (params.indicator == 'allTracerProducts') {
+//         params.year = new Date().getFullYear();
+         params.year = 2017;
+console.log(params);
+        if (params.indicator == 'allTracerProducts' || !params.indicator) {
             GetStockOutRateTrendOfTracerProductsData.get(params).then(function(data) {
                 stockOutRateTrendForTracerData = data;
                 var trendData = getTrendData(data, gzLevel);
