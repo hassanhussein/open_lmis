@@ -219,14 +219,17 @@ public class ProgramProductService {
     }
   }
 
-    public void insertISA(ProgramProductISA isa)
+  public void insertISA(ProgramProductISA isa)
     {
       programProductRepository.insertISA(isa);
     }
 
-    public void updateISA(ProgramProductISA isa)
+  public void updateISA(ProgramProductISA isa)
     {
       programProductRepository.updateISA(isa);
     }
 
+  public List<ProgramProduct> getByProductId(Long productId) {
+    return programProductRepository.getByProductId(productId);
+  }
 }

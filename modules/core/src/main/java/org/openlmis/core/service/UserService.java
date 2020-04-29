@@ -265,6 +265,4 @@ public class UserService {
   public void disableInactiveUsers(){
     userRepository.disableInactiveUsers();
   }
-
-
 }

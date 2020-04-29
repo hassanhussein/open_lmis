@@ -57,7 +57,7 @@ public class AuditService {
 
     public void logActivity(BaseModel newObject, BaseModel oldObject) {
 
-        List<String> auditFields = Arrays.asList("Code", "Name", "dispensingUnit", "dosesPerDispensingUnit",
+        List<String> auditFields = Arrays.asList("code", "name", "dispensingUnit", "dosesPerDispensingUnit",
                 "mslPackSize", "packSize", "packRoundingThreshold", "facilityType.name");
 
         javers = javers == null ?  JaversBuilder.javers().build() : javers;

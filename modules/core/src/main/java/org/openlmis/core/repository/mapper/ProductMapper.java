@@ -116,6 +116,9 @@ public interface ProductMapper {
   @Select("SELECT active FROM products WHERE LOWER(code) = LOWER(#{code})")
   boolean isActive(String code);
 
+  @Select("SELECT active FROM products WHERE id = #{id}")
+  boolean isActiveById(Long id);
+
   @Select({"SELECT id, fullSupply, code, primaryName, strength, dosageUnitId, dispensingUnit,mslpacksize, packSize, active",
     "FROM products WHERE id = #{id}"})
   @Results({

@@ -90,6 +90,10 @@ public class ProductRepository {
     return mapper.isActive(code);
   }
 
+  public boolean isActive(Long id) {
+    return mapper.isActiveById(id);
+  }
+
   public Integer getTotalSearchResultCount(String searchParam) {
     return mapper.getTotalSearchResultCount(searchParam);
   }

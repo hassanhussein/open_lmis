@@ -184,4 +184,17 @@ public interface ProgramProductMapper {
             @Result(property = "product.id", column = "productid")
     })
   List<ProgramProduct> getAll();
+
+  @Select("SELECT pp.*, pr.code AS programCode, pr.name as programName, p.active AS productActive FROM " +
+          "program_products pp " +
+          "INNER JOIN products p ON pp.productId = p.id INNER JOIN programs pr ON pp.programId = pr.id WHERE p.id = #{productId}")
+  @Results(value = {
+          @Result(property = "id", column = "id"),
+          @Result(property = "program.code", column = "programCode"),
+          @Result(property = "program.name", column = "programName"),
+          @Result(property = "product.active", column = "productActive"),
+          @Result(property = "productCategory", column = "productCategoryId", javaType = ProductCategory.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProductCategoryMapper.getById"))
+  })
+  List<ProgramProduct> getByProductId(Long productId);
 }

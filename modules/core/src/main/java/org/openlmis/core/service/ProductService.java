@@ -71,10 +71,12 @@ public class ProductService {
       auditService.logActivity(product, AuditAction.CREATE);
       return;
     }
+    // Since product code it self can be edits, we can't rely on this field to fetch child objects
+   // List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
 
-    List<ProgramProduct> existingProgramProducts = programProductService.getByProductCode(product.getCode());
+    List<ProgramProduct> existingProgramProducts = programProductService.getByProductId(product.getId());
 
-    Boolean isStoredProductActive = isActive(product.getCode());
+    Boolean isStoredProductActive = isActive(product.getId());
 
     Product existingProduct = repository.getById(product.getId());
 
@@ -87,7 +89,6 @@ public class ProductService {
     else
       auditService.logActivity(product, existingProduct); //track change of two objects
 
-    existingProduct = null;
     notifyProgramCatalogChange(product, existingProgramProducts);
   }
 
@@ -122,6 +123,10 @@ public class ProductService {
 
   public boolean isActive(String code) {
     return repository.isActive(code);
+  }
+
+  public boolean isActive(Long id) {
+    return repository.isActive(id);
   }
 
   public Integer getTotalSearchResultCount(String searchParam) {

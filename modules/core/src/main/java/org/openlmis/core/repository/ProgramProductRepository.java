@@ -152,4 +152,8 @@ public class ProgramProductRepository {
   public void updateISA(ProgramProductISA programProductISA) {
     programProductIsaMapper.update(programProductISA);
   }
+
+  public List<ProgramProduct> getByProductId(Long productId) {
+    return mapper.getByProductId(productId);
+  }
 }

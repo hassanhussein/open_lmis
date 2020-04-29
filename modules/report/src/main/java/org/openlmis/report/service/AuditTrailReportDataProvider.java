@@ -2,6 +2,7 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.service.MessageService;
 import org.openlmis.report.mapper.AuditTrailReportMapper;
 import org.openlmis.report.model.ReportParameter;
 import org.openlmis.report.model.ResultRow;
@@ -25,6 +26,9 @@ public class AuditTrailReportDataProvider extends ReportDataProvider {
     @Autowired
     private SelectedFilterHelper filterHelper;
 
+    @Autowired
+    private MessageService messageService;
+
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria,
                                                    Map<String, String[]> sortCriteria,
@@ -46,9 +50,11 @@ public class AuditTrailReportDataProvider extends ReportDataProvider {
 
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
-        Map<String, String[]> modifiableParams = new HashMap<String, String[]>();
-        modifiableParams.putAll(params);
-        modifiableParams.put("userId", new String[]{String.valueOf(this.getUserId())});
-        return filterHelper.getProgramPeriodGeoZone(modifiableParams);
+        return (new StringBuffer()).append(messageService.message("label.audit.actions"))
+                .append(" : ")
+                .append((params.get("action")[0]).isEmpty() ? messageService.message("label.all") :
+                        messageService.message("audit.label."+params.get("action")[0]))
+                .append("\n")
+                .append(filterHelper.getSelectedPeriodRange(params)).toString();
     }
 }
