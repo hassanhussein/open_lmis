@@ -12,8 +12,103 @@
  *
  */
 function DistributionController($window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+//test
+$scope.data={
+ orders:[{
+                orderNumber:"IVD0001",
+                period:"Sept - Dec 2020",
+                dateSubmitted:"11/09/2020",
+                issue:false,
+                name:"Arusha RVS",
+                ordered:[{
+                  productId:343,
+                  product:"BCG",
+                  amount:353,
+                  gap:'',
+                  given:[]
+                },
+                {
+                  productId:34,
+                  product:"PCV",
+                  amount:316,
+                  gap:'',
+                  given:[]
+                }
 
-$scope.requstions=$scope.$parent.orders;
+              ],
+
+              },
+              {
+                orderNumber:"IVD0002",
+                period:"Jan - Feb 2020",
+                dateSubmitted:"11/01/2020",
+                     issue:false,
+
+                name:"Dodoma RVS",
+                ordered:[{
+                  productId:343,
+                  product:"BCG",
+                  amount:753,
+                  gap:'',
+                  given:[]
+                },
+                {
+                  productId:34,
+                  product:"PCV",
+                  amount:300,
+                  gap:'',
+                  given:[]
+                }
+
+              ],
+              },
+              {
+                              orderNumber:"IVD0003",
+                              period:"Apr- Jun 2020",
+                              dateSubmitted:"11/04/2020",
+                                              issue:false,
+
+                              name:"Tanga RVS",
+                              ordered:[{
+                                productId:343,
+                                product:"BCG",
+                                amount:853,
+                                gap:'',
+                                given:[]
+                              },
+                              {
+                                productId:34,
+                                product:"PCV",
+                                amount:456,
+                                gap:'',
+                                given:[]
+
+                              }
+
+                            ],
+
+
+                            }
+
+            ],
+ pagination:{
+ totalRecords:3,
+ page:1,
+ limit:10,
+ }
+
+ };
+
+  $scope.requstions=[];
+ $scope.orderList = $scope.data.orders;
+    angular.forEach($scope.orderList,function(order){
+
+    $scope.requstions.push(order);
+
+    });
+//endtest
+
+//$scope.requstions=$scope.$parent.orders;
 
 
 $scope.getLotSumPerRegion=function(lotId,productId){
