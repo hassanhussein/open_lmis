@@ -185,33 +185,33 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 		<band height="30" splitType="Stretch">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="40" y="0" width="72" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="737ff77e-08a6-46fa-87c6-90dde8a147f4"/>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="40" y="0" width="72" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="737ff77e-08a6-46fa-87c6-90dde8a147f4"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{facilitycode}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="112" y="0" width="220" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="112" y="0" width="220" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{facility}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="332" y="0" width="59" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="332" y="0" width="59" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{province}]]></textFieldExpression>
 			</textField>
@@ -225,42 +225,50 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="0" y="0" width="40" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="b3bdd5ec-3469-4195-ad41-352e168b0ce2"/>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="0" y="0" width="40" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="b3bdd5ec-3469-4195-ad41-352e168b0ce2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single" leftIndent="5"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="451" y="0" width="86" height="30" uuid="2272c411-0906-483c-9221-b1104e0532b7"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="451" y="0" width="86" height="30" uuid="2272c411-0906-483c-9221-b1104e0532b7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{program}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd-MMM-yy">
-				<reportElement x="594" y="0" width="78" height="30" uuid="64def802-a8eb-4757-af4d-ab1c839a8669"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy">
+				<reportElement stretchType="RelativeToTallestObject" x="594" y="0" width="78" height="30" uuid="64def802-a8eb-4757-af4d-ab1c839a8669"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{ordernumber}!=null ? $F{ordernumber}: ""]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="537" y="0" width="57" height="30" uuid="41fddc9d-19c1-437d-9096-a33148daf972"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="537" y="0" width="57" height="30" uuid="41fddc9d-19c1-437d-9096-a33148daf972"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{period}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="672" y="0" width="100" height="30" uuid="f02cb463-d7f7-4ec0-8270-e9b893b84e3a"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="672" y="0" width="100" height="30" uuid="f02cb463-d7f7-4ec0-8270-e9b893b84e3a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<paragraph leftIndent="2"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="true">
-				<reportElement mode="Transparent" x="391" y="0" width="60" height="28" forecolor="#000000" backcolor="#FFFFFF" uuid="5cffd7f1-db04-434e-85b7-8cba3cbfbcc9">
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="391" y="0" width="60" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="5cffd7f1-db04-434e-85b7-8cba3cbfbcc9">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-					<paragraph lineSpacing="Single"/>
+					<paragraph lineSpacing="Single" leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 			</textField>
