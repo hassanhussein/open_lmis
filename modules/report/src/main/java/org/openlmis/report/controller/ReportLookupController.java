@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
@@ -688,6 +689,9 @@ public class ReportLookupController extends BaseController {
 
     @RequestMapping(value = "/audit_actions", method = GET, headers = BaseController.ACCEPT_JSON)
     public List<AuditAction> getAuditActions() {
-        return Arrays.asList(AuditAction.values());
+        return Arrays.asList(AuditAction.values())
+                .stream()
+                .filter((action) -> !action.name().equals(AuditAction.CHANGE_PRIMARYNAME.toString()))
+                .collect(Collectors.toList());
     }
 }

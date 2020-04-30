@@ -32,20 +32,20 @@ public class AuditService {
 
     public void logActivity(BaseModel object, AuditAction action) {
 
-        String code = getFieldValue(object, "Code");
-        String userName = getFieldValue(object, "UserName");
+       // String code = getFieldValue(object, "Code");
+        //String userName = getFieldValue(object, "UserName");
         Long id = object.getId();
         Long userId = object.getModifiedBy() != null ? object.getModifiedBy() : object.getCreatedBy();
 
         Audit audit;
 
-        if(code != null)
-            audit = new Audit(object.getClass(), action, AuditIdentityKey.CODE, code,
-                    null,null, userId, null);
-        else if(userName != null)
-            audit = new Audit(object.getClass(), action, AuditIdentityKey.USERNAME, userName,
-                    null,null, userId, null);
-        else if(id != null) {
+      //  if(code != null)
+       //     audit = new Audit(object.getClass(), action, AuditIdentityKey.CODE, code,
+       //             null,null, userId, null);
+       // if(userName != null)
+      //      audit = new Audit(object.getClass(), action, AuditIdentityKey.USERNAME, userName,
+       //             null,null, userId, null);
+        if(id != null) {
             audit = new Audit(object.getClass(), action, AuditIdentityKey.ID, id.toString(), null,
                     null, userId,null);
         }
@@ -58,7 +58,7 @@ public class AuditService {
     public void logActivity(BaseModel newObject, BaseModel oldObject) {
 
         List<String> auditFields = Arrays.asList("code", "name", "dispensingUnit", "dosesPerDispensingUnit",
-                "mslPackSize", "packSize", "packRoundingThreshold", "facilityType.name");
+                "mslPackSize", "packSize", "packRoundingThreshold", "facilityType.name", "dosageUnit.code", "primaryName");
 
         javers = javers == null ?  JaversBuilder.javers().build() : javers;
 

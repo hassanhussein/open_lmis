@@ -9,16 +9,16 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function AuditTrailController($scope, AuditReport, AuditActions, $q,  ngTableParams) {
+function AuditTrailController($scope, AuditReport, AuditActions, $q) {
         $scope.OnFilterChanged = function() {
-            $scope.registerServerSidePagination($scope.tableParams, $scope.runReport);
+            $scope.registerServerSidePagination($scope.tableParams, $scope.runAuditReport);
         };
 
         AuditActions.get(function(actions){
             $scope.auditActions = actions.auditActionList;
         });
 
-        $scope.runReport = function (pageSize, page, sortBy, sortDirection) {
+        $scope.runAuditReport = function () {
 
             var deferred = $q.defer();
 
