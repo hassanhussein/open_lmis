@@ -3,5 +3,6 @@ package org.openlmis.stockmanagement.domain;
 public enum StockCardEntryType {
   DEBIT,
   CREDIT,
-  ADJUSTMENT
+  ADJUSTMENT,
+  PUT_AWAY
 }

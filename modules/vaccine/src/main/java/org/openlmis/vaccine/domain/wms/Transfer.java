@@ -35,5 +35,7 @@ public class Transfer extends BaseModel {
 
     private Long soh;
 
+    private Long LotOnHandId;
+
 
 }

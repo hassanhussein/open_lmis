@@ -31,13 +31,10 @@ console.log($scope.products);
 
 });
 
+};
 
 
-
-
-
-
-
+$scope.openLedger = function() {
 
 };
 

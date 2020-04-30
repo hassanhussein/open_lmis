@@ -52,8 +52,8 @@ public class LotOnHandLocationRepository {
         return mapper.getSohReport(facilityId, warehouseId);
     }
 
-    public List<HashMap<String, Object>> getAllLedgers(Long facilityId, Long productId, Long warehouseId, Long year) {
-        return mapper.getAllLedgers(facilityId,productId,warehouseId,year);
+    public List<HashMap<String, Object>> getAllLedgers(Long productId, Long warehouseId, Long year) {
+        return mapper.getAllLedgers(productId,warehouseId,year);
     }
 
     public List<HashMap<String,Object>>getAllByWareHouseAndBinLocation(Long fromWarehouseId, Long fromBinLocationId){
@@ -62,5 +62,13 @@ public class LotOnHandLocationRepository {
 
     public List<TransferDTO>getTransferDetailsBy(Long wareHouseId, Long fromBinLocationId) {
         return mapper.getTransferDetailsBy(wareHouseId,fromBinLocationId);
+    }
+
+    public void updateByLotOnHandAndLocation(Integer total, Long fromBin, Long lotOnHandId) {
+        mapper.updateByLotOnHandAndLocation(total, fromBin, lotOnHandId);
+    }
+
+    public LotOnHandLocation getBy(Long fromBin, Long lotOnHandId) {
+        return mapper.getBy(fromBin, lotOnHandId);
     }
 }
