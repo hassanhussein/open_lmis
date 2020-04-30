@@ -62,8 +62,9 @@ public interface  StockOutRateMapper {
     @Select("select 100 - (((a.stockOutIncidence::float/a.totalIncidence::float)::float) * 100)::float as availabilityPercentage, asmonth as reportedMonth, district_name, region_name from \n" +
             "(select  asmonth, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence,district_name, region_name,\n" +
             "count(*) as totalIncidence\n" +
-            "from mv_stock_imbalance_by_facility_report\n" +
-            "where tracer=true and year=#{year}\n" +
+            "from mv_stock_imbalance_by_facility_report imb\n" +
+            "join processing_periods pp on pp.id=imb.periodid\n" +
+            "where tracer=true and year=#{year} and pp.startdate < now()\n" +
             "group by asmonth, district_name, region_name ) as a")
     List<HashMap<String,Object>> getStockOutRateTrendOfTracerProducts(@Param("year") Long year);
 
@@ -71,8 +72,9 @@ public interface  StockOutRateMapper {
     @Select( "select 100 - (((a.stockOutIncidence::float/a.totalIncidence::float)::float) * 100)::float as availabilityPercentage, asmonth as reportedMonth, district_name, region_name from \n" +
             "(select  asmonth, SUM(CASE WHEN status='SO' THEN 1 ELSE 0 END) as stockOutIncidence, district_name, region_name,\n" +
             "count(*) as totalIncidence\n" +
-            "from mv_stock_imbalance_by_facility_report\n" +
-            "where  year=#{year} and productid=#{product}\n" +
+            "from mv_stock_imbalance_by_facility_report imb\n" +
+            "join processing_periods pp on pp.id=imb.periodid\n" +
+            "where  year=#{year} and productid=#{product} and pp.startdate < now()\n" +
             "group by asmonth, district_name, region_name ) as a")
     List<HashMap<String,Object>> getStockOutRateTrendOfProducts(@Param("year") Long year, @Param("product") Long product);
 

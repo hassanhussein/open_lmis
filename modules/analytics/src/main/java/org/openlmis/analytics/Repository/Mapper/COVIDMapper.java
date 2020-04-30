@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface COVIDMapper {
 
-    @Select("select r.facilityid , f.name,\n" +
+    @Select("select r.facilityid  as id, f.name as name,\n" +
             "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand = 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
             "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand != 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
             "from requisition_line_items rli\n" +
@@ -23,14 +23,34 @@ public interface COVIDMapper {
             "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED') and rli.skipped=false \n" +
            "and pr.id=#{product}  and  pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
             "group by r.facilityid, f.name ")
-    List<HashMap<String,Object>> getStockStatusPerProduct(@Param("product") Long product,
+    List<HashMap<String,Object>> getStockStatusPerProductForFacilities(@Param("product") Long product,
                                                  @Param("startDate") String startDate,
                                                  @Param("endDate") String endDate
                                                 );
 
 
+    @Select("select vd.region_id as id,  vd.region_name as name, \n" +
+            "            ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand = 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
+            "            ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand != 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
+            "            from requisition_line_items rli\n" +
+            "            join requisitions r on r.id=rli.rnrid\n" +
+            "            join products pr on pr.code=rli.productcode\n" +
+            "            join programs p on p.id=r.programid\n" +
+            "            join facilities f on f.id=r.facilityid\n" +
+            "            join geographic_zones gz on gz.id=f.geographiczoneid\n" +
+            "            join vw_districts vd on vd.district_id=gz.id\n" +
+            "            join processing_periods pp on pp.id=r.periodid\n" +
+            "            where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED') and rli.skipped=false\n" +
+            "            and pr.id=#{product}  and  pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
+            "            group by vd.region_id, vd.region_name ")
+    List<HashMap<String,Object>> getStockStatusPerProductForRegions(@Param("product") Long product,
+                                                          @Param("startDate") String startDate,
+                                                          @Param("endDate") String endDate
+    );
 
-    @Select("select r.facilityid , f.name,\n" +
+
+
+    @Select("select r.facilityid as id , f.name as name,\n" +
             "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand = 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
             "ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand != 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
             "from requisition_line_items rli\n" +
@@ -41,8 +61,26 @@ public interface COVIDMapper {
             "where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED') and rli.skipped=false \n" +
             "  and pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
             "group by r.facilityid, f.name ")
-    List<HashMap<String,Object>> getAllStockStatus( @Param("startDate") String startDate,
+    List<HashMap<String,Object>> getAllStockStatusGroupByFacilites( @Param("startDate") String startDate,
                                                           @Param("endDate") String endDate
+    );
+
+
+    @Select("select vd.region_id as id,  vd.region_name as name,\n" +
+            "            ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand = 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS stockOutPercentage ,\n" +
+            "            ROUND(100.0 * (SUM(CASE WHEN rli.stockinhand != 0 THEN 1 ELSE 0 END) )/ COUNT(*),2) AS availabilityPercentage \n" +
+            "            from requisition_line_items rli\n" +
+            "            join requisitions r on r.id=rli.rnrid\n" +
+            "            join programs p on p.id=r.programid\n" +
+            "            join facilities f on f.id=r.facilityid\n" +
+            "            join geographic_zones gz on gz.id=f.geographiczoneid\n" +
+            "            join vw_districts vd on vd.district_id=gz.id\n" +
+            "            join processing_periods pp on pp.id=r.periodid\n" +
+            "            where p.code='COVID-19' and r.status IN ('APPROVED','IN_APPROVAL', 'RELEASED', 'AUTHORIZED') and rli.skipped=false \n" +
+            "            and pp.enddate between #{startDate}::DATE  and #{endDate}::DATE  \n" +
+            "            group by vd.region_id, vd.region_name")
+    List<HashMap<String,Object>> getAllStockStatusGroupByRegions( @Param("startDate") String startDate,
+                                                    @Param("endDate") String endDate
     );
 
 
