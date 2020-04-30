@@ -139,7 +139,9 @@ return sum;
 $scope.getGap=function(regionIndex,product){
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:product.productId});
-
+if(Number.isNaN(ordered.gap)){
+return ''
+}
 return ordered.gap;
 
 }
@@ -179,6 +181,11 @@ return
 }
 );
 lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.id,prod.productId)
+console.log(lot.amount)
+if(Number.isNaN(lot.amount)){
+console.log('am nan')
+lot.amount=lot.maxSoh;
+}
 //console.log($scope.requstions)
 //console.log("Giving "+qty+"of"+prod.product+" of lot "+lot.number+" to "+req.name)
 }

@@ -26,7 +26,7 @@
 
 
 
-                    <div class="span4">
+                    <div class="span3">
                         <label for="receiptDate">
                             <span>Distribution Date</span>
                             <span class="label-required"> *</span>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <div class="span4">
+                    <div class="span3">
                         <label for="supplier" >Distribution Type <span class="label-required"> *</span></label>
 
 
@@ -172,7 +172,7 @@
 <!--                            </tr>-->
                             <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">
                                 <td class="cell-input col-beginningBalance"  ng-repeat="req in requstions" >
-                                    <input  ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)||(lot.amount<=0 && !focus)" ng-init="focus=false" ng-focus="focus=true" ng-blur="focus=false" class="ng-invalid" type="text">
+                                    <input numeric-validator="positiveInteger"  ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)||(lot.amount<=0 && !focus)" ng-init="focus=false" ng-focus="focus=true" ng-blur="focus=false" class="ng-invalid" type="text">
                                 </td>
                             </tr>
 
@@ -194,7 +194,7 @@
         <div form-toolbar id="action_buttons" class="action-buttons">
             <div class="form-cell button-row">
                 <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                       openlmis-message="button.save" ng-click="saveAsn('DRAFT')" ng-if="!viewMode"/>
+                       value="Release for Picking" ng-click="saveAsn('DRAFT')" ng-if="!viewMode"/>
                 <!--                    <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"-->
                 <!--                            value="Print"/>-->
                 <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
