@@ -28,18 +28,18 @@ $scope.getLotSumPerRegion=function(lotId,productId){
 
    order.given.forEach(function(giv){
     if (giv.lotId===lotId){
-    qty=giv.qty
+    qty=giv.qty;
     if(giv.qty===""){
-    qty=0
+    qty=0;
     }
-    sum+=parseInt(qty,10)
+    sum+=parseInt(qty,10);
     }
-   })
+   });
    }
-   })
-   })
+   });
+   });
 return sum;
-}
+};
 
 $scope.getGap=function(regionIndex,product){
 var region =$scope.requstions[regionIndex];
@@ -47,14 +47,14 @@ var ordered = _.findWhere(region.ordered,{productId:product.productId});
 
 return ordered.gap;
 
-}
+};
 $scope.giveLot=function(req,prod,lot,qty,regionIndex){
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
-var given= _.findWhere(ordered.given,{lotId:lot.id})
+var given= _.findWhere(ordered.given,{lotId:lot.id});
 if(qty===""){
-qty=0
+qty=0;
 }
 
 //deduct soh for this product for this lot
@@ -67,26 +67,26 @@ given.qty=qty;
 ordered.given.push({
 lotId:lot.id,
 qty:qty
-})
+});
 }
 
 //find lot sum
 var sum=0;
 ordered.given.forEach(function(given){
-sum+=parseInt(given.qty,10)
-})
-ordered.gap=ordered.amount-sum
+sum+=parseInt(given.qty,10);
+});
+ordered.gap=ordered.amount-sum;
 
 //update the soh accordingly
 //sum all the requisitions for this product for this lot
 var all_requisitions=_.filter($scope.requstions,function(req){
-return
+return;
 }
 );
-lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.id,prod.productId)
+lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.id,prod.productId);
 //console.log($scope.requstions)
 //console.log("Giving "+qty+"of"+prod.product+" of lot "+lot.number+" to "+req.name)
-}
+};
 
 
   $scope.range = function(n) {

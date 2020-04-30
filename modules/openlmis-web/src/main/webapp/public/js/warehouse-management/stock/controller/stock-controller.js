@@ -81,8 +81,14 @@ $scope.validateQuantity  = function (movement){
 
  $scope.isGreater = false;
 
- if(movement.quantity > movement.soh || movement.quantity === 0) {
-   $scope.errorMessage = 'The Quantity should be less than SOH or greater than ZERO';
+ if(movement.quantity === 0) {
+   $scope.errorMessage = 'The Quantity should be greater than ZERO';
+   $scope.showError = true;
+   $scope.isGreater = true;
+   return;
+ }
+ if(movement.quantity > movement.soh) {
+   $scope.errorMessage = 'The Quantity should be less than SOH ';
    $scope.showError = true;
    $scope.isGreater = true;
    return;

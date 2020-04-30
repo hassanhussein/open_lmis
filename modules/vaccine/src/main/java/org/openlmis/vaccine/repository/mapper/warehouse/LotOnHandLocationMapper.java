@@ -69,7 +69,6 @@ public interface LotOnHandLocationMapper {
 
     @Select("\n" +
             "             Select primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +
-            "           --  voucherNumber,manufacturerName,expirationdate,vvm vvmStatus, \n" +
             "\n" +
             "             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +
             "                FROM \n" +
@@ -83,10 +82,6 @@ public interface LotOnHandLocationMapper {
             "                0::INTEGER as adjustment,\n" +
             "                loc.name locationName,\n" +
             "\n" +
-            "                --l.lotnumber,\n" +
-            "              --  MAX(l.manufacturerName) as manufacturerName ,\n" +
-            "               -- MAX(l.expirationdate::DATE) as expirationdate,\n" +
-            "              --  MAX(skvvvm.valuecolumn) as vvm, \n" +
             "                SUM(se.quantity)::integer as total\n" +
             "             \n" +
             "                from lot_location_entries se \n" +
@@ -98,10 +93,8 @@ public interface LotOnHandLocationMapper {
             "                --join lots l on l.id=lo.lotid \n" +
             "                join products p on p.id=s.productid \n" +
             "                join facilities f on f.id=s.facilityid \n" +
-            "              --  left join stock_card_entry_key_values skvvvm on skvvvm.stockcardentryid=se.id and skvvvm.keycolumn='vvmstatus' \n" +
             "                where \n" +
             "                loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
-            "              -- p.id = #{filterCriteria.product}::Integer and f.id = filter.getFacility() +and  se.createddate::DATE < #{filterCriteria.startDate}::date  \n" +
             "                 group by    loc.name) \n" +
             "                SELECT * FROM Q \n" +
             "                UNION ALL \n" +
@@ -110,14 +103,10 @@ public interface LotOnHandLocationMapper {
             "               case when se.type='DEBIT' then skvi.valuecolumn  else '' end as toBin,\n" +
             "               \n" +
             "               case when se.type='CREDIT' then skvr.valuecolumn when se.type='DEBIT' then skvi.valuecolumn end as facility, \n" +
-            "              -- case when se.type='CREDIT' then skvr.valuecolumn when se.type='DEBIT' then skvi.valuecolumn end as facility, \n" +
-            "             --  case when se.type='CREDIT' then loc.name when se.type='DEBIT' then loc.name end as facility, \n" +
             "                case when se.type ='CREDIT' then se.quantity else 0 end as received, \n" +
             "                case when se.type ='DEBIT' then se.quantity else 0 end as issued, \n" +
             "                case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment, \n" +
-            "               -- l.lotnumber, l.manufacturerName,\n" +
             "                loc.name locationName,\n" +
-            "             --   l.expirationdate::DATE, \n" +
             "                se.quantity::integer as total \n" +
             "               \n" +
             "                from lot_location_entries se \n" +
@@ -137,7 +126,7 @@ public interface LotOnHandLocationMapper {
             "               WHERE \n" +
             "                    loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId} \n" +
             "               order by se.createddate)) AS ledger order by id \n")
-    List<HashMap<String, Object>>getAllLedgers(@Param("facilityId") Long facilityId, @Param("productId") Long productId,@Param("warehouseId") Long warehouseId, @Param("year") Long year);
+    List<HashMap<String, Object>>getAllLedgers(@Param("productId") Long productId,@Param("warehouseId") Long warehouseId, @Param("year") Long year);
 
   /*  @Select("SELECT PUT.*,P.PRIMARYnAME FROM lot_on_hand_locations H\n" +
             "\n" +
