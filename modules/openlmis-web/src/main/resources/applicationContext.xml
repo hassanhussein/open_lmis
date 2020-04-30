@@ -461,6 +461,16 @@
                         <property name="recordHandler" ref="locationPercistanceHandler"/>
                     </bean>
                 </entry>
+
+                <entry key="transfer-reasons">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Transfer Reasons"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.vaccine.dto.AdjustmentReasonExDTO</value>
+                        </property>
+                        <property name="recordHandler" ref="adjustmentReasonPercistanceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>

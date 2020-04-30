@@ -67,91 +67,110 @@ public interface LotOnHandLocationMapper {
             "WHERE s.facilityId = #{facilityId} and toWarehouseId = #{warehouseId}")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
-    @Select("      Select bin, primaryname product,id,date , facility storeName, received, issued, adjustment,total,lotnumber,voucherNumber,manufacturerName,expirationdate,vvm vvmStatus, (SUM(total) over(partition by lotnumber order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +
+    @Select("\n" +
+            "             Select primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +
+            "           --  voucherNumber,manufacturerName,expirationdate,vvm vvmStatus, \n" +
             "\n" +
-            "                            FROM   \n" +
-            "                            (\n" +
+            "             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +
+            "                FROM \n" +
+            "                (WITH Q AS ( \n" +
+            "                select MAX(p.primaryname) primaryname  , 0 as id, MAX(se.createdDATE)::timestamp with time zone as date, \n" +
+            "                null::text as fromBin,\n" +
+            "                null::text as toBin,\n" +
+            "                null::TEXT as facility,\n" +
+            "                0::INTEGER as received, \n" +
+            "                0::INTEGER as issued,  \n" +
+            "                0::INTEGER as adjustment,\n" +
+            "                loc.name locationName,\n" +
             "\n" +
-            "                            WITH Q AS (   \n" +
-            "                            select MAX(p.primaryname) primaryname  , 0 as id, MAX('2019-01-01')::timestamp with time zone as date,   \n" +
-            "                            null::TEXT as facility,  \n" +
-            "                            0::INTEGER as received,   \n" +
-            "                            0::INTEGER as issued,    \n" +
-            "                            0::INTEGER as adjustment,  \n" +
-            "                            l.lotnumber,  \n" +
-            "                            MAX(l.manufacturerName) as manufacturerName ,  \n" +
-            "                            MAX(l.expirationdate::DATE) as expirationdate,  \n" +
-            "                            MAX(skvvvm.valuecolumn) as vvm,   \n" +
-            "                            SUM(se.quantity)::integer as total,   \n" +
-            "                            MAX( (select voucherNumber from vaccine_distributions vd    \n" +
-            "                            LEFT JOIN Vaccine_distribution_line_items li ON vd.id = li.distributionId    \n" +
-            "                            WHERE li.productId = p.id limit 1)  ) as voucherNumber,   \n" +
-            "                            loc.name bin\n" +
-            "                            from stock_card_entries se   \n" +
-            "                            join stock_cards s ON s.id=se.stockcardid   \n" +
-            "                            join lots_on_hand lo ON lo.id=se.lotonhandid  \n" +
-            "                            LEFT JOIN lot_on_hand_locations bin ON lo.id = bin.lotonhandId\n" +
-            "                            LEFT JOIN wms_locations loc ON bin.locationId = LOC.ID \n" +
-            "                            join lots l on l.id=lo.lotid   \n" +
-            "                            join products p on p.id=s.productid   \n" +
-            "                            join facilities f on f.id=s.facilityid   \n" +
-            "                            left join stock_card_entry_key_values skvvvm on skvvvm.stockcardentryid=se.id and skvvvm.keycolumn='vvmstatus'   \n" +
-            "                            where   \n" +
-            "                             p.id = #{productId}::Integer and loc.warehouseId = #{warehouseId} and f.id =  #{facilityId} AND EXTRACT( year from se.createddate::DATE) < #{year}::int    group by l.lotnumber,loc.name)   \n" +
-            "                            SELECT * FROM Q   \n" +
-            "                            UNION ALL   \n" +
-            "                            (\n" +
+            "                --l.lotnumber,\n" +
+            "              --  MAX(l.manufacturerName) as manufacturerName ,\n" +
+            "               -- MAX(l.expirationdate::DATE) as expirationdate,\n" +
+            "              --  MAX(skvvvm.valuecolumn) as vvm, \n" +
+            "                SUM(se.quantity)::integer as total\n" +
+            "             \n" +
+            "                from lot_location_entries se \n" +
             "\n" +
-            "                            select p.primaryname , se.id, se.createddate as date,   \n" +
-            "                            case when se.type='CREDIT' then skvr.valuecolumn when se.type='ADJUSTMENT' then (select name from facilities where id =   19075  ) when se.type='DEBIT' then skvi.valuecolumn end as facility,   \n" +
-            "                            case when se.type ='CREDIT' then se.quantity else 0 end as received,   \n" +
-            "                            case when se.type ='DEBIT' then se.quantity else 0 end as issued,   \n" +
-            "                            case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment,   \n" +
-            "                            l.lotnumber, l.manufacturerName,  \n" +
-            "                            l.expirationdate::DATE,   \n" +
-            "                            skvvvm.valuecolumn as vvm,   \n" +
-            "                            se.quantity::integer as total,     \n" +
-            "                             (SELECT voucherNumber from vaccine_distributions vd    \n" +
-            "                            LEFT JOIN Vaccine_distribution_line_items li ON vd.id = li.distributionId    \n" +
-            "                            WHERE li.productId = p.id limit 1) as voucherNumber,  \n" +
-            "                            loc.name bin\n" +
-            "                            from stock_card_entries se   \n" +
-            "                            join stock_cards s ON s.id=se.stockcardid   \n" +
-            "                            join lots_on_hand lo ON lo.id=se.lotonhandid   \n" +
-            "                            LEFT JOIN lot_on_hand_locations bin ON lo.id = bin.lotonhandId\n" +
-            "                            LEFT JOIN wms_locations loc ON bin.locationId = LOC.ID\n" +
-            "                            join lots l on l.id=lo.lotid   \n" +
-            "                            join products p on p.id=s.productid   \n" +
-            "                            join facilities f on f.id=s.facilityid   \n" +
-            "                            left join stock_card_entry_key_values skvr on skvr.stockcardentryid=se.id and skvr.keycolumn='receivedfrom'   \n" +
-            "                            left join stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'    \n" +
-            "                            left join stock_card_entry_key_values skvvvm on skvvvm.stockcardentryid=se.id and skvvvm.keycolumn='vvmstatus'   \n" +
-            "                            where p.id = #{productId}::Integer and s.facilityId = #{facilityId} and loc.warehouseId = #{warehouseId} AND EXTRACT( year from se.createddate::DATE) < #{year}::int \n" +
-            "                             order by se.createddate\n" +
+            "                join lots_on_hand lo ON lo.id=se.lotonhandid \n" +
+            "                JOIN lot_on_hand_locations H ON se.locationId = h.LOCATIONID\n" +
+            "                JOIN wms_locations loc ON loc.id = h.locationId\n" +
+            "                join stock_cards s ON s.id=lo.stockcardid\n" +
+            "                --join lots l on l.id=lo.lotid \n" +
+            "                join products p on p.id=s.productid \n" +
+            "                join facilities f on f.id=s.facilityid \n" +
+            "              --  left join stock_card_entry_key_values skvvvm on skvvvm.stockcardentryid=se.id and skvvvm.keycolumn='vvmstatus' \n" +
+            "                where \n" +
+            "                loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
+            "              -- p.id = #{filterCriteria.product}::Integer and f.id = filter.getFacility() +and  se.createddate::DATE < #{filterCriteria.startDate}::date  \n" +
+            "                 group by    loc.name) \n" +
+            "                SELECT * FROM Q \n" +
+            "                UNION ALL \n" +
+            "                (select p.primaryname , se.id, se.createddate as date, \n" +
+            "               case when se.type='CREDIT' then skvr.valuecolumn  else '' end as fromBin,\n" +
+            "               case when se.type='DEBIT' then skvi.valuecolumn  else '' end as toBin,\n" +
+            "               \n" +
+            "               case when se.type='CREDIT' then skvr.valuecolumn when se.type='DEBIT' then skvi.valuecolumn end as facility, \n" +
+            "              -- case when se.type='CREDIT' then skvr.valuecolumn when se.type='DEBIT' then skvi.valuecolumn end as facility, \n" +
+            "             --  case when se.type='CREDIT' then loc.name when se.type='DEBIT' then loc.name end as facility, \n" +
+            "                case when se.type ='CREDIT' then se.quantity else 0 end as received, \n" +
+            "                case when se.type ='DEBIT' then se.quantity else 0 end as issued, \n" +
+            "                case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment, \n" +
+            "               -- l.lotnumber, l.manufacturerName,\n" +
+            "                loc.name locationName,\n" +
+            "             --   l.expirationdate::DATE, \n" +
+            "                se.quantity::integer as total \n" +
+            "               \n" +
+            "                from lot_location_entries se \n" +
+            "            \n" +
+            "                join lots_on_hand lo ON lo.id=se.lotonhandid \n" +
+            "                JOIN lot_on_hand_locations H ON se.locationId = h.LOCATIONID\n" +
+            "                JOIN wms_locations loc ON loc.id = h.locationId\n" +
+            "                join stock_cards s ON s.id=lo.stockcardid\n" +
+            "                \n" +
+            "                join products p on p.id=s.productid \n" +
+            "                \n" +
+            "                LEFT join location_stock_card_entry_key_values skvr on skvr.stockcardentryid=se.id and skvr.keycolumn='receivedfrom' \n" +
+            "                                               \n" +
             "\n" +
-            "                             )\n" +
+            "               LEFT join location_stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'  \n" +
             "\n" +
-            "                             ) AS ledger order by id ")
+            "               WHERE \n" +
+            "                    loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId} \n" +
+            "               order by se.createddate)) AS ledger order by id \n")
     List<HashMap<String, Object>>getAllLedgers(@Param("facilityId") Long facilityId, @Param("productId") Long productId,@Param("warehouseId") Long warehouseId, @Param("year") Long year);
 
-    @Select("SELECT PUT.*,P.PRIMARYnAME FROM lot_on_hand_locations H\n" +
+  /*  @Select("SELECT PUT.*,P.PRIMARYnAME FROM lot_on_hand_locations H\n" +
             "\n" +
             "RIGHT JOIN putaway_line_items PUT ON H.locationId = PUT.fromBinLocationId\n" +
             "join PRODUCTS P ON PUT.productId = P.ID\n" +
             " WHERE fromWarehouseId = #{fromWarehouseId} and fromBinLocationId = #{fromBinLocationId}")
+    */
+    @Select("           SELECT productId, lotId, stockCardId, locationId, lotOnHandId, H.quantityOnHand,P.PRIMARYnAME\n" +
+            "             FROM lot_on_hand_locations H\n" +
+            "            JOIN wms_locations loc ON h.id = h.locationId\n" +
+            "            join LOts_on_hand loh ON H.LOTONHANDID = LOH.ID\n" +
+            "            join LOTS LOT oN loh.LOTiD = lot.id\n" +
+            "            join PRODUCTS P ON lot.productId = P.ID\n" +
+            "             WHERE warehouseId =  #{fromWarehouseId} and locationId = #{fromBinLocationId} and H.quantityOnHand > 0")
     List<HashMap<String, Object>>getAllByWareHouseAndBinLocation(@Param("fromWarehouseId") Long fromWarehouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
 
     @Select("select lotOnHandId, h.lotId, lotNumber, sum(l.quantityOnHand) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
-            "join WMS_LOCATIONS Lsc ON L.frombinLocationId = LSC.ID \n" +
+            "join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
             "\n" +
             "JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
             "JOIN lots LO ON Lo.id = h.lotId\n" +
             "JOIN products P on lo.productID = p.id\n" +
             "\n" +
-            "WHERE LSC.warehouseId = #{wareHouseId} AND lsc.ID = #{fromBinLocationId}\n" +
+            "WHERE LSC.warehouseId = #{wareHouseId} AND lsc.ID = #{fromBinLocationId} and l.quantityOnHand > 0\n" +
             "\n" +
             "group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber ")
     List<TransferDTO> getTransferDetailsBy(@Param("wareHouseId") Long wareHouseId, @Param("fromBinLocationId") Long fromBinLocationId);
+
+    @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{total} WHERE locationId=#{locationId} and lotOnHandId=#{lotOnHandId}")
+    void updateByLotOnHandAndLocation(@Param("total") Integer total,@Param("locationId") Long locationId, @Param("lotOnHandId") Long lotOnHandId);
+
+    @Select("SELECT * FROM lot_on_hand_locations WHERE locationId=#{locationId} and lotOnHandId=#{lotOnHandId} Limit 1")
+    LotOnHandLocation getBy(@Param("locationId") Long locationId, @Param("lotOnHandId") Long lotOnHandId);
 
 }

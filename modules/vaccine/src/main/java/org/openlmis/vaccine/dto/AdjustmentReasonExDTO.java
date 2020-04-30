@@ -8,9 +8,9 @@ import org.openlmis.upload.annotation.ImportField;
 @Data
 public class AdjustmentReasonExDTO extends BaseModel implements Importable {
 
-    @ImportField(name="code", mandatory = true)
+    @ImportField(name="Code", mandatory = true)
     private String code;
     @ImportField(name="Reason Name", mandatory = true)
-    private String reasonName;
+    private String name;
 
 }

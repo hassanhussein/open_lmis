@@ -63,4 +63,12 @@ public class LotOnHandLocationRepository {
     public List<TransferDTO>getTransferDetailsBy(Long wareHouseId, Long fromBinLocationId) {
         return mapper.getTransferDetailsBy(wareHouseId,fromBinLocationId);
     }
+
+    public void updateByLotOnHandAndLocation(Integer total, Long fromBin, Long lotOnHandId) {
+        mapper.updateByLotOnHandAndLocation(total, fromBin, lotOnHandId);
+    }
+
+    public LotOnHandLocation getBy(Long fromBin, Long lotOnHandId) {
+        return mapper.getBy(fromBin, lotOnHandId);
+    }
 }

@@ -110,7 +110,7 @@ public interface WareHouseMapper {
             " ORDER BY L.id desc "})
     List<LocationDTO> getAllLocationsByCategory(@Param("category") String category);
 
-    @Select(" SELECT * FROM warehouses")
+    @Select(" SELECT * FROM warehouses ")
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(property = "site", column = "siteId", javaType = Site.class,

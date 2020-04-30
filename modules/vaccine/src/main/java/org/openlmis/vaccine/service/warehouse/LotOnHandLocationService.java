@@ -229,4 +229,12 @@ public class LotOnHandLocationService {
     public List<TransferDTO>getTransferDetailsBy(Long wareHouseId, Long fromBinLocationId) {
         return repository.getTransferDetailsBy(wareHouseId,fromBinLocationId);
     }
+
+    public void updateByLotOnHandAndLocation(Integer total, Long fromBin, Long lotOnHandId) {
+        repository.updateByLotOnHandAndLocation(total,fromBin,lotOnHandId);
+    }
+
+    public LotOnHandLocation getBy(Long fromBin, Long lotOnHandId) {
+        return repository.getBy(fromBin, lotOnHandId);
+    }
 }

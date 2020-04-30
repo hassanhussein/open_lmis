@@ -50,6 +50,9 @@ public class StockMovementController extends BaseController {
         return OpenLmisResponse.response("transfers",transferService.getAll());
     }
 
-
+   @RequestMapping(value = "all-transfer-reasons", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllTransferReasons() {
+        return OpenLmisResponse.response("reasons",transferService.getTransferReasons());
+    }
 
 }

@@ -33,4 +33,8 @@ public class TransferRepository {
     public void updateReason(AdjustmentReasonExDTO reason){
         mapper.updateReason(reason);
     }
+
+    public List<AdjustmentReasonExDTO> getTransferReasons() {
+        return mapper.getTransferReasons();
+    }
 }

@@ -11,7 +11,6 @@
 function StockController($scope,$timeout, TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots,GetStockProducts,GetTransferDetails) {
                     console.log(vaccineProducts);
 
-
 $scope.stockMovement = {};
 $scope.stockMovement.products = [];
 
@@ -32,6 +31,7 @@ $scope.loadBinLocation = function(wareHouseId, warehouseList) {
 var binLocations = [];
 binLocations  = _.where(warehouseList, {id:wareHouseId});
 $scope.stockMovement.locations = binLocations[0].locations;
+console.log(binLocations);
 
 };
 
@@ -52,7 +52,7 @@ GetTransferDetails.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocation
 
 
 $scope.loadProductLots = function(productId) {
-
+   console.log($scope.productToDisplay);
     $scope.lotsToDisplay = [];
 
      if($scope.productToDisplay.length > 0) {
@@ -81,8 +81,8 @@ $scope.validateQuantity  = function (movement){
 
  $scope.isGreater = false;
 
- if(movement.quantity > movement.soh) {
-   $scope.errorMessage = 'The Quantity is greater than SOH';
+ if(movement.quantity > movement.soh || movement.quantity === 0) {
+   $scope.errorMessage = 'The Quantity should be less than SOH or greater than ZERO';
    $scope.showError = true;
    $scope.isGreater = true;
    return;
@@ -96,7 +96,7 @@ $scope.validateQuantity  = function (movement){
 $scope.submit = function (stockMovement) {
 
 stockMovement.stockCardId = $scope.productToDisplay[0].stockCardId;
-
+stockMovement.lotOnHandId = $scope.productToDisplay[0].lotOnHandId;
 console.log(stockMovement);
 
     if($scope.isGreater) {
@@ -167,16 +167,16 @@ StockController.resolve =  {
         return deferred.promise;
     },
 
-    reasonsForAdjustments: function ($q, $timeout, GetLossAndAdjustments, $routeParams) {
+    reasonsForAdjustments: function ($q, $timeout, GetTransferReasons, $routeParams) {
         var deferred = $q.defer();
         $timeout(function () {
 
-                GetLossAndAdjustments.get({},
+                GetTransferReasons.get({},
 
                     function (data) {
 
-                        if (!isUndefined(data.lossAdjustmentTypes) || data.lossAdjustmentTypes.length > 0)
-                            deferred.resolve(data.lossAdjustmentTypes);
+                        if (!isUndefined(data.reasons) || data.reasons.length > 0)
+                            deferred.resolve(data.reasons);
                         });
 
 

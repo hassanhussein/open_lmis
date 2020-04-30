@@ -29,15 +29,17 @@ public interface TransferMapper {
 
 
     @Insert("INSERT INTO public.wms_reasons(\n" +
-            "             code, reasonName)\n" +
-            "    VALUES (#{code}, #{reasonName}); ")
+            "             code, name)\n" +
+            "    VALUES (#{code}, #{name}); ")
     @Options(useGeneratedKeys = true)
     Integer insertReasons(AdjustmentReasonExDTO reason);
 
-    @Update("UPDATE wms_reasons SET code = #{code}, reasonName=#{reasonName} WHERE id =#{id}")
+    @Update("UPDATE wms_reasons SET code = #{code}, name=#{name} WHERE id =#{id}")
     void updateReason(AdjustmentReasonExDTO reason);
 
     @Select(" SELECT * FROM wms_reasons WHERE lower(code) = lower(#{code})")
     AdjustmentReasonExDTO getReasonByCode(@Param("code") String code);
 
+    @Select(" SELECT * FROM wms_reasons ")
+    List<AdjustmentReasonExDTO> getTransferReasons();
 }

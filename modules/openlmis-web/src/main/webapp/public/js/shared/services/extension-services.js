@@ -1423,3 +1423,7 @@ services.factory('TransferRecords', function ($resource) {
 services.factory('GetStockProducts', function ($resource) {
     return $resource('/rest-api/lotLocation/stock-products', {}, {});
 });
+
+services.factory('GetTransferReasons', function ($resource) {
+    return $resource('/rest-api/transfer/all-transfer-reasons', {}, {});
+});
