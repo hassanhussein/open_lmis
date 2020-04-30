@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import org.openlmis.vaccine.domain.wms.Location;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.openlmis.vaccine.repository.warehouse.WmsLocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,10 @@ public class WmsLocationService {
             repository.insert(location);
         }
 
+    }
+
+    public LocationDTO getByLocationId(Long locationId) {
+        return repository.getByLocationId(locationId);
     }
 
 }
