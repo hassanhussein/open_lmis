@@ -75,16 +75,7 @@
                         <table class="table table-bordered" fixed-table-header>
                             <thead>
                             <tr class="gradient-header" style="height:55px">
-                                <th  colspan="4"> Distribute to:</th>
-                            </tr>
-                            <tr class="gradient-header inner-tr-height">
-                                <th  colspan="4"></th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            <tr ng-repeat-start="p in soh" class="inner-tr-height">
-                                <th  colspan="4">{{p.product}}</th>
+                                <th  colspan="4" style="text-align:center"> Distribute to:</th>
                             </tr>
                             <tr class="gradient-header inner-tr-height">
                                 <th >Batch</th>
@@ -92,6 +83,18 @@
                                 <th >Exp Date</th>
                                 <th >SOH</th>
                             </tr>
+                            </thead>
+
+                            <tbody>
+                            <tr ng-repeat-start="p in soh" class="inner-tr-height">
+                                <th  colspan="4">{{p.product}}</th>
+                            </tr>
+<!--                            <tr class="gradient-header inner-tr-height">-->
+<!--                                <th >Batch</th>-->
+<!--                                <th >VVM</th>-->
+<!--                                <th >Exp Date</th>-->
+<!--                                <th >SOH</th>-->
+<!--                            </tr>-->
                             <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">
                                 <td >{{lot.number}}</td>
                                 <td >{{lot.vvm}}</td>
@@ -159,17 +162,17 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat-start="p in soh" class="inner-tr-height">
-                                <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+2}}">{{getOrderedQuantity($index,p.productId)}}</td>
+                                <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+1}}">{{getOrderedQuantity($index,p.productId)}}</td>
                                 <td></td>
-                                <td class="cell-input" style="padding-left: 15px;"  rowspan="{{p.lots.length+2}}" ng-repeat-end>{{getGap($index,p)}}</td>
+                                <td class="cell-input" style="padding-left: 15px;"  rowspan="{{p.lots.length+1}}" ng-repeat-end>{{getGap($index,p)}}</td>
                             </tr>
-                            <tr class="inner-tr-height">
-                                <td></td>
-                                <td></td>
-                            </tr>
+<!--                            <tr class="inner-tr-height">-->
+<!--                                <td>d</td>-->
+<!--                                <td>d1</td>-->
+<!--                            </tr>-->
                             <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">
                                 <td class="cell-input col-beginningBalance"  ng-repeat="req in requstions" >
-                                    <input ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="lotIndex>0 && p.lots[lotIndex-1].amount>0" type="text">
+                                    <input  ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)||(lot.amount<=0 && !focus)" ng-init="focus=false" ng-focus="focus=true" ng-blur="focus=false" class="ng-invalid" type="text">
                                 </td>
                             </tr>
 
