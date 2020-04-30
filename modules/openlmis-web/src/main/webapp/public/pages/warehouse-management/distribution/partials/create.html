@@ -26,7 +26,7 @@
 
 
 
-                    <div class="span4">
+                    <div class="span3">
                         <label for="receiptDate">
                             <span>Distribution Date</span>
                             <span class="label-required"> *</span>
@@ -45,7 +45,7 @@
                         </div>
                     </div>
 
-                    <div class="span4">
+                    <div class="span3">
                         <label for="supplier" >Distribution Type <span class="label-required"> *</span></label>
 
 
@@ -70,44 +70,120 @@
 
                 <br>
 
-                <div class="form-row clearfix">
-                    <table class="table table-bordered receive" style="display:block;overflow-x:auto;"  >
-                        <tr class="gradient-header">
-                            <th class="tg-lboi" colspan="4">Distribute to:</th>
-                            <th  ng-repeat="req in requstions" colspan="3">{{req.name}}</th>
-                        </tr>
-                        <tr class="gradient-header">
-                            <th  colspan="4"></th>
-                            <th  ng-repeat-start="req in requstions">Qty Ordered</th>
-                            <th >Qty to Issue</th>
-                            <th  ng-repeat-end>Gap</th>
-                        </tr>
-                        <!-- done -->
+                <div class="rnr-table">
+                    <div class="float-left left-table parent">
+                        <table class="table table-bordered" fixed-table-header>
+                            <thead>
+                            <tr class="gradient-header" style="height:55px">
+                                <th  colspan="4" style="text-align:center"> Distribute to:</th>
+                            </tr>
+                            <tr class="gradient-header inner-tr-height">
+                                <th >Batch</th>
+                                <th >VVM</th>
+                                <th >Exp Date</th>
+                                <th >SOH</th>
+                            </tr>
+                            </thead>
 
-                        <tr ng-repeat-start="p in soh">
-                            <td  colspan="4">{{p.product}}</td>
-                            <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+2}}">{{getOrderedQuantity($index,p.productId)}}</td>
-                            <td  rowspan="2"></td>
-                            <td class="cell-input" style="padding-left: 15px;" rowspan="{{p.lots.length+2}}" ng-repeat-end>{{getGap($index,p)}}</td>
-                        </tr>
-                        <tr class="gradient-header">
-                            <td >Batch</td>
-                            <td >VVM</td>
-                            <td >Exp Date</td>
-                            <td >SOH</td>
-                        </tr>
-                        <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index">
-                            <td >{{lot.number}}</td>
-                            <td >{{lot.vvm}}</td>
-                            <td >{{lot.expiry}}</td>
-                            <td >{{lot.amount}}</td>
-                            <td class="cell-input"  ng-repeat="req in requstions" >
-                                <input ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="lotIndex>0 && p.lots[lotIndex-1].amount>0" type="text">
-                            </td>
+                            <tbody>
+                            <tr ng-repeat-start="p in soh" class="inner-tr-height">
+                                <th  colspan="4">{{p.product}}</th>
+                            </tr>
+<!--                            <tr class="gradient-header inner-tr-height">-->
+<!--                                <th >Batch</th>-->
+<!--                                <th >VVM</th>-->
+<!--                                <th >Exp Date</th>-->
+<!--                                <th >SOH</th>-->
+<!--                            </tr>-->
+                            <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">
+                                <td >{{lot.number}}</td>
+                                <td >{{lot.vvm}}</td>
+                                <td >{{lot.expiry}}</td>
+                                <td >{{lot.amount}}</td>
 
-                        </tr>
 
-                    </table>
+                            </tr>
+                            </tbody>
+
+
+
+
+                        </table>
+                    </div>
+                    <div class="float-left right-table parent">
+<!--                        <table class="table table-bordered" >-->
+<!--                            <tr class="gradient-header" style="height:55px">-->
+<!--                                <th class="tg-lboi" colspan="4" >Distribute to:</th>-->
+<!--                                <th  ng-repeat="req in requstions" colspan="3">{{req.name}}</th>-->
+<!--                            </tr>-->
+<!--                            <tr class="gradient-header inner-tr-height">-->
+<!--                                <th  colspan="4"></th>-->
+<!--                                <th  ng-repeat-start="req in requstions">Qty Ordered</th>-->
+<!--                                <th >Qty to Issue</th>-->
+<!--                                <th  ng-repeat-end>Gap</th>-->
+<!--                            </tr>-->
+<!--                            &lt;!&ndash; done &ndash;&gt;-->
+
+<!--                            <tr ng-repeat-start="p in soh" class="inner-tr-height">-->
+<!--                                <td  colspan="4">{{p.product}}</td>-->
+<!--                                <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+2}}">{{getOrderedQuantity($index,p.productId)}}</td>-->
+<!--                                <td  rowspan="2"></td>-->
+<!--                                <td class="cell-input" style="padding-left: 15px;" rowspan="{{p.lots.length+2}}" ng-repeat-end>{{getGap($index,p)}}</td>-->
+<!--                            </tr>-->
+<!--                            <tr class="gradient-header inner-tr-height">-->
+<!--                                <td >Batch</td>-->
+<!--                                <td >VVM</td>-->
+<!--                                <td >Exp Date</td>-->
+<!--                                <td >SOH</td>-->
+<!--                            </tr>-->
+<!--                            <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">-->
+<!--                                <td >{{lot.number}}</td>-->
+<!--                                <td >{{lot.vvm}}</td>-->
+<!--                                <td >{{lot.expiry}}</td>-->
+<!--                                <td >{{lot.amount}}</td>-->
+<!--                                <td class="cell-input"  ng-repeat="req in requstions" >-->
+<!--                                    <input ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="lotIndex>0 && p.lots[lotIndex-1].amount>0" type="text">-->
+<!--                                </td>-->
+
+<!--                            </tr>-->
+
+<!--                        </table>-->
+
+                        <table class="table table-bordered" fixed-table-header>
+                            <thead>
+                            <tr class="gradient-header" style="height:55px">
+                                <th  ng-repeat="req in requstions" colspan="3">{{req.name}}</th>
+                            </tr>
+                            <tr class="gradient-header inner-tr-height">
+                                <th  ng-repeat-start="req in requstions">Qty Ordered</th>
+                                <th >Qty Issued</th>
+                                <th  ng-repeat-end>Gap</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat-start="p in soh" class="inner-tr-height">
+                                <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+1}}">{{getOrderedQuantity($index,p.productId)}}</td>
+                                <td></td>
+                                <td class="cell-input" style="padding-left: 15px;"  rowspan="{{p.lots.length+1}}" ng-repeat-end>{{getGap($index,p)}}</td>
+                            </tr>
+<!--                            <tr class="inner-tr-height">-->
+<!--                                <td>d</td>-->
+<!--                                <td>d1</td>-->
+<!--                            </tr>-->
+                            <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">
+                                <td class="cell-input col-beginningBalance"  ng-repeat="req in requstions" >
+                                    <input numeric-validator="positiveInteger"  ng-change="giveLot(req,p,lot,qty,$index)" ng-model="qty" ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)||(lot.amount<=0 && !focus)" ng-init="focus=false" ng-focus="focus=true" ng-blur="focus=false" class="ng-invalid" type="text">
+                                </td>
+                            </tr>
+
+
+
+                            </tbody>
+
+
+                        </table>
+                    </div>
+
                 </div>
 
             </div>
@@ -118,7 +194,7 @@
         <div form-toolbar id="action_buttons" class="action-buttons">
             <div class="form-cell button-row">
                 <input id="saveButton" type="submit" class="btn btn-primary save-button"
-                       openlmis-message="button.save" ng-click="saveAsn('DRAFT')" ng-if="!viewMode"/>
+                       value="Release for Picking" ng-click="saveAsn('DRAFT')" ng-if="!viewMode"/>
                 <!--                    <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"-->
                 <!--                            value="Print"/>-->
                 <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
