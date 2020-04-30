@@ -80,8 +80,7 @@ $scope.showSOH = function(lotId) {
 $scope.validateQuantity  = function (movement){
 
  $scope.isGreater = false;
-
- if(movement.quantity === 0) {
+ if(parseInt(movement.quantity,10) === 0) {
    $scope.errorMessage = 'The Quantity should be greater than ZERO';
    $scope.showError = true;
    $scope.isGreater = true;
