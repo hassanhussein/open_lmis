@@ -97,6 +97,17 @@ font-weight:bold;
                             <div class="form-row">
                                    <div class="form-cell horizontalFilters">
                                        <div class="col">
+                                           <div>
+                                               <label for="drpProduct" class="labels" ><span > Category Filters
+                                               </span><span  class="label-required">*</span></label><div>
+                                               <select id="drpProduct" ui-select2 class="input-large" ng-model="filter.isRegion"">
+                                                   <option  value="false" ng-selected="filter.isRegion == false">Facilities</option>
+                                                   <option  value="true" ng-selected="filter.isRegion == true">Regions</option>
+                                               </select>
+                                           </div>
+                                           </div>
+                                       </div>
+                                       <div class="col">
                                              <covid-product-filter class="form-cell horizontalFilters"></covid-product-filter>
                                          </div>
                                        <div class="col">
@@ -115,7 +126,7 @@ font-weight:bold;
                                            <br>
                                            <div>
                                                <span class="pull-right">
-                                                   <a ng-click="loadEmergencyCommoditiesDashlets(filter)" class="waves-effect waves-light btn">Search</a>
+                                                   <a ng-click="stockSection(filter)" class="waves-effect waves-light btn">Search</a>
                                                </span>
                                            </div>
                                        </div>
@@ -207,8 +218,15 @@ font-weight:bold;
 <!--                            </div>-->
                         </div>
                     </div>
-
-                <div class="card-content" ng-controller="EmergencyCommoditiesController">
+                    <div class="row">
+                        <div class="box-icon" style="float:right; margin-right:20px"  >
+                            <a id="pdf-button" href="" ng-click="exportReport('PDF')"
+                               class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+                            <a id="xls-button"  href="" ng-click="exportReport('XLS')"
+                               class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+                        </div>
+                    </div>
+                    <div class="card-content" ng-controller="EmergencyCommoditiesController">
                     <div style="height: 600px !important;">
                         <div class="card-action" style="background-color: #17888f; ; padding:8px">
                             <span style="color:white">{{title}}</span>
@@ -229,26 +247,6 @@ font-weight:bold;
                                         <covid-product-filter class="form-cell horizontalFilters"></covid-product-filter>
                                     </div>
                                 </div>
-<!--                                <div class="col">-->
-<!--                                    <label for="status" class="labels">Status</label>-->
-<!--                                    <div>-->
-<!--                                        <select id ="status" ui-select2 class="input-large"  ng-model="filter.status" ng-change="OnFilterChanged()">-->
-<!--                                            <option ng-repeat="type in statuses" ng-selected="type.code == default_status"-->
-<!--                                                    value="{{type.code}}">{{type.name}}-->
-<!--                                            </option>-->
-<!--                                        </select>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="col">-->
-<!--                                    <label for="source" class="labels">Source</label>-->
-<!--                                    <div>-->
-<!--                                        <select id ="source" ui-select2 class="input-large"  ng-model="filter.source" ng-change="OnFilterChanged()">-->
-<!--                                            <option ng-repeat="type in statuses" ng-selected="type.code == default_status"-->
-<!--                                                    value="{{type.code}}">{{type.name}}-->
-<!--                                            </option>-->
-<!--                                        </select>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                                 <div class="col">
                                     <br>
                                     <div>
@@ -264,6 +262,14 @@ font-weight:bold;
                     </filter-container>
                 </div>
                 <div id="pipeline"></div>
+                <div class="row" style="background:white">
+                    <div class="box-icon" style="float:right; margin-right:20px"  >
+                        <a id="pdf-button" href="" ng-click="exportReport('PDF')"
+                           class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
+                        <a id="xls-button"  href="" ng-click="exportReport('XLS')"
+                           class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+                    </div>
+                </div>
                 <div class="card-content" ng-controller="StockInboundController" style="padding:10px; background:white;">
                     <div style="height: 600px !important;">
                         <div class="card-action" style="background-color: #17888f; padding:8px">

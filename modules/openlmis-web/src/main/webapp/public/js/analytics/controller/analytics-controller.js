@@ -15,9 +15,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
         if (!isUndefined(data)) {
             var program = data.program;
 
-            FullProcessingPeriodData.get({program:parseInt(program.id,10)}).then(function(data){
+            FullProcessingPeriodData.get({program:parseInt(0,10)}).then(function(data){
+            console.log(data);
 
-                        console.log(data);
                 var period = data;
 
                var newParam = {
@@ -49,17 +49,29 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 //$rootScope.loadStockAvailableByLevel($scope.$parent.params);
               //  $rootScope.loadStockStatusByProgramTrends($scope.$parent.params, 'level1');
                 //$rootScope.loadConsumptionTrendSummary(params);
-               //$rootScope.loadInboundReport(params);
-              // $rootScope.loadEmergencyCommoditiesDashlets(params);
+
+if (typeof $rootScope.loadEmergencyCommoditiesDashlets !== "undefined") {
+           $rootScope.loadEmergencyCommoditiesDashlets(params);
+}
+
+if (typeof $rootScope.loadLatestReportedStockStatus !== "undefined") {
+           $rootScope.loadLatestReportedStockStatus(params);
+}
+
+if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
+           $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
+}
+
                loadRegularEmergenceTrend(params);
+
                // $rootScope.loadHealthCommoditiesFinancing(params);
 
               //  $rootScope.loadStockOutRate(params);
                 //$rootScope.loadCommoditiesComparison($scope.$parent.params);
 
-                $rootScope.loadLatestReportedStockStatus(params);
+
                //$rootScope.loadStockImbalance(params);
-                $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
+//                $rootScope.loadStockOutRateTrendForTracer(params, "Tz");
             });
 
         }

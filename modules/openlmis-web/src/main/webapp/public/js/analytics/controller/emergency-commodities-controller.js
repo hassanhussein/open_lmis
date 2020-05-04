@@ -4,6 +4,7 @@ GetCummulativeCasesTrendData, GetCasesPerDesignatedFacilitiesData) {
     $rootScope.loadEmergencyCommoditiesDashlets = function(params) {
         $scope.stockSection(params);
         $scope.facilityReporting(params);
+        $rootScope.loadInboundReport(params);
 
     };
 
@@ -78,6 +79,8 @@ GetCummulativeCasesTrendData, GetCasesPerDesignatedFacilitiesData) {
 
     $scope.stockSection = function(params) {
 
+    console.log(params);
+
         if (!params.startDate && !params.endDate) {
             var currentDate = new Date();
             currentDate.setDate(currentDate.getDate());
@@ -90,11 +93,16 @@ GetCummulativeCasesTrendData, GetCasesPerDesignatedFacilitiesData) {
             params.product = 0;
         }
 
+        if(!params.isRegion)
+        {
+        params.isRegion =false;
+        }
+
         var subTitle = "From " + params.startDate + " to " + params.endDate;
 
         var allParams = angular.extend(params);
         GetCOVIDStockStatusData.get(params).then(function(data) {
-            $scope.stockAvailabilityByDesignatedHospital('stockAvailabilityByDesignatedHospital', data, subTitle);
+            $scope.stockAvailabilityByDesignatedHospital('stockAvailabilityByDesignatedHospital', data, params, subTitle);
             $scope.stockAvailabilityForEmergencyCommodities('stockAvailabilityForEmergencyCommodities', data, subTitle);
         });
     };
@@ -156,13 +164,19 @@ GetCummulativeCasesTrendData, GetCasesPerDesignatedFacilitiesData) {
 
 
 
-    $scope.stockAvailabilityByDesignatedHospital = function(chartTypeId, data, subTitle) {
+    $scope.stockAvailabilityByDesignatedHospital = function(chartTypeId, data, params, subTitle) {
+    var title ="";
+    if(params.isRegion)
+        title = 'Stock Availability By Regions';
+    else
+        title = 'Stock Availability By Designated Hospitals';
+
         Highcharts.chart(chartTypeId, {
             chart: {
                 type: 'bar'
             },
             title: {
-                text: 'Stock Availability By Designated Hospitals'
+                text: title
             },
             subtitle: {
                 text: subTitle
@@ -360,6 +374,15 @@ console.log(e);
                 ]
             }]
         });
+    };
+
+
+    $scope.exportReport= function(exportFormat)
+    {
+//            $scope.filter.pdformat = 1;
+//            var params = jQuery.param($scope.distributionSumaryReportParams);
+//            var url = '/reports/download/vaccine_received_summary_report/' + type + '?' + params;
+//            $window.open(url, "_BLANK");
     };
 }
 
