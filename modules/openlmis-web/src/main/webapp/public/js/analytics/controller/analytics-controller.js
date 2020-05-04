@@ -15,9 +15,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
         if (!isUndefined(data)) {
             var program = data.program;
 
-            FullProcessingPeriodData.get({program:parseInt(0,10)}).then(function(data){
-            console.log(data);
+            FullProcessingPeriodData.get({program:parseInt(program.id,10)}).then(function(data){
 
+                        console.log(data);
                 var period = data;
 
                var newParam = {
@@ -49,10 +49,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
                 //$rootScope.loadStockAvailableByLevel($scope.$parent.params);
               //  $rootScope.loadStockStatusByProgramTrends($scope.$parent.params, 'level1');
                 //$rootScope.loadConsumptionTrendSummary(params);
-               $rootScope.loadInboundReport(params);
-               $rootScope.loadEmergencyCommoditiesDashlets(params);
+               //$rootScope.loadInboundReport(params);
+              // $rootScope.loadEmergencyCommoditiesDashlets(params);
                loadRegularEmergenceTrend(params);
-
                // $rootScope.loadHealthCommoditiesFinancing(params);
 
               //  $rootScope.loadStockOutRate(params);
@@ -226,6 +225,8 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
     $rootScope.loadStockStatusSummary(parameters,false);
 
+    $rootScope.loadStockAvailableByLevel(parameters);
+
      $rootScope.loadStockAvailableForPeriodData(parameters);
 
      $rootScope.loadOnTimeDelivery(parameters);
@@ -234,9 +235,9 @@ function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, le
 
      $rootScope.loadPercentageWastageData(parameters);
 
-    // $rootScope.loadTimelinessReportingData(parameters);
-
      $rootScope.initializeRequisitionSummary(parameters);
+
+      $rootScope.loadTimelinessReportingData(parameters);
 
     }
 

@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.domain.Facility;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -78,16 +80,16 @@ public class StockOutNotificationDTO extends BaseModel {
     @JsonProperty("legalNumber")
     public String legalNumber;
     @JsonProperty("fullFilledItems")
-    public List<FullFilledItem> fullFilledItems = null;
+    public List<FullFilledItem> fullFilledItems = new ArrayList<>();
     @JsonProperty("stockOutItems")
-    public List<StockOutItem> stockOutItems = null;
+    public List<StockOutItem> stockOutItems = new ArrayList<>();
     @JsonProperty("inSufficientFundingItems")
-    public List<InSufficientFundingItem> inSufficientFundingItems = null;
+    public List<InSufficientFundingItem> inSufficientFundingItems = new ArrayList<>();
     @JsonProperty("rationingItems")
-    public List<RationingItem> rationingItems = null;
+    public List<RationingItem> rationingItems = new ArrayList<>();
     @JsonProperty("closeToExpireItems")
-    public List<CloseToExpireItem> closeToExpireItems = null;
+    public List<CloseToExpireItem> closeToExpireItems = new ArrayList<>();
     @JsonProperty("phasedOutItems")
-    public List<PhasedOutItem> phasedOutItems = null;
+    public List<PhasedOutItem> phasedOutItems = new ArrayList<>();
 
 }

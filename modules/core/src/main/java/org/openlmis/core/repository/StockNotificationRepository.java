@@ -6,6 +6,7 @@ import org.openlmis.core.service.notification.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -56,4 +57,11 @@ public class StockNotificationRepository {
         stockOutItemService.save(notification);
     }
 
+    public StockOutNotificationDTO getById(Long id) {
+        return mapper.getById(id);
+    }
+
+    public List<HashMap<String, Object>> getStockBy(String facilityIds) {
+        return mapper.getStockBy(facilityIds);
+    }
 }

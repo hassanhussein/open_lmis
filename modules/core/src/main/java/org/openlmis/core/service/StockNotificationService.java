@@ -1,14 +1,17 @@
 package org.openlmis.core.service;
 
+import org.openlmis.core.domain.RightName;
 import org.openlmis.core.dto.NotificationResponseDTO;
 import org.openlmis.core.dto.ResponseExtDTO;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
 import org.openlmis.core.repository.StockNotificationRepository;
+import org.openlmis.core.repository.helper.CommaSeparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -20,7 +23,14 @@ public class StockNotificationService {
  @Autowired
  private ELMISInterfaceService elmisInterfaceService;
 
- @Transactional
+ @Autowired
+ private CommaSeparator commaSeparator;
+
+ @Autowired
+ private FacilityService facilityService;
+
+
+    @Transactional
  public StockOutNotificationDTO save(StockOutNotificationDTO notification) throws SQLException {
 
      if (notification != null) {
@@ -45,4 +55,14 @@ public class StockNotificationService {
         notificationResponse.setMessage("Received Successful");
         elmisInterfaceService.processAndSendOutOfStockResponseData(notificationResponse);
     }
+
+    public StockOutNotificationDTO getById(Long id) {
+     return repository.getById(id);
+    }
+
+    public List<HashMap<String,Object>> getStockOutBy(Long userId, Long programId){
+        String facilityIds = commaSeparator.commaSeparateIds(facilityService.getUserSupervisedFacilities(userId, programId, RightName.VIEW_OUT_OF_STOCK_NOTIFICATION));
+        return repository.getStockBy(facilityIds);
+    }
+
 }

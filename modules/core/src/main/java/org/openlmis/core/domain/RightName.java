@@ -57,6 +57,8 @@ public class RightName {
   public static final String MANAGE_STOCK = "MANAGE_STOCK";
 
   public static final String CREATE_MONITORING_FORM = "CREATE_MONITORING_REPORT";
+  public static final String VIEW_OUT_OF_STOCK_NOTIFICATION = "VIEW_OUT_OF_STOCK_NOTIFICATION";
+
 
 
   public static String commaSeparateRightNames(String... rightNames) {
