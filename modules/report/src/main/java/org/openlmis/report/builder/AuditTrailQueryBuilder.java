@@ -21,9 +21,10 @@ public class AuditTrailQueryBuilder {
         SELECT("at.oldvalue");
         SELECT("at.newvalue");
         SELECT("at.createddate");
-        SELECT("case when identity = 'USERNAME' then identity else 'CODE' end as identity");
-        SELECT("concat(p.code, f.code, (case when identity = 'USERNAME' then identityvalue else '' end)) as identityvalue");
+        SELECT("case when split_part(at.action, '.', 1) = 'User' then 'USERNAME' else 'CODE' end as identity");
+        SELECT("concat(p.code, f.code, u.username) as identityvalue");
         FROM("audit_trails at");
+        LEFT_OUTER_JOIN("users u on (split_part(at.action, '.', 1) = 'User') and identityvalue = u.id::varchar");
         LEFT_OUTER_JOIN("products p on (split_part(at.action, '.', 1) = 'Product') and identityvalue = p.id::varchar");
         LEFT_OUTER_JOIN("facilities f on (split_part(at.action, '.', 1) = 'Facility') and identityvalue = f.id::varchar");
 
@@ -31,8 +32,13 @@ public class AuditTrailQueryBuilder {
         WHERE(endDateFilteredBy("at.createddate::date", filter.getPeriodEnd()));
 
         if (filter.getAction() != null) {
-            WHERE("split_part(at.action, '.', 2) = #{filterCriteria.action}");
+            if(filter.getAction().equals("CHANGE_NAME"))
+                WHERE("split_part(at.action, '.', 2) = #{filterCriteria.action} or " +
+                        "at.action = 'Product.CHANGE_PRIMARYNAME' ");
+            else
+                WHERE("split_part(at.action, '.', 2) = #{filterCriteria.action}");
         }
+
         ORDER_BY("at.createddate desc");
 
         String query = SQL();
@@ -47,12 +53,18 @@ public class AuditTrailQueryBuilder {
         BEGIN();
         SELECT("count(*)");
         FROM("audit_trails");
-        WHERE(startDateFilteredBy("createddate", filter.getPeriodStart()));
-        WHERE(endDateFilteredBy("createddate", filter.getPeriodEnd()));
+
+        WHERE(startDateFilteredBy("createddate::date", filter.getPeriodStart()));
+        WHERE(endDateFilteredBy("createddate::date", filter.getPeriodEnd()));
 
         if (filter.getAction() != null) {
-            WHERE("split_part(action, '.', 2) = #{filterCriteria.action}");
+            if(filter.getAction().equals("CHANGE_NAME"))
+                WHERE("split_part(action, '.', 2) = #{filterCriteria.action} or " +
+                        "action = 'Product.CHANGE_PRIMARYNAME' ");
+            else
+                WHERE("split_part(action, '.', 2) = #{filterCriteria.action}");
         }
+
         return SQL();
     }
 }
