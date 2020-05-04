@@ -20,6 +20,7 @@ import org.openlmis.report.mapper.PipelineExportReportMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.PipelineExportParams;
 import org.openlmis.report.util.ParameterAdaptor;
+import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ import java.util.Map;
 
 @Component
 @NoArgsConstructor
-public class PipelineExportReportProvider extends ReportDataProvider{
+public class PipelineExportReportProvider extends ReportDataProvider {
     private PipelineExportReportMapper reportMapper;
 
     @Autowired
@@ -36,19 +37,22 @@ public class PipelineExportReportProvider extends ReportDataProvider{
         this.reportMapper = mapper;
     }
 
+    @Autowired
+    private SelectedFilterHelper filterHelper;
+
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
         PipelineExportParams reportParam = getReportFilterData(filterCriteria);
         reportParam.setUserId(this.getUserId());
-        return reportMapper.getReport(reportParam,sortCriteria, rowBounds);
+        return reportMapper.getReport(reportParam, sortCriteria, rowBounds);
     }
 
-    public List<Product> getProducts(Map<String, String[]> filterCriteria){
+    public List<Product> getProducts(Map<String, String[]> filterCriteria) {
         return reportMapper.getProductsForProgram(getReportFilterData(filterCriteria));
     }
 
-    public ProcessingPeriod getPeriod(Map<String, String[]> filterCriteria){
+    public ProcessingPeriod getPeriod(Map<String, String[]> filterCriteria) {
         return reportMapper.getPeriod(getReportFilterData(filterCriteria));
     }
 
@@ -59,7 +63,7 @@ public class PipelineExportReportProvider extends ReportDataProvider{
 
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
-        return getReportFilterData(params).toString();
+        return filterHelper.getProgramPeriodGeoZone(params);
 
     }
 

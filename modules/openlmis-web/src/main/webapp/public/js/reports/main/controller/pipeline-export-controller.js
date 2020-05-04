@@ -19,7 +19,11 @@ function PipelineExportController($scope, $window , PipelineExportReport) {
         var url = '/reports/pipeline-export.xml?' + params;
         $window.open(url, '_blank');
     };
-
+    $scope.exportReportPdfExcel = function (type) {
+        var params = jQuery.param($scope.getSanitizedParameter());
+        var url = '/reports/download/pipeline_report/' + type + '?' + params;
+        window.open(url, "_BLANK");
+    };
     $scope.OnFilterChanged = function() {
         // clear old data if there was any
         $scope.data  = $scope.xml = $scope.datarows = [];

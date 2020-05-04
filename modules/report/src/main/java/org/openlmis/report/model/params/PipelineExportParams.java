@@ -23,4 +23,10 @@ public class PipelineExportParams
    extends BaseParam implements ReportParameter {
     private Long program;
     private Long period;
+
+    @Override
+    public String toString() {
+        return "program=" + program +
+                ", period=" + period;
+    }
 }
