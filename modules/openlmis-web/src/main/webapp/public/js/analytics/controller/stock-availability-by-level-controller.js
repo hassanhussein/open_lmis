@@ -13,7 +13,7 @@ $rootScope.loadStockAvailableByLevel = function(params){
 
 
     StockAvailableByLevelData.get(params).then(function(data) {
-
+console.log(data);
 if(data.length > 0 && !isUndefined(data)) {
 
      var categories = _.pluck(data, 'tracerItems');

@@ -1426,3 +1426,7 @@ services.factory('MonitoringReportApprove', function($resource){
 services.factory('GetCOVIDDesignatedFacilities', function($resource){
     return $resource('/api/dashboard/getCOVIDDesignatedFacilities.json', {}, update);
 });
+
+services.factory('GetNotificationList', function($resource){
+    return $resource('/stock-notification/:program.json', {}, {});
+});

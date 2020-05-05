@@ -237,6 +237,8 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
     $rootScope.loadStockStatusSummary(parameters,false);
 
+    $rootScope.loadStockAvailableByLevel(parameters);
+
      $rootScope.loadStockAvailableForPeriodData(parameters);
 
      $rootScope.loadOnTimeDelivery(parameters);
@@ -245,9 +247,9 @@ if (typeof $rootScope.loadStockOutRateTrendForTracer !== "undefined") {
 
      $rootScope.loadPercentageWastageData(parameters);
 
-    // $rootScope.loadTimelinessReportingData(parameters);
-
      $rootScope.initializeRequisitionSummary(parameters);
+
+      $rootScope.loadTimelinessReportingData(parameters);
 
     }
 

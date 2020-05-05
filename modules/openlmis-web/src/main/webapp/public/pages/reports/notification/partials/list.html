@@ -1,0 +1,154 @@
+<style>
+    .breadcrumb {
+    padding: 3px 5px !important;
+    margin-bottom: 1px !important;
+    }
+    .content h2 {
+    border-bottom: 1px solid #d6d6d6 !important;
+        font-size: 1.2em;
+    }
+    .row{
+    margin: 10px 0;
+    }
+
+   span {
+   padding-left: 18px;
+   height: 40px !important;
+   padding-top: 8px !important;
+
+   }
+   #printButton {
+     height:30px !important
+   }
+</style>
+
+<div>
+    <h2><span>{{title}}</span></h2>
+    <div class="row">
+    <div class="col-sm-12" style="background-color:whitesmoke;">
+
+        <div class="row">
+            <div id="pod" class="rnr-table" tab-scroll bottom-offset="180">
+                <table id="equipmentTable" fixed-table-header class="table-bordered scrollable">
+                    <thead>
+                    <tr>
+
+                        <th class="col-product">
+                            <div class="regimen-heading">
+                                <span>Msd Zone</span>
+                            </div>
+                        </th>
+                        <th class="col-region">
+                            <div class="regimen-heading">
+                                <span>Region</span>
+                            </div>
+                        </th>
+                        <th class="col-district">
+                            <div class="regimen-heading">
+                                <span>District</span>
+                            </div>
+                        </th>
+                        <th class="col-facilityCode">
+                            <div class="regimen-heading">
+                                <span>Facility Code</span>
+                            </div>
+                        </th>
+                        <th class="col-facilityName">
+                            <div class="regimen-heading">
+                                <span>Facility Name</span>
+                            </div>
+                        </th>
+
+                        <th class="col-invoiceNumber">
+                            <div class="regimen-heading">
+                                <span>Invoice Number</span>
+                            </div>
+                        </th>
+                        <th class="col-invoiceDate">
+                            <div class="regimen-heading">
+                                <span>Invoice Date</span>
+                            </div>
+                        </th>
+                        <th class="col-sales-category">
+                            <div class="regimen-heading">
+                                <span>Sales Category</span>
+                            </div>
+                        </th>
+                        <th class="col-elmis-order-number">
+                            <div class="regimen-heading">
+                                <span>Order Number</span>
+                            </div>
+                        </th>
+
+                        <th class="span1">
+                            <div class="regimen-heading">
+                                <span>Action</span>
+                            </div>
+                        </th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="not in notificationList"
+                        ng-class-odd="'odd'" ng-class-even="'even'"
+                        ng-init="$index%2==0?(color='odd'): (color='even')"
+                    >
+                        <td class="col-product cell-input disabled padding2px">
+                            <span ng-bind="not.zone_name" class="padding2px cell-text"></span>
+                        </td>
+
+                        <td class="col-region cell-input disabled padding2px">
+                            <span ng-bind="not.region_name" class="padding2px cell-text"></span>
+                        </td>
+                        <td class="col-district cell-input disabled padding2px">
+                            <span ng-bind="not.district_name" class="padding2px cell-text"></span>
+                        </td>
+                        <td class="col-facilityCode cell-input disabled padding2px">
+                            <span ng-bind="not.soldto" class="padding2px cell-text"></span>
+                        </td>
+
+                        <td class="col-facilityName cell-input disabled padding2px">
+                            <span ng-bind="not.soldtocustomername" class="padding2px cell-text"></span>
+                        </td>
+
+                         <td class="col-invoiceNumber cell-input disabled padding2px">
+                             <span ng-bind="not.invoicenumber" class="padding2px cell-text"></span>
+                         </td>
+                        <td class="col-invoiceDate cell-input disabled padding2px">
+                             <span ng-bind="not.invoicedate " class="padding2px cell-text"></span>
+                         </td>
+
+                        <td class="col-sales-category cell-input disabled padding2px">
+                             <span ng-bind="not.salescategory" class="padding2px cell-text"></span>
+                         </td>
+
+                        <td class="col-elmis-order-number cell-input disabled padding2px">
+                             <span ng-bind="not.ordernumber" class="padding2px cell-text"></span>
+                         </td>
+
+                        <td  class="cell-input padding2px" >
+                              <span style="padding-left: 18px;padding-top: 10px;">
+                            <a style="padding-top: 5px;" ng-click="viewDetails(not.id)"
+                                    id="printButton"
+                               class="btn btn-primary"> view
+                         </a>
+                              </span>
+                        </td>
+
+                    </tr>
+
+
+                    </tbody>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+
+</div>
