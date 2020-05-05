@@ -403,7 +403,7 @@ app.controller('StockInboundController', function($rootScope, $scope, GetInbound
                     visible: false
                 },
                 yAxis: {
-                    gridLineWidth: 1,
+                    gridLineWidth: 3,
                     title: null,
                     labels: {
                         enabled: false

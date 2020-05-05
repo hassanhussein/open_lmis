@@ -66,7 +66,7 @@ public interface StockOutRateMapper {
             "            count(*) as totalIncidence\n" +
             "            from mv_stock_imbalance_by_facility_report imb\n" +
             "            join processing_periods pp on pp.id=imb.periodid\n" +
-            "            where tracer=true and year=#{year} and pp.startdate < now()\n" +
+            "            where tracer=true and year=#{year} and pp.enddate < now()\n" +
             "            group by pp.enddate, district_name, region_name ) as a" +
             " order by a.month asc")
     List<HashMap<String,Object>> getStockOutRateTrendOfTracerProducts(@Param("year") Long year);
@@ -79,7 +79,7 @@ public interface StockOutRateMapper {
             "count(*) as totalIncidence\n" +
             "from mv_stock_imbalance_by_facility_report imb\n" +
             "join processing_periods pp on pp.id=imb.periodid\n" +
-            "where  year=#{year} and productid=#{product} and pp.startdate < now()\n" +
+            "where  year=#{year} and productid=#{product} and pp.enddate < now()\n" +
             "group by pp.enddate, district_name, region_name ) as a" +
             " order by a.month asc")
     List<HashMap<String,Object>> getStockOutRateTrendOfProducts(@Param("year") Long year, @Param("product") Long product);
@@ -123,7 +123,7 @@ public interface StockOutRateMapper {
             "group by productid, district_name\n" +
             ") a on a.productid=msifr.productid and a.district_name=msifr.district_name\n" +
             "join processing_periods pp on pp.id=msifr.periodid\n" +
-            " where tracer=true and pp.startdate < now()\n" +
+            " where tracer=true and pp.enddate < now()\n" +
             "group by msifr.district_name, region_name\n" +
             "order by reported desc")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForTracer();
@@ -144,7 +144,7 @@ public interface StockOutRateMapper {
             "group by productid, district_name\n" +
             ") a on a.productid=msifr.productid and a.district_name=msifr.district_name\n" +
             "join processing_periods pp on pp.id=msifr.periodid\n" +
-            " where msifr.productid=#{product} and pp.startdate < now()\n" +
+            " where msifr.productid=#{product} and pp.enddate < now()\n" +
             "group by msifr.district_name, region_name\n" +
             "order by reported desc")
     List<HashMap<String,Object>> getLatestReportedStockOnHandForProductByDistrict( @Param("product") Long product);
