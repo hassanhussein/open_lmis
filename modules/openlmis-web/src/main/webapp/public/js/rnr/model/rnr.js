@@ -315,7 +315,7 @@ var Rnr = function (rnr, programRnrColumns, numberOfMonths, operationalStatuses)
         function prepareLineItems(lineItems) {
             var regularLineItems = [];
             $(lineItems).each(function (i, lineItem) {
-                var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.numberOfMonths, programRnrColumns, thisRnr.status,rnr.period.enableOrder,rnr.period, rnr.program);
+                var regularLineItem = new RegularRnrLineItem(lineItem, thisRnr.numberOfMonths, programRnrColumns, thisRnr.status,rnr.period.enableOrder,rnr.period, thisRnr.program.canTrackCovid);
                 regularLineItems.push(regularLineItem);
             });
             return regularLineItems;
