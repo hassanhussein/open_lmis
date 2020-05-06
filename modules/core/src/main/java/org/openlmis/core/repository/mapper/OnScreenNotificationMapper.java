@@ -22,13 +22,16 @@ import java.util.List;
 @Repository
 public interface OnScreenNotificationMapper {
 
-  @Insert("INSERT INTO on_screen_notifications (facilityId, fromUserId, toUserId, isHandled, type, subject, message, url, createdBy, modifiedBy, modifiedDate) " +
-      "VALUES (#{facilityId}, #{fromUserId}, #{toUserId}, #{isHandled}, #{type}, #{subject}, #{message}, #{url}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+  @Insert("INSERT INTO on_screen_notifications (facilityId, requisitionId ,fromUserId, toUserId, isHandled, type, subject, message, url, createdBy, modifiedBy, modifiedDate) " +
+      "VALUES (#{facilityId}, #{requisitionId}, #{fromUserId}, #{toUserId}, #{isHandled}, #{type}, #{subject}, #{message}, #{url}, #{createdBy}, #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
   @Options(useGeneratedKeys = true)
   Integer insert(OnScreenNotification onScreenNotification);
 
   @Select("SELECT * FROM on_screen_notifications where userId = #{userId}")
   List<OnScreenNotification> getNotificationsForUser(@Param("userId") Long userId);
+
+  @Select("SELECT count(*) FROM on_screen_notifications where userId = #{userId}")
+  Long getNotificationsCountForUser(@Param("userId") Long userId);
 
   @Update("update set isHandled = true on_screen_notifications where id = #{id}")
   void markAsProcessed(@Param("id") Long id);

@@ -10,34 +10,21 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.openlmis.core.domain;
+CREATE TABLE on_screen_notifications
+(
+    id            serial primary key,
+    facilityId    int references facilities (id),
+    requisitionId int,
+    fromUserId    int,
+    toUserId      int,
+    isHandled     boolean default false,
+    type          varchar(200) not null,
+    subject       varchar(200) not null,
+    message       varchar(2000),
+    url           varchar(200),
+    createdBy     int,
+    createdDate   date    default now(),
+    modifiedBy    int,
+    modifiedDate  date
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class OnScreenNotification extends BaseModel {
-
-  Long facilityId;
-
-  Long requisitionId;
-
-  Long fromUserId;
-
-  Long toUserId;
-
-  Boolean isHandled = false;
-
-  String type;
-
-  String subject;
-
-  String message;
-
-  String url;
-
-}
+)
