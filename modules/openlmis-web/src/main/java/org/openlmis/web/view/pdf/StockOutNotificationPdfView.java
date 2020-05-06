@@ -49,7 +49,7 @@ public class StockOutNotificationPdfView extends AbstractView {
 
         try (ByteArrayOutputStream stream = createTemporaryOutputStream()) {
 
-            NotificationPdfWriter notificationPdfWriter = new NotificationPdfWriter(new PdfDocument(), stream, messageService);
+            NotificationPdfWriter notificationPdfWriter = new NotificationPdfWriter(new PdfDocument(), stream, messageService,model);
             notificationPdfWriter.buildWith(model);
             writeToResponse(response, stream);
 

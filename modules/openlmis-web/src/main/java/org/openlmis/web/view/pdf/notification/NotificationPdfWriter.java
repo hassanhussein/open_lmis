@@ -1,13 +1,10 @@
 package org.openlmis.web.view.pdf.notification;
 
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.openlmis.core.service.MessageService;
-import org.openlmis.web.view.pdf.PdfPageEventHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,14 +22,15 @@ public class NotificationPdfWriter extends PdfWriter {
 
     public NotificationPdfWriter(PdfDocument document,
                                 OutputStream stream,
-                                MessageService messageService
+                                MessageService messageService,
+                                 Map<String, Object> model
     ) throws DocumentException {
         super(document, stream);
         document.addWriter(this);
         setDocumentAttributes(document);
         this.setViewerPreferences(getViewerPreferences());
         this.messageService = messageService;
-        this.setPageEvent(new PdfPageEventHandler(messageService));
+        this.setPageEvent(new NotificationEventPageHandler(messageService, model));
     }
     private void setDocumentAttributes(PdfDocument document) {
         document.setPageSize(PAGE_SIZE);
