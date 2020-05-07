@@ -1427,3 +1427,7 @@ services.factory('GetStockProducts', function ($resource) {
 services.factory('GetTransferReasons', function ($resource) {
     return $resource('/rest-api/transfer/all-transfer-reasons', {}, {});
 });
+
+services.factory('GetStockLedgerReport', function ($resource) {
+    return $resource('/rest-api/lotLocation/stock-ledgers/:warehouseId/:productId/:year.json', {warehouseId:'@warehouseId', productId:'@productId',year:'@year'}, {});
+});
