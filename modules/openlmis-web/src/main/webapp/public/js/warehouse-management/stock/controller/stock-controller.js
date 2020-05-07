@@ -9,15 +9,12 @@
  */
 
 function StockController($scope,$timeout, TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots,GetStockProducts,GetTransferDetails) {
-                    console.log(vaccineProducts);
 
 $scope.stockMovement = {};
 $scope.stockMovement.products = [];
 
 $scope.stockMovement.products = vaccineProducts;
 $scope.reasons = reasonsForAdjustments;
-
- console.log(reasonsForAdjustments);
 
  GetWarehouseLocations.get(function(data) {
 
@@ -31,20 +28,34 @@ $scope.loadBinLocation = function(wareHouseId, warehouseList) {
 var binLocations = [];
 binLocations  = _.where(warehouseList, {id:wareHouseId});
 $scope.stockMovement.locations = binLocations[0].locations;
-console.log(binLocations);
+
+loadToBinLocation($scope.stockMovement.locations);
 
 };
 
+var loadToBinLocation = function(toBinList) {
+
+ $scope.stockMovement.locations2 = [];
+
+var binLocations = [];
+binLocations = _.filter(toBinList, function(data){
+      return parseInt(data.id,10) != parseInt($scope.selectedBin,10);
+});
+
+$scope.stockMovement.locations2 = binLocations;
+
+};
 
 $scope.loadProductLotDetails = function (movement) {
+
+ $scope.selectedBin = movement.fromBin;
  $scope.productToDisplay = [];
  $scope.lotsToDisplay = [];
  $scope.stockMovement.soh = undefined;
 
 GetTransferDetails.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocationId:movement.fromBin}, function(data){
 
-
-    $scope.productToDisplay = data.products;
+ $scope.productToDisplay = data.products;
 
 });
 
@@ -52,13 +63,13 @@ GetTransferDetails.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocation
 
 
 $scope.loadProductLots = function(productId) {
-   console.log($scope.productToDisplay);
+
     $scope.lotsToDisplay = [];
 
      if($scope.productToDisplay.length > 0) {
 
      $scope.lotsToDisplay = _.where($scope.productToDisplay,{"productId":productId});
-     console.log($scope.lotsToDisplay);
+
      }
 
 
@@ -72,7 +83,6 @@ $scope.showSOH = function(lotId) {
  //quantityOnHand
 
   $scope.stockMovement.soh = _.where($scope.productToDisplay,{"lotId":lotId})[0].quantityOnHand;
-     console.log( _.where($scope.productToDisplay,{"lotId":lotId})[0].quantityOnHand);
   }
 
 };
@@ -102,7 +112,7 @@ $scope.submit = function (stockMovement) {
 
 stockMovement.stockCardId = $scope.productToDisplay[0].stockCardId;
 stockMovement.lotOnHandId = $scope.productToDisplay[0].lotOnHandId;
-console.log(stockMovement);
+
 
     if($scope.isGreater) {
     $scope.errorMessage = 'The Quantity is greater than SOH';
@@ -113,15 +123,12 @@ console.log(stockMovement);
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
-//            console.log($scope.asnForm.$error)
             return;
         }
 
 
 stockMovement.notify = true;
 TransferRecords.save({}, stockMovement, function(data) {
-console.log(data);
-
 
 $scope.showMessage = true;
 $scope.message = "Successiful Saved";
@@ -139,7 +146,7 @@ $timeout( function(){
  stockMovement.toBin= null;
  stockMovement.reason = null;
  stockMovement.quantity = null;
- }, 1000);
+ }, 3000);
 
 
 });

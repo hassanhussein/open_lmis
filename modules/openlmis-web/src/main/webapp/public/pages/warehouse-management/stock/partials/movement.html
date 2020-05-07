@@ -204,7 +204,7 @@
 
                     <select  name="toBin" id="toBin" ui-select2="{width: '100%'}" ng-model="stockMovement.toBin" ng-disabled="!stockMovement.toWarehouseId"
 
-                            ng-required="true"   ng-options="location.id as location.name for location in stockMovement.locations"
+                            ng-required="true"   ng-options="location.id as location.name for location in stockMovement.locations2"
                     >
                         <option value="">--Select Bin Location--</option>
 

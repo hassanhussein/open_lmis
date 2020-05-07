@@ -54,14 +54,6 @@ public class TransferService {
         locationService.updateByLotOnHandAndLocation(total,item.getFromBin(), item.getLotOnHandId());
 
 
-        //save Quantity On Hand
-        if(toBinSavedData != null) {
-
-            total = Integer.valueOf(toBinSavedData.getQuantityOnHand().toString()) + item.getQuantity();
-
-            locationService.updateByLotOnHandAndLocation(total, item.getToBin(), item.getLotOnHandId());
-        }
-
         LocationEntry entry = new LocationEntry();
         entry.setCreatedBy(userId);
         entry.setModifiedBy(userId);
@@ -96,6 +88,16 @@ public class TransferService {
         entry2.setKeyValues(vl2);
 
         locationEntryService.saveLocationEntry(entry2);
+
+
+        //save Quantity On Hand
+        // if(toBinSavedData != null) {
+
+        Integer total2 = 0;
+        total2 = Integer.valueOf(toBinSavedData.getQuantityOnHand().toString()) + item.getQuantity();
+        locationService.updateByLotOnHandAndLocation(total2, item.getToBin(), toBinSavedData.getLotOnHandId());
+        //}
+
 
         LotOnHand lotOnHand = new LotOnHand();
         lotOnHand.setId(item.getLotOnHandId());
