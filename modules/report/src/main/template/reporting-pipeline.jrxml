@@ -23,42 +23,13 @@
 	<parameter name="REPORT_MESSAGE_WHEN_NO_DATA" class="java.lang.String"/>
 	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[(SELECT DISTINCT facilities.code, facilities.name, gz.district_name as location, gz.region_name as province,
- p.name as program, ft.name as facilityType, 'REPORTED' as reportingStatus, period.name period, r.status as rnrStatus, r.id as rnrId,
-  (select max(rs.createdDate) from requisition_status_changes rs where rs.rnrid = r.id and rs.status = 'AUTHORIZED') as createdDate
-,'year' as year, 'month' as month
-FROM facilities
-INNER JOIN requisition_group_members rgm on rgm.facilityid = facilities.id
-INNER JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid
-INNER JOIN facility_types ft on ft.id = facilities.typeid
-INNER JOIN programs_supported ps on ps.facilityId = facilities.id and ps.programId = 3
-INNER JOIN programs p on p.id = ps.programId
-INNER JOIN processing_periods period on period.id = 109
-INNER JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programId = rgps.programId
-INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.programId and r.periodId = period.id and r.emergency = false
- order by name
- )
-
-union
-
-SELECT DISTINCT facilities.code, facilities.name, gz.district_name as location, gz.region_name as province, p.name as program,
-ft.name as facilityType, 'NON_REPORTING' as reportingStatus,period.name period, null as rnrStatus, r.id as rnrId,
- (select max(rs.createdDate) from requisition_status_changes rs where rs.rnrid = r.id and rs.status = 'AUTHORIZED') as createdDate
-,'year' as year, 'month' as month
-FROM facilities
-INNER JOIN requisition_group_members rgm on rgm.facilityid = facilities.id
-INNER JOIN vw_districts gz on gz.district_id = facilities.geographiczoneid
-INNER JOIN facility_types ft on ft.id = facilities.typeid
-INNER JOIN programs_supported ps on ps.facilityId = facilities.id and ps.programId = 3
-INNER JOIN programs p on p.id = ps.programId
-INNER JOIN processing_periods period on period.id = 109
-INNER JOIN requisition_group_program_schedules rgps on rgps.requisitionGroupId = rgm.requisitionGroupId and ps.programId = rgps.programId
-INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.programId and r.periodId = period.id and r.emergency = false
- order by name;]]>
+		<![CDATA[select
+productCode,
+ consumption, adjustment, product, period from products;]]>
 	</queryString>
 	<field name="productCode" class="java.lang.String"/>
 	<field name="consumption" class="java.lang.String"/>
-	<field name="adjustment" class="java.lang.String"/>
+	<field name="adjustment" class="java.lang.Long"/>
 	<field name="product" class="java.lang.String"/>
 	<field name="period" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
@@ -113,42 +84,42 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				</reportElement>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="0" y="0" width="40" height="32" uuid="bd93dec5-6d79-489a-a417-b20d9ad9fe08"/>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="40" height="32" uuid="bd93dec5-6d79-489a-a417-b20d9ad9fe08"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$R{label.line.no}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{label.line.no}!=null?$R{label.line.no}:"#Line No"]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="40" y="0" width="119" height="32" uuid="dd539b8b-94c9-44ad-82a1-744516ede0fb"/>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="40" y="0" width="119" height="32" uuid="dd539b8b-94c9-44ad-82a1-744516ede0fb"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{header.product.code}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="484" y="0" width="144" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="e268b6f3-c02e-43cb-823b-bbef5370279b"/>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="465" y="0" width="144" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="e268b6f3-c02e-43cb-823b-bbef5370279b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.reported.consumption}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="694" y="0" width="78" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="8a35ebf3-7667-4510-9bfe-9e601dd8920c"/>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="694" y="0" width="78" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="8a35ebf3-7667-4510-9bfe-9e601dd8920c"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.adjustments}]]></textFieldExpression>
 			</textField>
-			<textField pattern="" isBlankWhenNull="false">
-				<reportElement mode="Transparent" x="627" y="0" width="67" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="34855237-577e-4855-9c8c-35455750d400"/>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="609" y="0" width="85" height="32" forecolor="#000000" backcolor="#FFFFFF" uuid="34855237-577e-4855-9c8c-35455750d400"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.period}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="159" y="0" width="324" height="32" uuid="7d10ecb6-9860-405d-a20b-7195a66e5a35"/>
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="159" y="0" width="306" height="32" uuid="7d10ecb6-9860-405d-a20b-7195a66e5a35"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$R{header.product.name}]]></textFieldExpression>
 			</textField>
@@ -167,7 +138,7 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="484" y="0" width="144" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="465" y="0" width="144" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
 				</reportElement>
@@ -203,14 +174,14 @@ INNER JOIN requisitions r on r.facilityId = facilities.id and r.programId = ps.p
 				<textFieldExpression><![CDATA[$F{adjustment}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true">
-				<reportElement stretchType="RelativeToTallestObject" x="627" y="0" width="67" height="30" uuid="41fddc9d-19c1-437d-9096-a33148daf972"/>
+				<reportElement stretchType="RelativeToTallestObject" x="609" y="0" width="85" height="30" uuid="41fddc9d-19c1-437d-9096-a33148daf972"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<paragraph leftIndent="2"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{period}]]></textFieldExpression>
 			</textField>
 			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="159" y="0" width="324" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a">
+				<reportElement stretchType="RelativeToTallestObject" mode="Transparent" x="159" y="0" width="306" height="30" forecolor="#000000" backcolor="#FFFFFF" uuid="2ed64d73-ed87-4e35-a5ad-0d4f0d7d977a">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 				</reportElement>
