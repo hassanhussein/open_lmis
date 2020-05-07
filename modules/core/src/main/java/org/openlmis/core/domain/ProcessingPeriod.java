@@ -79,7 +79,7 @@ public class ProcessingPeriod extends BaseModel {
     if (isBlank(name)) {
       throw new DataException("error.period.without.name");
     }
-    if (endDate.compareTo(startDate) <= 0) {
+    if (endDate.compareTo(startDate) < 0) {
       throw new DataException("error.period.invalid.dates");
     }
   }
