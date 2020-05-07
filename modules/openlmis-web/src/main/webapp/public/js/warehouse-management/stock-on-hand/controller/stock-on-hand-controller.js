@@ -35,12 +35,12 @@ $scope.products=_.groupBy($scope.soh,'product');
 
 
 $scope.openLedger = function() {
-
+return;
 };
 
 
 $scope.calculateTotalQuantity=function(productId){
- console.log($scope.warehouseId)
+ console.log($scope.warehouseId);
  console.log(productId);
 var sum=0;
 var products=_.where($scope.soh,{productId:productId});
@@ -48,10 +48,10 @@ var products=_.where($scope.soh,{productId:productId});
     products.forEach(function(lot){
 
     sum+=lot.quantityOnHand;
-    })
+    });
  return sum;
 
-}
+};
 
 }
 
