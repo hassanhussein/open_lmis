@@ -11,7 +11,7 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
                 ordered:[{
                   productId:343,
                   product:"BCG",
-                  amount:353,
+                  amount:35343,
                   gap:'',
                   given:[]
                 },

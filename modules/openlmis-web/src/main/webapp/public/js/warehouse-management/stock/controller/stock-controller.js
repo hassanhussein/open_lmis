@@ -27,6 +27,7 @@ $scope.reasons = reasonsForAdjustments;
  });
 
 
+
 $scope.loadBinLocation = function(wareHouseId, warehouseList) {
 var binLocations = [];
 binLocations  = _.where(warehouseList, {id:wareHouseId});

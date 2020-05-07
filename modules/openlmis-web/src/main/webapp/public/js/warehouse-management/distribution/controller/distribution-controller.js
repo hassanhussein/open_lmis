@@ -226,12 +226,13 @@ if (ordered!==undefined) {
     lots:[{
        id:1,
       number:"ABDSE",
-      location:"abc",
-      amount:445,
-      maxSoh:445,
+
+      amount:4455,
+      maxSoh:4455,
       vvm:"VVM2",
       expiry:"2028-10-10"
     },
+
     {
     id:2,
       number:"PH0YUT",

@@ -1,0 +1,117 @@
+<!--
+  ~ This program is part of the OpenLMIS logistics management information system platform software.
+  ~ Copyright © 2013 VillageReach
+  ~
+  ~  This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+  -->
+
+
+<h2>
+    <span>Stock Ledger</span>
+
+</h2>
+
+
+
+
+
+<div class="row clear-fix">
+    <div class="span3">
+        <label id="parentLabel" >Select Year</label>
+
+        <div class="form-field row-fluid">
+            <select ui-select2="{width: '90%'}" class="span11"
+                    ng-model="warehouseId" ng-change="getSoh()">
+                <option value="">--Select Year--</option>
+
+                <option ng-repeat="warehouse in warehouses"
+                        value="{{ warehouse.id }}">
+                    {{ warehouse.name }}
+                </option>
+
+            </select>
+            <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                  openlmis-message="missing.value"></span>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="clear-fix rnr-table">
+
+    <table class="table-bordered table table-striped">
+        <thead>
+        <tr>
+            <th style="width:15px !important; min-width:15px !important">
+        #
+            </th>
+
+
+            <th style="width:34px !important; min-width:15px !important">
+Date
+            </th>
+            <th style="width:24px !important; min-width:15px !important">
+    From
+            </th>
+            <th style="width:24px !important; min-width:15px !important" >
+    To
+            </th>
+            <th style="width:24px !important; min-width:15px !important">
+    Received Qty
+            </th>
+
+            <th style="width:24px !important; min-width:15px !important">
+Issued Qty
+            </th>
+            <th style="width:24px !important; min-width:15px !important">
+Adjusted Qty
+            </th>
+
+
+            <th style="width:24px !important; min-width:15px !important">
+Batch
+            </th>
+
+            <th style="width:24px !important; min-width:15px !important">
+Exp. Date
+            </th>
+
+            <th style="width:15px !important; min-width:15px !important">
+VVM
+            </th>
+
+
+            <th style="width:24px !important; min-width:15px !important">
+SOH per Batch
+            </th>
+
+
+            <th style="width:24px !important; min-width:15px !important">
+Stock on Hand
+            </th>
+
+
+
+        </tr>
+        </thead>
+        <tbody>
+
+
+
+
+
+
+        </tbody>
+
+    </table>
+
+
+
+</div>
+
+
+

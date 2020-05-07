@@ -12,8 +12,18 @@ var stockOnHandModule = angular.module('stock-on-hand', ['openlmis', 'ui.bootstr
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
            when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html'}).
+           when('/stock-ledger', {controller: StockLedgerController, templateUrl: 'partials/stock-ledger.html'}).
+
             otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.warehouseSelected = "selected";
 //      AuthorizationService.preAuthorize('MANAGE_LOCATION');
-    });
+    }).filter('positive', function() {
+               return function(input) {
+                   if (!input) {
+                       return 0;
+                   }
+
+                   return Math.abs(input);
+               };
+           });
