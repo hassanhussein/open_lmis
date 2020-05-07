@@ -421,11 +421,10 @@ public class VaccineInventoryDistributionController extends BaseController {
 
 
 
-    @RequestMapping(value = "distribution", method = GET)
-    public ResponseEntity<OpenLmisResponse> getDistributionById(@RequestParam Long distributionId,
-                                                                            HttpServletRequest request) {
-            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getDistributionById(distributionId));
+  /*  @RequestMapping(value = "get-current-stock-on-hand", method = GET)
+    public ResponseEntity<OpenLmisResponse> getCurrentStockOnHand(HttpServletRequest request) {
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getCurrentStock(loggedInUserId(request)));
             return response;
     }
-
+*/
 }
