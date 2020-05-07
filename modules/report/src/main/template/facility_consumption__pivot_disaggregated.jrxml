@@ -96,66 +96,66 @@
 				<crosstabHeaderCell>
 					<cellContents backcolor="#3D9297" mode="Opaque">
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="22" height="30" uuid="bd9769fe-d71a-40e4-b046-a57011b58561"/>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="32" height="30" uuid="bd9769fe-d71a-40e4-b046-a57011b58561"/>
 							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Bottom">
+							<textElement textAlignment="Left" verticalAlignment="Middle">
 								<font size="8" isBold="true"/>
 							</textElement>
 							<text><![CDATA[#S.No]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="147" y="0" width="100" height="30" uuid="1eae139e-95d6-4f01-a331-4684721b8cbe"/>
+							<reportElement style="Crosstab Data Text" x="157" y="0" width="100" height="30" uuid="1eae139e-95d6-4f01-a331-4684721b8cbe"/>
 							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Bottom">
+							<textElement textAlignment="Left" verticalAlignment="Middle">
 								<font size="8" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Facility]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="247" y="0" width="47" height="30" uuid="8cad589c-36c0-4a64-9b66-e27f115fb23e"/>
+							<reportElement style="Crosstab Data Text" x="257" y="0" width="47" height="30" uuid="8cad589c-36c0-4a64-9b66-e27f115fb23e"/>
 							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Bottom">
+							<textElement textAlignment="Left" verticalAlignment="Middle">
 								<font size="8" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Product Code]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="82" y="0" width="65" height="30" uuid="06bcb29f-27b8-4419-8f37-8e0e13eb5f09"/>
+							<reportElement style="Crosstab Data Text" x="92" y="0" width="65" height="30" uuid="06bcb29f-27b8-4419-8f37-8e0e13eb5f09"/>
 							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Bottom">
+							<textElement textAlignment="Left" verticalAlignment="Middle">
 								<font size="8" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Facility Type]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="22" y="0" width="60" height="30" uuid="268fd7a2-7132-4b93-9410-1928228c5eec"/>
+							<reportElement style="Crosstab Data Text" x="32" y="0" width="60" height="30" uuid="268fd7a2-7132-4b93-9410-1928228c5eec"/>
 							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Bottom">
+							<textElement textAlignment="Left" verticalAlignment="Middle">
 								<font size="8" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Facility Code]]></text>
@@ -172,21 +172,21 @@
 							<text><![CDATA[]]></text>
 						</staticText>
 						<staticText>
-							<reportElement style="Crosstab Data Text" x="294" y="0" width="76" height="30" uuid="783810cb-f3a3-4c94-80f2-7800c0f7ea06"/>
+							<reportElement style="Crosstab Data Text" x="304" y="0" width="76" height="30" uuid="783810cb-f3a3-4c94-80f2-7800c0f7ea06"/>
 							<box leftPadding="2" bottomPadding="3">
 								<topPen lineWidth="0.75"/>
-								<leftPen lineWidth="0.75"/>
+								<leftPen lineWidth="0.0"/>
 								<bottomPen lineWidth="0.75"/>
-								<rightPen lineWidth="0.75"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Center" verticalAlignment="Bottom">
+							<textElement textAlignment="Left" verticalAlignment="Middle">
 								<font size="8" isBold="true"/>
 							</textElement>
 							<text><![CDATA[Product ]]></text>
 						</staticText>
 					</cellContents>
 				</crosstabHeaderCell>
-				<rowGroup name="code" width="22">
+				<rowGroup name="code" width="32">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{facProdCode}]]></bucketExpression>
 					</bucket>
@@ -200,14 +200,14 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="22" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="32" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
-									<leftPen lineWidth="1.0"/>
-									<bottomPen lineWidth="0.0"/>
-									<rightPen lineWidth="1.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement textAlignment="Left" verticalAlignment="Bottom">
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{ROW_COUNT}]]></textFieldExpression>
@@ -248,11 +248,11 @@
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="60" height="25" forecolor="#000000" uuid="9e875326-4e43-451a-8164-9763d462124e"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
-									<leftPen lineWidth="1.0"/>
-									<bottomPen lineWidth="0.0"/>
-									<rightPen lineWidth="1.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.5"/>
+									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement verticalAlignment="Bottom">
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{facilityCode}]]></textFieldExpression>
@@ -273,11 +273,11 @@
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="65" height="25" uuid="e79cd276-4e5e-4318-9467-f526d303bee3"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
-									<leftPen lineWidth="1.0"/>
-									<bottomPen lineWidth="0.0"/>
-									<rightPen lineWidth="1.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement verticalAlignment="Bottom">
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{facilityType}]]></textFieldExpression>
@@ -298,11 +298,11 @@
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="100" height="25" uuid="a642a497-5bf8-44cd-ae5b-bd04c08b16ea"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
-									<leftPen lineWidth="1.0"/>
-									<bottomPen lineWidth="0.0"/>
-									<rightPen lineWidth="1.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement verticalAlignment="Bottom">
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{facility}]]></textFieldExpression>
@@ -323,11 +323,11 @@
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="47" height="25" uuid="694df33a-015e-432c-8e6e-36af53308263"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
-									<leftPen lineWidth="1.0"/>
-									<bottomPen lineWidth="0.0"/>
-									<rightPen lineWidth="1.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement verticalAlignment="Bottom">
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{prodCode}]]></textFieldExpression>
@@ -348,11 +348,11 @@
 								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="76" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
 								<box leftPadding="2">
 									<topPen lineWidth="1.0"/>
-									<leftPen lineWidth="1.0"/>
-									<bottomPen lineWidth="0.0"/>
-									<rightPen lineWidth="1.0"/>
+									<leftPen lineWidth="0.0"/>
+									<bottomPen lineWidth="0.25"/>
+									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement textAlignment="Left" verticalAlignment="Bottom">
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{product}]]></textFieldExpression>
@@ -371,16 +371,18 @@
 						<cellContents backcolor="#3D9297" mode="Opaque">
 							<box>
 								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
 								<reportElement style="Crosstab Data Text" x="0" y="0" width="31" height="30" uuid="e2d51561-a0ed-45ec-89f5-fad831b1ef2e"/>
 								<box leftPadding="2" bottomPadding="3">
 									<topPen lineWidth="0.75"/>
-									<leftPen lineWidth="0.75"/>
+									<leftPen lineWidth="0.0"/>
 									<bottomPen lineWidth="0.75"/>
-									<rightPen lineWidth="0.75"/>
+									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
+								<textElement textAlignment="Left" verticalAlignment="Middle">
 									<font size="8" isBold="true"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{periodName}]]></textFieldExpression>
@@ -398,16 +400,18 @@
 					<cellContents>
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
+							<leftPen lineWidth="0.0"/>
+							<rightPen lineWidth="0.0"/>
 						</box>
 						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="31" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
 							<box leftPadding="2">
 								<topPen lineWidth="1.0"/>
-								<leftPen lineWidth="1.0"/>
-								<bottomPen lineWidth="0.0"/>
-								<rightPen lineWidth="1.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.25"/>
+								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Left" verticalAlignment="Bottom">
+							<textElement textAlignment="Left" verticalAlignment="Middle">
 								<font size="8"/>
 							</textElement>
 							<textFieldExpression><![CDATA[$V{consumptionMeasure}]]></textFieldExpression>
