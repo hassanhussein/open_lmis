@@ -378,4 +378,9 @@ public class VaccineInventoryDistributionService {
     public List<HashMap<String, Object>>getNotificationDistributionList(Long districtId,String startDate, String endDate){
         return repository.getNotificationDistributionList(districtId,startDate,endDate);
     }
+
+   /* public List<DistributionDTO> getCurrentStock(Long loggedInUserId) {
+
+
+    }*/
 }

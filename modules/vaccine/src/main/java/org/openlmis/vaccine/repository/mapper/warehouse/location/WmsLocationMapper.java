@@ -41,7 +41,7 @@ public interface WmsLocationMapper {
 
     @Select("SELECT * FROM wms_locations WHERE id=#{id}")
     @Results(value = {
-            @Result(property = "locationType", column = "typeId", javaType = Integer.class,
+            @Result(property = "type", column = "typeId", javaType = Integer.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.LocationTypeMapper.getById")),
             @Result(property = "house", column = "warehouseId", javaType = Integer.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WareHouseMapper.getById"))

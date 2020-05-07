@@ -159,7 +159,7 @@ public interface LotOnHandLocationMapper {
     @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{total} WHERE locationId=#{locationId} and lotOnHandId=#{lotOnHandId}")
     void updateByLotOnHandAndLocation(@Param("total") Integer total,@Param("locationId") Long locationId, @Param("lotOnHandId") Long lotOnHandId);
 
-    @Select("SELECT * FROM lot_on_hand_locations WHERE locationId=#{locationId} and lotOnHandId=#{lotOnHandId} Limit 1")
+    @Select("SELECT * FROM lot_on_hand_locations WHERE locationId=#{locationId} order by id desc Limit 1")
     LotOnHandLocation getBy(@Param("locationId") Long locationId, @Param("lotOnHandId") Long lotOnHandId);
 
 }
