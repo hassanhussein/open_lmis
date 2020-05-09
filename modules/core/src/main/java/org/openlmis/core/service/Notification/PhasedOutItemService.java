@@ -1,23 +1,23 @@
-package org.openlmis.core.service.notification;
+package org.openlmis.core.service.Notification;
 
-import org.openlmis.core.dto.notification.RationingItem;
+import org.openlmis.core.dto.notification.PhasedOutItem;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
-import org.openlmis.core.repository.notification.RationingItemRepository;
+import org.openlmis.core.repository.notification.PhasedOutItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RationingItemService {
+public class PhasedOutItemService {
 
     @Autowired
-    private RationingItemRepository repository;
+    private PhasedOutItemRepository repository;
 
     public void save(StockOutNotificationDTO notification) {
 
         if(!notification.getInSufficientFundingItems().isEmpty()) {
             repository.deleteByNotificationId(notification.getId());
 
-            for(RationingItem item : notification.getRationingItems()) {
+            for(PhasedOutItem item : notification.getPhasedOutItems()) {
                 item.setModifiedBy(notification.getModifiedBy());
                 item.setCreatedBy(notification.getCreatedBy());
                 item.setNotificationId(notification.getId());
@@ -27,5 +27,4 @@ public class RationingItemService {
         }
 
     }
-
 }

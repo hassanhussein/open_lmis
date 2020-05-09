@@ -478,4 +478,8 @@ public class FacilityService {
         }
 
     }
+
+   public List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(Long facilityId, Long programId) {
+        return facilityRepository.getSupervisorFacilityIncludingHomeFacility(facilityId, programId);
+    }
 }

@@ -633,4 +633,40 @@ Integer insertHfrMapping(HfrMappingDTO dto);
   @Update(" update facilities set latitude = #{latitude}, longitude = #{longitude} where code = #{code} ")
   void updateFacilityByCode(FacilityDTO dto);
 
+
+  @Select(" \n" +
+          "\n" +
+          "               With q as (\n" +
+          "                ( SELECT  DISTINCT userid as userId, username,firstName ||' '|| lastName as name, email as contact   \n" +
+          "                 FROM facilities f  \n" +
+          "                 JOIN requisition_group_members m ON m.facilityId = f.Id   \n" +
+          "                 JOIN requisition_groups rg ON rg.id = m.requisitionGroupId  \n" +
+          "                 JOIN supervisory_nodes sn ON sn.id = rg.supervisoryNodeId  \n" +
+          "                 JOIN role_assignments ra ON ra.supervisoryNodeId = sn.id  \n" +
+          "                 JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
+          "                 JOIN users  on users.id = ra.userId AND users.active = true  \n" +
+          "                 and restrictlogin= false \n" +
+          "                 WHERE f.Id = #{facilityId}  and ra.programId = #{programId}  and rr.rightName = 'VIEW_OUT_OF_STOCK_NOTIFICATION' \n" +
+          "                 and users.email is not null\n" +
+          "                 ORDER BY username )\n" +
+          "\n" +
+          "                 UNION ALL\n" +
+          "\n" +
+          "                SELECT  DISTINCT Users.ID  as userId, username,firstName ||' '|| lastName as name, email as contact   \n" +
+          "\n" +
+          "                FROM facilities f  \n" +
+          "                 JOIN requisition_group_members m ON m.facilityId = f.Id   \n" +
+          "                 JOIN requisition_groups rg ON rg.id = m.requisitionGroupId  \n" +
+          "                 JOIN supervisory_nodes sn ON sn.id = rg.supervisoryNodeId  \n" +
+          "                 JOIN role_assignments ra ON ra.supervisoryNodeId = sn.id  \n" +
+          "                 JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
+          "                 JOIN USERS ON F.ID = USERS.facilityID AND users.active = true  and restrictlogin= false\n" +
+          "                 WHERE USERS.facilityID = #{facilityId}   and ra.programId = #{programId}  AND  RR.RIGHTNAME = 'VIEW_OUT_OF_STOCK_NOTIFICATION'\n" +
+          "                 and users.email is not null\n" +
+          "                 ORDER BY USername \n" +
+          "                 )\n" +
+          "                 SELECT DISTINCT userId, username, name,  contact FROM Q\n")
+
+  List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
 }

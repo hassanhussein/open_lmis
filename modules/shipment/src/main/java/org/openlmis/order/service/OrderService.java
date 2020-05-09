@@ -352,5 +352,8 @@ public class OrderService {
     return orderRepository.getByProductAndExpectedDate(code,trackingNumber);
   }
 
+  public Order getByOrderNumberWithRequisition( String orderNumber){
+    return orderRepository.getByOrderNumberWithRequisition(orderNumber);
+  }
 
 }

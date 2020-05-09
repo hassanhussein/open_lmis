@@ -1,4 +1,4 @@
-package org.openlmis.core.service.notification.view.pdf;
+package org.openlmis.restapi.service.notification.view.pdf;
 
 
 import com.itextpdf.text.*;

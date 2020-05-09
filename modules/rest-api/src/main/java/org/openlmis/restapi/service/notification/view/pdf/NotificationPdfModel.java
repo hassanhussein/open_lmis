@@ -1,4 +1,4 @@
-package org.openlmis.core.service.notification.view.pdf;
+package org.openlmis.restapi.service.notification.view.pdf;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.openlmis.core.dto.notification.ColumnType.TEXT;
-import static org.openlmis.core.service.notification.view.pdf.NotificationCellFactory.createCell2;
+import static org.openlmis.restapi.service.notification.view.pdf.NotificationCellFactory.createCell2;
 
 @Data
 @NoArgsConstructor
@@ -387,8 +387,15 @@ public class NotificationPdfModel {
     }
 
     public PdfPTable getFullFilledItemsTable() throws IOException, IllegalAccessException, DocumentException, NoSuchFieldException {
-        return getTableFor(notification.getFullFilledItems(),notification.getFullFilledItems().get(0).getColumns());
-    }
+
+        if(!notification.getFullFilledItems().isEmpty()) {
+
+            return getTableFor(notification.getFullFilledItems(), notification.getFullFilledItems().get(0).getColumns());
+
+        }else {
+            return null;
+        }
+        }
 
 
     public Paragraph stockOutItemsHeader() {
@@ -396,7 +403,11 @@ public class NotificationPdfModel {
     }
 
     public PdfPTable getStockOutItemsTable() throws IOException, IllegalAccessException, DocumentException, NoSuchFieldException {
-        return getTableFor(notification.getStockOutItems(), notification.getStockOutItems().get(0).getColumns());
+         if(!notification.getStockOutItems().isEmpty()) {
+
+             return getTableFor(notification.getStockOutItems(), notification.getStockOutItems().get(0).getColumns());
+         } else
+             return null;
     }
 
     public Paragraph inSufficientFundingHeader() {
@@ -404,8 +415,13 @@ public class NotificationPdfModel {
     }
 
     public PdfPTable getInSufficientFundingTable() throws IOException, IllegalAccessException, DocumentException, NoSuchFieldException {
-        return getTableFor(notification.getInSufficientFundingItems(), notification.getInSufficientFundingItems().get(0).getColumns());
-    }
+
+        if(!notification.getInSufficientFundingItems().isEmpty()) {
+            return getTableFor(notification.getInSufficientFundingItems(), notification.getInSufficientFundingItems().get(0).getColumns());
+        } else {
+            return null;
+        }
+        }
 
     public Paragraph rationingItemsHeader() {
 
@@ -413,7 +429,13 @@ public class NotificationPdfModel {
     }
 
     public PdfPTable rationingItemsTable() throws IOException, IllegalAccessException, DocumentException, NoSuchFieldException {
-        return getTableFor(notification.getRationingItems(), notification.getRationingItems().get(0).getColumns());
+
+        if(!notification.getRationingItems().isEmpty()) {
+
+            return getTableFor(notification.getRationingItems(), notification.getRationingItems().get(0).getColumns());
+        }else {
+            return null;
+        }
     }
 
     public Paragraph closeToExpireItemsHeader() {
@@ -422,7 +444,13 @@ public class NotificationPdfModel {
     }
 
     public PdfPTable closeToExpireItemsTable() throws IOException, IllegalAccessException, DocumentException, NoSuchFieldException {
-        return getTableFor(notification.getCloseToExpireItems(), notification.getCloseToExpireItems().get(0).getColumns());
+
+        if(!notification.getCloseToExpireItems().isEmpty()) {
+            return getTableFor(notification.getCloseToExpireItems(), notification.getCloseToExpireItems().get(0).getColumns());
+        }
+        else {
+            return null;
+        }
     }
 
     public Paragraph phasedOutItemsHeader() {
@@ -431,9 +459,13 @@ public class NotificationPdfModel {
     }
 
     public PdfPTable phasedOutItemsTable() throws IOException, IllegalAccessException, DocumentException, NoSuchFieldException {
-        return getTableFor(notification.getPhasedOutItems(), notification.getPhasedOutItems().get(0).getColumns());
-    }
 
+       if(!notification.getPhasedOutItems().isEmpty()) {
+           return getTableFor(notification.getPhasedOutItems(), notification.getPhasedOutItems().get(0).getColumns());
+       }else {
+           return null;
+       }
+    }
 
 
     private PdfPTable getTableFor(List<? extends NotificationLineItem> lineItems, List<VisibleColumn> columns) throws DocumentException, NoSuchFieldException, IllegalAccessException, IOException {

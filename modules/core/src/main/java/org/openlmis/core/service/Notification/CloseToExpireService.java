@@ -1,25 +1,25 @@
-package org.openlmis.core.service.notification;
+package org.openlmis.core.service.Notification;
 
-import org.openlmis.core.dto.notification.FullFilledItem;
-import org.openlmis.core.dto.notification.StockOutItem;
+import org.openlmis.core.dto.notification.CloseToExpireItem;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
-import org.openlmis.core.repository.notification.FullFilledItemRepository;
-import org.openlmis.core.repository.notification.StockOutItemRepository;
+import org.openlmis.core.repository.notification.CloseToExpireRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FullFilledItemService {
+public class CloseToExpireService {
 
     @Autowired
-    private FullFilledItemRepository repository;
+    private CloseToExpireRepository repository;
+
 
     public void save(StockOutNotificationDTO notification) {
 
-        if(!notification.getFullFilledItems().isEmpty()) {
+        if(!notification.getCloseToExpireItems().isEmpty()) {
+
             repository.deleteByNotificationId(notification.getId());
 
-            for(FullFilledItem item : notification.getFullFilledItems()) {
+            for(CloseToExpireItem item : notification.getCloseToExpireItems()) {
                 item.setModifiedBy(notification.getModifiedBy());
                 item.setCreatedBy(notification.getCreatedBy());
                 item.setNotificationId(notification.getId());
@@ -29,5 +29,6 @@ public class FullFilledItemService {
         }
 
     }
+
 
 }
