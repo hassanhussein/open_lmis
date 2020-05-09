@@ -7,4 +7,5 @@ public class NotificationResponseDTO {
 
     private String invoiceNumber;
     private String message;
+    private String source;
 }

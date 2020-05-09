@@ -36,9 +36,11 @@ private StockNotificationService service;
         notification.setCreatedBy(loggedInUserId(request.getUserPrincipal()));
         notification.setModifiedBy(loggedInUserId(request.getUserPrincipal()));
         try {
-            service.save(notification);
+            service.save(notification,request);
         } catch (SQLException exception) {
             throw new DataException(exception.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         service.sendResponse(notification);
         return OpenLmisResponse.success("Saved Successiful!");

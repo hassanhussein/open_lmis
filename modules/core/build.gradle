@@ -22,8 +22,12 @@ dependencies {
   compile 'org.mybatis:mybatis:3.2.8'
   compile 'org.aspectj:aspectjweaver:1.8.5'
   compile 'org.apache.commons:commons-lang3:3.1'
-  compile 'org.springframework:spring-beans:4.1.5.RELEASE'
-  compile project(':modules:db')
+  compile 'org.springframework:spring-beans:4.1.5.RELEASE',
+          'com.itextpdf:itextpdf:5.4.0',
+          'net.sf.barcode4j:barcode4j:2.1'
+
+
+          compile project(':modules:db')
   compile project(':modules:upload')
   compile project(':modules:email')
 
