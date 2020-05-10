@@ -40,7 +40,7 @@ private RestStockNotificationService service;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        service.sendResponse(notification);
+      //  service.sendResponse(notification);
         return OpenLmisResponse.success("Saved Successiful!");
     }
 }

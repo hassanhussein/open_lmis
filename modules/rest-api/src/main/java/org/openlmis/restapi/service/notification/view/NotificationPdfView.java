@@ -29,18 +29,16 @@ public class NotificationPdfView extends AbstractView {
 
     private MessageService messageService;
 
-
-    @Autowired
     private EmailService emailService;
 
     @Autowired
     private JavaMailSender mailSender;
 
-
     @Autowired
-    public NotificationPdfView(MessageService messageService) {
+    public NotificationPdfView(MessageService messageService, EmailService emailService) {
 
         this.messageService = messageService;
+        this.emailService = emailService;
         setContentType("application/pdf");
     }
 
@@ -52,8 +50,10 @@ public class NotificationPdfView extends AbstractView {
             NotificationPdfWriter notificationPdfWriter = new NotificationPdfWriter(new PdfDocument(), stream, messageService,model);
             notificationPdfWriter.buildWith(model);
           //  writeToResponse(response, stream);
+            RestNotificationService service = new RestNotificationService(model, stream, emailService);
+            service.processEmail();
 
-            sendEmail(stream);
+          //  sendEmail(stream);
 
 
         }

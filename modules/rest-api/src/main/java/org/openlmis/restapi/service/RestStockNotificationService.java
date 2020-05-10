@@ -10,9 +10,12 @@ import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.service.ELMISInterfaceService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.email.service.EmailService;
 import org.openlmis.restapi.service.notification.view.NotificationPdfView;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.service.OrderService;
+import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +44,13 @@ public class RestStockNotificationService {
     private MessageService messageService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private RequisitionService requisitionService;
 
 
 
@@ -73,23 +82,26 @@ public class RestStockNotificationService {
 
         Order order = orderService.getByOrderNumber(notificationData.elmisOrderNumber);
 
-       // if(order != null) {
+
+        if(order != null ) {
+
+            Rnr rnr  = requisitionService.getFullRequisitionById(order.getId());
 
             Facility facility = facilityService.getByCodeFor(notification.getSoldTo());
 
-           // List<FacilitySupervisor> supervisorList = facilityService.getSupervisorFacilityIncludingHomeFacility(facility.getId(), order.getRnr().getProgram().getId());
+            List<FacilitySupervisor> supervisorList = facilityService.getSupervisorFacilityIncludingHomeFacility(facility.getId(), rnr.getProgram().getId());
 
             Map<String, Object> map = new HashMap<String, Object>();
 
             map.put("notification", notification);
             map.put("facility", facility);
-         //   map.put("supervisorList", supervisorList);
-           // map.put("order", order);
+            map.put("supervisorList", supervisorList);
+            map.put("order", order);
 
-            NotificationPdfView view = new NotificationPdfView(messageService);
+            NotificationPdfView view = new NotificationPdfView(messageService,emailService);
 
             view.render(map, request, null);
-        //}
+        }
 
     }
 
