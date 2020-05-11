@@ -57,10 +57,11 @@
                                                enddate="filter.periodEnd" required="true" rangemax="365"
                                                class="form-cell horizontalFilters"></date-range-filter>
                             <div class="horizontalFilters form-cell">
-                                <label for="action" class="labels" openlmis-message="label.audit.actions"><span ng-show="requiredFilters.year" class="label-required">*</span></label>
+                                <label for="action" class="labels" openlmis-message="label.audit.actions">
+                                    <span ng-show="requiredFilters.year" class="label-required">*</span></label>
                                 <div>
                                     <select id="action" ng-model="filter.action" ui-select2 class="input-large">
-                                        <option value="" selected>Select Audit types</option>
+                                        <option value="" selected openlmis-message="audit.label.all.types"></option>
                                         <option ng-repeat="action in auditActions" ng-value="action" openlmis-message="'audit.label.'+action">
                                             {{messageService.get('audit.label.'+action)}}</option>
                                     </select>
