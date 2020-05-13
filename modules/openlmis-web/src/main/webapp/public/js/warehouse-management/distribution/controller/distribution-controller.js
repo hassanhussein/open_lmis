@@ -11,7 +11,14 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+function DistributionController($q,homeFacility,StockEvent,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+
+
+
+
+
+
+
 //test
 //$scope.data={
 // orders:[{
@@ -316,3 +323,22 @@ if (ordered!==undefined) {
 
 
 }
+
+DistributionController.resolve = {
+
+
+    homeFacility: function ($q, $timeout, UserHomeFacility) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+
+            UserHomeFacility.get({}, function (data) {
+                deferred.resolve(data.homeFacility.id);
+            });
+
+        }, 100);
+
+        return deferred.promise;
+    }
+
+};

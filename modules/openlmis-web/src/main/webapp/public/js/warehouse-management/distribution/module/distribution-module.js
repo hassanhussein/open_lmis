@@ -13,7 +13,7 @@ var distributionModule = angular.module('distribution', ['openlmis', 'ui.bootstr
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
           when('/search', {controller: DistributionSearchController, templateUrl: 'partials/search.html'}).
-          when('/create', {controller: DistributionController, templateUrl: 'partials/create.html'}).
+          when('/create', {controller: DistributionController, templateUrl: 'partials/create.html', resolve:DistributionController.resolve}).
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.asnSelected = "selected";
