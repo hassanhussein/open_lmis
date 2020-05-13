@@ -11,7 +11,151 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+function DistributionController($q,homeFacility,StockEvent,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+
+
+
+var distributionData = [{
+                          //NEW
+                         "fromFacilityId":homeFacility,
+                         "toFacilityId":19076,
+                         "programId":parseInt(82,10),
+                         "orderId":2482,
+                         "periodId": 191,
+                         "remarks":'Add some remarks',
+                         //END NEW
+
+                         "orderNumber": "IVD0001",
+                         "period": "Sept - Dec 2020",
+
+                         "dateSubmitted": "11/09/2019",
+                         "issue": false,
+                         "name": "Arusha RVS",
+                         "ordered": [
+                           {
+                             "productId": 2412,
+                             "product": "BCG",
+                             "amount": 35343,
+                             "totalQuantity":56,
+                             //new
+                             "productCode":"V001",
+                             "gap": "",
+                             "given": [
+                               {
+                                 "lotId": "1415",
+                                 "quantity": 56,
+                                 "vvmStatus":1
+                               }
+                             ]
+                           }
+                         ]
+                       }];
+
+$scope.testToSaveDistribution = function (data) {
+
+var events = [];
+var distributionLineItemList = [];
+
+angular.forEach(distributionData, function (facility) {
+
+var distribution = {};
+
+distribution.fromFacilityId = facility.fromFacilityId;
+distribution.toFacilityId = facility.toFacilityId;
+distribution.distributionDate = $filter('date')(new Date(facility.dateSubmitted), 'yyyy-MM-dd');
+distribution.periodId = facility.periodId;
+distribution.orderId = facility.orderId;
+distribution.status = "PENDING";
+distribution.distributionType = "SCHEDULED";
+distribution.remarks = facility.remarks;
+distribution.programId = facility.programId;
+distribution.lineItems = [];
+
+ angular.forEach(facility.ordered, function (product) {
+
+
+var lineItem = {};
+
+        if (product.amount > 0) {
+
+             lineItem.productId = product.productId;
+             lineItem.quantity = product.totalQuantity;
+
+             angular.forEach(product.given, function(lot) {
+              lineItem.lots = [];
+             if (lot.quantity !== null && lot.quantity > 0) {
+                     var l = {};
+                     var event = {};
+                     event.type = "ISSUE";
+                     event.productCode = product.productCode;
+                     event.facilityId = facility.toFacilityId;
+                     event.occurred = distribution.distributionDate;
+                     event.quantity = lot.quantity;
+                     event.customProps = {};
+                     event.customProps.occurred = distribution.distributionDate;
+                     event.customProps.issuedto = facility.name;
+
+                     event.lotId = lot.lotId;
+                     event.quantity = lot.quantity;
+
+                     l.lotId = lot.lotId;
+                     l.vvmStatus = lot.vvmStatus;
+                     l.quantity = lot.quantity;
+                     lineItem.lots.push(l);
+                     events.push(event);
+
+             }
+
+             });
+
+
+                }
+
+                if (lineItem.quantity > 0) {
+                    distribution.lineItems.push(lineItem);
+                }
+
+            });
+             console.log(distribution);
+           distributionLineItemList.push(distribution);
+
+});
+
+console.log(events);
+
+
+
+StockEvent.save({facilityId: homeFacility}, events, function (data) {
+ console.log(data);
+ if (data.success) {
+ SaveDistributionList.save(distributionLineItemList, function (distribution) {
+
+
+                     /*       var printList = [];
+
+                            angular.forEach(distribution.distributionIds, function (distributionId) {
+
+                                UpdateOrderRequisitionStatus.update({orderId: distributionId.orderId}, function () {
+                                    $scope.message = "label.form.Submitted.Successfully";
+
+                                });
+
+                            });*/
+
+                        });
+                    }
+ });
+
+
+
+
+console.log('reached here');
+
+};
+
+
+
+
 //test
 //$scope.data={
 // orders:[{
@@ -317,3 +461,22 @@ if (ordered!==undefined) {
 
 
 }
+
+DistributionController.resolve = {
+
+
+    homeFacility: function ($q, $timeout, UserHomeFacility) {
+        var deferred = $q.defer();
+
+        $timeout(function () {
+
+            UserHomeFacility.get({}, function (data) {
+                deferred.resolve(data.homeFacility.id);
+            });
+
+        }, 100);
+
+        return deferred.promise;
+    }
+
+};
