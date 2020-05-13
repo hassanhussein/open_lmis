@@ -9,49 +9,9 @@
  */
 
 
-function StockOnHandController($scope, $location,WareHouseList,GetSohReport) {
-
-WareHouseList.get({},function(data){
-$scope.warehouses=data.house;
-});
 
 
-$scope.getSoh=function(){
+function StockLedgerController($scope, $location) {
 
-GetSohReport.get({facilityId:19075, warehouseId:$scope.warehouseId},function(data){
-
-
-//console.log(data);
-
-$scope.soh=data.soh;
-
-$scope.products=_.groupBy($scope.soh,'product');
-
-//console.log($scope.products);
-
-});
-
-};
-
-
-$scope.openLedger = function() {
-return;
-};
-
-
-$scope.calculateTotalQuantity=function(productId){
- console.log($scope.warehouseId);
- console.log(productId);
-var sum=0;
-var products=_.where($scope.soh,{productId:productId});
-
-    products.forEach(function(lot){
-
-    sum+=lot.quantityOnHand;
-    });
- return sum;
-
-};
 
 }
-
