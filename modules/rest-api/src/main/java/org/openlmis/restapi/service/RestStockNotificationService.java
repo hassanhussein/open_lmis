@@ -1,5 +1,6 @@
 package org.openlmis.restapi.service;
 
+import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.RightName;
 import org.openlmis.core.dto.FacilitySupervisor;
@@ -7,6 +8,7 @@ import org.openlmis.core.dto.NotificationResponseDTO;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
 import org.openlmis.core.repository.StockNotificationRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.ELMISInterfaceService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.service.MessageService;
@@ -52,7 +54,8 @@ public class RestStockNotificationService {
     @Autowired
     private RequisitionService requisitionService;
 
-
+    @Autowired
+    private ConfigurationSettingService settingService;
 
 
     @Transactional
@@ -69,7 +72,7 @@ public class RestStockNotificationService {
                 repository.update(notification);
             }
 
-            prepareEmailNotification(notification,request);
+            prepareEmailNotification(notification, request);
 
         }
 
@@ -82,10 +85,9 @@ public class RestStockNotificationService {
 
         Order order = orderService.getByOrderNumber(notificationData.elmisOrderNumber);
 
+        if (order != null) {
 
-        if(order != null ) {
-
-            Rnr rnr  = requisitionService.getFullRequisitionById(order.getId());
+            Rnr rnr = requisitionService.getFullRequisitionById(order.getId());
 
             Facility facility = facilityService.getByCodeFor(notification.getSoldTo());
 
@@ -97,20 +99,22 @@ public class RestStockNotificationService {
             map.put("facility", facility);
             map.put("supervisorList", supervisorList);
             map.put("order", order);
+            map.put("rnr", rnr);
 
-            NotificationPdfView view = new NotificationPdfView(messageService,emailService);
+            NotificationPdfView view = new NotificationPdfView(messageService, emailService, settingService);
 
             view.render(map, request, null);
         }
 
     }
 
-
     public void sendResponse(StockOutNotificationDTO notification) {
+
         NotificationResponseDTO notificationResponse = new NotificationResponseDTO();
         notificationResponse.setInvoiceNumber(notification.getInvoiceNumber());
         notificationResponse.setMessage("Received Successful");
         notificationResponse.setSource("elmis");
+        notificationResponse.setStatusCode("200");
         elmisInterfaceService.processAndSendOutOfStockResponseData(notificationResponse);
     }
 
@@ -118,7 +122,7 @@ public class RestStockNotificationService {
         return repository.getById(id);
     }
 
-    public List<HashMap<String,Object>> getStockOutBy(Long userId, Long programId){
+    public List<HashMap<String, Object>> getStockOutBy(Long userId, Long programId) {
         String facilityIds = commaSeparator.commaSeparateIds(facilityService.getUserSupervisedFacilities(userId, programId, RightName.VIEW_OUT_OF_STOCK_NOTIFICATION));
         return repository.getStockBy(facilityIds);
     }

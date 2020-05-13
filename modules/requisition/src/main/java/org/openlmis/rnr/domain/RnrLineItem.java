@@ -106,7 +106,8 @@ public class RnrLineItem extends LineItem {
     private Integer quantityToIssue;
     private Integer nextMonthPatient;
     private String patientCalculationFormula;
-
+    private String alternateItemCode;
+    private String owner;
 
     @SuppressWarnings("unused")
     private Boolean skipped = false;
@@ -486,6 +487,7 @@ public class RnrLineItem extends LineItem {
 
         this.productCategory = category.getName();
         this.productCategoryDisplayOrder = category.getDisplayOrder();
+        this.alternateItemCode = product.getAlternateItemCode();
     }
 
     private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {

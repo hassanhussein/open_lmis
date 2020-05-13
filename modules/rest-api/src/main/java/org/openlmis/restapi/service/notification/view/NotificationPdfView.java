@@ -2,9 +2,12 @@ package org.openlmis.restapi.service.notification.view;
 
 
 import com.itextpdf.text.pdf.PdfDocument;
+import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
 import org.openlmis.restapi.service.notification.view.pdf.NotificationPdfWriter;
 import org.openlmis.email.service.EmailService;
+import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -31,14 +34,19 @@ public class NotificationPdfView extends AbstractView {
 
     private EmailService emailService;
 
+    private ConfigurationSettingService settingService;
+
+
     @Autowired
     private JavaMailSender mailSender;
 
     @Autowired
-    public NotificationPdfView(MessageService messageService, EmailService emailService) {
+    public NotificationPdfView(MessageService messageService, EmailService emailService,ConfigurationSettingService settingService) {
 
         this.messageService = messageService;
         this.emailService = emailService;
+        this.settingService = settingService;
+
         setContentType("application/pdf");
     }
 
@@ -50,7 +58,7 @@ public class NotificationPdfView extends AbstractView {
             NotificationPdfWriter notificationPdfWriter = new NotificationPdfWriter(new PdfDocument(), stream, messageService,model);
             notificationPdfWriter.buildWith(model);
           //  writeToResponse(response, stream);
-            RestNotificationService service = new RestNotificationService(model, stream, emailService);
+            RestNotificationService service = new RestNotificationService(model, stream, emailService, this.settingService);
             service.processEmail();
 
           //  sendEmail(stream);

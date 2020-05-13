@@ -2,6 +2,7 @@ package org.openlmis.email.repository;
 
 import org.openlmis.email.domain.EmailAttachment;
 import org.openlmis.email.domain.EmailMessage;
+import org.openlmis.email.dto.EmailAttachmentDTO;
 import org.openlmis.email.repository.mapper.EmailNotificationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -40,5 +41,9 @@ public class EmailNotificationRepository {
 
   public List<EmailAttachment> getEmailAttachmentsByEmailId(Long id) {
     return mapper.queryEmailAttachmentsByEmailId(id);
+  }
+
+  public List<EmailAttachmentDTO> getEmailAttachmentsDTOByEmailId(Long id) {
+    return mapper.queryEmailAttachmentsDTOByEmailId(id);
   }
 }
