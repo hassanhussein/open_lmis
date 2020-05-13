@@ -88,6 +88,9 @@
 		<band height="50">
 			<crosstab ignoreWidth="true">
 				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="802" height="50" uuid="2717f50b-9ac3-46cf-a1ff-13b64b748219"/>
+				<box>
+					<bottomPen lineWidth="1.25"/>
+				</box>
 				<crosstabDataset isDataPreSorted="true"/>
 				<crosstabHeaderCell>
 					<cellContents backcolor="#3D9297" mode="Opaque">
@@ -100,7 +103,7 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textElement textAlignment="Left" verticalAlignment="Middle">
-								<font size="7"/>
+								<font size="8"/>
 							</textElement>
 							<text><![CDATA[Code]]></text>
 						</staticText>
@@ -113,7 +116,7 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textElement textAlignment="Left" verticalAlignment="Middle">
-								<font size="7"/>
+								<font size="8"/>
 							</textElement>
 							<text><![CDATA[Product Name]]></text>
 						</staticText>
@@ -126,7 +129,7 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textElement textAlignment="Left" verticalAlignment="Middle">
-								<font size="7"/>
+								<font size="8"/>
 							</textElement>
 							<text><![CDATA[#S.No]]></text>
 						</staticText>
@@ -137,25 +140,22 @@
 						<bucketExpression><![CDATA[$F{productCode}]]></bucketExpression>
 					</bucket>
 					<crosstabRowHeader>
-						<cellContents backcolor="#FFFFFF" mode="Opaque">
+						<cellContents backcolor="#FFFFFF" mode="Transparent">
 							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#006666"/>
-								<topPen lineColor="#006666"/>
-								<leftPen lineWidth="0.0" lineColor="#006666"/>
-								<bottomPen lineColor="#006666"/>
-								<rightPen lineWidth="0.0" lineColor="#006666"/>
+								<pen lineColor="#00CCCC"/>
+								<topPen lineWidth="0.0" lineColor="#00CCCC"/>
+								<leftPen lineColor="#00CCCC"/>
+								<bottomPen lineWidth="0.0" lineColor="#00CCCC"/>
+								<rightPen lineColor="#00CCCC"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="35" height="25" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
-								<box leftPadding="2" bottomPadding="2">
-									<topPen lineWidth="0.25"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="35" height="40" uuid="2831b06c-68e1-41de-8bdd-7cfa1977e6dd"/>
+								<box leftPadding="2" bottomPadding="2" rightPadding="3">
 									<leftPen lineWidth="0.0"/>
-									<bottomPen lineWidth="0.25"/>
+									<bottomPen lineWidth="1.5" lineColor="#00CCCC"/>
 									<rightPen lineWidth="0.0"/>
 								</box>
-								<textElement textAlignment="Left" verticalAlignment="Bottom">
-									<font size="7"/>
-								</textElement>
+								<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 								<textFieldExpression><![CDATA[$V{ROW_COUNT}]]></textFieldExpression>
 							</textField>
 						</cellContents>
@@ -170,16 +170,22 @@
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
+							<box>
+								<pen lineColor="#00CCCC"/>
+								<topPen lineWidth="0.0" lineColor="#00CCCC"/>
+								<leftPen lineColor="#00CCCC"/>
+								<bottomPen lineWidth="0.0" lineColor="#00CCCC"/>
+								<rightPen lineColor="#00CCCC"/>
+							</box>
 							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="41" height="25" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
-								<box leftPadding="2">
-									<topPen lineWidth="0.25"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="41" height="40" uuid="17e7a4f5-902a-4092-abe7-48bc60a8620c"/>
+								<box leftPadding="2" bottomPadding="2" rightPadding="3">
 									<leftPen lineWidth="0.0"/>
-									<bottomPen lineWidth="0.25"/>
+									<bottomPen lineWidth="1.5" lineColor="#00CCCC"/>
 									<rightPen lineWidth="0.0"/>
 								</box>
 								<textElement textAlignment="Left" verticalAlignment="Bottom">
-									<font size="7"/>
+									<font size="10"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{code}]]></textFieldExpression>
 							</textField>
@@ -195,16 +201,22 @@
 					</bucket>
 					<crosstabRowHeader>
 						<cellContents>
+							<box>
+								<pen lineColor="#00CCCC"/>
+								<topPen lineWidth="0.0" lineColor="#00CCCC"/>
+								<leftPen lineColor="#00CCCC"/>
+								<bottomPen lineWidth="0.0" lineColor="#00CCCC"/>
+								<rightPen lineColor="#00CCCC"/>
+							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="151" height="25" uuid="d1e519de-efda-40f0-8804-07cf53952981"/>
-								<box leftPadding="2">
-									<topPen lineWidth="0.25"/>
+								<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="151" height="40" uuid="d1e519de-efda-40f0-8804-07cf53952981"/>
+								<box leftPadding="2" bottomPadding="2" rightPadding="3">
 									<leftPen lineWidth="0.0"/>
-									<bottomPen lineWidth="0.25"/>
+									<bottomPen lineWidth="1.5" lineColor="#00CCCC"/>
 									<rightPen lineWidth="0.0"/>
 								</box>
 								<textElement verticalAlignment="Bottom">
-									<font size="7"/>
+									<font size="10"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{product}]]></textFieldExpression>
 							</textField>
@@ -226,7 +238,7 @@
 								<rightPen lineWidth="0.0"/>
 							</box>
 							<textField isStretchWithOverflow="true">
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="38" height="30" uuid="e2d51561-a0ed-45ec-89f5-fad831b1ef2e"/>
+								<reportElement style="Crosstab Data Text" x="0" y="0" width="46" height="30" uuid="e2d51561-a0ed-45ec-89f5-fad831b1ef2e"/>
 								<box>
 									<topPen lineWidth="0.75"/>
 									<leftPen lineWidth="0.0"/>
@@ -234,7 +246,7 @@
 									<rightPen lineWidth="0.0"/>
 								</box>
 								<textElement textAlignment="Left" verticalAlignment="Middle">
-									<font size="7"/>
+									<font size="8"/>
 								</textElement>
 								<textFieldExpression><![CDATA[$V{periodName}]]></textFieldExpression>
 							</textField>
@@ -247,24 +259,23 @@
 				<measure name="consumptionMeasure" class="java.lang.Double">
 					<measureExpression><![CDATA[$F{valeu}]]></measureExpression>
 				</measure>
-				<crosstabCell width="39" height="25">
+				<crosstabCell width="46" height="40">
 					<cellContents>
 						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							<leftPen lineWidth="0.0"/>
-							<rightPen lineWidth="0.0"/>
+							<pen lineColor="#00CCCC"/>
+							<topPen lineWidth="0.0" lineColor="#00CCCC"/>
+							<leftPen lineColor="#00CCCC"/>
+							<bottomPen lineWidth="0.0" lineColor="#00CCCC"/>
+							<rightPen lineColor="#00CCCC"/>
 						</box>
-						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="39" height="25" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
-							<box leftPadding="2" bottomPadding="2">
-								<topPen lineWidth="0.25"/>
+						<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+							<reportElement style="Crosstab Data Text" stretchType="RelativeToBandHeight" x="0" y="0" width="46" height="40" uuid="7b3d5ed3-7f39-48eb-8ecd-f844840a87d4"/>
+							<box leftPadding="2" bottomPadding="2" rightPadding="3">
 								<leftPen lineWidth="0.0"/>
-								<bottomPen lineWidth="0.25"/>
+								<bottomPen lineWidth="1.5" lineColor="#00CCCC"/>
 								<rightPen lineWidth="0.0"/>
 							</box>
-							<textElement textAlignment="Left" verticalAlignment="Bottom">
-								<font size="7"/>
-							</textElement>
+							<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 							<textFieldExpression><![CDATA[$V{consumptionMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
@@ -308,7 +319,7 @@
 				<crosstabCell rowTotalGroup="product" columnTotalGroup="periodName">
 					<cellContents/>
 				</crosstabCell>
-				<crosstabCell width="39" height="0" rowTotalGroup="count">
+				<crosstabCell width="46" height="0" rowTotalGroup="count">
 					<cellContents/>
 				</crosstabCell>
 				<crosstabCell rowTotalGroup="count" columnTotalGroup="periodName">
