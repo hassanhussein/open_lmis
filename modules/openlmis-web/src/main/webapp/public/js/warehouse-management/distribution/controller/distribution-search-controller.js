@@ -1,5 +1,41 @@
-function DistributionSearchController($scope,DisableAsn, Preadvice, $location, navigateBackService, $dialog){
+function DistributionSearchController($scope,DisableAsn, programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog){
+
+        $scope.facilities = facilities;
+
+        $scope.program =  programs;
+        if($scope.program.length === 1){
+            $scope.selectedProgramId = programs[0].id;
+            var selectedFacilityId = facilities.id;
+
+        }
+
+
+ VaccinePendingRequisitions.get({
+            facilityId: parseInt(facilities.id, 10),
+            programId: parseInt(programs[0].id, 10)
+        }, function (data) {
+            $scope.pendingRequisition = data.pendingRequest;
+            $scope.orders=[];
+//            console.log($scope.pendingRequisition);
+            $scope.pendingRequisition.forEach(function(order){
+            $scope.orders.push({
+                                orderNumber:"IVD"+order.id,
+                                period:order.periodName,
+                                dateSubmitted:order.orderDate,
+                                issue:false,
+                                name:order.facilityName,
+                                ordered:[]
+            });
+
+            })
+console.log($scope.orders);
+        });
+
+
+
 // simulate server data structure here
+
+
 
  $scope.data={
  orders:[{
@@ -228,3 +264,41 @@ function DistributionSearchController($scope,DisableAsn, Preadvice, $location, n
 
 
 }
+
+
+DistributionSearchController.resolve = {
+
+    orders: function ($q, $timeout, UserFacilityWithViewVaccineOrderRequisition) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            UserFacilityWithViewVaccineOrderRequisition.get({}, function (data) {
+                deferred.resolve(data.facilities);
+//                console.log(data.facilities);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    programs: function ($q, $timeout, VaccineHomeFacilityPrograms) {
+            var deferred = $q.defer();
+
+            $timeout(function () {
+                VaccineHomeFacilityPrograms.get({}, function (data) {
+                    deferred.resolve(data.programs);
+                });
+            }, 100);
+
+            return deferred.promise;
+        },
+        facilities: function ($q, $timeout, UserHomeFacility) {
+            var deferred = $q.defer();
+
+            $timeout(function () {
+                UserHomeFacility.get({}, function (data) {
+                    deferred.resolve(data.homeFacility);
+                });
+            }, 100);
+
+            return deferred.promise;
+        }
+
+    }

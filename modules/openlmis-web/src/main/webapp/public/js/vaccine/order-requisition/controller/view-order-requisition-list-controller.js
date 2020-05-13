@@ -166,6 +166,7 @@ ViewOrderRequisitionList.resolve = {
         $timeout(function () {
             UserFacilityWithViewVaccineOrderRequisition.get({}, function (data) {
                 deferred.resolve(data.facilities);
+                console.log(data.facilities);
             }, {});
         }, 100);
         return deferred.promise;
