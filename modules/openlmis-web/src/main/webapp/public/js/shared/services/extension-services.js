@@ -1437,5 +1437,5 @@ services.factory('VaccinePendingRequisitionsForCVS', function ($resource) {
 });
 
 services.factory('GetCurrentStock', function ($resource) {
-    return $resource('/rest-api/transfer/get-current-stock-for.json', {}, {});
+    return $resource('/rest-api/transfer/get-current-stock.json', {}, {});
 });
