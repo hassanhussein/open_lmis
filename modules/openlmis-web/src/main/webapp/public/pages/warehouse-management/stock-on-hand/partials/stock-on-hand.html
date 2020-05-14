@@ -40,47 +40,47 @@
 
 <div class="clear-fix rnr-table">
 
-    <table id="equipmentTable" fixed-table-header class="table-bordered table table-striped scrollable">
+    <table id="equipmentTable" fixed-table-header  style="width:75%" class="table-bordered table table-striped scrollable">
         <thead>
         <tr>
 
-            <th class="col-product">
+            <th style="width:55px; min-width:40px !important;" class="col-product">
                 <div class="regimen-heading">
                     <span>Product</span>
                 </div>
             </th>
-            <th class="span1">
+            <th style="width:50px; min-width:40px !important;" class="span1">
                 <div class="regimen-heading">
                     <span>Batch #</span>
                 </div>
             </th>
-            <th class="col-quantity">
+            <th style="text-align:right; width:50px; min-width:40px !important;" class="col-quantity">
                 <div class="regimen-heading">
                     <span>Quantity/Batch (Vials)</span>
                 </div>
             </th>
-            <th class="span1">
+            <th class="span1" style="width:30px; min-width:20px !important;">
                 <div class="regimen-heading">
                     <span>Expiry Date</span>
                 </div>
             </th>
-            <th class="span1">
+            <th class="span1" style="width:50px; min-width:40px !important;">
                 <div class="regimen-heading">
                     <span>Bin Location</span>
                 </div>
             </th>
-            <th class="span1">
+            <th class="span1" style="width:50px; min-width:40px !important;">
                 <div class="regimen-heading">
                     <span>Last Updated</span>
                 </div>
             </th>
 
-            <th class="span1">
+            <th class="span1" style="text-align:right; width:80px; min-width:40px !important;">
                 <div class="regimen-heading">
                     <span>Total Quantity (Vials)</span>
                 </div>
             </th>
-            <th class="span1">
+            <th class="span1" style="width:50px; min-width:40px !important;">
                 <div class="regimen-heading">
                     <span>Action</span>
                 </div>
@@ -96,14 +96,14 @@
     <td rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px">{{product_name}}</td>
 
             <td class="col-lot cell-input  disabled padding2px">{{product[0].lotNumber}}</td>
-            <td class="col-lot cell-input  disabled padding2px">{{product[0].quantityOnHand}}</td>
+            <td style="text-align:right;" class="col-lot cell-input  disabled padding2px">{{product[0].quantityOnHand}}</td>
 
             <td class="col-lot cell-input  disabled padding2px">{{product[0].expirationDate}}</td>
             <td class="col-lot cell-input  disabled padding2px">{{product[0].binLocation}}</td>
-            <td class="col-lot cell-input  disabled padding2px">{{product[0].lastUpdated}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{product[0].lastUpdated.split(" ")[0]}}</td>
 
 
-            <td rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px">{{calculateTotalQuantity(product[0].productId)}}</td>
+            <td style="text-align:right;" rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px">{{calculateTotalQuantity(product[0].productId)}}</td>
 
             <td rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px"> <a class="btn btn-primary" ng-click="openLedger(product[0])">
                 View</a></td>
@@ -112,10 +112,10 @@
 
         <tr ng-repeat-end  ng-repeat="lot in product" ng-if="$index > 0">
             <td class="col-lot cell-input  disabled padding2px">{{lot.lotNumber}}</td>
-            <td class="col-lot cell-input  disabled padding2px">{{lot.quantityOnHand}}</td>
+            <td style="text-align:right;" class="col-lot cell-input  disabled padding2px">{{lot.quantityOnHand}}</td>
             <td class="col-lot cell-input  disabled padding2px">{{lot.expirationDate}}</td>
             <td class="col-lot cell-input  disabled padding2px">{{lot.binLocation}}</td>
-            <td class="col-lot cell-input  disabled padding2px">{{lot.lastUpdated}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{lot.lastUpdated.split(" ")[0]}}</td>
 
 
 
