@@ -34,11 +34,9 @@ $scope.products=_.groupBy($scope.soh,'product');
 };
 
 
-$scope.openLedger = function(productId) {
+$scope.openLedger = function(product) {
+$location.path('stock-ledger/'+$scope.warehouseId+'/'+product.productId+'/'+new Date().getFullYear())
 
- console.log()
-
-return;
 };
 
 

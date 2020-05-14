@@ -60,4 +60,5 @@ public class StockMovementController extends BaseController {
         return OpenLmisResponse.response("reasons",transferService.getTransferReasons());
     }
 
+
 }

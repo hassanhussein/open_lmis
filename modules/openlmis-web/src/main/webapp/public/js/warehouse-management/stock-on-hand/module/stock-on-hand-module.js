@@ -12,7 +12,7 @@ var stockOnHandModule = angular.module('stock-on-hand', ['openlmis', 'ui.bootstr
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
            when('/stock-on-hand', {controller: StockOnHandController, templateUrl: 'partials/stock-on-hand.html'}).
-           when('/stock-ledger', {controller: StockLedgerController, templateUrl: 'partials/stock-ledger.html'}).
+           when('/stock-ledger/:warehouseId/:productId/:year', {controller: StockLedgerController, templateUrl: 'partials/stock-ledger.html',resolve:StockLedgerController.resolve}).
 
             otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {

@@ -8,6 +8,7 @@ import org.openlmis.vaccine.service.warehouse.LotOnHandLocationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -38,13 +39,13 @@ public class LotLocationController extends BaseController {
         return OpenLmisResponse.response("soh",lotOnHandLocationService.getSOHReport(facilityId,warehouseId));
     }
 
-   @RequestMapping(value = "stock-ledgers", method = GET, headers = ACCEPT_JSON)
+   @RequestMapping(value = "/stock-ledgers/{warehouseId}/{productId}/{year}", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllLedgers(
 
-                                                          @RequestParam(value = "warehouseId") Long warehouseId,
+                                                          @PathVariable(value = "warehouseId") Long warehouseId,
 
-                                                          @RequestParam(value = "productId") Long productId,
-                                                          @RequestParam(value = "year") Long year
+                                                          @PathVariable(value = "productId") Long productId,
+                                                          @PathVariable(value = "year") Long year
                                                           ) {
         return OpenLmisResponse.response("ledgers",lotOnHandLocationService.getAllLedgers(productId,warehouseId,year));
     }
