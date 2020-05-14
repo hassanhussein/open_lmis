@@ -478,22 +478,21 @@ DistributionController.resolve = {
 
         return deferred.promise;
     },
-    all_orders: function ($q, $timeout, ConsolidatedOrdersList, $route) {
+    all_orders: function ($q, $timeout, VaccinePendingRequisitionsForCVS, $route) {
             var deferred = $q.defer();
             $timeout(function () {
-                if (isUndefined($route.current.params.program) || isUndefined($route.current.params.facilityId)) {
+                if (isUndefined($route.current.params.facilityId)) {
 
 
                     return null;
                 } else {
-                    ConsolidatedOrdersList.get({
-                            program: $route.current.params.program,
+                    VaccinePendingRequisitionsForCVS.get({
+
                             facilityId: $route.current.params.facilityId
                         },
                         function (data) {
                         console.log(data);
-                            if (!isUndefined(data.consolidatedOrders) || data.consolidatedOrders.length > 0)
-                                deferred.resolve(data.consolidatedOrders);
+
                         });
                 }
 

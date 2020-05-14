@@ -14,7 +14,7 @@ var distributionModule = angular.module('distribution', ['openlmis', 'ui.bootstr
       $routeProvider.
 
           when('/search', {controller: DistributionSearchController, templateUrl: 'partials/search.html', resolve:DistributionSearchController.resolve,reloadOnSearch: false}).
-          when('/create/:program/:facilityId', {controller: DistributionController, templateUrl: 'partials/create.html', resolve:DistributionController.resolve,reloadOnSearch: false}).
+          when('/create/:facilityId', {controller: DistributionController, templateUrl: 'partials/create.html', resolve:DistributionController.resolve,reloadOnSearch: false}).
 
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {

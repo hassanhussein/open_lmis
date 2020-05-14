@@ -60,7 +60,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
 //                  gap:'',
 //                  given:[]
 //                },
-//                {
+//                {ConsolidatedOrdersList
 //                  productId:34,
 //                  product:"PCV",
 //                  amount:300,
@@ -272,7 +272,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
    }
    });
 
-   $location.path('/create/'+ parseInt(programs[0].id, 10)+'/'+parseInt(facilities.id, 10));
+   $location.path('/create/'+parseInt(facilities.id, 10));
 
 //   $window.location = '/public/pages/warehouse-management/distribution/index.html#/create/'+ parseInt(programs[0].id, 10)+'/'+parseInt(facilities.id, 10);
 
