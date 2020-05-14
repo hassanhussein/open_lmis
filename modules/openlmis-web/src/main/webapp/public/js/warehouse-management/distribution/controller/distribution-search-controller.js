@@ -10,26 +10,10 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
         }
 
 
- VaccinePendingRequisitions.get({
-            facilityId: parseInt(facilities.id, 10),
-            programId: parseInt(programs[0].id, 10)
-        }, function (data) {
-            $scope.pendingRequisition = data.pendingRequest;
-            $scope.orders=[];
-//            console.log($scope.pendingRequisition);
-            $scope.pendingRequisition.forEach(function(order){
-            $scope.orders.push({
-                                orderNumber:"IVD"+order.id,
-                                period:order.periodName,
-                                dateSubmitted:order.orderDate,
-                                issue:false,
-                                name:order.facilityName,
-                                ordered:[]
-            });
 
-            })
-console.log($scope.orders);
-        });
+
+
+
 
 
 
@@ -37,91 +21,91 @@ console.log($scope.orders);
 
 
 
- $scope.data={
- orders:[{
-                orderNumber:"IVD0001",
-                period:"Sept - Dec 2020",
-                dateSubmitted:"11/09/2020",
-                issue:false,
-                name:"Arusha RVS",
-                ordered:[{
-                  productId:343,
-                  product:"BCG",
-                  amount:35343,
-                  gap:'',
-                  given:[]
-                },
-                {
-                  productId:34,
-                  product:"PCV",
-                  amount:316,
-                  gap:'',
-                  given:[]
-                }
-
-              ],
-
-              },
-              {
-                orderNumber:"IVD0002",
-                period:"Jan - Feb 2020",
-                dateSubmitted:"11/01/2020",
-                     issue:false,
-
-                name:"Dodoma RVS",
-                ordered:[{
-                  productId:343,
-                  product:"BCG",
-                  amount:753,
-                  gap:'',
-                  given:[]
-                },
-                {
-                  productId:34,
-                  product:"PCV",
-                  amount:300,
-                  gap:'',
-                  given:[]
-                }
-
-              ],
-              },
-              {
-                              orderNumber:"IVD0003",
-                              period:"Apr- Jun 2020",
-                              dateSubmitted:"11/04/2020",
-                                              issue:false,
-
-                              name:"Tanga RVS",
-                              ordered:[{
-                                productId:343,
-                                product:"BCG",
-                                amount:853,
-                                gap:'',
-                                given:[]
-                              },
-                              {
-                                productId:34,
-                                product:"PCV",
-                                amount:456,
-                                gap:'',
-                                given:[]
-
-                              }
-
-                            ],
-
-
-                            }
-
-            ],
- pagination:{
- totalRecords:3,
- page:1,
- limit:10,
- }
-
- };
+// $scope.data={
+// orders:[{
+//                orderNumber:"IVD0001",
+//                period:"Sept - Dec 2020",
+//                dateSubmitted:"11/09/2020",
+//                issue:false,
+//                name:"Arusha RVS",
+//                ordered:[{
+//                  productId:343,
+//                  product:"BCG",
+//                  amount:35343,
+//                  gap:'',
+//                  given:[]
+//                },
+//                {
+//                  productId:34,
+//                  product:"PCV",
+//                  amount:316,
+//                  gap:'',
+//                  given:[]
+//                }
+//
+//              ],
+//
+//              },
+//              {
+//                orderNumber:"IVD0002",
+//                period:"Jan - Feb 2020",
+//                dateSubmitted:"11/01/2020",
+//                     issue:false,
+//
+//                name:"Dodoma RVS",
+//                ordered:[{
+//                  productId:343,
+//                  product:"BCG",
+//                  amount:753,
+//                  gap:'',
+//                  given:[]
+//                },
+//                {
+//                  productId:34,
+//                  product:"PCV",
+//                  amount:300,
+//                  gap:'',
+//                  given:[]
+//                }
+//
+//              ],
+//              },
+//              {
+//                              orderNumber:"IVD0003",
+//                              period:"Apr- Jun 2020",
+//                              dateSubmitted:"11/04/2020",
+//                                              issue:false,
+//
+//                              name:"Tanga RVS",
+//                              ordered:[{
+//                                productId:343,
+//                                product:"BCG",
+//                                amount:853,
+//                                gap:'',
+//                                given:[]
+//                              },
+//                              {
+//                                productId:34,
+//                                product:"PCV",
+//                                amount:456,
+//                                gap:'',
+//                                given:[]
+//
+//                              }
+//
+//                            ],
+//
+//
+//                            }
+//
+//            ],
+// pagination:{
+// totalRecords:3,
+// page:1,
+// limit:10,
+// }
+//
+// };
 
 // end of server data structure simulation
 
@@ -212,12 +196,12 @@ console.log($scope.orders);
     query = query.trim();
     $scope.searchedQuery = query;
 
-          $scope.orderList = $scope.data.orders;
-          $scope.pagination = $scope.data.pagination;
-          $scope.totalItems = $scope.pagination.totalRecords;
-          $scope.currentPage = $scope.pagination.page;
-          $scope.showResults = true;
-          $scope.showSearchResults = true;
+//          $scope.orderList = $scope.data.orders;
+//          $scope.pagination = $scope.data.pagination;
+//          $scope.totalItems = $scope.pagination.totalRecords;
+//          $scope.currentPage = $scope.pagination.page;
+//          $scope.showResults = true;
+//          $scope.showSearchResults = true;
 //    Preadvice.get({"searchParam": $scope.searchedQuery, "column": $scope.selectedSearchOption.value, "page": page}, function (data) {
 //      $scope.asnList = data.asns;
 //      $scope.pagination = data.pagination;
@@ -226,6 +210,40 @@ console.log($scope.orders);
 //      $scope.showResults = true;
 //      $scope.showSearchResults = true;
 //    }, {});
+
+
+
+    VaccinePendingRequisitions.get({
+                facilityId: parseInt(facilities.id, 10),
+                programId: parseInt(programs[0].id, 10)
+            }, function (data) {
+                $scope.pendingRequisition = data.pendingRequest;
+                $scope.orders=[];
+    //            console.log($scope.pendingRequisition);
+                $scope.pendingRequisition.forEach(function(order){
+                $scope.orders.push({
+                                    orderNumber:"IVD"+order.id,
+                                    period:order.periodName,
+                                    dateSubmitted:order.orderDate,
+                                    issue:false,
+                                    name:order.facilityName,
+                                    ordered:[]
+                });
+
+                })
+    $scope.data={};
+    $scope.data.orders=$scope.orders;
+    $scope.data.pagination={};
+    $scope.data.pagination.totalRecords=$scope.orders.length;
+    $scope.data.pagination.limit=$scope.orders.length;
+
+    $scope.orderList = $scope.data.orders;
+              $scope.pagination = $scope.data.pagination;
+              $scope.totalItems = $scope.pagination.totalRecords;
+              $scope.currentPage = $scope.pagination.page;
+              $scope.showResults = true;
+              $scope.showSearchResults = true;
+            });
   }
 
   getPreadvice(1,"%");
@@ -254,8 +272,9 @@ console.log($scope.orders);
    }
    });
 
-//     $scope.$parent.asnViewMode=false;
-           $location.path('create');
+   $location.path('/create/'+ parseInt(programs[0].id, 10)+'/'+parseInt(facilities.id, 10));
+
+//   $window.location = '/public/pages/warehouse-management/distribution/index.html#/create/'+ parseInt(programs[0].id, 10)+'/'+parseInt(facilities.id, 10);
 
 
   };

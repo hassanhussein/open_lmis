@@ -11,10 +11,10 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+function DistributionController($q,homeFacility,StockEvent,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
 
 
-
+console.log(all_orders);
 var distributionData = [{
                           //NEW
                          "fromFacilityId":homeFacility,
@@ -477,6 +477,30 @@ DistributionController.resolve = {
         }, 100);
 
         return deferred.promise;
-    }
+    },
+    all_orders: function ($q, $timeout, ConsolidatedOrdersList, $route) {
+            var deferred = $q.defer();
+            $timeout(function () {
+                if (isUndefined($route.current.params.program) || isUndefined($route.current.params.facilityId)) {
+
+
+                    return null;
+                } else {
+                    ConsolidatedOrdersList.get({
+                            program: $route.current.params.program,
+                            facilityId: $route.current.params.facilityId
+                        },
+                        function (data) {
+                        console.log(data);
+                            if (!isUndefined(data.consolidatedOrders) || data.consolidatedOrders.length > 0)
+                                deferred.resolve(data.consolidatedOrders);
+                        });
+                }
+
+
+            }, 100);
+
+            return deferred.promise;
+        },
 
 };
