@@ -1435,3 +1435,7 @@ services.factory('GetStockLedgerReport', function ($resource) {
 services.factory('VaccinePendingRequisitionsForCVS', function ($resource) {
     return $resource('/vaccine/orderRequisition/getPendingRequest-for/:facilityId.json', {}, {});
 });
+
+services.factory('GetCurrentStock', function ($resource) {
+    return $resource('/rest-api/transfer/get-current-stock-for.json', {}, {});
+});

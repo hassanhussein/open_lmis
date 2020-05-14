@@ -2,6 +2,8 @@ package org.openlmis.vaccine.domain.wms.dto;
 
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class LotOnHandExtDTO {
 
@@ -13,8 +15,8 @@ public class LotOnHandExtDTO {
 
     private String lotNumber;
 
-    private String expiry;
+    private Date expiry;
 
-    private Long maxSOH;
+    private Long maxSoh;
 
 }
