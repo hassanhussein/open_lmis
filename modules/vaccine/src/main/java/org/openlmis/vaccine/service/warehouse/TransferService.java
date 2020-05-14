@@ -1,6 +1,5 @@
 package org.openlmis.vaccine.service.warehouse;
 
-import com.lowagie.text.pdf.PRAcroForm;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.stockmanagement.domain.*;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service

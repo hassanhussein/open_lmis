@@ -1431,3 +1431,7 @@ services.factory('GetTransferReasons', function ($resource) {
 services.factory('GetStockLedgerReport', function ($resource) {
     return $resource('/rest-api/lotLocation/stock-ledgers/:warehouseId/:productId/:year.json', {warehouseId:'@warehouseId', productId:'@productId',year:'@year'}, {});
 });
+
+services.factory('VaccinePendingRequisitionsForCVS', function ($resource) {
+    return $resource('/vaccine/orderRequisition/getPendingRequest-for/:facilityId.json', {}, {});
+});
