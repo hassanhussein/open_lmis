@@ -172,4 +172,8 @@ public class StockCardService {
     lotRepository.updateLotOnHand(lotOnHand);
   }
 
+  public Integer insertLotOnHandBy(LotOnHand lotOnHand) {
+     return lotRepository.insertLotOnHandBy(lotOnHand);
+  }
+
 }

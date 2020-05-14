@@ -71,4 +71,8 @@ public class LotOnHandLocationRepository {
     public LotOnHandLocation getBy(Long fromBin, Long lotOnHandId) {
         return mapper.getBy(fromBin, lotOnHandId);
     }
+
+    public void updateLotOnHandLocation(Long id, Integer quantity) {
+         mapper.updateLotOnHandLocation(id, quantity);
+    }
 }

@@ -237,4 +237,8 @@ public class LotOnHandLocationService {
     public LotOnHandLocation getBy(Long fromBin, Long lotOnHandId) {
         return repository.getBy(fromBin, lotOnHandId);
     }
+
+    public void updateLotOnHandLocation(Long id, Integer quantity) {
+        repository.updateLotOnHandLocation(id, quantity);
+    }
 }

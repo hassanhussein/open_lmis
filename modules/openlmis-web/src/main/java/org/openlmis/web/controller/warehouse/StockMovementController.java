@@ -1,6 +1,8 @@
 package org.openlmis.web.controller.warehouse;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
+import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.vaccine.domain.wms.Transfer;
@@ -24,13 +26,16 @@ public class StockMovementController extends BaseController {
 
     @Autowired
     private TransferService transferService;
+    @Autowired
+    private FacilityService facilityService;
 
     @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Transfer item, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         item.setCreatedBy(userId);
         item.setModifiedBy(userId);
-        return OpenLmisResponse.response("trans",transferService.save(item,loggedInUserId(request)));
+        Facility facility = facilityService.getHomeFacility(userId);
+        return OpenLmisResponse.response("trans",transferService.save(item,loggedInUserId(request),facility.getId()));
 
     }
 

@@ -425,4 +425,9 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
 
+    @RequestMapping(value = "getPendingRequest-for/{facilityId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPendingRequestFor(@PathVariable Long facilityId, HttpServletRequest request) {
+        return OpenLmisResponse.response("pendingRequest", service.getPendingRequestForCVS(loggedInUserId(request), facilityId));
+    }
+
 }

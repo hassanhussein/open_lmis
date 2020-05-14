@@ -162,4 +162,6 @@ public interface LotOnHandLocationMapper {
     @Select("SELECT * FROM lot_on_hand_locations WHERE locationId=#{locationId} order by id desc Limit 1")
     LotOnHandLocation getBy(@Param("locationId") Long locationId, @Param("lotOnHandId") Long lotOnHandId);
 
+    @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{quantity} WHERE id = #{id}   ")
+    void updateLotOnHandLocation(@Param("id") Long id, @Param("quantity") Integer quantity);
 }

@@ -48,7 +48,7 @@ public class OrderRequisitionDTO extends SupervisoryNode{
     String orderDate;
     Long orderId;
 
-
+    List<PendingRequestDTO> ordered = new ArrayList<>();
 
     //Used to join order requisition and stock Card
 
