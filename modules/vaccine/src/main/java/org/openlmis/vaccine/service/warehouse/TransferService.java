@@ -259,10 +259,11 @@ public class TransferService {
                      lotOnHandDTO.setNumber(lot.getLotNumber());
                      lots.add(lotOnHandDTO);
                  }
-                 summary.setLots(lots);
+
+                 if(summary.getProduct() != null)
+                    summary.setLots(lots);
              }
              }
-             if(summary.getProduct() != null)
                    products.add(summary);
 
             }
