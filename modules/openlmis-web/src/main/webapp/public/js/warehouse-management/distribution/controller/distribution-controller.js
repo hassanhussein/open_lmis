@@ -501,7 +501,21 @@ DistributionController.resolve = {
         }, 100);
 
         return deferred.promise;
-    },
+    },wmsSoh: function ($q, $timeout, GetCurrentStock) {
+              var deferred = $q.defer();
+
+              $timeout(function () {
+
+                  GetCurrentStock.get({}, function (data) {
+                  console.log(data);
+                      deferred.resolve(data);
+                  });
+
+              }, 100);
+
+              return deferred.promise;
+          }
+    ,
     all_orders: function ($q, $timeout, VaccinePendingRequisitionsForCVS, $route) {
             var deferred = $q.defer();
             $timeout(function () {
