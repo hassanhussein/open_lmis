@@ -11,6 +11,8 @@
 
 function StockLedgerController($scope, stockLedgers,$location) {
 
+console.log(stockLedgers)
+
  console.log(stockLedgers);
 
 }

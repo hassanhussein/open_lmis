@@ -230,10 +230,11 @@ public class TransferService {
 
         if(!stockCardList.isEmpty()) {
 
+            StockOnHandSummaryDTO summary = new StockOnHandSummaryDTO();
+
             for (StockCard stockCard : stockCardList) {
 
              List<LotOnHandExtDTO> lotOnHandExtDTOList = repository.getLotOnHandExtraBy(stockCard.getProduct().getId());
-             StockOnHandSummaryDTO summary = new StockOnHandSummaryDTO();
 
              if(!lotOnHandExtDTOList.isEmpty()) {
 
@@ -261,7 +262,8 @@ public class TransferService {
                  summary.setLots(lots);
              }
              }
-                products.add(summary);
+             if(summary.getProduct() != null)
+                   products.add(summary);
 
             }
 
