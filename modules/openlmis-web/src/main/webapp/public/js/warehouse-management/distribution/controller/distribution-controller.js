@@ -11,10 +11,35 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+function DistributionController($q,homeFacility,StockEvent,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
 
 
+console.log(all_orders);
+$scope.requisitionsWithoutProducts=$scope.$parent.orders;
+$scope.requstions=[];
+$scope.requisitionsWithoutProducts.forEach(function(rwp){
+ var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
 
+$scope.requstions.push({
+                             fromFacilityId:19075,
+                             toFacilityId:19076,
+                             programId:parseInt(82,10),
+                             orderId:2482,
+                             periodId: 191,
+                             remarks:'Add some remarks',
+                             orderNumber: "IVD0001",
+                             period: "Sept - Dec 2020",
+                             dateSubmitted: "11/09/2019",
+                             issue: false,
+                             name:requisitionsWithProduct.facilityName,
+                             ordered:requisitionsWithProduct.ordered
+
+});
+
+
+});
+$scope.requisitions
+console.log($scope.requstions);
 var distributionData = [{
                           //NEW
                          "fromFacilityId":homeFacility,
@@ -304,7 +329,6 @@ wait()
   });
 
 
-$scope.requstions=$scope.$parent.orders;
 
 
 $scope.getLotSumPerRegion=function(lotId,productId){
@@ -477,6 +501,44 @@ DistributionController.resolve = {
         }, 100);
 
         return deferred.promise;
-    }
+    },wmsSoh: function ($q, $timeout, GetCurrentStock) {
+              var deferred = $q.defer();
+
+              $timeout(function () {
+
+                  GetCurrentStock.get({}, function (data) {
+                  console.log(data);
+                      deferred.resolve(data);
+                  });
+
+              }, 100);
+
+              return deferred.promise;
+          }
+    ,
+    all_orders: function ($q, $timeout, VaccinePendingRequisitionsForCVS, $route) {
+            var deferred = $q.defer();
+            $timeout(function () {
+                if (isUndefined($route.current.params.facilityId)) {
+
+
+                    return null;
+                } else {
+                    VaccinePendingRequisitionsForCVS.get({
+
+                            facilityId: $route.current.params.facilityId
+                        },
+                        function (data) {
+//                        console.log(data);
+                        deferred.resolve(data.pendingRequest);
+
+                        });
+                }
+
+
+            }, 100);
+
+            return deferred.promise;
+        },
 
 };
