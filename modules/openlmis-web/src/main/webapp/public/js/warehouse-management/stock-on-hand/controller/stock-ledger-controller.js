@@ -9,9 +9,7 @@
  */
 
 
-
-
-function StockLedgerController($scope, $location) {
+function StockLedgerController($scope, $location, GetStockLedgerReport) {
 
 
 }

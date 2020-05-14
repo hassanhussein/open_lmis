@@ -409,12 +409,14 @@ public class VaccineOrderRequisitionService {
 
                for(VaccineOrderRequisitionLineItem item : requisition.getLineItems()) {
 
-                   PendingRequestDTO order = new PendingRequestDTO();
-                   order.setProduct(item.getProductName());
-                   order.setProductId(item.getProductId());
-                   order.setAmount(item.getQuantityRequested().intValue());
+                 if(item != null) {
+                     PendingRequestDTO order = new PendingRequestDTO();
+                     order.setProduct(item.getProductName());
+                     order.setProductId(item.getProductId());
+                     order.setAmount(item.getQuantityRequested().intValue());
 
-                   ordered.add(order);
+                     ordered.add(order);
+                 }
                }
 
                dto.setOrdered(ordered);
