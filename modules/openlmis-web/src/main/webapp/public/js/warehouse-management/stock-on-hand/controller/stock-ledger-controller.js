@@ -11,6 +11,9 @@
 
 function StockLedgerController($scope, stockLedgers,$location) {
 
+$scope.ledgers = [];
+$scope.ledgers = stockLedgers;
+
 console.log(stockLedgers)
 
  console.log(stockLedgers);

@@ -245,6 +245,7 @@ public class TransferService {
                  summary.setProductId(stockCard.getProduct().getId());
                  Long total = 0L;
                  int index = 0;
+
                  List<LotOnHandDTO> lots = new ArrayList<>();
 
                  for (LotOnHandExtDTO lot : lotOnHandExtDTOList) {

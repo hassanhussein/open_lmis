@@ -26,11 +26,7 @@
             <select ui-select2="{width: '90%'}" class="span11"
                     ng-model="warehouseId" ng-change="getSoh()">
                 <option value="">--Select Year--</option>
-
-                <option ng-repeat="warehouse in warehouses"
-                        value="{{ warehouse.id }}">
-                    {{ warehouse.name }}
-                </option>
+                <option value="" ng-selected="true">2020</option>
 
             </select>
             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
@@ -98,10 +94,20 @@ Stock on Hand
 
         </tr>
         </thead>
-        <tbody>
+        <tbody ng-repeat="ledger in ledgers">
 
-
-
+        <td>{{$index + 1}}</td>
+        <td class="col-lot cell-input  disabled padding2px">{{ledger.date | date:'dd-MM-yyyy'}}</td>
+        <td class="col-lot cell-input  disabled padding2px">{{ledger.frombin}}</td>
+        <td class="col-lot cell-input  disabled padding2px">{{ledger.tobin}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.received}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.issued}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.adjustment}}</td>
+        <td class="col-lot cell-input  disabled padding2px">{{ledger.lotnumber}}</td>
+        <td class="col-lot cell-input  disabled padding2px">{{ledger.expirationdate}}</td>
+        <td class="col-lot cell-input  disabled padding2px">VVM1</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.loh | number}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.soh | number}}</td>
 
         </tbody>
 
