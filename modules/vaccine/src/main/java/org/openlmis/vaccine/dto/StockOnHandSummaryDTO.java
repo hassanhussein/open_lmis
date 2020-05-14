@@ -19,6 +19,8 @@ public class StockOnHandSummaryDTO extends BaseModel {
 
     private String productCode;
 
+    private Long productId;
+
     private List<LotOnHandDTO> lots = new ArrayList<>();
 
 }

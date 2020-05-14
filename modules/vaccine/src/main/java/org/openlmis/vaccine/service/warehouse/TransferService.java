@@ -239,6 +239,7 @@ public class TransferService {
 
                  summary.setProduct(stockCard.getProduct().getPrimaryName());
                  summary.setProductCode(stockCard.getProduct().getCode());
+                 summary.setProductId(stockCard.getProduct().getId());
                  Long total  = 0L;
                  int index = 0;
                  List<LotOnHandDTO>lots = new ArrayList<>();
@@ -251,7 +252,7 @@ public class TransferService {
                      lotOnHandDTO.setId(index++);
                      lotOnHandDTO.setLotId(lot.getLotId());
                      lotOnHandDTO.setVvm("VVM1");
-                     lotOnHandDTO.setLotNumber(lot.getLotNumber());
+                     lotOnHandDTO.setMaxSoh(lot.getQuantityOnHand());
                      lots.add(lotOnHandDTO);
                  }
                  summary.setLots(lots);
