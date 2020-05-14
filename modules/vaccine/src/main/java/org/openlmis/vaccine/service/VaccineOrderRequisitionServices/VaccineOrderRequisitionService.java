@@ -388,7 +388,7 @@ public class VaccineOrderRequisitionService {
 
             List<OrderRequisitionDTO> list = new ArrayList<>();
 
-           for(OrderRequisitionDTO request:orders ){
+           for(OrderRequisitionDTO request:orders ) {
 
                List<PendingRequestDTO> ordered = new ArrayList<>();
 
@@ -407,17 +407,20 @@ public class VaccineOrderRequisitionService {
 
                VaccineOrderRequisition requisition = orderRequisitionRepository.getAllDetailsById(request.getId());
 
-               for(VaccineOrderRequisitionLineItem item : requisition.getLineItems()) {
+               if (!requisition.getLineItems().isEmpty()) {
 
-                 if(item != null) {
-                     PendingRequestDTO order = new PendingRequestDTO();
-                     order.setProduct(item.getProductName());
-                     order.setProductId(item.getProductId());
-                     order.setAmount(item.getQuantityRequested().intValue());
+                   for (VaccineOrderRequisitionLineItem item : requisition.getLineItems()) {
 
-                     ordered.add(order);
-                 }
-               }
+                       if (item != null) {
+                           PendingRequestDTO order = new PendingRequestDTO();
+                           order.setProduct(item.getProductName());
+                           order.setProductId(item.getProductId());
+                           order.setAmount((item.getQuantityRequested() == null) ? 0 : item.getQuantityRequested());
+
+                           ordered.add(order);
+                       }
+                   }
+           }
 
                dto.setOrdered(ordered);
                list.add(dto);

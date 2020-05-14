@@ -12,7 +12,7 @@ public class PendingRequestDTO {
 
     private String product;
 
-    private Integer amount;
+    private Long amount;
 
     private String gap;
 
