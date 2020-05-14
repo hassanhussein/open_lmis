@@ -67,7 +67,6 @@ public class StockMovementController extends BaseController {
 
         Long userId = loggedInUserId(request);
         Facility facility = facilityService.getHomeFacility(userId);
-
         return OpenLmisResponse.response("stocks",transferService.getCurrentStockOnHand(userId,facility.getId()));
     }
 

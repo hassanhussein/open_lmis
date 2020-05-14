@@ -251,6 +251,7 @@ public class TransferService {
                      lotOnHandDTO.setId(index++);
                      lotOnHandDTO.setLotId(lot.getLotId());
                      lotOnHandDTO.setVvm("VVM1");
+                     lotOnHandDTO.setLotNumber(lot.getLotNumber());
                      lots.add(lotOnHandDTO);
                  }
                  summary.setLots(lots);
