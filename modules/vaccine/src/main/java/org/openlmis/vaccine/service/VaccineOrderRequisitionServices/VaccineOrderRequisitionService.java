@@ -413,7 +413,7 @@ public class VaccineOrderRequisitionService {
                      PendingRequestDTO order = new PendingRequestDTO();
                      order.setProduct(item.getProductName());
                      order.setProductId(item.getProductId());
-                     order.setAmount(item.getQuantityRequested().intValue());
+                     order.setAmount((item.getQuantityRequested() == null)?0:item.getQuantityRequested());
 
                      ordered.add(order);
                  }

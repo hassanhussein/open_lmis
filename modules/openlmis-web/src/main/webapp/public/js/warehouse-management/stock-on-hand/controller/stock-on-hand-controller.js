@@ -34,7 +34,10 @@ $scope.products=_.groupBy($scope.soh,'product');
 };
 
 
-$scope.openLedger = function() {
+$scope.openLedger = function(productId) {
+
+ console.log()
+
 return;
 };
 
