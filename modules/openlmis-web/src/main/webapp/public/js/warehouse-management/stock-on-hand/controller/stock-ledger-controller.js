@@ -9,7 +9,43 @@
  */
 
 
-function StockLedgerController($scope, $location, GetStockLedgerReport) {
+function StockLedgerController($scope, stockLedgers,$location) {
 
+ console.log(stockLedgers);
+
+}
+
+StockLedgerController.resolve = {
+
+    stockLedgers:function ($q, $route, $timeout, GetStockLedgerReport) {
+        console.log($route);
+        var deferred = $q.defer();
+
+          $timeout(function () {
+
+          var params = {};
+          var value = [];
+
+          params.warehouseId=parseInt($route.current.params.warehouseId,10);
+          params.productId=parseInt($route.current.params.productId,10);
+          params.year=parseInt($route.current.params.year,10);
+
+          GetStockLedgerReport.get(params, function(data) {
+
+                if(!isUndefined(data.ledgers) ) {
+
+                value = data.ledgers;
+                deferred.resolve(value);
+
+                } else {
+
+                deferred.resolve(value);
+
+                }
+
+            }, {});
+        }, 100);
+        return deferred.promise;
+    }
 
 }
