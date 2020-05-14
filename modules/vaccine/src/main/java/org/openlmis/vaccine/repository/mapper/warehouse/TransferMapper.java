@@ -1,8 +1,11 @@
 package org.openlmis.vaccine.repository.mapper.warehouse;
 
 import org.apache.ibatis.annotations.*;
+import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.vaccine.domain.wms.Transfer;
 import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
+import org.openlmis.vaccine.dto.LotDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,4 +45,22 @@ public interface TransferMapper {
 
     @Select(" SELECT * FROM wms_reasons ")
     List<AdjustmentReasonExDTO> getTransferReasons();
+
+    @Select(" select * from LOTS_ON_HAND h\n" +
+            "\n" +
+            "JOIN lot_on_hand_locations L  on h.ID = l.LOTONHANDID\n" +
+            "\n" +
+            "JOIN lots Lo on h.lotId = Lo.id " +
+            "\n" +
+            "WHERE LocationId = #{toBin} and lo.productId= #{productId}")
+    List<LotOnHand> checkAvailableProduct(@Param("toBin") Long toBin, @Param("productId") Long productId);
+
+    @Select(" \n" +
+            " SELECT LOTONHANDID, productId, lotId, locationId, l.id,  h.quantityOnHand quantity, l.quantityOnHand  from lots Lo \n" +
+            "\n" +
+            " JOIN LOTS_ON_HAND h on h.lotId = Lo.id\n" +
+            " JOIN lot_on_hand_locations L  on h.ID = l.LOTONHANDID " +
+            "\n" +
+            " WHERE LocationId = #{toBin} and lo.productId= #{productId} and lotId=#{lotId}")
+    List<LotDTO> checkAvailableProductAndLotBy(@Param("toBin") Long toBin, @Param("productId") Long productId, @Param("lotId") Long lotId);
 }

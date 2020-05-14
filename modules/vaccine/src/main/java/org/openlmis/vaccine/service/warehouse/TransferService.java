@@ -1,15 +1,16 @@
 package org.openlmis.vaccine.service.warehouse;
 
 import com.lowagie.text.pdf.PRAcroForm;
-import org.openlmis.stockmanagement.domain.LotOnHand;
-import org.openlmis.stockmanagement.domain.StockCardEntryKV;
-import org.openlmis.stockmanagement.domain.StockCardEntryType;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.service.ProductService;
+import org.openlmis.stockmanagement.domain.*;
 import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.LocationEntry;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.Transfer;
 import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.openlmis.vaccine.dto.LocationDTO;
+import org.openlmis.vaccine.dto.LotDTO;
 import org.openlmis.vaccine.repository.warehouse.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,22 +38,33 @@ public class TransferService {
     @Autowired
     private WmsLocationService wmsLocationService;
 
+    @Autowired
+    private ProductService productService;
+
     @Transactional
-    public Transfer save(Transfer item, Long userId) {
+    public Transfer save(Transfer item, Long userId, Long facilityId) {
 
        if(item.getId() == null) {
            repository.insert(item);
        }else
            repository.update(item);
 
+       checkProductAvailability(item,userId,facilityId);
+
+
         Integer total = 0;
 
         total = Integer.valueOf(item.getSoh().toString()) - Integer.valueOf(item.getQuantity().toString());
 
-        LotOnHandLocation toBinSavedData = locationService.getBy(item.getToBin(),item.getLotOnHandId());
+        //locationService.updateByLotOnHandAndLocation(total,item.getFromBin(), item.getLotOnHandId());
 
-        locationService.updateByLotOnHandAndLocation(total,item.getFromBin(), item.getLotOnHandId());
+        /*LotOnHandLocation toBinSavedData = locationService.getBy(item.getToBin(),item.getLotOnHandId());*/
 
+        List<LotDTO> lotList  = repository.checkAvailableProductAndLotBy(item.getFromBin(), item.getProductId(), item.getLotId());
+
+        for(LotDTO lots: lotList) {
+            locationService.updateByLotOnHandAndLocation(total,lots.getLocationId(),lots.getLotOnHandId());
+        }
 
         LocationEntry entry = new LocationEntry();
         entry.setCreatedBy(userId);
@@ -93,19 +105,82 @@ public class TransferService {
         //save Quantity On Hand
         // if(toBinSavedData != null) {
 
-        Integer total2 = 0;
+  /*      Integer total2 = 0;
         total2 = Integer.valueOf(toBinSavedData.getQuantityOnHand().toString()) + item.getQuantity();
         locationService.updateByLotOnHandAndLocation(total2, item.getToBin(), toBinSavedData.getLotOnHandId());
-        //}
+       */ //}
 
 
-        LotOnHand lotOnHand = new LotOnHand();
+       /* LotOnHand lotOnHand = new LotOnHand();
         lotOnHand.setId(item.getLotOnHandId());
         lotOnHand.setModifiedBy(userId);
         lotOnHand.setQuantityOnHand(total + item.getQuantity().longValue());
-        stockCardService.updateLotOnHand(lotOnHand);
+        stockCardService.updateLotOnHand(lotOnHand);*/
         return item;
 
+    }
+
+    private void checkProductAvailability(Transfer item, Long userId, Long facilityId) {
+
+      List<LotOnHand> products = repository.checkAvailableProduct(item.getToBin(), item.getProductId());
+        Product product = productService.getById(item.getProductId());
+        StockCard stockCard = stockCardService.getOrCreateStockCard(facilityId,product.getCode());
+
+        System.out.println("product-------");
+        System.out.println(item.getProductId());
+        System.out.println("Bin");
+        System.out.println(item.getToBin());
+        System.out.println("Loot");
+
+        System.out.println(item.getLotId());
+
+      if(!products.isEmpty()) {
+
+      List<LotDTO> lotList  = repository.checkAvailableProductAndLotBy(item.getToBin(),item.getProductId(), item.getLotId());
+
+      if(!lotList.isEmpty()) {
+
+          for(LotDTO lot : lotList) {
+              System.out.println(lot.getLotOnHandId());
+
+              LotOnHand lotOnHand = new LotOnHand();
+              lotOnHand.setId(lot.getLotOnHandId());
+              lotOnHand.setModifiedBy(userId);
+              lotOnHand.setQuantityOnHand(lot.getQuantity() + item.getQuantity().longValue());
+              stockCardService.updateLotOnHand(lotOnHand);
+
+              locationService.updateLotOnHandLocation(lot.getId(), lot.getQuantityOnHand() + item.getQuantity());
+
+          }
+
+      } else {
+          //Create New Lot
+
+          LotOnHand lotOnHand = new LotOnHand();
+          lotOnHand.setLotId(item.getLotId());
+          lotOnHand.setStockCard(stockCard);
+          lotOnHand.setModifiedBy(userId);
+          lotOnHand.setQuantityOnHand(item.getQuantity().longValue());
+          stockCardService.insertLotOnHandBy(lotOnHand);
+
+          LotOnHandLocation lotOnHandLocation = new LotOnHandLocation();
+          lotOnHandLocation.setLotOnHandId(lotOnHand.getId());
+          lotOnHandLocation.setLocationId(item.getToBin());
+          lotOnHandLocation.setStockCardId(stockCard.getId());
+          lotOnHandLocation.setCreatedBy(userId);
+          lotOnHandLocation.setModifiedBy(userId);
+          lotOnHandLocation.setQuantityOnHand(item.getQuantity().longValue());
+          locationService.save(lotOnHandLocation);
+
+          System.out.println("Lot Not available");
+       //if Lot not available create Lot
+      }
+
+      } else {
+          System.out.println("Product Not Available");
+         // if not available create Product + Add Lot
+
+      }
     }
 
     @Transactional

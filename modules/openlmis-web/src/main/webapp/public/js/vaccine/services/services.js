@@ -1897,3 +1897,7 @@ services.factory('GetVaccineDistrictCoverageForMap', function ($resource) {
 services.factory('GetLocationSummary', function ($resource) {
     return $resource('/location-lookup.json', {}, {});
 });
+
+services.factory('VaccinePendingRequisitionsForCVS', function ($resource) {
+    return $resource('/vaccine/orderRequisition/getPendingRequest-for/:facilityId.json', {}, {});
+});

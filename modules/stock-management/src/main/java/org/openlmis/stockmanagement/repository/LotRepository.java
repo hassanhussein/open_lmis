@@ -80,4 +80,8 @@ public class LotRepository {
   public void updateLotOnHand(LotOnHand lotOnHand) {
     mapper.updateLotOnHand(lotOnHand);
   }
+
+  public Integer insertLotOnHandBy(LotOnHand lotOnHand) {
+    return mapper.insertLotOnHandBy(lotOnHand);
+  }
 }

@@ -4,15 +4,13 @@ import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.*;
+import org.openlmis.order.domain.Order;
 import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionLineItem;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionStatusChange;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
-import org.openlmis.vaccine.dto.OrderRequisitionDTO;
-import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
-import org.openlmis.vaccine.dto.StockRequirementsDTO;
-import org.openlmis.vaccine.dto.VaccineOnTimeInFullDTO;
+import org.openlmis.vaccine.dto.*;
 import org.openlmis.vaccine.repository.VaccineOrderRequisitions.VaccineOrderRequisitionRepository;
 import org.openlmis.vaccine.repository.VaccineOrderRequisitions.VaccineOrderRequisitionStatusChangeRepository;
 import org.openlmis.vaccine.service.StockRequirementsService;
@@ -377,5 +375,57 @@ public class VaccineOrderRequisitionService {
 
         Program  p =  programService.getAllIvdPrograms().get(0);
         return orderRequisitionRepository.getSearchedDataForOnTimeReportingBy(facilityId, dateRangeStart, dateRangeEnd, p.getId());
+    }
+
+    public List<OrderRequisitionDTO> getPendingRequestForCVS(Long userId, Long facilityId) {
+
+        List<Program> vaccineProgram = programService.getAllIvdPrograms();
+        if (vaccineProgram != null) {
+
+            Long programId = vaccineProgram.get(0).getId();
+
+           List<OrderRequisitionDTO> orders =  orderRequisitionRepository.getPendingRequest(userId, facilityId, programId);
+
+            List<OrderRequisitionDTO> list = new ArrayList<>();
+
+           for(OrderRequisitionDTO request:orders ){
+
+               List<PendingRequestDTO> ordered = new ArrayList<>();
+
+               OrderRequisitionDTO dto = new OrderRequisitionDTO();
+
+               dto.setFacilityId(request.getFacilityId());
+               dto.setCreatedDate(request.getCreatedDate());
+               dto.setProgramId(request.getProgramId());
+               dto.setPeriodId(request.getPeriodId());
+               dto.setFacilityName(request.getFacilityName());
+               dto.setId(request.getId());
+               dto.setOrderDate(request.getOrderDate());
+               dto.setPeriodName(request.getPeriodName());
+               dto.setStatus(request.getStatus());
+               dto.setOrderId(request.getOrderId());
+
+               VaccineOrderRequisition requisition = orderRequisitionRepository.getAllDetailsById(request.getId());
+
+               for(VaccineOrderRequisitionLineItem item : requisition.getLineItems()) {
+
+                   PendingRequestDTO order = new PendingRequestDTO();
+                   order.setProduct(item.getProductName());
+                   order.setProductId(item.getProductId());
+                   order.setAmount(item.getQuantityRequested().intValue());
+
+                   ordered.add(order);
+               }
+
+               dto.setOrdered(ordered);
+               list.add(dto);
+
+           }
+
+           return list;
+
+        } else {
+            return null;
+        }
     }
 }

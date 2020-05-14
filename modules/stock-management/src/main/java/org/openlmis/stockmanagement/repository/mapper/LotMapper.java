@@ -117,4 +117,13 @@ public interface LotMapper {
 
     @Select("select * from lots_on_hand where stockcardid = #{stockCardId} and lotId = #{lotId} ")
     LotOnHand getLotOnHandBy(@Param("stockCardId") Long stockCardId,@Param("lotId") Long lotId);
+
+  @Insert("INSERT into lots_on_hand " +
+          " (stockCardId, lotId, quantityOnHand, effectiveDate" +
+          ", createdBy, createdDate, modifiedBy, modifiedDate) " +
+          "values " +
+          " (#{stockCard.id}, #{lotId}, #{quantityOnHand}, #{effectiveDate}" +
+          ", #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+  @Options(useGeneratedKeys = true)
+  Integer insertLotOnHandBy(LotOnHand lotOnHand);
 }
