@@ -237,12 +237,14 @@ public class TransferService {
 
              if(!lotOnHandExtDTOList.isEmpty()) {
 
+                 if(stockCard.getProduct().getPrimaryName() != null) {
+
                  summary.setProduct(stockCard.getProduct().getPrimaryName());
                  summary.setProductCode(stockCard.getProduct().getCode());
                  summary.setProductId(stockCard.getProduct().getId());
-                 Long total  = 0L;
+                 Long total = 0L;
                  int index = 0;
-                 List<LotOnHandDTO>lots = new ArrayList<>();
+                 List<LotOnHandDTO> lots = new ArrayList<>();
 
                  for (LotOnHandExtDTO lot : lotOnHandExtDTOList) {
 
@@ -253,9 +255,11 @@ public class TransferService {
                      lotOnHandDTO.setLotId(lot.getLotId());
                      lotOnHandDTO.setVvm("VVM1");
                      lotOnHandDTO.setMaxSoh(lot.getQuantityOnHand());
+                     lotOnHandDTO.setNumber(lot.getLotNumber());
                      lots.add(lotOnHandDTO);
                  }
                  summary.setLots(lots);
+             }
              }
                 products.add(summary);
 
