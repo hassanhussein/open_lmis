@@ -155,16 +155,16 @@
                                 <th  ng-repeat="req in requstions" colspan="3">{{req.name}}</th>
                             </tr>
                             <tr class="gradient-header inner-tr-height">
-                                <th  ng-repeat-start="req in requstions">Qty Ordered</th>
-                                <th >Qty Issued</th>
-                                <th  ng-repeat-end>Gap</th>
+                                <th style="text-align:right"  ng-repeat-start="req in requstions">Qty Ordered</th>
+                                <th style="text-align:right" >Qty Issued</th>
+                                <th style="text-align:right"  ng-repeat-end>Gap</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr ng-repeat-start="p in soh" class="inner-tr-height">
-                                <td class="cell-input" style="padding-left: 15px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+1}}">{{getOrderedQuantity($index,p.productId) | number}}</td>
+                                <td class="cell-input" style="padding-left: 15px; text-align:right;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+1}}">{{getOrderedQuantity($index,p.productId) | number}}</td>
                                 <td></td>
-                                <td class="cell-input" style="padding-left: 15px;"  rowspan="{{p.lots.length+1}}" ng-repeat-end>{{getGap($index,p) | number}}</td>
+                                <td class="cell-input" style="padding-left: 15px; text-align:right;"  rowspan="{{p.lots.length+1}}" ng-repeat-end>{{getGap($index,p) | number}}</td>
                             </tr>
 <!--                            <tr class="inner-tr-height">-->
 <!--                                <td>d</td>-->

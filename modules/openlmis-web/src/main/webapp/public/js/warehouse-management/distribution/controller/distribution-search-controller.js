@@ -222,6 +222,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
     //            console.log($scope.pendingRequisition);
                 $scope.pendingRequisition.forEach(function(order){
                 $scope.orders.push({
+                                    id:order.id,
                                     orderNumber:"IVD"+order.id,
                                     period:order.periodName,
                                     dateSubmitted:order.orderDate,
