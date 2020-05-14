@@ -11,6 +11,7 @@ import org.openlmis.vaccine.service.warehouse.TransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,6 +60,19 @@ public class StockMovementController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getAllTransferReasons() {
         return OpenLmisResponse.response("reasons",transferService.getTransferReasons());
     }
+
+
+    @RequestMapping(value = "/get-current-stock", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCurrentStockOnHand(HttpServletRequest request) {
+
+        Long userId = loggedInUserId(request);
+        Facility facility = facilityService.getHomeFacility(userId);
+
+        return OpenLmisResponse.response("stocks",transferService.getCurrentStockOnHand(userId,facility.getId()));
+    }
+
+
+
 
 
 }
