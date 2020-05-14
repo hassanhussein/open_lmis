@@ -7,9 +7,12 @@ import org.openlmis.stockmanagement.service.StockCardService;
 import org.openlmis.vaccine.domain.wms.LocationEntry;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.Transfer;
+import org.openlmis.vaccine.domain.wms.dto.LotOnHandDTO;
+import org.openlmis.vaccine.domain.wms.dto.LotOnHandExtDTO;
 import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.openlmis.vaccine.dto.LocationDTO;
 import org.openlmis.vaccine.dto.LotDTO;
+import org.openlmis.vaccine.dto.StockOnHandSummaryDTO;
 import org.openlmis.vaccine.repository.warehouse.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -217,5 +220,48 @@ public class TransferService {
 
     public List<AdjustmentReasonExDTO> getTransferReasons() {
         return repository.getTransferReasons();
+    }
+
+    public List<StockOnHandSummaryDTO> getCurrentStockOnHand(Long userId, Long facilityId) {
+
+        List<StockCard>stockCardList = stockCardService.getStockCards(facilityId);
+
+        List<StockOnHandSummaryDTO> products =new ArrayList<>();
+
+        if(!stockCardList.isEmpty()) {
+
+            for (StockCard stockCard : stockCardList) {
+
+             List<LotOnHandExtDTO> lotOnHandExtDTOList = repository.getLotOnHandExtraBy(stockCard.getProduct().getId());
+             StockOnHandSummaryDTO summary = new StockOnHandSummaryDTO();
+
+             if(!lotOnHandExtDTOList.isEmpty()) {
+
+                 summary.setProduct(stockCard.getProduct().getPrimaryName());
+                 summary.setProductCode(stockCard.getProduct().getCode());
+                 Long total  = 0L;
+                 int index = 0;
+                 List<LotOnHandDTO>lots = new ArrayList<>();
+
+                 for (LotOnHandExtDTO lot : lotOnHandExtDTOList) {
+
+                     LotOnHandDTO lotOnHandDTO = new LotOnHandDTO();
+                     lotOnHandDTO.setAmount(lot.getQuantityOnHand());
+                     lotOnHandDTO.setExpiry(lot.getExpiry());
+                     lotOnHandDTO.setId(index++);
+                     lotOnHandDTO.setLotId(lot.getLotId());
+                     lotOnHandDTO.setVvm("VVM1");
+                     lots.add(lotOnHandDTO);
+                 }
+                 summary.setLots(lots);
+             }
+                products.add(summary);
+
+            }
+
+        }
+
+    return products;
+
     }
 }

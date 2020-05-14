@@ -61,4 +61,17 @@ public class StockMovementController extends BaseController {
     }
 
 
+    @RequestMapping(value = "/get-current-stock/{facilityId}", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getCurrentStockOnHand(HttpServletRequest request) {
+
+        Long userId = loggedInUserId(request);
+        Facility facility = facilityService.getHomeFacility(userId);
+
+        return OpenLmisResponse.response("stocks",transferService.getCurrentStockOnHand(userId,facility.getId()));
+    }
+
+
+
+
+
 }

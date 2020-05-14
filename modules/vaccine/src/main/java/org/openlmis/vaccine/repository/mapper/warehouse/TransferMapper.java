@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.*;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.vaccine.domain.wms.Transfer;
+import org.openlmis.vaccine.domain.wms.dto.LotOnHandExtDTO;
 import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.openlmis.vaccine.dto.LotDTO;
 import org.springframework.stereotype.Repository;
@@ -63,4 +64,14 @@ public interface TransferMapper {
             "\n" +
             " WHERE LocationId = #{toBin} and lo.productId= #{productId} and lotId=#{lotId}")
     List<LotDTO> checkAvailableProductAndLotBy(@Param("toBin") Long toBin, @Param("productId") Long productId, @Param("lotId") Long lotId);
+
+    @Select("\n" +
+            "select p.primaryName product, sum(H.quantityOnHand) quantityOnHand, lo.id lotId, expirationDate expiry, lotNumber from lots_on_hand h\n" +
+            "JOIN lot_on_hand_locations L  on h.ID = l.LOTONHANDID\n" +
+            "JOIN lots Lo on h.lotId = Lo.id \n" +
+            "JOIN products P ON lo.productId = P.ID\n" +
+            "\n" +
+            "where productId= #{productId} \n" +
+            " group by  p.primaryName ,lo.id ,expirationDate, lotNumber  ")
+    List<LotOnHandExtDTO> getLotOnHandExtaBy(@Param("productId") Long id);
 }
