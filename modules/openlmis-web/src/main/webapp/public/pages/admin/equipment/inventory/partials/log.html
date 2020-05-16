@@ -24,6 +24,7 @@
         <th><span openlmis-message="label.date"></span></th>
         <th><span openlmis-message="label.equipment.status"></span></th>
         <th><span openlmis-message="label.remarks"></span>
+        <th><span>Resolved Date</span>
         </th>
       </tr>
       </thead>
@@ -31,6 +32,8 @@
         <td>{{row.dateString}}</td>
         <td><strong>{{row.type}}</strong> - {{row.reason}}</td>
         <td>{{row.comment}}</td>
+        <td ng-if="row.status=='t'">{{row.date | date}}</td>
+        <td ng-if="row.status !='t'"></td>
       </tr>
       <tr ng-show="logs.length == 0">
         <td colspan="3" openlmis-message="msg.no.records.found"></td>

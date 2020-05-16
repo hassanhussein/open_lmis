@@ -12,6 +12,7 @@
 
 
 function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, SaveAndLogMaintenanceRequest, messageService, $routeParams, $location) {
+console.log('reached here');
 
   $scope.$parent.message = '';
 
@@ -21,6 +22,7 @@ function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, S
   $scope.nextDateOfServiceForCurrent = null;
 
   PendingRequests.get(function (data) {
+  console.log(data);
     $scope.list = data.logs;
   });
 
