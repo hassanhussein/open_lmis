@@ -1,10 +1,14 @@
-function InvoiceNotificationFunc($scope,$state, notifications) {
+function InvoiceNotificationFunc($scope,$filter,$state, notifications) {
 
 console.log(notifications);
 
 $scope.notificationList = notifications;
 
 $scope.title = '';
+
+$scope.formatDate = function (not) {
+   return $filter('date')(Date.parse(not.invoicedate), 'dd-MM-yyyy');
+};
 
 $scope.viewDetails = function (id) {
  console.log(id);

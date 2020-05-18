@@ -52,7 +52,7 @@ public class StockNotificationController extends BaseController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/nots/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/all-notifications/{id}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public StockOutNotificationDTO getAllNots(@PathVariable Long id) {
         return stockNotificationService.getById(id);
     }
@@ -69,9 +69,6 @@ public class StockNotificationController extends BaseController {
        List<HashMap<String,Object>> list = new ArrayList<>();
 
        StockOutNotificationDTO notification = stockNotificationService.getById(id);
-
-
-
 
         return response("notifications", stockNotificationService.getStockOutBy(loggedInUserId(request),id));
     }

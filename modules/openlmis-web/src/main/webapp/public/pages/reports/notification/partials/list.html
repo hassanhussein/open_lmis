@@ -20,6 +20,9 @@
    #printButton {
      height:30px !important
    }
+   .cell-input {
+    text-align:center;
+   }
 </style>
 
 <div>
@@ -115,7 +118,7 @@
                              <span ng-bind="not.invoicenumber" class="padding2px cell-text"></span>
                          </td>
                         <td class="col-invoiceDate cell-input disabled padding2px">
-                             <span ng-bind="not.invoicedate " class="padding2px cell-text"></span>
+                             <span ng-bind="formatDate(not)" class="padding2px cell-text"></span>
                          </td>
 
                         <td class="col-sales-category cell-input disabled padding2px">

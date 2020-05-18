@@ -1430,3 +1430,9 @@ services.factory('GetCOVIDDesignatedFacilities', function($resource){
 services.factory('GetNotificationList', function($resource){
     return $resource('/stock-notification/:program.json', {}, {});
 });
+
+
+
+services.factory('GetNotificationById', function($resource){
+    return $resource('/all-notifications/:id.json', {id:'@id'}, {});
+});

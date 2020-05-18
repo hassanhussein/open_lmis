@@ -57,10 +57,12 @@ public interface StockNotificationMapper {
             })
     StockOutNotificationDTO getById(Long id);
 
-    @Select(" select n.id, invoiceNumber, soldto,soldtoCustomerName,  d.district_name,region_name,zone_name, orderNumber, msdOrderNumber, invoicedate, salescategory, n.comment\n" +
+    @Select(" select P.NAME programName, n.id, invoiceNumber, soldto,soldtoCustomerName,  d.district_name,region_name,zone_name, orderNumber, msdOrderNumber, invoicedate, salescategory, n.comment\n" +
             " from stock_out_notifications n\n" +
             " JOIN orders o ON n.elmisOrdernumber = o.orderNumber\n" +
-            " JOIN facilities f on n.soldTo = f.code\n" +
+            " JOIN requisitions r ON o.id = r.id " +
+            " JOIN programs p ON r.programId = P.ID " +
+            " JOIN facilities f on LOWER(n.soldTo) = LOWER(f.code)\n" +
             " JOIN vw_districts d on f.geographiczoneId = D.DISTRICT_ID\n" +
             " WHERE f.id = ANY( #{facilityIds}::INT[])")
     List<HashMap<String, Object>> getStockBy(@Param("facilityIds") String facilityIds);
