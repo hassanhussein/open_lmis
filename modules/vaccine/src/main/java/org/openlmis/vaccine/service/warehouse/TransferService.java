@@ -9,6 +9,7 @@ import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.Transfer;
 import org.openlmis.vaccine.domain.wms.dto.LotOnHandDTO;
 import org.openlmis.vaccine.domain.wms.dto.LotOnHandExtDTO;
+import org.openlmis.vaccine.domain.wms.dto.StockCardDTO;
 import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.openlmis.vaccine.dto.LocationDTO;
 import org.openlmis.vaccine.dto.LotDTO;
@@ -224,25 +225,25 @@ public class TransferService {
 
     public List<StockOnHandSummaryDTO> getCurrentStockOnHand(Long userId, Long facilityId) {
 
-        List<StockCard>stockCardList = stockCardService.getStockCards(facilityId);
+        List<StockCardDTO>stockCardList = locationService.getStockCardWithLocationBy(facilityId);
 
         List<StockOnHandSummaryDTO> products =new ArrayList<>();
 
         if(!stockCardList.isEmpty()) {
 
+
+
+            for (StockCardDTO stockCard : stockCardList) {
+
             StockOnHandSummaryDTO summary = new StockOnHandSummaryDTO();
 
-            for (StockCard stockCard : stockCardList) {
+            List<LotOnHandExtDTO> lotOnHandExtDTOList = repository.getLotOnHandExtraBy(stockCard.getProductId());
 
-             List<LotOnHandExtDTO> lotOnHandExtDTOList = repository.getLotOnHandExtraBy(stockCard.getProduct().getId());
+             if(!lotOnHandExtDTOList.isEmpty() && stockCard.getProduct() !=null) {
 
-             if(!lotOnHandExtDTOList.isEmpty()) {
-
-                 if(stockCard.getProduct().getPrimaryName() != null) {
-
-                 summary.setProduct(stockCard.getProduct().getPrimaryName());
-                 summary.setProductCode(stockCard.getProduct().getCode());
-                 summary.setProductId(stockCard.getProduct().getId());
+                 summary.setProduct(stockCard.getProduct());
+                 summary.setProductCode(stockCard.getProductCode());
+                 summary.setProductId(stockCard.getProductId());
                  Long total = 0L;
                  int index = 0;
 
@@ -250,22 +251,26 @@ public class TransferService {
 
                  for (LotOnHandExtDTO lot : lotOnHandExtDTOList) {
 
-                     LotOnHandDTO lotOnHandDTO = new LotOnHandDTO();
-                     lotOnHandDTO.setAmount(lot.getQuantityOnHand());
-                     lotOnHandDTO.setExpiry(lot.getExpiry());
-                     lotOnHandDTO.setId(index++);
-                     lotOnHandDTO.setLotId(lot.getLotId());
-                     lotOnHandDTO.setVvm("VVM1");
-                     lotOnHandDTO.setMaxSoh(lot.getQuantityOnHand());
-                     lotOnHandDTO.setNumber(lot.getLotNumber());
-                     lots.add(lotOnHandDTO);
+                     if(lot.getLotNumber() != null) {
+
+                         LotOnHandDTO lotOnHandDTO = new LotOnHandDTO();
+
+                         lotOnHandDTO.setAmount(lot.getQuantityOnHand());
+                         lotOnHandDTO.setExpiry(lot.getExpiry());
+                         lotOnHandDTO.setId(index++);
+                         lotOnHandDTO.setLotId(lot.getLotId());
+                         lotOnHandDTO.setVvm("VVM1");
+                         lotOnHandDTO.setMaxSoh(lot.getQuantityOnHand());
+                         lotOnHandDTO.setNumber(lot.getLotNumber());
+                         lots.add(lotOnHandDTO);
+                     }
                  }
 
                  if(summary.getProduct() != null)
                     summary.setLots(lots);
-             }
-             }
-                   products.add(summary);
+
+             }     if(summary.getProduct() != null)
+                      products.add(summary);
 
             }
 

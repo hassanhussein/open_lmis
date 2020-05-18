@@ -55,16 +55,27 @@ public interface LotOnHandLocationMapper {
     void deleteExistingStockCardLocation(@Param("id") Long id,@Param("toBinLocationId") Long toBinLocationId);
 
 
-    @Select("  \n" +
-            " SELECT S.ID stockCardId,s.productId, p.primaryName product, QUANTITY quantityOnHand, lotID,\n" +
-            " s.modifieddate lastUpdated\n" +
-            " ,LotNumber,to_char(lot.expirationDate, 'dd-MM-yyyy') expirationDate\n" +
-            "    FROM stock_cards s  \n" +
-            "LEFT JOIN putaway_line_items put on s.productID = PUT.productId\n" +
-            "JOIN products p on s.productID = p.id\n" +
-            "LEFT JOIN lots lot ON lot.id = put.lotId\n" +
+    @Select("\n" +
+            "            select \n" +
+            "            to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
+            "            p.primaryName product, sum(h.quantityOnHand) quantityOnHand, lotID, lotNumber, \n" +
+            "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated\n" +
+            "             \n" +
+            "            from lot_on_hand_locations L\n" +
+            "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
+            "            \n" +
+            "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
             "\n" +
-            "WHERE s.facilityId = #{facilityId} and toWarehouseId = #{warehouseId}")
+            "            JOIN lots LO ON Lo.id = h.lotId\n" +
+            "            \n" +
+            "            JOIN products P on lo.productID = p.id\n" +
+            "\n" +
+            "            JOIN  stock_cards s  ON s.id = h.stockcardId\n" +
+            "            \n" +
+            "            WHERE  facilityId = #{facilityId} AND LSC.ID = #{warehouseId}\n" +
+            "            and l.quantityOnHand > 0\n" +
+            "            \n" +
+            "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID ")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("\n" +
@@ -164,4 +175,21 @@ public interface LotOnHandLocationMapper {
 
     @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{quantity} WHERE id = #{id}   ")
     void updateLotOnHandLocation(@Param("id") Long id, @Param("quantity") Integer quantity);
+
+    @Select(" WITH Q as (\n" +
+            "             SELECT p.id productId, p.primaryName product, p.code productCode, sum(h.quantityOnHand) quantityOnHand FROM STOCK_CARDS SC \n" +
+            "             \n" +
+            "            JOIN lots_on_hand h on SC.ID =  H.STOCKCARDId\n" +
+            "\n" +
+            "            JOIN lot_on_hand_locations L ON h.id =L.LOTONHANDID\n" +
+            "            \n" +
+            "            JOIN lots LO ON Lo.id = h.lotId\n" +
+            "            \n" +
+            "            JOIN products P on lo.productID = p.id\n" +
+            "            \n" +
+            "             where sc.facilityId = #{facilityId} and totalQuantityOnHand > 0\n" +
+            "             group by p.id , p.primaryName , p.code\n" +
+            "\n" +
+            "             ) select * from q where quantityOnHand> 0")
+    List<StockCardDTO> getStockCardWithLocationBy(@Param("facilityId") Long facilityId);
 }

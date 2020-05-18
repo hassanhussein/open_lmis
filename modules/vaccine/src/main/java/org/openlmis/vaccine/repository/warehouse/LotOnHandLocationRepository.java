@@ -2,10 +2,7 @@ package org.openlmis.vaccine.repository.warehouse;
 
 import net.sf.jasperreports.engine.json.expression.member.ObjectKeyExpression;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
-import org.openlmis.vaccine.domain.wms.dto.PutAwayLineItemDTO;
-import org.openlmis.vaccine.domain.wms.dto.SohReportDTO;
-import org.openlmis.vaccine.domain.wms.dto.StockCardLocationDTO;
-import org.openlmis.vaccine.domain.wms.dto.TransferDTO;
+import org.openlmis.vaccine.domain.wms.dto.*;
 import org.openlmis.vaccine.repository.mapper.warehouse.LotOnHandLocationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -75,4 +72,10 @@ public class LotOnHandLocationRepository {
     public void updateLotOnHandLocation(Long id, Integer quantity) {
          mapper.updateLotOnHandLocation(id, quantity);
     }
+
+    public List<StockCardDTO> getStockCardWithLocationBy(Long  facilityId) {
+        return mapper.getStockCardWithLocationBy(facilityId);
+    }
+
+
 }

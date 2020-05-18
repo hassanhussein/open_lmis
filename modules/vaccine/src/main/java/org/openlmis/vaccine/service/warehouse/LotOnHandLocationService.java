@@ -241,4 +241,10 @@ public class LotOnHandLocationService {
     public void updateLotOnHandLocation(Long id, Integer quantity) {
         repository.updateLotOnHandLocation(id, quantity);
     }
+
+    public List<StockCardDTO> getStockCardWithLocationBy(Long  facilityId) {
+        return repository.getStockCardWithLocationBy(facilityId);
+    }
+
+
 }
