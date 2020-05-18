@@ -203,108 +203,6 @@
                            openlmis-message="link.vaccine.receive"></a>
                     </li>
 
-                    <li ng-show="hasPermission('MANAGE_NATIONAL_RECEIVE') " class="has-children">
-
-                        <a id="receive-menu" href="javascript: void(0)" openlmis-message="link.warehouse"></a>
-
-                        <div class="submenu">
-                            <ul>
-
-                                <li>
-                                    <a href="/public/pages/warehouse-management/site/index.html#/search"> Manage Location</a>
-
-                                </li>
-
-                            <li>
-                                <a href="/public/pages/warehouse-management/pre-advice/index.html#/list" openlmis-message="label.pre.advice"></a>
-
-                            </li>
-                            <li><a href="/public/pages/warehouse-management/receive/index.html#/list" openlmis-message="link.vaccine.receive"></a>
-
-
-                            </li>
-                                <li><a href="/public/pages/warehouse-management/inspection/index.html#/search" openlmis-message="label.inspect"></a>
-
-
-                                </li>
-
-
-                                <li><a href="/public/pages/warehouse-management/putaway/index.html#/search">Putaway</a>
-
-
-                                </li>
-
-                                <li class="has-children">
-
-                                    <a  href="javascript: void(0)">Manage Stock</a>
-
-                                    <div class="submenu">
-                                        <ul>
-
-                                            <li>
-                                                <a href="/public/pages/warehouse-management/stock/index.html#/movement"> Stock Movement</a>
-
-                                            </li>
-
-                                            <li>
-                                                <a href="/public/pages/warehouse-management/stock/index.html#/adjustment">Stock Adjustment</a>
-
-                                            </li>
-                                            <li><a href="/public/pages/warehouse-management/stock-on-hand/index.html#/stock-on-hand">Stock on Hand</a>
-
-
-                                            </li>
-                                            <li><a href="/public/pages/warehouse-management/physical-inventory/index.html#/search"> Physical Inventory</a>
-
-
-                                            </li>
-
-
-
-                                        </ul>
-
-                                    </div>
-
-                                </li>
-
-<!--                                <li><a href="" openlmis-message="label.upload.lots"></a></li>-->
-
-                                                                <li class="has-children">
-                                                                    <a href="javascript: void(0)">Order Management</a>
-                                                                    <div class="submenu">
-                                                                        <ul>
-
-                                                                            <li>
-                                                                                <a href="/public/pages/warehouse-management/distribution/index.html#/search"> View Pending Orders</a>
-
-                                                                            </li>
-
-
-
-
-
-                                                                        </ul>
-
-                                                                    </div>
-
-
-                                                                </li>
-
-
-
-                                <li><a href="/public/pages/reports/wms-reports/index.html#/reports" openlmis-message="link.reports"></a>
-
-
-                                </li>
-
-                                <li class="beak"></li>
-
-
-                            </ul>
-
-                        </div>
-
-                    </li>
 
                     <li ng-show="hasPermission('USE_BARCODE_FEATURE') ">
                         <a href="/public/pages/vaccine/inventory/index.html#/receive_barcode"
@@ -397,6 +295,110 @@
                 </ul>
             </div>
         </li>
+
+        <li ng-show="MANAGE_NATIONAL_RECEIVE">
+
+            <a id="receive-menu" href="javascript: void(0)" openlmis-message="link.warehouse.management"></a>
+
+            <div class="submenu">
+                <ul>
+
+                    <li>
+                        <a href="/public/pages/warehouse-management/site/index.html#/search"> Manage Location</a>
+
+                    </li>
+
+                    <li>
+                        <a href="/public/pages/warehouse-management/pre-advice/index.html#/list" openlmis-message="label.pre.advice"></a>
+
+                    </li>
+                    <li><a href="/public/pages/warehouse-management/receive/index.html#/list" openlmis-message="link.vaccine.receive"></a>
+
+
+                    </li>
+                    <li><a href="/public/pages/warehouse-management/inspection/index.html#/search" openlmis-message="label.inspect"></a>
+
+
+                    </li>
+
+
+                    <li><a href="/public/pages/warehouse-management/putaway/index.html#/search">Putaway</a>
+
+
+                    </li>
+
+                    <li class="has-children">
+
+                        <a  href="javascript: void(0)">Manage Stock</a>
+
+                        <div class="submenu">
+                            <ul>
+
+                                <li>
+                                    <a href="/public/pages/warehouse-management/stock/index.html#/movement"> Stock Movement</a>
+
+                                </li>
+
+                                <li>
+                                    <a href="/public/pages/warehouse-management/stock/index.html#/adjustment">Stock Adjustment</a>
+
+                                </li>
+                                <li><a href="/public/pages/warehouse-management/stock-on-hand/index.html#/stock-on-hand">Stock on Hand</a>
+
+
+                                </li>
+                                <li><a href="/public/pages/warehouse-management/physical-inventory/index.html#/search"> Physical Inventory</a>
+
+
+                                </li>
+
+
+
+                            </ul>
+
+                        </div>
+
+                    </li>
+
+                    <!--                                <li><a href="" openlmis-message="label.upload.lots"></a></li>-->
+
+                    <li class="has-children">
+                        <a href="javascript: void(0)">Order Management</a>
+                        <div class="submenu">
+                            <ul>
+
+                                <li>
+                                    <a href="/public/pages/warehouse-management/distribution/index.html#/search"> View Pending Orders</a>
+
+                                </li>
+
+
+
+
+
+                            </ul>
+
+                        </div>
+
+
+                    </li>
+
+
+
+                    <li><a href="/public/pages/reports/wms-reports/index.html#/reports" openlmis-message="link.reports"></a>
+
+
+                    </li>
+
+                    <li class="beak"></li>
+
+
+                </ul>
+
+            </div>
+
+        </li>
+
         <li ng-include="'/public/pages/reports/navigation.html'"></li>
 
 

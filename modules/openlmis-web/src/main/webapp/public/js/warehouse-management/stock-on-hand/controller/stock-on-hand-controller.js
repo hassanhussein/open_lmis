@@ -35,7 +35,7 @@ $scope.products=_.groupBy($scope.soh,'product');
 
 
 $scope.openLedger = function(product) {
-$location.path('stock-ledger/'+$scope.warehouseId+'/'+product.productId+'/'+new Date().getFullYear())
+$location.path('stock-ledger/'+$scope.warehouseId+'/'+product.productId+'/'+new Date().getFullYear());
 
 };
 

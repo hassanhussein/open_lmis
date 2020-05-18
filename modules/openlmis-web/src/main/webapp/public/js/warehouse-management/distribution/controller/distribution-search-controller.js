@@ -231,7 +231,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
                                     ordered:[]
                 });
 
-                })
+                });
     $scope.data={};
     $scope.data.orders=$scope.orders;
     $scope.data.pagination={};
@@ -321,4 +321,4 @@ DistributionSearchController.resolve = {
             return deferred.promise;
         }
 
-    }
+    };

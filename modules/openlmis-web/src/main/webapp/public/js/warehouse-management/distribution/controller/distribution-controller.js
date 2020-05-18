@@ -38,8 +38,7 @@ $scope.requstions.push({
 
 
 });
-$scope.requisitions
-console.log($scope.requstions);
+
 var distributionData = [{
                           //NEW
                          "fromFacilityId":homeFacility,
@@ -514,8 +513,7 @@ DistributionController.resolve = {
               }, 100);
 
               return deferred.promise;
-          }
-    ,
+          },
     all_orders: function ($q, $timeout, VaccinePendingRequisitionsForCVS, $route) {
             var deferred = $q.defer();
             $timeout(function () {
