@@ -4,9 +4,10 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
 import org.openlmis.core.service.FacilityService;
-import org.openlmis.core.service.StockNotificationService;
+
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.restapi.service.RestStockNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +34,7 @@ public class StockNotificationController extends BaseController {
 */
 
     @Autowired
-    private StockNotificationService stockNotificationService;
+    private RestStockNotificationService stockNotificationService;
 
     @Autowired
     private FacilityService facilityService;

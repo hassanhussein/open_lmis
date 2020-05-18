@@ -49,9 +49,11 @@
         </label>
 
         <div class="form-field">
-          <input ng-required="true" ng-model="current.recommendedDate" name="recommendedDate" id="recommendedDate"
-                 ng-change="blurDateFields();" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                 ui-date-format="yy-dd-mm"/>
+
+          <input ng-model="current.recommendedDate" name="recommendedDate" id="recommendedDate" type="text"
+                 ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}" ui-date-format="yy-mm-dd"
+                 readonly ng-change="blurDateFields()" ng-required="true"/>
+
           <span class="field-error" ng-show="requestForm.recommendedDate.$error.required && showError"
                 openlmis-message="missing.value"></span>
         </div>

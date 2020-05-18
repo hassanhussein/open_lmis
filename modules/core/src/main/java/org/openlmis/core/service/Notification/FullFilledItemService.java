@@ -1,23 +1,23 @@
-package org.openlmis.core.service.notification;
+package org.openlmis.core.service.Notification;
 
-import org.openlmis.core.dto.notification.InSufficientFundingItem;
+import org.openlmis.core.dto.notification.FullFilledItem;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
-import org.openlmis.core.repository.notification.InSufficientFundingItemRepository;
+import org.openlmis.core.repository.notification.FullFilledItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InSufficientFundingItemService {
+public class FullFilledItemService {
 
     @Autowired
-    private InSufficientFundingItemRepository repository;
+    private FullFilledItemRepository repository;
 
     public void save(StockOutNotificationDTO notification) {
 
-        if(!notification.getInSufficientFundingItems().isEmpty()) {
+        if(!notification.getFullFilledItems().isEmpty()) {
             repository.deleteByNotificationId(notification.getId());
 
-            for(InSufficientFundingItem item : notification.getInSufficientFundingItems()) {
+            for(FullFilledItem item : notification.getFullFilledItems()) {
                 item.setModifiedBy(notification.getModifiedBy());
                 item.setCreatedBy(notification.getCreatedBy());
                 item.setNotificationId(notification.getId());
@@ -27,6 +27,5 @@ public class InSufficientFundingItemService {
         }
 
     }
-
 
 }

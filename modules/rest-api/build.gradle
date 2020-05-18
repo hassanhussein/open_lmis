@@ -19,6 +19,8 @@ buildscript {
 
 dependencies {
     compile 'com.wordnik:swagger-annotations:1.3.12',
+            'com.itextpdf:itextpdf:5.4.0',
+            'net.sf.barcode4j:barcode4j:2.1',
             project(':modules:requisition'),
             project(':modules:report'),
             project(':modules:shipment'),

@@ -1,10 +1,11 @@
-package org.openlmis.web.view.pdf.notification;
+package org.openlmis.restapi.service.notification.view.pdf;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.restapi.service.notification.view.NotificationEventPageHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,24 +59,37 @@ public class NotificationPdfWriter extends PdfWriter {
 
         document.add(notificationPdfModel.commentInfo());
 
-        document.add(notificationPdfModel.getFullFilledItemsHeader());
-        document.add(notificationPdfModel.getFullFilledItemsTable());
+        if(notificationPdfModel.getFullFilledItemsTable() != null) {
+            document.add(notificationPdfModel.getFullFilledItemsHeader());
+            document.add(notificationPdfModel.getFullFilledItemsTable());
+        }
 
-        document.add(notificationPdfModel.stockOutItemsHeader());
-        document.add(notificationPdfModel.getStockOutItemsTable());
+        if(notificationPdfModel.getStockOutItemsTable() != null) {
+            document.add(notificationPdfModel.stockOutItemsHeader());
+            document.add(notificationPdfModel.getStockOutItemsTable());
+        }
 
-        document.add(notificationPdfModel.inSufficientFundingHeader());
-        document.add(notificationPdfModel.getInSufficientFundingTable());
+        if(notificationPdfModel.getInSufficientFundingTable() != null) {
+            document.add(notificationPdfModel.inSufficientFundingHeader());
+            document.add(notificationPdfModel.getInSufficientFundingTable());
+        }
         document.newPage();
         document.add(notificationPdfModel.reportTitle());
-        document.add(notificationPdfModel.rationingItemsHeader());
-        document.add(notificationPdfModel.rationingItemsTable());
 
-        document.add(notificationPdfModel.closeToExpireItemsHeader());
-        document.add(notificationPdfModel.closeToExpireItemsTable());
+        if(notificationPdfModel.rationingItemsTable() != null) {
+            document.add(notificationPdfModel.rationingItemsHeader());
+            document.add(notificationPdfModel.rationingItemsTable());
+        }
 
-        document.add(notificationPdfModel.phasedOutItemsHeader());
-        document.add(notificationPdfModel.phasedOutItemsTable());
+        if(notificationPdfModel.closeToExpireItemsTable() != null) {
+            document.add(notificationPdfModel.closeToExpireItemsHeader());
+            document.add(notificationPdfModel.closeToExpireItemsTable());
+        }
+
+        if(notificationPdfModel.phasedOutItemsTable() != null) {
+            document.add(notificationPdfModel.phasedOutItemsHeader());
+            document.add(notificationPdfModel.phasedOutItemsTable());
+        }
       //  document.newPage();
         document.close();
     }

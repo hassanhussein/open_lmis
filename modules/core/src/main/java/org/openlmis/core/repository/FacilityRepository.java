@@ -342,4 +342,8 @@ public class FacilityRepository {
     public void updateFacilityByCode(FacilityDTO dto) {
             mapper.updateFacilityByCode(dto);
     }
+
+  public List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(Long facilityId, Long programId) {
+    return mapper.getSupervisorFacilityIncludingHomeFacility(facilityId,programId);
+  }
 }

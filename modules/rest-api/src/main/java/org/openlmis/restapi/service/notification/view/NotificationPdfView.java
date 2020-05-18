@@ -1,10 +1,13 @@
-package org.openlmis.web.view.pdf;
+package org.openlmis.restapi.service.notification.view;
 
-import com.itextpdf.text.PageSize;
+
 import com.itextpdf.text.pdf.PdfDocument;
+import org.openlmis.core.domain.ConfigurationSetting;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.MessageService;
+import org.openlmis.restapi.service.notification.view.pdf.NotificationPdfWriter;
 import org.openlmis.email.service.EmailService;
-import org.openlmis.web.view.pdf.notification.NotificationPdfWriter;
+import org.openlmis.rnr.domain.Rnr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
@@ -24,22 +27,25 @@ import java.io.ByteArrayOutputStream;
 import java.util.Map;
 import java.util.Properties;
 
-@Component("notificationPDF")
-public class StockOutNotificationPdfView extends AbstractView {
+@Component("processNotificationPDF")
+public class NotificationPdfView extends AbstractView {
 
     private MessageService messageService;
 
-    @Autowired
     private EmailService emailService;
+
+    private ConfigurationSettingService settingService;
+
 
     @Autowired
     private JavaMailSender mailSender;
 
-
     @Autowired
-    public StockOutNotificationPdfView(MessageService messageService) {
+    public NotificationPdfView(MessageService messageService, EmailService emailService,ConfigurationSettingService settingService) {
 
         this.messageService = messageService;
+        this.emailService = emailService;
+        this.settingService = settingService;
 
         setContentType("application/pdf");
     }
@@ -51,9 +57,11 @@ public class StockOutNotificationPdfView extends AbstractView {
 
             NotificationPdfWriter notificationPdfWriter = new NotificationPdfWriter(new PdfDocument(), stream, messageService,model);
             notificationPdfWriter.buildWith(model);
-            writeToResponse(response, stream);
+          //  writeToResponse(response, stream);
+            RestNotificationService service = new RestNotificationService(model, stream, emailService, this.settingService);
+            service.processEmail();
 
-            sendEmail(stream);
+          //  sendEmail(stream);
 
 
         }

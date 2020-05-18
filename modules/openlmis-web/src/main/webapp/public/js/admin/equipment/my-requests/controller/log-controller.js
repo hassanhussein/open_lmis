@@ -21,6 +21,12 @@ function LogController($scope, $location, $routeParams, EquipmentInventory, Equi
     $scope.logs = data.logs;
   });
 
+$scope.returnDate = function(row){
+
+     return row.date;
+   //  console.log(data);
+};
+
   $scope.cancel = function () {
     $location.path('');
   };

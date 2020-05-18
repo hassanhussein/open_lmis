@@ -2,7 +2,7 @@ package org.openlmis.core.repository;
 
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
 import org.openlmis.core.repository.mapper.notificationMapper.StockNotificationMapper;
-import org.openlmis.core.service.notification.*;
+import org.openlmis.core.service.Notification.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
