@@ -369,4 +369,11 @@ public class FacilityController extends BaseController {
     return new ResponseEntity<>(getFacilityResponse(programId, userId,CREATE_MONITORING_FORM), HttpStatus.OK);
   }
 
+  @RequestMapping(value = "/supervised/{programId}/{facilityId}/facilities.json", method = GET)
+  public ResponseEntity<OpenLmisResponse> getSupervisorFacilityIncludingHomeFacility(@PathVariable(value = "programId") Long programId,
+                                                                                     @PathVariable(value = "facilityId") Long facilityId,
+                                                                                     HttpServletRequest request) {
+    return response("facility", facilityService.getSupervisorFacilityIncludingHomeFacility(facilityId,programId));
+  }
+
 }
