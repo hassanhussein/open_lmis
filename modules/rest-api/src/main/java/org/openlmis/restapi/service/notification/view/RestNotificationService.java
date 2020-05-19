@@ -13,10 +13,19 @@ import org.openlmis.email.service.EmailService;
 import org.openlmis.rnr.domain.Rnr;
 import org.springframework.stereotype.Component;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 @Component
 @NoArgsConstructor
@@ -111,4 +120,100 @@ public class RestNotificationService {
 
     }
 
+    public void sendEmail() {
+
+        if(!this.userList.isEmpty()) {
+
+            String emailMessage = settingService.getByKey(OUT_OF_STOCK_EMAIL_MESSAGE_TEMPLATE).getValue();
+
+            final String subject = settingService.getByKey(OUT_OF_STOCK_EMAIL_SUBJECT_TEMPLATE).getValue();
+
+
+            byte[] bytes = this.byteArrayOutputStream.toByteArray();
+            //construct the pdf body part
+
+            String smtpHost = "smtp.gmail.com";
+            int smtpPort = 465;
+
+            String sender = "test.hhassan.developer@gmail.com"; //replace this with a valid sender email address
+
+
+            for(FacilitySupervisor user: this.userList) {
+
+                emailMessage = emailMessage.replaceAll("\\{facility_name\\}", this.facility.getName());
+                emailMessage = emailMessage.replaceAll("\\{name\\}", user.getName());
+                emailMessage = emailMessage.replaceAll("\\{period\\}", this.rnr.getPeriod().getName());
+                emailMessage = emailMessage.replaceAll("\\{program\\}", this.rnr.getProgram().getName());
+
+               // String emailAddress = user.getContact();
+
+
+                String recipient = user.getContact(); //replace this with a valid recipient email address
+
+                Properties properties = new Properties();
+                properties.put("mail.smtp.host", smtpHost);
+                properties.put("mail.smtp.port", smtpPort);
+                properties.put("mail.smtp.ssl.enable", "true");
+                properties.put("mail.smtp.auth", "true");
+
+                // Get the Session object.// and pass username and password
+                Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+
+                    protected PasswordAuthentication getPasswordAuthentication() {
+
+                        return new PasswordAuthentication("test.hhassan.developer@gmail.com", "8819rukia");
+
+                    }
+
+                });
+
+                session.setDebug(true);
+
+
+                try {
+                    // Create a default MimeMessage object.
+                    MimeMessage message = new MimeMessage(session);
+
+                    // Set From: header field of the header.
+                    message.setFrom(new InternetAddress(sender));
+
+                    // Set To: header field of the header.
+                    message.addRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
+
+                    // Set Subject: header field
+                    message.setSubject(subject);
+
+                    //send Attachment
+
+                    Multipart multipart = new MimeMultipart();
+                    MimeBodyPart pdfBodyPart = new MimeBodyPart();
+
+                    DataSource dataSource = new ByteArrayDataSource(bytes, "application/pdf");
+
+                    pdfBodyPart.setDataHandler(new DataHandler(dataSource));
+                    pdfBodyPart.setFileName("MSD_OOS_Notification.pdf");
+
+
+                    MimeBodyPart textPart = new MimeBodyPart();
+
+                    textPart.setText(emailMessage);
+                    multipart.addBodyPart(textPart);
+                    multipart.addBodyPart(pdfBodyPart);
+
+                    message.setContent(multipart);
+
+                    System.out.println("sending...");
+                    // Send message
+                    Transport.send(message);
+                    System.out.println("Sent message successfully....");
+                } catch (MessagingException mex) {
+                    mex.printStackTrace();
+                }
+
+
+            }
+
+        }
+
+    }
 }

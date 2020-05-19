@@ -59,9 +59,9 @@ public class NotificationPdfView extends AbstractView {
             notificationPdfWriter.buildWith(model);
           //  writeToResponse(response, stream);
             RestNotificationService service = new RestNotificationService(model, stream, emailService, this.settingService);
-            service.processEmail();
+           // service.processEmail();
 
-          //  sendEmail(stream);
+            service.sendEmail();
 
 
         }
