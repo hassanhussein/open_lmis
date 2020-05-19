@@ -72,7 +72,7 @@ public interface LotOnHandLocationMapper {
             "\n" +
             "            JOIN  stock_cards s  ON s.id = h.stockcardId\n" +
             "            \n" +
-            "            WHERE  facilityId = #{facilityId} AND LSC.ID = #{warehouseId}\n" +
+            "            WHERE  facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
             "            and l.quantityOnHand > 0\n" +
             "            \n" +
             "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID ")
