@@ -54,9 +54,9 @@ public class RestNotificationService {
 
         byte[] bytes = this.byteArrayOutputStream.toByteArray();
 
-        if(!this.userList.isEmpty()) {
+       // if(!this.userList.isEmpty()) {
             insertEmailMessages(bytes, this.userList);
-        }
+      //  }
 
 
     }
