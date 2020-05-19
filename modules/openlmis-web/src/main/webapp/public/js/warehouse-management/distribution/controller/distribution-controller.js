@@ -319,7 +319,7 @@ wait()
 
         $scope.soh.push(currentS);
 
-       console.log($scope.soh);
+//       console.log($scope.soh);
 
    });
 
