@@ -1,10 +1,11 @@
-function AnalyticsFunction($stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
+function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
     GetEmergencyOrderByProgramData, GetEmergencyOrderTrendsData, DashboardRnrTypes, RejectionCount, RnRStatusSummary,
     DefaultProgram, StockStatusByProgramData,FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData) {
 
     //resourceLoadingConfig.hideReloadIcon = true;
     //resourceLoadingConfig.loadingDashlet = [];
 
+    $scope.notifications = notifications;
 
     var params;
 
@@ -1606,5 +1607,17 @@ AnalyticsFunction.resolve = {
             }, {});
         }, 100);
         return deferred.promise;
-    }
+    },
+
+    notifications: function ($q, $timeout, GetNotificationList) {
+             var deferred = $q.defer();
+             $timeout(function () {
+                 GetNotificationList.get({program:1}, function (data) {
+                     deferred.resolve(data.notifications);
+                 }, {});
+             }, 100);
+             return deferred.promise;
+         }
+
+
 };

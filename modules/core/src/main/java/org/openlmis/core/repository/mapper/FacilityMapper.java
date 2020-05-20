@@ -669,7 +669,7 @@ Integer insertHfrMapping(HfrMappingDTO dto);
           "                 SELECT DISTINCT userId, username, name,  contact FROM Q\n")
 
   List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
-
+/*
   @Select("\n" +
           "                            SELECT DISTINCT Users.ID  as userId, rr.rightname, username,firstName ||' '|| lastName as name, email as contact   \n" +
           "                           FROM facilities f  \n" +
@@ -681,7 +681,13 @@ Integer insertHfrMapping(HfrMappingDTO dto);
           "                           INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
           "                           WHERE   RR.RIGHTNAME = 'VIEW_OUT_OF_STOCK_NOTIFICATION' \n" +
           "                           and users.email is not null\n" +
-          "                           ORDER BY USername\n")
+          "                           ORDER BY USername\n")*/
+  @Select("                         SELECT DISTINCT Users.ID  as userId, username,firstName ||' '|| lastName as name, email as contact   \n" +
+          "                           FROM facilities f  \n" +
+          "                           JOIN USERS ON F.ID = USERS.facilityID AND users.active = true  and restrictlogin= false\n" +
+          "                            \n" +
+          "                           and users.email is not null and f.isHIDTU = true \n" +
+          "                           ORDER BY USername")
   List<FacilitySupervisor> getFacilitySuperVisorByRight();
 
 }
