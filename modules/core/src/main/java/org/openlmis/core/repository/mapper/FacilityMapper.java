@@ -328,6 +328,7 @@ public interface FacilityMapper {
             " JOIN FACILITIES F ON S.facilityId = F.id ")
     Facility getParentFacility(@Param("facilityId")Long facilityId);
 
+
   public class SelectFacilities {
     @SuppressWarnings(value = "unused")
     public static String getFacilitiesCountBy(Map<String, Object> params) {
@@ -668,5 +669,19 @@ Integer insertHfrMapping(HfrMappingDTO dto);
           "                 SELECT DISTINCT userId, username, name,  contact FROM Q\n")
 
   List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+
+  @Select("\n" +
+          "                            SELECT DISTINCT Users.ID  as userId, rr.rightname, username,firstName ||' '|| lastName as name, email as contact   \n" +
+          "                           FROM facilities f  \n" +
+          "                           JOIN requisition_group_members m ON m.facilityId = f.Id   \n" +
+          "                           JOIN USERS ON F.ID = USERS.facilityID AND users.active = true  and restrictlogin= false\n" +
+          "                           JOIN requisition_groups rg ON rg.id = m.requisitionGroupId  \n" +
+          "                           JOIN supervisory_nodes sn ON sn.id = rg.supervisoryNodeId  \n" +
+          "                           JOIN role_assignments ra ON ra.supervisoryNodeId = sn.id  AND RA.USERID = users.id\n" +
+          "                           INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
+          "                           WHERE   RR.RIGHTNAME = 'VIEW_OUT_OF_STOCK_NOTIFICATION' \n" +
+          "                           and users.email is not null\n" +
+          "                           ORDER BY USername\n")
+  List<FacilitySupervisor> getFacilitySuperVisorByRight();
 
 }

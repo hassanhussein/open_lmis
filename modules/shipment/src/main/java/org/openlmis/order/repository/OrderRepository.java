@@ -144,4 +144,7 @@ public class OrderRepository {
       return orderMapper.getByOrderNumberWithRequisition(orderNumber);
   }
 
+    public Order getLatestOrderByFacility(String soldTo) {
+     return orderMapper.getLatestOrderByFacility(soldTo);
+    }
 }

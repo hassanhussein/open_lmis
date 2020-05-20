@@ -83,7 +83,13 @@ public class RestStockNotificationService {
 
         StockOutNotificationDTO notification = getById(notificationData.getId());
 
-        Order order = orderService.getByOrderNumber(notificationData.elmisOrderNumber);
+        Order order = null;
+
+                order= orderService.getByOrderNumber(notificationData.elmisOrderNumber);
+
+        if(order == null) {
+            order  = orderService.getLatestOrderByFacility(notificationData.getSoldTo());
+        }
 
         if (order != null) {
 
@@ -91,7 +97,9 @@ public class RestStockNotificationService {
 
             Facility facility = facilityService.getByCodeFor(notification.getSoldTo());
 
-            List<FacilitySupervisor> supervisorList = facilityService.getSupervisorFacilityIncludingHomeFacility(facility.getId(), rnr.getProgram().getId());
+            List<FacilitySupervisor> supervisorList = facilityService.getFacilitySupervisorsByRight();
+
+            //List<FacilitySupervisor> supervisorList = facilityService.getSupervisorFacilityIncludingHomeFacility(facility.getId(), rnr.getProgram().getId());
 
             Map<String, Object> map = new HashMap<String, Object>();
 

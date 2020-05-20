@@ -346,4 +346,8 @@ public class FacilityRepository {
   public List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(Long facilityId, Long programId) {
     return mapper.getSupervisorFacilityIncludingHomeFacility(facilityId,programId);
   }
+
+  public List<FacilitySupervisor> getFacilitySupervisorByRight() {
+    return mapper.getFacilitySuperVisorByRight();
+  }
 }

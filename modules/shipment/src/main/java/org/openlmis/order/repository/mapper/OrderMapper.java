@@ -254,4 +254,10 @@ public interface OrderMapper {
   })
   Order getByOrderNumberWithRequisition(@Param("orderNumber") String orderNumber);
 
+  @Select("select * from orders JOIN requisitions r ON orders.id = r.id \n" +
+          "JOIN Facilities F ON r.facilityId = f.id\n" +
+          "where orderNumber is not null and LOWER(f.code) = LOWER(#{soldTo}) AND orderNumber <>'0' and r.status = 'RELEASED' \n" +
+          "Order By r.id desc\n" +
+          "limit 1")
+  Order getLatestOrderByFacility(@Param("soldTo") String soldTo);
 }
