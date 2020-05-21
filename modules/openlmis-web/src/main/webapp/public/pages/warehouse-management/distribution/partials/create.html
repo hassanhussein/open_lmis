@@ -80,7 +80,7 @@
                             <tr class="gradient-header inner-tr-height">
                                 <th style="width:20px; min-width:20px;">Batch</th>
                                 <th style="width:14px; min-width:14px;" >VVM</th>
-                                <th  style="width:27px; min-width:25px;" >Exp Date</th>
+                                <th  style="width:51px; min-width:25px;" >Exp Date</th>
                                 <th style="text-align:right; width:45px; min-width:25px;" >SOH</th>
                             </tr>
                             </thead>
@@ -162,9 +162,9 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat-start="p in soh" class="inner-tr-height">
-                                <td class="cell-input" style="padding-left: 15px; text-align:right;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+1}}">{{getOrderedQuantity($index,p.productId) | number}}</td>
+                                <td class="cell-input" style="padding-left: 15px; text-align:right; padding-right: 4px;"  ng-repeat-start="x in range(requstions.length) track by $index" rowspan="{{p.lots.length+1}}">{{getOrderedQuantity($index,p.productId) | number}}</td>
                                 <td></td>
-                                <td class="cell-input" style="padding-left: 15px; text-align:right;"  rowspan="{{p.lots.length+1}}" ng-repeat-end>{{getGap($index,p) | number}}</td>
+                                <td class="cell-input" style="padding-left: 15px; text-align:right; padding-right: 4px;"  rowspan="{{p.lots.length+1}}" ng-repeat-end>{{getGap($index,p) | number}}</td>
                             </tr>
 <!--                            <tr class="inner-tr-height">-->
 <!--                                <td>d</td>-->

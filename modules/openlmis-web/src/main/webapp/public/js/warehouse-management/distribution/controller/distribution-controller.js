@@ -11,10 +11,11 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
 
 
 console.log(all_orders);
+$scope.soh=wmsSoh.stocks;
 $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
@@ -275,59 +276,6 @@ console.log('reached here');
 //
 //    });
 //endtest
-
-var currentStock = $scope.soh = lots = [];
-
-  var wait = function() {
-    var deferred = $q.defer();
-    setTimeout(function() {
-
-     StockCards.get({facilityId:19075}, function(data){
-          deferred.resolve(data.stockCards);
-
-     });
-
-
-    }, 1000);
-    return deferred.promise;
-  };
-
-wait()
-  .then(function(stocks) {
-
-
-   var sohAvailable = {};
-    var currentS = {};
-
-   if(stocks.length > 0 ) {
-
-   angular.forEach(stocks, function(stock, indx){
-
-            currentS.product=stock.product.primaryName;
-            currentS.productId=stock.product.id;
-
-            var newLots = [];
-
-            angular.forEach(stock.lotsOnHand, function(lot,idx){
-              newLots.push({id:idx + 1, lotNumber:lot.lot.lotCode,
-              amount:lot.quantityOnHand, maxSoh:lot.quantityOnHand, expirationDate:lot.lot.expirationDate,
-              vvm:lot.customProps.vvmstatus
-
-              });
-             });
-             currentS.lots = newLots;
-
-        $scope.soh.push(currentS);
-
-       console.log($scope.soh);
-
-   });
-
-   }
-
-  });
-
-
 
 
 $scope.getLotSumPerRegion=function(lotId,productId){
