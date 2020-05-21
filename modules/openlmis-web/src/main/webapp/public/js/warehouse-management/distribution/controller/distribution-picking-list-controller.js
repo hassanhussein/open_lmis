@@ -16,4 +16,4 @@ function DistributionPickingListController($scope) {}
 
 
 
-DistributionPickingListController.resolve = {}
+DistributionPickingListController.resolve = {};

@@ -20,7 +20,7 @@ $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
  var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
-console.log(requisitionsWithProduct)
+console.log(requisitionsWithProduct);
 $scope.requstions.push({
                              fromFacilityId:19075,
                              toFacilityId:requisitionsWithProduct.facilityId,
@@ -189,7 +189,7 @@ if (ordered!==undefined) {
 
 
 $scope.saveDistribution = function () {
-console.log($scope.requstions)
+console.log($scope.requstions);
 
 var events = [];
 var distributionLineItemList = [];
