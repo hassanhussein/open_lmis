@@ -59,7 +59,7 @@ public interface LotOnHandLocationMapper {
             "            select \n" +
             "            to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
             "            p.primaryName product, sum(h.quantityOnHand) quantityOnHand, lotID, lotNumber, \n" +
-            "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated\n" +
+            "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
             "             \n" +
             "            from lot_on_hand_locations L\n" +
             "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
@@ -75,7 +75,7 @@ public interface LotOnHandLocationMapper {
             "            WHERE  facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
             "            and l.quantityOnHand > 0\n" +
             "            \n" +
-            "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID ")
+            "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name ")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("\n" +

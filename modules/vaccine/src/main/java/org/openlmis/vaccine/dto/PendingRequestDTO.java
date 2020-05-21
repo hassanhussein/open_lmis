@@ -3,6 +3,7 @@ package org.openlmis.vaccine.dto;
 import lombok.Data;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -16,6 +17,6 @@ public class PendingRequestDTO {
 
     private String gap;
 
-    List<LotOnHand> given;
+    private List<LotOnHand> given = new ArrayList<>();
 
 }
