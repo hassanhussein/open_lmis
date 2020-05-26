@@ -44,7 +44,7 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select({"SELECT requisition_line_items.*, products.strength, products.primaryname, products.patientCalculationFormula ",
+  @Select({"SELECT requisition_line_items.*, products.alternateItemCode, products.strength, products.primaryname, products.patientCalculationFormula ",
           "FROM requisition_line_items, products ",
           "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true ",
           "and requisition_line_items.productcode = products.code ",

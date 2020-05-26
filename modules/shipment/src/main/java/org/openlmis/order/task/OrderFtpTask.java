@@ -25,6 +25,7 @@ import org.openlmis.order.dto.OrderFileTemplateDTO;
 import org.openlmis.order.helper.OrderCsvHelper;
 import org.openlmis.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
@@ -65,6 +66,9 @@ public class OrderFtpTask {
 
   Boolean sendFtp;
 
+  @Value("${order.ftp.local.directory}")
+  private String orderDirectory;
+
   private void initiateSettings(){
     sendFtp = configurationSettingService.getBoolValue("USE_FTP_TO_SEND_ORDERS");
   }
@@ -102,7 +106,7 @@ public class OrderFtpTask {
       if (!localDirectory.exists()) {
         localDirectory.mkdir();
       }
-      File file = new File(supplyingFacilityFtpDetails.getLocalFolderPath() + System.getProperty("file.separator") + fileName);
+      File file = new File( orderDirectory+ System.getProperty("file.separator") + fileName);
       try (FileWriter fileWriter = new FileWriter(file)) {
         orderCsvHelper.writeCsvFile(order, orderFileTemplateDTO, fileWriter);
         fileWriter.flush();
