@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRParameter;
 import org.apache.ibatis.annotations.Param;
+import org.json.JSONObject;
 import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Program;
@@ -130,6 +131,14 @@ public class VaccineInventoryDistributionController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getUserSupervisedFacilities(@PathVariable Long programId, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         return OpenLmisResponse.response(FACILITIES, facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_STOCK));
+    }
+
+    @RequestMapping(value = "by-voucher-data", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    public ResponseEntity<OpenLmisResponse> getDistributionByVoucherData(@Param("voucherNumber") String voucherNumber,
+                                                                           HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        return OpenLmisResponse.response("distribution", service.getDistributionByVoucherNumber(userId, voucherNumber));
     }
 
     @RequestMapping(value = "by-voucher-number", method = GET, headers = ACCEPT_JSON)
@@ -352,6 +361,59 @@ public class VaccineInventoryDistributionController extends BaseController {
         }
     }
 
+    @RequestMapping(value = "/fetch/{id}", method = GET)
+    public ModelAndView  getDynamicUriValue(@PathVariable String id){
+        System.out.println("ID is "+id);
+        ModelAndView mv= new ModelAndView();
+        mv.addObject("message", "this is a message for");
+        mv.addObject("name", "Spring");
+        mv.setViewName("login");
+        return mv;
+    }
+
+    @RequestMapping(value = "/stock-on-data")
+    public JSONObject printStockOnHandTest() {
+
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("name","Felix");
+        jsonObject.put("phone","255766545878");
+        System.out.println("hello john");
+        return jsonObject;
+    }
+
+    @RequestMapping(value = "stock-on-hand-test/print/{facilityId}", method = GET, headers = ACCEPT_JSON)
+    public ModelAndView printStockOnHandTest(@PathVariable Long facilityId,HttpServletRequest request) throws JRException, IOException, ClassNotFoundException {
+        Long facility = null;
+        Facility facility1 = facilityService.getHomeFacility(loggedInUserId(request));
+
+        Facility f = facilityService.getById(facilityId);
+
+        if (f != null) {
+            facility = facilityId;
+        } else {
+            facility = facility1.getId();
+        }
+
+        Template orPrintTemplate = templateService.getByName("stock_on_hand_repo");
+        JasperReportsMultiFormatView jasperView = jasperReportsViewFactory.getJasperReportsView(orPrintTemplate);
+        Map<String, Object> map = new HashMap<>();
+        map.put("format", "pdf");
+        Locale currentLocale = messageService.getCurrentLocale();
+        map.put(JRParameter.REPORT_LOCALE, currentLocale);
+        ResourceBundle resourceBundle = ResourceBundle.getBundle("messages", currentLocale);
+        map.put(JRParameter.REPORT_RESOURCE_BUNDLE, resourceBundle);
+        Resource reportResource = new ClassPathResource("report");
+        Resource imgResource = new ClassPathResource("images");
+        ConfigurationSetting configuration = settingService.getByKey(Constants.OPERATOR_NAME);
+        map.put(Constants.OPERATOR_NAME, configuration.getValue());
+
+        String separator = System.getProperty("file.separator");
+        map.put("image_dir", imgResource.getFile().getAbsolutePath() + separator);
+        map.put("facilityId", f.getId().intValue());
+        map.put("facilityName",f.getName());
+
+        return new ModelAndView(jasperView, map);
+    }
 
     @RequestMapping(value = "stock-on-hand/print/{facilityId}", method = GET, headers = ACCEPT_JSON)
     public ModelAndView printStockOnHand(@PathVariable Long facilityId,HttpServletRequest request) throws JRException, IOException, ClassNotFoundException {
