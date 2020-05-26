@@ -100,9 +100,9 @@ Stock on Hand
         <td class="col-lot cell-input  disabled padding2px">{{ledger.date | date:'dd-MM-yyyy'}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.frombin}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.tobin}}</td>
-        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.received}}</td>
-        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.issued}}</td>
-        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.adjustment}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.received | number}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.issued | number}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.adjustment | number}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.lotnumber}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.expirationdate}}</td>
         <td class="col-lot cell-input  disabled padding2px">VVM1</td>

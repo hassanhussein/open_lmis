@@ -57,6 +57,7 @@ $scope.loadProductLotDetails = function (movement) {
 GetTransferDetails.get({fromWarehouseId:movement.fromWarehouseId,fromBinLocationId:movement.fromBin}, function(data){
 
  $scope.productToDisplay = data.products;
+ console.log($scope.productToDisplay);
 
 });
 

@@ -73,7 +73,7 @@
 
                 <div class="form-field row-fluid">
                     <select ui-select2="{width: '100%'}" name="productId" id="productId" ng-model="stockMovement.productId"
-                            ng-required="true"    ng-options="product.productId as product.productName for product in productToDisplay"
+                            ng-required="true"    ng-options="product.productId as product.productName for product in productToDisplay | unique:'productName'"
                             ng-change="loadProductLots(stockMovement.productId)"
 
 

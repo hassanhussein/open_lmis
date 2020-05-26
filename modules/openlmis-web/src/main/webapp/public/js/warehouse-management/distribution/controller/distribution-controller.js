@@ -14,24 +14,24 @@
 function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
 
 
-console.log(all_orders);
+//console.log(all_orders);
 $scope.soh=wmsSoh.stocks;
 $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
  var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
-
+console.log(requisitionsWithProduct);
 $scope.requstions.push({
                              fromFacilityId:19075,
-                             toFacilityId:19076,
+                             toFacilityId:requisitionsWithProduct.facilityId,
                              programId:parseInt(82,10),
-                             orderId:2482,
-                             periodId: 191,
+                             orderId:requisitionsWithProduct.id,
+                             periodId: requisitionsWithProduct.periodId,
                              remarks:'Add some remarks',
-                             orderNumber: "IVD0001",
-                             period: "Sept - Dec 2020",
-                             dateSubmitted: "11/09/2019",
-                             issue: false,
+                             orderNumber: requisitionsWithProduct.orderNumber,
+                             period: requisitionsWithProduct.period,
+                             dateSubmitted: requisitionsWithProduct.dateSubmitted,
+                             issue: true,
                              name:requisitionsWithProduct.facilityName,
                              ordered:requisitionsWithProduct.ordered
 
@@ -40,242 +40,41 @@ $scope.requstions.push({
 
 });
 
-var distributionData = [{
-                          //NEW
-                         "fromFacilityId":homeFacility,
-                         "toFacilityId":19076,
-                         "programId":parseInt(82,10),
-                         "orderId":2482,
-                         "periodId": 191,
-                         "remarks":'Add some remarks',
-                         //END NEW
-
-                         "orderNumber": "IVD0001",
-                         "period": "Sept - Dec 2020",
-
-                         "dateSubmitted": "11/09/2019",
-                         "issue": false,
-                         "name": "Arusha RVS",
-                         "ordered": [
-                           {
-                             "productId": 2412,
-                             "product": "BCG",
-                             "amount": 35343,
-                             "totalQuantity":56,
-                             //new
-                             "productCode":"V001",
-                             "gap": "",
-                             "given": [
-                               {
-                                 "lotId": "1415",
-                                 "quantity": 56,
-                                 "vvmStatus":1
-                               }
-                             ]
-                           }
-                         ]
-                       }];
-
-$scope.testToSaveDistribution = function (data) {
-
-var events = [];
-var distributionLineItemList = [];
-
-angular.forEach(distributionData, function (facility) {
-
-var distribution = {};
-
-distribution.fromFacilityId = facility.fromFacilityId;
-distribution.toFacilityId = facility.toFacilityId;
-distribution.distributionDate = $filter('date')(new Date(facility.dateSubmitted), 'yyyy-MM-dd');
-distribution.periodId = facility.periodId;
-distribution.orderId = facility.orderId;
-distribution.status = "PENDING";
-distribution.distributionType = "SCHEDULED";
-distribution.remarks = facility.remarks;
-distribution.programId = facility.programId;
-distribution.lineItems = [];
-
- angular.forEach(facility.ordered, function (product) {
-
-
-var lineItem = {};
-
-        if (product.amount > 0) {
-
-             lineItem.productId = product.productId;
-             lineItem.quantity = product.totalQuantity;
-
-             angular.forEach(product.given, function(lot) {
-              lineItem.lots = [];
-             if (lot.quantity !== null && lot.quantity > 0) {
-                     var l = {};
-                     var event = {};
-                     event.type = "ISSUE";
-                     event.productCode = product.productCode;
-                     event.facilityId = facility.toFacilityId;
-                     event.occurred = distribution.distributionDate;
-                     event.quantity = lot.quantity;
-                     event.customProps = {};
-                     event.customProps.occurred = distribution.distributionDate;
-                     event.customProps.issuedto = facility.name;
-
-                     event.lotId = lot.lotId;
-                     event.quantity = lot.quantity;
-
-                     l.lotId = lot.lotId;
-                     l.vvmStatus = lot.vvmStatus;
-                     l.quantity = lot.quantity;
-                     lineItem.lots.push(l);
-                     events.push(event);
-
-             }
-
-             });
-
-
-                }
-
-                if (lineItem.quantity > 0) {
-                    distribution.lineItems.push(lineItem);
-                }
-
-            });
-             console.log(distribution);
-           distributionLineItemList.push(distribution);
-
-});
-
-console.log(events);
-
-
-
-StockEvent.save({facilityId: homeFacility}, events, function (data) {
- console.log(data);
- if (data.success) {
- SaveDistributionList.save(distributionLineItemList, function (distribution) {
-
-
-                     /*       var printList = [];
-
-                            angular.forEach(distribution.distributionIds, function (distributionId) {
-
-                                UpdateOrderRequisitionStatus.update({orderId: distributionId.orderId}, function () {
-                                    $scope.message = "label.form.Submitted.Successfully";
-
-                                });
-
-                            });*/
-
-                        });
-                    }
- });
-
-
-
-
-console.log('reached here');
-
-};
-
-
-
-
-//test
-//$scope.data={
-// orders:[{
-//                orderNumber:"IVD0001",
-//                period:"Sept - Dec 2020",
-//                dateSubmitted:"11/09/2020",
-//                issue:false,
-//                name:"Arusha RVS",
-//                ordered:[{
-//                  productId:343,
-//                  product:"BCG",
-//                  amount:353,
-//                  gap:'',
-//                  given:[]
-//                },
-//                {
-//                  productId:34,
-//                  product:"PCV",
-//                  amount:316,
-//                  gap:'',
-//                  given:[]
-//                }
+//var distributionData = [{
+//                          //NEW
+//                         "fromFacilityId":homeFacility,
+//                         "toFacilityId":19076,
+//                         "programId":parseInt(82,10),
+//                         "orderId":2482,
+//                         "periodId": 191,
+//                         "remarks":'Add some remarks',
+//                         //END NEW
 //
-//              ],
+//                         "orderNumber": "IVD0001",
+//                         "period": "Sept - Dec 2020",
 //
-//              },
-//              {
-//                orderNumber:"IVD0002",
-//                period:"Jan - Feb 2020",
-//                dateSubmitted:"11/01/2020",
-//                     issue:false,
-//
-//                name:"Dodoma RVS",
-//                ordered:[{
-//                  productId:343,
-//                  product:"BCG",
-//                  amount:753,
-//                  gap:'',
-//                  given:[]
-//                },
-//                {
-//                  productId:34,
-//                  product:"PCV",
-//                  amount:300,
-//                  gap:'',
-//                  given:[]
-//                }
-//
-//              ],
-//              },
-//              {
-//                              orderNumber:"IVD0003",
-//                              period:"Apr- Jun 2020",
-//                              dateSubmitted:"11/04/2020",
-//                                              issue:false,
-//
-//                              name:"Tanga RVS",
-//                              ordered:[{
-//                                productId:343,
-//                                product:"BCG",
-//                                amount:853,
-//                                gap:'',
-//                                given:[]
-//                              },
-//                              {
-//                                productId:34,
-//                                product:"PCV",
-//                                amount:456,
-//                                gap:'',
-//                                given:[]
-//
-//                              }
-//
-//                            ],
-//
-//
-//                            }
-//
-//            ],
-// pagination:{
-// totalRecords:3,
-// page:1,
-// limit:10,
-// }
-//
-// };
-//
-//  $scope.requstions=[];
-// $scope.orderList = $scope.data.orders;
-//    angular.forEach($scope.orderList,function(order){
-//
-//    $scope.requstions.push(order);
-//
-//    });
-//endtest
+//                         "dateSubmitted": "11/09/2019",
+//                         "issue": false,
+//                         "name": "Arusha RVS",
+//                         "ordered": [
+//                           {
+//                             "productId": 2412,
+//                             "product": "BCG",
+//                             "amount": 35343,
+//                             "totalQuantity":56,
+//                             //new
+//                             "productCode":"V001",
+//                             "gap": "",
+//                             "given": [
+//                               {
+//                                 "lotId": "1415",
+//                                 "quantity": 56,
+//                                 "vvmStatus":1
+//                               }
+//                             ]
+//                           }
+//                         ]
+//                       }];
 
 
 $scope.getLotSumPerRegion=function(lotId,productId){
@@ -386,49 +185,123 @@ if (ordered!==undefined) {
   return ordered.amount;
 }
 };
-/*
 
-  $scope.soh=[{
-    product:"BCG",
-    productId:343,
-    lots:[{
-       id:1,
-      number:"ABDSE",
 
-      amount:4455,
-      maxSoh:4455,
-      vvm:"VVM2",
-      expiry:"2028-10-10"
-    },
 
-    {
-    id:2,
-      number:"PH0YUT",
-      location:"PGHDJ",
-      amount:700,
-      maxSoh:700,
-      vvm:"VVM2",
-      expiry:"2028-10-10"
-    }
-  ]
-  },
+$scope.saveDistribution = function () {
+console.log($scope.requstions);
 
-  {
-    product:"PCV",
-    productId:34,
-    lots:[{
-    id:4,
-      number:"AWPXDD",
-      location:"abc",
-      amount:280,
-      maxSoh:280,
-      vvm:"VVM1",
-      expiry:"2028-09-10"
-    }]
-  }
+var events = [];
+var distributionLineItemList = [];
 
-];
-*/
+angular.forEach($scope.requstions, function (facility) {
+
+var distribution = {};
+
+distribution.fromFacilityId = facility.fromFacilityId;
+distribution.toFacilityId = facility.toFacilityId;
+distribution.distributionDate = "2020-05-21";
+distribution.periodId = facility.periodId;
+distribution.orderId = facility.orderId;
+distribution.status = "PENDING";
+distribution.distributionType = "SCHEDULED";
+distribution.remarks = facility.remarks;
+distribution.programId = facility.programId;
+distribution.lineItems = [];
+
+ angular.forEach(facility.ordered, function (product) {
+
+
+var lineItem = {};
+
+        if (product.amount > 0) {
+
+             lineItem.productId = product.productId;
+             lineItem.quantity = product.totalQuantity;
+
+             angular.forEach(product.given, function(lot) {
+              lineItem.lots = [];
+             if (lot.quantity !== null && lot.quantity > 0) {
+                     var l = {};
+                     var event = {};
+                     event.type = "ISSUE";
+                     event.productCode = product.productCode;
+                     event.facilityId = facility.toFacilityId;
+                     event.occurred = distribution.distributionDate;
+                     event.quantity = lot.quantity;
+                     event.customProps = {};
+                     event.customProps.occurred = distribution.distributionDate;
+                     event.customProps.issuedto = facility.name;
+
+                     event.lotId = lot.lotId;
+                     event.quantity = lot.quantity;
+
+                     l.lotId = lot.lotId;
+                     l.vvmStatus = lot.vvmStatus;
+                     l.quantity = lot.quantity;
+                     lineItem.lots.push(l);
+                     events.push(event);
+
+             }
+
+             });
+
+
+                }
+
+                if (lineItem.quantity > 0) {
+                    distribution.lineItems.push(lineItem);
+                }
+
+            });
+//             console.log(distribution);
+           distributionLineItemList.push(distribution);
+
+});
+
+//console.log(events);
+
+
+
+StockEvent.save({facilityId: homeFacility}, events, function (data) {
+ console.log(data);
+ if (data.success) {
+ SaveDistributionList.save(distributionLineItemList, function (distribution) {
+
+
+                  console.log('distributed');
+
+                        });
+                    }
+ });
+
+
+
+
+//console.log('reached here');
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
@@ -454,7 +327,7 @@ DistributionController.resolve = {
               $timeout(function () {
 
                   GetCurrentStock.get({}, function (data) {
-                  console.log(data);
+//                  console.log(data);
                       deferred.resolve(data);
                   });
 
