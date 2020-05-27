@@ -35,6 +35,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -87,8 +88,14 @@ public class VaccineInventoryDistributionService {
 @Transactional
     public Long save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period
+
+    System.out.println(userId);
         Facility homeFacility = facilityService.getHomeFacility(userId);
+    System.out.println("fac");
+    System.out.println(homeFacility);
         Long homeFacilityId = homeFacility.getId();
+    System.out.println("home");
+    System.out.println(homeFacilityId);
         ProcessingPeriod period = null;
         if (null != distribution.getToFacilityId() && null != distribution.getProgramId()) {
             period = getCurrentPeriod_new(distribution.getToFacilityId(), distribution.getProgramId(), distribution.getDistributionDate());
@@ -98,7 +105,7 @@ public class VaccineInventoryDistributionService {
         }
 
         if (null == distribution.getVoucherNumber())
-        distribution.setVoucherNumber(generateVoucherNumber(homeFacilityId, distribution.getProgramId()));
+         distribution.setVoucherNumber(generateVoucherNumber(homeFacilityId, distribution.getProgramId()));
 
         if (distribution.getId() != null) {
 
@@ -109,7 +116,9 @@ public class VaccineInventoryDistributionService {
             VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
             statusChangeRepository.insert(statusChange);
         } else {
+            distribution.setPickListId(getPickList());
             distribution.setCreatedBy(userId);
+            distribution.setStatus("PENDING");
             ObjectMapper mapper = new ObjectMapper();
             try {
                 System.out.println("Distribution");
@@ -379,8 +388,25 @@ public class VaccineInventoryDistributionService {
         return repository.getNotificationDistributionList(districtId,startDate,endDate);
     }
 
-   /* public List<DistributionDTO> getCurrentStock(Long loggedInUserId) {
+    public Long generatePickList(Long loggedInUserId) {
+
+        return getPickList();
+    }
+
+    private Long getPickList() {
+
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println(timestamp.getTime());
+        return timestamp.getTime();
+    }
+
+    public static int generateRandomDigits(int n) {
+        int m = (int) Math.pow(10, n - 1);
+        return m + new Random().nextInt(9 * m);
+    }
+
+    public void saveDistribution(VaccineDistribution distribution, Long userId) {
 
 
-    }*/
+    }
 }

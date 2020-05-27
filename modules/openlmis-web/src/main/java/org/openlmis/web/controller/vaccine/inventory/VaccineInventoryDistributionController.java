@@ -55,8 +55,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
@@ -421,10 +420,38 @@ public class VaccineInventoryDistributionController extends BaseController {
 
 
 
-  /*  @RequestMapping(value = "get-current-stock-on-hand", method = GET)
-    public ResponseEntity<OpenLmisResponse> getCurrentStockOnHand(HttpServletRequest request) {
-            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getCurrentStock(loggedInUserId(request)));
+    @RequestMapping(value = "generatePickList", method = GET)
+    public ResponseEntity<OpenLmisResponse> generatePickList(HttpServletRequest request) {
+            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.generatePickList(loggedInUserId(request)));
             return response;
     }
-*/
+
+
+    @RequestMapping(value = "saveDistribution", method = POST, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> saveDistribution(@RequestBody VaccineDistribution distribution, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        try {
+            service.save(distribution,userId);
+
+        }catch (Exception e){
+            e.fillInStackTrace();
+        };
+        return OpenLmisResponse.response("distributionId", distribution.getId());
+    }
+
+    @RequestMapping(value = "update", method = PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> updateDistribution(@RequestBody VaccineDistribution distribution, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        try {
+            service.saveDistribution(distribution,userId);
+
+        }catch (Exception e){
+            e.fillInStackTrace();
+        };
+        return OpenLmisResponse.response("distributionId", distribution.getId());
+    }
 }

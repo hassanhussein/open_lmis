@@ -31,27 +31,27 @@ public interface VaccineInventoryDistributionMapper {
     List<Facility> getOneLevelSupervisedFacilities(@Param("facilityId") Long facilityId);
 
     @Insert("insert into vaccine_distributions " +
-            " (tofacilityid, fromfacilityid, vouchernumber, distributiondate, periodid,orderid,status, distributiontype, createdby, createddate, modifiedby,modifieddate,remarks )" +
+            " (tofacilityid, fromfacilityid, vouchernumber, distributiondate, periodid,orderid,status, distributiontype, createdby, createddate, modifiedby,modifieddate,remarks,pickListId )" +
             " values " +
-            " (#{toFacilityId}, #{fromFacilityId}, #{voucherNumber}, #{distributionDate}, #{periodId}, #{orderId}, #{status},#{distributionType}, #{createdBy},NOW(),#{modifiedBy},NOW(),#{remarks}) ")
+            " (#{toFacilityId}, #{fromFacilityId}, #{voucherNumber}, #{distributionDate}, #{periodId}, #{orderId}, #{status},#{distributionType}, #{createdBy},NOW(),#{modifiedBy},NOW(),#{remarks},#{pickListId}) ")
     @Options(useGeneratedKeys = true)
     Integer saveDistribution(VaccineDistribution vaccineDistribution);
 
     @Update("update vaccine_distributions set " +
-            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
+            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks}, pickListId=#{pickListId} " +
             " where id=#{id}"
     )
     Integer updateDistribution(VaccineDistribution vaccineDistribution);
 
     @Insert("insert into vaccine_distribution_line_items " +
-            " (distributionid, productid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate )" +
+            " (distributionid, productid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate,gap )" +
             " values " +
-            " (#{distributionId}, #{productId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
+            " (#{distributionId}, #{productId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW(), #{gap}) ")
     @Options(useGeneratedKeys = true)
     Integer saveDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
 
     @Update("update vaccine_distribution_line_items set " +
-            " quantity=#{quantity}, modifiedby=#{modifiedBy}, modifieddate=NOW() " +
+            " quantity=#{quantity}, modifiedby=#{modifiedBy}, modifieddate=NOW(), gap=#{gap} " +
             " where id=#{id}"
     )
     Integer updateDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
