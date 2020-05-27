@@ -430,21 +430,7 @@ public class VaccineInventoryDistributionController extends BaseController {
     @RequestMapping(value = "saveDistribution", method = POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
     @Transactional
-    public ResponseEntity<OpenLmisResponse> saveDistribution(@RequestBody VaccineDistribution distribution, HttpServletRequest request) {
-        Long userId = loggedInUserId(request);
-        try {
-            service.save(distribution,userId);
-
-        }catch (Exception e){
-            e.fillInStackTrace();
-        };
-        return OpenLmisResponse.response("distributionId", distribution.getId());
-    }
-
-    @RequestMapping(value = "update", method = PUT, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
-    @Transactional
-    public ResponseEntity<OpenLmisResponse> updateDistribution(@RequestBody VaccineDistribution distribution, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> saveDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
         Long userId = loggedInUserId(request);
         try {
             service.saveDistribution(distribution,userId);
@@ -452,6 +438,20 @@ public class VaccineInventoryDistributionController extends BaseController {
         }catch (Exception e){
             e.fillInStackTrace();
         };
-        return OpenLmisResponse.response("distributionId", distribution.getId());
+        return OpenLmisResponse.response("distributionId", "Saved Successiful");
+    }
+
+    @RequestMapping(value = "updateDistribution", method = PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> updateDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        try {
+            service.saveDistribution(distribution,userId);
+
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
+        return OpenLmisResponse.response("distributionId","Updated Successiful");
     }
 }
