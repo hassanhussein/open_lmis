@@ -135,6 +135,7 @@ public class VaccineInventoryDistributionService {
 
         }
 
+
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
             lineItem.setDistributionId(distribution.getId());
             if (lineItem.getId() != null) {
@@ -405,8 +406,13 @@ public class VaccineInventoryDistributionService {
         return m + new Random().nextInt(9 * m);
     }
 
-    public void saveDistribution(VaccineDistribution distribution, Long userId) {
+    public void saveDistribution(List<VaccineDistribution> distributions, Long userId) {
 
+        for (VaccineDistribution distribution : distributions) {
+            distribution.setCreatedBy(userId);
+            distribution.setModifiedBy(userId);
+            save(distribution,userId);
+      }
 
     }
 }
