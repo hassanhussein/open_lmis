@@ -13,6 +13,7 @@
  */
 function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
 
+  $scope.$parent.distributed = false;
 
 //console.log(all_orders);
 $scope.soh=wmsSoh.stocks;
@@ -187,6 +188,12 @@ if (ordered!==undefined) {
 };
 
 
+$scope.cancel=function(){
+ $scope.$parent.distributed = true;
+  $location.path('');
+}
+
+
 
 $scope.saveDistribution = function () {
 console.log($scope.requstions);
@@ -264,7 +271,10 @@ var lineItem = {};
 
 
 StockEvent.save({facilityId: homeFacility}, events, function (data) {
- console.log(data);
+// console.log(data);
+  $scope.$parent.distributed = true;
+  $location.path('');
+
  if (data.success) {
  SaveDistributionList.save(distributionLineItemList, function (distribution) {
 
