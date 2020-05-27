@@ -15,6 +15,8 @@ var distributionModule = angular.module('distribution', ['openlmis', 'ui.bootstr
 
           when('/search', {controller: DistributionSearchController, templateUrl: 'partials/search.html', resolve:DistributionSearchController.resolve,reloadOnSearch: false}).
           when('/picking-list', {controller: DistributionPickingListController, templateUrl: 'partials/picking-list.html', resolve:DistributionPickingListController.resolve,reloadOnSearch: false}).
+          when('/approve-orders', {controller: DistributionApproveOrdersController, templateUrl: 'partials/approve-orders.html', resolve:DistributionApproveOrdersController.resolve,reloadOnSearch: false}).
+
 
           when('/create/:facilityId', {controller: DistributionController, templateUrl: 'partials/create.html', resolve:DistributionController.resolve,reloadOnSearch: false}).
 
