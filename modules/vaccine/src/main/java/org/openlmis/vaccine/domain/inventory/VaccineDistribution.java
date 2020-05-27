@@ -47,6 +47,7 @@ public class VaccineDistribution extends BaseModel {
 
     String orderDate;
 
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = DateDeserializer.class)
     Date distributionDate;
@@ -54,4 +55,6 @@ public class VaccineDistribution extends BaseModel {
     List<VaccineDistributionLineItem> lineItems;
 
     Boolean isNotificationSent;
+
+    private Long pickListId;
 }

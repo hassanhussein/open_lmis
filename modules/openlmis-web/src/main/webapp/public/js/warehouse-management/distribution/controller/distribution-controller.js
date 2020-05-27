@@ -262,7 +262,19 @@ var lineItem = {};
 //console.log(events);
 
 
+//Test to save
 
+console.log(distributionLineItemList);
+/*
+ SaveDistributionList.save(distributionLineItemList, function (distribution) {
+
+
+
+
+                        });*/
+
+
+/*
 StockEvent.save({facilityId: homeFacility}, events, function (data) {
  console.log(data);
  if (data.success) {
@@ -273,7 +285,7 @@ StockEvent.save({facilityId: homeFacility}, events, function (data) {
 
                         });
                     }
- });
+ });*/
 
 
 
