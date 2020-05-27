@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope) {
+function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution) {
 
 
 //console.log(all_orders);
@@ -262,19 +262,7 @@ var lineItem = {};
 //console.log(events);
 
 
-//Test to save
 
-console.log(distributionLineItemList);
-/*
- SaveDistributionList.save(distributionLineItemList, function (distribution) {
-
-
-
-
-                        });*/
-
-
-/*
 StockEvent.save({facilityId: homeFacility}, events, function (data) {
  console.log(data);
  if (data.success) {
@@ -285,7 +273,7 @@ StockEvent.save({facilityId: homeFacility}, events, function (data) {
 
                         });
                     }
- });*/
+ });
 
 
 

@@ -88,8 +88,14 @@ public class VaccineInventoryDistributionService {
 @Transactional
     public Long save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period
+
+    System.out.println(userId);
         Facility homeFacility = facilityService.getHomeFacility(userId);
+    System.out.println("fac");
+    System.out.println(homeFacility);
         Long homeFacilityId = homeFacility.getId();
+    System.out.println("home");
+    System.out.println(homeFacilityId);
         ProcessingPeriod period = null;
         if (null != distribution.getToFacilityId() && null != distribution.getProgramId()) {
             period = getCurrentPeriod_new(distribution.getToFacilityId(), distribution.getProgramId(), distribution.getDistributionDate());
