@@ -138,6 +138,8 @@ public class VaccineInventoryDistributionService {
 
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
             lineItem.setDistributionId(distribution.getId());
+            lineItem.setCreatedBy(userId);
+            lineItem.setModifiedBy(userId);
             if (lineItem.getId() != null) {
                 repository.updateDistributionLineItem(lineItem);
             } else {
@@ -146,6 +148,8 @@ public class VaccineInventoryDistributionService {
 
             if (lineItem.getLots() != null) {
                 for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
+                    lot.setModifiedBy(userId);
+                    lot.setCreatedBy(userId);
                     lot.setDistributionLineItemId(lineItem.getId());
                     if (lot.getId() != null) {
                         repository.updateDistributionLineItemLot(lot);
