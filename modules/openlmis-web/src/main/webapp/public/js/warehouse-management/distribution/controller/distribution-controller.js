@@ -270,25 +270,17 @@ var lineItem = {};
 
 
 
-StockEvent.save({facilityId: homeFacility}, events, function (data) {
-// console.log(data);
-  $scope.$parent.distributed = true;
-  $location.path('');
 
- if (data.success) {
+
+
+
  SaveDistributionList.save(distributionLineItemList, function (distribution) {
 
-
+  $scope.$parent.distributed = true;
+  $location.path('');
                   console.log('distributed');
 
                         });
-                    }
- });
-
-
-
-
-//console.log('reached here');
 
 };
 
