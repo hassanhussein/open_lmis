@@ -41,43 +41,6 @@ $scope.requstions.push({
 
 });
 
-//var distributionData = [{
-//                          //NEW
-//                         "fromFacilityId":homeFacility,
-//                         "toFacilityId":19076,
-//                         "programId":parseInt(82,10),
-//                         "orderId":2482,
-//                         "periodId": 191,
-//                         "remarks":'Add some remarks',
-//                         //END NEW
-//
-//                         "orderNumber": "IVD0001",
-//                         "period": "Sept - Dec 2020",
-//
-//                         "dateSubmitted": "11/09/2019",
-//                         "issue": false,
-//                         "name": "Arusha RVS",
-//                         "ordered": [
-//                           {
-//                             "productId": 2412,
-//                             "product": "BCG",
-//                             "amount": 35343,
-//                             "totalQuantity":56,
-//                             //new
-//                             "productCode":"V001",
-//                             "gap": "",
-//                             "given": [
-//                               {
-//                                 "lotId": "1415",
-//                                 "quantity": 56,
-//                                 "vvmStatus":1
-//                               }
-//                             ]
-//                           }
-//                         ]
-//                       }];
-
-
 $scope.getLotSumPerRegion=function(lotId,productId){
  var sum=0;
    $scope.requstions.forEach(function(region){
@@ -196,77 +159,21 @@ $scope.cancel=function(){
 
 
 $scope.saveDistribution = function () {
-console.log($scope.requstions);
+$scope.distribution_list=[]
 
-var events = [];
-var distributionLineItemList = [];
+$scope.requstions.forEach(function(req){
 
-angular.forEach($scope.requstions, function (facility) {
+    req.ordered.forEach(function(ord){
+    ord.lots=ord.given
+    })
 
-var distribution = {};
+    req.lineItems=req.ordered
 
-distribution.fromFacilityId = facility.fromFacilityId;
-distribution.toFacilityId = facility.toFacilityId;
-distribution.distributionDate = "2020-05-21";
-distribution.periodId = facility.periodId;
-distribution.orderId = facility.orderId;
-distribution.status = "PENDING";
-distribution.distributionType = "SCHEDULED";
-distribution.remarks = facility.remarks;
-distribution.programId = facility.programId;
-distribution.lineItems = [];
-
- angular.forEach(facility.ordered, function (product) {
-
-
-var lineItem = {};
-
-        if (product.amount > 0) {
-
-             lineItem.productId = product.productId;
-             lineItem.quantity = product.totalQuantity;
-
-             angular.forEach(product.given, function(lot) {
-              lineItem.lots = [];
-             if (lot.quantity !== null && lot.quantity > 0) {
-                     var l = {};
-                     var event = {};
-                     event.type = "ISSUE";
-                     event.productCode = product.productCode;
-                     event.facilityId = facility.toFacilityId;
-                     event.occurred = distribution.distributionDate;
-                     event.quantity = lot.quantity;
-                     event.customProps = {};
-                     event.customProps.occurred = distribution.distributionDate;
-                     event.customProps.issuedto = facility.name;
-
-                     event.lotId = lot.lotId;
-                     event.quantity = lot.quantity;
-
-                     l.lotId = lot.lotId;
-                     l.vvmStatus = lot.vvmStatus;
-                     l.quantity = lot.quantity;
-                     lineItem.lots.push(l);
-                     events.push(event);
-
-             }
-
-             });
-
-
-                }
-
-                if (lineItem.quantity > 0) {
-                    distribution.lineItems.push(lineItem);
-                }
-
-            });
-//             console.log(distribution);
-           distributionLineItemList.push(distribution);
+    $scope.distribution_list.push(req);
 
 });
 
-//console.log(events);
+console.log($scope.distribution_list);
 
 
 
@@ -274,7 +181,16 @@ var lineItem = {};
 
 
 
- SaveDistributionList.save(distributionLineItemList, function (distribution) {
+
+
+
+
+
+
+
+
+
+ SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
   $scope.$parent.distributed = true;
   $location.path('');
