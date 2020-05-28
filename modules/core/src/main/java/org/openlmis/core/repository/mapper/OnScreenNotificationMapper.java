@@ -27,10 +27,10 @@ public interface OnScreenNotificationMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(OnScreenNotification onScreenNotification);
 
-  @Select("SELECT * FROM on_screen_notifications where userId = #{userId}")
+  @Select("SELECT * FROM on_screen_notifications where toUserId = #{userId}")
   List<OnScreenNotification> getNotificationsForUser(@Param("userId") Long userId);
 
-  @Select("SELECT count(*) FROM on_screen_notifications where userId = #{userId}")
+  @Select("SELECT count(*) FROM on_screen_notifications where toUserId = #{userId}")
   Long getNotificationsCountForUser(@Param("userId") Long userId);
 
   @Update("update set isHandled = true on_screen_notifications where id = #{id}")
@@ -38,4 +38,7 @@ public interface OnScreenNotificationMapper {
 
   @Select("SELECT * FROM on_screen_notifications where facilityId in (#{facilityIds})::INTEGER[]")
   List<OnScreenNotification> getNotificationsByFacilityIds(@Param("facilityIds") String facilityIds);
+
+  @Select("SELECT * FROM on_screen_notifications where requisitionId = #{requisitionId}")
+  List<OnScreenNotification> getNotificationsForRequisitionId(@Param("requisitionId") Long requisitionId);
 }

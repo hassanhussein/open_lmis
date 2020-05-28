@@ -33,11 +33,12 @@ public interface RequisitionStatusChangeMapper {
   @Select("SELECT max(createdDate) FROM requisition_status_changes WHERE rnrId = #{rnrId} AND status = #{status}")
   Date getOperationDateFor(@Param("rnrId") Long rnrId, @Param("status") String status);
 
-  @Select({"SELECT rsc.*, u.firstName, u.lastName, u.id as userId from requisition_status_changes rsc",
+  @Select({"SELECT rsc.*, u.firstName, u.lastName, u.id as userId, u.email from requisition_status_changes rsc",
     "INNER JOIN users u ON rsc.createdBy = u.id WHERE rnrId = #{rnrId}"})
   @Results({
     @Result(column = "firstName", property = "createdBy.firstName"),
     @Result(column = "lastName", property = "createdBy.lastName"),
+    @Result(column = "email", property = "createdBy.email"),
     @Result(column = "userId", property = "createdBy.id")
   })
   List<RequisitionStatusChange> getByRnrId(Long rnrId);

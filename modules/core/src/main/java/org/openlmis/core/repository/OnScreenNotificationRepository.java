@@ -39,7 +39,15 @@ public class OnScreenNotificationRepository {
   }
 
   public List<OnScreenNotification> getNotificationsByFacilityIds(List<Long> facilityIds) {
-    List<String> ids = facilityIds.stream().map(l -> l.toString()).collect(Collectors.toList())
+    List<String> ids = facilityIds.stream().map(l -> l.toString()).collect(Collectors.toList());
     return mapper.getNotificationsByFacilityIds(String.join(",", ids));
+  }
+
+  public List<OnScreenNotification> getNotificationByRequisitionId(Long requisitionId) {
+    return mapper.getNotificationsForRequisitionId(requisitionId);
+  }
+
+  public Long getNotificationsCount(Long userId) {
+    return mapper.getNotificationsCountForUser(userId);
   }
 }

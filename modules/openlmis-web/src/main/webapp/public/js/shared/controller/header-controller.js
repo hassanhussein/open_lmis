@@ -8,10 +8,21 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function HeaderController($scope, localStorageService, loginConfig, ConfigSettingsByKey, $window) {
+function HeaderController($scope, localStorageService, loginConfig, ConfigSettingsByKey, UserNotificationCount, UserNotifications, $window) {
   $scope.loginConfig = loginConfig;
   $scope.user = localStorageService.get(localStorageKeys.FULLNAME);
   $scope.userId = localStorageService.get(localStorageKeys.USER_ID);
+  $scope.notificationCount = 0;
+
+  UserNotificationCount.get(function(data){
+    $scope.notificationCount = data.notifications;
+    if(data.notifications > 0) {
+      UserNotifications.get(function(notifications){
+        console.log(notifications)
+        $scope.notifications = notifications.notifications;
+      });
+    }
+  });
 
   var isGoogleAnalyticsEnabled  = localStorageService.get('ENABLE_GOOGLE_ANALYTICS');
   // load this only once

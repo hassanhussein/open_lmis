@@ -30,6 +30,9 @@ public class OnScreenNotificationService {
   }
 
   public void markAsRead(List<OnScreenNotification> notifications) {
+    if(notifications == null) {
+      return;
+    }
     notifications.forEach(n -> {
       n.setIsHandled(true);
       repository.markAsProcessed(n);
@@ -40,7 +43,15 @@ public class OnScreenNotificationService {
     return repository.getNotifications(userId);
   }
 
+  public Long getNotificationsCount(Long userId) {
+    return repository.getNotificationsCount(userId);
+  }
+
   public List<OnScreenNotification> getNotificationsByFacilityIds(List<Long> facilityIds) {
     return repository.getNotificationsByFacilityIds(facilityIds);
+  }
+
+  public List<OnScreenNotification> getNotificationByRequisitionId(Long requisitionId) {
+    return repository.getNotificationByRequisitionId(requisitionId);
   }
 }

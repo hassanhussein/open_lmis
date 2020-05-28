@@ -51,6 +51,14 @@ services.factory('UserContext', function ($resource) {
   return $resource('/user-context.json', {}, {});
 });
 
+services.factory('UserNotifications', function ($resource) {
+  return $resource('/notifications/on-screen-notifications.json', {}, {});
+});
+
+services.factory('UserNotificationCount', function ($resource) {
+  return $resource('/notifications/on-screen-notifications-count.json', {}, {});
+});
+
 services.factory('Users', function ($resource) {
   var resource = $resource('/users/:id.json', {id: '@id'}, update);
 

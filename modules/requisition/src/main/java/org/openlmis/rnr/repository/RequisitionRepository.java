@@ -322,4 +322,8 @@ public class RequisitionRepository {
   public void updateComment(Comment comment) {
     commentMapper.update(comment);
   }
+
+  public List<RequisitionStatusChange> getAllStatusChanges(Long rnrId) {
+    return requisitionStatusChangeMapper.getByRnrId(rnrId);
+  }
 }
