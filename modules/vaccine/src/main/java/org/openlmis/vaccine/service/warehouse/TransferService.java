@@ -255,12 +255,14 @@ public class TransferService {
 
                          LotOnHandDTO lotOnHandDTO = new LotOnHandDTO();
 
-                         lotOnHandDTO.setAmount(lot.getQuantityOnHand());
+                         Long quantityWithPackSize = (lot.getPackSize() != null)?lot.getQuantityOnHand() * Long.valueOf(lot.getPackSize()):lot.getQuantityOnHand();
+
+                         lotOnHandDTO.setAmount(quantityWithPackSize);
                          lotOnHandDTO.setExpiry(lot.getExpiry());
                          lotOnHandDTO.setId(index++);
                          lotOnHandDTO.setLotId(lot.getLotId());
                          lotOnHandDTO.setVvm("VVM1");
-                         lotOnHandDTO.setMaxSoh(lot.getQuantityOnHand());
+                         lotOnHandDTO.setMaxSoh(quantityWithPackSize);
                          lotOnHandDTO.setNumber(lot.getLotNumber());
                          lots.add(lotOnHandDTO);
                      }
