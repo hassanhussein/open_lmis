@@ -118,7 +118,6 @@ public class VaccineInventoryDistributionService {
         } else {
             distribution.setPickListId(getPickList());
             distribution.setCreatedBy(userId);
-            distribution.setStatus("PENDING");
             ObjectMapper mapper = new ObjectMapper();
             try {
                 System.out.println("Distribution");
@@ -415,6 +414,7 @@ public class VaccineInventoryDistributionService {
         for (VaccineDistribution distribution : distributions) {
             distribution.setCreatedBy(userId);
             distribution.setModifiedBy(userId);
+            distribution.setStatus("UNDER_PICKING");
             save(distribution,userId);
       }
 
