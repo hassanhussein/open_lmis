@@ -424,7 +424,7 @@ public class VaccineInventoryDistributionService {
     private void updateOrderStatus(VaccineDistribution distribution) {
         VaccineOrderRequisition requisition = new VaccineOrderRequisition();
         requisition.setStatus(VaccineOrderStatus.UNDER_PICKING);
-        requisition.setId(distribution.getId());
+        requisition.setId(distribution.getOrderId());
 
         notificationService.updateOrderStatus(requisition);
     }
