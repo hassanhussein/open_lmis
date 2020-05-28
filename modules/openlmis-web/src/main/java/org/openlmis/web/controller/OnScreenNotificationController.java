@@ -42,7 +42,7 @@ public class OnScreenNotificationController extends BaseController {
 
   @RequestMapping(value = "/notifications/mark-as-read", method = RequestMethod.PUT)
   public ResponseEntity<OpenLmisResponse> markAsRead(@RequestParam("rnrId") Long rnrId) {
-    service.markAsRead(service.getNotificationByRequisitionId(rnrId));
+    service.markAsReadForRequisitionId(rnrId);
     return OpenLmisResponse.success("marked as read successfully.");
   }
 

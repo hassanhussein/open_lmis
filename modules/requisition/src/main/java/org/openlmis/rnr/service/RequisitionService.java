@@ -1,5 +1,6 @@
 package org.openlmis.rnr.service;
 
+import org.apache.velocity.VelocityContext;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.message.OpenLmisMessage;
@@ -108,6 +109,9 @@ public class RequisitionService {
 
   @Autowired
   private SupplyPartnerService supplyPartnerService;
+
+  @Autowired
+  private RequisitionNotificationService requisitionNotificationService;
 
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
@@ -259,7 +263,7 @@ public class RequisitionService {
 
     calculationService.perform(savedRnr, template);
 
-    onScreenNotificationService.markAsRead(onScreenNotificationService.getNotificationByRequisitionId(rnr.getId()));
+    onScreenNotificationService.markAsReadForRequisitionId(rnr.getId());
     return update(savedRnr);
   }
 
@@ -749,32 +753,7 @@ public class RequisitionService {
   }
 
   private void notifyRejectedRnR(Rnr rnr) {
-    List<RequisitionStatusChange> changes = requisitionRepository.getAllStatusChanges(rnr.getId());
-    List<User> users = changes.stream().map(c->c.getCreatedBy()).collect(Collectors.toList());
-    // find the template and generate the email message.
-    // send the email messages
-    // log this message in a table so that the notification can be seen on screen.
-    List<OnScreenNotification> notifications = new ArrayList<>();
-    users.forEach(u->{
-      OnScreenNotification un = OnScreenNotification
-          .builder()
-          .facilityId(rnr.getFacility().getId())
-          .requisitionId(rnr.getId())
-          .fromUserId(rnr.getModifiedBy())
-          .toUserId(u.getId())
-          .isHandled(false)
-          .type("REJECTED_REQUISITION")
-          .message("Réquisition rejetée:" +
-              "Cliquez ici pour <a href=\"/public/pages/logistics/rnr/index.html#/create-rnr/" + rnr.getId()+ "/" + rnr.getFacility().getId()+ "/?\">modifier et soumettre à nouveau</a>.")
-          .subject("Réquisition rejetée: " + rnr.getFacility().getName() + " " + rnr.getPeriod().getName())
-          .url("/public/pages/logistics/rnr/index.html#/create-rnr/" + rnr.getId()+ "/" + rnr.getFacility().getId()+ "/" + rnr.getProgram().getId())
-          .build();
-      notifications.add(un);
-    });
-
-    if(notifications.size() > 0){
-      onScreenNotificationService.sendNotification(notifications);
-    }
+    requisitionNotificationService.notifyRequisitionRejected(rnr);
 
   }
 

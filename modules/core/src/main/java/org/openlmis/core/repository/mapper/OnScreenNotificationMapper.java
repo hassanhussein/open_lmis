@@ -27,13 +27,13 @@ public interface OnScreenNotificationMapper {
   @Options(useGeneratedKeys = true)
   Integer insert(OnScreenNotification onScreenNotification);
 
-  @Select("SELECT * FROM on_screen_notifications where toUserId = #{userId}")
+  @Select("SELECT * FROM on_screen_notifications where toUserId = #{userId} and isHandled = false")
   List<OnScreenNotification> getNotificationsForUser(@Param("userId") Long userId);
 
-  @Select("SELECT count(*) FROM on_screen_notifications where toUserId = #{userId}")
+  @Select("SELECT count(*) FROM on_screen_notifications where toUserId = #{userId} and isHandled = false")
   Long getNotificationsCountForUser(@Param("userId") Long userId);
 
-  @Update("update set isHandled = true on_screen_notifications where id = #{id}")
+  @Update("update on_screen_notifications set isHandled = true where id = #{id}")
   void markAsProcessed(@Param("id") Long id);
 
   @Select("SELECT * FROM on_screen_notifications where facilityId in (#{facilityIds})::INTEGER[]")

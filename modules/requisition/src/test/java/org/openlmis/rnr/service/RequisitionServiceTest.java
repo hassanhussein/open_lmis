@@ -391,8 +391,7 @@ public class RequisitionServiceTest {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
 
-    doNothing().when(notificationService).markAsRead(any());
-    when(notificationService.getNotificationByRequisitionId(any())).thenReturn(null);
+    doNothing().when(notificationService).markAsReadForRequisitionId(any());
 
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
     doNothing().when(calculationService).perform(savedRnr, template);
@@ -1037,7 +1036,7 @@ public class RequisitionServiceTest {
 
     doNothing().when(calculationService).perform(savedRnr, template);
 
-    doNothing().when(notificationService).markAsRead(any());
+    doNothing().when(notificationService).markAsReadForRequisitionId(any());
     when(notificationService.getNotificationByRequisitionId(any())).thenReturn(null);
 
     when(savedRnr.getFacility()).thenReturn(initiatedRnr.getFacility());
