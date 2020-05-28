@@ -22,6 +22,8 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
+import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
@@ -414,7 +416,16 @@ public class VaccineInventoryDistributionService {
             distribution.setModifiedBy(userId);
             distribution.setStatus("UNDER_PICKING");
             save(distribution,userId);
+            updateOrderStatus(distribution);
       }
 
+    }
+
+    private void updateOrderStatus(VaccineDistribution distribution) {
+        VaccineOrderRequisition requisition = new VaccineOrderRequisition();
+        requisition.setStatus(VaccineOrderStatus.UNDER_PICKING);
+        requisition.setId(distribution.getId());
+
+        notificationService.updateOrderStatus(requisition);
     }
 }

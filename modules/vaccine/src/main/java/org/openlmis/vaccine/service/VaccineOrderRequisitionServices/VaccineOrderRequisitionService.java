@@ -433,4 +433,8 @@ public class VaccineOrderRequisitionService {
             return null;
         }
     }
+
+    public void updateOrderStatus(VaccineOrderRequisition requisition) {
+        orderRequisitionRepository.updateOrderStatus(requisition);
+    }
 }
