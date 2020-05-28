@@ -138,6 +138,8 @@ public class RequisitionServiceTest {
   private BudgetLineItemService budgetLineItemService;
   @Mock
   private StatusChangeEventService statusChangeEventService;
+  @Mock
+  private OnScreenNotificationService notificationService;
 
   @InjectMocks
   private RequisitionSearchStrategyFactory requisitionSearchStrategyFactory;
@@ -388,6 +390,10 @@ public class RequisitionServiceTest {
   public void shouldSubmitValidRnrWithSubmittedDate() {
     Rnr savedRnr = getFilledSavedRequisitionWithDefaultFacilityProgramPeriod(initiatedRnr, CREATE_REQUISITION);
     ProgramRnrTemplate template = new ProgramRnrTemplate(rnrColumns);
+
+    doNothing().when(notificationService).markAsRead(any());
+    when(notificationService.getNotificationByRequisitionId(any())).thenReturn(null);
+
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
     doNothing().when(calculationService).perform(savedRnr, template);
     when(supervisoryNodeService.getFor(FACILITY, PROGRAM)).thenReturn(new SupervisoryNode());
@@ -1030,6 +1036,9 @@ public class RequisitionServiceTest {
     when(rnrTemplateService.fetchProgramTemplate(PROGRAM.getId())).thenReturn(template);
 
     doNothing().when(calculationService).perform(savedRnr, template);
+
+    doNothing().when(notificationService).markAsRead(any());
+    when(notificationService.getNotificationByRequisitionId(any())).thenReturn(null);
 
     when(savedRnr.getFacility()).thenReturn(initiatedRnr.getFacility());
     when(savedRnr.getProgram()).thenReturn(initiatedRnr.getProgram());
