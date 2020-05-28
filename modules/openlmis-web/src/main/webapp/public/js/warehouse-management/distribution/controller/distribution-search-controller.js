@@ -219,7 +219,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
             }, function (data) {
                 $scope.pendingRequisition = data.pendingRequest;
                 $scope.orders=[];
-    //            console.log($scope.pendingRequisition);
+                console.log($scope.pendingRequisition);
                 $scope.pendingRequisition.forEach(function(order){
                 $scope.orders.push({
                                     id:order.id,
@@ -227,6 +227,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
                                     period:order.periodName,
                                     dateSubmitted:order.orderDate,
                                     issue:false,
+                                    status:order.status,
                                     name:order.facilityName,
                                     ordered:[]
                 });
@@ -239,6 +240,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
     $scope.data.pagination.limit=$scope.orders.length;
 
     $scope.orderList = $scope.data.orders;
+
               $scope.pagination = $scope.data.pagination;
               $scope.totalItems = $scope.pagination.totalRecords;
               $scope.currentPage = $scope.pagination.page;

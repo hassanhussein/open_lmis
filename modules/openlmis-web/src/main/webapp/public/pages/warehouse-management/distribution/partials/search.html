@@ -69,13 +69,15 @@
             </thead>
             <tbody>
             <tr ng-repeat="order in orderList">
-                <td ><input type="checkbox" ng-model="order.issue" ></td>
+                <td ><input type="checkbox" ng-model="order.issue" ng-disabled="order.status!='SUBMITTED'" ></td>
                 <td>{{order.orderNumber}}</td>
                 <td>{{order.name}}</td>
                 <td>{{order.period}}</td>
                 <td>
                     {{order.dateSubmitted}}
                 </td>
+
+                <td>{{order.status}}</td>
 
             </tr>
 

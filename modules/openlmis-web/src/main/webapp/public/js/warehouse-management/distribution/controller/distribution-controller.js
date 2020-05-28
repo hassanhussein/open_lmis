@@ -165,6 +165,7 @@ $scope.requstions.forEach(function(req){
 
     req.ordered.forEach(function(ord){
     ord.lots=ord.given
+    delete ord.product
     })
 
     req.lineItems=req.ordered
