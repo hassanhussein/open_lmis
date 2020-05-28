@@ -404,4 +404,14 @@ public interface VaccineInventoryDistributionMapper {
             " LEFT JOIN VACCINE_DISTRIBUTIONS ds ON d.distributionId = ds.id " +
             " where vd.district_id=#{districtId} and d.createdDate::date > #{startDate}::date and d.createdDate::date <=#{endDate}::date")
     List<HashMap<String,Object>>getDistributionNotificationList(@Param("districtId") Long districtId,@Param("startDate") String startDate,@Param("endDate") String endDate);
+
+    @Select(" \n" +
+            "select d.id, orderId orderNumber, d.status,w.region_name region,pp.name period, to_char(r.createdDate,'dd-MM-YYYY') dateSubmitted  from vaccine_distributions d\n" +
+            "JOIN facilities f ON d.toFacilityId = f.id\n" +
+            "JOIN vw_districts w ON f.geographiczoneid = w.district_id\n" +
+            "JOIN vaccine_order_requisitions r ON f.id = r.facilityId AND R.ID = D.ORDERiD\n" +
+            "JOIN processing_periods pp ON r.periodID = pp.id\n" +
+            "where modifieddate::DATE >=#{startDate}::date and modifedDate::date<=#{endDate}::date   ")
+    List<HashMap<String,Object>> getPickList(@Param("startDate") String startDate,
+                                          @Param("endDate") String endDate);
 }

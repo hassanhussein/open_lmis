@@ -116,7 +116,7 @@ public class VaccineInventoryDistributionService {
             VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
             statusChangeRepository.insert(statusChange);
         } else {
-            distribution.setPickListId(getPickList());
+            distribution.setPickListId(generatePickList());
             distribution.setCreatedBy(userId);
             ObjectMapper mapper = new ObjectMapper();
             try {
@@ -392,16 +392,14 @@ public class VaccineInventoryDistributionService {
         return repository.getNotificationDistributionList(districtId,startDate,endDate);
     }
 
-    public Long generatePickList(Long loggedInUserId) {
-
-        return getPickList();
-    }
-
-    private Long getPickList() {
-
+    public Long generatePickList() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         System.out.println(timestamp.getTime());
         return timestamp.getTime();
+    }
+
+    public List<HashMap<String,Object>>  getPickList(String startDate, String endDate) {
+        return repository.getPickList(startDate,endDate);
     }
 
     public static int generateRandomDigits(int n) {
