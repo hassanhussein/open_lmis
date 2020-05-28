@@ -447,9 +447,8 @@ public class VaccineInventoryDistributionController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
     @Transactional
     public ResponseEntity<OpenLmisResponse> updateDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
-        Long userId = loggedInUserId(request);
         try {
-            service.saveDistribution(distribution,userId);
+            service.updateOrderStatus(distribution);
 
         }catch (Exception e){
             e.fillInStackTrace();

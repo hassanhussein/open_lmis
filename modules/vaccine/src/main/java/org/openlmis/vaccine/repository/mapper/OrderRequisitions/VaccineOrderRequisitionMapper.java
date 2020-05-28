@@ -212,5 +212,9 @@ public interface VaccineOrderRequisitionMapper {
                                                 ,@Param("programId") Long programId);
 
 
+    @Update("Update vaccine_order_requisitions SET status = #{status} where id = #{id}")
+    void updateOrderStatus(@Param("status") String status, @Param("id") Long id);
+
+
 }
 

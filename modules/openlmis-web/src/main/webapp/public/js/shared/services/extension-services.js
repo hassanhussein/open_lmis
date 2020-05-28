@@ -1444,8 +1444,14 @@ services.factory('GetCurrentStock', function ($resource) {
 
 services.factory('SaveOnlyDistribution', function ($resource) {
     return $resource('/vaccine/inventory/distribution/saveDistribution.json', {}, {save: {method: 'POST'}});
+});
+
 
 services.factory('GetPickListByDateRange', function ($resource) {
     return $resource('/vaccine/inventory/distribution/getPickList/:startDate/:endDate.json', {startDate:'@startDate', endDate:'@endDate'}, {});
 
+});
+
+services.factory('updateDistribution', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/updateDistribution.json', {}, {update: {method: 'PUT'}});
 });

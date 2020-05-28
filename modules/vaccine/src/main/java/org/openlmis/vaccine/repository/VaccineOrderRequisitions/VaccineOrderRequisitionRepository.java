@@ -104,6 +104,7 @@ public class VaccineOrderRequisitionRepository {
     }
 
     public void updateOrderStatus(VaccineOrderRequisition requisition) {
-        orderRequisitionMapper.update(requisition);
+        orderRequisitionMapper.updateOrderStatus(requisition.getStatus().toString(),requisition.getId());
     }
+
 }
