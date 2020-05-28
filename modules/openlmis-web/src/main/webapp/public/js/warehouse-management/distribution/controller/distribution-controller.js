@@ -154,21 +154,21 @@ if (ordered!==undefined) {
 $scope.cancel=function(){
  $scope.$parent.distributed = true;
   $location.path('');
-}
+};
 
 
 
 $scope.saveDistribution = function () {
-$scope.distribution_list=[]
+$scope.distribution_list=[];
 
 $scope.requstions.forEach(function(req){
 
     req.ordered.forEach(function(ord){
-    ord.lots=ord.given
-    delete ord.product
-    })
+    ord.lots=ord.given;
+    delete ord.product;
+    });
 
-    req.lineItems=req.ordered
+    req.lineItems=req.ordered;
 
     $scope.distribution_list.push(req);
 

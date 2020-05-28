@@ -290,7 +290,7 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
 
 
 
-  }
+  };
 
 
 
