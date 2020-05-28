@@ -1439,3 +1439,7 @@ services.factory('VaccinePendingRequisitionsForCVS', function ($resource) {
 services.factory('GetCurrentStock', function ($resource) {
     return $resource('/rest-api/transfer/get-current-stock.json', {}, {});
 });
+
+services.factory('GetPickListByDateRange', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/getPickList/:startDate/:endDate.json', {startDate:'@startDate', endDate:'@endDate'}, {});
+});

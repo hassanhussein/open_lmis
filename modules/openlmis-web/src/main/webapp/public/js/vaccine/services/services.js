@@ -1906,6 +1906,4 @@ services.factory('UpdateOnlyDistribution', function ($resource) {
     return $resource('/vaccine/inventory/distribution/updateDistribution.json', {}, {update: {method: 'PUT'}});
 });
 
-services.factory('GetPickListByDateRange', function ($resource) {
-    return $resource('/vaccine/inventory/distribution/getPickList/:startDate/:endDate.json', {startDate:'@startDate', endDate:'@endDate'}, {});
-});
+
