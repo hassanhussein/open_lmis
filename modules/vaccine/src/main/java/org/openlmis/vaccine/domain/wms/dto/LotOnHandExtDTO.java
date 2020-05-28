@@ -19,4 +19,6 @@ public class LotOnHandExtDTO {
 
     private Long maxSoh;
 
+    private String packSize;
+
 }
