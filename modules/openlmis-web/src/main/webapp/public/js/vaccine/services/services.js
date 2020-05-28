@@ -1905,3 +1905,5 @@ services.factory('SaveOnlyDistribution', function ($resource) {
 services.factory('UpdateOnlyDistribution', function ($resource) {
     return $resource('/vaccine/inventory/distribution/updateDistribution.json', {}, {update: {method: 'PUT'}});
 });
+
+
