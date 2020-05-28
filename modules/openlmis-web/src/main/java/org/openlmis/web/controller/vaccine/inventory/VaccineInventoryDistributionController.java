@@ -418,8 +418,6 @@ public class VaccineInventoryDistributionController extends BaseController {
         return OpenLmisResponse.response("distribution",sdpNotificationService.getLastDistributionForFacility(toFacilityId,distributionType,distributionDate,status));
     }
 
-
-
     @RequestMapping(value = "generatePickList", method = GET)
     public ResponseEntity<OpenLmisResponse> generatePickList(HttpServletRequest request) {
             ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.generatePickList(loggedInUserId(request)));
@@ -437,7 +435,7 @@ public class VaccineInventoryDistributionController extends BaseController {
 
         }catch (Exception e){
             e.fillInStackTrace();
-        };
+        }
         return OpenLmisResponse.response("distributionId", "Saved Successiful");
     }
 
