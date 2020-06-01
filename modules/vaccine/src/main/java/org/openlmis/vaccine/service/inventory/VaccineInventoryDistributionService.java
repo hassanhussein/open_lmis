@@ -22,6 +22,8 @@ import org.openlmis.core.service.MessageService;
 import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
+import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
@@ -35,6 +37,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Service
@@ -87,8 +90,14 @@ public class VaccineInventoryDistributionService {
 @Transactional
     public Long save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period
+
+    System.out.println(userId);
         Facility homeFacility = facilityService.getHomeFacility(userId);
+    System.out.println("fac");
+    System.out.println(homeFacility);
         Long homeFacilityId = homeFacility.getId();
+    System.out.println("home");
+    System.out.println(homeFacilityId);
         ProcessingPeriod period = null;
         if (null != distribution.getToFacilityId() && null != distribution.getProgramId()) {
             period = getCurrentPeriod_new(distribution.getToFacilityId(), distribution.getProgramId(), distribution.getDistributionDate());
@@ -98,7 +107,7 @@ public class VaccineInventoryDistributionService {
         }
 
         if (null == distribution.getVoucherNumber())
-        distribution.setVoucherNumber(generateVoucherNumber(homeFacilityId, distribution.getProgramId()));
+         distribution.setVoucherNumber(generateVoucherNumber(homeFacilityId, distribution.getProgramId()));
 
         if (distribution.getId() != null) {
 
@@ -109,6 +118,7 @@ public class VaccineInventoryDistributionService {
             VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
             statusChangeRepository.insert(statusChange);
         } else {
+            distribution.setPickListId(generatePickList());
             distribution.setCreatedBy(userId);
             ObjectMapper mapper = new ObjectMapper();
             try {
@@ -126,8 +136,11 @@ public class VaccineInventoryDistributionService {
 
         }
 
+
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
             lineItem.setDistributionId(distribution.getId());
+            lineItem.setCreatedBy(userId);
+            lineItem.setModifiedBy(userId);
             if (lineItem.getId() != null) {
                 repository.updateDistributionLineItem(lineItem);
             } else {
@@ -136,6 +149,8 @@ public class VaccineInventoryDistributionService {
 
             if (lineItem.getLots() != null) {
                 for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
+                    lot.setModifiedBy(userId);
+                    lot.setCreatedBy(userId);
                     lot.setDistributionLineItemId(lineItem.getId());
                     if (lot.getId() != null) {
                         repository.updateDistributionLineItemLot(lot);
@@ -379,8 +394,45 @@ public class VaccineInventoryDistributionService {
         return repository.getNotificationDistributionList(districtId,startDate,endDate);
     }
 
-   /* public List<DistributionDTO> getCurrentStock(Long loggedInUserId) {
+    public Long generatePickList() {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        System.out.println(timestamp.getTime());
+        return timestamp.getTime();
+    }
 
+    public List<HashMap<String,Object>>  getPickList(String startDate, String endDate) {
+        return repository.getPickList(startDate,endDate);
+    }
 
-    }*/
+    public static int generateRandomDigits(int n) {
+        int m = (int) Math.pow(10, n - 1);
+        return m + new Random().nextInt(9 * m);
+    }
+
+    public void saveDistribution(List<VaccineDistribution> distributions, Long userId) {
+
+        for (VaccineDistribution distribution : distributions) {
+            distribution.setCreatedBy(userId);
+            distribution.setModifiedBy(userId);
+            distribution.setStatus("UNDER_PICKING");
+            save(distribution,userId);
+      }
+
+    }
+
+    public void updateOrderStatus(List<VaccineDistribution> distribution) {
+
+        for(VaccineDistribution distribution1 : distribution) {
+
+            VaccineOrderRequisition requisition = new VaccineOrderRequisition();
+            requisition.setStatus(VaccineOrderStatus.UNDER_PICKING);
+
+            System.out.println(distribution1.getOrderId());
+            requisition.setId(distribution1.getOrderId());
+
+            notificationService.updateOrderStatus(requisition);
+
+        }
+
+    }
 }

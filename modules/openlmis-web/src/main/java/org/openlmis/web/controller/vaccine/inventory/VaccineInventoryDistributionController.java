@@ -56,8 +56,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @Controller
 @NoArgsConstructor
@@ -481,12 +480,41 @@ public class VaccineInventoryDistributionController extends BaseController {
         return OpenLmisResponse.response("distribution",sdpNotificationService.getLastDistributionForFacility(toFacilityId,distributionType,distributionDate,status));
     }
 
+    @RequestMapping(value = "getPickList/{startDate}/{endDate}", method = GET)
+    public ResponseEntity<OpenLmisResponse> getPickList(HttpServletRequest request,
+                                                        @PathVariable String startDate,
+                                                        @PathVariable String endDate
 
+                                                        ) {
 
-  /*  @RequestMapping(value = "get-current-stock-on-hand", method = GET)
-    public ResponseEntity<OpenLmisResponse> getCurrentStockOnHand(HttpServletRequest request) {
-            ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response(DISTRIBUTION, service.getCurrentStock(loggedInUserId(request)));
-            return response;
+            return OpenLmisResponse.response(DISTRIBUTION, service.getPickList(startDate,endDate));
     }
-*/
+
+
+    @RequestMapping(value = "saveDistribution", method = POST, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> saveDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        try {
+            service.saveDistribution(distribution,userId);
+
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
+        return OpenLmisResponse.response("distributionId", "Saved Successiful");
+    }
+
+    @RequestMapping(value = "updateDistribution", method = PUT, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> updateDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
+        try {
+            service.updateOrderStatus(distribution);
+
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
+        return OpenLmisResponse.response("distributionId","Updated Successiful");
+    }
 }

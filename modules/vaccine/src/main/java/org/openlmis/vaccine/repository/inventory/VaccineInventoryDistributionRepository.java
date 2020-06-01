@@ -176,4 +176,8 @@ public class VaccineInventoryDistributionRepository {
     public List<HashMap<String, Object>>getNotificationDistributionList(Long districtId,String startDate, String endDate){
         return  mapper.getDistributionNotificationList(districtId,startDate,endDate);
     }
+
+    public  List<HashMap<String,Object>> getPickList(String startDate, String endDate) {
+        return mapper.getPickList(startDate,endDate);
+    }
 }

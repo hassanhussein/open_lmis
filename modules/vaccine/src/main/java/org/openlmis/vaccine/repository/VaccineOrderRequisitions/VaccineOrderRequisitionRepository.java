@@ -102,4 +102,9 @@ public class VaccineOrderRequisitionRepository {
     public List<OrderRequisitionDTO>getSearchedDataForOnTimeReportingBy(Long facilityId,String dateRangeStart,String dateRangeEnd,Long programId){
         return orderRequisitionMapper.getSearchedDataForOnTimeReportingBy(facilityId, dateRangeStart, dateRangeEnd, programId);
     }
+
+    public void updateOrderStatus(VaccineOrderRequisition requisition) {
+        orderRequisitionMapper.updateOrderStatus(requisition.getStatus().toString(),requisition.getId());
+    }
+
 }

@@ -1,5 +1,9 @@
 function PreAdviceSearchController($scope,DisableAsn, Preadvice, $location, navigateBackService, $dialog){
 
+
+
+  $scope.distributed = false;
+
   $scope.searchOptions = [
 //  {value: "asnumber", name: "ASN Number"},
     {value: "ponumber", name: "PO Number"}

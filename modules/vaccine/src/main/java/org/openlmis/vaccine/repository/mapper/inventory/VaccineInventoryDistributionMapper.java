@@ -31,27 +31,27 @@ public interface VaccineInventoryDistributionMapper {
     List<Facility> getOneLevelSupervisedFacilities(@Param("facilityId") Long facilityId);
 
     @Insert("insert into vaccine_distributions " +
-            " (tofacilityid, fromfacilityid, vouchernumber, distributiondate, periodid,orderid,status, distributiontype, createdby, createddate, modifiedby,modifieddate,remarks )" +
+            " (tofacilityid, fromfacilityid, vouchernumber, distributiondate, periodid,orderid,status, distributiontype, createdby, createddate, modifiedby,modifieddate,remarks,pickListId )" +
             " values " +
-            " (#{toFacilityId}, #{fromFacilityId}, #{voucherNumber}, #{distributionDate}, #{periodId}, #{orderId}, #{status},#{distributionType}, #{createdBy},NOW(),#{modifiedBy},NOW(),#{remarks}) ")
+            " (#{toFacilityId}, #{fromFacilityId}, #{voucherNumber}, #{distributionDate}, #{periodId}, #{orderId}, #{status},#{distributionType}, #{createdBy},NOW(),#{modifiedBy},NOW(),#{remarks},#{pickListId}) ")
     @Options(useGeneratedKeys = true)
     Integer saveDistribution(VaccineDistribution vaccineDistribution);
 
     @Update("update vaccine_distributions set " +
-            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
+            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks}, pickListId=#{pickListId} " +
             " where id=#{id}"
     )
     Integer updateDistribution(VaccineDistribution vaccineDistribution);
 
     @Insert("insert into vaccine_distribution_line_items " +
-            " (distributionid, productid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate )" +
+            " (distributionid, productid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate,gap )" +
             " values " +
-            " (#{distributionId}, #{productId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
+            " (#{distributionId}, #{productId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW(), #{gap}) ")
     @Options(useGeneratedKeys = true)
     Integer saveDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
 
     @Update("update vaccine_distribution_line_items set " +
-            " quantity=#{quantity}, modifiedby=#{modifiedBy}, modifieddate=NOW() " +
+            " quantity=#{quantity}, modifiedby=#{modifiedBy}, modifieddate=NOW(), gap=#{gap} " +
             " where id=#{id}"
     )
     Integer updateDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
@@ -404,4 +404,14 @@ public interface VaccineInventoryDistributionMapper {
             " LEFT JOIN VACCINE_DISTRIBUTIONS ds ON d.distributionId = ds.id " +
             " where vd.district_id=#{districtId} and d.createdDate::date > #{startDate}::date and d.createdDate::date <=#{endDate}::date")
     List<HashMap<String,Object>>getDistributionNotificationList(@Param("districtId") Long districtId,@Param("startDate") String startDate,@Param("endDate") String endDate);
+
+    @Select(" \n" +
+            "select d.id, orderId orderNumber, d.status,w.region_name region,pp.name period, to_char(r.createdDate,'dd-MM-YYYY') dateSubmitted  from vaccine_distributions d\n" +
+            "JOIN facilities f ON d.toFacilityId = f.id\n" +
+            "JOIN vw_districts w ON f.geographiczoneid = w.district_id\n" +
+            "JOIN vaccine_order_requisitions r ON f.id = r.facilityId AND R.ID = D.ORDERiD\n" +
+            "JOIN processing_periods pp ON r.periodID = pp.id\n" +
+            "where modifieddate::DATE >=#{startDate}::date and modifedDate::date<=#{endDate}::date   ")
+    List<HashMap<String,Object>> getPickList(@Param("startDate") String startDate,
+                                          @Param("endDate") String endDate);
 }

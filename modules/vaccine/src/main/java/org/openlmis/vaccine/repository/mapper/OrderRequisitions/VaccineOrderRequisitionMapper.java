@@ -89,7 +89,7 @@ public interface VaccineOrderRequisitionMapper {
             "     JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid " +
             "     JOIN vaccine_order_requisitions r on f.id = r.facilityId and sn.id = r.supervisorynodeid " +
             "     JOIN processing_periods pp on r.periodId = pp.id " +
-            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId}")
+            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId}")
       List<OrderRequisitionDTO> getPendingRequest(@Param("userId") Long userId, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
 
@@ -210,6 +210,10 @@ public interface VaccineOrderRequisitionMapper {
                                                 @Param("dateRangeStart") String dateRangeStart,
                                                 @Param("dateRangeEnd") String dateRangeEnd
                                                 ,@Param("programId") Long programId);
+
+
+    @Update("Update vaccine_order_requisitions SET status = #{status} where id = #{id}")
+    void updateOrderStatus(@Param("status") String status, @Param("id") Long id);
 
 
 }

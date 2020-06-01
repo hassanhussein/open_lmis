@@ -199,4 +199,8 @@ public class VaccineNotificationService {
        }
 
     }
+
+    public void updateOrderStatus(VaccineOrderRequisition requisition) {
+        requisitionService.updateOrderStatus(requisition);
+    }
 }
