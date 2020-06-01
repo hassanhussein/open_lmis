@@ -16,4 +16,4 @@ values
 'Email Subject for Rejected Requisition',
 'Notification - Email',
 'Email Subject for Rejected Requisition',
-'A requisition you acted on has been rejected', 'STRING', 56);
+'A requisition you acted on has been rejected', 'TEXT', 56);

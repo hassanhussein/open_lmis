@@ -15,19 +15,23 @@
       <span dropdown on-toggle="toggled(open)">
         <button class="" class="simple-dropdown" aria-label="simple-dropdown"
                 dropdown-toggle>
-          <i class="icon icon-bell-alt red-bell"></i>
+        <i class="icon icon-bell-alt red-bell"></i> <b class="red-bell"> {{notificationCount}}</b>
         </button>
-      <div class="dropdown-menu" style="position: absolute;right: 0px; left: 500px;" aria-labelledby="simple-dropdown">
-        <div style="height:400px;width: 300px">
-          <b>You have {{notificationCount}} notifications.</b>
-          <div class="container">
-            Notifications
-            <div style="text-align: left" ng-repeat="n in notifications">
-              <a ng-href="{{n.url}}">{{$index}} - {{n.subject}}</a>
-            </div>
+      <span class="dropdown-menu" style="position: absolute;left: auto; right: 50px"
+            aria-labelledby="simple-dropdown">
+        <span style="min-height:200px;min-width: 300px; max-width: 350px;text-align: left" class="panel">
+          <div class="panel-header" style="padding-left: 20px;">
+             <h3>
+              <b>{{notificationCount}} notifications</b>
+            </h3>
           </div>
-        </div>
-      </div>
+          <span class="panel-body">
+            <p style="text-align: left" ng-repeat="n in notifications">
+              <a ng-href="{{n.url}}">{{$index + 1}} - {{n.subject}}</a>
+            </p>
+          </span>
+        </span>
+      </span>
     </span>
 
     </span>
