@@ -57,13 +57,28 @@ public interface StockNotificationMapper {
             })
     StockOutNotificationDTO getById(Long id);
 
-    @Select(" select P.NAME programName, n.id, invoiceNumber, soldto,soldtoCustomerName,  d.district_name,region_name,zone_name, orderNumber, msdOrderNumber, invoicedate, salescategory, n.comment\n" +
-            " from stock_out_notifications n\n" +
-            " JOIN orders o ON n.elmisOrdernumber = o.orderNumber\n" +
-            " JOIN requisitions r ON o.id = r.id " +
-            " JOIN programs p ON r.programId = P.ID " +
-            " JOIN facilities f on LOWER(n.soldTo) = LOWER(f.code)\n" +
-            " JOIN vw_districts d on f.geographiczoneId = D.DISTRICT_ID\n" +
-            " WHERE f.id = ANY( #{facilityIds}::INT[])")
-    List<HashMap<String, Object>> getStockBy(@Param("facilityIds") String facilityIds);
+    @Select("select P.NAME programName, n.id, invoiceNumber, soldto,soldtoCustomerName,  d.district_name,region_name,zone_name, orderNumber, msdOrderNumber, invoicedate, salescategory, n.comment\n" +
+            "             from stock_out_notifications n\n" +
+            "            JOIN orders o ON n.elmisOrdernumber = o.orderNumber\n" +
+            "            JOIN requisitions r ON o.id = r.id \n" +
+            "             JOIN programs p ON r.programId = P.ID \n" +
+            "             JOIN facilities f on LOWER(n.soldTo) = LOWER(f.code)\n" +
+            "             JOIN vw_districts d on f.geographiczoneId = D.DISTRICT_ID\n" +
+            "             WHERE f.id = ANY( #{facilityIds}::INT[])\n" +
+            "\n" +
+            "             UNION(\n" +
+            "\n" +
+            "           select P.NAME programName, n.id, invoiceNumber, soldto,soldtoCustomerName,  d.district_name,region_name,zone_name, orderNumber, msdOrderNumber, invoicedate, salescategory, n.comment\n" +
+            "             from stock_out_notifications n\n" +
+            "            JOIN orders o ON n.elmisOrdernumber = o.orderNumber\n" +
+            "            JOIN requisitions r ON o.id = r.id \n" +
+            "             JOIN programs p ON r.programId = P.ID \n" +
+            "             JOIN facilities f on LOWER(n.soldTo) = LOWER(f.code)\n" +
+            "             JOIN vw_districts d on f.geographiczoneId = D.DISTRICT_ID\n" +
+            "            WHERE  f.id in (\n" +
+            "SELECT DISTINCT F.id FROM facilities F INNER JOIN users U ON U.facilityId = F.id\n" +
+            "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId\n" +
+            "WHERE U.id =#{userId} AND RR.rightName in ('VIEW_OUT_OF_STOCK_NOTIFICATION') AND RA.supervisoryNodeId IS NULL)\n" +
+            ")")
+    List<HashMap<String, Object>> getStockBy(@Param("facilityIds") String facilityIds, @Param("userId") Long userId);
 }

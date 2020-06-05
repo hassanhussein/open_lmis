@@ -61,7 +61,7 @@ public class StockNotificationRepository {
         return mapper.getById(id);
     }
 
-    public List<HashMap<String, Object>> getStockBy(String facilityIds) {
-        return mapper.getStockBy(facilityIds);
+    public List<HashMap<String, Object>> getStockBy(String facilityIds, Long userId) {
+        return mapper.getStockBy(facilityIds,userId);
     }
 }

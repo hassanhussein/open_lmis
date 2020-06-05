@@ -610,3 +610,7 @@ services.factory('GetScheduleDetailsByFacilityIdAndProgramId', function ($resour
 services.factory('UserSupervisedFacilitiesForProgramForMonitoringForm', function ($resource) {
     return $resource('/create/monitoringForm/supervised/:programId/facilities.json', {}, {});
 });
+
+services.factory('GetNotificationList', function($resource){
+    return $resource('/stock-notification/:program.json', {}, {});
+});

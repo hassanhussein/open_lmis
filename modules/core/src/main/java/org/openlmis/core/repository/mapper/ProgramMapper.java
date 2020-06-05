@@ -193,4 +193,7 @@ public interface ProgramMapper {
 
   @Select("select * from programs where enableMonthlyReporting = true limit 1")
   List<Program> getMonthlyEnabledProgramWithoutId();
+
+  @Select("SELECT id from programs where active = true ")
+  List<Program> getAllActiveProgram();
 }

@@ -486,4 +486,13 @@ public class FacilityService {
     public List<FacilitySupervisor> getFacilitySupervisorsByRight() {
         return facilityRepository.getFacilitySupervisorByRight();
     }
+
+    public List<Facility> getUserSupervisedFacilitiesBy(Long userId, String... rightNames) {
+
+        List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rightNames);
+        List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
+        List<Program> programs = programSupportedService.getAllActiveProgram();
+
+        return facilityRepository.getFacilitiesWithPrograms(programs, requisitionGroups);
+    }
 }

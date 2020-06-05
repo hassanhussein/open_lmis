@@ -141,4 +141,8 @@ public class ProgramService {
     public Program getMonthlyEnabledProgram(Long programId) {
     return  programRepository.getMonthlyEnabledProgram(programId);
     }
+
+  public List<Program> getAllActiveProgram() {
+    return programRepository.getAllActiveProgram();
+  }
 }

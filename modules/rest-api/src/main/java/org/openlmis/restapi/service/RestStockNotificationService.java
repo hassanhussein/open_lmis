@@ -97,9 +97,9 @@ public class RestStockNotificationService {
 
             Facility facility = facilityService.getByCodeFor(notification.getSoldTo());
 
-            List<FacilitySupervisor> supervisorList = facilityService.getFacilitySupervisorsByRight();
+           // List<FacilitySupervisor> supervisorList = facilityService.getFacilitySupervisorsByRight();
 
-            //List<FacilitySupervisor> supervisorList = facilityService.getSupervisorFacilityIncludingHomeFacility(facility.getId(), rnr.getProgram().getId());
+            List<FacilitySupervisor> supervisorList = facilityService.getSupervisorFacilityIncludingHomeFacility(facility.getId(), rnr.getProgram().getId());
 
             Map<String, Object> map = new HashMap<String, Object>();
 
@@ -130,9 +130,11 @@ public class RestStockNotificationService {
         return repository.getById(id);
     }
 
-    public List<HashMap<String, Object>> getStockOutBy(Long userId, Long programId) {
-        String facilityIds = commaSeparator.commaSeparateIds(facilityService.getUserSupervisedFacilities(userId, programId, RightName.VIEW_OUT_OF_STOCK_NOTIFICATION));
-        return repository.getStockBy(facilityIds);
+    public List<HashMap<String, Object>> getStockOutBy(Long userId) {
+
+        String facilityIds = commaSeparator.commaSeparateIds(facilityService.getUserSupervisedFacilitiesBy(userId, RightName.VIEW_OUT_OF_STOCK_NOTIFICATION));
+
+        return repository.getStockBy(facilityIds,userId);
     }
 
 }

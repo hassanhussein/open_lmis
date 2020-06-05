@@ -350,4 +350,8 @@ public class FacilityRepository {
   public List<FacilitySupervisor> getFacilitySupervisorByRight() {
     return mapper.getFacilitySuperVisorByRight();
   }
+
+  public List<Facility> getFacilitiesWithPrograms(List<Program> programs, List<RequisitionGroup> requisitionGroups) {
+    return mapper.getFacilitiesWithPrograms(commaSeparator.commaSeparateIds(programs),commaSeparator.commaSeparateIds(requisitionGroups));
+  }
 }

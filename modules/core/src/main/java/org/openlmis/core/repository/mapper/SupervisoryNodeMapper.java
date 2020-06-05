@@ -212,5 +212,28 @@ public interface SupervisoryNodeMapper {
   SupervisoryNodeDTO getByuserAndRightName(@Param(value = "userId") Long userId, @Param(value = "programId") Long programId,
                                            @Param(value = "commaSeparatedRights") String commaSeparatedRights);
 
+  @Select("WITH  recursive  supervisoryNodesRec AS " +
+          "   (" +
+          "   SELECT *" +
+          "   FROM supervisory_nodes " +
+          "   WHERE id in  (SELECT DISTINCT s.id FROM  " +
+          "       supervisory_nodes s " +
+          "       INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  " +
+          "       INNER JOIN role_rights rr ON ra.roleId = rr.roleId  " +
+          "       WHERE rr.rightName = ANY (#{commaSeparatedRights}::VARCHAR[])  " +
+          "       AND ra.userId = #{userId}  " +
+          "       AND ra.programId in (SELECT ID from programs where active = true)) " +
+          "   UNION " +
+          "   SELECT sn.* " +
+          "   FROM supervisory_nodes sn " +
+          "   JOIN supervisoryNodesRec " +
+          "   ON sn.parentId = supervisoryNodesRec.id " +
+          "   )" +
+          "SELECT * FROM supervisoryNodesRec")
+  List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByWithAllProgram(@Param(value = "userId") Long userId,
+                                                            @Param(value = "commaSeparatedRights") String commaSeparatedRights);
+
+
+
 
 }
