@@ -1,3 +1,5 @@
+
+DELETE FROM role_rights WHERE rightname = 'VIEW_STOCK_OUT_NOTIFICATION_MENU';
 DELETE FROM rights WHERE name = 'VIEW_STOCK_OUT_NOTIFICATION_MENU';
 
 INSERT INTO rights (name, rightType, displaynamekey, description, displayOrder) VALUES
