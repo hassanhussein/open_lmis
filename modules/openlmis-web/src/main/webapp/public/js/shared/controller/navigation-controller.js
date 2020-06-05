@@ -104,6 +104,6 @@ $scope.openNotificationLink = function () {
 
 $window.location = '/public/pages/reports/notification/index.html#/home';
 
-}
+};
 
 }
