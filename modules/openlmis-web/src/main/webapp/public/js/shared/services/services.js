@@ -155,7 +155,12 @@ services.factory('ReOpenRequisition', function ($resource) {
 });
 
 services.factory('RejectRequisition', function ($resource) {
-    return $resource('/requisitions/reject/:id.json', {id: '@id'}, {post: {method: 'POST', isArray: false}});
+    return $resource('/requisitions/reject/:id/:reasons.json', {id: '@id', reasons: '@reasons'}, {
+        post: {
+            method: 'POST',
+            isArray: false
+        }
+    });
 });
 
 services.factory('Schedule', function ($resource) {
@@ -520,9 +525,9 @@ services.factory('BatchExpiryNotification', function ($resource) {
     return $resource('/vaccine/inventory/distribution/getBatchExpiryNotification/', {}, {});
 });
 
-services.factory('VaccineDashboardSummary', function($resource){
+services.factory('VaccineDashboardSummary', function ($resource) {
 
-    return $resource('/vaccine/dashboard/summary.json',{},{});
+    return $resource('/vaccine/dashboard/summary.json', {}, {});
 });
 
 services.factory('ReceiveDistributionAlert', function ($resource) {
@@ -545,4 +550,8 @@ services.factory('MaterializedViews', function ($resource) {
 
 services.factory('RefreshMaterializedViews', function ($resource) {
     return $resource('/materialized-views/:viewName.json', {}, update);
+});
+
+services.factory('RejectionReasons', function ($resource) {
+    return $resource('/requisitions/rejection-reasons.json', {}, {});
 });

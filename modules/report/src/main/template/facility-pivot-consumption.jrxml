@@ -86,7 +86,7 @@
 	</pageHeader>
 	<summary>
 		<band height="50">
-			<crosstab ignoreWidth="true">
+			<crosstab ignoreWidth="false">
 				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="802" height="50" uuid="2717f50b-9ac3-46cf-a1ff-13b64b748219"/>
 				<box>
 					<bottomPen lineWidth="1.25"/>

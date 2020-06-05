@@ -438,4 +438,8 @@ public class RequisitionRepository {
             commaSeparator.commaSeparateIds(programs),
             commaSeparator.commaSeparateIds(periods));
   }
+
+    public void addRejectionReason(RnrRejection rnrRejection) {
+    requisitionMapper.insertRnrRejection(rnrRejection);
+    }
 }

@@ -9,62 +9,64 @@
  */
 
 var OpenLmisDialog = {
-  newDialog: function (overrideOpts, callback, $dialog) {
-    var defaults = {
-      id: "",
-      header: "Header",
-      body: "Body",
-      ok: {label: "button.ok", value: true},
-      cancel: {label: "button.cancel", value: false}
-    };
-
-    var opts = {
-      templateUrl: '/public/pages/template/dialog/dialogbox.html',
-      controller: function ($scope, dialog) {
-
-        $scope.dialogClose = function (result) {
-          dialog.close(result);
+    newDialog: function (overrideOpts, callback, $dialog) {
+        var defaults = {
+            id: "",
+            header: "Header",
+            body: "Body",
+            listValues: [],
+            selectedOption: [],
+            otherReason: "",
+            ok: {label: "button.ok", value: true},
+            cancel: {label: "button.cancel", value: false}
         };
 
-        $scope.dialogOptions = _.extend(defaults, overrideOpts);
-      }
-    };
-    var closeCallback = function (result) {
-      var tabbables = olDialog.modalEl.find(":tabbable");
-      tabbables.last().unbind("keydown");
-      tabbables.first().unbind("keydown");
+        var opts = {
+            templateUrl: '/public/pages/template/dialog/dialogbox.html',
+            controller: function ($scope, dialog) {
 
-      callback(result);
-    };
+                $scope.dialogClose = function (result) {
+                    dialog.close(result);
+                };
 
-    var olDialog = $dialog.dialog(opts);
-    olDialog.open().then(closeCallback);
+                $scope.dialogOptions = _.extend(defaults, overrideOpts);
+            }
+        };
+        var closeCallback = function (result) {
+            var tabbables = olDialog.modalEl.find(":tabbable");
+            tabbables.last().unbind("keydown");
+            tabbables.first().unbind("keydown");
+            callback(result, defaults.selectedOption, defaults.otherReason);
+        };
+
+        var olDialog = $dialog.dialog(opts);
+        olDialog.open().then(closeCallback);
 
 
-    var autoFocus = function () {
-      if (olDialog.isOpen()) {
-        var tabbables = olDialog.modalEl.find(":tabbable");
-        tabbables.first().focus();
-        tabbables.last().bind("keydown", function (e) {
-          if (e.which == 9 && !e.shiftKey) {
-            tabbables.first().focus();
-            e.preventDefault();
-          }
+        var autoFocus = function () {
+            if (olDialog.isOpen()) {
+                var tabbables = olDialog.modalEl.find(":tabbable");
+                tabbables.first().focus();
+                tabbables.last().bind("keydown", function (e) {
+                    if (e.which == 9 && !e.shiftKey) {
+                        tabbables.first().focus();
+                        e.preventDefault();
+                    }
 
-        });
-        tabbables.first().bind("keydown", function (e) {
-          if (e.which == 9 && e.shiftKey) {
-            tabbables.last().focus();
-            e.preventDefault();
-          }
-        });
-      }
-      else {
-        setTimeout(function () {
-          autoFocus();
-        }, 10);
-      }
-    };
-    autoFocus();
-  }
+                });
+                tabbables.first().bind("keydown", function (e) {
+                    if (e.which == 9 && e.shiftKey) {
+                        tabbables.last().focus();
+                        e.preventDefault();
+                    }
+                });
+            }
+            else {
+                setTimeout(function () {
+                    autoFocus();
+                }, 10);
+            }
+        };
+        autoFocus();
+    }
 };

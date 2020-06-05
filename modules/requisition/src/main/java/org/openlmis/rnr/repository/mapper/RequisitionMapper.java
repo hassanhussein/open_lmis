@@ -13,6 +13,7 @@ package org.openlmis.rnr.repository.mapper;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.*;
 import org.openlmis.rnr.domain.Rnr;
+import org.openlmis.rnr.domain.RnrRejection;
 import org.openlmis.rnr.dto.RnrDTO;
 import org.openlmis.rnr.service.RequisitionService;
 import org.springframework.stereotype.Repository;
@@ -301,8 +302,12 @@ public interface RequisitionMapper {
                                                    @Param("commaSeparatedProgramIds") String commaSeparatedProgramIds,
                                                    @Param("commaSeparatedPeriodIds") String commaSeparatedPeriodIds);
 
+  @Insert("INSERT INTO requisition_rejection(rnr_id, rnr_status_from,rnr_status_to,  description) VALUES " +
+          " (#{rnr.id}, #{statusFrom}, #{statusTo},#{reasons})")
+    void insertRnrRejection(RnrRejection rnrRejection);
 
-  public class ApprovedRequisitionSearch {
+
+    public class ApprovedRequisitionSearch {
 
     @SuppressWarnings("UnusedDeclaration")
     public static String getApprovedRequisitionsByCriteria(Map<String, Object> params) {

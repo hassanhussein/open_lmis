@@ -8,238 +8,254 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, $location, pageSize, $routeParams, $dialog, requisitionService, $q) {
+function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, $location, pageSize, $routeParams, $dialog, requisitionService, $q,rnrRejectionReasons) {
 
-  $scope.canApproveRnr = requisitionData.canApproveRnr;
-  $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
-  $scope.rnrColumns = rnrColumns;
-  $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
-  $scope.pageSize = pageSize;
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, []);
-  $scope.error = $scope.message = "";
-  $scope.regimenCount = $scope.rnr.regimenLineItems.length;
-  $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
-  $scope.manualTestCount = $scope.rnr.manualTestLineItems.length;
+    $scope.canApproveRnr = requisitionData.canApproveRnr;
+    $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
+    $scope.rnrColumns = rnrColumns;
+    $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
+    $scope.pageSize = pageSize;
+    $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, []);
+    $scope.error = $scope.message = "";
+    $scope.regimenCount = $scope.rnr.regimenLineItems.length;
+    $scope.equipmentCount = $scope.rnr.equipmentLineItems.length;
+    $scope.manualTestCount = $scope.rnr.manualTestLineItems.length;
 
-  $scope.showMaxStock = showMaxStock;
-  $scope.equipmentOperationalStatus = equipmentOperationalStatus;
+    $scope.showMaxStock = showMaxStock;
+    $scope.equipmentOperationalStatus = equipmentOperationalStatus;
 
-  $scope.errorPages = {};
-  $scope.shownErrorPages = [];
-  $scope.rnrComments = comments;
+    $scope.errorPages = {};
+    $scope.shownErrorPages = [];
+    $scope.rnrComments = comments;
+    var REJECTION_REASONS = rnrRejectionReasons;
+    var NON_FULL_SUPPLY = 'nonFullSupply';
 
-  var NON_FULL_SUPPLY = 'nonFullSupply';
-
-  requisitionService.populateScope($scope, $location, $routeParams);
+    requisitionService.populateScope($scope, $location, $routeParams);
 
 
-  $scope.rejectRnR = function( ){
-    var callBack = function (result) {
+    $scope.rejectRnR = function () {
+        var callBack = function (result, reason, other) {
 
-      if (result) {
-        // reject
-        RejectRequisition.post({id: $scope.rnr.id}, function(){
-          OpenLmisDialog.newDialog({
+            if (result) {
+                // reject
+                var reasons = _.map(reason, function (r) {
+                    return r.name;
+                });
+                if (other.length > 0) {
+                    reasons = reasons +"," + other;
+                }
+                RejectRequisition.post({id: $scope.rnr.id, reasons: reasons}, function () {
+                    OpenLmisDialog.newDialog({
+                        id: "confirmDialog",
+                        header: "label.confirm.action",
+                        body: 'msg.rnr.returned'
+                    }, function () {
+                        $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
+                    }, $dialog);
+                });
+                // redirect to the main page
+            }
+        };
+
+        var options = {
             id: "confirmDialog",
             header: "label.confirm.action",
-            body: 'msg.rnr.returned'
-          }, function(){
-            $location.url('/public/pages/logistics/rnr/index.html#/init-rnr');
-          }, $dialog);
-        });
-        // redirect to the main page
-      }
+            body: "label.rnr.confirm.return",
+            listValues: REJECTION_REASONS,
+        };
+
+        OpenLmisDialog.newDialog(options, callBack, $dialog);
     };
 
-    var options = {
-      id: "confirmDialog",
-      header: "label.confirm.action",
-      body: "label.rnr.confirm.return"
+    $scope.saveRnr = function (preventMessage) {
+        var deferred = $q.defer();
+        if (!$scope.approvalForm || !$scope.approvalForm.$dirty) {
+            deferred.resolve();
+            return deferred.promise;
+        }
+        resetFlags();
+        var rnr = removeExtraDataForPostFromRnr();
+        Requisitions.update({id: $scope.rnr.id, operation: "save"},
+            rnr, function (data) {
+                deferred.resolve();
+                if (preventMessage === true) return;
+                $scope.message = data.success;
+                $scope.error = "";
+                $scope.approvalForm.$setPristine();
+            }, function (data) {
+                deferred.reject();
+                $scope.error = data.data.error;
+                $scope.message = "";
+            });
+
+        return deferred.promise;
     };
 
-    OpenLmisDialog.newDialog(options, callBack, $dialog);
-  };
+    $scope.$on('$routeUpdate', function () {
+        requisitionService.refreshGrid($scope, $location, $routeParams, true);
+    });
 
-  $scope.saveRnr = function (preventMessage) {
-    var deferred = $q.defer();
-    if (!$scope.approvalForm || !$scope.approvalForm.$dirty) {
-      deferred.resolve();
-      return deferred.promise;
-    }
-    resetFlags();
-    var rnr = removeExtraDataForPostFromRnr();
-    Requisitions.update({id: $scope.rnr.id, operation: "save"},
-        rnr, function (data) {
-          deferred.resolve();
-          if (preventMessage === true) return;
-          $scope.message = data.success;
-          $scope.error = "";
-          $scope.approvalForm.$setPristine();
-        }, function (data) {
-          deferred.reject();
-          $scope.error = data.data.error;
-          $scope.message = "";
-        });
-
-    return deferred.promise;
-  };
-
-  $scope.$on('$routeUpdate', function () {
     requisitionService.refreshGrid($scope, $location, $routeParams, true);
-  });
 
-  requisitionService.refreshGrid($scope, $location, $routeParams, true);
-
-  $scope.$watch("currentPage", function () {
-    $location.search("page", $scope.currentPage);
-  });
-
-  $scope.getId = function (prefix, parent) {
-    return prefix + "_" + parent.$parent.$index;
-  };
-
-  function removeExtraDataForPostFromRnr() {
-    var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
-    if ($scope.visibleTab == "Regimen" || !$scope.page[$scope.visibleTab].length) return rnr;
-
-    rnr[$scope.visibleTab + 'LineItems'] = _.map($scope.page[$scope.visibleTab], function (lineItem) {
-      return lineItem.reduceForApproval();
+    $scope.$watch("currentPage", function () {
+        $location.search("page", $scope.currentPage);
     });
 
-    return rnr;
-  }
+    $scope.getId = function (prefix, parent) {
+        return prefix + "_" + parent.$parent.$index;
+    };
 
-  $scope.approveRnr = function () {
-    $scope.approvedQuantityRequiredFlag = true;
-    resetFlags();
-    requisitionService.resetErrorPages($scope);
-    var saveRnrPromise = $scope.saveRnr(true);
+    function removeExtraDataForPostFromRnr() {
+        var rnr = _.pick(this, 'id', 'fullSupplyLineItems', 'nonFullSupplyLineItems');
+        if ($scope.visibleTab == "Regimen" || !$scope.page[$scope.visibleTab].length) return rnr;
 
-    saveRnrPromise.then(function () {
-      if (!setError()) confirm();
-    });
-  };
+        rnr[$scope.visibleTab + 'LineItems'] = _.map($scope.page[$scope.visibleTab], function (lineItem) {
+            return lineItem.reduceForApproval();
+        });
 
-  function setError() {
-    var fullSupplyError = $scope.rnr.validateFullSupplyForApproval();
-    var nonFullSupplyError = $scope.rnr.validateNonFullSupplyForApproval();
-    $scope.fullSupplyTabError = !!fullSupplyError;
-    $scope.nonFullSupplyTabError = !!nonFullSupplyError;
-
-
-    var error = fullSupplyError || nonFullSupplyError;
-
-    if (error) {
-      requisitionService.setErrorPages($scope);
-      $scope.error = error;
-      $scope.message = '';
+        return rnr;
     }
 
-    return !!error;
-  }
+    $scope.approveRnr = function () {
+        $scope.approvedQuantityRequiredFlag = true;
+        resetFlags();
+        requisitionService.resetErrorPages($scope);
+        var saveRnrPromise = $scope.saveRnr(true);
 
-  var confirm = function () {
-    var options = {
-      id: "confirmDialog",
-      header: "label.confirm.action",
-      body: "msg.question.confirmation"
+        saveRnrPromise.then(function () {
+            if (!setError()) confirm();
+        });
     };
-    OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
-  };
 
-  $scope.dialogCloseCallback = function (result) {
-    if (result)
-      approveValidatedRnr();
-  };
+    function setError() {
+        var fullSupplyError = $scope.rnr.validateFullSupplyForApproval();
+        var nonFullSupplyError = $scope.rnr.validateNonFullSupplyForApproval();
+        $scope.fullSupplyTabError = !!fullSupplyError;
+        $scope.nonFullSupplyTabError = !!nonFullSupplyError;
 
-  var approveValidatedRnr = function () {
-    Requisitions.update({id: $scope.rnr.id, operation: "approve"}, {}, function (data) {
-      $scope.$parent.message = data.success;
-      $scope.error = "";
-      $location.path("rnr-for-approval");
-    }, function (data) {
-      $scope.error = data.data.error;
-      $scope.message = "";
-    });
-  };
 
-  $scope.checkErrorOnPage = function (page) {
-    return $scope.visibleTab === NON_FULL_SUPPLY ?
-        _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
-  };
+        var error = fullSupplyError || nonFullSupplyError;
 
-  function resetFlags() {
-    $scope.error = "";
-    $scope.message = "";
-  }
+        if (error) {
+            requisitionService.setErrorPages($scope);
+            $scope.error = error;
+            $scope.message = '';
+        }
+
+        return !!error;
+    }
+
+    var confirm = function () {
+        var options = {
+            id: "confirmDialog",
+            header: "label.confirm.action",
+            body: "msg.question.confirmation"
+        };
+        OpenLmisDialog.newDialog(options, $scope.dialogCloseCallback, $dialog);
+    };
+
+    $scope.dialogCloseCallback = function (result) {
+        if (result)
+            approveValidatedRnr();
+    };
+
+    var approveValidatedRnr = function () {
+        Requisitions.update({id: $scope.rnr.id, operation: "approve"}, {}, function (data) {
+            $scope.$parent.message = data.success;
+            $scope.error = "";
+            $location.path("rnr-for-approval");
+        }, function (data) {
+            $scope.error = data.data.error;
+            $scope.message = "";
+        });
+    };
+
+    $scope.checkErrorOnPage = function (page) {
+        return $scope.visibleTab === NON_FULL_SUPPLY ?
+            _.contains($scope.errorPages.nonFullSupply, page) : _.contains($scope.errorPages.fullSupply, page);
+    };
+
+    function resetFlags() {
+        $scope.error = "";
+        $scope.message = "";
+    }
 
 }
 
 ApproveRnrController.resolve = {
 
-  requisitionData: function ($q, $timeout, Requisitions, $route) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      Requisitions.get({id: $route.current.params.rnr}, function (data) {
-        deferred.resolve(data);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
+    requisitionData: function ($q, $timeout, Requisitions, $route) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            Requisitions.get({id: $route.current.params.rnr}, function (data) {
+                deferred.resolve(data);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
 
-  comments: function($q, $timeout, RequisitionComment, $route){
-    var deferred = $q.defer();
-    $timeout(function () {
-      RequisitionComment.get({id: $route.current.params.rnr}, function (data) {
-        deferred.resolve(data.comments);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
+    comments: function ($q, $timeout, RequisitionComment, $route) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            RequisitionComment.get({id: $route.current.params.rnr}, function (data) {
+                deferred.resolve(data.comments);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
 
-  rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.rnrColumnList);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
-  showMaxStock: function($q, $timeout, ConfigSettingsByKey){
-    var deferred = $q.defer();
-    $timeout(function () {
-      ConfigSettingsByKey.get({key: 'USE_GLOBAL_MAX_MOS_ON_DISPLAY'}, function (data){
-        deferred.resolve(data.settings.value === 'true');
-      });
-    }, 100);
-    return deferred.promise;
-  },
-  pageSize: function ($q, $timeout, LineItemsPerPage) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      LineItemsPerPage.get({}, function (data) {
-        deferred.resolve(data.pageSize);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
-  equipmentOperationalStatus: function ($q, $timeout, EquipmentOperationalStatus) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      EquipmentOperationalStatus.get({}, function (data) {
-        deferred.resolve(data.status);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
-  regimenTemplate: function ($q, $timeout, $route, ProgramRegimenTemplate) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      ProgramRegimenTemplate.get({programId: $route.current.params.program}, function (data) {
-        deferred.resolve(data.template);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  }
+    rnrColumns: function ($q, $timeout, ProgramRnRColumnList, $route) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            ProgramRnRColumnList.get({programId: $route.current.params.program}, function (data) {
+                deferred.resolve(data.rnrColumnList);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    showMaxStock: function ($q, $timeout, ConfigSettingsByKey) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            ConfigSettingsByKey.get({key: 'USE_GLOBAL_MAX_MOS_ON_DISPLAY'}, function (data) {
+                deferred.resolve(data.settings.value === 'true');
+            });
+        }, 100);
+        return deferred.promise;
+    },
+    pageSize: function ($q, $timeout, LineItemsPerPage) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            LineItemsPerPage.get({}, function (data) {
+                deferred.resolve(data.pageSize);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    equipmentOperationalStatus: function ($q, $timeout, EquipmentOperationalStatus) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            EquipmentOperationalStatus.get({}, function (data) {
+                deferred.resolve(data.status);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    regimenTemplate: function ($q, $timeout, $route, ProgramRegimenTemplate) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            ProgramRegimenTemplate.get({programId: $route.current.params.program}, function (data) {
+                deferred.resolve(data.template);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    rnrRejectionReasons: function ($q, $timeout, $route, RejectionReasons) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            RejectionReasons.get({}, function (data) {
+                deferred.resolve(data.rejectionReasons);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    }
 };

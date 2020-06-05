@@ -448,6 +448,15 @@
                         <property name="recordHandler" ref="equipmentInventoryPersistenceHandler"/>
                     </bean>
                 </entry>
+                <entry key="rnrRejectionReason">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="menu.header.rnr.rejection.reasons"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.RnrRejectionReasons</value>
+                        </property>
+                        <property name="recordHandler" ref="rnrRejectionReasonsPersistenceHandler"/>
+                    </bean>
+                </entry>
             </map>
         </constructor-arg>
     </bean>
