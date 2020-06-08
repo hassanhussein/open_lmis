@@ -58,7 +58,6 @@ public class StockNotificationController extends BaseController {
     }
 
     @RequestMapping(value = "/stock-notification/{program}", method = GET, headers = ACCEPT_JSON)
-    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_OUT_OF_STOCK_NOTIFICATION')")
     public ResponseEntity<OpenLmisResponse> getStockOutBy(@PathVariable Long program, HttpServletRequest request) {
         return response("notifications", stockNotificationService.getStockOutBy(loggedInUserId(request)));
     }
