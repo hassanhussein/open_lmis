@@ -2,7 +2,7 @@ function MetabaseDashboardConroller($scope, $sce, dashboardUrls) {
     $scope.dashboardUrls = dashboardUrls;
     $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
-    }
+    };
     $scope.testUrl = {src: $scope.dashboardUrls[0].value };
 
 }
@@ -15,7 +15,7 @@ MetabaseDashboardConroller.resolve = {
                 deffered.resolve(data.settings);
 
             }, {});
-        }, 100)
+        }, 100);
         return deffered.promise;
     }
-}
+};
