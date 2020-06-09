@@ -205,6 +205,10 @@ services.factory('SettingsByKey', function ($resource) {
     return $resource('/settings/:key.json', {}, {});
 });
 
+services.factory('SettingsByGroup', function ($resource) {
+    return $resource('/settings/group/:name.json', {}, {});
+});
+
 services.factory('SettingUpdator', function ($resource) {
     return $resource('/saveSettings.json', {}, {post: {method: 'POST'}});
 });

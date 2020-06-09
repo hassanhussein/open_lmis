@@ -540,12 +540,21 @@
       </div>
 
     </li>
-      <li ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
+      <li  ng-show="hasPermission('ACCESS_NEW_DASHBOARD')">
       <a
               href="/public/pages/dashboard/new-index.html#/home"
               openlmis-message="link.dashboard"></a>
+          <div class="submenu">
+              <ul>
+                  <li >
+                      <a href="/public/pages/dashboard/index_metabase.html"
+                      >Emergency Order Analysis Dashboard</a>
+                  </li>
+
+              </ul>
+          </div>
     </li>
-      <li ng-show="hasPermission('VIEW_ELMIS_DASHBOARD')">
+      <li  ng-show="hasPermission('VIEW_ELMIS_DASHBOARD')">
           <a
                   href="/public/pages/dashboard/index.html#/dashboard"
                   openlmis-message="link.dashboard"></a>

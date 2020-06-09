@@ -102,4 +102,8 @@ public class ConfigurationSettingService {
     configurationSettingRepository.create(setting);
     return setting;
   }
+
+    public List<ConfigurationSetting> getByGroupName(String name) {
+      return configurationSettingRepository.getByGroupName(name);
+    }
 }

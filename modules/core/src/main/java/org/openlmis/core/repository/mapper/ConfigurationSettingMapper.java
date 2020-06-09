@@ -43,6 +43,8 @@ public interface ConfigurationSettingMapper {
       "values" +
       "(#{key}, #{isConfigurable}, #{groupName}, #{displayOrder}, #{name}, #{valueType}, #{valueOptions}, #{value})")
   void create(ConfigurationSetting config);
+  @Select("SELECT * FROM configuration_settings WHERE LOWER(groupname) = LOWER(#{name})")
+  List<ConfigurationSetting> getByGroupName(String name);
 }
 
 

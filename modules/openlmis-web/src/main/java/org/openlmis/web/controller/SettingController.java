@@ -47,7 +47,10 @@ public class SettingController extends BaseController {
   public ResponseEntity<OpenLmisResponse> getByKey(@PathVariable(value = "key") String key) {
     return OpenLmisResponse.response(SETTINGS, configurationService.getByKey(key) );
   }
-
+  @RequestMapping(value = "/settings/group/{name}",  method = RequestMethod.GET, headers = "Accept=application/json")
+  public ResponseEntity<OpenLmisResponse> getByGroupName(@PathVariable(value = "name") String name) {
+    return OpenLmisResponse.response(SETTINGS, configurationService.getByGroupName(name) );
+  }
   @RequestMapping(value = "/saveSettings", method = RequestMethod.POST, headers = "Accept=application/json")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SETTING')")
   public ResponseEntity<OpenLmisResponse> updateSettings(@RequestBody ConfigurationDTO settings) {

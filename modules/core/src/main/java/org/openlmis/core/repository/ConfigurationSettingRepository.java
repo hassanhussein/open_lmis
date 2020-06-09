@@ -50,4 +50,8 @@ public class ConfigurationSettingRepository {
   public void create(ConfigurationSetting setting) {
     mapper.create(setting);
   }
+
+    public List<ConfigurationSetting> getByGroupName(String name) {
+      return mapper.getByGroupName(name);
+    }
 }
