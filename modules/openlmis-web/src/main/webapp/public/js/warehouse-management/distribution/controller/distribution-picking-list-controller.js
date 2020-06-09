@@ -11,9 +11,74 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionPickingListController($scope) {}
+function DistributionPickingListController($scope,DisableAsn, programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog) {
+//$scope.orderList=[];
+$scope.getPickingList=function () {
+
+if ($scope.distributionForm.$error.required) {
+            $scope.showError = true;
+            $scope.error = 'form.error';
+            $scope.message = "";
+            return;
+        }
+
+//        console.log(new Date($scope.toDate));
+
+    VaccinePendingRequisitions.get({
+                facilityId: parseInt(facilities.id, 10),
+                programId: parseInt(programs[0].id, 10)
+            }, function (data) {
+                $scope.pendingRequisition = data.pendingRequest;
+//                lets filter arccoding to the date given
+//                console.log($scope.pendingRequisition);
+                $scope.orderList=_.filter($scope.pendingRequisition,function(order){
+
+                return order.status!="SUBMITTED" && new Date($scope.toDate)>=new Date(order.orderDate) && new Date($scope.fromDate)<=new Date(order.orderDate);
+
+                });
+
+                console.log($scope.orderList);
 
 
 
 
-DistributionPickingListController.resolve = {};
+            });
+  }
+}
+
+DistributionPickingListController.resolve = {
+
+
+    orders: function ($q, $timeout, UserFacilityWithViewVaccineOrderRequisition) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            UserFacilityWithViewVaccineOrderRequisition.get({}, function (data) {
+                deferred.resolve(data.facilities);
+//                console.log(data.facilities);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    programs: function ($q, $timeout, VaccineHomeFacilityPrograms) {
+            var deferred = $q.defer();
+
+            $timeout(function () {
+                VaccineHomeFacilityPrograms.get({}, function (data) {
+                    deferred.resolve(data.programs);
+                });
+            }, 100);
+
+            return deferred.promise;
+        },
+        facilities: function ($q, $timeout, UserHomeFacility) {
+            var deferred = $q.defer();
+
+            $timeout(function () {
+                UserHomeFacility.get({}, function (data) {
+                    deferred.resolve(data.homeFacility);
+                });
+            }, 100);
+
+            return deferred.promise;
+        }
+};
