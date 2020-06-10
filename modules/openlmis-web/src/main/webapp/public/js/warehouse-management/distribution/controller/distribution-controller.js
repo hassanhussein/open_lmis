@@ -271,7 +271,7 @@ DistributionController.resolve = {
                             facilityId: $route.current.params.facilityId
                         },
                         function (data) {
-//                        console.log(data);
+                        console.log(data.pendingRequest);
                         deferred.resolve(data.pendingRequest);
 
                         });

@@ -43,7 +43,7 @@
     </div>
 
     <div class="table-container">
-        <table name="searchResultTable" class="table table-striped table-bordered search-list" ng-show="showResults" >
+        <table name="searchResultTable" style="max-width: 85%;" class="table table-striped table-bordered search-list" ng-show="showResults" >
             <thead>
             <tr class="gradient-header resultCountHeader" ng-show = "showSearchResults">
                 <th colspan="7">
@@ -59,12 +59,12 @@
 
             <tr class="gradient-header" ng-show="orderList.length">
                 <th style="width:44px; min-width:14px;"  ></th>
-                <th > Order Number</th>
-                <th >Region</th>
-                <th >Period</th>
-                <th >Date Submitted</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th style="width:100px; min-width:100px;" > Order Number</th>
+                <th style="width:100px; min-width:100px;" >Region</th>
+                <th style="width:158px; min-width:100px;" >Period</th>
+                <th style="width:100px; min-width:100px;">Date Submitted</th>
+                <th style="width:100px; min-width:100px;">Status</th>
+                <th style="width:100px; min-width:50px;">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -77,13 +77,13 @@
                     {{order.dateSubmitted}}
                 </td>
 
-                <td>{{order.status}}</td>
+                <td>{{order.status=="UNDER_PICKING"?'UNDER PICKING':order.status}}</td>
                 <td>
 
-                    <input  type="button" class="btn btn-primary pull-right" ng-if="order.status=='SUBMITTED'"
+                    <input  type="button" class="btn btn-primary" ng-if="order.status=='SUBMITTED'"
                             ng-click="singleIssue(order)" value="Issue" />
 
-                    <input  type="button" class="btn btn-primary pull-right" ng-if="order.status=='UNDER_PICKING'"
+                    <input  type="button" class="btn btn-primary" ng-if="order.status=='UNDER_PICKING'"
                             ng-click="amend(order)" value="Amend" />
                 </td>
 
