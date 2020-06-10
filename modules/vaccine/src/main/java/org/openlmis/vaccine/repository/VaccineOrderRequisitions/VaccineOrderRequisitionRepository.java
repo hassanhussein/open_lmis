@@ -1,5 +1,6 @@
 package org.openlmis.vaccine.repository.VaccineOrderRequisitions;
 
+import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
@@ -107,4 +108,7 @@ public class VaccineOrderRequisitionRepository {
         orderRequisitionMapper.updateOrderStatus(requisition.getStatus().toString(),requisition.getId());
     }
 
+    public List<LotOnHand> getDistributionByOrderIdAndProduct(Long id, Long productId) {
+        return orderRequisitionMapper.getDistributionByOrderIdAndProduct(id, productId);
+    }
 }

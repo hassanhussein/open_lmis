@@ -21,6 +21,7 @@ import java.util.*;
 @JsonIgnoreProperties(ignoreUnknown=true)
 public class LotOnHand extends BaseModel {
 
+  private String gap;
   @JsonIgnore
   private StockCard stockCard;
 
@@ -29,6 +30,8 @@ public class LotOnHand extends BaseModel {
   private Long lotId;
 
   private Long quantityOnHand;
+
+  private Long quantity;
 
   @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
   @JsonDeserialize(using=DateDeserializer.class)
@@ -64,13 +67,15 @@ public class LotOnHand extends BaseModel {
     return new LotOnHand(lot, stockCard);
   }
 
-  public Map<String, String> getCustomProps() {
+/*  public Map<String, String> getCustomProps() {
     if (null == strategy) strategy = new LatestSyncedStrategy();
 
     Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(keyValues, strategy);
 
     return customProps.isEmpty() ? null : customProps;
-  }
+  }*/
+
+  public Map<String, String> customProps;
 
   public void addToQuantityOnHand(long quantity) {
     this.quantityOnHand += quantity;
