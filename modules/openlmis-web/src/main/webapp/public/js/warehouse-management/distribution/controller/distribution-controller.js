@@ -41,6 +41,20 @@ $scope.requstions.push({
 
 });
 
+
+$scope.getQuantity=function(req,product,lot,regionIndex){
+var region =$scope.requstions[regionIndex];
+var ordered = _.findWhere(region.ordered,{productId:product.productId});
+var given = _.findWhere(ordered.given,{lotId:lot.lotId});
+if(given==undefined){
+    return '';
+}
+console.log(given.qty);
+return given.qty;
+
+
+}
+
 $scope.getLotSumPerRegion=function(lotId,productId){
  var sum=0;
    $scope.requstions.forEach(function(region){
