@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.5.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vaccvine_distribution_order" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="messages" uuid="de7c1d72-8cca-4842-af56-07df692132e2">
+	<queryString language="json">
+		<![CDATA[itemLots]]>
+	</queryString>
+	<field name="distributionlineitemid" class="java.lang.Integer"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="lotId" class="java.lang.Integer"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="vvmStatus" class="java.lang.Integer"/>
+	<field name="lotNumber" class="java.lang.String"/>
+	<field name="expirationDate" class="java.lang.String"/>
+	<variable name="totalQuantity" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{quantity}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="34">
+			<textField>
+				<reportElement x="-11" y="10" width="81" height="23" forecolor="#000000" uuid="033ec43f-0294-4440-b10d-5a22a8b96f2e">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0cb2cc98-1535-40be-a52c-a6e91fa989d4"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.batch.number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="10" width="80" height="23" forecolor="#000000" uuid="d615e014-4c98-4b04-91ab-887f1ef001df"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.vvm.status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="10" width="70" height="23" forecolor="#000000" uuid="ddcbe96d-eeb8-4807-9f4c-b27bd6bf84a2">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f2e24382-0ea6-4b52-bb1d-f04e8c97baff"/>
+				</reportElement>
+				<box leftPadding="4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.expired.date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="9" width="60" height="24" forecolor="#000000" uuid="3e317de5-8624-4736-b782-52fbacb3f55f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e26264d-0f91-4e61-8882-e7889390bd63"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="10" width="70" height="22" forecolor="#000000" uuid="23f769a1-4de6-4a1e-9349-771f86162d84"/>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.bin.location}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<frame>
+				<reportElement x="386" y="-3" width="99" height="23" uuid="d73948b5-36a5-4044-83bc-c2426441e169"/>
+				<box topPadding="1" bottomPadding="1">
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<componentElement>
+					<reportElement x="5" y="3" width="90" height="20" uuid="ea404588-5d17-4579-ad8f-37eaaba60355">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					</reportElement>
+					<jr:Codabar xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<jr:codeExpression><![CDATA[$F{id}]]></jr:codeExpression>
+					</jr:Codabar>
+				</componentElement>
+			</frame>
+			<textField>
+				<reportElement x="70" y="0" width="80" height="21" forecolor="#666666" uuid="f11e6c7d-37d0-4bc7-bd72-407175bb3bef"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{vvmStatus}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###">
+				<reportElement x="-11" y="1" width="81" height="20" forecolor="#666666" uuid="179aac7f-954a-4eb7-b894-a2b67a114cb4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0cb2cc98-1535-40be-a52c-a6e91fa989d4"/>
+				</reportElement>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="70" height="20" forecolor="#666666" uuid="fe70246d-3fcc-47a9-89ff-9fd1c1f127b3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f2e24382-0ea6-4b52-bb1d-f04e8c97baff"/>
+				</reportElement>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{expirationDate}))]]></textFieldExpression>
+			</textField>
+			<textField pattern="##,###">
+				<reportElement x="220" y="0" width="60" height="20" forecolor="#666666" uuid="0867355c-d269-4412-874d-f0141bf6091b">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e26264d-0f91-4e61-8882-e7889390bd63"/>
+				</reportElement>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="1" width="71" height="20" forecolor="#666666" uuid="febfc334-1dc1-43d5-8d4a-650355697938"/>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[2222dd]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="35">
+			<textField>
+				<reportElement x="150" y="0" width="80" height="20" uuid="7a8ac2c3-2cee-446f-959a-40d869452fa1"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.total.quantity}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##,###" isBlankWhenNull="true">
+				<reportElement x="240" y="0" width="60" height="20" forecolor="#666666" uuid="97e5054a-f65c-4881-a9c1-a607c25b5198">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e26264d-0f91-4e61-8882-e7889390bd63"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Center" markup="html"/>
+				<textFieldExpression><![CDATA[$V{totalQuantity}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

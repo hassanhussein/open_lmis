@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @NoArgsConstructor
@@ -74,6 +76,7 @@ public class ReportExportController extends BaseController {
   }
 
 
+
    @RequestMapping(value = "/download/unscheduled_reporting/list/{outputOption}")
     public void showUnscheduledReportingReport(
             @PathVariable(value = "outputOption") String outputOption
@@ -89,6 +92,7 @@ public class ReportExportController extends BaseController {
             , HttpServletRequest request
             , HttpServletResponse response
     ) {
+
         showReport("equipment_replacement_list", outputOption, request, response);
     }
 

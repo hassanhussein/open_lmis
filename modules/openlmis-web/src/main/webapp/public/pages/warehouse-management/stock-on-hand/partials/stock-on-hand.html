@@ -8,7 +8,6 @@
   ~  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
   -->
 
-
 <h2>
     <span>Stock On Hand</span>
 
@@ -33,6 +32,18 @@
             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                   openlmis-message="missing.value"></span>
         </div>
+    </div>
+    <div class="span5 right-align center-align pull-right">
+
+            <select  onChange="window.open(this.value)" style="width: 200px;margin-top: 10px">
+                <option value="#">Select Report</option>
+                <option value="/wms-reports/generate-report?docType=pdf&facilityId=19092">Stock On Hand</option>
+                <option value="/wms-reports/vaccine-report?type=1&docType=pdf">Picking List</option>
+                <option value="/wms-reports/delivery-report?docType=pdf&distId=554">Proof of Delivery</option>
+                <option value="/wms-reports/invoice-report?docType=pdf&distId=554">Invoice</option>
+
+            </select>
+
     </div>
 </div>
 
