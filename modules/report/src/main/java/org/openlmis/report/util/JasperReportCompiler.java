@@ -27,6 +27,7 @@ import java.io.File;
 public class JasperReportCompiler {
 
     private String reportPath = "src/main/template";
+    private String reportPathImage = "src/main/template";
 
     private String destinationPath = "src/main/resources/";
 
@@ -40,6 +41,10 @@ public class JasperReportCompiler {
 
     public String getDestinationPath() {
         return destinationPath;
+    }
+
+    public String getReportPathImage() {
+        return reportPathImage;
     }
 
     public void setDestinationPath(String destinationPath) {

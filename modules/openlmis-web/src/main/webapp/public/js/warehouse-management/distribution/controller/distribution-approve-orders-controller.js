@@ -191,7 +191,7 @@ function DistributionApproveOrdersController($scope,DisableAsn, programs,facilit
   };
 
 
-  $scope.singleIssue=function(order){
+  $scope.singleApprove=function(order){
         $scope.$parent.orders=[];
         $scope.$parent.orders.push(order);
         $location.path('/create/'+parseInt(facilities.id, 10));
