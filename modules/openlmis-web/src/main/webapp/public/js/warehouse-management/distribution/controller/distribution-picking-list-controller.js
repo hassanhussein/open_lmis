@@ -43,7 +43,7 @@ if ($scope.distributionForm.$error.required) {
 
 
             });
-  }
+  };
 }
 
 DistributionPickingListController.resolve = {
