@@ -15,6 +15,7 @@ function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,Upd
 
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
+            console.log($scope.rights);
      }();
 
      $scope.hasPermission = function (permission) {

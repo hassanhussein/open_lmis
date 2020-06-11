@@ -152,10 +152,12 @@
         <div form-toolbar id="action_buttons" class="action-buttons">
             <div class="form-cell button-row">
                 <input type="submit" class="btn btn-primary save-button"
-                       value="Release for Picking" ng-click="saveDistribution()"/>
-                <!--                    <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"-->
-                <!--                            value="Print"/>-->
-                <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                       value="Release for Picking" ng-if="!hasPermission('WMS_APPROVE_DISTRIBUTION')" ng-click="saveDistribution()"/>
+
+                <input type="submit" class="btn btn-primary save-button" ng-if="hasPermission('WMS_APPROVE_DISTRIBUTION')"
+                       value="Approve" ng-click="approveDistribution()"/>
+
+                <input id="cancelButton" type="button" class="btn btn-cancel cancel-button"   openlmis-message="button.cancel"
                        ng-click="cancel()"/>
 
 
