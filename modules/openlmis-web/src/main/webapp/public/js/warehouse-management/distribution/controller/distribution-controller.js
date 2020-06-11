@@ -11,7 +11,21 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, updateDistribution) {
+function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, updateDistribution,localStorageService) {
+
+     $scope.loadRights = function () {
+            $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
+     }();
+
+     $scope.hasPermission = function (permission) {
+            if ($scope.rights !== undefined && $scope.rights !== null) {
+              var rights = JSON.parse($scope.rights);
+              var rightNames = _.pluck(rights, 'name');
+              return rightNames.indexOf(permission) > -1;
+            }
+            return false;
+      };
+
 
   $scope.$parent.distributed = false;
 
