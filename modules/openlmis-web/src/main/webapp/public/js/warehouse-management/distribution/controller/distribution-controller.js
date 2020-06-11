@@ -21,7 +21,7 @@ $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
  var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
-console.log(requisitionsWithProduct);
+//console.log($scope.soh);
 $scope.requstions.push({
                              fromFacilityId:19075,
                              toFacilityId:requisitionsWithProduct.facilityId,
@@ -76,6 +76,7 @@ return ordered.gap;
 
 };
 $scope.giveLot=function(req,prod,lot,qty,regionIndex){
+console.log(lot);
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
@@ -92,7 +93,7 @@ given.qty=qty;
 }else{
 //push this lot
 ordered.given.push({
-lotId:lot.id,
+lotId:lot.lotId,
 qty:qty
 });
 }
@@ -114,7 +115,7 @@ lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.id,prod.productId);
 if(Number.isNaN(lot.amount)){
 lot.amount=lot.maxSoh;
 }
-//console.log($scope.requstions)
+console.log($scope.requstions)
 //console.log("Giving "+qty+"of"+prod.product+" of lot "+lot.number+" to "+req.name)
 };
 
@@ -271,7 +272,7 @@ DistributionController.resolve = {
                             facilityId: $route.current.params.facilityId
                         },
                         function (data) {
-//                        console.log(data);
+                        console.log(data.pendingRequest);
                         deferred.resolve(data.pendingRequest);
 
                         });

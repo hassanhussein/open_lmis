@@ -5,6 +5,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.Program;
+import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
@@ -215,6 +216,10 @@ public interface VaccineOrderRequisitionMapper {
     @Update("Update vaccine_order_requisitions SET status = #{status} where id = #{id}")
     void updateOrderStatus(@Param("status") String status, @Param("id") Long id);
 
-
+    @Select("SELECT ITEM.GAP, LOT.LOTID, LOT.QUANTITY FROM VACCINE_DISTRIBUTIONS D \n" +
+            "JOIN VACCINE_DISTRIBUTION_LINE_ITEMS item ON d.id = item.distributionId\n" +
+            "LEFT JOIN VACCINE_DISTRIBUTION_LINE_ITEM_lots LOT ON  lot.distributionlineitemid = item.id\n" +
+            " WHERE orderId = #{id} AND PRODUCTId = #{productId}")
+    List<LotOnHand> getDistributionByOrderIdAndProduct(@Param("id") Long id, @Param("productId") Long productId);
 }
 

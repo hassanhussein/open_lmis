@@ -152,6 +152,7 @@ public class VaccineInventoryDistributionService {
                     lot.setModifiedBy(userId);
                     lot.setCreatedBy(userId);
                     lot.setDistributionLineItemId(lineItem.getId());
+                    lot.setQuantity(lot.getQty());
                     if (lot.getId() != null) {
                         repository.updateDistributionLineItemLot(lot);
                     } else {

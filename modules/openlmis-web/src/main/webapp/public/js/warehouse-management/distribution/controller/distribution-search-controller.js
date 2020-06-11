@@ -293,6 +293,16 @@ function DistributionSearchController($scope,DisableAsn, programs,facilities, $l
   };
 
 
+  $scope.amend=function(order){
+          $scope.$parent.orders=[];
+          $scope.$parent.orders.push(order);
+          $location.path('/create/'+parseInt(facilities.id, 10));
+
+
+
+    };
+
+
 
 
 }

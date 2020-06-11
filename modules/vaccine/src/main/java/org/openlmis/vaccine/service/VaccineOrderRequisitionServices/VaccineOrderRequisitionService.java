@@ -5,6 +5,7 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.service.*;
 import org.openlmis.order.domain.Order;
+import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.repository.mapper.StockCardMapper;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionLineItem;
@@ -411,12 +412,29 @@ public class VaccineOrderRequisitionService {
 
                    for (VaccineOrderRequisitionLineItem item : requisition.getLineItems()) {
 
+                       List<LotOnHand> list1 = new ArrayList<>();
+
                        if (item != null) {
+
+                           list1 = orderRequisitionRepository.getDistributionByOrderIdAndProduct(requisition.getId(),item.getProductId());
+
                            PendingRequestDTO order = new PendingRequestDTO();
                            order.setProduct(item.getProductName());
                            order.setProductId(item.getProductId());
                            order.setAmount((item.getQuantityRequested() == null || item.getQuantityRequested() < 0) ? 0 : item.getQuantityRequested());
 
+                           if(!list1.isEmpty() && list1.get(0) !=null) {
+
+                            order.setGap(list1.get(0).getGap());
+                             List<LotOnHand> arrayList = new ArrayList<>();
+                            for(LotOnHand h : list1) {
+                                LotOnHand l = new LotOnHand();
+                                l.setLotId(h.getLotId());
+                                l.setQuantity(h.getQuantity());
+                                arrayList.add(l);
+                            }
+                            order.setGiven(arrayList);
+                           }
                            ordered.add(order);
                        }
                    }
