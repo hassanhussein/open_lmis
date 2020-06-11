@@ -414,4 +414,6 @@ public interface VaccineInventoryDistributionMapper {
             "where modifieddate::DATE >=#{startDate}::date and modifedDate::date<=#{endDate}::date   ")
     List<HashMap<String,Object>> getPickList(@Param("startDate") String startDate,
                                           @Param("endDate") String endDate);
+    @Delete(" delete from vaccine_distribution_line_item_lots WHERE distributionLineItemId = #{id} ")
+    void deleteLotsByLineItem(@Param("id") Long id);
 }

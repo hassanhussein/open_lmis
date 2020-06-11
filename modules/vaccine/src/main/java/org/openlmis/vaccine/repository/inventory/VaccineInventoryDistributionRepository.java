@@ -180,4 +180,8 @@ public class VaccineInventoryDistributionRepository {
     public  List<HashMap<String,Object>> getPickList(String startDate, String endDate) {
         return mapper.getPickList(startDate,endDate);
     }
+
+    public void deleteLotsByLineItem(Long id) {
+        mapper.deleteLotsByLineItem(id);
+    }
 }
