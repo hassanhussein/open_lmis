@@ -33,6 +33,8 @@ public class LotOnHand extends BaseModel {
 
   private Long quantity;
 
+  private Long qty;
+
   @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
   @JsonDeserialize(using=DateDeserializer.class)
   private Date effectiveDate;

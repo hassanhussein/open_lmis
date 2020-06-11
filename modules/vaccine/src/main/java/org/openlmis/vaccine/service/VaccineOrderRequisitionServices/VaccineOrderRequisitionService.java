@@ -431,6 +431,7 @@ public class VaccineOrderRequisitionService {
                                 LotOnHand l = new LotOnHand();
                                 l.setLotId(h.getLotId());
                                 l.setQuantity(h.getQuantity());
+                                l.setQty(h.getQuantity());
                                 arrayList.add(l);
                             }
                             order.setGiven(arrayList);
