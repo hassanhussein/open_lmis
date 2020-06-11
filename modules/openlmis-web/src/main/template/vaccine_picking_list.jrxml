@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 7.5.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="vacinne_picking_list" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" resourceBundle="messages" uuid="559d8ab3-853c-4ced-b9d1-a0469cc8b081">
+	<parameter name="HEADER_IMAGE" class="java.lang.String"/>
+	<parameter name="vaccine_distribution_product" class="java.lang.String"/>
+	<parameter name="vaccine_distribution_lots" class="java.lang.String"/>
+	<parameter name="createdBy" class="java.lang.String"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="tofacilityid" class="java.lang.Integer"/>
+	<field name="distributiondate" class="java.lang.String"/>
+	<field name="periodid" class="java.lang.Integer"/>
+	<field name="orderid" class="java.lang.Integer"/>
+	<field name="facilityName" class="java.lang.String"/>
+	<field name="distributionListItem" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="70" splitType="Stretch">
+			<image scaleImage="FillFrame">
+				<reportElement x="0" y="-10" width="545" height="59" uuid="3798860b-165e-4f32-afd9-7a615569a328">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{HEADER_IMAGE}]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="220" y="50" width="132" height="20" forecolor="#64AFBC" uuid="b9790dd7-f87e-4ce0-9fab-cbec10bca98a"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.picking.list}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="350" splitType="Stretch">
+			<frame>
+				<reportElement stretchType="RelativeToBandHeight" x="-10" y="-80" width="570" height="350" uuid="aef4ee44-4497-4401-9b0e-a5e5c6c05c10"/>
+				<box>
+					<pen lineWidth="1.0"/>
+				</box>
+				<subreport>
+					<reportElement x="12" y="171" width="550" height="150" uuid="059bccd2-814a-4539-9ac1-3daac6e52709"/>
+					<subreportParameter name="vaccine_distribution_lots">
+						<subreportParameterExpression><![CDATA[$P{vaccine_distribution_lots}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="createdBy">
+						<subreportParameterExpression><![CDATA[$P{createdBy}]]></subreportParameterExpression>
+					</subreportParameter>
+					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("distributionListItem")]]></dataSourceExpression>
+					<subreportExpression><![CDATA[JasperCompileManager.compileReport($P{vaccine_distribution_product})]]></subreportExpression>
+				</subreport>
+				<textField>
+					<reportElement x="180" y="111" width="80" height="17" uuid="457f2dd3-f228-4ea0-8b96-d60ad73c992f"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{report.date.ordered}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="181" y="128" width="79" height="22" uuid="05333ead-705c-49e9-b5a6-1367dce4e5ed"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{report.date.picked}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="260" y="110" width="100" height="18" uuid="ae2036c1-36bd-4b7c-9f90-5c653ae74549"/>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{distributiondate}))]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="262" y="128" width="100" height="22" uuid="80fe5603-c305-41b3-a640-794c479835d3"/>
+					<text><![CDATA[05/06/2020]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="91" width="100" height="20" uuid="f083f390-4d74-4bfd-aaf3-68ef0e682b73"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="10" y="92" width="91" height="20" uuid="2fd56d3b-256f-4bf7-9ce8-f48ce3d740ea"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{report.customer.name}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<textField>
+				<reportElement x="90" y="30" width="81" height="18" uuid="822659d4-1f24-4faf-a9ff-969f87b478ed"/>
+				<textFieldExpression><![CDATA[$F{orderid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="30" width="90" height="18" uuid="1f43e19a-efe8-40de-895b-662de6e28907"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.order.number}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="47" width="90" height="23" uuid="ab895e85-ecb9-43aa-9831-5b37fdc226b3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.warehouse}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="47" width="81" height="23" uuid="afa00262-59ee-43e5-aebc-5154eb2fed0a"/>
+				<textFieldExpression><![CDATA[$R{report.vacinehouse}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="100" height="30" uuid="3e3bc940-286b-4518-811b-626fca1e9e41"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.pickid}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="60" height="30" uuid="b725648c-543c-439a-a8af-d37295ef21ce"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="70" width="552" height="20" backcolor="#C3DFF2" uuid="ef00c1f3-386e-4dae-985e-293e828a97e1"/>
+				<graphicElement>
+					<pen lineColor="#FFFCFC"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</detail>
+</jasperReport>

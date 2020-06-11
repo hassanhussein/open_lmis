@@ -1,9 +1,13 @@
 package org.openlmis.report.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NoArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
+import org.json.JSONArray;
 import org.openlmis.report.model.wmsreport.Facilities;
 import org.openlmis.report.model.wmsreport.StockCards;
+import org.openlmis.report.model.wmsreport.VaccineDistribution;
+import org.openlmis.report.model.wmsreport.VaccineDistributionLineItem;
 import org.openlmis.report.repository.WmsReportRepository;
 import org.openlmis.report.service.WmsReportService;
 import org.openlmis.report.util.JasperReportCompiler;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,18 +38,57 @@ public class WmsReportController {
     WmsReportRepository wmsReportRepository;
     @Autowired
     private WmsReportService wmsReportService;
-    @RequestMapping(value = "/out-of-stock")
-    public List<String> getOutOfStock(){
-        return getStrings();
-    }
-    @RequestMapping(value = "/generate-report/{facilityId}/{format}")
-    public  void generateReport(@PathVariable String format,@PathVariable Long facilityId,HttpServletRequest request
+
+    @RequestMapping(value = "/generate-report",params = {"facilityId","docType"})
+    public  void generateReport(@RequestParam String docType, @RequestParam Long facilityId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-         wmsReportService.exportReport(format,facilityId,response);
+         wmsReportService.exportReport(docType,facilityId,lang,response);
     }
+
+    @RequestMapping(value = "/vaccine-report",params = {"docType"})
+    public  void generateReport(@RequestParam String docType,@RequestParam int type,@RequestParam(required = false,defaultValue = "en")  String lang,HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+        if(type==1){
+            wmsReportService.exportReportVaccineDistribution(docType,lang, response);
+
+        }else {
+            wmsReportService.exportReportVaccineSummary(docType, response);
+        }
+    }
+
+    @RequestMapping(value = "/proof-delivery-report/{distId}")
+    public  void generateProofDeliveryReport(@PathVariable Long distId,@RequestParam(required = false,defaultValue = "pdf") int type,@RequestParam(required = false,defaultValue = "en")  String lang,HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+
+            wmsReportService.exportReportVaccineDeliveryProof(distId,lang, response);
+    }
+
+    @RequestMapping(value = "/delivery-report",params = {"distId","docType"})
+    public  void generateProofReport(@RequestParam String docType, @RequestParam Long distId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+        wmsReportService.exportReportVaccineDeliveryProof(distId,lang,response);
+    }
+
+    @RequestMapping(value = "/invoice-report",params = {"distId","docType"})
+    public  void generateInvoiceReport(@RequestParam String docType, @RequestParam Long distId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+        wmsReportService.exportReportVaccineInvoice(distId,lang,response);
+    }
+
+
     @RequestMapping(value = "/list-reports/{facilityId}")
     public List<StockCards> getListReport(@PathVariable Long facilityId){
         return wmsReportRepository.getListReports(facilityId);
+    }
+    @RequestMapping(value = "/list-vaccine")
+    public String getVaccineItems() {
+        try {
+            long ID=557;
+            return wmsReportService.getArrayReport(2,ID);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @RequestMapping(value = "/facility-reports/{facilityId}")
@@ -59,18 +103,7 @@ public class WmsReportController {
 
         String pathData= file.getAbsolutePath();
 
-        System.out.println("File Path: "+pathData);
-
         return pathData;
     }
 
-    static List<String> getStrings() {
-        List<String> stockList=new ArrayList<>();
-        stockList.add("Felix");
-        stockList.add("Joseph");
-        stockList.add("ALex");
-        stockList.add("John");
-        System.out.println("Hello john");
-        return stockList;
-    }
 }

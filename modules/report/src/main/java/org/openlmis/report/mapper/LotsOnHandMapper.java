@@ -30,11 +30,12 @@ public interface LotsOnHandMapper {
     List<Map> getListOfReports();
 
     @Select("select lhl.id,s.facilityid,s.productid," +
-            "lhl.quantityonhand as totalquantityonhand,s.effectivedate,s.modifieddate,pr.fullname,fa.name as facility_name from lot_on_hand_locations lhl " +
-            "left join lots_on_hand h on (lhl.lotonhandid = h.id) left join  stock_cards s on (s.id = h.stockcardId) " +
+            "lhl.quantityonhand as totalquantityonhand,s.effectivedate,s.modifieddate,pr.fullname,wl.name as facility_name from lot_on_hand_locations lhl " +
+            "left join lots_on_hand h on (lhl.lotonhandid = h.id) " +
+            "left join  stock_cards s on (s.id = h.stockcardId) " +
             "left join products pr on(pr.id=s.productid) " +
-            "left join facilities fa on(fa.id=s.facilityid) where s.facilityid=#{facilityId} " )
-    List<StockCards> getListStockOnHand(@Param("facilityId") Long facilityId);
+            "lef join wms_locations wl on(wl.id=lhl.locationid) where s.facilityid=#{wareHouseId}")
+    List<StockCards> getListStockOnHand(@Param("wareHouseId") Long wareHouseId);
 
 
 }

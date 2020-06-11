@@ -91,9 +91,21 @@
 
 
     </form>
-
-
-
+<div>
+    <div class="span12 right-align center-align pull-right">
+        <form action="/wms-reports/vaccine-report" method="get">
+            <select name="type" style="width: 200px;margin-top: 10px">
+                <option value="1">Pick List Report</option>
+                <option value="2">Distribution Summary</option>
+            </select>
+            <input name="docType" value="pdf" style="display: none">
+            <button type="submit" class="btn btn-primary save-button"  style="background-color: #0D757D !important;color: #ffffff" formtarget="_blank">PRINT</button>
+        </form>
+        <!--
+            <a href="/wms-reports/generate-report/19092/pdf" target="_blank"><button class="btn-success">PRINT</button></a>
+        -->
+    </div>
+</div>
     <div class="table-container">
         <table class="table table-striped table-bordered search-list" >
             <thead>

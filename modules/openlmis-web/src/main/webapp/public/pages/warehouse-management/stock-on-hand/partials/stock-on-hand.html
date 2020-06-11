@@ -34,9 +34,18 @@
                   openlmis-message="missing.value"></span>
         </div>
     </div>
-    <div class="col-lg-3">
-
-    <a ng-href="/requisitions/7899/print.pdf" target="_blank"><button class="btn-success">PRINT</button></a>
+    <div class="span5 right-align center-align pull-right">
+        <form action="/wms-reports/generate-report" method="get">
+            <select name="docType" style="width: 100px;margin-top: 10px">
+                <option value="pdf">PDF</option>
+                <option value="">EXCEL</option>
+            </select>
+            <input name="facilityId" value="19092" style="display: none">
+            <button type="submit" class="btn btn-primary save-button"  style="background-color: #0D757D !important;color: #ffffff" formtarget="_blank">PRINT</button>
+        </form>
+<!--
+    <a href="/wms-reports/generate-report/19092/pdf" target="_blank"><button class="btn-success">PRINT</button></a>
+-->
     </div>
 </div>
 
