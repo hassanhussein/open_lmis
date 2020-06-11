@@ -41,13 +41,13 @@
 	<parameter name="HEADER_IMAGE" class="java.lang.String"/>
 	<parameter name="facilityName" class="java.lang.String"/>
 	<field name="id" class="java.lang.Integer"/>
-	<field name="facilityid" class="java.lang.Integer"/>
-	<field name="productid" class="java.lang.Integer"/>
-	<field name="totalquantityonhand" class="java.lang.Integer"/>
-	<field name="effectivedate" class="java.sql.Timestamp"/>
-	<field name="modifieddate" class="java.sql.Timestamp"/>
-	<field name="fullname" class="java.lang.String"/>
-	<field name="facility_name" class="java.lang.String"/>
+	<field name="facilityId" class="java.lang.Integer"/>
+	<field name="productId" class="java.lang.Integer"/>
+	<field name="totalQuantityOnHand" class="java.lang.Integer"/>
+	<field name="effectiveDate" class="java.sql.Timestamp"/>
+	<field name="modifiedDate" class="java.sql.Timestamp"/>
+	<field name="fullName" class="java.lang.String"/>
+	<field name="facilityName" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -70,7 +70,7 @@
 				</textField>
 				<textField>
 					<reportElement x="92" y="1" width="100" height="30" uuid="b9c2b07d-870c-4330-9a8c-42843bd8504d"/>
-					<textFieldExpression><![CDATA[$F{facility_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd/MM/yyyy">
 					<reportElement x="91" y="21" width="100" height="30" uuid="6a23626c-8384-4b67-85eb-1c86475f6fdb"/>
@@ -234,7 +234,7 @@
 				</reportElement>
 				<box rightPadding="4"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{totalquantityonhand}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{totalQuantityOnHand}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="styleTable" x="508" y="0" width="81" height="33" uuid="35d560a9-e17f-4659-ae7d-1b55a1ecf2d4">
@@ -242,7 +242,7 @@
 				</reportElement>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{facility_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement style="styleTable" x="589" y="0" width="87" height="33" uuid="0966aff2-f066-4f88-a60b-01889aeb8843">
@@ -250,7 +250,7 @@
 				</reportElement>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{modifieddate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{modifiedDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="styleTable" x="676" y="0" width="93" height="33" uuid="f486334c-ddda-4c6e-abfe-9902d0a46e8a"/>
@@ -263,7 +263,7 @@
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4e610a54-42db-4832-83fe-54bb8e241cb3"/>
 				</reportElement>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{fullname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fullName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement style="styleTable" x="423" y="0" width="85" height="33" uuid="c81779ca-8a44-498d-85d0-b7088c42638c">
@@ -271,7 +271,7 @@
 				</reportElement>
 				<box leftPadding="5"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{modifieddate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{modifiedDate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="styleTable" x="171" y="0" width="74" height="33" uuid="fb898e5f-de6d-4eea-a75d-35aee718d71a">
@@ -279,7 +279,7 @@
 				</reportElement>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{productid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{productId}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement style="styleTable" x="17" y="0" width="30" height="33" uuid="5ac00ef9-1afa-4233-bb7c-d9936e389555"/>
@@ -292,7 +292,7 @@
 				</reportElement>
 				<box leftPadding="6"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{effectivedate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{effectiveDate}]]></textFieldExpression>
 			</textField>
 			<frame borderSplitType="DrawBorders">
 				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="0" y="-4" width="782" height="40" isPrintInFirstWholeBand="true" uuid="c871d92e-cdb4-4f3a-a165-684c5fe4d3f2">
@@ -314,7 +314,7 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fullname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fullName}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="18" y="2" width="70" height="30" forecolor="#8C8C8C" uuid="4149376c-4b77-4f9f-b872-dd35956bc10b"/>

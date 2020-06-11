@@ -9,7 +9,7 @@
 	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center"/>
 	<subDataset name="dataset1" uuid="091a1376-c476-4867-9ced-423695e8c98e">
 
-		<field name="facilityname" class="java.lang.String">
+		<field name="facilityName" class="java.lang.String">
 
 		</field>
 		<field name="product" class="java.lang.String">

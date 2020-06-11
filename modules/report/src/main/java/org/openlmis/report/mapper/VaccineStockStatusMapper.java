@@ -29,7 +29,7 @@ public interface VaccineStockStatusMapper {
                                                     @Param("userId") Long userId,
                                                     @Param("RowBounds") RowBounds rowBounds
                                                     );
-    @Select("SELECT vd.id,vd.distributionid,f.name as facilityName,p.fullname as product,g.name as district,\n" +
+    @Select("SELECT vd.id,vd.distributionid as distributionId,f.name as facilityName,p.fullname as product,g.name as district,\n" +
             "g.code as region,vd.quantity as quantityIssued\n" +
             "FROM vaccine_distribution_line_items vd\n" +
             "left join products p on(p.id=vd.productid)\n" +
@@ -48,13 +48,13 @@ public interface VaccineStockStatusMapper {
     List<VaccineDistributionLineItem> vaccineDistributionLineItemListByDistribution(@Param("distID") Long facilityId);
 
     @Select("SELECT v.id,\n" +
-            "\tv.tofacilityid,\n" +
-            "\tv.distributiondate,\n" +
-            "\tftf.name as facility_type_from,\n" +
-            "\tfto.name as facility_type_to,\n" +
-            "\tv.periodid,vo.id,vo.orderdate,gf.name as from_zone_name,\n" +
-            "\tgo.name as to_zone_name,\n" +
-            "\tv.orderid,f.name as facilityName,f.description as to_description,fo.description as from_description,fo.name as from_facility_name\n" +
+            "\tv.tofacilityid as toFacilityId ,\n" +
+            "\tv.distributiondate as distributionDate,\n" +
+            "\tftf.name as facilityTypeFrom,\n" +
+            "\tfto.name as facilityTypeTo,\n" +
+            "\tv.periodid as periodId,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
+            "\tgo.name as toZoneName,\n" +
+            "\tv.orderid as orderId ,f.name as facilityName,f.description as to_description,fo.description as fromDescription,fo.name as fromFacilityName\n" +
             "FROM vaccine_distributions v\n" +
             " left join facilities f  on(f.id=v.tofacilityid)\n" +
             " left join facilities fo  on(f.id=v.fromfacilityid)\n" +
@@ -66,13 +66,13 @@ public interface VaccineStockStatusMapper {
     List<VaccineDistribution> vaccineDistributionList();
 
     @Select("SELECT v.id,\n" +
-            "\tv.tofacilityid,\n" +
-            "\tv.distributiondate,\n" +
-            "\tftf.name as facility_type_from,\n" +
-            "\tfto.name as facility_type_to,\n" +
-            "\tv.periodid,vo.id,vo.orderdate,gf.name as from_zone_name,\n" +
-            "\tgo.name as to_zone_name,\n" +
-            "\tv.orderid,f.name as facilityName,f.description as to_description,fo.description as from_description,fo.name as from_facility_name\n" +
+            "\tv.tofacilityid as toFacilityId,\n" +
+            "\tv.distributiondate as distributionDate,\n" +
+            "\tftf.name as facilityTypeFrom,\n" +
+            "\tfto.name as facilityTypeTo,\n" +
+            "\tv.periodid as periodId ,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
+            "\tgo.name as toZoneName,\n" +
+            "\tv.orderid as orderId,f.name as facilityName,f.description as toDescription,fo.description as fromDescription,fo.name as fromFacilityName\n" +
             "FROM vaccine_distributions v\n" +
             " left join facilities f  on(f.id=v.tofacilityid)\n" +
             " left join facilities fo  on(f.id=v.fromfacilityid)\n" +
@@ -85,12 +85,12 @@ public interface VaccineStockStatusMapper {
 
 
 
-    @Select("SELECT vd.distributionlineitemid,\n" +
+    @Select("SELECT vd.distributionlineitemid as distributionLineItemId,\n" +
             "\tvd.id,vd.distributionlineitemid," +
-            "\tvd.lotid,\n" +
+            "\tvd.lotid as lotId ,\n" +
             "\tvd.quantity,\n" +
-            "\tvd.vvmstatus,\n" +
-            "\tl.lotnumber,l.expirationdate\n" +
+            "\tvd.vvmstatus as vvmStatus,\n" +
+            "\tl.lotnumber as lotNumber,l.expirationdate as expirationDate\n" +
             "FROM vaccine_distribution_line_item_lots vd left join lots l on(l.id=vd.lotid)\n" +
             " where vd.distributionlineitemid=#{distID}")
 

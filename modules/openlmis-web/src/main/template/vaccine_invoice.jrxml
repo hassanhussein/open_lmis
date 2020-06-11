@@ -17,19 +17,19 @@
 	<parameter name="vaccine_distribution_lots" class="java.lang.String"/>
 	<parameter name="createdBy" class="java.lang.String"/>
 	<field name="id" class="java.lang.Integer"/>
-	<field name="tofacilityid" class="java.lang.Integer"/>
-	<field name="distributiondate" class="java.lang.String"/>
-	<field name="facility_type_from" class="java.lang.String"/>
-	<field name="facility_type_to" class="java.lang.String"/>
-	<field name="periodid" class="java.lang.Integer"/>
-	<field name="orderdate" class="java.lang.String"/>
-	<field name="from_zone_name" class="java.lang.String"/>
-	<field name="to_zone_name" class="java.lang.String"/>
-	<field name="orderid" class="java.lang.Integer"/>
+	<field name="tofacilityId" class="java.lang.Integer"/>
+	<field name="distributionDate" class="java.lang.String"/>
+	<field name="facilityTypeFrom" class="java.lang.String"/>
+	<field name="facilityTypeTo" class="java.lang.String"/>
+	<field name="periodId" class="java.lang.Integer"/>
+	<field name="orderDate" class="java.lang.String"/>
+	<field name="fromZoneName" class="java.lang.String"/>
+	<field name="toZoneName" class="java.lang.String"/>
+	<field name="orderId" class="java.lang.Integer"/>
 	<field name="facilityName" class="java.lang.String"/>
-	<field name="to_description" class="java.lang.String"/>
-	<field name="from_description" class="java.lang.String"/>
-	<field name="from_facility_name" class="java.lang.String"/>
+	<field name="toDescription" class="java.lang.String"/>
+	<field name="fromDescription" class="java.lang.String"/>
+	<field name="fromFacilityName" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -74,19 +74,19 @@
 			</staticText>
 			<textField>
 				<reportElement x="10" y="140" width="100" height="20" uuid="f0c0219c-5ea3-4abf-9715-ec8949dba9b9"/>
-				<textFieldExpression><![CDATA[$F{from_facility_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fromFacilityName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="160" width="100" height="20" uuid="f3170c9e-d2d4-4a1f-8d4f-9a8ddd1f7d17"/>
-				<textFieldExpression><![CDATA[$F{from_description}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fromDescription}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="180" width="100" height="20" uuid="eb1a506b-00b7-4651-921a-30c960ec8c6a"/>
-				<textFieldExpression><![CDATA[$F{from_zone_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{fromZoneName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="200" width="100" height="20" uuid="d3b44773-f9d4-4c9f-950a-6ecb4cdddf24"/>
-				<textFieldExpression><![CDATA[$F{facility_type_from}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{facilityTypeFrom}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="0" y="230" width="90" height="20" uuid="c0811f48-52d7-4a63-b12e-ab21cbc24b57"/>
@@ -118,11 +118,11 @@
 			</staticText>
 			<textField>
 				<reportElement x="90" y="230" width="80" height="20" uuid="bda7d4d8-be8a-42c1-8e32-3410831f095b"/>
-				<textFieldExpression><![CDATA[$F{orderid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MM/dd/yyyy">
 				<reportElement x="90" y="250" width="80" height="20" uuid="59f33144-d823-4a1b-9752-11b3c40a0652"/>
-				<textFieldExpression><![CDATA[$F{orderdate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{orderDate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="90" y="290" width="100" height="20" uuid="e587ae90-6740-41fb-b1fd-4bf662e19fce"/>
@@ -157,15 +157,15 @@
 				</box>
 				<textField>
 					<reportElement x="18" y="41" width="100" height="20" uuid="382fee86-c569-428d-b1a3-f006370c6f2f"/>
-					<textFieldExpression><![CDATA[$F{to_description}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{toDescription}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="18" y="61" width="100" height="20" uuid="24c364e6-b645-4cfe-8ff3-b12cc88cbe30"/>
-					<textFieldExpression><![CDATA[$F{to_zone_name}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{toZoneName}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="18" y="81" width="100" height="20" uuid="da9c2240-ddd5-449f-aef3-374af32a0f1b"/>
-					<textFieldExpression><![CDATA[$F{facility_type_to}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{facilityTypeTo}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="18" y="1" width="56" height="20" uuid="35444ac9-7ddc-4f50-93dc-f4fbed84723a"/>

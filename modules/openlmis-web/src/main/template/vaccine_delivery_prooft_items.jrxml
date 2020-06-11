@@ -6,11 +6,11 @@
 	</queryString>
 	<field name="distributionlineitemid" class="java.lang.Integer"/>
 	<field name="id" class="java.lang.Integer"/>
-	<field name="lotid" class="java.lang.Integer"/>
+	<field name="lotId" class="java.lang.Integer"/>
 	<field name="quantity" class="java.lang.Integer"/>
-	<field name="vvmstatus" class="java.lang.Integer"/>
-	<field name="lotnumber" class="java.lang.String"/>
-	<field name="expirationdate" class="java.sql.Timestamp"/>
+	<field name="vvmStatus" class="java.lang.Integer"/>
+	<field name="lotNumber" class="java.lang.String"/>
+	<field name="expirationDate" class="java.sql.Timestamp"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -18,7 +18,7 @@
 		<band height="26" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="80" height="26" uuid="f5c8ca7d-03bd-42f8-a731-3778cba134aa"/>
-				<textFieldExpression><![CDATA[$F{vvmstatus}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vvmStatus}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="180" y="0" width="100" height="26" uuid="1260e9da-b6d7-46ff-892f-c5826c063480"/>
@@ -26,11 +26,11 @@
 			</textField>
 			<textField>
 				<reportElement x="80" y="0" width="100" height="26" uuid="6b3a2eb9-46c2-43a7-9f9e-1c812af46c30"/>
-				<textFieldExpression><![CDATA[$F{lotnumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="280" y="0" width="100" height="26" uuid="ddfb5e69-66df-4703-b968-180b2498b058"/>
-				<textFieldExpression><![CDATA[$F{expirationdate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{expirationDate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="380" y="0" width="100" height="26" uuid="034436cb-746e-4a32-8df7-86c19a614700"/>

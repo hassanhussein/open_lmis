@@ -7,42 +7,42 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
-import java.util.Date;
+
 @Entity
 public class VaccineDistributionLots {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private  int id;
-    int lotid,quantity,vvmstatus,distributionlineitemid;
-    String lotnumber;
+    int lotId,quantity, vvmStatus, distributionLineItemId;
+    String lotNumber;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp expirationdate;
+    private Timestamp expirationDate;
 
     public int getId() {
         return id;
     }
 
-    public int getDistributionlineitemid() {
-        return distributionlineitemid;
+    public int getDistributionLineItemId() {
+        return distributionLineItemId;
     }
 
-    public int getLotid() {
-        return lotid;
+    public int getLotId() {
+        return lotId;
     }
 
     public int getQuantity() {
         return quantity;
     }
 
-    public int getVvmstatus() {
-        return vvmstatus;
+    public int getVvmStatus() {
+        return vvmStatus;
     }
 
-    public String getLotnumber() {
-        return lotnumber;
+    public String getLotNumber() {
+        return lotNumber;
     }
 
-    public Timestamp getExpirationdate() {
-        return expirationdate;
+    public Timestamp getExpirationDate() {
+        return expirationDate;
     }
 }

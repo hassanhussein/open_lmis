@@ -74,30 +74,30 @@
 		</queryString>
 		<field name="distributionlineitemid" class="java.lang.Integer"/>
 		<field name="id" class="java.lang.Integer"/>
-		<field name="lotid" class="java.lang.Integer"/>
+		<field name="lotId" class="java.lang.Integer"/>
 		<field name="quantity" class="java.lang.Integer"/>
-		<field name="vvmstatus" class="java.lang.Integer"/>
-		<field name="lotnumber" class="java.lang.String"/>
-		<field name="expirationdate" class="java.lang.String"/>
+		<field name="vvmStatus" class="java.lang.Integer"/>
+		<field name="lotNumber" class="java.lang.String"/>
+		<field name="expirationDate" class="java.lang.String"/>
 	</subDataset>
 	<subDataset name="DatasetTable" uuid="c002a018-2f0b-4891-b17a-d36e92e266cc">
 		<field name="id" class="java.lang.Integer"/>
-		<field name="facilityname" class="java.lang.String"/>
+		<field name="facilityName" class="java.lang.String"/>
 		<field name="product" class="java.lang.String"/>
 		<field name="district" class="java.lang.String"/>
 		<field name="region" class="java.lang.String"/>
-		<field name="quantityissued" class="java.lang.Integer"/>
-		<field name="product_code" class="java.lang.String"/>
+		<field name="quantityIssued" class="java.lang.Integer"/>
+		<field name="productCode" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="distrID" class="java.lang.String"/>
 	<parameter name="createdBy" class="java.lang.String"/>
 	<field name="id" class="java.lang.Integer"/>
-	<field name="facilityname" class="java.lang.String"/>
+	<field name="facilityName" class="java.lang.String"/>
 	<field name="product" class="java.lang.String"/>
 	<field name="district" class="java.lang.String"/>
 	<field name="region" class="java.lang.String"/>
-	<field name="quantityissued" class="java.lang.Integer"/>
-	<field name="product_code" class="java.lang.String"/>
+	<field name="quantityIssued" class="java.lang.Integer"/>
+	<field name="productCode" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -216,7 +216,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Expirery Date]]></text>
+				<text><![CDATA[Expiry Date]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="420" y="5" width="50" height="20" backcolor="#BFBFBF" uuid="6c24d980-a015-4969-8475-4375d423db2d">
@@ -291,7 +291,7 @@
 							<textField>
 								<reportElement x="0" y="0" width="50" height="20" uuid="e5ada3e8-a051-4cd8-82e2-ee70181d2144"/>
 								<box leftPadding="2"/>
-								<textFieldExpression><![CDATA[$F{product_code}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -312,7 +312,7 @@
 								<reportElement x="0" y="0" width="40" height="20" uuid="6afb9d8c-fa98-498e-8e44-0583413e3b7e"/>
 								<box rightPadding="4"/>
 								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$F{quantityissued}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantityIssued}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -325,7 +325,7 @@
 								</reportElement>
 								<box rightPadding="4"/>
 								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$F{quantityissued}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{quantityIssued}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -350,7 +350,7 @@
 												<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 											</box>
 											<textElement textAlignment="Right"/>
-											<textFieldExpression><![CDATA[$F{vvmstatus}]]></textFieldExpression>
+											<textFieldExpression><![CDATA[$F{vvmStatus}]]></textFieldExpression>
 										</textField>
 										<textField>
 											<reportElement x="50" y="0" width="70" height="20" uuid="15e9b53b-2985-4e52-92bf-77c94439a6d6"/>
@@ -360,7 +360,7 @@
 											<textElement textAlignment="Left">
 												<font size="9"/>
 											</textElement>
-											<textFieldExpression><![CDATA[$F{lotnumber}]]></textFieldExpression>
+											<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
 										</textField>
 										<textField pattern="#,###.###">
 											<reportElement x="120" y="0" width="50" height="20" uuid="6e0041f3-22cc-4652-96ed-f4986057eb42"/>
@@ -375,7 +375,7 @@
 											<box leftPadding="2">
 												<leftPen lineWidth="1.0"/>
 											</box>
-											<textFieldExpression><![CDATA[new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{expirationdate}))]]></textFieldExpression>
+											<textFieldExpression><![CDATA[new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{expirationDate}))]]></textFieldExpression>
 										</textField>
 										<textField pattern="#,###.###">
 											<reportElement x="240" y="0" width="50" height="20" uuid="49bff30f-1be5-4764-b6c2-550fb9a04839"/>

@@ -6,11 +6,11 @@
 	</queryString>
 	<field name="distributionlineitemid" class="java.lang.Integer"/>
 	<field name="id" class="java.lang.Integer"/>
-	<field name="lotid" class="java.lang.Integer"/>
+	<field name="lotId" class="java.lang.Integer"/>
 	<field name="quantity" class="java.lang.Integer"/>
-	<field name="vvmstatus" class="java.lang.Integer"/>
-	<field name="lotnumber" class="java.lang.String"/>
-	<field name="expirationdate" class="java.lang.String"/>
+	<field name="vvmStatus" class="java.lang.Integer"/>
+	<field name="lotNumber" class="java.lang.String"/>
+	<field name="expirationDate" class="java.lang.String"/>
 	<variable name="totalQuantity" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{quantity}]]></variableExpression>
 	</variable>
@@ -89,7 +89,7 @@
 				<reportElement x="70" y="0" width="80" height="21" forecolor="#666666" uuid="f11e6c7d-37d0-4bc7-bd72-407175bb3bef"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{vvmstatus}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vvmStatus}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
 				<reportElement x="-11" y="1" width="81" height="20" forecolor="#666666" uuid="179aac7f-954a-4eb7-b894-a2b67a114cb4">
@@ -97,7 +97,7 @@
 				</reportElement>
 				<box rightPadding="4"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{lotnumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="150" y="0" width="70" height="20" forecolor="#666666" uuid="fe70246d-3fcc-47a9-89ff-9fd1c1f127b3">
@@ -105,7 +105,7 @@
 				</reportElement>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left"/>
-				<textFieldExpression><![CDATA[new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{expirationdate}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{expirationDate}))]]></textFieldExpression>
 			</textField>
 			<textField pattern="##,###">
 				<reportElement x="220" y="0" width="60" height="20" forecolor="#666666" uuid="0867355c-d269-4412-874d-f0141bf6091b">

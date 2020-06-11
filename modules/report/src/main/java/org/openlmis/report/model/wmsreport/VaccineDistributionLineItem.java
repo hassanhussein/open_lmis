@@ -8,7 +8,7 @@ public class VaccineDistributionLineItem {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private  int id;
     private String facilityName,product,district,region;
-    int quantityIssued,distributionid;
+    int quantityIssued, distributionId;
 
 
 
@@ -16,8 +16,8 @@ public class VaccineDistributionLineItem {
         return id;
     }
 
-    public int getDistributionid() {
-        return distributionid;
+    public int getDistributionId() {
+        return distributionId;
     }
 
     public String getFacilityName() {

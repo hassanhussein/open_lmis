@@ -6,10 +6,10 @@
 	<parameter name="vaccine_distribution_lots" class="java.lang.String"/>
 	<parameter name="createdBy" class="java.lang.String"/>
 	<field name="id" class="java.lang.Integer"/>
-	<field name="tofacilityid" class="java.lang.Integer"/>
-	<field name="distributiondate" class="java.lang.String"/>
-	<field name="periodid" class="java.lang.Integer"/>
-	<field name="orderid" class="java.lang.Integer"/>
+	<field name="toFacilityId" class="java.lang.Integer"/>
+	<field name="distributionDate" class="java.lang.String"/>
+	<field name="periodId" class="java.lang.Integer"/>
+	<field name="orderId" class="java.lang.Integer"/>
 	<field name="facilityName" class="java.lang.String"/>
 	<field name="distributionListItem" class="java.lang.String"/>
 	<background>
@@ -66,7 +66,7 @@
 				</textField>
 				<textField>
 					<reportElement x="260" y="110" width="100" height="18" uuid="ae2036c1-36bd-4b7c-9f90-5c653ae74549"/>
-					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{distributiondate}))]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("dd/MM/yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{distributionDate}))]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="262" y="128" width="100" height="22" uuid="80fe5603-c305-41b3-a640-794c479835d3"/>
@@ -89,7 +89,7 @@
 			</frame>
 			<textField>
 				<reportElement x="90" y="30" width="81" height="18" uuid="822659d4-1f24-4faf-a9ff-969f87b478ed"/>
-				<textFieldExpression><![CDATA[$F{orderid}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="30" width="90" height="18" uuid="1f43e19a-efe8-40de-895b-662de6e28907"/>

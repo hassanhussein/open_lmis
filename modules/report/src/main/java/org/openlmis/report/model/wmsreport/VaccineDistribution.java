@@ -1,12 +1,9 @@
 package org.openlmis.report.model.wmsreport;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 public class VaccineDistribution {
@@ -15,65 +12,65 @@ public class VaccineDistribution {
     private  int id;
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date distributiondate;
-    private String orderdate;
-    private  int orderid,tofacilityid,periodid;
-    private String facilityName,facility_type_from,facility_type_to,from_zone_name,
-    to_zone_name,to_description,from_description,from_facility_name;
+    private Date distributionDate;
+    private String orderDate;
+    private  int orderId, toFacilityId, periodId;
+    private String facilityName, facilityTypeFrom, facilityTypeTo, fromZoneName,
+            toZoneName, toDescription, fromDescription, fromFacilityName;
 
     public int getId() {
         return id;
     }
 
-    public Date getDistributiondate() {
-        return distributiondate;
+    public Date getDistributionDate() {
+        return distributionDate;
     }
 
-    public String getOrderdate() {
-        return orderdate;
+    public String getOrderDate() {
+        return orderDate;
     }
 
-    public int getPeriodid() {
-        return periodid;
+    public int getPeriodId() {
+        return periodId;
     }
 
-    public int getOrderid() {
-        return orderid;
+    public int getOrderId() {
+        return orderId;
     }
 
-    public int getTofacilityid() {
-        return tofacilityid;
+    public int getToFacilityId() {
+        return toFacilityId;
     }
 
     public String getFacilityName() {
         return facilityName;
     }
 
-    public String getFacility_type_from() {
-        return facility_type_from;
+    public String getFacilityTypeFrom() {
+        return facilityTypeFrom;
     }
 
-    public String getFacility_type_to() {
-        return facility_type_to;
+    public String getFacilityTypeTo() {
+        return facilityTypeTo;
     }
 
-    public String getFrom_zone_name() {
-        return from_zone_name;
+    public String getFromZoneName() {
+        return fromZoneName;
     }
 
-    public String getTo_zone_name() {
-        return to_zone_name;
+    public String getToZoneName() {
+        return toZoneName;
     }
 
-    public String getTo_description() {
-        return to_description;
+    public String getToDescription() {
+        return toDescription;
     }
 
-    public String getFrom_description() {
-        return from_description;
+    public String getFromDescription() {
+        return fromDescription;
     }
 
-    public String getFrom_facility_name() {
-        return from_facility_name;
+    public String getFromFacilityName() {
+        return fromFacilityName;
     }
 }

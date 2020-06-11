@@ -247,7 +247,6 @@ public class WmsReportService {
                     long vacItemID = vaccineListObjectLot.getLong("id");
                     List<VaccineDistributionLots> vaccineListItemLOt = wmsReportRepository.vaccineDistributionLotList(vacItemID);
 
-                    System.out.println(vaccineListObjectLot.toString());
                     vaccineListObjectLot.put("itemLots", vaccineListItemLOt);
 
                     jsonArrayLot.put(vaccineListObjectLot);
