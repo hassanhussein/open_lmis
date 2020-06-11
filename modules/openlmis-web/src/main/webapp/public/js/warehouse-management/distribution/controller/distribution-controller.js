@@ -80,7 +80,7 @@ console.log(lot);
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
-var given= _.findWhere(ordered.given,{lotId:lot.id});
+var given= _.findWhere(ordered.given,{lotId:lot.lotId});
 if(qty===""){
 qty=0;
 }
@@ -111,7 +111,7 @@ var all_requisitions=_.filter($scope.requstions,function(req){
 return;
 }
 );
-lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.id,prod.productId);
+lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.lotId,prod.productId);
 if(Number.isNaN(lot.amount)){
 lot.amount=lot.maxSoh;
 }
@@ -161,6 +161,7 @@ $scope.cancel=function(){
 
 $scope.saveDistribution = function () {
 $scope.distribution_list=[];
+//console.log($scope.)
 
 $scope.requstions.forEach(function(req){
 
@@ -175,7 +176,7 @@ $scope.requstions.forEach(function(req){
 
 });
 
-console.log($scope.distribution_list);
+//console.log($scope.distribution_list);
 
 
 
@@ -196,7 +197,7 @@ console.log($scope.distribution_list);
 
   $scope.$parent.distributed = true;
   $location.path('');
-                  console.log('distributed');
+//                  console.log('distributed');
 
                         });
 
