@@ -108,6 +108,8 @@ public class RnrLineItem extends LineItem {
     private String patientCalculationFormula;
     private String alternateItemCode;
     private String owner;
+    private String revision;
+    private String uom;
 
     @SuppressWarnings("unused")
     private Boolean skipped = false;

@@ -44,10 +44,10 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select({"SELECT requisition_line_items.*, products.alternateItemCode, products.strength, products.primaryname, products.patientCalculationFormula ",
-          "FROM requisition_line_items, products ",
+  @Select({"SELECT requisition_line_items.*, products.packSize || dosage_units.code as uom, products.alternateItemCode, products.strength, products.primaryname, products.patientCalculationFormula, RIGHT(products.code, 2) revision ",
+          "FROM requisition_line_items, products, dosage_units  ",
           "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true ",
-          "and requisition_line_items.productcode = products.code ",
+          "and requisition_line_items.productcode = products.code and dosage_units.id = products.dosageUnitId and products.alternateItemCode is not null ",
           "order by productDisplayOrder;"})
   @Results(value = {
     @Result(property = "id", column = "id"),
