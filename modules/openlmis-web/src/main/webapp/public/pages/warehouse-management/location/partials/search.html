@@ -123,11 +123,13 @@
                     <input type="text" ng-model="location.name">
                 </td>
 
-                <td ng-show="!location.editMode" ng-bind="(location.displayOrder)==1?'Storage':'Receiving'"></td>
+                <td ng-show="!location.editMode" ng-bind="(location.displayOrder)==1?'Storage':(location.displayOrder)==2?'Receiving':'Quarantine'"></td>
                 <td ng-show="location.editMode">
                     <select ng-model="location.displayOrder" style="width:90% !important;" class="span12">
                         <option value="1" ng-selected="location.displayOrder==1">Storage</option>
                         <option value="2" ng-selected="location.displayOrder==2">Receiving</option>
+                        <option value="2" ng-selected="location.displayOrder==3">Quarantine</option>
+
                     </select>
                 </td>
                 <td ng-show="!location.editMode" id="locationZone{{$index}}" ng-bind="(location.active)?'Yes':'No'"></td>
