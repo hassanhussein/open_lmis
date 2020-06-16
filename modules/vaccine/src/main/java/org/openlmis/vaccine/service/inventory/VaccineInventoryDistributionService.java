@@ -109,7 +109,14 @@ public class VaccineInventoryDistributionService {
         if (null == distribution.getVoucherNumber())
          distribution.setVoucherNumber(generateVoucherNumber(homeFacilityId, distribution.getProgramId()));
 
-        if (distribution.getId() != null) {
+         VaccineDistribution dbDistribution = null;
+
+        if (distribution.getOrderId() != null) {
+
+             dbDistribution = repository.getDistributionByOrderId(distribution.getOrderId());
+             distribution.setId(dbDistribution.getId());
+        }
+        if (distribution.getId() != null || dbDistribution != null) {
 
             distribution.setModifiedBy(userId);
             repository.updateDistribution(distribution);
