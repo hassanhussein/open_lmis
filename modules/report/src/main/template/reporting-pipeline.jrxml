@@ -166,7 +166,7 @@ productCode,
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="dd-MMM-yy">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00">
 				<reportElement stretchType="RelativeToTallestObject" x="694" y="0" width="78" height="30" uuid="64def802-a8eb-4757-af4d-ab1c839a8669"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<paragraph leftIndent="2"/>
