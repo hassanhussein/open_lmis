@@ -419,4 +419,10 @@ public interface VaccineInventoryDistributionMapper {
 
     @Select("SELECT * FROM VACCINE_DISTRIBUTIONS WHERE orderId = #{orderId}")
     VaccineDistribution getDistributionByOrderId(@Param("orderId") Long orderId);
+
+    @Select("SELECT * FROM vaccine_distribution_line_items WHERE distributionId = #{id}")
+    List<VaccineDistributionLineItem> getItemByDistributionId(@Param("id") Long id);
+
+    @Select(" DELETE FROM vaccine_distribution_line_items WHERE distributionId = #{id} ")
+    void deleteLineItemByDistributionId(@Param("id") Long id);
 }
