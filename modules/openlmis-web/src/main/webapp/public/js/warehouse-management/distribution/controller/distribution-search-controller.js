@@ -1,4 +1,20 @@
-function DistributionSearchController($scope,DisableAsn, programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog){
+function DistributionSearchController($scope,DisableAsn, localStorageService,programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog){
+
+  $scope.loadRights = function () {
+            $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
+//            console.log($scope.rights);
+     }();
+
+     $scope.hasPermission = function (permission) {
+            if ($scope.rights !== undefined && $scope.rights !== null) {
+              var rights = JSON.parse($scope.rights);
+              var rightNames = _.pluck(rights, 'name');
+              return rightNames.indexOf(permission) > -1;
+            }
+            return false;
+      };
+
+
 
         $scope.facilities = facilities;
 

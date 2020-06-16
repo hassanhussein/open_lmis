@@ -15,7 +15,6 @@ function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,Upd
 
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
-            console.log($scope.rights);
      }();
 
      $scope.hasPermission = function (permission) {
@@ -32,6 +31,7 @@ function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,Upd
 
 //console.log(all_orders);
 $scope.soh=wmsSoh.stocks;
+console.log($scope.requisitionsWithoutProducts);
 $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
@@ -52,6 +52,8 @@ $scope.requstions.push({
                              ordered:requisitionsWithProduct.ordered
 
 });
+
+console.log($scope.requstions);
 
 
 });
@@ -188,6 +190,14 @@ $scope.cancel=function(){
 
 
 $scope.saveDistribution = function () {
+
+//if ($scope.distributionForm.$error.required) {
+//            $scope.showError = true;
+//            $scope.error = 'form.error';
+//            $scope.message = "";
+////            console.log('dfas')
+//            return;
+//        }
 $scope.distribution_list=[];
 //console.log($scope.)
 

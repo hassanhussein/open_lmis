@@ -51,6 +51,7 @@ function SiteSearchController($scope, Locations, $location, navigateBackService,
       $scope.pagination = data.pagination;
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
+      console.log($scope.locationList);
       $scope.showResults = true;
     }, {});
   }

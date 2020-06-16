@@ -52,6 +52,7 @@ function LocationSearchController($scope, Locations, $location, navigateBackServ
       $scope.totalItems = $scope.pagination.totalRecords;
       $scope.currentPage = $scope.pagination.page;
       $scope.showResults = true;
+
     }, {});
   }
 
