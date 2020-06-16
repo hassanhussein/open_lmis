@@ -13,6 +13,7 @@ function StockOnHandController($scope, $location,WareHouseList,GetSohReport) {
 
 WareHouseList.get({},function(data){
 $scope.warehouses=data.house;
+console.log($scope.warehouses)
 });
 
 

@@ -114,7 +114,7 @@
             <td class="col-lot cell-input  disabled padding2px">{{product[0].lastUpdated.split(" ")[0]}}</td>
 
 
-            <td style="text-align:right;" rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px">{{calculateTotalQuantity(product[0].productId | number)}}</td>
+            <td style="text-align:right;" rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px">{{calculateTotalQuantity(product[0].productId) | number}}</td>
 
             <td rowspan="{{product.length}}" class="col-lot cell-input  disabled padding2px"> <a class="btn btn-primary" ng-click="openLedger(product[0])">
                 View</a></td>

@@ -49,6 +49,7 @@ function LocationController($scope, locationTypes, location, GeographicZonesAbov
       Locations.update({id: $scope.location.id}, $scope.location, success, error);
     }
     else {
+        console.log($scope.location);
       Locations.save({}, $scope.location, success, error);
     }
   };
