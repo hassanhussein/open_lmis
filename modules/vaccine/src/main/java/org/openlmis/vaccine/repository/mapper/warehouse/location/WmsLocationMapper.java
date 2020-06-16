@@ -48,8 +48,9 @@ public interface WmsLocationMapper {
     })
     LocationDTO getByLocationId(Long id);
 
-    @Select("SELECT * FROM wms_locations WHERE warehouseId=#{id} and id IN" +
-            " ( SELECT Distinct locationId FROM lot_on_hand_locations )")
+    @Select(" SELECT * FROM wms_locations WHERE warehouseId=#{id} " )
+            //" and id IN"
+           // " ( SELECT Distinct locationId FROM lot_on_hand_locations )"
     @Results(value = {
             @Result(property = "type", column = "typeId", javaType = Integer.class,
                     one = @One(select = "org.openlmis.core.repository.mapper.LocationTypeMapper.getById")),
