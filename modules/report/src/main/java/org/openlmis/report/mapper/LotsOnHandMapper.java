@@ -19,7 +19,7 @@ public interface LotsOnHandMapper {
             "stock_cards.totalquantityonhand as totalQuantityOnHand," +
             "stock_cards.effectivedate as effectiveDate," +
             "stock_cards.modifieddate as modifiedDate," +
-            "pr.fullname as fullName,fa.name as facilityName from stock_cards  left join products pr on(pr.id=stock_cards.productid) " +
+            "pr.primaryname as fullName,fa.name as facilityName from stock_cards  left join products pr on(pr.id=stock_cards.productid) " +
             " left join facilities fa on(fa.id=stock_cards.facilityid) where stock_cards.facilityid=#{facilityId}   limit 100")
     List<StockCards> getListWithFullAttributes(@Param("facilityId") Long facilityId);
 
@@ -30,11 +30,13 @@ public interface LotsOnHandMapper {
     List<Map> getListOfReports();
 
     @Select("select lhl.id,s.facilityid as facilityId ,s.productid as productId," +
-            "lhl.quantityonhand as totalQuantityOnHand,s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.fullname as fullName,wl.name as facility_name as facilityName from lot_on_hand_locations lhl " +
+            "lhl.quantityonhand as totalQuantityOnHand,s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wh.name  as facilityName from lot_on_hand_locations lhl " +
             "left join lots_on_hand h on (lhl.lotonhandid = h.id) " +
-            "left join  stock_cards s on (s.id = h.stockcardId) " +
+            "left join  stock_cards s on (s.id = h.stockcardid) " +
             "left join products pr on(pr.id=s.productid) " +
-            "lef join wms_locations wl on(wl.id=lhl.locationid) where s.facilityid=#{wareHouseId}")
+            "left join wms_locations wl on(wl.id=lhl.locationid) " +
+            "left join warehouses wh on(wh.id=wl.warehouseid)" +
+            "where wl.warehouseid=#{wareHouseId}")
     List<StockCards> getListStockOnHand(@Param("wareHouseId") Long wareHouseId);
 
 

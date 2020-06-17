@@ -35,8 +35,8 @@ public interface VaccineStockStatusMapper {
             "left join products p on(p.id=vd.productid)\n" +
             " left join  vaccine_distributions d on(d.id=vd.distributionid)\n" +
             " left join facilities f on(f.id=d.tofacilityid)\n" +
-            " left join geographic_zones g on(g.id=f.geographiczoneid)")
-    List<VaccineDistributionLineItem> vaccineDistributionLineItemList();
+            " left join geographic_zones g on(g.id=f.geographiczoneid) where f.id=#{facilityId}")
+    List<VaccineDistributionLineItem> vaccineDistributionLineItemList(@Param("facilityId") Long facilityId);
 
     @Select("SELECT vd.id,vd.distributionid,f.name as facilityName,p.fullname as product,g.name as district,\n" +
             "g.code as region,vd.quantity as quantityIssued\n" +
@@ -49,7 +49,7 @@ public interface VaccineStockStatusMapper {
 
     @Select("SELECT v.id,\n" +
             "\tv.tofacilityid as toFacilityId ,\n" +
-            "\tv.distributiondate as distributionDate,\n" +
+            "\tv.distributiondate as distributionDate,v.picklistid as pickListId,\n" +
             "\tftf.name as facilityTypeFrom,\n" +
             "\tfto.name as facilityTypeTo,\n" +
             "\tv.periodid as periodId,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
@@ -65,9 +65,28 @@ public interface VaccineStockStatusMapper {
             "left join vaccine_order_requisitions vo on(vo.id=v.orderid) limit 4")
     List<VaccineDistribution> vaccineDistributionList();
 
+
+    @Select("SELECT v.id,\n" +
+            "\tv.tofacilityid as toFacilityId ,\n" +
+            "\tv.distributiondate as distributionDate,v.picklistid as pickListId,\n" +
+            "\tftf.name as facilityTypeFrom,\n" +
+            "\tfto.name as facilityTypeTo,\n" +
+            "\tv.periodid as periodId,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
+            "\tgo.name as toZoneName,\n" +
+            "\tv.orderid as orderId ,f.name as facilityName,f.description as to_description,fo.description as fromDescription,fo.name as fromFacilityName\n" +
+            "FROM vaccine_distributions v\n" +
+            " left join facilities f  on(f.id=v.tofacilityid)\n" +
+            " left join facilities fo  on(f.id=v.fromfacilityid)\n" +
+            " left join facility_types ftf on(ftf.id=f.typeid)\n" +
+            " left join facility_types fto on(fto.id=f.typeid)\n" +
+            " left join geographic_zones go on(go.id=fo.geographiczoneid)\n" +
+            " left join geographic_zones gf on(gf.id=f.geographiczoneid)\n" +
+            "left join vaccine_order_requisitions vo on(vo.id=v.orderid) where v.id=#{orderID}")
+    List<VaccineDistribution> vaccineDistributionListByOrderId(@Param("orderID") Long orderID);
+
     @Select("SELECT v.id,\n" +
             "\tv.tofacilityid as toFacilityId,\n" +
-            "\tv.distributiondate as distributionDate,\n" +
+            "\tv.distributiondate as distributionDate,v.picklistid as pickListId,\n" +
             "\tftf.name as facilityTypeFrom,\n" +
             "\tfto.name as facilityTypeTo,\n" +
             "\tv.periodid as periodId ,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +

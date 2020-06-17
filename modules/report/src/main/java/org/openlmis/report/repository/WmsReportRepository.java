@@ -23,19 +23,19 @@ public class WmsReportRepository {
     public List<StockCards> getReportListWithFullAttributes(Long facilityId){
         return lotsOnHandMapper.getListWithFullAttributes(facilityId);
     }
-    public List<StockCards> getListReports(Long facilityId){
-        return lotsOnHandMapper.getListWithFullAttributes(facilityId);
+    public List<StockCards> getListReports(Long warehouseId){
+        return lotsOnHandMapper.getListStockOnHand(warehouseId);
     }
 
     public Facilities getFacilityDetails(Long facilityId){
         return lotsOnHandMapper.getFacilityDetails(facilityId);
     }
 
-    public List<VaccineDistributionLineItem> getReportVaccine(){
-        return vaccineStockStatusMapper.vaccineDistributionLineItemList();
+    public List<VaccineDistributionLineItem> getReportVaccine(Long facilityId){
+        return vaccineStockStatusMapper.vaccineDistributionLineItemList(facilityId);
     }
-    public List<VaccineDistribution> getReportVaccineDistribution(){
-        return vaccineStockStatusMapper.vaccineDistributionList();
+    public List<VaccineDistribution> getReportVaccineDistribution(Long orderId){
+        return vaccineStockStatusMapper.vaccineDistributionListByOrderId(orderId);
     }
 
     public List<VaccineDistributionLineItem> vaccineDistributionLineItemListByDistribution(Long distId){
