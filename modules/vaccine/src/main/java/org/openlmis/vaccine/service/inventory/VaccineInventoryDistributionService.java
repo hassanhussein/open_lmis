@@ -23,6 +23,7 @@ import org.openlmis.core.service.ProcessingScheduleService;
 import org.openlmis.core.service.ProgramService;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
+import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisitionLineItem;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
@@ -143,6 +144,15 @@ public class VaccineInventoryDistributionService {
 
         }
 
+       List<VaccineDistributionLineItem> itemList = repository.getItemByDistributionId(distribution.getId());
+
+        if(!itemList.isEmpty()) {
+
+            for (VaccineDistributionLineItem item : itemList) {
+                repository.deleteLotsByLineItem(item.getId());
+            }
+          repository.deleteLineItemByDistributionId(distribution.getId());
+        }
 
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
             lineItem.setDistributionId(distribution.getId());
@@ -154,13 +164,14 @@ public class VaccineInventoryDistributionService {
                 repository.saveDistributionLineItem(lineItem);
             }
 
-           // repository.deleteLotsByLineItem(lineItem.getId());
+            repository.deleteLotsByLineItem(lineItem.getId());
             if (lineItem.getLots() != null) {
                 for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
                     lot.setModifiedBy(userId);
                     lot.setCreatedBy(userId);
                     lot.setDistributionLineItemId(lineItem.getId());
                     lot.setQuantity(lot.getQty());
+                    System.out.println(lot.getQty());
                     if (lot.getId() != null) {
                         repository.updateDistributionLineItemLot(lot);
                    } else {

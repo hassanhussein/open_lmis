@@ -188,4 +188,12 @@ public class VaccineInventoryDistributionRepository {
     public VaccineDistribution getDistributionByOrderId(Long orderId) {
         return mapper.getDistributionByOrderId(orderId);
     }
+
+    public List<VaccineDistributionLineItem> getItemByDistributionId(Long id) {
+        return mapper.getItemByDistributionId(id);
+    }
+
+    public void deleteLineItemByDistributionId(Long id) {
+        mapper.deleteLineItemByDistributionId(id);
+    }
 }
