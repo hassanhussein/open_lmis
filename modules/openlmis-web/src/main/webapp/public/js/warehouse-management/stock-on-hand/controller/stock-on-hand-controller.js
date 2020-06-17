@@ -9,7 +9,7 @@
  */
 
 
-function StockOnHandController($scope, $location,WareHouseList,GetSohReport) {
+function StockOnHandController($scope,$window, $location,WareHouseList,GetSohReport) {
 
 WareHouseList.get({},function(data){
 $scope.warehouses=data.house;
