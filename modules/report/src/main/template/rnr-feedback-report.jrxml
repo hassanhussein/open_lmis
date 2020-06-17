@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rnr-feedback-report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="115"/>
 	<property name="ireport.y" value="0"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="err_open" fontName="SansSerif" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
@@ -167,14 +167,14 @@ ORDER BY li.productCode]]>
 		<groupHeader>
 			<band height="83">
 				<staticText>
-					<reportElement mode="Opaque" x="0" y="40" width="802" height="43" forecolor="#FFFFFF" backcolor="#F6F6F6" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<reportElement mode="Opaque" x="0" y="40" width="802" height="43" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 					</reportElement>
 					<text><![CDATA[]]></text>
 				</staticText>
 				<textField>
 					<reportElement mode="Transparent" x="104" y="40" width="151" height="43" forecolor="#000000" backcolor="#333333" uuid="bcf9957f-1bc0-48ac-abd4-9d4a56d87b8e"/>
-					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -182,7 +182,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="0" y="40" width="42" height="43" forecolor="#000000" backcolor="#333333" uuid="81f0bb73-349a-4dc9-bc54-473fc0cddc7b"/>
-					<textElement textAlignment="Left" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -190,7 +190,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="255" y="40" width="40" height="43" forecolor="#000000" backcolor="#333333" uuid="9ea97bfa-bdef-491f-a394-0f53d1867cc5"/>
-					<textElement verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -278,7 +278,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="376" y="40" width="62" height="43" forecolor="#000000" backcolor="#333333" uuid="6b0109e5-6eb1-4f0b-85cc-ed7dca43a2d5"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -286,7 +286,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="295" y="40" width="81" height="43" forecolor="#000000" backcolor="#333333" uuid="fa40e247-a40b-41a4-8a52-7080087f4c1c"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -294,7 +294,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="438" y="40" width="66" height="43" forecolor="#000000" backcolor="#333333" uuid="5bb7efee-7f9b-4431-b05b-4f9d46189dd5"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -302,7 +302,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="504" y="40" width="65" height="43" forecolor="#000000" backcolor="#333333" uuid="d68cb954-7053-4bbd-b27f-924702bd049b"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -310,7 +310,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="569" y="40" width="61" height="43" forecolor="#000000" backcolor="#333333" uuid="6bd12265-4736-4d7a-b7e3-f16258f6c29c"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -318,7 +318,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="630" y="40" width="60" height="43" forecolor="#000000" backcolor="#333333" uuid="7c471c45-3a80-4bda-a3ec-e01cd20a68e8"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -326,7 +326,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="690" y="40" width="63" height="43" forecolor="#000000" backcolor="#333333" uuid="fe2cb926-12c6-4270-b869-342cac6bba51"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -334,7 +334,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="753" y="40" width="49" height="43" forecolor="#000000" backcolor="#333333" uuid="e1a5541d-fa30-469e-b833-683cd0feeeca"/>
-					<textElement textAlignment="Right" verticalAlignment="Bottom" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -342,7 +342,7 @@ ORDER BY li.productCode]]>
 				</textField>
 				<textField>
 					<reportElement mode="Transparent" x="42" y="40" width="62" height="43" forecolor="#000000" backcolor="#333333" uuid="d42b9229-9184-47a6-b4bc-1acf92bc140b"/>
-					<textElement verticalAlignment="Bottom" markup="none">
+					<textElement textAlignment="Left" verticalAlignment="Top" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.product.code}]]></textFieldExpression>
@@ -375,8 +375,7 @@ ORDER BY li.productCode]]>
 					<textElement verticalAlignment="Middle">
 						<paragraph leftIndent="5"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{REPORT_COUNT}+1
-]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{REPORT_COUNT}+1]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="42" y="0" width="62" height="20" uuid="c9bc60cb-abde-4dcf-a88e-06c431a49abc"/>
