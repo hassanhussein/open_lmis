@@ -36,113 +36,121 @@ import java.util.List;
 @Component
 public class RestRequisitionCalculator {
 
-  @Autowired
-  private RequisitionService requisitionService;
+    @Autowired
+    private RequisitionService requisitionService;
 
-  @Autowired
-  private PODService podService;
+    @Autowired
+    private PODService podService;
 
-  @Autowired
-  private ProcessingScheduleService processingScheduleService;
+    @Autowired
+    private ProcessingScheduleService processingScheduleService;
 
-  public void validatePeriod(Facility reportingFacility, Program reportingProgram) {
-
-    if (!reportingFacility.getVirtualFacility()) {
-
-      RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
-      searchCriteria.setProgramId(reportingProgram.getId());
-      searchCriteria.setFacilityId(reportingFacility.getId());
-
-      if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
-          (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
-        throw new DataException("error.rnr.previous.not.filled");
-      }
-    }
-  }
-
-  public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period, Long userId) {
-
-    if (period == null) {
-      throw new DataException("error.rnr.period.provided.is.invalid");
+    public void validateSdpPeriod(ProcessingPeriod reportPeriod,RequisitionSearchCriteria criteria) {
+        List<ProcessingPeriod> periodList = requisitionService.getProcessingPeriods(criteria);
+        ProcessingPeriod validPeriod=periodList!=null?periodList.get(0):null;
+        if(validPeriod==null || !validPeriod.getId().equals(reportPeriod.getId())){
+            throw new DataException("error.rnr.previous.not.filled");
+        }
     }
 
-    RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
-    searchCriteria.setProgramId(reportingProgram.getId());
-    searchCriteria.setFacilityId(reportingFacility.getId());
+    public void validatePeriod(Facility reportingFacility, Program reportingProgram) {
 
-    List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
-    periods.add(period);
+        if (!reportingFacility.getVirtualFacility()) {
 
-    searchCriteria.setWithoutLineItems(true);
-    searchCriteria.setUserId(userId);
-    List<Rnr> list = requisitionService.getRequisitionsFor(searchCriteria, periods);
-    if (list != null && !list.isEmpty() && !list.get(0).preAuthorize()) {
-      throw new DataException("error.rnr.already.submitted.for.this.period");
-    }
-  }
+            RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+            searchCriteria.setProgramId(reportingProgram.getId());
+            searchCriteria.setFacilityId(reportingFacility.getId());
 
-  public void validateProducts(List<RnrLineItem> products, Rnr savedRequisition) {
-    if (products == null) {
-      return;
+            if (requisitionService.getCurrentPeriod(searchCriteria) != null && !requisitionService.getCurrentPeriod(searchCriteria).getId().equals
+                    (requisitionService.getPeriodForInitiating(reportingFacility, reportingProgram).getId())) {
+                throw new DataException("error.rnr.previous.not.filled");
+            }
+        }
     }
 
-    List<String> invalidProductCodes = new ArrayList<>();
-    for (final RnrLineItem product : products) {
-      RnrLineItem correspondingLineItem = savedRequisition.findCorrespondingLineItem(product);
-      if (correspondingLineItem == null) {
-        invalidProductCodes.add(product.getProductCode());
-      }
-    }
-    if (!invalidProductCodes.isEmpty()) {
-      throw new DataException("invalid.product.codes", invalidProductCodes.toString());
-    }
-  }
+    public void validateCustomPeriod(Facility reportingFacility, Program reportingProgram, ProcessingPeriod period, Long userId) {
 
-  public Rnr setDefaultValues(Rnr requisition) {
-    Integer M = processingScheduleService.findM(requisition.getPeriod());
+        if (period == null) {
+            throw new DataException("error.rnr.period.provided.is.invalid");
+        }
 
-    List<ProcessingPeriod> nPreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
-    Date trackingDate = requisition.getPeriod().getStartDate();
+        RequisitionSearchCriteria searchCriteria = new RequisitionSearchCriteria();
+        searchCriteria.setProgramId(reportingProgram.getId());
+        searchCriteria.setFacilityId(reportingFacility.getId());
 
-    if (!nPreviousPeriods.isEmpty()) {
-      trackingDate = M >= 3 ? nPreviousPeriods.get(0).getStartDate() : nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate();
-    }
+        List<ProcessingPeriod> periods = new ArrayList<ProcessingPeriod>();
+        periods.add(period);
 
-    for (RnrLineItem rnrLineItem : requisition.getNonSkippedLineItems()) {
-      setBeginningBalance(rnrLineItem, requisition, trackingDate);
-      setQuantityReceived(rnrLineItem, requisition, trackingDate);
-    }
-    return requisition;
-  }
-
-  private void setQuantityReceived(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
-    if (rnrLineItem.getQuantityReceived() != null)
-      return;
-
-    List<OrderPODLineItem> nOrderPodLineItems = podService.getNPreviousOrderPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
-
-    Integer quantityReceived = !nOrderPodLineItems.isEmpty() ? nOrderPodLineItems.get(0).getQuantityReceived() : 0;
-
-    rnrLineItem.setQuantityReceived(quantityReceived);
-  }
-
-  private void setBeginningBalance(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
-    List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
-
-    if (!nRnrLineItems.isEmpty()) {
-      if (rnrLineItem.getBeginningBalance() != null) {
-        rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
-      } else {
-        rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
-        rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
-      }
-      return;
-    } else {
-      if (rnrLineItem.getBeginningBalance() != null)
-        return;
+        searchCriteria.setWithoutLineItems(true);
+        searchCriteria.setUserId(userId);
+        List<Rnr> list = requisitionService.getRequisitionsFor(searchCriteria, periods);
+        if (list != null && !list.isEmpty() && !list.get(0).preAuthorize()) {
+            throw new DataException("error.rnr.already.submitted.for.this.period");
+        }
     }
 
-    Integer beginningBalance = rnrLineItem.getStockInHand() != null ? rnrLineItem.getStockInHand() : 0;
-    rnrLineItem.setBeginningBalance(beginningBalance);
-  }
+    public void validateProducts(List<RnrLineItem> products, Rnr savedRequisition) {
+        if (products == null) {
+            return;
+        }
+
+        List<String> invalidProductCodes = new ArrayList<>();
+        for (final RnrLineItem product : products) {
+            RnrLineItem correspondingLineItem = savedRequisition.findCorrespondingLineItem(product);
+            if (correspondingLineItem == null) {
+                invalidProductCodes.add(product.getProductCode());
+            }
+        }
+        if (!invalidProductCodes.isEmpty()) {
+            throw new DataException("invalid.product.codes", invalidProductCodes.toString());
+        }
+    }
+
+    public Rnr setDefaultValues(Rnr requisition) {
+        Integer M = processingScheduleService.findM(requisition.getPeriod());
+
+        List<ProcessingPeriod> nPreviousPeriods = processingScheduleService.getNPreviousPeriodsInDescOrder(requisition.getPeriod(), 2);
+        Date trackingDate = requisition.getPeriod().getStartDate();
+
+        if (!nPreviousPeriods.isEmpty()) {
+            trackingDate = M >= 3 ? nPreviousPeriods.get(0).getStartDate() : nPreviousPeriods.get(nPreviousPeriods.size() - 1).getStartDate();
+        }
+
+        for (RnrLineItem rnrLineItem : requisition.getNonSkippedLineItems()) {
+            setBeginningBalance(rnrLineItem, requisition, trackingDate);
+            setQuantityReceived(rnrLineItem, requisition, trackingDate);
+        }
+        return requisition;
+    }
+
+    private void setQuantityReceived(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
+        if (rnrLineItem.getQuantityReceived() != null)
+            return;
+
+        List<OrderPODLineItem> nOrderPodLineItems = podService.getNPreviousOrderPodLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+
+        Integer quantityReceived = !nOrderPodLineItems.isEmpty() ? nOrderPodLineItems.get(0).getQuantityReceived() : 0;
+
+        rnrLineItem.setQuantityReceived(quantityReceived);
+    }
+
+    private void setBeginningBalance(RnrLineItem rnrLineItem, Rnr requisition, Date trackingDate) {
+        List<RnrLineItem> nRnrLineItems = requisitionService.getNRnrLineItems(rnrLineItem.getProductCode(), requisition, 1, trackingDate);
+
+        if (!nRnrLineItems.isEmpty()) {
+            if (rnrLineItem.getBeginningBalance() != null) {
+                rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
+            } else {
+                rnrLineItem.setBeginningBalance(nRnrLineItems.get(0).getStockInHand());
+                rnrLineItem.setPreviousStockInHand(nRnrLineItems.get(0).getStockInHand());
+            }
+            return;
+        } else {
+            if (rnrLineItem.getBeginningBalance() != null)
+                return;
+        }
+
+        Integer beginningBalance = rnrLineItem.getStockInHand() != null ? rnrLineItem.getStockInHand() : 0;
+        rnrLineItem.setBeginningBalance(beginningBalance);
+    }
 }
