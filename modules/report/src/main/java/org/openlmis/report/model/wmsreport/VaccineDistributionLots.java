@@ -13,8 +13,8 @@ public class VaccineDistributionLots {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private  int id;
-    int lotId,quantity, vvmStatus, distributionLineItemId;
-    String lotNumber;
+    int lotId,quantity, distributionLineItemId;
+    String lotNumber,vvmStatus;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp expirationDate;
 
@@ -34,7 +34,7 @@ public class VaccineDistributionLots {
         return quantity;
     }
 
-    public int getVvmStatus() {
+    public String getVvmStatus() {
         return vvmStatus;
     }
 

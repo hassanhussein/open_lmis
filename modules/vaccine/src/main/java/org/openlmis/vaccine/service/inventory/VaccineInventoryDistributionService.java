@@ -434,7 +434,11 @@ public class VaccineInventoryDistributionService {
         for (VaccineDistribution distribution : distributions) {
             distribution.setCreatedBy(userId);
             distribution.setModifiedBy(userId);
-            distribution.setStatus("UNDER_PICKING");
+
+            if(distribution.getStatus().equalsIgnoreCase("PICKED"))
+                distribution.setStatus("PICKED");
+            else
+                distribution.setStatus("UNDER_PICKING");
             save(distribution,userId);
       }
 
@@ -445,7 +449,11 @@ public class VaccineInventoryDistributionService {
         for(VaccineDistribution distribution1 : distribution) {
 
             VaccineOrderRequisition requisition = new VaccineOrderRequisition();
-            requisition.setStatus(VaccineOrderStatus.UNDER_PICKING);
+
+            if(distribution1.getStatus().equalsIgnoreCase("PICKED"))
+                requisition.setStatus(VaccineOrderStatus.ISSUED);
+            else
+                requisition.setStatus(VaccineOrderStatus.UNDER_PICKING);
 
             System.out.println(distribution1.getOrderId());
             requisition.setId(distribution1.getOrderId());
