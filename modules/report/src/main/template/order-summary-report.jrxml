@@ -200,6 +200,7 @@
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
 					<reportElement mode="Transparent" x="420" y="144" width="60" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9221b760-26c4-49b2-a060-06d2aa33b26f"/>
+					<box rightPadding="4"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -207,7 +208,8 @@
 					<textFieldExpression><![CDATA[$R{label.pack}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
-					<reportElement mode="Transparent" x="480" y="144" width="73" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a5255254-61c0-4f9e-9a69-1001d67ab14f"/>
+					<reportElement mode="Transparent" x="480" y="144" width="75" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a5255254-61c0-4f9e-9a69-1001d67ab14f"/>
+					<box rightPadding="4"/>
 					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -783,7 +785,7 @@
 				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0" isBlankWhenNull="true">
-				<reportElement x="480" y="0" width="73" height="20" uuid="d3eac902-fedc-487a-a65a-f86f8399af4d"/>
+				<reportElement x="480" y="0" width="75" height="20" uuid="d3eac902-fedc-487a-a65a-f86f8399af4d"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<paragraph leftIndent="10" rightIndent="5"/>
 				</textElement>
