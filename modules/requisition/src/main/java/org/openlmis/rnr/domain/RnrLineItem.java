@@ -110,6 +110,7 @@ public class RnrLineItem extends LineItem {
     private String owner;
     private String revision;
     private String uom;
+    private String quoteDate;
 
     @SuppressWarnings("unused")
     private Boolean skipped = false;
