@@ -200,7 +200,7 @@
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
 					<reportElement mode="Transparent" x="420" y="144" width="60" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="9221b760-26c4-49b2-a060-06d2aa33b26f"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
@@ -208,7 +208,7 @@
 				</textField>
 				<textField pattern="" isBlankWhenNull="false">
 					<reportElement mode="Transparent" x="480" y="144" width="73" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a5255254-61c0-4f9e-9a69-1001d67ab14f"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<textElement textAlignment="Right" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="12" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
