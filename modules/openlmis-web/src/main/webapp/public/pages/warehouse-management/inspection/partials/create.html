@@ -254,6 +254,7 @@
                                                 <span ng-bind="product.programProduct.product.dosageUnit.code" ></span>
                                                 <span class="row-fluid" >
                                                 {{product.programProduct.dosageUnit.code}}
+
                                             </span>
                                             </td>
                                             <td class="col-general">
@@ -332,7 +333,9 @@
                                             <td>
                                                 <span style="padding-left: 15px;">{{lineItem.product.primaryName}}</span>
                                             </td>
-                                            <td style="padding-left: 15px;">{{lineItem.product.dosageUnit.code}}</td>
+                                            <td style="padding-left: 15px;">
+                                                Vials
+                                            </td>
                                             <td >{{totalReceivedQty}}</td>
                                             <td style="text-align:right" ng-if="lotInspected">{{totalPassQty | number}}</td>
                                             <td style="text-align:right" ng-if="lotInspected">{{totalFailQty | number }}</td>
@@ -741,7 +744,7 @@
                     <th >VVM Status </th>
                     <th >No. of Boxes </th>
                     <th>Received Qty</th>
-                    <th>Storage Location</th>
+                    <th>Location</th>
                     <th>Failed Qty</th>
 
                     <th >Fail Reason</th>

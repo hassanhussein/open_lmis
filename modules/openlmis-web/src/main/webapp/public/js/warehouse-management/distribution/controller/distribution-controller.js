@@ -233,6 +233,7 @@ $scope.requstions.forEach(function(req){
 
  SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
+console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
   $location.path('');
 //                  console.log('distributed');

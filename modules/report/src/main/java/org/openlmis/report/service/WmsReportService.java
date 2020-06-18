@@ -26,11 +26,11 @@ public class WmsReportService {
     @Autowired
     WmsReportRepository wmsReportRepository;
 
-    public void exportReport(String reportFormat, Long facilityId,String language, HttpServletResponse response) throws IOException, JRException {
+    public void exportStockOnHandReport(String reportFormat, Long wareHouseId,String language, HttpServletResponse response) throws IOException, JRException {
         //String path="C:\\Users\\user\\Desktop\\ExpotedPdf";
-        List<StockCards> stockList = wmsReportRepository.getListReports(facilityId);
+        List<StockCards> stockList = wmsReportRepository.getListReports(wareHouseId);
 
-        Facilities facilityDetails = wmsReportRepository.getFacilityDetails(facilityId);
+       // Facilities facilityDetails = wmsReportRepository.getFacilityDetails(wareHouseId);
 
 
         JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
@@ -47,7 +47,8 @@ public class WmsReportService {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("createdBy", "Felix Joseph");
         parameters.put("StockListData", dataSource);
-        parameters.put("facilityName", facilityDetails.getName());
+        parameters.put("facilityName", "Dar es salaam");
+        parameters.put("wareHouseId",wareHouseId);
         parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
         parameters.put(JRParameter.REPORT_LOCALE,new Locale(language));
 
@@ -67,8 +68,8 @@ public class WmsReportService {
     }
 
 
-    public void exportReportVaccineSummary(String reportFormat, HttpServletResponse response) throws IOException, JRException {
-        List<VaccineDistributionLineItem> stockList = wmsReportRepository.getReportVaccine();
+    public void exportReportVaccineSummary(String reportFormat,Long facilityId, HttpServletResponse response) throws IOException, JRException {
+        List<VaccineDistributionLineItem> stockList = wmsReportRepository.getReportVaccine(facilityId);
 
         JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
@@ -96,10 +97,10 @@ public class WmsReportService {
         //return "Report generated in Path: "+path;
     }
 
-    public void exportReportVaccineDistribution(String reportFormat,String language, HttpServletResponse response) throws IOException, JRException {
+    public void exportReportVaccineDistribution(String reportFormat,String language,Long orderId, HttpServletResponse response) throws IOException, JRException {
 
-        long ID=9;
-        String vaccineList = getArrayReport(1,ID);
+
+        String vaccineList = getArrayReport(1,orderId);
         JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
         File file = new File(jasperReportCompiler.getReportPath() + "/" + "vaccine_picking_list.jrxml");
@@ -216,15 +217,15 @@ public class WmsReportService {
 
 
 
-    public String getArrayReport(int queryType,Long distributionID) {
+    public String getArrayReport(int queryType,Long ID) {
         JSONArray jsonArray = new JSONArray();
 
         try {
             List<VaccineDistribution> vaccineList =null;
             if(queryType==1){
-                vaccineList= wmsReportRepository.getReportVaccineDistribution();
+                vaccineList= wmsReportRepository.getReportVaccineDistribution(ID);
             }else if(queryType==2){
-                vaccineList= wmsReportRepository.getVaccineDistributionByID(distributionID);
+                vaccineList= wmsReportRepository.getVaccineDistributionByID(ID);
             }
 
             String json = new ObjectMapper().writerWithDefaultPrettyPrinter()

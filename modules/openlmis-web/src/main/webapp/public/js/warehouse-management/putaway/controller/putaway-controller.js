@@ -11,7 +11,7 @@
 function PutawayController($scope, $location,GetInspectionById,putaway,GetWarehouseLocations,SavePutAwayDetails) {
 
  GetWarehouseLocations.get(function(data) {
-               console.log(data.binLocations);
+               console.log("Bin:loc:"+data.binLocations);
                 $scope.warehouseList=data.binLocations;
                 });
 $scope.movementQueue=[];

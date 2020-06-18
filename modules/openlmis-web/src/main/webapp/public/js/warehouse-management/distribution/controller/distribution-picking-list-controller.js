@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionPickingListController($scope,DisableAsn, programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog) {
+function DistributionPickingListController($scope,$window,DisableAsn, programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog) {
 //$scope.orderList=[];
 $scope.getPickingList=function () {
 
@@ -44,6 +44,11 @@ if ($scope.distributionForm.$error.required) {
 
             });
   };
+
+$scope.printPickList=function (data) {
+    $orderId=data.id
+    $window.open('/wms-reports/picklist-report?type=1&docType=pdf&orderId='+$orderId, '_blank');
+};
 }
 
 DistributionPickingListController.resolve = {

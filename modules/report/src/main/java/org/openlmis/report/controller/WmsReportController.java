@@ -39,22 +39,28 @@ public class WmsReportController {
     @Autowired
     private WmsReportService wmsReportService;
 
-    @RequestMapping(value = "/generate-report",params = {"facilityId","docType"})
-    public  void generateReport(@RequestParam String docType, @RequestParam Long facilityId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+    @RequestMapping(value = "/stockonhand-report",params = {"wareHouseId","docType"})
+    public  void generateReport(@RequestParam String docType, @RequestParam Long wareHouseId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-         wmsReportService.exportReport(docType,facilityId,lang,response);
+         wmsReportService.exportStockOnHandReport(docType,wareHouseId,lang,response);
     }
 
-    @RequestMapping(value = "/vaccine-report",params = {"docType"})
-    public  void generateReport(@RequestParam String docType,@RequestParam int type,@RequestParam(required = false,defaultValue = "en")  String lang,HttpServletRequest request
+    @RequestMapping(value = "/picklist-report",params = {"docType","orderId"})
+    public  void generateReport(@RequestParam String docType,@RequestParam Long orderId,@RequestParam int type,@RequestParam(required = false,defaultValue = "en")  String lang,HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-        if(type==1){
-            wmsReportService.exportReportVaccineDistribution(docType,lang, response);
+        ///if(type==1){
+            wmsReportService.exportReportVaccineDistribution(docType,lang,orderId, response);
 
-        }else {
-            wmsReportService.exportReportVaccineSummary(docType, response);
-        }
+
     }
+
+
+    @RequestMapping(value = "/distribution-report",params = {"facilityId","docType"})
+    public  void generateVaccineDistributionReport(@RequestParam String docType, @RequestParam Long facilityId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+        wmsReportService.exportReportVaccineSummary("PDF",facilityId, response);
+    }
+
 
     @RequestMapping(value = "/proof-delivery-report/{distId}")
     public  void generateProofDeliveryReport(@PathVariable Long distId,@RequestParam(required = false,defaultValue = "pdf") int type,@RequestParam(required = false,defaultValue = "en")  String lang,HttpServletRequest request

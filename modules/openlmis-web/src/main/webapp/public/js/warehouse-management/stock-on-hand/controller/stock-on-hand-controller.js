@@ -9,11 +9,11 @@
  */
 
 
-function StockOnHandController($scope, $location,WareHouseList,GetSohReport) {
+function StockOnHandController($scope,$window, $location,WareHouseList,GetSohReport) {
 
 WareHouseList.get({},function(data){
 $scope.warehouses=data.house;
-console.log($scope.warehouses)
+//console.log($scope.warehouses)
 });
 
 
@@ -26,12 +26,21 @@ GetSohReport.get({facilityId:19075, warehouseId:$scope.warehouseId},function(dat
 
 $scope.soh=data.soh;
 
+$scope.warehouseidvalue=$scope.warehouseId;
+
 $scope.products=_.groupBy($scope.soh,'product');
 
 //console.log($scope.products);
 
 });
 
+};
+
+$scope.printStockOnHand=function(data){
+    $wareHouseId=$scope.warehouseId;
+    $window.open('/wms-reports/stockonhand-report?docType=pdf&wareHouseId='+$wareHouseId, '_blank');
+
+    console.log($wareHouseId+"console");
 };
 
 
