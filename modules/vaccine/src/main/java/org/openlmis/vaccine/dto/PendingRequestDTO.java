@@ -19,4 +19,6 @@ public class PendingRequestDTO {
 
     private List<LotOnHand> given = new ArrayList<>();
 
+    private String productCode;
+
 }
