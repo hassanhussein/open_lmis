@@ -15,8 +15,8 @@ public class StockCards {
     private int totalQuantityOnHand;
     private  int productId;
     private String fullName;
-    private String facilityName;
-    private Timestamp effectiveDate;
+    private String warehouseName,locationName;
+    private Timestamp effectiveDate,expirationDate;
     private Timestamp modifiedDate;
 
     public int getId() {
@@ -39,8 +39,8 @@ public class StockCards {
         return fullName;
     }
 
-    public String getFacilityName() {
-        return facilityName;
+    public String getWarehouseName() {
+        return warehouseName;
     }
 
     public Timestamp getEffectiveDate() {
@@ -49,5 +49,13 @@ public class StockCards {
 
     public Timestamp getModifiedDate() {
         return modifiedDate;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public Timestamp getExpirationDate() {
+        return expirationDate;
     }
 }

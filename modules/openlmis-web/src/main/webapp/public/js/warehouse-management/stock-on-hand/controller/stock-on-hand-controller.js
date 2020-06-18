@@ -22,11 +22,20 @@ $scope.getSoh=function(){
 GetSohReport.get({facilityId:19075, warehouseId:$scope.warehouseId},function(data){
 
 
+
 //console.log(data);
 
 $scope.soh=data.soh;
 
 $scope.warehouseidvalue=$scope.warehouseId;
+
+$wareHouseId=$scope.warehouseId;
+if(!$wareHouseId){
+    $scope.disableBtn = true;
+}else {
+    $scope.disableBtn = false;
+}
+
 
 $scope.products=_.groupBy($scope.soh,'product');
 

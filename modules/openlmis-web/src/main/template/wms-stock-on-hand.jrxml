@@ -48,7 +48,9 @@
 	<field name="effectiveDate" class="java.sql.Timestamp"/>
 	<field name="modifiedDate" class="java.sql.Timestamp"/>
 	<field name="fullName" class="java.lang.String"/>
-	<field name="facilityName" class="java.lang.String"/>
+	<field name="locationName" class="java.lang.String"/>
+	<field name="warehouseName" class="java.lang.String"/>
+	<field name="expirationDate" class="java.sql.Timestamp"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -72,7 +74,7 @@
 				</textField>
 				<textField>
 					<reportElement x="92" y="1" width="100" height="30" uuid="b9c2b07d-870c-4330-9a8c-42843bd8504d"/>
-					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{warehouseName}]]></textFieldExpression>
 				</textField>
 				<textField pattern="dd/MM/yyyy">
 					<reportElement x="91" y="21" width="100" height="14" uuid="6a23626c-8384-4b67-85eb-1c86475f6fdb"/>
@@ -245,7 +247,7 @@
 				</reportElement>
 				<box leftPadding="4"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{locationName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement style="styleTable" x="589" y="0" width="87" height="33" uuid="0966aff2-f066-4f88-a60b-01889aeb8843">
@@ -259,7 +261,7 @@
 				<reportElement style="styleTable" x="676" y="0" width="93" height="33" uuid="f486334c-ddda-4c6e-abfe-9902d0a46e8a"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<text><![CDATA[1000]]></text>
+				<text><![CDATA[1,000]]></text>
 			</staticText>
 			<textField>
 				<reportElement style="styleTable" x="47" y="0" width="124" height="33" uuid="d91c90e2-ed6e-4a08-9679-b2cfea220912">
@@ -296,7 +298,7 @@
 				</reportElement>
 				<box leftPadding="4"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{effectiveDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{expirationDate}]]></textFieldExpression>
 			</textField>
 			<frame borderSplitType="DrawBorders">
 				<reportElement stretchType="ElementGroupHeight" mode="Transparent" x="0" y="-4" width="782" height="40" isPrintInFirstWholeBand="true" uuid="c871d92e-cdb4-4f3a-a165-684c5fe4d3f2">

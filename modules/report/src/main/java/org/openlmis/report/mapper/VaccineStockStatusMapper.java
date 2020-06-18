@@ -108,9 +108,10 @@ public interface VaccineStockStatusMapper {
             "\tvd.id,vd.distributionlineitemid," +
             "\tvd.lotid as lotId ,\n" +
             "\tvd.quantity,\n" +
-            "\tvd.vvmstatus as vvmStatus,\n" +
+            "\tvs.name as vvmStatus,\n" +
             "\tl.lotnumber as lotNumber,l.expirationdate as expirationDate\n" +
-            "FROM vaccine_distribution_line_item_lots vd left join lots l on(l.id=vd.lotid)\n" +
+            "FROM vaccine_distribution_line_item_lots vd " +
+            "left join vvm_statuses vs on(vs.id=vd.vvmstatus) left join lots l on(l.id=vd.lotid)\n" +
             " where vd.distributionlineitemid=#{distID}")
 
     List<VaccineDistributionLots> vaccineDistributionLots(@Param("distID") Long distID);

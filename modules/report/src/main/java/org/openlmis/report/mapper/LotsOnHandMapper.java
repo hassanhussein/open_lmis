@@ -29,11 +29,12 @@ public interface LotsOnHandMapper {
     @Select("select * from stock_cards limit 100")
     List<Map> getListOfReports();
 
-    @Select("select lhl.id,s.facilityid as facilityId ,s.productid as productId," +
-            "lhl.quantityonhand as totalQuantityOnHand,s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wh.name  as facilityName from lot_on_hand_locations lhl " +
+    @Select("select lhl.id,s.facilityid as facilityId,wh.name as warehouseName,lo.expirationdate as expirationDate,s.productid as productId," +
+            "lhl.quantityonhand as totalQuantityOnHand,s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wl.name  as locationName from lot_on_hand_locations lhl " +
             "left join lots_on_hand h on (lhl.lotonhandid = h.id) " +
             "left join  stock_cards s on (s.id = h.stockcardid) " +
-            "left join products pr on(pr.id=s.productid) " +
+            "left join lots lo on(lo.id=h.lotid) "+
+            "left join products pr on(pr.id=lo.productid) " +
             "left join wms_locations wl on(wl.id=lhl.locationid) " +
             "left join warehouses wh on(wh.id=wl.warehouseid)" +
             "where wl.warehouseid=#{wareHouseId}")
