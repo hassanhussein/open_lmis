@@ -210,24 +210,10 @@ $scope.requstions.forEach(function(req){
 
     req.lineItems=req.ordered;
 
+
     $scope.distribution_list.push(req);
 
 });
-
-//console.log($scope.distribution_list);
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -261,7 +247,125 @@ console.log($scope.distribution_list);
 
 
 
+$scope.approveDistribution=function(){
 
+
+var events = [];
+var distributionLineItemList = [];
+
+angular.forEach($scope.requstions, function (facility) {
+
+var distribution = {};
+
+distribution.fromFacilityId = facility.fromFacilityId;
+distribution.toFacilityId = facility.toFacilityId;
+distribution.distributionDate = "2020-05-21";
+distribution.periodId = facility.periodId;
+distribution.orderId = facility.orderId;
+distribution.status = "PICKED";
+distribution.distributionType = "SCHEDULED";
+distribution.remarks = facility.remarks;
+distribution.programId = facility.programId;
+distribution.lineItems = [];
+
+ angular.forEach(facility.ordered, function (product) {
+
+
+var lineItem = {};
+
+        if (product.amount > 0) {
+
+             lineItem.productId = product.productId;
+             lineItem.quantity = product.totalQuantity;
+
+             angular.forEach(product.given, function(lot) {
+              lineItem.lots = [];
+             if (lot.quantity !== null && lot.quantity > 0) {
+                     var l = {};
+                     var event = {};
+                     event.type = "ISSUE";
+                     event.productCode = product.productCode;
+                     event.facilityId = facility.toFacilityId;
+                     event.occurred = distribution.distributionDate;
+                     event.quantity = lot.quantity;
+                     event.customProps = {};
+                     event.customProps.occurred = distribution.distributionDate;
+                     event.customProps.issuedto = facility.name;
+
+                     event.lotId = lot.lotId;
+                     event.quantity = lot.quantity;
+
+                     l.lotId = lot.lotId;
+                     l.vvmStatus = lot.vvmStatus;
+                     l.quantity = lot.quantity;
+                     lineItem.lots.push(l);
+                     events.push(event);
+
+             }
+
+             });
+
+
+                }
+
+                if (lineItem.quantity > 0) {
+                    distribution.lineItems.push(lineItem);
+                }
+
+            });
+//             console.log(distribution);
+           distributionLineItemList.push(distribution);
+
+});
+
+//console.log(events);
+
+
+
+StockEvent.save({facilityId: homeFacility}, events, function (data) {
+ console.log(data);
+ if (data.success) {
+$scope.distribution_list=[];
+//console.log($scope.)
+
+$scope.requstions.forEach(function(req){
+
+    req.ordered.forEach(function(ord){
+    ord.lots=ord.given;
+    delete ord.product;
+    });
+
+    req.lineItems=req.ordered;
+    req.status="PICKED";
+
+
+    $scope.distribution_list.push(req);
+
+});
+
+
+
+ SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+
+console.log($scope.distribution_list);
+  $scope.$parent.distributed = true;
+  $location.path('');
+//                  console.log('distributed');
+
+                        });
+
+  updateDistribution.update($scope.distribution_list, function(distribution){
+                    console.log('distributed');
+  });
+                    }
+ });
+
+
+
+
+//console.log('reached here');
+
+};
 
 
 
