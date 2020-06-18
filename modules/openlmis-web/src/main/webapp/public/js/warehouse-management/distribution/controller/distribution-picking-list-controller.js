@@ -46,7 +46,7 @@ if ($scope.distributionForm.$error.required) {
   };
 
 $scope.printPickList=function (data) {
-    $orderId=data.id
+    $orderId=data.id;
     $window.open('/wms-reports/picklist-report?type=1&docType=pdf&orderId='+$orderId, '_blank');
 };
 }
