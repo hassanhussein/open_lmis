@@ -356,7 +356,7 @@ console.log($scope.distribution_list);
 
                         });
 
-  updateDistribution.update($scope.distribution_list, function(distribution){
+  UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
                     console.log('distributed');
   });
                     }
