@@ -1455,3 +1455,7 @@ services.factory('GetPickListByDateRange', function ($resource) {
 services.factory('updateDistribution', function ($resource) {
     return $resource('/vaccine/inventory/distribution/updateDistribution.json', {}, {update: {method: 'PUT'}});
 });
+
+services.factory('ApproveOnlyDistribution', function ($resource) {
+    return $resource('/vaccine/inventory/distribution/approveDistribution.json', {}, {save: {method: 'POST'}});
+});

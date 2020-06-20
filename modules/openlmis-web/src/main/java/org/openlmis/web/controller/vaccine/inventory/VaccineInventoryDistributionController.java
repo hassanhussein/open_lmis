@@ -517,4 +517,19 @@ public class VaccineInventoryDistributionController extends BaseController {
         }
         return OpenLmisResponse.response("distributionId","Updated Successiful");
     }
+
+    @RequestMapping(value = "approveDistribution", method = POST, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> approveDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        try {
+            service.saveDistribution(distribution,userId);
+
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
+        return OpenLmisResponse.response("distributionId", "Approved Successiful");
+    }
+
 }

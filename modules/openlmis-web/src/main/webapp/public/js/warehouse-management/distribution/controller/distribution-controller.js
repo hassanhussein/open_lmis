@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, updateDistribution,localStorageService) {
+function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, updateDistribution,localStorageService,ApproveOnlyDistribution) {
 
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
@@ -215,10 +215,11 @@ $scope.requstions.forEach(function(req){
 
 });
 
-
+console.log($scope.distribution_list);
 
  SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
-
+  console.log(distribution);
+  return;
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
   $location.path('');
@@ -226,9 +227,9 @@ console.log($scope.distribution_list);
 
                         });
 
-  updateDistribution.update($scope.distribution_list, function(distribution){
+/*  updateDistribution.update($scope.distribution_list, function(distribution){
                     console.log('distributed');
-  });
+  });*/
 
 };
 
@@ -345,7 +346,7 @@ $scope.requstions.forEach(function(req){
 
 
 
- SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
