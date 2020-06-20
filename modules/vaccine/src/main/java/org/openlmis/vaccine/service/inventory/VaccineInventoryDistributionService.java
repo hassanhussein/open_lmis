@@ -115,9 +115,12 @@ public Long save(VaccineDistribution distribution, Long userId) {
         if (distribution.getOrderId() != null) {
 
              dbDistribution = repository.getDistributionByOrderId(distribution.getOrderId());
-             distribution.setId(dbDistribution.getId());
+
+             if(dbDistribution != null) {
+                 distribution.setId(dbDistribution.getId());
+             }
         }
-        if (distribution.getId() != null || dbDistribution != null) {
+        if (distribution.getId() != null) {
 
             distribution.setModifiedBy(userId);
             repository.updateDistribution(distribution);
