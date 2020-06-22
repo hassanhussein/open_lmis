@@ -42,8 +42,6 @@ public class WmsReportService {
 
             File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/wms-stock-on-hand.jrxml"));
 
-            System.out.println(file.getAbsolutePath());
-            //Load file and compile it
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stockList);
 
