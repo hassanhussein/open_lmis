@@ -41,6 +41,7 @@
 	<parameter name="HEADER_IMAGE" class="java.lang.String"/>
 	<parameter name="facilityName" class="java.lang.String"/>
 	<parameter name="wareHouseId" class="java.lang.Long"/>
+	<parameter name="createdBy" class="java.lang.String"/>
 	<field name="id" class="java.lang.Integer"/>
 	<field name="facilityId" class="java.lang.Integer"/>
 	<field name="productId" class="java.lang.Integer"/>
@@ -112,7 +113,7 @@
 					<imageExpression><![CDATA[$P{HEADER_IMAGE}]]></imageExpression>
 				</image>
 			</frame>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="687" y="55" width="72" height="20" uuid="86a81259-a002-4aa1-9b6d-9fd86e921eed"/>
 				<textElement>
 					<font isBold="true"/>
@@ -263,7 +264,7 @@
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<text><![CDATA[1,000]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement style="styleTable" x="47" y="0" width="124" height="33" uuid="d91c90e2-ed6e-4a08-9679-b2cfea220912">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4e610a54-42db-4832-83fe-54bb8e241cb3"/>
 				</reportElement>
@@ -271,7 +272,7 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fullName}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement style="styleTable" x="423" y="0" width="85" height="33" uuid="c81779ca-8a44-498d-85d0-b7088c42638c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1ff4ed57-10a7-448b-932f-370ca50a673e"/>
 				</reportElement>
@@ -279,7 +280,7 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{modifiedDate}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement style="styleTable" x="171" y="0" width="74" height="33" uuid="fb898e5f-de6d-4eea-a75d-35aee718d71a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6bbfcca7-e055-4685-893d-df201cae6419"/>
 				</reportElement>
@@ -292,7 +293,7 @@
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd/MM/yyyy">
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
 				<reportElement style="styleTable" x="325" y="0" width="98" height="33" uuid="c21baea4-1de9-4dd1-a3f2-7f3edc54b63e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d4b7745b-a135-414c-918b-504576c8e80e"/>
 				</reportElement>
@@ -320,7 +321,7 @@
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{fullName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{createdBy}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="18" y="2" width="70" height="30" forecolor="#8C8C8C" uuid="4149376c-4b77-4f9f-b872-dd35956bc10b"/>

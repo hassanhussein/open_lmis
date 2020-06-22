@@ -4,6 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.NoArgsConstructor;
 import net.sf.jasperreports.engine.JRException;
 import org.json.JSONArray;
+import org.openlmis.core.domain.User;
+import org.openlmis.core.repository.UserRepository;
+import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.report.model.wmsreport.Facilities;
 import org.openlmis.report.model.wmsreport.StockCards;
 import org.openlmis.report.model.wmsreport.VaccineDistribution;
@@ -31,83 +34,100 @@ import java.util.Map;
 @RestController
 @NoArgsConstructor
 @RequestMapping(value = "/wms-reports")
-public class WmsReportController {
-    private String reportPath = "src/main/template";
+public class WmsReportController extends BaseController {
 
     @Autowired
     WmsReportRepository wmsReportRepository;
     @Autowired
     private WmsReportService wmsReportService;
+    @Autowired
+    private UserRepository userRepository;
 
-    @RequestMapping(value = "/stockonhand-report",params = {"wareHouseId","docType"})
-    public  void generateReport(@RequestParam String docType, @RequestParam Long wareHouseId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+    @RequestMapping(value = "/stockonhand-report", params = {"wareHouseId", "docType"})
+    public void generateReport(@RequestParam String docType, @RequestParam Long wareHouseId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-         wmsReportService.exportStockOnHandReport(docType,wareHouseId,lang,response);
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportStockOnHandReport(docType, wareHouseId, lang, currentName, response);
     }
 
-    @RequestMapping(value = "/picklist-report",params = {"docType","orderId"})
-    public  void generateReport(@RequestParam String docType,@RequestParam Long orderId,@RequestParam int type,@RequestParam(required = false,defaultValue = "en")  String lang,HttpServletRequest request
+    @RequestMapping(value = "/picklist-report", params = {"docType", "orderId"})
+    public void generateReport(@RequestParam String docType, @RequestParam Long orderId, @RequestParam int type, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
         ///if(type==1){
-            wmsReportService.exportReportVaccineDistribution(docType,lang,orderId, response);
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String fullName = userDetails.getFullName();
+        wmsReportService.exportReportVaccineDistribution(docType, lang, orderId, fullName, response);
 
 
     }
 
 
-    @RequestMapping(value = "/distribution-report",params = {"facilityId","docType"})
-    public  void generateVaccineDistributionReport(@RequestParam String docType, @RequestParam Long facilityId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+    @RequestMapping(value = "/distribution-report", params = {"facilityId", "docType"})
+    public void generateVaccineDistributionReport(@RequestParam String docType, @RequestParam Long facilityId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-        wmsReportService.exportReportVaccineSummary("PDF",facilityId, response);
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportReportVaccineSummary("PDF", facilityId, currentName, response);
     }
 
 
     @RequestMapping(value = "/proof-delivery-report/{distId}")
-    public  void generateProofDeliveryReport(@PathVariable Long distId,@RequestParam(required = false,defaultValue = "pdf") int type,@RequestParam(required = false,defaultValue = "en")  String lang,HttpServletRequest request
+    public void generateProofDeliveryReport(@PathVariable Long distId, @RequestParam(required = false, defaultValue = "pdf") int type, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-
-            wmsReportService.exportReportVaccineDeliveryProof(distId,lang, response);
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportReportVaccineDeliveryProof(distId, lang, currentName, response);
     }
 
-    @RequestMapping(value = "/delivery-report",params = {"distId","docType"})
-    public  void generateProofReport(@RequestParam String docType, @RequestParam Long distId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+    @RequestMapping(value = "/delivery-report", params = {"distId", "docType"})
+    public void generateProofReport(@RequestParam String docType, @RequestParam Long distId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-        wmsReportService.exportReportVaccineDeliveryProof(distId,lang,response);
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportReportVaccineDeliveryProof(distId, lang, currentName, response);
     }
 
-    @RequestMapping(value = "/invoice-report",params = {"distId","docType"})
-    public  void generateInvoiceReport(@RequestParam String docType, @RequestParam Long distId,@RequestParam(required = false,defaultValue = "en")  String lang, HttpServletRequest request
+    @RequestMapping(value = "/invoice-report", params = {"distId", "docType"})
+    public void generateInvoiceReport(@RequestParam String docType, @RequestParam Long distId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-        wmsReportService.exportReportVaccineInvoice(distId,lang,response);
+        wmsReportService.exportReportVaccineInvoice(distId, lang, response);
     }
 
 
     @RequestMapping(value = "/list-reports/{facilityId}")
-    public List<StockCards> getListReport(@PathVariable Long facilityId){
+    public List<StockCards> getListReport(@PathVariable Long facilityId) {
         return wmsReportRepository.getListReports(facilityId);
     }
+
     @RequestMapping(value = "/list-vaccine")
     public String getVaccineItems() {
         try {
-            long ID=557;
-            return wmsReportService.getArrayReport(2,ID);
-        }catch (Exception e){
+            long ID = 557;
+            return wmsReportService.getArrayReport(2, ID);
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @RequestMapping(value = "/facility-reports/{facilityId}")
-    public Facilities getFacility(@PathVariable Long facilityId){
-       return wmsReportRepository.getFacilityDetails(facilityId);
+    public Facilities getFacility(@PathVariable Long facilityId) {
+        return wmsReportRepository.getFacilityDetails(facilityId);
     }
+
     @RequestMapping(value = "/list-path")
     public String getListPath() throws FileNotFoundException {
         JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
-        File file= new File(jasperReportCompiler.getReportPath()+"/"+"user-summary.jrxml");
+        File file = new File(jasperReportCompiler.getReportPath() + "/" + "user-summary.jrxml");
 
-        String pathData= file.getAbsolutePath();
+        String pathData = file.getAbsolutePath();
 
         return pathData;
     }
