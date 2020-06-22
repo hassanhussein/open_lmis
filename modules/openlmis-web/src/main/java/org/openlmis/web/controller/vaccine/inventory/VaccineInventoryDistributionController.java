@@ -509,9 +509,12 @@ public class VaccineInventoryDistributionController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
     @Transactional
     public ResponseEntity<OpenLmisResponse> updateDistributionOrderStatus(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
-
+        try {
             service.updateOrderStatus(distribution);
 
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
         return OpenLmisResponse.response("distributionId","Order Updated Successiful");
     }
 
