@@ -31,19 +31,21 @@ public class WmsReportService {
     public void exportStockOnHandReport(String reportFormat, Long wareHouseId, String language, String currentName, HttpServletResponse response) throws IOException, JRException {
 
         try {
-            List<StockCards> stockList = wmsReportRepository.getListReports(wareHouseId);
+            String stockList = getStockProduct(wareHouseId);
 
-            // Facilities facilityDetails = wmsReportRepository.getFacilityDetails(wareHouseId);
 
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(stockList.getBytes());
 
             JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
             File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath( "template/headerimage.png"));
 
-            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/wms-stock-on-hand.jrxml"));
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/wms-stock-hand.jrxml"));
+            File fileSubReport = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/substockonhand.jrxml"));
 
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stockList);
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
 
 
             Map<String, Object> parameters = new HashMap<>();
@@ -51,6 +53,7 @@ public class WmsReportService {
             parameters.put("StockListData", dataSource);
             parameters.put("wareHouseId", wareHouseId);
             parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            parameters.put("product_item_template", fileSubReport.getAbsolutePath());
             parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
@@ -230,6 +233,29 @@ public class WmsReportService {
     }
 
 
+    public String getStockProduct(Long ID){
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            List<StockCard> stockList = wmsReportRepository.getListStockProduct(ID);
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(stockList);
+            JSONArray outputData = new JSONArray(json);
+            for (int i = 0; i < outputData.length(); i++) {
+                JSONObject stockListObject = outputData.getJSONObject(i);
+
+                Long productID = stockListObject.getLong("productId");
+
+                List<StockCards> stockListProd = wmsReportRepository.getListReports(productID);
+
+                stockListObject.put("productItem",stockListProd);
+                jsonArray.put(stockListObject);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return jsonArray.toString();
+    }
     public String getArrayReport(int queryType, Long ID) {
         JSONArray jsonArray = new JSONArray();
 

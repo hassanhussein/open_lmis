@@ -15,7 +15,7 @@ public class StockCards {
     private int totalQuantityOnHand;
     private  int productId;
     private String fullName;
-    private String warehouseName,locationName;
+    private String warehouseName,locationName,lotNumber;
     private Timestamp effectiveDate,expirationDate;
     private Timestamp modifiedDate;
 
@@ -57,5 +57,9 @@ public class StockCards {
 
     public Timestamp getExpirationDate() {
         return expirationDate;
+    }
+
+    public String getLotNumber() {
+        return lotNumber;
     }
 }

@@ -23,8 +23,13 @@ public class WmsReportRepository {
     public List<StockCards> getReportListWithFullAttributes(Long facilityId){
         return lotsOnHandMapper.getListWithFullAttributes(facilityId);
     }
-    public List<StockCards> getListReports(Long warehouseId){
-        return lotsOnHandMapper.getListStockOnHand(warehouseId);
+
+    public List<StockCard> getListStockProduct(Long warehouseId){
+        return lotsOnHandMapper.getListStockProduct(warehouseId);
+    }
+
+    public List<StockCards> getListReports(Long productId){
+        return lotsOnHandMapper.getListStockOnHand(productId);
     }
 
     public Facilities getFacilityDetails(Long facilityId){
