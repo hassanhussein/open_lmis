@@ -16,6 +16,8 @@ import org.springframework.util.ResourceUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -26,206 +28,243 @@ public class WmsReportService {
     @Autowired
     WmsReportRepository wmsReportRepository;
 
-    public void exportStockOnHandReport(String reportFormat, Long wareHouseId,String language, HttpServletResponse response) throws IOException, JRException {
-        //String path="C:\\Users\\user\\Desktop\\ExpotedPdf";
-        List<StockCards> stockList = wmsReportRepository.getListReports(wareHouseId);
+    public void exportStockOnHandReport(String reportFormat, Long wareHouseId, String language, String currentName, HttpServletResponse response) throws IOException, JRException {
 
-       // Facilities facilityDetails = wmsReportRepository.getFacilityDetails(wareHouseId);
-
-
-        JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
-
-        File file = new File(jasperReportCompiler.getReportPath() + "/" + "wms-stock-on-hand.jrxml");
-
-        File imagePath = new File(jasperReportCompiler.getReportPathImage() + "/" + "headerimage.png");
-
-        //Load file and compile it
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stockList);
+        try {
+            String stockList = getStockProduct(wareHouseId);
 
 
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Felix Joseph");
-        parameters.put("StockListData", dataSource);
-        parameters.put("facilityName", "Dar es salaam");
-        parameters.put("wareHouseId",wareHouseId);
-        parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
-        parameters.put(JRParameter.REPORT_LOCALE,new Locale(language));
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(stockList.getBytes());
 
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
-        if (reportFormat.equals("pdf")) {
-            response.setContentType("application/pdf");
-            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
-            OutputStream out = response.getOutputStream();
-            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
-        } else if (reportFormat.equals("EXCEL")) {
-            response.setContentType("application/x-download");
-            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
-            OutputStream out = response.getOutputStream();
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath( "template/headerimage.png"));
 
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/wms-stock-hand.jrxml"));
+            File fileSubReport = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/substockonhand.jrxml"));
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+            parameters.put("StockListData", dataSource);
+            parameters.put("wareHouseId", wareHouseId);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            parameters.put("product_item_template", fileSubReport.getAbsolutePath());
+            parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+            if (reportFormat.equals("pdf")) {
+                response.setContentType("application/pdf");
+                response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+                OutputStream out = response.getOutputStream();
+                JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+            } else if (reportFormat.equals("EXCEL")) {
+                response.setContentType("application/x-download");
+                response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+                OutputStream out = response.getOutputStream();
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
 
-    public void exportReportVaccineSummary(String reportFormat,Long facilityId, HttpServletResponse response) throws IOException, JRException {
-        List<VaccineDistributionLineItem> stockList = wmsReportRepository.getReportVaccine(facilityId);
+    public void exportReportVaccineSummary(String reportFormat, Long facilityId, String currentName, HttpServletResponse response) throws IOException, JRException {
+        try {
+            List<VaccineDistributionLineItem> stockList = wmsReportRepository.getReportVaccine(facilityId);
 
-        JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
-        File file = new File(jasperReportCompiler.getReportPath() + "/" + "vaccine-distribution-summary-report.jrxml");
+            File file = new File(jasperReportCompiler.getReportPath() + "/" + "vaccine-distribution-summary-report.jrxml");
 
-        File imagePath = new File(jasperReportCompiler.getReportPathImage() + "/" + "headerimage.png");
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
 
-        //Load file and compile it
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stockList);
+            //Load file and compile it
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stockList);
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+            parameters.put("VaccineListData", dataSource);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            //JasperExportManager.exportReportToPdfFile(jasperPrint,path+"\\"+reportName+".pdf");
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+            //return "Report generated in Path: "+path;
+        }catch (Exception e){
+
+        }
+    }
+
+    public void exportReportVaccineDistribution(String reportFormat, String language, Long orderId, String fullName, HttpServletResponse response) throws IOException, JRException {
+
+        try {
+
+            String vaccineList = getArrayReport(1, orderId);
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
+
+            File file =ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_picking_list.jrxml"));
+
+            File filePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_distribution_product.jrxml"));
+            File filePathLots =ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_distribution_order.jrxml"));
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(vaccineList.getBytes());
+
+            //Load file and compile it
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
 
 
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Felix Joseph");
-        parameters.put("VaccineListData", dataSource);
-        parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-        //JasperExportManager.exportReportToPdfFile(jasperPrint,path+"\\"+reportName+".pdf");
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", fullName);
+            parameters.put("VaccineListData", dataSource);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            parameters.put("vaccine_distribution_product", filePath.getAbsolutePath());
+            parameters.put("vaccine_distribution_lots", filePathLots.getAbsolutePath());
+            parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
 
-        response.setContentType("application/pdf");
-        response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
-        OutputStream out = response.getOutputStream();
-        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+            //return "Report generated in Path: "+path;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void exportReportVaccineInvoice(Long distId, String language, HttpServletResponse response) throws IOException, JRException {
+
+        try {
+            String vaccineList = getArrayReport(2, distId);
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_invoice.jrxml"));
+
+            //  String fileProdLots = jasperReportCompiler.getReportPath() + "/" + "vaccine_delivery_prooft_items.jrxml";
+
+            File filePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_invoice_products.jrxml"));
+            //File filePathLots = new File(fileProdLots);
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(vaccineList.getBytes());
+
+            //Load file and compile it
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", "Felix Joseph");
+            parameters.put("VaccineListData", dataSource);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            parameters.put("vaccine_distribution_product", filePath.getAbsolutePath());
+            //parameters.put("vaccine_distribution_lots", filePathLots.getAbsolutePath());
+            parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+            //return "Report generated in Path: "+path;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    public void exportReportVaccineDeliveryProof(Long distId, String language, String currentName, HttpServletResponse response) throws IOException, JRException {
+
+        try {
+            String vaccineList = getArrayReport(2, distId);
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("vaccine_proof_of_delivery.jrxml"));
+
+            File filePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("vaccine_distibution_product_proof.jrxml"));
+            File filePathLots = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_delivery_prooft_items.jrxml"));
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(vaccineList.getBytes());
+
+            //Load file and compile it
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+            parameters.put("VaccineListData", dataSource);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            parameters.put("vaccine_distribution_product", filePath.getAbsolutePath());
+            parameters.put("vaccine_distribution_lots", filePathLots.getAbsolutePath());
+            parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         //return "Report generated in Path: "+path;
     }
 
-    public void exportReportVaccineDistribution(String reportFormat,String language,Long orderId, HttpServletResponse response) throws IOException, JRException {
 
-
-        String vaccineList = getArrayReport(1,orderId);
-        JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
-
-        File file = new File(jasperReportCompiler.getReportPath() + "/" + "vaccine_picking_list.jrxml");
-        String fileProd = jasperReportCompiler.getReportPath() + "/" + "vaccine_distribution_product.jrxml";
-
-        String fileProdLots = jasperReportCompiler.getReportPath() + "/" + "vaccine_distribution_order.jrxml";
-
-        File filePath = new File(fileProd);
-        File filePathLots = new File(fileProdLots);
-        File imagePath = new File(jasperReportCompiler.getReportPathImage() + "/" + "headerimage.png");
-
-        ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(vaccineList.getBytes());
-
-        //Load file and compile it
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
-
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Felix Joseph");
-        parameters.put("VaccineListData", dataSource);
-        parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
-        parameters.put("vaccine_distribution_product", filePath.getAbsolutePath());
-        parameters.put("vaccine_distribution_lots", filePathLots.getAbsolutePath());
-        parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-        response.setContentType("application/pdf");
-        response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
-        OutputStream out = response.getOutputStream();
-        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
-
-        //return "Report generated in Path: "+path;
-    }
-
-    public void exportReportVaccineInvoice(Long distId,String language, HttpServletResponse response) throws IOException, JRException {
-        String vaccineList = getArrayReport(2,distId);
-        JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
-
-        File file = new File(jasperReportCompiler.getReportPath() + "/" + "vaccine_invoice.jrxml");
-        String fileProd = jasperReportCompiler.getReportPath() + "/" + "vaccine_invoice_products.jrxml";
-
-      //  String fileProdLots = jasperReportCompiler.getReportPath() + "/" + "vaccine_delivery_prooft_items.jrxml";
-
-        File filePath = new File(fileProd);
-        //File filePathLots = new File(fileProdLots);
-        File imagePath = new File(jasperReportCompiler.getReportPathImage() + "/" + "headerimage.png");
-
-        ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(vaccineList.getBytes());
-
-        //Load file and compile it
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
-
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Felix Joseph");
-        parameters.put("VaccineListData", dataSource);
-        parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
-        parameters.put("vaccine_distribution_product", filePath.getAbsolutePath());
-        //parameters.put("vaccine_distribution_lots", filePathLots.getAbsolutePath());
-        parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-        response.setContentType("application/pdf");
-        response.addHeader("Content-disposition", "inline; filename=StatisticsReport1.pdf");
-        OutputStream out = response.getOutputStream();
-        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
-
-        //return "Report generated in Path: "+path;
-    }
-
-
-    public void exportReportVaccineDeliveryProof(Long distId,String language, HttpServletResponse response) throws IOException, JRException {
-        String vaccineList = getArrayReport(2,distId);
-        JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
-
-        File file = new File(jasperReportCompiler.getReportPath() + "/" + "vaccine_proof_of_delivery.jrxml");
-        String fileProd = jasperReportCompiler.getReportPath() + "/" + "vaccine_distibution_product_proof.jrxml";
-
-        String fileProdLots = jasperReportCompiler.getReportPath() + "/" + "vaccine_delivery_prooft_items.jrxml";
-
-        File filePath = new File(fileProd);
-        File filePathLots = new File(fileProdLots);
-        File imagePath = new File(jasperReportCompiler.getReportPathImage() + "/" + "headerimage.png");
-
-        ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(vaccineList.getBytes());
-
-        //Load file and compile it
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
-
-
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("createdBy", "Felix Joseph");
-        parameters.put("VaccineListData", dataSource);
-        parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
-        parameters.put("vaccine_distribution_product", filePath.getAbsolutePath());
-        parameters.put("vaccine_distribution_lots", filePathLots.getAbsolutePath());
-        parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
-
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-
-        response.setContentType("application/pdf");
-        response.addHeader("Content-disposition", "inline; filename=StatisticsReport1.pdf");
-        OutputStream out = response.getOutputStream();
-        JasperExportManager.exportReportToPdfStream(jasperPrint, out);
-
-        //return "Report generated in Path: "+path;
-    }
-
-
-
-
-    public String getArrayReport(int queryType,Long ID) {
+    public String getStockProduct(Long ID){
         JSONArray jsonArray = new JSONArray();
 
         try {
-            List<VaccineDistribution> vaccineList =null;
-            if(queryType==1){
-                vaccineList= wmsReportRepository.getReportVaccineDistribution(ID);
-            }else if(queryType==2){
-                vaccineList= wmsReportRepository.getVaccineDistributionByID(ID);
+            List<StockCard> stockList = wmsReportRepository.getListStockProduct(ID);
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(stockList);
+            JSONArray outputData = new JSONArray(json);
+            for (int i = 0; i < outputData.length(); i++) {
+                JSONObject stockListObject = outputData.getJSONObject(i);
+
+                Long productID = stockListObject.getLong("productId");
+
+                List<StockCards> stockListProd = wmsReportRepository.getListReports(productID);
+
+                stockListObject.put("productItem",stockListProd);
+                jsonArray.put(stockListObject);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return jsonArray.toString();
+    }
+    public String getArrayReport(int queryType, Long ID) {
+        JSONArray jsonArray = new JSONArray();
+
+        try {
+            List<VaccineDistribution> vaccineList = null;
+            if (queryType == 1) {
+                vaccineList = wmsReportRepository.getReportVaccineDistribution(ID);
+            } else if (queryType == 2) {
+                vaccineList = wmsReportRepository.getVaccineDistributionByID(ID);
             }
 
             String json = new ObjectMapper().writerWithDefaultPrettyPrinter()

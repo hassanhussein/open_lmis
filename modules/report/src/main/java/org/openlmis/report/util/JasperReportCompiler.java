@@ -18,6 +18,9 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 /**
  * Utility class used to compile Jasper Design file(.jrxml) to Jasper Report (.jasper)
@@ -33,6 +36,12 @@ public class JasperReportCompiler {
 
     public String getReportPath() {
         return reportPath;
+    }
+
+
+    public URI getReportPath(String docPath) throws URISyntaxException {
+        URL url = this.getClass().getClassLoader().getResource(docPath);
+        return url.toURI();
     }
 
     public void setReportPath(String reportPath) {

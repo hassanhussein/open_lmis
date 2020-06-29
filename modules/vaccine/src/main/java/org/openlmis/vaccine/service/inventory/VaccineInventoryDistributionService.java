@@ -89,9 +89,9 @@ public class VaccineInventoryDistributionService {
     }
 
 @Transactional
-    public Long save(VaccineDistribution distribution, Long userId) {
+public Long save(VaccineDistribution distribution, Long userId) {
         //Get supervised facility period
-
+    System.out.println("Reached Here");
     System.out.println(userId);
         Facility homeFacility = facilityService.getHomeFacility(userId);
     System.out.println("fac");
@@ -115,9 +115,12 @@ public class VaccineInventoryDistributionService {
         if (distribution.getOrderId() != null) {
 
              dbDistribution = repository.getDistributionByOrderId(distribution.getOrderId());
-             distribution.setId(dbDistribution.getId());
+
+             if(dbDistribution != null) {
+                 distribution.setId(dbDistribution.getId());
+             }
         }
-        if (distribution.getId() != null || dbDistribution != null) {
+        if (distribution.getId() != null) {
 
             distribution.setModifiedBy(userId);
             repository.updateDistribution(distribution);
@@ -434,13 +437,20 @@ public class VaccineInventoryDistributionService {
         for (VaccineDistribution distribution : distributions) {
             distribution.setCreatedBy(userId);
             distribution.setModifiedBy(userId);
-
-            if(distribution.getStatus().equalsIgnoreCase("PICKED"))
-                distribution.setStatus("PICKED");
-            else
-                distribution.setStatus("UNDER_PICKING");
+            distribution.setStatus("UNDER_PICKING");
             save(distribution,userId);
       }
+
+    }
+
+    public void approveDistribution(List<VaccineDistribution> distributions, Long userId){
+
+        for (VaccineDistribution distribution : distributions) {
+            distribution.setCreatedBy(userId);
+            distribution.setModifiedBy(userId);
+            distribution.setStatus("PICKED");
+            save(distribution,userId);
+        }
 
     }
 

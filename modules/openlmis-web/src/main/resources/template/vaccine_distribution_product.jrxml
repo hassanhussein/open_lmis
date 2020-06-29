@@ -21,7 +21,7 @@
 					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("itemLots")]]></dataSourceExpression>
 					<subreportExpression><![CDATA[JasperCompileManager.compileReport($P{vaccine_distribution_lots})]]></subreportExpression>
 				</subreport>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="142" y="11" width="101" height="19" uuid="b39d394f-5bfe-44cf-a770-ec0af4c2c01d"/>
 					<textElement>
 						<font size="10"/>
@@ -287,18 +287,6 @@
 				<reportElement x="138" y="25" width="102" height="1" uuid="a47c0fb6-e098-4907-a043-04a1f90f5a63"/>
 				<graphicElement>
 					<pen lineWidth="1.0"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="90" y="225" width="101" height="1" uuid="c4285b40-ed56-4697-ab14-442d002adde9"/>
-				<graphicElement>
-					<pen lineWidth="1.5"/>
-				</graphicElement>
-			</line>
-			<line>
-				<reportElement x="440" y="226" width="80" height="1" uuid="939863c8-1b6c-4418-b06c-6ac4a3fee089"/>
-				<graphicElement>
-					<pen lineWidth="1.5"/>
 				</graphicElement>
 			</line>
 			<textField pattern="dd/MM/yyyy">

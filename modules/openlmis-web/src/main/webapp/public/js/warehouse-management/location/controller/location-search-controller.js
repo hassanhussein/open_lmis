@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function LocationSearchController($scope,WareHouseList,navigateBackService,SaveBinLocation,updateBinLocation,SearchBinByPaged) {
+function LocationSearchController($location,$scope,WareHouseList,navigateBackService,SaveBinLocation,updateBinLocation,SearchBinByPaged) {
 
 console.log( $scope.newLocation);
 
@@ -75,6 +75,7 @@ $scope.warehouses=data.house;
             $scope.newLocationModal = true;
             $scope.newLot = {};
             $scope.newLot.product = product;
+            $scope.error = "";
 
         };
 
@@ -97,6 +98,28 @@ $scope.warehouses=data.house;
             location.editMode=true;
             };
 
+       var success = function (data) {
+          $scope.error = "";
+          $scope.$parent.message = data.success;
+          //$scope.$parent.locationId = data.location.id;
+          $scope.showError = false;
+         // $location.path('');
+        };
+
+        var error = function (data) {
+
+        if(data.status === 400) {
+            console.log(data);
+                  $scope.$parent.message = "";
+                  $scope.error = data.data.error;
+                  $scope.showError = true;
+        } else {
+
+        success(data);
+        }
+
+        };
+
 
       $scope.editBin=function(row){
       var newLocation = {};
@@ -112,7 +135,9 @@ $scope.warehouses=data.house;
 
       };
 
+
        $scope.createLocation = function() {
+       console.log('cacae');
               var newLocation = {};
               newLocation.code = $scope.newLocation.code;
               newLocation.name = $scope.newLocation.name;
@@ -125,6 +150,6 @@ $scope.warehouses=data.house;
                    $scope.newLocation.code="";
                    $scope.newLocation.name="";
                    $scope.newLocation.type="";
-              });
+              }, error);
           };
 }

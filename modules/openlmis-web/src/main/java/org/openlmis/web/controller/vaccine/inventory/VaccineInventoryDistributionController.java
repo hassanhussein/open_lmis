@@ -505,16 +505,31 @@ public class VaccineInventoryDistributionController extends BaseController {
         return OpenLmisResponse.response("distributionId", "Saved Successiful");
     }
 
-    @RequestMapping(value = "updateDistribution", method = PUT, headers = ACCEPT_JSON)
+    @RequestMapping(value = "updateDistributionOrderStatus", method = PUT, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
     @Transactional
-    public ResponseEntity<OpenLmisResponse> updateDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
+    public ResponseEntity<OpenLmisResponse> updateDistributionOrderStatus(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
         try {
             service.updateOrderStatus(distribution);
 
         }catch (Exception e){
             e.fillInStackTrace();
         }
-        return OpenLmisResponse.response("distributionId","Updated Successiful");
+        return OpenLmisResponse.response("distributionId","Order Updated Successiful");
     }
+
+    @RequestMapping(value = "approveDistribution", method = POST, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK, VIEW_STOCK_ON_HAND')")
+    @Transactional
+    public ResponseEntity<OpenLmisResponse> approveDistribution(@RequestBody List<VaccineDistribution> distribution, HttpServletRequest request) {
+        Long userId = loggedInUserId(request);
+        try {
+            service.approveDistribution(distribution,userId);
+
+        }catch (Exception e){
+            e.fillInStackTrace();
+        }
+        return OpenLmisResponse.response("distributionId", "Approved Successiful");
+    }
+
 }

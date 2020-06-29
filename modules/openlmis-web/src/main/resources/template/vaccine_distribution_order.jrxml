@@ -86,13 +86,13 @@
 					</jr:Codabar>
 				</componentElement>
 			</frame>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="70" y="0" width="80" height="21" forecolor="#666666" uuid="f11e6c7d-37d0-4bc7-bd72-407175bb3bef"/>
 				<box rightPadding="5"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{vvmStatus}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0.###">
+			<textField pattern="#,##0.###" isBlankWhenNull="true">
 				<reportElement x="-11" y="1" width="81" height="20" forecolor="#666666" uuid="179aac7f-954a-4eb7-b894-a2b67a114cb4">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0cb2cc98-1535-40be-a52c-a6e91fa989d4"/>
 				</reportElement>
@@ -100,7 +100,7 @@
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="150" y="0" width="70" height="20" forecolor="#666666" uuid="fe70246d-3fcc-47a9-89ff-9fd1c1f127b3">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f2e24382-0ea6-4b52-bb1d-f04e8c97baff"/>
 				</reportElement>
@@ -108,7 +108,7 @@
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{expirationDate}))]]></textFieldExpression>
 			</textField>
-			<textField pattern="##,###">
+			<textField pattern="##,###" isBlankWhenNull="true">
 				<reportElement x="220" y="0" width="60" height="20" forecolor="#666666" uuid="0867355c-d269-4412-874d-f0141bf6091b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e26264d-0f91-4e61-8882-e7889390bd63"/>
 				</reportElement>
@@ -116,7 +116,7 @@
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="280" y="0" width="71" height="20" forecolor="#666666" uuid="febfc334-1dc1-43d5-8d4a-650355697938"/>
 				<box leftPadding="5"/>
 				<textElement textAlignment="Left"/>

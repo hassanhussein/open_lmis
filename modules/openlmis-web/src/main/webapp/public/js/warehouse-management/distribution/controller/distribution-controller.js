@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, updateDistribution,localStorageService) {
+function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, UpdateDistributionOrderStatus,localStorageService,ApproveOnlyDistribution) {
 
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
@@ -203,6 +203,7 @@ $scope.distribution_list=[];
 
 $scope.requstions.forEach(function(req){
 
+    req.status='PENDING';
     req.ordered.forEach(function(ord){
     ord.lots=ord.given;
     delete ord.product;
@@ -215,10 +216,10 @@ $scope.requstions.forEach(function(req){
 
 });
 
-
+console.log($scope.distribution_list);
 
  SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
-
+  console.log(distribution);
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
   $location.path('');
@@ -226,12 +227,12 @@ console.log($scope.distribution_list);
 
                         });
 
-  updateDistribution.update($scope.distribution_list, function(distribution){
-                    console.log('distributed');
+  UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
+                 console.log(distribution);
+                    console.log('distributedsa');
   });
 
 };
-
 
 
 
@@ -345,7 +346,8 @@ $scope.requstions.forEach(function(req){
 
 
 
- SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+
 
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
@@ -354,7 +356,7 @@ console.log($scope.distribution_list);
 
                         });
 
-  updateDistribution.update($scope.distribution_list, function(distribution){
+  UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
                     console.log('distributed');
   });
                     }
