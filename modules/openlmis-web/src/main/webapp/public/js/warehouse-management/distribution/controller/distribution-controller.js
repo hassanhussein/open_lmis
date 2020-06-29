@@ -36,7 +36,7 @@ $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
  var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
-//console.log($scope.soh);
+console.log(all_orders);
 $scope.requstions.push({
                              fromFacilityId:19075,
                              toFacilityId:requisitionsWithProduct.facilityId,
