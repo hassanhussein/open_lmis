@@ -21,6 +21,8 @@ import java.util.Date;
 @Setter
 public class EquipmentChangeLogDto {
 
+  private Long equipmentId;
+
   private String serialNumber;
 
   private String changeType;
