@@ -320,7 +320,7 @@ function DistributionSearchController($scope,DisableAsn, localStorageService,pro
         $scope.issueSelectable=true;
      }
      });
-  }
+  };
 
 
   $scope.amend=function(order){
