@@ -49,7 +49,7 @@
                         </label>
 
                         <div class="form-field">
-                            <input id="receiptNumber" ng-model="inspection.receive.receiveLineItems[0].receiveNumber" ng-disabled="false" type="text" maxlength="50" />
+                            <input id="receiptNumber" ng-model="inspection.receive.receiveLineItems[0].receiveNumber" ng-disabled="true" type="text" maxlength="50" />
 
                         </div>
                     </div>
@@ -197,7 +197,7 @@
                             <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && !isVaccine)" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && isVaccine)"   value="1" ng-click="changeProductType(false)" > Other Items
+                            <input type="radio" ng-model="switchData" ng-disabled="true"   value="1" ng-click="changeProductType(false)" > Other Items
                         </label>
 
                     </div>
@@ -472,7 +472,7 @@
                             </div>
                         <div class="tab-pane" id="tab3">
                             <div class="form-row clearfix">
-                                <div class="span4" ng-if="!viewMode" ng-show="false">
+                                <div class="span4" ng-if="!viewMode">
                                     <fieldset>
                                         <label for="model"><span>Document Type</span>:</label>
 
