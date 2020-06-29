@@ -108,8 +108,8 @@ public class WmsReportController extends BaseController {
     @RequestMapping(value = "/list-vaccine")
     public String getVaccineItems() {
         try {
-            long ID = 557;
-            return wmsReportService.getArrayReport(2, ID);
+            long ID = 5;
+            return wmsReportService.getStockProduct(ID);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
