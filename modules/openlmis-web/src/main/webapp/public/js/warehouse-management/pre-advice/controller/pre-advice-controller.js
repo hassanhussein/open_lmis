@@ -792,6 +792,7 @@ console.log($scope.fiiCost);
 
 
     $scope.saveAsn = function(status) {
+        console.log($scope.docLists);
 
 //    console.log($scope.asnCode);
 
@@ -802,12 +803,12 @@ console.log($scope.fiiCost);
 //    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required ||$scope.docList.length < 4) {
+      if ($scope.asnForm.$error.required ||$scope.docLists.length <= parseInt(3,10)) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
 
-            if($scope.docList.length<4){
+            if($scope.docLists.length <= parseInt(3,10)){
             $scope.docError=true;
             }
 //            console.log('dfas')
