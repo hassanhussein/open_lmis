@@ -126,10 +126,10 @@
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="110" y="10" width="70" height="30" backcolor="#73A098" uuid="183e4ee7-ea96-47d5-bb65-1f4536ae6000"/>
-				<box>
+				<box leftPadding="4">
 					<pen lineWidth="1.4"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Batch No]]></text>
@@ -156,10 +156,10 @@
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="350" y="10" width="70" height="30" backcolor="#73A098" uuid="001031a6-c868-494c-905f-8dc8f8b448f3"/>
-				<box>
+				<box leftPadding="4">
 					<pen lineWidth="1.4"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Location]]></text>

@@ -46,7 +46,7 @@ public interface SiteMapper {
          "WHERE LOWER(s.name) LIKE '%' || LOWER(#{searchParam} || '%') "})
  Integer getTotalSearchResultCount(String param);
 
- @Select({"SELECT h.id,h.code, h.name,gz.name region FROM sites h\n" ,
+ @Select({"SELECT h.id,h.code,h.active, h.name,gz.name region FROM sites h\n" ,
          "JOIN GEOGRAPHIC_ZONES gz ON  gz.id = h.geographicZoneId\n" ,
          "WHERE LOWER(h.name) LIKE '%' || LOWER(#{searchParam} || '%') ",
          "ORDER BY LOWER(h.name)"})
