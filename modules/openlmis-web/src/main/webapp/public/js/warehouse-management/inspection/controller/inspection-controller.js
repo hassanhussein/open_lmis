@@ -421,7 +421,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
-      console.log(data.inspection)
+//      console.log(data.inspection)
         deferred.resolve(data.inspection);
       }, {});
     }, 100);
