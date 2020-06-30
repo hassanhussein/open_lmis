@@ -32,7 +32,7 @@
                                     ng-required="true">
                                 <option value="">Select Region</option>
                             </select>
-                            <span class="field-error" ng-show="locationForm.geographicZoneId.$error.required && showError"
+                            <span class="field-error" ng-show="locationForm.locationType.$error.required && showError"
                                   openlmis-message="select.value"></span>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
 
                         <div class="form-field">
                             <input ng-model="site.code" name="code" id="code" type="text" maxlength="50" ng-required="true"/>
-                            <span class="field-error" ng-show="locationForm.site.$error.required && showError"
+                            <span class="field-error" ng-show="locationForm.code.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>

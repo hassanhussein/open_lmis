@@ -1459,3 +1459,7 @@ services.factory('UpdateDistributionOrderStatus', function ($resource) {
 services.factory('ApproveOnlyDistribution', function ($resource) {
     return $resource('/vaccine/inventory/distribution/approveDistribution.json', {}, {save: {method: 'POST'}});
 });
+
+services.factory('GetAllClearingAgents', function ($resource) {
+    return $resource('/rest-api/warehouse/all-clearing-agents.json', {}, {});
+});

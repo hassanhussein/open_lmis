@@ -163,6 +163,7 @@ getAllLookups();
 
 
                     $scope.productsToDisplay = $scope.allProducts;
+                    console.log($scope.allProducts);
 
                 });
         }else{
@@ -789,12 +790,18 @@ console.log($scope.fiiCost);
 //    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required && $scope.docList.length < 1) {
+      if ($scope.asnForm.$error.required && $scope.docList.length < 4) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
+
+            if($scope.docList.length<4){
+            $scope.docError=true;
+            }
 //            console.log('dfas')
             return;
+
+
         }
 
 
@@ -998,6 +1005,7 @@ $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentT
         $scope.upload = function(document) {
 
          if(document.documentType !== null && document.file !== null) {
+            $scope.docError=false;
 
           document.fileLocation = document.file.name;
           removeItemFromList(document.documentType);

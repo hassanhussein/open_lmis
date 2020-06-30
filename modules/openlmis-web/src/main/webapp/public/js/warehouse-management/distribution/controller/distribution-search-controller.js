@@ -1,5 +1,9 @@
 function DistributionSearchController($scope,DisableAsn, localStorageService,programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog){
 
+        $scope.issueSelectable=false;
+
+
+
   $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 //            console.log($scope.rights);
@@ -306,6 +310,16 @@ function DistributionSearchController($scope,DisableAsn, localStorageService,pro
 
 
 
+  };
+
+
+
+  $scope.checkSelection=function(){
+  angular.forEach($scope.orderList,function(order){
+     if(order.issue===true){
+        $scope.issueSelectable=true;
+     }
+     });
   };
 
 

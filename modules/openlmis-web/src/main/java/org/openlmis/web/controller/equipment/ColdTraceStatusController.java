@@ -14,6 +14,7 @@ package org.openlmis.web.controller.equipment;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.equipment.domain.ColdChainEquipmentTemperatureAlarm;
@@ -23,6 +24,7 @@ import org.openlmis.equipment.service.DailyColdTraceStatusService;
 import org.openlmis.equipment.service.EquipmentInventoryService;
 import org.openlmis.restapi.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -183,14 +185,17 @@ public class ColdTraceStatusController extends BaseController {
   }
 
 
-  @ApiOperation(value = "returns list of equipments serial number and active status changes",
-      notes = "<p>accepts a date as a parameter for starting from when the change log is returned." +
+  @ApiOperation(value = "returns list of equipments serial number and active status changes in incremental manner",
+      notes = "<p>accepts a date (yyyy-MM-dd) as a parameter for starting from when the change log is returned." +
           "</p>",
       response = EquipmentChangeLogDto.class, responseContainer = "List"
 
   )
   @RequestMapping(value = "/rest-api/equipment/cold-trace/equipment-changes", method = RequestMethod.GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getEquipmentChangeLogs(@RequestParam("lastDate") Date date) {
+  public ResponseEntity<OpenLmisResponse> getEquipmentChangeLogs(
+      @ApiParam("The date that API user has last retrieved change logs for. (yyyy-MM-dd)")
+      @RequestParam("lastDate")
+      @DateTimeFormat(pattern="yyyy-MM-dd") Date date) {
     return OpenLmisResponse.response("changes", equipmentInventoryService.getEquipmentLogDtos(date));
   }
 

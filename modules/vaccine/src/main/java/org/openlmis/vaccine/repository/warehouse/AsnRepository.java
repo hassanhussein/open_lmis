@@ -8,6 +8,7 @@ import org.openlmis.vaccine.repository.mapper.warehouse.asn.AsnMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -79,5 +80,9 @@ public class AsnRepository {
     public Asn getByAsnNumber(String asnNumber) {
 
         return mapper.getByAsnNumber(asnNumber);
+    }
+
+    public List<HashMap> getAllClearingAgents() {
+        return mapper.getAllClearingAgents();
     }
 }
