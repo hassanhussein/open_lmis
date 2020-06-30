@@ -1,4 +1,4 @@
-function InspectionController($scope,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary){
+function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary){
 
 
 $scope.globalErrorFlag=true;
@@ -10,6 +10,17 @@ GetLocationSummary.get({}, function(data){
      console.log(data.locationList);
 
     });
+
+
+
+ $scope.clearingAgentList = [];
+
+GetAllClearingAgents.get({}, function(data){
+
+           $scope.clearingAgentList = data.agents;
+           console.log(data);
+
+           });
 
 
  VaccineDiscardingReasons.get({},function(data){
@@ -412,6 +423,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
+      console.log(data.inspection)
         deferred.resolve(data.inspection);
       }, {});
     }, 100);

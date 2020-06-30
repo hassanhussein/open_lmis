@@ -130,7 +130,7 @@
                             </tr>
                             <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">
                                 <td class="cell-input col-beginningBalance"  ng-repeat="req in requstions" >
-                                    <input numeric-validator="positiveInteger" ng-class="{'ng-invalid-input':qty>lot.amount}"  ng-change="giveLot(req,p,lot,qty,$index)"  ng-init="qty=getQuantity(req,p,lot,$index)" ng-model="qty"  ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)||(lot.amount<=0 && !focus)" ng-init="focus=false" ng-focus="focus=true" ng-blur="focus=false" class="ng-invalid" type="text">
+                                    <input numeric-validator="positiveInteger" ng-class="{'ng-invalid-input':qty>lot.amount}"  ng-change="giveLot(req,p,lot,qty,$index)"  ng-init="qty=getQuantity(req,p,lot,$index)" ng-model="qty"  ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)" ng-init="focus=false" ng-focus="focus=true" ng-blur="focus=false" class="ng-invalid" type="text">
                                 </td>
                             </tr>
 

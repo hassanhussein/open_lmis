@@ -168,7 +168,7 @@
                         </label>
 
                         <div class="form-field">
-                            <textarea id="description" rows="3" ng-disabled="viewMode" style="width: 425px;" ng-model="inspection.descriptionOfInspection" ></textarea>
+                            <textarea id="description" rows="3" ng-disabled="true" style="width: 425px;" ng-model="inspection.descriptionOfInspection" ></textarea>
 
                         </div>
                     </div>
@@ -438,14 +438,36 @@
 
                                     </div>
                                 </div>
-                                <div class="span3">
-                                    <label for="clearingAgent">
-                                        <span >Clearing Agent</span>
-                                        <span class="label-required"> *</span>
-                                    </label>
+<!--                                <div class="span3">-->
+<!--                                    <label for="clearingAgent">-->
+<!--                                        <span >Clearing Agent</span>-->
+<!--                                        <span class="label-required"> *</span>-->
+<!--                                    </label>-->
 
-                                    <div class="form-field">
-                                        <input id="clearingAgent" ng-model="inspection.receive.clearingAgent" name="clearingAgent" ng-disabled="true"  type="text" maxlength="50" ng-required="true"/>
+<!--                                    <div class="form-field">-->
+<!--                                        <input id="clearingAgent" ng-model="inspection.receive.clearingAgent" name="clearingAgent" ng-disabled="true"  type="text" maxlength="50" ng-required="true"/>-->
+<!--                                        <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"-->
+<!--                                              openlmis-message="missing.value"></span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="span3">
+                                    <label id="clearingAgentLabel" >Clearing Agent<span class="label-required"> *</span></label>
+
+                                    <div class="form-field row-fluid">
+                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="viewMode"  ng-model="clearingAgent"
+                                                openlmis-message="label.select.parent.zone" ng-required="true">
+                                            <option value="">--Select Agent--</option>
+
+                                            <option ng-repeat="agent in clearingAgentList"
+                                                    value="{{ agent.name }}"
+                                                    ng-selected="clearingAgent===agent.name"
+                                            >
+                                                {{ agent.name }}
+
+
+                                            </option>
+
+                                        </select>
                                         <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
