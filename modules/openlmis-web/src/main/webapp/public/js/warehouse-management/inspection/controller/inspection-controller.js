@@ -25,9 +25,7 @@ GetAllClearingAgents.get({}, function(data){
 
  VaccineDiscardingReasons.get({},function(data){
 
-
-$scope.failReasons=data.reasons;
- console.log(data);
+   $scope.failReasons=_.reject(data.reasons, {name: "Other (Specify)"});
 
  });
 
