@@ -1,22 +1,13 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div>
     <h2>Product Putaway</h2>
 </div>
 
-<form name="putawayForm"  novalidate>
+<div class="alert alert-success" ng-show="messageFlag">
+    <span>{{messageToDisplay}}</span>
+
+</div>
+
+<form name="putawayForm" novalidate>
 
     <div class="form-row clearfix">
         <div class="span3">
@@ -33,16 +24,16 @@
             <label>Lot</label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="fromLot" ng-options="lot as lot.lotNumber for lot in lineItem.lots">
+                <select ui-select2="{width: '100%'}" ng-model="fromLot"
+                        ng-options="lot as lot.lotNumber for lot in lineItem.lots">
                     <option value="">--Select Lot--</option>
-<!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
+                    <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
 
 
                 </select>
 
             </div>
         </div>
-
 
 
     </div>
@@ -63,20 +54,20 @@
                 </div>
 
 
-</div>
+            </div>
 
             <div class="form-row clearfix">
 
-            <label for="receiptDate">
-                <span>Bin Location</span>
-            </label>
+                <label for="receiptDate">
+                    <span>Bin Location</span>
+                </label>
 
-            <div class="form-field">
-                <input type="text" ng-model="fromLot.location.code" ng-disabled="true"/>
+                <div class="form-field">
+                    <input type="text" ng-model="fromLot.location.code" ng-disabled="true"/>
+
+                </div>
 
             </div>
-
-        </div>
 
             <div class="form-row clearfix">
 
@@ -103,7 +94,8 @@
                 </label>
 
                 <div class="form-field row-fluid">
-                    <select ui-select2="{width: '100%'}" ng-disabled="!fromLot" ng-model="toLot.warehouse" ng-options="warehouse as warehouse.name for warehouse in warehouseList">
+                    <select ui-select2="{width: '100%'}" ng-disabled="!fromLot" ng-model="toLot.warehouse"
+                            ng-options="warehouse as warehouse.name for warehouse in warehouseList">
                         <option value="">--Select Warehouse--</option>
                         <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
 
@@ -118,11 +110,12 @@
             <div class="form-row clearfix">
 
                 <label for="receiptDate">
-                    <span>Bin Location</span>
+                    <span>Receiving Location</span>
                 </label>
 
                 <div class="form-field row-fluid">
-                    <select ui-select2="{width: '100%'}" ng-disabled="!toLot.warehouse" ng-model="toLot.binLocation" ng-options="location as location.code for location in toLot.warehouse.locations">
+                    <select ui-select2="{width: '100%'}" ng-disabled="!toLot.warehouse" ng-model="toLot.binLocation"
+                            ng-options="location as location.code for location in toLot.warehouse.locations">
                         <option value="">--Select Bin Location--</option>
                         <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
 
@@ -140,7 +133,8 @@
                 </label>
 
                 <div class="form-field">
-                    <input type="text" ng-model="toLot.passQuantity" numeric-validator="positiveInteger" ng-disabled="!toLot.binLocation"/>
+                    <input type="text" ng-model="toLot.passQuantity" numeric-validator="positiveInteger"
+                           ng-disabled="!toLot.binLocation"/>
 
                 </div>
 
@@ -149,25 +143,27 @@
         </div>
 
 
-
     </div>
 
 
     <div class="form-row clearfix">
-<div class="span6">
-
-    </div>
         <div class="span6">
 
-            <input ng-disabled="!toLot.passQuantity || toLot.passQuantity==0" type="button" class="btn btn-primary pull-right" ng-click="addToQueue()"
-                    value="Add" style="margin-left:10px;margin-right:10px"/>
+        </div>
+        <div class="span6">
+
+            <input ng-disabled="!toLot.passQuantity || toLot.passQuantity==0" type="button"
+                   class="btn btn-primary pull-right" ng-click="addToQueue()"
+                   value="Add" style="margin-left:10px;margin-right:10px"/>
 
         </div>
-</div>
+    </div>
 
 
     <div class="form-row clearfix">
-        <div  class="alert alert-danger" ng-show="quantityError">Putaway Quantity Should be less or equal to remaining Passed Quantity</div>
+        <div class="alert alert-danger" ng-show="quantityError">Putaway Quantity Should be less or equal to remaining
+            Passed Quantity
+        </div>
         <table class="table table-bordered receive">
             <thead>
             <tr class="gradient-header">
@@ -186,19 +182,18 @@
 
             <tbody>
 
-                <tr ng-repeat="movement in movementQueue">
-                    <td ng-hide="true" ng-bind="movement.selected" ng-value="true"></td>
-                    <td ng-bind="movement.lotNumber"></td>
-                    <td ng-bind="movement.quantity"></td>
-                    <td ng-bind="movement.fromWarehouse"></td>
-                    <td ng-bind="movement.fromBinLocation"></td>
-                    <td ng-bind="movement.toWarehouse"></td>
-                    <td ng-bind="movement.toBinLocation"></td>
+            <tr ng-repeat="movement in movementQueue">
+                <td ng-hide="true" ng-bind="movement.selected" ng-value="true"></td>
+                <td ng-bind="movement.lotNumber"></td>
+                <td ng-bind="movement.quantity"></td>
+                <td ng-bind="movement.fromWarehouse"></td>
+                <td ng-bind="movement.fromBinLocation"></td>
+                <td ng-bind="movement.toWarehouse"></td>
+                <td ng-bind="movement.toBinLocation"></td>
 
 
-                </tr>
+            </tr>
             </tbody>
-
 
 
         </table>
@@ -209,8 +204,8 @@
         <div class="form-cell button-row">
             <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" value="Clear"
                    ng-click="cancel()"/>
-            <input  type="button" class="btn btn-primary pull-right" ng-click="generateMovement(movementQueue)"
-                    value="Generate Movement" style="margin-left:10px;margin-right:10px"/>
+            <input type="button" class="btn btn-primary pull-right" ng-click="generateMovement(movementQueue)"
+                   value="Generate Movement" style="margin-left:10px;margin-right:10px"/>
         </div>
         <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
     </div>

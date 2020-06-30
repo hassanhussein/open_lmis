@@ -9,71 +9,80 @@
  */
 
 
-function StockOnHandController($scope,$window, $location,WareHouseList,GetSohReport) {
+function StockOnHandController($scope, $window, $location, WareHouseList, GetSohReport) {
 
-WareHouseList.get({},function(data){
-$scope.warehouses=data.house;
+    WareHouseList.get({}, function (data) {
+        $scope.warehouses = data.house;
 //console.log($scope.warehouses)
-});
-
-
-$scope.getSoh=function(){
-
-GetSohReport.get({facilityId:19075, warehouseId:$scope.warehouseId},function(data){
-
-
-
-//console.log(data);
-
-$scope.soh=data.soh;
-
-console.log($scope.soh);
-
-$scope.warehouseidvalue=$scope.warehouseId;
-
-$wareHouseId=$scope.warehouseId;
-if(!$wareHouseId){
-    $scope.disableBtn = true;
-}else {
-    $scope.disableBtn = false;
-}
-
-
-$scope.products=_.groupBy($scope.soh,'product');
-
-//console.log($scope.products);
-
-});
-
-};
-
-$scope.printStockOnHand=function(data){
-    $wareHouseId=$scope.warehouseId;
-    $window.open('/wms-reports/stockonhand-report?docType=pdf&wareHouseId='+$wareHouseId, '_blank');
-
-    console.log($wareHouseId+"console");
-};
-
-
-$scope.openLedger = function(product) {
-$location.path('stock-ledger/'+$scope.warehouseId+'/'+product.productId+'/'+new Date().getFullYear());
-
-};
-
-
-$scope.calculateTotalQuantity=function(productId){
- console.log($scope.warehouseId);
- console.log(productId);
-var sum=0;
-var products=_.where($scope.soh,{productId:productId});
-
-    products.forEach(function(lot){
-
-    sum+=lot.quantityOnHand;
     });
- return sum;
 
-};
+
+    $scope.getSoh = function () {
+
+
+        $wareHouseId = $scope.warehouseId;
+        $scope.warehouseidvalue = $wareHouseId;
+
+        if (!$wareHouseId) {
+            $storedWareHouse = sessionStorage.getItem("warehouseId");
+            if ($storedWareHouse) {
+                $wareHouseId = $storedWareHouse
+                $scope.warehouseId=$wareHouseId;
+                $scope.disableBtn = false;
+            } else {
+                $scope.disableBtn = true;
+            }
+        } else {
+            $scope.disableBtn = false;
+        }
+
+
+        console.log("WareHouse: " + $wareHouseId);
+
+        GetSohReport.get({facilityId: 19075, warehouseId: $wareHouseId}, function (data) {
+
+            console.log(data.soh);
+            $scope.soh = data.soh;
+            $scope.products = _.groupBy($scope.soh, 'product');
+
+
+        });
+
+    };
+
+    $scope.printStockOnHand = function (data) {
+
+
+        $wareHouseId = $scope.warehouseId;
+        $window.open('/wms-reports/stockonhand-report?docType=pdf&wareHouseId=' + $wareHouseId, '_blank');
+
+        console.log($wareHouseId + "console");
+    };
+
+
+    $scope.openLedger = function (product) {
+        $wareHouseId = $scope.warehouseId;
+
+        sessionStorage.setItem("warehouseId", $wareHouseId);
+
+        $location.path('stock-ledger/' + $scope.warehouseId + '/' + product.productId + '/' + new Date().getFullYear());
+
+    };
+
+
+    $scope.calculateTotalQuantity = function (productId) {
+        console.log($scope.warehouseId);
+        console.log(productId);
+        var sum = 0;
+        var products = _.where($scope.soh, {productId: productId});
+
+        products.forEach(function (lot) {
+
+            sum += lot.quantityOnHand;
+        });
+        return sum;
+
+    };
 
 }
 
