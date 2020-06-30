@@ -31,12 +31,19 @@ function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,Upd
 
 //console.log(all_orders);
 $scope.soh=wmsSoh.stocks;
-console.log($scope.requisitionsWithoutProducts);
+
+
+
+
+
+
+
+//console.log($scope.requisitionsWithoutProducts);
 $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
  var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
-console.log(all_orders);
+//console.log(all_orders);
 $scope.requstions.push({
                              fromFacilityId:19075,
                              toFacilityId:requisitionsWithProduct.facilityId,
@@ -53,10 +60,13 @@ $scope.requstions.push({
 
 });
 
-console.log($scope.requstions);
+//console.log($scope.requstions);
 
 
 });
+
+
+
 
 
 $scope.getQuantity=function(req,product,lot,regionIndex){
@@ -398,6 +408,7 @@ DistributionController.resolve = {
 
                   GetCurrentStock.get({}, function (data) {
 //                  console.log(data);
+
                       deferred.resolve(data);
                   });
 
@@ -418,7 +429,7 @@ DistributionController.resolve = {
                             facilityId: $route.current.params.facilityId
                         },
                         function (data) {
-                        console.log(data.pendingRequest);
+//                        console.log(data.pendingRequest);
                         deferred.resolve(data.pendingRequest);
 
                         });

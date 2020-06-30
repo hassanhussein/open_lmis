@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory){
 
 
@@ -19,8 +19,16 @@ function ReceiveController(GetAllLocationsByType,DeleteDocument,DocumentList,Sto
                                    $scope.$parent.received = false;
 
 
-
+$scope.clearingAgentList = [];
     function getAllLookups(){
+
+
+     GetAllClearingAgents.get({}, function(data){
+
+           $scope.clearingAgentList = data.agents;
+           console.log(data);
+
+           });
 
     GetBinLocationByCategory.get({category:'receiving'}, function(data){
 
@@ -785,7 +793,10 @@ $scope.removeProduct(productIndex);
         newLot.expirationDate = $filter('date')($scope.newLot.expirationDate, "yyyy-MM-dd");
         Lot.create(newLot, function(data) {
             $scope.newLotModal = false;
-            //                             console.log(data.lot.product)
+            $scope.batchCreated=true;
+            $timeout(function(){
+            $scope.batchCreated=false;
+            },3000);
             $scope.loadProductLots(data.lot.product);
         });
     };

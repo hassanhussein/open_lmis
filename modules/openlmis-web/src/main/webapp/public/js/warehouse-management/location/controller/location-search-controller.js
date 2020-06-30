@@ -8,9 +8,11 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function LocationSearchController($location,$scope,WareHouseList,navigateBackService,SaveBinLocation,updateBinLocation,SearchBinByPaged) {
+function LocationSearchController($location,$timeout,$scope,WareHouseList,navigateBackService,SaveBinLocation,updateBinLocation,SearchBinByPaged) {
 
 console.log( $scope.newLocation);
+$scope.locationCreated="false";
+
 
 WareHouseList.get({},function(data){
 
@@ -147,6 +149,11 @@ $scope.warehouses=data.house;
               SaveBinLocation.save(newLocation, function(data) {
                   $scope.newLocationModal = false;
                   console.log(data);
+                  $scope.locationCreated=true;
+
+                  $timeout(function(){
+                   $scope.locationCreated=false;
+                  },3000);
                    $scope.newLocation.code="";
                    $scope.newLocation.name="";
                    $scope.newLocation.type="";

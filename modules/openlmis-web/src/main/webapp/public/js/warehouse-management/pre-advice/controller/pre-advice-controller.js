@@ -756,7 +756,10 @@ console.log($scope.fiiCost);
         newLot.expirationDate = $filter('date')($scope.newLot.expirationDate, "yyyy-MM-dd");
         Lot.create(newLot, function(data) {
             $scope.newLotModal = false;
-            //                             console.log(data.lot.product)
+            $scope.batchCreated=true;
+            $timeout(function(){
+             $scope.batchCreated=false;
+                 },3000);
             $scope.loadProductLots(data.lot.product);
         });
     };
@@ -799,7 +802,7 @@ console.log($scope.fiiCost);
 //    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required && $scope.docList.length < 4) {
+      if ($scope.asnForm.$error.required ||$scope.docList.length < 4) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
