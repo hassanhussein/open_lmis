@@ -9,6 +9,7 @@ import org.openlmis.vaccine.domain.wms.Port;
 import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -172,4 +173,8 @@ public interface AsnMapper {
 
     })
     Asn getByAsnNumber(@Param("asnNumber") String asnNumber);
+
+    @Select(" SELECT * FROM clearing_agents ")
+    List<HashMap> getAllClearingAgents();
+
 }

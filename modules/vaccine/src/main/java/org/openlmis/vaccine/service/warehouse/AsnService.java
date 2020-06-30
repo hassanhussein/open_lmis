@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -190,6 +191,10 @@ public class AsnService {
     public List<CurrencyDTO> getAllCurrencies(){
 
         return repository.getAllCurrencies();
+    }
+
+    public List<HashMap> getAllClearingAgents() {
+        return repository.getAllClearingAgents();
     }
 
  /*   public void saveDocument(PurchaseDocument d) {

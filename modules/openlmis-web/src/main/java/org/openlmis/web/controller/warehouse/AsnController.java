@@ -373,4 +373,11 @@ public class AsnController extends BaseController {
         return new ModelAndView(jasperView, map);
     }
 
+
+    @RequestMapping(value = "/all-clearing-agents", method =GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllClearingAgents(HttpServletRequest request) {
+
+        return OpenLmisResponse.response("agents",asnService.getAllClearingAgents());
+    }
+
 }
