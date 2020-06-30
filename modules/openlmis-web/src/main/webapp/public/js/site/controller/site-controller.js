@@ -35,6 +35,7 @@ $scope.regions=_.where(geoZone,{"levelId":3});
   };
 
   $scope.save = function () {
+  console.log($scope.locationForm);
     if ($scope.siteForm.$error.pattern || $scope.siteForm.$error.required) {
 
       $scope.showError = true;

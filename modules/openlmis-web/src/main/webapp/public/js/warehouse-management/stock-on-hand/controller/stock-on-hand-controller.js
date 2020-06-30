@@ -27,6 +27,8 @@ GetSohReport.get({facilityId:19075, warehouseId:$scope.warehouseId},function(dat
 
 $scope.soh=data.soh;
 
+console.log($scope.soh);
+
 $scope.warehouseidvalue=$scope.warehouseId;
 
 $wareHouseId=$scope.warehouseId;

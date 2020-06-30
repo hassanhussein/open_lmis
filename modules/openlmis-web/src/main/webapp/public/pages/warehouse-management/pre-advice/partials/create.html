@@ -342,7 +342,7 @@
                                                 <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].info || viewMode" ng-model="product.lots[0].quantity" style="width:99px">
                                             </td>
                                             <td rowspan="{{product.lots.length}}" class="col-general cell-input" style="padding-left:1px;">
-                                                <input type="text" ng-decimal="5"  ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity || viewMode" style="width:99px">
+                                                <input type="text" ng-decimal="10"  ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity || viewMode" style="width:99px">
                                             </td>
 
                                             <td rowspan="{{product.lots.length}}" class="cell-general cell-input" style="padding-left:15px; text-align:right;" >{{totalCostPerProduct(product) | number}}</td>
@@ -562,6 +562,9 @@
                                         <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="successMsg">
                                             {{successMsg}}
                                         </div>
+                                        <div class="alert alert-error" ng-show="docError" >
+                                            Atleast 3 documents are requiered!
+                                        </div>
                                         <br>
                                         <input id="uploadButton" ng-click="upload(document)" type="submit" openlmis-message="link.admin.upload" class="btn btn-primary"
                                                ng-disabled="!document.documentType || !asnCode">
@@ -679,13 +682,14 @@
                 <div class="span3">
                     <label id="newLotExpirationDateLabel" for="newLot.expirationDate">
                         <span openlmis-message="label.expiryDate"></span>
-                        <span class="label-required">*</span>
+                        <span ng-show="newLot.product.id!=2426" class="label-required">*</span>
                     </label>
                     <span class="position-relative">
-                                <input ng-required="true" class="span12"
+                                <input ng-required="newLot.product.id!=2426" class="span12"
                                        id="newLot.expirationDate"
                                        name="expirationDate"
                                        type="text"
+                                       ng-disabled="newLot.product.id==2426"
                                        ui-date-format="yy-mm-dd"
                                        ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, minDate:'today + 1'}"
                                        ng-model="newLot.expirationDate"/>

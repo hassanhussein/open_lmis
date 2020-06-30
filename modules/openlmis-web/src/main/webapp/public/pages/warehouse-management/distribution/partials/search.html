@@ -69,7 +69,7 @@
             </thead>
             <tbody>
             <tr ng-repeat="order in orderList">
-                <td ><input type="checkbox" ng-model="order.issue" ng-disabled="order.status!='SUBMITTED'" ></td>
+                <td ><input type="checkbox" ng-model="order.issue" ng-change="checkSelection()" ng-disabled="order.status!='SUBMITTED'" ></td>
                 <td>{{order.orderNumber}}</td>
                 <td>{{order.name}}</td>
                 <td>{{order.period}}</td>
@@ -104,7 +104,7 @@
 
 
 
-            <input  type="button" class="btn btn-primary pull-right" ng-if="!viewMode"
+            <input  type="button"  ng-disabled="!issueSelectable" class="btn btn-primary pull-right" ng-if="!viewMode"
                     ng-click="issue('FINALIZED')" value="Issue" style="margin-left:10px;margin-right:10px"/>
         </div>
 
