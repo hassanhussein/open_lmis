@@ -261,7 +261,7 @@ public class TransferService {
                          lotOnHandDTO.setExpiry(lot.getExpiry());
                          lotOnHandDTO.setId(index++);
                          lotOnHandDTO.setLotId(lot.getLotId());
-                         lotOnHandDTO.setVvm("VVM1");
+                         lotOnHandDTO.setVvm(lot.getVvmStatus());
                          lotOnHandDTO.setMaxSoh(quantityWithPackSize);
                          lotOnHandDTO.setNumber(lot.getLotNumber());
                          lots.add(lotOnHandDTO);

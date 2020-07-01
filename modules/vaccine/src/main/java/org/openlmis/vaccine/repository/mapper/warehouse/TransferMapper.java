@@ -66,13 +66,14 @@ public interface TransferMapper {
     List<LotDTO> checkAvailableProductAndLotBy(@Param("toBin") Long toBin, @Param("productId") Long productId, @Param("lotId") Long lotId);
 
     @Select("\n" +
-            "select p.primaryName product, sum(H.quantityOnHand) quantityOnHand, lo.id lotId, expirationDate::date expiry, lotNumber,lo.packSize from lots_on_hand h\n" +
+            "select p.primaryName product, sum(H.quantityOnHand) quantityOnHand, lo.id lotId, expirationDate::date expiry, lotNumber,lo.packSize, " +
+            "(SELECT name from vvm_statuses WHERE vvmId = h.vvmId limit 1) vvmStatus from lots_on_hand h\n" +
             "JOIN lot_on_hand_locations L  on h.ID = l.LOTONHANDID\n" +
             "JOIN lots Lo on h.lotId = Lo.id \n" +
             "JOIN products P ON lo.productId = P.ID\n" +
             "\n" +
             "where productId= #{productId} \n" +
-            " group by  p.primaryName ,lo.id ,expirationDate, lotNumber " +
+            " group by  p.primaryName ,lo.id ,expirationDate, lotNumber,h.vvmid " +
             " order by Lo.expirationDate asc ")
     List<LotOnHandExtDTO> getLotOnHandExtaBy(@Param("productId") Long id);
 }

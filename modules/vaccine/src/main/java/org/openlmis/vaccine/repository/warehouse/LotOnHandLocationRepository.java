@@ -78,4 +78,7 @@ public class LotOnHandLocationRepository {
     }
 
 
+    public InspectionLotDTO getByLotAndInspection(String lotNumber, Long inspectionId) {
+        return mapper.getByLotAndInspection(lotNumber,inspectionId);
+    }
 }

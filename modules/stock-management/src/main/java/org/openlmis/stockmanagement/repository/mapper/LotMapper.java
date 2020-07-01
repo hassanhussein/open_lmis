@@ -84,11 +84,11 @@ public interface LotMapper {
   int update(Lot lot);
 
   @Insert("INSERT into lots_on_hand " +
-      " (stockCardId, lotId, quantityOnHand, effectiveDate" +
+      " (stockCardId, lotId, quantityOnHand, effectiveDate, vvmId" +
       ", createdBy, createdDate, modifiedBy, modifiedDate) " +
       "values " +
       " (#{stockCard.id}, #{lot.id}, #{quantityOnHand}, #{effectiveDate}" +
-      ", #{createdBy}, NOW(), #{modifiedBy}, NOW())")
+      ", #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{vvmId})")
   @Options(useGeneratedKeys = true)
   void insertLotOnHand(LotOnHand lotOnHand);
 
@@ -96,7 +96,7 @@ public interface LotMapper {
       "SET quantityOnHand = #{quantityOnHand}" +
           ", effectiveDate = NOW()" +
           ", modifiedBy = #{modifiedBy}" +
-          ", modifiedDate = NOW()" +
+          ", modifiedDate = NOW(), vvmId = #{vvmId}" +
       "WHERE id = #{id}")
   int updateLotOnHand(LotOnHand lotOnHand);
 

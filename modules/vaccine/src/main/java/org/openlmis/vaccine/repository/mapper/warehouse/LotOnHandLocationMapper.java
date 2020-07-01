@@ -56,7 +56,7 @@ public interface LotOnHandLocationMapper {
 
 
     @Select("\n" +
-            "            select \n" +
+            "            select (SELECT name from vvm_statuses WHERE vvmId = h.vvmId limit 1) vvm,\n" +
             "            to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
             "            p.primaryName product, sum(h.quantityOnHand) quantityOnHand, lotID, lotNumber, \n" +
             "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
@@ -75,7 +75,7 @@ public interface LotOnHandLocationMapper {
             "            WHERE  facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
             "            and l.quantityOnHand > 0\n" +
             "            \n" +
-            "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name ")
+            "            group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name ")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("\n" +
@@ -192,4 +192,12 @@ public interface LotOnHandLocationMapper {
             "\n" +
             "             ) select * from q where quantityOnHand> 0")
     List<StockCardDTO> getStockCardWithLocationBy(@Param("facilityId") Long facilityId);
+
+    @Select("select VVMstatus vvmId, lotNumber from inspections i\n" +
+            "\n" +
+            "JOIN inspection_line_items item ON i.id = item.inspectionId\n" +
+            "\n" +
+            "Join inspection_lots lo ON item.id = lo.inspectionlineitemid \n" +
+            "WHERE lo.lotNumber = #{lotNumber} and i.id = #{inspectionId} ")
+    InspectionLotDTO getByLotAndInspection(@Param("lotNumber") String lotNumber, @Param("inspectionId") Long inspectionId);
 }

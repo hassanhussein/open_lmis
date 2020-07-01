@@ -84,6 +84,23 @@ public class StockCardService {
     return lotOnHand;
   }
 
+
+  public LotOnHand getLotOnHandWithVvmStatus(Long vvmId, Long lotId, Lot lotObj, String productCode, StockCard card, StringBuilder str) {
+
+
+    LotOnHand lotOnHand = null;
+
+    if (null != lotId) { // Lot specified by id
+      lotOnHand = lotRepository.getLotOnHandByStockCardAndLot(card.getId(), lotId);
+      if (null == lotOnHand) {
+        Lot lot = lotRepository.getOrCreateLot(lotObj);
+        lotOnHand = getOrCreateLotOnHand(lot, card);
+      }
+    }
+    return lotOnHand;
+  }
+
+
   public LotOnHand getLotOnHandByStockCardAndLot(Long stockCardId, Long lotId) {
 
     return lotRepository.getLotOnHandByStockCardAndLot(stockCardId, lotId);

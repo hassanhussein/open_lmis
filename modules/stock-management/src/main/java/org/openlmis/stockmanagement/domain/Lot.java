@@ -49,4 +49,7 @@ public class Lot extends BaseModel implements Importable
     private String lotNumber;
 
     private String packSize;
+
+    private Long vvmId;
+
 }

@@ -77,16 +77,27 @@ public class LotOnHandLocationService {
 */
             StockEventDTO event = new StockEventDTO();
             Lot newLot = null;
+            InspectionLotDTO vvmData = null;
+
             if(dto.getLotNumber() != null)  {
                newLot = lotRepository.getById(lotRepository.getByCode(dto.getLotNumber()).getId());
+                System.out.println("lot");
+                System.out.println(dto.getLotNumber());
+                System.out.println("nanaana");
+                System.out.println(dto.getInspectionId());
+                vvmData = repository.getByLotAndInspection(dto.getLotNumber(), dto.getInspectionId());
+
 
                //save PutAway
                 dto.setCreatedBy(userId);
                 dto.setLotId(newLot.getId());
+                dto.setVvmId(vvmData.getVvmId());
                 repository.insertPutAwayDetails(dto);
 
-               event.setLotId(newLot.getId());
+                event.setLotId(newLot.getId());
+                newLot.setVvmId(vvmData.getVvmId());
                 event.setLot(newLot);
+                event.setVvmId(vvmData.getVvmId());
 
             } else {
                 event.setLot(null);
@@ -96,7 +107,11 @@ public class LotOnHandLocationService {
             event.setFacilityId(facility.getId());
             event.setProductCode(product.getCode());
             event.setQuantity(Long.valueOf(dto.getQuantity()));
-            customProps.put("vvmStatus", "1");
+
+            if(vvmData != null)
+             customProps.put("vvmStatus", vvmData.getVvmId().toString());
+            else
+             customProps.put("vvmStatus", "1");
 
             event.setCustomProps(customProps);
             event.setToBinLocationId(dto.getToBinLocationId());
@@ -166,7 +181,9 @@ public class LotOnHandLocationService {
             StringBuilder str = new StringBuilder();
             Long lotId = event.getLotId();
             Lot lotObj = event.getLot();
-            LotOnHand lotOnHand = stockCardService.getLotOnHandFor(lotId, lotObj, productCode, card, str);
+            Long vvmId = event.getLot().getVvmId();
+
+            LotOnHand lotOnHand = stockCardService.getLotOnHandWithVvmStatus(vvmId, lotId, lotObj, productCode, card, str);
             if (!str.toString().equals("")) {
                 return "Lot Not created";
             }
@@ -197,6 +214,7 @@ public class LotOnHandLocationService {
             String referenceNumber  = event.getReferenceNumber();
 
             StockCardEntry entry = new StockCardEntry(card, entryType, event.getQuantity(), occurred, referenceNumber);
+            lotOnHand.setVvmId(event.getLot().getVvmId());
             entry.setLotOnHand(lotOnHand);
             Map<String, String> customProps = event.getCustomProps();
             if (null != customProps) {
