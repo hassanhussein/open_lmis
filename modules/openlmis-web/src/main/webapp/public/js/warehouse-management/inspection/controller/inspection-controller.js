@@ -1,4 +1,4 @@
-function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary){
+function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
 
 
 $scope.globalErrorFlag=true;
