@@ -1,15 +1,23 @@
-function InspectionController($scope,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary){
+function InspectionController($scope,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationSummary,GetLocationBy){
 
 
 $scope.globalErrorFlag=true;
 
-GetLocationSummary.get({}, function(data){
+    GetLocationBy.get({}, function(data){
+
+        $scope.locations = data.locationList;
+
+        console.log(data.locationList);
+
+    });
+
+/*GetLocationSummary.get({}, function(data){
 
      $scope.locations = data.locationList;
 
      console.log(data.locationList);
 
-    });
+    });*/
 
 
  VaccineDiscardingReasons.get({},function(data){

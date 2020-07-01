@@ -206,14 +206,15 @@
 
         </div>
         <div class="modal-footer">
+            <div style="float: left;width: 30%">
             <input type="button"  class="btn btn-primary save-button"
                    ng-click="createLocation()"
                    ng-disabled="newLocationForm.$invalid"
                    openlmis-message="button.create"/>
             <input type="button" ng-click="closeNewLocationModal();" class="btn btn-cancel"
                    openlmis-message="button.cancel"/>
-
-            <div class="toolbar-error pull-right" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
+            </div>
+            <div class="toolbar-error pull-right center-align" style="width: 50%;float: left" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
 
         </div>
 
