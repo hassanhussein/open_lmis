@@ -230,7 +230,7 @@ public interface InspectionMapper {
     @Select("SELECT varNumber FROM inspections order by id desc limit 1")
     String generateVarNumber();
 
-    @Select(" SELECT count(*) FROM inspections i\n" +
+    @Select(" SELECT COUNT(1) FROM ( SELECT DISTINCT ON(r.poNumber) * FROM inspections i\n" +
             "                    JOIN receives r on i.receiveid = r.id \n" +
             "                    JOIN receive_LINE_ITEMS LI on r.id = li.receiveid\n" +
             "                    JOIN Asns A ON a.id = r.asnId\n" +
@@ -239,10 +239,11 @@ public interface InspectionMapper {
             "                    Join wms_locations loc ON lot.passLocationId = loc.ID\n" +
             "                    Join wms_location_types lt On loc.typeId = lt.id\n" +
             "                    JOIN warehouses house On loc.warehouseId = house.id\n" +
-            "                    where (R.poNumber::text LIKE '%' || #{searchParam} || '%') and i.status='IN-PUTAWAY'")
+            "                    where (R.poNumber::text LIKE '%' || #{searchParam} || '%') and i.status='IN-PUTAWAY'" +
+            "       )as k ")
     Integer getTotalSearchResultCountForPutAway(@Param("searchParam") String searchParam);
 
-    @Select(" select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +
+    @Select(" select distinct on(r.poNumber) r.poNumber, i.id,asnNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status,\n" +
             "loc.name binLocation, house.name warehouseName, inspectionDate\n" +
             "from inspections i\n" +
             "                JOIN receives r on i.receiveid = r.id \n" +
@@ -299,7 +300,7 @@ public interface InspectionMapper {
                     "                    JOIN warehouses house On loc.warehouseId = house.id\n" +
                     "                  \n" +
                     "                     )\n" +
-                    "                    select * from q where status='IN-PUTAWAY' AND  ");
+                    "                    select  distinct on(q.poNumber) q.poNumber, * from q where status='IN-PUTAWAY' AND  ");
             return createQuery(sql, params).toString();
         }
 

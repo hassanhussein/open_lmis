@@ -316,6 +316,9 @@
                                         Atleast One product with atleast One batch is required
                                     </div>
 
+                                    <div  class="alert alert-success" ng-show="batchCreated"
+                                    >Batch Created Successfully</div>
+
                                     <div  class="alert alert-danger" ng-show="quantityBoxError">
                                         Quantity should be greater or equal to Number of Boxes
                                     </div>
@@ -463,7 +466,7 @@
                                                 <div class="" style="margin-top:6px;">
                                                     <div class="span2">Location: </div>
                                                     <div class="span10">
-                                                        <select ng-disabled="!lot.info" ng-model="lot.locationId">
+                                                        <select ng-disabled="!lot.info || viewMode" ng-model="lot.locationId">
                                                             <option value="" >--Select Location--</option>
                                                             <option ng-repeat="location in locationList" value="{{ location.id }}" ng-selected="lot.locationId==location.id">{{ location.code }}</option>
 
@@ -601,14 +604,36 @@
 
                                     </div>
                                 </div>
-                                <div class="span3">
-                                    <label id="codeLabel" for="code">
-                                        <span >Clearing Agent</span>
-                                        <span class="label-required"> *</span>
-                                    </label>
+<!--                                <div class="span3">-->
+<!--                                    <label id="codeLabel" for="code">-->
+<!--                                        <span >Clearing Agent</span>-->
+<!--                                        <span class="label-required"> *</span>-->
+<!--                                    </label>-->
 
-                                    <div class="form-field">
-                                        <input ng-model="clearingAgent" name="clearingAgent" ng-disabled="viewMode"  type="text" maxlength="50" ng-required="true"/>
+<!--                                    <div class="form-field">-->
+<!--                                        <input ng-model="clearingAgent" name="clearingAgent" ng-disabled="viewMode"  type="text" maxlength="50" ng-required="true"/>-->
+<!--                                        <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"-->
+<!--                                              openlmis-message="missing.value"></span>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="span3">
+                                    <label id="clearingAgentLabel" >Clearing Agent<span class="label-required"> *</span></label>
+
+                                    <div class="form-field row-fluid">
+                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="viewMode"  ng-model="clearingAgent"
+                                                openlmis-message="label.select.parent.zone" ng-required="true">
+                                            <option value="">--Select Agent--</option>
+
+                                            <option ng-repeat="agent in clearingAgentList"
+                                                    value="{{ agent.name }}"
+                                                    ng-selected="clearingAgent===agent.name"
+                                            >
+                                                {{ agent.name }}
+
+
+                                            </option>
+
+                                        </select>
                                         <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
@@ -621,7 +646,7 @@
 
                                     <div class="form-field">
                                         <input name="actualArrivalDate"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today',maxDate:period.stringStartDate}"
+                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:period.stringStartDate}"
                                                ui-date-format="yy-mm-dd"
                                                ng-model="actualArrivalDate"
                                                ng-disabled="viewMode"

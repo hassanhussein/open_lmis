@@ -72,6 +72,7 @@ public interface TransferMapper {
             "JOIN products P ON lo.productId = P.ID\n" +
             "\n" +
             "where productId= #{productId} \n" +
-            " group by  p.primaryName ,lo.id ,expirationDate, lotNumber  ")
+            " group by  p.primaryName ,lo.id ,expirationDate, lotNumber " +
+            " order by Lo.expirationDate asc ")
     List<LotOnHandExtDTO> getLotOnHandExtaBy(@Param("productId") Long id);
 }

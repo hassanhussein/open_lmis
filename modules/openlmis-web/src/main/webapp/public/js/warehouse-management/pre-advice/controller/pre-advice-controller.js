@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController(DeleteDocument,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController(GetAllClearingAgents,DeleteDocument,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
@@ -55,8 +55,17 @@ console.log(parseInt($routeParams.id, 10));
        $window.open(url, '_blank');
       };
 
+     $scope.clearingAgentList = [];
 
     function getAllLookups(){
+
+       GetAllClearingAgents.get({}, function(data){
+
+       $scope.clearingAgentList = data.agents;
+       console.log(data);
+
+       });
+
      AllVaccineInventoryConfigurations.get(function(data) {
                     $scope.configurations = data;
                     $scope.userPrograms=data.programs;
@@ -747,7 +756,10 @@ console.log($scope.fiiCost);
         newLot.expirationDate = $filter('date')($scope.newLot.expirationDate, "yyyy-MM-dd");
         Lot.create(newLot, function(data) {
             $scope.newLotModal = false;
-            //                             console.log(data.lot.product)
+            $scope.batchCreated=true;
+            $timeout(function(){
+             $scope.batchCreated=false;
+                 },3000);
             $scope.loadProductLots(data.lot.product);
         });
     };
@@ -780,6 +792,7 @@ console.log($scope.fiiCost);
 
 
     $scope.saveAsn = function(status) {
+        console.log($scope.docLists);
 
 //    console.log($scope.asnCode);
 
@@ -790,12 +803,12 @@ console.log($scope.fiiCost);
 //    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required && $scope.docList.length < 4) {
+      if ($scope.asnForm.$error.required ||$scope.docLists.length <= parseInt(3,10)) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
 
-            if($scope.docList.length<4){
+            if($scope.docLists.length <= parseInt(3,10)){
             $scope.docError=true;
             }
 //            console.log('dfas')

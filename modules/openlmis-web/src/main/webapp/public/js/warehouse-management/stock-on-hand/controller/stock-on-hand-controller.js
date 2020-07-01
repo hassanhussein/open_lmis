@@ -26,7 +26,7 @@ function StockOnHandController($scope, $window, $location, WareHouseList, GetSoh
         if (!$wareHouseId) {
             $storedWareHouse = sessionStorage.getItem("warehouseId");
             if ($storedWareHouse) {
-                $wareHouseId = $storedWareHouse
+                $wareHouseId = $storedWareHouse;
                 $scope.warehouseId=$wareHouseId;
                 $scope.disableBtn = false;
             } else {
