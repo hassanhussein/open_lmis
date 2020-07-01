@@ -221,6 +221,8 @@ $scope.currency=_.findWhere($scope.currencies,{'id':parseInt($scope.selectedCurr
     $scope.quantityVsBox=function(){
 //    get the total quantity
 if($scope.isVaccine){
+
+//console.log('and')
 var total_lot_quantity = 0;
 //    this is safe because we have only one product per receive
     var total_box_quantity=$scope.productsToAdd[0].boxCounted;
@@ -234,6 +236,7 @@ var total_lot_quantity = 0;
 //    console.log(total_box_quantity)
 //        console.log(total_lot_quantity)
 
+//    console.log($scope.productsToAdd[0])
     return total_lot_quantity >= total_box_quantity;
 
 }else{
@@ -811,12 +814,12 @@ $scope.saveAsn = function(status) {
 
 $scope.quantityBoxError=false;
 
-   /*  if (!$scope.quantityVsBox()){
-        $scope.quantityBoxError=true;
-         return;
-     }else{
-     $scope.quantityBoxError=false;
-     }*/
+//   if (!$scope.quantityVsBox()){
+//        $scope.quantityBoxError=true;
+//         return;
+//     }else{
+//     $scope.quantityBoxError=false;
+//     }
 
 //                        console.log($scope.asnForm)
     if ($scope.asnForm.$error.required) {

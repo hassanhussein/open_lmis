@@ -21,4 +21,6 @@ public class LotOnHandExtDTO {
 
     private String packSize;
 
+    private String vvmStatus;
+
 }

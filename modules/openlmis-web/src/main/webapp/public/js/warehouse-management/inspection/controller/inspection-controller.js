@@ -153,6 +153,16 @@ return true;
 return false;
 };
 
+$scope.sumBoxes=function(){
+
+var sum=0;
+ angular.forEach($scope.lineItem.lots,function(lot){
+    sum+=parseInt(lot.boxNumber,10);
+ });
+ return sum;
+
+};
+
 //$scope.hasExpired("2010-10-11");
 
     $scope.inspectLot = function(lineItem) {

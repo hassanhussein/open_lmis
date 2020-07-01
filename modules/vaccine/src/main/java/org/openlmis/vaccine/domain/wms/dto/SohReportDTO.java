@@ -23,4 +23,6 @@ public class SohReportDTO {
 
     private Integer quantityOnHand;
 
+    private String vvm;
+
 }
