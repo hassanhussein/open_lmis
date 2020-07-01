@@ -803,12 +803,12 @@ console.log($scope.fiiCost);
 //    console.log($scope.currency)
     $scope.asnStatus=status;
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required ||$scope.docLists.length <= parseInt(3,10)) {
+      if ($scope.asnForm.$error.required ||$scope.docLists.length < parseInt(3,10)) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
 
-            if($scope.docLists.length <= parseInt(3,10)){
+            if($scope.docLists.length < parseInt(3,10)){
             $scope.docError=true;
             }
 //            console.log('dfas')
