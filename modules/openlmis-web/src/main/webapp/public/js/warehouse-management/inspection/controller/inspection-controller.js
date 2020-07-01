@@ -153,7 +153,7 @@ var sum=0;
  });
  return sum;
 
-}
+};
 
 //$scope.hasExpired("2010-10-11");
 

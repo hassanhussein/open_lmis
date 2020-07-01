@@ -236,7 +236,7 @@ var total_lot_quantity = 0;
 //    console.log(total_box_quantity)
 //        console.log(total_lot_quantity)
 
-    console.log($scope.productsToAdd[0])
+//    console.log($scope.productsToAdd[0])
     return total_lot_quantity >= total_box_quantity;
 
 }else{
