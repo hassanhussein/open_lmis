@@ -9,12 +9,31 @@
  */
 
 
-function StockLedgerController($scope, stockLedgers,$location) {
+function StockLedgerController($scope, stockLedgers,$location,OperationYears) {
 
 $scope.ledgers = [];
 $scope.ledgers = stockLedgers;
 
+ $scope.currentYear = new Date().getFullYear();
+
+
+   OperationYears.get(function (data) {
+        var array = _.sortBy(data.years, function(num) {
+            return num;
+        });
+        $scope.startYears = array.reverse();
+       // $scope.startYears.unshift('--select year-- ');
+    });
+
+
+    $scope.changeByYear = function() {
+
+
+    };
+
 }
+
+
 
 StockLedgerController.resolve = {
 

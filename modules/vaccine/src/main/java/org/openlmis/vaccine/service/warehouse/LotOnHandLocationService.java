@@ -10,8 +10,10 @@ import org.openlmis.stockmanagement.dto.StockEvent;
 import org.openlmis.stockmanagement.dto.StockEventType;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.service.StockCardService;
+import org.openlmis.vaccine.domain.wms.LocationEntry;
 import org.openlmis.vaccine.domain.wms.LotOnHandLocation;
 import org.openlmis.vaccine.domain.wms.dto.*;
+import org.openlmis.vaccine.dto.LocationDTO;
 import org.openlmis.vaccine.repository.warehouse.LotOnHandLocationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,6 +42,12 @@ public class LotOnHandLocationService {
 
     @Autowired
     private InspectionService inspectionService;
+
+    @Autowired
+    private WmsLocationService wmsLocationService;
+
+    @Autowired
+    private LocationEntryService locationEntryService;
 
     public void save(LotOnHandLocation location){
 
@@ -225,6 +233,45 @@ public class LotOnHandLocationService {
             entry.setCreatedBy(userId);
             entry.setModifiedBy(userId);
             entries.add(entry);
+
+            //save Entries
+       /*     LocationEntry locationEntry = new LocationEntry();
+            locationEntry.setCreatedBy(userId);
+            locationEntry.setModifiedBy(userId);
+            locationEntry.setLocationId(event.getFromBinLocationId());
+            locationEntry.setLotOnHandId(onHand);
+            locationEntry.setQuantity(Math.toIntExact(event.getQuantity()));
+            locationEntry.setType(StockCardEntryType.DEBIT);
+
+            List<StockCardEntryKV> vl = new ArrayList<>();
+            StockCardEntryKV values = new StockCardEntryKV();
+            values.setKeyColumn("issuedto");
+            LocationDTO dto2 = wmsLocationService.getByLocationId(event.getToBinLocationId());
+            values.setValueColumn(dto2.getName());
+            vl.add(values);
+            locationEntry.setKeyValues(vl);
+            locationEntryService.saveLocationEntry(locationEntry);*/
+
+            LocationEntry entry2 = new LocationEntry();
+            entry2.setCreatedBy(userId);
+            entry2.setModifiedBy(userId);
+            entry2.setType(StockCardEntryType.CREDIT);
+            entry2.setLotOnHandId(lotOnHand.getId());
+            entry2.setLocationId(event.getToBinLocationId());
+            entry2.setQuantity(Math.toIntExact(event.getQuantity()));
+
+            List<StockCardEntryKV> vl2 = new ArrayList<>();
+            StockCardEntryKV values2 = new StockCardEntryKV();
+            values2.setKeyColumn("receivedfrom");
+            LocationDTO dto3 = wmsLocationService.getByLocationId(event.getFromBinLocationId());
+            values2.setValueColumn(dto3.getName());
+            vl2.add(values2);
+            entry2.setKeyValues(vl2);
+
+            locationEntryService.saveLocationEntry(entry2);
+
+
+
 
         }
 

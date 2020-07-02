@@ -198,6 +198,6 @@ public interface LotOnHandLocationMapper {
             "JOIN inspection_line_items item ON i.id = item.inspectionId\n" +
             "\n" +
             "Join inspection_lots lo ON item.id = lo.inspectionlineitemid \n" +
-            "WHERE lo.lotNumber = #{lotNumber} and i.id = #{inspectionId} ")
+            "WHERE lo.lotNumber = #{lotNumber} and i.id = #{inspectionId} limit 1 ")
     InspectionLotDTO getByLotAndInspection(@Param("lotNumber") String lotNumber, @Param("inspectionId") Long inspectionId);
 }

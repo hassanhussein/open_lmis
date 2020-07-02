@@ -51,7 +51,7 @@ public interface InspectionMapper {
             "JOIN Asns A ON a.id = r.asnId \n")
     Integer getTotalSearchResultCountAll();
 
-    @Select("select r.poNumber ,i.id,asnNumber,A.modifiedDate asnDate, i.receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
+    @Select("select r.poNumber ,i.id,asnNumber,A.modifiedDate asnDate, i.receiveNumber receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
             "JOIN receives r on i.receiveid = r.id \n" +
             "JOIN receive_LINE_ITEMS LI on r.id = li.receiveId\n" +
             "JOIN Asns A ON a.id = r.asnId ")
@@ -263,7 +263,7 @@ public interface InspectionMapper {
 
         public static String getSearchBy(Map<String, Object> params) {
             StringBuilder sql = new StringBuilder();
-            sql.append("WITH Q AS (select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
+            sql.append("WITH Q AS (select i.id,asnNumber,r.poNumber,A.modifiedDate asnDate, r.receiveNumber as receiptNumber,r.modifiedDate receiptDate, i.status from inspections i\n" +
                     "JOIN receives r on i.receiveid = r.id \n" +
                     "JOIN receive_LINE_ITEMS LI on r.id = li.receiveid\n" +
                     "JOIN Asns A ON a.id = r.asnId )\n" +

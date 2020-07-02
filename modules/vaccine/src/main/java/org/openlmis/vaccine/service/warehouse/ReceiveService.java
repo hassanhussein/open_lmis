@@ -88,10 +88,11 @@ public class ReceiveService {
         }
 
         if (receive.getId() == null) {
-
+            receive.setReceiveNumber(generateReceiveNumber());
             repository.insert(receive);
 
         } else {
+            receive.setReceiveNumber(generateReceiveNumber());
             repository.update(receive);
         }
 

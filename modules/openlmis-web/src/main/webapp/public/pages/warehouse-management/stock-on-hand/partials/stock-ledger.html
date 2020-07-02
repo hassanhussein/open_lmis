@@ -22,18 +22,17 @@
 
 
 
-
 <div class="row clear-fix">
     <div class="span3">
         <label id="parentLabel" >Select Year</label>
 
         <div class="form-field row-fluid">
-            <select ui-select2="{width: '90%'}" class="span11"
-                    ng-model="warehouseId" ng-change="getSoh()">
-                <option value="">--Select Year--</option>
-                <option value="" ng-selected="true">2020</option>
 
+            <select ui-select2="{width: '90%'}" style="width:100px;" class="span11"  ng-required="true"  name="year" id="startYear" ng-model="selectedYear" ng-change="changeByYear()"
+            >
+                <option ng-repeat="year in startYears" value="{{year}}" ng-selected="currentYear==year" >{{year}}</option>
             </select>
+
             <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
                   openlmis-message="missing.value"></span>
         </div>
