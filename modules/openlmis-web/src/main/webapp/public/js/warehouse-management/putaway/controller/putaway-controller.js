@@ -11,7 +11,7 @@
 function PutawayController($scope, $location,GetInspectionById,putaway,GetWarehouseLocations,SavePutAwayDetails) {
 
  GetWarehouseLocations.get(function(data) {
-               console.log("Bin:loc:"+data.binLocations);
+               console.log(data.binLocations);
                 $scope.warehouseList=data.binLocations;
                 });
 $scope.movementQueue=[];
@@ -79,10 +79,13 @@ console.log(JSON.stringify(movement));
   var success = function (data) {
     $scope.error = "";
     $scope.$parent.message = data.success;
-    $scope.$parent.messageToDisplay = "Lots Moved Successfully";
-    $scope.$parent.messageFlag = true;
-    $scope.showError = false;
+
     $location.path('');
+      $scope.$parent.messageToDisplay = "Batch Moved Successfully";
+      $scope.$parent.messageFlag = true;
+      $scope.messageToDisplay = "Batch Moved Successfully";
+      $scope.messageFlag = true;
+      $scope.showError = false;
   };
 
   var error = function (data) {

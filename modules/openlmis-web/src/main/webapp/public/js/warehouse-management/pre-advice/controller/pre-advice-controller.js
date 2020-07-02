@@ -748,20 +748,30 @@ console.log($scope.fiiCost);
 
 
     $scope.createLot = function() {
+
         var newLot = {};
         newLot.product = $scope.newLot.product;
         newLot.lotCode = $scope.newLot.lotCode;
         newLot.manufacturerName = $scope.newLot.manufacturerName;
         newLot.packSize=$scope.newLot.packSize;
-        newLot.expirationDate = $filter('date')($scope.newLot.expirationDate, "yyyy-MM-dd");
+        var productID=$scope.newLot.product.id;
+        if(productID===2426){
+            newLot.expirationDate = $filter('date')("2050-07-01", "yyyy-MM-dd");
+        }else {
+
+            newLot.expirationDate = $filter('date')($scope.newLot.expirationDate, "yyyy-MM-dd");
+        }
         Lot.create(newLot, function(data) {
             $scope.newLotModal = false;
             $scope.batchCreated=true;
             $timeout(function(){
              $scope.batchCreated=false;
                  },3000);
+
             $scope.loadProductLots(data.lot.product);
         });
+
+
     };
 
 

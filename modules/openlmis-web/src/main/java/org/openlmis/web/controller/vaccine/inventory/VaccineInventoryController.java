@@ -40,6 +40,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.jasperreports.AbstractJasperReportsSingleFormatView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.*;
 import java.util.*;
 
 import static org.openlmis.core.web.OpenLmisResponse.response;
@@ -99,7 +100,6 @@ public class VaccineInventoryController extends BaseController {
     @RequestMapping(value = "lots/byProduct/{productId}", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_STOCK')")
     public ResponseEntity getLotsByProductId(@PathVariable Long productId) {
-
         return OpenLmisResponse.response("lots", service.getLotsByProductId(productId));
     }
 
