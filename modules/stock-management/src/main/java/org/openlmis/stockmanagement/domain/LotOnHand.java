@@ -57,6 +57,7 @@ public class LotOnHand extends BaseModel {
     this.effectiveDate = new Date();
     this.keyValues = new ArrayList<>();
     this.strategy = null;
+    this.vvmId = lot.getVvmId();
   }
 
   /**

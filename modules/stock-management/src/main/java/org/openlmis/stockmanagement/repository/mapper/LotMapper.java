@@ -84,8 +84,8 @@ public interface LotMapper {
   int update(Lot lot);
 
   @Insert("INSERT into lots_on_hand " +
-      " (stockCardId, lotId, quantityOnHand, effectiveDate, vvmId" +
-      ", createdBy, createdDate, modifiedBy, modifiedDate) " +
+      " (stockCardId, lotId, quantityOnHand, effectiveDate " +
+      ", createdBy, createdDate, modifiedBy, modifiedDate,vvmId) " +
       "values " +
       " (#{stockCard.id}, #{lot.id}, #{quantityOnHand}, #{effectiveDate}" +
       ", #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{vvmId})")

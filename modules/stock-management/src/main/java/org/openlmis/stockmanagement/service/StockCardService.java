@@ -62,6 +62,10 @@ public class StockCardService {
     if (null == lotOnHand) {
       Lot l = lotRepository.getOrCreateLot(lot);
       lotOnHand = LotOnHand.createZeroedLotOnHand(l, stockCard);
+      if(lot.getVvmId() != null)
+         lotOnHand.setVvmId(lot.getVvmId());
+      System.out.println(lot.getVvmId());
+      System.out.println("----------------------------------------------------------");
       lotRepository.saveLotOnHand(lotOnHand);
     }
 
@@ -86,7 +90,7 @@ public class StockCardService {
 
 
   public LotOnHand getLotOnHandWithVvmStatus(Long vvmId, Long lotId, Lot lotObj, String productCode, StockCard card, StringBuilder str) {
-
+    System.out.println(vvmId);
 
     LotOnHand lotOnHand = null;
 
@@ -94,6 +98,10 @@ public class StockCardService {
       lotOnHand = lotRepository.getLotOnHandByStockCardAndLot(card.getId(), lotId);
       if (null == lotOnHand) {
         Lot lot = lotRepository.getOrCreateLot(lotObj);
+        if(vvmId != null)
+          lot.setVvmId(vvmId);
+        System.out.println(lot);
+        System.out.println("----------------------------------------------------------");
         lotOnHand = getOrCreateLotOnHand(lot, card);
       }
     }
