@@ -127,7 +127,7 @@ public class IvdFormController extends BaseController {
 
   //Handle bulk processing monthly forms
 
-  @RequestMapping(value = {"/vaccine/report/save", "/rest-api/ivd/saveArray"}, method = {RequestMethod.PUT})
+  @RequestMapping(value = {"/rest-api/ivd/saveArray"}, method = {RequestMethod.PUT})
   @ApiOperation(position = 8, value = "Save IVD form")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> saveMultipleForms(@RequestBody String reports, HttpServletRequest request) throws IOException {
