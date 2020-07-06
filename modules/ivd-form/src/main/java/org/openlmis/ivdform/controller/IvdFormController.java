@@ -11,6 +11,7 @@
  */
 package org.openlmis.ivdform.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -24,7 +25,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @Api("IVD Rest APIs")
@@ -121,5 +124,24 @@ public class IvdFormController extends BaseController {
     service.reject(report, loggedInUserId(request));
     return OpenLmisResponse.response(REPORT, report);
   }
+
+  //Handle bulk processing monthly forms
+
+  @RequestMapping(value = {"/vaccine/report/save", "/rest-api/ivd/saveArray"}, method = {RequestMethod.PUT})
+  @ApiOperation(position = 8, value = "Save IVD form")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
+  public ResponseEntity<OpenLmisResponse> saveMultipleForms(@RequestBody String reports, HttpServletRequest request) throws IOException {
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    VaccineReport[] readValues = mapper.readValue(reports, VaccineReport[].class);
+
+    for(VaccineReport report: readValues) {
+      service.save(report, loggedInUserId(request));
+    }
+
+    return OpenLmisResponse.response(REPORT, "Successiful saved");
+  }
+
 
 }
