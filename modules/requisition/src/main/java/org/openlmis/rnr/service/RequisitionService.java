@@ -715,6 +715,7 @@ public class RequisitionService {
   }
 
   public String deleteRnR(Long rnrId) {
+    onScreenNotificationService.markAsReadForRequisitionId(rnrId);
     return requisitionRepository.deleteRnR(rnrId);
   }
 
