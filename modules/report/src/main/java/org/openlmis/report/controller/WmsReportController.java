@@ -100,15 +100,15 @@ public class WmsReportController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/list-reports/{facilityId}")
+    /*@RequestMapping(value = "/list-reports/{facilityId}")
     public List<StockCards> getListReport(@PathVariable Long facilityId) {
-        return wmsReportRepository.getListReports(facilityId);
-    }
+        return wmsReportRepository.getStockProduct(facilityId);
+    }*/
 
     @RequestMapping(value = "/list-vaccine")
     public String getVaccineItems() {
         try {
-            long ID = 5;
+            long ID = 1;
             return wmsReportService.getStockProduct(ID);
         } catch (Exception e) {
             e.printStackTrace();

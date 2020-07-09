@@ -11,6 +11,8 @@
 	<field name="fullName" class="java.lang.String"/>
 	<field name="locationName" class="java.lang.String"/>
 	<field name="lotNumber" class="java.lang.String"/>
+	<field name="vvm" class="java.lang.String"/>
+
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -48,7 +50,7 @@
 					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{totalQuantityOnHand}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[Integer.valueOf($F{totalQuantityOnHand})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="110" y="-20" width="60" height="20" uuid="771c80ea-66ef-4355-b459-24469add037b"/>

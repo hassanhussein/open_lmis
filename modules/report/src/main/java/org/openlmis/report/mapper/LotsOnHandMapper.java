@@ -30,20 +30,21 @@ public interface LotsOnHandMapper {
     @Select("select * from stock_cards limit 100")
     List<Map> getListOfReports();
 
-    @Select("select lhl.id,s.facilityid as facilityId,lo.lotnumber as lotNumber,wh.name as warehouseName,lo.expirationdate as expirationDate,s.productid as productId," +
-            "lhl.quantityonhand as totalQuantityOnHand,s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wl.name  as locationName from lot_on_hand_locations lhl " +
+    @Select("select vvmst.name as vvm,lhl.id,s.facilityid as facilityId,lo.lotnumber as lotNumber,wh.name as warehouseName,lo.expirationdate as expirationDate,s.productid as productId," +
+            "h.quantityOnHand as totalQuantityOnHand ,s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wl.name  as locationName from lot_on_hand_locations lhl " +
             "left join lots_on_hand h on (lhl.lotonhandid = h.id) " +
             "left join  stock_cards s on (s.id = h.stockcardid) " +
             "left join lots lo on(lo.id=h.lotid) "+
+            "left join vvm_statuses vvmst on(vvmst.id=h.vvmId) "+
             "left join products pr on(pr.id=lo.productid) " +
             "left join wms_locations wl on(wl.id=lhl.locationid) " +
-            "left join warehouses wh on(wh.id=wl.warehouseid)" +
-            "where lo.productid=#{productId}")
-    List<StockCards> getListStockOnHand(@Param("productId") Long wareHouseId);
+            "left join warehouses wh on(wh.id=wl.warehouseid) " +
+            "where lo.productid=#{productId} and wl.warehouseid=#{warehouseId} ")
+    List<StockCards> getListStockOnHand(@Param("productId") Long productId,@Param("warehouseId") Long warehouseId);
 
 
 
-    @Select("select sum(lhl.quantityonhand) as totalQuantityOnHand,lo.productid as productId,pr.primaryname as productName,wh.name as wareHouseName from lot_on_hand_locations lhl \n" +
+    @Select("select  sum(h.quantityOnHand) as totalQuantityOnHand,lo.productid as productId,pr.primaryname as productName,wh.name as wareHouseName from lot_on_hand_locations lhl \n" +
             "            left join lots_on_hand h on (lhl.lotonhandid = h.id) \n" +
             "            left join  stock_cards s on (s.id = h.stockcardid) \n" +
             "            left join lots lo on(lo.id=h.lotid) \n" +

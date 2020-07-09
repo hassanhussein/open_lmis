@@ -63,11 +63,14 @@ public class InspectionController extends BaseController {
                                                                    @RequestParam(value = "column") String column,
                                                                    @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                    @Value("${search.page.size}") String limit) {
+
         Pagination pagination = new Pagination(page, parseInt(limit));
         pagination.setTotalRecords(service.getTotalSearchResultCount(searchParam, column));
         List<InspectionDTO> inspectList = service.searchBy(searchParam, column, pagination);
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("inspections", inspectList);
         response.getBody().addData("pagination", pagination);
+        System.out.println("called Methods:"+response.toString());
+
         return response;
     }
 
