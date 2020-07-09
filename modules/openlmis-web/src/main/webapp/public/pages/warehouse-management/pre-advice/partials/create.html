@@ -275,6 +275,9 @@
                                     <div  class="alert alert-danger" ng-show="productError"
                                     >Atleast One product with atleast One batch is required</div>
 
+                                    <div  class="alert alert-danger" ng-show="quantityError"
+                                    >Please Fill all the quantities</div>
+
                                     <div  class="alert alert-success" ng-show="batchCreated"
                                     >Batch Created Successfully</div>
                                     <table  class="table table-bordered receive">
@@ -544,7 +547,7 @@
 
                                             <option ng-repeat="agent in clearingAgentList"
                                                     value="{{ agent.name }}"
-                                                    ng-selected="clearingAgent===agent.name"
+                                                    ng-selected="clearingAgent==agent.name"
                                             >
                                                 {{ agent.name }}
 

@@ -805,12 +805,37 @@ $scope.removeProduct(productIndex);
     };
 
 
+$scope.quantitiesValid=function(){
+      var qError=false;
+    angular.forEach($scope.productsToAdd[0].lots,function(lot){
+            if(lot.info && lot.quantity==""){
+             qError=true;
+            }
+    })
 
+    if(!$scope.productsToAdd[0].unitPrice || qError){
+
+    $scope.quantityError = true;
+         $timeout(function(){
+
+              $scope.quantityError = false;
+
+              },10000);
+    return false
+    }
+
+    return true;
+
+
+
+    }
 
 $scope.saveAsn = function(status) {
 
 //    console.log($scope.docList);
         $scope.validateProduct();
+
+        $scope.quantitiesValid();
 
 $scope.quantityBoxError=false;
 

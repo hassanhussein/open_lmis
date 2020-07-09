@@ -149,6 +149,7 @@ getAllLookups();
 //    $scope.otherProducts=otherProducts;
 
     $scope.asn = asn;
+//    console.log(asn)
  if(!isUndefined(asn)) {
 
 
@@ -801,8 +802,35 @@ console.log($scope.fiiCost);
     };
 
 
+
+    $scope.quantitiesValid=function(){
+      var qError=false;
+    angular.forEach($scope.productsToAdd[0].lots,function(lot){
+            if(lot.info && lot.quantity==""){
+             qError=true;
+            }
+    })
+
+    if(!$scope.productsToAdd[0].unitPrice || qError){
+
+    $scope.quantityError = true;
+         $timeout(function(){
+
+              $scope.quantityError = false;
+
+              },10000);
+    return false
+    }
+
+    return true;
+
+
+
+    }
+
+
     $scope.saveAsn = function(status) {
-        console.log($scope.docLists);
+//        console.log($scope.docLists);
 
 //    console.log($scope.asnCode);
 
@@ -811,8 +839,9 @@ console.log($scope.fiiCost);
 
 
 //    console.log($scope.currency)
-    $scope.asnStatus=status;
+        $scope.asnStatus=status;
         $scope.validateProduct();
+        $scope.quantitiesValid();
       if ($scope.asnForm.$error.required ||$scope.docLists.length < parseInt(3,10)) {
             $scope.showError = true;
             $scope.error = 'form.error';
