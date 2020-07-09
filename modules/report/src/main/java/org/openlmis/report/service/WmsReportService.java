@@ -246,7 +246,7 @@ public class WmsReportService {
 
                 Long productID = stockListObject.getLong("productId");
 
-                List<StockCards> stockListProd = wmsReportRepository.getListReports(productID);
+                List<StockCards> stockListProd = wmsReportRepository.getListReports(productID,ID);
 
                 stockListObject.put("productItem",stockListProd);
                 jsonArray.put(stockListObject);

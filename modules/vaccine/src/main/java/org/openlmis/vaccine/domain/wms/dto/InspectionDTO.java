@@ -12,6 +12,7 @@ import java.util.Date;
 public class InspectionDTO extends BaseModel {
 
     private String asnNumber;
+    private String customStatus;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = DateDeserializer.class)

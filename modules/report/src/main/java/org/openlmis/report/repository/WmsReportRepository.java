@@ -28,8 +28,8 @@ public class WmsReportRepository {
         return lotsOnHandMapper.getListStockProduct(warehouseId);
     }
 
-    public List<StockCards> getListReports(Long productId){
-        return lotsOnHandMapper.getListStockOnHand(productId);
+    public List<StockCards> getListReports(Long productId,Long warehouseId){
+        return lotsOnHandMapper.getListStockOnHand(productId,warehouseId);
     }
 
     public Facilities getFacilityDetails(Long facilityId){
