@@ -69,7 +69,6 @@ public class InspectionController extends BaseController {
         List<InspectionDTO> inspectList = service.searchBy(searchParam, column, pagination);
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("inspections", inspectList);
         response.getBody().addData("pagination", pagination);
-        System.out.println("called Methods:"+response.toString());
 
         return response;
     }
