@@ -808,6 +808,7 @@ console.log($scope.fiiCost);
     angular.forEach($scope.productsToAdd[0].lots,function(lot){
             if(lot.info && lot.quantity===""){
              qError=true;
+             return;
             }
     });
 
