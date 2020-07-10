@@ -36,7 +36,7 @@
                                    ui-date-format="yy-mm-dd"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
                                     ng-model="inspection.inspectionDate"
-                                    ng-disabled="false"
+                                    ng-disabled="isDisabled(inspection.status)"
                                     ng-required="true"/>
                             <span class="field-error" ng-show="inspectionForm.inspectionDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
@@ -606,7 +606,7 @@
 
                                         <div class="control-group">
                                             <label  for="notes">Comments</label>
-                                            <input type="text" ng-model="inspection.shippedComment" id="notes">
+                                            <input type="text" ng-model="inspection.shippedComment"  ng-disabled="isDisabled(inspection.status)" id="notes">
 
                                         </div>
                                     </div>
@@ -650,7 +650,7 @@
                                             <label class="control-label"></label>
                                             <div>
 <!--                                                <input type="text" ng-model="inspection.conditionOfBox">-->
-                                                <select ng-model="inspection.conditionOfBox" >
+                                                <select  ng-model="inspection.conditionOfBox" >
 <!--                                                    <option value=""></option>-->
                                                     <option value="Good Condition">Good Condition</option>
                                                     <option value="Partially damaged">Partially damaged</option>
@@ -676,7 +676,7 @@
                                             <label class="control-label"></label>
                                             <div>
 <!--                                                <input type="text" ng-model="inspection.labelAttachedComment">-->
-                                                <select ng-model="inpection.labelAttachedComment" >
+                                                <select  ng-disabled="isDisabled(inspection.status)" ng-model="inpection.labelAttachedComment" >
 <!--                                                    <option value=""></option>-->
                                                     <option value="All labels were attached">All labels were attached</option>
                                                     <option value="Some boxes missing labels">Some boxes missing labels</option>
@@ -705,7 +705,7 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" ng-if="!viewMode" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="save('DRAFT')"/>
+                           ng-disabled="isDisabled(inspection.status)"     openlmis-message="button.save" ng-click="save('DRAFT')"/>
                     <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"
                            value="Print"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
@@ -716,7 +716,7 @@
                              ng-if="!viewMode" value="Print" style="margin-left:10px;margin-right:10px"/>
 
                     <input  type="button" class="btn btn-primary pull-right" ng-click="save('IN-PUTAWAY')"
-                             ng-if="!viewMode" value="Finalize Inspection" style="margin-left:10px;margin-right:10px"/>
+                            ng-disabled="isDisabled(inspection.status)" ng-if="!viewMode" value="Finalize Inspection" style="margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
