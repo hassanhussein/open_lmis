@@ -293,7 +293,6 @@ var sum=0;
     $scope.save = function (status) {
 //check the outer form validations
 
-
        if ($scope.inspectionForm.$error.pattern || $scope.inspectionForm.$error.required) {
          $scope.showError = true;
          $scope.error = 'form.error';
@@ -302,7 +301,7 @@ var sum=0;
        }
 
 //check the inner form validation
-// if invalid add css class to blink it
+// if invalid add css class to blink itf
     if($scope.globalErrorFlag){
     $scope.enabled=true;
     return;
@@ -314,6 +313,7 @@ var sum=0;
          $scope.inspection.status  = status;
          $scope.inspection.receiptNumber = $scope.inspection.receive.receiveLineItems[0].receiveNumber;
 
+         console.log($scope.inspection);
 
          UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
 
@@ -355,7 +355,7 @@ if(!$scope.hasExpired(lot)){
 //               lot.passLocationError=false;
 //           }
        //check fail qty
-          if(lot.failQuantity>lot.receivedQuantity){
+          if(lot.failedQuantity>lot.receivedQuantity){
                lot.failQuantityError=true;
                $scope.globalErrorFlag=true;
            }else{
@@ -363,7 +363,7 @@ if(!$scope.hasExpired(lot)){
            }
        //check check fail reason
             //only if we have fail quantity
-             if((lot.failQuantity!=='0' && lot.failQuantity)&&!lot.failReason){
+             if((lot.failedQuantity!=='0' && lot.failedQuantity)&&!lot.failedReason){
                        lot.failReasonError=true;
                        $scope.globalErrorFlag=true;
                    }else{
@@ -393,10 +393,10 @@ if(!$scope.hasExpired(lot)){
 
    //process passed qty for all lots
    angular.forEach(lineItem.lots,function(lot){
-    if(lot.failQuantity===''){
-    lot.failQuantity=0;
+    if(lot.failedQuantity===''){
+    lot.failedQuantity=0;
     }
-     lot.passQuantity=lot.receivedQuantity-parseInt(lot.failQuantity,10);
+     lot.passQuantity=lot.receivedQuantity-parseInt(lot.failedQuantity,10);
    });
 
   $scope.totalPassQty=sumLots('passQuantity',lineItem);

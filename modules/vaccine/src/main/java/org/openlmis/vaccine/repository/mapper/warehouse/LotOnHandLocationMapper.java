@@ -56,16 +56,16 @@ public interface LotOnHandLocationMapper {
 
 
     @Select("\n" +
-            "            select (SELECT name from vvm_statuses WHERE vvmId = h.vvmId limit 1) vvm,\n" +
+            "            select vvmst.name as vvm,\n" +
             "            to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
             "            p.primaryName product, sum(h.quantityOnHand) quantityOnHand, lotID, lotNumber, \n" +
             "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
             "             \n" +
             "            from lot_on_hand_locations L\n" +
             "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
-            "            \n" +
             "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
             "\n" +
+            "            \n left join vvm_statuses  vvmst on (vvmst.id=h.vvmId)" +
             "            JOIN lots LO ON Lo.id = h.lotId\n" +
             "            \n" +
             "            JOIN products P on lo.productID = p.id\n" +
@@ -75,7 +75,7 @@ public interface LotOnHandLocationMapper {
             "            WHERE  facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
             "            and l.quantityOnHand > 0\n" +
             "            \n" +
-            "            group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name ")
+            "            group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name,vvmst.name ")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("\n" +
