@@ -137,7 +137,14 @@ public class IvdFormController extends BaseController {
     VaccineReport[] readValues = mapper.readValue(reports, VaccineReport[].class);
 
     for(VaccineReport report: readValues) {
-      service.save(report, loggedInUserId(request));
+
+      if(report.getFacility().getAllowedToSend()) {
+
+        service.submitFromOtherApplications(report, loggedInUserId(request));
+
+      } else {
+        service.save(report, loggedInUserId(request));
+      }
     }
 
     return OpenLmisResponse.response(REPORT, "Successiful saved");
