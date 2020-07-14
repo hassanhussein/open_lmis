@@ -835,7 +835,7 @@
 
 
 
-                        <select ui-select2="{width: '100%'}" ng-model="lot.failedReason" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity || hasExpired(lot)" ng-required="lot.failQuantity!=='0' && lot.failQuantity">
+                        <select ui-select2="{width: '100%'}" ng-model="lot.failedReason" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity || hasExpired(lot)" ng-required="lot.failedQuantity!=='0' && lot.failedQuantity">
                             <option value=""></option>
                             <option ng-repeat="reason in failReasons"
                                     value="{{ reason.id }}"
@@ -852,7 +852,7 @@
                     <td ng-show="false">454</td>
                     <td>
 
-                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="lot.failQuantity=='0' || !lot.failQuantity">
+                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity">
                             <option value=""></option>
                             <option ng-repeat="location in locations"
                                     value="{{ location.id }}"

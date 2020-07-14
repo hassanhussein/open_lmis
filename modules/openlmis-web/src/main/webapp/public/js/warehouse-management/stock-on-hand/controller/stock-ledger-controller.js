@@ -54,7 +54,10 @@ StockLedgerController.resolve = {
 
                 if(!isUndefined(data.ledgers) ) {
 
-                value = data.ledgers;
+                    console.log(data.ledgers);
+
+
+                    value = data.ledgers;
                 deferred.resolve(value);
 
                 } else {

@@ -148,6 +148,8 @@ $scope.clearingAgentList = [];
 
     console.log($scope.receive);
 
+
+
     $scope.loadProducts = function(facilityId, programId,isVaccine) {
 
         if(isVaccine){
@@ -1150,10 +1152,13 @@ ReceiveController.resolve = {
             }, function(data) {
 
                 deferred.resolve(data.receive);
+
                 console.log(data.receive);
             }, {});
         }, 100);
         return deferred.promise;
     }
+
+
 
 };

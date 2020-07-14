@@ -81,7 +81,7 @@ public interface LotOnHandLocationMapper {
     @Select("\n" +
             "             Select primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +
             "\n" +
-            "             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +
+            "             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh,vvm,expirationDate,lotNumber\n" +
             "                FROM \n" +
             "                (WITH Q AS ( \n" +
             "                select MAX(p.primaryname) primaryname  , 0 as id, MAX(se.createdDATE)::timestamp with time zone as date, \n" +
@@ -93,20 +93,21 @@ public interface LotOnHandLocationMapper {
             "                0::INTEGER as adjustment,\n" +
             "                loc.name locationName,\n" +
             "\n" +
-            "                SUM(se.quantity)::integer as total\n" +
+            "                SUM(se.quantity)::integer as total,vvmst.name  vvm,to_char(max(l.expirationDate), 'dd-MM-yyyy') expirationDate,l.lotnumber as lotNumber\n" +
             "             \n" +
             "                from lot_location_entries se \n" +
             "\n" +
             "                join lots_on_hand lo ON lo.id=se.lotonhandid \n" +
             "                JOIN lot_on_hand_locations H ON se.locationId = h.LOCATIONID\n" +
             "                JOIN wms_locations loc ON loc.id = h.locationId\n" +
+            "            \n left join vvm_statuses  vvmst on (vvmst.id=lo.vvmId) " +
             "                join stock_cards s ON s.id=lo.stockcardid\n" +
-            "                --join lots l on l.id=lo.lotid \n" +
+            "                join lots l on l.id=lo.lotid \n" +
             "                join products p on p.id=s.productid \n" +
             "                join facilities f on f.id=s.facilityid \n" +
             "                where \n" +
             "                loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
-            "                 group by    loc.name) \n" +
+            "                 group by    loc.name,vvmst.name,l.lotnumber) \n" +
             "                SELECT * FROM Q \n" +
             "                UNION ALL \n" +
             "                (select p.primaryname , se.id, se.createddate as date, \n" +
@@ -118,13 +119,14 @@ public interface LotOnHandLocationMapper {
             "                case when se.type ='DEBIT' then se.quantity else 0 end as issued, \n" +
             "                case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment, \n" +
             "                loc.name locationName,\n" +
-            "                se.quantity::integer as total \n" +
+            "                se.quantity::integer as total,vvmst.name vvm,(select to_char(max(expirationDate), 'dd-MM-yyyy') expirationDate from lots where id=lo.lotid limit 1) as expiredDate,(select lotnumber from lots where id=lo.lotid limit 1) as lotNumber\n" +
             "               \n" +
             "                from lot_location_entries se \n" +
             "            \n" +
             "                join lots_on_hand lo ON lo.id=se.lotonhandid \n" +
             "                JOIN lot_on_hand_locations H ON se.locationId = h.LOCATIONID\n" +
             "                JOIN wms_locations loc ON loc.id = h.locationId\n" +
+            "            \n left join vvm_statuses  vvmst on (vvmst.id=lo.vvmId) " +
             "                join stock_cards s ON s.id=lo.stockcardid\n" +
             "                \n" +
             "                join products p on p.id=s.productid \n" +

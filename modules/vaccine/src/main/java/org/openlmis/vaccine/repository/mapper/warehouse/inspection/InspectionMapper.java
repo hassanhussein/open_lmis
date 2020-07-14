@@ -301,7 +301,9 @@ public interface InspectionMapper {
                     "                  \n" +
                     "                     )\n" +
                     "                    select  distinct on(q.poNumber) q.poNumber, * from q where status='IN-PUTAWAY' AND  ");
-            return createQuery(sql, params).toString();
+            String query=createQuery(sql, params).toString();
+            System.out.println(query);
+            return query;
         }
 
         private static StringBuilder createQuery(StringBuilder sql, Map<String, Object> params) {
