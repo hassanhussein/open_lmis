@@ -606,8 +606,8 @@
                                             <span style="font-size:12px">Was quantity received as per shipping notification?</span>
 
                                         <span ng-init="inspection.isShipped" >
-                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShipped" ng-value="true" /> <strong>No</strong>
-                                            <input type="radio" ng-model="inspection.isShipped" ng-value="false"/>
+                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShipped" ng-disabled="isDisabled(inspection.status)" ng-value="true" /> <strong>No</strong>
+                                            <input type="radio" ng-model="inspection.isShipped" ng-disabled="isDisabled(inspection.status)" ng-value="false"/>
                                         </span>
 
                                         </div>
@@ -800,7 +800,7 @@
 
 
 
-                        <select ui-select2="{width: '90%'}" ng-model="lot.vvmStatus"  ng-disabled="hasExpired(lot)"   ng-change="vvmChanged(lot)">
+                        <select ui-select2="{width: '90%'}" ng-model="lot.vvmStatus"  ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"   ng-change="vvmChanged(lot)">
                             <option value="">Select VVM</option>
                             <option ng-repeat="vvm in vvmStatusList"
                                     value="{{ vvm.id }}"
@@ -824,7 +824,7 @@
 
 
                     </td>
-                    <td><input type="text" numeric-validator="positiveInteger" ng-model="lot.failedQuantity" ng-disabled="hasExpired(lot)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
+                    <td><input type="text" numeric-validator="positiveInteger" ng-model="lot.failedQuantity" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
 
 
 
@@ -889,13 +889,13 @@
                 <div class="form-cell" >
                     <label class="checkbox inline">  Coolant Type Available: </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.dryIceFlag" name="dryIceFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.icePackFlag" ng-change="coolant(lineItem)"> Dry Ice
+                        <input type="checkbox" ng-model="lineItem.dryIceFlag" ng-disabled="isDisabled(inspection.status)" name="dryIceFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.icePackFlag" ng-change="coolant(lineItem)"> Dry Ice
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.icePackFlag" name="icePackFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.dryIceFlag" ng-change="coolant(lineItem)"> Icepacks
+                        <input type="checkbox" ng-model="lineItem.icePackFlag" ng-disabled="isDisabled(inspection.status)" name="icePackFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.dryIceFlag" ng-change="coolant(lineItem)"> Icepacks
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.noCoolantFlag" name="noCoolantFlag" ng-required="!lineItem.dryIceFlag && !lineItem.icePackFlag" ng-change="noCoolant(lineItem)"> No Coolant
+                        <input type="checkbox" ng-model="lineItem.noCoolantFlag" ng-disabled="isDisabled(inspection.status)" name="noCoolantFlag" ng-required="!lineItem.dryIceFlag && !lineItem.icePackFlag" ng-change="noCoolant(lineItem)"> No Coolant
                     </label>
                     <span class="field-error" ng-show="(inspectLotForm.icePackFlag.$error.required || inspectLotForm.dryIceFlag.$error.required || inspectLotForm.noCoolantFlag.$error.required) && showError"
                           openlmis-message="missing.value"></span>
@@ -907,17 +907,17 @@
                 <div class="form-cell" >
                     <label class="checkbox inline">  Temperature Monitor Present: </label>
                     <label class="checkbox inline">
-                     <input type="checkbox" ng-model="lineItem.vvmFlag" > VVM
+                     <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.vvmFlag" > VVM
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.ccCardFlag"> Cold-chain Card
+                        <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.ccCardFlag"> Cold-chain Card
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.electronicDeviceFlag"> Electronic devices
+                        <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.electronicDeviceFlag"> Electronic devices
                     </label>
 
                     <label class="checkbox inline">
-                      Other Type  <input type="text" ng-model="lineItem.otherMonitor">
+                      Other Type  <input type="text" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.otherMonitor">
                     </label>
 
                 </div>
@@ -928,7 +928,7 @@
                 <div class="form-cell" >
                     <label class="checkbox inline">  Any Problem Observed? </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="problem" >
+                        <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="problem" >
                     </label>
 
 
