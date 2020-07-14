@@ -18,11 +18,12 @@ public class QuantificationExtractQueryBuilder {
 
         return "   SELECT \n" +
                 "   periodName, period,facilityCode,facility,facilityType,code,product,category,unit, SUM(uom) uom,  sum(issues) issues, \n" +
-                "   round(cast(sum(issues) / (sum(uom)/count(Code))::float as numeric),2) Consumption\n" +
+                "   round(cast(sum(issues) / (sum(uom)/count(Code))::float as numeric),0) Consumption\n" +
+                "   , ceil(sum(normalizedConsumption) / (sum(uom)/count(code))::float) adjustedConsumptionInPacks, sum(normalizedConsumption) adjustedConsumption  " +
                 "   from mv_quantification_extraction\n" +
                      writePredicates(returnParams(map)) +
                 "   group by periodName,period,facilityCode,facility,facilityType,code,product,category,unit" +
-                " order by periodName limit 2000 ";
+                " order by periodName ";
 
 
     }
