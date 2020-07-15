@@ -785,4 +785,8 @@ public class ReportLookupService {
     return new Pagination(page, pageSize2);
   }
 
+  public List<HashMap<String, Object>> getUserDistrict(Long programId, Long userId){
+
+    return geographicZoneMapper.getUserDistricts(programId,userId);
+  }
 }

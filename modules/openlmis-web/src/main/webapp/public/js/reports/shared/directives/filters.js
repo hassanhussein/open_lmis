@@ -456,7 +456,10 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
             if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
 
                 var service = TreeGeographicZoneListByProgram;
+                attr.nozone = true;
+
                 if (attr.nozone) {
+                console.log('reached gere');
                     service = TreeGeographicTreeByProgramNoZones;
                 }
 
@@ -509,7 +512,7 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
                         name: scope.filter.zoneName.replace(/\+/g, ' ')
                     };
                 }
-
+console.log(attr);
                 if (attr.districtOnly) {
                     scope.showDistrictOnly = true;
                 }

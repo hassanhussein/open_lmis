@@ -1431,3 +1431,7 @@ services.factory('GetCOVIDDesignatedFacilities', function($resource){
 services.factory('GetNotificationById', function($resource){
     return $resource('/all-notifications/:id.json', {id:'@id'}, {});
 });
+
+services.factory('GetDistrictUserOnly', function($resource){
+    return $resource('/reports/geographic-zones/user-district/:id.json', {id:'@id'}, {});
+});

@@ -28,6 +28,7 @@ import org.openlmis.report.model.geo.GeoStockStatusProduct;
 import org.openlmis.report.model.geo.GeoStockStatusProductConsumption;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -1222,6 +1223,12 @@ public interface GeographicZoneReportMapper {
 
         List<GeoZoneVaccineCoverage>getGeoZoneVaccineCoverage(@Param("userId") Long userId, @Param("productId") Long product,@Param("year") Long year, @Param("periodId") Long processingPeriodId,@Param("doseId")Long doseId);
 
+        @Select("\n" +
+                "\n" +
+                " select distinct gz.id, gz.* from geographic_zones gz join geographic_levels gl on gl.id = gz.levelId  \n" +
+                "                join (select vd.* from vw_districts vd join vw_user_districts vud on vud.district_id = vd.district_id where vud.program_id = #{programId} and vud.user_id = #{userId} ) sq\n" +
+                "                 on sq.district_id = gz.id ")
+        List<HashMap<String,Object>> getUserDistricts(@Param("programId")Long programId, @Param("userId") Long userId);
 
 
 
