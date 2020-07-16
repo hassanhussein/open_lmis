@@ -58,7 +58,7 @@ public interface LotOnHandLocationMapper {
     @Select("\n" +
             "            select vvmst.name as vvm,\n" +
             "            to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
-            "            p.primaryName product, sum(h.quantityOnHand) quantityOnHand, lotID, lotNumber, \n" +
+            "            p.primaryName product, (sum(h.quantityOnHand)-(select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1)) quantityOnHand, lotID, lotNumber, \n" +
             "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
             "             \n" +
             "            from lot_on_hand_locations L\n" +
@@ -75,11 +75,11 @@ public interface LotOnHandLocationMapper {
             "            WHERE  facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
             "            and l.quantityOnHand > 0\n" +
             "            \n" +
-            "            group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name,vvmst.name ")
+            "            group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name,vvmst.name,lo.id ")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("\n" +
-            "             Select primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +
+            "             Select distinct primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +
             "\n" +
             "             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh,vvm,expirationDate,lotNumber\n" +
             "                FROM \n" +
