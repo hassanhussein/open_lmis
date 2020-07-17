@@ -7,6 +7,8 @@
 <html lang="en" ng-app="supply-chain-visualization">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title openlmis-message="app.title"></title>        <!-- Icons -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon"/>
 
@@ -28,6 +30,12 @@
     <script src="/public/lib/c3/c3-angular.min.js"></script>
     <link rel="stylesheet" href="/public/lib/c3/c3.min.css">
 
+    <script type="text/javascript" src="/public/lib/material/js/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/public/lib/jquery.smartmenus.js"></script>
+    <script type="text/javascript" src="/public/lib/jquery/jquery.dimensions.min.js"></script>
+
+    <script type="text/javascript" src="/public/lib/angular-materialize/src/angular-materialize.js"></script>
+    <script src="/public/lib/material/js/materialize.min.js"></script>
 
     <script src="/public/lib/nsPopover/nsPopover.js"></script>
     <link rel="stylesheet" href="/public/lib/nsPopover/nsPopover.css">
@@ -40,6 +48,9 @@
     <link rel="stylesheet" href="/public/lib/select2/select2.css">
     <link rel="stylesheet" href="/public/lib/fullcalendar/fullcalendar.css">
     <link rel="stylesheet" href="/public/lib/jquery/jquery.jqplot.min.css">
+    <link rel="stylesheet" href="/public/lib/bootstrap-tree-view/css/bootstrap.3.3.7.min.css">
+    <script src="/public/lib/angular/animate.css"></script>
+    <link rel="stylesheet" href="/public/lib/bootstrap-tree-view/css/bootstrap-treeview.min.css">
 
     <!-- Services -->
     <script src="/public/js/shared/services/services.js"></script>
@@ -115,15 +126,34 @@
 
 </head>
 <body onunload="">
-<div id="wrap">
     <ng-include src="'/public/pages/header.html'"></ng-include>
     <ng-include src="'/public/pages/navigation.html'"></ng-include>
-    <div class="content">
+    <div class="content" style="background-color: #eef1f3;">
         <div ng-view></div>
     </div>
-    <!--<ng-include src="'/public/pages/template/footer/openlmis-footer.html'"></ng-include>-->
-</div>
-<!--
+    <script type="text/javascript">
+ $(document).ready(function(){
+    $('ul.tabs').tabs();
+  });
+
+
+
+    $(document).ready(function() {
+        $('.modal-trigger').leanModal();
+        $(".my_select_box").chosen({max_selected_options: 100});
+    $('select').material_select();
+
+
+
+});
+
+
+
+
+
+
+</script>
+    <!--
 <script>
     var newWin = null;
     function popUp(strURL,strType, strHeight, strWidth) {

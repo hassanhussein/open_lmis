@@ -1,42 +1,237 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+<style>
+    .ngRow.odd {
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(212,212,212);
+    }
+    .ngRow.even {
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(212,212,212);
+    }
+.vl {
+  border-left: 6px solid green;
+  height: 100px;
+}
+.text-card {
+font-size:40px;
+color:#17888f
+font-weight:bold;
+}
+.card-box {
+    padding: 20px;
+    border-radius: 3px;
+    margin-bottom: 30px;
+    background-color: #fff;
+}
+.text-muted {
+    color: black!important;
+    font-size: 13px;
+}
 
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+.font-13 {
+    font-size: 13px!important;
+}
+.tabs-left, .tabs-right {
+  border-bottom: none;
+  padding-top: 2px;
+}
+.tabs-left {
+  border-right: 1px solid #ddd;
+}
+.tabs-right {
+  border-left: 1px solid #ddd;
+}
+.tabs-left>li, .tabs-right>li {
+  float: none;
+  margin-bottom: 2px;
+}
+.tabs-left>li {
+  margin-right: -1px;
+}
+.tabs-right>li {
+  margin-left: -1px;
+}
+.tabs-left>li.active>a,
+.tabs-left>li.active>a:hover,
+.tabs-left>li.active>a:focus {
+  border-bottom-color: #ddd;
+  border-right-color: transparent;
+}
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-</head>
-<body>
+.tabs-right>li.active>a,
+.tabs-right>li.active>a:hover,
+.tabs-right>li.active>a:focus {
+  border-bottom: 1px solid #ddd;
+  border-left-color: transparent;
+}
+.tabs-left>li>a {
+  border-radius: 4px 0 0 4px;
+  margin-right: 0;
+  display:block;
+}
+.tabs-right>li>a {
+  border-radius: 0 4px 4px 0;
+  margin-right: 0;
+}
+</style>
+<div>
+    <h1 style="text-align:left; font-size:25px"></h1>
 
+    <div class="col-md-2"> <!-- required for floating -->
+        <ul class="nav nav-tabs tabs-left sideways">
+            <li class="active"><a href="#stock-status" data-toggle="tab">Stock Availability</a></li>
+            <li><a href="#summary" data-toggle="tab">RnR Reporting</a></li>
+            <li><a href="#inbound" data-toggle="tab">Requisition Analysis</a></li>
+        </ul>
+    </div>
 
-<div class="row-fluid">
-    <iframe width="100%" height="800" ng-src="{{iframeSrcUrl | trustAsResourceUrl}}" frameborder="0" allowtransparency></iframe>
+    <div class="col-md-10">
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="stock-status">
+                <div class="card-content" >
+                    <div class="row" style="float:top;padding:10px; background:white">
 
-<!--
-    <iframe    src="http://dashboard.tz.elmis-dev.org/public/question/2a519af8-a6da-4c68-bfd3-b661e2488665"    frameborder="0"    width="800"    height="600"    allowtransparency></iframe>
--->
-    <!--
-        <iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/150c1f58-2a55-46c4-964e-687a65a5a759"    frameborder="0"    width="800"    height="600"    allowtransparency></iframe>
-    -->
-    <!--
-        <iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/5529dc41-89d3-4e49-9c37-ac5af37bacde"    frameborder="0"    width="100%"    height="3000px"    allowtransparency></iframe>
-    -->
-    <!--<iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/1cd064f1-615b-4080-83c7-5159af530796"    frameborder="0"    width="100%"    height="3000px"    allowtransparency>--></iframe>
+                        <iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/d6aec215-6913-4fdc-8ee5-5b10af04ed0f"   frameborder="0"    width="100%"    height="600px"    allowtransparency></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="cases">
+                <div class="card-content" >
+                    <div class="row" style="float:top;background:#ffffff">
+                        <div class="col-md-6">
+                            <div id="cumulativePatientTrend" style="height: 400px;margin:0 auto "></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div id="patientPerRegion"  style=" height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="summary" style="background:white;" >
+                <div class="grey lighten-5 card row2-height"   >
+                    <div class="row" style="float:top; padding:10px">
+                        <filter-container>
+                            <form>
+                                <div class="form-row">
+                                    <div class="form-cell horizontalFilters">
+                                        <div class="col">
+                                            <div>
+                                                <covid-facility-filter class="form-cell horizontalFilters"></covid-facility-filter>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <br>
+                                            <div>
+                                               <span class="pull-right">
+                                                   <a ng-click="facilityReporting(filter)" class="waves-effect waves-light btn">Search</a>
+                                               </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </filter-container>
+                    </div>
+                    <div  style=" padding:3px margin-top:3px" >
+                        <div class="row" style="background:white;">
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one">
+                                    <div class="vl col-sm-3"></div>
+                                    <div class="col-sm-9" >
+                                        <i class="icon-layers float-right text-muted"></i>
+                                        <h6 class="text-muted text-uppercase mt-0">Items Reported</h6>
+                                        <h3 class="text-card" >{{items}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
+                                    <h6 class="text-muted text-uppercase mt-0"># of StockOut</h6>
+                                    <h3 class="text-card">{{stockOutItems}}</h3>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
+                                    <h6 class="text-muted text-uppercase mt-0">Availability(%)</h6>
+                                    <h3 class="text-card">{{availability || 0}}%</h3>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" >
+                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>
+                                    <h6 class="text-muted text-uppercase mt-0">Reporting Compliance(%)</h6>
+                                    <h3 class="text-card">100%</h3>
+                                </div>
+                            </div>
+                            <!--                            <div class="col-sm-3" >-->
+                            <!--                                <div class="card-box tilebox-one"><i class="icon-layers float-right text-muted"></i>-->
+                            <!--                                    <h6 class="text-muted text-uppercase mt-0">Reporting Compliance(%)</h6>-->
+                            <!--                                    <h3 class="text-card">100%</h3>-->
+                            <!--                                </div>-->
+                            <!--                            </div>-->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="box-icon" style="float:right; margin-right:20px"  >
+                            <a id="pdf-button" href="" ng-click="exportSummaryReport(drillDownData)"
+                               class='btn-small btn-info'><span >Export</span></a>
+                        </div>
+                    </div>
+                    <div class="card-content" >
+                        <div style="height: 600px !important;">
+                            <div class="card-action" style="background-color: #17888f; ; padding:8px">
+                                <span style="color:white">{{title}}</span>
+                            </div>
+                            <div ng-show="drillDownData.length" style="height: 550px !important;" id="ordersGrid" class="gridStyle" ng-grid="gridOptions"  ui-grid-exporter></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="background:white" class="tab-pane" id="inbound" >
+                <div class="row" style="float:top; padding:10px; background:white">
+                    <filter-container>
+                        <form>
+                            <div class="form-row">
+                                <div class="form-cell horizontalFilters">
+                                    <div class="col">
+                                        <div>
+                                            <covid-product-filter class="form-cell horizontalFilters"></covid-product-filter>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <br>
+                                        <div>
+                                               <span class="pull-right">
+                                                   <a ng-click="loadInboundReport(filter)" class="waves-effect waves-light btn">Search</a>
+                                               </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </filter-container>
+                </div>
+                <div><div style="margin-left:40px; margin-right:40px" id="pipeline"></div></div>
+                <div class="row" style="background:white">
+                    <div class="box-icon" style="float:right; margin-right:20px"  >
+                        <a id="pdf-button" href="" ng-click="exportPipelineReport(pipelineData)"
+                           class='btn-small btn-info'><span >Export</span></a>
+                    </div>
+                </div>
+                <div class="card-content"  style="padding:10px; background:white;">
+                    <div style="height: 600px !important;">
+                        <div class="card-action" style="background-color: #17888f; padding:8px">
+                            <span style="color:white; ">Inbound List</span>
+                        </div>
+                        <div ng-show="pipelineData.length" style="height: 550px !important;" id="pipelineGrid" class="gridStyle" ng-grid="gridPipelineOptions"  ui-grid-exporter></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
 </div>
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="js/jquery-1.9.1.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="js/bootstrap.min.js"></script>
-</body>
-</html>
