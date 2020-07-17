@@ -1,0 +1,118 @@
+<style>
+    .ngRow.odd {
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(212,212,212);
+    }
+    .ngRow.even {
+        background-color: rgb(255, 255, 255);
+        border: 1px solid rgb(212,212,212);
+    }
+.vl {
+  border-left: 6px solid green;
+  height: 100px;
+}
+.text-card {
+font-size:40px;
+color:#17888f
+font-weight:bold;
+}
+.card-box {
+    padding: 20px;
+    border-radius: 3px;
+    margin-bottom: 30px;
+    background-color: #fff;
+}
+.text-muted {
+    color: black!important;
+    font-size: 13px;
+}
+
+.font-13 {
+    font-size: 13px!important;
+}
+.tabs-left, .tabs-right {
+  border-bottom: none;
+  padding-top: 2px;
+}
+.tabs-left {
+  border-right: 1px solid #ddd;
+}
+.tabs-right {
+  border-left: 1px solid #ddd;
+}
+.tabs-left>li, .tabs-right>li {
+  float: none;
+  margin-bottom: 2px;
+}
+.tabs-left>li {
+  margin-right: -1px;
+}
+.tabs-right>li {
+  margin-left: -1px;
+}
+.tabs-left>li.active>a,
+.tabs-left>li.active>a:hover,
+.tabs-left>li.active>a:focus {
+  border-bottom-color: #ddd;
+  border-right-color: transparent;
+}
+
+.tabs-right>li.active>a,
+.tabs-right>li.active>a:hover,
+.tabs-right>li.active>a:focus {
+  border-bottom: 1px solid #ddd;
+  border-left-color: transparent;
+}
+.tabs-left>li>a {
+  border-radius: 4px 0 0 4px;
+  margin-right: 0;
+  display:block;
+}
+.tabs-right>li>a {
+  border-radius: 0 4px 4px 0;
+  margin-right: 0;
+}
+</style>
+<div >
+<!--    <h1 style="text-align:center; font-size:25px">Zan</h1>-->
+    <hr/>
+    <div class="col-md-2"> <!-- required for floating -->
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs tabs-left sideways">
+            <li class="active"><a href="#stock-availability" data-toggle="tab">Stock Availability</a></li>
+            <li><a href="#requisitions" data-toggle="tab">Requisition Analysis</a></li>
+            <li><a href="#reporting" data-toggle="tab">Reporting Analysis</a></li>
+<!--            <li><a href="#cases" ng-show="false" data-toggle="tab">Cases/Patients</a></li>-->
+        </ul>
+    </div>
+
+    <div class="col-md-10">
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="stock-availability">
+                <div class="card-content" ng-controller="EmergencyCommoditiesController">
+                    <iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/d6aec215-6913-4fdc-8ee5-5b10af04ed0f"    frameborder="0"    width="100%"    height="600px"    allowtransparency></iframe>
+                </div>
+            </div>
+            <div class="tab-pane" id="requisitions">
+                <div class="card-content" ng-controller="EmergencyCommoditiesController">
+                    <div class="row" style="float:top;background:#ffffff">
+                        <iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/d45bf87b-1979-4a56-8bb7-4fb0eb98a99a"    frameborder="0"    width="100%"    height="600px"    allowtransparency></iframe>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="reporting" style="background:white;" ng-controller="EmergencyCommoditiesController">
+                <div class="grey lighten-5 card row2-height"   >
+                    <iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/37d67507-6f38-4559-8cc3-50a18caea384"    frameborder="0"    width="100%"    height="600"    allowtransparency></iframe>
+                </div>
+            </div>
+            <div style="background:white" class="tab-pane" id="inbound" ng-controller="StockInboundController">
+                <iframe    src="http://dashboard.tz.elmis-dev.org/public/dashboard/21132895-f460-4ee9-b86d-8334f56324a3"    frameborder="0"    width="100%"    height="3000px"    allowtransparency></iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+</div>
+
