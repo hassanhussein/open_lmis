@@ -14,7 +14,8 @@ public class VaccineDistribution {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Date distributionDate;
     private String orderDate;
-    private  int orderId, toFacilityId, periodId,pickListId;
+    private  long pickListId;
+    private  int orderId, toFacilityId, periodId;
     private String facilityName, facilityTypeFrom, facilityTypeTo, fromZoneName,
             toZoneName, toDescription, fromDescription, fromFacilityName;
 
@@ -46,7 +47,7 @@ public class VaccineDistribution {
         return facilityName;
     }
 
-    public int getPickListId() {
+    public long getPickListId() {
         return pickListId;
     }
 
