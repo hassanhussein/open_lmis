@@ -1,10 +1,11 @@
 function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
     GetEmergencyOrderByProgramData, GetEmergencyOrderTrendsData, DashboardRnrTypes, RejectionCount, RnRStatusSummary,
-    DefaultProgram, StockStatusByProgramData,FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData) {
+    DefaultProgram, StockStatusByProgramData,FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData, $sce) {
 
     //resourceLoadingConfig.hideReloadIcon = true;
     //resourceLoadingConfig.loadingDashlet = [];
 
+    $scope.testUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/public/dashboard/d6aec215-6913-4fdc-8ee5-5b10af04ed0f");
     $scope.notifications = notifications;
 
     var params;
