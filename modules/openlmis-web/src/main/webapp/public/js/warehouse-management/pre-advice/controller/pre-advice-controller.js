@@ -1192,7 +1192,7 @@ deferred.resolve('data');
              var configurations = {};
              $timeout(function() {
                  GetAllClearingAgents.get(function(data) {
-                 console.log(data.agents)
+//                 console.log(data.agents)
                      deferred.resolve(data.agents);
                  });
              }, 100);

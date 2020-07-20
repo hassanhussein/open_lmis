@@ -21,7 +21,7 @@ $scope.globalErrorFlag=true;
 
     $scope.isDisabled = function($value){
         return ($value === "INSPECTED") || ($value === "IN-PUTAWAY");
-    }
+    };
 
  $scope.clearingAgentList = [];
 
