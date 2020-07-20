@@ -274,7 +274,6 @@ public class LotOnHandLocationService {
 
 
         }
-
         stockCardService.addStockCardEntries(entries);
         return "success.stock.adjusted";
     }
