@@ -118,7 +118,7 @@ if ($scope.movementForm.$error.required ) {
             $scope.message = "";
             return;
         }
-}
+};
 
 $scope.submit = function (stockMovement) {
 

@@ -810,7 +810,7 @@ $scope.removeProduct(productIndex);
 $scope.quantitiesValid=function(){
       var qError=false;
     angular.forEach($scope.productsToAdd[0].lots,function(lot){
-            if(lot.info && lot.quantity==""){
+            if(lot.info && lot.quantity===""){
              qError=true;
 //             return;
             }
@@ -1166,7 +1166,7 @@ ReceiveController.resolve = {
                  var configurations = {};
                  $timeout(function() {
                      GetAllClearingAgents.get(function(data) {
-                     console.log(data.agents)
+//                     console.log(data.agents)
                          deferred.resolve(data.agents);
                      });
                  }, 100);
