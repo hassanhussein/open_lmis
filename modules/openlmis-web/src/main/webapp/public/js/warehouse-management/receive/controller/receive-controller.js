@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,clearingAgent,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory){
 
 
@@ -19,16 +19,16 @@ function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,DeleteDocu
                                    $scope.$parent.received = false;
 
 
-$scope.clearingAgentList = [];
+$scope.clearingAgentList = clearingAgent;
     function getAllLookups(){
 
 
-     GetAllClearingAgents.get({}, function(data){
-
-           $scope.clearingAgentList = data.agents;
-           console.log(data);
-
-           });
+//     GetAllClearingAgents.get({}, function(data){
+//
+//           $scope.clearingAgentList = data.agents;
+//           console.log(data);
+//
+//           });
 
     GetBinLocationByCategory.get({category:'receiving'}, function(data){
 
@@ -810,9 +810,9 @@ $scope.removeProduct(productIndex);
 $scope.quantitiesValid=function(){
       var qError=false;
     angular.forEach($scope.productsToAdd[0].lots,function(lot){
-            if(lot.info && lot.quantity===""){
+            if(lot.info && lot.quantity==""){
              qError=true;
-             return;
+//             return;
             }
     });
 
@@ -838,7 +838,10 @@ $scope.saveAsn = function(status) {
 //    console.log($scope.docList);
         $scope.validateProduct();
 
-        $scope.quantitiesValid();
+
+        if(!$scope.quantitiesValid()){
+        return;
+        }
 
 $scope.quantityBoxError=false;
 
@@ -1157,7 +1160,19 @@ ReceiveController.resolve = {
             }, {});
         }, 100);
         return deferred.promise;
-    }
+    },
+    clearingAgent:function($q, $timeout,GetAllClearingAgents){
+            var deferred = $q.defer();
+                 var configurations = {};
+                 $timeout(function() {
+                     GetAllClearingAgents.get(function(data) {
+                     console.log(data.agents)
+                         deferred.resolve(data.agents);
+                     });
+                 }, 100);
+
+                 return deferred.promise;
+         }
 
 
 

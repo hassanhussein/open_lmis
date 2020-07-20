@@ -110,6 +110,16 @@ $scope.validateQuantity  = function (movement){
 
 };
 
+$scope.adjust=function(){
+console.log('am here');
+if ($scope.movementForm.$error.required ) {
+            $scope.showError = true;
+            $scope.error = 'form.error';
+            $scope.message = "";
+            return;
+        }
+}
+
 $scope.submit = function (stockMovement) {
 
 stockMovement.stockCardId = $scope.productToDisplay[0].stockCardId;
@@ -127,6 +137,10 @@ stockMovement.lotOnHandId = $scope.productToDisplay[0].lotOnHandId;
             $scope.message = "";
             return;
         }
+
+    if(stockMovement=="adjustment"){
+    return;
+    }
 
 
 stockMovement.notify = true;
