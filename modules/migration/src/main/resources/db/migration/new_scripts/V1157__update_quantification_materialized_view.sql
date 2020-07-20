@@ -41,3 +41,9 @@ CREATE MATERIALIZED VIEW public.mv_quantification_extraction AS
   WHERE r.emergency = false and processing_periods.enableOrder = true
   ORDER BY li.productcategory, li.product, facilities.name
 WITH NO DATA;
+
+--add configuration settings
+
+delete from configuration_settings where key = 'LLIN_STARTING_REPORTING_YEAR';
+insert into configuration_settings(key,value,name,description,groupname,valuetype,isconfigurable)
+values('LLIN_STARTING_REPORTING_YEAR','2019','LLIN starting year to send data to DHIS2','LLIN starting year to send data to DHIS2','GENERAL','TEXT',true);

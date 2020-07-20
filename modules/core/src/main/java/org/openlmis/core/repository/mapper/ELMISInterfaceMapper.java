@@ -105,8 +105,17 @@ public interface ELMISInterfaceMapper {
     Integer updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
 
 
-    @Select("SELECT * FROM vw_bed_nets_data WHERE reporting_year >= 2017")
-    List<ELMISInterfaceDataSetDTO>getMosquitoNetData();
+    @Select("SELECT * FROM vw_bed_nets_data WHERE period::INT=#{period}::INT")
+    List<ELMISInterfaceDataSetDTO>getMosquitoNetData(@Param("period") Long period);
+
+    @Select("\n" +
+            "SELECT \n" +
+            "to_char(generate_series, 'YYYYMM')::int AS period\n" +
+            " from generate_series(\n" +
+            " ((SELECT value::INT from configuration_settings where key = 'LLIN_STARTING_REPORTING_YEAR' LIMIT 1) ||'-01-01')::date\n" +
+            ", now(), '1 month') order by period desc ")
+    List<ELMISInterfaceDataSetDTO>getReportedPeriodMosquitoNetData();
+
 
     @Select("REFRESH MATERIALIZED VIEW  vw_bed_nets_data")
     void refreshMaterializedView();

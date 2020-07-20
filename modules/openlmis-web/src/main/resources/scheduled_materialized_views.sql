@@ -1,3 +1,4 @@
+REFRESH MATERIALIZED VIEW vw_bed_nets_data;
 REFRESH MATERIALIZED VIEW mv_dashboard_tracer_available_by_programs;
 REFRESH MATERIALIZED VIEW mv_dashboard_tracer_product_by_program_counts;
 REFRESH MATERIALIZED VIEW mv_dashboard_tracer_reported_products_by_programs;

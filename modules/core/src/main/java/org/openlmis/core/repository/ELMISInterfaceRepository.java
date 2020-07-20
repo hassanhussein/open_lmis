@@ -158,8 +158,12 @@ public class ELMISInterfaceRepository {
         }
     }
 
-    public List<ELMISInterfaceDataSetDTO> getMosquitoNetData(){
-        return mapper.getMosquitoNetData();
+    public List<ELMISInterfaceDataSetDTO> getMosquitoNetData(Long period){
+        return mapper.getMosquitoNetData(period);
+    }
+
+   public List<ELMISInterfaceDataSetDTO> getReportedPeriodMosquitoNetData(){
+        return mapper.getReportedPeriodMosquitoNetData();
     }
 
 

@@ -130,20 +130,25 @@ public class ELMISInterfaceService {
 
     }
 
-    // @Scheduled(cron = "${batch.job.send.bed.net.data}")
+     @Scheduled(cron = "${batch.job.send.bed.net.data}")
     ///@Scheduled(fixedRate = 900000)
     public void processMosquitoNetData() {
         //Populate Data
         repository.refreshMaterializedView();
+
         String username = settingService.getByKey(USERNAME).getValue();
         String password = settingService.getByKey(PASSWORD).getValue();
         String url = settingService.getByKey(URL).getValue();
 
-        ELMISInterfaceDTO dto = new ELMISInterfaceDTO();
+         List<ELMISInterfaceDataSetDTO> periods = repository.getReportedPeriodMosquitoNetData();
 
-        if (username != null & password != null & url != null) {
-            dto.setDataValues(repository.getMosquitoNetData());
-            sendBedNetData(username, password, url, dto, null,null,null,null,null);
+         if (username != null & password != null & url != null) {
+             ELMISInterfaceDTO dto;
+             for(ELMISInterfaceDataSetDTO period: periods) {
+               dto = new ELMISInterfaceDTO();
+               dto.setDataValues(repository.getMosquitoNetData(period.getPeriod()));
+               sendBedNetData(username, password, url, dto, null, null, null, null, null);
+           }
         }
 
     }
@@ -153,7 +158,10 @@ public class ELMISInterfaceService {
         java.net.URL obj = null;
         try {
             obj = new URL(url);
-            HttpsURLConnection con = (HttpsURLConnection) obj.openConnection();
+
+                System.out.println("is HTTP");
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
             String jsonInString ="";
 
             if(oosRes != null) {
@@ -199,6 +207,7 @@ public class ELMISInterfaceService {
                 response.append(inputLine);
             }
             in.close();
+            System.out.println("Response from DHIS2");
             System.out.println(response);
             //print result
 
