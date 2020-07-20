@@ -183,6 +183,12 @@ public class Product extends BaseModel implements Importable {
 
   private Boolean trackNet;
 
+  private String priceCode;
+
+  private String msdUom;
+
+  private String owner;
+
   public void validate() {
     if (this.packSize <= 0) {
       throw new DataException("error.invalid.pack.size");

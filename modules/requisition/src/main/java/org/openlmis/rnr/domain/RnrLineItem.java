@@ -111,6 +111,7 @@ public class RnrLineItem extends LineItem {
     private String revision;
     private String uom;
     private String quoteDate;
+    private String priceCode;
 
     @SuppressWarnings("unused")
     private Boolean skipped = false;

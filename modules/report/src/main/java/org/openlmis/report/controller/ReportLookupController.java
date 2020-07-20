@@ -665,8 +665,8 @@ public class ReportLookupController extends BaseController {
     return response;
   }
 
-  @RequestMapping(value = "/geographic-zones/user-district/{program}", method = GET, headers = ACCEPT_JSON)
-  public ResponseEntity<OpenLmisResponse> getUserDistrict(@PathVariable(value = "program") Long program, HttpServletRequest request) {
+  @RequestMapping(value = "/geographic-zones/user-district", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getUserDistrict(@RequestParam("program") Long program, HttpServletRequest request) {
 
     return OpenLmisResponse.response(ZONE, reportLookupService.getUserDistrict(program,loggedInUserId(request)));
 

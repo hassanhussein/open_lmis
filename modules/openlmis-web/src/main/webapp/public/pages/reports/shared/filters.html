@@ -960,3 +960,14 @@ Updated Filters
     </div>
     </div>
 </script>
+
+<script type="text/ng-template" id="filter-user-district-template">
+    <div>
+        <label for="district" class="labels" openlmis-message="label.district"><span class="label-required">*</span></label>
+        <div>
+            <select id="district" ui-select2 class="input-medium" ng-change="notifyFilterChanged('zone-changed');" ng-model="filter.zone">
+                <option ng-repeat="zone in zones" value="{{ zone.id }}" ng-selected="filter.zone == zone.id" openlmis-message="zone.name"></option>
+            </select>
+        </div>
+    </div>
+</script>

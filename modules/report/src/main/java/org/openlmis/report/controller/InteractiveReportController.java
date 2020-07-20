@@ -931,7 +931,7 @@ public class InteractiveReportController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public OpenLmisResponse getQuantificationReportSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                     @RequestParam(value = "limit", defaultValue="100") String limit,
+                                                     @RequestParam(value = "limit", defaultValue="10") String limit,
                                                      HttpServletRequest request
 
     ) {

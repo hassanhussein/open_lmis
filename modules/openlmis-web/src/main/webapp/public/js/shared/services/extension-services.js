@@ -1433,5 +1433,5 @@ services.factory('GetNotificationById', function($resource){
 });
 
 services.factory('GetDistrictUserOnly', function($resource){
-    return $resource('/reports/geographic-zones/user-district/:id.json', {id:'@id'}, {});
+    return $resource('/reports/geographic-zones/user-district.json', {}, {});
 });
