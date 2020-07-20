@@ -63,6 +63,9 @@ public class ProductBuilder {
       product.setPackRoundingThreshold(1);
       product.setRoundToZero(true);
       product.setDosesPerDispensingUnit(10);
+      product.setOwner("MD");
+      product.setPriceCode("IL112L");
+      product.setMsdUom("112L");
       ProductForm form = new ProductForm();
       form.setDisplayOrder(1);
       form.setCode("Tablet");
