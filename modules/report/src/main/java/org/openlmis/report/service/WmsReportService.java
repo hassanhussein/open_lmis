@@ -74,6 +74,51 @@ public class WmsReportService {
         }
     }
 
+    public void exportVarReport(Long inspectionId,String language,String currentName, HttpServletResponse response)throws IOException, JRException{
+        try {
+           // String dataList= String.valueOf(wmsReportRepository.getVarReportById(inspectionId));
+            List<HashMap<String, Object>> dataListData=wmsReportRepository.getVarReportById(inspectionId);
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(dataListData);
+
+
+
+            System.out.println(json);
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(json.getBytes());
+
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath( "template/headerimage.png"));
+
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("report/avr-report.jrxml"));
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+
+            parameters.put("OPERATOR_NAME", currentName);
+
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+                response.setContentType("application/pdf");
+                response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+                OutputStream out = response.getOutputStream();
+                JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void exportReportVaccineSummary(String reportFormat, Long facilityId, String currentName, HttpServletResponse response) throws IOException, JRException {
         try {
@@ -249,6 +294,21 @@ public class WmsReportService {
                 List<StockCards> stockListProd = wmsReportRepository.getListReports(productID,ID);
 
                 stockListObject.put("productItem",stockListProd);
+
+                String jsonProd = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                        .writeValueAsString(stockListProd);
+                JSONArray outputDataProd= new JSONArray(jsonProd);
+
+                int totalProduct=0;
+                for (int j = 0; j < outputDataProd.length(); j++) {
+                    JSONObject stockListObjectProd = outputDataProd.getJSONObject(j);
+
+                    int totalQuantityOnHand=stockListObjectProd.getInt("totalQuantityOnHand");
+                    totalProduct=totalProduct+totalQuantityOnHand;
+                }
+
+
+                stockListObject.put("totalQuantityOnHand",totalProduct);
                 jsonArray.put(stockListObject);
             }
         }catch (Exception e){

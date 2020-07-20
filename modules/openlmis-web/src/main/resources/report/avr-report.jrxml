@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<!-- Created with Jaspersoft Studio version 7.5.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="var-report" pageWidth="595" pageHeight="1500" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="35019c82-b893-4ce9-9f58-62e6ee2be848">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="elmis"/>
@@ -8,562 +8,140 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
-	<parameter name="ISSUE_ID" class="java.lang.Integer" isForPrompting="false"/>
-	<queryString language="SQL">
-		<![CDATA[select 
-r.country as hdr_country,
-RECEIPTNUMBER as hdr_reportnumber,
-to_char(now(), 'DD/MM/YYYY') as hdr_dateofreport,
-'AAABBCC'||', '||to_char(r.receivedate, 'DD/MM/YYYY') as hdr_nameofcoldstore,
-'CVS'||', '|| to_char(inspectionDate, 'DD/MM/YYYY') as hdr_completiontime,
-i.id as ins_id,
-i.receiveid as ins_receiveid,
- to_char(i.inspectiondate , 'DD/MM/YYYY') as ins_inspectiondate,
-i.inspectionnote as ins_inspectionnote,
-i.inspectedby as ins_inspectedby,
-i.status as ins_status,
-i.createby as ins_createby,
-i.createddate as ins_createddate,
-i.modifiedby as ins_modifiedby,
-i.modifieddate as ins_modifieddate,
-i.receiptnumber as ins_receiptnumber,
-i.descriptionofinspection as ins_descriptionofinspection,
-i.isshippedprovided as ins_isshippedprovided,
-i.isshipped as ins_isshipped,
-i.shippedcomment as ins_shippedcomment,
-i.shippedprovidedcomment as ins_shippedprovidedcomment,
-i.conditionofbox as ins_conditionofbox,
-i.labelattachedcomment as ins_labelattachedcomment,
-ii.id as insi_id,
-ii.inspectionid as insi_inspectionid,
-ii.productid as insi_productid,
-ii.quantitycounted as insi_quantitycounted,
-ii.boxcounted as insi_boxcounted,
-ii.passquantity as insi_passquantity,
-ii.passlocationid as insi_passlocationid,
-ii.failquantity as insi_failquantity,
-ii.failreason as insi_failreason,
-ii.faillocationid as insi_faillocationid,
-ii.lotflag as insi_lotflag,
-ii.dryiceflag as insi_dryiceflag,
-ii.vvmflag as insi_vvmflag,
-ii.cccardflag as insi_cccardflag,
-ii.electronicdeviceflag as insi_electronicdeviceflag,
-ii.createdby as insi_createdby,
-ii.createddate as insi_createddate,
-ii.modifiedby as insi_modifiedby,
-ii.modifieddate as insi_modifieddate,
-ii.othermonitor as insi_othermonitor,
-ii.icepackflag as insi_icepackflag,
-ii.nocoolantflag as insi_nocoolantflag,
-r.id as rec_id,
-r.purchaseorderid as rec_purchaseorderid,
-r.ponumber as rec_ponumber,
-r.podate as rec_podate,
-r.supplierid as rec_supplierid,
-r.asnid as rec_asnid,
-to_char(r.receivedate, 'DD/MM/YYYY') as rec_receivedate,
-r.blawbnumber as rec_blawbnumber,
-r.country as rec_country,
-r.flightvesselnumber as rec_flightvesselnumber,
-p.name as rec_portofarrival,
-to_char(r.expectedarrivaldate, 'DD/MM/YYYY hh24:mi:ss') as rec_expectedarrivaldate,
-to_char(r.actualarrivaldate, 'DD/MM/YYYY hh24:mi:ss') as rec_actualarrivaldate,
-r.clearingagent as rec_clearingagent,
-r.shippingagent as rec_shippingagent,
-r.status as rec_status,
-r.note as rec_note,
-r.notetosupplier as rec_notetosupplier,
-r.description as rec_description,
-r.createdby as rec_createdby,
-r.createddate as rec_createddate,
-r.modifiedby as rec_modifiedby,
-r.modifieddate as rec_modifieddate,
-r.isforeignprocurement as rec_isforeignprocurement,
-r.currencyid as rec_currencyid,
-ri.id as reci_id,
-ri.receiveid as reci_receiveid,
-ri.productid as reci_productid,
-to_char(ri.expirydate, 'MM/YYYY') as reci_expirydate,
-ri.manufacturingdate as reci_manufacturingdate,
-ri.quantitycounted as reci_quantitycounted,
-ri.unitprice as reci_unitprice,
-ri.boxcounted as reci_boxcounted,
-ri.lotflag as reci_lotflag,
-ri.createdby as reci_createdby,
-ri.createddate as reci_createddate,
-ri.modifiedby as reci_modifiedby,
-ri.modifieddate as reci_modifieddate,
-a.id as asn_id,
-a.purchaseorderid as asn_purchaseorderid,
-a.ponumber as asn_ponumber,
-a.podate as asn_podate,
-a.supplierid as asn_supplierid,
-a.asnnumber as asn_asnnumber,
-to_char(a.asndate, 'DD/MM/YYYY') as asn_asndate,
-a.blawbnumber as asn_blawbnumber,
-a.flightvesselnumber as asn_flightvesselnumber,
-a.portofarrival as asn_portofarrival,
-a.expectedarrivaldate as asn_expectedarrivaldate,
-a.clearingagent as asn_clearingagent,
-a.status as asn_status,
-a.note as asn_note,
-a.createdby as asn_createdby,
-a.createddate as asn_createddate,
-a.modifiedby as asn_modifiedby,
-a.modifieddate as asn_modifieddate,
-a.expecteddeliverydate as asn_expecteddeliverydate,
-a.active as asn_active,
-a.currencyid as asn_currencyid,
-ai.id as asni_id,
-ai.asnid as asni_asnid,
-ai.productid as asni_productid,
-to_char(ai.expirydate, 'MM/YYYY') as asni_expirydate,
-ai.manufacturingdate as asni_manufacturingdate,
-ai.quantityexpected as asni_quantityexpected,
-ai.lotflag as asni_lotflag,
-ai.createdby as asni_createdby,
-ai.createddate as asni_createddate,
-ai.modifiedby as asni_modifiedby,
-ai.modifieddate as asni_modifieddate,
-ai.unitprice as asni_unitprice,
-(select case when (documentType = 1) then 'Yes' else 'No' end as rec_airBill from documents doc
-JOIN document_types T on doc.documentType = t.id
- where doc.asnNumber = a.asnNumber limit 1),
-
-(select case when (documentType = 2) then 'Yes' else 'No' end as rec_packList from documents doc
-JOIN document_types T on doc.documentType = t.id
- where doc.asnNumber = a.asnNumber limit 1),
-
- (select case when (documentType = 3) then 'Yes' else 'No' end as rec_invoice from documents doc
-JOIN document_types T on doc.documentType = t.id
- where doc.asnNumber = a.asnNumber limit 1),
-
-  (select case when (documentType = 4) then 'Yes' else 'No' end as rec_releaseCertificate
-   from documents doc
-JOIN document_types T on doc.documentType = t.id
- where doc.asnNumber = a.asnNumber limit 1),
-   'Yes' as var_report
-
-   , pp.primaryname product,
-   lot.lotNumber ins_lotNumber,
-to_char(LOT.EXPIRYDATE, 'MM/YYYY') as ins_expirydate,
- 
-pp.primaryname ||' ('|| PACKSIZE ||' '|| u.code ||' )' productDescription,
-pp.manufacturer,
-
-case when i.isshipped=true then 'Yes' else 'No' end as isshipped,
-case when isshippedprovided= true then 'Yes' else 'No' end as isshippedprovided,
-shippedcomment, shippedprovidedcomment,
-i.varNumber 
-
-
-from inspections i
-JOIN inspection_line_items ii on i.id = ii.inspectionid
-JOIN Receives r on i.receiveId = r.id
-JOIN receive_line_items ri ON ri.receiveid = r.id
-JOIN asns a ON r.asnId = a.id
-JOIN asn_details ai ON a.id = ai.asnId
-JOIN products pp ON ii.productId = pp.id
-JOIN inspection_lots LOT ON ii.id = LOT.inspectionLINEITEMID
-JOIN dosage_units u on pp.dosageunitid = u.id
-JOIN ports P ON r.portofarrival = p.id
-WHERE I.ID  = $P{ORDER_ID}]]>
-	</queryString>
-	<field name="hdr_reportnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="hdr_reportnumber"/>
-	</field>
-	<field name="hdr_country" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="hdr_country"/>
-	</field>
-	<field name="hdr_dateofreport" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="hdr_dateofreport"/>
-	</field>
-	<field name="hdr_nameofcoldstore" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="hdr_nameofcoldstore"/>
-	</field>
-	<field name="hdr_completiontime" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="hdr_completiontime"/>
-	</field>
-	<field name="ins_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="ins_id"/>
-	</field>
-	<field name="ins_receiveid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="ins_receiveid"/>
-	</field>
-	<field name="ins_inspectiondate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_inspectiondate"/>
-	</field>
-	<field name="ins_inspectionnote" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_inspectionnote"/>
-	</field>
-	<field name="ins_inspectedby" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_inspectedby"/>
-	</field>
-	<field name="ins_status" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_status"/>
-	</field>
-	<field name="ins_createby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="ins_createby"/>
-	</field>
-	<field name="ins_createddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="ins_createddate"/>
-	</field>
-	<field name="ins_modifiedby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="ins_modifiedby"/>
-	</field>
-	<field name="ins_modifieddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="ins_modifieddate"/>
-	</field>
-	<field name="ins_receiptnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_receiptnumber"/>
-	</field>
-	<field name="ins_descriptionofinspection" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_descriptionofinspection"/>
-	</field>
-	<field name="ins_isshippedprovided" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="ins_isshippedprovided"/>
-	</field>
-	<field name="ins_isshipped" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="ins_isshipped"/>
-	</field>
-	<field name="ins_shippedcomment" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_shippedcomment"/>
-	</field>
-	<field name="ins_shippedprovidedcomment" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_shippedprovidedcomment"/>
-	</field>
-	<field name="ins_conditionofbox" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_conditionofbox"/>
-	</field>
-	<field name="ins_labelattachedcomment" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_labelattachedcomment"/>
-	</field>
-	<field name="insi_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_id"/>
-	</field>
-	<field name="insi_inspectionid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_inspectionid"/>
-	</field>
-	<field name="insi_productid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_productid"/>
-	</field>
-	<field name="insi_quantitycounted" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_quantitycounted"/>
-	</field>
-	<field name="insi_boxcounted" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_boxcounted"/>
-	</field>
-	<field name="insi_passquantity" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_passquantity"/>
-	</field>
-	<field name="insi_passlocationid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_passlocationid"/>
-	</field>
-	<field name="insi_failquantity" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_failquantity"/>
-	</field>
-	<field name="insi_failreason" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_failreason"/>
-	</field>
-	<field name="insi_faillocationid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_faillocationid"/>
-	</field>
-	<field name="insi_lotflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="insi_lotflag"/>
-	</field>
-	<field name="insi_dryiceflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="insi_dryiceflag"/>
-	</field>
-	<field name="insi_vvmflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="insi_vvmflag"/>
-	</field>
-	<field name="insi_cccardflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="insi_cccardflag"/>
-	</field>
-	<field name="insi_electronicdeviceflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="insi_electronicdeviceflag"/>
-	</field>
-	<field name="insi_createdby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_createdby"/>
-	</field>
-	<field name="insi_createddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="insi_createddate"/>
-	</field>
-	<field name="insi_modifiedby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="insi_modifiedby"/>
-	</field>
-	<field name="insi_modifieddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="insi_modifieddate"/>
-	</field>
-	<field name="insi_othermonitor" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="insi_othermonitor"/>
-	</field>
-	<field name="insi_icepackflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="insi_icepackflag"/>
-	</field>
-	<field name="insi_nocoolantflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="insi_nocoolantflag"/>
-	</field>
-	<field name="rec_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="rec_id"/>
-	</field>
-	<field name="rec_purchaseorderid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="rec_purchaseorderid"/>
-	</field>
-	<field name="rec_ponumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_ponumber"/>
-	</field>
-	<field name="rec_podate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="rec_podate"/>
-	</field>
-	<field name="rec_supplierid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="rec_supplierid"/>
-	</field>
-	<field name="rec_asnid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="rec_asnid"/>
-	</field>
-	<field name="rec_receivedate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_receivedate"/>
-	</field>
-	<field name="rec_blawbnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_blawbnumber"/>
-	</field>
-	<field name="rec_country" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_country"/>
-	</field>
-	<field name="rec_flightvesselnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_flightvesselnumber"/>
-	</field>
-	<field name="rec_portofarrival" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_portofarrival"/>
-	</field>
-	<field name="rec_expectedarrivaldate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_expectedarrivaldate"/>
-	</field>
-	<field name="rec_actualarrivaldate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_actualarrivaldate"/>
-	</field>
-	<field name="rec_clearingagent" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_clearingagent"/>
-	</field>
-	<field name="rec_shippingagent" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_shippingagent"/>
-	</field>
-	<field name="rec_status" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_status"/>
-	</field>
-	<field name="rec_note" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_note"/>
-	</field>
-	<field name="rec_notetosupplier" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_notetosupplier"/>
-	</field>
-	<field name="rec_description" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_description"/>
-	</field>
-	<field name="rec_createdby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="rec_createdby"/>
-	</field>
-	<field name="rec_createddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="rec_createddate"/>
-	</field>
-	<field name="rec_modifiedby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="rec_modifiedby"/>
-	</field>
-	<field name="rec_modifieddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="rec_modifieddate"/>
-	</field>
-	<field name="rec_isforeignprocurement" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="rec_isforeignprocurement"/>
-	</field>
-	<field name="rec_currencyid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="rec_currencyid"/>
-	</field>
-	<field name="reci_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="reci_id"/>
-	</field>
-	<field name="reci_receiveid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="reci_receiveid"/>
-	</field>
-	<field name="reci_productid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="reci_productid"/>
-	</field>
-	<field name="reci_expirydate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="reci_expirydate"/>
-	</field>
-	<field name="reci_manufacturingdate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="reci_manufacturingdate"/>
-	</field>
-	<field name="reci_quantitycounted" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="reci_quantitycounted"/>
-	</field>
-	<field name="reci_unitprice" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.label" value="reci_unitprice"/>
-	</field>
-	<field name="reci_boxcounted" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="reci_boxcounted"/>
-	</field>
-	<field name="reci_lotflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="reci_lotflag"/>
-	</field>
-	<field name="reci_createdby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="reci_createdby"/>
-	</field>
-	<field name="reci_createddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="reci_createddate"/>
-	</field>
-	<field name="reci_modifiedby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="reci_modifiedby"/>
-	</field>
-	<field name="reci_modifieddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="reci_modifieddate"/>
-	</field>
-	<field name="asn_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asn_id"/>
-	</field>
-	<field name="asn_purchaseorderid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asn_purchaseorderid"/>
-	</field>
-	<field name="asn_ponumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_ponumber"/>
-	</field>
-	<field name="asn_podate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asn_podate"/>
-	</field>
-	<field name="asn_supplierid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asn_supplierid"/>
-	</field>
-	<field name="asn_asnnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_asnnumber"/>
-	</field>
-	<field name="asn_asndate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_asndate"/>
-	</field>
-	<field name="asn_blawbnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_blawbnumber"/>
-	</field>
-	<field name="asn_flightvesselnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_flightvesselnumber"/>
-	</field>
-	<field name="asn_portofarrival" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asn_portofarrival"/>
-	</field>
-	<field name="asn_expectedarrivaldate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asn_expectedarrivaldate"/>
-	</field>
-	<field name="asn_clearingagent" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_clearingagent"/>
-	</field>
-	<field name="asn_status" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_status"/>
-	</field>
-	<field name="asn_note" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asn_note"/>
-	</field>
-	<field name="asn_createdby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asn_createdby"/>
-	</field>
-	<field name="asn_createddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asn_createddate"/>
-	</field>
-	<field name="asn_modifiedby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asn_modifiedby"/>
-	</field>
-	<field name="asn_modifieddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asn_modifieddate"/>
-	</field>
-	<field name="asn_expecteddeliverydate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asn_expecteddeliverydate"/>
-	</field>
-	<field name="asn_active" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="asn_active"/>
-	</field>
-	<field name="asn_currencyid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asn_currencyid"/>
-	</field>
-	<field name="asni_id" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asni_id"/>
-	</field>
-	<field name="asni_asnid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asni_asnid"/>
-	</field>
-	<field name="asni_productid" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asni_productid"/>
-	</field>
-	<field name="asni_expirydate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="asni_expirydate"/>
-	</field>
-	<field name="asni_manufacturingdate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asni_manufacturingdate"/>
-	</field>
-	<field name="asni_quantityexpected" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asni_quantityexpected"/>
-	</field>
-	<field name="asni_lotflag" class="java.lang.Boolean">
-		<property name="com.jaspersoft.studio.field.label" value="asni_lotflag"/>
-	</field>
-	<field name="asni_createdby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asni_createdby"/>
-	</field>
-	<field name="asni_createddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asni_createddate"/>
-	</field>
-	<field name="asni_modifiedby" class="java.lang.Integer">
-		<property name="com.jaspersoft.studio.field.label" value="asni_modifiedby"/>
-	</field>
-	<field name="asni_modifieddate" class="java.sql.Timestamp">
-		<property name="com.jaspersoft.studio.field.label" value="asni_modifieddate"/>
-	</field>
-	<field name="asni_unitprice" class="java.math.BigDecimal">
-		<property name="com.jaspersoft.studio.field.label" value="asni_unitprice"/>
-	</field>
-	<field name="rec_airbill" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_airbill"/>
-	</field>
-	<field name="rec_packlist" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_packlist"/>
-	</field>
-	<field name="rec_invoice" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_invoice"/>
-	</field>
-	<field name="rec_releasecertificate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="rec_releasecertificate"/>
-	</field>
-	<field name="var_report" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="var_report"/>
-	</field>
-	<field name="product" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="product"/>
-	</field>
-	<field name="ins_lotnumber" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_lotnumber"/>
-	</field>
-	<field name="ins_expirydate" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="ins_expirydate"/>
-	</field>
-	<field name="productdescription" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="productdescription"/>
-	</field>
-	<field name="manufacturer" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="manufacturer"/>
-	</field>
-	<field name="isshipped" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="isshipped"/>
-	</field>
-	<field name="isshippedprovided" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="isshippedprovided"/>
-	</field>
-	<field name="shippedcomment" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="shippedcomment"/>
-	</field>
-	<field name="shippedprovidedcomment" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.label" value="shippedprovidedcomment"/>
-	</field>
+	<field name="hdr_reportnumber" class="java.lang.String"/>
+	<field name="hdr_country" class="java.lang.String"/>
+	<field name="hdr_dateofreport" class="java.lang.String"/>
+	<field name="hdr_nameofcoldstore" class="java.lang.String"/>
+	<field name="hdr_completiontime" class="java.lang.String"/>
+	<field name="ins_id" class="java.lang.Integer"/>
+	<field name="ins_receiveid" class="java.lang.Integer"/>
+	<field name="ins_inspectiondate" class="java.lang.String"/>
+	<field name="ins_inspectionnote" class="java.lang.String"/>
+	<field name="ins_inspectedby" class="java.lang.String"/>
+	<field name="ins_status" class="java.lang.String"/>
+	<field name="ins_createby" class="java.lang.Integer"/>
+	<field name="ins_createddate" class="java.lang.String"/>
+	<field name="ins_modifiedby" class="java.lang.Integer"/>
+	<field name="ins_modifieddate" class="java.lang.String"/>
+	<field name="ins_receiptnumber" class="java.lang.String"/>
+	<field name="ins_descriptionofinspection" class="java.lang.String"/>
+	<field name="ins_isshippedprovided" class="java.lang.Boolean"/>
+	<field name="ins_isshipped" class="java.lang.Boolean"/>
+	<field name="ins_shippedcomment" class="java.lang.String"/>
+	<field name="ins_shippedprovidedcomment" class="java.lang.String"/>
+	<field name="ins_conditionofbox" class="java.lang.String"/>
+	<field name="ins_labelattachedcomment" class="java.lang.String"/>
+	<field name="insi_id" class="java.lang.Integer"/>
+	<field name="insi_inspectionid" class="java.lang.Integer"/>
+	<field name="insi_productid" class="java.lang.Integer"/>
+	<field name="insi_quantitycounted" class="java.lang.Integer"/>
+	<field name="insi_boxcounted" class="java.lang.Integer"/>
+	<field name="insi_passquantity" class="java.lang.Integer"/>
+	<field name="insi_passlocationid" class="java.lang.Integer"/>
+	<field name="insi_failquantity" class="java.lang.Integer"/>
+	<field name="insi_failreason" class="java.lang.Integer"/>
+	<field name="insi_faillocationid" class="java.lang.Integer"/>
+	<field name="insi_lotflag" class="java.lang.Boolean"/>
+	<field name="insi_dryiceflag" class="java.lang.Boolean"/>
+	<field name="insi_vvmflag" class="java.lang.Boolean"/>
+	<field name="insi_cccardflag" class="java.lang.Boolean"/>
+	<field name="insi_electronicdeviceflag" class="java.lang.Boolean"/>
+	<field name="insi_createdby" class="java.lang.Integer"/>
+	<field name="insi_createddate" class="java.lang.String"/>
+	<field name="insi_modifiedby" class="java.lang.Integer"/>
+	<field name="insi_modifieddate" class="java.lang.String"/>
+	<field name="insi_othermonitor" class="java.lang.String"/>
+	<field name="insi_icepackflag" class="java.lang.Boolean"/>
+	<field name="insi_nocoolantflag" class="java.lang.Boolean"/>
+	<field name="rec_id" class="java.lang.Integer"/>
+	<field name="rec_purchaseorderid" class="java.lang.Integer"/>
+	<field name="rec_ponumber" class="java.lang.String"/>
+	<field name="rec_podate" class="java.lang.String"/>
+	<field name="rec_supplierid" class="java.lang.Integer"/>
+	<field name="rec_asnid" class="java.lang.Integer"/>
+	<field name="rec_receivedate" class="java.lang.String"/>
+	<field name="rec_blawbnumber" class="java.lang.String"/>
+	<field name="rec_country" class="java.lang.String"/>
+	<field name="rec_flightvesselnumber" class="java.lang.String"/>
+	<field name="rec_portofarrival" class="java.lang.String"/>
+	<field name="rec_expectedarrivaldate" class="java.lang.String"/>
+	<field name="rec_actualarrivaldate" class="java.lang.String"/>
+	<field name="rec_clearingagent" class="java.lang.String"/>
+	<field name="rec_shippingagent" class="java.lang.String"/>
+	<field name="rec_status" class="java.lang.String"/>
+	<field name="rec_note" class="java.lang.String"/>
+	<field name="rec_notetosupplier" class="java.lang.String"/>
+	<field name="rec_description" class="java.lang.String"/>
+	<field name="rec_createdby" class="java.lang.Integer"/>
+	<field name="rec_createddate" class="java.lang.String"/>
+	<field name="rec_modifiedby" class="java.lang.Integer"/>
+	<field name="rec_modifieddate" class="java.lang.String"/>
+	<field name="rec_isforeignprocurement" class="java.lang.Boolean"/>
+	<field name="rec_currencyid" class="java.lang.Integer"/>
+	<field name="reci_id" class="java.lang.Integer"/>
+	<field name="reci_receiveid" class="java.lang.Integer"/>
+	<field name="reci_productid" class="java.lang.Integer"/>
+	<field name="reci_expirydate" class="java.lang.String"/>
+	<field name="reci_manufacturingdate" class="java.lang.String"/>
+	<field name="reci_quantitycounted" class="java.lang.Integer"/>
+	<field name="reci_unitprice" class="java.math.BigDecimal"/>
+	<field name="reci_boxcounted" class="java.lang.Integer"/>
+	<field name="reci_lotflag" class="java.lang.Boolean"/>
+	<field name="reci_createdby" class="java.lang.Integer"/>
+	<field name="reci_createddate" class="java.lang.String"/>
+	<field name="reci_modifiedby" class="java.lang.Integer"/>
+	<field name="reci_modifieddate" class="java.lang.String"/>
+	<field name="asn_id" class="java.lang.Integer"/>
+	<field name="asn_purchaseorderid" class="java.lang.Integer"/>
+	<field name="asn_ponumber" class="java.lang.String"/>
+	<field name="asn_podate" class="java.lang.String"/>
+	<field name="asn_supplierid" class="java.lang.Integer"/>
+	<field name="asn_asnnumber" class="java.lang.String"/>
+	<field name="asn_asndate" class="java.lang.String"/>
+	<field name="asn_blawbnumber" class="java.lang.String"/>
+	<field name="asn_flightvesselnumber" class="java.lang.String"/>
+	<field name="asn_portofarrival" class="java.lang.Integer"/>
+	<field name="asn_expectedarrivaldate" class="java.lang.String"/>
+	<field name="asn_clearingagent" class="java.lang.String"/>
+	<field name="asn_status" class="java.lang.String"/>
+	<field name="asn_note" class="java.lang.String"/>
+	<field name="asn_createdby" class="java.lang.Integer"/>
+	<field name="asn_createddate" class="java.lang.String"/>
+	<field name="asn_modifiedby" class="java.lang.Integer"/>
+	<field name="asn_modifieddate" class="java.lang.String"/>
+	<field name="asn_expecteddeliverydate" class="java.lang.String"/>
+	<field name="asn_active" class="java.lang.Boolean"/>
+	<field name="asn_currencyid" class="java.lang.Integer"/>
+	<field name="asni_id" class="java.lang.Integer"/>
+	<field name="asni_asnid" class="java.lang.Integer"/>
+	<field name="asni_productid" class="java.lang.Integer"/>
+	<field name="asni_expirydate" class="java.lang.String"/>
+	<field name="asni_manufacturingdate" class="java.lang.String"/>
+	<field name="asni_quantityexpected" class="java.lang.Integer"/>
+	<field name="asni_lotflag" class="java.lang.Boolean"/>
+	<field name="asni_createdby" class="java.lang.Integer"/>
+	<field name="asni_createddate" class="java.lang.String"/>
+	<field name="asni_modifiedby" class="java.lang.Integer"/>
+	<field name="asni_modifieddate" class="java.lang.String"/>
+	<field name="asni_unitprice" class="java.math.BigDecimal"/>
+	<field name="rec_airbill" class="java.lang.String"/>
+	<field name="rec_packlist" class="java.lang.String"/>
+	<field name="rec_invoice" class="java.lang.String"/>
+	<field name="rec_releasecertificate" class="java.lang.String"/>
+	<field name="var_report" class="java.lang.String"/>
+	<field name="product" class="java.lang.String"/>
+	<field name="ins_lotnumber" class="java.lang.String"/>
+	<field name="ins_expirydate" class="java.lang.String"/>
+	<field name="productdescription" class="java.lang.String"/>
+	<field name="manufacturer" class="java.lang.String"/>
+	<field name="isshipped" class="java.lang.String"/>
+	<field name="isshippedprovided" class="java.lang.String"/>
+	<field name="shippedcomment" class="java.lang.String"/>
+	<field name="shippedprovidedcomment" class="java.lang.String"/>
 	<field name="rec_airBill" class="java.lang.String"/>
 	<field name="rec_packList" class="java.lang.String"/>
 	<field name="rec_releaseCertificate" class="java.lang.String"/>
-	<field name="varNumber" class="java.lang.String"/>
+	<field name="varnumber" class="java.lang.String"/>
 	<group name="GroupByProduct">
 		<groupExpression><![CDATA[$F{product}]]></groupExpression>
 		<groupHeader>
@@ -734,7 +312,7 @@ WHERE I.ID  = $P{ORDER_ID}]]>
 				<textField>
 					<reportElement x="122" y="20" width="128" height="13" uuid="f94b03a2-34e7-4f47-a190-d7a4b7ac3014"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{varNumber}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{varnumber}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="122" y="1" width="128" height="13" uuid="727aa839-7e7f-4a41-b217-b3da26bd19aa"/>
@@ -832,17 +410,17 @@ WHERE I.ID  = $P{ORDER_ID}]]>
 					<textElement textAlignment="Left"/>
 					<textFieldExpression><![CDATA[$F{asn_asndate}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="218" y="52" width="89" height="13" uuid="72d101ef-2b81-4896-b86a-615a52f89221"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{rec_airBill}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="307" y="52" width="63" height="13" uuid="f6594129-7843-4833-874e-22da3043af78"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{rec_packList}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="379" y="52" width="82" height="13" uuid="cf93644f-42aa-4d2c-a921-c67c844a4fbd"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{rec_invoice}]]></textFieldExpression>
@@ -914,7 +492,7 @@ WHERE I.ID  = $P{ORDER_ID}]]>
 				<text><![CDATA[PART II — FLIGHT ARRIVAL DETAILS]]></text>
 			</staticText>
 			<frame>
-				<reportElement x="2" y="240" width="554" height="45" uuid="da261ba9-261d-428d-bcfe-5896e55e06fe"/>
+				<reportElement x="2" y="240" width="554" height="50" uuid="da261ba9-261d-428d-bcfe-5896e55e06fe"/>
 				<box>
 					<pen lineWidth="2.0"/>
 				</box>
@@ -963,7 +541,7 @@ destination]]></text>
 					<textFieldExpression><![CDATA[$F{rec_expectedarrivaldate}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="440" y="31" width="114" height="12" uuid="86122b5d-6653-414b-8f0c-c1cc38454c63"/>
+					<reportElement x="440" y="29" width="114" height="15" uuid="86122b5d-6653-414b-8f0c-c1cc38454c63"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{rec_actualarrivaldate}]]></textFieldExpression>
 				</textField>
@@ -1092,7 +670,7 @@ destination]]></text>
 				</reportElement>
 				<text><![CDATA[]]></text>
 			</staticText>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="6" y="0" width="54" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="35af69e2-ccb1-4bc0-a98e-c7187bcae1e4">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1105,7 +683,7 @@ destination]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ins_lotnumber}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="60" y="-1" width="80" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="b38af0a4-c725-478e-8d83-ae1ecb3d17fa">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1118,7 +696,7 @@ destination]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{insi_boxcounted}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="##,###" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="141" y="0" width="77" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="a8d59409-f89b-47ae-8e28-3604f7cc8a4b">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1131,7 +709,7 @@ destination]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{insi_passquantity}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="219" y="0" width="61" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="fd05aa9f-c3a2-4fd8-b3a8-268c9779c864">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1144,7 +722,7 @@ destination]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ins_expirydate}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="280" y="0" width="57" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7d018d05-9278-43da-81ae-b80d41971b4e">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1156,7 +734,7 @@ destination]]></text>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="338" y="-1" width="82" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="41ee4ae8-fbaa-4c27-ad76-c9137d5d4202">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1168,7 +746,7 @@ destination]]></text>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="421" y="-1" width="68" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="0437d6aa-202d-42b8-8303-9e31e8d695d2">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1180,7 +758,7 @@ destination]]></text>
 					<paragraph lineSpacing="Single"/>
 				</textElement>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+			<textField pattern="" isBlankWhenNull="true">
 				<reportElement mode="Transparent" x="489" y="-1" width="65" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="6fe0c4ba-453d-4ff9-9a74-7aaa6a6bba1f">
 					<property name="local_mesure_unitx" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.x" value="px"/>
@@ -1369,7 +947,7 @@ WHO recommends all UN agencies, countries and non-governmental organizations pro
 					</textElement>
 					<textFieldExpression><![CDATA[$F{rec_packlist}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isBlankWhenNull="true">
 					<reportElement x="210" y="30" width="90" height="13" uuid="24a62869-3a81-498c-a695-b8bc824420ef"/>
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>

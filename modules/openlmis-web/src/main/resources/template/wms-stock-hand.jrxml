@@ -81,7 +81,7 @@
 						</textElement>
 						<text><![CDATA[Printed Date:]]></text>
 					</staticText>
-					<textField isStretchWithOverflow="true">
+					<textField textAdjust="StretchHeight">
 						<reportElement x="101" y="10" width="149" height="31" uuid="3d44b120-9f07-49c7-b22a-5cb9bf279631"/>
 						<textFieldExpression><![CDATA[$F{wareHouseName}]]></textFieldExpression>
 					</textField>
@@ -231,7 +231,7 @@
 			<line>
 				<reportElement stretchType="ContainerHeight" x="550" y="-30" width="1" height="73" uuid="a9bc7414-8303-42eb-bf63-dc5c7a62add9"/>
 			</line>
-			<textField isBlankWhenNull="true" isStretchWithOverflow="true">
+			<textField textAdjust="StretchHeight" isBlankWhenNull="true">
 				<reportElement x="30" y="0" width="79" height="43" uuid="045ab238-cd2a-4b95-bfdb-5cdab8239ece">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5bdc3c0d-fe35-49e3-a6b2-011042cad19a"/>
 				</reportElement>
