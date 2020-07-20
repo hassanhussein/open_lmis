@@ -12,3 +12,4 @@ Refresh materialized view mv_dashboard_consumption_summary;
 REFRESH MATERIALIZED VIEW mv_dashboard_timeliness_report;
 REFRESH MATERIALIZED VIEW mv_dashboard_consumption_summary;
 REFRESH MATERIALIZED VIEW mv_latest_reported_stock_status;
+REFRESH MATERIALIZED VIEW mv_quantification_extraction;
