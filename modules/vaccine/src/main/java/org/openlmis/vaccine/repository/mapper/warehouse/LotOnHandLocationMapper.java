@@ -55,27 +55,26 @@ public interface LotOnHandLocationMapper {
     void deleteExistingStockCardLocation(@Param("id") Long id,@Param("toBinLocationId") Long toBinLocationId);
 
 
-    @Select("\n" +
-            "            select vvmst.name as vvm,\n" +
-            "            to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
-            "            p.primaryName product, (sum(h.quantityOnHand)-(select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1)) quantityOnHand, lotID, lotNumber, \n" +
-            "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
-            "             \n" +
-            "            from lot_on_hand_locations L\n" +
-            "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
-            "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
+    @Select("select vvmst.name as vvm,\n" +
+            "      to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
+            "                p.primaryName product, ((coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand, lotID, lotNumber,\n" +
+            "                 to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
+            "           \n" +
+            "                from lot_on_hand_locations L\n" +
+            "                    join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
+            "                      JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
+            "    \n" +
+            "             left join vvm_statuses  vvmst on (vvmst.id=h.vvmId)\n" +
+            "                      JOIN lots LO ON Lo.id = h.lotId\n" +
             "\n" +
-            "            \n left join vvm_statuses  vvmst on (vvmst.id=h.vvmId)" +
-            "            JOIN lots LO ON Lo.id = h.lotId\n" +
+            "                    JOIN products P on lo.productID = p.id\n" +
             "            \n" +
-            "            JOIN products P on lo.productID = p.id\n" +
-            "\n" +
-            "            JOIN  stock_cards s  ON s.id = h.stockcardId\n" +
+            "                     JOIN  stock_cards s  ON s.id = h.stockcardId\n" +
             "            \n" +
-            "            WHERE  facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
-            "            and l.quantityOnHand > 0\n" +
-            "            \n" +
-            "            group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name,vvmst.name,lo.id ")
+            "                    WHERE   facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
+            "                     and l.quantityOnHand > 0\n" +
+            "          \n" +
+            "                     group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name,vvmst.name,lo.id ")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("\n" +
