@@ -193,7 +193,8 @@ public interface LotsOnHandMapper {
 
 
     @Select("select vvmst.name as vvm,lhl.id,s.facilityid as facilityId,lo.lotnumber as lotNumber,wh.name as warehouseName,lo.expirationdate as expirationDate,s.productid as productId," +
-            "(h.quantityOnHand-(select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1))  totalQuantityOnHand ,s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wl.name  as locationName from lot_on_hand_locations lhl " +
+            "(h.quantityOnHand-(select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1))  totalQuantityOnHand ," +
+            "s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wl.name  as locationName from lot_on_hand_locations lhl " +
             "left join lots_on_hand h on (lhl.lotonhandid = h.id) " +
             "left join  stock_cards s on (s.id = h.stockcardid) " +
             "left join lots lo on(lo.id=h.lotid) "+
