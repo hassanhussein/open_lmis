@@ -137,21 +137,21 @@ function StockImbalanceController($scope, $window, $routeParams, StockImbalanceR
 
 //clear old data if there was any
 $scope.data = $scope.datarows = [];
-$scope.filter.max = 10000;
-$scope.filter.limit = $scope.pageSize;
-$scope.filter.page = $scope.page;
+//$scope.filter.max = 10000;
+//$scope.filter.limit = $scope.pageSize;
+//$scope.filter.page = $scope.page;
 
 //variable to manage counts on pagination
-$scope.countFactor = $scope.pageSize * ($scope.page - 1);
-
-if ($scope.filter.status === undefined && !$routeParams.dashboardView) {
-//By Default, show stocked out
-$scope.statuses = {
-    'SO': true
-};
-$scope.filter.status = 'SO';
-$scope.applyUrl();
-}
+//$scope.countFactor = $scope.pageSize * ($scope.page - 1);
+//
+//if ($scope.filter.status === undefined && !$routeParams.dashboardView) {
+////By Default, show stocked out
+//$scope.statuses = {
+//    'SO': true
+//};
+//$scope.filter.status = 'SO';
+//$scope.applyUrl();
+//}
 
 StockImbalanceReport.get($scope.getSanitizedParameter(), function(data) {
 if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {

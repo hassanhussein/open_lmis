@@ -47,7 +47,14 @@ app.config(function($stateProvider, $urlRouterProvider, $breadcrumbProvider,$htt
                           label: 'Rejection of {{zone}}',
                           parent: 'home'
                       }
-                  }
+                  },
+  {
+             name: 'znzdashboard',
+             url: '/znzdashboard',
+             templateUrl: 'partials/znz_dashboard.html',
+             controller:AnalyticsFunction,
+             resolve:AnalyticsFunction.resolve
+         }
     ];
 
     states.forEach($stateProvider.state);

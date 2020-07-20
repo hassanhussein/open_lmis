@@ -1,10 +1,13 @@
 function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnRTrendsData, leafletData, GetTrendOfEmergencyOrdersSubmittedPerMonthData, GetPercentageOfEmergencyOrderByProgramData, GetNumberOfEmergencyData,
     GetEmergencyOrderByProgramData, GetEmergencyOrderTrendsData, DashboardRnrTypes, RejectionCount, RnRStatusSummary,
-    DefaultProgram, StockStatusByProgramData,FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData) {
+    DefaultProgram, StockStatusByProgramData,FullProcessingPeriodData, FullProcessingPeriods, $rootScope, IndexOfAluStockAvailabilityData, RnrPassedQualityCheckData, $scope, messageService, GetLocalMap, ConsumptionTrendsData, DashboardStockStatusSummaryData, YearFilteredData, GetSourceOfFundsByLocationData, $sce) {
 
     //resourceLoadingConfig.hideReloadIcon = true;
     //resourceLoadingConfig.loadingDashlet = [];
 
+    $scope.stockAvailabilityDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/public/dashboard/d6aec215-6913-4fdc-8ee5-5b10af04ed0f");
+    $scope.requisitionsDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/public/dashboard/d45bf87b-1979-4a56-8bb7-4fb0eb98a99a");
+    $scope.reportingUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/public/dashboard/37d67507-6f38-4559-8cc3-50a18caea384");
     $scope.notifications = notifications;
 
     var params;
