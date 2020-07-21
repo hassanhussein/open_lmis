@@ -144,7 +144,7 @@ public class InspectionController extends BaseController {
                                                                       @RequestParam(value = "column") String column,
                                                                       @RequestParam(value = "page", defaultValue = "1") Integer page,
                                                                       @Value("${search.page.size}") String limit) {
-        Pagination pagination = new Pagination(page, parseInt(limit));
+        Pagination pagination = new Pagination(page, 100);
         pagination.setTotalRecords(service.getTotalSearchResultCountForPutAway(searchParam, column));
         List<PutAwayDTO> inspectList = service.searchPutAwayBy(searchParam, column, pagination);
         ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("aways", inspectList);
