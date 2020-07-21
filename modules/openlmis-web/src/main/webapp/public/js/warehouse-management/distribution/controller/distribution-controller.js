@@ -41,6 +41,7 @@ $scope.soh=wmsSoh.stocks;
 //console.log($scope.requisitionsWithoutProducts);
 $scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
+
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
  var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
 //console.log(all_orders);
@@ -64,6 +65,7 @@ $scope.requstions.push({
 
 
 });
+
 
 
 
@@ -233,7 +235,7 @@ console.log($scope.distribution_list);
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
   $location.path('');
-//                  console.log('distributed');
+                  console.log('distributed');
 
                         });
 
@@ -324,7 +326,7 @@ var lineItem = {};
                 }
 
             });
-//             console.log(distribution);
+             console.log(distribution);
            distributionLineItemList.push(distribution);
 
 });
@@ -362,7 +364,7 @@ $scope.requstions.forEach(function(req){
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
   $location.path('');
-//                  console.log('distributed');
+                  console.log('distributed');
 
                         });
 
@@ -407,7 +409,7 @@ DistributionController.resolve = {
               $timeout(function () {
 
                   GetCurrentStock.get({}, function (data) {
-//                  console.log(data);
+                 console.log(data);
 
                       deferred.resolve(data);
                   });
@@ -429,7 +431,7 @@ DistributionController.resolve = {
                             facilityId: $route.current.params.facilityId
                         },
                         function (data) {
-//                        console.log(data.pendingRequest);
+                        console.log(data.pendingRequest);
                         deferred.resolve(data.pendingRequest);
 
                         });

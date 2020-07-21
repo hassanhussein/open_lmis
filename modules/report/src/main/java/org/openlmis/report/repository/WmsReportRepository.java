@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,8 +29,13 @@ public class WmsReportRepository {
         return lotsOnHandMapper.getListStockProduct(warehouseId);
     }
 
-    public List<StockCards> getListReports(Long productId){
-        return lotsOnHandMapper.getListStockOnHand(productId);
+    public  List<HashMap<String, Object>> getVarReportById(Long inspectionId){
+        return lotsOnHandMapper.getListVarReport(inspectionId);
+
+    }
+
+    public List<StockCards> getListReports(Long productId,Long warehouseId){
+        return lotsOnHandMapper.getListStockOnHand(productId,warehouseId);
     }
 
     public Facilities getFacilityDetails(Long facilityId){

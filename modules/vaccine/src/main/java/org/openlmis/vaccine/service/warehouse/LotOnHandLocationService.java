@@ -144,9 +144,8 @@ public class LotOnHandLocationService {
             stockCard.setId(stock.getId());
             stockCardService.updateStockCard(stockCard);
         }
-
         processStockCard(facility, stockCard,product,events,userId);
-        inspectionService.updateStatus("FINALIZED", items.get(0).getInspectionId());
+        inspectionService.updateStatus("INSPECTED", items.get(0).getInspectionId());
 
         System.out.println("Inspection ID"+items.get(0).getInspectionId());
         System.out.println("----Processed Stock cards-----");
@@ -274,7 +273,6 @@ public class LotOnHandLocationService {
 
 
         }
-
         stockCardService.addStockCardEntries(entries);
         return "success.stock.adjusted";
     }

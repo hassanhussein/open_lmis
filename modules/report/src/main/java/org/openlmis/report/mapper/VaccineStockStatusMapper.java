@@ -23,13 +23,15 @@ import java.util.List;
 @Repository
 public interface VaccineStockStatusMapper {
 
+
+
     @SelectProvider(type = VaccineStockStatusQueryBuilder.class, method = "getQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
     public List<VaccineStockStatusReport> getReport(@Param("filterCriteria") VaccineStockStatusParam params,
                                                     @Param("userId") Long userId,
                                                     @Param("RowBounds") RowBounds rowBounds
                                                     );
-    @Select("SELECT vd.id,vd.distributionid as distributionId,f.name as facilityName,p.fullname as product,g.name as district,\n" +
+    @Select("SELECT vd.id,vd.distributionid as distributionId,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
             "g.code as region,vd.quantity as quantityIssued\n" +
             "FROM vaccine_distribution_line_items vd\n" +
             "left join products p on(p.id=vd.productid)\n" +
@@ -38,10 +40,11 @@ public interface VaccineStockStatusMapper {
             " left join geographic_zones g on(g.id=f.geographiczoneid) where f.id=#{facilityId}")
     List<VaccineDistributionLineItem> vaccineDistributionLineItemList(@Param("facilityId") Long facilityId);
 
-    @Select("SELECT vd.id,vd.distributionid,f.name as facilityName,p.fullname as product,g.name as district,\n" +
+    @Select("SELECT vd.id,vd.distributionid,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
             "g.code as region,vd.quantity as quantityIssued\n" +
             "FROM vaccine_distribution_line_items vd\n" +
             "left join products p on(p.id=vd.productid)\n" +
+            ""+
             " left join  vaccine_distributions d on(d.id=vd.distributionid)\n" +
             " left join facilities f on(f.id=d.tofacilityid)\n" +
             " left join geographic_zones g on(g.id=f.geographiczoneid) where vd.distributionid=#{distID} limit 4")
@@ -71,7 +74,7 @@ public interface VaccineStockStatusMapper {
             "\tv.distributiondate as distributionDate,v.picklistid as pickListId,\n" +
             "\tftf.name as facilityTypeFrom,\n" +
             "\tfto.name as facilityTypeTo,\n" +
-            "\tv.periodid as periodId,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
+            "\tv.periodid as periodId,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
             "\tgo.name as toZoneName,\n" +
             "\tv.orderid as orderId ,f.name as facilityName,f.description as to_description,fo.description as fromDescription,fo.name as fromFacilityName\n" +
             "FROM vaccine_distributions v\n" +
@@ -81,7 +84,7 @@ public interface VaccineStockStatusMapper {
             " left join facility_types fto on(fto.id=f.typeid)\n" +
             " left join geographic_zones go on(go.id=fo.geographiczoneid)\n" +
             " left join geographic_zones gf on(gf.id=f.geographiczoneid)\n" +
-            "left join vaccine_order_requisitions vo on(vo.id=v.orderid) where v.id=#{orderID}")
+            "left join vaccine_order_requisitions vo on(vo.id=v.orderid) where vo.id=#{orderID}")
     List<VaccineDistribution> vaccineDistributionListByOrderId(@Param("orderID") Long orderID);
 
     @Select("SELECT v.id,\n" +

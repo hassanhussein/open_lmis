@@ -162,7 +162,8 @@ $scope.searchOptions = [
                   console.log(inspectionId.id);
 
 
-                   var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
+                   //var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
+            var url = '/wms-reports/var-report?inspectionId='+ parseInt(inspectionId.id,10);
 
                    $window.open(url, '_blank');
 

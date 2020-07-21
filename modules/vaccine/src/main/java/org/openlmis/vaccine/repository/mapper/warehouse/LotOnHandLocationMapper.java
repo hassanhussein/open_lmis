@@ -55,33 +55,32 @@ public interface LotOnHandLocationMapper {
     void deleteExistingStockCardLocation(@Param("id") Long id,@Param("toBinLocationId") Long toBinLocationId);
 
 
-    @Select("\n" +
-            "            select (SELECT name from vvm_statuses WHERE vvmId = h.vvmId limit 1) vvm,\n" +
-            "            to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
-            "            p.primaryName product, sum(h.quantityOnHand) quantityOnHand, lotID, lotNumber, \n" +
-            "             to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
-            "             \n" +
-            "            from lot_on_hand_locations L\n" +
-            "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
-            "            \n" +
-            "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
+    @Select("select vvmst.name as vvm,\n" +
+            "      to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
+            "                p.primaryName product, ((coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand, lotID, lotNumber,\n" +
+            "                 to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
+            "           \n" +
+            "                from lot_on_hand_locations L\n" +
+            "                    join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
+            "                      JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
+            "    \n" +
+            "             left join vvm_statuses  vvmst on (vvmst.id=h.vvmId)\n" +
+            "                      JOIN lots LO ON Lo.id = h.lotId\n" +
             "\n" +
-            "            JOIN lots LO ON Lo.id = h.lotId\n" +
+            "                    JOIN products P on lo.productID = p.id\n" +
             "            \n" +
-            "            JOIN products P on lo.productID = p.id\n" +
-            "\n" +
-            "            JOIN  stock_cards s  ON s.id = h.stockcardId\n" +
+            "                     JOIN  stock_cards s  ON s.id = h.stockcardId\n" +
             "            \n" +
-            "            WHERE  facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
-            "            and l.quantityOnHand > 0\n" +
-            "            \n" +
-            "            group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name ")
+            "                    WHERE   facilityId = #{facilityId} AND LSC.warehouseId = #{warehouseId}\n" +
+            "                     and l.quantityOnHand > 0\n" +
+            "          \n" +
+            "                     group by h.vvmId, h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,S.ID,Lsc.name,vvmst.name,lo.id ")
     List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("\n" +
-            "             Select primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +
+            "             Select distinct primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +
             "\n" +
-            "             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh\n" +
+            "             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh,vvm,expirationDate,lotNumber\n" +
             "                FROM \n" +
             "                (WITH Q AS ( \n" +
             "                select MAX(p.primaryname) primaryname  , 0 as id, MAX(se.createdDATE)::timestamp with time zone as date, \n" +
@@ -93,20 +92,21 @@ public interface LotOnHandLocationMapper {
             "                0::INTEGER as adjustment,\n" +
             "                loc.name locationName,\n" +
             "\n" +
-            "                SUM(se.quantity)::integer as total\n" +
+            "                SUM(se.quantity)::integer as total,vvmst.name  vvm,to_char(max(l.expirationDate), 'dd-MM-yyyy') expirationDate,l.lotnumber as lotNumber\n" +
             "             \n" +
             "                from lot_location_entries se \n" +
             "\n" +
             "                join lots_on_hand lo ON lo.id=se.lotonhandid \n" +
             "                JOIN lot_on_hand_locations H ON se.locationId = h.LOCATIONID\n" +
             "                JOIN wms_locations loc ON loc.id = h.locationId\n" +
+            "            \n left join vvm_statuses  vvmst on (vvmst.id=lo.vvmId) " +
             "                join stock_cards s ON s.id=lo.stockcardid\n" +
-            "                --join lots l on l.id=lo.lotid \n" +
+            "                join lots l on l.id=lo.lotid \n" +
             "                join products p on p.id=s.productid \n" +
             "                join facilities f on f.id=s.facilityid \n" +
             "                where \n" +
             "                loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
-            "                 group by    loc.name) \n" +
+            "                 group by    loc.name,vvmst.name,l.lotnumber) \n" +
             "                SELECT * FROM Q \n" +
             "                UNION ALL \n" +
             "                (select p.primaryname , se.id, se.createddate as date, \n" +
@@ -118,13 +118,14 @@ public interface LotOnHandLocationMapper {
             "                case when se.type ='DEBIT' then se.quantity else 0 end as issued, \n" +
             "                case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment, \n" +
             "                loc.name locationName,\n" +
-            "                se.quantity::integer as total \n" +
+            "                se.quantity::integer as total,vvmst.name vvm,(select to_char(max(expirationDate), 'dd-MM-yyyy') expirationDate from lots where id=lo.lotid limit 1) as expiredDate,(select lotnumber from lots where id=lo.lotid limit 1) as lotNumber\n" +
             "               \n" +
             "                from lot_location_entries se \n" +
             "            \n" +
             "                join lots_on_hand lo ON lo.id=se.lotonhandid \n" +
             "                JOIN lot_on_hand_locations H ON se.locationId = h.LOCATIONID\n" +
             "                JOIN wms_locations loc ON loc.id = h.locationId\n" +
+            "            \n left join vvm_statuses  vvmst on (vvmst.id=lo.vvmId) " +
             "                join stock_cards s ON s.id=lo.stockcardid\n" +
             "                \n" +
             "                join products p on p.id=s.productid \n" +
@@ -155,16 +156,15 @@ public interface LotOnHandLocationMapper {
     List<HashMap<String, Object>>getAllByWareHouseAndBinLocation(@Param("fromWarehouseId") Long fromWarehouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
 
-    @Select("select lotOnHandId, h.lotId, lotNumber, sum(l.quantityOnHand) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
-            "join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
-            "\n" +
-            "JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
-            "JOIN lots LO ON Lo.id = h.lotId\n" +
-            "JOIN products P on lo.productID = p.id\n" +
-            "\n" +
-            "WHERE LSC.warehouseId = #{wareHouseId} AND lsc.ID = #{fromBinLocationId} and l.quantityOnHand > 0\n" +
-            "\n" +
-            "group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber ")
+    @Select("select lotOnHandId, h.lotId, lotNumber,((coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
+            "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
+            "          \n" +
+            "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
+            "            JOIN lots LO ON Lo.id = h.lotId\n" +
+            "            JOIN products P on lo.productID = p.id\n" +
+            "            WHERE LSC.warehouseId =#{fromWarehouseId} AND lsc.ID =#{fromBinLocationId} and l.quantityOnHand > 0\n" +
+            "            \n" +
+            "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,lo.id ")
     List<TransferDTO> getTransferDetailsBy(@Param("wareHouseId") Long wareHouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
     @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{total} WHERE locationId=#{locationId} and lotOnHandId=#{lotOnHandId}")

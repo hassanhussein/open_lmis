@@ -774,3 +774,8 @@ services.factory('GetSohReport', function ($resource) {
 services.factory('GetTransferDetails', function ($resource) {
     return $resource('/rest-api/lotLocation/get-transfer-details',{fromWarehouseId:'@fromWarehouseId', fromBinLocationId:'@fromBinLocationId'}, {});
 });
+
+
+services.factory('WmsAdjustment', function ($resource) {
+    return $resource('/rest-api/adjustment/save.json',{}, {save:{method:'POST'}});
+});

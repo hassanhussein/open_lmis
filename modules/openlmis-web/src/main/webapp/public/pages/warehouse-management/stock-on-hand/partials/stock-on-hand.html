@@ -133,7 +133,7 @@
 
         <tr ng-repeat-end  ng-repeat="lot in product" ng-if="$index > 0">
             <td class="col-lot cell-input  disabled padding2px">{{lot.lotNumber}}</td>
-            <td class="col-lot cell-input  disabled padding2px">{{product[0].vvm}}</td>
+            <td class="col-lot cell-input  disabled padding2px">{{lot.vvm}}</td>
 
             <td style="text-align:right;" class="col-lot cell-input  disabled padding2px">{{lot.quantityOnHand | number}}</td>
             <td class="col-lot cell-input  disabled padding2px">{{lot.expirationDate}}</td>

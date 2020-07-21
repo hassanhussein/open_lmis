@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController(GetAllClearingAgents,DeleteDocument,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController(GetAllClearingAgents,clearingAgent,DeleteDocument,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
@@ -55,16 +55,16 @@ console.log(parseInt($routeParams.id, 10));
        $window.open(url, '_blank');
       };
 
-     $scope.clearingAgentList = [];
+     $scope.clearingAgentList = clearingAgent;
 
     function getAllLookups(){
 
-       GetAllClearingAgents.get({}, function(data){
-
-       $scope.clearingAgentList = data.agents;
-       console.log(data);
-
-       });
+//       GetAllClearingAgents.get({}, function(data){
+//
+//       $scope.clearingAgentList = data.agents;
+//       console.log(data);
+//
+//       });
 
      AllVaccineInventoryConfigurations.get(function(data) {
                     $scope.configurations = data;
@@ -92,7 +92,7 @@ console.log(parseInt($routeParams.id, 10));
                                   $scope.ports = data.ports;
                                       $scope.suppliers = data.suppliers;
                                       if(!isUndefined(asn) && !isUndefined($scope.docList) ){
-                                      console.log(data.documentTypes);
+//                                      console.log(data.documentTypes);
                                       $scope.findMatches(data.documentTypes,$rootScope.docList );
 
 
@@ -149,6 +149,7 @@ getAllLookups();
 //    $scope.otherProducts=otherProducts;
 
     $scope.asn = asn;
+//    console.log(asn)
  if(!isUndefined(asn)) {
 
 
@@ -801,8 +802,38 @@ console.log($scope.fiiCost);
     };
 
 
+
+    $scope.quantitiesValid=function(){
+      var qError=false;
+    angular.forEach($scope.productsToAdd[0].lots,function(lot){
+            if(lot.info && lot.quantity===""){
+             qError=true;
+//             return false;
+            }
+
+//            return true;
+    });
+
+    if(!$scope.productsToAdd[0].unitPrice || qError){
+
+    $scope.quantityError = true;
+         $timeout(function(){
+
+              $scope.quantityError = false;
+
+              },10000);
+    return false;
+    }
+
+    return true;
+
+
+
+    };
+
+
     $scope.saveAsn = function(status) {
-        console.log($scope.docLists);
+//        console.log($scope.docLists);
 
 //    console.log($scope.asnCode);
 
@@ -811,9 +842,12 @@ console.log($scope.fiiCost);
 
 
 //    console.log($scope.currency)
-    $scope.asnStatus=status;
+        $scope.asnStatus=status;
         $scope.validateProduct();
-      if ($scope.asnForm.$error.required ||$scope.docLists.length < parseInt(3,10)) {
+//        if(){
+//            return;
+//        }
+      if ($scope.asnForm.$error.required ||$scope.docLists.length < parseInt(3,10)||!$scope.quantitiesValid()) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
@@ -1152,6 +1186,18 @@ PreAdviceController.resolve = {
 //         }, 100);
 deferred.resolve('data');
          return deferred.promise;
+     },
+     clearingAgent:function($q, $timeout,GetAllClearingAgents){
+        var deferred = $q.defer();
+             var configurations = {};
+             $timeout(function() {
+                 GetAllClearingAgents.get(function(data) {
+//                 console.log(data.agents)
+                     deferred.resolve(data.agents);
+                 });
+             }, 100);
+
+             return deferred.promise;
      },
 
 

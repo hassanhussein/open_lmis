@@ -19,6 +19,9 @@
 <div class="page-header">
 
     <h4>Adjustment Details:</h4>
+
+    <div  class="alert alert-success" ng-show="adjustmentSuccess"
+    >Adjustment Successful</div>
 </div>
 <form name="movementForm"  novalidate>
 
@@ -46,32 +49,43 @@
 
     <div class="form-row clearfix">
         <div class="span4">
-            <label for="currency" >Warehouse</label>
+            <label for="currency" >Warehouse <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="warehouseId" openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}"
+                        ng-model="stockMovement.fromWarehouseId" name="fromWarehouseId"
+                        id="fromWarehouseId" ng-required="true"
+                        ng-options="warehouse.id as warehouse.name for warehouse in stockMovement.warehouseList"
+
+                        ng-change="loadBinLocation(stockMovement.fromWarehouseId,stockMovement.warehouseList)"
+                        openlmis-message="label.select.parent.zone">
                     <option value="">--Select Warehouse--</option>
-                    <option value="1">Warehouse 1</option>
-                    <option value="2"> Warehouse 2</option>
+
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="movementForm.fromWarehouseId.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
 
 
         <div class="span4">
-            <label for="currency" >Bin Location</label>
+            <label for="currency" >Bin Location <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="binLocationId" ng-disabled="!warehouseId" openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}"
+                        ng-model="stockMovement.fromBin" name="fromBin" id="fromBin" ng-disabled="!stockMovement.fromWarehouseId"
+
+                        ng-required="true"   ng-options="location.id as location.name for location in stockMovement.locations"
+
+                        ng-change="loadProductLotDetails(stockMovement)"
+
+                        >
                     <option value="">--Select Bin Location--</option>
-                    <option value="1">AAAA</option>
-                    <option value="2"> BBBB</option>
+
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="movementForm.fromBin.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
@@ -85,32 +99,38 @@
 
     <div class="form-row clearfix">
         <div class="span4">
-            <label for="currency" >Item</label>
+            <label for="currency" >Item <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-disabled="!binLocationId" ng-model="itemId" openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}"
+                        name="productId" id="productId" ng-model="stockMovement.productId"
+                        ng-required="true"    ng-options="product.productId as product.productName for product in productToDisplay | unique:'productName'"
+                        ng-change="loadProductLots(stockMovement.productId)"
+                >
                     <option value="">--Select Item--</option>
-                    <option value="1">BCG</option>
-                    <option value="2"> HPV</option>
+
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="movementForm.productId.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
 
 
         <div class="span4">
-            <label for="currency" >Lot</label>
+            <label for="currency" >Lot <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-disabled="!itemId" ng-model="lot" openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}"
+                        id="lotId" name="lotId" ui-select2="{width: '100%'}" ng-disabled="!stockMovement.productId" ng-model="stockMovement.lotId"
+                        ng-change="showSOH(stockMovement.lotId)"
+                        ng-required="true"   ng-options="lot.lotId as lot.lotNumber for lot in lotsToDisplay"
+                >
                     <option value="">--Select Lot--</option>
-                    <option value="1">ASDFAD</option>
-                    <option value="2"> FDFDFDF</option>
+
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="movementForm.lotId.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
@@ -119,11 +139,11 @@
 
         <div class="span4">
             <label for="receiptDate">
-                <span>SOH</span>
+                <span>SOH </span>
             </label>
 
             <div class="form-field">
-                <input type="text" ng-disabled="true"/>
+                <input type="text" ng-model="stockMovement.soh" ng-disabled="true"/>
                 <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
@@ -139,24 +159,23 @@
 
         <div class="span4">
             <label for="receiptDate">
-                <span>Quantity to Adjust</span>
+                Quantity to Adjust <span class="label-required"> *</span>
             </label>
 
             <div class="form-field">
-                <input type="text" ng-disabled="!lot" ng-model="quantity" style="width:95%"/>
-                <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
+                <input ng-disabled="!stockMovement.lotId"  ng-model="stockMovement.quantity" ng-required="true" numeric-validator="positiveInteger" name="quantity" type="text" style="width:95%"/>
+                <span class="field-error" ng-show="movementForm.quantity.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
 
         <div class="span4">
-            <label for="currency" >Reason</label>
+            <label >Reason <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-disabled="!quantity || quantity==0" openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}" ng-model="stockMovement.reason" ng-required="true" ng-options="reason.id as reason.reason for reason in adjustmentReasons" ng-disabled="!stockMovement.quantity || stockMovement.quantity==0" openlmis-message="label.select.parent.zone">
                     <option value="">--Select Reason--</option>
-                    <option value="1">Reason 1</option>
-                    <option value="2"> Reason 2</option>
+
 
                 </select>
                 <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
@@ -191,7 +210,7 @@
 
 
 
-            <input  type="button" class="btn btn-primary pull-right"
+            <input  type="button" ng-click="adjust()" class="btn btn-primary pull-right"
                     value="Adjust" style="margin-left:10px;margin-right:10px"/>
         </div>
 

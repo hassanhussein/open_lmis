@@ -14,7 +14,7 @@ public class StockCards {
     private int facilityId;
     private int totalQuantityOnHand;
     private  int productId;
-    private String fullName;
+    private String fullName,vvm;
     private String warehouseName,locationName,lotNumber;
     private Timestamp effectiveDate,expirationDate;
     private Timestamp modifiedDate;
@@ -61,5 +61,9 @@ public class StockCards {
 
     public String getLotNumber() {
         return lotNumber;
+    }
+
+    public String getVvm() {
+        return vvm;
     }
 }

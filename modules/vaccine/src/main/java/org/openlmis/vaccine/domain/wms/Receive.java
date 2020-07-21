@@ -43,6 +43,7 @@ public class Receive extends BaseModel {
     @JsonDeserialize(using = DateDeserializer.class)
     private Date actualArrivalDate;
     private String clearingAgent;
+    private String clearingAgentName;
     private String shippingAgent;
     private String status;
     private String note;

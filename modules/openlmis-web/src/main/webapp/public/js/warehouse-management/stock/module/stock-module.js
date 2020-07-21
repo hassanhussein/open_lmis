@@ -10,6 +10,7 @@
 
 var stockModule = angular.module('stock', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable','angular.filter']).
     config(['$routeProvider', function ($routeProvider) {
+
       $routeProvider.
           when('/movement', {controller: StockController, templateUrl: 'partials/movement.html',resolve: StockController.resolve, reloadOnSearch: false}).
           when('/adjustment', {controller: StockController, templateUrl: 'partials/adjustment.html', resolve: StockController.resolve}).

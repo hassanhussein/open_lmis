@@ -254,8 +254,13 @@ public class TransferService {
                      if(lot.getLotNumber() != null) {
 
                          LotOnHandDTO lotOnHandDTO = new LotOnHandDTO();
+                         long quantityWithPackSize=0;
+                         try{
+                             quantityWithPackSize = (lot.getPackSize() != null)?lot.getQuantityOnHand() * Long.valueOf(lot.getPackSize()):lot.getQuantityOnHand();
 
-                         Long quantityWithPackSize = (lot.getPackSize() != null)?lot.getQuantityOnHand() * Long.valueOf(lot.getPackSize()):lot.getQuantityOnHand();
+                         }catch (Exception e){
+
+                         }
 
                          lotOnHandDTO.setAmount(quantityWithPackSize);
                          lotOnHandDTO.setExpiry(lot.getExpiry());

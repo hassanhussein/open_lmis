@@ -96,6 +96,7 @@ public class InspectionRepository {
     }
 
     public List<PutAwayDTO> searchPutAwayBy(String searchParam, String column, Pagination pagination) {
+        //System.out.println("called:"+searchParam+" "+column);
         return  mapper.searchPutAwayBy(searchParam,column,pagination);
     }
 

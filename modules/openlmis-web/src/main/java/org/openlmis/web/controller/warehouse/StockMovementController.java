@@ -5,6 +5,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.vaccine.domain.wms.Adjustment;
 import org.openlmis.vaccine.domain.wms.Transfer;
 
 import org.openlmis.vaccine.service.warehouse.TransferService;
@@ -39,6 +40,7 @@ public class StockMovementController extends BaseController {
         return OpenLmisResponse.response("trans",transferService.save(item,loggedInUserId(request),facility.getId()));
 
     }
+
 
     /*@RequestMapping(value = "update", method = PUT, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> update(@RequestBody Transfer item, HttpServletRequest request) {

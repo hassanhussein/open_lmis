@@ -36,7 +36,7 @@
                                    ui-date-format="yy-mm-dd"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
                                     ng-model="inspection.inspectionDate"
-                                    ng-disabled="false"
+                                    ng-disabled="isDisabled(inspection.status)"
                                     ng-required="true"/>
                             <span class="field-error" ng-show="inspectionForm.inspectionDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
@@ -453,24 +453,34 @@
                                 <div class="span3">
                                     <label id="clearingAgentLabel" >Clearing Agent<span class="label-required"> *</span></label>
 
-                                    <div class="form-field row-fluid">
-                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="viewMode"  ng-model="clearingAgent"
+                                    <div class="form-field row-fluid" >
+                                       <!-- <select ui-select2="{width: '90%'}"  class="span11" ng-disabled="viewMode"  ng-model="inspection.receive.clearingAgent"
                                                 openlmis-message="label.select.parent.zone" ng-required="true">
-                                            <option value="">--Select Agent--</option>
+                                            <option value="">&#45;&#45;Select Agent&#45;&#45;</option>
 
                                             <option ng-repeat="agent in clearingAgentList"
-                                                    value="{{ agent.name }}"
-                                                    ng-selected="clearingAgent===agent.name"
-                                            >
-                                                {{ agent.name }}
-
-
+                                                    value="{{agent.name}}" >{{ agent.name }}
                                             </option>
 
                                         </select>
+
+                                        <label>
+                                            <select ng-options="f as agent.name for  agent in clearingAgentList" ng-model="inspection.receive.clearingAgent">
+
+                                                <option>Select</option>
+                                            </select>
+                                        </label>
+-->
                                         <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"
                                               openlmis-message="missing.value"></span>
+                                        <div class="form-field">
+                                            <input id ="clearingAgents" ng-model="inspection.receive.clearingAgent" ng-disabled="true"  type="text" maxlength="50"  />
+                                            <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"
+                                                  openlmis-message="missing.value"></span>
+                                        </div>
                                     </div>
+
+
                                 </div>
                                 <div class="span4">
                                     <label id="levelLabel" for="actualArrivalDate">
@@ -498,7 +508,7 @@
                                     <fieldset>
                                         <label for="model"><span>Document Type</span>:</label>
 
-                                        <select style="min-width:300px !important" ui-select2 ng-model="document.documentType"
+                                        <select style="min-width:300px !important" ng-disabled="isDisabled(inspection.status)" ui-select2 ng-model="document.documentType"
                                                 ng-options="f as f.name for f in displayDocumentTypes">
                                             <option value="">Select Document Type</option>
                                         </select>
@@ -596,8 +606,8 @@
                                             <span style="font-size:12px">Was quantity received as per shipping notification?</span>
 
                                         <span ng-init="inspection.isShipped" >
-                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShipped" ng-value="true" /> <strong>No</strong>
-                                            <input type="radio" ng-model="inspection.isShipped" ng-value="false"/>
+                                           <strong>Yes</strong><input type="radio" ng-model="inspection.isShipped" ng-disabled="isDisabled(inspection.status)" ng-value="true" /> <strong>No</strong>
+                                            <input type="radio" ng-model="inspection.isShipped" ng-disabled="isDisabled(inspection.status)" ng-value="false"/>
                                         </span>
 
                                         </div>
@@ -606,7 +616,7 @@
 
                                         <div class="control-group">
                                             <label  for="notes">Comments</label>
-                                            <input type="text" ng-model="inspection.shippedComment" id="notes">
+                                            <input type="text" ng-model="inspection.shippedComment"  ng-disabled="isDisabled(inspection.status)" id="notes">
 
                                         </div>
                                     </div>
@@ -650,7 +660,7 @@
                                             <label class="control-label"></label>
                                             <div>
 <!--                                                <input type="text" ng-model="inspection.conditionOfBox">-->
-                                                <select ng-model="inspection.conditionOfBox" >
+                                                <select  ng-model="inspection.conditionOfBox" ng-disabled="isDisabled(inspection.status)" >
 <!--                                                    <option value=""></option>-->
                                                     <option value="Good Condition">Good Condition</option>
                                                     <option value="Partially damaged">Partially damaged</option>
@@ -676,7 +686,7 @@
                                             <label class="control-label"></label>
                                             <div>
 <!--                                                <input type="text" ng-model="inspection.labelAttachedComment">-->
-                                                <select ng-model="inpection.labelAttachedComment" >
+                                                <select ng-model="inspection.labelAttachedComment" ng-disabled="isDisabled(inspection.status)"  >
 <!--                                                    <option value=""></option>-->
                                                     <option value="All labels were attached">All labels were attached</option>
                                                     <option value="Some boxes missing labels">Some boxes missing labels</option>
@@ -705,18 +715,18 @@
             <div form-toolbar id="action_buttons" class="action-buttons">
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" ng-if="!viewMode" class="btn btn-primary save-button"
-                           openlmis-message="button.save" ng-click="save('DRAFT')"/>
+                           ng-disabled="isDisabled(inspection.status)"     openlmis-message="button.save" ng-click="save('DRAFT')"/>
                     <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"
                            value="Print"/>
                     <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
                            ng-click="cancel()"/>
 
 
-                    <input  type="button" class="btn btn-primary pull-right" ng-click="print(inspection)"
+                  <!--  <input  type="button" class="btn btn-primary pull-right" ng-click="print(inspection)"
                              ng-if="!viewMode" value="Print" style="margin-left:10px;margin-right:10px"/>
-
+-->
                     <input  type="button" class="btn btn-primary pull-right" ng-click="save('IN-PUTAWAY')"
-                             ng-if="!viewMode" value="Finalize Inspection" style="margin-left:10px;margin-right:10px"/>
+                            ng-disabled="isDisabled(inspection.status)" ng-if="!viewMode" value="Finalize Inspection" style="margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
@@ -790,7 +800,7 @@
 
 
 
-                        <select ui-select2="{width: '90%'}" ng-model="lot.vvmStatus"  ng-disabled="hasExpired(lot)"  ng-change="vvmChanged(lot)">
+                        <select ui-select2="{width: '90%'}" ng-model="lot.vvmStatus"  ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"   ng-change="vvmChanged(lot)">
                             <option value="">Select VVM</option>
                             <option ng-repeat="vvm in vvmStatusList"
                                     value="{{ vvm.id }}"
@@ -814,7 +824,7 @@
 
 
                     </td>
-                    <td><input type="text" numeric-validator="positiveInteger" ng-model="lot.failQuantity" ng-disabled="hasExpired(lot)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
+                    <td><input type="text" numeric-validator="positiveInteger" ng-model="lot.failedQuantity" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
 
 
 
@@ -825,7 +835,7 @@
 
 
 
-                        <select ui-select2="{width: '100%'}" ng-model="lot.failReason" ng-disabled="lot.failQuantity=='0' || !lot.failQuantity || hasExpired(lot)" ng-required="lot.failQuantity!=='0' && lot.failQuantity">
+                        <select ui-select2="{width: '100%'}" ng-model="lot.failedReason" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity || hasExpired(lot)" ng-required="lot.failedQuantity!=='0' && lot.failedQuantity">
                             <option value=""></option>
                             <option ng-repeat="reason in failReasons"
                                     value="{{ reason.id }}"
@@ -842,7 +852,7 @@
                     <td ng-show="false">454</td>
                     <td>
 
-                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="lot.failQuantity=='0' || !lot.failQuantity">
+                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity">
                             <option value=""></option>
                             <option ng-repeat="location in locations"
                                     value="{{ location.id }}"
@@ -879,13 +889,13 @@
                 <div class="form-cell" >
                     <label class="checkbox inline">  Coolant Type Available: </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.dryIceFlag" name="dryIceFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.icePackFlag" ng-change="coolant(lineItem)"> Dry Ice
+                        <input type="checkbox" ng-model="lineItem.dryIceFlag" ng-disabled="isDisabled(inspection.status)" name="dryIceFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.icePackFlag" ng-change="coolant(lineItem)"> Dry Ice
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.icePackFlag" name="icePackFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.dryIceFlag" ng-change="coolant(lineItem)"> Icepacks
+                        <input type="checkbox" ng-model="lineItem.icePackFlag" ng-disabled="isDisabled(inspection.status)" name="icePackFlag" ng-required="!lineItem.noCoolantFlag && !lineItem.dryIceFlag" ng-change="coolant(lineItem)"> Icepacks
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.noCoolantFlag" name="noCoolantFlag" ng-required="!lineItem.dryIceFlag && !lineItem.icePackFlag" ng-change="noCoolant(lineItem)"> No Coolant
+                        <input type="checkbox" ng-model="lineItem.noCoolantFlag" ng-disabled="isDisabled(inspection.status)" name="noCoolantFlag" ng-required="!lineItem.dryIceFlag && !lineItem.icePackFlag" ng-change="noCoolant(lineItem)"> No Coolant
                     </label>
                     <span class="field-error" ng-show="(inspectLotForm.icePackFlag.$error.required || inspectLotForm.dryIceFlag.$error.required || inspectLotForm.noCoolantFlag.$error.required) && showError"
                           openlmis-message="missing.value"></span>
@@ -897,17 +907,17 @@
                 <div class="form-cell" >
                     <label class="checkbox inline">  Temperature Monitor Present: </label>
                     <label class="checkbox inline">
-                     <input type="checkbox" ng-model="lineItem.vvmFlag" > VVM
+                     <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.vvmFlag" > VVM
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.ccCardFlag"> Cold-chain Card
+                        <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.ccCardFlag"> Cold-chain Card
                     </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="lineItem.electronicDeviceFlag"> Electronic devices
+                        <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.electronicDeviceFlag"> Electronic devices
                     </label>
 
                     <label class="checkbox inline">
-                      Other Type  <input type="text" ng-model="lineItem.otherMonitor">
+                      Other Type  <input type="text" ng-disabled="isDisabled(inspection.status)" ng-model="lineItem.otherMonitor">
                     </label>
 
                 </div>
@@ -918,7 +928,7 @@
                 <div class="form-cell" >
                     <label class="checkbox inline">  Any Problem Observed? </label>
                     <label class="checkbox inline">
-                        <input type="checkbox" ng-model="problem" >
+                        <input type="checkbox" ng-disabled="isDisabled(inspection.status)" ng-model="problem" >
                     </label>
 
 
@@ -985,12 +995,12 @@
                     <!--                </tbody>-->
                 </table>
 
-            </div
+            </div>
 
         </div>
         <div class="modal-footer">
             <input type="button" id="issueSubmit" class="btn btn-primary save-button"
-                   ng-click="doneLotInspection(lineItem)"
+                   ng-click="doneLotInspection(lineItem)" ng-disabled="isDisabled(inspection.status)"
 
                    value="Done"/>
             <input type="button" ng-click="closeInspectLotModal();" class="btn btn-cancel"

@@ -52,6 +52,17 @@ public class WmsReportController extends BaseController {
         wmsReportService.exportStockOnHandReport(docType, wareHouseId, lang, currentName, response);
     }
 
+    @RequestMapping(value = "/var-report", params = {"inspectionId"})
+    public void varReport(@RequestParam Long inspectionId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportVarReport(inspectionId, lang, currentName, response);
+    }
+
+
+
     @RequestMapping(value = "/picklist-report", params = {"docType", "orderId"})
     public void generateReport(@RequestParam String docType, @RequestParam Long orderId, @RequestParam int type, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
@@ -100,15 +111,26 @@ public class WmsReportController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/list-reports/{facilityId}")
+    /*@RequestMapping(value = "/list-reports/{facilityId}")
     public List<StockCards> getListReport(@PathVariable Long facilityId) {
-        return wmsReportRepository.getListReports(facilityId);
+        return wmsReportRepository.getStockProduct(facilityId);
+    }*/
+
+    @RequestMapping(value = "/list-picking")
+    public String getPickingItems() {
+        try {
+            long ID = 3531;
+            return wmsReportService.getArrayReport(1, ID);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @RequestMapping(value = "/list-vaccine")
     public String getVaccineItems() {
         try {
-            long ID = 5;
+            long ID = 1;
             return wmsReportService.getStockProduct(ID);
         } catch (Exception e) {
             e.printStackTrace();

@@ -77,16 +77,16 @@
 
                 <td ng-bind="inspection.receiptNumber"></td>
                 <td  ng-bind="inspection.receiptDate"></td>
-                <td  ng-bind="inspection.status"></td>
+                <td  ng-bind="inspection.customStatus"></td>
                 <td>
-                    <a  href="" ng-click="edit(inspection,false)"  ng-if="inspection.status=='DRAFT'" >Inspect</a>
+                    <a  href="" ng-click="edit(inspection,false)"  ng-if="inspection.customStatus=='DRAFT'" >Update</a>
 <!--                    <a  href=""  ng-if="asn.status!='DRAFT'" >Recei</a>-->
-                    <a  href="" ng-click="edit(inspection,true)"  ng-if="inspection.status!='DRAFT'" >update</a>
+                    <a  href="" ng-click="edit(inspection,true)"  ng-if="inspection.customStatus=='INSPECTED'||inspection.customStatus=='IN-PUTAWAY'" >view</a>
 
                 </td>
 
                 <td>
-                    <a  href="" ng-click="print(inspection,true)"  ng-if="inspection.status='RELEASED'" >VAR</a>
+                    <a  href="" ng-click="print(inspection,true)"  ng-if="inspection.customStatus=='INSPECTED'||inspection.customStatus=='IN-PUTAWAY'" >VAR</a>
 
                 </td>
 

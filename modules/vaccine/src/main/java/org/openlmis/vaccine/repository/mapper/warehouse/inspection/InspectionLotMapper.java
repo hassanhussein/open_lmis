@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface InspectionLotMapper {
 
-    @Select(" SELECT * FROM inspection_lots WHERE inspectionLineItemId = #{lineItemId} ")
+    @Select("SELECT *,failquantity as failedQuantity,failreason as failedReason FROM inspection_lots WHERE inspectionLineItemId = #{lineItemId} ")
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(column = "passLocationId", property = "passLocationId"),
@@ -24,7 +24,7 @@ public interface InspectionLotMapper {
 
     @Update(" UPDATE public.inspection_lots\n" +
             "   SET  inspectionLineItemId=#{inspectionLineItemId}, lotNumber=#{lotNumber}, countedQuantity=#{countedQuantity}, \n" +
-            "       passQuantity=#{passQuantity}, passLocationId=#{passLocationId}, failQuantity=#{failQuantity}, failReason=#{failReason}, \n" +
+            "       passQuantity=#{passQuantity}, passLocationId=#{passLocationId}, failQuantity=#{failedQuantity}, failReason=#{failedReason}, \n" +
             "       failLocationId=#{failLocationId}, vvmStatus=#{vvmStatus}, modifiedBy=#{modifiedBy}, \n" +
             "       modifiedDate=NOW(), expiryDate=#{expiryDate}, receivedQuantity=#{receivedQuantity}\n" +
             " WHERE id = #{id} ")
