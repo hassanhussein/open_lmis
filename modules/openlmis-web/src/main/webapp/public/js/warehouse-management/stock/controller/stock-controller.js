@@ -8,7 +8,45 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function StockController($scope,$timeout, TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots,GetStockProducts,GetTransferDetails) {
+function StockController($scope,$timeout, WmsAdjustment,TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots,GetStockProducts,GetTransferDetails) {
+
+
+$scope.adjustmentReasons=[
+{
+    id:1,
+    reason:'Missing Inventory in',
+    type:'CREDIT'
+},
+{
+    id:2,
+    reason:'Missing Inventory out',
+    type:'DEBIT'
+},
+
+{
+    id:3,
+    reason:'Breakage',
+    type:'DEBIT'
+},
+
+{
+    id:4,
+    reason:'Label Disappeared',
+    type:'DEBIT'
+},
+
+{
+    id:5,
+    reason:'Frozen',
+    type:'DEBIT'
+},
+
+{
+    id:5,
+    reason:'Damaged',
+    type:'DEBIT'
+}
+];
 
 $scope.stockMovement = {};
 $scope.stockMovement.products = [];
@@ -110,7 +148,13 @@ $scope.validateQuantity  = function (movement){
 
 };
 
-$scope.adjust=function(){
+function getReason(id){
+return _.findWhere($scope.adjustmentReasons, {id:id});
+}
+
+
+
+$scope.adjust=function(stockAdjust){
 console.log('am here');
 if ($scope.movementForm.$error.required ) {
             $scope.showError = true;
@@ -118,6 +162,42 @@ if ($scope.movementForm.$error.required ) {
             $scope.message = "";
             return;
         }
+          var reason = getReason($scope.stockMovement.reason);
+        var adjust={
+        "lotId":$scope.stockMovement.lotId,
+        "locationid":$scope.stockMovement.fromBin,
+        "quantity":parseInt($scope.stockMovement.quantity,10),
+        "type":reason.type,
+        "reason":reason.reason
+        };
+
+        console.log(adjust);
+
+        WmsAdjustment.save({},adjust,function(){
+         $scope.showMessage = false;
+                        $scope.showError = false;
+                        $scope.error = false;
+                        $scope.stockMovement.lotId = null;
+                        $scope.stockMovement.productId = null;
+                        $scope.stockMovement.soh= null;
+                        $scope.stockMovement.fromWarehouseId = null;
+                        $scope.stockMovement.toWarehouseId = null;
+                        $scope.stockMovement.fromBin = null;
+                        $scope.stockMovement.toBin= null;
+                        $scope.stockMovement.reason = null;
+                        $scope.stockMovement.quantity = null;
+        $scope.adjustmentSuccess=true;
+                 $timeout(function() {
+               $scope.adjustmentSuccess=false;
+
+
+
+                                 }, 3000);
+
+        });
+
+
+
 };
 
 $scope.submit = function (stockMovement) {
