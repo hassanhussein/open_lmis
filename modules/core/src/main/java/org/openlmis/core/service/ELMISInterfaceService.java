@@ -112,6 +112,11 @@ public class ELMISInterfaceService {
 
     }
 
+    @Scheduled(cron = "${batch.job.quantification.extract}")
+    public void refreshQuantificationExtract() {
+
+        repository.refreshViewsByName("mv_quantification_extraction");
+    }
     // @Scheduled(cron = "${batch.job.send.bed.net.data}")
     // @Scheduled(fixedRate = 900000)
     public void processMosquitoNetReportingData() {
