@@ -156,16 +156,15 @@ public interface LotOnHandLocationMapper {
     List<HashMap<String, Object>>getAllByWareHouseAndBinLocation(@Param("fromWarehouseId") Long fromWarehouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
 
-    @Select("select lotOnHandId, h.lotId, lotNumber, sum(l.quantityOnHand) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
-            "join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
-            "\n" +
-            "JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
-            "JOIN lots LO ON Lo.id = h.lotId\n" +
-            "JOIN products P on lo.productID = p.id\n" +
-            "\n" +
-            "WHERE LSC.warehouseId = #{wareHouseId} AND lsc.ID = #{fromBinLocationId} and l.quantityOnHand > 0\n" +
-            "\n" +
-            "group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber ")
+    @Select("select lotOnHandId, h.lotId, lotNumber,((coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
+            "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
+            "          \n" +
+            "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
+            "            JOIN lots LO ON Lo.id = h.lotId\n" +
+            "            JOIN products P on lo.productID = p.id\n" +
+            "            WHERE LSC.warehouseId =#{fromWarehouseId} AND lsc.ID =#{fromBinLocationId} and l.quantityOnHand > 0\n" +
+            "            \n" +
+            "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,lo.id ")
     List<TransferDTO> getTransferDetailsBy(@Param("wareHouseId") Long wareHouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
     @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{total} WHERE locationId=#{locationId} and lotOnHandId=#{lotOnHandId}")
