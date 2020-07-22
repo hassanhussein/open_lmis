@@ -295,8 +295,9 @@ StockController.resolve =  {
                 GetTransferReasons.get({},
 
                     function (data) {
-
+                            console.log(data.reasons);
                         if (!isUndefined(data.reasons) || data.reasons.length > 0)
+
                             deferred.resolve(data.reasons);
                         });
 
