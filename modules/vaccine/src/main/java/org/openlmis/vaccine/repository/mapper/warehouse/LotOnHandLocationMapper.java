@@ -162,7 +162,7 @@ public interface LotOnHandLocationMapper {
             "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
             "            JOIN lots LO ON Lo.id = h.lotId\n" +
             "            JOIN products P on lo.productID = p.id\n" +
-            "            WHERE LSC.warehouseId =#{fromWarehouseId} AND lsc.ID =#{fromBinLocationId} and l.quantityOnHand > 0\n" +
+            "            WHERE LSC.warehouseId =#{wareHouseId} AND lsc.ID =#{fromBinLocationId} and l.quantityOnHand > 0\n" +
             "            \n" +
             "            group by h.lotId,lotOnHandId,p.id, p.primaryName, stockCardId,lotNumber,lo.id ")
     List<TransferDTO> getTransferDetailsBy(@Param("wareHouseId") Long wareHouseId, @Param("fromBinLocationId") Long fromBinLocationId);
