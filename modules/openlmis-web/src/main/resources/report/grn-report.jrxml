@@ -73,7 +73,7 @@
 	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<parameter name="ISSUE_ID" class="java.lang.Integer" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, i.receiveNumber, lo.code binLocation, S.name supplyName,
+		<![CDATA[SELECT distinct l.lotNumber,to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, i.receiveNumber, lo.code binLocation, S.name supplyName,
  r.invoiceNumber, r.poNumber, p.code productCode, p.primaryName product, u.code dosageUnit,
 
 asnL.quantity  quantityOrdered, l.lotNumber, l.manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate,
