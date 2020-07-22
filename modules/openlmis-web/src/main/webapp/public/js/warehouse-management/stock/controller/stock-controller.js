@@ -127,6 +127,19 @@ $scope.showSOH = function(lotId) {
 
 };
 
+
+$scope.showSOHa = function(lotId) {
+
+     $scope.stockMovement.soh = undefined;
+
+ if($scope.lotsToDisplay.length > 0 && !isUndefined($scope.productToDisplay) && !isUndefined(lotId)) {
+ //quantityOnHand
+
+  $scope.stockMovement.soh = _.where($scope.productToDisplay,{"lotOnHandId":lotId})[0].quantityOnHand;
+  }
+
+};
+
 $scope.validateQuantity  = function (movement){
 
  $scope.isGreater = false;
@@ -164,7 +177,7 @@ if ($scope.movementForm.$error.required ) {
         }
           var reason = getReason($scope.stockMovement.reason);
         var adjust={
-        "lotId":$scope.stockMovement.lotId,
+        "lotId":$scope.stockMovement.lotOnHandId,
         "locationid":$scope.stockMovement.fromBin,
         "quantity":parseInt($scope.stockMovement.quantity,10),
         "type":reason.type,
@@ -177,7 +190,7 @@ if ($scope.movementForm.$error.required ) {
          $scope.showMessage = false;
                         $scope.showError = false;
                         $scope.error = false;
-                        $scope.stockMovement.lotId = null;
+                        $scope.stockMovement.lotOnHandId = null;
                         $scope.stockMovement.productId = null;
                         $scope.stockMovement.soh= null;
                         $scope.stockMovement.fromWarehouseId = null;
