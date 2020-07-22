@@ -1898,7 +1898,7 @@ services.factory('GetLocationSummary', function ($resource) {
     return $resource('/location-lookup.json', {}, {});
 });
 services.factory('GetLocationBy', function ($resource) {
-    return $resource('/location-by/Qurantine', {}, {});
+    return $resource('/location-by/Quarantine', {}, {});
 });
 
 
