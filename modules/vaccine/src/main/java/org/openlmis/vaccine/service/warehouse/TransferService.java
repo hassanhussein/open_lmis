@@ -73,7 +73,7 @@ public class TransferService {
         entry.setModifiedBy(userId);
         entry.setLocationId(item.getFromBin());
         entry.setLotOnHandId(item.getLotOnHandId());
-        entry.setQuantity(total);
+        entry.setQuantity(item.getQuantity());
         entry.setType(StockCardEntryType.DEBIT);
 
         List<StockCardEntryKV> vl = new ArrayList<>();
