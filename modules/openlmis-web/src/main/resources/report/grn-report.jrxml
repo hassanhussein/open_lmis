@@ -4,7 +4,7 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="280"/>
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="elmis"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -73,13 +73,13 @@
 	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<parameter name="ISSUE_ID" class="java.lang.Integer" isForPrompting="false"/>
 	<queryString>
-		<![CDATA[SELECT to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, receiveNumber, lo.code binLocation, S.name supplyName,
+		<![CDATA[SELECT to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, i.receiveNumber, lo.code binLocation, S.name supplyName,
  r.invoiceNumber, r.poNumber, p.code productCode, p.primaryName product, u.code dosageUnit,
 
 asnL.quantity  quantityOrdered, l.lotNumber, l.manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate,
 L.quantity quantityReceived, date_part('month',age(  L.expiryDate::date,receiveDate::date))  as shelfLife,r.note
- 
-FROM RECEIVES R 
+
+FROM RECEIVES R
 JOIN receive_line_items i ON r.id = i.receiveid
 JOIN Receive_lots L ON i.id = L.receivelineItemId
 JOIN products p ON i.productId = P.ID
@@ -88,7 +88,7 @@ JOIN SUpply_partners S on r.supplierid = s.id
 JOIN dosage_units U on p.dosageunitId = U.ID
 JOIN ASNs ON R.asnId = ASNS.ID
 JOIN ASN_details it On asns.id = it.asnId
-Join asn_lots asnL ON it.ID = asnL.asndetailId 
+Join asn_lots asnL ON it.ID = asnL.asndetailId
 
 WHERE r.ID = $P{ORDER_ID}]]>
 	</queryString>
