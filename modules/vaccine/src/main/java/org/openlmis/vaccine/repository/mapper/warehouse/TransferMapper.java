@@ -31,7 +31,6 @@ public interface TransferMapper {
             " WHERE id = #{id};\n")
     void update(Transfer transfer);
 
-
     @Insert("INSERT INTO public.wms_reasons(\n" +
             "             code, name)\n" +
             "    VALUES (#{code}, #{name}); ")
