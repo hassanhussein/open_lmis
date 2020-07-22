@@ -28,7 +28,7 @@
 
         <div class="form-field row-fluid">
 
-            <select ui-select2="{width: '90%'}" style="width:100px;" class="span11"  ng-required="true"  name="year" id="startYear" ng-model="selectedYear" ng-change="changeByYear()"
+            <select ui-select2="{width: '90%'}" style="width:100px;" class="span11"  ng-required="true"  name="year" id="startYear" ng-model="currentYear" ng-change="changeByYear()"
             >
                 <option ng-repeat="year in startYears" value="{{year}}" ng-selected="currentYear==year" >{{year}}</option>
             </select>
