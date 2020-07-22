@@ -155,7 +155,6 @@ public interface LotOnHandLocationMapper {
             "             WHERE warehouseId =  #{fromWarehouseId} and locationId = #{fromBinLocationId} and H.quantityOnHand > 0")
     List<HashMap<String, Object>>getAllByWareHouseAndBinLocation(@Param("fromWarehouseId") Long fromWarehouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
-
     @Select("select lotOnHandId, h.lotId, lotNumber,((coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
             "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
             "          \n" +
