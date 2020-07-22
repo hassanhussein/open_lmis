@@ -46,9 +46,9 @@ public interface RnrLineItemMapper {
 
   //removed products.packSize || dosage_units.code
   @Select({"SELECT requisition_line_items.*, msdUom as uom, products.alternateItemCode, products.strength, products.primaryname, products.patientCalculationFormula, owner revision, priceCode, to_char(CURRENT_DATE, 'yyyy-MM-dd') quoteDate ",
-          "FROM requisition_line_items, products, dosage_units  ",
+          "FROM requisition_line_items, products ",
           "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true ",
-          "and requisition_line_items.productcode = products.code and dosage_units.id = products.dosageUnitId ",
+          "and requisition_line_items.productcode = products.code ",
           "order by productDisplayOrder;"})
   @Results(value = {
     @Result(property = "id", column = "id"),

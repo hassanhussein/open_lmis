@@ -46,7 +46,7 @@ public class QuantificationExtractQueryBuilder {
                    "     and r.emergency = false and pp.enableorder = true\n" +
                    "    GROUP BY p.code, p.primaryName,\n" +
                    "    pp.name, PP.ID,FT.CODE,F.NAME,ft.name, PC.NAME\n" +
-                   "    ORDER BY p.primaryName  ";
+                   "    ORDER BY p.primaryName LIMIT 10 ";
     }
 
 
