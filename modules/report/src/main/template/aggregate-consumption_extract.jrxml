@@ -26,12 +26,12 @@
 	</queryString>
 	<field name="product" class="java.lang.String"/>
 	<field name="district" class="java.lang.String"/>
-	<field name="consumption" class="java.lang.Float"/>
+	<field name="adjustedConsumptionInPacks" class="java.lang.Integer"/>
 	<field name="code" class="java.lang.String"/>
 	<field name="facilityCode" class="java.lang.String"/>
 	<field name="facility" class="java.lang.String"/>
 	<field name="facilityType" class="java.lang.String"/>
-	<field name="issues" class="java.lang.Double"/>
+	<field name="adjustedConsumption" class="java.lang.Integer"/>
 	<field name="unit" class="java.lang.String"/>
 	<field name="uom" class="java.lang.Integer"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
@@ -92,7 +92,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="9" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Consumption In Smallest Unit]]></text>
+					<text><![CDATA[Adjusted consumption]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="720" y="0" width="82" height="40" uuid="ebcce03d-a02b-418c-9a02-fee13efe8a0c">
@@ -103,7 +103,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="9" isBold="false"/>
 					</textElement>
-					<text><![CDATA[Consumption (in Packs)]]></text>
+					<text><![CDATA[Adjusted Consumption (in Packs)]]></text>
 				</staticText>
 				<staticText>
 					<reportElement x="44" y="0" width="100" height="40" uuid="38c45b7c-4950-468f-8027-a8524d239ffb">
@@ -244,7 +244,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement x="640" y="0" width="80" height="20" uuid="f463c503-d878-4a0f-a32a-711b3bee6a24"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{issues}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{adjustedConsumption}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="550" y="0" width="90" height="20" uuid="e87d5541-e8ba-49eb-ac05-35ed11254222"/>
@@ -254,7 +254,7 @@
 			<textField pattern="#0.00#" isBlankWhenNull="true">
 				<reportElement x="720" y="0" width="82" height="20" uuid="ef26c5fd-ee13-4f57-8b04-6b0d91dbb35a"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{consumption} == null ?0:$F{consumption}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{adjustedConsumptionInPacks} == null ?0:$F{adjustedConsumptionInPacks}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="44" y="0" width="100" height="20" uuid="6893755b-b6cc-4686-b95e-15797050705d"/>

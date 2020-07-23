@@ -937,7 +937,7 @@ public class InteractiveReportController extends BaseController {
     ) {
         Report report = reportManager.getReportByKey("quantification_extract");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<QuantificationExtractReport> quantificationExtractReportList = (List<QuantificationExtractReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        List<QuantificationExtractReport> quantificationExtractReportList = (List<QuantificationExtractReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), 1, 10);
         OpenLmisResponse pages = new OpenLmisResponse("rows",quantificationExtractReportList);
         return pages;
     }
