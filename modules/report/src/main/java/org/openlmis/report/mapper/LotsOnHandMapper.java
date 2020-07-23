@@ -193,7 +193,7 @@ public interface LotsOnHandMapper {
 
 
     @Select("select vvmst.name as vvm,lhl.id,s.facilityid as facilityId,lo.lotnumber as lotNumber,wh.name as warehouseName,lo.expirationdate as expirationDate,s.productid as productId, \n" +
-            "            ((coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=lhl.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where lotonhandid=lhl.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0))   totalQuantityOnHand , \n" +
+            "            ((coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = wl.ID and lotonhandid=lhl.lotonhandid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = wl.ID and lotonhandid=lhl.lotonhandid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = wl.ID and lotonhandid=lhl.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0))   totalQuantityOnHand , \n" +
             "            s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wl.name  as locationName from lot_on_hand_locations lhl  \n" +
             "            left join lots_on_hand h on (lhl.lotonhandid = h.id)  \n" +
             "            left join  stock_cards s on (s.id = h.stockcardid)  \n" +

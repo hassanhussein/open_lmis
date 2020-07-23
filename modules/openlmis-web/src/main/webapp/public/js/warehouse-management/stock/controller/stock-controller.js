@@ -168,7 +168,6 @@ return _.findWhere($scope.adjustmentReasons, {id:id});
 
 
 $scope.adjust=function(stockAdjust){
-console.log('am here');
 if ($scope.movementForm.$error.required ) {
             $scope.showError = true;
             $scope.error = 'form.error';
@@ -176,11 +175,19 @@ if ($scope.movementForm.$error.required ) {
             return;
         }
           var reason = getReason($scope.stockMovement.reason);
+
+        var reasonType=reason.type;
+        var quantity=parseInt($scope.stockMovement.quantity,10)
+
+        if(reasonType==="DEBIT"){
+            quantity=-quantity;
+        }
+
         var adjust={
         "lotId":$scope.stockMovement.lotOnHandId,
         "locationid":$scope.stockMovement.fromBin,
-        "quantity":parseInt($scope.stockMovement.quantity,10),
-        "type":reason.type,
+        "quantity":quantity,
+        "type":"ADJUSTMENT",
         "reason":reason.reason
         };
 

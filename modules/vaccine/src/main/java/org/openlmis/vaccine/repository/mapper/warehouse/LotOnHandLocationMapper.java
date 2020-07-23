@@ -57,7 +57,7 @@ public interface LotOnHandLocationMapper {
 
     @Select("select vvmst.name as vvm,\n" +
             "      to_char(max(lo.expirationDate), 'dd-MM-yyyy') expirationDate,p.id productId, S.ID stockCardId,\n" +
-            "                p.primaryName product, ((coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand, lotID, lotNumber,\n" +
+            "                p.primaryName product, ((coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where  lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand, lotID, lotNumber,\n" +
             "                 to_char(max(h.modifieddate), 'dd-MM-yyyy') lastUpdated, Lsc.name binLocation\n" +
             "           \n" +
             "                from lot_on_hand_locations L\n" +
@@ -161,7 +161,7 @@ public interface LotOnHandLocationMapper {
             "             WHERE warehouseId =  #{fromWarehouseId} and locationId = #{fromBinLocationId} and H.quantityOnHand > 0")
     List<HashMap<String, Object>>getAllByWareHouseAndBinLocation(@Param("fromWarehouseId") Long fromWarehouseId, @Param("fromBinLocationId") Long fromBinLocationId);
 
-    @Select("select lotOnHandId, h.lotId, lotNumber,((coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='CREDIT')-coalesce((select sum(quantity) from lot_location_entries lt where  lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
+    @Select("select lotOnHandId, h.lotId, lotNumber,((coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where  lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt where  lt.LOCATIONId = LSC.ID and lotonhandid=l.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0)) quantityOnHand,  p.id productId,p.primaryName productName, stockcardid from lot_on_hand_locations L\n" +
             "            join WMS_LOCATIONS Lsc ON L.LocationId = LSC.ID \n" +
             "          \n" +
             "            JOIN lots_on_hand h on L.LOTONHANDID =  H.ID\n" +
