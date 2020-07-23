@@ -215,4 +215,14 @@ public interface ELMISInterfaceMapper {
 
     @Select("Refresh materialized view ${tableName}")
     void refreshViewsByName(@Param("tableName") String tableName);
+
+    @Select(" Select * from interface_logs ")
+    List<InterfaceLogDTO>getAllLogs();
+
+    @Insert(" INSERT INTO public.interface_logs (\n" +
+            "            details, isSent, fileName, statusCode, createdDate)\n" +
+            "    VALUES (#{details}, #{isSent}, #{fileName}, #{statusCode}, NOW());")
+    @Options(useGeneratedKeys = true)
+    public Integer insertLogs(InterfaceLogDTO interfaceLog);
+
 }

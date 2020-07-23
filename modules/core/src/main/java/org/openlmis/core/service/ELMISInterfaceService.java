@@ -131,7 +131,7 @@ public class ELMISInterfaceService {
 
     }
 
-     @Scheduled(cron = "${batch.job.send.bed.net.data}")
+    // @Scheduled(cron = "${batch.job.send.bed.net.data}")
     ///@Scheduled(fixedRate = 900000)
     public void processMosquitoNetData() {
         //Populate Data
@@ -311,5 +311,15 @@ public class ELMISInterfaceService {
                 repository.refreshViewsByName(tableName);
             }
         }).start();
+    }
+
+    public List<InterfaceLogDTO> getAllLogs() {
+        return repository.getAllLogs();
+    }
+
+
+    public void saveDataToJSONFile() {
+
+
     }
 }

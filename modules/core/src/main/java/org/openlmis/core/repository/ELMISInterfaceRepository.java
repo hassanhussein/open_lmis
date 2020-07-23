@@ -202,4 +202,13 @@ public class ELMISInterfaceRepository {
     public void refreshViewsByName(String tableName) {
         mapper.refreshViewsByName(tableName);
     }
+
+    public List<InterfaceLogDTO> getAllLogs() {
+       return mapper.getAllLogs();
+    }
+
+    public Integer insertLogs(InterfaceLogDTO dto){
+       return mapper.insertLogs(dto);
+    }
+
 }
