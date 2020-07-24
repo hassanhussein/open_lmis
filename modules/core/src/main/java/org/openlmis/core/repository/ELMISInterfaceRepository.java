@@ -211,4 +211,7 @@ public class ELMISInterfaceRepository {
        return mapper.insertLogs(dto);
     }
 
+    public List<ELMISInterfaceDataSetDTO> getMosquitoNetDataBy() {
+        return mapper.getMosquitoNetDataBy();
+    }
 }

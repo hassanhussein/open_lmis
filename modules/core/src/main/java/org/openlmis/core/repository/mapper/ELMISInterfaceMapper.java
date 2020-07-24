@@ -225,4 +225,6 @@ public interface ELMISInterfaceMapper {
     @Options(useGeneratedKeys = true)
     public Integer insertLogs(InterfaceLogDTO interfaceLog);
 
+    @Select(" SELECT * FROM vw_bed_nets_data WHERE reporting_year >= (SELECT value::INT from configuration_settings where key = 'LLIN_STARTING_REPORTING_YEAR' LIMIT 1) and value > 0 ")
+    List<ELMISInterfaceDataSetDTO> getMosquitoNetDataBy();
 }

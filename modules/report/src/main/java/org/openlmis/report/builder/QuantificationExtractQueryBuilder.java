@@ -16,7 +16,7 @@ public class QuantificationExtractQueryBuilder {
 
     public static String getReportQuery(Map map) {
 
-           return  "    SELECT li.dispensingunit unit, pp.name periodName,PP.ID period,FT.CODE facilityCode,F.NAME facility,ft.name facilityType,p.code,p.primaryName product,pc.name category,\n" +
+           return  "    SELECT li.dispensingunit unit, pp.name periodName,PP.ID period,F.CODE facilityCode,F.NAME facility,ft.name facilityType,p.code,p.primaryName product,pc.name category,\n" +
                    "    SUM(li.packsize) uom,\n" +
                    "   -- p.code, p.primaryName || ' '|| coalesce(p.strength,'') ||' '|| coalesce(ds.code,'') || ' (' || coalesce(p.dispensingunit, '-') || ')' as product,\n" +
                    "    sum(li.quantityDispensed) issues, \n" +
@@ -38,7 +38,7 @@ public class QuantificationExtractQueryBuilder {
                   // "     WHERE pp.startDate::date <= '2019-01-01'::date and pp.endDate::date < '2019-12-30'::date and pp.scheduleId=2 AND r.programiD=1 and d.district_id = 482\n" +
                    "     and r.emergency = false and pp.enableorder = true\n" +
                    "    GROUP BY p.code, p.primaryName,\n" +
-                   "    pp.name, PP.ID,FT.CODE,F.NAME,ft.name, PC.NAME,li.dispensingunit\n" +
+                   "    pp.name, PP.ID,F.CODE,F.NAME,ft.name, PC.NAME,li.dispensingunit\n" +
                    "    ORDER BY p.primaryName ";
     }
 

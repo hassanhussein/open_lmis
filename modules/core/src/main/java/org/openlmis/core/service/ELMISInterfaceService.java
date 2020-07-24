@@ -14,6 +14,7 @@ package org.openlmis.core.service;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openlmis.core.domain.*;
@@ -21,20 +22,24 @@ import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.USER_AGENT;
@@ -50,6 +55,9 @@ public class ELMISInterfaceService {
     private ConfigurationSettingService settingService;
     @Autowired
     private FacilityService facilityService;
+
+    @Value("${interface.document.uploadLocation}")
+    private String fileStoreLocation;
 
     public static final String URL = "LLIN_DHIS_URL";
     private static final String URL2 = "LLIN_DHIS_SECOND_URL";
@@ -318,8 +326,107 @@ public class ELMISInterfaceService {
     }
 
 
-    public void saveDataToJSONFile() {
+    public String saveDataToJSONFile() throws IOException {
+
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        Date dateobj = new Date();
+
+        String filePath;
+        File directory = new File(this.fileStoreLocation);
+        boolean isFileExist = directory.exists();
+
+        if(!isFileExist) {
+
+            Path myPath = Paths.get(this.fileStoreLocation);
+            try {
+                Files.createDirectories(myPath);
+                System.out.println("Directory created");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        boolean isWritePermitted = directory.canWrite();
+
+        ELMISInterfaceDTO dataV = new ELMISInterfaceDTO();
+
+        filePath =this.fileStoreLocation+"dhis-"+df.format(dateobj)+".json";
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        List<ELMISInterfaceDataSetDTO> dto = repository.getMosquitoNetDataBy();
+
+        dataV.setDataValues(dto);
+        String jsonString =  mapper.writeValueAsString(dataV);
+
+        if(isWritePermitted) {
+
+            FileWriter file = new FileWriter(filePath);
+            file.write(jsonString);
+
+            file.flush();
+            file.close();
+
+            String username = settingService.getByKey(USERNAME).getValue();
+            String password = settingService.getByKey(PASSWORD).getValue();
+            String url = settingService.getByKey(URL).getValue();
+
+            sendBedNetData2(username, password, url, jsonString);
+
+        }else {
+            System.out.println("No Permission to Upload At Specified Path");
+        }
+
+        return  null;
+    }
+
+
+    private void sendBedNetData2(String username, String password, String url,String jsonInString) {
+        ObjectMapper mapper = new ObjectMapper();
+        java.net.URL obj = null;
+        try {
+            obj = new URL(url);
+
+            System.out.println("is HTTP");
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+
+            String userCredentials = username + ":" + password;
+            String basicAuth = "Basic " + new String(java.util.Base64.getEncoder().encode(userCredentials.getBytes()));
+            con.setRequestProperty("Authorization", basicAuth);
+            con.setRequestMethod("POST");
+            con.setRequestProperty("Content-Type", "application/json");
+            con.setDoOutput(true);
+            OutputStream wr = con.getOutputStream();
+            wr.write(jsonInString.getBytes("UTF-8"));
+
+            wr.flush();
+            wr.close();
+
+            int responseCode = con.getResponseCode();
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            System.out.println("Response from DHIS2");
+            System.out.println(response);
+            //print result
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }
+
 }

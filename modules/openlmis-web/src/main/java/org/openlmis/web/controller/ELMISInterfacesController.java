@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -118,4 +119,9 @@ public class ELMISInterfacesController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getAllMosquitoData(HttpServletRequest request) {
         return OpenLmisResponse.response("llin", elmisInterfaceService.processMosquitoNetData());
     }*/
+
+    @RequestMapping(value = "/rest-api/test-data", method = GET, headers = "Accept=application/json")
+    public ResponseEntity<OpenLmisResponse> saveDataToJSONFile(HttpServletRequest request) throws IOException {
+        return OpenLmisResponse.response("ProcessedData",elmisInterfaceService.saveDataToJSONFile());
+    }
 }
