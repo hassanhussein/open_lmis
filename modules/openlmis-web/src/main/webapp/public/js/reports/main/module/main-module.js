@@ -210,7 +210,7 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularTreeview','angularC
             reloadOnSearch: false
          }).when('/home-facility-quantification-extract-report', {
              controller: HomeFacilityQuantificationExtractController,
-             templateUrl: 'partials/home-facility-quantification-extract.html',
+             templateUrl: 'partials/home-facility-quantification-extract2.html',
               reloadOnSearch: false
              })
         .otherwise({redirectTo: '/adjustment-summary'});

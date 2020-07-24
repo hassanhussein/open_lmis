@@ -5,7 +5,6 @@ import org.openlmis.report.model.params.QuantificationExtractReportParam;
 import java.util.Map;
 
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
-import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.geoZoneIsFilteredBy;
 import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.scheduleFilteredBy;
 
 public class QuantificationExtractQueryBuilder {
