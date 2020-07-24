@@ -16,6 +16,7 @@ function HomeFacilityQuantificationExtractController($scope, $window , Quantific
 
 
 
+
 $scope.searchQuantificationReport = function(){
 
         $scope.filter.page = $scope.page;

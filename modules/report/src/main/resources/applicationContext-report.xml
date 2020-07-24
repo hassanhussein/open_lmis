@@ -727,7 +727,7 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="home_facility_aggregate_consumption"/>
-                    <property name="template" value="aggregate-consumption.jasper"/>
+                    <property name="template" value="facility-quantification-extract.jasper"/>
                     <property name="reportDataProvider" ref="aggregateConsumptionHomeFacilityReportDataProvider"/>
                     <property name="id" value="RP-Aggregate_Consumption"/>
                     <property name="name" value="Aggregate Consumption Report"/>
@@ -746,9 +746,9 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="home_facility_quantification_extract"/>
-                    <property name="template" value="aggregate-consumption_extract.jasper"/>
+                    <property name="template" value="facility-quantification-extract2.jasper"/>
                     <property name="reportDataProvider" ref="quantificationExtractHomeFacilityReportServiceDataProvider"/>
-                    <property name="id" value="quantification_extract_report"/>
+                    <property name="id" value="facility-quantification-extract"/>
                     <property name="name" value="Quantification Extract Report"/>
                     <property name="title" value="report.title.quantification.extract.report"/>
                     <property name="version" value="1.0"/>
