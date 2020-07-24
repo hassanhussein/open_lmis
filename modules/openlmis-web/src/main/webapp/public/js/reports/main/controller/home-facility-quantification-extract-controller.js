@@ -5,7 +5,7 @@ function HomeFacilityQuantificationExtractController($scope, $window , Quantific
         $scope.filter.pdformat = 1;
          console.log($scope.filter);
         var params = jQuery.param($scope.getSanitizedParameter());
-        var url = '/reports/download/quantification_extract/' + type + '?' + params;
+        var url = '/reports/download/home_facility_quantification_extract/' + type + '?' + params;
         $window.open(url, '_blank');
     };
 
@@ -13,7 +13,6 @@ function HomeFacilityQuantificationExtractController($scope, $window , Quantific
     $scope.pageSize = 10;
     $scope.page = 1;
     $scope.filter = {};
-
 
 
 

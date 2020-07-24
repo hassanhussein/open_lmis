@@ -746,7 +746,7 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="home_facility_quantification_extract"/>
-                    <property name="template" value="facility-quantification-extract2.jasper"/>
+                    <property name="template" value="aggregate-consumption_extract.jasper"/>
                     <property name="reportDataProvider" ref="quantificationExtractHomeFacilityReportServiceDataProvider"/>
                     <property name="id" value="facility-quantification-extract"/>
                     <property name="name" value="Quantification Extract Report"/>
