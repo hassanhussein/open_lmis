@@ -21,7 +21,7 @@ CREATE TABLE public.embed_menu
     modifiedby integer,
     modifieddate timestamp without time zone DEFAULT now(),
     CONSTRAINT embed_menu_pkey PRIMARY KEY (id),
-   CONSTRAINT embed_menu_parentid_fkey FOREIGN KEY (parentid)
+   CONSTRAINT embed_menu_parentid_fkey FOREIGN KEY (parentMenu)
         REFERENCES public.embed_menu(id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
