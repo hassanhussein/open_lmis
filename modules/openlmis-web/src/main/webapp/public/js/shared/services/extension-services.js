@@ -1575,13 +1575,4 @@ services.factory('AuditActions', function ($resource) {
     return $resource('/reports/audit_actions.json', {}, {});
 });
 
-services.factory('MetabaseMenus', function ($resource) {
-    return $resource('/metabase-integration/menus.json', {}, {});
-});
-services.factory('MetabaseFlatMenus', function ($resource) {
-    return $resource('/metabase-integration/flat/menus.json', {}, {});
-});
 
-services.factory('MetabasePages', function ($resource) {
-    return $resource('/metabase-integration/pages.json', {}, {});
-});

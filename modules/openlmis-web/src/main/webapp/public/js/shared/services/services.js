@@ -555,3 +555,13 @@ services.factory('RefreshMaterializedViews', function ($resource) {
 services.factory('RejectionReasons', function ($resource) {
     return $resource('/requisitions/rejection-reasons.json', {}, {});
 });
+services.factory('MetabaseMenus', function ($resource) {
+    return $resource('/metabase-integration/menus.json', {}, {});
+});
+services.factory('MetabaseFlatMenus', function ($resource) {
+    return $resource('/metabase-integration/flat/menus.json', {}, {});
+});
+
+services.factory('MetabasePages', function ($resource) {
+    return $resource('/metabase-integration/pages.json', {}, {});
+});

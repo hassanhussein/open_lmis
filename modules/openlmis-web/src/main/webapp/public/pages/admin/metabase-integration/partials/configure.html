@@ -57,7 +57,7 @@
                 <div><input ng-disabled="true" type="text" ng-model="selectedNode.name"></div>
 
                 <div class="span2 fluid-grid-cell">
-                    <input ng-show="selectedNode.menuItem" type="button" class="btn btn-primary btn-small "
+                    <input ng-show="selectedNode==undefined || selectedNode.menuItem" type="button" class="btn btn-primary btn-small "
                            id="interfaceSave"
                            ng-click="openAddEditMetabaseItemDialog(true)"
                            openlmis-message="button.add"/>
@@ -65,6 +65,10 @@
                            class="btn btn-small"
                            ng-click="openAddEditMetabaseItemDialog(false)"
                            openlmis-message="button.edit"/>
+                    <input id="clearInterfaceDatasets{{$index}}" type="button"
+                           class="btn btn-small"
+                           ng-click="clear()"
+                           openlmis-message="button.clear"/>
                 </div>
             </div>
         </div>

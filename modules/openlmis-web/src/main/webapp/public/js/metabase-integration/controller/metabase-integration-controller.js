@@ -7,6 +7,9 @@ function ConfigureMetabaseIntegrationController($scope, MetabaseMenus, MetabaseF
         },
         items: ["contains", "startswith"]
     };
+    $scope.clear= function () {
+        $scope.selectedNode=undefined;
+    };
     $scope.openAddEditMetabaseItemDialog = function (isAddingNew) {
 
         var modalInstance = $modal.open({
