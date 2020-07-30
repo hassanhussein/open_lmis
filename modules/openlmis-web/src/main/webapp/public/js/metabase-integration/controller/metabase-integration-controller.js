@@ -1,4 +1,4 @@
-function ConfigureMetabaseIntegrationController($scope, MetabaseMenus, MetabaseFlatMenus, $modal) {
+function ConfigureMetabaseIntegrationController($scope, $location, $route, MetabaseMenus, MetabaseFlatMenus, $modal) {
     $scope.searchMode = "contains";
     loadMenuList();
     $scope.searchModeOptions = {
@@ -7,8 +7,8 @@ function ConfigureMetabaseIntegrationController($scope, MetabaseMenus, MetabaseF
         },
         items: ["contains", "startswith"]
     };
-    $scope.clear= function () {
-        $scope.selectedNode=undefined;
+    $scope.clear = function () {
+        $scope.selectedNode = undefined;
     };
     $scope.openAddEditMetabaseItemDialog = function (isAddingNew) {
 
@@ -51,6 +51,9 @@ function ConfigureMetabaseIntegrationController($scope, MetabaseMenus, MetabaseF
                 onItemClick: function (o) {
                     $scope.selectedNode = o.itemData;
                 },
+                reload: function (items) {
+
+                },
                 items: $scope.menus,
                 width: 500,
                 searchEnabled: true
@@ -59,8 +62,12 @@ function ConfigureMetabaseIntegrationController($scope, MetabaseMenus, MetabaseF
 
     }
 
-    var saveCallBack = function () {
+    var saveCallBack = function (data) {
+
         loadMenuList();
+        $route.reload();
+        $scope.message = data.success;
+
     };
 }
 ConfigureMetabaseIntegrationController.resolve = {

@@ -59,7 +59,7 @@ function MetabaseIntegrationModalInstanceController($scope, MetabaseMenus, Metab
             };
         var createSuccessCallback = function (data) {
             $modalInstance.close();
-            callback();
+            callback(data);
         };
 
         var errorCallback = function (data) {

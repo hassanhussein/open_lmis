@@ -15,9 +15,11 @@
     #treeview {
         bottom: 0;
     }
-    .dx-texteditor-input-container{
-        height:30px !important;
+
+    .dx-texteditor-input-container {
+        height: 30px !important;
     }
+
     .options {
         padding: 20px;
         position: absolute;
@@ -45,39 +47,45 @@
         margin-top: 5px;
     }
 </style>
+<div>
+    <div class="alert alert-success" id="saveSuccessMsgDiv" ng-show="message!=undefined && message.length>0" >
+        <span ng-bind="message"></span>.&nbsp;&nbsp;
+        <!--<a ng-href="#/edit/{{facilityId}}" openlmis-message="search.viewHere"></a>-->
+    </div>
+    <div class="dx-viewport demo-container">
 
-<div class="dx-viewport demo-container">
+        <div class="demo-container">
+            <div id="treeview" dx-tree-view="treeViewOptions"></div>
+            <div class="options">
+                <div class="caption">Selected</div>
+                <div class="option">
 
-    <div class="demo-container" >
-        <div id="treeview" dx-tree-view="treeViewOptions"></div>
-        <div class="options">
-            <div class="caption">Selected</div>
-            <div class="option">
+                    <div><input ng-disabled="true" type="text" ng-model="selectedNode.name"></div>
 
-                <div><input ng-disabled="true" type="text" ng-model="selectedNode.name"></div>
-
-                <div class="span2 fluid-grid-cell">
-                    <input ng-show="selectedNode==undefined || selectedNode.menuItem" type="button" class="btn btn-primary btn-small "
-                           id="interfaceSave"
-                           ng-click="openAddEditMetabaseItemDialog(true)"
-                           openlmis-message="button.add"/>
-                    <input id="cancleEditInterfaceDatasets{{$index}}" type="button"
-                           class="btn btn-small"
-                           ng-click="openAddEditMetabaseItemDialog(false)"
-                           openlmis-message="button.edit"/>
-                    <input id="clearInterfaceDatasets{{$index}}" type="button"
-                           class="btn btn-small"
-                           ng-click="clear()"
-                           openlmis-message="button.clear"/>
+                    <div class="span2 fluid-grid-cell">
+                        <input ng-show="selectedNode==undefined || selectedNode.menuItem" type="button"
+                               class="btn btn-primary btn-small "
+                               id="interfaceSave"
+                               ng-click="openAddEditMetabaseItemDialog(true)"
+                               openlmis-message="button.add"/>
+                        <input id="cancleEditInterfaceDatasets{{$index}}" type="button"
+                               class="btn btn-small"
+                               ng-click="openAddEditMetabaseItemDialog(false)"
+                               openlmis-message="button.edit"/>
+                        <input id="clearInterfaceDatasets{{$index}}" type="button"
+                               class="btn btn-small"
+                               ng-click="clear()"
+                               openlmis-message="button.clear"/>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div class="regiment-list-items">
+
+        </div>
+        <ng-include
+                src="'/public/pages/admin/metabase-integration/partials/MetabaseIntegrationModal.html'"></ng-include>
     </div>
 
-    <div  class="regiment-list-items">
-
-    </div>
-    <ng-include
-            src="'/public/pages/admin/metabase-integration/partials/MetabaseIntegrationModal.html'"></ng-include>
 </div>
-
