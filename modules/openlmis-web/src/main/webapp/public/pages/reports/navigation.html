@@ -15,6 +15,7 @@
 
 <div ng-if="!useFlatReportMenu" id="report-submenu" class="submenu" ui-nav>
   <ul>
+    <li class="has-children" ng-include="'/public/pages/admin/metabase-integration/navigation.html'"></li>
     <li ng-show="hasPermission('VIEW_VACCINE_REPORT')" class="has-children">
       <a href="" openlmis-message="menu.report.routine.immunization"></a>
       <div class="submenu">
@@ -339,6 +340,7 @@
       </div>
     </li>
 
+
     <li class="has-children">
 
       <!--<div><ng-include src="'/public/pages/reports/mozambique/reports.html'"/></div>-->
@@ -350,6 +352,7 @@
     <li ng-show="hasReportingPermission()">
       <a id="other-reports-menu" ng-href="/public/pages/report/index.html" openlmis-message="menu.report.others"></a>
     </li>
+
     <li class="beak"></li>
 
 

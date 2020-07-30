@@ -1,9 +1,10 @@
-function MetabaseDashboardConroller($scope, $sce, dashboardUrls) {
+function MetabaseDashboardConroller($scope, $sce,metabaseNavService, localStorageService,dashboardUrls) {
     $scope.dashboardUrls = dashboardUrls;
+    var a=localStorageService.get("metabasePage");
     $scope.trustSrc = function (src) {
         return $sce.trustAsResourceUrl(src);
     };
-    $scope.testUrl = {src: $scope.dashboardUrls[0].value };
+    $scope.testUrl = {src: a };
 
 }
 

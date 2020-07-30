@@ -35,7 +35,7 @@ CREATE TABLE public.metabase_page
     name character varying(200) COLLATE pg_catalog."default" NOT NULL,
     menuid integer,
     icon character varying(50) COLLATE pg_catalog."default",
-	urllink character varying(50) COLLATE pg_catalog."default",
+	linkurl character varying(50) COLLATE pg_catalog."default",
 	rights character varying(500) COLLATE pg_catalog."default",
 	description character varying(500) COLLATE pg_catalog."default",
     createdby integer,

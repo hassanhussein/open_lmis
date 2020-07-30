@@ -565,3 +565,18 @@ services.factory('MetabaseFlatMenus', function ($resource) {
 services.factory('MetabasePages', function ($resource) {
     return $resource('/metabase-integration/pages.json', {}, {});
 });
+services.factory('metabaseNavService', function() {
+    var metabasePage = {};
+
+   var setData = function(data) {
+        metabasePage=data;
+    };
+    var getData = function() {
+        return metabasePage;
+    };
+
+    return {
+        setData: setData,
+        getData: getData
+    };
+});

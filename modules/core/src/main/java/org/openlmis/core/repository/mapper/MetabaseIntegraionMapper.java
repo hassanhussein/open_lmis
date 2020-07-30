@@ -34,6 +34,9 @@ public interface MetabaseIntegraionMapper {
     @Select(" select * from embed_menu")
     public List<MetabaseMenu> loadMetabaseMenus();
 
+    @Select(" select * from embed_menu where id =#{id}")
+    public MetabaseMenu getMenuById(Long param);
+
     @Delete("Delete from embed_menu where id = #{id} ")
     void deleteMenu(MetabaseMenu menu);
 
@@ -43,8 +46,9 @@ public interface MetabaseIntegraionMapper {
             "     icon = #{icon}," +
             "     menuitem=#{menuBarItem}," +
             "     description= #{description}," +
-            "     modifiedDate= #{modifiedDate}" +
-            "     modifiedBy=#{modifiedBy}")
+            "     modifiedDate= #{modifiedDate}," +
+            "     modifiedBy=#{modifiedBy}" +
+            " where id = #{id}")
     void modifyMenu(MetabaseMenu menu);
 
 
@@ -59,6 +63,7 @@ public interface MetabaseIntegraionMapper {
     @Select(" select * from metabase_page")
     public List<MetabasePage> loadMetabasePages();
 
+
     @Delete("Delete from metabase_page where id = #{id} ")
     void removePage(MetabasePage page);
 
@@ -66,12 +71,19 @@ public interface MetabaseIntegraionMapper {
             " set name = #{name} ," +
             "     menuid =#{menu.id}," +
             "     icon = #{icon}," +
-            "     urllink=#{linkUrl}," +
+            "     linkUrl=#{linkUrl}," +
             "     rights= #{rights}," +
             "     description= #{description}," +
-            "     modifiedDate= #{modifiedDate}" +
-            "     modifiedBy=#{modifiedBy}")
+            "     modifiedDate= #{modifiedDate}," +
+            "     modifiedBy=#{modifiedBy}" +
+            " where id = #{id}")
     void updatePage(MetabasePage page);
+
     @Select(" select * from metabase_page where menuid=#{id}")
+    @Results(value = {
+
+            @Result(property = "menu", column = "menuid", javaType = MetabaseMenu.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.MetabaseIntegraionMapper.getMenuById")),
+    })
     List<MetabasePage> loadMenuPageList(MetabaseMenu menu);
 }

@@ -14,7 +14,7 @@
 
 function MetabaseIntegrationModalInstanceController($scope, MetabaseMenus, MetabasePages, messageService, $modalInstance, items) {
     $scope.isAddingNew = items.isAddingNew;
-    $scope.menu={};
+    $scope.menu = {};
     if ($scope.isAddingNew === true) {
         configureForNew();
     }
@@ -24,25 +24,37 @@ function MetabaseIntegrationModalInstanceController($scope, MetabaseMenus, Metab
     $scope.isPage = false;
     var callback = items.callback;
 
-    function configureForEdit() {
 
+    function configureForEdit() {
+        var findMenuById = function (id) {
+            return _.findWhere(items.menuList, {id: id});
+        };
         $scope.menu = items.parentMenu;
-        $scope.isPage=!$scope.menu.menuItem;
-        $scope.menu.isPage=$scope.isPage;
-        $scope.selectedItem = $scope.menu.menuItem === true ? $scope.menu.menu : $scope.menu.parentMenu;
+        $scope.isPage = !$scope.menu.menuItem;
+        $scope.menu.isPage = $scope.isPage;
+        $scope.selectedItem = $scope.menu.menuItem === false ? $scope.menu.menu : findMenuById($scope.menu.parentMenu);
     }
+
     function configureForNew() {
 
         $scope.selectedItem = items.parentMenu;
     }
+
     $scope.save = function (menuItem, selectedItem) {
         $scope.selectedItem = selectedItem;
+
         var obj = menuItem.isPage === true ? {
-            name: menuItem.name, menu: $scope.selectedItem,rights:menuItem.rights,
-            linkUrl: menuItem.linkUrl, description: menuItem.description
+            id: menuItem.id,
+            name: menuItem.name,
+            menu: $scope.selectedItem,
+            rights: menuItem.rights,
+            linkUrl: menuItem.linkUrl,
+            description: menuItem.description
         } :
             {
-                name: menuItem.name, parentMenu: $scope.selectedItem.id,
+                id: menuItem.id,
+                name: menuItem.name,
+                parentMenu: utils.isNullOrUndefined($scope.selectedItem) ? null : $scope.selectedItem.id,
                 description: menuItem.description
             };
         var createSuccessCallback = function (data) {

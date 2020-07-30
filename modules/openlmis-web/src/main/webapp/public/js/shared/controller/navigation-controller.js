@@ -8,85 +8,93 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, CustomReportList, $timeout
+function NavigationController($scope, MetabaseMenus, metabaseNavService, ConfigSettingsByKey, localStorageService, Locales, $location, $window, CustomReportList, $timeout) {
 
-) {
-
-  ConfigSettingsByKey.get({key: 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE'}, function (data){
-    $scope.homePage =  data.settings.value;
-  });
-
-  $scope.loadRights = function () {
-    $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
-
-    $(".navigation > ul").show();
-  }();
-
-  $scope.showSubmenu = function () {
-    $(".navigation li:not(.navgroup)").on("click", function () {
-      $(this).children("ul").show();
+    ConfigSettingsByKey.get({key: 'LOGIN_SUCCESS_DEFAULT_LANDING_PAGE'}, function (data) {
+        $scope.homePage = data.settings.value;
     });
-  }();
 
-  $scope.hasReportingPermission = function () {
-    if ($scope.rights !== undefined && $scope.rights !== null) {
-      var rights = JSON.parse($scope.rights);
-      var rightTypes = _.pluck(rights, 'type');
-      return rightTypes.indexOf('REPORTING') > -1;
-    }
-    return false;
-  };
-$scope.homeLinkClicked=function(){
-    $window.location.href= $scope.homePage;
-};
-  $scope.hasPermission = function (permission) {
-    if ($scope.rights !== undefined && $scope.rights !== null) {
-      var rights = JSON.parse($scope.rights);
-      var rightNames = _.pluck(rights, 'name');
-      return rightNames.indexOf(permission) > -1;
-    }
-    return false;
-  };
+    $scope.loadRights = function () {
+        $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 
-  $scope.goOnline = function () {
-    Locales.get({}, function (data) {
-      if (data.locales) {
-        var currentURI = $location.absUrl();
-        if (currentURI.endsWith('offline.html')) {
-          $window.location = currentURI.replace('public/pages/offline.html', '');
+        $(".navigation > ul").show();
+    }();
+
+    $scope.showSubmenu = function () {
+        $(".navigation li:not(.navgroup)").on("click", function () {
+            $(this).children("ul").show();
+        });
+    }();
+
+    $scope.hasReportingPermission = function () {
+        if ($scope.rights !== undefined && $scope.rights !== null) {
+            var rights = JSON.parse($scope.rights);
+            var rightTypes = _.pluck(rights, 'type');
+            return rightTypes.indexOf('REPORTING') > -1;
         }
-        else {
-          $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
+        return false;
+    };
+    $scope.homeLinkClicked = function () {
+        $window.location.href = $scope.homePage;
+    };
+    $scope.hasPermission = function (permission) {
+        if ($scope.rights !== undefined && $scope.rights !== null) {
+            var rights = JSON.parse($scope.rights);
+            var rightNames = _.pluck(rights, 'name');
+            return rightNames.indexOf(permission) > -1;
         }
-        $scope.showNetworkError = false;
-        return;
-      }
-      $scope.showNetworkError = true;
-    }, {});
-  };
+        return false;
+    };
 
-  ConfigSettingsByKey.get({key: 'USE_NEW_REPORT_MENU'}, function (data){
-    if(data.settings !== null)
-      $scope.useFlatReportMenu =  data.settings.value  == 'true' ? true : false;
+    $scope.goOnline = function () {
+        Locales.get({}, function (data) {
+            if (data.locales) {
+                var currentURI = $location.absUrl();
+                if (currentURI.endsWith('offline.html')) {
+                    $window.location = currentURI.replace('public/pages/offline.html', '');
+                }
+                else {
+                    $window.location = currentURI.replace('offline.html', 'index.html').replace('#/list', '#/manage');
+                }
+                $scope.showNetworkError = false;
+                return;
+            }
+            $scope.showNetworkError = true;
+        }, {});
+    };
 
-  });
+    ConfigSettingsByKey.get({key: 'USE_NEW_REPORT_MENU'}, function (data) {
+        if (data.settings !== null)
+            $scope.useFlatReportMenu = data.settings.value == 'true' ? true : false;
 
-  $scope.getCustomReportsList = function() {
-      CustomReportList.get({}, function (list) {
-          $scope.customReports =_.groupBy(list.reports,'category');
-      });
-  }();
+    });
 
-  function hideEmptyReportCategory(){
-      $("#all-report-lists li.report-children ul").each(
-          function() {
-              var elem = $(this);
-              if(elem.children().filter(".ng-hide").length == elem.children().length)
-                  elem.parent().hide();
-          }
-      );
-  }
-  $timeout(hideEmptyReportCategory, 0);
+    $scope.getCustomReportsList = function () {
+        CustomReportList.get({}, function (list) {
+            $scope.customReports = _.groupBy(list.reports, 'category');
+        });
+    }();
+
+    function hideEmptyReportCategory() {
+        $("#all-report-lists li.report-children ul").each(
+            function () {
+                var elem = $(this);
+                if (elem.children().filter(".ng-hide").length == elem.children().length)
+                    elem.parent().hide();
+            }
+        );
+    }
+
+    $timeout(hideEmptyReportCategory, 0);
+
+    $scope.loadMetabasePage = function (page) {
+        localStorageService.add("metabasePage",page.linkUrl);
+        // $location.path( navigateTo);
 
 
+    };
+
+    MetabaseMenus.get(function (data) {
+        $scope.metabaseMenuTree = data.menus;
+    });
 }
