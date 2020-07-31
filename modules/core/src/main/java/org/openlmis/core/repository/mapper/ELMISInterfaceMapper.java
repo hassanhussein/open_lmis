@@ -19,9 +19,11 @@ import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.dto.*;
+import org.openlmis.core.dto.covid.productDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -227,4 +229,14 @@ public interface ELMISInterfaceMapper {
 
     @Select(" SELECT * FROM vw_bed_nets_data WHERE reporting_year >= (SELECT value::INT from configuration_settings where key = 'LLIN_STARTING_REPORTING_YEAR' LIMIT 1) and value > 0 ")
     List<ELMISInterfaceDataSetDTO> getMosquitoNetDataBy();
+
+
+    @Select("\n" +
+            "select p.id, P.PRIMARYNAME as \"name\", P.CODE PRODUCT_CODE, P.PRIMARYNAME description, pc.name category,'COVID19' as \"program\"  from program_products pp \n" +
+            "\n" +
+            "JOIN products p on pp.productId = P.ID\n" +
+            "join product_categories pc ON pp.productCategoryID = pc.id\n" +
+            "JOIN programs pr ON pp.programId = PR.ID\n" +
+            "WHERE PROGRAMID = 12")
+    List<productDTO> getProductListForCovid();
 }

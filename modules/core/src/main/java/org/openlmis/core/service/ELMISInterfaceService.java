@@ -13,12 +13,14 @@
 package org.openlmis.core.service;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.*;
+import org.openlmis.core.dto.covid.productDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -429,4 +431,20 @@ public class ELMISInterfaceService {
 
     }
 
+    public String sendProductCovidData() throws JsonProcessingException {
+
+        String username="";
+        String password="";
+        String url ="http://41.221.51.164:4000/api/v1/sync/products/bulk";
+        String jsonString;
+
+        List<productDTO> productDTOList = repository.getProductListForCovid();
+        ObjectMapper mapper = new ObjectMapper();
+       jsonString = mapper.writeValueAsString(productDTOList);
+        System.out.println("string values");
+
+        sendBedNetData2(username, password,url,jsonString);
+
+        return null;
+    }
 }

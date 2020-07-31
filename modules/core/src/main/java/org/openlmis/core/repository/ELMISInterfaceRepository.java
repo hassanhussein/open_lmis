@@ -19,6 +19,7 @@ import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.dto.*;
+import org.openlmis.core.dto.covid.productDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ELMISInterfaceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -213,5 +215,9 @@ public class ELMISInterfaceRepository {
 
     public List<ELMISInterfaceDataSetDTO> getMosquitoNetDataBy() {
         return mapper.getMosquitoNetDataBy();
+    }
+
+    public List<productDTO> getProductListForCovid() {
+        return mapper.getProductListForCovid();
     }
 }

@@ -124,4 +124,14 @@ public class ELMISInterfacesController extends BaseController {
     public ResponseEntity<OpenLmisResponse> saveDataToJSONFile(HttpServletRequest request) throws IOException {
         return OpenLmisResponse.response("ProcessedData",elmisInterfaceService.saveDataToJSONFile());
     }
+
+    @RequestMapping(value = "/rest-api/covid-product", method = GET, headers = "Accept=application/json")
+    public ResponseEntity<OpenLmisResponse> sendCovidData(HttpServletRequest request) throws IOException {
+        return OpenLmisResponse.response("productList",elmisInterfaceService.sendProductCovidData());
+    }
+
+    @RequestMapping(value = "/rest-api/getLLINLogs", method = GET, headers = "Accept=application/json")
+    public ResponseEntity<OpenLmisResponse> getLLINLogs(HttpServletRequest request) {
+        return OpenLmisResponse.response("logs", elmisInterfaceService.getAllLogs());
+    }
 }
