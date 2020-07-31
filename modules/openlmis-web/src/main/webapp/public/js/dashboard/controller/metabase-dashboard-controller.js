@@ -5,7 +5,13 @@ function MetabaseDashboardConroller($scope, $sce,metabaseNavService, localStorag
         return $sce.trustAsResourceUrl(src);
     };
     $scope.testUrl = {src: a };
-
+    $('#externalPage').ready(function () {
+        $('#loadingMessage').css('display', 'block');
+        $scope.inprogress=true;
+    });
+    $('#externalPage').load(function () {
+        $('#loadingMessage').css('display', 'none');
+    });
 }
 
 MetabaseDashboardConroller.resolve = {
