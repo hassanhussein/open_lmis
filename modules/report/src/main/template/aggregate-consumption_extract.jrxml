@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consumption-extraction" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="consumption-extraction" language="groovy" pageWidth="922" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -34,16 +34,17 @@
 	<field name="adjustedConsumption" class="java.lang.Integer"/>
 	<field name="unit" class="java.lang.String"/>
 	<field name="uom" class="java.lang.Integer"/>
+	<field name="issues" class="java.lang.Integer"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
 	<variable name="consumption_1" class="java.math.BigDecimal" resetType="Group" resetGroup="GroupByProduct"/>
 	<group name="GroupByProduct" isStartNewPage="true" isReprintHeaderOnEachPage="true">
 		<groupHeader>
-			<band height="42">
+			<band height="40">
 				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 				<staticText>
-					<reportElement mode="Opaque" x="0" y="0" width="802" height="40" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
+					<reportElement mode="Opaque" x="0" y="0" width="880" height="40" forecolor="#FFFFFF" backcolor="#3D9297" uuid="e587f413-b748-4b6c-8a34-93bb08817a0b">
 						<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
@@ -53,7 +54,7 @@
 					<text><![CDATA[]]></text>
 				</staticText>
 				<staticText>
-					<reportElement mode="Transparent" x="0" y="0" width="45" height="40" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b">
+					<reportElement mode="Transparent" x="0" y="0" width="44" height="40" forecolor="#000000" backcolor="#333333" uuid="57f0b09b-7281-4a6e-bc88-36c28580be8b">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
@@ -85,7 +86,7 @@
 					<text><![CDATA[Unit of measure]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="640" y="0" width="80" height="40" uuid="4cd7e846-0a2e-49f4-814b-9e7b01cd3b99">
+					<reportElement x="720" y="0" width="80" height="40" uuid="4cd7e846-0a2e-49f4-814b-9e7b01cd3b99">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 					</reportElement>
@@ -95,7 +96,7 @@
 					<text><![CDATA[Adjusted consumption]]></text>
 				</staticText>
 				<staticText>
-					<reportElement x="720" y="0" width="82" height="40" uuid="ebcce03d-a02b-418c-9a02-fee13efe8a0c">
+					<reportElement x="800" y="0" width="82" height="40" uuid="ebcce03d-a02b-418c-9a02-fee13efe8a0c">
 						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
 						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
@@ -160,13 +161,23 @@
 					</textElement>
 					<text><![CDATA[Unit]]></text>
 				</staticText>
+				<staticText>
+					<reportElement x="640" y="0" width="80" height="40" uuid="68f9b28f-cf71-431b-a0b4-b9ce6a58c6c3">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="9" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Consumption in smallest unit]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 	</group>
 	<pageHeader>
 		<band height="80">
 			<subreport>
-				<reportElement x="0" y="0" width="802" height="79" isRemoveLineWhenBlank="true" uuid="987d303c-2eef-4a90-9f0b-120bdb31a9d7">
+				<reportElement x="0" y="0" width="880" height="79" isRemoveLineWhenBlank="true" uuid="987d303c-2eef-4a90-9f0b-120bdb31a9d7">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="PAGE_NO">
@@ -211,20 +222,20 @@
 				<textFieldExpression><![CDATA[$P{REPORT_MESSAGE_WHEN_NO_DATA}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement mode="Opaque" x="0" y="0" width="802" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
+				<reportElement mode="Opaque" x="0" y="0" width="880" height="20" backcolor="#F4F4F4" uuid="9a174af8-d2cb-46c8-b19f-0b17e1be585b">
 					<printWhenExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></printWhenExpression>
 				</reportElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="45" height="20" printWhenGroupChanges="GroupByProduct" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
+				<reportElement x="0" y="0" width="44" height="20" printWhenGroupChanges="GroupByProduct" uuid="29ff9399-7f59-451b-b8df-f1f6240f4a60"/>
 				<textElement verticalAlignment="Middle">
 					<paragraph leftIndent="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="19" width="801" height="1" forecolor="#C1C1C1" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
+				<reportElement x="0" y="19" width="880" height="1" forecolor="#C1C1C1" uuid="83a87452-92e8-46d4-bcdd-314f90e18dc7">
 					<printWhenExpression><![CDATA[$P{REPORT_OUTPUT_OPTION}.toUpperCase() != "XLS"]]></printWhenExpression>
 				</reportElement>
 				<graphicElement>
@@ -242,7 +253,7 @@
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="640" y="0" width="80" height="20" uuid="f463c503-d878-4a0f-a32a-711b3bee6a24"/>
+				<reportElement x="720" y="0" width="80" height="20" uuid="f463c503-d878-4a0f-a32a-711b3bee6a24"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{adjustedConsumption}]]></textFieldExpression>
 			</textField>
@@ -252,7 +263,7 @@
 				<textFieldExpression><![CDATA[$F{uom}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00#" isBlankWhenNull="true">
-				<reportElement x="720" y="0" width="82" height="20" uuid="ef26c5fd-ee13-4f57-8b04-6b0d91dbb35a"/>
+				<reportElement x="800" y="0" width="82" height="20" uuid="ef26c5fd-ee13-4f57-8b04-6b0d91dbb35a"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{adjustedConsumptionInPacks} == null ?0:$F{adjustedConsumptionInPacks}]]></textFieldExpression>
 			</textField>
@@ -275,6 +286,11 @@
 				<reportElement x="500" y="0" width="50" height="20" uuid="bc2e9122-3927-4135-a33d-f694cd7a1177"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="640" y="0" width="80" height="20" uuid="cb24437d-fea6-4ae3-ac54-6bcabd9e9d5c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{issues}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
