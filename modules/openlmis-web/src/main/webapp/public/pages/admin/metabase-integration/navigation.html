@@ -1,4 +1,5 @@
 <script type="text/ng-template" id="categoryTree">
+
     <li ng-class="{'has-children': category.items.length>0}">
         <span ng-if="category.isMenuItem"><a href="javascript: void(0);">{{ category.name }}</a></span>
         <span ng-if="!category.isMenuItem"><a ng-click="loadMetabasePage(category)" href="/public/pages/dashboard/index_metabase.html" >{{ category.name }}</a></span>
@@ -12,5 +13,5 @@
     </li>
 </script>
 <ul>
-    <li class="has-children" ng-repeat="category in metabaseMenuTree" ng-include="'categoryTree'"></li>
+    <li class="has-children" ng-repeat="category in loadTargetMenuList(callTarget)" ng-include="'categoryTree'"></li>
 </ul>

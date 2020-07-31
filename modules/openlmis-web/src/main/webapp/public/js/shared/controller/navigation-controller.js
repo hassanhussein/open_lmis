@@ -88,13 +88,20 @@ function NavigationController($scope, MetabaseMenus, metabaseNavService, ConfigS
     $timeout(hideEmptyReportCategory, 0);
 
     $scope.loadMetabasePage = function (page) {
-        localStorageService.add("metabasePage",page.linkUrl);
+        localStorageService.add("metabasePage", page.linkUrl);
         // $location.path( navigateTo);
 
 
+    };
+    $scope.loadTargetMenuList = function (target) {
+      return   $scope.metabaseMenuTree.filter( function (m,i,arr) {
+          return m.name===target;
+
+      });
     };
 
     MetabaseMenus.get(function (data) {
         $scope.metabaseMenuTree = data.menus;
     });
+
 }

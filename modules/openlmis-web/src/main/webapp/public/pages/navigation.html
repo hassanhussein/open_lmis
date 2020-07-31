@@ -550,6 +550,8 @@
               openlmis-message="link.dashboard"></a>
           <div class="submenu">
               <ul>
+                  <li ng-repeat="callTarget in ['Dashboard']" class="has-children"
+                      ng-include="'/public/pages/admin/metabase-integration/navigation.html'"></li>
                   <li >
                       <a href="/public/pages/dashboard/index_metabase.html"
                       >Emergency Order Analysis Dashboard</a>
