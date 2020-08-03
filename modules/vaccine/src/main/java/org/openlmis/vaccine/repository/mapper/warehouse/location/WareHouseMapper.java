@@ -119,4 +119,15 @@ public interface WareHouseMapper {
                     many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper.getByWarehouseId"))
     })
     List<WarehouseLocationDTO> getWarehouseByBinLocation();
+
+    @Select(" SELECT * FROM warehouses ")
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(property = "site", column = "siteId", javaType = Site.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.SiteMapper.getAllById")),
+            @Result(property = "locations", column = "id", javaType = List.class,
+                    many = @Many(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WmsLocationMapper.getByWareHouseStorageQuarantine"))
+    })
+    List<WarehouseLocationDTO> getByWareHouseStorageQuarantine();
+
 }

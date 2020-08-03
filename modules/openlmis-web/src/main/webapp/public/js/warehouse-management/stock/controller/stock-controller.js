@@ -8,7 +8,7 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function StockController($scope,$timeout, WmsAdjustment,TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocations,vaccineProducts,ProductLots,GetStockProducts,GetTransferDetails) {
+function StockController($scope,$timeout, WmsAdjustment,TransferRecords,reasonsForAdjustments, $location, GetWarehouseLocationsByStorageQuarantine,vaccineProducts,ProductLots,GetStockProducts,GetTransferDetails) {
 
 
 $scope.adjustmentReasons=[
@@ -54,8 +54,11 @@ $scope.stockMovement.products = [];
 $scope.stockMovement.products = vaccineProducts;
 $scope.reasons = reasonsForAdjustments;
 
- GetWarehouseLocations.get(function(data) {
 
+
+ GetWarehouseLocationsByStorageQuarantine.get(function(data) {
+
+     console.log(data);
   $scope.warehouseList = data.binLocations;
   $scope.stockMovement.warehouseList = data.binLocations;
 

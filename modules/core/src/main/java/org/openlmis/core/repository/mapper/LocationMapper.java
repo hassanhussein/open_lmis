@@ -126,4 +126,12 @@ public interface LocationMapper {
             "\n" +
             "WHERE lower(t.name) = lower(#{type})  ")
     List<HashMap<String,Object>> getAllLocationsBy(@Param("type") String type);
+    @Select(" select l.id, L.code, L.name, t.name typeName from wms_locations L\n" +
+            "\n" +
+            "JOIN wms_location_types t ON l.typeID = t.id\n" +
+            "\n" +
+            "WHERE lower(t.code) = 'storage' or lower(t.code)='quarantine' ")
+    List<HashMap<String,Object>> getAllLocationsByStorageAndQuarantine();
+
+
 }
