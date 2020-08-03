@@ -46,6 +46,13 @@ function ConfigureMetabaseIntegrationController($scope, $location, $route, Metab
                 bindingOptions: {
                     searchMode: "searchMode",
                 },
+                itemTemplate: function(item) {
+                    var icon = item.menuItem ? 'folder-open' : 'file';
+                    return "<div>" +
+                        "<i class=\"icon-" + icon +"\"></i>" +
+                        // "<i class=\"icon-folder-open\"></i>" +
+                        "<span> "  + item.name + "</span></div>";
+                },
                 displayExpr: "name",
                 keyExpr: "name+id",
                 onItemClick: function (o) {
