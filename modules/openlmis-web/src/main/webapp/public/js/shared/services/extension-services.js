@@ -1435,3 +1435,7 @@ services.factory('GetNotificationById', function($resource){
 services.factory('GetDistrictUserOnly', function($resource){
     return $resource('/reports/geographic-zones/user-district.json', {}, {});
 });
+
+services.factory('GetAllLongs', function($resource){
+    return $resource('/rest-api/getLLINLogs.json', {}, {});
+});

@@ -372,6 +372,10 @@
               <a href="/public/pages/admin/sms/index.html">Messages</a>
           </li>
 
+          <li ng-show="hasPermission('MANAGE_SETTING')">
+              <a href="/public/pages/admin/log/index.html">Logs</a>
+          </li>
+
           <li class="has-children">
             <a id="manage-option" href="javascript: void(0);" openlmis-message="link.admin.manage"></a>
 
