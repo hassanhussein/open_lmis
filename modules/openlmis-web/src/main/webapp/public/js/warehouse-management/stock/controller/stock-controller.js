@@ -180,7 +180,7 @@ if ($scope.movementForm.$error.required ) {
           var reason = getReason($scope.stockMovement.reason);
 
         var reasonType=reason.type;
-        var quantity=parseInt($scope.stockMovement.quantity,10)
+        var quantity=parseInt($scope.stockMovement.quantity,10);
 
         if(reasonType==="DEBIT"){
             quantity=-quantity;
