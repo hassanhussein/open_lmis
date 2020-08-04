@@ -19,6 +19,8 @@ $scope.ledgers = stockLedgers;
  console.log($scope.currentYear);
 
 
+
+
    OperationYears.get(function (data) {
         var array = _.sortBy(data.years, function(num) {
             return num;
@@ -32,6 +34,9 @@ $scope.ledgers = stockLedgers;
 
 
     };
+
+
+
 
 }
 

@@ -8,155 +8,188 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function LocationSearchController($location,$timeout,$scope,WareHouseList,navigateBackService,SaveBinLocation,updateBinLocation,SearchBinByPaged) {
+function LocationSearchController($location, $timeout, $scope, WareHouseList, navigateBackService, SaveBinLocation, updateBinLocation, SearchBinByPaged) {
 
-console.log( $scope.newLocation);
-$scope.locationCreated="false";
+    console.log($scope.newLocation);
+    $scope.locationCreated = "false";
 
 
-WareHouseList.get({},function(data){
+    WareHouseList.get({}, function (data) {
 
 //console.log(data.house);
-$scope.warehouses=data.house;
-});
- $scope.searchOptions = [
-    {value: "code", name: "Code"}
-  ];
+        $scope.warehouses = data.house;
+    });
+    $scope.searchOptions = [
+        {value: "code", name: "Code"}
+    ];
 
-  $scope.showResults = false;
-  $scope.currentPage = 1;
-  $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
+    $scope.showResults = false;
+    $scope.currentPage = 1;
+    $scope.selectedSearchOption = navigateBackService.selectedSearchOption || $scope.searchOptions[0];
 
-  $scope.selectSearchType = function (searchOption) {
-    $scope.selectedSearchOption = searchOption;
-  };
+    $scope.selectSearchType = function (searchOption) {
+        $scope.selectedSearchOption = searchOption;
+    };
 
-  $scope.$on('$viewContentLoaded', function () {
-    $scope.query = navigateBackService.query;
-  });
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.query = navigateBackService.query;
+    });
 
-  $scope.$watch('currentPage', function () {
-      if ($scope.currentPage !== 0)
-        $scope.search($scope.currentPage, $scope.searchedQuery);
+    $scope.$watch('currentPage', function () {
+        if ($scope.currentPage !== 0)
+            $scope.search($scope.currentPage, $scope.searchedQuery);
     });
 
     $scope.search = function (page, lastQuery) {
-    console.log($scope.warehouseId);
-      if (!($scope.query || lastQuery)) return;
-      lastQuery ? getLocations(page, lastQuery) : getLocations(page, $scope.query);
+        console.log($scope.warehouseId);
+        if (!($scope.query || lastQuery)) return;
+        lastQuery ? getLocations(page, lastQuery) : getLocations(page, $scope.query);
     };
 
     function getLocations(page, query) {
-      query = query.trim();
-      var warehouseId = $scope.warehouseId;
-      $scope.searchedQuery = query;
-      SearchBinByPaged.get({"searchParam": $scope.searchedQuery, "columnName": $scope.selectedSearchOption.value, "page": page,"wareHouseId":warehouseId}, function (data) {
-        $scope.locationList = data.bins;
-        $scope.pagination = data.pagination;
-        $scope.totalItems = $scope.pagination.totalRecords;
-        $scope.currentPage = $scope.pagination.page;
-        $scope.showResults = true;
-      }, {});
+        query = query.trim();
+        var warehouseId = $scope.warehouseId;
+        $scope.searchedQuery = query;
+        SearchBinByPaged.get({
+            "searchParam": $scope.searchedQuery,
+            "columnName": $scope.selectedSearchOption.value,
+            "page": page,
+            "wareHouseId": warehouseId
+        }, function (data) {
+            $scope.locationList = data.bins;
+            $scope.pagination = data.pagination;
+            $scope.totalItems = $scope.pagination.totalRecords;
+            $scope.currentPage = $scope.pagination.page;
+            $scope.showResults = true;
+        }, {});
     }
 
     $scope.clearSearch = function () {
-      $scope.query = "";
-      $scope.totalItems = 0;
-      $scope.locationList = [];
-      $scope.showResults = false;
-      angular.element("#searchLocation").focus();
+        $scope.query = "";
+        $scope.totalItems = 0;
+        $scope.locationList = [];
+        $scope.showResults = false;
+        angular.element("#searchLocation").focus();
     };
 
     $scope.triggerSearch = function (event) {
-      if (event.keyCode === 13) {
-        $scope.search(1);
-      }
+        if (event.keyCode === 13) {
+            $scope.search(1);
+        }
     };
 
-      $scope.showNewLocationModal = function(product) {
-            $scope.newLocationModal = true;
-            $scope.newLot = {};
-            $scope.newLot.product = product;
-            $scope.error = "";
+    $scope.showNewLocationModal = function (product) {
+        $scope.newLocationModal = true;
+        $scope.newLot = {};
+        $scope.newLot.product = product;
+        $scope.error = "";
 
-        };
+    };
 
-        $scope.closeNewLocationModal = function() {
-            $scope.newLoocation = {};
-            $scope.newLocationModal = false;
-        };
+    $scope.closeNewLocationModal = function () {
+        $scope.newLoocation = {};
+        $scope.newLocationModal = false;
+    };
 
-      $scope.updateLocations=function(){
+    $scope.updateLocations = function () {
 
-      };
+    };
 
-      $scope.clearEditMode=function(location){
+    $scope.clearEditMode = function (location) {
 
-      location.editMode=false;
-      };
+        location.editMode = false;
+    };
 
-       $scope.enterEditMode=function(location){
+    $scope.enterEditMode = function (location) {
 
-            location.editMode=true;
-            };
+        location.editMode = true;
+    };
 
-       var success = function (data) {
-          $scope.error = "";
-          $scope.$parent.message = data.success;
-          //$scope.$parent.locationId = data.location.id;
-          $scope.showError = false;
-         // $location.path('');
-        };
+    var success = function (data) {
+        $scope.error = "";
+        $scope.$parent.message = data.success;
+        //$scope.$parent.locationId = data.location.id;
+        $scope.showError = false;
+        // $location.path('');
+    };
 
-        var error = function (data) {
+    var error = function (data) {
 
-        if(data.status === 400) {
+        if (data.status === 400) {
             console.log(data);
-                  $scope.$parent.message = "";
-                  $scope.error = data.data.error;
-                  $scope.showError = true;
+            $scope.$parent.message = "";
+            $scope.error = data.data.error;
+            $scope.showError = true;
         } else {
 
-        success(data);
+            success(data);
         }
 
-        };
+    };
 
 
-      $scope.editBin=function(row){
-      var newLocation = {};
-                    newLocation.code = row.code;
-                    newLocation.name = row.name;
-                    newLocation.displayOrder = parseInt(row.displayOrder,10);
-                    newLocation.active=row.active;
-                    newLocation.warehouseId=parseInt($scope.warehouseId,10);
-                    updateBinLocation.update({id:parseInt(row.id,10)},newLocation ,function(data) {
-                        console.log(data);
-                        row.editMode=false;
-                    });
+    $scope.editBin = function (row) {
+        console.log(row);
+        var locName = row.name;
+        var locCode =  row.code;
 
-      };
+        var errorExist=false;
+        if(!locName){
+            errorExist=true;
+            row.showErrorName=true;
+        }
+        if(!locCode){
+            errorExist=true;
+            row.showErrorCode=true;
+        }
+        if(!errorExist) {
+            var newLocation = {};
+            newLocation.code = row.code;
+            newLocation.name = row.name;
+            newLocation.displayOrder = parseInt(row.displayOrder, 10);
+            newLocation.active = row.active;
+            newLocation.warehouseId = parseInt($scope.warehouseId, 10);
+            updateBinLocation.update({id: parseInt(row.id, 10)}, newLocation, function (data) {
+                console.log(data);
+                row.editMode = false;
+            });
+        }
+
+    };
 
 
-       $scope.createLocation = function() {
-       console.log('cacae');
-              var newLocation = {};
-              newLocation.code = $scope.newLocation.code;
-              newLocation.name = $scope.newLocation.name;
-              newLocation.displayOrder = parseInt($scope.newLocation.type,10);
-              newLocation.active=true;
-              newLocation.warehouseId=parseInt($scope.warehouseId,10);
-              SaveBinLocation.save(newLocation, function(data) {
-                  $scope.newLocationModal = false;
-                  console.log(data);
-                  $scope.locationCreated=true;
+    $scope.createLocation = function () {
+        console.log('cacae');
+        var locName = $scope.newLocation.name;
+        var locCode = $scope.newLocation.code;
+        var errorExist=false;
+        if(!locName){
+            errorExist=true;
+        }
+        if(!locCode){
+            errorExist=true;
+        }
 
-                  $timeout(function(){
-                   $scope.locationCreated=false;
-                  },3000);
-                   $scope.newLocation.code="";
-                   $scope.newLocation.name="";
-                   $scope.newLocation.type="";
-              }, error);
-          };
+
+        if(!errorExist) {
+            var newLocation = {};
+            newLocation.code = $scope.newLocation.code;
+            newLocation.name = $scope.newLocation.name;
+            newLocation.displayOrder = parseInt($scope.newLocation.type, 10);
+            newLocation.active = true;
+            newLocation.warehouseId = parseInt($scope.warehouseId, 10);
+            SaveBinLocation.save(newLocation, function (data) {
+                $scope.newLocationModal = false;
+                console.log(data);
+                $scope.locationCreated = true;
+
+                $timeout(function () {
+                    $scope.locationCreated = false;
+                }, 3000);
+                $scope.newLocation.code = "";
+                $scope.newLocation.name = "";
+                $scope.newLocation.type = "";
+            }, error);
+        }
+    };
 }

@@ -64,4 +64,8 @@ public class LocationRepository {
     public List<HashMap<String, Object>> getAllLocationsBy(String type) {
         return mapper.getAllLocationsBy(type);
     }
+
+    public List<HashMap<String, Object>> getAllLocationsByStorageAndQuarantine() {
+        return mapper.getAllLocationsByStorageAndQuarantine();
+    }
 }

@@ -121,11 +121,15 @@
                 </td>
                 <td ng-show="location.editMode">
                     <input type="text" ng-model="location.code">
+                    <span class="field-error" ng-show="!location.code"
+                          openlmis-message="missing.value"></span>
                 </td>
 
                 <td ng-show="!location.editMode" ng-bind="location.name"></td>
                 <td ng-show="location.editMode">
                     <input type="text" ng-model="location.name">
+                    <span class="field-error" ng-show="!location.name"
+                          openlmis-message="missing.value"></span>
                 </td>
 
                 <td ng-show="!location.editMode" ng-bind="(location.displayOrder)==1?'Storage':(location.displayOrder)==2?'Receiving':'Quarantine'"></td>

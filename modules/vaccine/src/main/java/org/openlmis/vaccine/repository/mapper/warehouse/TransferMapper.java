@@ -16,7 +16,7 @@ public interface TransferMapper {
 
     @Insert("INSERT INTO public.wms_transfers(\n" +
             "           fromWarehouseId, toWarehouseId, fromBin, toBin, productId, \n" +
-            "            transferDate, reasonId, lotId, quantity,notify, createdBy, \n" +
+            "            transferDate, reason, lotId, quantity,notify, createdBy, \n" +
             "            createdDate, modifiedBy, modifiedDate)\n" +
             "    VALUES ( #{fromWarehouseId}, #{toWarehouseId}, #{fromBin}, #{toBin}, #{productId}, \n" +
             "            NOW(), #{reason}, #{lotId}, #{quantity}, #{notify}, #{createdBy}, NOW(), \n" +
