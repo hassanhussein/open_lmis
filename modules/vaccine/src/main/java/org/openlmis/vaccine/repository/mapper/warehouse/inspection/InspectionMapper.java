@@ -37,7 +37,7 @@ public interface InspectionMapper {
             "JOIN receives r on i.receiveId = r.id \n" +
             "JOIN receive_LINE_ITEMS LI on r.id = li.receiveId\n" +
             "JOIN Asns A ON a.id = r.asnId \n" +
-            "WHERE (A.poNumber::text LIKE '%' || #{searchParam} || '%')")
+            "WHERE (LOWER(A.poNumber) LIKE '%' || LOWER(#{searchParam}) || '%')")
     Integer getTotalSearchResultCountByAsnDate(@Param("searchParam") String searchParam);
 
     Integer getTotalSearchResultCountByReceiptNumber(@Param("searchParam") String searchParam);
@@ -278,7 +278,7 @@ public interface InspectionMapper {
             if (column.equalsIgnoreCase("asnNumber")) {
                 sql.append("(LOWER(Q.asnNumber) LIKE LOWER('%" + searchParam + "%') ) ");
             } else if (column.equalsIgnoreCase("poNumber")) {
-                sql.append("(Q.poNumber LIKE '%" + searchParam + "%')");
+                sql.append("(LOWER(Q.poNumber) LIKE LOWER('%" + searchParam + "%'))");
             }
             return sql;
         }

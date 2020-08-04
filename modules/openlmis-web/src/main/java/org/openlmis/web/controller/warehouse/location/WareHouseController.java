@@ -146,4 +146,10 @@ public class WareHouseController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getWarehousesWithLocation() {
         return OpenLmisResponse.response("binLocations", service.getWarehouseByBinLocation());
     }
+    @RequestMapping(value = "/house/locationsByStorageQuarantine", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getWarehouseByBinLocationStorageAndQuarantine() {
+        return OpenLmisResponse.response("binLocations", service.getWarehouseByBinLocationStorageAndQuarantine());
+    }
+
+
 }

@@ -164,4 +164,9 @@ public class WareHouseService {
     public List<WarehouseLocationDTO> getWarehouseByBinLocation() {
         return repository.getWarehouseByBinLocation();
     }
+    public List<WarehouseLocationDTO> getWarehouseByBinLocationStorageAndQuarantine() {
+        return repository.getByWareHouseStorageQuarantine();
+    }
+
+
 }

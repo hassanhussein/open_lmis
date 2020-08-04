@@ -56,7 +56,11 @@ public class LocationService {
     }
 
     public List<HashMap<String, Object>> getAllLocationsBy(String type) {
-        return  repository.getAllLocationsBy(type);
+        if(type.equals("storageQuarantine")){
+            return repository.getAllLocationsByStorageAndQuarantine();
+        }else {
+            return repository.getAllLocationsBy(type);
+        }
 
     }
 
