@@ -97,7 +97,7 @@
                     <select ui-select2="{width: '100%'}" ng-disabled="!fromLot" ng-model="toLot.warehouse"
                             ng-options="warehouse as warehouse.name for warehouse in warehouseList">
                         <option value="">--Select Warehouse--</option>
-                        <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
+                        <!--<option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
 
 
                     </select>
@@ -117,7 +117,7 @@
                     <select ui-select2="{width: '100%'}" ng-disabled="!toLot.warehouse" ng-model="toLot.binLocation"
                             ng-options="location as location.code for location in toLot.warehouse.locations| filter: { type.code: ('storage')}">
                         <option value="">--Select Bin Location--</option>
-                        <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
+                        <!--     <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
 
 
                     </select>
