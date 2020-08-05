@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 public interface AdjustmentMapper {
 
     @Insert("INSERT INTO public.lot_location_entries(\n" +
-            "           lotonhandid, type, quantity, locationid, \n" +
+            "           lotid, type, quantity, locationid,vvmid,stockCardId, \n" +
             "            createdBy, \n" +
             "            createdDate, modifiedBy, modifiedDate)\n" +
-            "    VALUES ( #{lotId}, #{type},#{quantity}, #{locationid}, \n" +
+            "    VALUES ( #{lotId}, #{type},#{quantity}, #{locationid},#{vvmId},#{stockCardId}, \n" +
             "             #{createdBy}, NOW(), \n" +
             "            #{modifiedBy}, now());")
     @Options(useGeneratedKeys = true)
