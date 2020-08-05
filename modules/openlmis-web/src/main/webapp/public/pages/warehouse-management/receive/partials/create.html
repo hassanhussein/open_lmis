@@ -200,7 +200,8 @@
 
                     <div class="form-cell" >
                         <label class="checkbox inline">
-                            <input type="checkbox" ng-disabled="viewMode" checked > Foreign Procurement
+                            <input type="hidden" ng-disabled="viewMode" checked >
+<!--                            Foreign Procurement-->
                         </label>
                         <label class="checkbox inline">
                             <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && !isVaccine)" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
@@ -649,7 +650,7 @@
 
                                     <div class="form-field">
                                         <input name="actualArrivalDate"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:period.stringStartDate}"
+                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today'}"
                                                ui-date-format="yy-mm-dd"
                                                ng-model="actualArrivalDate"
                                                ng-disabled="viewMode"
