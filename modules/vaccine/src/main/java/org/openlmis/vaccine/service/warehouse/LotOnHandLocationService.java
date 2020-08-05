@@ -70,7 +70,7 @@ public class LotOnHandLocationService {
         Facility facility = facilityService.getAllByFacilityTypeCode(CVS_CODE).get(0);
         Product product = productService.getById(items.get(0).getProductId());
 
-        StockCard stock = stockCardService.getStockCardByFacilityAndProduct(facility.getId(),product.getCode());
+        StockCard stockCard = stockCardService.getOrCreateStockCard(facility.getId(), product.getCode());
 
         for(PutAwayLineItemDTO dto :items) {
             total = total + dto.getQuantity();
@@ -107,6 +107,27 @@ public class LotOnHandLocationService {
                 event.setLot(newLot);
                 event.setVvmId(vvmData.getVvmId());
 
+                //Prepare entry values
+                LocationEntry entry = new LocationEntry();
+                entry.setVvmId(vvmData.getVvmId());
+                entry.setLotId(newLot.getId());
+                entry.setStockCardId(stockCard.getId());
+                entry.setQuantity(dto.getQuantity());
+                entry.setLocationId(dto.getToBinLocationId());
+                entry.setCreatedBy(userId);
+                entry.setModifiedBy(userId);
+                entry.setType(StockCardEntryType.CREDIT);
+
+                List<StockCardEntryKV> vl = new ArrayList<>();
+                StockCardEntryKV values = new StockCardEntryKV();
+                values.setKeyColumn("receivedfrom");
+                LocationDTO dto2 = wmsLocationService.getByLocationId(dto.getFromBinLocationId());
+                values.setValueColumn(dto2.getName());
+                vl.add(values);
+                entry.setKeyValues(vl);
+
+                locationEntryService.saveLocationEntry(entry);
+
             } else {
                 event.setLot(null);
             }
@@ -129,7 +150,7 @@ public class LotOnHandLocationService {
 
         }
 
-        StockCard stockCard = new StockCard();
+       /* StockCard stockCard = new StockCard();
         stockCard.setFacility(facility);
         stockCard.setProduct(product);
         stockCard.setTotalQuantityOnHand(total);
@@ -144,7 +165,7 @@ public class LotOnHandLocationService {
             stockCard.setId(stock.getId());
             stockCardService.updateStockCard(stockCard);
         }
-        processStockCard(facility, stockCard,product,events,userId);
+        processStockCard(facility, stockCard,product,events,userId);*/
         inspectionService.updateStatus("INSPECTED", items.get(0).getInspectionId());
 
         System.out.println("Inspection ID"+items.get(0).getInspectionId());
