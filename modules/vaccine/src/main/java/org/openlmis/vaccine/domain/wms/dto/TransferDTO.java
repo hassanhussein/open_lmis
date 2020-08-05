@@ -19,4 +19,6 @@ public class TransferDTO {
 
     private Long stockCardId;
 
+    private String vvm;
+
 }
