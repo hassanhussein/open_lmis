@@ -123,7 +123,7 @@ public class AsnService {
             res.setFlightVesselNumber(asn.getFlightvesselnumber());
             res.setPortOfArrival(asn.getPortofarrival());
             res.setExpectedArrivalDate(asn.getExpectedarrivaldate());
-            res.setActualArrivalDate(asn.getExpecteddeliverydate());
+            //res.setActualArrivalDate(asn.getExpecteddeliverydate());
             res.setClearingAgent(asn.getClearingagent());
             res.setShippingAgent(null);
             res.setStatus("DRAFT");
