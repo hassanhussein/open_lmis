@@ -5,6 +5,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.Product;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.service.ProductService;
 import org.openlmis.core.service.ProgramService;
@@ -18,6 +19,7 @@ import org.openlmis.vaccine.domain.wms.dto.StockEventDTO;
 import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.openlmis.vaccine.repository.warehouse.ReceiveRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,13 +89,18 @@ public class ReceiveService {
 
         }
 
-        if (receive.getId() == null) {
-            receive.setReceiveNumber(generateReceiveNumber());
-            repository.insert(receive);
+        try {
 
-        } else {
-            receive.setReceiveNumber(generateReceiveNumber());
-            repository.update(receive);
+            if (receive.getId() == null) {
+                receive.setReceiveNumber(generateReceiveNumber());
+                repository.insert(receive);
+
+            } else {
+                receive.setReceiveNumber(generateReceiveNumber());
+                repository.update(receive);
+            }
+        }catch (DuplicateKeyException e) {
+            throw new DataException("error.duplicate.po.number");
         }
 
         if (receive.getReceiveLineItems() != null && (!receive.getReceiveLineItems().isEmpty())) {

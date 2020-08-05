@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.service.UserService;
 import org.openlmis.vaccine.domain.wms.*;
@@ -14,6 +15,7 @@ import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,13 +60,16 @@ public class AsnService {
         SupplyPartner supplyPartner = supplyPartnerService.getById(asn.getSupplierid());
         asn.setSupplier(supplyPartner);
         asn.setSupplierid(supplyPartner.getId());
+        try {
+            if (asn.getId() == null) {
 
-        if (asn.getId() == null) {
+                repository.insert(asn);
 
-            repository.insert(asn);
-
-        }else {
-            repository.update(asn);
+            } else {
+                repository.update(asn);
+            }
+        }catch (DuplicateKeyException e) {
+            throw new DataException("error.duplicate.po.number");
         }
 
         List<AsnLineItem> asnLineItems = asn.getAsnLineItems();
