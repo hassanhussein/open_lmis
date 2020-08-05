@@ -61,7 +61,7 @@ public interface LotOnHandLocationMapper {
             "\n" +
             "SUM(CASE WHEN e.type='CREDIT' THEN quantity ELSE 0 end ) + SUM( CASE WHEN e.type='ADJUSTMENT' then quantity else 0 END)\n" +
             "- SUM(CASE WHEN E.type='DEBIT' then Quantity ELSE 0 end)\n" +
-            " stockOnHand\n" +
+            " quantityOnHand\n" +
             "\n" +
             "\n" +
             " FROM lot_location_entries e \n" +
