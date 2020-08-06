@@ -122,9 +122,9 @@
 
             <div class="form-field row-fluid">
                 <select ui-select2="{width: '100%'}"
-                        id="lotId" name="lotId" ui-select2="{width: '100%'}" ng-disabled="!stockMovement.productId" ng-model="stockMovement.lotOnHandId"
-                        ng-change="showSOHa(stockMovement.lotOnHandId)"
-                        ng-required="true"   ng-options="lot.lotOnHandId as lot.lotNumber for lot in lotsToDisplay"
+                        id="lotId" name="lotId" ui-select2="{width: '100%'}" ng-disabled="!stockMovement.productId" ng-model="stockMovement.lotNumberUn"
+                        ng-change="showSOHa(stockMovement.lotNumberUn)"
+                        ng-required="true"   ng-options="lot.lotNumberUn as lot.lotVvm for lot in lotsToDisplay"
                 >
                     <option value="">--Select Lot--</option>
 
@@ -154,6 +154,9 @@
     </div>
 
 
+    <input ng-disabled="true"  ng-model="stockMovement.lotId"  name="lotId" type="text" style="width:95%;display: none"/>
+    <input ng-disabled="true"  ng-model="stockMovement.vvmId"  name="vvmId" type="text" style="width:95%;display: none"/>
+    <input ng-disabled="true"  ng-model="stockMovement.stockCardId"  name="stockCardId" type="text" style="width:95%;display: none"/>
 
     <div class="form-row clearfix">
 
@@ -163,7 +166,7 @@
             </label>
 
             <div class="form-field">
-                <input ng-disabled="!stockMovement.lotOnHandId"  ng-model="stockMovement.quantity" ng-required="true" numeric-validator="positiveInteger" name="quantity" type="text" style="width:95%"/>
+                <input ng-disabled="!stockMovement.lotNumberUn"  ng-model="stockMovement.quantity" ng-required="true" numeric-validator="positiveInteger" name="quantity" type="text" style="width:95%"/>
                 <span class="field-error" ng-show="movementForm.quantity.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>

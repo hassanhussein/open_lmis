@@ -18,5 +18,9 @@ public class TransferDTO {
     private Long quantityOnHand;
 
     private Long stockCardId;
+    private String vvmId;
+    private String vvm;
+    private String lotVvm;
+    private String lotNumberUn;
 
 }

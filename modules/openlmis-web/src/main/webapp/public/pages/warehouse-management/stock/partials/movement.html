@@ -128,7 +128,7 @@
         <br/>
         <div class="form-row clearfix">
 
-            <div class="span4">
+            <div class="span4" ng-show="stockMovement.lotId">
                 <label for="reason" ><strong>Reason</strong><span class="label-required"> *</span></label>
 
                 <div class="form-field row-fluid">
@@ -173,12 +173,12 @@
 
         <div class="form-row clearfix">
 
-            <div class="span4">
+            <div class="span4" >
                 <label for="toWarehouseId" ><strong>To Warehouse</strong><span class="label-required"> *</span></label>
 
                 <div class="form-field row-fluid">
 
-                    <select  ui-select2="{width: '100%'}"
+                    <select  ui-select2="{width: '100%'}" ng-disabled="!stockMovement.quantity"
                              ng-model="stockMovement.toWarehouseId" name="toWarehouseId" id="toWarehouseId"
                              id="toWarehouse" ng-required="true"
                              ng-options="warehouse.id as warehouse.name for warehouse in stockMovement.warehouseList"
@@ -202,7 +202,7 @@
 
                 <div class="form-field row-fluid">
 
-                    <select  name="toBin" id="toBin" ui-select2="{width: '100%'}" ng-model="stockMovement.toBin" ng-disabled="!stockMovement.toWarehouseId"
+                    <select ng-disabled="!stockMovement.quantity" name="toBin" id="toBin" ui-select2="{width: '100%'}" ng-model="stockMovement.toBin" ng-disabled="!stockMovement.toWarehouseId"
 
                             ng-required="true"   ng-options="location.id as location.name for location in stockMovement.locations2"
                     >
@@ -222,7 +222,7 @@
     <div form-toolbar id="action_buttons" class="action-buttons">
         <div class="form-cell button-row">
 
-            <input ng-disabled="!stockMovement.quantity"  type="button" class="btn btn-primary pull-right"
+            <input ng-disabled="!stockMovement.toBin"  type="button" class="btn btn-primary pull-right"
                     value="Transfer" style="margin-left:10px;margin-right:10px"
                     ng-click="submit(stockMovement)"
             />

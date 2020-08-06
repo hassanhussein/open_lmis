@@ -17,6 +17,10 @@ public class LocationEntry extends BaseModel {
    private StockCardEntryType type;
    private Integer quantity;
    private Date occurred;
+   private Long vvmId;
+   private Long stockCardId;
+   private Long lotId;
+
 
    @JsonIgnore
    private List<StockCardEntryKV> keyValues;
