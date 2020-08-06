@@ -63,7 +63,7 @@ public class TransferService {
         StockCard stockCard = stockCardService.getOrCreateStockCard(facilityId,product.getCode());
         List<LocationEntry> locationProductList = repository.checkAvailableLocation(item.getToBin(), stockCard.getId());
 
-        LocationEntry availableLot = repository.getLotByStockCard(stockCard.getId(), item.getLotId());
+       /* LocationEntry availableLot = repository.getLotByStockCard(stockCard.getId(), item.getLotId());
         Long newLotId;
 
         if(availableLot== null){
@@ -74,7 +74,7 @@ public class TransferService {
             newLotId = availableLot.getLotId();
             System.out.println("old Lot");
             System.out.println(newLotId);
-        }
+        }*/
 
         //Debit entry
         LocationEntry entry = new LocationEntry();
@@ -107,7 +107,7 @@ public class TransferService {
             entry2.setQuantity(item.getQuantity());
             entry2.setStockCardId(stockCard.getId());
             entry2.setVvmId(1L);
-            entry2.setLotId(newLotId);
+            entry2.setLotId(item.getLotId());
             List<StockCardEntryKV> vl2 = new ArrayList<>();
             StockCardEntryKV values2 = new StockCardEntryKV();
             values2.setKeyColumn("receivedfrom");
@@ -126,7 +126,7 @@ public class TransferService {
             entry2.setQuantity(item.getQuantity());
             entry2.setStockCardId(stockCard.getId());
             entry2.setVvmId(1L);
-            entry2.setLotId(newLotId);
+            entry2.setLotId(item.getLotId());
             List<StockCardEntryKV> vl2 = new ArrayList<>();
             StockCardEntryKV values2 = new StockCardEntryKV();
             values2.setKeyColumn("receivedfrom");
