@@ -21,6 +21,11 @@ $scope.lineItem=putaway.lineItems[0];
 
 $scope.addToQueue=function(){
 
+
+
+
+
+//return;
 $scope.quantityError=false;
 
 
@@ -62,7 +67,10 @@ if($scope.fromLot.passQuantity===0){
     $scope.toLot.binLocation='';
 
 }
-$scope.toLot.passQuantity='';
+    $scope.toLot.warehouse="";
+    $scope.toLot.binLocation="";
+    $scope.toLot.passQuantity="";
+    $scope.toLot.passQuantity='';
 };
 
 

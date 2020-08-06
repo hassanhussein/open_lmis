@@ -272,20 +272,7 @@
                                             </td>
 
                                             <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
-                                            <td>
-                                                <select
-
-                                                >
-                                                    <option value=""  ng-disabled="viewMode">--Select Location--</option>
-                                                    <option ng-repeat="location in locationList"
-                                                            value="{{ location.id }}">
-                                                        {{ location.name }}
-                                                    </option>
-
-
-
-                                                </select>
-                                            </td>
+                                            masterpiece
 
                                             <td ><span class="btn btn-danger" ng-click="removeProduct(productIndex)"><i class="icon-remove"></i></i></span></td>
                                         </tr>
@@ -408,6 +395,31 @@
 
                                                 </div>
 
+                                                <div class="" style="margin-top:6px;">
+                                                    <div class="span2">VVM: </div>
+                                                    <div class="span7">
+                                                        <select ng-disabled="!product.lots[0].info || viewMode"
+                                                                ng-model="product.lots[0].vvmId"
+
+
+                                                        >
+                                                            <option value="" >--Select VVM--</option>
+
+                                                            <option ng-repeat="vvm in vvmStatusList"
+                                                                    value="{{ vvm.id }}"
+                                                                    ng-selected="product.lots[0].vvmId==vvm.id"
+                                                            >
+                                                                    {{ vvm.name }}
+                                                            </option>
+
+
+
+
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
                                                 <div class="">
                                                     <div class="span2">Campaign:</div>
                                                     <div class="span10"><input type="checkbox" ng-disabled="!product.lots[0].info || viewMode"></div>
@@ -473,6 +485,30 @@
                                                         <select ng-disabled="!lot.info || viewMode" ng-model="lot.locationId">
                                                             <option value="" >--Select Location--</option>
                                                             <option ng-repeat="location in locationList" value="{{ location.id }}" ng-selected="lot.locationId==location.id">{{ location.code }}</option>
+
+
+
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="" style="margin-top:6px;">
+                                                    <div class="span2">VVM: </div>
+                                                    <div class="span7">
+                                                        <select ng-disabled="!lot.info || viewMode"
+                                                                ng-model="lot.vvmId"
+
+                                                        >
+                                                            <option value="" >--Select VVM--</option>
+
+                                                            <option ng-repeat="vvm in vvmStatusList"
+                                                                    value="{{ vvm.id }}"
+                                                                    ng-selected="lot.vvmId==vvm.id"
+                                                            >
+                                                                {{ vvm.name }}
+                                                            </option>
+
 
 
 

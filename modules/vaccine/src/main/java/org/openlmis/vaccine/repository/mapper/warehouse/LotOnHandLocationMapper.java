@@ -59,8 +59,7 @@ public interface LotOnHandLocationMapper {
             "p.id productId,p.primaryName product, lotNumber,Lsc.name binLocation, to_char(max(e.modifieddate), 'dd-MM-yyyy') lastUpdated,\n" +
             "\n" +
             "\n" +
-            "SUM(CASE WHEN e.type='CREDIT' THEN quantity ELSE 0 end ) + SUM( CASE WHEN e.type='ADJUSTMENT' then quantity else 0 END)\n" +
-            "- SUM(CASE WHEN E.type='DEBIT' then Quantity ELSE 0 end)\n" +
+           "((coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and lotid=e.lotid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and lotid=e.lotid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and lotid=e.lotid and lt.type='DEBIT'),0),0))) \n"+
             " quantityOnHand\n" +
             "\n" +
             "\n" +
@@ -70,7 +69,7 @@ public interface LotOnHandLocationMapper {
             "JOIN products P on lo.productID = p.id\n" +
             "join WMS_LOCATIONS Lsc ON e.LocationId = LSC.ID \n" +
             "WHERE LSC.warehouseId = #{warehouseId} and e.quantity > 0\n" +
-            "group by vvm.name, e.lotId,p.id,lotNumber,Lsc.name")
+            "group by vvm.name,vvm.id, e.lotId,p.id,lotNumber,Lsc.name")
             List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
     @Select("                                      Select distinct primaryname product,id,date ,fromBin, toBin, facility storeName, received, issued, adjustment,total,locationName,\n" +

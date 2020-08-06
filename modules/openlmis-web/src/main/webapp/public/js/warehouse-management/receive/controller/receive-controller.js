@@ -12,7 +12,7 @@
  *
  */
 function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,clearingAgent,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
-                           $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory){
+                           $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory,vvmList){
 
 
  $scope.$parent.receiveSaved = false;
@@ -20,6 +20,8 @@ function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,clearingAg
 
 
 $scope.clearingAgentList = clearingAgent;
+   $scope.vvmStatusList = vvmList;
+
     function getAllLookups(){
 
 
@@ -366,6 +368,7 @@ var total_lot_quantity = 0;
 
                     },
                     locationId:lot.locationId,
+                    vvmId:lot.vvmId,
                     boxCounted:lot.boxNumber
 
                 });
@@ -883,6 +886,7 @@ $scope.quantityBoxError=false;
                                     boxNumber:lot.boxCounted,
                                     serialnumber: 'string',
                                     locationId:parseInt(lot.locationId,10),
+                                    vvmId:parseInt(lot.locationId,10)
                                 });
 
 
@@ -1161,6 +1165,17 @@ ReceiveController.resolve = {
         }, 100);
         return deferred.promise;
     },
+       vvmList: function ($q, $route, $timeout, GetVVMStatusList) {
+
+        var deferred = $q.defer();
+
+        $timeout(function () {
+          GetVVMStatusList.get({}, function (data) {
+            deferred.resolve(data.vvms);
+          }, {});
+        }, 100);
+        return deferred.promise;
+      },
     clearingAgent:function($q, $timeout,GetAllClearingAgents){
             var deferred = $q.defer();
                  var configurations = {};
