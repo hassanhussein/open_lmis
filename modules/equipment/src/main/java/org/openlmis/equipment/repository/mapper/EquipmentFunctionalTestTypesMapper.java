@@ -1,7 +1,6 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-
 import org.openlmis.equipment.domain.EquipmentFunctionalTestTypes;
 import org.springframework.stereotype.Repository;
 
@@ -33,5 +32,8 @@ public interface EquipmentFunctionalTestTypesMapper {
 
     @Select("select id from equipment_functional_test_types where equipmentcategoryid = #{id}")
     List<Long> getByEquipmentCategoryId(Long id);
+
+    @Select("select *  from equipment_functional_test_types types  ")
+    List<EquipmentFunctionalTestTypes> getAllEquipmentFunctionalTestTypeList();
 
 }

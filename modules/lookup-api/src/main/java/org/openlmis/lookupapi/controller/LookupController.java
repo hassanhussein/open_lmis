@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 import static javax.security.auth.callback.ConfirmationCallback.OK;
 
 @Controller
@@ -70,7 +69,7 @@ public class LookupController {
     public static final String REGIMEN_PRODUCT_COMBINATIONS = "regimen-product-combinations";
     public static final String REGIMEN_COMBINATION_CONSTITUENTS = "regimen-combination-constituents";
     public static final String REGIMEN_CONSTITUENT_DOSAGES = "regimen-constituent-dosages";
-    private static final String PROGRAM_REFERENCE_DATA ="ProgramReferenceData" ;
+    private static final String PROGRAM_REFERENCE_DATA = "ProgramReferenceData";
 
     @Autowired
     private LookupService lookupService;
@@ -330,9 +329,9 @@ public class LookupController {
             @ApiResponse(code = 500, message = "Internal server error")}
     )
     @RequestMapping(value = "/rest-api/hfr-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
-    public ResponseEntity postTransaction(@RequestBody HealthFacilityDTO dto, HttpServletRequest request){
+    public ResponseEntity postTransaction(@RequestBody HealthFacilityDTO dto, HttpServletRequest request) {
 
-       try {
+        try {
             interfaceService.sendResponse(dto);
         } catch (Exception e) {
             e.printStackTrace();
@@ -340,15 +339,78 @@ public class LookupController {
         System.out.println("RESPONSE BEFORE");
         return ResponseEntity.ok(OK);
     }
+
     @RequestMapping(value = "/rest-api/lookup/program-referece-data/{code}/{facility_code}", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getProgramReferenceData(@PathVariable("code") String code,@PathVariable("facility_code") String facilityCode) {
-        return RestResponse.response(PROGRAM_REFERENCE_DATA, lookupService.getProgramReferenceData(code,facilityCode));
+    public ResponseEntity getProgramReferenceData(@PathVariable("code") String code, @PathVariable("facility_code") String facilityCode) {
+        return RestResponse.response(PROGRAM_REFERENCE_DATA, lookupService.getProgramReferenceData(code, facilityCode));
     }
 
 
     @RequestMapping(value = "/rest-api/lookup/hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getAllFacilities() {
         return RestResponse.response("facilities", lookupService.getAllHFRFacilities());
+    }
+
+    /**
+     * @return
+     */
+    @RequestMapping(value = "/rest-api/lookup/equipment-types")
+    public ResponseEntity getAllEquipmentTypes() {
+        return RestResponse.response("equipment-types", lookupService.getAllEquipmentTypes());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-functional-test-types")
+    public ResponseEntity getAllEquipmentFunctionalTestTypesTypes() {
+        return RestResponse.response("equipment-functional-test-types", lookupService.getAllEquipmentFunctionalTestTypesTypes());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-categories")
+    public ResponseEntity getAllEquipmentCategories() {
+        return RestResponse.response("equipment-categories", lookupService.getAllEquipmentCategories());
+    }
+
+
+    /**
+     * @return
+     */
+    @RequestMapping(value = "/rest-api/lookup/equipment-energy-types")
+    public ResponseEntity getAllEquipmentEnergyTypes() {
+        return RestResponse.response("equipment-energy-types", lookupService.getAllEquipmentEnergyTypes());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-models")
+    public ResponseEntity getAllEquipmentEquipmentModels() {
+        return RestResponse.response("equipment-models", lookupService.getAllEquipmentEquipmentModels());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipments")
+    public ResponseEntity getAllEquipments() {
+        return RestResponse.response("equipments", lookupService.getAllEquipments());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-cold-chain-equipments")
+    public ResponseEntity getAllEquipmentProducts() {
+        return RestResponse.response("equipment-cold-chain-equipments", lookupService.getAllEquipmentProducts());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-service-vendors")
+    public ResponseEntity getAllEquipmentServiceVendors() {
+        return RestResponse.response("equipment-service-vendors", lookupService.getAllEquipmentServiceVendors());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-service-vendor-users")
+    public ResponseEntity getAllEquipmentServiceVendorUsers() {
+        return RestResponse.response("equipment-service-vendor-users", lookupService.getAllEquipmentServiceVendorUsers());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-service-types")
+    public ResponseEntity getAllEquipmentServiceTypes() {
+        return RestResponse.response("equipment-service-types", lookupService.getAllEquipmentServiceTypes());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-type-programs")
+    public ResponseEntity getAllEquipmentTypePrograms() {
+        return RestResponse.response("equipment-type-programs", lookupService.getAllEquipmentTypePrograms());
     }
 
 }

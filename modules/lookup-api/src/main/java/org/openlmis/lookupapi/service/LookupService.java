@@ -20,11 +20,13 @@ import org.openlmis.core.repository.RegimenRepository;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.equipment.domain.*;
+import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.repository.*;
 import org.openlmis.lookupapi.mapper.DosageUnitReportMapper;
 import org.openlmis.lookupapi.mapper.GeographicLevelReportMapper;
 import org.openlmis.lookupapi.mapper.ILInterfaceMapper;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
-import org.openlmis.lookupapi.model.MSDStockDTO;
 import org.openlmis.lookupapi.model.ProgramReferenceData;
 import org.openlmis.report.mapper.lookup.*;
 import org.openlmis.report.model.dto.*;
@@ -49,192 +51,261 @@ import java.util.List;
 public class LookupService {
 
 
-  @Autowired
-  private ProgramReportMapper programMapper;
+    @Autowired
+    private ProgramReportMapper programMapper;
 
-  @Autowired
-  private ProgramProductMapper programProductMapper;
+    @Autowired
+    private ProgramProductMapper programProductMapper;
 
-  @Autowired
-  private FacilityApprovedProductMapper facilityApprovedProductMapper;
+    @Autowired
+    private FacilityApprovedProductMapper facilityApprovedProductMapper;
 
-  @Autowired
-  private ProcessingScheduleMapper processingScheduleMapper;
+    @Autowired
+    private ProcessingScheduleMapper processingScheduleMapper;
 
-  @Autowired
-  private DosageUnitReportMapper dosageUnitMapper;
+    @Autowired
+    private DosageUnitReportMapper dosageUnitMapper;
 
-  @Autowired
-  private RegimenRepository regimenRepository;
+    @Autowired
+    private RegimenRepository regimenRepository;
 
-  @Autowired
-  private GeographicLevelReportMapper geographicLevelMapper;
+    @Autowired
+    private GeographicLevelReportMapper geographicLevelMapper;
 
-  @Autowired
-  private FacilityLookupReportMapper facilityReportMapper;
+    @Autowired
+    private FacilityLookupReportMapper facilityReportMapper;
 
-  @Autowired
-  private ProcessingPeriodReportMapper processingPeriodMapper;
+    @Autowired
+    private ProcessingPeriodReportMapper processingPeriodMapper;
 
-  @Autowired
-  private RegimenCategoryReportMapper regimenCategoryReportMapper;
+    @Autowired
+    private RegimenCategoryReportMapper regimenCategoryReportMapper;
 
-  @Autowired
-  private ProductCategoryReportMapper productCategoryMapper;
+    @Autowired
+    private ProductCategoryReportMapper productCategoryMapper;
 
-  @Autowired
-  private AdjustmentTypeReportMapper adjustmentTypeReportMapper;
+    @Autowired
+    private AdjustmentTypeReportMapper adjustmentTypeReportMapper;
 
-  @Autowired
-  private ProductReportMapper productMapper;
+    @Autowired
+    private ProductReportMapper productMapper;
 
-  @Autowired
-  private FacilityTypeReportMapper facilityTypeMapper;
+    @Autowired
+    private FacilityTypeReportMapper facilityTypeMapper;
 
-  @Autowired
-  private GeographicZoneReportMapper geographicZoneMapper;
+    @Autowired
+    private GeographicZoneReportMapper geographicZoneMapper;
 
-  @Autowired
-  private RegimenReportMapper regimenReportMapper;
+    @Autowired
+    private RegimenReportMapper regimenReportMapper;
 
-  @Autowired
-  private ILInterfaceMapper interfaceMapper;
+    @Autowired
+    private ILInterfaceMapper interfaceMapper;
+    @Autowired
+    private EquipmentTypeRepository equipmentTypeRepository;
+    @Autowired
+    private EquipmentFunctionalTestTypesRepository functionalTestTypesRepository;
+    @Autowired
+    private EquipmentCategoryRepository categoryRepository;
+    @Autowired
+    private ProgramEquipmentTypeRepository programEquipmentTypeRepository;
+    @Autowired
+    private EquipmentEnergyTypeRepository equipmentEnergyTypeRepository;
+    @Autowired
+    private EquipmentModelRepository modelRepository;
+    @Autowired
+    private EquipmentProductRepository equipmentProductRepository;
+    @Autowired
+    private EquipmentRepository equipmentRepository;
+    @Autowired
+    private VendorRepository vendorRepository;
+    @Autowired
+    private VendorUserRepository userRepository;
+    @Autowired
+    private ServiceTypeRepository serviceTypeRepository;
 
-  public List<Program> getAllPrograms() {
-    return programMapper.getAll();
-  }
+    public List<Program> getAllPrograms() {
+        return programMapper.getAll();
+    }
 
-  public Program getProgramByCode(String code) {
-    return programMapper.getProgramByCode(code);
-  }
+    public Program getProgramByCode(String code) {
+        return programMapper.getProgramByCode(code);
+    }
 
-  public List<RegimenCategory> getAllRegimenCategories() {
-    return regimenCategoryReportMapper.getAll();
-  }
+    public List<RegimenCategory> getAllRegimenCategories() {
+        return regimenCategoryReportMapper.getAll();
+    }
 
-  public List<DosageFrequency> getAllDosageFrequencies() {
-    return regimenRepository.getAllDosageFrequencies();
-  }
+    public List<DosageFrequency> getAllDosageFrequencies() {
+        return regimenRepository.getAllDosageFrequencies();
+    }
 
-  public List<RegimenProductCombination> getAllRegimenProductCombinations() {
-    return regimenRepository.getAllRegimenProductCombinations();
-  }
+    public List<RegimenProductCombination> getAllRegimenProductCombinations() {
+        return regimenRepository.getAllRegimenProductCombinations();
+    }
 
-  public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents() {
-    return regimenRepository.getAllRegimenCombinationConstituents();
-  }
+    public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents() {
+        return regimenRepository.getAllRegimenCombinationConstituents();
+    }
 
-  public List<ProcessingSchedule> getAllProcessingSchedules() {
-    return processingScheduleMapper.getAll();
-  }
+    public List<ProcessingSchedule> getAllProcessingSchedules() {
+        return processingScheduleMapper.getAll();
+    }
 
-  public List<ProcessingPeriod> getAllProcessingPeriods() {
-    return processingPeriodMapper.getAll();
-  }
+    public List<ProcessingPeriod> getAllProcessingPeriods() {
+        return processingPeriodMapper.getAll();
+    }
 
-  public Product getProductByCode(String code) {
-    return productMapper.getProductByCode(code);
-  }
+    public Product getProductByCode(String code) {
+        return productMapper.getProductByCode(code);
+    }
 
-  public List<GeographicLevel> getAllGeographicLevels() {
-    return geographicLevelMapper.getAll();
-  }
+    public List<GeographicLevel> getAllGeographicLevels() {
+        return geographicLevelMapper.getAll();
+    }
 
-  public List<org.openlmis.report.model.dto.GeographicZone> getAllZones() {
-    return geographicZoneMapper.getAll();
-  }
+    public List<org.openlmis.report.model.dto.GeographicZone> getAllZones() {
+        return geographicZoneMapper.getAll();
+    }
 
-  public List<ProductCategory> getAllProductCategories() {
-    return this.productCategoryMapper.getAll();
-  }
+    public List<ProductCategory> getAllProductCategories() {
+        return this.productCategoryMapper.getAll();
+    }
 
-  public List<org.openlmis.core.domain.Product> getFullProductList(RowBounds rowBounds) {
-    return productMapper.getFullProductList(rowBounds);
-  }
+    public List<org.openlmis.core.domain.Product> getFullProductList(RowBounds rowBounds) {
+        return productMapper.getFullProductList(rowBounds);
+    }
 
-  public List<RegimenConstituentDosage> getAllRegimenConstituentDosages() {
-    return regimenRepository.getAllRegimenConstituentsDosages();
-  }
+    public List<RegimenConstituentDosage> getAllRegimenConstituentDosages() {
+        return regimenRepository.getAllRegimenConstituentsDosages();
+    }
 
-  public List<Regimen> getAllRegimens() {
-    return regimenReportMapper.getAll();
-  }
+    public List<Regimen> getAllRegimens() {
+        return regimenReportMapper.getAll();
+    }
 
-  public List<DosageUnit> getDosageUnits() {
-    return dosageUnitMapper.getAll();
-  }
+    public List<DosageUnit> getDosageUnits() {
+        return dosageUnitMapper.getAll();
+    }
 
-  public List<FacilityType> getAllFacilityTypes() {
-    return facilityTypeMapper.getAllFacilityTypes();
-  }
+    public List<FacilityType> getAllFacilityTypes() {
+        return facilityTypeMapper.getAllFacilityTypes();
+    }
 
-  public List<Facility> getAllFacilities(RowBounds bounds) {
-    return facilityReportMapper.getAll(bounds);
-  }
+    public List<Facility> getAllFacilities(RowBounds bounds) {
+        return facilityReportMapper.getAll(bounds);
+    }
 
-  public Facility getFacilityByCode(String code) {
-    return facilityReportMapper.getFacilityByCode(code);
-  }
+    public Facility getFacilityByCode(String code) {
+        return facilityReportMapper.getFacilityByCode(code);
+    }
 
-  public List<ProgramProduct> getAllProgramProducts() {
-    return programProductMapper.getAll();
-  }
+    public List<ProgramProduct> getAllProgramProducts() {
+        return programProductMapper.getAll();
+    }
 
-  public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts() {
-    return facilityApprovedProductMapper.getAll();
-  }
+    public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts() {
+        return facilityApprovedProductMapper.getAll();
+    }
 
-  public List<AdjustmentType> getAllAdjustmentTypes() {
-    return adjustmentTypeReportMapper.getAll();
-  }
+    public List<AdjustmentType> getAllAdjustmentTypes() {
+        return adjustmentTypeReportMapper.getAll();
+    }
 
-  @Transactional
-  public void saveHFR(HealthFacilityDTO dto){
+    @Transactional
+    public void saveHFR(HealthFacilityDTO dto) {
 
-    if(dto != null){
-        if(!dto.getIlIDNumber().isEmpty()) {
-            HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
-            //HealthFacilityDTO facilityDTO = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
-            if (hfr == null) {
-                //if(facilityDTO == null) {
-                interfaceMapper.insert(dto);
+        if (dto != null) {
+            if (!dto.getIlIDNumber().isEmpty()) {
+                HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
+                //HealthFacilityDTO facilityDTO = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
+                if (hfr == null) {
+                    //if(facilityDTO == null) {
+                    interfaceMapper.insert(dto);
         /*}else
           interfaceMapper.update(dto);*/
 
-            } else {
-                // if (hfr.getFacIDNumber() != null){
-                interfaceMapper.update(dto);
-                // }
+                } else {
+                    // if (hfr.getFacIDNumber() != null){
+                    interfaceMapper.update(dto);
+                    // }
+                }
             }
+
         }
 
     }
 
-  }
 
+    public ProgramReferenceData getProgramReferenceData(String code, String facilityCode) {
+        Facility facility = null;
+        Program program = null;
+        List<FacilityTypeApprovedProduct> facilityTypeApprovedProductList = null;
+        List<ProcessingPeriod> processingPeriodList = null;
+        ProgramReferenceData programReferenceData = new ProgramReferenceData();
+        program = programMapper.getProgramByCode(code);
+        facility = facilityReportMapper.getFacilityByCode(facilityCode);
+        processingPeriodList = processingPeriodMapper.getPeriodsByProgramCode(code);
+        if (facility != null && program != null) {
+            facilityTypeApprovedProductList = facilityApprovedProductMapper.getAllByFacilityAndProgramId(Long.valueOf(facility.getId()), Long.valueOf(program.getId()));
 
-
-  public ProgramReferenceData getProgramReferenceData(String code, String facilityCode) {
-    Facility facility = null;
-    Program program = null;
-    List<FacilityTypeApprovedProduct> facilityTypeApprovedProductList = null;
-    List<ProcessingPeriod> processingPeriodList = null;
-    ProgramReferenceData programReferenceData = new ProgramReferenceData();
-    program = programMapper.getProgramByCode(code);
-    facility = facilityReportMapper.getFacilityByCode(facilityCode);
-    processingPeriodList = processingPeriodMapper.getPeriodsByProgramCode(code);
-    if (facility != null && program != null) {
-      facilityTypeApprovedProductList = facilityApprovedProductMapper.getAllByFacilityAndProgramId(Long.valueOf(facility.getId()), Long.valueOf(program.getId()));
-
-      programReferenceData.setFacility(facility);
-      programReferenceData.setProgram(program);
-      programReferenceData.setFacilityTypeApprovedProductList(facilityTypeApprovedProductList);
-      programReferenceData.setProcessingPeriodList(processingPeriodList);
+            programReferenceData.setFacility(facility);
+            programReferenceData.setProgram(program);
+            programReferenceData.setFacilityTypeApprovedProductList(facilityTypeApprovedProductList);
+            programReferenceData.setProcessingPeriodList(processingPeriodList);
+        }
+        return programReferenceData;
     }
-    return programReferenceData;
-  }
 
-  public List<HashMap<String,Object>>getAllHFRFacilities(){
-    return interfaceMapper.getAllHFRFacilities();
-  }
+    public List<HashMap<String, Object>> getAllHFRFacilities() {
+        return interfaceMapper.getAllHFRFacilities();
+    }
+
+    public List<EquipmentType> getAllEquipmentTypes() {
+        return this.equipmentTypeRepository.getAll();
+    }
+
+    public List<EquipmentFunctionalTestTypes> getAllEquipmentFunctionalTestTypesTypes() {
+        return this.functionalTestTypesRepository.getAllEquipmentFunctionalTestTypeList();
+    }
+
+    public List<EquipmentCategory> getAllEquipmentCategories() {
+        return this.categoryRepository.getAllEquipmentCategories();
+    }
+
+    public List<EquipmentEnergyType> getAllEquipmentEnergyTypes() {
+        return this.equipmentEnergyTypeRepository.getAll();
+    }
+
+    public List<EquipmentModel> getAllEquipmentEquipmentModels() {
+        return this.modelRepository.getAll();
+    }
+
+
+    public List<EquipmentProduct> getAllEquipmentProducts() {
+        return this.equipmentProductRepository.getByProgramEquipmentId(4l);
+    }
+
+    public List<Equipment> getAllEquipments() {
+        return this.equipmentRepository.getAll();
+    }
+
+    public List<Vendor> getAllEquipmentServiceVendors() {
+        return this.vendorRepository.getAll();
+    }
+
+    public List<VendorUser> getAllEquipmentServiceVendorUsers() {
+        return this.userRepository.getAllVendorUsers();
+    }
+
+    public List<ServiceType> getAllEquipmentServiceTypes() {
+        return this.serviceTypeRepository.getAll();
+
+    }
+
+    public List<ProgramEquipmentType> getAllEquipmentTypePrograms() {
+        return this.programEquipmentTypeRepository.getAllEquipmentTypePrograms();
+    }
+
+
 }

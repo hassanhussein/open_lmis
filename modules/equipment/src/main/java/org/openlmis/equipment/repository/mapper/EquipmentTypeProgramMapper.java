@@ -21,30 +21,33 @@ import java.util.List;
 @Repository
 public interface EquipmentTypeProgramMapper {
 
-  @Select("select pet.*, et.name equipmentTypeName, p.name programName " +
-      "from equipment_type_programs pet " +
-      "join equipment_types et on et.id = pet.equipmentTypeId " +
-      "join programs p on p.id = pet.programId " +
-      "where programId=#{programId} " +
-      "ORDER BY equipmentTypeName ")
-  @Results(value = {
-      @Result(property = "program.id", column = "programId"),
-      @Result(property = "equipmentType.id", column = "equipmentTypeId"),
-      @Result(property = "program.name", column = "programName"),
-      @Result(property = "equipmentType.name", column = "equipmentTypeName")
-  })
-  List<ProgramEquipmentType> getByProgramId(@Param(value = "programId") Long programId);
+    @Select("select pet.*, et.name equipmentTypeName, p.name programName " +
+            "from equipment_type_programs pet " +
+            "join equipment_types et on et.id = pet.equipmentTypeId " +
+            "join programs p on p.id = pet.programId " +
+            "where programId=#{programId} " +
+            "ORDER BY equipmentTypeName ")
+    @Results(value = {
+            @Result(property = "program.id", column = "programId"),
+            @Result(property = "equipmentType.id", column = "equipmentTypeId"),
+            @Result(property = "program.name", column = "programName"),
+            @Result(property = "equipmentType.name", column = "equipmentTypeName")
+    })
+    List<ProgramEquipmentType> getByProgramId(@Param(value = "programId") Long programId);
 
-  @Insert("INSERT INTO equipment_type_programs(programId, equipmentTypeId, displayOrder, enableTestCount, enableTotalColumn, createdBy, createdDate, modifiedBy, modifiedDate) " +
-      "VALUES (#{program.id},#{equipmentType.id},#{displayOrder}, #{enableTestCount},#{enableTotalColumn},#{createdBy},#{createdDate},#{modifiedBy},#{modifiedDate})")
-  @Options(useGeneratedKeys = true)
-  void insert(ProgramEquipmentType programEquipmentType);
+    @Insert("INSERT INTO equipment_type_programs(programId, equipmentTypeId, displayOrder, enableTestCount, enableTotalColumn, createdBy, createdDate, modifiedBy, modifiedDate) " +
+            "VALUES (#{program.id},#{equipmentType.id},#{displayOrder}, #{enableTestCount},#{enableTotalColumn},#{createdBy},#{createdDate},#{modifiedBy},#{modifiedDate})")
+    @Options(useGeneratedKeys = true)
+    void insert(ProgramEquipmentType programEquipmentType);
 
-  @Update("UPDATE equipment_type_programs " +
-      "SET programId = #{program.id}, equipmentTypeId = #{equipmentType.id}, displayOrder = #{displayOrder}, enableTestCount = #{enableTestCount}, enableTotalColumn = #{enableTotalColumn},modifiedBy = #{modifiedBy},modifiedDate = #{modifiedDate} " +
-      "WHERE id = #{id}")
-  void update(ProgramEquipmentType programEquipmentType);
+    @Update("UPDATE equipment_type_programs " +
+            "SET programId = #{program.id}, equipmentTypeId = #{equipmentType.id}, displayOrder = #{displayOrder}, enableTestCount = #{enableTestCount}, enableTotalColumn = #{enableTotalColumn},modifiedBy = #{modifiedBy},modifiedDate = #{modifiedDate} " +
+            "WHERE id = #{id}")
+    void update(ProgramEquipmentType programEquipmentType);
 
-  @Delete("DELETE FROM equipment_type_programs WHERE id = #{programEquipmentTypeId}")
-  void remove(Long programEquipmentTypeId);
+    @Delete("DELETE FROM equipment_type_programs WHERE id = #{programEquipmentTypeId}")
+    void remove(Long programEquipmentTypeId);
+
+    @Select("select * from equipment_type_programs ")
+    List<ProgramEquipmentType> getAllEquipmentTypePrograms();
 }

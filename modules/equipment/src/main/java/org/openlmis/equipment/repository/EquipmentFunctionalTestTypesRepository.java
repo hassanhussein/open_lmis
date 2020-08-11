@@ -33,4 +33,8 @@ public class EquipmentFunctionalTestTypesRepository {
     public void insertEquipmentFunctionalTestTypes(EquipmentFunctionalTestTypes obj) {
         mapper.insertEquipmentFunctionalTestTypes(obj);
     }
+    public List<EquipmentFunctionalTestTypes> getAllEquipmentFunctionalTestTypeList() {
+
+        return mapper.getAllEquipmentFunctionalTestTypeList();
+    }
 }

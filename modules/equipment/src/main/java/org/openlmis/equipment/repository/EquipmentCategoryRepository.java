@@ -69,4 +69,10 @@ public class EquipmentCategoryRepository {
     public void update(EquipmentCategory category) {
         mapper.update(category);
     }
+
+
+    public List<EquipmentCategory> getAllEquipmentCategories() {
+
+        return mapper.getAllEquipmentCategories();
+    }
 }

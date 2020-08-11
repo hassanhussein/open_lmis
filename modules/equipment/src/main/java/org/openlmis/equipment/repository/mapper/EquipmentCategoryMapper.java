@@ -1,10 +1,7 @@
 package org.openlmis.equipment.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
-import org.openlmis.core.domain.Facility;
-import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentCategory;
-import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,7 +40,7 @@ public interface EquipmentCategoryMapper {
     @Update("update equipment_types set categoryid = null")
     void resetEquipmentTypecategoryAssociation();
 
-   @Update("update equipment_functional_test_types set equipmentcategoryid = null")
+    @Update("update equipment_functional_test_types set equipmentcategoryid = null")
     void resetEquipmentFunctionalTestTypeCategoryAssociation();
 
     @Update("update equipment_functional_test_types set  equipmentcategoryid = #{equipmentCategoryId} where id = #{functionalTestTypeId}")
@@ -61,4 +58,7 @@ public interface EquipmentCategoryMapper {
             " values " +
             " (#{code}, #{name}, #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW())")
     void insert(EquipmentCategory category);
+
+    @Select("select *  from equipment_category")
+    List<EquipmentCategory> getAllEquipmentCategories();
 }

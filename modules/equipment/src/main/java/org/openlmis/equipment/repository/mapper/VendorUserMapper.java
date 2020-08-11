@@ -47,4 +47,8 @@ public interface VendorUserMapper {
           "WHERE u.id not in (SELECT userId from equipment_service_vendor_users) AND u.active = TRUE " +
       "  order by u.firstName, u.lastName")
   List<User> getAllUsersAvailableForVendor();
+
+  @Select("SELECT * " +
+          "from equipment_service_vendor_users ")
+  List<VendorUser> getAllVendorUsers();
 }

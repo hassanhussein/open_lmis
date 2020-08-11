@@ -45,4 +45,7 @@ public class VendorUserRepository {
   public List<User> getAllUsersAvailableForVendor() {
     return vendorUserMapper.getAllUsersAvailableForVendor();
   }
+  public List<VendorUser> getAllVendorUsers() {
+    return vendorUserMapper.getAllVendorUsers();
+  }
 }

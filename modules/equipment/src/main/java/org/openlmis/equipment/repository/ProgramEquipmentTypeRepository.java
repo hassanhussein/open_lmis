@@ -38,4 +38,8 @@ public class ProgramEquipmentTypeRepository {
     public void remove(Long programEquipmentId){
         equipmentTypeProgramMapper.remove(programEquipmentId);
     }
+
+    public List<ProgramEquipmentType> getAllEquipmentTypePrograms() {
+      return equipmentTypeProgramMapper.getAllEquipmentTypePrograms();
+    }
 }
