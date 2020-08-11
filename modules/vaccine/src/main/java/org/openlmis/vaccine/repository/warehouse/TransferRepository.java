@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.warehouse;
 
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
+import org.openlmis.vaccine.domain.wms.LocationEntry;
 import org.openlmis.vaccine.domain.wms.Transfer;
 import org.openlmis.vaccine.domain.wms.dto.LotOnHandExtDTO;
 import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
@@ -52,5 +53,17 @@ public class TransferRepository {
 
     public List<LotOnHandExtDTO> getLotOnHandExtraBy(Long id) {
         return mapper.getLotOnHandExtaBy(id);
+    }
+
+    public List<LocationEntry> checkAvailableLocation(Long toBin, Long productId) {
+        return mapper.checkAvailableLocation(toBin,productId);
+    }
+
+    public LocationEntry getLotByStockCard(Long id, Long lotId) {
+        return mapper.getLotByStockCard(id,lotId);
+    }
+
+    public Lot getLotByProduct(Long productId, Long lotId) {
+        return mapper.getByProduct(productId, lotId);
     }
 }

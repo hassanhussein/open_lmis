@@ -3,6 +3,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
+import org.openlmis.vaccine.domain.wms.LocationEntry;
 import org.openlmis.vaccine.domain.wms.Transfer;
 import org.openlmis.vaccine.domain.wms.dto.LotOnHandExtDTO;
 import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
@@ -75,4 +76,13 @@ public interface TransferMapper {
             " group by  p.primaryName ,lo.id ,expirationDate, lotNumber,h.vvmid,H.quantityOnHand " +
             " order by Lo.expirationDate asc ")
     List<LotOnHandExtDTO> getLotOnHandExtaBy(@Param("productId") Long id);
+
+    @Select("select * from lot_location_entries h where stockCardId = #{stockCardId} AND locationId = #{locationId} ")
+    List<LocationEntry> checkAvailableLocation(@Param("locationId") Long locationId, @Param("stockCardId") Long stockCardId);
+
+    @Select("  select * from lot_location_entries h where stockCardID  = #{stockCardId} AND lotId not in( #{lotId}) and quantity > 0 limit 1")
+    LocationEntry getLotByStockCard(@Param("stockCardId") Long id, @Param("lotId") Long lotId);
+
+    @Select("select * from lots where productID = #{productId} and expirationDate::date > NOW()::DATE and Id NOT IN(#{lotId}) limit 1")
+    Lot getByProduct(@Param("productId") Long productId , @Param("lotId") Long lotId);
 }
