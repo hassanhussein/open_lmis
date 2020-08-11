@@ -123,6 +123,8 @@ public class LookupService {
     private VendorUserRepository userRepository;
     @Autowired
     private ServiceTypeRepository serviceTypeRepository;
+    @Autowired
+    private EquipmentInventoryRepository inventoryRepository;
 
     public List<Program> getAllPrograms() {
         return programMapper.getAll();
@@ -307,5 +309,8 @@ public class LookupService {
         return this.programEquipmentTypeRepository.getAllEquipmentTypePrograms();
     }
 
+    public List<EquipmentInventory> getAllEquipmentInventories() {
+        return inventoryRepository.getAllEquipmentInventories();
+    }
 
 }

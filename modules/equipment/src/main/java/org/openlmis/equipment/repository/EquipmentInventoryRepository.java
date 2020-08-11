@@ -15,7 +15,10 @@ package org.openlmis.equipment.repository;
 import org.apache.log4j.Logger;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
-import org.openlmis.equipment.domain.*;
+import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentInventoryStatus;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.dto.ColdChainEquipmentTemperatureStatusDTO;
 import org.openlmis.equipment.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,150 +29,154 @@ import java.util.List;
 @Repository
 public class EquipmentInventoryRepository {
 
-  public static Logger logger = Logger.getLogger(EquipmentInventoryRepository.class);
-  @Autowired
-  EquipmentInventoryMapper mapper;
-  @Autowired
-  EquipmentMapper equipmentMapper;
-  @Autowired
-  EquipmentTypeMapper equipmentTypeMapper;
-  @Autowired
-  ColdChainEquipmentMapper coldChainEquipmentMapper;
-  @Autowired
-  EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
-  @Autowired
-  EquipmentOperationalStatusMapper equipmentOperationalStatusMapper;
+    public static Logger logger = Logger.getLogger(EquipmentInventoryRepository.class);
+    @Autowired
+    EquipmentInventoryMapper mapper;
+    @Autowired
+    EquipmentMapper equipmentMapper;
+    @Autowired
+    EquipmentTypeMapper equipmentTypeMapper;
+    @Autowired
+    ColdChainEquipmentMapper coldChainEquipmentMapper;
+    @Autowired
+    EquipmentInventoryStatusMapper equipmentInventoryStatusMapper;
+    @Autowired
+    EquipmentOperationalStatusMapper equipmentOperationalStatusMapper;
 
-  public List<EquipmentInventory> getFacilityInventory(Long facilityId, Long programId){
-    List<EquipmentInventory> inventories = mapper.getInventoryByFacilityAndProgram(facilityId, programId);
-    for (EquipmentInventory inventory : inventories) {
-      setEquipmentToInventory(inventory);
-      setStatusToInventory(inventory);
-    }
-    return inventories;
-  }
-
-  public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds, Pagination pagination) {
-    String strFacilityIds = getFacilityIdString(facilityIds);
-
-    List<EquipmentInventory> inventories = mapper.getInventory(programId, equipmentTypeId, strFacilityIds, pagination);
-    for (EquipmentInventory inventory : inventories) {
-      setEquipmentToInventory(inventory);
-      setStatusToInventory(inventory);
-    }
-    return inventories;
-  }
-
-  public Integer getInventoryCount(Long programId, Long equipmentTypeId, long[] facilityIds) {
-    String strFacilityIds = getFacilityIdString(facilityIds);
-
-    return mapper.getInventoryCount(programId, equipmentTypeId, strFacilityIds);
-  }
-
-  private String getFacilityIdString(long[] facilityIds) {
-    // Convert ids into string format for the mapper to use
-    StringBuilder str = new StringBuilder();
-    if (facilityIds.length == 0) {
-      str.append("{}");
-    } else {
-      str.append("{");
-      for (int i = 0; i < facilityIds.length-1; i++) {
-        str.append(facilityIds[i]);
-        str.append(",");
-      }
-      str.append(facilityIds[facilityIds.length-1]);
-      str.append("}");
+    public List<EquipmentInventory> getFacilityInventory(Long facilityId, Long programId) {
+        List<EquipmentInventory> inventories = mapper.getInventoryByFacilityAndProgram(facilityId, programId);
+        for (EquipmentInventory inventory : inventories) {
+            setEquipmentToInventory(inventory);
+            setStatusToInventory(inventory);
+        }
+        return inventories;
     }
 
-    return str.toString();
-  }
+    public List<EquipmentInventory> getInventory(Long programId, Long equipmentTypeId, long[] facilityIds, Pagination pagination) {
+        String strFacilityIds = getFacilityIdString(facilityIds);
 
-  public EquipmentInventory getInventoryById(Long id){
-    EquipmentInventory inventory = mapper.getInventoryById(id);
-    setEquipmentToInventory(inventory);
-    setStatusToInventory(inventory);
-    return inventory;
-  }
-
-  private void setEquipmentToInventory(EquipmentInventory inventory) {
-    Long equipmentId = inventory.getEquipmentId();
-    Equipment equipment = equipmentMapper.getById(equipmentId);
-    EquipmentType equipmentType = equipmentTypeMapper.getEquipmentTypeById(equipment.getEquipmentTypeId());
-    if (equipmentType.getIsColdChain()) {
-      equipment = coldChainEquipmentMapper.getById(equipmentId);
+        List<EquipmentInventory> inventories = mapper.getInventory(programId, equipmentTypeId, strFacilityIds, pagination);
+        for (EquipmentInventory inventory : inventories) {
+            setEquipmentToInventory(inventory);
+            setStatusToInventory(inventory);
+        }
+        return inventories;
     }
-    inventory.setEquipment(equipment);
-  }
 
-  private void setStatusToInventory(EquipmentInventory inventory) {
-    EquipmentInventoryStatus status = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
-    if(status != null) {
-      inventory.setOperationalStatusId(status.getStatusId());
-      inventory.setNotFunctionalStatusId(status.getNotFunctionalStatusId());
+    public Integer getInventoryCount(Long programId, Long equipmentTypeId, long[] facilityIds) {
+        String strFacilityIds = getFacilityIdString(facilityIds);
+
+        return mapper.getInventoryCount(programId, equipmentTypeId, strFacilityIds);
     }
-  }
 
-  public void insert(EquipmentInventory inventory){
-    mapper.insert(inventory);
-    updateStatus(inventory);
-  }
+    private String getFacilityIdString(long[] facilityIds) {
+        // Convert ids into string format for the mapper to use
+        StringBuilder str = new StringBuilder();
+        if (facilityIds.length == 0) {
+            str.append("{}");
+        } else {
+            str.append("{");
+            for (int i = 0; i < facilityIds.length - 1; i++) {
+                str.append(facilityIds[i]);
+                str.append(",");
+            }
+            str.append(facilityIds[facilityIds.length - 1]);
+            str.append("}");
+        }
 
-  public void update(EquipmentInventory inventory){
-    mapper.update(inventory);
-    updateStatus(inventory);
-  }
-
-  public void updateStatus(EquipmentInventory inventory){
-    EquipmentInventoryStatus existingStatus = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
-    EquipmentInventoryStatus status = getStatusFromInventory(inventory);
-    if (!status.equals(existingStatus)) {
-      status.setCreatedBy(inventory.getCreatedBy());
-      status.setModifiedBy(inventory.getModifiedBy());
-      if (!equipmentOperationalStatusMapper.getById(status.getStatusId()).getIsBad()) {
-        status.setNotFunctionalStatusId(null);
-      }
-      equipmentInventoryStatusMapper.insert(status);
+        return str.toString();
     }
-  }
 
-  private EquipmentInventoryStatus getStatusFromInventory(EquipmentInventory inventory) {
-    EquipmentInventoryStatus inventoryStatus = new EquipmentInventoryStatus();
-    inventoryStatus.setInventoryId(inventory.getId());
-    inventoryStatus.setStatusId(inventory.getOperationalStatusId());
-    inventoryStatus.setNotFunctionalStatusId(inventory.getNotFunctionalStatusId());
-    return inventoryStatus;
-  }
+    public EquipmentInventory getInventoryById(Long id) {
+        EquipmentInventory inventory = mapper.getInventoryById(id);
+        setEquipmentToInventory(inventory);
+        setStatusToInventory(inventory);
+        return inventory;
+    }
 
-  public String updateNonFunctionalEquipments() {
-    return mapper.updateNonFunctionalEquipments();
-  }
+    private void setEquipmentToInventory(EquipmentInventory inventory) {
+        Long equipmentId = inventory.getEquipmentId();
+        Equipment equipment = equipmentMapper.getById(equipmentId);
+        EquipmentType equipmentType = equipmentTypeMapper.getEquipmentTypeById(equipment.getEquipmentTypeId());
+        if (equipmentType.getIsColdChain()) {
+            equipment = coldChainEquipmentMapper.getById(equipmentId);
+        }
+        inventory.setEquipment(equipment);
+    }
 
-  public List<ColdChainEquipmentTemperatureStatusDTO>getAll(Long equipmentId){
-    return mapper.getLineItemsByEquipmentInventory(equipmentId);
-  }
+    private void setStatusToInventory(EquipmentInventory inventory) {
+        EquipmentInventoryStatus status = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
+        if (status != null) {
+            inventory.setOperationalStatusId(status.getStatusId());
+            inventory.setNotFunctionalStatusId(status.getNotFunctionalStatusId());
+        }
+    }
 
-  public List<Facility> getFacilitiesWithNonFunctionalEquipments() {
-    return mapper.getFacilitiesWithNonFunctionalEquipments();
-  }
+    public void insert(EquipmentInventory inventory) {
+        mapper.insert(inventory);
+        updateStatus(inventory);
+    }
 
-  public void deleteEquipmentInventory(Long inventoryId){
-    mapper.deleteEquipmentInventoryStatuses(inventoryId);
-    mapper.deleteEquipmentFromIDVReport(inventoryId);
-    mapper.deleteEquipmentInventory(inventoryId);
-  }
+    public void update(EquipmentInventory inventory) {
+        mapper.update(inventory);
+        updateStatus(inventory);
+    }
 
-  public List<EquipmentInventory> getInventoryByFacilityAndProgram(Long facilityId, Long programId){
-     return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
-  }
+    public void updateStatus(EquipmentInventory inventory) {
+        EquipmentInventoryStatus existingStatus = equipmentInventoryStatusMapper.getCurrentStatus(inventory.getId());
+        EquipmentInventoryStatus status = getStatusFromInventory(inventory);
+        if (!status.equals(existingStatus)) {
+            status.setCreatedBy(inventory.getCreatedBy());
+            status.setModifiedBy(inventory.getModifiedBy());
+            if (!equipmentOperationalStatusMapper.getById(status.getStatusId()).getIsBad()) {
+                status.setNotFunctionalStatusId(null);
+            }
+            equipmentInventoryStatusMapper.insert(status);
+        }
+    }
 
-  public EquipmentInventory findBySerialNumber(String serialNumber) {
-    return mapper.findInventoryBySerialNumber(serialNumber);
-  }
+    private EquipmentInventoryStatus getStatusFromInventory(EquipmentInventory inventory) {
+        EquipmentInventoryStatus inventoryStatus = new EquipmentInventoryStatus();
+        inventoryStatus.setInventoryId(inventory.getId());
+        inventoryStatus.setStatusId(inventory.getOperationalStatusId());
+        inventoryStatus.setNotFunctionalStatusId(inventory.getNotFunctionalStatusId());
+        return inventoryStatus;
+    }
 
-  public EquipmentInventory getInventoryByFacilityProgramEquipmentSerialNumber(Long facilityId,
-                                                                               Long programId,
-                                                                               Long equipmentId,
-                                                                               String serialNumber) {
-    return mapper.getInventoryByFacilityProgramEquipmentSerialNumber(facilityId, programId, equipmentId, serialNumber);
-  }
+    public String updateNonFunctionalEquipments() {
+        return mapper.updateNonFunctionalEquipments();
+    }
+
+    public List<ColdChainEquipmentTemperatureStatusDTO> getAll(Long equipmentId) {
+        return mapper.getLineItemsByEquipmentInventory(equipmentId);
+    }
+
+    public List<Facility> getFacilitiesWithNonFunctionalEquipments() {
+        return mapper.getFacilitiesWithNonFunctionalEquipments();
+    }
+
+    public void deleteEquipmentInventory(Long inventoryId) {
+        mapper.deleteEquipmentInventoryStatuses(inventoryId);
+        mapper.deleteEquipmentFromIDVReport(inventoryId);
+        mapper.deleteEquipmentInventory(inventoryId);
+    }
+
+    public List<EquipmentInventory> getInventoryByFacilityAndProgram(Long facilityId, Long programId) {
+        return mapper.getInventoryByFacilityAndProgram(facilityId, programId);
+    }
+
+    public EquipmentInventory findBySerialNumber(String serialNumber) {
+        return mapper.findInventoryBySerialNumber(serialNumber);
+    }
+
+    public EquipmentInventory getInventoryByFacilityProgramEquipmentSerialNumber(Long facilityId,
+                                                                                 Long programId,
+                                                                                 Long equipmentId,
+                                                                                 String serialNumber) {
+        return mapper.getInventoryByFacilityProgramEquipmentSerialNumber(facilityId, programId, equipmentId, serialNumber);
+    }
+
+    public List<EquipmentInventory> getAllEquipmentInventories() {
+        return mapper.getAllEquipmentInventories();
+    }
 }

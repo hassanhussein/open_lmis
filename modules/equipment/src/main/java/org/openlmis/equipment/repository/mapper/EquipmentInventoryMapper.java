@@ -25,84 +25,84 @@ import java.util.List;
 @Repository
 public interface EquipmentInventoryMapper {
 
-  @Select("SELECT * from equipment_inventories where facilityId = #{facilityId} and programId = #{programId}")
-  @Results({
-      @Result(property = "equipmentId", column = "equipmentId"),
-      @Result(
-          property = "equipment", column = "equipmentId", javaType = Equipment.class,
-          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
-  })
-  List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId")Long programId);
+    @Select("SELECT * from equipment_inventories where facilityId = #{facilityId} and programId = #{programId}")
+    @Results({
+            @Result(property = "equipmentId", column = "equipmentId"),
+            @Result(
+                    property = "equipment", column = "equipmentId", javaType = Equipment.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById"))
+    })
+    List<EquipmentInventory> getInventoryByFacilityAndProgram(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
-  @Select("SELECT ei.*" +
-      " FROM equipment_inventories ei" +
-      " JOIN equipments e ON ei.equipmentId = e.id" +
-      " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
-      " WHERE ei.programId = #{programId}" +
-      " AND et.id = #{equipmentTypeId}" +
-      " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
-  @Results({
-      @Result(property = "equipmentId", column = "equipmentId"),
-      @Result(
-          property = "equipment", column = "equipmentId", javaType = Equipment.class,
-          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
-      @Result(property = "facilityId", column = "facilityId"),
-      @Result(
-          property = "facility", column = "facilityId", javaType = Facility.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
-      @Result(property = "coldChainLineItems", javaType = List.class, column = "equipmentInventoryId",
-           many = @Many(select = "getLineItemsByEquipmentInventory"))
+    @Select("SELECT ei.*" +
+            " FROM equipment_inventories ei" +
+            " JOIN equipments e ON ei.equipmentId = e.id" +
+            " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
+            " WHERE ei.programId = #{programId}" +
+            " AND et.id = #{equipmentTypeId}" +
+            " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
+    @Results({
+            @Result(property = "equipmentId", column = "equipmentId"),
+            @Result(
+                    property = "equipment", column = "equipmentId", javaType = Equipment.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+            @Result(property = "facilityId", column = "facilityId"),
+            @Result(
+                    property = "facility", column = "facilityId", javaType = Facility.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById")),
+            @Result(property = "coldChainLineItems", javaType = List.class, column = "equipmentInventoryId",
+                    many = @Many(select = "getLineItemsByEquipmentInventory"))
 
-  })
-  List<EquipmentInventory> getInventory(@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds, RowBounds rowBounds);
+    })
+    List<EquipmentInventory> getInventory(@Param("programId") Long programId, @Param("equipmentTypeId") Long equipmentTypeId, @Param("facilityIds") String facilityIds, RowBounds rowBounds);
 
-  @Select("SELECT COUNT(ei.id)" +
-      " FROM equipment_inventories ei" +
-      " JOIN equipments e ON ei.equipmentId = e.id" +
-      " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
-      " WHERE ei.programId = #{programId}" +
-      " AND et.id = #{equipmentTypeId}" +
-      " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
-  Integer getInventoryCount(@Param("programId")Long programId, @Param("equipmentTypeId")Long equipmentTypeId, @Param("facilityIds")String facilityIds);
+    @Select("SELECT COUNT(ei.id)" +
+            " FROM equipment_inventories ei" +
+            " JOIN equipments e ON ei.equipmentId = e.id" +
+            " JOIN equipment_types et ON e.equipmentTypeId = et.id" +
+            " WHERE ei.programId = #{programId}" +
+            " AND et.id = #{equipmentTypeId}" +
+            " AND ei.facilityId = ANY (#{facilityIds}::INT[])")
+    Integer getInventoryCount(@Param("programId") Long programId, @Param("equipmentTypeId") Long equipmentTypeId, @Param("facilityIds") String facilityIds);
 
-  @Select("SELECT * from equipment_inventories where id = #{id}")
-  @Results({
-      @Result(property = "equipmentId", column = "equipmentId"),
-      @Result(
-          property = "equipment", column = "equipmentId", javaType = Equipment.class,
-          one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
-      @Result(property = "facilityId", column = "facilityId"),
-      @Result(
-          property = "facility", column = "facilityId", javaType = Facility.class,
-          one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
-  })
-  EquipmentInventory getInventoryById(@Param("id") Long id);
+    @Select("SELECT * from equipment_inventories where id = #{id}")
+    @Results({
+            @Result(property = "equipmentId", column = "equipmentId"),
+            @Result(
+                    property = "equipment", column = "equipmentId", javaType = Equipment.class,
+                    one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentMapper.getById")),
+            @Result(property = "facilityId", column = "facilityId"),
+            @Result(
+                    property = "facility", column = "facilityId", javaType = Facility.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.FacilityMapper.getById"))
+    })
+    EquipmentInventory getInventoryById(@Param("id") Long id);
 
-  @Insert("INSERT into equipment_inventories " +
-      " ( facilityId, equipmentId, programId, serialNumber" +
-      ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
-      ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasStabilizer" +
-      ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate,nameOfSparePart, remark) " +
-      "values " +
-      " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}" +
-      ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
-      ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasStabilizer}" +
-      ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{nameOfSparePart}, #{remark})")
-  @Options(useGeneratedKeys = true)
-  void insert(EquipmentInventory inventory);
+    @Insert("INSERT into equipment_inventories " +
+            " ( facilityId, equipmentId, programId, serialNumber" +
+            ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
+            ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasStabilizer" +
+            ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate,nameOfSparePart, remark) " +
+            "values " +
+            " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}" +
+            ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
+            ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasStabilizer}" +
+            ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{nameOfSparePart}, #{remark})")
+    @Options(useGeneratedKeys = true)
+    void insert(EquipmentInventory inventory);
 
-  @Update("UPDATE equipment_inventories " +
-      "SET " +
-      " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, " +
-      " serialNumber = #{serialNumber}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, " +
-      " sourceOfFund = #{sourceOfFund}, replacementRecommended = #{replacementRecommended}, " +
-      " reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, " +
-      " dateLastAssessed = #{dateLastAssessed}, hasStabilizer = #{hasStabilizer} " +
-      " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, primaryDonorId = #{primaryDonorId} " +
-      " , modifiedBy = #{modifiedBy}, modifiedDate = NOW(), " +
-      " nameOfSparePart = #{nameOfSparePart}, remark = #{remark}" +
-      " WHERE id = #{id}")
-  void update(EquipmentInventory inventory);
+    @Update("UPDATE equipment_inventories " +
+            "SET " +
+            " facilityId = #{facilityId}, equipmentId = #{equipmentId}, programId = #{programId}, " +
+            " serialNumber = #{serialNumber}, yearOfInstallation = #{yearOfInstallation}, purchasePrice = #{purchasePrice}, " +
+            " sourceOfFund = #{sourceOfFund}, replacementRecommended = #{replacementRecommended}, " +
+            " reasonForReplacement = #{reasonForReplacement}, nameOfAssessor = #{nameOfAssessor}, " +
+            " dateLastAssessed = #{dateLastAssessed}, hasStabilizer = #{hasStabilizer} " +
+            " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, primaryDonorId = #{primaryDonorId} " +
+            " , modifiedBy = #{modifiedBy}, modifiedDate = NOW(), " +
+            " nameOfSparePart = #{nameOfSparePart}, remark = #{remark}" +
+            " WHERE id = #{id}")
+    void update(EquipmentInventory inventory);
 
     @Select("Select * from fn_populate_alert_equipment_nonfunctional(1);")
     String updateNonFunctionalEquipments();
@@ -138,4 +138,7 @@ public interface EquipmentInventoryMapper {
                                                                           @Param("programId") Long programId,
                                                                           @Param("equipmentId") Long equipmentId,
                                                                           @Param("serialNumber") String serialNumber);
+
+    @Select("select * from equipment_inventories ")
+    List<EquipmentInventory> getAllEquipmentInventories();
 }

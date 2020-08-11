@@ -413,4 +413,9 @@ public class LookupController {
         return RestResponse.response("equipment-type-programs", lookupService.getAllEquipmentTypePrograms());
     }
 
+    @RequestMapping(value = "/rest-api/lookup/equipment-inventories")
+    public ResponseEntity getAllEquipmentInventories() {
+        return RestResponse.response("equipment-inventories", lookupService.getAllEquipmentInventories());
+    }
+
 }
