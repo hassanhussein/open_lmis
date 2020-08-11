@@ -45,10 +45,14 @@ public interface RnrLineItemMapper {
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
   //removed products.packSize || dosage_units.code
-  @Select({"SELECT requisition_line_items.*, msdUom as uom, products.alternateItemCode, products.strength, products.primaryname, products.patientCalculationFormula, owner revision, priceCode, to_char(CURRENT_DATE, 'yyyy-MM-dd') quoteDate ",
+  @Select({"SELECT requisition_line_items.*, " +
+          " CASE WHEN msdUom is null THEN products.dispensingUnit ELSE msdUom END as uom, " +
+          " CASE WHEN products.alternateItemCode is null  then requisition_line_items.productcode else products.alternateItemCode end as alternateItemCode," +
+          " CASE WHEN owner is null THEN RIGHT(products.code,2 ) else owner end as revision " +
+          " , products.strength, products.primaryname, products.patientCalculationFormula, to_char(CURRENT_DATE, 'yyyy-MM-dd') quoteDate ",
           "FROM requisition_line_items, products ",
           "WHERE rnrId = #{rnrId} and requisition_line_items.fullSupply = true ",
-          "and requisition_line_items.productcode = products.code and products.owner is not null ",
+          "and requisition_line_items.productcode = products.code ",
           "order by productDisplayOrder;"})
   @Results(value = {
     @Result(property = "id", column = "id"),
@@ -115,7 +119,13 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true)
   void insertNonFullSupply(RnrLineItem requisitionLineItem);
 
-  @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
+ // @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
+  @Select("SELECT requisition_line_items.*, \n" +
+          " CASE WHEN msdUom is null THEN products.dispensingUnit ELSE msdUom END as uom, \n" +
+          "          CASE WHEN products.alternateItemCode is null  then requisition_line_items.productcode else products.alternateItemCode end as alternateItemCode,\n" +
+          "          CASE WHEN owner is null THEN RIGHT(products.code,2 ) else owner end as revision, to_char(CURRENT_DATE, 'yyyy-MM-dd') quoteDate  \n" +
+          " FROM requisition_line_items, products \n" +
+          " WHERE rnrId = #{rnrId} AND requisition_line_items.fullSupply = false and requisition_line_items.productcode = products.code")
   public List<RnrLineItem> getNonFullSupplyRnrLineItemsByRnrId(Long rnrId);
 
   @Delete("DELETE FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
