@@ -47,7 +47,7 @@ public interface RnrLineItemMapper {
   //removed products.packSize || dosage_units.code
   @Select({"SELECT requisition_line_items.*, " +
           " CASE WHEN msdUom is null THEN products.dispensingUnit ELSE msdUom END as uom, " +
-          " CASE WHEN products.alternateItemCode is null  then requisition_line_items.productcode else products.alternateItemCode end as alternateItemCode," +
+          " CASE WHEN products.alternateItemCode is null  then left(requisition_line_items.productcode, -2) else products.alternateItemCode end as alternateItemCode," +
           " CASE WHEN owner is null THEN RIGHT(products.code,2 ) else owner end as revision " +
           " , products.strength, products.primaryname, products.patientCalculationFormula, to_char(CURRENT_DATE, 'yyyy-MM-dd') quoteDate ",
           "FROM requisition_line_items, products ",
@@ -122,7 +122,7 @@ public interface RnrLineItemMapper {
  // @Select("SELECT * FROM requisition_line_items WHERE rnrId = #{rnrId} AND fullSupply = false")
   @Select("SELECT requisition_line_items.*, \n" +
           " CASE WHEN msdUom is null THEN products.dispensingUnit ELSE msdUom END as uom, \n" +
-          "          CASE WHEN products.alternateItemCode is null  then requisition_line_items.productcode else products.alternateItemCode end as alternateItemCode,\n" +
+          "          CASE WHEN products.alternateItemCode is null  then left(requisition_line_items.productcode, -2) else products.alternateItemCode end as alternateItemCode,\n" +
           "          CASE WHEN owner is null THEN RIGHT(products.code,2 ) else owner end as revision, to_char(CURRENT_DATE, 'yyyy-MM-dd') quoteDate  \n" +
           " FROM requisition_line_items, products \n" +
           " WHERE rnrId = #{rnrId} AND requisition_line_items.fullSupply = false and requisition_line_items.productcode = products.code")
