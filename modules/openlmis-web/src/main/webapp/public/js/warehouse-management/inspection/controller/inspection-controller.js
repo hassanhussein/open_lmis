@@ -70,7 +70,17 @@ $scope.productSum($scope.lineItem);
    $scope.failReasons = [{"id":1,"name":'Temperature'},{"id":2,"name":'Rain'},{"id":3,"name":'Opened Vial'}];
 
 
+$scope.hasZero=function(lot){
 
+if(lot.failedQuantity=="" || lot.failedQuantity==0){
+//    reset failed reason
+       lot.failedReason="";
+       lot.failLocationId="";
+//     reset faled location
+//
+}
+
+}
 $scope.vvmChanged=function(lot){
 
  if(lot.vvmStatus>2){
@@ -379,7 +389,7 @@ if(!$scope.hasExpired(lot)){
 
    //check fail location
         //only if we have fail quantity
- if((lot.failLocationId===null|| !lot.failLocationId)&&lot.failedQuantity!=='0' && lot.failedQuantity){
+ if((lot.failedReason==4&&lot.failedReason=='')||(lot.failedVvm=='' && lot.failedReason==4)||(lot.failedReason=='')){
                        lot.failLocationError=true;
                        $scope.globalErrorFlag=true;
                    }else{
@@ -453,7 +463,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
-//      console.log(data.inspection)
+      console.log(data.inspection)
         deferred.resolve(data.inspection);
       }, {});
     }, 100);
