@@ -562,8 +562,8 @@
                                         <tr ng-repeat="document in inspection.receive.asn.purchaseDocuments">
 
                                             <td>{{$index+1}}</td>
-                                            <td>
-                                                <span style="min-width:300px !important" title="Created By: {{document.createdByName}}, Created At: {{document.createddate}}">{{document.documentType.name}}</span>
+                                            <td ng-class="{'deleted': document.deleted==true}">
+                                                <span style="min-width:300px !important" ng-class="{'deleted': document.deleted==true}" title="Created By: {{document.createdByName}}, Created At: {{document.createddate}}">{{document.documentType.name}}</span>
                                             </td>
                                             <td><span>{{document.fileLocation}}</span></td>
 
