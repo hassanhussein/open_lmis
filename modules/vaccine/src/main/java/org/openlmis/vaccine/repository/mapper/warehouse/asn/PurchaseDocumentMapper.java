@@ -10,14 +10,14 @@ import java.util.List;
 @Repository
 public interface PurchaseDocumentMapper {
 
-    @Insert("insert into purchase_documents(asnId,receiveId, documentType, fileLocation, createdDate,createdBy, modifiedBy, modifiedDate,asnNumber) values(" +
+    @Insert("insert into purchase_documents(asnId,receiveId, documentType, fileLocation, createdDate,createdBy, modifiedBy, modifiedDate,asnNumber,deleted,comment) values(" +
             "#{asn.id},#{receive.id},#{documentType.id}, #{fileLocation}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
-            "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{asnNumber} )")
+            "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{asnNumber} ,#{deleted},#{comment})")
     @Options(useGeneratedKeys = true)
     Integer insert(PurchaseDocument purchaseDocument);
 
     @Update("update  purchase_documents set documentType = #{documentType.id},asnNumber = #{asnNumber}, fileLocation = #{fileLocation}, " +
-            " modifiedBy = #{modifiedBy}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
+            " modifiedBy = #{modifiedBy},comment=#{comment},deleted=#{deleted} modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
     void update(PurchaseDocument purchaseDocument);
 
     @Select("SELECT * FROM purchase_documents")
@@ -39,7 +39,7 @@ public interface PurchaseDocumentMapper {
     })
     PurchaseDocument getById(@Param("id") Long id);
 
-    @Select("SELECT * FROM purchase_documents where asnid = #{id}")
+    @Select("SELECT p.*, concat(u.firstname,' ',u.lastname)  createdByName FROM purchase_documents p left join users u on (u.id=p.createdby)  where asnid = #{id}")
     @Results(value = {
             @Result(property = "documentType", column = "documenttype", javaType = Integer.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMapper.getById"))
@@ -55,16 +55,19 @@ public interface PurchaseDocumentMapper {
 
 
     @Insert("INSERT INTO public.documents(\n" +
-            "            asnNumber, documentType, fileLocation)\n" +
-            "    VALUES ( #{asnNumber}, #{documentType.id}, #{fileLocation});\n")
+            "            asnNumber, documentType, fileLocation,createdDate,createdBy)\n" +
+            "    VALUES ( #{asnNumber}, #{documentType.id}, #{fileLocation},COALESCE(#{createdDate}, NOW()),#{createdBy});\n")
     @Options(useGeneratedKeys = true)
     Integer insertDocument(Document document);
 
    @Update("update documents set asnNumber=#{asnNumber}, documentType = #{documentType.id}, fileLocation= #{fileLocation} where id = #{id}")
    void updateDocument(Document document);
 
+    @Update("update  documents set deleted=true,comment=#{comment},deletionLocation=#{deletionLocation},deletedBy=#{deletedBy} where id = #{id} ")
+    void updateDeleteDocument(Document document);
 
-    @Select("SELECT * FROM documents where asnNumber = #{asnNumber}")
+
+    @Select("SELECT d.*, concat(u.firstname,' ',u.lastname)  createdByName FROM documents d left join users u on (u.id=d.createdby) where asnNumber = #{asnNumber}")
     @Results(value = {
             @Result(property = "documentType", column = "documentType", javaType = Integer.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMapper.getById"))

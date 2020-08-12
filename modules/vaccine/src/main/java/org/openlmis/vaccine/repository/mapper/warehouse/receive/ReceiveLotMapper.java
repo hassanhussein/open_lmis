@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface ReceiveLotMapper {
 
-    @Insert(" INSERT INTO receive_lots (receiveLineItemId,locationId, lotNumber, serialNumber, expiryDate, manufacturingDate, quantity,  " +
+    @Insert(" INSERT INTO receive_lots (receiveLineItemId,locationId, lotNumber, serialNumber, expiryDate, manufacturingDate, quantity,vvmId,  " +
             "createdBy, createdDate,modifiedBy,modifiedDate, boxNumber) " +
-            " VALUES(#{receiveLineItem.id},#{locationId}, #{lotNumber}, #{serialNumber}, #{expiryDate}, #{manufacturingDate}, #{quantity}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),  #{boxNumber}) ")
+            " VALUES(#{receiveLineItem.id},#{locationId}, #{lotNumber}, #{serialNumber}, #{expiryDate}, #{manufacturingDate}, #{quantity},#{vvmId}, #{createdBy}, NOW(),#{modifiedBy}, NOW(),  #{boxNumber}) ")
     @Options(useGeneratedKeys = true)
     Integer insert(ReceiveLot receiveLot);
 

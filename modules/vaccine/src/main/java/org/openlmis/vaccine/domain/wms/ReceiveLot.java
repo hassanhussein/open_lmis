@@ -23,7 +23,7 @@ public class ReceiveLot extends BaseModel {
     private Integer quantity;
     private ReceiveLineItem receiveLineItem;
     private String manufacturerName;
-
+    private Long vvmId;
     private LocationDTO location;
 
     private String packSize;

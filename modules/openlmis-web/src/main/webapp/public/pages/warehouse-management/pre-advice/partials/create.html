@@ -626,17 +626,27 @@
                                         <tr ng-repeat="document in docLists">
 
                                             <td>{{$index+1}}</td>
-                                            <td>
-                                                <span style="min-width:300px !important">{{document.documentType.name}}</span>
+                                            <td ng-class="{'deleted': document.deleted==true}">
+                                                <span style="min-width:300px !important" title="Created By: {{document.createdByName}}, Created At: {{document.createddate}}">{{document.documentType.name}}</span>
                                             </td>
-                                            <td><span>{{document.fileLocation}}</span></td>
+                                            <td ><span>{{document.fileLocation}}</span></td>
 
                                             <td style="min-width:200px !important" >
-                                                <span ng-click="downloadFile(document.fileLocation,asnCode)"><a href="" ng-show="!document.documentType.disableSelectedRows">Download ({{document.documentType.name}})</a></span>
+                                                <span ng-click="downloadFile(document.fileLocation,asnCode)" ><a title="Created By: {{document.createdByName}}, Created At: {{document.createddate}}" href="" ng-show="!document.documentType.disableSelectedRows">Download ({{document.documentType.name}})</a></span>
+                                            <span ng-show="document.deleted" title="{{document.deletionLocation}}" class="text-muted" style="color: #919191">Deleted:({{document.comment}})</span>
+
                                             </td>
 
-                                            <td ng-if="!viewMode">
-                                                <input type="button" class="btn btn-danger pull-right" ng-click="removeFile(document)" value="Remove">
+                                            <td ng-if="!viewMode" style="min-width:100px !important">
+                                               <!-- <input type="button" class="btn btn-danger pull-right" ng-click="removeFile(document)" value="Remove">
+-->
+                                                <div ng-show="document.deleteOption">
+                                                    <textarea ng-model="document.comment"  placeholder="Reason of deletion!" type="text" maxlength="50" ></textarea>
+                                                    <span ng-show="document.alertcomment" class="text-error" style="color: darkred">Comment is required!</span>
+                                                </div>
+                                                <input type="button" style="margin-top: 10px; margin-left: 5px" ng-show="document.cancelBtn" class="btn btn-sucess pull-right" ng-click="cancelRemoveFileOptions(document)"  value="Cancel">
+
+                                                <input type="button" style="margin-top: 10px" ng-disabled="document.deleted" class="btn btn-danger pull-right" ng-click="removeFileOptions(document)"  value="Remove">
 
                                             </td>
 
@@ -778,4 +788,7 @@
     <!--Lot Modal Ends-->
 </div>
 
+<script>
+    $('#datetimepicker').datetimepicker('show');
 
+</script>

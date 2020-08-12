@@ -120,11 +120,14 @@ public class ReceiveService {
                     for (ReceiveLot lot : lineItem.getReceiveLots()) {
                         if (lot.getLotNumber() != null) {
                             Lot l = lotRepository.getByCode(lot.getLotNumber());
+
+                          //  System.out.println("Passed Data: "+lot.getLotNumber());
                             lot.setReceiveLineItem(lineItem);
                             lot.setExpiryDate(l.getExpirationDate());
                             lot.setManufacturingDate(l.getManufactureDate());
                             lot.setManufacturerName(l.getManufacturerName());
                             lot.setCreatedBy(userId);
+                            //lot.setVvmId(l.getVvmId());
                             lot.setModifiedBy(userId);
                             lotService.save(lot);
                         }
@@ -271,6 +274,7 @@ public class ReceiveService {
                            lot1.setSerialNumber(lot.getSerialnumber());
                            lot1.setManufacturingDate(lot.getManufacturingdate());
                            lot1.setQuantity(lot.getQuantity());
+                           //lot1.setVvmId(lot.getVvmId());
                            lot1.setCreatedBy(userId);
                            lot1.setModifiedBy(userId);
                            lot1.setReceiveLineItem(receiveLineItem);
@@ -456,6 +460,7 @@ public class ReceiveService {
                            lotToSave.setLotCode(lot.getLotNumber());
                            lotToSave.setManufacturerName(newLot.getManufacturerName());
                            lotToSave.setExpirationDate(lot.getExpiryDate());
+                           lotToSave.setVvmId(lot.getVvmId());
 
                            customProps.put("vvmStatus", "1");
                            event.setLotId(newLot.getId());
