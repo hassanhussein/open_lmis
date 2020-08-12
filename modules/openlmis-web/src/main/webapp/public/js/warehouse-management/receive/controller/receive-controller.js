@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,clearingAgent,DeleteDocument,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
+function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,clearingAgent,DeleteDocumentStatus,DocumentList,StockEvent,$window,$scope,$filter,Locations, AsnLookups, Receive,$location,UserFacilityList,VaccineProgramProducts,AllVaccineInventoryConfigurations, receive, ProductLots, FacilityTypeAndProgramProducts, Lot,
                            $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory,vvmList){
 
 
@@ -886,7 +886,7 @@ $scope.quantityBoxError=false;
                                     boxNumber:lot.boxCounted,
                                     serialnumber: 'string',
                                     locationId:parseInt(lot.locationId,10),
-                                    vvmId:parseInt(lot.locationId,10)
+                                    vvmId:parseInt(lot.vvmId,10)
                                 });
 
 
@@ -935,12 +935,12 @@ console.log(receiveLots);
             programId:82
         };
 
-//        console.log(receive)
+       console.log(receive);
 
         if($scope.receive){
          Receive.update({id:$scope.receive.id},receive,function(){
          $scope.error = "";
-          console.log('update');
+          //console.log('update');
           if(status==='RECEIVED'){
               $scope.$parent.received = true;
           }else{
@@ -993,6 +993,37 @@ console.log(receiveLots);
 
     }
 
+    $scope.removeFileOptions=function(file){
+
+        if(file.deleteOption){
+            var comment=file.comment;
+            if(comment) {
+                DeleteDocumentStatus.update({
+                    id: file.id,
+                    code: file.asnNumber,
+                    comment: file.comment,
+                    deletionLocation:'RECEIVE'
+                }, function (response) {
+
+                    getListOfFilesByASNumber(file.asnNumber);
+
+                    $scope.displayDocumentTypes.push(file.documentType);
+
+                });
+                file.deleteOption = false;
+                file.cancelBtn = false;
+                document.alertcomment=false;
+            }else{
+                document.alertcomment=true;
+            }
+        }
+        file.deleteOption=true;
+        file.cancelBtn=true;
+    };
+    $scope.cancelRemoveFileOptions=function(file){
+        file.deleteOption=false;
+        file.cancelBtn=false;
+    };
 
       $scope.removeFile = function(file) {
 
