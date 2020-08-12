@@ -41,5 +41,9 @@ ALTER TABLE public.documents
     ADD COLUMN deleted boolean DEFAULT false;
 
 
+ALTER TABLE public.purchase_documents
+    DROP COLUMN IF EXISTS comment;
+ALTER TABLE public.purchase_documents
+    ADD COLUMN comment character varying(200);
 
 
