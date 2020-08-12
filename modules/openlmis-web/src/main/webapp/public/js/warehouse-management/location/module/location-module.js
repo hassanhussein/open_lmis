@@ -17,5 +17,5 @@ var locationModule = angular.module('bin-location', ['openlmis', 'ui.bootstrap.m
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.locationSelected = "selected";
-//      AuthorizationService.preAuthorize('MANAGE_LOCATION');
+     AuthorizationService.preAuthorize('MANAGE_LOCATION');
     });

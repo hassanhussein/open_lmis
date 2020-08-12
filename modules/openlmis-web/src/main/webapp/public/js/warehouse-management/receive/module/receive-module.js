@@ -19,7 +19,7 @@ var receiveModule = angular.module('receive', ['openlmis', 'ui.bootstrap.modal',
           otherwise({redirectTo: '/list'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.receiveSelected = "selected";
-//      AuthorizationService.preAuthorize('MANAGE_ASN');
+    AuthorizationService.preAuthorize('WMS_RECEIVE_CONSIGNMENT');
     }).directive('validFile',[function() {
                       return {
                         require : 'ngModel',
