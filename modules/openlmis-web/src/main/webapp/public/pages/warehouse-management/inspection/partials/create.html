@@ -771,39 +771,40 @@
 -->
 
 
-            <table  class="table table-bordered receive">
+            <table  class="table table-bordered receive" style="width:80%">
                 <thead>
                 <tr class="gradient-header">
-                    <th>Lot</th>
-                    <th>Expiry Date</th>
-                    <th >VVM Status </th>
+                    <th style="width:19%">Lots</th>
                     <th >No. of Boxes </th>
-                    <th>Received Qty</th>
-                    <th>Location</th>
-                    <th>Failed Qty</th>
-
+                    <th style="width:14%">Received Qty(Vials)</th>
+                    <th style="width:14%">VVM Status </th>
+                    <th style="width:14%">Failed Qty(Vials)</th>
                     <th >Fail Reason</th>
                     <th >Fail Location</th>
-
-
                 </tr>
                 </thead>
-                <tbody ng-repeat="lot in lineItem.lots">
-                <tr  >
+                <tbody >
+                <tr ng-repeat="lot in lineItem.lots">
                     <td>
-                        <span>{{lot.lotNumber}} </span>
+                        <span> <strong>No: </strong> {{lot.lotNumber}} </span>
                         <div ng-if="hasExpired(lot)">
-
                             <strong style="color:red;">expired</strong>
                         </div>
 
+                        <div><strong>Exp Date: </strong>{{lot.expiryDate | date:'dd-MM-yyyy' }}</div>
+
+                        <div ><strong>Location: </strong> <span ng-bind="lot.location.code"></span></div>
+
                     </td>
-                    <td><span>{{lot.expiryDate | date:'dd-MM-yyyy' }}</span></td>
-                    <td>
+<!--                    <td><span>{{lot.expiryDate | date:'dd-MM-yyyy' }}</span></td>-->
+
+                    <td style="text-align:right" class="cell-input">{{lot.boxNumber}}</td>
+                    <td style="text-align:right" class="cell-input col-general"><input  ng-disabled="true" ng-model="lot.receivedQuantity" type="text"/></td>
+                    <td class="cell-input">
 
 
 
-                        <select ui-select2="{width: '90%'}" ng-model="lot.vvmStatus"  ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"   ng-change="vvmChanged(lot)">
+                        <select ui-select2="{width: '100%'}" ng-model="lot.vvmStatus"  ng-disabled="true"   ng-change="vvmChanged(lot)">
                             <option value="">Select VVM</option>
                             <option ng-repeat="vvm in vvmStatusList"
                                     value="{{ vvm.id }}"
@@ -816,30 +817,33 @@
                         <span class="field-error" ng-show="lot.vvmError"
                               openlmis-message="missing.value"></span>
 
+
+
                     </td>
-                    <td style="text-align:right">{{lot.boxNumber}}</td>
-                    <td style="text-align:right"><input  ng-disabled="true" ng-model="lot.receivedQuantity" type="text"/></td>
-                    <td ng-bind="lot.location.code">
+
+                    <td style="text-align:right" class="cell-input col-general"><input type="text" numeric-validator="positiveInteger" ng-model="lot.failedQuantity" ng-change="hasZero(lot)" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
+
+
+
+                    </td>
+<!--                    <td >-->
 
 <!--                        <input type="hidden" ng-model="lot.passLocationId" value="lot.location.id">-->
 
 
 
 
-                    </td>
-                    <td><input type="text" numeric-validator="positiveInteger" ng-model="lot.failedQuantity" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
+<!--                    </td>-->
 
 
 
-                    </td>
-
-                    <td>
+                    <td class="cell-input">
 
 
 
 
                         <select ui-select2="{width: '100%'}" ng-model="lot.failedReason" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity || hasExpired(lot)" ng-required="lot.failedQuantity!=='0' && lot.failedQuantity">
-                            <option value=""></option>
+                            <option value="">--Select Reason--</option>
                             <option ng-repeat="reason in failReasons"
                                     value="{{ reason.id }}"
                                     ng-selected="failReason==reason.id"
@@ -851,11 +855,23 @@
                               openlmis-message="missing.value"></span>
 
 
+
+                        <select ui-select2="{width: '100%'}" ng-model="lot.failedVvm"  ng-show="lot.failedReason==4" >
+                            <option value="">Select VVM</option>
+                            <option ng-repeat="vvm in vvmStatusList"
+                                    value="{{ vvm.id }}"
+                                    ng-selected="lot.failedVvm==vvm.id"
+                            >
+                                {{ vvm.name }}
+                            </option>
+                        </select>
+
+
                     </td>
                     <td ng-show="false">454</td>
-                    <td>
+                    <td class="cell-input">
 
-                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity">
+                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="(lot.failedReason==4&&lot.failedReason=='')||(lot.failedVvm=='' && lot.failedReason==4)||(lot.failedReason=='')">
                             <option value=""></option>
                             <option ng-repeat="location in locations"
                                     value="{{ location.id }}"

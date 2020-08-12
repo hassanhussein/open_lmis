@@ -72,6 +72,11 @@ public class StockMovementController extends BaseController {
         return OpenLmisResponse.response("stocks",transferService.getCurrentStockOnHand(userId,facility.getId()));
     }
 
+  @RequestMapping(value = "/get-near-to-expire-items", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getNearToExpiryItems(HttpServletRequest request) {
+        return OpenLmisResponse.response("items",transferService.getNearToExpireItems());
+    }
+
 
 
 
