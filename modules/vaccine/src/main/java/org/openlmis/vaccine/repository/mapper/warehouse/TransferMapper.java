@@ -10,6 +10,7 @@ import org.openlmis.vaccine.dto.AdjustmentReasonExDTO;
 import org.openlmis.vaccine.dto.LotDTO;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -85,4 +86,16 @@ public interface TransferMapper {
 
     @Select("select * from lots where productID = #{productId} and expirationDate::date > NOW()::DATE and Id NOT IN(#{lotId}) limit 1")
     Lot getByProduct(@Param("productId") Long productId , @Param("lotId") Long lotId);
+
+    @Select("\n" +
+            "select  (SELECT EXTRACT(DAY FROM l.expirationdate - CURRENT_DATE)) DAYS,\n" +
+            "p.id productId, p.primaryName product, p.code productCode, l.lotNumber, l.expirationDate, l.manufacturerNAME\n" +
+            " from program_products pp\n" +
+            "JOIN products p ON pp.productId = P.ID\n" +
+            "JOIN lots l On p.id = l.productId AND PP.PRODUCTCATEGORYID = 100\n" +
+            "\n" +
+            "WHERE PROGRAMID = (select id from programs where enableivdform=true  limit 1)\n" +
+            " AND PP.ACTIVE = TRUE AND l.expirationdate > CURRENT_DATE and \n" +
+            "(SELECT EXTRACT(DAY FROM l.expirationdate - CURRENT_DATE)) < (select value::INT from configuration_settings where key = 'MAXIMUM_DAYS_PRODUCT_EXPIRY_RESTRICTION')\n")
+    List<HashMap<String, Object>> getNearToExpireItems();
 }
