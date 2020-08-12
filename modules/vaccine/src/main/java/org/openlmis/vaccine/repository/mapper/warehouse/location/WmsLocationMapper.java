@@ -71,4 +71,14 @@ public interface WmsLocationMapper {
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WareHouseMapper.getById"))
     })
     List<LocationDTO> getByWareHouseStorageQuarantine(Long id);
+
+    @Select("select l.* from public.wms_locations l JOIN wms_location_types t ON l.typeID = t.id where l.wareHouseId = #{id} and lower(t.code)='storage'")
+
+    @Results(value = {
+            @Result(property = "type", column = "typeId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.core.repository.mapper.LocationTypeMapper.getById")),
+            @Result(property = "house", column = "warehouseId", javaType = Integer.class,
+                    one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.location.WareHouseMapper.getById"))
+    })
+    List<LocationDTO> getByWareHouseStorageOnly(Long id);
 }

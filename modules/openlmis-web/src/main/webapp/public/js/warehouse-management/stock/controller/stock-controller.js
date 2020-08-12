@@ -55,7 +55,7 @@ function StockController($scope, $timeout, WmsAdjustment, TransferRecords, reaso
     $scope.reasons = reasonsForAdjustments;
 
 
-    GetWarehouseLocationsByStorageQuarantine.get(function (data) {
+    GetWarehouseLocationsByStorageQuarantineWithPermission.get(function (data) {
 
         console.log(data);
         $scope.warehouseList = data.binLocations;

@@ -789,3 +789,7 @@ services.factory('GetTransferDetails', function ($resource) {
 services.factory('WmsAdjustment', function ($resource) {
     return $resource('/rest-api/adjustment/save.json',{}, {save:{method:'POST'}});
 });
+
+services.factory('GetWarehouseLocationsByStorageQuarantineWithPermission', function ($resource) {
+    return $resource('/rest-api/warehouse/house/locationsByStorageQuarantine-with-permission', {}, {});
+});
