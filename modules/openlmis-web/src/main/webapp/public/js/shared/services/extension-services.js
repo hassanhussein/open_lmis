@@ -1308,6 +1308,12 @@ services.factory('FacilityOnwerList', function ($resource) {
 services.factory('ManualTestType', function ($resource) {
     return $resource('/manualTestTypes/types/:tid', {tid: '@tid'}, {});
 });
+services.factory('ManualTestResultCategory', function ($resource) {
+    return $resource('/manualTestResultCategories/types/:tid', {tid: '@tid'}, {});
+});
+services.factory('ManualTestResultType', function ($resource) {
+    return $resource('/manualTestResultTypes/types/:tid', {tid: '@tid'}, {});
+});
 
 services.factory('GetProductById', function ($resource) {
     return $resource('/products/product/:id.json', {id: '@id'}, {});

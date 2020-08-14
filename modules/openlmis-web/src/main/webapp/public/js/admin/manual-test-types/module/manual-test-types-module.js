@@ -10,10 +10,42 @@
  *   You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('manualTestTypes',  ['openlmis','ui.bootstrap', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination','ui.bootstrap.modal', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
-        $routeProvider.
-            when('/create', {controller: ManualTestTypeController, templateUrl: 'partials/create.html', mode: 'NEW'}).
-            when('/list', {controller: ManualTestTypeController, templateUrl: 'partials/list.html', mode: 'LIST'}).
-            when('/edit/:id', {controller: ManualTestTypeController, templateUrl: 'partials/create.html', mode: 'EDIT'}).
-            otherwise({redirectTo: '/list'});
-    }]);
+angular.module('manualTestTypes', ['openlmis', 'ui.bootstrap', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ui.bootstrap.modal', 'ui.bootstrap.dialog']).config(['$routeProvider', function ($routeProvider) {
+    $routeProvider.when('/create', {
+        controller: ManualTestTypeController,
+        templateUrl: 'partials/create.html',
+        mode: 'NEW'
+    }).when('/list', {
+        controller: ManualTestTypeController,
+        templateUrl: 'partials/list.html',
+        mode: 'LIST'
+    }).when('/edit/:id', {
+        controller: ManualTestTypeController,
+        templateUrl: 'partials/create.html',
+        mode: 'EDIT'
+    }).when('/create-result-category', {
+        controller: ManualTestResultCategoryController,
+        templateUrl: 'partials/create-result-category.html',
+        mode: 'NEW'
+    }).when('/list-result-category', {
+        controller: ManualTestResultCategoryController,
+        templateUrl: 'partials/list-result-category.html',
+        mode: 'LIST'
+    }).when('/edit-result-category/:id', {
+        controller: ManualTestResultCategoryController,
+        templateUrl: 'partials/create-result-category.html',
+        mode: 'EDIT'
+    }).when('/create-result-type', {
+        controller: ManualTestResultTypeController,
+        templateUrl: 'partials/create-result-type.html',
+        mode: 'NEW'
+    }).when('/list-result-type', {
+        controller: ManualTestResultTypeController,
+        templateUrl: 'partials/list-result-type.html',
+        mode: 'LIST'
+    }).when('/edit-result-type/:id', {
+        controller: ManualTestResultTypeController,
+        templateUrl: 'partials/create-result-type.html',
+        mode: 'EDIT'
+    }).otherwise({redirectTo: '/list'});
+}]);
