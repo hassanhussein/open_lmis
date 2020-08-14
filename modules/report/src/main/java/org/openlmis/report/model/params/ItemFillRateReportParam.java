@@ -3,6 +3,8 @@ package org.openlmis.report.model.params;
 import lombok.*;
 import org.openlmis.report.model.ReportParameter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,5 +23,9 @@ public class ItemFillRateReportParam extends BaseParam implements ReportParamete
     private Long facility;
 
     public Long orderId;
+
+    public String periodStart;
+
+    public String periodEnd;
 
 }

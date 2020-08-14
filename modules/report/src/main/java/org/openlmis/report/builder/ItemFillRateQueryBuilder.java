@@ -11,7 +11,7 @@ public class ItemFillRateQueryBuilder {
 
         ItemFillRateReportParam  filter = (ItemFillRateReportParam) params.get("filterCriteria");
 
-        return
+       return
                         " select zone_name zoneName,region_name region, district_name district,f.name facilityName,item.productCode, item.product, " +
                         " to_char(R.modifieddate,'dd-MM-yyyy') orderedDate,to_char(pod.INVOICEDATE,'dd-MM-yyyy') shippedDate, " +
                         " to_char(receiveddate ,'dd-MM-yyyy') receiveddate, coalesce(item.quantityApproved,0) OrderedQuantity, li.quantityShipped quantityReceived, " +
@@ -33,7 +33,7 @@ public class ItemFillRateQueryBuilder {
 
         ItemFillRateReportParam filter = (ItemFillRateReportParam) params.get("filterCriteria");
 
-        return "                              SELECT l.productcode msdProductCode, CASE WHEN  (m.productCode is null) then l.productCode else m.productCode  end as eLMISProductCode ,m.product, coalesce(quantityApproved,0) quantityApproved,coalesce(quantityShipped,0) quantityShipped  \n" +
+        String sql =  "                              SELECT l.productcode msdProductCode, CASE WHEN  (m.productCode is null) then l.productCode else m.productCode  end as eLMISProductCode ,m.product, coalesce(quantityApproved,0) quantityApproved,coalesce(quantityShipped,0) quantityShipped  \n" +
                 "\n" +
                 "                                        FROM ( \n" +
                 "                                        \n" +
@@ -42,7 +42,7 @@ public class ItemFillRateQueryBuilder {
                 "                                         JOIN pod_line_items item on pod.id = item.podId \n" +
                 "                                         Join products p ON p.code = item.productcode \n" +
                 "                                         where pod.orderId in (select r.id from requisitions r JOIN  \n" +
-                "                                         processing_periods pp on pp.id = r.periodID where programId ='"+filter.getProgram()+"' and pp.id ='"+filter.getPeriod()+"') \n" +
+                "                                         processing_periods pp on pp.id = r.periodID where programId ='"+filter.getProgram()+"' and pp.startdate >='"+filter.getPeriodStart()+"' and pp.enddate <='" +filter.getPeriodEnd()+"') \n" +
                 "\n" +
                 "                                        )  \n" +
                 "                                        SELECT  productcode, SUM(quantityshipped) quantityshipped FROM Q \n" +
@@ -58,9 +58,10 @@ public class ItemFillRateQueryBuilder {
                 "                                         FROM REQUISITIONS R  \n" +
                 "                 \n" +
                 "                                         JOIN requisition_line_items item on item.rnrid = R.ID  \n" +
+                "                                         JOIN processing_periods pp ON pp.id = R.periodID" +
                 "                                          \n" +
                 "                                      \n" +
-                "                                         WHERE  SKIPPED = false and status ='RELEASED' and  programId = '"+filter.getProgram()+"' and periodId = '"+filter.getPeriod()+"'\n" +
+                "                                         WHERE  SKIPPED = false and status ='RELEASED' and  programId = '"+filter.getProgram()+"' and pp.startdate >='"+filter.getPeriodStart()+"' and pp.enddate <= '" +filter.getPeriodEnd()+"' \n" +
                 "                                          \n" +
                 "                                         GROUP BY ITEM.productcode, item.product )  \n" +
                 "                                          \n" +
@@ -70,7 +71,7 @@ public class ItemFillRateQueryBuilder {
                 "                                         \n" +
                 "                                        order by msdproductcode, eLMISProductCode  ";
 
-
+        return sql;
 
     }
 
@@ -122,7 +123,7 @@ public class ItemFillRateQueryBuilder {
 
         Long userId = (Long) params.get("userId");
 
-       return " \n" +
+       String sql =  " \n" +
                "\n" +
                "                                     WITH Q AS (\n" +
                "                                      SELECT facilityId, periodID, ID, EMERGENCY,\n" +
@@ -151,7 +152,8 @@ public class ItemFillRateQueryBuilder {
                "" +
                " order by f.id ";
 
-
+       System.out.println(sql);
+return sql;
     }
 
 
