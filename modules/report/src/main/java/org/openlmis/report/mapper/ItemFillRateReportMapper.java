@@ -24,7 +24,7 @@ public interface ItemFillRateReportMapper {
     );
 
 
-    @SelectProvider(type = ItemFillRateQueryBuilder.class, method = "getQueryReport")
+    @SelectProvider(type = ItemFillRateQueryBuilder.class, method = "getItemFillRateByFacility")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
     public List<ItemFillRateReport> getFilteredFillRateReportData(
             @Param("filterCriteria") ItemFillRateReportParam itemFillRateReportParam,

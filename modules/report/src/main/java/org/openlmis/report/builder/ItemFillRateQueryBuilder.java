@@ -126,7 +126,7 @@ public class ItemFillRateQueryBuilder {
        String sql =  " \n" +
                "\n" +
                "                                     WITH Q AS (\n" +
-               "                                      SELECT facilityId, periodID, ID, EMERGENCY,\n" +
+               "                                      SELECT facilityId, periodID, requisitions.ID, EMERGENCY,\n" +
                "                                      (select count(*) totalItems from requisition_line_items where rnrId = requisitions.id and SKIPPED = false),\n" +
                "\n" +
                "                                      (SELECT count(*) totalReceived from  POD \n" +
@@ -135,12 +135,13 @@ public class ItemFillRateQueryBuilder {
                "                                         where orderId = requisitions.id\n" +
                "                                       )\n" +
                "                                      from requisitions \n" +
+               " join processing_periods pp on pp.id=requisitions.periodID " +
                "                                      \n" +
-               "                                      WHERE  periodID= '"+filter.getPeriod()+"' and programID = '"+filter.getProgram()+"' AND STATUS = 'RELEASED' \n" +
+               "                                      WHERE  pp.startdate >='"+filter.getPeriodStart()+"' and pp.enddate <='" +filter.getPeriodEnd() + "' and programID = '"+filter.getProgram()+"' AND STATUS = 'RELEASED' \n" +
                "                                      \n" +
-               "                                      GROUP BY facilityid, periodid, EMERGENCY,ID\n" +
+               "                                      GROUP BY facilityid, periodid, EMERGENCY,requisitions.ID\n" +
                "\n" +
-               "                                      order by facilityId, Id\n" +
+               "                                      order by facilityId, requisitions.Id\n" +
                "                                      ) select f.name facilityName, district_name district,region_name region, zone_name msdZONE, orderNumber, emergency, q.id rnrId, \n" +
                "                                        totalItems  approvedQuantity, totalReceived receivedQuantity, invoiceNumber, invoiceDate,p.name periodName from q \n" +
                "                                      JOIN facilities f on q.facilityId = F.ID\n" +
@@ -152,7 +153,6 @@ public class ItemFillRateQueryBuilder {
                "" +
                " order by f.id ";
 
-       System.out.println(sql);
 return sql;
     }
 
