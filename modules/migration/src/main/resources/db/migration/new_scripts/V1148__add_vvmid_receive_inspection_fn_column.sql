@@ -24,7 +24,7 @@ ALTER TABLE public.documents
     ADD COLUMN IF NOT EXISTS deletionlocation character varying(40);
 
     ALTER TABLE public.purchase_documents
-    ADD COLUMN IF NOT EXISTS deletedby boolean integer false;
+    ADD COLUMN IF NOT EXISTS deletedby  integer ;
 
     ALTER TABLE public.purchase_documents
     ADD COLUMN IF NOT EXISTS comment character varying(200);
