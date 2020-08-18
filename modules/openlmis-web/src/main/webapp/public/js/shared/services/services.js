@@ -693,6 +693,11 @@ services.factory("DeleteDocument", function ($resource) {
      return $resource('/rest-api/warehouse/deleteDocument/:id/:code.json', {id: '@id', code:'@code'},{});
  });
 
+services.factory("DeleteDocumentStatus", function ($resource) {
+    return $resource('/rest-api/warehouse/deleteDocuments/:id/:code.json', {id: '@id', code:'@code'},update);
+});
+
+
  services.factory("DisableAsn", function ($resource) {
      return $resource('/rest-api/warehouse/asn/disable/:id.json', {id: '@id'}, update);
  });
@@ -783,4 +788,8 @@ services.factory('GetTransferDetails', function ($resource) {
 
 services.factory('WmsAdjustment', function ($resource) {
     return $resource('/rest-api/adjustment/save.json',{}, {save:{method:'POST'}});
+});
+
+services.factory('GetWarehouseLocationsByStorageQuarantineWithPermission', function ($resource) {
+    return $resource('/rest-api/warehouse/house/locationsByStorageQuarantine-with-permission', {}, {});
 });

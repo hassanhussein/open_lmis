@@ -16,5 +16,5 @@ var putawayModule = angular.module('putaway', ['openlmis', 'ui.bootstrap.modal',
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
 //      $rootScope.warehouseSelected = "selected";
-//      AuthorizationService.preAuthorize('MANAGE_LOCATION');
+    AuthorizationService.preAuthorize('WMS_PUT_AWAY');
     });

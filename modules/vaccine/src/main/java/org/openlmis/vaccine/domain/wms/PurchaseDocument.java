@@ -1,9 +1,14 @@
 package org.openlmis.vaccine.domain.wms;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.serializer.DateDeserializer;
+
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -19,5 +24,16 @@ public class PurchaseDocument extends BaseModel {
     Receive receive;
 
     private String asnNumber;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    @JsonDeserialize(using = DateDeserializer.class)
+    private Date createddate;
+
+    private  String createdByName;
+
+    private Boolean deleted;
+
+    String comment;
+
 
 }

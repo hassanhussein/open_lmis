@@ -23,7 +23,7 @@ var distributionModule = angular.module('distribution', ['openlmis', 'ui.bootstr
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.asnSelected = "selected";
-//      AuthorizationService.preAuthorize('MANAGE_ASN');
+    AuthorizationService.preAuthorize('WMS_MANAGE_ORDERS');
     }).directive('validFile',[function() {
                       return {
                         require : 'ngModel',

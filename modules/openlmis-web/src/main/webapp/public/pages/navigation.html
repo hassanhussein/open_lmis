@@ -296,38 +296,40 @@
             </div>
         </li>
 
-        <li>
+        <li ng-show="hasPermission('WMS_MANAGE_WAREHOUSE')">
 
             <a id="receive-menu" href="javascript: void(0)" openlmis-message="link.warehouse.management"></a>
 
             <div class="submenu">
                 <ul>
 
-                    <li>
+                    <li ng-show="hasPermission('MANAGE_LOCATION')">
                         <a href="/public/pages/warehouse-management/site/index.html#/search"> Manage Location</a>
-
                     </li>
 
-                    <li>
+                    <li ng-show="hasPermission('WMS_CREATE_ASN')">
                         <a href="/public/pages/warehouse-management/pre-advice/index.html#/list" openlmis-message="label.pre.advice"></a>
 
-                    </li>
-                    <li><a href="/public/pages/warehouse-management/receive/index.html#/list" openlmis-message="link.vaccine.receive"></a>
+                    </li >
+                    <li ng-show="hasPermission('WMS_RECEIVE_CONSIGNMENT')">
+                        <a href="/public/pages/warehouse-management/receive/index.html#/list" openlmis-message="link.vaccine.receive"></a>
 
 
                     </li>
-                    <li><a href="/public/pages/warehouse-management/inspection/index.html#/search" openlmis-message="label.inspect"></a>
-
-
-                    </li>
-
-
-                    <li><a href="/public/pages/warehouse-management/putaway/index.html#/search">Putaway</a>
+                    <li ng-show="hasPermission('WMS_INSPECT_CONSIGNMENT')">
+                        <a href="/public/pages/warehouse-management/inspection/index.html#/search" openlmis-message="label.inspect"></a>
 
 
                     </li>
 
-                    <li class="has-children">
+
+                    <li ng-show="hasPermission('WMS_PUT_AWAY')">
+                        <a href="/public/pages/warehouse-management/putaway/index.html#/search">Putaway</a>
+
+
+                    </li>
+
+                    <li class="has-children" ng-show="hasPermission('WMS_MANAGE_STOCK')">
 
                         <a  href="javascript: void(0)">Manage Stock</a>
 
@@ -362,7 +364,7 @@
 
                     <!--                                <li><a href="" openlmis-message="label.upload.lots"></a></li>-->
 
-                    <li class="has-children">
+                    <li class="has-children" ng-show="hasPermission('WMS_MANAGE_ORDERS')">
                         <a href="javascript: void(0)">Order Management</a>
                         <div class="submenu">
                             <ul>
@@ -382,10 +384,6 @@
                                     <a href="/public/pages/warehouse-management/distribution/index.html#/approve-orders"> Approve Orders</a>
 
                                 </li>
-
-
-
-
 
                             </ul>
 

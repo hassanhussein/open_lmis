@@ -41,6 +41,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -328,6 +329,24 @@ public class AsnController extends BaseController {
                                                        @PathVariable(value = "code") String code) {
 
         return OpenLmisResponse.response("list", purchaseDocumentService.deleteById(id,code));
+    }
+
+    @RequestMapping(value = "deleteDocuments/{id}/{code}", method =PUT, headers = ACCEPT_JSON)
+    public ResponseEntity updateDelete(@RequestBody Document document, @PathVariable(value = "id") Long id,@PathVariable(value = "code") String code, HttpServletRequest principal) {
+
+        try{
+            document.setId(id);
+            document.setModifiedBy(loggedInUserId(principal));
+            //document.setComment("Felix Deleted");
+            //document.setDeletionLocation("ASN");
+            document.setDeletedBy(loggedInUserId(principal));
+            purchaseDocumentService.updateDocumentDelete(document);
+
+            return success("message.success.warehouse.updated");
+
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
     }
 
 

@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController(GetAllClearingAgents,clearingAgent,DeleteDocument,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController(GetAllClearingAgents,clearingAgent,DeleteDocumentStatus,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
@@ -1046,10 +1046,42 @@ $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentT
 
 }*/
 
+    $scope.removeFileOptions=function(file){
+
+        if(file.deleteOption){
+            var comment=file.comment;
+            if(comment) {
+                DeleteDocumentStatus.update({
+                    id: file.id,
+                    code: file.asnNumber,
+                    comment: file.comment,
+                    deletionLocation:'ASN/Pre-advice'
+                }, function (response) {
+
+                    getListOfFilesByASNumber(file.asnNumber);
+
+                    $scope.displayDocumentTypes.push(file.documentType);
+
+                });
+                file.deleteOption = false;
+                file.cancelBtn = false;
+                document.alertcomment=false;
+            }else{
+                document.alertcomment=true;
+            }
+        }
+        file.deleteOption=true;
+        file.cancelBtn=true;
+    };
+    $scope.cancelRemoveFileOptions=function(file){
+        file.deleteOption=false;
+        file.cancelBtn=false;
+    };
+
 
         $scope.removeFile = function(file) {
-
-        DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response) {
+            console.log("called");
+            DeleteDocumentStatus.update({id:file.id, code:file.asnNumber,comment:"From javascript deleted!"}, function(response) {
 
         getListOfFilesByASNumber(file.asnNumber);
 

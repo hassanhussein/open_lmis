@@ -5,6 +5,7 @@ import org.openlmis.core.domain.LocationType;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.LocationTypeService;
+import org.openlmis.core.service.RoleRightsService;
 import org.openlmis.vaccine.domain.wms.WareHouse;
 import org.openlmis.vaccine.domain.wms.dto.WareHouseDTO;
 import org.openlmis.vaccine.dto.LocationDTO;
@@ -19,7 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.google.common.collect.Iterables.any;
 import static java.util.Collections.emptyList;
+import static org.openlmis.core.utils.RightUtil.with;
 
 @Service
 public class WareHouseService {
@@ -41,6 +44,11 @@ public class WareHouseService {
 
     @Autowired
     private WareHouseLineItemService lineItemService;
+
+    @Autowired
+    private RoleRightsService roleRightsService;
+
+    public static final String TRANSFER_QUARANTINE_LOCATION = "TRANSFER_QUARANTINE_LOCATION";
 
     public void save(WareHouse house) {
          try {
@@ -169,4 +177,16 @@ public class WareHouseService {
     }
 
 
+    public List<WarehouseLocationDTO> getWarehouseByBinLocationStorageAndQuarantineWithPermission(Long userId) {
+
+        if(hasPermission(userId,TRANSFER_QUARANTINE_LOCATION)) {
+            return repository.getByWareHouseStorageQuarantine();
+        } else {
+            return repository.getWarehouseByBinLocationStorageOnly();
+        }
+    }
+
+    public boolean hasPermission(Long userId, String rightName) {
+        return any(roleRightsService.getRights(userId), with(rightName));
+    }
 }

@@ -11,6 +11,7 @@ import org.openlmis.vaccine.repository.mapper.warehouse.TransferMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -65,5 +66,9 @@ public class TransferRepository {
 
     public Lot getLotByProduct(Long productId, Long lotId) {
         return mapper.getByProduct(productId, lotId);
+    }
+
+    public List<HashMap<String, Object>> getNearToExpireItems() {
+        return mapper.getNearToExpireItems();
     }
 }

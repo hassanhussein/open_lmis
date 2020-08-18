@@ -14,5 +14,8 @@
     "karma-firefox-launcher": "^0.1.4",
     "karma-jasmine": "~0.1.0",
     "matchdep": "~0.1.2"
+  },
+  "dependencies": {
+    "angular-datepicker": "^1.0.5"
   }
 }

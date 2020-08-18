@@ -35,23 +35,26 @@ public class PurchaseDocumentService {
         }
 
         for (Document document : documents) {
+            Boolean deleted=document.getDeleted();
+            //if(!deleted) {
+                PurchaseDocument doc = new PurchaseDocument();
+                doc.setCreatedBy(userId);
+                doc.setModifiedBy(userId);
+                doc.setAsn(asn);
+                doc.setDocumentType(document.getDocumentType());
+                doc.setFileLocation(document.getFileLocation());
+                doc.setReceive(receive);
+                doc.setAsnNumber(document.getAsnNumber());
+                doc.setDeleted(deleted);
+                doc.setComment(document.getComment());
+                if (getDocumentByFileLocation(doc.getFileLocation()) == null) {
 
-            PurchaseDocument doc = new PurchaseDocument();
-            doc.setCreatedBy(userId);
-            doc.setModifiedBy(userId);
-            doc.setAsn(asn);
-            doc.setDocumentType(document.getDocumentType());
-            doc.setFileLocation(document.getFileLocation());
-            doc.setReceive(receive);
-            doc.setAsnNumber(document.getAsnNumber());
+                    repository.insert(doc);
+                } else {
 
-            if (getDocumentByFileLocation(doc.getFileLocation()) == null) {
-
-                repository.insert(doc);
-            } else {
-
-                repository.update(doc);
-            }
+                    repository.update(doc);
+                }
+           // }
 
         }
 
@@ -86,6 +89,10 @@ public class PurchaseDocumentService {
             repository.updateDocument(document);
         }
 
+    }
+
+    public void updateDocumentDelete(Document document){
+        repository.updateDeleteDocument(document);
     }
 
     public List<Document> getByASNCode(String code) {

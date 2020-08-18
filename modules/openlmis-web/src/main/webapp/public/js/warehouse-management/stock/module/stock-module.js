@@ -19,5 +19,5 @@ var stockModule = angular.module('stock', ['openlmis', 'ui.bootstrap.modal','lea
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.warehouseSelected = "selected";
-//      AuthorizationService.preAuthorize('MANAGE_LOCATION');
+   AuthorizationService.preAuthorize('WMS_MANAGE_STOCK');
     });

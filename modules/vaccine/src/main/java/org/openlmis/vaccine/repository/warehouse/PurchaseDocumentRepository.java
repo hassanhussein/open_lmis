@@ -42,6 +42,9 @@ public class PurchaseDocumentRepository {
     public void updateDocument(Document document) {
         mapper.updateDocument(document);
     }
+    public void updateDeleteDocument(Document document){
+        mapper.updateDeleteDocument(document);
+    }
 
     public List<Document> getByASNCode (String code){
         return mapper.getByASNCode(code);

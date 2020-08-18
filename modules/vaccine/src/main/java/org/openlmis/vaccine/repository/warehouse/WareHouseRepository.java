@@ -82,4 +82,8 @@ public class WareHouseRepository {
     public List<WarehouseLocationDTO> getByWareHouseStorageQuarantine() {
         return mapper.getByWareHouseStorageQuarantine();
     }
+
+    public List<WarehouseLocationDTO> getWarehouseByBinLocationStorageOnly() {
+        return mapper.getWarehouseByBinLocationStorageOnly();
+    }
 }

@@ -17,7 +17,7 @@ var stockOnHandModule = angular.module('stock-on-hand', ['openlmis', 'ui.bootstr
             otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.warehouseSelected = "selected";
-//      AuthorizationService.preAuthorize('MANAGE_LOCATION');
+   AuthorizationService.preAuthorize('WMS_MANAGE_STOCK');
     }).filter('positive', function() {
                return function(input) {
                    if (!input) {
