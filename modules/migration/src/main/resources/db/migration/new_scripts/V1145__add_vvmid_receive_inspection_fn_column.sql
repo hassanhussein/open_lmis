@@ -1,5 +1,10 @@
+ DROP FUNCTION IF EXISTS public.fn_create_inpsection(integer);
+
  ALTER TABLE public.receive_lots
-    ADD COLUMN IF NOT EXISTS vvmid integer;
+    DROP COLUMN IF EXISTS vvmid;
+
+ ALTER TABLE public.receive_lots
+    ADD COLUMN vvmid integer;
 
 
 

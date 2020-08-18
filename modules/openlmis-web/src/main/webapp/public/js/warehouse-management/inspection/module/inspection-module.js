@@ -17,5 +17,5 @@ var locationModule = angular.module('wms_inspection', ['openlmis', 'ui.bootstrap
           otherwise({redirectTo: '/search'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.locationSelected = "selected";
-//      AuthorizationService.preAuthorize('MANAGE_LOCATION');
+    AuthorizationService.preAuthorize('WMS_CREATE_ASN');
     });
