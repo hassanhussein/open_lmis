@@ -20,10 +20,13 @@ public class Document extends BaseModel {
     private String asnNumber;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
-    @JsonDeserialize(using = DateDeserializer.class)
+   // @JsonDeserialize(using = DateDeserializer.class)
     private Date createddate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+    private  Date docCreatedDate;
 
     private  String createdByName;
+    private String deletedByName;
     private  String deletionLocation;
     private String comment;
     private Long deletedBy;

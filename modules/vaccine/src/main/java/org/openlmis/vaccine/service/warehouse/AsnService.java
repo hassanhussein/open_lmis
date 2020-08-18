@@ -117,7 +117,7 @@ public class AsnService {
             res.setPoDate(asn.getAsndate());
             res.setSupplierId(asn.getSupplierid());
             res.setCurrencyId(asn.getCurrencyId());
-            res.setReceiveDate(asn.getAsndate());
+           // res.setReceiveDate(asn.getAsndate());
             res.setBlawBnumber(asn.getBlawbnumber());
             res.setCountry("Tanzania");
             res.setFlightVesselNumber(asn.getFlightvesselnumber());
@@ -140,6 +140,7 @@ public class AsnService {
            // notificationService.sendAsnFinalizeEmail();
 
         }
+       // System.out.println("---- Output--- "+asn.getExpectedarrivaldate());
 
     }
 

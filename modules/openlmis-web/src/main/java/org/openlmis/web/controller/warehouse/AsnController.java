@@ -109,6 +109,9 @@ public class AsnController extends BaseController {
     @RequestMapping(value = "asn", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> save(@RequestBody Asn asn, HttpServletRequest principal) {
         try {
+            String asnString=asn.toString();
+            System.out.println(asnString);
+
             Long userId = loggedInUserId(principal);
             asn.setCreatedBy(userId);
             asn.setModifiedBy(userId);
@@ -116,6 +119,7 @@ public class AsnController extends BaseController {
             return success("message.success.warehouse.created");
 
         } catch (DataException e) {
+           // e.printStackTrace();
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
     }

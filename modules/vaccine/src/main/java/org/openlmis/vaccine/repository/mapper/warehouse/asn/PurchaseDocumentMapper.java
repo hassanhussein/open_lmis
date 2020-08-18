@@ -67,7 +67,8 @@ public interface PurchaseDocumentMapper {
     void updateDeleteDocument(Document document);
 
 
-    @Select("SELECT d.*, concat(u.firstname,' ',u.lastname)  createdByName FROM documents d left join users u on (u.id=d.createdby) where asnNumber = #{asnNumber}")
+    @Select("SELECT d.*,d.createddate as docCreatedDate, concat(u.firstname,' ',u.lastname)  createdByName,concat(du.firstname,' ',du.lastname)  deletedByName FROM documents d left join users u on (u.id=d.createdby) " +
+            " left join users du on (du.id=d.deletedby) where asnNumber = #{asnNumber}")
     @Results(value = {
             @Result(property = "documentType", column = "documentType", javaType = Integer.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMapper.getById"))

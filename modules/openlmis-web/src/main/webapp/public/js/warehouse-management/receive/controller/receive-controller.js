@@ -326,7 +326,8 @@ var total_lot_quantity = 0;
         $scope.blAwbNumber = receive.blawBnumber;
         $scope.clearingAgent = receive.clearingAgent;
         $scope.expectedArrivalDate = receive.expectedArrivalDate;
-//        $scope.expectedDeliveryDate = asn.expecteddeliverydate;
+        $scope.expectedArrivalTime=receive.expectedArrivalTime;
+        $scope.actualArrivalTime = receive.actualArrivalTime;
         $scope.flightVesselNumber = receive.flightVesselNumber;
         $scope.notes = receive.note;
         $scope.poDate = receive.poDate;
@@ -909,6 +910,27 @@ console.log(receiveLots);
 
 
         });
+
+    var expectedArrivalTime=$scope.expectedArrivalTime;
+    if(!expectedArrivalTime){
+        expectedArrivalTime="00:00:00";
+    }else{
+        expectedArrivalTime=expectedArrivalTime+":00"
+    }
+
+    var actualArrivalTime=$scope.actualArrivalTime;
+    if(!actualArrivalTime){
+        actualArrivalTime="00:00:00";
+    }else{
+        actualArrivalTime=actualArrivalTime+":00"
+    }
+
+    var expectedArrivalDate=$filter('date')(new Date($scope.expectedArrivalDate),"yyyy-MM-dd");
+    var actualArrivalDate=$filter('date')(new Date($scope.actualArrivalDate),"yyyy-MM-dd");
+
+    console.log(expectedArrivalDate+" : "+actualArrivalDate)
+
+
         var receive = {
             receiveLineItems: receiveLineItems,
             receiveDate: $scope.receiveDate,
@@ -917,9 +939,9 @@ console.log(receiveLots);
             invoiceNumber:$scope.invoiceNumber,
             blawBnumber: $scope.blAwbNumber,
             clearingAgent: $scope.clearingAgent,
-            expectedArrivalDate: $scope.expectedArrivalDate,
+            expectedArrivalDate: expectedArrivalDate+" "+expectedArrivalTime,
             expecteddeliverydate:$scope.expectedDeliveryDate,
-            actualArrivalDate:$scope.actualArrivalDate,
+            actualArrivalDate:actualArrivalDate+" "+actualArrivalTime,
             flightVesselNumber: $scope.flightVesselNumber,
             isForeignProcurement:$scope.isForeignProcurement,
             note: $scope.notes,

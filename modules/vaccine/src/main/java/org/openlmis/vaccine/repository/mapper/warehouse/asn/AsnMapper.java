@@ -28,7 +28,7 @@ public interface AsnMapper {
             " modifiedDate = now(), modifiedBy = #{modifiedBy}, currencyId = #{currencyId}  where id = #{id} ")
     void update(Asn asn);
 
-    @Select("select * from asns where id = #{id}")
+    @Select("select *,to_char(expectedarrivaldate, 'HH24:MI') expectedArrivalTime from asns where id = #{id}")
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(property = "asnLineItems", column = "id", javaType = List.class,
