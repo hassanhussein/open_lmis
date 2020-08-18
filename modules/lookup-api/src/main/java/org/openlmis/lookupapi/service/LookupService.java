@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.domain.GeographicLevel;
+import org.openlmis.core.repository.ManualTestTypeRepository;
 import org.openlmis.core.repository.RegimenRepository;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
@@ -125,6 +126,10 @@ public class LookupService {
     private ServiceTypeRepository serviceTypeRepository;
     @Autowired
     private EquipmentInventoryRepository inventoryRepository;
+    @Autowired
+    private ManualTestTypeRepository manualTestTypeRepository;
+    @Autowired
+    EquipmentOperationalStatusRepository statusRepository;
 
     public List<Program> getAllPrograms() {
         return programMapper.getAll();
@@ -313,4 +318,10 @@ public class LookupService {
         return inventoryRepository.getAllEquipmentInventories();
     }
 
+    public List<ManualTestType> getAllManualTestTypes() {
+       return manualTestTypeRepository.getAll();
+    }
+    public List<EquipmentOperationalStatus> getAllEquipmentOprationalStatuses() {
+        return statusRepository.getAll();
+    }
 }

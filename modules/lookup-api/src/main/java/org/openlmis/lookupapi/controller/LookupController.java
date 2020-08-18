@@ -354,6 +354,17 @@ public class LookupController {
     /**
      * @return
      */
+
+    @RequestMapping(value = "/rest-api/lookup/equipment_operational_statuses")
+    public ResponseEntity getAllequipmentOperationalStatuses() {
+        return RestResponse.response("equipment_operational_statuses", lookupService.getAllEquipmentOprationalStatuses());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/manual-test-types")
+    public ResponseEntity getAllManualTestTypes() {
+        return RestResponse.response("manual-test-types", lookupService.getAllManualTestTypes());
+    }
+
     @RequestMapping(value = "/rest-api/lookup/equipment-types")
     public ResponseEntity getAllEquipmentTypes() {
         return RestResponse.response("equipment-types", lookupService.getAllEquipmentTypes());
