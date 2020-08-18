@@ -159,6 +159,20 @@
     <input ng-disabled="true"  ng-model="stockMovement.stockCardId"  name="stockCardId" type="text" style="width:95%;display: none"/>
 
     <div class="form-row clearfix">
+        <div class="span4">
+            <label >Reason <span class="label-required"> *</span></label></label>
+
+            <div class="form-field row-fluid">
+                <select ui-select2="{width: '100%'}" ng-model="stockMovement.reason" ng-required="true" ng-options="reason.id as reason.reason for reason in adjustmentReasons"  openlmis-message="label.select.parent.zone">
+<!--                    ng-disabled="!stockMovement.quantity || stockMovement.quantity==0"-->
+                    <option value="">--Select Reason--</option>
+
+
+                </select>
+                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                      openlmis-message="missing.value"></span>
+            </div>
+        </div>
 
         <div class="span4">
             <label for="receiptDate">
@@ -172,12 +186,12 @@
             </div>
         </div>
 
-        <div class="span4">
-            <label >Reason <span class="label-required"> *</span></label></label>
+        <div class="span4" ng-show="stockMovement.reason==7">
+            <label >VVM <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="stockMovement.reason" ng-required="true" ng-options="reason.id as reason.reason for reason in adjustmentReasons" ng-disabled="!stockMovement.quantity || stockMovement.quantity==0" openlmis-message="label.select.parent.zone">
-                    <option value="">--Select Reason--</option>
+                <select ui-select2="{width: '100%'}" ng-model="stockMovement.vvmId"  ng-options="vvm.id as vvm.name for vvm in vvmList"  openlmis-message="label.select.parent.zone">
+                    <option value="">--Select VVM--</option>
 
 
                 </select>
@@ -186,6 +200,64 @@
             </div>
         </div>
 
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="form-group"  ng-show="stockMovement.reason!=1 && stockMovement.reason!=7 && stockMovement.reason!=null || (stockMovement.reason==7 &&(stockMovement.vvmId==3||stockMovement.vvmId==4))">
+        <h3 id="basicInformationLabel">Transfer To</h3>
+
+        <div class="form-row clearfix">
+
+            <div class="span4" >
+                <label for="toWarehouseId" ><strong>To Warehouse</strong><span class="label-required"> *</span></label>
+
+                <div class="form-field row-fluid">
+
+                    <select  ui-select2="{width: '100%'}"
+                             ng-model="stockMovement.toWarehouseId" name="toWarehouseId" id="toWarehouseId"
+                             id="toWarehouse" ng-required="true"
+                             ng-options="warehouse.id as warehouse.name for warehouse in stockMovement.warehouseList"
+
+                             ng-change="loadBinLocation(stockMovement.toWarehouseId,stockMovement.warehouseList)"
+                    >
+                        <option value="">--Select Warehouse--</option>
+                    </select>
+
+
+
+                    <span class="field-error" ng-show="movementForm.toWarehouseId.$error.required && showError"
+                          openlmis-message="missing.value"></span>
+                </div>
+            </div>
+
+
+            <div class="span4">
+
+                <label for="toBin" ><strong>To Bin Location</strong><span class="label-required"> *</span></label>
+
+                <div class="form-field row-fluid">
+
+                    <select name="toBin" id="toBin" ui-select2="{width: '100%'}" ng-model="stockMovement.toBin" ng-disabled="!stockMovement.toWarehouseId"
+
+                            ng-required="true"   ng-options="location.id as location.name for location in stockMovement.locations2"
+                    >
+                        <option value="">--Select Bin Location--</option>
+
+                    </select>
+                    <span class="field-error" ng-show="movementForm.toBin.$error.required && showError"
+                          openlmis-message="missing.value"></span>
+
+                </div>
+            </div>
+
+        </div>
     </div>
 
 

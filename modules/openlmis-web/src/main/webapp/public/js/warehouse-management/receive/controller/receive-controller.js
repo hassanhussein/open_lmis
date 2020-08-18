@@ -1171,6 +1171,7 @@ ReceiveController.resolve = {
 
         $timeout(function () {
           GetVVMStatusList.get({}, function (data) {
+
             deferred.resolve(data.vvms);
           }, {});
         }, 100);
