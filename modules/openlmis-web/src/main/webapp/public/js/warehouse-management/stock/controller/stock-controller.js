@@ -9,7 +9,7 @@
  */
 
 
-function StockController($scope, $timeout, WmsAdjustment, vvmList,TransferRecords, reasonsForAdjustments, $location, GetWarehouseLocationsByStorageQuarantine,GetWarehouseLocationsByStorageQuarantineWithPermission, vaccineProducts, ProductLots, GetStockProducts, GetTransferDetails) {
+function StockController($scope, $timeout, WmsAdjustment, vvmList,TransferRecords, reasonsForAdjustments, $location, GetWarehouseLocationsByStorageQuarantineWithPermission,GetWarehouseLocationsByStorageQuarantine, vaccineProducts, ProductLots, GetStockProducts, GetTransferDetails) {
 
 
 $scope.vvmList=vvmList;
@@ -53,7 +53,13 @@ $scope.vvmList=vvmList;
                      id: 7,
                      reason: 'VVM Change',
                      type: 'DEBIT'
-                 }
+                 },
+
+                 {
+                                      id: 8,
+                                      reason: 'Expired',
+                                      type: 'DEBIT'
+                                  }
     ];
 
     $scope.stockMovement = {};
@@ -142,7 +148,29 @@ $scope.vvmList=vvmList;
 
     };
 
+$scope.quantityChanged=function(){
+    $scope.quantityError=false;
+    if($scope.stockMovement.reason>1 && parseInt($scope.stockMovement.quantity,10)>$scope.stockMovement.soh){
+        $scope.quantityError=true;
+    }
 
+
+}
+
+$scope.reasonChanged=function(){
+$scope.disableQuantity=false;
+$scope.stockMovement.quantity="";
+    $scope.quantityError=false;
+
+    if($scope.stockMovement.reason==8){
+//    check actual expiry of batch
+            $scope.stockMovement.quantity=$scope.stockMovement.soh;
+            $scope.disableQuantity=true;
+        }
+
+
+
+}
     $scope.showSOHa = function (lotId) {
 
         $scope.stockMovement.soh = undefined;
@@ -187,7 +215,7 @@ $scope.vvmList=vvmList;
 
 
     $scope.adjust = function (stockAdjust) {
-        if ($scope.movementForm.$error.required) {
+        if ($scope.movementForm.$error.required||$scope.quantityError) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";

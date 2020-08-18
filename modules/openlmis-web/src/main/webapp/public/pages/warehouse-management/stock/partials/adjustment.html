@@ -106,6 +106,7 @@
                         name="productId" id="productId" ng-model="stockMovement.productId"
                         ng-required="true"    ng-options="product.productId as product.productName for product in productToDisplay | unique:'productName'"
                         ng-change="loadProductLots(stockMovement.productId)"
+                        ng-disabled="!stockMovement.fromBin"
                 >
                     <option value="">--Select Item--</option>
 
@@ -122,7 +123,7 @@
 
             <div class="form-field row-fluid">
                 <select ui-select2="{width: '100%'}"
-                        id="lotId" name="lotId" ui-select2="{width: '100%'}" ng-disabled="!stockMovement.productId" ng-model="stockMovement.lotNumberUn"
+                        id="lotId" name="lotNumberUn" ui-select2="{width: '100%'}" ng-disabled="!stockMovement.productId" ng-model="stockMovement.lotNumberUn"
                         ng-change="showSOHa(stockMovement.lotNumberUn)"
                         ng-required="true"   ng-options="lot.lotNumberUn as lot.lotVvm for lot in lotsToDisplay"
                 >
@@ -130,7 +131,7 @@
 
 
                 </select>
-                <span class="field-error" ng-show="movementForm.lotId.$error.required && showError"
+                <span class="field-error" ng-show="movementForm.lotNumberUn.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
@@ -139,7 +140,7 @@
 
         <div class="span4">
             <label for="receiptDate">
-                <span>Stock On Hand </span>
+                <span>Stock On Hand(Vials)</span>
             </label>
 
             <div class="form-field">
@@ -163,13 +164,13 @@
             <label >Reason <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="stockMovement.reason" ng-required="true" ng-options="reason.id as reason.reason for reason in adjustmentReasons"  openlmis-message="label.select.parent.zone">
-<!--                    ng-disabled="!stockMovement.quantity || stockMovement.quantity==0"-->
+                <select ui-select2="{width: '100%'}" name="reason" ng-disabled="!stockMovement.lotNumberUn" ng-change="reasonChanged()" ng-model="stockMovement.reason" ng-required="true" ng-options="reason.id as reason.reason for reason in adjustmentReasons"  openlmis-message="label.select.parent.zone">
+
                     <option value="">--Select Reason--</option>
 
 
                 </select>
-                <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                <span class="field-error" ng-show="movementForm.reason.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
         </div>
@@ -180,9 +181,11 @@
             </label>
 
             <div class="form-field">
-                <input ng-disabled="!stockMovement.lotNumberUn"  ng-model="stockMovement.quantity" ng-required="true" numeric-validator="positiveInteger" name="quantity" type="text" style="width:95%"/>
+                <input ng-disabled="!stockMovement.lotNumberUn || disableQuantity"  ng-change="quantityChanged()"  ng-model="stockMovement.quantity" ng-required="true" numeric-validator="positiveInteger" name="quantity" type="text" style="width:95%"/>
                 <span class="field-error" ng-show="movementForm.quantity.$error.required && showError"
                       openlmis-message="missing.value"></span>
+                <span class="field-error" ng-show="quantityError"
+                      >Quantity should be less/equal to the Stock on hand</span>
             </div>
         </div>
 
@@ -190,8 +193,15 @@
             <label >VVM <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="stockMovement.vvmId"  ng-options="vvm.id as vvm.name for vvm in vvmList"  openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}" ng-model="stockMovement.vvmId"   openlmis-message="label.select.parent.zone">
                     <option value="">--Select VVM--</option>
+
+                    <option ng-repeat="vvm in vvmList"
+                            value="{{ vvm.id }}"
+                            ng-selected="stockMovement.vvmId==vvm.id"
+                    >
+                        {{ vvm.name }}
+                    </option>
 
 
                 </select>
@@ -223,6 +233,7 @@
                     <select  ui-select2="{width: '100%'}"
                              ng-model="stockMovement.toWarehouseId" name="toWarehouseId" id="toWarehouseId"
                              id="toWarehouse" ng-required="true"
+                             ng-disabled="quantityError"
                              ng-options="warehouse.id as warehouse.name for warehouse in stockMovement.warehouseList"
 
                              ng-change="loadBinLocation(stockMovement.toWarehouseId,stockMovement.warehouseList)"
