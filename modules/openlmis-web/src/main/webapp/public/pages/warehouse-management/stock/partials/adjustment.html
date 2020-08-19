@@ -144,7 +144,7 @@
             </label>
 
             <div class="form-field">
-                <input type="text" ng-model="stockMovement.soh" ng-disabled="true"/>
+                <input type="text" ng-model="stockMovement.soh" ng-disabled="true" style="width:95%"/>
                 <span class="field-error" ng-show="asnForm.asnReceiptDate.$error.required && showError"
                       openlmis-message="missing.value"></span>
             </div>
@@ -175,20 +175,6 @@
             </div>
         </div>
 
-        <div class="span4">
-            <label for="receiptDate">
-                Quantity to Adjust <span class="label-required"> *</span>
-            </label>
-
-            <div class="form-field">
-                <input ng-disabled="!stockMovement.lotNumberUn || disableQuantity"  ng-change="quantityChanged()"  ng-model="stockMovement.quantity" ng-required="true" numeric-validator="positiveInteger" name="quantity" type="text" style="width:95%"/>
-                <span class="field-error" ng-show="movementForm.quantity.$error.required && showError"
-                      openlmis-message="missing.value"></span>
-                <span class="field-error" ng-show="quantityError"
-                      >Quantity should be less/equal to the Stock on hand</span>
-            </div>
-        </div>
-
         <div class="span4" ng-show="stockMovement.reason==7">
             <label >VVM <span class="label-required"> *</span></label></label>
 
@@ -209,6 +195,25 @@
                       openlmis-message="missing.value"></span>
             </div>
         </div>
+
+        <div class="span4">
+            <label for="receiptDate">
+                Quantity to Adjust <span class="label-required"> *</span>
+            </label>
+
+            <div class="form-field">
+                <input ng-disabled="!stockMovement.lotNumberUn || disableQuantity"  ng-change="quantityChanged()"  ng-model="stockMovement.quantity" ng-required="true" numeric-validator="positiveInteger" name="quantity" type="text" style="width:95%"/>
+                <span class="field-error" ng-show="movementForm.quantity.$error.required && showError"
+                      openlmis-message="missing.value"></span>
+                <span class="field-error" ng-show="quantityError"
+                      >Quantity should be less/equal to the Stock on hand</span>
+
+                <span class="field-error" ng-show="zeroQuantityError"
+                >Quantity should not be Zero</span>
+            </div>
+        </div>
+
+
 
 
 

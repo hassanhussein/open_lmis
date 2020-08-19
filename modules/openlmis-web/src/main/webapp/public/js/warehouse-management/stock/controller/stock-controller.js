@@ -16,12 +16,12 @@ $scope.vvmList=vvmList;
     $scope.adjustmentReasons = [
         {
             id: 1,
-            reason: 'Missing Inventory in',
+            reason: 'Inventory in',
             type: 'CREDIT'
         },
         {
             id: 2,
-            reason: 'Missing Inventory out',
+            reason: 'Inventory out',
             type: 'DEBIT'
         },
 
@@ -55,11 +55,7 @@ $scope.vvmList=vvmList;
                      type: 'DEBIT'
                  },
 
-                 {
-                                      id: 8,
-                                      reason: 'Expired',
-                                      type: 'DEBIT'
-                                  }
+
     ];
 
     $scope.stockMovement = {};
@@ -150,9 +146,16 @@ $scope.vvmList=vvmList;
 
 $scope.quantityChanged=function(){
     $scope.quantityError=false;
+   $scope.zeroQuantityError=false;
+
     if($scope.stockMovement.reason>1 && parseInt($scope.stockMovement.quantity,10)>$scope.stockMovement.soh){
         $scope.quantityError=true;
     }
+
+
+     if(parseInt($scope.stockMovement.quantity,10)==0){
+            $scope.zeroQuantityError=true;
+     }
 
 
 }
@@ -161,12 +164,15 @@ $scope.reasonChanged=function(){
 $scope.disableQuantity=false;
 $scope.stockMovement.quantity="";
     $scope.quantityError=false;
+        $scope.zeroQuantityError=false;
+
 
     if($scope.stockMovement.reason==8){
 //    check actual expiry of batch
             $scope.stockMovement.quantity=$scope.stockMovement.soh;
             $scope.disableQuantity=true;
         }
+
 
 
 
@@ -215,7 +221,7 @@ $scope.stockMovement.quantity="";
 
 
     $scope.adjust = function (stockAdjust) {
-        if ($scope.movementForm.$error.required||$scope.quantityError) {
+        if ($scope.movementForm.$error.required||$scope.quantityError||$scope.zeroQuantityError) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
@@ -238,7 +244,9 @@ $scope.stockMovement.quantity="";
             "vvmId": $scope.stockMovement.vvmId,
             "stockCardId": $scope.stockMovement.stockCardId,
             "type": "ADJUSTMENT",
-            "reason": reason.reason
+            "reason": reason.reason,
+            'toWarehouseId':$scope.stockMovement.toWarehouseId,
+            'toBinId':$scope.stockMovement.toBin,
         };
 
         console.log(adjust);
