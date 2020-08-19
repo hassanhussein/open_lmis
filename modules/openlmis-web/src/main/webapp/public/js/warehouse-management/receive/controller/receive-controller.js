@@ -915,20 +915,20 @@ console.log(receiveLots);
     if(!expectedArrivalTime){
         expectedArrivalTime="00:00:00";
     }else{
-        expectedArrivalTime=expectedArrivalTime+":00"
+        expectedArrivalTime=expectedArrivalTime+":00";
     }
 
     var actualArrivalTime=$scope.actualArrivalTime;
     if(!actualArrivalTime){
         actualArrivalTime="00:00:00";
     }else{
-        actualArrivalTime=actualArrivalTime+":00"
+        actualArrivalTime=actualArrivalTime+":00";
     }
 
     var expectedArrivalDate=$filter('date')(new Date($scope.expectedArrivalDate),"yyyy-MM-dd");
     var actualArrivalDate=$filter('date')(new Date($scope.actualArrivalDate),"yyyy-MM-dd");
 
-    console.log(expectedArrivalDate+" : "+actualArrivalDate)
+    console.log(expectedArrivalDate+" : "+actualArrivalDate);
 
 
         var receive = {

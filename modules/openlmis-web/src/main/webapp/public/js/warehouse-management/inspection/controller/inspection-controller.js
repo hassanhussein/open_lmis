@@ -72,7 +72,7 @@ $scope.productSum($scope.lineItem);
 
 $scope.hasZero=function(lot){
 
-if(lot.failedQuantity=="" || lot.failedQuantity==0){
+if(lot.failedQuantity==="" || lot.failedQuantity===0){
 //    reset failed reason
        lot.failedReason="";
        lot.failLocationId="";
@@ -80,7 +80,7 @@ if(lot.failedQuantity=="" || lot.failedQuantity==0){
 //
 }
 
-}
+};
 $scope.vvmChanged=function(lot){
 
  if(lot.vvmStatus>2){
@@ -389,7 +389,7 @@ if(!$scope.hasExpired(lot)){
 
    //check fail location
         //only if we have fail quantity
- if((lot.failedReason==4&&lot.failedReason=='')||(lot.failedVvm=='' && lot.failedReason==4)||(lot.failedReason=='')){
+ if((lot.failedReason===4&&lot.failedReason==='')||(lot.failedVvm==='' && lot.failedReason===4)||(lot.failedReason==='')){
                        lot.failLocationError=true;
                        $scope.globalErrorFlag=true;
                    }else{
@@ -463,7 +463,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
-      console.log(data.inspection)
+//      console.log(data.inspection)
         deferred.resolve(data.inspection);
       }, {});
     }, 100);

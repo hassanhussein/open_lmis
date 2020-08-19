@@ -153,12 +153,12 @@ $scope.quantityChanged=function(){
     }
 
 
-     if(parseInt($scope.stockMovement.quantity,10)==0){
+     if(parseInt($scope.stockMovement.quantity,10)===0){
             $scope.zeroQuantityError=true;
      }
 
 
-}
+};
 
 $scope.reasonChanged=function(){
 $scope.disableQuantity=false;
@@ -176,7 +176,7 @@ $scope.stockMovement.quantity="";
 
 
 
-}
+};
     $scope.showSOHa = function (lotId) {
 
         $scope.stockMovement.soh = undefined;

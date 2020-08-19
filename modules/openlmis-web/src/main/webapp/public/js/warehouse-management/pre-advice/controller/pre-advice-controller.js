@@ -902,7 +902,7 @@ console.log($scope.expectedArrivalDate);
         if(!expectedArrivalTime){
             expectedArrivalTime="00:00:00";
         }else{
-            expectedArrivalTime=expectedArrivalTime+":00"
+            expectedArrivalTime=expectedArrivalTime+":00";
         }
 
         var expectedArrivalDate=$filter('date')(new Date($scope.expectedArrivalDate),"yyyy-MM-dd");
