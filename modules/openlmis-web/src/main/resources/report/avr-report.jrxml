@@ -138,8 +138,6 @@
 	<field name="isshippedprovided" class="java.lang.String"/>
 	<field name="shippedcomment" class="java.lang.String"/>
 	<field name="shippedprovidedcomment" class="java.lang.String"/>
-	<field name="rec_airBill" class="java.lang.String"/>
-	<field name="rec_packList" class="java.lang.String"/>
 	<field name="rec_releaseCertificate" class="java.lang.String"/>
 	<field name="varnumber" class="java.lang.String"/>
 	<group name="GroupByProduct">
@@ -312,7 +310,7 @@
 				<textField>
 					<reportElement x="122" y="20" width="128" height="13" uuid="f94b03a2-34e7-4f47-a190-d7a4b7ac3014"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{varnumber}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{hdr_reportnumber}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="122" y="1" width="128" height="13" uuid="727aa839-7e7f-4a41-b217-b3da26bd19aa"/>
@@ -382,7 +380,9 @@
 					<reportElement x="377" y="0" width="1" height="67" uuid="4aed42ff-a922-4f06-b73a-2cea0755d04d"/>
 				</line>
 				<staticText>
-					<reportElement x="307" y="3" width="63" height="24" uuid="eeb8eeea-f726-4f25-a512-be04672f8902"/>
+					<reportElement x="307" y="0" width="63" height="28" uuid="eeb8eeea-f726-4f25-a512-be04672f8902">
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
 					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Copy of packing list]]></text>
 				</staticText>
@@ -413,12 +413,12 @@
 				<textField isBlankWhenNull="true">
 					<reportElement x="218" y="52" width="89" height="13" uuid="72d101ef-2b81-4896-b86a-615a52f89221"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{rec_airBill}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{rec_airbill}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="307" y="52" width="63" height="13" uuid="f6594129-7843-4833-874e-22da3043af78"/>
 					<textElement textAlignment="Center" verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{rec_packList}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{rec_packlist}]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
 					<reportElement x="379" y="52" width="82" height="13" uuid="cf93644f-42aa-4d2c-a921-c67c844a4fbd"/>
@@ -439,6 +439,11 @@
 				<frame>
 					<reportElement mode="Opaque" x="217" y="29" width="337" height="21" backcolor="#121010" uuid="275d5f18-b388-4aed-bda2-73104b7e7e15"/>
 				</frame>
+				<textField isBlankWhenNull="true">
+					<reportElement x="471" y="53" width="82" height="13" uuid="b243a942-c351-439b-9fe3-69e874c05db6"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{rec_releasecertificate}]]></textFieldExpression>
+				</textField>
 			</frame>
 			<line>
 				<reportElement x="118" y="115" width="1" height="67" uuid="53824f79-6ac2-4cf4-9264-cf5eae3f5ffc"/>
@@ -638,7 +643,7 @@ destination]]></text>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{productdescription}]]></textFieldExpression>
 				</textField>
-				<textField>
+				<textField isStretchWithOverflow="true">
 					<reportElement x="360" y="31" width="89" height="13" uuid="890a86ee-9f17-43bd-a072-f1c97bb99881"/>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{manufacturer}]]></textFieldExpression>
@@ -952,7 +957,7 @@ WHO recommends all UN agencies, countries and non-governmental organizations pro
 					<textElement verticalAlignment="Middle">
 						<font size="8"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{rec_releaseCertificate}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{rec_releasecertificate}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="333" y="31" width="89" height="13" uuid="9aef1ca9-6601-4639-85bf-e8bb2b0eebc5"/>
