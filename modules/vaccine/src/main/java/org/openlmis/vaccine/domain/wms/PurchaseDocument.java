@@ -29,11 +29,18 @@ public class PurchaseDocument extends BaseModel {
     @JsonDeserialize(using = DateDeserializer.class)
     private Date createddate;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+
+    private Date docCreatedDate;
+
     private  String createdByName;
 
     private Boolean deleted;
+    private  Long deletedBy;
 
     String comment;
+    String deletionLocation;
+    String deletedByName;
 
 
 }

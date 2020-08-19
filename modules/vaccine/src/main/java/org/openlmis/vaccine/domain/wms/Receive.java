@@ -35,12 +35,12 @@ public class Receive extends BaseModel {
     private String flightVesselNumber;
     private Integer portOfArrival;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Africa/Dar_es_Salaam")
+   // @JsonDeserialize(using = DateDeserializer.class)
     private Date expectedArrivalDate;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Africa/Dar_es_Salaam")
+   // @JsonDeserialize(using = DateDeserializer.class)
     private Date actualArrivalDate;
     private String clearingAgent;
     private String clearingAgentName;
@@ -50,6 +50,9 @@ public class Receive extends BaseModel {
     private String noteToSupplier;
     private String description;
     private Boolean isForeignProcurement;
+
+    private String expectedArrivalTime;
+    private  String actualArrivalTime;
 
     private Long supplierId;
 
