@@ -20,7 +20,7 @@ var preAdviceModule = angular.module('asn', ['openlmis', 'ui.bootstrap.modal','l
           otherwise({redirectTo: '/list'});
     }]).run(function ($rootScope, AuthorizationService) {
       $rootScope.asnSelected = "selected";
-   AuthorizationService.preAuthorize('MANAGE_ASN');
+  // AuthorizationService.preAuthorize('WMS_CREATE_ASN');
     }).directive('validFile',[function() {
                       return {
                         require : 'ngModel',

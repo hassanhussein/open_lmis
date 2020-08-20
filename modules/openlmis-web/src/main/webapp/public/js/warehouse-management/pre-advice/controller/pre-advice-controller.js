@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function PreAdviceController(GetAllClearingAgents,clearingAgent,DeleteDocumentStatus,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
+function PreAdviceController(GetAllClearingAgents,localStorageService,clearingAgent,DeleteDocumentStatus,$window,$scope,$filter,$routeParams, $route,$location,otherProducts, asn,AsnLookups, Preadvice, UserFacilityList, configurations, AllVaccineInventoryConfigurations,homeFacility, asnLookups, ProductLots, FacilityTypeAndProgramProducts, VaccineProgramProducts, manufacturers, Lot,
 $rootScope,documentTypes,UploadFile,$http,docService, $timeout, DocumentList
 ) {
 
@@ -55,6 +55,26 @@ console.log(parseInt($routeParams.id, 10));
       };
 
      $scope.clearingAgentList = clearingAgent;
+
+
+ //Permissions
+
+
+     $scope.loadRights = function () {
+             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
+      }();
+
+      $scope.hasPermission = function (permission) {
+             if ($scope.rights !== undefined && $scope.rights !== null) {
+               var rights = JSON.parse($scope.rights);
+               var rightNames = _.pluck(rights, 'name');
+               console.log(rightNames);
+               return rightNames.indexOf(permission) > -1;
+             }
+             return false;
+       };
+
+
 
     function getAllLookups(){
 
