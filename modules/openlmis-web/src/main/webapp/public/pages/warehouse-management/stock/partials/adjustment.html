@@ -237,7 +237,7 @@
 
                     <select  ui-select2="{width: '100%'}"
                              ng-model="stockMovement.toWarehouseId" name="toWarehouseId" id="toWarehouseId"
-                             id="toWarehouse" ng-required="stockMovement.reason>1"
+                             id="toWarehouse" ng-required="parseInt(stockMovement.reason,10)>1||parseInt(stockMovement.toVvmId,10)>2"
                              ng-disabled="quantityError"
                              ng-options="warehouse.id as warehouse.name for warehouse in stockMovement.warehouseList"
 
