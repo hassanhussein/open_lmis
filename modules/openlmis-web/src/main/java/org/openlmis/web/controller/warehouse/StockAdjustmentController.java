@@ -49,6 +49,7 @@ public class StockAdjustmentController extends BaseController {
             if(toVvmId>2){
                 if (tobinLocation != null && tobinLocation != 0) {
                     item.setLocationid(tobinLocation);
+                    item.setVvmId(toVvmId);
                     item.setType("CREDIT");
                     item.setId(null);
                     item.setQuantity(Math.abs(item.getQuantity()));
