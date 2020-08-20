@@ -267,6 +267,7 @@ $scope.stockMovement.quantity="";
             $scope.stockMovement.toBin = null;
             $scope.stockMovement.reason = null;
             $scope.stockMovement.quantity = null;
+            $scope.stockMovement.lotNumberUn=null;
             $scope.adjustmentSuccess = true;
             $timeout(function () {
                 $scope.adjustmentSuccess = false;
