@@ -39,8 +39,48 @@ public class StockAdjustmentController extends BaseController {
         }catch (Exception e){
 
         }
-        System.out.println("Done: u: "+userId);
-        return OpenLmisResponse.response("adju",adjustmentService.save(item,loggedInUserId(request),facilityID));
+        Long tobinLocation=item.getToBinId();
+        System.out.println("Done: u: "+tobinLocation);
+        Object results=adjustmentService.save(item,loggedInUserId(request),facilityID);
+        Boolean isTransfer=item.getIsTransfer();
+        String getReason=item.getReason();
+        if(getReason.equals("VVM Change")){
+            Long toVvmId=item.getToVvmId();
+            if(toVvmId>2){
+                if (tobinLocation != null && tobinLocation != 0) {
+                    item.setLocationid(tobinLocation);
+                    item.setType("CREDIT");
+                    item.setId(null);
+                    item.setQuantity(Math.abs(item.getQuantity()));
+
+                   // System.out.println("Passed: " + item.toString());
+
+                    adjustmentService.save(item, loggedInUserId(request), facilityID);
+                }
+            }else {
+                item.setVvmId(toVvmId);
+                item.setType("CREDIT");
+                item.setId(null);
+                item.setQuantity(Math.abs(item.getQuantity()));
+
+                // System.out.println("Passed: " + item.toString());
+
+                adjustmentService.save(item, loggedInUserId(request), facilityID);
+            }
+        }else {
+
+            if (tobinLocation != null && tobinLocation != 0 && isTransfer) {
+                item.setLocationid(tobinLocation);
+                item.setType("CREDIT");
+                item.setId(null);
+                item.setQuantity(Math.abs(item.getQuantity()));
+
+                System.out.println("Passed: " + item.toString());
+
+                adjustmentService.save(item, loggedInUserId(request), facilityID);
+            }
+        }
+        return OpenLmisResponse.response("adju",results);
 
     }
 }
