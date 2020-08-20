@@ -179,7 +179,7 @@
             <label >VVM <span class="label-required"> *</span></label></label>
 
             <div class="form-field row-fluid">
-                <select ui-select2="{width: '100%'}" ng-model="stockMovement.vvmId"   openlmis-message="label.select.parent.zone">
+                <select ui-select2="{width: '100%'}" ng-model="stockMovement.toVvmId" ng-required="stockMovement.reason==7"  openlmis-message="label.select.parent.zone">
                     <option value="">--Select VVM--</option>
 
                     <option ng-repeat="vvm in vvmList"
@@ -237,7 +237,7 @@
 
                     <select  ui-select2="{width: '100%'}"
                              ng-model="stockMovement.toWarehouseId" name="toWarehouseId" id="toWarehouseId"
-                             id="toWarehouse" ng-required="true"
+                             id="toWarehouse" ng-required="stockMovement.reason>1"
                              ng-disabled="quantityError"
                              ng-options="warehouse.id as warehouse.name for warehouse in stockMovement.warehouseList"
 
@@ -262,7 +262,7 @@
 
                     <select name="toBin" id="toBin" ui-select2="{width: '100%'}" ng-model="stockMovement.toBin" ng-disabled="!stockMovement.toWarehouseId"
 
-                            ng-required="true"   ng-options="location.id as location.name for location in stockMovement.locations2"
+                            ng-required="stockMovement.toWarehouseId"   ng-options="location.id as location.name for location in stockMovement.locations2"
                     >
                         <option value="">--Select Bin Location--</option>
 

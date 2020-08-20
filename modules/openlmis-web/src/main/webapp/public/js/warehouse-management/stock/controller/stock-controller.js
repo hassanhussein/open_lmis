@@ -11,7 +11,8 @@
 
 function StockController($scope, $timeout, WmsAdjustment, vvmList,TransferRecords, reasonsForAdjustments, $location, GetWarehouseLocationsByStorageQuarantineWithPermission,GetWarehouseLocationsByStorageQuarantine, vaccineProducts, ProductLots, GetStockProducts, GetTransferDetails) {
 
-
+$scope.quantityError=false;
+$scope.zeroQuantityError=false;
 $scope.vvmList=vvmList;
     $scope.adjustmentReasons = [
         {
@@ -247,6 +248,8 @@ $scope.stockMovement.quantity="";
             "reason": reason.reason,
             'toWarehouseId':$scope.stockMovement.toWarehouseId,
             'toBinId':$scope.stockMovement.toBin,
+            'toVvmId':$scope.stockMovement.toVvmId,
+            'isTransfer':parseInt($scope.stockMovement.reason,10)>1
         };
 
         console.log(adjust);
