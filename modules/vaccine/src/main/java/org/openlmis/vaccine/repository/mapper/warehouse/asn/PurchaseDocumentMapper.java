@@ -10,14 +10,14 @@ import java.util.List;
 @Repository
 public interface PurchaseDocumentMapper {
 
-    @Insert("insert into purchase_documents(asnId,receiveId, documentType, fileLocation, createdDate,createdBy, modifiedBy, modifiedDate,asnNumber,deleted,comment) values(" +
+    @Insert("insert into purchase_documents(asnId,receiveId, documentType, fileLocation, createdDate,createdBy, modifiedBy, modifiedDate,asnNumber,deleted,comment,deletedBy,deletionLocation) values(" +
             "#{asn.id},#{receive.id},#{documentType.id}, #{fileLocation}, COALESCE(#{createdDate}, NOW()), #{createdBy}, #{modifiedBy}," +
-            "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{asnNumber} ,#{deleted},#{comment})")
+            "COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{asnNumber} ,#{deleted},#{comment},#{deletedBy},#{deletionLocation})")
     @Options(useGeneratedKeys = true)
     Integer insert(PurchaseDocument purchaseDocument);
 
-    @Update("update  purchase_documents set documentType = #{documentType.id},asnNumber = #{asnNumber}, fileLocation = #{fileLocation}, " +
-            " modifiedBy = #{modifiedBy},comment=#{comment},deleted=#{deleted} modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
+    @Update("update  purchase_documents set documentType = #{documentType.id},asnNumber = #{asnNumber},deletedBy=#{deletedBy},deletionLocation=#{deletionLocation}, fileLocation = #{fileLocation}, " +
+            " modifiedBy = #{modifiedBy},comment=#{comment},deleted=#{deleted}, modifiedDate = (COALESCE(#{modifiedDate}, NOW())) WHERE id = #{id}")
     void update(PurchaseDocument purchaseDocument);
 
     @Select("SELECT * FROM purchase_documents")
@@ -39,7 +39,8 @@ public interface PurchaseDocumentMapper {
     })
     PurchaseDocument getById(@Param("id") Long id);
 
-    @Select("SELECT p.*, concat(u.firstname,' ',u.lastname)  createdByName FROM purchase_documents p left join users u on (u.id=p.createdby)  where asnid = #{id}")
+    @Select("SELECT p.*,p.createddate as docCreatedDate, concat(u.firstname,' ',u.lastname)  createdByName,concat(du.firstname,' ',du.lastname)  deletedByName FROM purchase_documents p left join users u on (u.id=p.createdby) " +
+            " left join users du on (du.id=p.deletedby) where asnid = #{id}")
     @Results(value = {
             @Result(property = "documentType", column = "documenttype", javaType = Integer.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMapper.getById"))
@@ -67,7 +68,8 @@ public interface PurchaseDocumentMapper {
     void updateDeleteDocument(Document document);
 
 
-    @Select("SELECT d.*, concat(u.firstname,' ',u.lastname)  createdByName FROM documents d left join users u on (u.id=d.createdby) where asnNumber = #{asnNumber}")
+    @Select("SELECT d.*,d.createddate as docCreatedDate, concat(u.firstname,' ',u.lastname)  createdByName,concat(du.firstname,' ',du.lastname)  deletedByName FROM documents d left join users u on (u.id=d.createdby) " +
+            " left join users du on (du.id=d.deletedby) where asnNumber = #{asnNumber}")
     @Results(value = {
             @Result(property = "documentType", column = "documentType", javaType = Integer.class,
                     one = @One(select = "org.openlmis.vaccine.repository.mapper.warehouse.asn.DocumentTypeMapper.getById"))

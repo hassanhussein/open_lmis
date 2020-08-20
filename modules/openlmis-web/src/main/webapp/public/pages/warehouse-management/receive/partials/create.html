@@ -16,16 +16,10 @@
         <h2 ng-if="viewMode">View Consignment</h2>
 
 
-
-
-
-
     </div>
 
 
-
-
-    <form name="asnForm"  novalidate>
+    <form name="asnForm" novalidate>
         <div class="app-form">
 
             <div class="form-group clear-top">
@@ -33,31 +27,32 @@
                 <div class="form-row clearfix">
                     <div class="span3">
                         <label for="receiveDate">
-                            <span >Receive Date</span>
+                            <span>Receive Date</span>
                             <span class="label-required"> *</span>
                         </label>
 
                         <div class="form-field">
                             <input name="receiveDate"
-                                    type="text"
-                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
-                                    ui-date-format="yy-mm-dd"
-                                    ng-model="receiveDate"
-                                    ng-disabled="viewMode"
-                                    ng-required="true"/>
+                                   type="text"
+                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
+                                   ui-date-format="yy-mm-dd"
+                                   ng-model="receiveDate"
+                                   ng-disabled="viewMode"
+                                   ng-required="true"/>
                             <span class="field-error" ng-show="asnForm.receiveDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
                     <div class="span3">
                         <label for="asnCode">
-                            <span >Invoice Number</span>
+                            <span>Invoice Number</span>
 
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="invoiceNumber" style="width:93%;"  name="invoice" ng-disabled="viewMode || editMode" type="text" maxlength="50" />
-                            <input type="hidden" ng-model="asnCode" name="invoice"  />
+                            <input ng-model="invoiceNumber" style="width:93%;" name="invoice"
+                                   ng-disabled="viewMode || editMode" type="text" maxlength="50"/>
+                            <input type="hidden" ng-model="asnCode" name="invoice"/>
 
                         </div>
                     </div>
@@ -71,16 +66,16 @@
                         <div class="form-field">
                             <input id="receiptDate"
                                    ng-disabled="true"
-                                    type="text"
+                                   type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
-                                   ng-model="asnReceiptDate" name="asnReceiptDate" />
+                                   ng-model="asnReceiptDate" name="asnReceiptDate"/>
 
                         </div>
                     </div>
 
                     <div class="span3">
-                        <label for="supplier" >Supplier <span class="label-required"> *</span></label>
+                        <label for="supplier">Supplier <span class="label-required"> *</span></label>
 
 
                         <div class="form-field row-fluid">
@@ -103,9 +98,7 @@
                     </div>
 
 
-
                     <div>
-
 
 
                     </div>
@@ -114,19 +107,18 @@
                 </div>
 
 
-
                 <div class="form-row clearfix">
-
 
 
                     <div class="span3">
                         <label for="poNumber">
-                            <span >PO Number</span>
+                            <span>PO Number</span>
                             <span class="label-required"> *</span>
                         </label>
 
                         <div class="form-field">
-                            <input ng-model="poNumber" ng-disabled="viewMode || editMode" style="width:93%;" type="text" maxlength="50" name="poNumber" ng-required="true"/>
+                            <input ng-model="poNumber" ng-disabled="viewMode || editMode" style="width:93%;" type="text"
+                                   maxlength="50" name="poNumber" ng-required="true"/>
                             <span class="field-error" ng-show="asnForm.poNumber.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
@@ -134,24 +126,24 @@
 
                     <div class="span3">
                         <label for="poDate">
-                            <span >PO Date</span>
+                            <span>PO Date</span>
                             <span class="label-required"> *</span>
                         </label>
 
                         <div class="form-field">
-                            <input  name="poDate" id="poDate"
-                                    type="text"
+                            <input name="poDate" id="poDate"
+                                   type="text"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
                                    ng-model="poDate"
-                                    ng-disabled="viewMode || editMode"
-                                    ng-required="true"/>
+                                   ng-disabled="viewMode || editMode"
+                                   ng-required="true"/>
                             <span class="field-error" ng-show="asnForm.poDate.$error.required && showError"
                                   openlmis-message="missing.value"></span>
                         </div>
                     </div>
                     <div class="span3">
-                        <label for="currency" >Currency <span class="label-required"> *</span></label>
+                        <label for="currency">Currency <span class="label-required"> *</span></label>
 
                         <div class="form-field row-fluid">
                             <select ui-select2="{width: '100%'}" class="span11" id="currency"
@@ -181,12 +173,13 @@
                 <div class="form-row clearfix">
                     <div class="span6">
                         <label id="codeLabel" for="code">
-                            <span >Description of Procurement</span>
+                            <span>Description of Procurement</span>
                             <!--                                        <span class="label-required"> *</span>-->
                         </label>
 
                         <div class="form-field">
-                            <textarea rows="3" ng-disabled="viewMode" style="width: 425px;" ng-model="descriptionOfProcurement" ></textarea>
+                            <textarea rows="3" ng-disabled="viewMode" style="width: 425px;"
+                                      ng-model="descriptionOfProcurement"></textarea>
 
                         </div>
                     </div>
@@ -195,24 +188,24 @@
                 </div>
 
 
-
                 <div class="form-row clearfix">
 
-                    <div class="form-cell" >
+                    <div class="form-cell">
                         <label class="checkbox inline">
-                            <input type="hidden" ng-disabled="viewMode" checked >
-<!--                            Foreign Procurement-->
+                            <input type="hidden" ng-disabled="viewMode" checked>
+                            <!--                            Foreign Procurement-->
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && !isVaccine)" ng-init="switchData=2"  value="2" ng-click="changeProductType(true)"> Vaccines/Associated Products
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && !isVaccine)"
+                                   ng-init="switchData=2" value="2" ng-click="changeProductType(true)">
+                            Vaccines/Associated Products
                         </label>
                         <label class="checkbox inline">
-                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && isVaccine)"   value="1" ng-click="changeProductType(false)" > Other Items
+                            <input type="radio" ng-model="switchData" ng-disabled="viewMode || (editMode && isVaccine)"
+                                   value="1" ng-click="changeProductType(false)"> Other Items
                         </label>
 
                     </div>
-
-
 
 
                 </div>
@@ -223,8 +216,8 @@
                         <li class="active">
                             <a href="#tab1" data-toggle="tab" target="_self">Item Info</a>
                         </li>
-                        <li ><a href="#tab2" data-toggle="tab" target="_self">Shipment info</a></li>
-                        <li ><a href="#tab3" data-toggle="tab" target="_self">Documents</a></li>
+                        <li><a href="#tab2" data-toggle="tab" target="_self">Shipment info</a></li>
+                        <li><a href="#tab3" data-toggle="tab" target="_self">Documents</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -247,34 +240,40 @@
                                         </thead>
                                         <tbody id="append-element">
                                         <tr data-ng-repeat="product in productsToAdd" ng-init="productIndex=$index">
-                                            <td  class="cell-input" style="padding-left:15px;">
+                                            <td class="cell-input" style="padding-left:15px;">
                                                 <select style="width:90% !important;" ui-select2
                                                         ng-show="!product.displayNameOnly"
                                                         ng-model="product.programProduct"
                                                         ng-options="obj.programProduct  as obj.programProduct.product.primaryName for obj in productsToDisplay">
-                                                    <option value="" openlmis-message="placeholder.select.product"></option>
+                                                    <option value=""
+                                                            openlmis-message="placeholder.select.product"></option>
                                                 </select>
                                                 <div class="row-fluid" ng-show="product.displayNameOnly">
                                                     {{product.programProduct.product.primaryName}}
                                                 </div>
                                             </td>
                                             <td>
-                                                <span ng-bind="product.programProduct.product.dosageUnit.code" ></span>
-                                                <span class="row-fluid" >
+                                                <span ng-bind="product.programProduct.product.dosageUnit.code"></span>
+                                                <span class="row-fluid">
                                                Vials
                                             </span>
                                             </td>
                                             <td class="col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.quantity">
+                                                <input type="text" numeric-validator="positiveInteger"
+                                                       ng-model="product.quantity">
                                             </td>
                                             <td class="col-general">
                                                 <input type="text" ng-decimal="10" ng-model="product.unitPrice">
                                             </td>
 
-                                            <td>{{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0 | number}}</td>
+                                            <td>
+                                                {{(product.quantity*product.unitPrice)?product.quantity*product.unitPrice:0
+                                                | number}}
+                                            </td>
                                             masterpiece
 
-                                            <td ><span class="btn btn-danger" ng-click="removeProduct(productIndex)"><i class="icon-remove"></i></i></span></td>
+                                            <td><span class="btn btn-danger" ng-click="removeProduct(productIndex)"><i
+                                                    class="icon-remove"></i></i></span></td>
                                         </tr>
 
                                         </tbody>
@@ -282,14 +281,14 @@
                                         <tfoot>
                                         <tr>
                                             <td colspan="3">
-                                                <button class="btn btn-small btn-info" type="button" ng-click="addProduct()">Add Product</button>
+                                                <button class="btn btn-small btn-info" type="button"
+                                                        ng-click="addProduct()">Add Product
+                                                </button>
 
                                             </td>
 
 
-
-
-                                            <th >Grand Total {{currency.code?'('+currency.code+')':''}}</th>
+                                            <th>Grand Total {{currency.code?'('+currency.code+')':''}}</th>
 
                                             <td colspan="3" style="text-align:right;">{{grandTotal() | number}}</td>
 
@@ -300,45 +299,62 @@
                                 </div>
 
                                 <div ng-switch-when="2">
-                                    <div  class="alert alert-danger" ng-show="productError">
+                                    <div class="alert alert-danger" ng-show="productError">
                                         Atleast One product with atleast One batch is required
                                     </div>
 
-                                    <div  class="alert alert-danger" ng-show="quantityError"
-                                    >Please Fill Number of Boxes/Quantities</div>
+                                    <div class="alert alert-danger" ng-show="quantityError"
+                                    >Please Fill Number of Boxes/Quantities
+                                    </div>
 
-                                    <div  class="alert alert-success" ng-show="batchCreated"
-                                    >Batch Created Successfully</div>
+                                    <div class="alert alert-success" ng-show="batchCreated"
+                                    >Batch Created Successfully
+                                    </div>
 
-                                    <div  class="alert alert-danger" ng-show="quantityBoxError">
+                                    <div class="alert alert-danger" ng-show="quantityBoxError">
                                         Quantity should be greater or equal to Number of Boxes
                                     </div>
-                                    <table  class="table table-bordered receive">
+                                    <table class="table table-bordered receive">
                                         <thead>
                                         <tr class="gradient-header">
-                                            <th  style="width:250px !important;max-width:250px !important" class="col-product " openlmis-message="label.products"></th>
+                                            <th style="width:250px !important;max-width:250px !important"
+                                                class="col-product " openlmis-message="label.products"></th>
 
-                                            <th style="width:300px !important;max-width:300px !important" class="col-lot" >Batch</th>
+                                            <th style="width:300px !important;max-width:300px !important"
+                                                class="col-lot">Batch
+                                            </th>
                                             <th class="col-product" style="width:100px">
                                                 Number of Boxes
                                             </th>
-                                            <th class="col-quantity" style="width:100px" ><span
+                                            <th class="col-quantity" style="width:100px"><span
                                                     openlmis-message="label.stock.quantity"></span></th>
-                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" >Unit Price {{currency.code?'('+currency.code+')':''}}</th>
-                                            <th  class="col-add-lot" style="width:100px">Total Cost {{currency.code?'('+currency.code+')':''}}</th>
-                                            <th ng-if="!viewMode" style="width:100px !important;max-width:100px !important" class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span></th>
-<!--                                            <th ng-if="!viewMode" class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>-->
+                                            <th class="col-add-lot"
+                                                style="width:100px !important;max-width:100px !important">Unit Price
+                                                {{currency.code?'('+currency.code+')':''}}
+                                            </th>
+                                            <th class="col-add-lot" style="width:100px">Total Cost
+                                                {{currency.code?'('+currency.code+')':''}}
+                                            </th>
+                                            <th ng-if="!viewMode"
+                                                style="width:100px !important;max-width:100px !important"
+                                                class="col-add-lot"><span openlmis-message="label.stock.add.lot"></span>
+                                            </th>
+                                            <!--                                            <th ng-if="!viewMode" class="col-add-product"><span openlmis-message="label.stock.add.product"></span></th>-->
 
                                         </tr>
                                         </thead>
-                                        <tbody >
-                                        <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index" style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
-                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px;">
-                                                <select style="width:90% !important;" ui-select2 ng-change="loadProductLots(product.programProduct.product)"
+                                        <tbody>
+                                        <tr ng-repeat-start="product in productsToAdd" ng-init="productIndex=$index"
+                                            style="border-bottom:2px solid #333" ng-form="$parent.productToAddForm">
+                                            <td rowspan="{{product.lots.length}}" class="cell-input"
+                                                style="padding-left:15px;">
+                                                <select style="width:90% !important;" ui-select2
+                                                        ng-change="loadProductLots(product.programProduct.product)"
                                                         ng-show="!product.displayNameOnly"
                                                         ng-model="product.programProduct"
                                                         ng-options="obj.programProduct  as obj.programProduct.product.primaryName group by obj.programProduct.productCategory.name for obj in productsToDisplay">
-                                                    <option value="" openlmis-message="placeholder.select.product"></option>
+                                                    <option value=""
+                                                            openlmis-message="placeholder.select.product"></option>
                                                 </select>
                                                 <div class="row-fluid" ng-show="product.displayNameOnly">
                                                     {{product.programProduct.product.primaryName}}
@@ -346,14 +362,15 @@
                                             </td>
 
 
-
-                                            <td >
+                                            <td>
 
                                                 <div class="">
                                                     <div class="span2">
-                                                        <input type="button" ng-disabled="!product.programProduct.product || viewMode"
+                                                        <input type="button"
+                                                               ng-disabled="!product.programProduct.product || viewMode"
                                                                class="btn btn-primary btn-small"
-                                                               href ng-click="showNewLotModal(product.programProduct.product)"
+                                                               href
+                                                               ng-click="showNewLotModal(product.programProduct.product)"
                                                                openlmis-message="button.create"
                                                                ng-if="!product.lots[0].displayCodeOnly"
                                                         />
@@ -362,29 +379,33 @@
                                                     <div class="span10">
                                                         <select ng-if="!product.lots[0].displayCodeOnly"
 
-                                                                 ng-model="product.lots[0].info"
-                                                                 ng-disabled="!product.programProduct.product"
-                                                                 ng-options="obj.lotCode for obj in lotsToDisplay"
+                                                                ng-model="product.lots[0].info"
+                                                                ng-disabled="!product.programProduct.product"
+                                                                ng-options="obj.lotCode for obj in lotsToDisplay"
 
                                                         >
-                                                            <option value="" openlmis-message="placeholder.select.batch"></option>
+                                                            <option value=""
+                                                                    openlmis-message="placeholder.select.batch"></option>
 
                                                         </select>
-                                                        <div ng-if="product.lots[0].displayCodeOnly">{{product.lots[0].info.lotCode}}</div>
+                                                        <div ng-if="product.lots[0].displayCodeOnly">
+                                                            {{product.lots[0].info.lotCode}}
+                                                        </div>
                                                     </div>
 
 
                                                 </div>
 
                                                 <div class="" style="margin-top:6px;">
-                                                    <div class="span2">Location: </div>
+                                                    <div class="span2">Location:</div>
                                                     <div class="span10">
                                                         <select ng-disabled="!product.lots[0].info || viewMode"
                                                                 ng-model="product.lots[0].locationId"
                                                         >
-                                                            <option value="" >--Select Location--</option>
+                                                            <option value="">--Select Location--</option>
 
-                                                            <option ng-repeat="location in locationList" ng-selected="product.lots[0].locationId==location.id"
+                                                            <option ng-repeat="location in locationList"
+                                                                    ng-selected="product.lots[0].locationId==location.id"
                                                                     value="{{ location.id }}">
                                                                 {{ location.code }}
                                                             </option>
@@ -396,23 +417,21 @@
                                                 </div>
 
                                                 <div class="" style="margin-top:6px;">
-                                                    <div class="span2">VVM: </div>
+                                                    <div class="span2">VVM:</div>
                                                     <div class="span7">
                                                         <select ng-disabled="!product.lots[0].info || viewMode"
                                                                 ng-model="product.lots[0].vvmId"
 
 
                                                         >
-                                                            <option value="" >--Select VVM--</option>
+                                                            <option value="">--Select VVM--</option>
 
                                                             <option ng-repeat="vvm in vvmStatusList"
                                                                     value="{{ vvm.id }}"
                                                                     ng-selected="product.lots[0].vvmId==vvm.id"
                                                             >
-                                                                    {{ vvm.name }}
+                                                                {{ vvm.name }}
                                                             </option>
-
-
 
 
                                                         </select>
@@ -422,40 +441,64 @@
 
                                                 <div class="">
                                                     <div class="span2">Campaign:</div>
-                                                    <div class="span10"><input type="checkbox" ng-disabled="!product.lots[0].info || viewMode"></div>
+                                                    <div class="span10"><input type="checkbox"
+                                                                               ng-disabled="!product.lots[0].info || viewMode">
+                                                    </div>
 
                                                 </div>
 
                                             </td>
-                                            <td  class="cell-input col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="product.lots[0].boxCounted"  ng-disabled="!product.lots[0].info || viewMode">
+                                            <td class="cell-input col-general">
+                                                <input type="text" numeric-validator="positiveInteger"
+                                                       ng-model="product.lots[0].boxCounted"
+                                                       ng-disabled="!product.lots[0].info || viewMode">
 
                                             </td>
                                             <td class="cell-input col-general">
-                                                <input type="text" numeric-validator="positiveInteger" ng-disabled="!product.lots[0].boxCounted || product.lots[0].boxCounted==0 || viewMode" ng-model="product.lots[0].quantity" style="width:110px">
+                                                <input type="text" numeric-validator="positiveInteger"
+                                                       ng-disabled="!product.lots[0].boxCounted || product.lots[0].boxCounted==0 || viewMode"
+                                                       ng-model="product.lots[0].quantity" style="width:110px">
                                             </td>
-                                            <td rowspan="{{product.lots.length}}" class="cell-input col-general" style="padding-left:1px;">
-                                                <input type="text"  ng-decimal="10" ng-model="product.unitPrice" ng-disabled="!product.lots[0].quantity || viewMode" style="width:99px">
+                                            <td rowspan="{{product.lots.length}}" class="cell-input col-general"
+                                                style="padding-left:1px;">
+                                                <input type="text" ng-decimal="10" ng-model="product.unitPrice"
+                                                       ng-disabled="!product.lots[0].quantity || viewMode"
+                                                       style="width:99px">
                                             </td>
 
-                                            <td rowspan="{{product.lots.length}}" class="cell-input" style="padding-left:15px; text-align:right; padding-right:4px;" >{{totalCostPerProduct(product) | number}}</td>
+                                            <td rowspan="{{product.lots.length}}" class="cell-input"
+                                                style="padding-left:15px; text-align:right; padding-right:4px;">
+                                                {{totalCostPerProduct(product) | number}}
+                                            </td>
                                             <td class="cell-input" style="padding-left:3px" ng-if="!viewMode">
-                                                <button class="btn btn-small btn-info"  type="button" ng-click="addLot(product)" ng-disabled="!product.unitPrice ||product.lots[0].quantity<1" ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly " >Add</button>
-                                                <button class="btn btn-small btn-danger" ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"  type="button" ng-click="removeLot(productIndex,0)">Remove</button>
+                                                <button class="btn btn-small btn-info" type="button"
+                                                        ng-click="addLot(product)"
+                                                        ng-disabled="!product.unitPrice ||product.lots[0].quantity<1"
+                                                        ng-if="product.lots.length==1 && !product.lots[0].displayCodeOnly ">
+                                                    Add
+                                                </button>
+                                                <button class="btn btn-small btn-danger"
+                                                        ng-if="product.lots.length!=1 || product.lots[0].displayCodeOnly"
+                                                        type="button" ng-click="removeLot(productIndex,0)">Remove
+                                                </button>
 
                                             </td>
 
 
                                         </tr>
-                                        <tr ng-repeat-end style="border-bottom:2px solid #333" ng-repeat="lot in product.lots" ng-if="$index > 0" ng-init="lotIndex=$index">
+                                        <tr ng-repeat-end style="border-bottom:2px solid #333"
+                                            ng-repeat="lot in product.lots" ng-if="$index > 0"
+                                            ng-init="lotIndex=$index">
 
 
                                             <td>
                                                 <div class="">
                                                     <div class="span2">
-                                                        <input type="button" ng-disabled="!product.programProduct.product"
+                                                        <input type="button"
+                                                               ng-disabled="!product.programProduct.product"
                                                                class="btn btn-primary btn-small"
-                                                               href ng-click="showNewLotModal(product.programProduct.product)"
+                                                               href
+                                                               ng-click="showNewLotModal(product.programProduct.product)"
                                                                openlmis-message="button.create"
                                                                ng-if="!lot.displayCodeOnly"
 
@@ -471,7 +514,8 @@
                                                                 ng-if="!lot.displayCodeOnly"
 
                                                         >
-                                                            <option value="" openlmis-message="placeholder.select.batch"></option>
+                                                            <option value=""
+                                                                    openlmis-message="placeholder.select.batch"></option>
 
                                                         </select>
                                                         <div ng-if="lot.displayCodeOnly">{{lot.info.lotCode}}</div>
@@ -480,12 +524,16 @@
                                                 </div>
 
                                                 <div class="" style="margin-top:6px;">
-                                                    <div class="span2">Location: </div>
+                                                    <div class="span2">Location:</div>
                                                     <div class="span10">
-                                                        <select ng-disabled="!lot.info || viewMode" ng-model="lot.locationId">
-                                                            <option value="" >--Select Location--</option>
-                                                            <option ng-repeat="location in locationList" value="{{ location.id }}" ng-selected="lot.locationId==location.id">{{ location.code }}</option>
-
+                                                        <select ng-disabled="!lot.info || viewMode"
+                                                                ng-model="lot.locationId">
+                                                            <option value="">--Select Location--</option>
+                                                            <option ng-repeat="location in locationList"
+                                                                    value="{{ location.id }}"
+                                                                    ng-selected="lot.locationId==location.id">{{
+                                                                location.code }}
+                                                            </option>
 
 
                                                         </select>
@@ -494,13 +542,13 @@
                                                 </div>
 
                                                 <div class="" style="margin-top:6px;">
-                                                    <div class="span2">VVM: </div>
+                                                    <div class="span2">VVM:</div>
                                                     <div class="span7">
                                                         <select ng-disabled="!lot.info || viewMode"
                                                                 ng-model="lot.vvmId"
 
                                                         >
-                                                            <option value="" >--Select VVM--</option>
+                                                            <option value="">--Select VVM--</option>
 
                                                             <option ng-repeat="vvm in vvmStatusList"
                                                                     value="{{ vvm.id }}"
@@ -511,8 +559,6 @@
                                                             </option>
 
 
-
-
                                                         </select>
                                                     </div>
 
@@ -520,22 +566,34 @@
 
                                                 <div class="">
                                                     <div class="span2">Campaign:</div>
-                                                    <div class="span10"><input type="checkbox" ng-disabled="!lot.info || viewMode"></div>
+                                                    <div class="span10"><input type="checkbox"
+                                                                               ng-disabled="!lot.info || viewMode">
+                                                    </div>
 
                                                 </div>
                                             </td>
-                                            <td  class="cell-input col-general">
+                                            <td class="cell-input col-general">
 
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.boxCounted"  ng-disabled="!lot.info || viewMode" >
+                                                <input type="text" numeric-validator="positiveInteger"
+                                                       ng-model="lot.boxCounted" ng-disabled="!lot.info || viewMode">
 
 
                                             </td>
                                             <td class="col-general cell-input">
-                                                <input type="text" numeric-validator="positiveInteger" ng-model="lot.quantity" name="quantity" ng-disabled="!lot.boxCounted ||lot.boxCounted==0  || viewMode" style="width:110px">
+                                                <input type="text" numeric-validator="positiveInteger"
+                                                       ng-model="lot.quantity" name="quantity"
+                                                       ng-disabled="!lot.boxCounted ||lot.boxCounted==0  || viewMode"
+                                                       style="width:110px">
                                             </td>
                                             <td ng-if="!viewMode">
-                                                <button class="btn btn-small btn-info" ng-disabled="lot.quantity<1" ng-show="(product.lots.indexOf(lot)+1==product.lots.length && !lot.displayCodeOnly) && (!viewMode && !editMode)" type="button" ng-click="addLot(product,lot)" >Add</button>
-                                                <button class="btn btn-small btn-danger" ng-if="lot && !$last || lot.displayCodeOnly" type="button" ng-click="removeLot(productIndex,lotIndex)">Remove</button>
+                                                <button class="btn btn-small btn-info" ng-disabled="lot.quantity<1"
+                                                        ng-show="(product.lots.indexOf(lot)+1==product.lots.length && !lot.displayCodeOnly) && (!viewMode && !editMode)"
+                                                        type="button" ng-click="addLot(product,lot)">Add
+                                                </button>
+                                                <button class="btn btn-small btn-danger"
+                                                        ng-if="lot && !$last || lot.displayCodeOnly" type="button"
+                                                        ng-click="removeLot(productIndex,lotIndex)">Remove
+                                                </button>
                                             </td>
 
                                         </tr>
@@ -545,7 +603,7 @@
                                         <tr>
 
                                             <td colspan="4"></td>
-                                            <th >Grand Total {{currency.code?'('+currency.code+')':''}}</th>
+                                            <th>Grand Total {{currency.code?'('+currency.code+')':''}}</th>
 
                                             <td style="text-align:right;">{{grandTotal() | number}}</td>
                                             <td ng-if="!viewMode" style="border-left: 0px solid white;"></td>
@@ -559,109 +617,121 @@
                             </div>
 
 
-
-
-
-
-
-
-
-
                         </div>
                         <div class="tab-pane" id="tab2">
                             <div class="form-row clearfix">
                                 <div class="span3">
                                     <label id="codeLabel" for="code">
-                                        <span >BL/AWB Number</span>
+                                        <span>BL/AWB Number</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="blAwbNumber" ng-disabled="viewMode"  type="text"  maxlength="50" name="blAwbNumber" ng-required="true"/>
-                                        <span class="field-error" ng-show="asnForm.blAwbNumber.$error.required && showError"
+                                        <input ng-model="blAwbNumber" ng-disabled="viewMode" type="text" maxlength="50"
+                                               name="blAwbNumber" ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="asnForm.blAwbNumber.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
 
                                 <div class="span3">
-                                    <label id="parentLabel" >Destination Airport/Port</label>
+                                    <label id="parentLabel">Destination Airport/Port</label>
 
                                     <div class="form-field row-fluid">
-                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="viewMode"  ng-model="portOfArrivalId"
+                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="viewMode"
+                                                ng-model="portOfArrivalId"
                                                 openlmis-message="label.select.parent.zone">
                                             <option value=""></option>
 
-                                                <option ng-repeat="port in ports"
-                                                        value="{{ port.id }}">
-                                                    {{ port.name }}
-                                                </option>
+                                            <option ng-repeat="port in ports"
+                                                    value="{{ port.id }}">
+                                                {{ port.name }}
+                                            </option>
 
                                         </select>
-                                        <span class="field-error" ng-show="geoZoneForm.parent.code.$error.required && showError"
+                                        <span class="field-error"
+                                              ng-show="geoZoneForm.parent.code.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
                                 <div class="span3">
                                     <label id="codeLabel" for="code">
-                                        <span >Flight/Vessel Number</span>
+                                        <span>Flight/Vessel Number</span>
                                         <span class="label-required"> *</span>
                                     </label>
 
                                     <div class="form-field">
-                                        <input ng-model="flightVesselNumber" ng-disabled="viewMode"  type="text" maxlength="50" name="flightVesselNumber" ng-required="true"/>
-                                        <span class="field-error" ng-show="asnForm.flightVesselNumber.$error.required && showError"
+                                        <input ng-model="flightVesselNumber" ng-disabled="viewMode" type="text"
+                                               maxlength="50" name="flightVesselNumber" ng-required="true"/>
+                                        <span class="field-error"
+                                              ng-show="asnForm.flightVesselNumber.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
 
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Expected Time of Arrival (ETA)</span>
+                                        <span>Expected Time of Arrival (ETA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
+                                    <div class="span4" style="margin-left: 0px">
 
-                                    <div class="form-field">
-                                        <input name="expectedArrivalDate"
-                                                type="text"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today',maxDate:period.stringStartDate}"
-                                               ui-date-format="yy-mm-dd"
-                                               ng-model="expectedArrivalDate"
-                                               ng-disabled="viewMode"
-                                               ng-required="true"/>
-                                        <span class="field-error" ng-show="asnForm.expectedArrivalDate.$error.required && showError"
-                                              openlmis-message="missing.value"></span>
+                                        <div class="form-field span2" style="width: 200px;float: left;margin-left: 0px">
+                                            <input name="expectedArrivalDate"
+                                                   type="text"
+                                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,minDate:'today',maxDate:period.stringStartDate}"
+                                                   ui-date-format="yy-mm-dd"
+                                                   ng-model="expectedArrivalDate"
+                                                   ng-disabled="viewMode"
+                                                   ng-required="true"/>
+                                            <span class="field-error"
+                                                  ng-show="asnForm.expectedArrivalDate.$error.required && showError"
+                                                  openlmis-message="missing.value"></span>
+                                        </div>
+
+                                        <div class="span1" style="float: left">
+                                            <input type="time" style="width: 100px !important;"
+                                                   ng-model="expectedArrivalTime"
+                                                   ng-disabled="viewMode"
+                                                   ng-required="true"
+                                                   id="etatime" name="etatime">
+                                        </div>
+
                                     </div>
                                 </div>
-                        </div>
+                            </div>
                             <div class="form-row clearfix">
                                 <div class="span6">
                                     <label id="codeLabel" for="code">
-                                        <span >Notes</span>
-<!--                                        <span class="label-required"> *</span>-->
+                                        <span>Notes</span>
+                                        <!--                                        <span class="label-required"> *</span>-->
                                     </label>
 
                                     <div class="form-field">
-                                        <textarea rows="3" ng-disabled="viewMode"  style="width: 425px;" ng-model="notes" ></textarea>
+                                        <textarea rows="3" ng-disabled="viewMode" style="width: 425px;"
+                                                  ng-model="notes"></textarea>
 
                                     </div>
                                 </div>
-<!--                                <div class="span3">-->
-<!--                                    <label id="codeLabel" for="code">-->
-<!--                                        <span >Clearing Agent</span>-->
-<!--                                        <span class="label-required"> *</span>-->
-<!--                                    </label>-->
+                                <!--                                <div class="span3">-->
+                                <!--                                    <label id="codeLabel" for="code">-->
+                                <!--                                        <span >Clearing Agent</span>-->
+                                <!--                                        <span class="label-required"> *</span>-->
+                                <!--                                    </label>-->
 
-<!--                                    <div class="form-field">-->
-<!--                                        <input ng-model="clearingAgent" name="clearingAgent" ng-disabled="viewMode"  type="text" maxlength="50" ng-required="true"/>-->
-<!--                                        <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"-->
-<!--                                              openlmis-message="missing.value"></span>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <!--                                    <div class="form-field">-->
+                                <!--                                        <input ng-model="clearingAgent" name="clearingAgent" ng-disabled="viewMode"  type="text" maxlength="50" ng-required="true"/>-->
+                                <!--                                        <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"-->
+                                <!--                                              openlmis-message="missing.value"></span>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
                                 <div class="span3">
-                                    <label id="clearingAgentLabel" >Clearing Agent<span class="label-required"> *</span></label>
+                                    <label id="clearingAgentLabel">Clearing Agent<span class="label-required"> *</span></label>
 
                                     <div class="form-field row-fluid">
-                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="viewMode"  ng-model="clearingAgent"
+                                        <select ui-select2="{width: '90%'}" class="span11" ng-disabled="viewMode"
+                                                ng-model="clearingAgent"
                                                 openlmis-message="label.select.parent.zone" ng-required="true">
                                             <option value="">--Select Agent--</option>
 
@@ -675,37 +745,48 @@
                                             </option>
 
                                         </select>
-                                        <span class="field-error" ng-show="asnForm.clearingAgent.$error.required && showError"
+                                        <span class="field-error"
+                                              ng-show="asnForm.clearingAgent.$error.required && showError"
                                               openlmis-message="missing.value"></span>
                                     </div>
                                 </div>
                                 <div class="span4">
                                     <label id="levelLabel">
-                                        <span >Actual Time of Arrival (ATA)</span>
+                                        <span>Actual Time of Arrival (ATA)</span>
                                         <span class="label-required"> *</span>
                                     </label>
+                                    <div class="span2" style="width: 200px;float: left;margin-left: 0px">
 
-                                    <div class="form-field">
-                                        <input name="actualArrivalDate"
-                                               ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today'}"
-                                               ui-date-format="yy-mm-dd"
-                                               ng-model="actualArrivalDate"
+                                        <div class="form-field">
+                                            <input name="actualArrivalDate"
+                                                   ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today'}"
+                                                   ui-date-format="yy-mm-dd"
+                                                   ng-model="actualArrivalDate"
+                                                   ng-disabled="viewMode"
+                                                   type="text"
+                                                   ng-required="true"/>
+                                            <span class="field-error"
+                                                  ng-show="asnForm.actualArrivalDate.$error.required && showError"
+                                                  openlmis-message="missing.value"></span>
+                                        </div>
+                                    </div>
+                                    <div class="span1" style="float: left">
+                                        <input type="time" style="width: 100px !important;" ng-model="actualArrivalTime"
                                                ng-disabled="viewMode"
-                                               type="text"
-                                               ng-required="true"/>
-                                        <span class="field-error" ng-show="asnForm.actualArrivalDate.$error.required && showError"
-                                              openlmis-message="missing.value"></span>
+                                               ng-required="true"
+                                               id="atatime" name="atatime">
                                     </div>
                                 </div>
                             </div>
-                            </div>
+                        </div>
                         <div class="tab-pane" id="tab3">
                             <div class="form-row clearfix">
                                 <div class="span4" ng-if="!viewMode">
                                     <fieldset>
                                         <label for="model"><span>Document Type</span>:</label>
 
-                                        <select style="min-width:300px !important" ui-select2 ng-model="document.documentType"
+                                        <select style="min-width:300px !important" ui-select2
+                                                ng-model="document.documentType"
                                                 ng-options="f as f.name for f in displayDocumentTypes">
                                             <option value="">Select Document Type</option>
                                         </select>
@@ -714,7 +795,9 @@
                                         <br/>
                                         <br/>
                                         <label for="csvFile"><span openlmis-message="upload.label.file"></span>:</label>
-                                        <input ng-disabled="!document.documentType" name="csvFile" ngf-select  id="csvFile" ng-model="document.file" type="file" ngf-accept="'image/*,application/pdf'"
+                                        <input ng-disabled="!document.documentType" name="csvFile" ngf-select
+                                               id="csvFile" ng-model="document.file" type="file"
+                                               ngf-accept="'image/*,application/pdf'"
                                                ng-change="clearMessages()"
                                                value="Choose CSV File to upload"/>
                                         <!--       <span class="field-error" ng-show="uploadForm.csvFile.errorMessage"
@@ -730,7 +813,8 @@
                                             {{successMsg}}
                                         </div>
                                         <br>
-                                        <input id="uploadButton" ng-click="upload(document)" type="submit" openlmis-message="link.admin.upload" class="btn btn-primary"
+                                        <input id="uploadButton" ng-click="upload(document)" type="submit"
+                                               openlmis-message="link.admin.upload" class="btn btn-primary"
                                                ng-disabled="!document.documentType">
                                         <br/>
                                         <br/>
@@ -750,7 +834,7 @@
                                         <tr>
                                             <th>#</th>
                                             <th>Document Type</th>
-                                            <th>File Name </th>
+                                            <th>File Name</th>
                                             <th style="width:200px!important"></th>
 
                                         </tr>
@@ -760,24 +844,35 @@
 
                                             <td>{{$index+1}}</td>
                                             <td ng-class="{'deleted': document.deleted==true}">
-                                                <span style="min-width:300px !important" title="Created By: {{document.createdByName}}, Created At: {{document.createddate}}">{{document.documentType.name}}</span>
+                                                <span style="min-width:300px !important"
+                                                      title="Created By: {{document.createdByName}}, Created At: {{document.docCreatedDate}}">{{document.documentType.name}}</span>
                                             </td>
                                             <td><span>{{document.fileLocation}}</span></td>
 
-                                            <td style="min-width:200px !important" >
-                                                <span ng-click="downloadFile(document.fileLocation,asnCode)"><a href="" ng-show="!document.documentType.disableSelectedRows">Download ({{document.documentType.name}})</a></span>
-                                                <span ng-show="document.deleted" title="{{document.deletionLocation}}" class="text-muted" style="color: #919191">Deleted:({{document.comment}})</span>
+                                            <td style="min-width:200px !important">
+                                                <span ng-click="downloadFile(document.fileLocation,asnCode)"><a href=""
+                                                                                                                ng-show="!document.documentType.disableSelectedRows">Download ({{document.documentType.name}})</a></span>
+                                                <span ng-show="document.deleted"
+                                                      title="Deleted By {{document.deletedByName}} at {{document.deletionLocation}}"
+                                                      class="text-muted" style="color: #919191">Deleted:({{document.comment}})</span>
 
                                             </td>
 
                                             <td ng-if="!viewMode">
                                                 <div ng-show="document.deleteOption">
-                                                    <textarea ng-model="document.comment"  placeholder="Reason of deletion!" type="text" maxlength="50" ></textarea>
-                                                    <span ng-show="document.alertcomment" class="text-error" style="color: darkred">Comment is required!</span>
+                                                    <textarea ng-model="document.comment"
+                                                              placeholder="Reason of deletion!" type="text"
+                                                              maxlength="50"></textarea>
+                                                    <span ng-show="document.alertcomment" class="text-error"
+                                                          style="color: darkred">Comment is required!</span>
                                                 </div>
-                                                <input type="button" style="margin-top: 10px; margin-left: 5px" ng-show="document.cancelBtn" class="btn btn-sucess pull-right" ng-click="cancelRemoveFileOptions(document)"  value="Cancel">
+                                                <input type="button" style="margin-top: 10px; margin-left: 5px"
+                                                       ng-show="document.cancelBtn" class="btn btn-sucess pull-right"
+                                                       ng-click="cancelRemoveFileOptions(document)" value="Cancel">
 
-                                                <input type="button" class="btn btn-danger pull-right" style="margin-top: 10px;" ng-click="removeFileOptions(document)" value="Remove">
+                                                <input type="button" class="btn btn-danger pull-right"
+                                                       style="margin-top: 10px;" ng-click="removeFileOptions(document)"
+                                                       value="Remove">
 
                                             </td>
 
@@ -790,7 +885,6 @@
 
 
                             </div>
-
 
 
                         </div>
@@ -806,18 +900,16 @@
                 <div class="form-cell button-row">
                     <input id="saveButton" type="submit" ng-if="!viewMode" class="btn btn-primary save-button"
                            openlmis-message="button.save" ng-click="saveAsn('DRAFT')"/>
-                    <input type="button"  class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"
+                    <input type="button" class="btn btn-primary save-button" ng-if="viewMode" ng-click="print()"
                            value="Print GRN"/>
-                    <input id="cancelButton" type="button" class="btn btn-cancel cancel-button" openlmis-message="button.cancel"
+                    <input id="cancelButton" type="button" class="btn btn-cancel cancel-button"
+                           openlmis-message="button.cancel"
                            ng-click="cancel()"/>
 
 
-
-
-
-
-                    <input  type="button" class="btn btn-primary pull-right"
-                            ng-click="saveAsn('RECEIVED')" ng-if="!viewMode" value="Receive" style=margin-left:10px;margin-right:10px"/>
+                    <input type="button" class="btn btn-primary pull-right"
+                           ng-click="saveAsn('RECEIVED')" ng-if="!viewMode" value="Receive"
+                           style=margin-left:10px;margin-right:10px"/>
                 </div>
 
                 <div class="toolbar-error" id="saveErrorMsgDiv" openlmis-message="error" ng-show="error"></div>
@@ -828,7 +920,8 @@
     </form>
 
     <!--Lot Modal-->
-    <div id="popup-box"  ng-form="newLotForm"  modal="newLotModal" options="{'backdrop':'static', 'escape':false}" style="width:60% !important;margin-left:-30% !important">
+    <div id="popup-box" ng-form="newLotForm" modal="newLotModal" options="{'backdrop':'static', 'escape':false}"
+         style="width:60% !important;margin-left:-30% !important">
         <div class="modal-header">
             <div class="row-fluid">
                 <div class="span4">
@@ -847,7 +940,8 @@
                         <span class="label-required">*</span>
                     </label>
                     <span class="position-relative">
-                                    <input  ng-required="true" class="span12" type="text" ng-model="newLot.lotCode" value="" id="newLot.lotCode" />
+                                    <input ng-required="true" class="span12" type="text" ng-model="newLot.lotCode"
+                                           value="" id="newLot.lotCode"/>
                                 </span>
                 </div>
 
@@ -875,7 +969,8 @@
                         <span class="label-required">*</span>
                     </label>
                     <span class="position-relative">
-                                    <input  ng-required="true" class="span12" type="text" name="packSize" ng-model="newLot.packSize" value=""  />
+                                    <input ng-required="true" class="span12" type="text" name="packSize"
+                                           ng-model="newLot.packSize" value=""/>
                                 </span>
                 </div>
 
@@ -900,7 +995,8 @@
                         <span openlmis-message="label.manufacture.date "></span>
                     </label>
                     <span class="position-relative">
-                                <input class="span12"  id="newLot.manufactureDate" name="newLot.manufactureDate" type="text"
+                                <input class="span12" id="newLot.manufactureDate" name="newLot.manufactureDate"
+                                       type="text"
                                        ui-date="{dateFormat: 'dd/mm/yy', changeYear: true, maxDate:'today'}"
                                        ng-model="newLot.manufactureDate"/>
                                 </span>

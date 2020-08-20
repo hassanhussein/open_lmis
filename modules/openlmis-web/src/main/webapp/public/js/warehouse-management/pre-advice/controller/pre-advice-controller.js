@@ -29,7 +29,6 @@ var today = new Date();
         hours = ("0" + date.getHours()).slice(-2);
         minutes = ("0" + date.getMinutes()).slice(-2);
         seconds = ("0" + date.getSeconds()).slice(-2);
-
         var selectedDate = [date.getFullYear(), month, day].join("-");
         var  selectedTime = [hours, minutes, seconds].join(":");
         return [selectedDate, selectedTime].join(" ");
@@ -290,6 +289,8 @@ getAllLookups();
         $scope.flightVesselNumber = asn.flightvesselnumber;
         $scope.notes = asn.note;
         $scope.poDate = asn.podate;
+        $scope.expectedArrivalTime=asn.expectedArrivalTime;
+
         $scope.poNumber = asn.ponumber;
         $scope.portOfArrivalId = asn.port.id;
         $scope.productsToAdd = [];
@@ -857,7 +858,7 @@ console.log($scope.fiiCost);
 
 //    console.log($scope.asnCode);
 
-//console.log($scope.expectedArrivalDate);
+console.log($scope.expectedArrivalDate);
 
 
 
@@ -916,6 +917,17 @@ console.log($scope.fiiCost);
 
 
         });
+
+        var expectedArrivalTime=$scope.expectedArrivalTime;
+        if(!expectedArrivalTime){
+            expectedArrivalTime="00:00:00";
+        }else{
+            expectedArrivalTime=expectedArrivalTime+":00";
+        }
+
+        var expectedArrivalDate=$filter('date')(new Date($scope.expectedArrivalDate),"yyyy-MM-dd");
+
+
         var asn = {
             asnLineItems: asnLineItems,
             asndate: $scope.asnReceiptDate,
@@ -923,8 +935,9 @@ console.log($scope.fiiCost);
             asnnumber: $scope.asnCode,
             blawbnumber: $scope.blAwbNumber,
             clearingagent: $scope.clearingAgent,
-            expectedarrivaldate: $scope.expectedArrivalDate,
+            expectedarrivaldate: expectedArrivalDate+" "+expectedArrivalTime,
             expecteddeliverydate:'2014-08-18',
+            expectedArrivalTime:'00:00',
             flightvesselnumber: $scope.flightVesselNumber,
             currencyId:$scope.selectedCurrency,
             note: $scope.notes,
@@ -936,6 +949,9 @@ console.log($scope.fiiCost);
             supplierid: $scope.supplierId,
 
         };
+
+        console.log(expectedArrivalTime);
+        console.log(asn);
 
         if($scope.asn){
 
@@ -1276,7 +1292,6 @@ deferred.resolve('data');
             Preadvice.get({
                 id: asnId
             }, function(data) {
-
                 deferred.resolve(data.asn);
             }, {});
         }, 100);

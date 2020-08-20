@@ -8,18 +8,20 @@
  *  You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
-function StockController($scope, $timeout, WmsAdjustment, TransferRecords, reasonsForAdjustments, $location, GetWarehouseLocationsByStorageQuarantineWithPermission, vaccineProducts, ProductLots, GetStockProducts, GetTransferDetails) {
+
+function StockController($scope, $timeout, WmsAdjustment, vvmList,TransferRecords, reasonsForAdjustments, $location, GetWarehouseLocationsByStorageQuarantineWithPermission,GetWarehouseLocationsByStorageQuarantine, vaccineProducts, ProductLots, GetStockProducts, GetTransferDetails) {
 
 
+$scope.vvmList=vvmList;
     $scope.adjustmentReasons = [
         {
             id: 1,
-            reason: 'Missing Inventory in',
+            reason: 'Inventory in',
             type: 'CREDIT'
         },
         {
             id: 2,
-            reason: 'Missing Inventory out',
+            reason: 'Inventory out',
             type: 'DEBIT'
         },
 
@@ -42,10 +44,18 @@ function StockController($scope, $timeout, WmsAdjustment, TransferRecords, reaso
         },
 
         {
-            id: 5,
+            id: 6,
             reason: 'Damaged',
             type: 'DEBIT'
-        }
+        },
+
+                 {
+                     id: 7,
+                     reason: 'VVM Change',
+                     type: 'DEBIT'
+                 },
+
+
     ];
 
     $scope.stockMovement = {};
@@ -81,6 +91,9 @@ function StockController($scope, $timeout, WmsAdjustment, TransferRecords, reaso
         binLocations = _.filter(toBinList, function (data) {
             return parseInt(data.id, 10) != parseInt($scope.selectedBin, 10);
         });
+
+
+        console.log(binLocations);
 
         $scope.stockMovement.locations2 = binLocations;
 
@@ -131,7 +144,39 @@ function StockController($scope, $timeout, WmsAdjustment, TransferRecords, reaso
 
     };
 
+$scope.quantityChanged=function(){
+    $scope.quantityError=false;
+   $scope.zeroQuantityError=false;
 
+    if($scope.stockMovement.reason>1 && parseInt($scope.stockMovement.quantity,10)>$scope.stockMovement.soh){
+        $scope.quantityError=true;
+    }
+
+
+     if(parseInt($scope.stockMovement.quantity,10)===0){
+            $scope.zeroQuantityError=true;
+     }
+
+
+};
+
+$scope.reasonChanged=function(){
+$scope.disableQuantity=false;
+$scope.stockMovement.quantity="";
+    $scope.quantityError=false;
+        $scope.zeroQuantityError=false;
+
+
+    if($scope.stockMovement.reason==8){
+//    check actual expiry of batch
+            $scope.stockMovement.quantity=$scope.stockMovement.soh;
+            $scope.disableQuantity=true;
+        }
+
+
+
+
+};
     $scope.showSOHa = function (lotId) {
 
         $scope.stockMovement.soh = undefined;
@@ -176,7 +221,7 @@ function StockController($scope, $timeout, WmsAdjustment, TransferRecords, reaso
 
 
     $scope.adjust = function (stockAdjust) {
-        if ($scope.movementForm.$error.required) {
+        if ($scope.movementForm.$error.required||$scope.quantityError||$scope.zeroQuantityError) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
@@ -199,7 +244,9 @@ function StockController($scope, $timeout, WmsAdjustment, TransferRecords, reaso
             "vvmId": $scope.stockMovement.vvmId,
             "stockCardId": $scope.stockMovement.stockCardId,
             "type": "ADJUSTMENT",
-            "reason": reason.reason
+            "reason": reason.reason,
+            'toWarehouseId':$scope.stockMovement.toWarehouseId,
+            'toBinId':$scope.stockMovement.toBin,
         };
 
         console.log(adjust);
@@ -302,6 +349,18 @@ StockController.resolve = {
 
         return deferred.promise;
     },
+     vvmList: function ($q, $route, $timeout, GetVVMStatusList) {
+
+            var deferred = $q.defer();
+
+            $timeout(function () {
+              GetVVMStatusList.get({}, function (data) {
+               console.log(data.vvms);
+                deferred.resolve(data.vvms);
+              }, {});
+            }, 100);
+            return deferred.promise;
+          },
 
     reasonsForAdjustments: function ($q, $timeout, GetTransferReasons, $routeParams) {
         var deferred = $q.defer();

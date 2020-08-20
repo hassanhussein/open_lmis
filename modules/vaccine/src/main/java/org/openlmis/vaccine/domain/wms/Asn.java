@@ -35,9 +35,11 @@ public class Asn extends BaseModel {
     private String flightvesselnumber;
     private Integer portofarrival;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonDeserialize(using = DateDeserializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Africa/Dar_es_Salaam")
+    //@JsonDeserialize(using = DateDeserializer.class)
     private Date expectedarrivaldate;
+
+    private String expectedArrivalTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = DateDeserializer.class)
@@ -60,6 +62,8 @@ public class Asn extends BaseModel {
     private CurrencyDTO currency;
 
     private String invoiceNumber;
+
+
 
 
 }

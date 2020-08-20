@@ -39,7 +39,7 @@ public interface ReceiveMapper {
   void update(Receive receive);
 
 
-    @Select("select *,clearingagent as clearingAgentName from receives where id = #{id}")
+    @Select("select *,to_char(expectedarrivaldate, 'HH24:MI') expectedArrivalTime,to_char(actualarrivaldate, 'HH24:MI') actualArrivalTime,clearingagent as clearingAgentName from receives where id = #{id}")
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(column = "asnId", property = "asnId"),

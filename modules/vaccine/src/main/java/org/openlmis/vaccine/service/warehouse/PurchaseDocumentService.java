@@ -46,7 +46,9 @@ public class PurchaseDocumentService {
                 doc.setReceive(receive);
                 doc.setAsnNumber(document.getAsnNumber());
                 doc.setDeleted(deleted);
+                doc.setDeletedBy(document.getDeletedBy());
                 doc.setComment(document.getComment());
+                doc.setDeletionLocation(document.getDeletionLocation());
                 if (getDocumentByFileLocation(doc.getFileLocation()) == null) {
 
                     repository.insert(doc);
