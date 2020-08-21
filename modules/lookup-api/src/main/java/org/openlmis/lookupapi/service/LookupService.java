@@ -130,6 +130,10 @@ public class LookupService {
     private ManualTestTypeRepository manualTestTypeRepository;
     @Autowired
     EquipmentOperationalStatusRepository statusRepository;
+    @Autowired
+    ColdChainEquipmentDesignationRepository designationRepository;
+    @Autowired
+    ColdChainEquipmentPqsStatusRepository equipmentPqsStatusRepository;
 
     public List<Program> getAllPrograms() {
         return programMapper.getAll();
@@ -319,9 +323,17 @@ public class LookupService {
     }
 
     public List<ManualTestType> getAllManualTestTypes() {
-       return manualTestTypeRepository.getAll();
+        return manualTestTypeRepository.getAll();
     }
+
     public List<EquipmentOperationalStatus> getAllEquipmentOprationalStatuses() {
         return statusRepository.getAll();
+    }
+
+    public List<ColdChainEquipmentDesignation> getAllColdChainEquipmentDesignations() {
+        return designationRepository.getAll();
+    }
+    public List<ColdChainEquipmentPqsStatus> getAllColdChainEquipmentPqsStatuses(){
+        return  equipmentPqsStatusRepository.getAll();
     }
 }
