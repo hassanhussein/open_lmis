@@ -69,7 +69,7 @@ public interface LotOnHandLocationMapper {
             "            JOIN lots lo ON e.lotId = lo.id\n" +
             "            JOIN products P on lo.productID = p.id\n" +
             "            join WMS_LOCATIONS Lsc ON e.LocationId = LSC.ID \n" +
-            "           WHERE LSC.warehouseId = #{warehouseId} and e.quantity > 0\n" +
+            "           WHERE LSC.warehouseId = #{warehouseId} and Lsc.typeid<>9 and e.quantity > 0\n" +
             "            group by vvm.name,vvm.id, e.lotId,p.id,lotNumber,Lsc.name, e.locationId")
             List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
