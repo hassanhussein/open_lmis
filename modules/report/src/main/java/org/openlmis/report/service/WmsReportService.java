@@ -83,7 +83,7 @@ public class WmsReportService {
 
 
 
-            System.out.println(json);
+           // System.out.println(json);
 
             ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(json.getBytes());
 

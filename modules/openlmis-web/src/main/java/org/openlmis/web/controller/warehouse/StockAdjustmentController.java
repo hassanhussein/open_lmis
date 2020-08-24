@@ -76,7 +76,7 @@ public class StockAdjustmentController extends BaseController {
                 item.setId(null);
                 item.setQuantity(Math.abs(item.getQuantity()));
 
-                System.out.println("Passed: " + item.toString());
+                ///System.out.println("Passed: " + item.toString());
 
                 adjustmentService.save(item, loggedInUserId(request), facilityID);
             }
