@@ -197,28 +197,31 @@ public interface LotsOnHandMapper {
     List<HashMap<String, Object>>getListVarReport(@Param("inspectionId") Long inspectionId);
 
 
-    @Select("select vvmst.name as vvm,lhl.id,s.facilityid as facilityId,lo.lotnumber as lotNumber,wh.name as warehouseName,lo.expirationdate as expirationDate,s.productid as productId, \n" +
-            "            ((coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = wl.ID and lotonhandid=lhl.lotonhandid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = wl.ID and lotonhandid=lhl.lotonhandid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt where lt.LOCATIONId = wl.ID and lotonhandid=lhl.lotonhandid and lt.type='DEBIT'),0),0))-coalesce((select sum(quantity) from vaccine_distribution_line_item_lots where lotid=lo.id and lotNumber=lo.lotNumber limit 1),0))   totalQuantityOnHand , \n" +
-            "            s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName,wl.name  as locationName from lot_on_hand_locations lhl  \n" +
-            "            left join lots_on_hand h on (lhl.lotonhandid = h.id)  \n" +
-            "            left join  stock_cards s on (s.id = h.stockcardid)  \n" +
-            "            left join lots lo on(lo.id=h.lotid) \n" +
-            "            left join vvm_statuses vvmst on(vvmst.id=h.vvmId) \n" +
-            "            left join products pr on(pr.id=lo.productid)  \n" +
-            "            left join wms_locations wl on(wl.id=lhl.locationid)  \n" +
-            "            left join warehouses wh on(wh.id=wl.warehouseid)  \n" +
-            "            where lo.productid=#{productId} and wl.warehouseid=#{warehouseId} ")
+    @Select("select vvm.name as vvm,lo.lotnumber as lotNumber,lo.expirationdate as expirationDate,  \n" +
+            "                         ((coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and lt.locationid= e.locationId and lotid=e.lotid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and  lt.locationid= e.locationId and lotid=e.lotid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt  \n" +
+            "                       where lt.vvmid = vvm.id and  lt.locationid= e.locationId and lotid=e.lotid and lt.type='DEBIT'),0),0)))  \n" +
+            "                         totalQuantityOnHand,\n" +
+            "\t\t\t\t\t   s.effectivedate as effectiveDate,s.modifieddate as modifiedDate ,pr.primaryname as fullName from lot_location_entries e  \n" +
+            "                        \n" +
+            "                        left join  stock_cards s on (s.id = e.stockcardid)   \n" +
+            "                        left join lots lo on(lo.id=e.lotid)  \n" +
+            "                        left join vvm_statuses vvm on(vvm.id=e.vvmId)  \n" +
+            "                        left join products pr on(pr.id=lo.productid)   \n" +
+            "                        left join wms_locations wl on(wl.id=e.locationid)   \n" +
+            "                        left join warehouses wh on(wh.id=wl.warehouseid)   \n" +
+            "                        where lo.productid=#{productId} and wl.warehouseid=#{warehouseId} and wl.typeid<>9 and e.quantity > 0 \n" +
+            "\t\t\t\t\t\t group by vvm.name,vvm.id, e.lotId,pr.id,lotNumber, e.locationId,lo.expirationdate,s.effectivedate,s.modifieddate ")
     List<StockCards> getListStockOnHand(@Param("productId") Long productId,@Param("warehouseId") Long warehouseId);
 
 
 
-    @Select("select  sum(h.quantityOnHand) as totalQuantityOnHand,lo.productid as productId,pr.primaryname as productName,wh.name as wareHouseName from lot_on_hand_locations lhl \n" +
-            "            left join lots_on_hand h on (lhl.lotonhandid = h.id) \n" +
-            "            left join  stock_cards s on (s.id = h.stockcardid) \n" +
-            "            left join lots lo on(lo.id=h.lotid) \n" +
-            "            left join products pr on(pr.id=lo.productid) \n" +
-            "            left join wms_locations wl on(wl.id=lhl.locationid) \n" +
-            "            left join warehouses wh on(wh.id=wl.warehouseid)  where wl.warehouseid=#{wareHouseId} group by   lo.productid,pr.primaryname,wh.name")
+    @Select("select  sum(lhl.quantity) as totalQuantityOnHand,lo.productid as productId,pr.primaryname as productName,wh.name as wareHouseName from lot_location_entries lhl  \n" +
+            "                         \n" +
+            "                        left join  stock_cards s on (s.id = lhl.stockcardid)  \n" +
+            "                        left join lots lo on(lo.id=lhl.lotid)  \n" +
+            "                        left join products pr on(pr.id=lo.productid)  \n" +
+            "                        left join wms_locations wl on(wl.id=lhl.locationid)  \n" +
+            "                        left join warehouses wh on(wh.id=wl.warehouseid)  where wl.warehouseid=#{wareHouseId} group by   lo.productid,pr.primaryname,wh.name")
     List<StockCard> getListStockProduct(@Param("wareHouseId") Long wareHouseId);
 
 
