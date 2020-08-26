@@ -996,8 +996,12 @@ console.log(receiveLots);
         if(document.documentType !== null && document.file !== null && !isUndefined(document.file)) {
 
             document.fileLocation = document.file.name;
-            removeItemFromList(document.documentType);
+
             getFile(document.file,document);
+
+            if($scope.openMessage){
+             removeItemFromList(document.documentType);
+            }
             document.documentType = null;
             document.file = null;
 

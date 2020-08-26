@@ -1066,9 +1066,13 @@ console.log($scope.expectedArrivalDate);
 
 
                if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
-                  removeItemFromList(document.documentType);
+
                  document.fileLocation = $scope.asnCode+'-'+document.file.name;
                  getFile(document.file, document.documentType);
+
+                if($scope.openMessage){
+                 removeItemFromList(document.documentType);
+                }
 
                }
 

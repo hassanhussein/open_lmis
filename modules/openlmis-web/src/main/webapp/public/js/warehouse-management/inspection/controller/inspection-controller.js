@@ -122,8 +122,11 @@ $scope.displayDocumentTypes  = filteredData;
 
             document.fileLocation = document.file.name;
             console.log(document);
-            removeItemFromList(document.documentType);
             getFile(document.file,document);
+
+            if($scope.openMessage){
+             removeItemFromList(document.documentType);
+            }
             document.documentType = null;
             document.file = null;
 
@@ -262,7 +265,7 @@ $scope.lotInspected=false;
    $scope.vvmStatusList = vvmList;
    $scope.totalPassQty=0;
    $scope.totalFailQty=0;
-console.log(inspection);
+
      if(!isUndefined(inspection)) {
 
 
