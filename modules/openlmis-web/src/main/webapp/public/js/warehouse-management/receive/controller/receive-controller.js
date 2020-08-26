@@ -1086,7 +1086,7 @@ function getFile(file,documentType) {
         asnNum = new Date(today).getTime();
      }else
        asnNum = $scope.asnCode;
-
+       console.log(file);
       docService.saveDoc(file, asnNum, documentType.documentType.name).then(
 
       function (response) {
