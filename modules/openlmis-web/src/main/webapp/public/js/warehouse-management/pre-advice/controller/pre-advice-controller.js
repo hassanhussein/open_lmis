@@ -860,15 +860,16 @@ console.log($scope.fiiCost);
 
 console.log($scope.expectedArrivalDate);
 
+var docs = [];
 
+  docs = _.where($scope.docLists, {deleted:false});
 
-//    console.log($scope.currency)
         $scope.asnStatus=status;
         $scope.validateProduct();
 //        if(){
 //            return;
 //        }
-      if ($scope.asnForm.$error.required ||$scope.docLists.length < parseInt(3,10)||!$scope.quantitiesValid()) {
+      if ($scope.asnForm.$error.required ||docs.length < parseInt(3,10)||!$scope.quantitiesValid()) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
@@ -952,6 +953,8 @@ console.log($scope.expectedArrivalDate);
 
         console.log(expectedArrivalTime);
         console.log(asn);
+
+
 
         if($scope.asn){
 
