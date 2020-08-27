@@ -1,4 +1,4 @@
-function InspectionController(AsnLookups,docService,DocumentList,$scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
+function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
 
 $scope.displayDocumentTypes = [];
 $scope.globalErrorFlag=true;
@@ -251,9 +251,9 @@ function getFile(file,documentType) {
 
        });
 
+       }
 
 
-}
 
 $scope.lotInspected=false;
 //$scope.dryIceFlag=false;
@@ -261,20 +261,16 @@ $scope.lotInspected=false;
 //$scope.noCoolantFlag=false;
    $scope.inspection = inspection;
    console.log($scope.inspection);
-   $scope.lineItem=$scope.inspection.lineItems[0];
+
+
    $scope.vvmStatusList = vvmList;
+   $scope.vvmThreeAndFour= _.filter(vvmList,function(vvm){
+
+        return vvm.id > 2 && vvm.id < 5;
+   });
+   console.log($scope.vvmThreeAndFour);
    $scope.totalPassQty=0;
    $scope.totalFailQty=0;
-
-     if(!isUndefined(inspection)) {
-
-
-           getListOfFilesByASNumber(inspection.receive.asn.asnnumber);
-                   $scope.asnCode = inspection.receive.asn.asnnumber;
-
-          // $scope.documentDetails  = asn.purchaseDocuments;
-
-        }
 
 $scope.productSum($scope.lineItem);
 
@@ -287,12 +283,90 @@ $scope.hasZero=function(lot){
 if(lot.failedQuantity==="" || lot.failedQuantity===0){
 //    reset failed reason
        lot.failedReason="";
-       lot.failLocationId="";
+       lot.failedLocationId="";
 //     reset faled location
 //
 }
 
 };
+
+
+$scope.failedQuantityChanged=function(vvm){
+
+console.log(vvm.failed.quantity);
+
+if(vvm.failed.quantity===undefined || vvm.failed.quantity===0 ||vvm.failed.quantity>vvm.quantity){
+
+       vvm.failed.reasonId=null;
+       vvm.failed.locationId=null;
+
+}
+
+};
+
+$scope.vvmUpdateChanged=function(lot){
+var lastVvm=lot.vvm[lot.vvm.length-1];
+    lastVvm.quantity=undefined;
+var firstVvm=lot.vvm[0];
+    firstVvm.quantity=lot.receivedQuantity;
+};
+
+
+$scope.vvmQuantityChanged=function(vvm,lot){
+
+//console.log(vvm.failed.quantity);
+
+if(vvm.quantity===undefined || vvm.quantity===0 ||vvm.quantity>lot.receivedQuantity){
+
+       vvm.failed.reasonId=null;
+       vvm.failed.locationId=null;
+       vvm.failed.quantity=null;
+
+}
+
+// make vvm 1 and 2 field mutually exlusive
+if(vvm.vvmId===1 && lot.vvmUpdate){
+//get vvm2 quantity and set it as lot.receivedQuantity-vvm.quantity
+ var vvmTwo= _.filter(lot.vvm,function(vvmStatus){
+//        console.log(vvmStatus)
+        return vvmStatus.vvmId == 2;
+   });
+   vvmTwo[0].quantity=(lot.receivedQuantity-vvm.quantity)>0?lot.receivedQuantity-vvm.quantity:0;
+
+}else if(vvm.vvmId===2 && lot.vvmUpdate){
+//get vvm2 quantity and set it as lot.receivedQuantity-vvm.quantity
+ var vvmTw= _.filter(lot.vvm,function(vvmStatus){
+//        console.log(vvmStatus)
+        return vvmStatus.vvmId == 1;
+   });
+   vvmTw[0].quantity=(lot.receivedQuantity-vvm.quantity)>0?lot.receivedQuantity-vvm.quantity:0;
+
+}
+
+
+
+
+};
+
+
+
+
+
+
+$scope.reasonChanged=function(vvm){
+
+console.log(vvm.failed.reasonId);
+
+if(vvm.failed.reasonId===undefined){
+
+//       vvm.failed.reasonId=null;
+//       vvm.failed.locationId=null;
+       vvm.failed.locationId=null;
+
+}
+
+};
+
 $scope.vvmChanged=function(lot){
 
  if(lot.vvmStatus>2){
@@ -695,6 +769,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetVVMStatusList.get({}, function (data) {
+      console.log(data.vvms);
         deferred.resolve(data.vvms);
       }, {});
     }, 100);
