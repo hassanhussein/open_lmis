@@ -1,6 +1,24 @@
 function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $scope.globalErrorFlag=true;
 
     GetLocationBy.get({}, function(data){
@@ -58,9 +76,48 @@ $scope.lotInspected=false;
 //$scope.icePackFlag=false;
 //$scope.noCoolantFlag=false;
    $scope.inspection = inspection;
-   console.log($scope.inspection);
    $scope.lineItem=$scope.inspection.lineItems[0];
+
+
+//   update line lineItems
+
+angular.forEach($scope.lineItem.lots,function(lot){
+lot.vvm=[];
+    lot.vvm.push(
+        { vvmId:1,
+           quantity:10,
+           failed:{
+           quantity:null,
+           reasonId:null,
+           vvmId:null,
+           locationId:null
+           }
+        }
+    );
+
+     lot.vvm.push(
+            { vvmId:2,
+               quantity:null,
+               failed:{
+               quantity:null,
+               reasonId:null,
+               vvmId:null,
+               locationId:null
+
+               }
+            }
+        );
+});
+
+   console.log($scope.inspection);
+
+
    $scope.vvmStatusList = vvmList;
+   $scope.vvmThreeAndFour= _.filter(vvmList,function(vvm){
+
+        return vvm.id > 2 && vvm.id < 5;
+   });
+   console.log($scope.vvmThreeAndFour);
    $scope.totalPassQty=0;
    $scope.totalFailQty=0;
 
@@ -70,17 +127,102 @@ $scope.productSum($scope.lineItem);
    $scope.failReasons = [{"id":1,"name":'Temperature'},{"id":2,"name":'Rain'},{"id":3,"name":'Opened Vial'}];
 
 
+
+$scope.getVvmName=function(vvmId){
+
+return _.findWhere($scope.vvmStatusList,{id:vvmId}).name;
+
+}
+
 $scope.hasZero=function(lot){
 
 if(lot.failedQuantity==="" || lot.failedQuantity===0){
 //    reset failed reason
        lot.failedReason="";
-       lot.failLocationId="";
+       lot.failedLocationId="";
 //     reset faled location
 //
 }
 
 };
+
+
+$scope.failedQuantityChanged=function(vvm){
+
+console.log(vvm.failed.quantity);
+
+if(vvm.failed.quantity===undefined || vvm.failed.quantity===0 ||vvm.failed.quantity>vvm.quantity){
+
+       vvm.failed.reasonId=null;
+       vvm.failed.locationId=null;
+
+}
+
+};
+
+$scope.vvmUpdateChanged=function(lot){
+var lastVvm=lot.vvm[lot.vvm.length-1];
+    lastVvm.quantity=undefined;
+var firstVvm=lot.vvm[0];
+    firstVvm.quantity=lot.receivedQuantity;
+}
+
+
+$scope.vvmQuantityChanged=function(vvm,lot){
+
+//console.log(vvm.failed.quantity);
+
+if(vvm.quantity===undefined || vvm.quantity===0 ||vvm.quantity>lot.receivedQuantity){
+
+       vvm.failed.reasonId=null;
+       vvm.failed.locationId=null;
+       vvm.failed.quantity=null;
+
+}
+
+// make vvm 1 and 2 field mutually exlusive
+if(vvm.vvmId===1 && lot.vvmUpdate){
+//get vvm2 quantity and set it as lot.receivedQuantity-vvm.quantity
+ var vvmTwo= _.filter(lot.vvm,function(vvmStatus){
+//        console.log(vvmStatus)
+        return vvmStatus.vvmId == 2
+   });
+   vvmTwo[0].quantity=(lot.receivedQuantity-vvm.quantity)>0?lot.receivedQuantity-vvm.quantity:0;
+
+}else if(vvm.vvmId===2 && lot.vvmUpdate){
+//get vvm2 quantity and set it as lot.receivedQuantity-vvm.quantity
+ var vvmTwo= _.filter(lot.vvm,function(vvmStatus){
+//        console.log(vvmStatus)
+        return vvmStatus.vvmId == 1
+   });
+   vvmTwo[0].quantity=(lot.receivedQuantity-vvm.quantity)>0?lot.receivedQuantity-vvm.quantity:0;
+
+}
+
+
+
+
+};
+
+
+
+
+
+
+$scope.reasonChanged=function(vvm){
+
+console.log(vvm.failed.reasonId);
+
+if(vvm.failed.reasonId===undefined){
+
+//       vvm.failed.reasonId=null;
+//       vvm.failed.locationId=null;
+       vvm.failed.locationId=null;
+
+}
+
+};
+
 $scope.vvmChanged=function(lot){
 
  if(lot.vvmStatus>2){
@@ -476,6 +618,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetVVMStatusList.get({}, function (data) {
+      console.log(data.vvms);
         deferred.resolve(data.vvms);
       }, {});
     }, 100);

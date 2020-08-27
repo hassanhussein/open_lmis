@@ -771,21 +771,21 @@
 -->
 
 
-            <table  class="table table-bordered receive" style="width:80%">
+            <table  class="table table-bordered receive" style="width:90%">
                 <thead>
                 <tr class="gradient-header">
                     <th style="width:19%">Lots</th>
                     <th >No. of Boxes </th>
                     <th style="width:14%">Received Qty(Vials)</th>
-                    <th style="width:14%">VVM Status </th>
+                    <th style="width:24%">VVM Status </th>
                     <th style="width:14%">Failed Qty(Vials)</th>
                     <th >Fail Reason</th>
-                    <th >Fail Location</th>
+                    <th style="width:19%">Fail Location</th>
                 </tr>
                 </thead>
                 <tbody >
-                <tr ng-repeat="lot in lineItem.lots">
-                    <td>
+                <tr ng-repeat-start="lot in lineItem.lots" >
+                    <td rowspan="4">
                         <span> <strong>No: </strong> {{lot.lotNumber}} </span>
                         <div ng-if="hasExpired(lot)">
                             <strong style="color:red;">expired</strong>
@@ -796,53 +796,46 @@
                         <div ><strong>Location: </strong> <span ng-bind="lot.location.code"></span></div>
 
                     </td>
-<!--                    <td><span>{{lot.expiryDate | date:'dd-MM-yyyy' }}</span></td>-->
-
-                    <td style="text-align:right" class="cell-input">{{lot.boxNumber}}</td>
-                    <td style="text-align:right" class="cell-input col-general"><input  ng-disabled="true" ng-model="lot.receivedQuantity" type="text"/></td>
-                    <td class="cell-input">
+                    <td rowspan="4"  style="text-align:right" class="cell-input">{{lot.boxNumber}}</td>
+                    <td rowspan="4" style="text-align:right" class="cell-input col-general"><input  ng-disabled="true" ng-model="lot.receivedQuantity" type="text"/></td>
 
 
 
-                        <select ui-select2="{width: '100%'}" ng-model="lot.vvmStatus"  ng-disabled="true"   ng-change="vvmChanged(lot)">
-                            <option value="">Select VVM</option>
-                            <option ng-repeat="vvm in vvmStatusList"
-                                    value="{{ vvm.id }}"
-                                    ng-selected="vvmStatus==vvm.id"
-                            >
-                                {{ vvm.name }}
-                            </option>
-                        </select>
+                </tr>
 
-                        <span class="field-error" ng-show="lot.vvmError"
-                              openlmis-message="missing.value"></span>
+                <tr>
+                    <td>
+                        <div class="span4">VVM Update:</div>
+                        <div class="span8"><input type="checkbox" ng-disabled="viewMode" ng-change="vvmUpdateChanged(lot)" ng-model="lot.vvmUpdate">
+                        </div>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+
+                </tr>
+
+                <tr ng-repeat-end ng-repeat="vvm in lot.vvm" ng-show="$index==0||lot.vvmUpdate">
+                    <td class="col-general">
+
+                        <div class="" style="margin-top:6px;">
+                            <div class="span4">{{getVvmName(vvm.vvmId)}}:</div>
+                            <div class="span8"><input type="text" ng-model="vvm.quantity" ng-disabled="$index==0 && !lot.vvmUpdate" ng-change="vvmQuantityChanged(vvm,lot)" numeric-validator="positiveInteger">
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <td style="text-align:right" class="cell-input col-general"><input type="text" numeric-validator="positiveInteger" ng-model="vvm.failed.quantity" ng-change="failedQuantityChanged(vvm)" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)||vvm.quantity==0||vvm.quantity>lot.receivedQuantity||vvm.quantity==undefined"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
 
 
 
                     </td>
 
-                    <td style="text-align:right" class="cell-input col-general"><input type="text" numeric-validator="positiveInteger" ng-model="lot.failedQuantity" ng-change="hasZero(lot)" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
-
-
-
-                    </td>
-<!--                    <td >-->
-
-<!--                        <input type="hidden" ng-model="lot.passLocationId" value="lot.location.id">-->
-
-
-
-
-<!--                    </td>-->
-
 
 
                     <td class="cell-input">
-
-
-
-
-                        <select ui-select2="{width: '100%'}" ng-model="lot.failedReason" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity || hasExpired(lot)" ng-required="lot.failedQuantity!=='0' && lot.failedQuantity">
+                        <select ui-select2="{width: '100%'}" ng-model="vvm.failed.reasonId" ng-change="reasonChanged(vvm)" ng-disabled="vvm.failed.quantity==0 || !vvm.failed.quantity || hasExpired(lot)||vvm.failed.quantity>vvm.quantity" ng-required="vvm.failed.quantity!=='0' && vvm.failed.quantity">
                             <option value="">--Select Reason--</option>
                             <option ng-repeat="reason in failReasons"
                                     value="{{ reason.id }}"
@@ -853,29 +846,24 @@
                         </select>
                         <span class="field-error"  ng-show="lot.failReasonError"
                               openlmis-message="missing.value"></span>
-
-
-
-                        <select ui-select2="{width: '100%'}" ng-model="lot.failedVvm"  ng-show="lot.failedReason==4" >
+                        <select ui-select2="{width: '100%'}" ng-model="vvm.id"  ng-show="vvm.failed.reasonId==4" >
                             <option value="">Select VVM</option>
-                            <option ng-repeat="vvm in vvmStatusList"
-                                    value="{{ vvm.id }}"
-                                    ng-selected="lot.failedVvm==vvm.id"
+                            <option ng-repeat="vvmStatus in vvmThreeAndFour"
+                                    value="{{ vvmStatus.id }}"
+                                    ng-selected="vvm.id==vvmStatus.id"
                             >
-                                {{ vvm.name }}
+                                {{ vvmStatus.name }}
                             </option>
                         </select>
-
-
                     </td>
-                    <td ng-show="false">454</td>
+
                     <td class="cell-input">
 
-                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="(lot.failedReason==4&&lot.failedReason=='')||(lot.failedVvm=='' && lot.failedReason==4)||(lot.failedReason=='')">
+                        <select ui-select2="{width: '100%'}" ng-required="vvm.failed.quantity!=='0' && vvm.failed.quantity" name="failLocationId" ng-model="vvm.failed.locationId" ng-disabled="(vvm.failed.reasonId==undefined||vvm.failed.reasonId==null||vvm.failed.reasonId=='')">
                             <option value=""></option>
                             <option ng-repeat="location in locations"
                                     value="{{ location.id }}"
-                                    ng-selected="failLocationId==location.id"
+                                    ng-selected="vvm.failed.locationId==location.id"
                             >
                                 {{ location.code }}
                             </option>
@@ -886,9 +874,72 @@
 
                     </td>
 
-
-
                 </tr>
+
+<!--                <tr ng-repeat-end ng-repeat="vvm in lot.vvm" >-->
+<!--                    <td>-->
+
+
+
+
+
+<!--                        <div class="">-->
+<!--                            <div class="span4">VVM2:</div>-->
+<!--                            <div class="span8"><input type="text" numeric-validator="positiveInteger">-->
+<!--                            </div>-->
+
+<!--                        </div>-->
+<!--                    </td>-->
+
+<!--                    <td style="text-align:right" class="cell-input col-general"><input type="text" numeric-validator="positiveInteger" ng-model="lot.failedQuantity" ng-change="hasZero(lot)" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>-->
+
+
+
+<!--                    </td>-->
+
+
+
+<!--                    <td class="cell-input">-->
+<!--                        <select ui-select2="{width: '100%'}" ng-model="lot.failedReason" ng-disabled="lot.failedQuantity=='0' || !lot.failedQuantity || hasExpired(lot)" ng-required="lot.failedQuantity!=='0' && lot.failedQuantity">-->
+<!--                            <option value="">&#45;&#45;Select Reason&#45;&#45;</option>-->
+<!--                            <option ng-repeat="reason in failReasons"-->
+<!--                                    value="{{ reason.id }}"-->
+<!--                                    ng-selected="failReason==reason.id"-->
+<!--                            >-->
+<!--                                {{ reason.name }}-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                        <span class="field-error"  ng-show="lot.failReasonError"-->
+<!--                              openlmis-message="missing.value"></span>-->
+<!--                        <select ui-select2="{width: '100%'}" ng-model="lot.failedVvm"  ng-show="lot.failedReason==4" >-->
+<!--                            <option value="">Select VVM</option>-->
+<!--                            <option ng-repeat="vvm in vvmThreeAndFour"-->
+<!--                                    value="{{ vvm.id }}"-->
+<!--                                    ng-selected="lot.failedVvm==vvm.id"-->
+<!--                            >-->
+<!--                                {{ vvm.name }}-->
+<!--                            </option>-->
+<!--                        </select>-->
+<!--                    </td>-->
+
+<!--                    <td class="cell-input">-->
+
+<!--                        <select ui-select2="{width: '100%'}" ng-required="lot.failQuantity!=='0' && lot.failQuantity" name="failLocationId" ng-model="lot.failLocationId" ng-disabled="(lot.failedReason==4&&lot.failedReason=='')||(lot.failedVvm=='' && lot.failedReason==4)||(lot.failedReason=='')">-->
+<!--                            <option value=""></option>-->
+<!--                            <option ng-repeat="location in locations"-->
+<!--                                    value="{{ location.id }}"-->
+<!--                                    ng-selected="failLocationId==location.id"-->
+<!--                            >-->
+<!--                                {{ location.code }}-->
+<!--                            </option>-->
+<!--                        </select>-->
+
+<!--                        <span class="field-error" ng-show="lot.failLocationError"-->
+<!--                              openlmis-message="missing.value"></span>-->
+
+<!--                    </td>-->
+
+<!--                </tr>-->
                 </tbody>
             </table>
 
