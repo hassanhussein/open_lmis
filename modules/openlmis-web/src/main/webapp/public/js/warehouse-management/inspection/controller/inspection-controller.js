@@ -251,6 +251,8 @@ function getFile(file,documentType) {
 
        });
 
+       }
+
 
 
 $scope.lotInspected=false;
@@ -307,7 +309,7 @@ var lastVvm=lot.vvm[lot.vvm.length-1];
     lastVvm.quantity=undefined;
 var firstVvm=lot.vvm[0];
     firstVvm.quantity=lot.receivedQuantity;
-}
+};
 
 
 $scope.vvmQuantityChanged=function(vvm,lot){
@@ -327,17 +329,17 @@ if(vvm.vvmId===1 && lot.vvmUpdate){
 //get vvm2 quantity and set it as lot.receivedQuantity-vvm.quantity
  var vvmTwo= _.filter(lot.vvm,function(vvmStatus){
 //        console.log(vvmStatus)
-        return vvmStatus.vvmId == 2
+        return vvmStatus.vvmId == 2;
    });
    vvmTwo[0].quantity=(lot.receivedQuantity-vvm.quantity)>0?lot.receivedQuantity-vvm.quantity:0;
 
 }else if(vvm.vvmId===2 && lot.vvmUpdate){
 //get vvm2 quantity and set it as lot.receivedQuantity-vvm.quantity
- var vvmTwo= _.filter(lot.vvm,function(vvmStatus){
+ var vvmTw= _.filter(lot.vvm,function(vvmStatus){
 //        console.log(vvmStatus)
-        return vvmStatus.vvmId == 1
+        return vvmStatus.vvmId == 1;
    });
-   vvmTwo[0].quantity=(lot.receivedQuantity-vvm.quantity)>0?lot.receivedQuantity-vvm.quantity:0;
+   vvmTw[0].quantity=(lot.receivedQuantity-vvm.quantity)>0?lot.receivedQuantity-vvm.quantity:0;
 
 }
 
