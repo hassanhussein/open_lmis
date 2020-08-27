@@ -1140,8 +1140,12 @@ $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentT
             $scope.docError=false;
 
           document.fileLocation = document.file.name;
-          removeItemFromList(document.documentType);
+
           getFile(document.file,document);
+
+           if($scope.openMessage){
+            removeItemFromList(document.documentType);
+           }
 
           document.documentType = null;
           document.file = null;
