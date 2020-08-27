@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ConfigurationSettingKey;
 import org.openlmis.core.domain.User;
+import org.openlmis.core.dto.ExpectedArrivalDTO;
 import org.openlmis.core.service.ApproverService;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.StaticReferenceDataService;
@@ -117,4 +118,34 @@ public class NotificationServices {
     }
   }
 
+  public void sendExpectedArrivalNotification(ExpectedArrivalDTO dto, List<User> users) {
+
+    for (User user : users) {
+      if (user.getActive() != Boolean.TRUE || user.getVerified() != Boolean.TRUE ) {
+        continue;
+      }
+
+      SimpleMailMessage message = new SimpleMailMessage();
+      String emailMessage = configService.getByKey("EMAIL_TEMPLATE_EXPECTED_ARRIVAL").getValue();
+
+      emailMessage = emailMessage.replaceAll("\\{receiver_name\\}", user.getFirstName() +" "+user.getLastName());
+      emailMessage = emailMessage.replaceAll("\\{expected_arrival_date\\}", dto.getExpectedArrivalDate());
+      emailMessage = emailMessage.replaceAll("\\{pon_umber\\}", dto.getPoNumber());
+      emailMessage = emailMessage.replaceAll("\\{port_of_arrival\\}", dto.getPortOfArrival());
+      emailMessage = emailMessage.replaceAll("\\{clearing_agent\\}", dto.getClearingAgent());
+      emailMessage = emailMessage.replaceAll("\\{supplier_Name\\}", dto.getSupplierName());
+      emailMessage = emailMessage.replaceAll("\\{po_date\\}", dto.getPoDate());
+
+      message.setText(emailMessage);
+      message.setSubject(configService.getByKey("EMAIL_SUBJECT_EXPECTED_ARRIVAL").getValue());
+      message.setTo(user.getEmail());
+
+      try {
+        emailService.queueMessage(message);
+      } catch (Exception exp) {
+        LOGGER.error("Notification was not sent due to the following exception ...", exp);
+      }
+    }
+
+  }
 }

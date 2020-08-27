@@ -1,6 +1,7 @@
 package org.openlmis.vaccine.repository.warehouse;
 
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.dto.ExpectedArrivalDTO;
 import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.vaccine.domain.wms.Asn;
 import org.openlmis.vaccine.dto.CurrencyDTO;
@@ -84,5 +85,13 @@ public class AsnRepository {
 
     public List<HashMap> getAllClearingAgents() {
         return mapper.getAllClearingAgents();
+    }
+
+    public String updateExpectedArrivalAlert() {
+        return mapper.updateExpectedArrivalAlert();
+    }
+
+    public List<ExpectedArrivalDTO> getExpectedToReceive() {
+        return mapper.getExpectedToReceive();
     }
 }
