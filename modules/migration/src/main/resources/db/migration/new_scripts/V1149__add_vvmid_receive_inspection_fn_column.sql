@@ -1,32 +1,58 @@
+
 ALTER TABLE documents
-ADD COLUMN IF NOT EXISTS deleted BOOLEAN  default false;
+DROP COLUMN IF EXISTS deleted;
+
+ALTER TABLE documents
+ADD COLUMN deleted BOOLEAN  default false;
+
 
 ALTER TABLE public.documents
-    ADD COLUMN IF NOT EXISTS createddate timestamp without time zone;
+    DROP COLUMN IF EXISTS createddate;
+
+ALTER TABLE public.documents
+    ADD COLUMN createddate timestamp without time zone;
 
     ALTER TABLE public.documents
-    ADD COLUMN IF NOT EXISTS createdby integer;
+    DROP COLUMN IF EXISTS createdby;
+
+     ALTER TABLE public.documents
+    ADD COLUMN createdby integer;
 
     ALTER TABLE public.documents
-    ADD COLUMN IF NOT EXISTS comment character varying(500);
+    DROP COLUMN IF EXISTS comment;
+     ALTER TABLE public.documents
+    ADD COLUMN comment character varying(500);
 
 
     ALTER TABLE public.documents
-    ADD COLUMN IF NOT EXISTS deletionlocation character varying(40);
+    DROP COLUMN IF EXISTS deletionlocation;
 
     ALTER TABLE public.documents
-    ADD COLUMN IF NOT EXISTS deletedby integer;
+    ADD COLUMN deletionlocation character varying(40);
+
+    ALTER TABLE public.documents
+    DROP COLUMN IF EXISTS deletedby;
+    ALTER TABLE public.documents
+    ADD COLUMN deletedby integer;
 
     ALTER TABLE public.purchase_documents
-    ADD COLUMN IF NOT EXISTS deleted boolean DEFAULT false;
+    DROP COLUMN IF EXISTS deleted;
+    ALTER TABLE public.purchase_documents
+    ADD COLUMN deleted boolean DEFAULT false;
 
     ALTER TABLE public.purchase_documents
-    ADD COLUMN IF NOT EXISTS deletionlocation character varying(40);
+    DROP COLUMN IF EXISTS deletionlocation;
+    ALTER TABLE public.purchase_documents
+    ADD COLUMN deletionlocation character varying(40);
 
     ALTER TABLE public.purchase_documents
-    ADD COLUMN IF NOT EXISTS deletedby  integer ;
+    DROP COLUMN IF EXISTS deletedby ;
+     ALTER TABLE public.purchase_documents
+    ADD COLUMN deletedby  integer ;
 
     ALTER TABLE public.purchase_documents
-    ADD COLUMN IF NOT EXISTS comment character varying(200);
+    DROP COLUMN IF EXISTS comment;
+    ALTER TABLE public.purchase_documents
+    ADD COLUMN comment character varying(200);
 
 

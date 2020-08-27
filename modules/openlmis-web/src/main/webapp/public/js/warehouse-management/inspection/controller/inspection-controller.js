@@ -1,24 +1,6 @@
 function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+$scope.displayDocumentTypes = [];
 $scope.globalErrorFlag=true;
 
     GetLocationBy.get({}, function(data){
@@ -28,6 +10,25 @@ $scope.globalErrorFlag=true;
         console.log(data.locationList);
 
     });
+
+
+   function getLookup(){
+
+      AsnLookups.get(function(data) {
+
+console.log(data);
+                             $scope.displayDocumentTypes =  data.documentTypes;
+
+                                // $scope.manufacturers = data.manufactures;
+
+                                   //  $scope.ports = data.ports;
+                                        // $scope.suppliers = data.suppliers;
+                                        //  $scope.currencies=data.currencies;
+
+                     });
+                     }
+getLookup();
+
 
 /*GetLocationSummary.get({}, function(data){
 
@@ -68,6 +69,187 @@ $scope.productSum=function(lineItem){
  $scope.totalReceivedQty=sum;
 };
 
+//File functions
+
+function getListOfFilesByASNumber(asnNumber) {
+    var docLists = [];
+     DocumentList.get({code:asnNumber}, function(data){
+
+       docLists = data.list;
+       console.log('doc list');
+       console.log(docLists);
+      if(data.list.length > 0) {
+
+      $timeout(function(){
+      getOnlyMatchedDocumentTypes($scope.displayDocumentTypes,  docLists);
+      },1000);
+
+      console.log(data.list);
+    // $scope.findMatches($scope.displayDocumentTypes, data.list);
+      }
+
+
+      });
+}
+
+function getOnlyMatchedDocumentTypes(documentTypes, docs) {
+
+ $scope.displayDocumentTypes = [];
+ docs.forEach(function(data) {
+
+     for(var i=0;i<documentTypes.length;i++){
+
+       if(documentTypes[i].name === data.documentType.name){
+        documentTypes[i].isAvailable = true;
+       }
+     }
+
+});
+
+var filteredData = [];
+filteredData = _.filter(documentTypes, function(dx){
+return dx.isAvailable !== true;
+});
+$scope.docLists = docs;
+$scope.displayDocumentTypes  = filteredData;
+
+}
+
+ $scope.upload = function(document) {
+        validateAnsNumber($scope.asnCode,document);
+
+        if(document.documentType !== null && document.file !== null && !isUndefined(document.file)) {
+
+            document.fileLocation = document.file.name;
+            console.log(document);
+            getFile(document.file,document);
+
+            if($scope.openMessage){
+             removeItemFromList(document.documentType);
+            }
+            document.documentType = null;
+            document.file = null;
+
+        }
+
+    };
+
+  function validateAnsNumber(asnCode,document) {
+
+    if(asnCode === undefined) {
+
+    $scope.asnCode = $scope.poNumber;
+           console.log($scope.asnCode);
+    }
+
+    }
+
+    $scope.removeFileOptions=function(file){
+
+        if(file.deleteOption){
+            var comment=file.comment;
+            if(comment) {
+                DeleteDocumentStatus.update({
+                    id: file.id,
+                    code: file.asnNumber,
+                    comment: file.comment,
+                    deletionLocation:'RECEIVE'
+                }, function (response) {
+
+                    getListOfFilesByASNumber(file.asnNumber);
+
+                    $scope.displayDocumentTypes.push(file.documentType);
+
+                });
+                file.deleteOption = false;
+                file.cancelBtn = false;
+                document.alertcomment=false;
+            }else{
+                document.alertcomment=true;
+            }
+        }
+        file.deleteOption=true;
+        file.cancelBtn=true;
+    };
+    $scope.cancelRemoveFileOptions=function(file){
+        file.deleteOption=false;
+        file.cancelBtn=false;
+    };
+
+      $scope.removeFile = function(file) {
+
+         DeleteDocument.get({id:file.id, code:file.asnNumber}, function(response) {
+
+         getListOfFilesByASNumber(file.asnNumber);
+
+         $scope.displayDocumentTypes.push(file.documentType);
+
+         });
+
+         };
+
+  function removeItemFromList(document) {
+
+
+  var i = $scope.displayDocumentTypes.length;
+
+  while(i--) {
+
+  var name = $scope.displayDocumentTypes[i];
+
+
+  if(document.name === name.name) {
+
+  $scope.displayDocumentTypes.splice(i,1);
+
+  }
+  }
+ }
+
+
+function getFile(file,documentType) {
+
+     var asnNum;
+     if($scope.asnCode === null || $scope.asnCode === undefined) {
+        var today = new Date().toLocaleDateString();
+        asnNum = new Date(today).getTime();
+     }else
+       asnNum = $scope.asnCode;
+       console.log(asnNum);
+       console.log(documentType.documentType);
+      docService.saveDoc(file, asnNum, documentType.documentType.name).then(
+
+      function (response) {
+
+      $scope.openMessage = true;
+      $scope.message = response;
+
+      $timeout(function(){
+
+      $scope.openMessage = false;
+
+      },2000);
+
+      getListOfFilesByASNumber(asnNum);
+
+/*
+      $http.get("/rest-api/warehouse/downloadFile?filename="+$scope.asnCode+'-'+file.name).success(
+
+      function(response) {
+      console.log(response);
+
+
+
+      });*/
+
+
+
+
+      },
+      function (errResponse) {
+
+
+       });
 
 
 
@@ -76,39 +258,6 @@ $scope.lotInspected=false;
 //$scope.icePackFlag=false;
 //$scope.noCoolantFlag=false;
    $scope.inspection = inspection;
-   $scope.lineItem=$scope.inspection.lineItems[0];
-
-
-//   update line lineItems
-
-angular.forEach($scope.lineItem.lots,function(lot){
-lot.vvm=[];
-    lot.vvm.push(
-        { vvmId:1,
-           quantity:10,
-           failed:{
-           quantity:null,
-           reasonId:null,
-           vvmId:null,
-           locationId:null
-           }
-        }
-    );
-
-     lot.vvm.push(
-            { vvmId:2,
-               quantity:null,
-               failed:{
-               quantity:null,
-               reasonId:null,
-               vvmId:null,
-               locationId:null
-
-               }
-            }
-        );
-});
-
    console.log($scope.inspection);
 
 
@@ -126,13 +275,6 @@ $scope.productSum($scope.lineItem);
 //   $scope.locations = [{"id":1,"name":'AA11'},{"id":2,"name":'BB11'},{"id":4,"name":'AA17'}];
    $scope.failReasons = [{"id":1,"name":'Temperature'},{"id":2,"name":'Rain'},{"id":3,"name":'Opened Vial'}];
 
-
-
-$scope.getVvmName=function(vvmId){
-
-return _.findWhere($scope.vvmStatusList,{id:vvmId}).name;
-
-}
 
 $scope.hasZero=function(lot){
 
@@ -529,6 +671,9 @@ if(!$scope.hasExpired(lot)){
                    }
 }
 
+
+
+
    //check fail location
         //only if we have fail quantity
  if((lot.failedReason===4&&lot.failedReason==='')||(lot.failedVvm==='' && lot.failedReason===4)||(lot.failedReason==='')){
@@ -586,6 +731,10 @@ if ($scope.inspectLotForm.$error.required) {
             return;
         }
   };
+
+
+
+
 
 
 

@@ -643,7 +643,7 @@ destination]]></text>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{productdescription}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true">
+				<textField>
 					<reportElement x="360" y="31" width="89" height="13" uuid="890a86ee-9f17-43bd-a072-f1c97bb99881"/>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{manufacturer}]]></textFieldExpression>
@@ -664,6 +664,12 @@ destination]]></text>
 				</textElement>
 				<text><![CDATA[PART III — DETAILS OF VACCINE SHIPMENT]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="160" y="293" width="89" height="20" uuid="09fb7fac-2668-4a5c-942a-2c5feefa7476"/>
+				<box bottomPadding="2"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{asn_clearingagent}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<detail>
@@ -1011,6 +1017,16 @@ WHO recommends all UN agencies, countries and non-governmental organizations pro
 					<textElement verticalAlignment="Middle"/>
 					<text><![CDATA[Temperature monitors present]]></text>
 				</staticText>
+				<textField>
+					<reportElement x="221" y="188" width="121" height="13" uuid="ad61a5f8-a0d8-47d1-ac1f-274fa3d82756"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{ins_conditionofbox}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="221" y="203" width="103" height="13" uuid="8d093855-0eb4-4bf1-9c18-ebae2f54784e"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{isshippedprovided}]]></textFieldExpression>
+				</textField>
 			</frame>
 			<staticText>
 				<reportElement x="2" y="370" width="550" height="30" uuid="e81e6380-ae04-4e54-8cec-c13a2673bf47"/>
@@ -1021,7 +1037,7 @@ WHO recommends all UN agencies, countries and non-governmental organizations pro
 (in addition fill in ALARM REPORTING FORM if there are any ALARMS in electronic devices):]]></text>
 			</staticText>
 			<frame>
-				<reportElement x="0" y="403" width="554" height="66" uuid="6cd7602e-4c16-43b5-9ccb-98da43880cdd"/>
+				<reportElement x="3" y="403" width="555" height="66" uuid="6cd7602e-4c16-43b5-9ccb-98da43880cdd"/>
 				<box>
 					<pen lineWidth="2.0"/>
 				</box>

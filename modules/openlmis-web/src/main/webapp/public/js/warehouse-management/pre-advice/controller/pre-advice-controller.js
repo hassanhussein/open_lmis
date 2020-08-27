@@ -860,15 +860,16 @@ console.log($scope.fiiCost);
 
 console.log($scope.expectedArrivalDate);
 
+var docs = [];
 
+  docs = _.where($scope.docLists, {deleted:false});
 
-//    console.log($scope.currency)
         $scope.asnStatus=status;
         $scope.validateProduct();
 //        if(){
 //            return;
 //        }
-      if ($scope.asnForm.$error.required ||$scope.docLists.length < parseInt(3,10)||!$scope.quantitiesValid()) {
+      if ($scope.asnForm.$error.required ||docs.length < parseInt(3,10)||!$scope.quantitiesValid()) {
             $scope.showError = true;
             $scope.error = 'form.error';
             $scope.message = "";
@@ -952,6 +953,8 @@ console.log($scope.expectedArrivalDate);
 
         console.log(expectedArrivalTime);
         console.log(asn);
+
+
 
         if($scope.asn){
 
@@ -1066,9 +1069,13 @@ console.log($scope.expectedArrivalDate);
 
 
                if(!isUndefined(document.documentType) && !isUndefined(document.file) ) {
-                  removeItemFromList(document.documentType);
+
                  document.fileLocation = $scope.asnCode+'-'+document.file.name;
                  getFile(document.file, document.documentType);
+
+                if($scope.openMessage){
+                 removeItemFromList(document.documentType);
+                }
 
                }
 
@@ -1133,8 +1140,12 @@ $scope.displayDocumentTypes = _.filter(data, function(num){ return num.documentT
             $scope.docError=false;
 
           document.fileLocation = document.file.name;
-          removeItemFromList(document.documentType);
+
           getFile(document.file,document);
+
+           if($scope.openMessage){
+            removeItemFromList(document.documentType);
+           }
 
           document.documentType = null;
           document.file = null;
