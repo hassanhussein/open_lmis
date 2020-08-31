@@ -32,7 +32,7 @@ public class ConsumptionBuilder {
                 " COALESCE(NULLIF(avg(r.amc), 0), 1))::numeric, 4) AS consumptionrate");
         SELECT("( SELECT df.description" +
                 "           FROM data_range_flags_configuration df\n" +
-                "          WHERE df.range @> round(100*\n" +
+                "          WHERE LOWER(category)= 'consumption' and df.range @> round(100*\n" +
                 "  (" +
                 "(sum(r.consumption)- COALESCE(avg(r.amc), 0)) / COALESCE(NULLIF(avg(r.amc), 0), 1)\n" +
                 " ), 4)::numeric) AS flagcolor");
