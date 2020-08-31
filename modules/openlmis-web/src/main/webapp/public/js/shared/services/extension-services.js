@@ -1581,4 +1581,8 @@ services.factory('AuditActions', function ($resource) {
     return $resource('/reports/audit_actions.json', {}, {});
 });
 
+services.factory('DataRangeConfigurations', function ($resource) {
+    return $resource('/data_configuration/:tid', {tid: '@tid'}, {});
+});
+
 

@@ -1,0 +1,58 @@
+<script type="text/ng-template" id="data-range-configuration.html" xmlns="http://www.w3.org/1999/html">
+    <div class="modal-header">
+        <h3 class="modal-title"><span openlmis-message="header.data.range.flag.configuration"></span>
+
+        </h3>
+    </div>
+    <div class="modal-body">
+        <div  class="form-group" >
+            <label for="isPage" class="col-sm-3 control-label" openlmis-message="label.data.range.flag.category.name"></label>
+            <div  class="col-sm-2">
+                <input  type="text" id="isPage"
+                       ng-model="menu.category">
+                </input>
+            </div>
+
+            <label for="name" class="col-sm-3 control-label" openlmis-message="label.data.range.flag.name"></label>
+            <div class="col-sm-5">
+                <input type="text" id="name"
+                        ng-model="menu.rangename">
+                </input>
+            </div>
+
+            <label  for="displayName" class="col-sm-3 control-label" openlmis-message="label.data.range.flag.display.name"></label>
+            <div class="col-sm-5">
+                <input type="text" id="displayName"
+                       ng-model="menu.displayname">
+                </input>
+            </div>
+            <label  for="minValue" class="col-sm-3 control-label" openlmis-message="label.data.range.flag.min.value"></label>
+            <div class="col-sm-5">
+                <input type="number" id="minValue"
+                       ng-model="menu.minvalue">
+                </input>
+            </div>
+            <label  for="maxValue" class="col-sm-3 control-label" openlmis-message="label.data.range.flag.max.value"></label>
+            <div class="col-sm-5">
+                <input type="number" id="maxValue"
+                       ng-model="menu.maxvalue">
+                </input>
+            </div>
+        </div>
+
+
+        <div class="form-group" >
+            <label for="description" class="col-sm-3 control-label" openlmis-message="label.description"></label>
+            <div class="col-sm-5">
+                <input  colorpicker class="form-control" type="text" id="description"
+                       ng-model="menu.description">
+                </input>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <input name="button" class="btn btn-default" type="button" ng-click="cancel()" openlmis-message="button.cancel"/>
+        <input id="btnAdd" name="button"  ng-click="save(menu,selectedItem)" class="btn btn-primary" type="button" openlmis-message="button.save "/>
+    </div>
+</script>

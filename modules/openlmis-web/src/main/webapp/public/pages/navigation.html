@@ -544,6 +544,11 @@
                            href="/public/pages/admin/metabase-integration/index.html#/configure"
                            openlmis-message="link.admin.configure.metabase.integration"></a>
                     </li>
+                    <li ng-show="hasPermission('CONFIGURE_METABASE_INTEGRATION')">
+                        <a id='configureDataRangeFlag'
+                           href="/public/pages/admin/data-range-flag/index.html#/configure"
+                           openlmis-message="link.admin.configure.metabase.integration"></a>
+                    </li>
                     <li ng-show="hasPermission('MANAGE_CUSTOM_REPORTS')">
                         <a id='manageLogTagTemperature'
                            href="/public/pages/vaccine/inventory/log-tag-temperature/index.html#/list"
