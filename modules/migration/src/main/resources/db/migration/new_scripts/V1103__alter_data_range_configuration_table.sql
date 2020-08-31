@@ -1,3 +1,5 @@
+
+CREATE EXTENSION IF NOT EXISTS btree_gist;
 ALTER TABLE public.data_range_flags_configuration
 ADD COLUMN if not exists range numrange NOT NULL;
 	
