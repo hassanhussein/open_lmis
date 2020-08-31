@@ -395,6 +395,12 @@ public class LookupController {
     /**
      * @return
      */
+
+    @RequestMapping(value = "/rest-api/lookup/donors")
+    public ResponseEntity getAllDonors() {
+        return RestResponse.response("donors", lookupService.getAllDonors());
+    }
+
     @RequestMapping(value = "/rest-api/lookup/equipment-energy-types")
     public ResponseEntity getAllEquipmentEnergyTypes() {
         return RestResponse.response("equipment-energy-types", lookupService.getAllEquipmentEnergyTypes());

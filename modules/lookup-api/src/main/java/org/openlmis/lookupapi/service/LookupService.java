@@ -134,6 +134,8 @@ public class LookupService {
     ColdChainEquipmentDesignationRepository designationRepository;
     @Autowired
     ColdChainEquipmentPqsStatusRepository equipmentPqsStatusRepository;
+    @Autowired
+    private  DonorRepository donorRepository;
 
     public List<Program> getAllPrograms() {
         return programMapper.getAll();
@@ -333,7 +335,12 @@ public class LookupService {
     public List<ColdChainEquipmentDesignation> getAllColdChainEquipmentDesignations() {
         return designationRepository.getAll();
     }
-    public List<ColdChainEquipmentPqsStatus> getAllColdChainEquipmentPqsStatuses(){
-        return  equipmentPqsStatusRepository.getAll();
+
+    public List<ColdChainEquipmentPqsStatus> getAllColdChainEquipmentPqsStatuses() {
+        return equipmentPqsStatusRepository.getAll();
+    }
+
+    public List<Donor> getAllDonors() {
+        return donorRepository.getAll();
     }
 }
