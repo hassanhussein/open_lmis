@@ -39,6 +39,9 @@ public class DistrictConsumptionReport implements ResultRow {
   private Double district_id;
   private String periodName;
   private Date periodStart;
+  private Double amc;
+  private Double consumptionrate;
+  private String flagcolor;
 
 
 }

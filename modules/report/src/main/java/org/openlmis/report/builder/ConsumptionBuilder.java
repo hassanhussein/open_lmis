@@ -27,6 +27,15 @@ public class ConsumptionBuilder {
         SELECT("r.productdispalayname as product");
         SELECT("sum(r.dispensed) dispensed");
         SELECT("sum(r.consumption) consumption");
+        SELECT("avg(r.amc) amc");
+        SELECT(" round(100*((sum(r.consumption) - COALESCE(avg(r.amc), 0)) /" +
+                " COALESCE(NULLIF(avg(r.amc), 0), 1))::numeric, 4) AS consumptionrate");
+        SELECT("( SELECT df.description" +
+                "           FROM data_range_flags_configuration df\n" +
+                "          WHERE df.range @> round(100*\n" +
+                "  (" +
+                "(sum(r.consumption)- COALESCE(avg(r.amc), 0)) / COALESCE(NULLIF(avg(r.amc), 0), 1)\n" +
+                " ), 4)::numeric) AS flagcolor");
         SELECT("ceil(sum(r.dispensed/r.packsize)::float) consumptionInPacks");
         SELECT("ceil(sum(r.consumption/r.packsize)::float) adjustedConsumptionInPacks ");
     }

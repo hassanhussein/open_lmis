@@ -44,6 +44,9 @@ public interface AggregateConsumptionReportMapper {
           @Result(property = "product", column = "primaryName"),
           @Result(property = "code", column = "code"),
           @Result(property = "consumption", column = "consumption"),
+          @Result(property = "consumptionrate", column = "consumptionrate"),
+          @Result(property = "amc", column = "amc"),
+          @Result(property = "flagcolor", column = "flagcolor"),
           @Result(property = "consumptionInPacks", column = "consumptionInPacks"),
           @Result(property = "adjustedConsumptionInPacks", column = "adjustedConsumptionInPacks"),
           @Result(property = "dispensed", column = "dispensed")
