@@ -5,10 +5,12 @@ function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnR
     //resourceLoadingConfig.hideReloadIcon = true;
     //resourceLoadingConfig.loadingDashlet = [];
 
-    $scope.stockAvailabilityDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/public/dashboard/d6aec215-6913-4fdc-8ee5-5b10af04ed0f");
-    $scope.requisitionsDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/public/dashboard/d45bf87b-1979-4a56-8bb7-4fb0eb98a99a");
-    $scope.reportingUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/public/dashboard/37d67507-6f38-4559-8cc3-50a18caea384");
+    $scope.stockAvailabilityDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjI5fSwicGFyYW1zIjp7fSwiaWF0IjoxNTk4MjYxOTIxfQ.DL5Bg84TX9piTpkPV7qWK4fuZGUi8-mV6akR9c106EA?tracer=true#bordered&titled");
+    $scope.reportingUrl = $sce.trustAsResourceUrl("http://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjMxfSwicGFyYW1zIjp7fSwiaWF0IjoxNTk4MjU2MTQzfQ.OefMgzh8s56T3N8i-B5un-H3BnJwto8dwPAVLO4kHE0#bordered=true&titled=true");
     $scope.notifications = notifications;
+
+
+
 
     var params;
 
