@@ -1223,7 +1223,7 @@ function getOnlyMatchedDocumentTypes(documentTypes, docs) {
 
      for(var i=0;i<documentTypes.length;i++){
 
-       if(documentTypes[i].name === data.documentType.name){
+       if((documentTypes[i].name === data.documentType.name)&&!data.deleted){
         documentTypes[i].isAvailable = true;
        }
      }
