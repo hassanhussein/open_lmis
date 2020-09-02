@@ -1,4 +1,4 @@
-function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
+function InspectionController($scope,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,AsnLookups,GetLocationBy){
 
 $scope.displayDocumentTypes = [];
 $scope.globalErrorFlag=true;
