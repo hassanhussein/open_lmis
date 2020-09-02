@@ -141,6 +141,8 @@ public class RequisitionService {
   @Autowired
   private FacilityTypeService facilityTypeService;
 
+  @Autowired ProcessingPeriodService processingPeriodService;
+
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
@@ -582,17 +584,21 @@ public class RequisitionService {
     }
 
     Long periodIdForLastRequisition = null;
+    Boolean enabledPeriod = null;
+
     if (lastRegularRequisition != null) {
       if (lastRegularRequisition.preAuthorize()) {
         throw new DataException("error.rnr.previous.not.filled");
       }
       periodIdForLastRequisition = lastRegularRequisition.getPeriod().getId();
+
+      enabledPeriod = processingPeriodService.getById(periodIdForLastRequisition).getEnableOrder();
     }
     //Original Settings
     List<ProcessingPeriod> periods;
 
     if(null != enabledProgram)
-      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition, enabledPeriod);
     else
       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
 
@@ -619,9 +625,13 @@ public class RequisitionService {
 
     List<ProcessingPeriod> periods;
 
+    Boolean enabledPeriod = null;
+
+    if(periodIdOfLastRequisitionToEnterPostSubmitFlow != null)
+     enabledPeriod = processingPeriodService.getById(periodIdOfLastRequisitionToEnterPostSubmitFlow).getEnableOrder();
 
     if(null != program)
-      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow,enabledPeriod);
     else
       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
