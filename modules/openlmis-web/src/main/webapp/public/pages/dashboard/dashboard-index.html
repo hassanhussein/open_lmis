@@ -114,9 +114,9 @@
 
     <script src="/public/lib/angular-ui/ui-jqplot/ui-jqplot-chart.js"></script>
     <script src="/public/js/shared/controller/header-controller.js"></script>
-<!--
-    <script src="/public/js/static-pages/controller/openlmis-footer-controller.js"></script>
--->
+    <!--
+        <script src="/public/js/static-pages/controller/openlmis-footer-controller.js"></script>
+    -->
     <link rel="stylesheet" href="/public/css/footer.css">
 
     <link type="text/css" rel="stylesheet" charset="UTF-8" href="/public/css/app.css">
@@ -126,12 +126,12 @@
 
 </head>
 <body onunload="">
-    <ng-include src="'/public/pages/header.html'"></ng-include>
-    <ng-include src="'/public/pages/navigation.html'"></ng-include>
-    <div class="content" style="background-color: #eef1f3;">
-        <div ng-view></div>
-    </div>
-    <script type="text/javascript">
+<ng-include src="'/public/pages/header.html'"></ng-include>
+<ng-include src="'/public/pages/navigation.html'"></ng-include>
+<div class="content" style="background-color: #eef1f3;">
+    <div ng-view></div>
+</div>
+<script type="text/javascript">
  $(document).ready(function(){
     $('ul.tabs').tabs();
   });
@@ -153,37 +153,37 @@
 
 
 </script>
-    <!--
+<!--
 <script>
-    var newWin = null;
-    function popUp(strURL,strType, strHeight, strWidth) {
+var newWin = null;
+function popUp(strURL,strType, strHeight, strWidth) {
 
-        if(typeof(strHeight)==='undefined') strType = "maximized";
-        if(typeof(strWidth)==='undefined')  strType = "maximized";
+    if(typeof(strHeight)==='undefined') strType = "maximized";
+    if(typeof(strWidth)==='undefined')  strType = "maximized";
 
-        if (newWin != null && !newWin.closed) {
-            newWin.close();
-        }
-        var strOptions="";
-        if (strType=="console") {
-            strOptions="resizable,height="+strHeight+",width="+strWidth;
-        }
-        if (strType=="fixed") {
-            strOptions="status,height="+strHeight+",width="+strWidth;
-        }
-        if (strType=="elastic") {
-            strOptions="toolbar,menubar,scrollbars,"+"resizable,location,height="+strHeight+",width="+strWidth;
-        }
-        if (strType=="maximized") {
-            strWidth = (screen.availWidth - 10).toString();
-            strHeight = (screen.availHeight - 122).toString();
-
-            strOptions="toolbar,menubar,scrollbars,"+"location,height="+strHeight+",width="+strWidth;
-        }
-
-        newWin = window.open(strURL, 'newWin', strOptions);
-        newWin.focus();
+    if (newWin != null && !newWin.closed) {
+        newWin.close();
     }
+    var strOptions="";
+    if (strType=="console") {
+        strOptions="resizable,height="+strHeight+",width="+strWidth;
+    }
+    if (strType=="fixed") {
+        strOptions="status,height="+strHeight+",width="+strWidth;
+    }
+    if (strType=="elastic") {
+        strOptions="toolbar,menubar,scrollbars,"+"resizable,location,height="+strHeight+",width="+strWidth;
+    }
+    if (strType=="maximized") {
+        strWidth = (screen.availWidth - 10).toString();
+        strHeight = (screen.availHeight - 122).toString();
+
+        strOptions="toolbar,menubar,scrollbars,"+"location,height="+strHeight+",width="+strWidth;
+    }
+
+    newWin = window.open(strURL, 'newWin', strOptions);
+    newWin.focus();
+}
 </script>
 -->
 </body>
