@@ -13,6 +13,7 @@ package org.openlmis.rnr.repository;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.OtherFundsRespository;
 import org.openlmis.core.repository.SourceOfFundRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.SignatureMapper;
@@ -97,6 +98,9 @@ public class RequisitionRepository {
 
     @Autowired
     private PatientRecordMapper patientRecordMapper;
+
+    @Autowired
+    private OtherFundsRespository otherFundsRespository;
 
 @Autowired
 private DataHealthCheckMapper dataHealthCheckMapper;
@@ -650,6 +654,10 @@ private DataHealthCheckMapper dataHealthCheckMapper;
 
     public PatientRecord getLastRequisitionWithPatientRecoord(Facility facility, Program program) {
         return requisitionMapper.getLastRequisitionWithPatientRecoord(facility, program);
+    }
+
+    public List<OtherFundsDTO> getFundingSources(Long facilityId) {
+        return otherFundsRespository.getFundingSources(facilityId);
     }
 
 }

@@ -947,6 +947,10 @@ public class RequisitionService {
     return requisitionRepository.getAllSourcesOfFund(program);
   }
 
+  public List<OtherFundsDTO>getFundingSources(Long facilityId){
+    return requisitionRepository.getFundingSources(facilityId);
+  }
+
   public void insertSourceOfFundLineItem(SourceOfFundLineItemDTO dto) {
     requisitionRepository.insertFundingSourceLineItem(dto);
   }

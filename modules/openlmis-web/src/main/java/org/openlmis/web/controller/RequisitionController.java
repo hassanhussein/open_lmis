@@ -347,6 +347,12 @@ public class RequisitionController extends BaseController {
         return response(FUNDING_SOURCES, requisitionService.getAllSourcesOfFund(program));
     }
 
+    @RequestMapping(value = "/requisitions/{facilityId}/get-funding-sources", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFundingSources(@PathVariable("facilityId") Long facilityId) {
+
+        return response(FUNDING_SOURCES, requisitionService.getFundingSources(facilityId));
+    }
+
 /*
   @RequestMapping(value = "/requisitions/{id}/funding-sources", method = POST, headers = ACCEPT_JSON)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION, APPROVE_REQUISITION')")
