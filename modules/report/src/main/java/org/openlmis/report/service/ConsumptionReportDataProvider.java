@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.openlmis.report.mapper.FacilityConsumptionReportMapper;
 import org.openlmis.report.mapper.lookup.ProcessingPeriodReportMapper;
 import org.openlmis.report.model.ResultRow;
-import org.openlmis.report.model.dto.ProcessingPeriod;
 import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 import org.openlmis.report.model.report.ConsumptionColumn;
 import org.openlmis.report.model.report.FacilityConsumptionRow;
@@ -57,6 +56,7 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
             for (Map<String, Object> objectHashMap : consumptionHashMapList) {
                 FacilityConsumptionRow consumptionRow = new FacilityConsumptionRow();
                 Long facilityId = objectHashMap.get("facilityid") != null ? Long.parseLong(String.valueOf(objectHashMap.get("facilityid"))) : null;
+                Float amc = objectHashMap.get("amc") != null ? Float.parseFloat(String.valueOf(objectHashMap.get("amc"))) : null;
                 consumptionRow.setHeaderPeriods(this.periodList);
                 consumptionRow.setProductCode(String.valueOf(objectHashMap.get("productcode")));
                 consumptionRow.setProduct(String.valueOf(objectHashMap.get("product")));
@@ -65,6 +65,8 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
                 consumptionRow.setFacility(String.valueOf(objectHashMap.get("facility")));
                 consumptionRow.setFacilityCode(String.valueOf(objectHashMap.get("facilitycode")));
                 consumptionRow.setFacProdCode(String.valueOf(objectHashMap.get("facprodcode")));
+                consumptionRow.setAmc(amc);
+                consumptionRow.setFlagcolor(String.valueOf(objectHashMap.get("flagcolor")));
                 List<ConsumptionColumn> consumptionColumns = new ArrayList<>();
                 for (String period : this.periodList) {
                     ConsumptionColumn consumptionColumn = new ConsumptionColumn();
@@ -75,6 +77,8 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
                     consumptionColumn.setFacility(String.valueOf(objectHashMap.get("facility")));
                     consumptionColumn.setFacilityCode(String.valueOf(objectHashMap.get("facilitycode")));
                     consumptionColumn.setFacProdCode(String.valueOf(objectHashMap.get("facprodcode")));
+                    consumptionColumn.setAmc(amc);
+                    consumptionColumn.setFlagcolor(String.valueOf(objectHashMap.get("flagcolor")));
                     consumptionColumn.setHeader(period);
                     Object objectValue = objectHashMap.get(period);
                     if (objectValue != null) {
@@ -107,11 +111,11 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     }
 
     public String constructCrossTabColumnSection() {
-        String crossTabColumn = " ( code text[]";
+        String crossTabColumn = " ( code text[],val float4[]";
 
         if (this.periodList != null && !periodList.isEmpty()) {
             for (String period : periodList) {
-                crossTabColumn = crossTabColumn + ", \"" + period+ "\" integer";
+                crossTabColumn = crossTabColumn + ", \"" + period + "\" integer";
             }
             crossTabColumn = crossTabColumn + ")";
 
@@ -165,7 +169,7 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
         FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
         param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
-        this.periodList = reportMapper.getPeriods(param,this.getUserId());
+        this.periodList = reportMapper.getPeriods(param, this.getUserId());
         String crossTabColumn = this.constructCrossTabColumnSection();
         String crossColumnHeader = this.constructTabColumnHeader();
         param.setCrossTabColumn(crossTabColumn);

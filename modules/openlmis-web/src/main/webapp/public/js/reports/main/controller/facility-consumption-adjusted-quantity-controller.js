@@ -42,7 +42,13 @@ function FacilityConsumptionByAdjustedQuantReportController($scope, $filter, $wi
         }
         return consumption;
     };
-
+    $scope.getBackGroundColor = function (row, period) {
+        var color = "";
+        if (!utils.isNullOrUndefined(row)) {
+            color = _.findWhere(row.consumptionColumnList, {header: period}).flagcolor;
+        }
+        return color;
+    };
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var url = '/reports/download/facility_adj_consumption' + (($scope.filter.disaggregated === true) ? '_disaggregated' : '') + '/' + type + '?' + jQuery.param($scope.getSanitizedParameter());

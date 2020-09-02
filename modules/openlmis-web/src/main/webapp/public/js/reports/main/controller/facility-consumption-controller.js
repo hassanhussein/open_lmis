@@ -44,6 +44,13 @@ function FacilityConsumptionReportController($scope, $filter, $window, FacilityC
         }
         return consumption;
     };
+    $scope.getBackGroundColor = function (row, period) {
+        var color="";
+        if (!utils.isNullOrUndefined(row)) {
+            color = _.findWhere(row.consumptionColumnList, {header: period}).flagcolor;
+        }
+        return color;
+    };
 
     $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;

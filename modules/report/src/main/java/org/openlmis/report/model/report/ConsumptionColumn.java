@@ -34,5 +34,7 @@ public class ConsumptionColumn implements ResultRow {
     private String type;
     private String header;
     private Object valeu;
+    private Float amc;
+    private String flagcolor;
 
 }

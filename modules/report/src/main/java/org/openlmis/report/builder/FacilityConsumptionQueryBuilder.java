@@ -25,10 +25,18 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
     private static final String CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT = " sum(r.consumption)::integer dispensed\n";
 
     public static String aggregateCrossTabQuery(FacilityConsumptionReportParam filter) {
-        String query = " ( select code[1] as product , code[2] as productCode " +
+        String query = " ( select code[1] as product , code[2] as productCode ,   code[3] as flagcolor, val[1] as amc " +
                 filter.getCrossColumnHeader() +
                 " from CROSSTAB\n" +
-                "($$SELECT ARRAY[r.productDispalayName,r.productcode::text] code,  \n" +
+                "($$SELECT ARRAY[r.productDispalayName,r.productcode::text ," +
+                "( SELECT df.description\n" +
+                "                         FROM data_range_flags_configuration df\n" +
+                "                        WHERE LOWER(category)= 'consumption' \n" +
+                "                      and df.range @> round(100*(sum(r.consumption)- COALESCE(sum(r.amc), 0))\n" +
+                "\t\t\t\t\t/ COALESCE(NULLIF(sum(r.amc), 0), 1)\n" +
+                "                , 4)::numeric)" +
+                "] code,  " +
+                "Array[sum(r.amc)] val, \n" +
                 " r.period periodName,\n" +
                 (filter.getAdjustedConsumption() ? CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT : CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT) +
                 " FROM mv_requisition r\n" +
@@ -59,13 +67,21 @@ public class FacilityConsumptionQueryBuilder extends ConsumptionBuilder {
     public static String disAggregateCrossTabQuery(FacilityConsumptionReportParam filter) {
         String query = " ( select code[1] as facilityid, code[2] as facilitycode, code[3] as facility ,\n" +
                 "code[4]  as facilitytype , code[5] as  facProdCode,\n" +
-                "code[6] as product , code[7] as productCode " +
+                "code[6] as product , code[7] as productCode ,   code[8] as flagcolor, val[1] as amc " +
                 filter.getCrossColumnHeader() +
                 "  from\n" +
                 "CROSSTAB\n" +
                 "($$ SELECT ARRAY[r.facilityid::text, r.facilitycode,r.facility,\n" +
                 "r.facilitytype,r.facprodcode,\n" +
-                "r.productDispalayName::text,r.productcode::text] code, \n" +
+                "r.productDispalayName::text,r.productcode::text ," +
+                "( SELECT df.description\n" +
+                "                         FROM data_range_flags_configuration df\n" +
+                "                        WHERE LOWER(category)= 'consumption' \n" +
+                "                      and df.range @> round(100*(sum(r.consumption)- COALESCE(sum(r.amc), 0))\n" +
+                "\t\t\t\t\t/ COALESCE(NULLIF(sum(r.amc), 0), 1)\n" +
+                "                , 4)::numeric)" +
+                "] code, " +
+                " Array[sum(r.amc)] val," +
                 " r.period periodName,\n" +
                 (filter.getAdjustedConsumption() ? CONSUMPTION_ADJUSTED_REPORT_AGGREGATE_SEGEMENT : CONSUMPTION_DISPENSED_REPORT_AGGREGATE_SEGEMENT) +
                 " FROM mv_requisition r\n" +

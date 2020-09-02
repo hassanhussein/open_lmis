@@ -112,7 +112,7 @@
                             <td  ng-if="showDisaggregatedColumns" ng-bind="row.type"></td>
                             <td ng-bind="row.productCode"></td>
                             <td ng-bind="row.product"></td>
-                            <td  ng-repeat="period in periods">{{ consumptionForPeriod(row,period) }}</td>
+                            <td ng-style="{'background-color':getBackGroundColor(row,period) }" ng-repeat="period in periods">{{ consumptionForPeriod(row,period) }}</td>
                         </tr>
                         </tbody>
                     </table>
