@@ -158,7 +158,7 @@ public interface ProcessingPeriodMapper {
             "WHERE scheduleId = #{scheduleId} " +
             "AND endDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id = #{startingPeriodId}) " +
             "AND startDate <= #{beforeDate} " +
-            "AND endDate >= #{afterDate} AND enableOrder is not #{enabledPeriod} "  +
+            "AND endDate >= #{afterDate} AND enableOrder <> #{enabledPeriod} "  +
             "ORDER BY startDate limit 1 ")
     List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriodForByMonthlyReporting(@Param(value = "scheduleId") Long scheduleId,
                                                                                 @Param(value = "startingPeriodId") Long startingPeriodId,
