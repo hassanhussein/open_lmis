@@ -354,11 +354,9 @@ public class LookupController {
     /**
      * @return
      */
-    @RequestMapping(value = "/rest-api/lookup/equipment_cold_chain_equipment_pqs_status\n" +
-            "\n")
+    @RequestMapping(value = "/rest-api/lookup/equipment_cold_chain_equipment_pqs_status")
     public ResponseEntity getAllColdChainEquipmentPqsStatuses() {
-        return RestResponse.response("equipment_cold_chain_equipment_pqs_status\n" +
-                "\n", lookupService.getAllColdChainEquipmentPqsStatuses());
+        return RestResponse.response("equipment_cold_chain_equipment_pqs_status" , lookupService.getAllColdChainEquipmentPqsStatuses());
     }
 
     @RequestMapping(value = "/rest-api/lookup/equipment_cold_chain_equipment_designations")
