@@ -167,10 +167,10 @@ public class ProcessingScheduleService {
     }
 
 
-  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriodForMonthlyReporting(Long facilityId, Long programId, Date programStartDate, Long startingPeriodId) {
+  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriodForMonthlyReporting(Long facilityId, Long programId, Date programStartDate, Long startingPeriodId, Boolean enabledPeriod) {
     RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
     return periodRepository.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
-            startingPeriodId, programStartDate, new Date());
+            startingPeriodId, programStartDate, new Date(), enabledPeriod);
   }
 
   public ProcessingPeriod getCurrentPeriodBySchedule(Facility facility, Program program, Date date) {
