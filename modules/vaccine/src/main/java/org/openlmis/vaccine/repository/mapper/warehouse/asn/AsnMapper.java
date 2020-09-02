@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.asn;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.dto.ExpectedArrivalDTO;
 import org.openlmis.vaccine.domain.wms.ASNDocument;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.vaccine.domain.wms.Asn;
@@ -108,6 +109,9 @@ public interface AsnMapper {
     @Update("update asns set active = false where id = #{id}")
     void disableAsnBy(@Param("id") Long id);
 
+    @Select(" SELECT * FROM alert_asn_expected_arrival ")
+    List<ExpectedArrivalDTO> getExpectedToReceive();
+
     class SelectAsn {
         @SuppressWarnings(value = "unused")
         public static String getAsnCountBy(Map<String, Object> params) {
@@ -176,5 +180,8 @@ public interface AsnMapper {
 
     @Select(" SELECT * FROM clearing_agents ")
     List<HashMap> getAllClearingAgents();
+
+    @Select("Select * from fn_populate_alert_asn_expected_arrival(1);")
+    String updateExpectedArrivalAlert();
 
 }

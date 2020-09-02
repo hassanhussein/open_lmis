@@ -1,27 +1,22 @@
 package org.openlmis.vaccine.service.warehouse;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.domain.SupplyPartner;
 import org.openlmis.core.domain.User;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.SupplyPartnerService;
 import org.openlmis.core.service.UserService;
+import org.openlmis.rnr.service.NotificationServices;
 import org.openlmis.vaccine.domain.wms.*;
+import org.openlmis.core.dto.ExpectedArrivalDTO;
 import org.openlmis.vaccine.dto.CurrencyDTO;
 import org.openlmis.vaccine.repository.warehouse.AsnRepository;
 import org.openlmis.vaccine.service.VaccineOrderRequisitionServices.VaccineNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -54,6 +49,9 @@ public class AsnService {
 
     private final String FINALIZE_ASN_REPORT = "RECEIVE_FINALIZED_ASN_REPORT";
 
+    @Autowired
+    private NotificationServices notificationServices;
+
     @Transactional
     public void save(Asn asn, Long userId) {
 
@@ -68,20 +66,20 @@ public class AsnService {
             } else {
                 repository.update(asn);
             }
-        }catch (DuplicateKeyException e) {
+        } catch (DuplicateKeyException e) {
             throw new DataException("error.duplicate.po.number");
         }
 
         List<AsnLineItem> asnLineItems = asn.getAsnLineItems();
 
-        for(AsnLineItem lineItem : asnLineItems){
+        for (AsnLineItem lineItem : asnLineItems) {
 
             lineItem.setAsn(asn);
             lineItem.setCreatedBy(userId);
             lineItem.setModifiedBy(userId);
             asnLineItemService.save(lineItem);
             asnLotService.deleteByAsnDetail(lineItem.getId());
-            if(lineItem.isLotflag()) {
+            if (lineItem.isLotflag()) {
                 for (AsnLot asnLot : lineItem.getAsnLots()) {
                     asnLot.setAsnLineItem(lineItem);
                     asnLot.setCreatedBy(userId);
@@ -90,7 +88,7 @@ public class AsnService {
                 }
             }
         }
-        purchaseDocumentService.save(asn,null,userId);
+        purchaseDocumentService.save(asn, null, userId);
  /*       List<PurchaseDocument> purchaseDocuments = asn.getPurchaseDocuments();
         for(PurchaseDocument document : purchaseDocuments){
             document.setAsn(asn);
@@ -100,13 +98,12 @@ public class AsnService {
         }*/
 
 
-        if(asn.getStatus().equalsIgnoreCase("Finalized")) {
+        if (asn.getStatus().equalsIgnoreCase("Finalized")) {
 
             //Copy ASN to rceive
 
-          //  Receive receive = null;
-           // receive.copyAsnValues(getById(asn.getId()));
-
+            //  Receive receive = null;
+            // receive.copyAsnValues(getById(asn.getId()));
 
 
             Receive res = new Receive();
@@ -117,7 +114,7 @@ public class AsnService {
             res.setPoDate(asn.getAsndate());
             res.setSupplierId(asn.getSupplierid());
             res.setCurrencyId(asn.getCurrencyId());
-           // res.setReceiveDate(asn.getAsndate());
+            // res.setReceiveDate(asn.getAsndate());
             res.setBlawBnumber(asn.getBlawbnumber());
             res.setCountry("Tanzania");
             res.setFlightVesselNumber(asn.getFlightvesselnumber());
@@ -136,46 +133,48 @@ public class AsnService {
             res.setSupplier(asn.getSupplier());
             res.setPurchaseOrderId(null);
             res.setReceiveLineItems(null);
-            receiveService.save(res, asn.getModifiedBy(),asn, false);
-           // notificationService.sendAsnFinalizeEmail();
+            receiveService.save(res, asn.getModifiedBy(), asn, false);
+            // notificationService.sendAsnFinalizeEmail();
 
         }
-       // System.out.println("---- Output--- "+asn.getExpectedarrivaldate());
+        // System.out.println("---- Output--- "+asn.getExpectedarrivaldate());
 
     }
 
-    public Asn getById (Long id) {
+    public Asn getById(Long id) {
         Asn asn = repository.getById(id);
-        if(asn !=null) {
+        if (asn != null) {
             asn.setPurchaseDocuments(purchaseDocumentService.getByAsnId(id));
 
             return asn;
         }
         return null;
     }
-    public List<Asn> getAll(){
 
-        return  repository.getAll();
+    public List<Asn> getAll() {
+
+        return repository.getAll();
     }
 
     public Integer getTotalSearchResultCount(String searchParam, String column) {
-        if(column.equals("asnumber")){
+        if (column.equals("asnumber")) {
             return repository.getTotalSearchResultCountByAsnumber(searchParam);
         }
-        if(column.equals("ponumber")){
+        if (column.equals("ponumber")) {
             return repository.getTotalSearchResultCountByPonumber(searchParam);
         }
-        if(column.equals("supplier")){
+        if (column.equals("supplier")) {
             return repository.getTotalSearchResultCountBySupplier(searchParam);
         }
-        if(column.equals("all")){
+        if (column.equals("all")) {
             return repository.getTotalSearchResultCountAll();
         }
         return 0;
     }
+
     public List<Asn> searchBy(String searchParam, String column, Pagination pagination) {
 
-        if(column.equals("all")){
+        if (column.equals("all")) {
             return repository.getAll();
         }
         return repository.searchBy(searchParam, column, pagination);
@@ -187,14 +186,14 @@ public class AsnService {
     }
 
     public void deleteById(Long id) {
-       repository.deleteById(id);
+        repository.deleteById(id);
     }
 
     public void disableAsnBy(Long id) {
         repository.disableAsnBy(id);
     }
 
-    public List<CurrencyDTO> getAllCurrencies(){
+    public List<CurrencyDTO> getAllCurrencies() {
 
         return repository.getAllCurrencies();
     }
@@ -203,7 +202,25 @@ public class AsnService {
         return repository.getAllClearingAgents();
     }
 
+    public void updateExpectedArrivalAlert() {
+
+        repository.updateExpectedArrivalAlert();
+       // sendEmailNotification();
+    }
  /*   public void saveDocument(PurchaseDocument d) {
         purchaseDocumentService.save(d);
     }*/
+
+    public String sendEmailNotification() {
+
+       List<User> user = userService.getUsersWithRight("WMS_RECEIVE_CONSIGNMENT");
+       List<ExpectedArrivalDTO> dtoList = repository.getExpectedToReceive();
+       if(!dtoList.isEmpty() && !user.isEmpty()) {
+           for(ExpectedArrivalDTO dto: dtoList)
+            notificationServices.sendExpectedArrivalNotification(dto, user);
+       }
+       return null;
+    }
+
+
 }

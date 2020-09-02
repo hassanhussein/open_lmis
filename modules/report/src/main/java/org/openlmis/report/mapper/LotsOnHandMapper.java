@@ -87,8 +87,8 @@ public interface LotsOnHandMapper {
             "            r.country as rec_country, \n" +
             "            r.flightvesselnumber as rec_flightvesselnumber, \n" +
             "            p.name as rec_portofarrival, \n" +
-            "            to_char(r.expectedarrivaldate, 'DD/MM/YYYY HH:MI') as rec_expectedarrivaldate, \n" +
-            "            to_char(r.actualarrivaldate, 'DD/MM/YYYY HH:MI') as rec_actualarrivaldate, \n" +
+            "            to_char(r.expectedarrivaldate, 'DD/MM/YYYY HH24:MI') as rec_expectedarrivaldate, \n" +
+            "            to_char(r.actualarrivaldate, 'DD/MM/YYYY HH24:MI') as rec_actualarrivaldate, \n" +
             "            r.clearingagent as rec_clearingagent, \n" +
             "            r.shippingagent as rec_shippingagent, \n" +
             "            r.status as rec_status, \n" +

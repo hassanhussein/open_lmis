@@ -116,6 +116,7 @@ public class AsnController extends BaseController {
             asn.setCreatedBy(userId);
             asn.setModifiedBy(userId);
             asnService.save(asn, userId);
+            asnService.updateExpectedArrivalAlert();
             return success("message.success.warehouse.created");
 
         } catch (DataException e) {
@@ -184,6 +185,7 @@ public class AsnController extends BaseController {
         asn.setId(id);
         asn.setModifiedBy(loggedInUserId(request));
         asnService.save(asn, loggedInUserId(request));
+        asnService.updateExpectedArrivalAlert();
         return success("message.success.warehouse.updated");
 
     } catch (DataException e) {
@@ -401,6 +403,12 @@ public class AsnController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getAllClearingAgents(HttpServletRequest request) {
 
         return OpenLmisResponse.response("agents",asnService.getAllClearingAgents());
+    }
+
+    @RequestMapping(value = "/send-email-alert", method =GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> sendExpedtedEmailNotification(HttpServletRequest request) {
+
+        return OpenLmisResponse.response("email-alerts",asnService.sendEmailNotification());
     }
 
 }
