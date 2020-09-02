@@ -71,6 +71,7 @@ public class LookupController {
     public static final String REGIMEN_CONSTITUENT_DOSAGES = "regimen-constituent-dosages";
     private static final String PROGRAM_REFERENCE_DATA = "ProgramReferenceData";
 
+
     @Autowired
     private LookupService lookupService;
     @Autowired
@@ -356,7 +357,7 @@ public class LookupController {
      */
     @RequestMapping(value = "/rest-api/lookup/equipment_cold_chain_equipment_pqs_status")
     public ResponseEntity getAllColdChainEquipmentPqsStatuses() {
-        return RestResponse.response("equipment_cold_chain_equipment_pqs_status" , lookupService.getAllColdChainEquipmentPqsStatuses());
+        return RestResponse.response("equipment_cold_chain_equipment_pqs_status", lookupService.getAllColdChainEquipmentPqsStatuses());
     }
 
     @RequestMapping(value = "/rest-api/lookup/equipment_cold_chain_equipment_designations")
@@ -442,6 +443,11 @@ public class LookupController {
     @RequestMapping(value = "/rest-api/lookup/equipment-inventories")
     public ResponseEntity getAllEquipmentInventories() {
         return RestResponse.response("equipment-inventories", lookupService.getAllEquipmentInventories());
+    }
+
+    @RequestMapping(value = "/rest-api/lookup/equipment-inventories/{searchFacilityValue}/{facilityInfo}")
+    public ResponseEntity getAllEquipmentInventoriesById(@PathVariable(value = "searchFacilityValue") String searchFacilityValue, @PathVariable(value = "facilityInfo") String facilityInfo) {
+        return RestResponse.response("equipment-inventories", lookupService.getEquipmentInventoriesForFacility(searchFacilityValue, facilityInfo));
     }
 
 }

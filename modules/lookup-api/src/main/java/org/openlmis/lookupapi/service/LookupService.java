@@ -51,6 +51,8 @@ import java.util.List;
 @NoArgsConstructor
 public class LookupService {
 
+    public static final String FACILITY_CODE = "code";
+    public static final String FACILITY_ID = "id";
 
     @Autowired
     private ProgramReportMapper programMapper;
@@ -135,7 +137,7 @@ public class LookupService {
     @Autowired
     ColdChainEquipmentPqsStatusRepository equipmentPqsStatusRepository;
     @Autowired
-    private  DonorRepository donorRepository;
+    private DonorRepository donorRepository;
 
     public List<Program> getAllPrograms() {
         return programMapper.getAll();
@@ -342,5 +344,19 @@ public class LookupService {
 
     public List<Donor> getAllDonors() {
         return donorRepository.getAll();
+    }
+
+
+    public List<EquipmentInventory> getEquipmentInventoriesForFacility(String searchFacilityValue, String facilityInfo) {
+        if (searchFacilityValue != null && !searchFacilityValue.trim().equals("")) {
+            if (searchFacilityValue.equals(FACILITY_CODE)) {
+                return inventoryRepository.getEquipmentInventoriesForFacilityByCode(facilityInfo);
+            } else if (searchFacilityValue.equals(FACILITY_ID)) {
+                Long facilityId = Long.parseLong(facilityInfo);
+                return inventoryRepository.getEquipmentInventoriesForFacilityId(facilityId);
+
+            }
+        }
+        return null;
     }
 }

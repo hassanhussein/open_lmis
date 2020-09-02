@@ -179,4 +179,12 @@ public class EquipmentInventoryRepository {
     public List<EquipmentInventory> getAllEquipmentInventories() {
         return mapper.getAllEquipmentInventories();
     }
+
+    public List<EquipmentInventory> getEquipmentInventoriesForFacilityByCode(String facilityInfo) {
+        return mapper.getEquipmentInventoriesForFacilityByCode( facilityInfo);
+    }
+
+    public List<EquipmentInventory> getEquipmentInventoriesForFacilityId(Long facilityId) {
+        return mapper.getEquipmentInventoriesForFacilityId( facilityId);
+    }
 }

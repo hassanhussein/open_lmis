@@ -141,4 +141,12 @@ public interface EquipmentInventoryMapper {
 
     @Select("select * from equipment_inventories ")
     List<EquipmentInventory> getAllEquipmentInventories();
+
+    @Select("select * from equipment_inventories  " +
+            " where facilityid =(select id from facilities where code= #{facilityCode})")
+    List<EquipmentInventory> getEquipmentInventoriesForFacilityByCode(String facilityCode);
+
+    @Select("select * from equipment_inventories " +
+            " where facilityid= #{facilityId}")
+    List<EquipmentInventory> getEquipmentInventoriesForFacilityId(Long facilityId);
 }
