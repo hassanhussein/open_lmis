@@ -457,7 +457,9 @@
                                             <td class="cell-input col-general">
                                                 <input type="text" numeric-validator="positiveInteger"
                                                        ng-disabled="!product.lots[0].boxCounted || product.lots[0].boxCounted==0 || viewMode"
-                                                       ng-model="product.lots[0].quantity" style="width:110px">
+                                                       ng-model="product.lots[0].quantity" name="quantity" ng-required="true" style="width:110px">
+                                                <span class="field-error" ng-show="quantity.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
                                             </td>
                                             <td rowspan="{{product.lots.length}}" class="cell-input col-general"
                                                 style="padding-left:1px;">

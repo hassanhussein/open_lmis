@@ -333,7 +333,7 @@ if(lot.failedQuantity==="" || lot.failedQuantity===0){
 //     reset faled location
 //
 }
-failed
+//failed
 };
 
 

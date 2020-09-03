@@ -59,6 +59,8 @@ $scope.vvmList=vvmList;
 
     ];
 
+    $scope.adjustmentReasonsCopy=angular.copy($scope.adjustmentReasons);
+
     $scope.stockMovement = {};
     $scope.stockMovement.products = [];
 
@@ -131,6 +133,8 @@ $scope.vvmList=vvmList;
         }
 
 
+
+
     };
 
     $scope.showSOH = function (lotId) {
@@ -191,8 +195,19 @@ $scope.stockMovement.quantity="";
             $scope.stockMovement.lotId = queryResults.lotId;
             $scope.stockMovement.stockCardId = queryResults.stockCardId;
 
+            if($scope.stockMovement.soh===0){
+                var positiveReason=$scope.adjustmentReasons[0];
+                $scope.adjustmentReasons=[];
+                $scope.adjustmentReasons.push(positiveReason);
+            }else{
+                $scope.adjustmentReasons=angular.copy($scope.adjustmentReasonsCopy);
+            }
+
+
 
         }
+
+
 
     };
 
