@@ -47,5 +47,23 @@ angular.module('manualTestTypes', ['openlmis', 'ui.bootstrap', 'ui.bootstrap.dro
         controller: ManualTestResultTypeController,
         templateUrl: 'partials/create-result-type.html',
         mode: 'EDIT'
+    }).when('/chat', {
+        controller: ChatController,
+        templateUrl: 'partials/chat.html',
+        mode: 'chat'
     }).otherwise({redirectTo: '/list'});
-}]);
+
+}]).run(function($rootScope,$http, $sce) {
+    var url = "https://jshz.3cx.co.za:5001/";
+    var trust = $sce.trustAsResourceUrl(url);
+
+    $http.jsonp(trust,{params: {format:'jsonp'}})
+        .then(function(response) {
+            console.log(response);
+            $rootScope.response = response.data;
+        }).catch(function(response) {
+        console.log(response);
+        $rootScope.response = 'ERROR: ' + response.status;
+    });
+});
+
