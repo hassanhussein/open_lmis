@@ -78,18 +78,18 @@
                             <td data-title="'#'" class="number" style="width:20px" >{{ row.no }}</td>
                             <td data-title="getLocalMessage('label.district')"  ng-class="{'consumption-parent' : toggel}" style="width:100px" sortable="district" >{{ row.district }}</td>
                             <td data-title="getLocalMessage('label.product.name')" ng-class="{'consumption-parent' : toggel}" style="width:40%" sortable="product" >{{ row.product }}</td>
-                            <td data-title="getLocalMessage('label.consumption')" ng-class="{'consumption-parent' : toggel}" class="number" style="width:80px" sortable="consumption"  >{{ row.consumption | number }}</td>
+                            <td data-title="getLocalMessage('label.consumption')" ng-class="{'consumption-parent' : toggel}" class="number" ng-style="{'background-color':row.flagcolor, 'width':'80px'}"  sortable="consumption"  >{{ row.consumption | number }}</td>
 
-                            <td data-title="getLocalMessage('label.percentage')" ng-class="{'consumption-parent' : toggel}" class="number" style="width:80px" sortable="totalPercentage"  >{{ row.totalPercentage | number : 2 }} %</td>
+                            <td data-title="getLocalMessage('label.percentage')" ng-class="{'consumption-parent' : toggel}" class="number" ng-style="{'background-color':row.flagcolor, 'width':'80px'}"  sortable="totalPercentage"  >{{ row.totalPercentage | number : 2 }} %</td>
 
                         </tr>
                         <tr ng-repeat-end ng-repeat="r in row.facilityConsumption" ng-show="toggel">
                             <td  class="sub-child" rowspan="{{row.facilityConsumption.length}}" ng-if="$index == 0"></td>
                             <td  class="sub-child"  >{{ r.facility }}</td>
                             <td   class="sub-child">{{ r.product }}</td>
-                            <td   class="number sub-child" >{{ r.consumption | number }}</td>
+                            <td   class="number " ng-style="{'background-color':r.flagcolor }">{{ r.consumption | number }}</td>
 
-                            <td  class="number sub-child">{{ r.totalPercentage | number : 2 }} %</td>
+                            <td  class="number " ng-style="{'background-color':r.flagcolor}">{{ r.totalPercentage | number : 2 }} %</td>
                         </tr>
                         </tbody>
                     </table>

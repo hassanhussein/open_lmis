@@ -27,43 +27,43 @@ public class DistrictConsumptionQueryBuilder {
     DistrictConsumptionReportParam filter = (DistrictConsumptionReportParam) params.get("filterCriteria");
 
     BEGIN();
-    SELECT("p.code");
-    SELECT("p.primaryName || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
-    SELECT("d.district_name as district");
-    SELECT(" d.district_id ");
-    SELECT("sum(li.quantityDispensed) dispensed");
-    SELECT("sum(li.normalizedConsumption) consumption");
-    SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
-    SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
-    FROM("requisition_line_items li");
-    INNER_JOIN("requisitions r on r.id = li.rnrid");
-    INNER_JOIN("facilities f on r.facilityId = f.id ");
-    INNER_JOIN("facility_types ft ON f.typeid = ft.id ");
-    INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
-    INNER_JOIN("processing_periods pp on pp.id = r.periodId");
-    INNER_JOIN("products p on p.code::text = li.productCode::text");
-    INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
-
-
-    WHERE(programIsFilteredBy("r.programId"));
-    WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
-    WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));
-    WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+    SELECT("r.productcode code");
+    SELECT("r.product as product");
+    SELECT("r.district as district");
+    SELECT(" r.districtid as district_id ");
+    SELECT("sum(r.dispensed) dispensed");
+    SELECT("sum(r.consumption) consumption");
+    SELECT("ceil(sum(r.dispensed) / (sum(r.packsize)/count(r.productcode))::float) consumptionInPacks");
+    SELECT("ceil(sum(r.consumption) / (sum(r.packsize)/count(r.productcode))::float) adjustedConsumptionInPacks ");
+    SELECT("sum(r.amc) amc");
+    SELECT(" round(100*(sum(r.consumption) - COALESCE(sum(r.amc), 0)) /" +
+            " COALESCE(NULLIF(sum(r.amc), 0), 1)::numeric, 4) AS consumptionrate");
+    SELECT("( SELECT df.description" +
+            "           FROM data_range_flags_configuration df\n" +
+            "          WHERE LOWER(category)= 'consumption' and df.range @> round(100*\n" +
+            "  (" +
+            "sum(r.consumption)- COALESCE(sum(r.amc), 0)) / COALESCE(NULLIF(sum(r.amc), 0), 1)\n" +
+            " , 4)::numeric) AS flagcolor");
+    FROM("mv_requisition r");
+    WHERE(programIsFilteredBy("r.programid"));
+    WHERE(userHasPermissionOnFacilityBy("r.facilityid"));
     WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
-    WHERE(productFilteredBy("p.id"));
+    WHERE(productFilteredBy("r.productid"));
+    WHERE(periodStartDateRangeFilteredBy("r.startdate", filter.getPeriodStart().trim()));
+    WHERE(periodEndDateRangeFilteredBy("r.enddate", filter.getPeriodEnd().trim()));
 
     if(filter.getProductCategory() != 0){
-      WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
+      WHERE( productCategoryIsFilteredBy("r.categoryid"));
+    }
+
+    if (filter.getZone() != 0) {
+      WHERE( geoMvZoneIsFilteredBy("r") );
     }
 
     if(filter.getExcludeDHO())
-      WHERE("ft.code not in ('DHO','DHTM', 'MSL') "); // exclude DHOs and DHMTs
+      WHERE("r.facilitytypeid not in (select id from facility_types where code in ('DHO','DHTM', 'MSL')) "); // exclude DHOs and DHMTs
 
-    if (filter.getZone() != 0) {
-      WHERE( geoZoneIsFilteredBy("d") );
-    }
-
-    GROUP_BY("p.code, p.primaryName, p.dispensingunit, d.district_name, d.district_id");
+    GROUP_BY("r.productcode, r.product, r.district, r.districtid");
     return String.format( "select sq.*, " +
         " (sq.consumption / sum(sq.consumption) over ()) * 100 as totalPercentage " +
         "from ( %s ) as sq " +
@@ -74,44 +74,45 @@ public class DistrictConsumptionQueryBuilder {
     DistrictConsumptionReportParam filter = (DistrictConsumptionReportParam) params.get("filterCriteria");
 
     BEGIN();
-    SELECT("p.code");
-    SELECT("p.primaryName || ' (' || coalesce(p.dispensingunit, '-') || ')' as product");
-    SELECT("d.district_name as district");
-    SELECT(" d.district_id ");
-    SELECT(" f.name as facility ");
-    SELECT("sum(li.quantityDispensed) dispensed");
-    SELECT("sum(li.normalizedConsumption) consumption");
-    SELECT("ceil(sum(li.quantityDispensed) / (sum(li.packsize)/count(li.productCode))::float) consumptionInPacks");
-    SELECT("ceil(sum(li.normalizedConsumption) / (sum(li.packsize)/count(li.productCode))::float) adjustedConsumptionInPacks ");
-    FROM("requisition_line_items li");
-    INNER_JOIN("requisitions r on r.id = li.rnrid");
-    INNER_JOIN("facilities f on r.facilityId = f.id ");
-    INNER_JOIN("facility_types ft ON f.typeid = ft.id ");
-    INNER_JOIN("vw_districts d on d.district_id = f.geographicZoneId ");
-    INNER_JOIN("processing_periods pp on pp.id = r.periodId");
-    INNER_JOIN("products p on p.code::text = li.productCode::text");
-    INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
+    SELECT("r.productcode code");
+    SELECT("r.product as product");
+    SELECT("r.district as district");
+    SELECT(" r.districtid as district_id ");
+    SELECT(" r.facility as facility ");
+    SELECT("sum(r.dispensed) dispensed");
+    SELECT("sum(r.consumption) consumption");
+    SELECT("ceil(sum(r.dispensed) / (sum(r.packsize)/count(r.productcode))::float) consumptionInPacks");
+    SELECT("ceil(sum(r.consumption) / (sum(r.packsize)/count(r.productcode))::float) adjustedConsumptionInPacks ");
+    SELECT("sum(r.amc) amc");
+    SELECT(" round(100*(sum(r.consumption) - COALESCE(sum(r.amc), 0)) /" +
+            " COALESCE(NULLIF(sum(r.amc), 0), 1)::numeric, 4) AS consumptionrate");
+    SELECT("( SELECT df.description" +
+            "           FROM data_range_flags_configuration df\n" +
+            "          WHERE LOWER(category)= 'consumption' and df.range @> round(100*\n" +
+            "  (" +
+            "sum(r.consumption)- COALESCE(sum(r.amc), 0)) / COALESCE(NULLIF(sum(r.amc), 0), 1)\n" +
+            " , 4)::numeric) AS flagcolor");
+    FROM("mv_requisition r");
 
-
-    WHERE(programIsFilteredBy("r.programId"));
-    WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
+    WHERE(programIsFilteredBy("r.programid"));
+    WHERE(userHasPermissionOnFacilityBy("r.facilityid"));
     WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
-    WHERE(productFilteredBy("p.id"));
-    WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
-    WHERE(periodEndDateRangeFilteredBy("pp.enddate", filter.getPeriodEnd().trim()));
+    WHERE(productFilteredBy("r.productid"));
+    WHERE(periodStartDateRangeFilteredBy("r.startdate", filter.getPeriodStart().trim()));
+    WHERE(periodEndDateRangeFilteredBy("r.enddate", filter.getPeriodEnd().trim()));
 
     if(filter.getProductCategory() != 0){
-      WHERE( productCategoryIsFilteredBy("ppg.productCategoryId"));
+      WHERE( productCategoryIsFilteredBy("r.categoryid"));
     }
 
     if (filter.getZone() != 0) {
-      WHERE( geoZoneIsFilteredBy("d") );
+      WHERE( geoMvZoneIsFilteredBy("r") );
     }
 
     if(filter.getExcludeDHO())
-      WHERE("ft.code not in ('DHO','DHTM', 'MSL') "); // exclude DHOs and DHMTs
+      WHERE("r.facilitytypeid not in (select id from facility_types where code in ('DHO','DHTM', 'MSL')) "); // exclude DHOs and DHMTs
 
-    GROUP_BY("p.code, p.primaryName, p.dispensingunit, d.district_name, d.district_id, f.name");
+    GROUP_BY("r.productcode, r.product, r.district, r.districtid, r.facility");
     return String.format( "select sq.*, " +
             " (sq.consumption / sum(sq.consumption) over ()) * 100 as totalPercentage " +
             "from ( %s ) as sq " +

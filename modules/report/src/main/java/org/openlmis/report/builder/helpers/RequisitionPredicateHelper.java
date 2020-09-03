@@ -38,6 +38,9 @@ public class RequisitionPredicateHelper {
   public static String geoZoneIsFilteredBy(String viewAlias) {
     return String.format("(%1$s.zone_id = #{filterCriteria.zone} or %1$s.parent = #{filterCriteria.zone} or %1$s.region_id = #{filterCriteria.zone} or %1$s.district_id = #{filterCriteria.zone})", viewAlias);
   }
+  public static String geoMvZoneIsFilteredBy(String viewAlias) {
+    return String.format("(%1$s.zoneid = #{filterCriteria.zone} or %1$s.parent = #{filterCriteria.zone} or %1$s.provinceid = #{filterCriteria.zone} or %1$s.districtid = #{filterCriteria.zone})", viewAlias);
+  }
   public static String geoZoneIsFilteredBy(String regCol,String parcol,String zoneCol,String disCol) {
     return String.format("(%1$s = #{filterCriteria.zone} or %2$s = #{filterCriteria.zone} " +
             " or %3$s = #{filterCriteria.zone} or %4$s = #{filterCriteria.zone})", regCol,parcol,zoneCol,disCol);
