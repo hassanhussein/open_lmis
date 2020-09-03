@@ -869,6 +869,7 @@ var docs = [];
 //        if(){
 //            return;
 //        }
+        console.log($scope.asnForm);
       if ($scope.asnForm.$error.required ||docs.length < parseInt(3,10)||!$scope.quantitiesValid()) {
             $scope.showError = true;
             $scope.error = 'form.error';

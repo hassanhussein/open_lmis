@@ -94,7 +94,7 @@
                 <div class="form-field row-fluid">
                     <select id="lotId" name="lotId" ui-select2="{width: '100%'}" ng-disabled="!stockMovement.productId" ng-model="stockMovement.lotId"
                             ng-change="showSOH(stockMovement.lotId)"
-                            ng-required="true"   ng-options="lot.lotId as lot.lotNumber for lot in lotsToDisplay"
+                            ng-required="true"   ng-options="lot.lotId as lot.lotVvm for lot in lotsToDisplay"
 
                     >
                         <option value="">--Select Lot--</option>
