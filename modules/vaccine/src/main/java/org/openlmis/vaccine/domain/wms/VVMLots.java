@@ -10,12 +10,13 @@ import org.openlmis.vaccine.dto.LocationDTO;
 import java.util.Date;
 import java.util.List;
 
-
 @EqualsAndHashCode(callSuper = false)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InspectionLot extends BaseModel {
+public class VVMLots extends BaseModel {
+    private Long vvmId;
+    private Integer quantity;
 
     private InspectionLineItem lineItem;
 
@@ -30,8 +31,6 @@ public class InspectionLot extends BaseModel {
     private Long failQuantity;
     private Long failedQuantity;
     private Long failedReason;
-
-
     private Long failReason;
 
     private Long failLocationId;
@@ -44,11 +43,9 @@ public class InspectionLot extends BaseModel {
 
     private Integer receivedQuantity;
 
-    private List<InspectionLotProblem>problems;
+    private List<InspectionLotProblem> problems;
 
     private String boxNumber;
-
-    private List<VVMLots> vvm;
 
     private LocationDTO location;
 
