@@ -134,6 +134,13 @@ $scope.displayDocumentTypes  = filteredData;
 
     };
 
+
+    $scope.getVvmName=function(vvmId){
+
+    return _.findWhere($scope.vvmStatusList,{id:vvmId}).name;
+
+    };696000
+
   function validateAnsNumber(asnCode,document) {
 
     if(asnCode === undefined) {
