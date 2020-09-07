@@ -27,7 +27,6 @@ public class InspectionLineItemRepository {
             for (InspectionLot lot : lineItem.getLots()) {
                 inspectionLotRepository.update(lot);
                 //System.out.println("passed: "+lot.getVvm());
-
                 for(VVMLots lotVVm : lot.getVvm()){
                     lotVVm.setInspectionLineItemId(lot.getInspectionLineItemId());
                     lotVVm.setLotNumber(lot.getLotNumber());
