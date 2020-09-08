@@ -90,6 +90,7 @@ public class TransferService {
         List<StockCardEntryKV> vl = new ArrayList<>();
         StockCardEntryKV values = new StockCardEntryKV();
         values.setKeyColumn("issuedto");
+        entry.setIsTransferred(true);
         LocationDTO dto = wmsLocationService.getByLocationId(item.getToBin());
         values.setValueColumn(dto.getName());
         vl.add(values);
@@ -111,6 +112,7 @@ public class TransferService {
             entry2.setLotId(item.getLotId());
             List<StockCardEntryKV> vl2 = new ArrayList<>();
             StockCardEntryKV values2 = new StockCardEntryKV();
+            entry2.setIsTransferred(true);
             values2.setKeyColumn("receivedfrom");
             LocationDTO dto2 = wmsLocationService.getByLocationId(item.getFromBin());
             values2.setValueColumn(dto2.getName());
@@ -131,6 +133,7 @@ public class TransferService {
             List<StockCardEntryKV> vl2 = new ArrayList<>();
             StockCardEntryKV values2 = new StockCardEntryKV();
             values2.setKeyColumn("receivedfrom");
+            entry2.setIsTransferred(true);
             LocationDTO dto2 = wmsLocationService.getByLocationId(item.getFromBin());
             values2.setValueColumn(dto2.getName());
             vl2.add(values2);

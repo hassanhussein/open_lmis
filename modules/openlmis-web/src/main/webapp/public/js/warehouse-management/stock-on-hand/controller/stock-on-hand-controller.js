@@ -61,11 +61,12 @@ function StockOnHandController($scope, $window, $location, WareHouseList, GetSoh
 
 
     $scope.openLedger = function (product) {
+    console.log(product.product);
         $wareHouseId = $scope.warehouseId;
 
         sessionStorage.setItem("warehouseId", $wareHouseId);
 
-        $location.path('stock-ledger/' + $scope.warehouseId + '/' + product.productId + '/' + new Date().getFullYear());
+        $location.path('stock-ledger/' + $scope.warehouseId + '/' + product.productId + '/' + new Date().getFullYear()) + '/' + product.product;
 
     };
 

@@ -28,7 +28,7 @@
 
         <div class="form-field row-fluid">
 
-            <select ui-select2="{width: '90%'}" style="width:100px;" class="span11"  ng-required="true"  name="year" id="startYear" ng-model="currentYear" ng-change="changeByYear()"
+            <select ui-select2="{width: '90%'}" style="width:100px;" class="span11"  ng-required="true"  name="year" id="startYear" ng-model="currentYear" ng-change="changeByYear(currentYear)"
             >
                 <option ng-repeat="year in startYears" value="{{year}}" ng-selected="currentYear==year" >{{year}}</option>
             </select>
@@ -37,13 +37,21 @@
                   openlmis-message="missing.value"></span>
         </div>
     </div>
+    <div class="clearboth"></div>
+    <div class="span3 form-field row-fluid"><span><strong>Product: </strong>{{product}}</span></div>
 </div>
-
 
 
 <div class="clear-fix rnr-table">
 
-    <table class="table-bordered table table-striped">
+    <table class="table table-bordered"
+           ng-show="ledgers == undefined || ledgers.length == 0">
+        <tr>
+            <td>No data to show under selected filters</td>
+        </tr>
+    </table>
+
+    <table class="table-bordered table table-striped" ng-show="ledgers.length > 0">
         <thead>
         <tr>
             <th style="width:15px !important; min-width:15px !important">
@@ -104,9 +112,9 @@ Stock on Hand
         <td class="col-lot cell-input  disabled padding2px">{{ledger.date | date:'dd-MM-yyyy'}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.frombin}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.tobin}}</td>
-        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.received | number}}</td>
-        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.issued | number}}</td>
-        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.adjustment | number}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{(ledger.received==0)?'':ledger.received}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{(ledger.issued==0)?'':ledger.issued}}</td>
+        <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{(ledger.adjustment==0)?'':ledger.adjustment}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.lotnumber}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.expirationdate}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.vvm}}</td>

@@ -9,16 +9,22 @@
  */
 
 
-function StockLedgerController($scope, stockLedgers,$location,OperationYears) {
+function StockLedgerController($scope,$routeParams, stockLedgers,$location,OperationYears,GetStockLedgerReport, GetProductById) {
 
 $scope.ledgers = [];
 $scope.ledgers = stockLedgers;
 
  $scope.currentYear = new Date().getFullYear();
 
- console.log($scope.currentYear);
+ console.log($routeParams);
 
+GetProductById.get({id:parseInt($routeParams.productId,10) }, function(data){
 
+$scope.product = data.productDTO.product.primaryName;
+
+console.log(data.productDTO.product.primaryName);
+
+});
 
 
    OperationYears.get(function (data) {
@@ -31,6 +37,25 @@ $scope.ledgers = stockLedgers;
 
 
     $scope.changeByYear = function() {
+
+        var params = {};
+        params.warehouseId = parseInt($routeParams.warehouseId,10);
+        params.productId = parseInt($routeParams.productId,10);
+        params.year = parseInt($scope.currentYear,10);
+
+        $scope.ledgers = [];
+
+        GetStockLedgerReport.get(params, function(data) {
+
+                if(!isUndefined(data.ledgers) ) {
+
+                    $scope.ledgers = data.ledgers;
+
+
+                }
+
+            }, {});
+
 
 
     };
@@ -45,7 +70,7 @@ $scope.ledgers = stockLedgers;
 StockLedgerController.resolve = {
 
     stockLedgers:function ($q, $route, $timeout, GetStockLedgerReport) {
-        console.log($route);
+        console.log($route.current.params);
         var deferred = $q.defer();
 
           $timeout(function () {
@@ -56,6 +81,7 @@ StockLedgerController.resolve = {
           params.warehouseId=parseInt($route.current.params.warehouseId,10);
           params.productId=parseInt($route.current.params.productId,10);
           params.year=parseInt($route.current.params.year,10);
+          params.product = $route.current.params.product;
 
           GetStockLedgerReport.get(params, function(data) {
 

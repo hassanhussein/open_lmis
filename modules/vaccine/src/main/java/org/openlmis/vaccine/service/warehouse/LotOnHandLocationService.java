@@ -117,6 +117,7 @@ public class LotOnHandLocationService {
                 entry.setCreatedBy(userId);
                 entry.setModifiedBy(userId);
                 entry.setType(StockCardEntryType.CREDIT);
+                entry.setIsTransferred(false);
 
                 List<StockCardEntryKV> vl = new ArrayList<>();
                 StockCardEntryKV values = new StockCardEntryKV();

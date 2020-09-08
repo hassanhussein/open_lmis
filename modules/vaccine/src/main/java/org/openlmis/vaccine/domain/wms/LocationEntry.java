@@ -20,7 +20,7 @@ public class LocationEntry extends BaseModel {
    private Long vvmId;
    private Long stockCardId;
    private Long lotId;
-
+   private Boolean isTransferred;
 
    @JsonIgnore
    private List<StockCardEntryKV> keyValues;

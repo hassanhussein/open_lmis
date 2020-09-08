@@ -12,9 +12,9 @@ public interface LocationEntryMapper {
 
     @Insert("INSERT INTO public.lot_location_entries(\n" +
             "            locationId, type, quantity, vvmId, stockCardId, lotId, createdBy, \n" +
-            "            createdDate, modifiedBy, modifiedDate)\n" +
+            "            createdDate, modifiedBy, modifiedDate,isTransferred)\n" +
             "    VALUES (#{locationId}, #{type}, #{quantity},#{vvmId},#{stockCardId},#{lotId}, #{createdBy}, NOW(),\n" +
-            "                     #{modifiedBy}, NOW());")
+            "                     #{modifiedBy}, NOW(), #{isTransferred});")
     @Options(useGeneratedKeys = true)
     int insert(LocationEntry entry);
 
