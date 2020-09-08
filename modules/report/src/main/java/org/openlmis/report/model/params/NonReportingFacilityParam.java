@@ -38,5 +38,6 @@ public class NonReportingFacilityParam
   private Long facilityType;
   private  Long facilityOwner;
   private String periodStart;
+  private Boolean feFacility;
 
 }

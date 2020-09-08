@@ -286,33 +286,33 @@ public class ReportLookupService {
   }
 
 
-  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone, Long facilityOperator,Long facilityOwner, Long userId) {
+  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone, Long facilityOperator,Long facilityOwner,Boolean feFacility, Long userId) {
     // this method does not work if no program is specified
     if (program == 0L) {
       return null;
     }
 
     if (schedule == 0 && type == 0) {
-      return facilityReportMapper.getFacilitiesByProgram(program, zone, facilityOperator, facilityOwner, userId);
+      return facilityReportMapper.getFacilitiesByProgram(program, zone, facilityOperator, facilityOwner,feFacility, userId);
     }
 
     if (type == 0 && requisitionGroup == 0) {
-      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone, facilityOperator, facilityOwner, userId);
+      return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone, facilityOperator, facilityOwner,feFacility, userId);
     }
 
     if (type == 0 && requisitionGroup != 0) {
-      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, facilityOperator, facilityOwner, userId);
+      return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, facilityOperator, facilityOwner,feFacility, userId);
     }
 
     if (requisitionGroup == 0 && type != 0) {
-      return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, facilityOwner,userId,  type);
+      return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, facilityOwner,feFacility,userId,  type);
     }
 
     if (requisitionGroup == 0) {
-      return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, facilityOperator, facilityOwner, userId);
+      return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, facilityOperator, facilityOwner,feFacility, userId);
     }
 
-    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone, facilityOperator,facilityOwner);
+    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone, facilityOperator,facilityOwner,feFacility);
   }
 
 
@@ -557,11 +557,12 @@ public class ReportLookupService {
     long type;
     long facilityOperator = 0;
     long facilityOwner = 0;
+    Boolean feFacility= false;
     program = StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]);
     zone = StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Long.parseLong(filterCriteria.get("zoneId")[0]);
     type = StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("facilityTypeId")[0]);
 
-    facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator,facilityOwner, userId, type);
+    facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator,facilityOwner,feFacility, userId, type);
 
     return facilitiesList;
   }

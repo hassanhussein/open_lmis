@@ -64,7 +64,16 @@
         </div>
     </div>
 </script>
+<script type="text/ng-template" id="filter-fe-facility-template">
+    <div>
+        <label for="feFacilitiy" class="labels" openlmis-message="label.load.facility.configured.facilities"><span ng-show="requiredFilters.facilityType" class="label-required">*</span></label>
+        <div>
+            <input id="feFacilitiy" type="checkbox" ng-model="filter.feFacility" ng-change="notifyFilterChanged('fe-facility-changed');">
 
+            </input>
+        </div>
+    </div>
+</script>
 <script type="text/ng-template" id="filter-facility-template">
     <div>
         <label for="facility" class="labels check-box">

@@ -92,6 +92,9 @@ public class ConsumptionBuilder {
         } else {
             predicate.append(" and r.emergency =" + filter.getIsEmergency());
         }
+        if(filter.getFeFacility()){
+            predicate.append(" and r.feconfigured =" + filter.getFeFacility());
+        }
         return predicate.toString();
     }
 

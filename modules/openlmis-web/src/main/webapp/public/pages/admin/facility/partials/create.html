@@ -654,6 +654,22 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-row clearfix">
+                    <div class="form-cell">
+                        <label openlmis-message="label.facility.configured.facilities"></label>
+
+                        <div class="form-field radio-group">
+                            <input id="feConfigurationEnabled" ng-model="facility.feConfigured" type="radio"
+                                   name="fe-configured"
+                                   ng-value="true"/>
+                            <strong openlmis-message="button.yes"></strong>
+                            &nbsp; &nbsp; &nbsp;
+                            <input ng-model="facility.feConfigured" type="radio" name="fe-configured"
+                                   ng-value="false"/>
+                            <strong openlmis-message="button.no"></strong>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="form-row clearfix">
                     <div class="form-cell full-width">

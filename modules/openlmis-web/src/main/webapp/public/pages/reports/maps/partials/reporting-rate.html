@@ -26,6 +26,7 @@
                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
                 <period-filter class="form-cell horizontalFilters" required="true"></period-filter>
+
                 <div class="form-cell horizontalFilters">
                     <label class="labels">Indicator</label>
                     <select style="width: 400px;" ng-model="filter.indicator_type" ng-change="OnFilterChanged()">
@@ -34,6 +35,7 @@
                         </option>
                     </select>
                 </div>
+                <fe-facility-filter class="form-cell horizontalFilters"></fe-facility-filter>
             </filter-container>
         </div>
         <div class="clear-both"></div>

@@ -307,11 +307,12 @@ public class ReportLookupController extends BaseController {
             @RequestParam(value = ZONE, defaultValue = "0", required = false) Long zone,
             @RequestParam(value = "facilityOperator", defaultValue = "0", required = false) Long facilityOperator,
             @RequestParam(value = "facilityOwner", defaultValue = "0", required = false) Long facilityOwner,
+            @RequestParam(value = "feFacility", defaultValue = "false", required = false) Boolean feFacility,
             HttpServletRequest request
 
     ) {
 
-        return OpenLmisResponse.response(FACILITIES, reportLookupService.getFacilities(program, schedule, type, requisitionGroup, zone, facilityOperator, facilityOwner, loggedInUserId(request)));
+        return OpenLmisResponse.response(FACILITIES, reportLookupService.getFacilities(program, schedule, type, requisitionGroup, zone, facilityOperator, facilityOwner,feFacility, loggedInUserId(request)));
     }
 
     @RequestMapping(value = "/facilitiesByType/{facilityTypeId}.json", method = GET, headers = BaseController.ACCEPT_JSON)

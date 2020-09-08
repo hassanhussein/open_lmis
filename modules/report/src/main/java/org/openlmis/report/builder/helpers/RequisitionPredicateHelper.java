@@ -71,6 +71,9 @@ public class RequisitionPredicateHelper {
   public static String facilityOwnerIdFilteredBy(String field) {
     return String.format("%s= #{filterCriteria.facilityOwner}", field);
   }
+  public static String feConfiguredfacilityFilteredBy(String field) {
+    return String.format("%s= #{filterCriteria.feFacility}", field);
+  }
   public static String regimenCategoryIsFilteredBy(String field) {
     return String.format("%s= #{filterCriteria.regimenCategory}", field);
   }

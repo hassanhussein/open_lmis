@@ -45,4 +45,5 @@ public class FacilityConsumptionReportParam
     private String crossTabColumn;
     private String crossColumnHeader;
     private Boolean adjustedConsumption;
+    private Boolean feFacility;
 }

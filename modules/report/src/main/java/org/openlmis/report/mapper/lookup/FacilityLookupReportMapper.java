@@ -49,9 +49,10 @@ public interface FacilityLookupReportMapper {
             "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and " +
             "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
             "                (o.id = #{facilityOperator} or #{facilityOperator} = 0) and " +
-            "  (fo.ownerid = #{ownerId} or #{ownerId} = 0) and " +
+            "  (fo.ownerid = #{ownerId} or #{ownerId} = 0) " +
+            " and (f.feconfigured=#{feFacility} or #{feFacility}=false)and " +
             "               ps.programid = #{program} and ps.active = true  order by f.name")
-    List<Facility> getFacilitiesByProgram(@Param("program") Long program, @Param("zone") Long zone, @Param("facilityOperator") Long facilityOperator, @Param("ownerId") Long ownerId, @Param("userId") Long userId);
+    List<Facility> getFacilitiesByProgram(@Param("program") Long program, @Param("zone") Long zone, @Param("facilityOperator") Long facilityOperator, @Param("ownerId") Long ownerId, @Param("feFacility") Boolean feFacility, @Param("userId") Long userId);
 
     @Select("SELECT f.id, f.code, f.name" +
             "   FROM " +
@@ -69,14 +70,15 @@ public interface FacilityLookupReportMapper {
             "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and " +
             "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
             "                (o.id = #{facilityOperator} or #{facilityOperator} = 0) and " +
-            "  (fo.ownerid = #{ownerId} or #{ownerId} = 0) and " +
+            "  (fo.ownerid = #{ownerId} or #{ownerId} = 0) and" +
+            " (f.feconfigured=#{feFacility} or #{feFacility}=false)and " +
             "             ps.programid = #{program} " +
             "             and rps.scheduleid = #{schedule} " +
             "             and ps.active = true  " +
             "        order by f.name")
     List<Facility> getFacilitiesByProgramSchedule(@Param("program") Long program, @Param("schedule") Long schedule,
                                                   @Param("zone") Long zone, @Param("facilityOperator") Long facilityOperator
-            , @Param("ownerId") Long ownerId,
+            , @Param("ownerId") Long ownerId, @Param("feFacility") Boolean feFacility,
 
                                                   @Param("userId") Long userId);
 
@@ -97,14 +99,15 @@ public interface FacilityLookupReportMapper {
             "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
             "                (o.id = #{facilityOperator} or #{facilityOperator} = 0) and " +
             "             ps.programid = #{program} " +
-            "  and    (fo.ownerid = #{ownerId} or #{ownerId} = 0)   "+
+            "  and    (fo.ownerid = #{ownerId} or #{ownerId} = 0)" +
+            "  and (f.feconfigured=#{feFacility} or #{feFacility}=false)   " +
             "             and rps.scheduleid = #{schedule} " +
             "             and ps.active = true  " +
             "             and f.id in (select facilityId from requisition_group_members where requisitionGroupId = #{requisitionGroup})  " +
             "        order by f.name")
     List<Facility> getFacilitiesByProgramScheduleAndRG(@Param("program") Long program, @Param("schedule") Long schedule,
                                                        @Param("requisitionGroup") Long requisitionGroup, @Param("zone") Long zone,
-                                                       @Param("facilityOperator") Long facilityOperator, @Param("ownerId") Long ownerId, @Param("userId") Long userId);
+                                                       @Param("facilityOperator") Long facilityOperator, @Param("ownerId") Long ownerId, @Param("feFacility") Boolean feFacility, @Param("userId") Long userId);
 
 
     @Select("SELECT f.id, f.code, f.name" +
@@ -123,7 +126,8 @@ public interface FacilityLookupReportMapper {
             "               f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and" +
             "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
             "                (o.id = #{facilityOperator} or #{facilityOperator} = 0) and " +
-            " (fo.ownerid = #{ownerId} or #{ownerId} = 0) and "+
+            " (fo.ownerid = #{ownerId} or #{ownerId} = 0)and " +
+            "(f.feconfigured=#{feFacility} or #{feFacility}=false) and " +
             "             ps.programid = #{program} " +
             "             and rps.scheduleid = #{schedule} " +
             "             and f.typeid = #{type} " +
@@ -131,7 +135,7 @@ public interface FacilityLookupReportMapper {
             "        order by f.name")
     List<Facility> getFacilitiesByPrgraomScheduleType(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type,
                                                       @Param("zone") Long zone, @Param("facilityOperator") Long facilityOperator,
-                                                      @Param("ownerId") Long ownerId,@Param("userId") Long userId);
+                                                      @Param("ownerId") Long ownerId,@Param("feFacility") Boolean feFacility, @Param("userId") Long userId);
 
     @Select("SELECT f.id, f.code, f.name" +
             "   FROM " +
@@ -150,7 +154,8 @@ public interface FacilityLookupReportMapper {
             "               (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and " +
             "                (o.id = #{facilityOperator} or #{facilityOperator} = 0) and " +
             "             ps.programid = #{program} " +
-            " and(fo.ownerid = #{ownerId} or #{ownerId} = 0)  "+
+            " and(fo.ownerid = #{ownerId} or #{ownerId} = 0) " +
+            "             and (f.feconfigured=#{feFacility} or #{feFacility}=false) " +
             "             and rps.scheduleid = #{schedule} " +
             "             and f.typeid = #{type} " +
             "             and ps.active = true  " +
@@ -158,7 +163,8 @@ public interface FacilityLookupReportMapper {
             "        order by f.name")
     List<Facility> getFacilitiesByPrgraomScheduleTypeAndRG(@Param("program") Long program, @Param("schedule") Long schedule, @Param("type") Long type,
                                                            @Param("requisitionGroup") Long requisitionGroup, @Param("zone") Long zone,
-                                                           @Param("facilityOperator") Long facilityOperator ,@Param("ownerId") Long ownerId);
+                                                           @Param("facilityOperator") Long facilityOperator, @Param("ownerId") Long ownerId,
+                                                           @Param("feFacility") Boolean feFacility);
 
 
     @Select("SELECT DISTINCT f.id, f.code, f.name\n" +
@@ -219,10 +225,13 @@ public interface FacilityLookupReportMapper {
             "  where  \n" +
             "       f.id in (select facility_id from vw_user_facilities where user_id = #{userId} and program_id = #{program}) and  \n" +
             "       (d.district_id = #{zone} or d.zone_id = #{zone} or d.region_id = #{zone} or d.parent = #{zone} or #{zone} = 0 ) and  \n" +
-            "        (o.id = #{facilityOperator} or #{facilityOperator} = 0) and " +
+            "        (o.id = #{facilityOperator} or #{facilityOperator} = 0) " +
+            "and (f.feconfigured=#{feFacility} or #{feFacility}=false)" +
+            "and " +
             "       ps.programid = #{program} and(fo.ownerid = #{ownerId} or #{ownerId} = 0)  and f.typeid = #{type} and ps.active = true  order by f.name")
     List<Facility> getFacilitiesByProgramZoneFacilityType(@Param("program") Long program, @Param("zone") Long zone, @Param("facilityOperator") Long facilityOperator,
                                                           @Param("ownerId") Long ownerId,
+                                                          @Param("feFacility") Boolean feFacility,
                                                           @Param("userId") Long userId, @Param("type") Long type);
 
     @Select("SELECT f.id, f.code, f.name  FROM facilities f " +

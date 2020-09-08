@@ -65,6 +65,9 @@ public class FacilityReportQueryBuilder {
             WHERE("F.id in (select m.facilityid from requisition_group_members m where m.requisitionGroupId in (select rpgs.requisitionGroupId from requisition_group_program_schedules rpgs where rpgs.programId = #{filterCriteria.program}) )");
             WHERE("ps.active = true");
         }
+        if(filter.getFeFacility()){
+            WHERE(feConfiguredfacilityFilteredBy("F.feconfigured"));
+        }
         String query = SQL();
         return query;
     }

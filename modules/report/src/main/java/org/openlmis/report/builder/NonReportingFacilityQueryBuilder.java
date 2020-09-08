@@ -155,6 +155,9 @@ public class NonReportingFacilityQueryBuilder {
         if (filterParams.getFacilityOwner() != 0) {
             WHERE(facilityOwnerIdFilteredBy("fo.ownerid"));
         }
+        if(filterParams.getFeFacility()){
+            WHERE(feConfiguredfacilityFilteredBy("facilities.feconfigured "));
+        }
     }
 
     public static String getPeriodListQueryString(NonReportingFacilityParam filterParam) {
