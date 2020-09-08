@@ -14,7 +14,20 @@ function CreatePatientLineItemController($scope) {
         return !((index > 0) && ($scope.rnr.patientLineItems.length > absIndex) && ($scope.rnr.patientLineItems[absIndex].category.name == $scope.rnr.patientLineItems[absIndex - 1].category.name));
     };
 
-    $scope.disableInput = function(colId, rowId) {
+    $scope.disableInput = function(colId, rowId, code) {
+
+    if(code =='MDR-REGIMEN-1' || code =='MDR-REGIMEN-2' || code =='MDR-REGIMEN-3')
+    {
+    if (rowId===1 && colId <=18)
+         return false;
+    else if (rowId===2 && colId <=11)
+         return false;
+    else if (rowId===3 && colId <=9)
+        return false;
+    else
+        return true;
+    }
+
         if (colId < 7)
             return false;
       else if ((colId >= 6 && rowId === 3))

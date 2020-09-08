@@ -66,7 +66,7 @@
                 </thead>
                 <tbody ng-repeat="patientLineItem in page.patient">
                 <tr>
-                    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length + 4}}"
+                    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length + 14}}"
                         ng-show="showCategory($index)">
                         &nbsp;
                     </td>
@@ -81,7 +81,7 @@
                             <span ng-switch-default  class="position-relative" >
                                  <input
                                          ng-required="false"
-                                        ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder) || (patientLineItem.skipped && !patientLineItem[patientColumn.name])"
+                                        ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder, patientLineItem.code) || (patientLineItem.skipped && !patientLineItem[patientColumn.name])"
                                         id="{{getId(patientColumn.name, $parent)}}"
                                         type="text"
                                         ng-model="patientLineItem[patientColumn.name]"
