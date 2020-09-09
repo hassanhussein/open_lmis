@@ -12,10 +12,8 @@
 
 package org.openlmis.equipment.repository.mapper;
 
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
+import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.springframework.stereotype.Repository;
 
@@ -29,6 +27,11 @@ public interface EquipmentTypeMapper {
   EquipmentType getEquipmentTypeById(Long id);
 
   @Select("select * from equipment_types order by name")
+  @Results(value = {
+          @Result(property = "category", column = "categoryid"
+                  , javaType = EquipmentCategory.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentCategoryMapper.getEquipmentCategoryById"))
+  })
   List<EquipmentType> getAll();
 
   @Insert("insert into equipment_types (code, name, createdBy, createdDate, modifiedBy, modifiedDate, isColdChain, IsBioChemistry, categoryId) " +
