@@ -2,6 +2,7 @@ package org.openlmis.stockmanagement.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Product;
+import org.openlmis.stockmanagement.domain.LocationEntry;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.springframework.stereotype.Repository;
@@ -36,8 +37,8 @@ public interface LotMapper {
   })
   Lot getByObject(Lot lot);
 
-  @Select("SELECT DISTINCT ON(lots_on_hand.lotId) *" +
-      " FROM lots_on_hand" +
+  @Select("SELECT DISTINCT ON(lot_location_entries.lotId) *,quantity as quantityOnHand " +
+      " FROM lot_location_entries" +
       " WHERE stockcardid = #{stockCardId}" +
       "   AND lotid = #{lotId}")
   @Results({
@@ -83,14 +84,24 @@ public interface LotMapper {
       "WHERE id = #{id}")
   int update(Lot lot);
 
-  @Insert("INSERT into lots_on_hand " +
+ /* @Insert("INSERT into lots_on_hand " +
       " (stockCardId, lotId, quantityOnHand, effectiveDate " +
       ", createdBy, createdDate, modifiedBy, modifiedDate,vvmId) " +
       "values " +
       " (#{stockCard.id}, #{lot.id}, #{quantityOnHand}, #{effectiveDate}" +
-      ", #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{vvmId})")
+      ", #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{vvmId})")*/
+ @Insert("INSERT INTO public.lot_location_entries(\n" +
+         "           lotid, type, quantity, locationid,vvmid,stockCardId, \n" +
+         "            createdBy, \n" +
+         "            createdDate, modifiedBy, modifiedDate)\n" +
+         "    VALUES ( #{lotId}, #{inputType},#{quantity}, #{locationId},#{vvmId},#{stockCardId}, \n" +
+         "             #{createdBy}, NOW(), \n" +
+         "            #{modifiedBy}, now());")
+
   @Options(useGeneratedKeys = true)
-  void insertLotOnHand(LotOnHand lotOnHand);
+  void insertLotOnHand(LocationEntry lotOnHand);
+
+
 
   @Update("UPDATE lots_on_hand " +
       "SET quantityOnHand = #{quantityOnHand}" +
@@ -98,7 +109,7 @@ public interface LotMapper {
           ", modifiedBy = #{modifiedBy}" +
           ", modifiedDate = NOW(), vvmId = #{vvmId}" +
       "WHERE id = #{id}")
-  int updateLotOnHand(LotOnHand lotOnHand);
+  int updateLotOnHand(LocationEntry lotOnHand);
 
     @Delete("delete from lots where id = #{id}")
     void delete(@Param("id") Long id);

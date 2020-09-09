@@ -1,6 +1,7 @@
 package org.openlmis.stockmanagement.repository;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.stockmanagement.domain.LocationEntry;
 import org.openlmis.stockmanagement.domain.Lot;
 import org.openlmis.stockmanagement.domain.LotOnHand;
 import org.openlmis.stockmanagement.repository.mapper.LotMapper;
@@ -45,7 +46,7 @@ public class LotRepository {
     return l;
   }
 
-  public void saveLotOnHand(LotOnHand lotOnHand) {
+  public void saveLotOnHand(LocationEntry lotOnHand) {
     if (null == lotOnHand.getId()) {
       mapper.insertLotOnHand(lotOnHand);
     } else {
@@ -77,7 +78,7 @@ public class LotRepository {
      return mapper.getLotOnHandBy(stockCardId,lotId);
     }
 
-  public void updateLotOnHand(LotOnHand lotOnHand) {
+  public void updateLotOnHand(LocationEntry lotOnHand) {
     mapper.updateLotOnHand(lotOnHand);
   }
 

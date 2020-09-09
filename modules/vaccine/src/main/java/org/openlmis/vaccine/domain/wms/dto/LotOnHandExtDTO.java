@@ -21,6 +21,12 @@ public class LotOnHandExtDTO {
 
     private String packSize;
 
+    private String binLocation;
+
     private String vvmStatus;
+    private Long locationId;
+    private Long stockCardId;
+    private Long vvmId;
+
 
 }

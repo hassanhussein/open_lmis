@@ -137,7 +137,13 @@ given.qty=qty;
 //push this lot
 ordered.given.push({
 lotId:lot.lotId,
-qty:qty
+qty:qty,
+locationId:lot.locationId,
+number:lot.number,
+stockCardId:lot.stockCardId,
+vvmId:lot.vvmId,
+packSize:lot.packSize
+
 });
 }
 
@@ -283,34 +289,59 @@ distribution.lineItems = [];
 
  angular.forEach(facility.ordered, function (product) {
 
-
 var lineItem = {};
 
         if (product.amount > 0) {
 
+            console.log("Product");
+
+            console.log(product);
+
              lineItem.productId = product.productId;
              lineItem.quantity = product.totalQuantity;
+              var totalQuantity=0;
 
              angular.forEach(product.given, function(lot) {
               lineItem.lots = [];
-             if (lot.quantity !== null && lot.quantity > 0) {
+
+              console.log(lot);
+
+              var lotQuantity=0;
+
+              if(lot.qty){
+              lotQuantity=parseInt(lot.qty);
+              }
+
+
+             if (lotQuantity !== null && lotQuantity > 0) {
+                                         console.log("here again");
+                totalQuantity=totalQuantity+lotQuantity;
                      var l = {};
                      var event = {};
                      event.type = "ISSUE";
                      event.productCode = product.productCode;
                      event.facilityId = facility.toFacilityId;
                      event.occurred = distribution.distributionDate;
-                     event.quantity = lot.quantity;
+                     event.quantity = lotQuantity;
                      event.customProps = {};
                      event.customProps.occurred = distribution.distributionDate;
                      event.customProps.issuedto = facility.name;
 
                      event.lotId = lot.lotId;
-                     event.quantity = lot.quantity;
+                     event.quantity = lotQuantity;
+
 
                      l.lotId = lot.lotId;
                      l.vvmStatus = lot.vvmStatus;
-                     l.quantity = lot.quantity;
+                     l.locationId=lot.locationId
+                     l.lotNumber=lot.number;
+                     l.stockCardId=lot.stockCardId;
+                     l.vvmId=lot.vvmId;
+                     l.packSize=lot.packSize;
+
+
+                     l.quantity = lotQuantity/lot.packSize;
+                     event.lots=l;
                      lineItem.lots.push(l);
                      events.push(event);
 
@@ -318,7 +349,7 @@ var lineItem = {};
 
              });
 
-
+                lineItem.quantity=totalQuantity;
                 }
 
                 if (lineItem.quantity > 0) {
@@ -326,6 +357,8 @@ var lineItem = {};
                 }
 
             });
+                         console.log("distribution");
+
              console.log(distribution);
            distributionLineItemList.push(distribution);
 
@@ -358,7 +391,7 @@ $scope.requstions.forEach(function(req){
 
 
 
- ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+ /*ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 
 console.log($scope.distribution_list);
@@ -370,7 +403,7 @@ console.log($scope.distribution_list);
 
   UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
                     console.log('distributed');
-  });
+  });*/
                     }
  });
 

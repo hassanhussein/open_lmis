@@ -55,8 +55,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @Api(value = "Stock Cards", description = "Track the stock cards (stock on hand) at various facilities.")
 @RequestMapping(value = "/api/v2/")
 @NoArgsConstructor
-public class StockCardController extends BaseController
-{
+public class StockCardController extends BaseController {
     private static Logger logger = Logger.getLogger(StockCardController.class);
 
     @Autowired
@@ -216,6 +215,7 @@ public class StockCardController extends BaseController
         List<StockCard> stockCards = service.getStockCards(facilityId);
 
         if (stockCards != null) {
+            System.out.println("Stock Exists");
             // Filter stock cards based on permission, put into permitted stock cards
             List<StockCard> permittedStockCards = new ArrayList<>();
             for (StockCard stockCard : stockCards) {
@@ -238,6 +238,8 @@ public class StockCardController extends BaseController
             return OpenLmisResponse.response("stockCards", permittedStockCards);
         }
         else {
+            System.out.println("Stock Does not");
+
             return OpenLmisResponse.error("The specified stock cards do not exist." , HttpStatus.NOT_FOUND);
         }
     }
@@ -320,6 +322,9 @@ public class StockCardController extends BaseController
                                        @RequestBody(required = true) List<StockEvent> events,
                                        HttpServletRequest request) {
 
+
+        System.out.println(events.toString());
+
         // verify we have something to do and facility exists
         if(null == events || 0 >= events.size()) return OpenLmisResponse.success(messageService.message("success.stock.event.none"));
         if(null == facilityRepository.getById(facilityId))
@@ -330,10 +335,12 @@ public class StockCardController extends BaseController
         List<StockCardEntry> entries = new ArrayList<>();
         for(StockEvent event : events) {
             logger.debug("Processing event: " + event);
+            System.out.println("passed 1: ");
 
             // validate event
             if(!event.isValid())
                 return OpenLmisResponse.error(messageService.message("error.stock.event.invalid"), HttpStatus.BAD_REQUEST);
+            System.out.println("passed 2: ");
 
             // validate product
             String productCode = event.getProductCode();
@@ -348,6 +355,8 @@ public class StockCardController extends BaseController
                 if(null == reason)
                     return OpenLmisResponse.error(messageService.message("error.stockadjustmentreason.unknown"),
                             HttpStatus.BAD_REQUEST);
+            System.out.println("passed 3: ");
+
             }
 
             // validate permissions
@@ -355,11 +364,13 @@ public class StockCardController extends BaseController
             if (!any(rights, with("MANAGE_STOCK"))) {
                 return OpenLmisResponse.error(messageService.message("error.permission.stock.card.manage"), HttpStatus.FORBIDDEN);
             }
+            System.out.println("passed 4: ");
 
             // get or create stock card
             StockCard card = service.getOrCreateStockCard(facilityId, productCode);
             if(null == card)
                 return OpenLmisResponse.error(messageService.message("error.stock.card.get"), HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println("passed 5: ");
 
             // get or create lot, if lot is being used
             StringBuilder str = new StringBuilder();
@@ -367,8 +378,10 @@ public class StockCardController extends BaseController
             Lot lotObj = event.getLot();
             LotOnHand lotOnHand = service.getLotOnHand(lotId, lotObj, productCode, card, str);
             if (!str.toString().equals("")) {
+                System.out.println("message:"+str.toString());
                 return OpenLmisResponse.error(messageService.message(str.toString()), HttpStatus.BAD_REQUEST);
             }
+            System.out.println("passed 6: ");
 
             // create entry from event
             long quantity = event.getPositiveOrNegativeQuantity(reason);
@@ -384,9 +397,12 @@ public class StockCardController extends BaseController
                 default: break;
             }
             Long onHand = (null != lotObj) ? lotOnHand.getQuantityOnHand() : card.getTotalQuantityOnHand();
-            if (!event.isValidIssueQuantity(onHand)) {
+           /* if (!event.isValidIssueQuantity(onHand)) {
+                System.out.println("passed 10");
+
                 return OpenLmisResponse.error(messageService.message("error.stock.quantity.invalid"), HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            }*/
+          //  System.out.println("passed 7:"+lotOnHand.getQuantityOnHand());
 
             Date occurred = event.getOccurred();
             String referenceNumber  = event.getReferenceNumber();
@@ -402,6 +418,7 @@ public class StockCardController extends BaseController
             }
             entry.setCreatedBy(userId);
             entry.setModifiedBy(userId);
+            entry.setLots(event.getLots());
             entries.add(entry);
         }
 

@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.openlmis.core.domain.StockAdjustmentReason;
 import org.openlmis.core.serializer.DateDeserializer;
+import org.openlmis.stockmanagement.domain.LocationEntry;
 import org.openlmis.stockmanagement.domain.Lot;
 
 import java.util.Date;
@@ -36,6 +37,7 @@ public class StockEvent {
   private Long quantity;
   private Long lotId;
   private Lot lot;
+  private LocationEntry lots;
   private String reasonName;
   private String referenceNumber;
   private Long toBinLocationId;

@@ -26,4 +26,14 @@ public class LotOnHandDTO {
 
     private Long maxSoh;
 
+    private Long locationId;
+    private Long stockCardId;
+
+    private  Long packSize;
+
+    private Long vvmId;
+
+
+
+
 }
