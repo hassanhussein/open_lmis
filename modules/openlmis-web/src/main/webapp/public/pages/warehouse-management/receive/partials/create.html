@@ -304,16 +304,32 @@
                                     </div>
 
                                     <div class="alert alert-danger" ng-show="quantityError"
-                                    >Please Fill Number of Boxes/Quantities
+                                    >Quantities should be greater than zero
+                                    </div>
+
+                                    <div class="alert alert-danger" ng-show="vvmError"
+                                    >Vvm is required
+                                    </div>
+
+                                    <div class="alert alert-danger" ng-show="locationError"
+                                    >Location is required
+                                    </div>
+
+
+                                    <div class="alert alert-danger" ng-show="boxesError"
+                                    >Number of boxes should be greater than zero
+                                    </div>
+
+
+                                    <div class="alert alert-danger" ng-show="unitPriceError"
+                                    >Unit Price should be greater than zero
                                     </div>
 
                                     <div class="alert alert-success" ng-show="batchCreated"
                                     >Batch Created Successfully
                                     </div>
 
-                                    <div class="alert alert-danger" ng-show="quantityBoxError">
-                                        Quantity should be greater or equal to Number of Boxes
-                                    </div>
+
                                     <table class="table table-bordered receive">
                                         <thead>
                                         <tr class="gradient-header">
@@ -407,7 +423,7 @@
                                                             <option ng-repeat="location in locationList"
                                                                     ng-selected="product.lots[0].locationId==location.id"
                                                                     value="{{ location.id }}">
-                                                                {{ location.code }}
+                                                                {{ location.code }}({{location.locationType}})
                                                             </option>
 
 
@@ -457,7 +473,9 @@
                                             <td class="cell-input col-general">
                                                 <input type="text" numeric-validator="positiveInteger"
                                                        ng-disabled="!product.lots[0].boxCounted || product.lots[0].boxCounted==0 || viewMode"
-                                                       ng-model="product.lots[0].quantity" style="width:110px">
+                                                       ng-model="product.lots[0].quantity" name="quantity" ng-required="true" style="width:110px">
+                                                <span class="field-error" ng-show="quantity.$error.required && showError"
+                                                      openlmis-message="missing.value"></span>
                                             </td>
                                             <td rowspan="{{product.lots.length}}" class="cell-input col-general"
                                                 style="padding-left:1px;">

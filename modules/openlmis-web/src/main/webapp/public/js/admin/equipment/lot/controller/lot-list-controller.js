@@ -2,6 +2,7 @@ function LotListController($scope,navigateBackService,LotLists,$location){
 
     LotLists.get(function (data) {
         $scope.lots = data.lots;
+        console.log($scope.lots);
         JSON.stringify(data.lots);
     });
 

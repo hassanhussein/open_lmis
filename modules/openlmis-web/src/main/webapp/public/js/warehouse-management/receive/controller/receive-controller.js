@@ -36,7 +36,7 @@ $scope.clearingAgentList = clearingAgent;
 
      $scope.locationList = data.bins;
 
-//     console.log(data);
+     console.log(data);
 
     });
 
@@ -285,6 +285,46 @@ var total_lot_quantity = 0;
         return editProduct.product;
 
     };
+
+    $scope.validLocation=function(){
+       return _.every($scope.productsToAdd[0].lots ,function(lot){
+            return (typeof lot.locationId !== "undefined" && lot.locationId!=="") || typeof lot.info === "undefined"|| lot.info===null;
+        });
+
+
+    };
+
+    $scope.validVvm=function(){
+        return _.every($scope.productsToAdd[0].lots ,function(lot){
+                    return (typeof lot.vvmId !== "undefined" && lot.vvmId!=="" && lot.vvmId!==null)|| typeof lot.info === "undefined"|| lot.info===null;
+                });
+    };
+
+
+    $scope.validQuantity=function(){
+    return _.every($scope.productsToAdd[0].lots ,function(lot){
+                        return (typeof lot.quantity !== "undefined" && lot.quantity!=="" && lot.quantity!==null &&lot.quantity>0)|| typeof lot.info === "undefined"|| lot.info===null;
+        });
+
+    };
+
+
+    $scope.validUnitPrice=function(){
+    console.log($scope.productsToAdd[0]);
+        return _.every($scope.productsToAdd ,function(product){
+                            return (product.unitPrice!=="" &&product.unitPrice>0)||_.isEmpty(product.programProduct);
+            });
+
+        };
+
+
+      $scope.validBoxes=function(){
+        return _.every($scope.productsToAdd[0].lots ,function(lot){
+//            console.log(lot)
+                 return (typeof lot.boxCounted !== "undefined"  && lot.boxCounted!=="" && lot.boxCounted!==null &&lot.boxCounted>0)|| typeof lot.info === "undefined"|| lot.info===null;
+            });
+
+        };
 
 
        $scope.updateProductsToDisplay = function() {
@@ -539,7 +579,7 @@ $scope.changeProductType=function(isVaccine){
 
     $scope.validateProduct = function() {
     if($scope.isVaccine){
-        if (angular.equals($scope.productsToAdd[0].programProduct, {}) || !$scope.productsToAdd[0].unitPrice || !$scope.productsToAdd[0].lots[0].quantity) {
+        if (angular.equals($scope.productsToAdd[0].programProduct, {}) ) {
                 $scope.productError = true;
                 return;
             }
@@ -839,24 +879,57 @@ $scope.quantitiesValid=function(){
 
 $scope.saveAsn = function(status) {
 
-//    console.log($scope.docList);
+if(!$scope.validLocation()){
+$scope.locationError=true;
+$timeout(function(){
+    $scope.locationError=false;
+},5000);
+return;
+}
+
+
+
+if(!$scope.validVvm()){
+$scope.vvmError=true;
+$timeout(function(){
+    $scope.vvmError=false;
+},5000);
+return;
+}
+
+
+if(!$scope.validBoxes()){
+$scope.boxesError=true;
+$timeout(function(){
+    $scope.boxesError=false;
+},5000);
+return;
+}
+
+
+if(!$scope.validQuantity()){
+$scope.quantityError=true;
+$timeout(function(){
+    $scope.quantityError=false;
+},5000);
+return;
+}
+
+
+if(!$scope.validUnitPrice()){
+$scope.unitPriceError=true;
+$timeout(function(){
+    $scope.unitPriceError=false;
+},5000);
+return;
+}
+
+
+
+
+
         $scope.validateProduct();
 
-
-        if(!$scope.quantitiesValid()){
-        return;
-        }
-
-$scope.quantityBoxError=false;
-
-//   if (!$scope.quantityVsBox()){
-//        $scope.quantityBoxError=true;
-//         return;
-//     }else{
-//     $scope.quantityBoxError=false;
-//     }
-
-//                        console.log($scope.asnForm)
     if ($scope.asnForm.$error.required) {
             $scope.showError = true;
             $scope.error = 'form.error';
@@ -1155,7 +1228,7 @@ function getOnlyMatchedDocumentTypes(documentTypes, docs) {
 
      for(var i=0;i<documentTypes.length;i++){
 
-       if(documentTypes[i].name === data.documentType.name){
+       if(documentTypes[i].name === data.documentType.name&&!data.deleted){
         documentTypes[i].isAvailable = true;
        }
      }

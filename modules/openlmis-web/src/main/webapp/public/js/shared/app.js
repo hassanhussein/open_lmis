@@ -233,7 +233,7 @@ app.run(function ($rootScope, messageService) {
     return messageService.get(key);
   };
 
-  var setState = function(state) {
+ /* var setState = function(state) {
     $rootScope.appCacheState = state;
     $rootScope.$apply();
   };
@@ -253,7 +253,7 @@ app.run(function ($rootScope, messageService) {
   window.applicationCache.addEventListener('updateready', function () {
     setState("cached");
   });
-
+*/
 });
 
 function isUndefined(value) {

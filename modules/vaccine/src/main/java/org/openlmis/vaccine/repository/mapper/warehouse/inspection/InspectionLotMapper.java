@@ -2,6 +2,7 @@ package org.openlmis.vaccine.repository.mapper.warehouse.inspection;
 
 import org.apache.ibatis.annotations.*;
 import org.openlmis.vaccine.domain.wms.InspectionLot;
+import org.openlmis.vaccine.domain.wms.VVMLots;
 import org.openlmis.vaccine.dto.LocationDTO;
 import org.springframework.stereotype.Repository;
 
@@ -29,5 +30,16 @@ public interface InspectionLotMapper {
             "       modifiedDate=NOW(), expiryDate=#{expiryDate}, receivedQuantity=#{receivedQuantity}\n" +
             " WHERE id = #{id} ")
     void update(InspectionLot lot);
+
+    @Insert("INSERT INTO public.inspection_lots(\n" +
+            "           inspectionLineItemId, lotNumber, passQuantity, passLocationId,vvmStatus,expiryDate, \n" +
+            "             createdDate,\n" +
+            "             modifiedBy, modifiedDate)\n" +
+            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate}, \n" +
+            "           now(),  \n" +
+            "            #{modifiedBy}, now()) on conflict(inspectionLineItemId,lotNumber,passLocationId,vvmStatus) DO UPDATE \n" +
+            "SET passQuantity=#{quantity} ;")
+    @Options(useGeneratedKeys = true)
+    void updateOrSave(VVMLots lots);
 
 }

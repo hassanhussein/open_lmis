@@ -869,6 +869,7 @@ var docs = [];
 //        if(){
 //            return;
 //        }
+        console.log($scope.asnForm);
       if ($scope.asnForm.$error.required ||docs.length < parseInt(3,10)||!$scope.quantitiesValid()) {
             $scope.showError = true;
             $scope.error = 'form.error';
@@ -1223,7 +1224,7 @@ function getOnlyMatchedDocumentTypes(documentTypes, docs) {
 
      for(var i=0;i<documentTypes.length;i++){
 
-       if(documentTypes[i].name === data.documentType.name){
+       if((documentTypes[i].name === data.documentType.name)&&!data.deleted){
         documentTypes[i].isAvailable = true;
        }
      }

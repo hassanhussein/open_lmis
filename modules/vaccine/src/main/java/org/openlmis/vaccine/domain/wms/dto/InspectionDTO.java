@@ -28,5 +28,8 @@ public class InspectionDTO extends BaseModel {
 
     private String poNumber;
 
+    private String varNumber;
+
+
 
 }
