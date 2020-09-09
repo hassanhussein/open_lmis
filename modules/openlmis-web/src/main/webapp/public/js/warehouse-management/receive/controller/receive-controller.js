@@ -288,43 +288,43 @@ var total_lot_quantity = 0;
 
     $scope.validLocation=function(){
        return _.every($scope.productsToAdd[0].lots ,function(lot){
-            return (typeof lot.locationId != "undefined" && lot.locationId!="") || typeof lot.info === "undefined"|| lot.info===null;
+            return (typeof lot.locationId !== "undefined" && lot.locationId!=="") || typeof lot.info === "undefined"|| lot.info===null;
         });
 
 
-    }
+    };
 
     $scope.validVvm=function(){
         return _.every($scope.productsToAdd[0].lots ,function(lot){
-                    return (typeof lot.vvmId != "undefined" && lot.vvmId!="" && lot.vvmId!=null)|| typeof lot.info === "undefined"|| lot.info===null;
+                    return (typeof lot.vvmId !== "undefined" && lot.vvmId!=="" && lot.vvmId!==null)|| typeof lot.info === "undefined"|| lot.info===null;
                 });
-    }
+    };
 
 
     $scope.validQuantity=function(){
     return _.every($scope.productsToAdd[0].lots ,function(lot){
-                        return (typeof lot.quantity != "undefined" && lot.quantity!="" && lot.quantity!=null &&lot.quantity>0)|| typeof lot.info === "undefined"|| lot.info===null;
+                        return (typeof lot.quantity !== "undefined" && lot.quantity!=="" && lot.quantity!==null &&lot.quantity>0)|| typeof lot.info === "undefined"|| lot.info===null;
         });
 
-    }
+    };
 
 
     $scope.validUnitPrice=function(){
     console.log($scope.productsToAdd[0]);
         return _.every($scope.productsToAdd ,function(product){
-                            return (product.unitPrice!="" &&product.unitPrice>0)||_.isEmpty(product.programProduct);
+                            return (product.unitPrice!=="" &&product.unitPrice>0)||_.isEmpty(product.programProduct);
             });
 
-        }
+        };
 
 
       $scope.validBoxes=function(){
         return _.every($scope.productsToAdd[0].lots ,function(lot){
-            console.log(lot)
-                 return (typeof lot.boxCounted != "undefined"  && lot.boxCounted!="" && lot.boxCounted!=null &&lot.boxCounted>0)|| typeof lot.info === "undefined"|| lot.info===null;
+//            console.log(lot)
+                 return (typeof lot.boxCounted !== "undefined"  && lot.boxCounted!=="" && lot.boxCounted!==null &&lot.boxCounted>0)|| typeof lot.info === "undefined"|| lot.info===null;
             });
 
-        }
+        };
 
 
        $scope.updateProductsToDisplay = function() {
