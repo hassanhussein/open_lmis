@@ -104,14 +104,14 @@
                 <input id="{{getId(column.name, $parent)}}" type="text"
                        name="reasonForRequestedQuantity{{rnrLineItem['id']}}"
                        ng-model="rnrLineItem[column.name]"
-                       ng-disabled="!(patientCount > 0 && rnr.status == 'IN_APPROVAL')"
+                       ng-disabled="(patientCount > 0 && rnr.status == 'IN_APPROVAL')"
                        maxlength="250"/>
               </span>
 
               <span ng-switch-when="quantityReceived"
               ng-class="getCellErrorClass(rnrLineItem)" class="position-relative">
             <input ng-required="true"
-                   ng-disabled="!(patientCount > 0 && rnr.status == 'IN_APPROVAL')"
+                   ng-disabled="(patientCount > 0 && rnr.status == 'IN_APPROVAL')"
                    id="{{getId(column.name, $parent)}}" type="text"
                    name="quantityReceived{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
