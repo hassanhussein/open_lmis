@@ -317,7 +317,7 @@
 
         <span ng-switch-when="nextMonthPatient" class="position-relative">
             <input ng-required="true"
-                   ng-disabled="formDisabled || rnrLineItem.skipped"
+                   ng-disabled="formDisabled || rnrLineItem.skipped || (column.calculationOption == 'LOCK_FACILITY_OPEN_DISTRICT')"
                    id="{{getId(column.name, $parent)}}"
                    type="text" name="nextMonthPatient{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
