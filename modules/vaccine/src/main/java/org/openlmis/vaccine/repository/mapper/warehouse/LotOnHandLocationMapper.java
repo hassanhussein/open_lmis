@@ -73,46 +73,95 @@ public interface LotOnHandLocationMapper {
             "            group by vvm.name,vvm.id, e.lotId,p.id,lotNumber,Lsc.name, e.locationId")
             List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
-    @Select("         Select distinct primaryname product,id,date ,case when fromBin is not null then locationName else frombin end as fromBin, \n" +
-            "case when toBin is null then locationName else facility end as toBin,\n" +
-            "        facility storeName, received, issued, adjustment,total,locationName,\n" +
+    @Select("             SELECT *, storename as fromBin, locationName as toBin FROM (\n" +
+            "\n" +
+            "                                       Select distinct primaryname product,id,date ,case when fromBin is not null then locationName else frombin end as fromBin2, \n" +
+            "                                                                      case when toBin is null then locationName else facility end as toBin2,\n" +
+            "                                                                     facility storeName, received, issued, adjustment,total,locationName,\n" +
+            "                                                \n" +
+            "                                                             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh,\n" +
+            "                                                             vvm,expirationDate,lotNumber\n" +
+            "\n" +
+            "\n" +
+            "\t\t\t\t\t\t\t\tFROM   \n" +
+            "                (\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "                                                                 select  MAX(p.primaryname) primaryname , 0 AS id,  MAX('2020-01-01')::timestamp with time zone as date,\n" +
+            "\t\t\t\t\t\t\t\t  NULL as fromBin,\n" +
+            "\t\t\t\t\t\t\t\t NULL as toBin,\n" +
+            "\t\t\t\t\t\t\t\t\t\t\t\t\t       \n" +
+            "\t\t\t\t\t\t\t\t null::TEXT as facility, \n" +
+            "\t\t\t\t\t\t\t\t 0::INTEGER as received,   \n" +
+            "\t\t\t\t\t\t\t\t0::INTEGER as issued,    \n" +
+            "\t\t\t\t\t\t\t\t0::INTEGER as adjustment,\n" +
+            "\t\t\t\t\t\t\t\t   loc.name locationName,  \n" +
+            "\t\t\t\t\t\t\t\t    SUM(se.quantity)::integer as total,                                      \n" +
+            "\t\t\t\t\t\t\t      --case when se.type ='DEBIT' then -1 * se.quantity else se.quantity end as total, \n" +
+            "\t\t\t\t\t\t\t\t\t\t    \n" +
+            "\t\t\t\t\t\t\t       MAX(vvmst.name) vvm, MAX(expirationDate::DATE) expirationDate,\n" +
+            "\t\t\t\t\t\t\t       lotNumber\n" +
+            "                                                               \n" +
+            "                                                               from lot_location_entries se \n" +
+            "                                                                JOIN wms_locations loc ON loc.id = se.locationId\n" +
+            "                                                             left join vvm_statuses  vvmst on (vvmst.id=se.vvmId)  \n" +
+            "                                                                join stock_cards s ON s.id=se.stockcardid\n" +
+            "                                                                \n" +
+            "                                                                join products p on p.id=s.productid \n" +
+            "                                                                JOIN lots l ON se.lotiD = l.id\n" +
+            "                                                                \n" +
+            "                                                                LEFT join location_stock_card_entry_key_values skvr on skvr.stockcardentryid=se.id and skvr.keycolumn='receivedfrom' \n" +
+            "                                                                                               \n" +
+            "                                                \n" +
+            "                                                               LEFT join location_stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'  \n" +
+            "                                                               WHERE se.type <> 'DEBIT' \n" +
+            "                                                \n" +
+            "                                                              WHERE \n" +
+            "                                                                 loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
+            "                                                                group by l.lotnumber,loc.name\n" +
+            "\n" +
+            "                                                             \n" +
+            "                                                                UNION ALL\n" +
+            "                                                                (\n" +
+            "                       \n" +
+            "                                                                select p.primaryname , se.id, se.createddate as date, \n" +
+            "                                                               case when se.type='CREDIT' then skvr.valuecolumn  else '' end as fromBin,\n" +
+            "                                                               case when se.type='DEBIT' then skvi.valuecolumn  else '' end as toBin,\n" +
+            "                                                               \n" +
+            "                                                               case when se.type='CREDIT' then skvr.valuecolumn when se.type='DEBIT' then skvi.valuecolumn end as facility, \n" +
+            "                                                                case when se.type ='CREDIT' then se.quantity else 0 end as received, \n" +
+            "                                                                case when se.type ='DEBIT' then se.quantity else 0 end as issued, \n" +
+            "                                                                case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment, \n" +
+            "                                                                loc.name locationName,\n" +
+            "                                                                \n" +
+            "                                                                 case when se.type ='DEBIT' then -1 * se.quantity else se.quantity end as total, \n" +
             "                                    \n" +
-            "                                                 (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh,vvm,expirationDate,lotNumber\n" +
-            "                                                    FROM \n" +
-            "                                                    (\n" +
-            "           \n" +
-            "                                                    select p.primaryname , se.id, se.createddate as date, \n" +
-            "                                                   case when se.type='CREDIT' then skvr.valuecolumn  else '' end as fromBin,\n" +
-            "                                                   case when se.type='DEBIT' then skvi.valuecolumn  else '' end as toBin,\n" +
-            "                                                   \n" +
-            "                                                   case when se.type='CREDIT' then skvr.valuecolumn when se.type='DEBIT' then skvi.valuecolumn end as facility, \n" +
-            "                                                    case when se.type ='CREDIT' then se.quantity else 0 end as received, \n" +
-            "                                                    case when se.type ='DEBIT' then se.quantity else 0 end as issued, \n" +
-            "                                                    case when se.type ='ADJUSTMENT' then quantity else 0 end as adjustment, \n" +
-            "                                                    loc.name locationName,\n" +
-            "                                                    \n" +
-            "                                                     case when se.type ='DEBIT' then -1 * se.quantity else se.quantity end as total, \n" +
+            "                                                                 \n" +
+            "                                                                vvmst.name vvm,(select to_char(max(expirationDate), 'dd-MM-yyyy')::DATE expirationDate from lots where id=se.lotid limit 1) as expirationDate,(select lotnumber from lots where id=se.lotid limit 1) as lotNumber\n" +
+            "                                                               \n" +
+            "                                                               from lot_location_entries se \n" +
+            "                                                                JOIN wms_locations loc ON loc.id = se.locationId\n" +
+            "                                                             left join vvm_statuses  vvmst on (vvmst.id=se.vvmId)  \n" +
+            "                                                                join stock_cards s ON s.id=se.stockcardid\n" +
+            "                                                                \n" +
+            "                                                                join products p on p.id=s.productid \n" +
+            "                                                                \n" +
+            "                                                                LEFT join location_stock_card_entry_key_values skvr on skvr.stockcardentryid=se.id and skvr.keycolumn='receivedfrom' \n" +
+            "                                                                                               \n" +
+            "                                                \n" +
+            "                                                               LEFT join location_stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'  \n" +
+            "                                                               WHERE se.type <> 'DEBIT' \n" +
+            "                                                \n" +
+            "                                                              WHERE \n" +
+            "                                                                 loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
+            "                                                               order by se.createddate\n" +
             "                        \n" +
-            "                                                     \n" +
-            "                                                    vvmst.name vvm,(select to_char(max(expirationDate), 'dd-MM-yyyy') expirationDate from lots where id=se.lotid limit 1) as expirationDate,(select lotnumber from lots where id=se.lotid limit 1) as lotNumber\n" +
-            "                                                   \n" +
-            "                                                   from lot_location_entries se \n" +
-            "                                                    JOIN wms_locations loc ON loc.id = se.locationId\n" +
-            "                                                 left join vvm_statuses  vvmst on (vvmst.id=se.vvmId)  \n" +
-            "                                                    join stock_cards s ON s.id=se.stockcardid\n" +
-            "                                                    \n" +
-            "                                                    join products p on p.id=s.productid \n" +
-            "                                                    \n" +
-            "                                                    LEFT join location_stock_card_entry_key_values skvr on skvr.stockcardentryid=se.id and skvr.keycolumn='receivedfrom' \n" +
-            "                                                                                   \n" +
-            "                                    \n" +
-            "                                                   LEFT join location_stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'  \n" +
-            "                                    \n" +
-            "                                                   WHERE \n" +
-            "                                                      loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
-            "                                                   order by se.createddate\n" +
-            "            \n" +
-            "                                                   ) AS ledger order by id")
+            "                                                               )\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "                                                               ) AS ledger order by id ) X ")
     List<HashMap<String, Object>>getAllLedgers(@Param("productId") Long productId,@Param("warehouseId") Long warehouseId, @Param("year") Long year);
 
   /*  @Select("SELECT PUT.*,P.PRIMARYnAME FROM lot_on_hand_locations H\n" +
