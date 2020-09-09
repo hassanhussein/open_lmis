@@ -272,7 +272,7 @@
                                                     <option value=""  ng-disabled="viewMode">--Select Location--</option>
                                                     <option ng-repeat="location in locations"
                                                             value="{{ location.id }}">
-                                                        {{ location.name }}
+                                                        {{ location.name }}({{location.typename}})
                                                     </option>
 
 
@@ -860,12 +860,12 @@
                     <td class="cell-input">
 
                         <select ui-select2="{width: '100%'}" ng-required="vvm.failed.quantity!=='0' && vvm.failed.quantity" name="failLocationId" ng-model="vvm.failed.locationId" ng-disabled="(vvm.failed.reasonId==undefined||vvm.failed.reasonId==null||vvm.failed.reasonId=='')">
-                            <option value=""></option>
+                            <option value="">--Select Location--</option>
                             <option ng-repeat="location in locations"
                                     value="{{ location.id }}"
                                     ng-selected="vvm.failed.locationId==location.id"
                             >
-                                {{ location.code }}
+                                {{ location.code }}({{location.typename}})
                             </option>
                         </select>
 

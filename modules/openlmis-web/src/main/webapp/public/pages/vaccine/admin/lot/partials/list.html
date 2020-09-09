@@ -34,6 +34,7 @@
                 <th class="col-row-number">#</th>
                 <th><span>Product</span></th>
                 <th><span>Lot Code</span></th>
+                <th><span>Vial Presentation</span></th>
                 <th><span>Manufacture</span></th>
                 <th><span>Expiration Date</span></th>
             </tr>
@@ -43,6 +44,7 @@
                 <td>{{$index + 1}}</td>
                 <td>{{lot.product.primaryName}}</td>
                 <td><a href="" ng-click="editLot(lot.id)">{{lot.lotCode}}</a></td>
+                <td>{{lot.packSize}}</td>
                 <td>{{lot.product.manufacturer}}</td>
                 <td>{{lot.expirationDate}}</td>
 

@@ -139,7 +139,7 @@ $scope.displayDocumentTypes  = filteredData;
 
     return _.findWhere($scope.vvmStatusList,{id:vvmId}).name;
 
-    };696000
+    };
 
   function validateAnsNumber(asnCode,document) {
 

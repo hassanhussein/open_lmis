@@ -304,16 +304,32 @@
                                     </div>
 
                                     <div class="alert alert-danger" ng-show="quantityError"
-                                    >Please Fill Number of Boxes/Quantities
+                                    >Quantities should be greater than zero
+                                    </div>
+
+                                    <div class="alert alert-danger" ng-show="vvmError"
+                                    >Vvm is required
+                                    </div>
+
+                                    <div class="alert alert-danger" ng-show="locationError"
+                                    >Location is required
+                                    </div>
+
+
+                                    <div class="alert alert-danger" ng-show="boxesError"
+                                    >Number of boxes should be greater than zero
+                                    </div>
+
+
+                                    <div class="alert alert-danger" ng-show="unitPriceError"
+                                    >Unit Price should be greater than zero
                                     </div>
 
                                     <div class="alert alert-success" ng-show="batchCreated"
                                     >Batch Created Successfully
                                     </div>
 
-                                    <div class="alert alert-danger" ng-show="quantityBoxError">
-                                        Quantity should be greater or equal to Number of Boxes
-                                    </div>
+
                                     <table class="table table-bordered receive">
                                         <thead>
                                         <tr class="gradient-header">
@@ -407,7 +423,7 @@
                                                             <option ng-repeat="location in locationList"
                                                                     ng-selected="product.lots[0].locationId==location.id"
                                                                     value="{{ location.id }}">
-                                                                {{ location.code }}
+                                                                {{ location.code }}({{location.locationType}})
                                                             </option>
 
 
