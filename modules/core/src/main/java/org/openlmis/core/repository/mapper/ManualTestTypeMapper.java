@@ -12,11 +12,9 @@
 
 package org.openlmis.core.repository.mapper;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.ManualTestType;
+import org.openlmis.core.domain.Product;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,6 +23,9 @@ import java.util.List;
 public interface ManualTestTypeMapper {
 
     @Select("select * from manual_test_types order by displayorder")
+    @Results(value = {
+            @Result(property = "category", column = "categoryid", one = @One(select = "org.openlmis.core.repository.mapper.EquipmentCategoryMapper.getEquipmentCategoryById"))
+    })
     List<ManualTestType> getAll();
 
     @Select("select * from manual_test_types where id = #{id}")
