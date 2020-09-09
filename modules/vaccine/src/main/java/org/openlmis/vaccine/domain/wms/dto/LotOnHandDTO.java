@@ -32,6 +32,7 @@ public class LotOnHandDTO {
     private  Long packSize;
 
     private Long vvmId;
+    private String binLocation;
 
 
 

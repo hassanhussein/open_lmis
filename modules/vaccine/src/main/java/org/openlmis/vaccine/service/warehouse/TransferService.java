@@ -229,7 +229,7 @@ public class TransferService {
                          lotOnHandDTO.setLocationId(lot.getLocationId());
                          lotOnHandDTO.setVvm(lot.getVvmStatus());
                          lotOnHandDTO.setVvmId(lot.getVvmId());
-
+                         lotOnHandDTO.setBinLocation(lot.getBinLocation());
                          lotOnHandDTO.setMaxSoh(quantityWithPackSize);
                          lotOnHandDTO.setNumber(lot.getLotNumber());
                          lots.add(lotOnHandDTO);
