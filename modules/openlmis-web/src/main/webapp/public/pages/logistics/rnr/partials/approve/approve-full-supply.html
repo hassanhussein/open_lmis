@@ -84,7 +84,7 @@
 
               <span ng-switch-when="nextMonthPatient" class="position-relative">
             <input ng-required="true"
-                   ng-disabled="(patientCount > 0 && rnr.status != 'AUTHORIZED' && (column.calculationOption == 'LOCK_FACILITY_OPEN_DISTRICT'))"
+                   ng-disabled="rnr.status === 'IN_APPROVAL' || (patientCount > 0 && rnr.status != 'AUTHORIZED' && (column.calculationOption == 'LOCK_FACILITY_OPEN_DISTRICT'))"
                    id="{{getId(column.name, $parent)}}"
                    type="text" name="nextMonthPatient{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
