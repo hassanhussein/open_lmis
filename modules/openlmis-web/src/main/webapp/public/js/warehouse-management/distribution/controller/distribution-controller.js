@@ -391,7 +391,7 @@ $scope.requstions.forEach(function(req){
 
 
 
- /*ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 
 console.log($scope.distribution_list);
@@ -403,7 +403,7 @@ console.log($scope.distribution_list);
 
   UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
                     console.log('distributed');
-  });*/
+  });
                     }
  });
 
