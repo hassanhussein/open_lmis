@@ -391,7 +391,7 @@ $scope.requstions.forEach(function(req){
 
 
 
- ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+ /*ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 
 console.log($scope.distribution_list);
@@ -399,11 +399,11 @@ console.log($scope.distribution_list);
   $location.path('');
                   console.log('distributed');
 
-                        });
+                        });*/
 
-  UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
+  /*UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
                     console.log('distributed');
-  });
+  });*/
                     }
  });
 
