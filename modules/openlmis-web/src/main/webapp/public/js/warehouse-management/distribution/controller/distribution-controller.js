@@ -309,7 +309,7 @@ var lineItem = {};
               var lotQuantity=0;
 
               if(lot.qty){
-              lotQuantity=parseInt(lot.qty);
+              lotQuantity=parseInt(lot.qty,10);
               }
 
 
@@ -333,7 +333,7 @@ var lineItem = {};
 
                      l.lotId = lot.lotId;
                      l.vvmStatus = lot.vvmStatus;
-                     l.locationId=lot.locationId
+                     l.locationId=lot.locationId;
                      l.lotNumber=lot.number;
                      l.stockCardId=lot.stockCardId;
                      l.vvmId=lot.vvmId;

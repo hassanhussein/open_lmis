@@ -15,6 +15,12 @@ function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,clearingAg
                            $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory,vvmList){
 
 
+
+$scope.itemInfoTab="active";
+$scope.shipmentInfoTab="";
+$scope.documentTab="";
+
+
  $scope.$parent.receiveSaved = false;
                                    $scope.$parent.received = false;
 
@@ -879,6 +885,17 @@ $scope.quantitiesValid=function(){
 
 $scope.saveAsn = function(status) {
 
+    if ($scope.asnForm.$error.required) {
+            $scope.showError = true;
+            $scope.error = 'form.error';
+            $scope.message = "";
+//            console.log($scope.asnForm.$error)
+            return;
+        }
+
+
+
+
 if(!$scope.validLocation()){
 $scope.locationError=true;
 $timeout(function(){
@@ -930,13 +947,6 @@ return;
 
         $scope.validateProduct();
 
-    if ($scope.asnForm.$error.required) {
-            $scope.showError = true;
-            $scope.error = 'form.error';
-            $scope.message = "";
-//            console.log($scope.asnForm.$error)
-            return;
-        }
 
 
 
