@@ -74,7 +74,7 @@ $scope.requstions.push({
 $scope.getQuantity=function(req,product,lot,regionIndex){
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:product.productId});
-var given = _.findWhere(ordered.given,{lotId:lot.lotId});
+var given = _.findWhere(ordered.given,{lotId:lot.lotId,number:lot.number,vvmId:lot.vvmId,locationId:lot.locationId});
 if(given===undefined){
     return '';
 }
@@ -84,7 +84,7 @@ return given.qty;
 
 };
 
-$scope.getLotSumPerRegion=function(lotId,productId){
+$scope.getLotSumPerRegion=function(lotId,locationId,productId){
  var sum=0;
    $scope.requstions.forEach(function(region){
 
@@ -95,7 +95,7 @@ $scope.getLotSumPerRegion=function(lotId,productId){
    if(order.productId===productId){
 
    order.given.forEach(function(giv){
-    if (giv.lotId===lotId){
+    if (giv.lotId===lotId&&giv.locationId===locationId){
     qty=giv.qty;
     if(giv.qty===""){
     qty=0;
@@ -119,22 +119,38 @@ return ordered.gap;
 
 };
 $scope.giveLot=function(req,prod,lot,qty,regionIndex){
-console.log(lot);
+//console.log(lot);
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
-var given= _.findWhere(ordered.given,{lotId:lot.lotId});
+var given= _.findWhere(ordered.given,{lotId:lot.lotId,number:lot.number,vvmId:lot.vvmId,locationId:lot.locationId});
 if(qty===""){
 qty=0;
 }
+console.log("called filled");
+
+console.log(ordered.given);
 
 //deduct soh for this product for this lot
 if(given){
+var lotQuantity=0;
+ if(qty){
+      lotQuantity=parseInt(qty,10);
+  }
 //edit this lot
 given.qty=qty;
+given.quantity=lotQuantity/lot.packSize
+
 //console.log('edit lot')
 }else{
 //push this lot
+var lotQuantity=0;
+ if(qty){
+      lotQuantity=parseInt(qty,10);
+  }
+
+  console.log(lotQuantity+" ii");
+
 ordered.given.push({
 lotId:lot.lotId,
 qty:qty,
@@ -142,7 +158,9 @@ locationId:lot.locationId,
 number:lot.number,
 stockCardId:lot.stockCardId,
 vvmId:lot.vvmId,
-packSize:lot.packSize
+packSize:lot.packSize,
+binLocation:lot.binLocation,
+quantity:lotQuantity/lot.packSize
 
 });
 }
@@ -160,7 +178,7 @@ var all_requisitions=_.filter($scope.requstions,function(req){
 return;
 }
 );
-lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.lotId,prod.productId);
+lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.lotId,lot.locationId,prod.productId);
 if(Number.isNaN(lot.amount)){
 lot.amount=lot.maxSoh;
 }
@@ -234,7 +252,7 @@ $scope.requstions.forEach(function(req){
 
 });
 
-console.log($scope.distribution_list);
+//console.log($scope.distribution_list);
 
  SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
   console.log(distribution);
@@ -290,10 +308,9 @@ distribution.lineItems = [];
  angular.forEach(facility.ordered, function (product) {
 
 var lineItem = {};
-
         if (product.amount > 0) {
 
-            console.log("Product");
+
 
             console.log(product);
 
@@ -301,8 +318,12 @@ var lineItem = {};
              lineItem.quantity = product.totalQuantity;
               var totalQuantity=0;
 
+              console.log("given lot");
+              console.log(product.given);
+            var l = {};
+                          lineItem.lots = [];
+
              angular.forEach(product.given, function(lot) {
-              lineItem.lots = [];
 
               console.log(lot);
 
@@ -316,7 +337,7 @@ var lineItem = {};
              if (lotQuantity !== null && lotQuantity > 0) {
                                          console.log("here again");
                 totalQuantity=totalQuantity+lotQuantity;
-                     var l = {};
+
                      var event = {};
                      event.type = "ISSUE";
                      event.productCode = product.productCode;
@@ -341,8 +362,8 @@ var lineItem = {};
 
 
                      l.quantity = lotQuantity/lot.packSize;
-                     event.lots=l;
-                     lineItem.lots.push(l);
+                     event.lots=lot;
+                     lineItem.lots.push(lot);
                      events.push(event);
 
              }
@@ -368,6 +389,7 @@ var lineItem = {};
 
 
 
+
 StockEvent.save({facilityId: homeFacility}, events, function (data) {
  console.log(data);
  if (data.success) {
@@ -390,8 +412,7 @@ $scope.requstions.forEach(function(req){
 });
 
 
-
- /*ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
+ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 
 console.log($scope.distribution_list);
@@ -399,13 +420,17 @@ console.log($scope.distribution_list);
   $location.path('');
                   console.log('distributed');
 
-                        });*/
+                        });
 
-  /*UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
+
+
+UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
                     console.log('distributed');
-  });*/
+  });
+
                     }
  });
+
 
 
 
