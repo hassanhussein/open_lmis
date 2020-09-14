@@ -212,6 +212,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularTreeview','angularC
              controller: HomeFacilityQuantificationExtractController,
              templateUrl: 'partials/home-facility-quantification-extract2.html',
               reloadOnSearch: false
+             }).when('/product-list', {
+             controller: ProductListReportController,
+             templateUrl: 'partials/product-list-summary.html',
+              reloadOnSearch: false
              })
         .otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {

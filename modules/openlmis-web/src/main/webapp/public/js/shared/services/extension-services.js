@@ -1439,3 +1439,7 @@ services.factory('GetDistrictUserOnly', function($resource){
 services.factory('GetAllLongs', function($resource){
     return $resource('/rest-api/getLLINLogs.json', {}, {});
 });
+
+services.factory('GetProductReport', function($resource){
+    return $resource('/reports/reportdata/productListReport.json', {}, {});
+});

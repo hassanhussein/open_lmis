@@ -1179,4 +1179,19 @@ public class InteractiveReportController extends BaseController {
     }
 
 
+ @RequestMapping(value = "/reportdata/productListReport", method = GET, headers = BaseController.ACCEPT_JSON)
+
+    public Pages getProductListReport(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                               @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                               HttpServletRequest request
+    ) {
+        Report report = reportManager.getReportByKey("product_list_report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<ProductListReport> productListReportList =
+                (List<ProductListReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, productListReportList);
+    }
+
+
 }

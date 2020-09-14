@@ -773,6 +773,16 @@
                     <property name="title" value="report.title.monthly.stock.status.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="product_list_report"/>
+                    <property name="template" value="product-list-report.jasper"/>
+                    <property name="reportDataProvider" ref="productListReportDataProvider"/>
+                    <property name="id" value="RP_product List Report"/>
+                    <property name="name" value="Product List Report"/>
+                    <property name="title" value="report.title.product.list.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>
