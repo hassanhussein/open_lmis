@@ -1,4 +1,4 @@
-<div class="comments-popup total_cost"  style="width:390px !important" ng-hide="!show">
+<div class="comments-popup"  style="width:390px !important" ng-hide="!show">
     <!--
        ~ This program is part of the OpenLMIS logistics management information system platform software.
        ~ Copyright © 2013 VillageReach
@@ -98,14 +98,14 @@
                         </select>
                      </td>
                      <td> <input
-                                   name="quantity{{currentRnrLineItem.id}}"
-                                   ng-disabled="formDisabled || sourceOfFund.skipped"
-                                   ng-model="sourceOfFund.quantity"
-                                   ng-trim="false"
-                                   ng-keyup="checkAmount($event,sourceOfFund.quantity, sourceOfFund.name)"
-                                   openlmis-message="label.amount"
-                                   style="width: 130px !important; margin-left: 10px"
-                                   type="number"/>
+                             name="quantity{{currentRnrLineItem.id}}"
+                             ng-disabled="formDisabled || sourceOfFund.skipped"
+                             ng-model="sourceOfFund.quantity"
+                             ng-trim="false"
+                             ng-keyup="checkAmount($event,sourceOfFund.quantity, sourceOfFund.name)"
+                             openlmis-message="label.amount"
+                             style="width: 130px !important; margin-left: 10px"
+                             type="number"/>
                      </td>
                      <td>
                         <input class="btn btn-primary" id="addLossesAndAdjustment1"

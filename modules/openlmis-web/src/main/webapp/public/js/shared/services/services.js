@@ -614,3 +614,8 @@ services.factory('UserSupervisedFacilitiesForProgramForMonitoringForm', function
 services.factory('GetNotificationList', function($resource){
     return $resource('/stock-notification/:program.json', {}, {});
 });
+
+services.factory('FundsSource', function ($resource) {
+    return $resource('/requisitions/:facility/get-funding-sources.json', {}, {});
+});
+

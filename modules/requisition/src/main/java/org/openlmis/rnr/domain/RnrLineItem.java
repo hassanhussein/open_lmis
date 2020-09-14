@@ -417,7 +417,7 @@ public class RnrLineItem extends LineItem {
     }
 
     public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
-        String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS, SKIPPED, QUANTITY_RECEIVED, REMARKS_FOR_TB};
+        String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS, SKIPPED, QUANTITY_RECEIVED, REMARKS_FOR_TB, NEXT_MONTH_PATIENT};
 
         for (String fieldName : approverEditableFields) {
             copyField(fieldName, lineItem, template);

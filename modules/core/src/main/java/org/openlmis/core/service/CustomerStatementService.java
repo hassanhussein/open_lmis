@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
@@ -86,7 +87,8 @@ public class CustomerStatementService {
             //  urlConnection.setRequestProperty("Authorization", "Basic "+base64);
             urlConnection.setRequestProperty("Accept", "application/json");
             urlConnection.setRequestMethod("POST");
-            urlConnection.setConnectTimeout(10000);
+            urlConnection.setConnectTimeout(5000);
+            urlConnection.setReadTimeout(5000);
             urlConnection.connect();
             //Write
             OutputStream outputStream = urlConnection.getOutputStream();
@@ -141,7 +143,10 @@ public class CustomerStatementService {
 
             }
 
-        } catch (UnsupportedEncodingException e) {
+        } catch (SocketTimeoutException ste){
+            ste.printStackTrace();
+        }
+        catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();

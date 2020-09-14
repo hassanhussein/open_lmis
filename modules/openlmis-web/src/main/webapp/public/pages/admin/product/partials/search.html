@@ -48,7 +48,7 @@
     <table id="programProductTable" class="table table-bordered search-list" ng-show="showResults">
       <thead>
       <tr class="gradient-header resultCountHeader">
-        <th colspan="11">
+        <th colspan="12">
         <span ng-switch on="totalItems" ng-show="searchedQuery">
           <h3 id="noResultMessage" ng-switch-when="0" openlmis-message="msg.no.matches|searchedQuery"></h3>
           <h3 id="oneResultMessage" ng-switch-when="1" openlmis-message="msg.one.match|searchedQuery"></h3>
@@ -61,6 +61,7 @@
       <tr class="gradient-header" ng-show="programProducts.length">
         <th id="fullSupply" openlmis-message="header.full.supply"></th>
         <th id="code" openlmis-message="header.code"></th>
+        <th id="alternateItemCode" openlmis-message="header.alternateCode"></th>
         <th id="name" openlmis-message="header.name"></th>
         <th id="program" openlmis-message="option.value.program"></th>
         <th id="strength" openlmis-message="header.strength"></th>
@@ -74,11 +75,11 @@
       </thead>
       <tbody ng-repeat="programProduct in programProducts">
       <tr ng-if="programProduct.productCategory">
-        <td id="category{{$index}}" class="productCategory" colspan="11"
+        <td id="category{{$index}}" class="productCategory" colspan="12"
             ng-show="showCategory($index)"
             ng-bind="programProduct.productCategory.name"></td>
       <tr ng-if="!programProduct.productCategory">
-        <td id="category{{$index}}" class="productCategory" colspan="11"
+        <td id="category{{$index}}" class="productCategory" colspan="12"
             ng-show="showCategory($index)"
             openlmis-message="label.no.category"></td>
       </tr>
@@ -88,6 +89,7 @@
              ng-class="{'icon-ok': programProduct.product.fullSupply}"></i>
         </td>
         <td id="code{{$index}}" ng-bind="programProduct.product.code"></td>
+        <td id="alternateItemCode{{$index}}" ng-bind="programProduct.product.alternateItemCode"></td>
         <td><a id="name{{$index}}" href="" ng-click="edit(programProduct.product.id)" ng-bind="programProduct.product.primaryName"></a></td>
         <td id="program{{$index}}" ng-bind="programProduct.program.name"></td>
         <td id="strength{{$index}}" ng-bind="programProduct.product.strength"></td>
