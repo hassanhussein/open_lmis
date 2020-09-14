@@ -1,7 +1,11 @@
 package org.openlmis.vaccine.domain.wms;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.stockmanagement.domain.StockCardEntryKV;
+
+import java.util.List;
 
 @Data
 public class Adjustment extends BaseModel {
@@ -11,5 +15,8 @@ public class Adjustment extends BaseModel {
     private Long toWarehouseId;
     private Long toBinId;
     private  Boolean isTransfer;
+
+    @JsonIgnore
+    private List<StockCardEntryKV> keyValues;
 
 }

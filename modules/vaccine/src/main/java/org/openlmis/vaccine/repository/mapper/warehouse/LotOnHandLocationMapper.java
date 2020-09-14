@@ -79,7 +79,9 @@ public interface LotOnHandLocationMapper {
             "                                                                      case when toBin is null then locationName else facility end as toBin2,\n" +
             "                                                                     facility storeName, received, issued, adjustment,total,locationName,\n" +
             "                                                \n" +
-            "                                                             (SUM(total) over(partition by locationName order by id))  as loh,(SUM(total) over(order by id))  as soh,\n" +
+            "                                                             (SUM(total) over(partition by locationName order by id))  as loh," +
+            "   CASE WHEN row_number() over (order by id asc) =1 THEN (SUM(total) over(partition by locationName order by id)) else \n" +
+            " (SUM(total) over(order by id)) end as soh, " +
             "                                                             vvm,expirationDate,lotNumber\n" +
             "\n" +
             "\n" +
@@ -115,10 +117,10 @@ public interface LotOnHandLocationMapper {
             "                                                                                               \n" +
             "                                                \n" +
             "                                                               LEFT join location_stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'  \n" +
-            "                                                               WHERE se.type <> 'DEBIT' \n" +
+            "                                                                \n" +
             "                                                \n" +
-            "                                                              WHERE \n" +
-            "                                                                 loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
+            "                                                              \n" +
+            "                                                               WHERE  loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
             "                                                                group by l.lotnumber,loc.name\n" +
             "\n" +
             "                                                             \n" +
@@ -151,9 +153,9 @@ public interface LotOnHandLocationMapper {
             "                                                                                               \n" +
             "                                                \n" +
             "                                                               LEFT join location_stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'  \n" +
-            "                                                               WHERE se.type <> 'DEBIT' \n" +
+            "                                                               WHERE  \n" +
             "                                                \n" +
-            "                                                              WHERE \n" +
+            "                                                               \n" +
             "                                                                 loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
             "                                                               order by se.createddate\n" +
             "                        \n" +

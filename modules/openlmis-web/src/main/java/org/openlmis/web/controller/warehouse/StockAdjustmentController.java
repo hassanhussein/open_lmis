@@ -5,6 +5,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.stockmanagement.domain.StockCardEntryKV;
 import org.openlmis.vaccine.domain.wms.Adjustment;
 import org.openlmis.vaccine.service.warehouse.AdjustmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -80,7 +84,11 @@ public class StockAdjustmentController extends BaseController {
 
                 adjustmentService.save(item, loggedInUserId(request), facilityID);
             }
+
+
+
         }
+
         return OpenLmisResponse.response("adju",results);
 
     }
