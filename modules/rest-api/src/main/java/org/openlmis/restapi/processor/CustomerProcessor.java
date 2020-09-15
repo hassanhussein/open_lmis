@@ -28,6 +28,9 @@ public class CustomerProcessor {
   @Value("${elmis.default.geographic.zone.code}")
   private String defaultGeographicZoneCode;
 
+  @Value("${elmis.default.integration.user.id}")
+  Long integrationUserId;
+
   @Autowired
   FacilityService facilityService;
 
@@ -35,6 +38,7 @@ public class CustomerProcessor {
     Facility facility = facilityService.getByCodeFor(customer.getCustomerId());
     if (facility == null) {
       facility = customer.createNewFacility(defaultFacilityTypeCode, defaultGeographicZoneCode);
+      facility.setModifiedBy(integrationUserId);
       facilityService.save(facility);
     } else {
       customer.updateFacility(facility);
