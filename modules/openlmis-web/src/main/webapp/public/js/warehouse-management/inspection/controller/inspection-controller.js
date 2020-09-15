@@ -274,33 +274,33 @@ $scope.lotInspected=false;
 $scope.lineItem=$scope.inspection.lineItems[0];
 //   update line lineItems
 
-angular.forEach($scope.lineItem.lots,function(lot){
-lot.vvm=[];
-    lot.vvm.push(
-        { vvmId:1,
-           quantity:10,
-           failed:{
-           quantity:null,
-           reasonId:null,
-           vvmId:null,
-           locationId:null
-           }
-        }
-    );
-
-     lot.vvm.push(
-            { vvmId:2,
-               quantity:null,
-               failed:{
-               quantity:null,
-               reasonId:null,
-               vvmId:null,
-               locationId:null
-
-               }
-            }
-        );
-});
+//angular.forEach($scope.lineItem.lots,function(lot){
+//lot.vvm=[];
+//    lot.vvm.push(
+//        { vvmId:1,
+//           quantity:10,
+//           failed:{
+//           quantity:null,
+//           reasonId:null,
+//           vvmId:null,
+//           locationId:null
+//           }
+//        }
+//    );
+//
+//     lot.vvm.push(
+//            { vvmId:2,
+//               quantity:null,
+//               failed:{
+//               quantity:null,
+//               reasonId:null,
+//               vvmId:null,
+//               locationId:null
+//
+//               }
+//            }
+//        );
+//});
 
    $scope.vvmStatusList = vvmList;
    $scope.totalPassQty=0;
@@ -809,7 +809,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
-//      console.log(data.inspection)
+      console.log(data.inspection)
         deferred.resolve(data.inspection);
       }, {});
     }, 100);
