@@ -158,21 +158,21 @@ public interface LotOnHandLocationMapper {
     @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{quantity} WHERE id = #{id}   ")
     void updateLotOnHandLocation(@Param("id") Long id, @Param("quantity") Integer quantity);
 
-    @Select(" WITH Q as (\n" +
-            "             SELECT p.id productId, p.primaryName product, p.code productCode, sum(h.quantityOnHand) quantityOnHand FROM STOCK_CARDS SC \n" +
+    @Select("  WITH Q as (  SELECT p.id productId, p.primaryName product, p.code productCode, ((coalesce((select sum(quantity) from lot_location_entries lt where  stockcardid=h.stockcardid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where stockcardid=h.stockcardid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt\n" +
+            "                                 where stockcardid=h.stockcardid and lt.type='DEBIT'),0),0)))  \n" +
+            "                         quantityOnHand FROM STOCK_CARDS SC  \n" +
+            "                          \n" +
+            "                        left JOIN lot_location_entries h on SC.ID =  H.STOCKCARDId \n" +
             "             \n" +
-            "            JOIN lots_on_hand h on SC.ID =  H.STOCKCARDId\n" +
-            "\n" +
-            "            JOIN lot_on_hand_locations L ON h.id =L.LOTONHANDID\n" +
-            "            \n" +
-            "            JOIN lots LO ON Lo.id = h.lotId\n" +
-            "            \n" +
-            "            JOIN products P on lo.productID = p.id\n" +
-            "            \n" +
-            "             where sc.facilityId = #{facilityId} and totalQuantityOnHand > 0\n" +
-            "             group by p.id , p.primaryName , p.code\n" +
-            "\n" +
-            "             ) select * from q where quantityOnHand> 0")
+            "                        left JOIN lot_on_hand_locations L ON h.id =L.LOTONHANDID \n" +
+            "                         \n" +
+            "                        left JOIN lots LO ON Lo.id = h.lotId \n" +
+            "                         \n" +
+            "                        left JOIN products P on lo.productID = p.id \n" +
+            "                         \n" +
+            "                         where sc.facilityId = #{facilityId}\n" +
+            "                         group by p.id, p.primaryName , p.code,h.stockcardid) select * from q where quantityOnHand> 0\n" +
+            "             ")
     List<StockCardDTO> getStockCardWithLocationBy(@Param("facilityId") Long facilityId);
 
     @Select("select VVMstatus vvmId, lotNumber from inspections i\n" +
