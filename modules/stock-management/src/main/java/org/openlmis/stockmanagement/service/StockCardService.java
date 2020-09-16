@@ -161,7 +161,7 @@ public class StockCardService {
       lotOnHand.setInputType("DEBIT");
 
       //lotOnHand.addToQuantityOnHand(entry.getQuantity());
-      lotRepository.saveLotOnHand(lotOnHand);
+      lotRepository.saveLotOnHandDistribution(lotOnHand);
     }else{
       //System.out.println("Stock on hand empty");
     }

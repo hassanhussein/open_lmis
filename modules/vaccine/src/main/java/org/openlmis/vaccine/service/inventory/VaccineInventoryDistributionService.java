@@ -152,9 +152,9 @@ public Long save(VaccineDistribution distribution, Long userId) {
         if(!itemList.isEmpty()) {
 
             for (VaccineDistributionLineItem item : itemList) {
-                repository.deleteLotsByLineItem(item.getId());
+              //  repository.deleteLotsByLineItem(item.getId());
             }
-          repository.deleteLineItemByDistributionId(distribution.getId());
+          //repository.deleteLineItemByDistributionId(distribution.getId());
         }
 
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
@@ -162,23 +162,27 @@ public Long save(VaccineDistribution distribution, Long userId) {
             lineItem.setCreatedBy(userId);
             lineItem.setModifiedBy(userId);
             if (lineItem.getId() != null) {
+               // System.out.println(lineItem.getId()+" passed here update: "+lineItem.getGap());
+
                 repository.updateDistributionLineItem(lineItem);
             } else {
                 repository.saveDistributionLineItem(lineItem);
             }
 
-            repository.deleteLotsByLineItem(lineItem.getId());
+            //repository.deleteLotsByLineItem(lineItem.getId());
             if (lineItem.getLots() != null) {
                 for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
                     lot.setModifiedBy(userId);
                     lot.setCreatedBy(userId);
                     lot.setDistributionLineItemId(lineItem.getId());
-                    lot.setQuantity(lot.getQty());
+                    lot.setQuantity(lot.getQuantity());
                     System.out.println(lot.getQty());
                     if (lot.getId() != null) {
                         repository.updateDistributionLineItemLot(lot);
                    } else {
-                        repository.saveDistributionLineItemLot(lot);
+                        if(lot.getLotId() !=null) {
+                            repository.saveDistributionLineItemLot(lot);
+                        }
                     }
                 }
             }

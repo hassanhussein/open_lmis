@@ -46,6 +46,10 @@ public class LotRepository {
     return l;
   }
 
+  public void saveLotOnHandDistribution(LocationEntry lotOnHand){
+    mapper.insertLotOnHand(lotOnHand);
+  }
+
   public void saveLotOnHand(LocationEntry lotOnHand) {
     if (null == lotOnHand.getId()) {
       mapper.insertLotOnHand(lotOnHand);
