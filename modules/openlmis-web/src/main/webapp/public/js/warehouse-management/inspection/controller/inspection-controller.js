@@ -301,6 +301,74 @@ $scope.lineItem=$scope.inspection.lineItems[0];
 //            }
 //        );
 //});
+function getLotByIdAndVvmId(lotId,vvmId){
+
+    return _.findWhere($scope.lineItem.lots,{id:lotId,vvmStatus:vvmId});
+}
+
+
+angular.forEach($scope.lineItem.lots,function(lot){
+lot.vvm=[];
+
+var foundLotVvm1=getLotByIdAndVvmId(lot.id,1);
+//$scope.vvmRowSpan=(foundLotVvm1.vvmUpdate)
+    lot.vvm.push(
+        { vvmId:1,
+           quantity:typeof foundLotVvm1!=="undefined"?foundLotVvm1.receivedQuantity:null,
+           failed:{
+           quantity:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failQuantity:null,
+           reasonId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failReason:null,
+           vvmId:null,
+           locationId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failLocationId:null
+           }
+        }
+    );
+var foundLotVvm2=getLotByIdAndVvmId(lot.id,2);
+
+     lot.vvm.push(
+            { vvmId:2,
+               quantity:typeof foundLotVvm2!=="undefined"?foundLotVvm2.receivedQuantity:null,
+               failed:{
+               quantity:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failQuantity:null,
+               reasonId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failReason:null,
+               vvmId:null,
+               locationId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failLocationId:null
+
+               }
+            }
+        );
+
+
+
+//        var foundLotVvm3=getLotByIdAndVvmId(lot.id,3);
+//        var foundLotVvm4=getLotByIdAndVvmId(lot.id,4);
+//
+//
+//             lot.vvm.push(
+//                    { vvmId:1,
+//                       quantity:typeof foundLotVvm2!=="undefined"?foundLotVvm2.receivedQuantity:null,
+//                       failed:{
+//                       quantity:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failQuantity:null,
+//                       reasonId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failReason:null,
+//                       vvmId:null,
+//                       locationId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failLocationId:null
+//
+//                       }
+//                    }
+//                );
+
+
+
+
+// then remove all vvm two
+var vvm2Index=$scope.lineItem.lots.indexOf(foundLotVvm2);
+console.log(vvm2Index)
+if(vvm2Index>-1){
+$scope.lineItem.lots.splice(vvm2Index,1);
+}
+
+
+});
 
    $scope.vvmStatusList = vvmList;
    $scope.totalPassQty=0;

@@ -815,12 +815,12 @@
 
                 </tr>
 
-                <tr ng-repeat-end ng-repeat="vvm in lot.vvm" ng-show="$index==0||lot.vvmUpdate">
+                <tr ng-repeat-end ng-repeat="vvm in lot.vvm" >
                     <td class="col-general">
 
                         <div class="" style="margin-top:6px;">
                             <div class="span4">{{getVvmName(vvm.vvmId)}}:</div>
-                            <div class="span8"><input type="text" ng-model="vvm.quantity" ng-disabled="$index==0 && !lot.vvmUpdate" ng-change="vvmQuantityChanged(vvm,lot)" numeric-validator="positiveInteger">
+                            <div class="span8"><input type="text" ng-model="vvm.quantity"  ng-disabled="($index==0 && !lot.vvmUpdate)||!($index==0||lot.vvmUpdate)" ng-change="vvmQuantityChanged(vvm,lot)" numeric-validator="positiveInteger">
                             </div>
 
                         </div>
