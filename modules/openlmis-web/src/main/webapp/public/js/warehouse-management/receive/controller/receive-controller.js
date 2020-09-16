@@ -416,7 +416,8 @@ var total_lot_quantity = 0;
                     },
                     locationId:lot.locationId,
                     vvmId:lot.vvmId,
-                    boxCounted:lot.boxNumber
+                    boxCounted:lot.boxNumber,
+//                    campaign:lot.campaign
 
                 });
 
@@ -970,7 +971,8 @@ return;
                                     boxNumber:lot.boxCounted,
                                     serialnumber: 'string',
                                     locationId:parseInt(lot.locationId,10),
-                                    vvmId:parseInt(lot.vvmId,10)
+                                    vvmId:parseInt(lot.vvmId,10),
+//                                    campaign:lot.campaign,
                                 });
 
 

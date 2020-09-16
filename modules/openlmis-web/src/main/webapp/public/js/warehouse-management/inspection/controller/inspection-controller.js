@@ -725,12 +725,12 @@ var sum=0;
 
 //check the inner form validation
 // if invalid add css class to blink itf
-    if($scope.globalErrorFlag){
-    $scope.enabled=true;
-    return;
-    }else{
-    $scope.enabled=false;
-    }
+//    if($scope.globalErrorFlag){
+//    $scope.enabled=true;
+//    return;
+//    }else{
+//    $scope.enabled=false;
+//    }
 
        if ($scope.inspection.id) {
          $scope.inspection.status  = status;
@@ -763,12 +763,12 @@ $scope.globalErrorFlag=false;
 if(!$scope.hasExpired(lot)){
 
        //check vvm
-        if(lot.vvmStatus===null || !lot.vvmStatus){
-            lot.vvmError=true;
-            $scope.globalErrorFlag=true;
-        }else{
-            lot.vvmError=false;
-        }
+//        if(lot.vvmStatus===null || !lot.vvmStatus){
+//            lot.vvmError=true;
+//            $scope.globalErrorFlag=true;
+//        }else{
+//            lot.vvmError=false;
+//        }
             //only check if lot has not expired
        //check storage location
 //        if((lot.passLocationId===null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity==='')){
@@ -778,20 +778,20 @@ if(!$scope.hasExpired(lot)){
 //               lot.passLocationError=false;
 //           }
        //check fail qty
-          if(lot.failedQuantity>lot.receivedQuantity){
-               lot.failQuantityError=true;
-               $scope.globalErrorFlag=true;
-           }else{
-               lot.failQuantityError=false;
-           }
+//          if(lot.failedQuantity>lot.receivedQuantity){
+//               lot.failQuantityError=true;
+//               $scope.globalErrorFlag=true;
+//           }else{
+//               lot.failQuantityError=false;
+//           }
        //check check fail reason
             //only if we have fail quantity
-             if((lot.failedQuantity!=='0' && lot.failedQuantity)&&!lot.failedReason){
-                       lot.failReasonError=true;
-                       $scope.globalErrorFlag=true;
-                   }else{
-                       lot.failReasonError=false;
-                   }
+//             if((lot.failedQuantity!=='0' && lot.failedQuantity)&&!lot.failedReason){
+//                       lot.failReasonError=true;
+//                       $scope.globalErrorFlag=true;
+//                   }else{
+//                       lot.failReasonError=false;
+//                   }
 }
 
 
@@ -799,40 +799,40 @@ if(!$scope.hasExpired(lot)){
 
    //check fail location
         //only if we have fail quantity
- if((lot.failedReason===4&&lot.failedReason==='')||(lot.failedVvm==='' && lot.failedReason===4)||(lot.failedReason==='')){
-                       lot.failLocationError=true;
-                       $scope.globalErrorFlag=true;
-                   }else{
-                       lot.failLocationError=false;
-                   }
-
+// if((lot.failedReason===4&&lot.failedReason==='')||(lot.failedVvm==='' && lot.failedReason===4)||(lot.failedReason==='')){
+//                       lot.failLocationError=true;
+//                       $scope.globalErrorFlag=true;
+//                   }else{
+//                       lot.failLocationError=false;
+//                   }
+//
 
 
 
    });
-
-    if($scope.globalErrorFlag){
-    return;
-    }else{
-    $scope.globalErrorFlag=false;
-    }
+//
+//    if($scope.globalErrorFlag){
+//    return;
+//    }else{
+//    $scope.globalErrorFlag=false;
+//    }
 
    //process passed qty for all lots
-   angular.forEach(lineItem.lots,function(lot){
-    if(lot.failedQuantity===''||!lot.failedQuantity){
-    lot.failedQuantity=0;
-    }
+//   angular.forEach(lineItem.lots,function(lot){
+//    if(lot.failedQuantity===''||!lot.failedQuantity){
+//    lot.failedQuantity=0;
+//    }
+//
+//     lot.passQuantity=lot.receivedQuantity-parseInt(lot.failedQuantity,10);
+//   });
 
-     lot.passQuantity=lot.receivedQuantity-parseInt(lot.failedQuantity,10);
-   });
-
-  $scope.totalPassQty=sumLots('passQuantity',lineItem);
-  $scope.totalFailQty=sumLots('failedQuantity',lineItem);
-  var quantityFail=0;
-  if($scope.totalFailQty){
-      quantityFail=$scope.totalFailQty;
-  }
-  $scope.totalReceivedQty=quantityFail+$scope.totalPassQty;
+//  $scope.totalPassQty=sumLots('passQuantity',lineItem);
+//  $scope.totalFailQty=sumLots('failedQuantity',lineItem);
+//  var quantityFail=0;
+//  if($scope.totalFailQty){
+//      quantityFail=$scope.totalFailQty;
+//  }
+//  $scope.totalReceivedQty=quantityFail+$scope.totalPassQty;
 
          $scope.inspectLotModal = false;
   $scope.lotInspected=true;
