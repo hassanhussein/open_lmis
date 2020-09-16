@@ -19,11 +19,12 @@ public class VaccineDistributionLineItem extends BaseModel {
     List<VaccineDistributionLineItemLot> lots;
     private Long distributionId;
     private Long productId;
+    private Long id;
     private Product product;
     private Long quantity;
     private Integer vvmStatus;
     private Long quantityRequested;
     private String remarks;
-    private String gap;
+    private Long gap;
 }
 

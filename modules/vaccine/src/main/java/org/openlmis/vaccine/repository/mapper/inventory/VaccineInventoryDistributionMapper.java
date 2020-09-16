@@ -57,9 +57,9 @@ public interface VaccineInventoryDistributionMapper {
     Integer updateDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
 
     @Insert("insert into vaccine_distribution_line_item_lots " +
-            " (distributionlineitemid, lotid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate )" +
+            " (distributionlineitemid, lotid, quantity,vvmid,locationid,stockcardid,packsize, vvmstatus, createdby, createddate, modifiedby,modifieddate )" +
             " values " +
-            " (#{distributionLineItemId}, #{lotId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
+            " (#{distributionLineItemId}, #{lotId}, #{quantity},#{vvmId},#{locationId},#{stockCardId},#{packSize}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW()) ")
     @Options(useGeneratedKeys = true)
     Integer saveDistributionLineItemLot(VaccineDistributionLineItemLot lot);
 

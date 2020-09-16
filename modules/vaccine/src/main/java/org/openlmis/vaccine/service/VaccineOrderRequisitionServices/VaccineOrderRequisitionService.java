@@ -420,6 +420,7 @@ public class VaccineOrderRequisitionService {
 
                            PendingRequestDTO order = new PendingRequestDTO();
                            order.setProduct(item.getProductName());
+                           order.setId(item.getId());
                            order.setProductId(item.getProductId());
                            order.setProductCode(item.getProduct().getCode());
                            order.setAmount((item.getQuantityRequested() == null || item.getQuantityRequested() < 0) ? 0 : item.getQuantityRequested());
@@ -432,7 +433,12 @@ public class VaccineOrderRequisitionService {
                                 LotOnHand l = new LotOnHand();
                                 l.setLotId(h.getLotId());
                                 l.setQuantity(h.getQuantity());
-                                l.setQty(h.getQuantity());
+                                l.setQty(h.getQty());
+                                l.setId(h.getId());
+                                l.setVvmId(h.getVvmId());
+                                l.setLocationId(h.getLocationId());
+                                l.setStockCardId(h.getStockCardId());
+                                l.setPackSize(h.getPackSize());
                                 arrayList.add(l);
                             }
                             order.setGiven(arrayList);

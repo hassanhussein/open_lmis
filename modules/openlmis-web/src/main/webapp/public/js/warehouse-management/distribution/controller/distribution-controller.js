@@ -74,7 +74,7 @@ $scope.requstions.push({
 $scope.getQuantity=function(req,product,lot,regionIndex){
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:product.productId});
-var given = _.findWhere(ordered.given,{lotId:lot.lotId,number:lot.number,vvmId:lot.vvmId,locationId:lot.locationId});
+var given = _.findWhere(ordered.given,{lotId:lot.lotId,vvmId:lot.vvmId,locationId:lot.locationId});
 if(given===undefined){
     return '';
 }
@@ -123,7 +123,7 @@ $scope.giveLot=function(req,prod,lot,qty,regionIndex){
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
-var given= _.findWhere(ordered.given,{lotId:lot.lotId,number:lot.number,vvmId:lot.vvmId,locationId:lot.locationId});
+var given= _.findWhere(ordered.given,{lotId:lot.lotId,vvmId:lot.vvmId,locationId:lot.locationId});
 if(qty===""){
 qty=0;
 }
@@ -252,7 +252,7 @@ $scope.requstions.forEach(function(req){
 
 });
 
-//console.log($scope.distribution_list);
+console.log($scope.distribution_list);
 
  SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
   console.log(distribution);
