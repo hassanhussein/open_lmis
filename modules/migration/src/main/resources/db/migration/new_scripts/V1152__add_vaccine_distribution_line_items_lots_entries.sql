@@ -11,7 +11,6 @@ ALTER TABLE public.vaccine_distribution_line_item_lots
     ALTER TABLE public.vaccine_distribution_line_item_lots
         ADD COLUMN IF NOT EXISTS locationid integer;
 
-
         ALTER TABLE public.vaccine_distribution_line_item_lots
             ADD COLUMN IF NOT EXISTS stockcardid integer;
 
