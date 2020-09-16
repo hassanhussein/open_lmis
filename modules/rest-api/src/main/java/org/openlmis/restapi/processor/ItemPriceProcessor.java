@@ -46,6 +46,10 @@ public class ItemPriceProcessor {
   }
 
   private void updatePrice(ProgramProduct programProduct, BigDecimal newPrice) {
+    if(programProduct == null || newPrice == null) {
+      // there is nothing to save.
+      return;
+    }
     ProgramProductPrice ppp = new ProgramProductPrice();
     ppp.setPricePerDosage(new Money(newPrice));
     ppp.setProgramProduct(programProduct);
