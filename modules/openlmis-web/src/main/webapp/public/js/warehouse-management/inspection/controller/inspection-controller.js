@@ -318,7 +318,7 @@ var foundLotVvm1=getLotByIdAndVvmId(lot.id,1);
            failed:{
            quantity:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failQuantity:null,
            reasonId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failReason:null,
-           vvmId:null,
+           vvmId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failVvmId:null,
            locationId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failLocationId:null
            }
         }
@@ -331,7 +331,7 @@ var foundLotVvm2=getLotByIdAndVvmId(lot.id,2);
                failed:{
                quantity:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failQuantity:null,
                reasonId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failReason:null,
-               vvmId:null,
+               vvmId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failVvmId:null,
                locationId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failLocationId:null
 
                }
