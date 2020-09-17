@@ -25,7 +25,7 @@
 
             <div class="form-field row-fluid">
                 <select ui-select2="{width: '100%'}" ng-model="fromLot"
-                        ng-options="lot as lot.lotNumber for lot in lineItem.lots">
+                        ng-options="lot as (lot.lotNumber+'('+(lot.vvmStatus==1?'VVM1':'VVM2')+')') for lot in lineItem.lots">
                     <option value="">--Select Lot--</option>
                     <!--                    <option ng ng-repeat="lot in lineItem.lots">{{lot.lotNumber}}</option>-->
 
