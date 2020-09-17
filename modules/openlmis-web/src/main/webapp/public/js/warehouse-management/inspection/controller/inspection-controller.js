@@ -324,7 +324,7 @@ var foundLotVvm1=getLotByIdAndVvmId(lot.lotNumber,1);
         }
     );
 var foundLotVvm2=getLotByIdAndVvmId(lot.lotNumber,2);
-console.log(foundLotVvm2)
+//console.log(foundLotVvm2)
      lot.vvm.push(
             { vvmId:2,
                quantity:typeof foundLotVvm2!=="undefined"?parseInt(foundLotVvm2.passQuantity,10):null,
@@ -877,7 +877,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetInspectionById.get({id: inspectionId}, function (data) {
-      console.log(data.inspection)
+//      console.log(data.inspection)
         deferred.resolve(data.inspection);
       }, {});
     }, 100);
