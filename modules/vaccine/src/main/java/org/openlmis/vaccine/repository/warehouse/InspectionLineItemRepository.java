@@ -46,7 +46,6 @@ public class InspectionLineItemRepository {
                    // System.out.println("Failed:"+failed.getQuantity());
                     //lotVVm.set
 
-
                     inspectionLotRepository.updateOrSave(lotVVm);
 
                     //System.out.println("passed: "+lotVVm.getQuantity());
