@@ -18,7 +18,7 @@ function PutawayController($scope, $location,GetInspectionById,putaway,GetWareho
 $scope.movementQueue=[];
 $scope.lineItem=putaway.lineItems[0];
 
-console.log($scope.lineItem)
+//console.log($scope.lineItem)
 
 
 

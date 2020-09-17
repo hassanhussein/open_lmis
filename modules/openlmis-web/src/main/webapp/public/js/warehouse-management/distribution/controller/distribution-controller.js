@@ -132,19 +132,19 @@ console.log("called filled");
 console.log(ordered.given);
 
 //deduct soh for this product for this lot
-if(given){
 var lotQuantity=0;
+if(given){
  if(qty){
       lotQuantity=parseInt(qty,10);
   }
 //edit this lot
 given.qty=qty;
-given.quantity=lotQuantity/lot.packSize
+given.quantity=lotQuantity/lot.packSize;
 
 //console.log('edit lot')
 }else{
 //push this lot
-var lotQuantity=0;
+//var lotQuantity=0;
  if(qty){
       lotQuantity=parseInt(qty,10);
   }
