@@ -16,7 +16,9 @@ import java.util.List;
 @NoArgsConstructor
 public class VVMLots extends BaseModel {
     private Long vvmId;
-    private Integer quantity;
+    private Long failVvmId;
+
+    private Long quantity;
 
     private InspectionLineItem lineItem;
 
@@ -48,5 +50,6 @@ public class VVMLots extends BaseModel {
     private String boxNumber;
 
     private LocationDTO location;
+    private  InspectionFailProblem failed;
 
 }

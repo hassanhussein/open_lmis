@@ -1,5 +1,6 @@
 package org.openlmis.vaccine.repository.warehouse;
 
+import org.openlmis.vaccine.domain.wms.InspectionFailProblem;
 import org.openlmis.vaccine.domain.wms.InspectionLineItem;
 import org.openlmis.vaccine.domain.wms.InspectionLot;
 import org.openlmis.vaccine.domain.wms.VVMLots;
@@ -32,6 +33,18 @@ public class InspectionLineItemRepository {
                     lotVVm.setLotNumber(lot.getLotNumber());
                     lotVVm.setPassLocationId(lot.getPassLocationId());
                     lotVVm.setExpiryDate(lot.getExpiryDate());
+
+                    InspectionFailProblem failed=lotVVm.getFailed();
+                    lotVVm.setFailQuantity(failed.getQuantity());
+                    lotVVm.setFailReason(failed.getReasonId());
+                    lotVVm.setFailLocationId(failed.getLocationId());
+                    lotVVm.setFailVvmId(failed.getVvmId());
+
+                    if(failed.getQuantity()!=null){
+                        lotVVm.setQuantity(lotVVm.getQuantity()-failed.getQuantity());
+                    }
+                   // System.out.println("Failed:"+failed.getQuantity());
+                    //lotVVm.set
 
 
                     inspectionLotRepository.updateOrSave(lotVVm);
