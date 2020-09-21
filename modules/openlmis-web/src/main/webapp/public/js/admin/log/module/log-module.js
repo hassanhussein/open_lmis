@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-angular.module('logs', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog']).
+angular.module('dhis2_logs', ['openlmis','ui.bootstrap.modal', 'ui.bootstrap.dialog']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
         when('/list', {controller: LogController, templateUrl: 'partials/list.html'}).otherwise({redirectTo: '/list'});
