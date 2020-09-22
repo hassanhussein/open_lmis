@@ -96,6 +96,8 @@ public class RnrLineItem extends LineItem {
   private List<Integer> previousNormalizedConsumptions = new ArrayList<>();
   private Money price;
   private Integer total;
+  private Double consumptionrate;
+  private String flagcolor;
   @SuppressWarnings("unused")
   private Boolean skipped = false;
 

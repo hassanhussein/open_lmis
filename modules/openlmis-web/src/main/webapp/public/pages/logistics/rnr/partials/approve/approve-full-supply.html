@@ -36,13 +36,14 @@
         </tr>
         </thead>
         <tbody ng-repeat="rnrLineItem in page.fullSupply">
+
         <tr>
           <td class="productCategory" colspan="{{visibleColumns.fullSupply.fixed.length}}"
               ng-show="showCategory($index)"
               ng-bind="rnrLineItem.productCategory"></td>
         </tr>
         <tr>
-          <td class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
+          <td   class="cell-input col-{{ column.name }}" ng-repeat="column in visibleColumns.fullSupply.fixed">
             <span ng-switch on="column.name">
               <span ng-switch-when="skipped">
                 <input ng-model="rnrLineItem[column.name]" id="skip_{{$parent.$parent.$index}}"
@@ -70,7 +71,7 @@
               ng-show="showCategory($index)"></td>
         </tr>
         <tr>
-          <td class="cell-input col-{{ column.name }}"
+          <td ng-style="{'background-color':rnrLineItem.flagcolor}"  class="cell-input col-{{ column.name }}"
               ng-repeat="column in visibleColumns.fullSupply.scrollable">
             <span ng-switch on="column.name">
               <span ng-switch-when="lossesAndAdjustments">
@@ -82,7 +83,7 @@
                 </div>
               </span>
 
-              <span ng-switch-when="quantityApproved" class="position-relative">
+              <span  ng-switch-when="quantityApproved" class="position-relative">
                 <input ng-change='rnr.fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
                        ng-model="rnrLineItem[column.name]" numeric-validator="positiveInteger" maxlength="8"
                        name="quantityApproved{{$parent.$parent.$index}}" ng-disabled="rnrLineItem['skipped']"

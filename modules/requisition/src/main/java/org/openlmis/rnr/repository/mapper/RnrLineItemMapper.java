@@ -41,7 +41,15 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select({"SELECT rli.*, p.strength, p.primaryname " ,
+  @Select({"SELECT rli.*, p.strength, p.primaryname , " +
+          " round(100*((rli.normalizedconsumption - COALESCE(rli.amc, 0)) /" +
+                  " COALESCE(NULLIF(rli.amc, 0), 1))::numeric, 4) AS consumptionrate ,"+
+         "( SELECT df.description" +
+                  "           FROM data_range_flags_configuration df\n" +
+                  "          WHERE LOWER(category)= 'consumption' and df.range @> round(100*\n" +
+                  "  (" +
+                  "rli.normalizedconsumption- COALESCE(rli.amc, 0)) / COALESCE(NULLIF(rli.amc, 0), 1)\n" +
+                  " , 4)::numeric) AS flagcolor"+
           "          FROM requisition_line_items rli " ,
           " inner join  requisitions r on r.id=rli.rnrid " ,
           "  inner join products p on p.code=rli.productcode " ,
