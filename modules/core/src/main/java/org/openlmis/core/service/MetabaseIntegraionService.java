@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.MetabaseItem;
 import org.openlmis.core.domain.MetabaseMenu;
 import org.openlmis.core.domain.MetabasePage;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.MetabaseIntegraionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,10 +34,14 @@ public class MetabaseIntegraionService {
     private List<MetabaseMenu> metabaseMenuList;
 
     public void addMetabaseMenu(MetabaseMenu metabaseMenu) {
+
         repository.addMetabaseMenu(metabaseMenu);
     }
 
     public void addMetabasePage(MetabasePage metabasePage) {
+        if(!validateMenu(metabasePage)){
+            throw  new DataException("error.invalid.hierarchy");
+        }
         repository.addMetabasePage(metabasePage);
     }
 
@@ -103,5 +108,13 @@ public class MetabaseIntegraionService {
 
     public List<MetabaseMenu> loadFlatMetabaseMenuList() {
         return this.repository.loadMetabaseMenuList();
+    }
+
+    public boolean validateMenu(MetabasePage page) {
+        boolean isValid = true;
+        if(!page.isMenuItem() && (page.getMenu()==null || page.getMenu().getId()==null || page.getMenu().getId().equals(0l))){
+            isValid=false;
+        }
+        return isValid;
     }
 }
