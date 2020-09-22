@@ -28,6 +28,9 @@ public class ItemProcessor {
   @Value("${elmis.default.product.default.product.form.code}")
   private String defaultProductFormCode;
 
+  @Value("${elmis.default.integration.user.id}")
+  Long integrationUserId;
+
   @Autowired
   ProductService productService;
 
@@ -36,6 +39,7 @@ public class ItemProcessor {
 
     if(product == null) {
       Product newProduct = item.createNewProduct(defaultDosageUnitCode, defaultProductFormCode);
+      newProduct.setModifiedBy(integrationUserId);
       productService.save(newProduct);
     }
   }

@@ -68,6 +68,7 @@ public class Item {
     product.setTracer(false);
     product.setPackRoundingThreshold(1);
     product.setRoundToZero(true);
+    product.setFullSupply(true);
     return product;
   }
 }

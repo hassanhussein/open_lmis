@@ -23,8 +23,12 @@ import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.logging.Logger;
+
 @Service
 public class ShipmentProcessor {
+
+  Logger logger = Logger.getLogger(ShipmentProcessor.class.toString());
 
   @Autowired
   private ShipmentService shipmentService;
@@ -34,6 +38,9 @@ public class ShipmentProcessor {
 
   public void process(Shipment shipment) {
     Order order = orderService.getByOrderNumber(shipment.getOrderNumber());
+    logger.info("Shipment is being processed.");
+    logger.info(shipment.getOrderNumber());
+    logger.info("Number of line Items: " + shipment.getDetail().size());
     if (order == null) {
       // this shipment cannot be processed becasue a corresponding order was not found for it.
       return;
