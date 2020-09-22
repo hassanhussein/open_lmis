@@ -421,4 +421,27 @@ public class LookupController {
         return ResponseEntity.ok(OK);
     }
 
+
+   @RequestMapping(value = "/rest-api/sc-portal-products", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getAllProducts(HttpServletRequest request){
+
+        try {
+            lookupService.getAllProducts();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(OK);
+    }
+
+    @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getStockInHand(HttpServletRequest request){
+
+        try {
+            lookupService.getStockInHand();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(OK);
+    }
+
 }

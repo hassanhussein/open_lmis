@@ -24,6 +24,7 @@ import org.openlmis.core.repository.mapper.ProgramProductMapper;
 import org.openlmis.lookupapi.mapper.DosageUnitReportMapper;
 import org.openlmis.lookupapi.mapper.GeographicLevelReportMapper;
 import org.openlmis.lookupapi.mapper.ILInterfaceMapper;
+import org.openlmis.lookupapi.mapper.SCPortalInterfaceMapper;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.MSDStockDTO;
 import org.openlmis.lookupapi.model.ProgramReferenceData;
@@ -100,6 +101,9 @@ public class LookupService {
 
   @Autowired
   private ILInterfaceMapper interfaceMapper;
+
+  @Autowired
+  private SCPortalInterfaceMapper scPortalInterfaceMapper;
 
   public List<Program> getAllPrograms() {
     return programMapper.getAll();
@@ -247,5 +251,13 @@ public class LookupService {
   public BaseModel getByHfrCode(HealthFacilityDTO hfr) {
     return interfaceMapper.getByFacilityCode(hfr.facIDNumber);
   }
+
+  public List<HashMap<String,Object>>getStockInHand(){
+    return scPortalInterfaceMapper.getStockInHand();
+  }
+  public List<HashMap<String,Object>>getAllProducts(){
+    return scPortalInterfaceMapper.getAllProducts();
+  }
+
 
 }

@@ -7,6 +7,7 @@ import org.openlmis.lookupapi.model.MSDStockDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @Repository
@@ -71,4 +72,7 @@ public interface ILInterfaceMapper {
 
     @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
     void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
+
+
+
 }
