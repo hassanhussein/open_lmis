@@ -119,7 +119,7 @@ public class WmsReportController extends BaseController {
     @RequestMapping(value = "/list-picking")
     public String getPickingItems() {
         try {
-            long ID = 3531;
+            long ID = 3588;
             return wmsReportService.getArrayReport(1, ID);
         } catch (Exception e) {
             e.printStackTrace();

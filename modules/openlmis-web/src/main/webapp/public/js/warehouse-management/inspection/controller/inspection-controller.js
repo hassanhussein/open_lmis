@@ -736,7 +736,7 @@ var sum=0;
          $scope.inspection.status  = status;
          $scope.inspection.receiptNumber = $scope.inspection.receive.receiveLineItems[0].receiveNumber;
 
-//         console.log($scope.inspection);
+        console.log($scope.inspection);
 
          UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
 

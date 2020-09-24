@@ -20,6 +20,7 @@ public class VaccineDistributionLineItem extends BaseModel {
     private Long distributionId;
     private Long productId;
     private Long id;
+    private Long distributionLineItemId;
     private Product product;
     private Long quantity;
     private Integer vvmStatus;

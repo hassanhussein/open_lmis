@@ -35,6 +35,7 @@ public class LotOnHand extends BaseModel {
   private Long packSize;
 
   private Long quantity;
+  private Long distributionLineItemId;
 
   private Long qty;
 

@@ -158,9 +158,7 @@ public interface LotOnHandLocationMapper {
     @Update(" UPDATE lot_on_hand_locations SET quantityOnHand=#{quantity} WHERE id = #{id}   ")
     void updateLotOnHandLocation(@Param("id") Long id, @Param("quantity") Integer quantity);
 
-    @Select("  WITH Q as (  SELECT p.id productId, p.primaryName product, p.code productCode, ((coalesce((select sum(quantity) from lot_location_entries lt where  stockcardid=h.stockcardid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where stockcardid=h.stockcardid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt\n" +
-            "                                 where stockcardid=h.stockcardid and lt.type='DEBIT'),0),0)))  \n" +
-            "                         quantityOnHand FROM STOCK_CARDS SC  \n" +
+    @Select("  WITH Q as (  SELECT p.id productId, p.primaryName product, 10 as quantityOnHand, p.code productCode FROM STOCK_CARDS SC  \n" +
             "                          \n" +
             "                        left JOIN lot_location_entries h on SC.ID =  H.STOCKCARDId \n" +
             "             \n" +
@@ -171,7 +169,7 @@ public interface LotOnHandLocationMapper {
             "                        left JOIN products P on lo.productID = p.id \n" +
             "                         \n" +
             "                         where sc.facilityId = #{facilityId}\n" +
-            "                         group by p.id, p.primaryName , p.code,h.stockcardid) select * from q where quantityOnHand> 0\n" +
+            "                         group by p.id, p.primaryName , p.code) select * from q  \n" +
             "             ")
     List<StockCardDTO> getStockCardWithLocationBy(@Param("facilityId") Long facilityId);
 

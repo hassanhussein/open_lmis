@@ -1,0 +1,4 @@
+ALTER TABLE vaccine_distribution_line_items DROP CONSTRAINT IF EXISTS vaccine_distribution_items_Unique;
+
+ALTER TABLE vaccine_distribution_line_items
+ADD CONSTRAINT vaccine_distribution_items_Unique UNIQUE (distributionid,productId);

@@ -434,6 +434,7 @@ public class VaccineOrderRequisitionService {
                                 l.setLotId(h.getLotId());
                                 l.setQuantity(h.getQuantity());
                                 l.setQty(h.getQty());
+                                l.setDistributionLineItemId(h.getDistributionLineItemId());
                                 l.setId(h.getId());
                                 l.setVvmId(h.getVvmId());
                                 l.setLocationId(h.getLocationId());

@@ -38,7 +38,7 @@ public interface VaccineInventoryDistributionMapper {
     Integer saveDistribution(VaccineDistribution vaccineDistribution);
 
     @Update("update vaccine_distributions set " +
-            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks}, pickListId=#{pickListId} " +
+            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
             " where id=#{id}"
     )
     Integer updateDistribution(VaccineDistribution vaccineDistribution);
@@ -46,7 +46,8 @@ public interface VaccineInventoryDistributionMapper {
     @Insert("insert into vaccine_distribution_line_items " +
             " (distributionid, productid, quantity, vvmstatus, createdby, createddate, modifiedby,modifieddate,gap )" +
             " values " +
-            " (#{distributionId}, #{productId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW(), #{gap}) ")
+            " (#{distributionId}, #{productId}, #{quantity}, #{vvmStatus}, #{createdBy},NOW(),#{modifiedBy},NOW(), #{gap}) " +
+            " on conflict(distributionid,productId) DO UPDATE SET modifieddate=NOW()")
     @Options(useGeneratedKeys = true)
     Integer saveDistributionLineItem(VaccineDistributionLineItem vaccineDistributionLineItem);
 

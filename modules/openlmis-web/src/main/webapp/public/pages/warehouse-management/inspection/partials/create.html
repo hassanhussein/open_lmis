@@ -574,6 +574,24 @@
 
                                             </td>
 
+                                            <td ng-if="!viewMode"  >
+                                                <div ng-show="document.deleteOption">
+                                                    <textarea ng-model="document.comment"
+                                                              placeholder="Reason of deletion!" type="text"
+                                                              maxlength="50"></textarea>
+                                                    <span ng-show="document.alertcomment" class="text-error"
+                                                          style="color: darkred">Comment is required!</span>
+                                                </div>
+                                                <input type="button" style="margin-top: 10px; margin-left: 5px"
+                                                       ng-show="document.cancelBtn" class="btn btn-sucess pull-right"
+                                                       ng-click="cancelRemoveFileOptions(document)" value="Cancel">
+
+                                                <input type="button" ng-show="!document.deleted" class="btn btn-danger pull-right"
+                                                       style="margin-top: 10px;" ng-click="removeFileOptionsInspection(document)"
+                                                       value="Remove">
+
+                                            </td>
+
                                         </tr>
                                         </tbody>
                                     </table>

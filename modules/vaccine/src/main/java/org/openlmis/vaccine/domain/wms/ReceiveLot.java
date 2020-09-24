@@ -25,6 +25,7 @@ public class ReceiveLot extends BaseModel {
     private String manufacturerName;
     private Long vvmId;
     private LocationDTO location;
+    private Boolean campaign;
 
     private String packSize;
 
