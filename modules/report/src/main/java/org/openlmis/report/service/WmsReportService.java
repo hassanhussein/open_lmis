@@ -240,6 +240,7 @@ public class WmsReportService {
 
         try {
             String vaccineList = getArrayReport(2, distId);
+            System.out.println(vaccineList);
             JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
             File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("vaccine_proof_of_delivery.jrxml"));
@@ -342,10 +343,12 @@ public class WmsReportService {
                 JSONArray outputDataItem = new JSONArray(jsonItem);
                 JSONArray jsonArrayLot = new JSONArray();
 
+
                 for (int j = 0; j < outputDataItem.length(); j++) {
                     JSONObject vaccineListObjectLot = outputDataItem.getJSONObject(j);
                     long vacItemID = vaccineListObjectLot.getLong("id");
                     List<VaccineDistributionLots> vaccineListItemLOt = wmsReportRepository.vaccineDistributionLotList(vacItemID);
+
 
                     vaccineListObjectLot.put("itemLots", vaccineListItemLOt);
 
@@ -354,7 +357,9 @@ public class WmsReportService {
 
                 }
 
-                vaccineListObject.put("distributionListItem", jsonArrayLot);
+
+                    vaccineListObject.put("distributionListItem", jsonArrayLot);
+
 
 
                 jsonArray.put(vaccineListObject);

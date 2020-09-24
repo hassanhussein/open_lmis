@@ -212,7 +212,7 @@ $scope.stockMovement.quantity="";
     };
 
     $scope.validateQuantity = function (movement) {
-
+    console.log($scope.stockMovement.toWarehouseId);
         $scope.isGreater = false;
         if (parseInt(movement.quantity, 10) === 0) {
             $scope.errorMessage = 'The Quantity should be greater than ZERO';

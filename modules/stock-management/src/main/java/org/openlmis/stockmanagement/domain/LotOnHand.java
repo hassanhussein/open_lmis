@@ -26,12 +26,16 @@ public class LotOnHand extends BaseModel {
   private StockCard stockCard;
 
   private Lot lot;
+  private Long id;
 
   private Long lotId;
-
+  private Long locationId;
   private Long quantityOnHand;
+  private Long stockCardId;
+  private Long packSize;
 
   private Long quantity;
+  private Long distributionLineItemId;
 
   private Long qty;
 

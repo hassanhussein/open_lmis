@@ -1,10 +1,8 @@
-package org.openlmis.vaccine.domain.wms;
+package org.openlmis.stockmanagement.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.openlmis.core.domain.BaseModel;
-import org.openlmis.stockmanagement.domain.StockCardEntryKV;
-import org.openlmis.stockmanagement.domain.StockCardEntryType;
 
 import java.util.Date;
 import java.util.List;
@@ -20,7 +18,9 @@ public class LocationEntry extends BaseModel {
    private Long vvmId;
    private Long stockCardId;
    private Long lotId;
-   private Boolean isTransferred;
+   private String inputType;
+   private Integer packSize;
+
 
 
    @JsonIgnore

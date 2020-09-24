@@ -13,10 +13,7 @@ package org.openlmis.stockmanagement.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.*;
-import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.stockmanagement.domain.LotOnHand;
-import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.*;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.repository.StockCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +63,7 @@ public class StockCardService {
          lotOnHand.setVvmId(lot.getVvmId());
       System.out.println(lot.getVvmId());
       System.out.println("----------------------------------------------------------");
-      lotRepository.saveLotOnHand(lotOnHand);
+      //lotRepository.saveLotOnHand(lotOnHand);
     }
 
     Objects.requireNonNull(lotOnHand);
@@ -118,6 +115,7 @@ public class StockCardService {
   public LotOnHand getLotOnHand(Long lotId, Lot lotObj, String productCode, StockCard card, StringBuilder str) {
     LotOnHand lotOnHand = null;
     if (null != lotId) { // Lot specified by id
+     // System.out.println("Lot unknown: "+card.getId()+" "+lotId);
       lotOnHand = lotRepository.getLotOnHandByStockCardAndLot(card.getId(), lotId);
       if (null == lotOnHand) {
         str.append("error.lot.unknown");
@@ -157,10 +155,15 @@ public class StockCardService {
     card.addToTotalQuantityOnHand(entry.getQuantity());
     repository.persistStockCardEntry(entry);
 
-    LotOnHand lotOnHand = entry.getLotOnHand();
+    LocationEntry lotOnHand = entry.getLots();
     if (null != lotOnHand) {
-      lotOnHand.addToQuantityOnHand(entry.getQuantity());
-      lotRepository.saveLotOnHand(lotOnHand);
+     // System.out.println("Stock on hand not empty");
+      lotOnHand.setInputType("DEBIT");
+
+      //lotOnHand.addToQuantityOnHand(entry.getQuantity());
+      lotRepository.saveLotOnHandDistribution(lotOnHand);
+    }else{
+      //System.out.println("Stock on hand empty");
     }
     repository.updateStockCard(card);
 
@@ -168,7 +171,10 @@ public class StockCardService {
 
   @Transactional
   public void addStockCardEntries(List<StockCardEntry> entries) {
+
     for (StockCardEntry entry : entries) {
+
+
       addStockCardEntry(entry);
     }
   }
@@ -193,7 +199,7 @@ public class StockCardService {
     return lotRepository.getLotOnHandBy(stockCardId,lotId);
   }
 
-  public void updateLotOnHand(LotOnHand lotOnHand) {
+  public void updateLotOnHand(LocationEntry lotOnHand) {
     lotRepository.updateLotOnHand(lotOnHand);
   }
 

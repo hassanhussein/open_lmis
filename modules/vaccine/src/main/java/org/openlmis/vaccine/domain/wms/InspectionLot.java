@@ -24,6 +24,7 @@ public class InspectionLot extends BaseModel {
     private Integer countedQuantity;
 
     private Integer passQuantity;
+    private Long failVvmId;
 
     private Long passLocationId;
 

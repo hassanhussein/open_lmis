@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface InspectionLotMapper {
 
-    @Select("SELECT *,failquantity as failedQuantity,failreason as failedReason FROM inspection_lots WHERE inspectionLineItemId = #{lineItemId} ")
+    @Select("SELECT *,failvvmid as failVvmId, failquantity as failedQuantity,failreason as failedReason FROM inspection_lots WHERE inspectionLineItemId = #{lineItemId} ")
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(column = "passLocationId", property = "passLocationId"),
@@ -32,13 +32,13 @@ public interface InspectionLotMapper {
     void update(InspectionLot lot);
 
     @Insert("INSERT INTO public.inspection_lots(\n" +
-            "           inspectionLineItemId, lotNumber, passQuantity, passLocationId,vvmStatus,expiryDate, \n" +
+            "           inspectionLineItemId, lotNumber, passQuantity, passLocationId,vvmStatus,expiryDate,faillocationid,failquantity,failreason,failVvmId, \n" +
             "             createdDate,\n" +
             "             modifiedBy, modifiedDate)\n" +
-            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate}, \n" +
+            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate},#{failLocationId},#{failQuantity},#{failReason},#{failVvmId}, \n" +
             "           now(),  \n" +
             "            #{modifiedBy}, now()) on conflict(inspectionLineItemId,lotNumber,passLocationId,vvmStatus) DO UPDATE \n" +
-            "SET passQuantity=#{quantity} ;")
+            "SET passQuantity=#{quantity},faillocationid=#{failLocationId},failquantity=#{failQuantity},failreason=#{failReason},failVvmId=#{failVvmId};")
     @Options(useGeneratedKeys = true)
     void updateOrSave(VVMLots lots);
 

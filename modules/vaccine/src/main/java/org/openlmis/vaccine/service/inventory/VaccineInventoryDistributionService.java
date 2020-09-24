@@ -120,11 +120,12 @@ public Long save(VaccineDistribution distribution, Long userId) {
                  distribution.setId(dbDistribution.getId());
              }
         }
+
+        System.out.println(distribution.getId()+" Ditribution ID");
         if (distribution.getId() != null) {
 
             distribution.setModifiedBy(userId);
             repository.updateDistribution(distribution);
-
             //Update status changes to keep distribution log
             VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
             statusChangeRepository.insert(statusChange);
@@ -152,33 +153,46 @@ public Long save(VaccineDistribution distribution, Long userId) {
         if(!itemList.isEmpty()) {
 
             for (VaccineDistributionLineItem item : itemList) {
-                repository.deleteLotsByLineItem(item.getId());
+              //  repository.deleteLotsByLineItem(item.getId());
             }
-          repository.deleteLineItemByDistributionId(distribution.getId());
+          //repository.deleteLineItemByDistributionId(distribution.getId());
+        }
+        else {
+            System.out.println("Item Empty");
         }
 
         for (VaccineDistributionLineItem lineItem : distribution.getLineItems()) {
             lineItem.setDistributionId(distribution.getId());
             lineItem.setCreatedBy(userId);
             lineItem.setModifiedBy(userId);
-            if (lineItem.getId() != null) {
+
+            if (lineItem.getDistributionLineItemId() != null) {
+               // System.out.println(lineItem.getId()+" passed here update: "+lineItem.getGap());
+
                 repository.updateDistributionLineItem(lineItem);
             } else {
-                repository.saveDistributionLineItem(lineItem);
-            }
+               repository.saveDistributionLineItem(lineItem);
+                lineItem.setDistributionLineItemId(lineItem.getId());
 
-            repository.deleteLotsByLineItem(lineItem.getId());
+            }
+            System.out.println("Line Item id "+lineItem.getId());
+
+
+
+            //repository.deleteLotsByLineItem(lineItem.getId());
             if (lineItem.getLots() != null) {
                 for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
                     lot.setModifiedBy(userId);
                     lot.setCreatedBy(userId);
-                    lot.setDistributionLineItemId(lineItem.getId());
-                    lot.setQuantity(lot.getQty());
+                    lot.setDistributionLineItemId(lineItem.getDistributionLineItemId());
+                    lot.setQuantity(lot.getQuantity());
                     System.out.println(lot.getQty());
                     if (lot.getId() != null) {
                         repository.updateDistributionLineItemLot(lot);
                    } else {
-                        repository.saveDistributionLineItemLot(lot);
+                        if(lot.getLotId() !=null) {
+                            repository.saveDistributionLineItemLot(lot);
+                        }
                     }
                 }
             }

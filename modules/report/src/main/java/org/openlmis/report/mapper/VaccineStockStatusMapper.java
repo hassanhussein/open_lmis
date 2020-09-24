@@ -40,14 +40,14 @@ public interface VaccineStockStatusMapper {
             " left join geographic_zones g on(g.id=f.geographiczoneid) where f.id=#{facilityId}")
     List<VaccineDistributionLineItem> vaccineDistributionLineItemList(@Param("facilityId") Long facilityId);
 
-    @Select("SELECT vd.id,vd.distributionid,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
+    @Select("select * from (SELECT vd.id,vd.distributionid,(select count(id) from vaccine_distribution_line_item_lots  where distributionlineitemid=vd.id) itemNo,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
             "g.code as region,vd.quantity as quantityIssued\n" +
             "FROM vaccine_distribution_line_items vd\n" +
             "left join products p on(p.id=vd.productid)\n" +
             ""+
             " left join  vaccine_distributions d on(d.id=vd.distributionid)\n" +
             " left join facilities f on(f.id=d.tofacilityid)\n" +
-            " left join geographic_zones g on(g.id=f.geographiczoneid) where vd.distributionid=#{distID} limit 4")
+            " left join geographic_zones g on(g.id=f.geographiczoneid) where vd.distributionid=#{distID}) as ditItems where itemNo>0")
     List<VaccineDistributionLineItem> vaccineDistributionLineItemListByDistribution(@Param("distID") Long facilityId);
 
     @Select("SELECT v.id,\n" +
@@ -71,7 +71,7 @@ public interface VaccineStockStatusMapper {
 
     @Select("SELECT v.id,\n" +
             "\tv.tofacilityid as toFacilityId ,\n" +
-            "\tv.distributiondate as distributionDate,v.picklistid as pickListId,\n" +
+            "\tv.distributiondate as distributionDate, v.picklistid as pickListId,\n" +
             "\tftf.name as facilityTypeFrom,\n" +
             "\tfto.name as facilityTypeTo,\n" +
             "\tv.periodid as periodId,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
@@ -108,13 +108,15 @@ public interface VaccineStockStatusMapper {
 
 
     @Select("SELECT vd.distributionlineitemid as distributionLineItemId,\n" +
-            "\tvd.id,vd.distributionlineitemid," +
+            "\tvd.id,loc.code binLocation,vd.distributionlineitemid," +
             "\tvd.lotid as lotId ,\n" +
             "\tvd.quantity,\n" +
             "\tvs.name as vvmStatus,\n" +
             "\tl.lotnumber as lotNumber,l.expirationdate as expirationDate\n" +
             "FROM vaccine_distribution_line_item_lots vd " +
-            "left join vvm_statuses vs on(vs.id=vd.vvmstatus) left join lots l on(l.id=vd.lotid)\n" +
+            "left join vvm_statuses vs on(vs.id=vd.vvmid)" +
+            " left JOIN wms_locations loc on (loc.id=vd.locationid) " +
+            " left join lots l on(l.id=vd.lotid)\n" +
             " where vd.distributionlineitemid=#{distID}")
 
     List<VaccineDistributionLots> vaccineDistributionLots(@Param("distID") Long distID);

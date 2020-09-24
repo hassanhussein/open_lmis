@@ -29,6 +29,7 @@ public class StockCardEntry extends BaseModel {
   private StockAdjustmentReason adjustmentReason;
 
   private LotOnHand lotOnHand;
+  private LocationEntry lots;
 
   String notes;
 

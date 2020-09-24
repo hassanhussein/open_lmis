@@ -188,18 +188,24 @@ public class TransferService {
         List<StockCardDTO>stockCardList = locationService.getStockCardWithLocationBy(facilityId);
 
         List<StockOnHandSummaryDTO> products =new ArrayList<>();
+        //System.out.println("passed here 1");
 
         if(!stockCardList.isEmpty()) {
 
 
-
+           // System.out.println(stockCardList.toString());
             for (StockCardDTO stockCard : stockCardList) {
 
             StockOnHandSummaryDTO summary = new StockOnHandSummaryDTO();
 
-            List<LotOnHandExtDTO> lotOnHandExtDTOList = repository.getLotOnHandExtraBy(stockCard.getProductId());
+
+                //System.out.println(" "+stockCard.getProductId());
+
+
+                List<LotOnHandExtDTO> lotOnHandExtDTOList = repository.getLotOnHandExtraBy(stockCard.getProductId());
 
              if(!lotOnHandExtDTOList.isEmpty() && stockCard.getProduct() !=null) {
+                 //System.out.println(lotOnHandExtDTOList);
 
                  summary.setProduct(stockCard.getProduct());
                  summary.setProductCode(stockCard.getProductCode());
@@ -217,16 +223,22 @@ public class TransferService {
                          long quantityWithPackSize=0;
                          try{
                              quantityWithPackSize = (lot.getPackSize() != null)?lot.getQuantityOnHand() * Long.valueOf(lot.getPackSize()):lot.getQuantityOnHand();
+                             lotOnHandDTO.setPackSize(Long.valueOf(lot.getPackSize()));
 
                          }catch (Exception e){
 
                          }
 
+
                          lotOnHandDTO.setAmount(quantityWithPackSize);
                          lotOnHandDTO.setExpiry(lot.getExpiry());
                          lotOnHandDTO.setId(index++);
                          lotOnHandDTO.setLotId(lot.getLotId());
+                         lotOnHandDTO.setStockCardId(lot.getStockCardId());
+                         lotOnHandDTO.setLocationId(lot.getLocationId());
                          lotOnHandDTO.setVvm(lot.getVvmStatus());
+                         lotOnHandDTO.setVvmId(lot.getVvmId());
+                         lotOnHandDTO.setBinLocation(lot.getBinLocation());
                          lotOnHandDTO.setMaxSoh(quantityWithPackSize);
                          lotOnHandDTO.setNumber(lot.getLotNumber());
                          lots.add(lotOnHandDTO);
@@ -242,7 +254,7 @@ public class TransferService {
             }
 
         }
-
+    //System.out.println(products.toString());
     return products;
 
     }

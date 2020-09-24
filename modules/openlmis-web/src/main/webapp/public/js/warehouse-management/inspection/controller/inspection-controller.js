@@ -7,7 +7,7 @@ $scope.globalErrorFlag=true;
 
         $scope.locations = data.locationList;
 
-        console.log(data.locationList);
+//        console.log(data.locationList);
 
     });
 
@@ -16,7 +16,7 @@ $scope.globalErrorFlag=true;
 
       AsnLookups.get(function(data) {
 
-console.log(data);
+//console.log(data);
                              $scope.displayDocumentTypes =  data.documentTypes;
 
                                 // $scope.manufacturers = data.manufactures;
@@ -47,7 +47,7 @@ getLookup();
 GetAllClearingAgents.get({}, function(data){
 
            $scope.clearingAgentList = data.agents;
-           console.log(data);
+//           console.log(data);
 
            });
 
@@ -76,15 +76,15 @@ function getListOfFilesByASNumber(asnNumber) {
      DocumentList.get({code:asnNumber}, function(data){
 
        docLists = data.list;
-       console.log('doc list');
-       console.log(docLists);
+//       console.log('doc list');
+//       console.log(docLists);
       if(data.list.length > 0) {
 
       $timeout(function(){
       getOnlyMatchedDocumentTypes($scope.displayDocumentTypes,  docLists);
       },1000);
 
-      console.log(data.list);
+//      console.log(data.list);
     // $scope.findMatches($scope.displayDocumentTypes, data.list);
       }
 
@@ -121,7 +121,7 @@ $scope.displayDocumentTypes  = filteredData;
         if(document.documentType !== null && document.file !== null && !isUndefined(document.file)) {
 
             document.fileLocation = document.file.name;
-            console.log(document);
+//            console.log(document);
             getFile(document.file,document);
 
             if($scope.openMessage){
@@ -146,7 +146,7 @@ $scope.displayDocumentTypes  = filteredData;
     if(asnCode === undefined) {
 
     $scope.asnCode = $scope.poNumber;
-           console.log($scope.asnCode);
+//           console.log($scope.asnCode);
     }
 
     }
@@ -222,8 +222,8 @@ function getFile(file,documentType) {
         asnNum = new Date(today).getTime();
      }else
        asnNum = $scope.asnCode;
-       console.log(asnNum);
-       console.log(documentType.documentType);
+//       console.log(asnNum);
+//       console.log(documentType.documentType);
       docService.saveDoc(file, asnNum, documentType.documentType.name).then(
 
       function (response) {
@@ -270,36 +270,104 @@ $scope.lotInspected=false;
 
 
 
-   console.log($scope.inspection);
+//   console.log($scope.inspection);
 $scope.lineItem=$scope.inspection.lineItems[0];
 //   update line lineItems
 
+//angular.forEach($scope.lineItem.lots,function(lot){
+//lot.vvm=[];
+//    lot.vvm.push(
+//        { vvmId:1,
+//           quantity:10,
+//           failed:{
+//           quantity:null,
+//           reasonId:null,
+//           vvmId:null,
+//           locationId:null
+//           }
+//        }
+//    );
+//
+//     lot.vvm.push(
+//            { vvmId:2,
+//               quantity:null,
+//               failed:{
+//               quantity:null,
+//               reasonId:null,
+//               vvmId:null,
+//               locationId:null
+//
+//               }
+//            }
+//        );
+//});
+function getLotByIdAndVvmId(lotNumber,vvmId){
+
+    return _.findWhere($scope.lineItem.lots,{lotNumber:lotNumber,vvmStatus:vvmId});
+}
+
+
 angular.forEach($scope.lineItem.lots,function(lot){
 lot.vvm=[];
+
+var foundLotVvm1=getLotByIdAndVvmId(lot.lotNumber,1);
+//$scope.vvmRowSpan=(foundLotVvm1.vvmUpdate)
     lot.vvm.push(
         { vvmId:1,
-           quantity:10,
+           quantity:typeof foundLotVvm1!=="undefined"?parseInt(foundLotVvm1.passQuantity,10):null,
            failed:{
-           quantity:null,
-           reasonId:null,
-           vvmId:null,
-           locationId:null
+           quantity:typeof foundLotVvm1!=="undefined"?parseInt(foundLotVvm1.failQuantity,10):null,
+           reasonId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failReason:null,
+           vvmId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failVvmId:null,
+           locationId:typeof foundLotVvm1!=="undefined"?foundLotVvm1.failLocationId:null
            }
         }
     );
-
+var foundLotVvm2=getLotByIdAndVvmId(lot.lotNumber,2);
+//console.log(foundLotVvm2)
      lot.vvm.push(
             { vvmId:2,
-               quantity:null,
+               quantity:typeof foundLotVvm2!=="undefined"?parseInt(foundLotVvm2.passQuantity,10):null,
                failed:{
-               quantity:null,
-               reasonId:null,
-               vvmId:null,
-               locationId:null
+               quantity:typeof foundLotVvm2!=="undefined"?parseInt(foundLotVvm2.failQuantity,10):null,
+               reasonId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failReason:null,
+               vvmId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failVvmId:null,
+               locationId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failLocationId:null
 
                }
             }
         );
+
+
+
+//        var foundLotVvm3=getLotByIdAndVvmId(lot.id,3);
+//        var foundLotVvm4=getLotByIdAndVvmId(lot.id,4);
+//
+//
+//             lot.vvm.push(
+//                    { vvmId:1,
+//                       quantity:typeof foundLotVvm2!=="undefined"?foundLotVvm2.receivedQuantity:null,
+//                       failed:{
+//                       quantity:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failQuantity:null,
+//                       reasonId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failReason:null,
+//                       vvmId:null,
+//                       locationId:typeof foundLotVvm2!=="undefined"?foundLotVvm2.failLocationId:null
+//
+//                       }
+//                    }
+//                );
+
+
+
+
+// then remove all vvm two
+var vvm2Index=$scope.lineItem.lots.indexOf(foundLotVvm2);
+//console.log(vvm2Index)
+if(vvm2Index>-1){
+$scope.lineItem.lots.splice(vvm2Index,1);
+}
+
+
 });
 
    $scope.vvmStatusList = vvmList;
@@ -321,7 +389,7 @@ lot.vvm=[];
 
         return vvm.id > 2 && vvm.id < 5;
    });
-   console.log($scope.vvmThreeAndFour);
+//   console.log($scope.vvmThreeAndFour);
    $scope.totalPassQty=0;
    $scope.totalFailQty=0;
 
@@ -346,7 +414,7 @@ if(lot.failedQuantity==="" || lot.failedQuantity===0){
 
 $scope.failedQuantityChanged=function(vvm){
 
-console.log(vvm.failed.quantity);
+//console.log(vvm.failed.quantity);
 
 if(vvm.failed.quantity===undefined || vvm.failed.quantity===0 ||vvm.failed.quantity>vvm.quantity){
 
@@ -408,7 +476,7 @@ if(vvm.vvmId===1 && lot.vvmUpdate){
 
 $scope.reasonChanged=function(vvm){
 
-console.log(vvm.failed.reasonId);
+//console.log(vvm.failed.reasonId);
 
 if(vvm.failed.reasonId===undefined){
 
@@ -550,7 +618,7 @@ var sum=0;
 
     var sum = 0;
 
-    console.log(lineItem.lots);
+//    console.log(lineItem.lots);
     angular.forEach(lineItem.lots,function(lot){
     sum+=parseInt(lot[lotType],10);
     });
@@ -628,13 +696,13 @@ var sum=0;
 
   var error = function (data) {
     $scope.$parent.message = "";
-     console.log(data);
+//     console.log(data);
     $scope.error = data.data.error;
     $scope.showError = true;
   };
 
         $scope.print = function (inspectionId){
-                       console.log(inspectionId);
+//                       console.log(inspectionId);
                        // var url = '/rest-api/warehouse/inspection/var/print/'+ parseInt(inspectionId.id,10);
              var url = '/wms-reports/var-report?inspectionId='+ parseInt(inspectionId.id,10);
 
@@ -657,18 +725,18 @@ var sum=0;
 
 //check the inner form validation
 // if invalid add css class to blink itf
-    if($scope.globalErrorFlag){
-    $scope.enabled=true;
-    return;
-    }else{
-    $scope.enabled=false;
-    }
+//    if($scope.globalErrorFlag){
+//    $scope.enabled=true;
+//    return;
+//    }else{
+//    $scope.enabled=false;
+//    }
 
        if ($scope.inspection.id) {
          $scope.inspection.status  = status;
          $scope.inspection.receiptNumber = $scope.inspection.receive.receiveLineItems[0].receiveNumber;
 
-         console.log($scope.inspection);
+        console.log($scope.inspection);
 
          UpdateInspection.update({id: $scope.inspection.id}, $scope.inspection, success, error);
 
@@ -695,12 +763,12 @@ $scope.globalErrorFlag=false;
 if(!$scope.hasExpired(lot)){
 
        //check vvm
-        if(lot.vvmStatus===null || !lot.vvmStatus){
-            lot.vvmError=true;
-            $scope.globalErrorFlag=true;
-        }else{
-            lot.vvmError=false;
-        }
+//        if(lot.vvmStatus===null || !lot.vvmStatus){
+//            lot.vvmError=true;
+//            $scope.globalErrorFlag=true;
+//        }else{
+//            lot.vvmError=false;
+//        }
             //only check if lot has not expired
        //check storage location
 //        if((lot.passLocationId===null || !lot.passLocationId) &&(lot.failQuantity<lot.receivedQuantity || lot.failQuantity==='')){
@@ -710,20 +778,20 @@ if(!$scope.hasExpired(lot)){
 //               lot.passLocationError=false;
 //           }
        //check fail qty
-          if(lot.failedQuantity>lot.receivedQuantity){
-               lot.failQuantityError=true;
-               $scope.globalErrorFlag=true;
-           }else{
-               lot.failQuantityError=false;
-           }
+//          if(lot.failedQuantity>lot.receivedQuantity){
+//               lot.failQuantityError=true;
+//               $scope.globalErrorFlag=true;
+//           }else{
+//               lot.failQuantityError=false;
+//           }
        //check check fail reason
             //only if we have fail quantity
-             if((lot.failedQuantity!=='0' && lot.failedQuantity)&&!lot.failedReason){
-                       lot.failReasonError=true;
-                       $scope.globalErrorFlag=true;
-                   }else{
-                       lot.failReasonError=false;
-                   }
+//             if((lot.failedQuantity!=='0' && lot.failedQuantity)&&!lot.failedReason){
+//                       lot.failReasonError=true;
+//                       $scope.globalErrorFlag=true;
+//                   }else{
+//                       lot.failReasonError=false;
+//                   }
 }
 
 
@@ -731,40 +799,40 @@ if(!$scope.hasExpired(lot)){
 
    //check fail location
         //only if we have fail quantity
- if((lot.failedReason===4&&lot.failedReason==='')||(lot.failedVvm==='' && lot.failedReason===4)||(lot.failedReason==='')){
-                       lot.failLocationError=true;
-                       $scope.globalErrorFlag=true;
-                   }else{
-                       lot.failLocationError=false;
-                   }
-
+// if((lot.failedReason===4&&lot.failedReason==='')||(lot.failedVvm==='' && lot.failedReason===4)||(lot.failedReason==='')){
+//                       lot.failLocationError=true;
+//                       $scope.globalErrorFlag=true;
+//                   }else{
+//                       lot.failLocationError=false;
+//                   }
+//
 
 
 
    });
-
-    if($scope.globalErrorFlag){
-    return;
-    }else{
-    $scope.globalErrorFlag=false;
-    }
+//
+//    if($scope.globalErrorFlag){
+//    return;
+//    }else{
+//    $scope.globalErrorFlag=false;
+//    }
 
    //process passed qty for all lots
-   angular.forEach(lineItem.lots,function(lot){
-    if(lot.failedQuantity===''||!lot.failedQuantity){
-    lot.failedQuantity=0;
-    }
+//   angular.forEach(lineItem.lots,function(lot){
+//    if(lot.failedQuantity===''||!lot.failedQuantity){
+//    lot.failedQuantity=0;
+//    }
+//
+//     lot.passQuantity=lot.receivedQuantity-parseInt(lot.failedQuantity,10);
+//   });
 
-     lot.passQuantity=lot.receivedQuantity-parseInt(lot.failedQuantity,10);
-   });
-
-  $scope.totalPassQty=sumLots('passQuantity',lineItem);
-  $scope.totalFailQty=sumLots('failedQuantity',lineItem);
-  var quantityFail=0;
-  if($scope.totalFailQty){
-      quantityFail=$scope.totalFailQty;
-  }
-  $scope.totalReceivedQty=quantityFail+$scope.totalPassQty;
+//  $scope.totalPassQty=sumLots('passQuantity',lineItem);
+//  $scope.totalFailQty=sumLots('failedQuantity',lineItem);
+//  var quantityFail=0;
+//  if($scope.totalFailQty){
+//      quantityFail=$scope.totalFailQty;
+//  }
+//  $scope.totalReceivedQty=quantityFail+$scope.totalPassQty;
 
          $scope.inspectLotModal = false;
   $scope.lotInspected=true;
@@ -822,7 +890,7 @@ InspectionController.resolve = {
 
     $timeout(function () {
       GetVVMStatusList.get({}, function (data) {
-      console.log(data.vvms);
+//      console.log(data.vvms);
         deferred.resolve(data.vvms);
       }, {});
     }, 100);

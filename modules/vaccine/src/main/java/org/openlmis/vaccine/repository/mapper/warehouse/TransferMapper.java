@@ -66,16 +66,18 @@ public interface TransferMapper {
             " WHERE LocationId = #{toBin} and lo.productId= #{productId} and lotId=#{lotId}")
     List<LotDTO> checkAvailableProductAndLotBy(@Param("toBin") Long toBin, @Param("productId") Long productId, @Param("lotId") Long lotId);
 
-    @Select("select p.primaryName product, ((coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and lt.locationid= e.locationId and lotid=e.lotid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and  lt.locationid= e.locationId and lotid=e.lotid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt\n" +
+    @Select("select st.* from (select p.primaryName product,loc.code binLocation, ((coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and lt.locationid= e.locationId and lotid=e.lotid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where lt.vvmid = vvm.id and  lt.locationid= e.locationId and lotid=e.lotid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt\n" +
             "                     where lt.vvmid = vvm.id and  lt.locationid= e.locationId and lotid=e.lotid and lt.type='DEBIT'),0),0))) \n" +
-            "             quantityOnHand, lo.id lotId, expirationDate::date expiry, lotNumber,lo.packSize,  \n" +
+            "             quantityOnHand, lo.id lotId, expirationDate::date expiry,e.locationId,e.vvmId, lotNumber,lo.packSize,stockCardId,  \n" +
             "            vvm.name as vvmStatus from lot_location_entries e\n" +
-            "            JOIN lots Lo on e.lotId = Lo.id  \n" +
+            "            JOIN lots Lo on e.lotId = Lo.id  " +
+            "           left JOIN wms_locations loc on (loc.id=e.locationid) \n" +
             "            JOIN products P ON lo.productId = P.ID \n" +
-            "             JOIN vvm_statuses vvm On e.vvmId = vvm.id\n" +
-            "            where productId= #{productId}  and vvm.id<3 and expirationDate>now()\n" +
-            "             group by  p.primaryName ,lo.id ,expirationDate, lotNumber,vvm.id, e.lotId,vvm.name,e.locationId\n" +
-            "             order by vvm.id desc,Lo.expirationDate asc ")
+            "             JOIN vvm_statuses vvm On e.vvmId = vvm.id\n " +
+            "               left join WMS_LOCATIONS Lsc ON e.LocationId = LSC.ID" +
+            "            where productId= #{productId} and Lsc.typeid<>9  and vvm.id<3 and expirationDate>now()\n" +
+            "             group by  p.primaryName ,lo.id ,expirationDate, stockCardId, lotNumber, e.lotId,vvm.id,e.vvmId,vvm.name,e.locationId,loc.code\n" +
+            "             order by vvm.id desc,Lo.expirationDate asc) st where quantityOnHand>0 ")
     List<LotOnHandExtDTO> getLotOnHandExtaBy(@Param("productId") Long id);
 
     @Select("select * from lot_location_entries h where stockCardId = #{stockCardId} AND locationId = #{locationId} ")

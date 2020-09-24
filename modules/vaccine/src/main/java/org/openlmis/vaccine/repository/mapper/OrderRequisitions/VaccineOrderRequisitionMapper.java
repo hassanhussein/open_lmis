@@ -216,10 +216,16 @@ public interface VaccineOrderRequisitionMapper {
     @Update("Update vaccine_order_requisitions SET status = #{status} where id = #{id}")
     void updateOrderStatus(@Param("status") String status, @Param("id") Long id);
 
-    @Select("SELECT ITEM.GAP, LOT.LOTID, LOT.QUANTITY FROM VACCINE_DISTRIBUTIONS D \n" +
+   /* @Select("SELECT ITEM.GAP,item.id as distributionLineItemId,LOT.ID,LOT.PACKSIZE, LOT.LOTID,LOT.VVMID,LOT.LOCATIONID,LOT.STOCKCARDID,LOT.QUANTITY,(LOT.PACKSIZE*LOT.QUANTITY) QTY FROM VACCINE_DISTRIBUTIONS D \n" +
             "JOIN VACCINE_DISTRIBUTION_LINE_ITEMS item ON d.id = item.distributionId\n" +
             "LEFT JOIN VACCINE_DISTRIBUTION_LINE_ITEM_lots LOT ON  lot.distributionlineitemid = item.id\n" +
-            " WHERE orderId = #{id} AND PRODUCTId = #{productId}")
+            " WHERE orderId = #{id} AND PRODUCTId = #{productId}")*/
+
+
+    @Select("SELECT ITEM.GAP,item.id as distributionLineItemId,LOT.ID,LOT.PACKSIZE, LOT.LOTID,LOT.VVMID,LOT.LOCATIONID,LOT.STOCKCARDID,LOT.QUANTITY,(LOT.PACKSIZE*LOT.QUANTITY) QTY FROM  VACCINE_DISTRIBUTION_LINE_ITEM_LOTS LOT  \n" +
+            " LEFT JOIN VACCINE_DISTRIBUTION_LINE_ITEMS ITEM ON ITEM.id = lot.distributionlineitemid \n" +
+            " LEFT JOIN VACCINE_DISTRIBUTIONS  D ON  item.distributionId  = D.id \n" +
+            " WHERE D.orderId = #{id}  AND ITEM.PRODUCTId =#{productId}")
     List<LotOnHand> getDistributionByOrderIdAndProduct(@Param("id") Long id, @Param("productId") Long productId);
 }
 

@@ -267,7 +267,6 @@ public class StockCardControllerTest {
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
   }
 
-  @Test
   public void shouldErrorWithInvalidStockEvent() {
     List<StockEvent> events = Collections.singletonList(new StockEvent());
     long facilityId = 1;

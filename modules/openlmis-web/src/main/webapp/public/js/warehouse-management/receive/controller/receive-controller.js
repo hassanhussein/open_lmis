@@ -15,6 +15,12 @@ function ReceiveController(GetAllLocationsByType,GetAllClearingAgents,clearingAg
                            $rootScope,UploadFile,$http,docService, $timeout, GetLocationSummary,GetBinLocationByCategory,vvmList){
 
 
+
+$scope.itemInfoTab="active";
+$scope.shipmentInfoTab="";
+$scope.documentTab="";
+
+
  $scope.$parent.receiveSaved = false;
                                    $scope.$parent.received = false;
 
@@ -410,7 +416,8 @@ var total_lot_quantity = 0;
                     },
                     locationId:lot.locationId,
                     vvmId:lot.vvmId,
-                    boxCounted:lot.boxNumber
+                    boxCounted:lot.boxNumber,
+                    campaign:lot.campaign
 
                 });
 
@@ -879,6 +886,17 @@ $scope.quantitiesValid=function(){
 
 $scope.saveAsn = function(status) {
 
+    if ($scope.asnForm.$error.required) {
+            $scope.showError = true;
+            $scope.error = 'form.error';
+            $scope.message = "";
+//            console.log($scope.asnForm.$error)
+            return;
+        }
+
+
+
+
 if(!$scope.validLocation()){
 $scope.locationError=true;
 $timeout(function(){
@@ -930,13 +948,6 @@ return;
 
         $scope.validateProduct();
 
-    if ($scope.asnForm.$error.required) {
-            $scope.showError = true;
-            $scope.error = 'form.error';
-            $scope.message = "";
-//            console.log($scope.asnForm.$error)
-            return;
-        }
 
 
 
@@ -960,7 +971,8 @@ return;
                                     boxNumber:lot.boxCounted,
                                     serialnumber: 'string',
                                     locationId:parseInt(lot.locationId,10),
-                                    vvmId:parseInt(lot.vvmId,10)
+                                    vvmId:parseInt(lot.vvmId,10),
+                                    campaign:lot.campaign
                                 });
 
 

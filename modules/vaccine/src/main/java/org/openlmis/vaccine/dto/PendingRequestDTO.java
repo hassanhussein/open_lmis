@@ -14,6 +14,7 @@ public class PendingRequestDTO {
     private String product;
 
     private Long amount;
+    private Long id;
 
     private String gap;
 

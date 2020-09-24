@@ -17,12 +17,17 @@ public class VaccineDistributionLineItemLot extends BaseModel {
     private Long distributionLineItemId;
 
     private Long lotId;
+    private Long locationId;
 
     private Lot lot;
+    private Long stockCardId;
+
+    private Integer vvmId;
 
     private Long quantity;
 
     private Integer vvmStatus;
+    private Long packSize;
 
     private Long qty;
 }
