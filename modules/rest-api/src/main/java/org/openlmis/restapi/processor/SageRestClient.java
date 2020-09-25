@@ -77,7 +77,7 @@ public class SageRestClient {
     RestTemplate template = new RestTemplate();
     ResponseEntity<List<Customer>> response = template.exchange(urlFactory.customer() + queryString, HttpMethod.GET, createHeaders(), new ParameterizedTypeReference<List<Customer>>() {
     });
-    return response.getBody();
+    return (List<Customer>)response.getBody();
   }
 
   public List<Item> callGetItems(String lastUpdateTime) {

@@ -35,7 +35,7 @@ public class ItemProcessor {
   ProductService productService;
 
   public void process(Item item) {
-    Product product = productService.getByCode(item.getCode());
+    Product product = productService.getByCode(item.getCode().trim());
 
     if(product == null) {
       Product newProduct = item.createNewProduct(defaultDosageUnitCode, defaultProductFormCode);
