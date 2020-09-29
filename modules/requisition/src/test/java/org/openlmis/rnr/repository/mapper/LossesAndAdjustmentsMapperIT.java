@@ -138,7 +138,7 @@ public class LossesAndAdjustmentsMapperIT {
   @Test
   public void shouldReturnAllLossesAndAdjustmentsTypesAccordingToDisplayOrder() {
     List<LossesAndAdjustmentsType> lossesAndAdjustmentsTypes = lossesAndAdjustmentsMapper.getLossesAndAdjustmentsTypes();
-    assertThat(lossesAndAdjustmentsTypes.size(), is(9));
+    assertThat(lossesAndAdjustmentsTypes.size(), is(12));
     assertThat(lossesAndAdjustmentsTypes.get(0).getDisplayOrder(), is(1));
     assertThat(lossesAndAdjustmentsTypes.get(1).getDisplayOrder(), is(2));
     assertThat(lossesAndAdjustmentsTypes.get(2).getDisplayOrder(), is(3));
