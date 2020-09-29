@@ -16,6 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class ShipmentDetail {
@@ -33,6 +35,15 @@ public class ShipmentDetail {
   private String shipmentDetailLocation;
 
   @JsonProperty("ShipmentDetailQty")
-  private Integer shipmentDetailQty;
+  private Long shipmentDetailQty;
+
+  @JsonProperty("ShipmentDetailBatchNumber")
+  private String  shipmentDetailBatchNumber;
+
+  @JsonProperty("ShipmentDetailExpiryDate")
+  private Date shipmentDetailExpiryDate;
+
+  @JsonProperty("ShipmentDetailLotQty")
+  private Long shipmentDetailLotQty;
 
 }

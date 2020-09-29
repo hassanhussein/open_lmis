@@ -12,6 +12,8 @@
 
 package org.openlmis.restapi.processor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.openlmis.order.domain.Order;
 import org.openlmis.order.domain.OrderStatus;
 import org.openlmis.order.service.OrderService;
@@ -36,13 +38,21 @@ public class ShipmentProcessor {
   @Autowired
   private OrderService orderService;
 
+  @SneakyThrows
   public void process(Shipment shipment) {
     Order order = orderService.getByOrderNumber(shipment.getOrderNumber());
     logger.info("Shipment is being processed.");
     logger.info(shipment.getOrderNumber());
     logger.info("Number of line Items: " + shipment.getDetail().size());
     if (order == null) {
+      ObjectMapper mapper = new ObjectMapper();
       // this shipment cannot be processed becasue a corresponding order was not found for it.
+      ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+      shipmentFileInfo.setOrderNumber(shipment.getOrderNumber());
+      shipmentFileInfo.setFileName(shipment.getShipmentNumber());
+      shipmentFileInfo.setHasSkippedLineItems(true);
+      shipmentFileInfo.setSkippedShipmentLineItems( mapper.writeValueAsString(shipment));
+      shipmentService.insertShipmentFileInfo(shipmentFileInfo);
       return;
     }
     if (OrderStatus.RECEIVED.equals(order.getStatus())) {
@@ -51,14 +61,18 @@ public class ShipmentProcessor {
       return;
     }
 
-    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
-    shipmentFileInfo.setOrderNumber(shipment.getOrderNumber());
-    shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
     shipment
         .getDetail()
         .parallelStream()
         .forEach(detail -> shipmentService.save(lineItemFromDetail(order, detail)));
+
+    ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
+    shipmentFileInfo.setFileName(shipment.getShipmentNumber());
+    shipmentFileInfo.setOrderNumber(shipment.getOrderNumber());
+    shipmentFileInfo.setHasSkippedLineItems(false);
+    shipmentService.insertShipmentFileInfo(shipmentFileInfo);
+
 
     // mark the order as processed
     order.setStatus(OrderStatus.RECEIVED);
@@ -70,7 +84,7 @@ public class ShipmentProcessor {
     lineItem.setOrderId(order.getId());
     lineItem.setProductCode(detail.getShipmentDetailItemNum());
     lineItem.setProductName(detail.getShipmentDetailItemDescription());
-    lineItem.setQuantityShipped(detail.getShipmentDetailQty());
+    lineItem.setQuantityShipped(detail.getShipmentDetailQty().intValue());
     return lineItem;
   }
 
