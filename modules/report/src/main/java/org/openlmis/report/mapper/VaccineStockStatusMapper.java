@@ -40,7 +40,7 @@ public interface VaccineStockStatusMapper {
             " left join geographic_zones g on(g.id=f.geographiczoneid) where f.id=#{facilityId}")
     List<VaccineDistributionLineItem> vaccineDistributionLineItemList(@Param("facilityId") Long facilityId);
 
-    @Select("select * from (SELECT vd.id,vd.distributionid,(select count(id) from vaccine_distribution_line_item_lots  where distributionlineitemid=vd.id) itemNo,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
+    @Select("select * from (SELECT vd.id,vd.distributionid,(select count(id) from vaccine_distribution_line_item_lots  where distributionlineitemid=vd.id) itemNo,p.code as productCode,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
             "g.code as region,vd.quantity as quantityIssued\n" +
             "FROM vaccine_distribution_line_items vd\n" +
             "left join products p on(p.id=vd.productid)\n" +
@@ -93,7 +93,7 @@ public interface VaccineStockStatusMapper {
             "\tftf.name as facilityTypeFrom,\n" +
             "\tfto.name as facilityTypeTo,\n" +
             "\tv.periodid as periodId ,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
-            "\tgo.name as toZoneName,\n" +
+            "\tgf.name as toZoneName,\n" +
             "\tv.orderid as orderId,f.name as facilityName,f.description as toDescription,fo.description as fromDescription,fo.name as fromFacilityName\n" +
             "FROM vaccine_distributions v\n" +
             " left join facilities f  on(f.id=v.tofacilityid)\n" +
@@ -102,8 +102,8 @@ public interface VaccineStockStatusMapper {
             " left join facility_types fto on(fto.id=f.typeid)\n" +
             " left join geographic_zones go on(go.id=fo.geographiczoneid)\n" +
             " left join geographic_zones gf on(gf.id=f.geographiczoneid)\n" +
-            "left join vaccine_order_requisitions vo on(vo.id=v.orderid) where v.id=#{distID}")
-    List<VaccineDistribution> vaccineDistributionById(@Param("distID") Long distID);
+            "left join vaccine_order_requisitions vo on(vo.id=v.orderid) where v.orderid=#{orderId}")
+    List<VaccineDistribution> vaccineDistributionById(@Param("orderId") Long orderId);
 
 
 

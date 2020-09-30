@@ -193,10 +193,10 @@ public class WmsReportService {
         }
     }
 
-    public void exportReportVaccineInvoice(Long distId, String language, HttpServletResponse response) throws IOException, JRException {
+    public void exportReportVaccineInvoice(Long orderId,String currentName, String language, HttpServletResponse response) throws IOException, JRException {
 
         try {
-            String vaccineList = getArrayReport(2, distId);
+            String vaccineList = getArrayReport(2, orderId);
             JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
             File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_invoice.jrxml"));
@@ -215,7 +215,7 @@ public class WmsReportService {
 
 
             Map<String, Object> parameters = new HashMap<>();
-            parameters.put("createdBy", "Felix Joseph");
+            parameters.put("createdBy", currentName);
             parameters.put("VaccineListData", dataSource);
             parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
             parameters.put("vaccine_distribution_product", filePath.getAbsolutePath());
@@ -236,16 +236,16 @@ public class WmsReportService {
     }
 
 
-    public void exportReportVaccineDeliveryProof(Long distId, String language, String currentName, HttpServletResponse response) throws IOException, JRException {
+    public void exportReportVaccineDeliveryProof(Long orderId, String language, String currentName, HttpServletResponse response) throws IOException, JRException {
 
         try {
-            String vaccineList = getArrayReport(2, distId);
+            String vaccineList = getArrayReport(2, orderId);
             System.out.println(vaccineList);
             JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
-            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("vaccine_proof_of_delivery.jrxml"));
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_proof_of_delivery.jrxml"));
 
-            File filePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("vaccine_distibution_product_proof.jrxml"));
+            File filePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_distibution_product_proof.jrxml"));
             File filePathLots = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_delivery_prooft_items.jrxml"));
             File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
 
@@ -340,6 +340,8 @@ public class WmsReportService {
 
                 String jsonItem = new ObjectMapper().writerWithDefaultPrettyPrinter()
                         .writeValueAsString(vaccineListItem);
+
+              // System.out.println(jsonItem);
                 JSONArray outputDataItem = new JSONArray(jsonItem);
                 JSONArray jsonArrayLot = new JSONArray();
 
@@ -350,6 +352,7 @@ public class WmsReportService {
                     List<VaccineDistributionLots> vaccineListItemLOt = wmsReportRepository.vaccineDistributionLotList(vacItemID);
 
 
+                    vaccineListObjectLot.put("quantityIssued",vaccineListItemLOt.stream().mapToInt(VaccineDistributionLots::getQuantity).sum());
                     vaccineListObjectLot.put("itemLots", vaccineListItemLOt);
 
                     jsonArrayLot.put(vaccineListObjectLot);

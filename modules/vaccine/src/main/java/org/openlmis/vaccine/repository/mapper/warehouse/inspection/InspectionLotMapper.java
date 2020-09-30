@@ -42,4 +42,10 @@ public interface InspectionLotMapper {
     @Options(useGeneratedKeys = true)
     void updateOrSave(VVMLots lots);
 
+
+    @Delete("delete from inspection_lots where id=#{inspectionLotId}")
+    Integer deleteLotByInspectionLineItem(Long inspectionLotId);
+
+
+
 }

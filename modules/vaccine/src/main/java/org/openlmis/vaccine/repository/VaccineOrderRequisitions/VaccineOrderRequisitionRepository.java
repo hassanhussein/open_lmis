@@ -60,6 +60,11 @@ public class VaccineOrderRequisitionRepository {
     public List<OrderRequisitionDTO>getPendingRequest(Long userId, Long facilityId, Long programId){
         return  orderRequisitionMapper.getPendingRequest(userId,facilityId,programId);
     }
+    public List<OrderRequisitionDTO>searchPendingRequest(Long userId, Long facilityId, Long programId,String searchParam,String column){
+        return  orderRequisitionMapper.searchPendingRequest(userId,facilityId,programId,searchParam,column);
+    }
+
+
     public List<OrderRequisitionDTO>getAllBy(Long programId, Long periodId, Long facilityId){
         return orderRequisitionMapper.getAllBy(programId,periodId,facilityId);
     }

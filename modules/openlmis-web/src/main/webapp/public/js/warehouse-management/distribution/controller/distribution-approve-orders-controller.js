@@ -11,14 +11,28 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionApproveOrdersController($scope,DisableAsn, programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog) {
+function DistributionApproveOrdersController($scope,DisableAsn,$window, programs,facilities, $location, VaccinePendingRequisitions,navigateBackService, $dialog) {
 
+
+
+$scope.pod = function (order) {
+var url = '/wms-reports/proof-delivery-report/'+order.id;
+$window.open(url, '_blank');
+}
+
+
+$scope.invoice = function (order) {
+var url = '/wms-reports/invoice-report/'+order.id;
+$window.open(url, '_blank');
+}
 
 
 
 
   $scope.searchOptions = [
-    {value: "region", name: "Region"}
+    {value: "region", name: "Region"},
+    {value: "picklistid", name: "Pick List ID"},
+    {value: "orderid", name: "Order ID"}
   ];
 
 //  $scope.$parent.asnViewMode=false;
@@ -114,9 +128,10 @@ function DistributionApproveOrdersController($scope,DisableAsn, programs,facilit
 //      $scope.showSearchResults = true;
 //    }, {});
 
+//alert("done"+query);
 
 
-    VaccinePendingRequisitions.get({
+    VaccinePendingRequisitions.get({"searchParam": $scope.searchedQuery,"column": $scope.selectedSearchOption.value,
                 facilityId: parseInt(facilities.id, 10),
                 programId: parseInt(programs[0].id, 10)
             }, function (data) {

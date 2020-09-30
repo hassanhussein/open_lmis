@@ -16,6 +16,10 @@ public class InspectionLotRepository {
         mapper.update(lot);
 
     }
+    public void deleteLotByInspectionLineItem(Long inspectionLotId){
+        mapper.deleteLotByInspectionLineItem(inspectionLotId);
+
+    }
 
     public void updateOrSave(VVMLots lots){
         mapper.updateOrSave(lots);

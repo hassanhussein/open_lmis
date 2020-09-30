@@ -10,9 +10,11 @@ import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisiti
 import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.dto.OrderRequisitionStockCardDTO;
 import org.openlmis.vaccine.dto.VaccineOnTimeInFullDTO;
+import org.openlmis.vaccine.repository.mapper.warehouse.receive.ReceiveMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface VaccineOrderRequisitionMapper {
@@ -93,6 +95,39 @@ public interface VaccineOrderRequisitionMapper {
             "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId}")
       List<OrderRequisitionDTO> getPendingRequest(@Param("userId") Long userId, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
+    @SelectProvider(type = VaccineOrderRequisitionMapper.SelectVaccineOrder.class, method = "getOrderBySearchParam")
+    List<OrderRequisitionDTO> searchPendingRequest(@Param("userId") Long userId, @Param("facilityId") Long facilityId, @Param("programId") Long programId,@Param("searchParam") String searchParam,@Param("column") String column);
+
+    //searchPendingRequest
+
+    class SelectVaccineOrder {
+        public static String getOrderBySearchParam(Map<String, Object> params){
+            System.out.println("Called search");
+            StringBuilder sql = new StringBuilder();
+            String column = (String) params.get("column");
+            sql.append("SELECT DISTINCT f.id AS facilityId,r.periodId,f.name facilityName,R.orderDate orderDate,r.createdDate,R.ID,R.STATUS,ra.programid AS programId,pp.name periodName   \n" +
+                    "               FROM facilities f   \n" +
+                    "                 JOIN requisition_group_members m ON m.facilityid = f.id   \n" +
+                    "                 JOIN requisition_groups rg ON rg.id = m.requisitiongroupid   \n" +
+                    "                 JOIN supervisory_nodes sn ON sn.id = rg.supervisorynodeid   \n" +
+                    "                 JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid  \n" +
+                    "                 JOIN vaccine_order_requisitions r on f.id = r.facilityId and sn.id = r.supervisorynodeid  \n" +
+                    "                 JOIN processing_periods pp on r.periodId = pp.id  ");
+            sql.append(" JOIN vaccine_distributions vd on vd.orderid = r.id " +
+                    "  WHERE ra.userId = #{userId}   AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId} ");
+
+            if(column.equalsIgnoreCase("picklistid")) {
+                sql.append(" AND vd.picklistid=CAST(#{searchParam} as bigint) ");
+            }else if(column.equalsIgnoreCase("region")){
+                sql.append(" and (LOWER(f.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+
+            }else if(column.equalsIgnoreCase("orderid")){
+                sql.append(" AND vd.orderid=CAST(#{searchParam} as bigint) ");
+            }
+            sql.append("ORDER BY id desc limit 10");
+            return sql.toString();
+        }
+    }
 
     @Select("select r.id, p.name as periodName, r.facilityId, r.status, r.programId " +
             " from vaccine_order_requisitions r " +

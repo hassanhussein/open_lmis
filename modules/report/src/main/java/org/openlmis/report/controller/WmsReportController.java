@@ -86,13 +86,13 @@ public class WmsReportController extends BaseController {
     }
 
 
-    @RequestMapping(value = "/proof-delivery-report/{distId}")
-    public void generateProofDeliveryReport(@PathVariable Long distId, @RequestParam(required = false, defaultValue = "pdf") int type, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
+    @RequestMapping(value = "/proof-delivery-report/{orderId}")
+    public void generateProofDeliveryReport(@PathVariable Long orderId, @RequestParam(required = false, defaultValue ="1") int type, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
         Long userId = loggedInUserId(request);
         User userDetails = userRepository.getById(userId);
         String currentName = userDetails.getFullName();
-        wmsReportService.exportReportVaccineDeliveryProof(distId, lang, currentName, response);
+        wmsReportService.exportReportVaccineDeliveryProof(orderId, lang, currentName, response);
     }
 
     @RequestMapping(value = "/delivery-report", params = {"distId", "docType"})
@@ -104,10 +104,13 @@ public class WmsReportController extends BaseController {
         wmsReportService.exportReportVaccineDeliveryProof(distId, lang, currentName, response);
     }
 
-    @RequestMapping(value = "/invoice-report", params = {"distId", "docType"})
-    public void generateInvoiceReport(@RequestParam String docType, @RequestParam Long distId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
+    @RequestMapping(value = "/invoice-report/{orderId}")
+    public void generateInvoiceReport(@PathVariable Long orderId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
-        wmsReportService.exportReportVaccineInvoice(distId, lang, response);
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportReportVaccineInvoice(orderId,currentName, lang, response);
     }
 
 

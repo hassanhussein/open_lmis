@@ -161,9 +161,9 @@ public class VaccineOrderRequisitionController extends BaseController {
     }
 
     @RequestMapping(value = "getPendingRequest/{facilityId}", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity<OpenLmisResponse> getPendingRequest(@PathVariable Long facilityId, HttpServletRequest request) {
-
-        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("pendingRequest", service.getPendingRequest(loggedInUserId(request), facilityId));
+    public ResponseEntity<OpenLmisResponse> getPendingRequest(@PathVariable Long facilityId,@RequestParam(value = "searchParam", required = false) String searchParam, @RequestParam(value = "column", required = false) String column, HttpServletRequest request) {
+        //System.out.println("hello called:"+searchParam);
+        ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.response("pendingRequest", service.getPendingRequest(loggedInUserId(request), facilityId,searchParam,column));
         response.getBody().addData(PENDING_CONSIGNMENT_FOR_LOWER_LEVEL, inventoryDistributionService.getPendingReceivedAlert(facilityId));
         response.getBody().addData(PENDING_CONSIGNMENT, inventoryDistributionService.getPendingNotificationForLowerLevel(facilityId));
         return response;

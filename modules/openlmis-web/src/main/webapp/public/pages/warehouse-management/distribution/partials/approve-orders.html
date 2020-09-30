@@ -80,10 +80,10 @@
                 <td>{{order.status=="UNDER_PICKING"?'UNDER PICKING':order.status}}</td>
                 <td>
 
-                    <input  type="button" class="btn btn-primary" ng-if="order.status=='PICKED'"
+                    <input  type="button" class="btn btn-primary" ng-if="order.status=='ISSUED'"
                             ng-click="pod(order)" value="POD" />
 
-                    <input  type="button" class="btn btn-primary" ng-if="order.status=='PICKED'"
+                    <input  type="button" class="btn btn-primary" ng-if="order.status=='ISSUED'"
                             ng-click="invoice(order)" value="Invoice" />
 
                     <input  type="button" class="btn btn-primary" ng-if="order.status=='UNDER_PICKING'"

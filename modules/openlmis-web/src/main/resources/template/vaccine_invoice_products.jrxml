@@ -76,7 +76,7 @@
 		<field name="id" class="java.lang.Integer"/>
 		<field name="lotId" class="java.lang.Integer"/>
 		<field name="quantity" class="java.lang.Integer"/>
-		<field name="vvmStatus" class="java.lang.Integer"/>
+		<field name="vvmStatus" class="java.lang.String"/>
 		<field name="lotNumber" class="java.lang.String"/>
 		<field name="expirationDate" class="java.lang.String"/>
 	</subDataset>
@@ -88,6 +88,11 @@
 		<field name="region" class="java.lang.String"/>
 		<field name="quantityIssued" class="java.lang.Integer"/>
 		<field name="productCode" class="java.lang.String"/>
+		<field name="uom" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="Dataset1" uuid="54e8c35d-c448-4869-a064-842128ffc5a0">
+		<field name="product" class="java.lang.String"/>
+		<field name="quantityIssued" class="java.lang.Integer"/>
 	</subDataset>
 	<parameter name="distrID" class="java.lang.String"/>
 	<parameter name="createdBy" class="java.lang.String"/>
@@ -125,20 +130,22 @@
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<text><![CDATA[Item Description]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Opaque" x="90" y="5" width="40" height="20" backcolor="#BFBFBF" uuid="16fbec96-2a04-48f2-b77f-1c57fece1c24">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1e717d93-98b0-42ec-820d-b3ae32e9bdd0"/>
 				</reportElement>
-				<box rightPadding="4">
+				<box padding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[UOM]]></text>
@@ -162,19 +169,19 @@
 				<reportElement mode="Opaque" x="180" y="5" width="50" height="20" backcolor="#BFBFBF" uuid="1f75ffe4-5a66-4a76-8fba-6f031ddded50">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="115241ea-9e61-49e0-ae71-23951bea0d37"/>
 				</reportElement>
-				<box rightPadding="4">
+				<box padding="2">
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[VVM]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="300" y="5" width="50" height="20" backcolor="#BFBFBF" uuid="8eee5a4f-fc4b-475f-bcdd-d9e0db4c711b">
+				<reportElement mode="Opaque" x="290" y="5" width="60" height="20" backcolor="#BFBFBF" uuid="8eee5a4f-fc4b-475f-bcdd-d9e0db4c711b">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="115241ea-9e61-49e0-ae71-23951bea0d37"/>
 				</reportElement>
 				<box rightPadding="4">
@@ -189,7 +196,7 @@
 				<text><![CDATA[Batch Qty]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="230" y="5" width="70" height="20" backcolor="#BFBFBF" uuid="05b4e869-8121-4975-a7e3-9eb8927a3353">
+				<reportElement mode="Opaque" x="230" y="5" width="60" height="20" backcolor="#BFBFBF" uuid="05b4e869-8121-4975-a7e3-9eb8927a3353">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="115241ea-9e61-49e0-ae71-23951bea0d37"/>
 				</reportElement>
 				<box leftPadding="4">
@@ -219,7 +226,7 @@
 				<text><![CDATA[Expiry Date]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="420" y="5" width="50" height="20" backcolor="#BFBFBF" uuid="6c24d980-a015-4969-8475-4375d423db2d">
+				<reportElement mode="Opaque" x="420" y="5" width="60" height="20" backcolor="#BFBFBF" uuid="6c24d980-a015-4969-8475-4375d423db2d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="115241ea-9e61-49e0-ae71-23951bea0d37"/>
 				</reportElement>
 				<box rightPadding="4">
@@ -234,7 +241,7 @@
 				<text><![CDATA[Unit Price]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="470" y="5" width="60" height="20" backcolor="#BFBFBF" uuid="18c9c350-79a6-4ebe-97b6-a25a78926d31">
+				<reportElement mode="Opaque" x="480" y="5" width="120" height="20" backcolor="#BFBFBF" uuid="18c9c350-79a6-4ebe-97b6-a25a78926d31">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="115241ea-9e61-49e0-ae71-23951bea0d37"/>
 				</reportElement>
 				<box rightPadding="4">
@@ -253,17 +260,17 @@
 	<columnFooter>
 		<band height="53">
 			<line>
-				<reportElement x="301" y="20" width="229" height="1" uuid="9974aa68-1121-4aa2-ad00-89a0e90d4c7e"/>
+				<reportElement x="370" y="20" width="229" height="1" uuid="9974aa68-1121-4aa2-ad00-89a0e90d4c7e"/>
 			</line>
 			<staticText>
-				<reportElement x="310" y="30" width="100" height="18" uuid="df8323e9-ebe2-4118-a0ae-72a0be7bd4ea"/>
+				<reportElement x="420" y="30" width="100" height="18" uuid="df8323e9-ebe2-4118-a0ae-72a0be7bd4ea"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Invoice Total (TZS)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="450" y="30" width="80" height="15" isPrintInFirstWholeBand="true" uuid="f678013b-5a7e-411c-9a64-25df700cff78"/>
+				<reportElement x="520" y="30" width="80" height="15" isPrintInFirstWholeBand="true" uuid="f678013b-5a7e-411c-9a64-25df700cff78"/>
 				<box rightPadding="2"/>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
@@ -275,7 +282,7 @@
 	<summary>
 		<band height="37">
 			<componentElement>
-				<reportElement x="-20" y="0" width="550" height="30" uuid="450927ac-d21c-40be-b0ca-2845caab56cc">
+				<reportElement x="-20" y="0" width="620" height="30" uuid="450927ac-d21c-40be-b0ca-2845caab56cc">
 					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 					<property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
 					<property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
@@ -310,16 +317,16 @@
 						<jr:detailCell style="Table 1_TD" height="20">
 							<textField>
 								<reportElement x="0" y="0" width="40" height="20" uuid="6afb9d8c-fa98-498e-8e44-0583413e3b7e"/>
-								<box rightPadding="4"/>
-								<textElement textAlignment="Right"/>
-								<textFieldExpression><![CDATA[$F{quantityIssued}]]></textFieldExpression>
+								<box padding="2"/>
+								<textElement textAlignment="Left"/>
+								<textFieldExpression><![CDATA[$F{uom}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="50" uuid="14c88eb8-a7db-4524-abb6-a0c192b54258">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
 						<jr:detailCell style="Table 1_TD" height="20">
-							<textField>
+							<textField pattern="#,###.###">
 								<reportElement x="0" y="0" width="50" height="20" uuid="202ee19d-b210-43a1-8e00-a136870d011d">
 									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
 								</reportElement>
@@ -329,18 +336,18 @@
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="350" uuid="d445fdf5-a0ac-480f-8308-31013e6bee5c">
+					<jr:column width="240" uuid="d445fdf5-a0ac-480f-8308-31013e6bee5c">
 						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
 						<jr:detailCell style="Table 1_TD" height="20">
 							<componentElement>
-								<reportElement mode="Transparent" x="0" y="0" width="350" height="20" uuid="2ba6b648-0900-46c6-8714-fd69896bca40">
+								<reportElement mode="Transparent" x="0" y="0" width="240" height="20" uuid="2ba6b648-0900-46c6-8714-fd69896bca40">
 									<property name="com.jaspersoft.studio.layout"/>
 								</reportElement>
 								<jr:list printOrder="Vertical">
 									<datasetRun subDataset="ListItem" uuid="c68ff0ce-3bbb-4dbb-96d2-e28b9bbcd67e">
 										<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("itemLots")]]></dataSourceExpression>
 									</datasetRun>
-									<jr:listContents height="20" width="350">
+									<jr:listContents height="20" width="240">
 										<textField>
 											<reportElement x="0" y="0" width="50" height="20" uuid="3e4c8f81-505b-401b-ae58-7f12268affc8"/>
 											<box rightPadding="3">
@@ -353,7 +360,7 @@
 											<textFieldExpression><![CDATA[$F{vvmStatus}]]></textFieldExpression>
 										</textField>
 										<textField>
-											<reportElement x="50" y="0" width="70" height="20" uuid="15e9b53b-2985-4e52-92bf-77c94439a6d6"/>
+											<reportElement x="50" y="0" width="60" height="20" uuid="15e9b53b-2985-4e52-92bf-77c94439a6d6"/>
 											<box leftPadding="3">
 												<leftPen lineWidth="1.0"/>
 											</box>
@@ -363,7 +370,7 @@
 											<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
 										</textField>
 										<textField pattern="#,###.###">
-											<reportElement x="120" y="0" width="50" height="20" uuid="6e0041f3-22cc-4652-96ed-f4986057eb42"/>
+											<reportElement x="110" y="0" width="60" height="20" uuid="6e0041f3-22cc-4652-96ed-f4986057eb42"/>
 											<box rightPadding="3">
 												<leftPen lineWidth="1.0"/>
 											</box>
@@ -371,29 +378,40 @@
 											<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
 										</textField>
 										<textField>
-											<reportElement x="170" y="0" width="70" height="20" uuid="5d042b04-198a-43a5-9b30-932bceea5fcf"/>
+											<reportElement x="170" y="0" width="60" height="20" uuid="5d042b04-198a-43a5-9b30-932bceea5fcf"/>
 											<box leftPadding="2">
 												<leftPen lineWidth="1.0"/>
 											</box>
 											<textFieldExpression><![CDATA[new SimpleDateFormat("MMM yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{expirationDate}))]]></textFieldExpression>
 										</textField>
-										<textField pattern="#,###.###">
-											<reportElement x="240" y="0" width="50" height="20" uuid="49bff30f-1be5-4764-b6c2-550fb9a04839"/>
-											<box rightPadding="2">
-												<leftPen lineWidth="1.0"/>
-												<rightPen lineWidth="1.0"/>
-											</box>
-											<textElement textAlignment="Right"/>
-											<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+									</jr:listContents>
+								</jr:list>
+							</componentElement>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="180" uuid="2e7b2cae-c608-4806-9171-d32229867e9f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<componentElement>
+								<reportElement x="0" y="0" width="180" height="20" uuid="b7561685-3e55-44de-a27c-bd748b0dc63b"/>
+								<jr:list printOrder="Vertical">
+									<datasetRun subDataset="Dataset1" uuid="37b729e9-10b4-44fc-bd78-d2aa5a0ee92f">
+										<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("distributionListItem")]]></dataSourceExpression>
+									</datasetRun>
+									<jr:listContents height="20" width="180">
+										<textField>
+											<reportElement x="0" y="0" width="60" height="20" backcolor="#8C3130" uuid="314f0478-c1f1-4e5b-839d-0bcfabcd8bcc"/>
+											<textFieldExpression><![CDATA[$F{quantityIssued}]]></textFieldExpression>
 										</textField>
-										<textField pattern="#,###.###">
-											<reportElement x="290" y="0" width="60" height="20" uuid="22e1fa55-46f9-45ec-9c5f-a5c391026b54"/>
-											<box rightPadding="2">
-												<leftPen lineWidth="1.0"/>
-												<rightPen lineWidth="1.0"/>
-											</box>
-											<textElement textAlignment="Right"/>
-											<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+										<textField>
+											<reportElement x="60" y="0" width="90" height="20" uuid="0f5866b5-d92d-4903-871b-f7b8b34d2cab"/>
+											<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 										</textField>
 									</jr:listContents>
 								</jr:list>

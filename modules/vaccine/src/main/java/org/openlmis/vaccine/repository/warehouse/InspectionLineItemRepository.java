@@ -26,6 +26,8 @@ public class InspectionLineItemRepository {
         if (!lineItem.getLots().isEmpty()) {
 
             for (InspectionLot lot : lineItem.getLots()) {
+
+                inspectionLotRepository.deleteLotByInspectionLineItem(lot.getInspectionLineItemId());
                 inspectionLotRepository.update(lot);
                 //System.out.println("passed: "+lot.getVvm());
                 for(VVMLots lotVVm : lot.getVvm()){
@@ -41,7 +43,7 @@ public class InspectionLineItemRepository {
                     lotVVm.setFailVvmId(failed.getVvmId());
 
                     if(failed.getQuantity()!=null){
-                        lotVVm.setQuantity(lotVVm.getQuantity()-failed.getQuantity());
+                        lotVVm.setQuantity(lotVVm.getQuantity());
                     }
                    // System.out.println("Failed:"+failed.getQuantity());
                     //lotVVm.set
