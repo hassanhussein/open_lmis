@@ -240,7 +240,7 @@ public class WmsReportService {
 
         try {
             String vaccineList = getArrayReport(2, orderId);
-            System.out.println(vaccineList);
+            //System.out.println(vaccineList);
             JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
             File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine_proof_of_delivery.jrxml"));
@@ -341,26 +341,33 @@ public class WmsReportService {
                 String jsonItem = new ObjectMapper().writerWithDefaultPrettyPrinter()
                         .writeValueAsString(vaccineListItem);
 
-              // System.out.println(jsonItem);
+                // System.out.println(jsonItem);
                 JSONArray outputDataItem = new JSONArray(jsonItem);
                 JSONArray jsonArrayLot = new JSONArray();
 
-
+                int sumAmount=0;
                 for (int j = 0; j < outputDataItem.length(); j++) {
                     JSONObject vaccineListObjectLot = outputDataItem.getJSONObject(j);
                     long vacItemID = vaccineListObjectLot.getLong("id");
                     List<VaccineDistributionLots> vaccineListItemLOt = wmsReportRepository.vaccineDistributionLotList(vacItemID);
 
+                    int unitPrice=vaccineListObjectLot.getInt("unitPrice");
+                    int quantityTotal=vaccineListItemLOt.stream().mapToInt(VaccineDistributionLots::getQuantity).sum();
 
-                    vaccineListObjectLot.put("quantityIssued",vaccineListItemLOt.stream().mapToInt(VaccineDistributionLots::getQuantity).sum());
+                    int amount= unitPrice* quantityTotal;
+
+                    sumAmount=sumAmount+amount;
+
+                    vaccineListObjectLot.put("quantityIssued",quantityTotal);
                     vaccineListObjectLot.put("itemLots", vaccineListItemLOt);
+                    vaccineListObjectLot.put("amount", amount);
 
                     jsonArrayLot.put(vaccineListObjectLot);
 
 
                 }
 
-
+                    vaccineListObject.put("sumAmount",sumAmount);
                     vaccineListObject.put("distributionListItem", jsonArrayLot);
 
 

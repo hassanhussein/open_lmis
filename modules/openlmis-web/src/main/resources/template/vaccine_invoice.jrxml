@@ -22,6 +22,7 @@
 	<field name="fromDescription" class="java.lang.String"/>
 	<field name="fromFacilityName" class="java.lang.String"/>
 	<field name="pickListId" class="java.lang.Long"/>
+	<field name="sumAmount" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -58,29 +59,6 @@
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="10" y="120" width="56" height="20" uuid="8f89ef98-5345-4504-8079-d522bfa14659"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Ship from:]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="10" y="140" width="100" height="20" uuid="f0c0219c-5ea3-4abf-9715-ec8949dba9b9"/>
-				<textFieldExpression><![CDATA[$F{fromFacilityName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="10" y="160" width="100" height="20" uuid="f3170c9e-d2d4-4a1f-8d4f-9a8ddd1f7d17"/>
-				<textFieldExpression><![CDATA[$F{fromDescription}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="10" y="180" width="100" height="20" uuid="eb1a506b-00b7-4651-921a-30c960ec8c6a"/>
-				<textFieldExpression><![CDATA[$F{fromZoneName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="10" y="200" width="100" height="20" uuid="d3b44773-f9d4-4c9f-950a-6ecb4cdddf24"/>
-				<textFieldExpression><![CDATA[$F{facilityTypeFrom}]]></textFieldExpression>
-			</textField>
-			<staticText>
 				<reportElement x="0" y="230" width="90" height="20" uuid="c0811f48-52d7-4a63-b12e-ab21cbc24b57"/>
 				<textElement>
 					<font isBold="true"/>
@@ -101,13 +79,6 @@
 				</textElement>
 				<text><![CDATA[Pick ID:]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="0" y="290" width="90" height="20" uuid="eead5689-bddc-47e9-b6e3-be61dbaa123a"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Dispatch Location]]></text>
-			</staticText>
 			<textField>
 				<reportElement x="90" y="230" width="80" height="20" uuid="bda7d4d8-be8a-42c1-8e32-3410831f095b"/>
 				<textFieldExpression><![CDATA[$F{orderId}]]></textFieldExpression>
@@ -115,10 +86,6 @@
 			<textField pattern="MM/dd/yyyy">
 				<reportElement x="90" y="250" width="80" height="20" uuid="59f33144-d823-4a1b-9752-11b3c40a0652"/>
 				<textFieldExpression><![CDATA[$F{orderDate}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="90" y="290" width="100" height="20" uuid="e587ae90-6740-41fb-b1fd-4bf662e19fce"/>
-				<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="90" y="270" width="80" height="20" uuid="0460d93c-b222-47df-965b-d2c2844b93bc"/>
@@ -131,16 +98,7 @@
 				</graphicElement>
 			</rectangle>
 			<frame>
-				<reportElement x="0" y="120" width="170" height="100" uuid="0035011f-4b5f-4573-852b-248dc069ce7d"/>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-			</frame>
-			<frame>
-				<reportElement x="473" y="115" width="164" height="100" uuid="9b42fd09-bcee-4c72-a94c-bad642707c8e"/>
+				<reportElement x="470" y="115" width="167" height="106" uuid="9b42fd09-bcee-4c72-a94c-bad642707c8e"/>
 				<box>
 					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
 					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
@@ -149,14 +107,17 @@
 				</box>
 				<textField>
 					<reportElement x="18" y="41" width="100" height="20" uuid="382fee86-c569-428d-b1a3-f006370c6f2f"/>
+					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{toDescription}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="18" y="61" width="100" height="20" uuid="24c364e6-b645-4cfe-8ff3-b12cc88cbe30"/>
+					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{toZoneName}]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="18" y="81" width="100" height="20" uuid="da9c2240-ddd5-449f-aef3-374af32a0f1b"/>
+					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{facilityTypeTo}]]></textFieldExpression>
 				</textField>
 				<staticText>
@@ -168,9 +129,48 @@
 				</staticText>
 				<textField>
 					<reportElement x="18" y="21" width="100" height="20" uuid="5aa969be-8387-42b7-ab01-df7a2b1a17b6"/>
+					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{facilityName}]]></textFieldExpression>
 				</textField>
 			</frame>
+			<frame>
+				<reportElement x="0" y="118" width="170" height="103" uuid="b6789f2e-9041-4663-810a-4f0a38fb2199"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+			</frame>
+			<staticText>
+				<reportElement x="20" y="119" width="70" height="20" uuid="e4b4f51c-0658-4f99-9efa-b8062f9011cf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ship from:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="139" width="70" height="20" uuid="5e85d402-cc52-4456-ae20-bf2149f7a267"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[CVS00001]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="160" width="70" height="19" uuid="5e43532a-69a6-40b6-af40-b98b65816041"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Tanzania CVS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="179" width="70" height="20" uuid="e450b5c0-9b91-46ff-b252-bb6cbfcfef0d"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Temeke MC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="199" width="110" height="20" uuid="4153b4b6-2fef-430c-bd8b-a66d595d7e1c"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Centre Vaccine Store]]></text>
+			</staticText>
 		</band>
 	</title>
 	<detail>
@@ -183,13 +183,16 @@
 				<subreportParameter name="createdBy">
 					<subreportParameterExpression><![CDATA[$P{createdBy}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="sumAmount">
+					<subreportParameterExpression><![CDATA[$F{sumAmount}]]></subreportParameterExpression>
+				</subreportParameter>
 				<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("")]]></dataSourceExpression>
 				<subreportExpression><![CDATA[JasperCompileManager.compileReport($P{vaccine_distribution_product})]]></subreportExpression>
 			</subreport>
 		</band>
 	</detail>
 	<lastPageFooter>
-		<band height="228" splitType="Stretch">
+		<band height="249" splitType="Stretch">
 			<staticText>
 				<reportElement x="370" y="0" width="240" height="26" uuid="a03dd22e-d0fd-4984-81ed-591252a2845b"/>
 				<textElement>
@@ -392,6 +395,32 @@
 				</textElement>
 				<text><![CDATA[Date:]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="210" width="80" height="20" forecolor="#666666" uuid="dbce9e1c-9a0d-4bc4-9a13-8abb1b4c6a91"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Printed By:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="210" width="66" height="20" forecolor="#666666" uuid="40d0c46f-11ee-4d6a-9309-2e640514faf4"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Printed Date:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="80" y="210" width="100" height="20" forecolor="#666666" uuid="89c5a665-23ab-4d63-82e4-98e459ee6edb"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{createdBy}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="580" y="210" width="80" height="20" forecolor="#666666" uuid="74549a05-e889-46ad-a500-3e3ec2df4194"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
 		</band>
 	</lastPageFooter>
 </jasperReport>

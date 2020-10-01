@@ -40,14 +40,14 @@ public interface VaccineStockStatusMapper {
             " left join geographic_zones g on(g.id=f.geographiczoneid) where f.id=#{facilityId}")
     List<VaccineDistributionLineItem> vaccineDistributionLineItemList(@Param("facilityId") Long facilityId);
 
-    @Select("select * from (SELECT vd.id,vd.distributionid,(select count(id) from vaccine_distribution_line_item_lots  where distributionlineitemid=vd.id) itemNo,p.code as productCode,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
-            "g.code as region,vd.quantity as quantityIssued\n" +
-            "FROM vaccine_distribution_line_items vd\n" +
-            "left join products p on(p.id=vd.productid)\n" +
-            ""+
-            " left join  vaccine_distributions d on(d.id=vd.distributionid)\n" +
-            " left join facilities f on(f.id=d.tofacilityid)\n" +
-            " left join geographic_zones g on(g.id=f.geographiczoneid) where vd.distributionid=#{distID}) as ditItems where itemNo>0")
+    @Select("select * from (SELECT vd.id,vd.distributionid,(select count(id) from vaccine_distribution_line_item_lots  where distributionlineitemid=vd.id) itemNo,p.code as productCode,f.name as facilityName,p.primaryname as product,g.name as district, \n" +
+            "            g.code as region,(select currentprice from program_products where productid=p.id  and active=true limit 1) as unitPrice,vd.quantity as quantityIssued \n" +
+            "            FROM vaccine_distribution_line_items vd \n" +
+            "            left join products p on(p.id=vd.productid) \n" +
+            "          \n" +
+            "             left join  vaccine_distributions d on(d.id=vd.distributionid) \n" +
+            "             left join facilities f on(f.id=d.tofacilityid) \n" +
+            "             left join geographic_zones g on(g.id=f.geographiczoneid) where vd.distributionid=#{distID}) as ditItems where itemNo>0")
     List<VaccineDistributionLineItem> vaccineDistributionLineItemListByDistribution(@Param("distID") Long facilityId);
 
     @Select("SELECT v.id,\n" +
