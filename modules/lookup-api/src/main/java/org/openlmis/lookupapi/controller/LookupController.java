@@ -444,4 +444,39 @@ public class LookupController {
         return ResponseEntity.ok(OK);
     }
 
+    @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getHFRFacilities(HttpServletRequest request){
+
+        try {
+            lookupService.getAllHFRFacilities();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(OK);
+    }
+
+    @RequestMapping(value = "/rest-api/sc-portal-order-delivery", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getOrderDelivery(HttpServletRequest request){
+
+        try {
+            lookupService.getOrderDelivery();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(OK);
+    }
+
+    @RequestMapping(value = "/rest-api/sc-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getEmergencystockpiles(HttpServletRequest request){
+
+        try {
+            lookupService.getEmergencyCommodites();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok(OK);
+    }
+
+
+
 }

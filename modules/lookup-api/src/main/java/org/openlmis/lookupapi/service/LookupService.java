@@ -260,4 +260,12 @@ public class LookupService {
   }
 
 
+    public List<HashMap<String, Object>> getOrderDelivery() {
+      return interfaceMapper.getOrderDelivery();
+    }
+
+    public List<HashMap<String,Object>> getEmergencyCommodites() {
+
+      return interfaceMapper.getEmergencyCommodites();
+    }
 }

@@ -73,6 +73,31 @@ public interface ILInterfaceMapper {
     @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
     void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
 
+    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", facilityId as \"order_from_facility_id\",  \n" +
+            "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"order_type\" , \n" +
+            "QuantityApproved as \"ordered_quantity\", quantityReceived as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
+            "\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivery_promise_date\",\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivered_date\",\n" +
+            " 'MSD' as \"delivery_from_facility_id\",\n" +
+            "r.status as \"order_status\",\n" +
+            "30 as “target_days”\n" +
+            "from requisitions r\n" +
+            "\n" +
+            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
+            "JOIN orders o ON r.id = o.id\n" +
+            "JOIN products p ON i.productcode = p.code\n" +
+            "JOIN program_products pp On pp.productid = p.id\n" +
+            "limit 100")
+    List<HashMap<String, Object>> getOrderDelivery();
 
-
+    @Select(" select p.code as \"product_code\", facilityId as \"facility_id\",  r.modifieddate as \"date\",\n" +
+            "stockinhand as \"available_quantity\", quantityReceived as \"stock_quantity\", case when amc > 0 then stockinhand/ amc else 0 end as \"stock_of_month\"\n" +
+            "from requisitions r\n" +
+            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
+            "JOIN orders o ON r.id = o.id\n" +
+            "JOIN products p ON i.productcode = p.code\n" +
+            "JOIN program_products pp On pp.productid = p.id\n" +
+            "limit 100")
+    List<HashMap<String, Object>> getEmergencyCommodites();
 }
