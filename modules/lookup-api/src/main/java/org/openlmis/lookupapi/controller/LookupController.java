@@ -422,7 +422,7 @@ public class LookupController {
     }
 
 
-   @RequestMapping(value = "/rest-api/sc-portal-products", method = RequestMethod.GET, headers = ACCEPT_JSON)
+/*   @RequestMapping(value = "/rest-api/sc-portal-products", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getAllProducts(HttpServletRequest request){
 
         try {
@@ -431,9 +431,9 @@ public class LookupController {
             e.printStackTrace();
         }
         return ResponseEntity.ok(OK);
-    }
+    }*/
 
-    @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
+ /*   @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getStockInHand(HttpServletRequest request){
 
         try {
@@ -442,9 +442,9 @@ public class LookupController {
             e.printStackTrace();
         }
         return ResponseEntity.ok(OK);
-    }
+    }*/
 
-    @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+  /*  @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getHFRFacilities(HttpServletRequest request){
 
         try {
@@ -454,19 +454,21 @@ public class LookupController {
         }
         return ResponseEntity.ok(OK);
     }
-
-    @RequestMapping(value = "/rest-api/sc-portal-order-delivery", method = RequestMethod.GET, headers = ACCEPT_JSON)
+*/
+/*    @RequestMapping(value = "/rest-api/sc-portal-order-delivery", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getOrderDelivery(HttpServletRequest request){
 
         try {
+
             lookupService.getOrderDelivery();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok(OK);
-    }
+    }*/
 
-    @RequestMapping(value = "/rest-api/sc-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+ /*   @RequestMapping(value = "/rest-api/sc-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getEmergencystockpiles(HttpServletRequest request){
 
         try {
@@ -476,7 +478,32 @@ public class LookupController {
         }
         return ResponseEntity.ok(OK);
     }
+*/
 
+    @RequestMapping(value = "/rest-api/sc-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getEmergencystockpiles() {
+        return RestResponse.response("data", lookupService.getEmergencyCommodites());
+    }
+
+    @RequestMapping(value = "/rest-api/sc-portal-order-delivery", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getOrderDelivery() {
+        return RestResponse.response("data", lookupService.getOrderDelivery());
+    }
+
+   @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getAllHFRFacilities() {
+        return RestResponse.response("data", lookupService.getAllHFRFacilities());
+    }
+
+    @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getStockInHand() {
+        return RestResponse.response("data", lookupService.getStockInHand());
+    }
+
+    @RequestMapping(value = "/rest-api/sc-portal-products", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getAllProducts() {
+        return RestResponse.response("data", lookupService.getAllProducts());
+    }
 
 
 }
