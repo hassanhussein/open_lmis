@@ -505,5 +505,14 @@ public class LookupController {
         return RestResponse.response("data", lookupService.getAllProducts());
     }
 
+    @RequestMapping(value = "/rest-api/sc-portal-wastages", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getWastages() {
+        return RestResponse.response("data", lookupService.getWastages());
+    }
+
+    @RequestMapping(value = "/rest-api/sc-portal-forecasting", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getForeCastingData() {
+        return RestResponse.response("data", lookupService.getForeCastingData());
+    }
 
 }

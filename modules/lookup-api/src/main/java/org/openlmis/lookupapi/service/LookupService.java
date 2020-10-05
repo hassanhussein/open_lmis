@@ -268,4 +268,14 @@ public class LookupService {
 
       return interfaceMapper.getEmergencyCommodites();
     }
+
+    public List<HashMap<String,Object>> getForeCastingData() {
+
+      return scPortalInterfaceMapper.getForeCastingData();
+    }
+
+    public List<HashMap<String,Object>> getWastages() {
+
+      return scPortalInterfaceMapper.getWastages();
+    }
 }
