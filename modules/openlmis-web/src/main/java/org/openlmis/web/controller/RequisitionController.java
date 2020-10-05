@@ -306,8 +306,8 @@ public class RequisitionController extends BaseController {
     @RequestMapping(value = "/requisitions/delete/{id}", method = POST, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'DELETE_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> deleteRnR(@PathVariable("id") Long rnrId) {
-        requisitionService.deleteRnR(rnrId);
-        return OpenLmisResponse.success(messageService.message("msg.rnr.deleted"));
+        String response = requisitionService.deleteRnR(rnrId);
+        return OpenLmisResponse.success(response);
     }
 
     @RequestMapping(value = "/requisitions/skip/{id}", method = POST, headers = ACCEPT_JSON)
