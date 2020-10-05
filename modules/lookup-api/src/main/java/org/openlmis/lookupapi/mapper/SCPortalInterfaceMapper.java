@@ -20,12 +20,46 @@ public interface SCPortalInterfaceMapper {
             "LIMIT 100 ")
     List<HashMap<String, Object>> getAllProducts();
 
-    @Select(" SELECT f.id as \"facility_id\", productcode as \"product_code\"\n" +
+    @Select(" SELECT f.hfrcode as \"facility_id\", productcode as \"product_code\"\n" +
             ", 2 as \"level\", stockinhand as \"quantity\", r.modifieddate as \"updated_at\" \n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
-            "JOIN facilities F on r.facilityId = F.ID\n" +
+            "JOIN facilities F on r.facilityId = F.ID" +
+            " where f.hfrcode::text is not null\n" +
             "limit 100 ")
 
     List<HashMap<String, Object>> getStockInHand();
+
+    @Select("\n" +
+            " SELECT f.hfrcode as facility_id, productcode as \"product_code\",\n" +
+            "           quantityReceived as \"quantity_received\",\n" +
+            "           beginningBalance as \"begining_balance\", \n" +
+            "           case when totallossesandadjustments < 0 then \n" +
+            "           -1 * totallossesandadjustments  else\n" +
+            "           totallossesandadjustments end as \"adjustment_quantity\",\n" +
+            "           to_char(pp.enddate,'dd-MM-YYYY') as period,\n" +
+            "           ft.description as \"reason\"\n" +
+            "            from requisitions r\n" +
+            "            JOIN requisition_line_items i on r.id = i.rnrid\n" +
+            "            JOIN facilities F on r.facilityId = F.ID\n" +
+            "            JOIN requisition_line_item_losses_adjustments L on l.requisitionlineitemid = i.id\n" +
+            "            JOIN processing_periods pp on r.periodId = pp.id\n" +
+            "            JOIN losses_adjustments_types ft ON l.type = ft.name" +
+            "          where f.hfrcode::text is not null\n" +
+            "            limit 100")
+    List<HashMap<String, Object>> getWastages();
+
+    @Select(" SELECT f.hfrcode as facility_id, productcode as \"product_code\",\n" +
+            "           amc as \"actual_consumed\",\n" +
+            "                      to_char(pp.enddate,'dd-MM-YYYY') as period,\n" +
+            "           normalizedconsumption as \"forecast_consumed\"\n" +
+            "            from requisitions r\n" +
+            "            JOIN requisition_line_items i on r.id = i.rnrid\n" +
+            "            JOIN facilities F on r.facilityId = F.ID\n" +
+            "            JOIN requisition_line_item_losses_adjustments L on l.requisitionlineitemid = i.id\n" +
+            "            JOIN processing_periods pp on r.periodId = pp.id\n" +
+            "            JOIN losses_adjustments_types ft ON l.type = ft.name\n" +
+            "            where hfrcode::text is not null\n" +
+            "            limit 100")
+    List<HashMap<String,Object>> getForeCastingData();
 }
