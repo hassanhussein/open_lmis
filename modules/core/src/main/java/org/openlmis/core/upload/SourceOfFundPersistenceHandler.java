@@ -24,7 +24,7 @@ public class SourceOfFundPersistenceHandler  extends AbstractModelPersistenceHan
 
     @Override
     protected void save(BaseModel record) {
-        sourceOfFundService.save((SourceOfFundDTO) record);
+        sourceOfFundService.saveSDPFund((SourceOfFundDTO) record, null);
     }
 
     @Override
