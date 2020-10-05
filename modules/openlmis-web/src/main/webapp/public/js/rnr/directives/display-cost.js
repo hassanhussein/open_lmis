@@ -11,7 +11,7 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,RequisitionFacilitySourceOfFund,$timeout,FundsSource) {
+app.directive('displayCost', function ($interval,$rootScope,$q,RequisitionFacilitySourceOfFund,$timeout,FundsSource) {
   return {
     scope: {
       show: '=',
