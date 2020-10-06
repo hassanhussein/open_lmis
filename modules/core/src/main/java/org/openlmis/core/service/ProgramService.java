@@ -12,6 +12,7 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.ict4h.atomfeed.server.service.EventService;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.event.ProgramChangeEvent;
 import org.openlmis.core.exception.DataException;
@@ -32,109 +33,117 @@ import java.util.List;
 @NoArgsConstructor
 public class ProgramService {
 
-  @Autowired
-  private ProgramRepository programRepository;
+    @Autowired
+    private ProgramRepository programRepository;
 
-  @Autowired
-  private ProgramSupportedRepository programSupportedRepository;
+    @Autowired
+    private ProgramSupportedRepository programSupportedRepository;
 
-  @Autowired
-  private EventService eventService;
+    @Autowired
+    private EventService eventService;
 
-  public List<Program> getByFacility(Long facilityId) {
-    return programRepository.getByFacility(facilityId);
-  }
-
-  public List<Program> getAllPullPrograms() {
-    return programRepository.getAllPullPrograms();
-  }
-
-  public List<Program> getAllPushPrograms() {
-    return programRepository.getAllPushPrograms();
-  }
-
-  public List<Program> getAllIvdPrograms(){
-    return programRepository.getAllIvdPrograms();
-  }
-
-  public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
-    return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rightNames);
-  }
-
-  public List<Program> getIvdProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
-    return programRepository.getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rightNames);
-  }
-
-  public List<Program> getProgramForSupervisedFacilities(Long userId, String... rightNames) {
-    return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rightNames);
-  }
-
-
-  public List<Program> getIvdProgramForSupervisedFacilities(Long userId, String... rightNames) {
-    return programRepository.getUserSupervisedActiveIvdProgramsWithRights(userId, rightNames);
-  }
-
-  public Long getIdForCode(String code) {
-    return programRepository.getIdByCode(code);
-  }
-
-  public Date getProgramStartDate(Long facilityId, Long programId) {
-    return programSupportedRepository.getProgramStartDate(facilityId, programId);
-  }
-
-  public Program getById(Long id) {
-    return programRepository.getById(id);
-  }
-
-  public void setTemplateConfigured(Long id) {
-    programRepository.setTemplateConfigured(id);
-  }
-
-  public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, String... rightNames) {
-    return programRepository.getProgramsForUserByFacilityAndRights(facilityId, userId, rightNames);
-  }
-
-  public List<Program> getAll() {
-    return programRepository.getAll();
-  }
-
-  public Program getByCode(String code) {
-    return programRepository.getByCode(code);
-  }
-
-  public void setRegimenTemplateConfigured(Long programId) {
-    programRepository.setRegimenTemplateConfigured(programId);
-  }
-
-  public void setFeedSendFlag(Program program, Boolean sendFeed) {
-    programRepository.setFeedSendFlag(program, sendFeed);
-  }
-
-  public void notifyProgramChange() {
-    List<Program> programsForNotifications = programRepository.getProgramsForNotification();
-    for (Program program : programsForNotifications) {
-      try {
-        eventService.notify(new ProgramChangeEvent(program));
-        programRepository.setFeedSendFlag(program, false);
-      } catch (URISyntaxException e) {
-        throw new DataException("error.malformed.uri");
-      }
+    public List<Program> getByFacility(Long facilityId) {
+        return programRepository.getByFacility(facilityId);
     }
-  }
 
-  public Program getValidatedProgramByCode(String programCode) {
-    Program program = programRepository.getByCode(programCode);
-    if (program == null) {
-      throw new DataException("program.code.invalid");
+    public List<Program> getAllPullPrograms() {
+        return programRepository.getAllPullPrograms();
     }
-    return program;
-  }
 
-  public Program update(Program program) {
-    return programRepository.update(program);
-  }
+    public List<Program> getAllPushPrograms() {
+        return programRepository.getAllPushPrograms();
+    }
 
-  public List<Program> getProgramsForUserByRights(Long userId, String rightName) {
-    return programRepository.getActiveProgramsForUserWithRights(userId, rightName);
-  }
+    public List<Program> getAllIvdPrograms() {
+        return programRepository.getAllIvdPrograms();
+    }
+
+    public List<Program> getProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
+        return programRepository.getProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rightNames);
+    }
+
+    public List<Program> getIvdProgramsSupportedByUserHomeFacilityWithRights(Long facilityId, Long userId, String... rightNames) {
+        return programRepository.getIvdProgramsSupportedByUserHomeFacilityWithRights(facilityId, userId, rightNames);
+    }
+
+    public List<Program> getProgramForSupervisedFacilities(Long userId, String... rightNames) {
+        return programRepository.getUserSupervisedActiveProgramsWithRights(userId, rightNames);
+    }
+
+
+    public List<Program> getIvdProgramForSupervisedFacilities(Long userId, String... rightNames) {
+        return programRepository.getUserSupervisedActiveIvdProgramsWithRights(userId, rightNames);
+    }
+
+    public Long getIdForCode(String code) {
+        return programRepository.getIdByCode(code);
+    }
+
+    public Date getProgramStartDate(Long facilityId, Long programId) {
+        return programSupportedRepository.getProgramStartDate(facilityId, programId);
+    }
+
+    public Program getById(Long id) {
+        return programRepository.getById(id);
+    }
+
+    public void setTemplateConfigured(Long id) {
+        programRepository.setTemplateConfigured(id);
+    }
+
+    public List<Program> getProgramsForUserByFacilityAndRights(Long facilityId, Long userId, String... rightNames) {
+        return programRepository.getProgramsForUserByFacilityAndRights(facilityId, userId, rightNames);
+    }
+
+    public List<Program> getAll() {
+        return programRepository.getAll();
+    }
+
+    public Program getByCode(String code) {
+        return programRepository.getByCode(code);
+    }
+
+    public void setRegimenTemplateConfigured(Long programId) {
+        programRepository.setRegimenTemplateConfigured(programId);
+    }
+
+    public void setFeedSendFlag(Program program, Boolean sendFeed) {
+        programRepository.setFeedSendFlag(program, sendFeed);
+    }
+
+    public void notifyProgramChange() {
+        List<Program> programsForNotifications = programRepository.getProgramsForNotification();
+        for (Program program : programsForNotifications) {
+            try {
+                eventService.notify(new ProgramChangeEvent(program));
+                programRepository.setFeedSendFlag(program, false);
+            } catch (URISyntaxException e) {
+                throw new DataException("error.malformed.uri");
+            }
+        }
+    }
+
+    public Program getValidatedProgramByCode(String programCode) {
+        Program program = programRepository.getByCode(programCode);
+        if (program == null) {
+            throw new DataException("program.code.invalid");
+        }
+        return program;
+    }
+
+    public Program update(Program program) {
+        return programRepository.update(program);
+    }
+
+    public List<Program> getProgramsForUserByRights(Long userId, String rightName) {
+        return programRepository.getActiveProgramsForUserWithRights(userId, rightName);
+    }
+
+    public BaseModel getProgramByCode(Program program) {
+        return programRepository.getByCode(program.getCode());
+    }
+
+    public void save(Program record) {
+        this.programRepository.insert(record);
+    }
 }

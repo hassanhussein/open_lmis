@@ -128,4 +128,12 @@ public class ProgramRepository {
     return mapper.getAllIvdPrograms();
 
   }
+  public Program insert(Program program) {
+
+    if(program.getBudgetingApplies() == false)
+      program.setUsePriceSchedule(false);
+
+    mapper.insert(program);
+    return mapper.getById(program.getId());
+  }
 }
