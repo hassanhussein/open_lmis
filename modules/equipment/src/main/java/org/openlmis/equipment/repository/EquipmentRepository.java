@@ -85,4 +85,8 @@ public class EquipmentRepository {
     public EquipmentDTO getByCode(String code) {
     return mapper.getByCode(code);
     }
+
+    public List<Equipment> getAllByTypeCategory(Long equipmentTypeId, Long equipmentCategoryId) {
+       return mapper.getAllByTypeCategory(equipmentTypeId,equipmentCategoryId);
+    }
 }

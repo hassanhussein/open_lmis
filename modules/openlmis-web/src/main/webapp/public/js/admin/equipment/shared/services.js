@@ -370,3 +370,8 @@ services.factory('GetByModel', function($resource){
 services.factory('EquipmentModelList', function($resource){
     return $resource('/equipment/model/models',{},{});
 });
+
+
+services.factory('EquipmentsByTypeByCategory', function ($resource) {
+    return $resource('/equipment/manage/list-by-type-category.json', {}, {});
+});

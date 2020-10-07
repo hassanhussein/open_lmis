@@ -11,7 +11,7 @@
  */
 
 function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesList,$scope, $location, $routeParams,GetEquipmentByDesignation, EquipmentInventory,ColdChainDesignations, Donors, EquipmentsByType, SaveEquipmentInventory, UserFacilityList, EquipmentOperationalStatus,
-                                            messageService, EquipmentType, EquipmentInventoryFacilities, EquipmentEnergyTypes,
+                                            messageService,EquipmentType, EquipmentsByTypeByCategory, EquipmentInventoryFacilities, EquipmentEnergyTypes,
                                             equipmentStatusHelp, EquipmentModelByEquipmentType) {
 
 
@@ -32,10 +32,13 @@ function CreateEquipmentInventoryController(GetByModel,GetEquipmentCategoriesLis
   $scope.selected = {};
 
 
- $scope.loadEquipments = function(){
+ $scope.loadEquipments = function(equipment){
 
-   EquipmentsByType.get({equipmentTypeId: $routeParams.equipmentType}, function (data) {
-
+   EquipmentsByTypeByCategory.get({equipmentTypeId: $routeParams.equipmentType, equipmentCategoryId:parseInt(equipment.equipmentCategoryId,10)}, function (data) {
+      $scope.equipments = [];
+       $scope.inventory.equipment.manufacturer = undefined;
+         $scope.inventory.equipment.model = undefined;
+          console.log(data);
     if(!isUndefined(data.equipments) && data.equipments.length > 0) {
       $scope.equipments = data.equipments;
 

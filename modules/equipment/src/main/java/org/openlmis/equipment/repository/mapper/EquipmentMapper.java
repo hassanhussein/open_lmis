@@ -198,4 +198,31 @@ public interface EquipmentMapper {
 
   @Select(" SELECT * FROM equipments where lower(code) = lower(#{code}) ")
   EquipmentDTO getByCode(@Param("code") String code);
+
+  @Select("SELECT equipments.*" +
+          "   , COUNT(equipment_inventories.id) AS inventorycount,  " +
+          " equipment_cold_chain_equipments.*  " +
+          " FROM equipments" +
+          "   LEFT JOIN equipment_inventories ON equipment_inventories.equipmentid = equipments.id " +
+          "   LEFT JOIN equipment_cold_chain_equipments  ON equipment_cold_chain_equipments.equipmentId = equipments.ID " +
+          " WHERE equipmentTypeId = #{equipmentTypeId} and equipmentCategoryId::int = #{equipmentCategoryId}::int " +
+          " GROUP BY equipments.id,equipment_cold_chain_equipments.equipmentid" +
+          " ORDER BY name")
+  @Results({
+          @Result(
+                  property = "equipmentType", column = "equipmentTypeId", javaType = EquipmentType.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentTypeMapper.getEquipmentTypeById")),
+          @Result(property = "equipmentTypeId", column = "equipmentTypeId"),
+          @Result(
+                  property = "energyType", column = "energyTypeId", javaType = EquipmentEnergyType.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.EquipmentEnergyTypeMapper.getById")),
+          @Result(property = "energyTypeId", column = "energyTypeId"),
+          @Result(property = "designation", column = "designationId", javaType = ColdChainEquipmentDesignation.class,
+                  one = @One(select = "org.openlmis.equipment.repository.mapper.ColdChainEquipmentDesignationMapper.getById")),
+          @Result(property = "designationId", column = "designationId")
+
+
+  })
+  List<Equipment> getAllByTypeCategory(@Param("equipmentTypeId") Long equipmentTypeId,@Param("equipmentCategoryId") Long equipmentCategoryId);
+
 }
