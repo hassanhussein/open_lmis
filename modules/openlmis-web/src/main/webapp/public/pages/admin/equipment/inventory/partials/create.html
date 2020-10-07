@@ -59,7 +59,6 @@
                     <div class="form-cell">
                         <label for="equipmentType">
                             <span openlmis-message="label.equipment.type"></span>
-                            <span class="label-required">*</span>
                         </label>
 
                         <div class="form-field">
@@ -134,7 +133,6 @@
                         <div class="form-cell">
                             <label for="manufacturer">
                                 <span openlmis-message="label.equipment.manufacturer"></span>
-                                <span class="label-required">*</span>
                             </label>
                             <div class="form-field">
                                 <div ng-if="screenType === 'edit'" ng-show="false">
@@ -163,7 +161,6 @@
                         <div class="form-cell">
                             <label for="model">
                                 <span openlmis-message="label.equipment.model"></span>
-                                <span class="label-required">*</span>
                             </label>
                             <div class="form-field">
                                 <div ng-if="screenType === 'create'">
@@ -189,6 +186,7 @@
                         <div class="form-cell" ng-show="inventory.equipment.designation.hasEnergy">
                             <label for="source">
                                 <span openlmis-message="label.equipment.energy.source"></span>
+                                <span class="label-required">*</span>
                             </label>
                             <div class="form-field">
                                 <input ng-model="inventory.equipment.energyType.name" name="source" id="source" type="text" maxlength="50"
@@ -197,7 +195,6 @@
                                       openlmis-message="missing.value"></span>
                             </div>
                         </div>
-
 
                         <div class="form-cell">
                             <label for="serialNumber">
@@ -329,7 +326,6 @@
                 <div class="form-cell" >
                     <label for="equipmentCategoryId">
                         <span openlmis-message="label.equipment.category"></span>
-                        <span class="label-required">*</span>
                     </label>
                     <div class="form-field">
 
@@ -601,5 +597,5 @@
                openlmis-message="button.cancel"/>
     </div>
 
-
 </div>
+

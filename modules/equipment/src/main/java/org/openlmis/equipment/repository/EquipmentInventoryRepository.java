@@ -127,9 +127,13 @@ public class EquipmentInventoryRepository {
       status.setModifiedBy(inventory.getModifiedBy());
       EquipmentOperationalStatus status1 = equipmentOperationalStatusMapper.getById(status.getStatusId());
 
-       if (!status1.getIsBad()) {
-         status.setNotFunctionalStatusId(null);
-       }
+      if(status1 != null) {
+
+        if (!status1.getIsBad()) {
+          status.setNotFunctionalStatusId(null);
+        }
+
+      }
 
 
       equipmentInventoryStatusMapper.insert(status);

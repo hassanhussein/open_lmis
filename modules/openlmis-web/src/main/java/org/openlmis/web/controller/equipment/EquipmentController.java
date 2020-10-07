@@ -215,4 +215,13 @@ public class EquipmentController extends BaseController {
         return OpenLmisResponse.response(EQUIPMENT_BY,service.getByModel(equipmentId,manufacturer));
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "list-by-type-category")
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_SETTINGS')" +
+            " or @permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')" +
+            " or @permissionEvaluator.hasPermission(principal,'SERVICE_VENDOR_RIGHT')")
+    public ResponseEntity<OpenLmisResponse> getListByTypeByCategory(@RequestParam("equipmentTypeId") Long equipmentTypeId,
+                                                                    @RequestParam("equipmentCategoryId") Long equipmentCategoryId){
+        return OpenLmisResponse.response(EQUIPMENTS, service.getAllByTypeCategory(equipmentTypeId, equipmentCategoryId));
+    }
+
 }
