@@ -1,2 +1,5 @@
 ALTER TABLE public.receive_lots
-    ADD COLUMN IF NOT EXISTS campaign boolean default false;
+    DROP COLUMN IF EXISTS campaign;
+
+    ALTER TABLE public.receive_lots
+    ADD COLUMN campaign boolean default false;
