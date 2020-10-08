@@ -383,12 +383,15 @@ public class VaccineReport extends BaseModel {
                     item.setAgeGroupId(ageGroup.getAgeGroupId());
 
                     if (defaultFieldsToZero) {
+
                         item.setRegularMale(0L);
                         item.setRegularFemale(0L);
                         item.setCampaignMale(0L);
                         item.setCampaignFemale(0L);
                         item.setOutreachMale(0L);
                         item.setOutreachFemale(0L);
+                        item.setRegularOutReachFeMale(0L);
+                        item.setRegularOutReachMale(0L);
                     }
 
 

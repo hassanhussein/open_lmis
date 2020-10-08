@@ -1,2 +1,5 @@
 ALTER TABLE public.inspection_lots
-    ADD COLUMN IF NOT EXISTS failvvmid integer;
+    DROP COLUMN IF EXISTS failvvmid ;
+
+    ALTER TABLE public.inspection_lots
+    ADD COLUMN failvvmid integer;

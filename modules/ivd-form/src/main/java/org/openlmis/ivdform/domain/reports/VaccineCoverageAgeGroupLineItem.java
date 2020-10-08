@@ -47,6 +47,9 @@ public class VaccineCoverageAgeGroupLineItem extends BaseModel {
     private Long ageGroupId;
     private String ageGroupName;
 
+    private Long regularOutReachMale;
+    private Long regularOutReachFeMale;
+
     public void copyValuesFrom(VaccineCoverageAgeGroupLineItem source){
         this.setRegularMale(source.getRegularMale());
         this.setRegularFemale(source.getRegularFemale());
@@ -56,6 +59,8 @@ public class VaccineCoverageAgeGroupLineItem extends BaseModel {
         this.setOutreachFemale(source.getOutreachFemale());
         this.setAgeGroupId(source.getAgeGroupId());
         this.setAgeGroupName(source.getAgeGroupName());
+        this.setRegularOutReachFeMale(source.regularOutReachFeMale);
+        this.setRegularOutReachMale(source.regularOutReachMale);
     }
 
 
