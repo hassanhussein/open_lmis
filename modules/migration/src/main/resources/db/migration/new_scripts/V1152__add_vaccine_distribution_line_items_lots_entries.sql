@@ -1,4 +1,5 @@
 
+
 ALTER TABLE public.vaccine_distribution_line_item_lots
     DROP COLUMN IF EXISTS packsize;
 
@@ -27,4 +28,8 @@ ALTER TABLE public.vaccine_distribution_line_item_lots
 
 
          ALTER TABLE public.vaccine_distribution_line_items
+             DROP COLUMN gap;
+
+         ALTER TABLE public.vaccine_distribution_line_items
              ADD COLUMN gap integer;
+
