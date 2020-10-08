@@ -14,8 +14,6 @@ ALTER TABLE public.vaccine_distribution_line_item_lots
         ALTER TABLE public.vaccine_distribution_line_item_lots
             ADD COLUMN IF NOT EXISTS stockcardid integer;
 
-    ALTER TABLE public.vaccine_distribution_line_items
-             DROP COLUMN IF EXISTS gap;
 
          ALTER TABLE public.vaccine_distribution_line_items
              ADD COLUMN IF NOT EXISTS gap integer;
