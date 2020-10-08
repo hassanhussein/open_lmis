@@ -22,4 +22,8 @@ public class EquipmentCategory extends BaseModel {
 
     List<Long> equipmentTypeIds;
 
+    Long disciplineId;
+
+    Discipline discipline;
+
 }

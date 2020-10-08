@@ -1,6 +1,7 @@
 package org.openlmis.equipment.repository;
 
 
+import org.openlmis.equipment.domain.Discipline;
 import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.EquipmentFunctionalTestTypes;
 import org.openlmis.equipment.repository.mapper.EquipmentCategoryMapper;
@@ -61,4 +62,24 @@ public class EquipmentCategoryRepository {
     public EquipmentCategory getByCategory(String code) {
        return mapper.getByCode(code);
     }
+
+    public List<Discipline> getAllDisciplines() {
+
+        return mapper.getAllDisciplines();
+    }
+
+    public Discipline getDisciplineByCode(String code) {
+
+        return mapper.getDisciplineByCode(code);
+    }
+
+    public Integer insertDiscpline(Discipline discipline) {
+        return mapper.insertDiscpline(discipline);
+    }
+
+    public void UpdateDiscipline(Discipline discipline) {
+         mapper.UpdateDiscipline(discipline);
+    }
+
+
 }

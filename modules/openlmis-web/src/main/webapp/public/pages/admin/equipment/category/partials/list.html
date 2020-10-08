@@ -34,32 +34,38 @@
           <th class="col-row-number">#</th>
           <th><span openlmis-message="label.code"></span></th>
           <th><span openlmis-message="label.name"></span></th>
-          <th  openlmis-message="label.equipment.types"></th>
-          <th  openlmis-message="label.functional.test.types"></th>
+          <th><span>Descipline</span></th>
+          <th ng-hide="category.add" openlmis-message="label.equipment.types"></th>
+          <th ng-hide="category.add" openlmis-message="label.functional.test.types"></th>
+          <th>Action</th>
+
 
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="category in EquipmentCategory | filter : query">`
           <td>{{$index + 1}}</td>
-          <td><a href="#/edit/{{category.id}}">{{category.name}}</a></td>
-          <td>{{category.code}}</td>
-          <td style="width:20%;">
+          <td><a href="#/edit/{{category.id}}">{{category.code}}</a></td>
+          <td>{{category.name}}</td>
+          <td>{{category.discipline.name}}</td>
+          <td style="width:20%;" ng-hide="category.add">
             <select id="equipmentTypes" ui-select2 ng-model="category.equipmentTypeIds" class="full-width"
                     openlmis-message="placeholder.add.equipment.types"
                     multiple="multiple" name="equipmentTypeIds"
                     ng-options="testTypes.id as testTypes.name for testTypes in equipmentTypes"></select>
           </td>
-          <td style="width: 20%;">
+          <td style="width: 20%;" ng-hide="category.add">
             <select id="functionalTestTypeIds" ui-select2 ng-model="category.functionalTestTypeIds" class="full-width"
                     openlmis-message="placeholder.add.functional.test.types"
                     multiple="multiple" name="functionalTestTypeIds"
                     ng-options="testTypes.id as testTypes.name for testTypes in functionalTestTypes"></select>
           </td>
+          <td ng-show="!category.editMode"><button ng-click="hideTypes(category)" class="primary">Add Type</button></td>
+          <td ng-show="category.editMode"><button class="primary" ng-click="EditTypes(category)">Edit Type</button></td>
 
         </tr>
        <tr >
-         <td colspan="5"><a href="" class="btn btn-primary pull-right" ng-click="saveEquipmentTypeAssociation()">Save Changes</a></td>
+         <td ng-hide="true" colspan="5"><a href="" class="btn btn-primary pull-right" ng-click="saveEquipmentTypeAssociation()">Save Changes</a></td>
        </tr>
 
       </tbody>
