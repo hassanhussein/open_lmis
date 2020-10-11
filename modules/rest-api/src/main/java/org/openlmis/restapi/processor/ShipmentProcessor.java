@@ -25,6 +25,8 @@ import org.openlmis.shipment.service.ShipmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Service
@@ -40,18 +42,19 @@ public class ShipmentProcessor {
 
   @SneakyThrows
   public void process(Shipment shipment) {
+    ObjectMapper mapper = new ObjectMapper();
     Order order = orderService.getByOrderNumber(shipment.getOrderNumber());
     logger.info("Shipment is being processed.");
     logger.info(shipment.getOrderNumber());
     logger.info("Number of line Items: " + shipment.getDetail().size());
     if (order == null) {
-      ObjectMapper mapper = new ObjectMapper();
+
       // this shipment cannot be processed becasue a corresponding order was not found for it.
       ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
       shipmentFileInfo.setOrderNumber(shipment.getOrderNumber());
       shipmentFileInfo.setFileName(shipment.getShipmentNumber());
       shipmentFileInfo.setHasSkippedLineItems(true);
-      shipmentFileInfo.setSkippedShipmentLineItems( mapper.writeValueAsString(shipment));
+      shipmentFileInfo.setSkippedShipmentLineItems(mapper.writeValueAsString(shipment));
       shipmentService.insertShipmentFileInfo(shipmentFileInfo);
       return;
     }
@@ -71,12 +74,31 @@ public class ShipmentProcessor {
     shipmentFileInfo.setFileName(shipment.getShipmentNumber());
     shipmentFileInfo.setOrderNumber(shipment.getOrderNumber());
     shipmentFileInfo.setHasSkippedLineItems(false);
+    shipmentFileInfo.setSkippedShipmentLineItems(mapper.writeValueAsString(shipment));
     shipmentService.insertShipmentFileInfo(shipmentFileInfo);
 
 
     // mark the order as processed
     order.setStatus(OrderStatus.RECEIVED);
     orderService.updateOrderStatus(order);
+    List<ShipmentLineItem> lineItems = new ArrayList<>();
+    shipment.getDetail().forEach(l -> addLineItem(l, order, lineItems));
+    lineItems.forEach(l -> shipmentService.save(l));
+  }
+
+  private void addLineItem(ShipmentDetail detail, Order order, List<ShipmentLineItem> lineItems) {
+    ShipmentLineItem lineItem = new ShipmentLineItem();
+    lineItem.setProductCode(detail.getShipmentDetailItemNum());
+    lineItem.setQuantityShipped(detail.getShipmentDetailQty().intValue());
+    lineItem.setProductName(detail.getShipmentDetailItemDescription());
+    if (detail.getShipmentDetailBatchNumber() != null) {
+      lineItem.setBatch(detail.getShipmentDetailBatchNumber());
+      lineItem.setQuantityShipped(detail.getShipmentDetailLotQty().intValue());
+    }
+    lineItem.setDispensingUnit(" "); //TOFIX: Dispensing unit is not
+    lineItem.setOrderNumber(order.getOrderNumber());
+    lineItem.setOrderId(order.getId());
+
   }
 
   private ShipmentLineItem lineItemFromDetail(Order order, ShipmentDetail detail) {
