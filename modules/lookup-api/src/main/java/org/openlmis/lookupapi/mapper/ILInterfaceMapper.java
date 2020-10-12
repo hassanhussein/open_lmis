@@ -79,15 +79,15 @@ public interface ILInterfaceMapper {
             "\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivery_promise_date\",\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivered_date\",\n" +
-            " 'MSD' as \"delivery_from_facility_id\",\n" +
+            " 189701-7 as \"delivery_from_facility_id\",\n" +
             "r.status as \"order_status\",\n" +
-            "30 as “target_days”\n" +
+            "30 as target_days\n" +
             "from requisitions r\n" +
             "\n" +
             "JOIN requisition_line_items i On r.id = i.rnrid\n" +
             "JOIN orders o ON r.id = o.id\n" +
             "JOIN products p ON i.productcode = p.code\n" +
-            "JOIN program_products pp On pp.productid = p.id\n" +
+            "JOIN program_products pp On pp.productid = p.id" +
             "limit 100")
     List<HashMap<String, Object>> getOrderDelivery();
 
