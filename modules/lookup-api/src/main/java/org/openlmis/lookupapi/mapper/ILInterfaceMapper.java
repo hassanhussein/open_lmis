@@ -73,13 +73,13 @@ public interface ILInterfaceMapper {
     @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
     void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
 
-    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", facilityId as \"order_from_facility_id\",  \n" +
+    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", F.CODE facilityId as \"order_from_facility_id\",  \n" +
             "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"order_type\" , \n" +
             "QuantityApproved as \"ordered_quantity\", quantityReceived as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
             "\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivery_promise_date\",\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivered_date\",\n" +
-            " 189701-7 as \"delivery_from_facility_id\",\n" +
+            " 189790-1 as \"delivery_from_facility_id\",\n" +
             "r.status as \"order_status\",\n" +
             "30 as target_days\n" +
             "from requisitions r\n" +
@@ -88,6 +88,8 @@ public interface ILInterfaceMapper {
             "JOIN orders o ON r.id = o.id\n" +
             "JOIN products p ON i.productcode = p.code\n" +
             "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN facilities f ON r.facilityId = F.ID" +
+            " WHERE f.code NOT IN('.') AND f.code IS NOT NULL " +
             "limit 100")
     List<HashMap<String, Object>> getOrderDelivery();
 

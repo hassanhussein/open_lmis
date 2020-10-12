@@ -25,7 +25,7 @@ public interface SCPortalInterfaceMapper {
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "JOIN facilities F on r.facilityId = F.ID" +
-            " where f.hfrcode::text is not null\n" +
+            " where f.code::text is not null\n" +
             "limit 100 ")
 
     List<HashMap<String, Object>> getStockInHand();
@@ -44,8 +44,8 @@ public interface SCPortalInterfaceMapper {
             "                        JOIN requisition_line_item_losses_adjustments L on l.requisitionlineitemid = i.id\n" +
             "                        JOIN processing_periods pp on r.periodId = pp.id\n" +
             "                        JOIN losses_adjustments_types ft ON l.type = ft.name \n" +
-            "                      where f.hfrcode::text is not null  \n" +
-            "               and  hfrcode::text not in ('.') \n" +
+            "                      where f.code::text is not null  \n" +
+            "               and  f.code::text not in ('.') \n" +
             "                and type in ('LOST', 'DAMAGED','EXPIRED' )\n" +
             "                        limit 100")
     List<HashMap<String, Object>> getWastages();
@@ -60,7 +60,7 @@ public interface SCPortalInterfaceMapper {
             "            JOIN requisition_line_item_losses_adjustments L on l.requisitionlineitemid = i.id\n" +
             "            JOIN processing_periods pp on r.periodId = pp.id\n" +
             "            JOIN losses_adjustments_types ft ON l.type = ft.name\n" +
-            "            where hfrcode::text is not null and hfrcode::text not in ('.')\n" +
+            "            where f.code::text is not null and f.code::text not in ('.')\n" +
             "            limit 100")
     List<HashMap<String,Object>> getForeCastingData();
 }
