@@ -129,7 +129,7 @@
                             name="{{adjustment.quantity}}"
                             ng-change="reEvaluateTotalSourceOfFund(); resetModalErrorAndSetFormDirty()"
                             ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
-                            ng-disabled="formDisabled"
+                            ng-disabled="true"
                             ng-model="adjustment.quantity"
                             ng-required="true"
                             numeric-validator="positiveInteger"
