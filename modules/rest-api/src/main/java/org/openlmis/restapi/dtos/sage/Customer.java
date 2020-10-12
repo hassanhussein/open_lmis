@@ -69,7 +69,11 @@ public class Customer {
 
   public void updateFacility(Facility facility) {
     facility.setCode(getCustomerId());
-    facility.setName(getCustomerDescription().substring(0,49));
+    if(getCustomerDescription().length() >= 50) {
+      facility.setName(getCustomerDescription().substring(0, 49));
+    }else {
+      facility.setName(getCustomerDescription());
+    }
     facility.setDescription(getCustomerDescription());
     facility.setEnabled(true);
     facility.setActive(true);
