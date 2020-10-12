@@ -89,11 +89,11 @@ function EquipmentCategoryController($rootScope, $scope, DisciplineList, Equipme
         category.add = true;
         category.editMode = true;
         category.hideAdd = false;
-    }
+    };
 
     $scope.EditTypes = function (category) {
         category.add = false;
         category.editMode = true;
         category.hideEdit = true;
-    }
+    };
 }

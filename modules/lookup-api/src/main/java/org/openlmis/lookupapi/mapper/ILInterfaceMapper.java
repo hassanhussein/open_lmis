@@ -93,13 +93,15 @@ public interface ILInterfaceMapper {
             "limit 100")
     List<HashMap<String, Object>> getOrderDelivery();
 
-    @Select(" select p.code as \"product_code\", facilityId as \"facility_id\",  r.modifieddate as \"date\",\n" +
+    @Select(" select p.code as \"product_code\", f.code as \"facility_id\",  to_char(r.modifieddate, 'yyyy-MM-dd') as \"date\",\n" +
             "stockinhand as \"available_quantity\", quantityReceived as \"stock_quantity\", case when amc > 0 then stockinhand/ amc else 0 end as \"stock_of_month\"\n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i On r.id = i.rnrid\n" +
             "JOIN orders o ON r.id = o.id\n" +
             "JOIN products p ON i.productcode = p.code\n" +
-            "JOIN program_products pp On pp.productid = p.id\n" +
+            "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN facilities f ON r.facilityId = F.ID" +
+            " where f.code is not null \n" +
             "limit 100")
     List<HashMap<String, Object>> getEmergencyCommodites();
 }

@@ -10,8 +10,10 @@ import java.util.List;
 public interface SCPortalInterfaceMapper {
 
     @Select(" SELECT 'COVID19' as \"program\", \n" +
-            "p.code as \"product_code\", pc.name as category,\n" +
-            "p.description\n" +
+            "p.code as \"product_code\", \n" +
+            "p.description as name\n, " +
+            " p.description || p.dispensingunit as description, " +
+            " case when pc.code = 'msus' then 'medical supplies' else 'pharmaceuticals' end as category  " +
             " FROM program_products pP\n" +
             "\n" +
             "JOIN products p ON p.id = pp.productId \n" +
@@ -20,7 +22,7 @@ public interface SCPortalInterfaceMapper {
             "LIMIT 100 ")
     List<HashMap<String, Object>> getAllProducts();
 
-    @Select(" SELECT f.hfrcode as \"facility_id\", productcode as \"product_code\"\n" +
+    @Select(" SELECT f.code as \"facility_id\", productcode as \"product_code\"\n" +
             ", 2 as \"level\", stockinhand::text as \"quantity\", r.modifieddate as \"updated_at\" \n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
