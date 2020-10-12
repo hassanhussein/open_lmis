@@ -73,7 +73,7 @@ public interface ILInterfaceMapper {
     @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
     void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
 
-    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", F.CODE facilityId as \"order_from_facility_id\",  \n" +
+    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", F.CODE as \"order_from_facility_id\",  \n" +
             "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"order_type\" , \n" +
             "QuantityApproved as \"ordered_quantity\", quantityReceived as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
             "\n" +

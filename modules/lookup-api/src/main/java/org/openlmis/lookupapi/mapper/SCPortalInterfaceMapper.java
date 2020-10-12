@@ -23,7 +23,7 @@ public interface SCPortalInterfaceMapper {
     List<HashMap<String, Object>> getAllProducts();
 
     @Select(" SELECT f.code as \"facility_id\", productcode as \"product_code\"\n" +
-            ", 2 as \"level\", stockinhand::text as \"quantity\", r.modifieddate as \"updated_at\" \n" +
+            ", 4 as \"level\", stockinhand::text as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"updated_at\" \n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "JOIN facilities F on r.facilityId = F.ID" +
