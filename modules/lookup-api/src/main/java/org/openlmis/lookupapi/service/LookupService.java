@@ -138,6 +138,8 @@ public class LookupService {
     ColdChainEquipmentPqsStatusRepository equipmentPqsStatusRepository;
     @Autowired
     private DonorRepository donorRepository;
+    @Autowired
+    private EquipmentTestItemsRepository equipmentTestItemsRepository;
 
     public List<Program> getAllPrograms() {
         return programMapper.getAll();
@@ -358,5 +360,9 @@ public class LookupService {
             }
         }
         return null;
+    }
+
+    public List<EquipmentTestItems> getAllEquipmentTestItems() {
+        return equipmentTestItemsRepository.getAllEquipmentTestItems();
     }
 }

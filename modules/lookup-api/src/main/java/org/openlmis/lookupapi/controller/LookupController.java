@@ -450,4 +450,9 @@ public class LookupController {
         return RestResponse.response("equipment-inventories", lookupService.getEquipmentInventoriesForFacility(searchFacilityValue, facilityInfo));
     }
 
+    @RequestMapping(value = "/rest-api/lookup/equipment-test-items")
+    public ResponseEntity getAllEquipmentTestItems() {
+        return RestResponse.response("equipment-test-items", lookupService.getAllEquipmentTestItems());
+    }
+
 }
