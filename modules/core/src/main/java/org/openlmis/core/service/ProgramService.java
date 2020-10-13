@@ -144,6 +144,12 @@ public class ProgramService {
     }
 
     public void save(Program record) {
-        this.programRepository.insert(record);
+        Program program = this.programRepository.getByCode(record.getCode());
+        if (program != null) {
+            record.setId(program.getId());
+            this.programRepository.update(record);
+        } else {
+            this.programRepository.insert(record);
+        }
     }
 }
