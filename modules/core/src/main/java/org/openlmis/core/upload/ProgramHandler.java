@@ -23,7 +23,7 @@ public class ProgramHandler extends AbstractModelPersistenceHandler {
 
     @Override
     protected BaseModel getExisting(BaseModel record) {
-        return programService.getProgramByCode((Program) record);
+        return null;
     }
 
     @Override
