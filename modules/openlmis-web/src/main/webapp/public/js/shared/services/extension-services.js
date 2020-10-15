@@ -1443,3 +1443,7 @@ services.factory('GetAllLongs', function($resource){
 services.factory('GetProductReport', function($resource){
     return $resource('/reports/reportdata/productListReport.json', {}, {});
 });
+
+services.factory('DisciplineList', function($resource){
+    return $resource('/discipline-list.json', {}, {});
+});

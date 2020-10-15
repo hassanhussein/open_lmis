@@ -529,6 +529,16 @@
                     </bean>
                 </entry>
 
+                <entry key="upload-descipline">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Discipline List"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.equipment.domain.Discipline</value>
+                        </property>
+                        <property name="recordHandler" ref="disciplinePercistenceHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>
