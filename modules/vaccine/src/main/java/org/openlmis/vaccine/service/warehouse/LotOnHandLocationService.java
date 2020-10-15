@@ -1,6 +1,10 @@
 package org.openlmis.vaccine.service.warehouse;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.service.FacilityService;
@@ -19,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -303,8 +308,266 @@ public class LotOnHandLocationService {
         return repository.getSOHReport(facilityId, warehouseId);
     }
 
-    public List<HashMap<String, Object>> getAllLedgers(Long productId,Long warehouseId,  Long year) {
-        return repository.getAllLedgers(productId,warehouseId,year);
+    public List<HashMap<String, Object>> getAllLedgers(Long productId,Long warehouseId,  Long year) throws IOException {
+        List<HashMap<String, Object>>  ledgers=repository.getAllLedgers(productId,warehouseId,year);
+        JSONArray jsonLedger=new JSONArray(ledgers);
+
+        JSONArray selectedJsonYear=new JSONArray();
+
+        JSONArray previousYear=new JSONArray();
+
+        Map<String,Integer> uniqueLedgerItem=new HashMap<String, Integer>();
+
+      //  selectedJsonYear.put("{}");
+
+        for (int i=0;i<jsonLedger.length();i++){
+           //JSONObject jsonObject=jsonLedger.get(i);
+            JSONObject ledgerObject=jsonLedger.getJSONObject(i);
+            String locationname=ledgerObject.getString("locationname");
+            if(ledgerObject.has("transferlogs")) {
+                String transferlogs = ledgerObject.getString("transferlogs");
+
+                String [] arrayLogs=transferlogs.split("-");
+
+                if(arrayLogs.length==2){
+                    String fromBin=arrayLogs[0];
+                    String toBin=arrayLogs[1];
+
+                   /// System.out.println(fromBin+" :hh: "+toBin);
+
+                        ledgerObject.put("frombin", fromBin);
+                        ledgerObject.put("toBinCustom", toBin);
+
+
+                }else{
+                    String fromBin=arrayLogs[0];
+
+                    ledgerObject.put("frombin",fromBin);
+
+
+                }
+
+               //System.out.println(transferlogs);
+            }else {
+                ledgerObject.put("toBinCustom", locationname);
+
+            }
+           Long lotYear=ledgerObject.getLong("lotyear");
+
+            Integer loh=ledgerObject.getInt("loh");
+
+
+            if(lotYear.equals(year)){
+               selectedJsonYear.put(ledgerObject);
+           }else{
+               if(lotYear<year){
+                   previousYear.put(ledgerObject);
+               }
+           }
+
+
+            String keyValue=ledgerObject.getString("lotnumber")+"/"+ledgerObject.getString("locationname")+"/"+ledgerObject.getString("vvm")+"/"+ledgerObject.getString("expirationdate")+"/"+lotYear;
+
+            if(uniqueLedgerItem.containsKey(keyValue)){
+                int totalInHand=uniqueLedgerItem.get(keyValue)+loh;
+                uniqueLedgerItem.put(keyValue,totalInHand);
+
+            }else {
+                uniqueLedgerItem.put(keyValue,loh);
+
+            }
+
+       }
+
+
+        JSONArray previousYearBalance=new JSONArray();
+
+
+
+        for(Map.Entry m:uniqueLedgerItem.entrySet()){
+
+            String ledgerKey=m.getKey().toString();
+            //uniqueLedgerItem.put(ledgerKey,0);
+            Integer valueLedger=Integer.parseInt(m.getValue().toString());
+            String [] arrayValue=ledgerKey.split("/");
+            String lotnumber=arrayValue[0];
+            String locationname=arrayValue[1];
+            String vvm=arrayValue[2];
+            String expirationdate=arrayValue[3];
+            Long yearDate=Long.parseLong(arrayValue[4]);
+
+
+            JSONObject newPreviousLedgerObject=new JSONObject();
+            newPreviousLedgerObject.put("frombin",locationname);
+
+            //newPreviousLedgerObject.put("toBinCustom",locationname);
+            newPreviousLedgerObject.put("date",year+"-01-01");
+
+            newPreviousLedgerObject.put("lotnumber",lotnumber);
+            newPreviousLedgerObject.put("locationname",locationname);
+            newPreviousLedgerObject.put("vvm",vvm);
+            newPreviousLedgerObject.put("expirationdate",expirationdate);
+
+            if(yearDate<year) {
+                newPreviousLedgerObject.put("soh", valueLedger);
+                newPreviousLedgerObject.put("loh", 0);
+            }else{
+                newPreviousLedgerObject.put("soh", 0);
+                newPreviousLedgerObject.put("loh", 0);
+            }
+
+           // System.out.println(valueLedger+" donne "+ledgerKey);
+
+
+            int totalPrevious=0;
+            for(int k=0;k<previousYear.length();k++){
+                JSONObject ledgerObject=previousYear.getJSONObject(k);
+                int loh=ledgerObject.getInt("total");
+                totalPrevious=totalPrevious+loh;
+            }
+            newPreviousLedgerObject.put("total",totalPrevious);
+
+            previousYearBalance.put(newPreviousLedgerObject);
+
+            //System.out.println(m.getKey()+" "+m.getValue());
+        }
+
+
+
+
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        JSONArray sortedLedger=sortArrayList(previousYearBalance,selectedJsonYear);
+
+        List<HashMap<String, Object>> convertLedgerObject = mapper.readValue(sortedLedger.toString(),
+                new TypeReference<List<HashMap<String, Object>>>(){});
+
+        return convertLedgerObject;
+    }
+
+    private JSONArray sortArrayList(JSONArray previousLedger,JSONArray selectedLedger){
+        if(selectedLedger.length()!=0) {
+            for (int i = 0; i < selectedLedger.length(); i++) {
+                JSONObject ledgerObject = selectedLedger.getJSONObject(i);
+
+                String date = ledgerObject.getString("date");
+                ledgerObject.put("date", date);
+
+                previousLedger.put(ledgerObject);
+            }
+
+            int loh = 0;
+            int totalCount = previousLedger.length();
+
+            Map<String, Integer> mapLoh = new HashMap<String, Integer>();
+
+
+            for (int l = 0; l < previousLedger.length(); l++) {
+
+                JSONObject ledgerObject = previousLedger.getJSONObject(l);
+                String lotNumber = ledgerObject.getString("lotnumber") + "/" + ledgerObject.getString("locationname");
+                if (mapLoh.containsKey(lotNumber)) {
+                    loh = mapLoh.get(lotNumber);
+                }
+
+
+                int received = 0;
+                if (ledgerObject.has("received")) {
+                    received = ledgerObject.getInt("received");
+                }
+
+                String type = "CREDIT";
+
+                int issued = 0;
+                if (ledgerObject.has("issued")) {
+                    issued = ledgerObject.getInt("issued");
+                }
+
+                if (ledgerObject.has("type")) {
+                    type = ledgerObject.getString("type");
+                }
+
+
+                int adjustment = 0;
+                if (ledgerObject.has("adjustment")) {
+                    adjustment = ledgerObject.getInt("adjustment");
+                }
+                if (totalCount > l + 1) {
+                    JSONObject nextLedgerObject = previousLedger.getJSONObject(l + 1);
+
+                    if (issued > 0) {
+
+                        int nextObject = nextLedgerObject.getInt("received");
+                        String lotNumberNext = nextLedgerObject.getString("lotnumber");
+                        if (nextObject == issued && lotNumberNext.equals(lotNumber)) {
+                            System.out.println("Equals");
+                            issued = 0;
+                        } else {
+                            if (type.equals("DEBIT")) {
+                                issued = issued * -1;
+                            }
+                            //   System.out.println("Not Equals"+nextObject+":"+received+" - "+lotNumberNext+" "+lotNumber);
+                        }
+
+                        loh = loh + received + issued + adjustment;
+                    } else {
+                        if (l > 0) {
+                            JSONObject prevLedgerObject = previousLedger.getJSONObject(l - 1);
+                            int prevObjectIssued = 0;
+                            if (prevLedgerObject.has("issued")) {
+                                prevObjectIssued = prevLedgerObject.getInt("issued");
+                            }
+
+                            String lotNumberPrev = prevLedgerObject.getString("lotnumber");
+                            String date = prevLedgerObject.getString("date");
+                            //System.out.println(date + " prevObjectIssued:" + prevObjectIssued + ":" + received + " lotNumberPrev: " + lotNumberPrev + ":" + lotNumber);
+                            if (prevObjectIssued > 0) {
+                                if (prevObjectIssued == received && lotNumberPrev.equals(lotNumber)) {
+                                    received = 0;
+                                }
+                            }
+                        }
+
+
+                        loh = loh + received + issued + adjustment;
+                    }
+                } else {
+                    if (l > 0) {
+                        JSONObject prevLedgerObject = previousLedger.getJSONObject(l - 1);
+                        int prevObjectIssued = 0;
+                        if (prevLedgerObject.has("issued")) {
+                            prevObjectIssued = prevLedgerObject.getInt("issued");
+                        }
+                        String lotNumberPrev = prevLedgerObject.getString("lotnumber");
+                        String date = prevLedgerObject.getString("date");
+                        // System.out.println(date+" prevObjectIssued:"+prevObjectIssued+":"+received+" lotNumberPrev: "+lotNumberPrev+":"+lotNumber);
+                        if (prevObjectIssued > 0) {
+                            if (prevObjectIssued == received && lotNumberPrev.equals(lotNumber)) {
+                                received = 0;
+                            }
+                        }
+                    }
+
+                    if (type.equals("DEBIT") && issued > 0) {
+                        issued = issued * -1;
+                    }
+
+
+                    loh = loh + received + issued + adjustment;
+                }
+
+
+                mapLoh.put(lotNumber, loh);
+
+                ledgerObject.put("loh", loh);
+                //totalCount++;
+            }
+
+            return previousLedger;
+        }else{
+            return null;
+        }
     }
 
     public List<HashMap<String,Object>>getAllByWareHouseAndBinLocation(Long fromWarehouseId, Long fromBinLocationId){

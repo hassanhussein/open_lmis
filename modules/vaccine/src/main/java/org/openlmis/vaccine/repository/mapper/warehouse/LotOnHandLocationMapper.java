@@ -69,13 +69,13 @@ public interface LotOnHandLocationMapper {
             "            JOIN lots lo ON e.lotId = lo.id\n" +
             "            JOIN products P on lo.productID = p.id\n" +
             "            join WMS_LOCATIONS Lsc ON e.LocationId = LSC.ID \n" +
-            "           WHERE LSC.warehouseId = #{warehouseId} and Lsc.typeid<>9 and e.quantity > 0\n" +
+            "           WHERE LSC.warehouseId = #{warehouseId} and Lsc.typeid<>9 and vvmid<3 and e.quantity > 0\n" +
             "            group by vvm.name,vvm.id, e.lotId,p.id,lotNumber,Lsc.name, e.locationId")
             List<SohReportDTO>getSohReport(@Param("facilityId") Long facilityId, @Param("warehouseId")Long warehouseId);
 
-    @Select("             SELECT *, storename as fromBin, locationName as toBin FROM (\n" +
+    @Select("             SELECT *, storename as fromBin, locationName as toBin,'john' as otherObject  FROM (\n" +
             "\n" +
-            "                                       Select distinct primaryname product,id,date ,case when fromBin is not null then locationName else frombin end as fromBin2, \n" +
+            "                                       Select distinct primaryname product,id,date,extract(year from date) as lotyear,type,transferlogs, case when fromBin is not null then locationName else frombin end as fromBin2, \n" +
             "                                                                      case when toBin is null then locationName else facility end as toBin2,\n" +
             "                                                                     facility storeName, received, issued, adjustment,total,locationName,\n" +
             "                                                \n" +
@@ -90,44 +90,10 @@ public interface LotOnHandLocationMapper {
             "\n" +
             "\n" +
             "\n" +
-            "                                                                 select  MAX(p.primaryname) primaryname , 0 AS id,  MAX('2020-01-01')::timestamp with time zone as date,\n" +
-            "\t\t\t\t\t\t\t\t  NULL as fromBin,\n" +
-            "\t\t\t\t\t\t\t\t NULL as toBin,\n" +
-            "\t\t\t\t\t\t\t\t\t\t\t\t\t       \n" +
-            "\t\t\t\t\t\t\t\t null::TEXT as facility, \n" +
-            "\t\t\t\t\t\t\t\t 0::INTEGER as received,   \n" +
-            "\t\t\t\t\t\t\t\t0::INTEGER as issued,    \n" +
-            "\t\t\t\t\t\t\t\t0::INTEGER as adjustment,\n" +
-            "\t\t\t\t\t\t\t\t   loc.name locationName,  \n" +
-            "\t\t\t\t\t\t\t\t    SUM(se.quantity)::integer as total,                                      \n" +
-            "\t\t\t\t\t\t\t      --case when se.type ='DEBIT' then -1 * se.quantity else se.quantity end as total, \n" +
-            "\t\t\t\t\t\t\t\t\t\t    \n" +
-            "\t\t\t\t\t\t\t       MAX(vvmst.name) vvm, MAX(expirationDate::DATE) expirationDate,\n" +
-            "\t\t\t\t\t\t\t       lotNumber\n" +
-            "                                                               \n" +
-            "                                                               from lot_location_entries se \n" +
-            "                                                                JOIN wms_locations loc ON loc.id = se.locationId\n" +
-            "                                                             left join vvm_statuses  vvmst on (vvmst.id=se.vvmId)  \n" +
-            "                                                                join stock_cards s ON s.id=se.stockcardid\n" +
-            "                                                                \n" +
-            "                                                                join products p on p.id=s.productid \n" +
-            "                                                                JOIN lots l ON se.lotiD = l.id\n" +
-            "                                                                \n" +
-            "                                                                LEFT join location_stock_card_entry_key_values skvr on skvr.stockcardentryid=se.id and skvr.keycolumn='receivedfrom' \n" +
-            "                                                                                               \n" +
-            "                                                \n" +
-            "                                                               LEFT join location_stock_card_entry_key_values skvi on skvi.stockcardentryid=se.id and skvi.keycolumn='issuedto'  \n" +
-            "                                                                \n" +
-            "                                                \n" +
-            "                                                              \n" +
-            "                                                               WHERE  loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
-            "                                                                group by l.lotnumber,loc.name\n" +
-            "\n" +
-            "                                                             \n" +
-            "                                                                UNION ALL\n" +
-            "                                                                (\n" +
+
+            "                                                                " +
             "                       \n" +
-            "                                                                select p.primaryname , se.id, se.createddate as date, \n" +
+            "                                                                select p.primaryname , se.id, date(se.createddate) as date,se.transferlogs,se.type, \n" +
             "                                                               case when se.type='CREDIT' then skvr.valuecolumn  else '' end as fromBin,\n" +
             "                                                               case when se.type='DEBIT' then skvi.valuecolumn  else '' end as toBin,\n" +
             "                                                               \n" +
@@ -156,10 +122,10 @@ public interface LotOnHandLocationMapper {
             "                                                               WHERE  \n" +
             "                                                \n" +
             "                                                               \n" +
-            "                                                                 loc.warehouseID = #{warehouseId}  AND extract ('year' from se.createddate) = #{year} and p.id = #{productId}\n" +
+            "                                                                 loc.warehouseID = #{warehouseId} and vvmid<3 and  loc.typeid<>9  and p.id = #{productId}\n" +
             "                                                               order by se.createddate\n" +
             "                        \n" +
-            "                                                               )\n" +
+            "                                                               \n" +
             "\n" +
             "\n" +
             "\n" +

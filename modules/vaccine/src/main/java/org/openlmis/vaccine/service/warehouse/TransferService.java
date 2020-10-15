@@ -44,6 +44,7 @@ public class TransferService {
     @Autowired
     private ProductService productService;
 
+
     @Transactional
     public Transfer save(Transfer item, Long userId, Long facilityId) {
 
@@ -79,6 +80,30 @@ public class TransferService {
 
         //Debit entry
         LocationEntry entry = new LocationEntry();
+
+
+
+        String transfer_logs=null;
+        Long tobinLocation=item.getToBin();
+
+        try{
+            LocationDTO locationDTO= wmsLocationService.getByLocationId(item.getFromBin());
+            transfer_logs=locationDTO.getName();
+
+            if(tobinLocation != null && tobinLocation != 0){
+                LocationDTO locationDTOto= wmsLocationService.getByLocationId(tobinLocation);
+                transfer_logs=transfer_logs+"-"+locationDTOto.getName();
+            }
+
+            entry.setTransferLogs(transfer_logs);
+            //System.out.println("h: "+locationDTO.getName());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+
         entry.setCreatedBy(userId);
         entry.setModifiedBy(userId);
         entry.setLocationId(item.getFromBin());
@@ -99,6 +124,25 @@ public class TransferService {
 
 
         LocationEntry entry2 = new LocationEntry();
+
+        transfer_logs=null;
+         tobinLocation=item.getToBin();
+
+        try{
+            LocationDTO locationDTO= wmsLocationService.getByLocationId(item.getFromBin());
+            transfer_logs=locationDTO.getName();
+
+            if(tobinLocation != null && tobinLocation != 0){
+                LocationDTO locationDTOto= wmsLocationService.getByLocationId(tobinLocation);
+                transfer_logs=transfer_logs+"-"+locationDTOto.getName();
+            }
+
+            entry2.setTransferLogs(transfer_logs);
+            //System.out.println("h: "+locationDTO.getName());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         if(locationProductList.isEmpty()) {
 

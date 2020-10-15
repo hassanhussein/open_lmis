@@ -360,6 +360,8 @@ var lineItem = {};
                      l.vvmId=lot.vvmId;
                      l.packSize=lot.packSize;
 
+                      l.facilityName=facility.name;
+
 
                      l.quantity = lotQuantity/lot.packSize;
                      event.lots=lot;

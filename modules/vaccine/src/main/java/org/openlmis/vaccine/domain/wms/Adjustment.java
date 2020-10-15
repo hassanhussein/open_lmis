@@ -16,6 +16,8 @@ public class Adjustment extends BaseModel {
     private Long toBinId;
     private  Boolean isTransfer;
 
+    private  String transferLogs;
+
     @JsonIgnore
     private List<StockCardEntryKV> keyValues;
 

@@ -252,8 +252,11 @@ $scope.stockMovement.quantity="";
             quantity = -quantity;
         }
 
+         console.log($scope);
+
         var adjust = {
             "lotId": $scope.stockMovement.lotId,
+            "selectedBin":$scope.selectedBin,
             "locationid": $scope.stockMovement.fromBin,
             "productId": $scope.stockMovement.productId,
             "quantity": quantity,

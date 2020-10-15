@@ -11,9 +11,9 @@ import org.springframework.stereotype.Repository;
 public interface LocationEntryMapper {
 
     @Insert("INSERT INTO public.lot_location_entries(\n" +
-            "            locationId, type, quantity, vvmId, stockCardId, lotId, createdBy, \n" +
+            "            locationId, type, quantity, vvmId, stockCardId, lotId, createdBy,transferlogs,\n" +
             "            createdDate, modifiedBy, modifiedDate,isTransferred)\n" +
-            "    VALUES (#{locationId}, #{type}, #{quantity},#{vvmId},#{stockCardId},#{lotId}, #{createdBy}, NOW(),\n" +
+            "    VALUES (#{locationId}, #{type}, #{quantity},#{vvmId},#{stockCardId},#{lotId}, #{createdBy},#{transferLogs}, NOW(),\n" +
             "                     #{modifiedBy}, NOW(), #{isTransferred});")
     @Options(useGeneratedKeys = true)
     int insert(LocationEntry entry);

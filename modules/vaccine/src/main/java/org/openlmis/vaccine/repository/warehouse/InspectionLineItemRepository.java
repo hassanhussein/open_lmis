@@ -28,29 +28,38 @@ public class InspectionLineItemRepository {
             for (InspectionLot lot : lineItem.getLots()) {
 
                 inspectionLotRepository.deleteLotByInspectionLineItem(lot.getInspectionLineItemId());
+
+                if(lot.getPassQuantity()==null){
+                    lot.setPassQuantity(lot.getReceivedQuantity());
+                }
+
                 inspectionLotRepository.update(lot);
                 //System.out.println("passed: "+lot.getVvm());
-                for(VVMLots lotVVm : lot.getVvm()){
-                    lotVVm.setInspectionLineItemId(lot.getInspectionLineItemId());
-                    lotVVm.setLotNumber(lot.getLotNumber());
-                    lotVVm.setPassLocationId(lot.getPassLocationId());
-                    lotVVm.setExpiryDate(lot.getExpiryDate());
+                if(lot.getVvm()!=null) {
+                    for (VVMLots lotVVm : lot.getVvm()) {
 
-                    InspectionFailProblem failed=lotVVm.getFailed();
-                    lotVVm.setFailQuantity(failed.getQuantity());
-                    lotVVm.setFailReason(failed.getReasonId());
-                    lotVVm.setFailLocationId(failed.getLocationId());
-                    lotVVm.setFailVvmId(failed.getVvmId());
+                        lotVVm.setInspectionLineItemId(lot.getInspectionLineItemId());
+                        lotVVm.setLotNumber(lot.getLotNumber());
+                        lotVVm.setPassLocationId(lot.getPassLocationId());
+                        lotVVm.setExpiryDate(lot.getExpiryDate());
 
-                    if(failed.getQuantity()!=null){
-                        lotVVm.setQuantity(lotVVm.getQuantity());
+                        InspectionFailProblem failed = lotVVm.getFailed();
+                        lotVVm.setFailQuantity(failed.getQuantity());
+                        lotVVm.setFailReason(failed.getReasonId());
+                        lotVVm.setFailLocationId(failed.getLocationId());
+                        lotVVm.setFailVvmId(failed.getVvmId());
+
+                        // if(failed.getQuantity()!=null){
+                        //    lotVVm.setQuantity(lotVVm.getQuantity());
+                        //}
+                        // System.out.println("Failed:"+failed.getQuantity());
+                        //lotVVm.set
+                        if (lotVVm.getQuantity() != null) {
+                            inspectionLotRepository.updateOrSave(lotVVm);
+                        }
+
+                        //System.out.println("passed: "+lotVVm.getQuantity());
                     }
-                   // System.out.println("Failed:"+failed.getQuantity());
-                    //lotVVm.set
-
-                    inspectionLotRepository.updateOrSave(lotVVm);
-
-                    //System.out.println("passed: "+lotVVm.getQuantity());
                 }
             }
         }

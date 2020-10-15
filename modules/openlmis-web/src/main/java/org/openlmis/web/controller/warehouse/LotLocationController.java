@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -46,7 +47,7 @@ public class LotLocationController extends BaseController {
 
                                                           @PathVariable(value = "productId") Long productId,
                                                           @PathVariable(value = "year") Long year
-                                                          ) {
+                                                          ) throws IOException {
         return OpenLmisResponse.response("ledgers",lotOnHandLocationService.getAllLedgers(productId,warehouseId,year));
     }
 
