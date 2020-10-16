@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.utils.DateUtil;
 
 import java.util.Date;
@@ -23,7 +24,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Log {
+public class Log extends BaseModel {
 
   private String who;
   private String type;
@@ -31,6 +32,7 @@ public class Log {
   private String status;
   private String comment;
   private Date date;
+  private Boolean approved;
 
   public String getDateString() {
     return DateUtil.getFormattedDate(this.date, "yyyy-dd-MM");

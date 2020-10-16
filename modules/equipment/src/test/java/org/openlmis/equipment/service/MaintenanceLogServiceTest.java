@@ -118,7 +118,7 @@ public class MaintenanceLogServiceTest {
     MaintenanceRequest request = new MaintenanceRequest();
 
     request.setInventoryId(1L);
-    service.save(request);
+    service.save(request, 1L);
     verify(repository).insert(any(MaintenanceLog.class));
 
   }
@@ -135,7 +135,7 @@ public class MaintenanceLogServiceTest {
     MaintenanceRequest request = new MaintenanceRequest();
 
     request.setInventoryId(1L);
-    service.save(request);
+    service.save(request,1L);
     verify(repository).insert(any(MaintenanceLog.class));
 
   }

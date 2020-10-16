@@ -47,6 +47,9 @@ console.log('reached here');
       $scope.error = messageService.get(response.data.error);
     };
     $scope.currentRequest.resolved = true;
+
+      console.log( $scope.currentRequest);
+
     SaveMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
     SaveAndLogMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
   };

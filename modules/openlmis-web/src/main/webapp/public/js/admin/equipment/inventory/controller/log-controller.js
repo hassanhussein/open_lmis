@@ -10,12 +10,42 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function LogController($scope, $location, $routeParams, EquipmentInventory, EquipmentLogs) {
+function LogController($scope, $location, $routeParams, EquipmentInventory, EquipmentLogs,EquipmentLogUpdateStatus, $dialog) {
   EquipmentInventory.get({
     id: $routeParams.id
   }, function (data) {
     $scope.inventory = data.inventory;
   });
+
+
+  $scope.verification = function (row){
+
+   // row.approved = true;
+
+    console.log(row);
+
+ var callBack=function(result){
+        if(result){
+
+            EquipmentLogUpdateStatus.update({id: parseInt(row.id,10)}, function (dx) {
+
+             EquipmentLogs.get({id: $routeParams.id}, function (data) {
+                         console.log(data);
+                $scope.logs = data.logs;
+              });
+            }
+
+            );
+
+         }
+       };
+        var options = {
+                           id: "confirmDialog",
+                           header: "Confirm Equipment service request",
+                           body: "Are you sure you want to approve equipment has been fixed ?"
+                       };
+      OpenLmisDialog.newDialog(options, callBack, $dialog);
+  };
 
   EquipmentLogs.get({id: $routeParams.id}, function (data) {
     $scope.logs = data.logs;

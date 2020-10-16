@@ -38,9 +38,9 @@
         <td>{{$index + 1}}</td>
         <td>{{row.facilityName}}</td>
         <td>{{row.equipmentName}}</td>
-        <td>{{row.requestedDateString}}</td>
+        <td>{{row.requestDate | date: 'dd-MM-yyyy'}}</td>
         <td>{{row.reason}}</td>
-        <td>{{row.recommendedDateString}}</td>
+        <td>{{row.recommendedDate | date: 'dd-MM-yyyy'}}</td>
         <th class="span1"><input type="button" class="btn btn-small" ng-click="respondToRequest(row)" value="Respond"/></th>
       </tr>
       <tr ng-show="list == undefined || list.length == 0">
@@ -113,7 +113,7 @@
     </div>
 
     <div class="modal-footer">
-      <input type="button" class="btn btn-primary save-button" value="Send email to requested"
+      <input type="button" class="btn btn-primary save-button" value="Send email to requester"
              ng-click="saveResponse()"/>
       <input type="button"
              ng-click="closeModal();error=''"

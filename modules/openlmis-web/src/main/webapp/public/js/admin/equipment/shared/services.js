@@ -375,3 +375,7 @@ services.factory('EquipmentModelList', function($resource){
 services.factory('EquipmentsByTypeByCategory', function ($resource) {
     return $resource('/equipment/manage/list-by-type-category.json', {}, {});
 });
+
+services.factory('EquipmentLogUpdateStatus', function($resource){
+   return $resource('/equipment/maintenance-request/update-equipment-maintenance-status/:id.json',{id:'@id'},{update: {method: 'PUT' }});
+});

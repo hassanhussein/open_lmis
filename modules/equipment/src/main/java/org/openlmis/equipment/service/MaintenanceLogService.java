@@ -24,6 +24,7 @@ import org.openlmis.equipment.repository.ServiceContractRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -75,7 +76,7 @@ public class MaintenanceLogService {
   }
 
 
-  public void save(MaintenanceRequest maintenanceRequest) {
+  public void save(MaintenanceRequest maintenanceRequest, Long userId) {
     EquipmentInventory equipmentInventory = equipmentInventoryRepository.getInventoryById(maintenanceRequest.getInventoryId());
     List<ServiceContract> serviceContracts = serviceContractRepository.getAllForEquipment(equipmentInventory.getEquipmentId());
     Long serviceContractId = null;
@@ -88,7 +89,15 @@ public class MaintenanceLogService {
     log.setEquipmentId(equipmentInventory.getEquipmentId());
     log.setVendorId(maintenanceRequest.getVendorId());
     log.setContractId(serviceContractId);
+    log.setFinding(maintenanceRequest.getMaintenanceDetails().getFinding());
+    log.setMaintenanceDate(maintenanceRequest.getMaintenanceDetails().getMaintenanceDate());
+    log.setServicePerformed(maintenanceRequest.getMaintenanceDetails().getServicePerformed());
+    log.setRecommendation(maintenanceRequest.getMaintenanceDetails().getRecommendation());
+    log.setNextVisitDate(maintenanceRequest.getMaintenanceDetails().getNextVisitDate());
+    log.setCreatedBy(userId);
+    log.setModifiedBy(userId);
     log.setModifiedDate(maintenanceRequest.getModifiedDate());
+    log.setMaintenanceDate(new Date());
     log.setRequestId(maintenanceRequest.getId());
     this.save(log);
   }

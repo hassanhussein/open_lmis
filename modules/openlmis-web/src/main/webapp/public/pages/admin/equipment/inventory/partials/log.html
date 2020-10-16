@@ -21,19 +21,27 @@
     <table class="table table-bordered table-scrollable">
       <thead class="gradient-header">
       <tr>
-        <th><span openlmis-message="label.date"></span></th>
+        <th><span> Request Date</span></th>
         <th><span openlmis-message="label.equipment.status"></span></th>
         <th><span openlmis-message="label.remarks"></span>
         <th><span>Resolved Date</span>
         </th>
+        <th><span>verification</span></th>
       </tr>
       </thead>
       <tr ng-repeat="row in logs">
-        <td>{{row.dateString}}</td>
+        <td>{{row.date | date:'dd-MM-yyyy' }}</td>
         <td><strong>{{row.type}}</strong> - {{row.reason}}</td>
         <td>{{row.comment}}</td>
-        <td ng-if="row.status=='t'">{{row.date | date}}</td>
+        <td ng-if="row.status=='t'">{{row.date | date:'dd-MM-yyyy'}}</td>
         <td ng-if="row.status !='t'"></td>
+        <td>
+          <span class="button-row" ng-if="row.approved != true">
+           <input type="button" class="btn btn-cancel cancel-button" value="Approve"
+                  ng-click="verification(row)"/>
+        </span>
+          <span ng-if="row.approved == true">Approved</span>
+        </td>
       </tr>
       <tr ng-show="logs.length == 0">
         <td colspan="3" openlmis-message="msg.no.records.found"></td>

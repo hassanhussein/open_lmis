@@ -52,6 +52,8 @@ public class MaintenanceRequest extends BaseModel {
   private MaintenanceLog maintenanceDetails;
   // end of hack
 
+  @JsonDeserialize(using = DateDeserializer.class)
+  private Date breakDownDate;
 
   public String getRequestedDateString() {
     return getFormattedDate(this.requestDate);
@@ -59,6 +61,9 @@ public class MaintenanceRequest extends BaseModel {
 
   public String getRecommendedDateString() {
     return getFormattedDate(this.recommendedDate);
+  }
+  public String getBreakDownDateDateString() {
+    return getFormattedDate(this.breakDownDate);
   }
 
 }

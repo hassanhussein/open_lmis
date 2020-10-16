@@ -50,19 +50,24 @@ public interface MaintenanceRequestMapper {
   List<MaintenanceRequest> getOutstandingRequestsForUser(@Param("userId") Long userId);
 
 
-  @Insert("insert into equipment_maintenance_requests (userId, facilityId, inventoryId, vendorId, requestDate, reason, recommendedDate, comment, resolved, vendorComment, createdBy, createdDate, modifiedBy, modifiedDate) " +
+  @Insert("insert into equipment_maintenance_requests (userId, facilityId, inventoryId, vendorId, requestDate, reason, recommendedDate, comment, resolved, vendorComment, createdBy, createdDate, modifiedBy, modifiedDate, breakDownDate) " +
       " values " +
-      " (#{userId}, #{facilityId}, #{inventoryId}, #{vendorId}, #{requestDate}, #{reason}, #{recommendedDate}, #{comment}, #{resolved}, #{vendorComment} , #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW() )")
+      " (#{userId}, #{facilityId}, #{inventoryId}, #{vendorId}, #{requestDate}, #{reason}, #{recommendedDate}, #{comment}, #{resolved}, #{vendorComment} , #{createdBy},COALESCE(#{createdDate}, NOW()), #{modifiedBy}, NOW(), #{breakDownDate})")
   @Options(useGeneratedKeys = true)
   void insert(MaintenanceRequest value);
 
   @Update("UPDATE equipment_maintenance_requests SET " +
-      "userId = #{userId}, facilityId = #{facilityId}, inventoryId = #{inventoryId}, vendorId = #{vendorId}, requestDate = #{requestDate}, reason = #{reason}, recommendedDate = #{recommendedDate}, comment = #{comment}, resolved = #{resolved}, vendorComment = #{vendorComment}, modifiedBy = #{modifiedBy}, modifiedDate = NOW()" +
+      "userId = #{userId}, facilityId = #{facilityId}, inventoryId = #{inventoryId}, vendorId = #{vendorId}, requestDate = #{requestDate}, reason = #{reason}, recommendedDate = #{recommendedDate}, comment = #{comment}, resolved = #{resolved}, vendorComment = #{vendorComment}, modifiedBy = #{modifiedBy}, modifiedDate = NOW(), " +
+          " breakDownDate = #{breakDownDate} " +
       " WHERE id = #{id}")
   void update(MaintenanceRequest value);
 
-  @Select({"select users.username as who, r.reason, 'request' as type, r.resolved as status, r.comment, r.requestDate as date from equipment_maintenance_requests r join users on users.id = r.userId where inventoryId = #{inventoryId} ",
+  @Select({"select r.approved, r.id, users.username as who, r.reason, 'request' as type, r.resolved as status, r.comment, r.requestDate as date from equipment_maintenance_requests r join users on users.id = r.userId where inventoryId = #{inventoryId} ",
   " UNION ",
-  " select v.name as who, r.reason, 'maintenance' as type, r.resolved as status, m.servicePerformed as comment, m.maintenanceDate as date from equipment_maintenance_logs m left join equipment_maintenance_requests r on m.requestId = r.id join equipment_service_vendors v on v.id = m.vendorId where inventoryId = #{inventoryId}"})
+  " select r.approved, r.id, v.name as who, r.reason, 'maintenance' as type, r.resolved as status, m.servicePerformed as comment, m.maintenanceDate as date from equipment_maintenance_logs m left join equipment_maintenance_requests r on m.requestId = r.id join equipment_service_vendors v on v.id = m.vendorId where inventoryId = #{inventoryId}"})
   List<Log> getFullHistory(@Param("inventoryId") Long inventoryId);
+
+  @Update("UPDATE equipment_maintenance_requests SET " +
+          " approved = true WHERE id = #{id}")
+  void updateApprovedStatus(@Param("id") Long id);
 }

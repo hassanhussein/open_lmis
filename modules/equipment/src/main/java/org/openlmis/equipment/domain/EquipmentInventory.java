@@ -57,7 +57,7 @@ public class EquipmentInventory extends BaseModel {
   private Long equipmentInventoryId;
   private Long isObsolete;
   private String remark;
-
+  private Date dateOfInstallation;
 
   public String getDateLastAssessedString() {
     return DateUtil.getFormattedDate(this.dateLastAssessed, "yyyy-MM-dd");
@@ -65,6 +65,10 @@ public class EquipmentInventory extends BaseModel {
 
   public String getDateDecommissionedString() {
     return DateUtil.getFormattedDate(this.dateDecommissioned, "yyyy-MM-dd");
+  }
+
+  public String getDateOfInstallationString() {
+    return DateUtil.getFormattedDate(this.dateOfInstallation, "yyyy-MM-dd");
   }
 
   private List<ColdChainEquipmentTemperatureStatusDTO> coldChainLineItems;

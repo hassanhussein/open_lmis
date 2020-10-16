@@ -44,8 +44,8 @@
         </td>
         <td>{{row.description}}</td>
         <td>{{row.coverage}}</td>
-        <td>{{row.startDateString}}</td>
-        <td>{{row.endDateString}}</td>
+        <td>{{row.startDate | date:'dd-MM-yyyy'}}</td>
+        <td>{{row.endDate | date:'dd-MM-yyyy'}}</td>
       </tr>
       </tbody>
     </table>

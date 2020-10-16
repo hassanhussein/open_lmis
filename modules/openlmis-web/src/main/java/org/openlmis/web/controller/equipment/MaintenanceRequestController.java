@@ -11,19 +11,20 @@
  */
 package org.openlmis.web.controller.equipment;
 
+import org.openlmis.core.exception.DataException;
+import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.MaintenanceRequest;
 import org.openlmis.equipment.service.MaintenanceRequestService;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Controller
@@ -86,4 +87,16 @@ public class MaintenanceRequestController extends BaseController {
     return response;
   }
 
+
+  @RequestMapping(value = "/update-equipment-maintenance-status/{id}", method = RequestMethod.PUT)
+  public ResponseEntity updateApprovedStatus(@RequestBody @PathVariable("id") Long id) {
+
+    try {
+      service.updateApprovedStatus(id);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("Not updated");
+    }
+
+    return OpenLmisResponse.success("Approved succesifull");
+  }
 }
