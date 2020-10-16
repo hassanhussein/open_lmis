@@ -47,14 +47,20 @@ public class Program extends BaseModel implements Importable {
 
     @ImportField(name = "Template Configured", type = "boolean")
     private Boolean templateConfigured;
+    @ImportField(name = "Regimen Template Configured", type = "boolean")
     private Boolean regimenTemplateConfigured;
+    @ImportField(name = "Equipment Configured", type = "boolean")
     private Boolean isEquipmentConfigured;
+    @ImportField(name = "Enable Skip Period", type = "boolean")
     private Boolean enableSkipPeriod;
 
     @ImportField(name = "Show FullSupply Tab", type = "boolean")
     private Boolean showNonFullSupplyTab;
+    @ImportField(name = "Hide Skipped Products", type = "boolean")
     private Boolean hideSkippedProducts;
+    @ImportField(name = "Enable Ivd Form", type = "boolean")
     private Boolean enableIvdForm;
+    @ImportField(name = "Push", type = "boolean")
     private Boolean push;
 
     @ImportField(name = "Use Price Schedule", type = "boolean")
