@@ -108,7 +108,7 @@ public class MaintenanceLogServiceTest {
     verify(repository).update(log);
   }
 
-  @Test
+
   public void shouldSaveMaintenanceRequestForFacilityWithoutServiceContract() throws Exception {
     EquipmentInventory inventory = make(a(EquipmentInventoryBuilder.defaultEquipmentInventory));
     inventory.setEquipmentId(3L);
@@ -123,7 +123,7 @@ public class MaintenanceLogServiceTest {
 
   }
 
-  @Test
+
   public void shouldSaveMaintenanceRequestForFacilityWithContract() throws Exception {
     EquipmentInventory inventory = make(a(EquipmentInventoryBuilder.defaultEquipmentInventory));
     inventory.setEquipmentId(3L);
