@@ -17,6 +17,7 @@ public class PatientCategory extends BaseModel {
     private String code;
     private String name;
     private Integer displayOrder;
+    private boolean display;
 
 }
 

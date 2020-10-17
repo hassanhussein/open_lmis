@@ -44,6 +44,14 @@ public class PatientLineItem extends LineItem {
     private Integer tenthMonth;
     private Integer eleventhMonth;
     private Integer twelfthMonth;
+    private Integer thirteenthMonth;
+    private Integer fourteenthMonth;
+    private Integer fifteenthMonth;
+    private Integer sixteenthMonth;
+    private Integer seventeenthMonth;
+    private Integer eighteenthMonth;
+    private Integer nineteenthMonth;
+    private Integer twentiethMonth;
 
     private PatientCategory category;
     private Integer patientDisplayOrder;

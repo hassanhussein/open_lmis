@@ -10,8 +10,10 @@ import java.util.List;
 public interface PatientLineItemMapper {
 
 
-    @Insert({"INSERT INTO patient_line_items(code, name, patientDisplayOrder, patientCategory,  patientCategoryDisplayOrder, rnrId, modifiedBy, createdBy) values " +
-            "(#{code}, #{name},  #{patientDisplayOrder}, #{category.name}, #{category.displayOrder}, #{rnrId},  #{modifiedBy}, #{createdBy})"})
+    @Insert({"INSERT INTO patient_line_items(code, name, patientDisplayOrder, patientCategory,  " +
+            "patientCategoryDisplayOrder, rnrId, modifiedBy, createdBy, skipped) values " +
+            "(#{code}, #{name},  #{patientDisplayOrder}, #{category.name}, #{category" +
+            ".displayOrder}, #{rnrId},  #{modifiedBy}, #{createdBy}, #{skipped})"})
     @Options(useGeneratedKeys = true)
     void insert(PatientLineItem patientLineItem);
 
@@ -41,6 +43,14 @@ public interface PatientLineItemMapper {
             @Result(property = "tenthMonth", column = "tenthMonth"),
             @Result(property = "eleventhMonth", column = "eleventhMonth"),
             @Result(property = "twelfthMonth", column = "twelfthMonth"),
+            @Result(property = "thirteenthMonth", column = "thirteenthMonth"),
+            @Result(property = "fourteenthMonth", column = "fourteenthMonth"),
+            @Result(property = "fifteenthMonth", column = "fifteenthMonth"),
+            @Result(property = "sixteenthMonth", column = "sixteenthMonth"),
+            @Result(property = "seventeenthMonth", column = "seventeenthMonth"),
+            @Result(property = "eighteenthMonth", column = "eighteenthMonth"),
+            @Result(property = "nineteenthMonth", column = "nineteenthMonth"),
+            @Result(property = "twentiethMonth", column = "twentiethMonth"),
 
             @Result(property = "category.name", column = "patientCategory"),
             @Result(property = "category.displayOrder", column = "patientCategoryDisplayOrder"),
@@ -62,7 +72,14 @@ public interface PatientLineItemMapper {
             "ninthMonth = #{ninthMonth} ," +
             "tenthMonth = #{tenthMonth} ," +
             "eleventhMonth = #{eleventhMonth} ," +
-            "twelfthMonth = #{twelfthMonth} ," +
+            "thirteenthMonth = #{thirteenthMonth} ," +
+            "fourteenthMonth = #{fourteenthMonth} ," +
+            "fifteenthMonth = #{fifteenthMonth} ," +
+            "sixteenthMonth = #{sixteenthMonth} ," +
+            "seventeenthMonth = #{seventeenthMonth} ," +
+            "eighteenthMonth = #{eighteenthMonth} ," +
+            "nineteenthMonth = #{nineteenthMonth} ," +
+            "twentiethMonth = #{twentiethMonth} ," +
             "skipped = #{skipped} ," +
 
             "modifiedBy = #{modifiedBy}, modifiedDate =CURRENT_TIMESTAMP where id=#{id}")

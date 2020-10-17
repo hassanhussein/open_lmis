@@ -12,7 +12,6 @@ package org.openlmis.core.repository.mapper;
 
 import org.apache.ibatis.annotations.Select;
 import org.openlmis.core.domain.PatientCategory;
-import org.openlmis.core.domain.RegimenCategory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
