@@ -675,6 +675,15 @@
                     <property name="title" value="report.title.audit.trail"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="emergency-rnr-aggregate-by-geo-zone"/>
+                    <property name="template" value="emergency-rnr-aggregate-by-geo-zone.jasper"/>
+                    <property name="reportDataProvider" ref="emergencyRnrAggregateByGeozoneDataProvider"/>
+                    <property name="id" value="Emergency Rnr Aggregate By Geo-zone"/>
+                    <property name="name" value="Emergency Rnr Aggregate By Geo-zone"/>
+                    <property name="title" value="report.title.emergency.rnr.geo.zone"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>
