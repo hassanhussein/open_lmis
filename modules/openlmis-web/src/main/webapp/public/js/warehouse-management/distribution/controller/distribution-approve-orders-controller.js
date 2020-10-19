@@ -18,13 +18,13 @@ function DistributionApproveOrdersController($scope,DisableAsn,$window, programs
 $scope.pod = function (order) {
 var url = '/wms-reports/proof-delivery-report/'+order.id;
 $window.open(url, '_blank');
-}
+};
 
 
 $scope.invoice = function (order) {
 var url = '/wms-reports/invoice-report/'+order.id;
 $window.open(url, '_blank');
-}
+};
 
 
 
