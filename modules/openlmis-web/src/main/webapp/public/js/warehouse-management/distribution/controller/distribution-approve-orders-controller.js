@@ -28,7 +28,6 @@ $window.open(url, '_blank');
 
 
 
-
   $scope.searchOptions = [
     {value: "region", name: "Region"},
     {value: "picklistid", name: "Pick List ID"},
