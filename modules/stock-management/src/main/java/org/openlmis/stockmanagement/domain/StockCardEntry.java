@@ -63,13 +63,17 @@ public class StockCardEntry extends BaseModel {
     return true;
   }
 
-  public Map<String, String> getCustomProps() {
+  /*public Map<String, String> getCustomProps() {
     Map<String, String> customProps = new HashMap<>();
     for (StockCardEntryKV item : keyValues) {
       customProps.put(item.getKeyColumn(), item.getValueColumn());
     }
+    *//*if(customProps.isEmpty()){
+      customProps.put("vvmstatus","1");
+    }*//*
+   // System.out.println("called customProps");
     return customProps.isEmpty() ? null : customProps;
-  }
+  }*/
 
   public void addKeyValue(String key, String value) {
     String newKey = key.trim().toLowerCase();

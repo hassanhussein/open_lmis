@@ -43,6 +43,8 @@ public class StockCard extends BaseModel {
   @JsonIgnore
   private List<StockCardEntryKV> keyValues;
 
+ // Map<String, String> customProps;
+
   @JsonIgnore
   private StockCardEntryKVReduceStrategy strategy;
 
@@ -69,8 +71,20 @@ public class StockCard extends BaseModel {
 
     Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(keyValues, strategy);
 
+    if(customProps.isEmpty()){
+      customProps.put("vvmstatus","1");
+    }
+
     return customProps.isEmpty() ? null : customProps;
   }
+
+  /*public Map<String, String> getCustomProps() {
+    if (null == strategy) strategy = new LatestSyncedStrategy();
+
+    Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(keyValues, strategy);
+
+    return customProps.isEmpty() ? null : customProps;
+  }*/
 
   public static final StockCard createZeroedStockCard(Facility facility, Product product) {
     return new StockCard(facility, product);

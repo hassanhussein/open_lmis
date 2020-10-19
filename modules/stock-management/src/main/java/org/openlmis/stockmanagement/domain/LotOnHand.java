@@ -76,15 +76,19 @@ public class LotOnHand extends BaseModel {
     return new LotOnHand(lot, stockCard);
   }
 
-/*  public Map<String, String> getCustomProps() {
+  public Map<String, String> getCustomProps() {
     if (null == strategy) strategy = new LatestSyncedStrategy();
 
     Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(keyValues, strategy);
 
-    return customProps.isEmpty() ? null : customProps;
-  }*/
+    if(customProps.isEmpty()){
+      customProps.put("vvmstatus","1");
+    }
 
-  public Map<String, String> customProps;
+    return customProps.isEmpty() ? null : customProps;
+  }
+
+  //public Map<String, String> customProps;
 
   public void addToQuantityOnHand(long quantity) {
     this.quantityOnHand += quantity;

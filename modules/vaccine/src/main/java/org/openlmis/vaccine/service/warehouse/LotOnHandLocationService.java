@@ -54,22 +54,22 @@ public class LotOnHandLocationService {
     @Autowired
     private LocationEntryService locationEntryService;
 
-    public void save(LotOnHandLocation location){
+    public void save(LotOnHandLocation location) {
 
-        if(location.getId() == null){
-           repository.insert(location);
+        if (location.getId() == null) {
+            repository.insert(location);
         } else {
             repository.update(location);
         }
     }
 
     @Transactional
-    public PutAwayLineItemDTO savePutAwayDetails(List<PutAwayLineItemDTO> items,Long userId) {
+    public PutAwayLineItemDTO savePutAwayDetails(List<PutAwayLineItemDTO> items, Long userId) {
 
-       repository.deleteExistingPutAway(items.get(0).getInspectionId());
-       Long total = 0L;
-       List<StockEventDTO> events = new ArrayList<>();
-       Map<String, String> customProps = new HashMap<String, String>();
+        repository.deleteExistingPutAway(items.get(0).getInspectionId());
+        Long total = 0L;
+        List<StockEventDTO> events = new ArrayList<>();
+        Map<String, String> customProps = new HashMap<String, String>();
 
 
         Facility facility = facilityService.getAllByFacilityTypeCode(CVS_CODE).get(0);
@@ -77,7 +77,7 @@ public class LotOnHandLocationService {
 
         StockCard stockCard = stockCardService.getOrCreateStockCard(facility.getId(), product.getCode());
 
-        for(PutAwayLineItemDTO dto :items) {
+        for (PutAwayLineItemDTO dto : items) {
             total = total + dto.getQuantity();
 
 /*
@@ -92,8 +92,8 @@ public class LotOnHandLocationService {
             Lot newLot = null;
             InspectionLotDTO vvmData = null;
 
-            if(dto.getLotNumber() != null)  {
-               newLot = lotRepository.getById(lotRepository.getByCode(dto.getLotNumber()).getId());
+            if (dto.getLotNumber() != null) {
+                newLot = lotRepository.getById(lotRepository.getByCode(dto.getLotNumber()).getId());
                 System.out.println("lot");
                 System.out.println(dto.getLotNumber());
                 System.out.println("nanaana");
@@ -101,7 +101,7 @@ public class LotOnHandLocationService {
                 vvmData = repository.getByLotAndInspection(dto.getLotNumber(), dto.getInspectionId());
 
 
-               //save PutAway
+                //save PutAway
                 dto.setCreatedBy(userId);
                 dto.setLotId(newLot.getId());
                 dto.setVvmId(vvmData.getVvmId());
@@ -143,10 +143,10 @@ public class LotOnHandLocationService {
             event.setProductCode(product.getCode());
             event.setQuantity(Long.valueOf(dto.getQuantity()));
 
-            if(vvmData != null)
-             customProps.put("vvmStatus", vvmData.getVvmId().toString());
+            if (vvmData != null)
+                customProps.put("vvmStatus", vvmData.getVvmId().toString());
             else
-             customProps.put("vvmStatus", "1");
+                customProps.put("vvmStatus", "1");
 
             event.setCustomProps(customProps);
             event.setToBinLocationId(dto.getToBinLocationId());
@@ -174,35 +174,35 @@ public class LotOnHandLocationService {
         processStockCard(facility, stockCard,product,events,userId);*/
         inspectionService.updateStatus("INSPECTED", items.get(0).getInspectionId());
 
-        System.out.println("Inspection ID"+items.get(0).getInspectionId());
+        System.out.println("Inspection ID" + items.get(0).getInspectionId());
         System.out.println("----Processed Stock cards-----");
 
 
-       return items.get(0);
+        return items.get(0);
     }
 
-    private String processStockCard(Facility facility, StockCard card,Product product , List<StockEventDTO> events, Long userId) {
+    private String processStockCard(Facility facility, StockCard card, Product product, List<StockEventDTO> events, Long userId) {
 
-        if(null == events || events.isEmpty()) {
+        if (null == events || events.isEmpty()) {
             return "Empty Events";
         }
 
-        if(facility == null) {
+        if (facility == null) {
             return " Facility is not available ";
         }
 
         List<StockCardEntry> entries = new ArrayList<>();
 
-        for(StockEvent event : events) {
+        for (StockEvent event : events) {
             logger.debug("Processing event: " + event);
 
-            if(null == event.getProductCode() && event.getQuantity() < 0) {
+            if (null == event.getProductCode() && event.getQuantity() < 0) {
                 return "Quantity of product is not valid";
             }
 
             String productCode = event.getProductCode();
-            StockCardLocationDTO stockCardLocationDTO =new StockCardLocationDTO();
-            if(event.getLot() == null) {
+            StockCardLocationDTO stockCardLocationDTO = new StockCardLocationDTO();
+            if (event.getLot() == null) {
                 stockCardLocationDTO.setStockCardId(card.getId());
                 stockCardLocationDTO.setLocationId(event.getToBinLocationId());
                 stockCardLocationDTO.setCreatedBy(userId);
@@ -230,7 +230,7 @@ public class LotOnHandLocationService {
                 return "error.stock.quantity.invalid";
             }
 
-            LotOnHand l = stockCardService.getLotOnHandByStockCardAndLot(card.getId(),event.getLotId());
+            LotOnHand l = stockCardService.getLotOnHandByStockCardAndLot(card.getId(), event.getLotId());
 
             LotOnHandLocation location = new LotOnHandLocation();
             location.setCreatedBy(userId);
@@ -239,13 +239,13 @@ public class LotOnHandLocationService {
             location.setLotOnHandId(l.getId());
             location.setLocationId(event.getToBinLocationId());
             location.setFromBinLocationId(event.getFromBinLocationId());
-            repository.deleteExistingByLot(lotOnHand.getId(),event.getToBinLocationId());
+            repository.deleteExistingByLot(lotOnHand.getId(), event.getToBinLocationId());
 
             //Insert Lot locations
             repository.insert(location);
 
             Date occurred = event.getOccurred();
-            String referenceNumber  = event.getReferenceNumber();
+            String referenceNumber = event.getReferenceNumber();
 
             StockCardEntry entry = new StockCardEntry(card, entryType, event.getQuantity(), occurred, referenceNumber);
             lotOnHand.setVvmId(event.getLot().getVvmId());
@@ -297,8 +297,6 @@ public class LotOnHandLocationService {
             locationEntryService.saveLocationEntry(entry2);
 
 
-
-
         }
         stockCardService.addStockCardEntries(entries);
         return "success.stock.adjusted";
@@ -308,124 +306,123 @@ public class LotOnHandLocationService {
         return repository.getSOHReport(facilityId, warehouseId);
     }
 
-    public List<HashMap<String, Object>> getAllLedgers(Long productId,Long warehouseId,  Long year) throws IOException {
-        List<HashMap<String, Object>>  ledgers=repository.getAllLedgers(productId,warehouseId,year);
-        JSONArray jsonLedger=new JSONArray(ledgers);
+    public List<HashMap<String, Object>> getAllLedgers(Long productId, Long warehouseId, Long year) throws IOException {
+        List<HashMap<String, Object>> ledgers = repository.getAllLedgers(productId, warehouseId, year);
+        JSONArray jsonLedger = new JSONArray(ledgers);
 
-        JSONArray selectedJsonYear=new JSONArray();
+        JSONArray selectedJsonYear = new JSONArray();
 
-        JSONArray previousYear=new JSONArray();
+        JSONArray previousYear = new JSONArray();
 
-        Map<String,Integer> uniqueLedgerItem=new HashMap<String, Integer>();
+        Map<String, Integer> uniqueLedgerItem = new HashMap<String, Integer>();
 
-      //  selectedJsonYear.put("{}");
+        //  selectedJsonYear.put("{}");
 
-        for (int i=0;i<jsonLedger.length();i++){
-           //JSONObject jsonObject=jsonLedger.get(i);
-            JSONObject ledgerObject=jsonLedger.getJSONObject(i);
-            String locationname=ledgerObject.getString("locationname");
-            if(ledgerObject.has("transferlogs")) {
+        for (int i = 0; i < jsonLedger.length(); i++) {
+            //JSONObject jsonObject=jsonLedger.get(i);
+            JSONObject ledgerObject = jsonLedger.getJSONObject(i);
+            String locationname = ledgerObject.getString("locationname");
+            if (ledgerObject.has("transferlogs")) {
                 String transferlogs = ledgerObject.getString("transferlogs");
 
-                String [] arrayLogs=transferlogs.split("-");
+                String[] arrayLogs = transferlogs.split("-");
 
-                if(arrayLogs.length==2){
-                    String fromBin=arrayLogs[0];
-                    String toBin=arrayLogs[1];
+                if (arrayLogs.length == 2) {
+                    String fromBin = arrayLogs[0];
+                    String toBin = arrayLogs[1];
 
-                   /// System.out.println(fromBin+" :hh: "+toBin);
+                    /// System.out.println(fromBin+" :hh: "+toBin);
 
-                        ledgerObject.put("frombin", fromBin);
-                        ledgerObject.put("toBinCustom", toBin);
+                    ledgerObject.put("frombin", fromBin);
+                    ledgerObject.put("toBinCustom", toBin);
 
 
-                }else{
-                    String fromBin=arrayLogs[0];
+                } else {
+                    String fromBin = arrayLogs[0];
 
-                    ledgerObject.put("frombin",fromBin);
+                    ledgerObject.put("frombin", fromBin);
 
 
                 }
 
-               //System.out.println(transferlogs);
-            }else {
+                //System.out.println(transferlogs);
+            } else {
                 ledgerObject.put("toBinCustom", locationname);
 
             }
-           Long lotYear=ledgerObject.getLong("lotyear");
+            Long lotYear = ledgerObject.getLong("lotyear");
 
-            Integer loh=ledgerObject.getInt("loh");
-
-
-            if(lotYear.equals(year)){
-               selectedJsonYear.put(ledgerObject);
-           }else{
-               if(lotYear<year){
-                   previousYear.put(ledgerObject);
-               }
-           }
+            Integer loh = ledgerObject.getInt("loh");
 
 
-            String keyValue=ledgerObject.getString("lotnumber")+"/"+ledgerObject.getString("locationname")+"/"+ledgerObject.getString("vvm")+"/"+ledgerObject.getString("expirationdate")+"/"+lotYear;
+            if (lotYear.equals(year)) {
+                selectedJsonYear.put(ledgerObject);
+            } else {
+                if (lotYear < year) {
+                    previousYear.put(ledgerObject);
+                }
+            }
 
-            if(uniqueLedgerItem.containsKey(keyValue)){
-                int totalInHand=uniqueLedgerItem.get(keyValue)+loh;
-                uniqueLedgerItem.put(keyValue,totalInHand);
 
-            }else {
-                uniqueLedgerItem.put(keyValue,loh);
+            String keyValue = ledgerObject.getString("lotnumber") + "/" + ledgerObject.getString("locationname") + "/" + ledgerObject.getString("vvm") + "/" + ledgerObject.getString("expirationdate") + "/" + lotYear;
+
+            if (uniqueLedgerItem.containsKey(keyValue)) {
+                int totalInHand = uniqueLedgerItem.get(keyValue) + loh;
+                uniqueLedgerItem.put(keyValue, totalInHand);
+
+            } else {
+                uniqueLedgerItem.put(keyValue, loh);
 
             }
 
-       }
+        }
 
 
-        JSONArray previousYearBalance=new JSONArray();
+        JSONArray previousYearBalance = new JSONArray();
 
 
+        for (Map.Entry m : uniqueLedgerItem.entrySet()) {
 
-        for(Map.Entry m:uniqueLedgerItem.entrySet()){
-
-            String ledgerKey=m.getKey().toString();
+            String ledgerKey = m.getKey().toString();
             //uniqueLedgerItem.put(ledgerKey,0);
-            Integer valueLedger=Integer.parseInt(m.getValue().toString());
-            String [] arrayValue=ledgerKey.split("/");
-            String lotnumber=arrayValue[0];
-            String locationname=arrayValue[1];
-            String vvm=arrayValue[2];
-            String expirationdate=arrayValue[3];
-            Long yearDate=Long.parseLong(arrayValue[4]);
+            Integer valueLedger = Integer.parseInt(m.getValue().toString());
+            String[] arrayValue = ledgerKey.split("/");
+            String lotnumber = arrayValue[0];
+            String locationname = arrayValue[1];
+            String vvm = arrayValue[2];
+            String expirationdate = arrayValue[3];
+            Long yearDate = Long.parseLong(arrayValue[4]);
 
 
-            JSONObject newPreviousLedgerObject=new JSONObject();
-            newPreviousLedgerObject.put("frombin",locationname);
+            JSONObject newPreviousLedgerObject = new JSONObject();
+            newPreviousLedgerObject.put("frombin", locationname);
 
             //newPreviousLedgerObject.put("toBinCustom",locationname);
-            newPreviousLedgerObject.put("date",year+"-01-01");
+            newPreviousLedgerObject.put("date", year + "-01-01");
 
-            newPreviousLedgerObject.put("lotnumber",lotnumber);
-            newPreviousLedgerObject.put("locationname",locationname);
-            newPreviousLedgerObject.put("vvm",vvm);
-            newPreviousLedgerObject.put("expirationdate",expirationdate);
+            newPreviousLedgerObject.put("lotnumber", lotnumber);
+            newPreviousLedgerObject.put("locationname", locationname);
+            newPreviousLedgerObject.put("vvm", vvm);
+            newPreviousLedgerObject.put("expirationdate", expirationdate);
 
-            if(yearDate<year) {
+            if (yearDate < year) {
                 newPreviousLedgerObject.put("soh", valueLedger);
                 newPreviousLedgerObject.put("loh", 0);
-            }else{
+            } else {
                 newPreviousLedgerObject.put("soh", 0);
                 newPreviousLedgerObject.put("loh", 0);
             }
 
-           // System.out.println(valueLedger+" donne "+ledgerKey);
+            // System.out.println(valueLedger+" donne "+ledgerKey);
 
 
-            int totalPrevious=0;
-            for(int k=0;k<previousYear.length();k++){
-                JSONObject ledgerObject=previousYear.getJSONObject(k);
-                int loh=ledgerObject.getInt("total");
-                totalPrevious=totalPrevious+loh;
+            int totalPrevious = 0;
+            for (int k = 0; k < previousYear.length(); k++) {
+                JSONObject ledgerObject = previousYear.getJSONObject(k);
+                int loh = ledgerObject.getInt("total");
+                totalPrevious = totalPrevious + loh;
             }
-            newPreviousLedgerObject.put("total",totalPrevious);
+            newPreviousLedgerObject.put("total", totalPrevious);
 
             previousYearBalance.put(newPreviousLedgerObject);
 
@@ -433,21 +430,19 @@ public class LotOnHandLocationService {
         }
 
 
-
-
-
         ObjectMapper mapper = new ObjectMapper();
 
-        JSONArray sortedLedger=sortArrayList(previousYearBalance,selectedJsonYear);
+        JSONArray sortedLedger = sortArrayList(previousYearBalance, selectedJsonYear);
 
         List<HashMap<String, Object>> convertLedgerObject = mapper.readValue(sortedLedger.toString(),
-                new TypeReference<List<HashMap<String, Object>>>(){});
+                new TypeReference<List<HashMap<String, Object>>>() {
+                });
 
         return convertLedgerObject;
     }
 
-    private JSONArray sortArrayList(JSONArray previousLedger,JSONArray selectedLedger){
-        if(selectedLedger.length()!=0) {
+    private JSONArray sortArrayList(JSONArray previousLedger, JSONArray selectedLedger) {
+        if (selectedLedger.length() != 0) {
             for (int i = 0; i < selectedLedger.length(); i++) {
                 JSONObject ledgerObject = selectedLedger.getJSONObject(i);
 
@@ -520,8 +515,6 @@ public class LotOnHandLocationService {
                             }
 
                             String lotNumberPrev = prevLedgerObject.getString("lotnumber");
-                            String date = prevLedgerObject.getString("date");
-                            //System.out.println(date + " prevObjectIssued:" + prevObjectIssued + ":" + received + " lotNumberPrev: " + lotNumberPrev + ":" + lotNumber);
                             if (prevObjectIssued > 0) {
                                 if (prevObjectIssued == received && lotNumberPrev.equals(lotNumber)) {
                                     received = 0;
@@ -540,8 +533,6 @@ public class LotOnHandLocationService {
                             prevObjectIssued = prevLedgerObject.getInt("issued");
                         }
                         String lotNumberPrev = prevLedgerObject.getString("lotnumber");
-                        String date = prevLedgerObject.getString("date");
-                        // System.out.println(date+" prevObjectIssued:"+prevObjectIssued+":"+received+" lotNumberPrev: "+lotNumberPrev+":"+lotNumber);
                         if (prevObjectIssued > 0) {
                             if (prevObjectIssued == received && lotNumberPrev.equals(lotNumber)) {
                                 received = 0;
@@ -565,21 +556,21 @@ public class LotOnHandLocationService {
             }
 
             return previousLedger;
-        }else{
+        } else {
             return null;
         }
     }
 
-    public List<HashMap<String,Object>>getAllByWareHouseAndBinLocation(Long fromWarehouseId, Long fromBinLocationId){
-        return repository.getAllByWareHouseAndBinLocation(fromWarehouseId,fromBinLocationId);
+    public List<HashMap<String, Object>> getAllByWareHouseAndBinLocation(Long fromWarehouseId, Long fromBinLocationId) {
+        return repository.getAllByWareHouseAndBinLocation(fromWarehouseId, fromBinLocationId);
     }
 
-    public List<TransferDTO>getTransferDetailsBy(Long wareHouseId, Long fromBinLocationId) {
-        return repository.getTransferDetailsBy(wareHouseId,fromBinLocationId);
+    public List<TransferDTO> getTransferDetailsBy(Long wareHouseId, Long fromBinLocationId) {
+        return repository.getTransferDetailsBy(wareHouseId, fromBinLocationId);
     }
 
     public void updateByLotOnHandAndLocation(Integer total, Long fromBin, Long lotOnHandId) {
-        repository.updateByLotOnHandAndLocation(total,fromBin,lotOnHandId);
+        repository.updateByLotOnHandAndLocation(total, fromBin, lotOnHandId);
     }
 
     public LotOnHandLocation getBy(Long fromBin, Long lotOnHandId) {
@@ -590,7 +581,7 @@ public class LotOnHandLocationService {
         repository.updateLotOnHandLocation(id, quantity);
     }
 
-    public List<StockCardDTO> getStockCardWithLocationBy(Long  facilityId) {
+    public List<StockCardDTO> getStockCardWithLocationBy(Long facilityId) {
         return repository.getStockCardWithLocationBy(facilityId);
     }
 

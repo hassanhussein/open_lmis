@@ -219,12 +219,15 @@ public class StockCardController extends BaseController {
             // Filter stock cards based on permission, put into permitted stock cards
             List<StockCard> permittedStockCards = new ArrayList<>();
             for (StockCard stockCard : stockCards) {
+              /* Map<String, String> customProps=new HashMap<>();
+                customProps.put("vvmstatus","1");
+                stockCard.setCustomProps(customProps);*/
                 List<Right> rights = roleRightsService.getRightsForUserFacilityAndProductCode(userId, facilityId, stockCard.getProduct().getCode());
                 if (any(rights, with("VIEW_STOCK_ON_HAND"))) {
                     permittedStockCards.add(stockCard);
                 }
             }
-
+            //System.out.println(permittedStockCards.toString());
             // If countOnly specified, then only return count of permitted stock cards
             if (countOnly) {
                 return OpenLmisResponse.response("count", permittedStockCards.size());
