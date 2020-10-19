@@ -5,6 +5,9 @@ CREATE OR REPLACE FUNCTION fn_delete_rnr(in_rnrid integer)
   RETURNS character varying
   AS
 $BODY$
+/*
+ 2015-04-14 mahmed - handle pod relationships
+*/
 DECLARE i RECORD;
 DECLARE j RECORD;
 DECLARE li integer;
@@ -25,9 +28,8 @@ DELETE FROM requisition_line_items WHERE rnrid= in_rnrid;
 end if;
 DELETE FROM requisition_status_changes where rnrid = v_rnr_id;
 DELETE FROM requisition_rejections where rnrid = v_rnr_id;
-DELETE FROM requisition_source_of_funds where rnrid = v_rnr_id;
-DELETE FROM patient_line_items where rnrid = v_rnr_id;
 DELETE FROM regimen_line_items where rnrid = v_rnr_id;
+DELETE FROM patient_line_items where rnrid = v_rnr_id;
 DELETE FROM pod_line_items where podid in (select id from pod where orderid = v_rnr_id);
 DELETE FROM pod where orderid = v_rnr_id;
 DELETE FROM orders where id = v_rnr_id;
@@ -44,4 +46,5 @@ $BODY$
   COST 100;
 ALTER FUNCTION fn_delete_rnr(integer)
   OWNER TO postgres;
+
 
