@@ -110,9 +110,27 @@ $scope.homeLinkClicked=function(){
 
       $scope.repairing = data.summary.repairing;
       $scope.investigating = data.summary.investigating;
+
+
+       try{
+              if($scope.reportingPerformance.expected){
+              notificationCount=parseInt($scope.reportingPerformance.expected, 10);
+              console.log("Expected exists");
+              }else{
+              console.log("Expected  not exists");
+              }
+              $scope.notificationCount =  notificationCount +
+                  parseInt($scope.investigating.count, 10) +
+                  parseInt($scope.reportingPerformance.late, 10);
+                  } catch (e){
+                    console.log("Got an error!",e);
+                       // handle errors in processing or in error.
+                  }
+
+  /*
       $scope.notificationCount = parseInt($scope.reportingPerformance.expected, 10) +
           parseInt($scope.investigating.count, 10) +
-          parseInt($scope.reportingPerformance.late, 10);
+          parseInt($scope.reportingPerformance.late, 10);*/
 
 
     });
