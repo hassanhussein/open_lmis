@@ -110,6 +110,7 @@ $scope.homeLinkClicked=function(){
 
       $scope.repairing = data.summary.repairing;
       $scope.investigating = data.summary.investigating;
+        var notificationCount=0;
 
 
        try{
@@ -119,14 +120,14 @@ $scope.homeLinkClicked=function(){
               }else{
               console.log("Expected  not exists");
               }
-              $scope.notificationCount =  notificationCount +
+              notificationCount =  notificationCount +
                   parseInt($scope.investigating.count, 10) +
                   parseInt($scope.reportingPerformance.late, 10);
                   } catch (e){
                     console.log("Got an error!",e);
                        // handle errors in processing or in error.
                   }
-
+        $scope.notificationCount=notificationCount;
   /*
       $scope.notificationCount = parseInt($scope.reportingPerformance.expected, 10) +
           parseInt($scope.investigating.count, 10) +
