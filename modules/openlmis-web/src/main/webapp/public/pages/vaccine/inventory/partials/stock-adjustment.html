@@ -221,7 +221,7 @@
                 </td>
                 <td ng-if="vvmTracked(c)" ng-class="{'last-row':$last,'disabled':lot.isSkipped}"
                     class="col-count cell-input col-general ">
-                    <select style="max-width:130px !important;min-width:130px !important" ui-select2
+                    <select style="max-width:130px !important;min-width:130px !important" ng-init="lot.customProps.vvmstatus='1'" ui-select2
                             ng-options="i.value as i.name for i in vvmStatuses" name="vvm_{{lot.$index}}"
                             ng-disabled="lot.isSkipped"
                             ng-model="lot.customProps.vvmstatus" maxlength="5" type="text">

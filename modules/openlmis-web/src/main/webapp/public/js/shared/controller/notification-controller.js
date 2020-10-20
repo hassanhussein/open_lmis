@@ -14,9 +14,22 @@ function dashboardSummaryCallBack() {
 
         $scope.repairing = data.summary.repairing;
         $scope.investigating = data.summary.investigating;
-        $scope.notificationCount = parseInt($scope.reportingPerformance.expected, 10) +
+        var notificationCount=0;
+
+        try{
+        if($scope.reportingPerformance.expected){
+        notificationCount=parseInt($scope.reportingPerformance.expected, 10);
+        console.log("Expected exists");
+        }else{
+        console.log("Expected  not exists");
+        }
+        $scope.notificationCount =  notificationCount +
             parseInt($scope.investigating.count, 10) +
             parseInt($scope.reportingPerformance.late, 10);
+            } catch (e){
+              console.log("Got an error!",e);
+                 // handle errors in processing or in error.
+            }
 
 
     });

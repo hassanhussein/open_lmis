@@ -50,6 +50,8 @@ public class VaccineDashboardService {
 
     public Map<String, Object> getReportingSummary(Long userId) {
 
+        System.out.println(userId+" ");
+
         Map<String, Object> reportingSummaryList = null;
         try {
             reportingSummaryList = repository.getReportingSummary(userId);
