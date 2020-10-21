@@ -16,7 +16,7 @@ function ReportingEmergencyGeozones($scope, GeoZoneEmergencyRequests) {
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
         $scope.filter.pageSize = 100;
-        $scope.filter.page = 1;
+        $scope.filter.page = 2;
         $scope.reporting = $scope.reporting || 'TOT';
 
         GeoZoneEmergencyRequests.get($scope.getSanitizedParameter(), function (data) {
