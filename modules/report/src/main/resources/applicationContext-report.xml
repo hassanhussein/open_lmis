@@ -677,7 +677,7 @@
                 </bean>
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="emergency-rnr-aggregate-by-geo-zone"/>
-                    <property name="template" value="emergency-rnr-aggregate-by-geo-zone.jasper"/>
+                    <property name="template" value="reporting-emergency-geozone-rnrs.jasper"/>
                     <property name="reportDataProvider" ref="emergencyRnrAggregateByGeozoneDataProvider"/>
                     <property name="id" value="Emergency Rnr Aggregate By Geo-zone"/>
                     <property name="name" value="Emergency Rnr Aggregate By Geo-zone"/>

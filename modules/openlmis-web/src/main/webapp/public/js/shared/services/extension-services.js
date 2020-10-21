@@ -43,6 +43,9 @@ services.factory('SupplyStatusReport', function ($resource) {
 services.factory('NonReportingFacilities', function ($resource) {
     return $resource('/reports/reportdata/non_reporting.json', {}, {});
 });
+services.factory('GeoZoneEmergencyRequests', function ($resource) {
+    return $resource('/reports/reportdata/emergency-order-geozones.json', {}, {});
+});
 services.factory('EmergencyRequests', function ($resource) {
     return $resource('/reports/reportdata/emergencyRequest.json', {}, {});
 });

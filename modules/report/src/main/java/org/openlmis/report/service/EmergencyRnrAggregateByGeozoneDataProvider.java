@@ -47,13 +47,13 @@ public class EmergencyRnrAggregateByGeozoneDataProvider extends ReportDataProvid
         return reportMapper.getEmergencyRnrAggregateCount(getReportFilterData(filterCriteria));
     }
 
-    @Override
-    public String getFilterSummary(Map<String, String[]> params) {
-        return (new StringBuffer()).append(messageService.message("label.audit.actions"))
-                .append(" : ")
-                .append((params.get("action")[0]).isEmpty() ? messageService.message("label.all") :
-                        messageService.message("audit.label."+params.get("action")[0]))
-                .append("\n")
-                .append(filterHelper.getSelectedPeriodRange(params)).toString();
-    }
+//    @Override
+//    public String getFilterSummary(Map<String, String[]> params) {
+//        return (new StringBuffer()).append(messageService.message("label.audit.actions"))
+//                .append(" : ")
+//                .append((params.get("action")[0]).isEmpty() ? messageService.message("label.all") :
+//                        messageService.message("audit.label."+params.get("action")[0]))
+//                .append("\n")
+//                .append(filterHelper.getSelectedPeriodRange(params)).toString();
+//    }
 }
