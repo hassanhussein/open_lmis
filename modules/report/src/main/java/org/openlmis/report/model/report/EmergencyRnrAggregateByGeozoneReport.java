@@ -13,8 +13,10 @@ import org.openlmis.report.model.ResultRow;
 public class EmergencyRnrAggregateByGeozoneReport implements ResultRow {
 
     String geograhicZone;
+    Long geograhicZoneId;
     String programArea;
     String period;
+    Long periodId;
     Integer reported;
 
 }

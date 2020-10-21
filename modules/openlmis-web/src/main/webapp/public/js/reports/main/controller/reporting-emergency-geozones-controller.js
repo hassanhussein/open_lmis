@@ -31,7 +31,9 @@ function ReportingEmergencyGeozones($scope, GeoZoneEmergencyRequests) {
     $scope.openReportingFacility = function (row) {
         var d = new Date(row.period);
         $scope.filter.year=d.getFullYear();
-        $scope.filter.period = row.period;
+        $scope.filter.period = row.periodId;
+        $scope.filter.zone = row.geograhicZoneId;
+        $scope.filter.zoneName = row.geograhicZone;
         var paramString = jQuery.param($scope.filter);
         var url = '/public/pages/reports/main/index.html#reporting-emergency?reportingStatus=true&' + paramString;
         $scope.url = url;

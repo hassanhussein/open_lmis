@@ -21,4 +21,8 @@ public class EmergencyRnrAggregateByGeozoneReportParam extends BaseParam
 
     @RequiredParam
     private String periodEnd;
+
+    @RequiredParam
+    private Long program;
+    private Long zone;
 }
