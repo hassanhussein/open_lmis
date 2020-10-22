@@ -349,8 +349,18 @@
                         </div>
                     </li>
 
-                    <li ng-show="hasPermission('MANAGE_SETTING')">
-                        <a href="/public/pages/admin/sms/index.html">Messages</a>
+                    <li class="has-children">
+                        <a href="javascript: void(0);">Messages</a>
+                        <div class="submenu">
+                            <ul>
+                                <li ng-show="hasPermission('MANAGE_SETTING')">
+                                    <a href="/public/pages/admin/sms/index.html">Sms Messages</a>
+
+                                </li>
+                                <li> <a href="/public/pages/facility-notification/index.html">Facility Messages</a></li>
+                            </ul>
+
+                        </div>
                     </li>
 
                     <li class="has-children">

@@ -1585,4 +1585,8 @@ services.factory('DataRangeConfigurations', function ($resource) {
     return $resource('/data_configuration/:tid', {tid: '@tid'}, {});
 });
 
+services.factory('FacilityNotification', function ($resource) {
+    return $resource('/notification/notifications/:nid', {nid: '@nid'}, {});
+});
+
 
