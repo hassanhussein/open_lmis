@@ -27,6 +27,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import org.aspectj.weaver.ast.Not;
 import org.openlmis.notification.domain.FacilityNotification;
 import org.openlmis.notification.domain.Notifications;
 import org.springframework.stereotype.Repository;
@@ -67,8 +68,8 @@ public interface FacilityNotificationMapper {
 
     @Select({"select * from notifications where id not in" +
             "(select notificationid from facility_notifications " +
-            "where facilitycode= #{code}"})
-    List<FacilityNotification> getNewNotificationByFacilityCode(String code);
+            "where facilitycode= #{code})"})
+    List<Notifications> getNewNotificationByFacilityCode(String code);
 
     @Select({"select n.id,n.code,n.name,n.description,n.message," +
             " fn.id facilitynotificationid,fn.facilityid, fn.facilitycode,fn.downloaded,fn.acknowledged" +

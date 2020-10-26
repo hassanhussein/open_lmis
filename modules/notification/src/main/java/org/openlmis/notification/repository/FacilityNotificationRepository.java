@@ -59,7 +59,7 @@ public class FacilityNotificationRepository {
 
 
 
-    public List<FacilityNotification> getNewNotificationByFacilityCode(String code) {
+    public List<Notifications> getNewNotificationByFacilityCode(String code) {
         return mapper.getNewNotificationByFacilityCode(code);
     }
 

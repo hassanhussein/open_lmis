@@ -61,7 +61,7 @@ public class FacilityNotificationService {
     }
 
 
-    public List<FacilityNotification> getNewNotificationByFacilityCode(String code) {
+    public List<Notifications> getNewNotificationByFacilityCode(String code) {
         return repository.getNewNotificationByFacilityCode(code);
     }
 

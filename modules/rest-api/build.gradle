@@ -20,6 +20,7 @@ buildscript {
 dependencies {
     compile project(':modules:authentication')
     compile project(':modules:core')
+    compile project(':modules:notification')
     compile project(':modules:requisition')
     compile project(':modules:shipment')
     compile project(':modules:stock-management')

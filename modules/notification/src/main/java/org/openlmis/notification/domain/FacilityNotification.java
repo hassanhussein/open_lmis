@@ -21,13 +21,26 @@
  */
 package org.openlmis.notification.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
+import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.NON_EMPTY;
 
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonSerialize(include = NON_EMPTY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FacilityNotification extends BaseModel {
     private Facility facility;
     private Notifications notification;
     private Boolean downloaded;
-    private Boolean recieveAcknowledged;
+    private Boolean acknowledged;
 }

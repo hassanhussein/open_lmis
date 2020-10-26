@@ -3,19 +3,22 @@ function FacilityNotificationController($scope,$routeParams,  $location, $dialog
 
         "typeid": 1,
 
-        "name": "Notification"
+        "name": "Notification",
+        "bgColor":"lightblue"
 
     }, {
 
         "typeid": 2,
 
-        "name": "Warning"
+        "name": "Warning",
+        "bgColor":"yellow"
 
     }, {
 
         "typeid": 3,
 
-        "name": "Error"
+        "name": "Error",
+        "bgColor":"red"
 
     }];
 
@@ -23,19 +26,22 @@ $scope.messageturgencies = [{
 
     "urgencyid": 1,
 
-    "name": "High Urgency"
+    "name": "High Urgency",
+    "bgColor":"red"
 
 }, {
 
     "urgencyid": 2,
 
-    "name": "Mild Urgency"
+    "name": "Mild Urgency",
+    "bgColor":"yellow"
 
 }, {
 
     "urgencyid": 3,
 
-    "name": "Low Urgency"
+    "name": "Low Urgency",
+    "bgColor":"lightblue"
 
 }];
 
