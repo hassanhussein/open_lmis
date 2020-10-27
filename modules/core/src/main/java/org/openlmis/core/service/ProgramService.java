@@ -152,4 +152,8 @@ public class ProgramService {
             this.programRepository.insert(record);
         }
     }
+
+    public List<Program> getAllActive() {
+        return this.programRepository.getAllActivePrograms();
+    }
 }

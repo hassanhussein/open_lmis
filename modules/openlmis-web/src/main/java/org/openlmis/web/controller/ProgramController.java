@@ -144,5 +144,9 @@ public class ProgramController extends BaseController {
     }
     return pullPrograms;
   }
-
+  @RequestMapping(value = "/active-programs", method = GET, headers = ACCEPT_JSON)
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'MANAGE_REGIMEN_TEMPLATE, MANAGE_USER, MANAGE_PRODUCT')")
+  public ResponseEntity<OpenLmisResponse> getAllActivePrograms() {
+    return OpenLmisResponse.response(PROGRAMS, programService.getAllActive());
+  }
 }

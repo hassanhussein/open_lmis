@@ -1592,4 +1592,8 @@ services.factory('FacilityNotification', function ($resource) {
     return $resource('/notification/notifications/:nid', {nid: '@nid'}, {});
 });
 
+services.factory('PendingRequisition', function ($resource) {
+    return $resource('/reportdata/pending-approval.json', {}, {});
+});
+
 

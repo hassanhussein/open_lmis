@@ -380,7 +380,13 @@ public class RequisitionRepository {
   public Integer getCountOfApprovedRequisitionsForCriteria(String searchType, String searchVal, Long userId, String rightName) {
     return requisitionMapper.getCountOfApprovedRequisitionsForCriteria(searchType, searchVal, userId, rightName);
   }
-
+  public Integer getCountOfRequisitionsPendingApprovalForCriteria(
+          Long programId,Long scheduleId,String year, Long periodId,Long zoneId,
+          String searchType, String searchVal, Long userId, String rightName) {
+    return requisitionMapper.getCountOfRequisitionsPendingApprovalForCriteria(
+            programId,scheduleId,year,periodId,zoneId,
+            searchType, searchVal, userId, rightName);
+  }
   public Long getFacilityId(Long id) {
     return requisitionMapper.getFacilityId(id);
   }
@@ -442,4 +448,11 @@ public class RequisitionRepository {
     public void addRejectionReason(RnrRejection rnrRejection) {
     requisitionMapper.insertRnrRejection(rnrRejection);
     }
+
+  public List<Rnr> getPendingApprovalRequisitions(Long programId, Long scheduleId, String year, Long periodId, Long zoneId, String searchType, String searchVal, Integer pageNumber, Integer pageSize, Long userId, String rightName, String sortBy, String sortDirection) {
+  return this.requisitionMapper.getPendingApprovalRequisitions(
+          programId,scheduleId,year,periodId,zoneId,
+          searchType, searchVal, pageNumber, pageSize,
+            userId, rightName, sortBy, sortDirection);
+  }
 }

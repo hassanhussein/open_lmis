@@ -136,4 +136,8 @@ public class ProgramRepository {
     mapper.insert(program);
     return mapper.getById(program.getId());
   }
+
+  public List<Program> getAllActivePrograms() {
+    return mapper.getAllActivePrograms();
+  }
 }

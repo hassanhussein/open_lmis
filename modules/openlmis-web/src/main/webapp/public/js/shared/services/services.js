@@ -134,6 +134,9 @@ services.factory('RequisitionsForViewing', function ($resource) {
     return $resource('/requisitions.json', {}, {});
 });
 
+services.factory('SearchRequisitionsForViewing', function ($resource) {
+    return $resource('/requisitions-pending-approval.json', {}, {});
+});
 services.factory('RequisitionForConvertToOrder', function ($resource) {
     return $resource('/requisitions-for-convert-to-order.json', {}, {});
 });
@@ -579,4 +582,8 @@ services.factory('metabaseNavService', function() {
         setData: setData,
         getData: getData
     };
+});
+
+services.factory('ActivePrograms', function ($resource) {
+    return $resource('/active-programs.json', {}, {});
 });

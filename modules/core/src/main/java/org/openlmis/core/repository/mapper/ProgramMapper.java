@@ -185,4 +185,7 @@ public interface ProgramMapper {
             " where enableIvdForm = true " +
             " order by name")
     List<Program> getAllIvdPrograms();
+
+    @Select("SELECT * FROM programs WHERE active = TRUE")
+    List<Program> getAllActivePrograms();
 }

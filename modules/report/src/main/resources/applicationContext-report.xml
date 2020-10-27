@@ -684,6 +684,15 @@
                     <property name="title" value="report.title.emergency.rnr.geo.zone"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="pending-requisitions"/>
+                    <property name="template" value="pending-requisitions.jasper"/>
+                    <property name="reportDataProvider" ref="pendingRequisitionDataProvider"/>
+                    <property name="id" value=" Requisitions Pending Approval"/>
+                    <property name="name" value="Requisitions Pending Approval"/>
+                    <property name="title" value="report.title.requisitions.pending.approval"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

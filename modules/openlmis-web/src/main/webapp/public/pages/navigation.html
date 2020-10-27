@@ -36,6 +36,10 @@
                         <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/view-requisitions"
                            openlmis-message="link.requisition.view"></a>
                     </li>
+                    <li ng-show="hasPermission('VIEW_REQUISITION')">
+                        <a id="viewRnr" href="/public/pages/logistics/rnr/index.html#/search-requisitions"
+                           openlmis-message="link.requisition.view.pending.approval"></a>
+                    </li>
                     <li class="beak"></li>
                 </ul>
             </div>

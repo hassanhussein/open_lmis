@@ -41,8 +41,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static org.openlmis.core.domain.RightName.APPROVE_REQUISITION;
-import static org.openlmis.core.domain.RightName.CONVERT_TO_ORDER;
+import static org.openlmis.core.domain.RightName.*;
 import static org.openlmis.core.web.OpenLmisResponse.*;
 import static org.openlmis.rnr.dto.RnrDTO.*;
 import static org.openlmis.rnr.service.RequisitionService.NUMBER_OF_PAGES;
@@ -213,6 +212,13 @@ public class RequisitionController extends BaseController {
         return response(RNR_LIST, prepareForView(requisitionService.get(criteria)));
     }
 
+    @RequestMapping(value = "/pending-requisitions", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_REQUISITION')")
+    public ResponseEntity<OpenLmisResponse> getPendingRequisitionsForView(RequisitionSearchCriteria criteria, HttpServletRequest request) {
+        criteria.setUserId(loggedInUserId(request));
+        return response(RNR_LIST, prepareForView(requisitionService.get(criteria)));
+    }
+
     @RequestMapping(value = "/requisitions-for-approval", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'APPROVE_REQUISITION')")
     public ResponseEntity<OpenLmisResponse> listForApproval(HttpServletRequest request) {
@@ -243,6 +249,37 @@ public class RequisitionController extends BaseController {
             return error(new DataException(e.getMessage()), NOT_FOUND);
         }
     }
+
+    @RequestMapping(value = "/requisitions-pending-approval", method = GET, headers = ACCEPT_JSON)
+    @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'VIEW_REQUISITION')")
+    //TODO: move request params into form
+    public ResponseEntity<OpenLmisResponse> loadRequisitionsPendingApproval(
+            @RequestParam(value = "programId", required = true) Long programId,
+            @RequestParam(value = "scheduleId", required = true) Long scheduleId,
+            @RequestParam(value = "year", required = true) String year,
+            @RequestParam(value = "periodId", required = true) Long periodId,
+            @RequestParam(value = "zoneId", required = true) Long zoneId, @RequestParam(value = "searchType", required = false, defaultValue = SEARCH_ALL) String searchType,
+            @RequestParam(value = "searchVal", required = false, defaultValue = "") String searchVal,
+            @RequestParam(value = "page", required = true, defaultValue = "1") Integer page,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "submittedDate") String sortBy,
+            @RequestParam(value = "sortDirection", required = false, defaultValue = "asc") String sortDirection,
+            HttpServletRequest request){
+        try {
+            Integer numberOfPages = requisitionService.getNumberOfPagesOfPendingApprovalRequisitionsForCriteria(
+                    programId,scheduleId,year,periodId,zoneId,
+                    searchType, searchVal, loggedInUserId(request), VIEW_REQUISITION);
+            List<Rnr> approvedRequisitions = requisitionService.getRequisitionsPendingApprovalForCriteriaAndPageNumber(
+                    programId,scheduleId,year,periodId,zoneId,
+                    searchType, searchVal, page, numberOfPages, loggedInUserId(request), CONVERT_TO_ORDER, sortBy, sortDirection);
+
+            OpenLmisResponse response = new OpenLmisResponse(RNR_LIST, approvedRequisitions);
+            response.addData(NUMBER_OF_PAGES, numberOfPages);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return error(new DataException(e.getMessage()), NOT_FOUND);
+        }
+    }
+
 
     @RequestMapping(value = "/logistics/periods", method = GET, headers = ACCEPT_JSON)
     @PreAuthorize("@permissionEvaluator.hasPermission(principal, 'CREATE_REQUISITION, AUTHORIZE_REQUISITION')")

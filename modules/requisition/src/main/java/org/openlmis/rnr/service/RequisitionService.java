@@ -761,9 +761,9 @@ public class RequisitionService {
         logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
     }
 
-    public void rejectRnR(Long rnrId,String reasons, Long userId) {
+    public void rejectRnR(Long rnrId, String reasons, Long userId) {
         Rnr rnr = this.getFullRequisitionById(rnrId);
-        RnrRejection rnrRejection= new RnrRejection(rnr.getStatus(),RnrStatus.INITIATED,reasons);
+        RnrRejection rnrRejection = new RnrRejection(rnr.getStatus(), RnrStatus.INITIATED, reasons);
         rnrRejection.setRnr(rnr);
         rnr.setModifiedBy(userId);
         rnr.setStatus(RnrStatus.INITIATED);
@@ -773,7 +773,7 @@ public class RequisitionService {
     }
 
     public void addRejectionReason(RnrRejection rnrRejection) {
-           requisitionRepository.addRejectionReason(rnrRejection);
+        requisitionRepository.addRejectionReason(rnrRejection);
     }
 
     public Integer findM(ProcessingPeriod period) {
@@ -828,5 +828,32 @@ public class RequisitionService {
 
     }
 
+    public Integer getNumberOfPagesOfPendingApprovalRequisitionsForCriteria(Long programId, Long scheduleId, String year, Long periodId, Long zoneId, String searchType, String searchVal, Long userId, String rightName) {
+        Integer approvedRequisitionsByCriteria =
+                requisitionRepository.getCountOfRequisitionsPendingApprovalForCriteria(programId, scheduleId, year, periodId, zoneId,
+                        searchType, searchVal,
+                        userId, rightName);
+        Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
+        return (int) Math.ceil(approvedRequisitionsByCriteria.doubleValue() / pageSize.doubleValue());
+    }
+
+    public List<Rnr> getRequisitionsPendingApprovalForCriteriaAndPageNumber(Long programId, Long scheduleId, String year, Long periodId, Long zoneId,
+                                                                            String searchType, String searchVal, Integer pageNumber,
+                                                                            Integer totalNumberOfPages, Long userId, String rightName,
+                                                                            String sortBy, String sortDirection) {
+        if (pageNumber.equals(1) && totalNumberOfPages.equals(0))
+            return new ArrayList<>();
+
+        if (pageNumber <= 0 || pageNumber > totalNumberOfPages)
+            throw new DataException("error.page.not.found");
+
+        Integer pageSize = Integer.parseInt(staticReferenceDataService.getPropertyValue(CONVERT_TO_ORDER_PAGE_SIZE));
+
+        List<Rnr> requisitions = requisitionRepository.getPendingApprovalRequisitions(
+                programId, scheduleId, year, periodId, zoneId,
+                searchType, searchVal,
+                pageNumber, pageSize, userId, rightName, sortBy, sortDirection);
+        return requisitions;
+    }
 }
 
