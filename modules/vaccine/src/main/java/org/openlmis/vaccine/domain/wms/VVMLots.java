@@ -26,7 +26,7 @@ public class VVMLots extends BaseModel {
 
     private Integer countedQuantity;
 
-    private Integer passQuantity;
+    private Long passQuantity;
 
     private Long passLocationId;
 

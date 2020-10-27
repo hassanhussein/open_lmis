@@ -32,13 +32,13 @@ public interface InspectionLotMapper {
     void update(InspectionLot lot);
 
     @Insert("INSERT INTO public.inspection_lots(\n" +
-            "           inspectionLineItemId, lotNumber, passQuantity, passLocationId,vvmStatus,expiryDate,faillocationid,failquantity,failreason,failVvmId, \n" +
+            "           inspectionLineItemId, lotNumber,passQuantity,countedQuantity, passLocationId,vvmStatus,expiryDate,faillocationid,failquantity,failreason,failVvmId, \n" +
             "             createdDate,\n" +
             "             modifiedBy, modifiedDate)\n" +
-            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate},#{failLocationId},#{failQuantity},#{failReason},#{failVvmId}, \n" +
+            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{passQuantity},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate},#{failLocationId},#{failQuantity},#{failReason},#{failVvmId}, \n" +
             "           now(),  \n" +
             "            #{modifiedBy}, now()) on conflict(inspectionLineItemId,lotNumber,passLocationId,vvmStatus) DO UPDATE \n" +
-            "SET passQuantity=#{quantity},faillocationid=#{failLocationId},failquantity=#{failQuantity},failreason=#{failReason},failVvmId=#{failVvmId};")
+            "SET passQuantity=#{passQuantity},faillocationid=#{failLocationId},failquantity=#{failQuantity},failreason=#{failReason},failVvmId=#{failVvmId};")
     @Options(useGeneratedKeys = true)
     void updateOrSave(VVMLots lots);
 

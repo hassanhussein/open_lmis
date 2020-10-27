@@ -210,6 +210,7 @@ function TransferOutController($scope,$location, $document,$window,configuration
                            }
                    });
               });
+              console.log(data);
               StockEvent.save({facilityId:homeFacility.id},events, function (data) {
                   if(data.success !==null)
                   {

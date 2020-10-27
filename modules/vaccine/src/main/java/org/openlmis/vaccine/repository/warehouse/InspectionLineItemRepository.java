@@ -24,17 +24,18 @@ public class InspectionLineItemRepository {
         mapper.update(lineItem);
 
         if (!lineItem.getLots().isEmpty()) {
+            //System.out.println("ID:"+lineItem.getId());
+            inspectionLotRepository.deleteLotByInspectionLineItem(lineItem.getId());
 
             for (InspectionLot lot : lineItem.getLots()) {
 
-                inspectionLotRepository.deleteLotByInspectionLineItem(lot.getInspectionLineItemId());
 
                 if(lot.getPassQuantity()==null){
                     lot.setPassQuantity(lot.getReceivedQuantity());
                 }
 
                 inspectionLotRepository.update(lot);
-                //System.out.println("passed: "+lot.getVvm());
+                //System.out.println("passed: "+lot);
                 if(lot.getVvm()!=null) {
                     for (VVMLots lotVVm : lot.getVvm()) {
 
@@ -55,6 +56,7 @@ public class InspectionLineItemRepository {
                         // System.out.println("Failed:"+failed.getQuantity());
                         //lotVVm.set
                         if (lotVVm.getQuantity() != null) {
+                            lotVVm.setPassQuantity(lotVVm.getQuantity());
                             inspectionLotRepository.updateOrSave(lotVVm);
                         }
 
