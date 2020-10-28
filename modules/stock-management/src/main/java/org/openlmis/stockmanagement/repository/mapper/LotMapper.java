@@ -37,7 +37,8 @@ public interface LotMapper {
   })
   Lot getByObject(Lot lot);
 
-  @Select("SELECT DISTINCT ON(lot_location_entries.lotId) *,quantity as quantityOnHand " +
+  //The commented query is for WMS ..please create a separate function
+/*  @Select("SELECT DISTINCT ON(lots_on_hand.lotId) *,quantity as quantityOnHand " +
       " FROM lot_location_entries" +
       " WHERE stockcardid = #{stockCardId}" +
       "   AND lotid = #{lotId}")
@@ -45,6 +46,16 @@ public interface LotMapper {
       @Result(
           property = "lot", column = "lotId", javaType = Lot.class,
           one = @One(select = "getById"))
+  })*/
+
+  @Select("SELECT DISTINCT ON(lots_on_hand.lotId) * " +
+          " FROM lots_on_hand" +
+          " WHERE stockcardid = #{stockCardId}" +
+          "   AND lotid = #{lotId}")
+  @Results({
+          @Result(
+                  property = "lot", column = "lotId", javaType = Lot.class,
+                  one = @One(select = "getById"))
   })
   LotOnHand getLotOnHandByStockCardAndLot(@Param("stockCardId")Long stockCardId, @Param("lotId")Long lotId);
 
