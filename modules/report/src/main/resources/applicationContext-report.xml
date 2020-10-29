@@ -693,6 +693,15 @@
                     <property name="title" value="report.title.requisitions.pending.approval"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="requisition-group-member-report"/>
+                    <property name="template" value="requisition-group-member-report.jasper"/>
+                    <property name="reportDataProvider" ref="requisitionGroupMemberReportDataProvider"/>
+                    <property name="id" value=" Requisition Group Schedule Member Report"/>
+                    <property name="name" value="Requisition Group Schedule Member Report"/>
+                    <property name="title" value="report.title.requisitions.pending.approval"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

@@ -1596,4 +1596,8 @@ services.factory('PendingRequisition', function ($resource) {
     return $resource('/reportdata/pending-approval.json', {}, {});
 });
 
+services.factory('RequisitionScheduleGroupMembers', function ($resource) {
+    return $resource('/reports/reportdata/requisition-group-members.json', {}, {});
+});
+
 

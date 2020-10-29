@@ -67,6 +67,7 @@ function SearchRnrListController($scope, programs, years,TreeGeographicZoneListB
     }
 
     var selectionFunc = function () {
+        // $scope.mySelectedRows=$scope.rnrListGrid.selection.getSelectedRows();
         $scope.$parent.rnrStatus = $scope.selectedItems[0].status;
         $scope.openRequisition();
     };
@@ -102,10 +103,12 @@ function SearchRnrListController($scope, programs, years,TreeGeographicZoneListB
     };
 
     $scope.openRequisition = function () {
+        var startDate= new Date($scope.selectedItems[0].period.startDate);
+        var endDate= new Date($scope.selectedItems[0].period.endDate);
         var data = {
-            facilityId: $scope.selectedFacilityId,
-            dateRangeStart: $scope.startDate,
-            dateRangeEnd: $scope.endDate,
+            facilityId: startDate,
+            dateRangeStart: endDate,
+            dateRangeEnd: $scope.selectedItems[0].period.endDate,
             programs: $scope.programs
         };
         if ($scope.selectedProgramId) data.programId = $scope.selectedProgramId;

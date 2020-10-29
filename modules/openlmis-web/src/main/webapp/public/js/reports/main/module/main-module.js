@@ -196,6 +196,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: ReportingEmergencyGeozones,
             templateUrl: 'partials/reporting-emergency-geographic-zone.html',
             reloadOnSearch: false
+        }).when('/requisition-schedule-group-member', {
+            controller: RequisitionScheduleGroupMemberController,
+            templateUrl: 'partials/requisition-schedule-group-members.html',
+            reloadOnSearch: false
         }).otherwise({redirectTo: '/adjustment-summary'});
     }]).config(function (angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');
