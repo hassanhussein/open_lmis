@@ -111,7 +111,21 @@
   </div>
 
   <br/>
-
+  <div class="row-fluid">
+    <div class="span12">
+      <label openlmis-message="label.product.category"></label>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <select ui-select2 placeholder="{{ productCategoryOptionMessage() }}"
+            id="productCategoriesList" class="span3"
+            ng-model="selectedProductCategory" >
+      <option value=""></option>
+      <option ng-repeat="category in productCategories | orderBy: 'displayOrder'"
+              value="{{category}}">{{category.name}}
+      </option>
+    </select>
+  </div>
   <div class="row-fluid">
     <div class="span12">
       <label openlmis-message="label.requisition.type"></label>
