@@ -18,19 +18,30 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EquipmentType extends BaseModel {
+public class EquipmentType extends BaseModel implements Importable {
 
+  @ImportField(type = "String", name = "Name")
   private String name;
 
+  @ImportField(type = "String", name = "Code")
   private String code;
 
+  @ImportField(type = "Boolean", name = "Is ColdChain")
   private boolean isColdChain;
 
+  @ImportField(type = "Boolean", name = "Is BioChemistry")
   private Boolean isBioChemistry;
+
+  @ImportField(type = "String", name = "Equipment Category Code", nested = "code")
+  EquipmentCategory equipmentCategory;
+
+  private Long categoryId;
 
 }

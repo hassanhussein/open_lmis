@@ -70,4 +70,16 @@ public class EquipmentCategoryService {
         }
     }
 
+    public void uploadEquipment(EquipmentCategory equipmentCategory) {
+
+        Discipline discipline = repository.getDisciplineByCode(equipmentCategory.getDiscipline().getCode());
+        if(discipline != null) {
+            equipmentCategory.setDisciplineId(discipline.getId());
+            if (equipmentCategory.getId() == null) {
+                insertEquipmentCategory(equipmentCategory);
+            } else {
+                updateEquipmentCategory(equipmentCategory);
+            }
+        }
+    }
 }
