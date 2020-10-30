@@ -227,6 +227,7 @@ private DataHealthCheckMapper dataHealthCheckMapper;
         for (PatientLineItem patientLineItem : patientLineItems) {
             patientLineItem.setRnrId(requisition.getId());
             patientLineItem.setModifiedBy(requisition.getModifiedBy());
+            patientLineItem.setSkipped(!patientLineItem.getCategory().isDisplay());
             patientLineItemMapper.insert(patientLineItem);
         }
     }

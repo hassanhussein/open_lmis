@@ -1,0 +1,1 @@
+update patient_categories set display=true where code in ('TB', 'LEPROSY');

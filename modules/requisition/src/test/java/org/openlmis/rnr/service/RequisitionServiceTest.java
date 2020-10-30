@@ -200,7 +200,8 @@ public class RequisitionServiceTest {
 
 
     List<Patient> patients = new ArrayList<>();
-    patients.add(new Patient("name", "code", 6L, true,new PatientCategory("code", "name", 1),1 ));
+    patients.add(new Patient("name", "code", 6L, true,new PatientCategory("code", "name", 1,
+            false),1 ));
     requisition.setPatients(patients);
 
     List<PatientLineItem> patientLineItems = new ArrayList<>();
@@ -1506,7 +1507,8 @@ public class RequisitionServiceTest {
     List<Regimen> regimens = mock(List.class);
 
     List<Patient> patients = new ArrayList<>();
-    patients.add(new Patient("name", "code", 6L, true,new PatientCategory("code", "name", 1),1 ));
+    patients.add(new Patient("name", "code", 6L, true,new PatientCategory("code", "name", 1,
+            false),1 ));
 
     Rnr previousRnr = new Rnr();
     ProcessingPeriod previousPeriod = new ProcessingPeriod(3L);

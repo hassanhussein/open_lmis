@@ -14,9 +14,9 @@ function CreatePatientLineItemController($scope) {
         return !((index > 0) && ($scope.rnr.patientLineItems.length > absIndex) && ($scope.rnr.patientLineItems[absIndex].category.name == $scope.rnr.patientLineItems[absIndex - 1].category.name));
     };
 
-    $scope.disableInput = function(colId, rowId, code) {
 
-    if(code =='MDR-REGIMEN-1' || code =='MDR-REGIMEN-2' || code =='MDR-REGIMEN-3')
+    $scope.disableInputMDR = function(colId, rowId, code) {
+    if(code =='MDR-REGIMEN-1' || code =='MDR-REGIMEN-2' || code =='MDR-REGIMEN-3' || code =='MDR-REGIMEN-4' )
     {
     if (rowId===1 && colId <=18)
          return false;
@@ -24,10 +24,14 @@ function CreatePatientLineItemController($scope) {
          return false;
     else if (rowId===3 && colId <=9)
         return false;
+    else if (rowId>3)
+         return false;
     else
         return true;
     }
+    };
 
+    $scope.disableInput = function(colId, rowId, code) {
         if (colId < 7)
             return false;
       else if ((colId >= 6 && rowId === 3))
@@ -35,6 +39,39 @@ function CreatePatientLineItemController($scope) {
         else if (colId > 6 && rowId != 3 && (rowId === 1 || rowId === 2 || rowId === 4 || rowId === 5 || rowId === 7 || rowId === 9))
             return true;
     };
+
+
+      $scope.showAddSkippedRegimensModal = function(){
+        $scope.addSkippedProductsModal = true;
+      };
+
+       $scope.unskipRegimens = function(rnr){
+        var selected = _.where(rnr.patientLineItems, {unskip: true});
+             _.each(selected, function (lineItem) {
+                            lineItem.skipped = false;
+                            _.extend(_.findWhere($scope.rnr.patientLineItems, { code: lineItem.code }), lineItem);
+
+               });
+
+
+     $scope.saveRnrForm.$dirty = true;
+     $scope.$parent.saveRnr();
+
+     if(rnr.fullSupplyLineItems.length === 0){
+       rnr.fullSupplyLineItems = $scope.$parent.page[$scope.$parent.visibleTab];
+     }
+
+     angular.forEach(rnr.skippedLineItems, function(li){
+       if(!li.unskip){
+         li.unskip = false;
+       }
+     });
+
+     rnr.skippedLineItems = _.where(rnr.skippedLineItems, {unskip: false});
+     window.window.adjustHeight();
+     // all is said and done, close the dialog box
+     $scope.addSkippedProductsModal = false;
+        };
 
       $scope.setSkipAll = function(value){
         _.each($scope.page.patient, function (patient) {
