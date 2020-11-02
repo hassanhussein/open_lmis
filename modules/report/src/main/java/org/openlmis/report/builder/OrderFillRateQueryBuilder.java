@@ -58,6 +58,10 @@ public class OrderFillRateQueryBuilder {
                     " or r.provinceid = " + param.getZone() + ")";
         }
         predicate = predicate + getEmergencyPredictate(param);
+        if(param.getProductCategory()!=null&& !param.getProductCategory().equals(0L)){
+           predicate=predicate+ " and r.categoryid="+param.getProductCategory() +" ";
+
+        }
         if (multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer") != null) {
             predicate = predicate + " and " + multiProductFilterBy(param.getProducts(), "r.productid", "r.tracer");
         }
