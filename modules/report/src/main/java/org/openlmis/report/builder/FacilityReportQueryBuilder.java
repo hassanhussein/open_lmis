@@ -50,20 +50,22 @@ public class FacilityReportQueryBuilder {
         if (filter.getFacilityType() != 0) {
             WHERE(facilityTypeIsFilteredBy("F.typeId"));
         }
-        if (filter.getPeriodStart() != null && !filter.getPeriodStart().trim().isEmpty()) {
+
+      /*  if (filter.getPeriodStart() != null && !filter.getPeriodStart().trim().isEmpty()) {
             WHERE(startDateFilteredBy("ps.startdate", filter.getPeriodStart().trim()));
         }
         if (filter.getPeriodEnd() != null && !filter.getPeriodEnd().trim().isEmpty()) {
             WHERE(endDateFilteredBy("ps.startdate", filter.getPeriodEnd().trim()));
-        }
-        if (filter.getFacilityOwner() != 0) {
+        }*/
+       /* if (filter.getFacilityOwner() != 0) {
             WHERE(facilityOwnerIsFilteredBy("FS.ownerid"));
-        }
+        }*/
         if (filter.getProgram() != 0) {
             WHERE(programIsFilteredBy("ps.programId"));
             WHERE("F.id in (select facility_id from vw_user_facilities" +
                     " where user_id = cast( #{userId} as int4) and program_id = cast(#{filterCriteria.program} as int4))");
-            WHERE("F.id in (select m.facilityid from requisition_group_members m where m.requisitionGroupId in (select rpgs.requisitionGroupId from requisition_group_program_schedules rpgs where rpgs.programId = #{filterCriteria.program}) )");
+            WHERE("F.id in (select m.facilityid from requisition_group_members m where m.requisitionGroupId in (select rpgs.requisitionGroupId from requisition_group_program_schedules rpgs where" +
+                    " rpgs.programId = #{filterCriteria.program} and rpgs.scheduleid = #{filterCriteria.schedule}) )");
             WHERE("ps.active = true");
         }
         String query = SQL();

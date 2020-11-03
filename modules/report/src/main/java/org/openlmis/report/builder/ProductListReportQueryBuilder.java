@@ -29,17 +29,18 @@ public class ProductListReportQueryBuilder {
 
     private static String writePredicates(Map params, Long userId) {
 
-        String predicate = "  WHERE ";
-        String facilityTypeId = params.get("facilityType") == null ? null : ((String[]) params.get("facilityType"))[0];
-        String program = params.get("program") == null ? null : ((String[]) params.get("program"))[0];
-
+       String predicate = "  WHERE ";
+       String facilityTypeId = params.get("facilityType") == null ? null : ((String[]) params.get("facilityType"))[0];
+       String program = params.get("program") == null ? null : ((String[]) params.get("program"))[0];
+       String productCategory = params.get("productCategory") == null ? null : ((String[]) params.get("productCategory"))[0];
 
        predicate += " fap.facilityTypeId = " + facilityTypeId;
 
-        predicate += " and pp.programId = " + program;
+       predicate += " and pp.programId = " + program;
 
+       predicate += " and pp.productCategoryId = " + productCategory;
 
-        return predicate;
+       return predicate;
     }
 
 

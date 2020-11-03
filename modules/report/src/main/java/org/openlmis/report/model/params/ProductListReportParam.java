@@ -10,4 +10,6 @@ public class ProductListReportParam extends BaseParam implements ReportParameter
 
     private Long facilityType;
 
+    private Long productCategory;
+
 }
