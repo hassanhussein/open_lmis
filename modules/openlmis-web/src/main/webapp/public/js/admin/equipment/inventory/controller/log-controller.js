@@ -10,13 +10,19 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function LogController($scope, $location, $routeParams, EquipmentInventory, EquipmentLogs,EquipmentLogUpdateStatus, $dialog) {
+function LogController($scope,$window, $location, $routeParams, EquipmentInventory, EquipmentLogs,EquipmentLogUpdateStatus, $dialog) {
   EquipmentInventory.get({
     id: $routeParams.id
   }, function (data) {
     $scope.inventory = data.inventory;
   });
 
+  $scope.print = function (reportId) {
+
+   var url = '/equipment/maintenance-request/' + parseInt(reportId.id,10) + '/print-list';
+   $window.open(url, '_blank');
+
+   };
 
   $scope.verification = function (row){
 

@@ -13,7 +13,9 @@ package org.openlmis.web.controller.equipment;
 
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.EquipmentCategory;
+import org.openlmis.equipment.domain.MaintenanceLog;
 import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.dto.Log;
 import org.openlmis.equipment.service.MaintenanceRequestService;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
@@ -22,10 +24,12 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @RequestMapping(value="/equipment/maintenance-request/")
@@ -99,4 +103,15 @@ public class MaintenanceRequestController extends BaseController {
 
     return OpenLmisResponse.success("Approved succesifull");
   }
+
+  @RequestMapping(value = "{id}/print-list", method = GET, headers = ACCEPT_PDF)
+  public ModelAndView mantainanceHistory(@PathVariable (value = "id") Long id, HttpServletRequest request) {
+    ModelAndView modelAndView = new ModelAndView("equipmentHistory");
+
+    List<Log> log = service.getFullHistory(id);
+    modelAndView.addObject("history",log);
+
+    return modelAndView;
+  }
+
 }
