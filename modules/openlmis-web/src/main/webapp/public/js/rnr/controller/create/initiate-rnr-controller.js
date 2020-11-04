@@ -8,9 +8,8 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function InitiateRnrController($scope, $location, productCategories, Requisitions, AuthorizationService, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService, $timeout) {
+function InitiateRnrController($scope, $location, ProgramProductCategories, Requisitions, AuthorizationService, PeriodsForFacilityAndProgram, UserFacilityList, CreateRequisitionProgramList, UserSupervisedFacilitiesForProgram, FacilityProgramRights, navigateBackService, messageService, $timeout) {
     var isNavigatedBack;
-    $scope.productCategories = productCategories;
 
     $scope.selectedRnrType = {"name": "Regular", "emergency": false};
 
@@ -96,6 +95,18 @@ function InitiateRnrController($scope, $location, productCategories, Requisition
         } else {
             $scope.facilities = null;
             $scope.selectedFacilityId = null;
+        }
+    };
+    $scope.loadProductCategoriesForProgram = function () {
+        if ($scope.selectedProgram.id) {
+            ProgramProductCategories.get({programId: $scope.selectedProgram.id}, function (data) {
+                $scope.productCategories = data.productCategoryList;
+                $scope.selectedProductCategoryId = null;
+                $scope.error = null;
+            }, {});
+        } else {
+            $scope.productCategories = null;
+            $scope.selectedProductCategoryId = null;
         }
     };
 
@@ -203,6 +214,16 @@ function InitiateRnrController($scope, $location, productCategories, Requisition
     $scope.productCategoryOptionMessage = function () {
         return optionMessage($scope.programs, messageService.get("label.select.product.category "));
     };
+    $scope.refreshForProgram=function () {
+        $scope. loadFacilitiesForProgram();
+        $scope.loadProductCategoriesForProgram();
+
+    };
+    $scope.refreshForProgramForMyfacility=function () {
+        $scope. loadPeriods();
+        $scope.loadProductCategoriesForProgram();
+
+    };
     $scope.loadPeriods = function () {
         $scope.periodGridData = [];
         if (!($scope.selectedProgram && $scope.selectedProgram.id && $scope.selectedFacilityId)) {
@@ -295,15 +316,5 @@ function InitiateRnrController($scope, $location, productCategories, Requisition
 InitiateRnrController.resolve = {
     preAuthorize: function (AuthorizationService) {
         AuthorizationService.preAuthorize('CREATE_REQUISITION', 'AUTHORIZE_REQUISITION');
-    },
-    productCategories: function ($q, $timeout, ProductCategories) {
-        var deferred = $q.defer();
-
-        $timeout(function () {
-            ProductCategories.get({}, function (data) {
-                deferred.resolve(data.productCategoryList);
-            }, {});
-        }, 100);
-        return deferred.promise;
     }
 };

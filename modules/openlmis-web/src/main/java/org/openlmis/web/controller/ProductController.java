@@ -11,9 +11,13 @@
 package org.openlmis.web.controller;
 
 import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.DosageUnit;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.report.model.dto.*;
 import org.openlmis.web.form.ProductDTO;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -154,6 +158,10 @@ public class ProductController extends BaseController {
     return new ProductDTO(product, product.getModifiedDate(), programProducts, productPriceSchedules);
   }
 
+  @RequestMapping(value = "/products/{programId}/productCategories.json", method = GET, headers = BaseController.ACCEPT_JSON)
+  public List<ProductCategory> getProductCategoriesForPrograms(@PathVariable(value = "programId") int programId) {
+    return this.productCategoryService.getCategoriesForProgram(programId);
+  }
 
 
 }

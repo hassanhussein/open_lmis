@@ -75,4 +75,10 @@ public class ProductCategoryRepository {
   public ProductCategory getById(Long id){
     return mapper.getById(id);
   }
+
+    public List<ProductCategory> getForProgram(int programId) {
+    return  this.mapper.getForProgramUsingProgramProductCategory(programId);
+    }
+
+
 }

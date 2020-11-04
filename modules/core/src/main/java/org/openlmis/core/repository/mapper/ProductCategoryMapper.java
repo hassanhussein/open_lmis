@@ -48,4 +48,16 @@ public interface ProductCategoryMapper {
 
   @Select("SELECT * FROM product_categories")
   public List<ProductCategory> getAll();
+
+
+
+  @Select("SELECT distinct pc.id, pc.name, pc.code,pc.displayOrder " +
+          "   FROM " +
+          "       product_categories pc " +
+          "       join program_products pp on pp.productcategoryid = pc.id  " +
+          "   WHERE pp.programid = #{programId} and pp.active = true " +
+          " order by pc.displayOrder")
+  List<ProductCategory> getForProgramUsingProgramProductCategory(@Param("programId") int programId);
+
+
 }

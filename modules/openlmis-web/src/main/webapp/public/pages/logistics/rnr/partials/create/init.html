@@ -60,7 +60,7 @@
     <div class="row-fluid">
       <select ui-select2 placeholder="{{ programOptionMessage() }}"
               id="programListMyFacility" class="span3"
-              ng-model="selectedProgram.id" ng-change="loadPeriods()">
+              ng-model="selectedProgram.id" ng-change="refreshForProgramForMyfacility()">
         <option value=""></option>
         <option ng-repeat="program in programs | orderBy: 'name'"
                 value="{{ program.id }}">{{ program.name }}
@@ -80,7 +80,7 @@
     <div class="row-fluid">
       <select ui-select2 placeholder="{{ programOptionMessage() }}"
               class="span3" id="programListSupervisedFacility"
-              ng-change="loadFacilitiesForProgram();"
+              ng-change="refreshForProgram();"
               ng-model="selectedProgram.id">
         <option value=""></option>
         <option ng-repeat="program in programs | orderBy: 'name'"

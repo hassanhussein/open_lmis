@@ -458,6 +458,9 @@ services.factory('ProductCategories', function ($resource) {
     return $resource('/products/categories.json', {}, {});
 });
 
+services.factory('ProgramProductCategories', function ($resource) {
+    return $resource('/products/products/:programId/productCategories.json', {}, {});
+});
 
 services.factory('EquipmentOperationalStatus', function ($resource) {
     return $resource('/equipment/type/operational-status.json', {}, {});

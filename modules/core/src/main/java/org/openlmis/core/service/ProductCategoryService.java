@@ -26,38 +26,45 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductCategoryService {
 
-  private ProductCategoryRepository repository;
+    private ProductCategoryRepository repository;
+    @Autowired
+    private ConfigurationSettingService configurationService;
 
-  @Autowired
-  public ProductCategoryService(ProductCategoryRepository repository) {
-    this.repository = repository;
-  }
-
-  public Long getProductCategoryIdByCode(String code) {
-    return repository.getIdByCode(code);
-  }
-
-  public ProductCategory getByCode(String code) {
-    return repository.getByCode(code);
-  }
-
-  public void save(ProductCategory productCategory) {
-    if (productCategory.getId() != null) {
-      repository.update(productCategory);
-      return;
+    @Autowired
+    public ProductCategoryService(ProductCategoryRepository repository) {
+        this.repository = repository;
     }
-    repository.insert(productCategory);
-  }
 
-  public ProductCategory getExisting(ProductCategory productCategory) {
-    return repository.getExisting(productCategory);
-  }
+    public Long getProductCategoryIdByCode(String code) {
+        return repository.getIdByCode(code);
+    }
 
-  public ProductCategory getById(Long id){
-    return repository.getById(id);
-  }
+    public ProductCategory getByCode(String code) {
+        return repository.getByCode(code);
+    }
 
-  public List<ProductCategory> getAll() {
-    return repository.getAll();
-  }
+    public void save(ProductCategory productCategory) {
+        if (productCategory.getId() != null) {
+            repository.update(productCategory);
+            return;
+        }
+        repository.insert(productCategory);
+    }
+
+    public ProductCategory getExisting(ProductCategory productCategory) {
+        return repository.getExisting(productCategory);
+    }
+
+    public ProductCategory getById(Long id) {
+        return repository.getById(id);
+    }
+
+    public List<ProductCategory> getAll() {
+        return repository.getAll();
+    }
+
+    public List<ProductCategory> getCategoriesForProgram(int programId) {
+        return this.repository.getForProgram(programId);
+
+    }
 }
