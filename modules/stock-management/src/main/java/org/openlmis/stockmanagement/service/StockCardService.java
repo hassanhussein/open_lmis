@@ -3,9 +3,9 @@
  * Copyright © 2013 VillageReach
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
- * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
 
 package org.openlmis.stockmanagement.service;
@@ -13,7 +13,10 @@ package org.openlmis.stockmanagement.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.*;
-import org.openlmis.stockmanagement.domain.*;
+import org.openlmis.stockmanagement.domain.Lot;
+import org.openlmis.stockmanagement.domain.LotOnHand;
+import org.openlmis.stockmanagement.domain.StockCard;
+import org.openlmis.stockmanagement.domain.StockCardEntry;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.repository.StockCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,10 +63,10 @@ public class StockCardService {
       Lot l = lotRepository.getOrCreateLot(lot);
       lotOnHand = LotOnHand.createZeroedLotOnHand(l, stockCard);
       if(lot.getVvmId() != null)
-         lotOnHand.setVvmId(lot.getVvmId());
+        lotOnHand.setVvmId(lot.getVvmId());
       System.out.println(lot.getVvmId());
       System.out.println("----------------------------------------------------------");
-      //lotRepository.saveLotOnHand(lotOnHand);
+      lotRepository.saveLotOnHand(lotOnHand);
     }
 
     Objects.requireNonNull(lotOnHand);
@@ -115,7 +118,6 @@ public class StockCardService {
   public LotOnHand getLotOnHand(Long lotId, Lot lotObj, String productCode, StockCard card, StringBuilder str) {
     LotOnHand lotOnHand = null;
     if (null != lotId) { // Lot specified by id
-     // System.out.println("Lot unknown: "+card.getId()+" "+lotId);
       lotOnHand = lotRepository.getLotOnHandByStockCardAndLot(card.getId(), lotId);
       if (null == lotOnHand) {
         str.append("error.lot.unknown");
@@ -155,15 +157,10 @@ public class StockCardService {
     card.addToTotalQuantityOnHand(entry.getQuantity());
     repository.persistStockCardEntry(entry);
 
-    LocationEntry lotOnHand = entry.getLots();
+    LotOnHand lotOnHand = entry.getLotOnHand();
     if (null != lotOnHand) {
-     // System.out.println("Stock on hand not empty");
-      lotOnHand.setInputType("DEBIT");
-
-      //lotOnHand.addToQuantityOnHand(entry.getQuantity());
-      lotRepository.saveLotOnHandDistribution(lotOnHand);
-    }else{
-      //System.out.println("Stock on hand empty");
+      lotOnHand.addToQuantityOnHand(entry.getQuantity());
+      lotRepository.saveLotOnHand(lotOnHand);
     }
     repository.updateStockCard(card);
 
@@ -171,10 +168,7 @@ public class StockCardService {
 
   @Transactional
   public void addStockCardEntries(List<StockCardEntry> entries) {
-
     for (StockCardEntry entry : entries) {
-
-
       addStockCardEntry(entry);
     }
   }
@@ -199,12 +193,12 @@ public class StockCardService {
     return lotRepository.getLotOnHandBy(stockCardId,lotId);
   }
 
-  public void updateLotOnHand(LocationEntry lotOnHand) {
+  public void updateLotOnHand(LotOnHand lotOnHand) {
     lotRepository.updateLotOnHand(lotOnHand);
   }
 
   public Integer insertLotOnHandBy(LotOnHand lotOnHand) {
-     return lotRepository.insertLotOnHandBy(lotOnHand);
+    return lotRepository.insertLotOnHandBy(lotOnHand);
   }
 
 }

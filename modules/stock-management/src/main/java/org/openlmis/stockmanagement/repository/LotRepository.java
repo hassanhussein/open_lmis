@@ -47,10 +47,21 @@ public class LotRepository {
   }
 
   public void saveLotOnHandDistribution(LocationEntry lotOnHand){
-    mapper.insertLotOnHand(lotOnHand);
+    //Lot On hand insertLotOnHand function need to be reference insert lot on hand entry function for WMS
+   // mapper.insertLotOnHand(lotOnHand);
   }
 
-  public void saveLotOnHand(LocationEntry lotOnHand) {
+  //Please add separate lot on hand for WMS..I have commented the WMS function
+
+ /* public void saveLotOnHand(LocationEntry lotOnHand) {
+    if (null == lotOnHand.getId()) {
+      mapper.insertLotOnHand(lotOnHand);
+    } else {
+      mapper.updateLotOnHand(lotOnHand);
+    }
+  }*/
+
+  public void saveLotOnHand(LotOnHand lotOnHand) {
     if (null == lotOnHand.getId()) {
       mapper.insertLotOnHand(lotOnHand);
     } else {
@@ -82,7 +93,8 @@ public class LotRepository {
      return mapper.getLotOnHandBy(stockCardId,lotId);
     }
 
-  public void updateLotOnHand(LocationEntry lotOnHand) {
+   //Updtated to lotOnHand from LotOnHandEntry
+  public void updateLotOnHand(LotOnHand lotOnHand) {
     mapper.updateLotOnHand(lotOnHand);
   }
 

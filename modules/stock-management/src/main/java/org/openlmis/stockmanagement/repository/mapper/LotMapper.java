@@ -95,32 +95,42 @@ public interface LotMapper {
       "WHERE id = #{id}")
   int update(Lot lot);
 
- /* @Insert("INSERT into lots_on_hand " +
-      " (stockCardId, lotId, quantityOnHand, effectiveDate " +
-      ", createdBy, createdDate, modifiedBy, modifiedDate,vvmId) " +
-      "values " +
-      " (#{stockCard.id}, #{lot.id}, #{quantityOnHand}, #{effectiveDate}" +
-      ", #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{vvmId})")*/
- @Insert("INSERT INTO public.lot_location_entries(\n" +
+  //The commented query is for WMS ..please create a separate function
+
+/* @Insert("INSERT INTO public.lot_location_entries(\n" +
          "           lotid, type, quantity, locationid,vvmid,stockCardId, \n" +
          "            createdBy, \n" +
          "            createdDate, modifiedBy, modifiedDate)\n" +
          "    VALUES ( #{lotId}, #{inputType},#{quantity}, #{locationId},#{vvmId},#{stockCardId}, \n" +
          "             #{createdBy}, NOW(), \n" +
-         "            #{modifiedBy}, now());")
+         "            #{modifiedBy}, now());")*/
 
+ @Insert("INSERT into lots_on_hand " +
+         " (stockCardId, lotId, quantityOnHand, effectiveDate " +
+         ", createdBy, createdDate, modifiedBy, modifiedDate,vvmId) " +
+         "values " +
+         " (#{stockCard.id}, #{lot.id}, #{quantityOnHand}, #{effectiveDate}" +
+         ", #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{vvmId})")
   @Options(useGeneratedKeys = true)
-  void insertLotOnHand(LocationEntry lotOnHand);
+  void insertLotOnHand(LotOnHand lotOnHand);
 
 
-
-  @Update("UPDATE lots_on_hand " +
+//Please add separate function for WMS
+ /* @Update("UPDATE lots_on_hand " +
       "SET quantityOnHand = #{quantityOnHand}" +
           ", effectiveDate = NOW()" +
           ", modifiedBy = #{modifiedBy}" +
           ", modifiedDate = NOW(), vvmId = #{vvmId}" +
       "WHERE id = #{id}")
-  int updateLotOnHand(LocationEntry lotOnHand);
+  int updateLotOnHand(LocationEntry lotOnHand);*/
+
+    @Update("UPDATE lots_on_hand " +
+            "SET quantityOnHand = #{quantityOnHand}" +
+            ", effectiveDate = NOW()" +
+            ", modifiedBy = #{modifiedBy}" +
+            ", modifiedDate = NOW(), vvmId = #{vvmId}" +
+            "WHERE id = #{id}")
+    int updateLotOnHand(LotOnHand lotOnHand);
 
     @Delete("delete from lots where id = #{id}")
     void delete(@Param("id") Long id);
