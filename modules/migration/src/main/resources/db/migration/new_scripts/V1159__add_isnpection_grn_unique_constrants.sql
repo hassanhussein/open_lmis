@@ -1,0 +1,1 @@
+ALTER TABLE inspections ADD CONSTRAINT inspection_grn_unique_key UNIQUE (receiptnumber);

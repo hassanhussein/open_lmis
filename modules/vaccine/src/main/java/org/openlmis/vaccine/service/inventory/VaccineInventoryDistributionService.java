@@ -121,7 +121,7 @@ public Long save(VaccineDistribution distribution, Long userId) {
              }
         }
 
-        System.out.println(distribution.getId()+" Ditribution ID");
+        //System.out.println(distribution+" Ditribution ID");
         if (distribution.getId() != null) {
 
             distribution.setModifiedBy(userId);
@@ -181,11 +181,23 @@ public Long save(VaccineDistribution distribution, Long userId) {
 
             //repository.deleteLotsByLineItem(lineItem.getId());
             if (lineItem.getLots() != null) {
+                System.out.println("Line Item id "+lineItem.getLots());
+
                 for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
                     lot.setModifiedBy(userId);
                     lot.setCreatedBy(userId);
                     lot.setDistributionLineItemId(lineItem.getDistributionLineItemId());
-                    lot.setQuantity(lot.getQuantity());
+                    if(lot.getQuantity()!=null){
+                        lot.setQuantity(lot.getQuantity());
+                    }else{
+                        lot.setQuantity(lot.getQty());
+                    }
+
+                    if(lot.getPackSize()==null){
+                        long parkSize=1;
+                        lot.setPackSize(parkSize);
+                    }
+
                     System.out.println(lot.getQty());
                     if (lot.getId() != null) {
                         repository.updateDistributionLineItemLot(lot);

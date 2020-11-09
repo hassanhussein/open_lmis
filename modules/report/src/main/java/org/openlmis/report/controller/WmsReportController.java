@@ -60,6 +60,14 @@ public class WmsReportController extends BaseController {
         String currentName = userDetails.getFullName();
         wmsReportService.exportVarReport(inspectionId, lang, currentName, response);
     }
+    @RequestMapping(value = "/grn-report", params = {"receiveId"})
+    public void grnReport(@RequestParam Long receiveId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportGrnReport(receiveId, lang, currentName, response);
+    }
 
 
 

@@ -18,10 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class WmsReportService {
@@ -74,16 +71,74 @@ public class WmsReportService {
         }
     }
 
+
+
+
+    public void exportGrnReport(Long receiveId,String language,String currentName, HttpServletResponse response)throws IOException, JRException{
+        try {
+            // String dataList= String.valueOf(wmsReportRepository.getVarReportById(inspectionId));
+            List<HashMap<String, Object>> dataListData=wmsReportRepository.getGrnReportById(receiveId);
+
+
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(dataListData);
+            ArrayList<String> dataListStorage=wmsReportRepository.getStorageLocation(receiveId);
+
+
+            String storageString=dataListStorage.toString();
+            // System.out.println(dataListStorage.toString());
+            //System.out.println(json);
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(json.getBytes());
+
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath( "template/headerimage.png"));
+
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("report/grn-report.jrxml"));
+
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+            parameters.put("storageString",storageString);
+
+            parameters.put("OPERATOR_NAME", currentName);
+
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
     public void exportVarReport(Long inspectionId,String language,String currentName, HttpServletResponse response)throws IOException, JRException{
         try {
            // String dataList= String.valueOf(wmsReportRepository.getVarReportById(inspectionId));
             List<HashMap<String, Object>> dataListData=wmsReportRepository.getVarReportById(inspectionId);
+
+
             String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
                     .writeValueAsString(dataListData);
+            ArrayList<String> dataListStorage=wmsReportRepository.getStorageLocation(inspectionId);
 
 
-
-           // System.out.println(json);
+            String storageString=dataListStorage.toString();
+           // System.out.println(dataListStorage.toString());
+            System.out.println(json);
 
             ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(json.getBytes());
 
@@ -100,6 +155,7 @@ public class WmsReportService {
 
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("createdBy", currentName);
+            parameters.put("storageString",storageString);
 
             parameters.put("OPERATOR_NAME", currentName);
 

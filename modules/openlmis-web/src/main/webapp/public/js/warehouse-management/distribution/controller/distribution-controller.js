@@ -246,6 +246,8 @@ $scope.requstions.forEach(function(req){
     });
 
     req.lineItems=req.ordered;
+    req.distributionDate=$scope.distributionDate;
+    req.distributionType=$scope.distributionType;
 
 
     $scope.distribution_list.push(req);
@@ -258,6 +260,7 @@ console.log($scope.distribution_list);
   console.log(distribution);
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
+  $scope.$parent.message="Distribution updated successfully"
   $location.path('');
                   console.log('distributed');
 
@@ -419,6 +422,8 @@ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
+    $scope.$parent.message="Distribution approved successfully!"
+
   $location.path('');
                   console.log('distributed');
 

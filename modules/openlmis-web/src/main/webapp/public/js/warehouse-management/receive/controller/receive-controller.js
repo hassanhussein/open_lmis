@@ -213,7 +213,7 @@ $scope.clearingAgentList = clearingAgent;
 
 $scope.print=function() {
 
-var url = '/rest-api/warehouse/grn-report/'+parseInt($scope.receive.id, 10)+'/print';
+var url = '/wms-reports/grn-report?receiveId='+parseInt($scope.receive.id, 10);
 $window.open(url, '_blank');
 
 };

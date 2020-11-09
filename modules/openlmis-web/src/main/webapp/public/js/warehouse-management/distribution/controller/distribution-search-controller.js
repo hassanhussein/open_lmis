@@ -231,11 +231,13 @@ function DistributionSearchController($scope,DisableAsn, localStorageService,pro
 //      $scope.showSearchResults = true;
 //    }, {});
 
-
+   // console.log(" called:"+query);
 
     VaccinePendingRequisitions.get({
                 facilityId: parseInt(facilities.id, 10),
-                programId: parseInt(programs[0].id, 10)
+                programId: parseInt(programs[0].id, 10),
+                "searchParam": $scope.searchedQuery,
+                "column": $scope.selectedSearchOption.value
             }, function (data) {
                 $scope.pendingRequisition = data.pendingRequest;
                 $scope.orders=[];

@@ -38,7 +38,7 @@ public interface VaccineInventoryDistributionMapper {
     Integer saveDistribution(VaccineDistribution vaccineDistribution);
 
     @Update("update vaccine_distributions set " +
-            " status=#{status}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
+            " status=#{status},distributionDate=#{distributionDate}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
             " where id=#{id}"
     )
     Integer updateDistribution(VaccineDistribution vaccineDistribution);

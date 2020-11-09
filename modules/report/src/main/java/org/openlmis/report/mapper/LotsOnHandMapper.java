@@ -9,6 +9,7 @@ import org.openlmis.report.model.wmsreport.StockCard;
 import org.openlmis.report.model.wmsreport.StockCards;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,7 @@ public interface LotsOnHandMapper {
             "            ii.lotflag as insi_lotflag, \n" +
             "            ii.dryiceflag as insi_dryiceflag, \n" +
             "            ii.vvmflag as insi_vvmflag, \n" +
+            "            concat(lot.lotNumber,' (',v.name,')') as ins_lot_vvm_status," +
             "            ii.cccardflag as insi_cccardflag, \n" +
             "            ii.electronicdeviceflag as insi_electronicdeviceflag, \n" +
             "            ii.createdby as insi_createdby, \n" +
@@ -187,14 +189,46 @@ public interface LotsOnHandMapper {
             "            JOIN inspection_line_items ii on i.id = ii.inspectionid \n" +
             "            JOIN Receives r on i.receiveId = r.id \n" +
             "            JOIN receive_line_items ri ON ri.receiveid = r.id \n" +
-            "            JOIN asns a ON r.asnId = a.id \n" +
+            "            JOIN asns a ON r.asnId = a.id \n " +
+
             "            JOIN asn_details ai ON a.id = ai.asnId \n" +
             "            JOIN products pp ON ii.productId = pp.id \n" +
             "            JOIN inspection_lots LOT ON ii.id = LOT.inspectionLINEITEMID \n" +
+            " JOIN vvm_statuses v on v.id=LOT.vvmstatus " +
             "            JOIN dosage_units u on pp.dosageunitid = u.id \n" +
             "            JOIN ports P ON r.portofarrival = p.id \n" +
             "            WHERE I.ID  = #{inspectionId}")
     List<HashMap<String, Object>>getListVarReport(@Param("inspectionId") Long inspectionId);
+
+    @Select("SELECT distinct l.lotNumber,to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, i.receiveNumber, lo.code binLocation, S.name supplyName,\n" +
+            " r.invoiceNumber, r.poNumber, p.code productCode, p.primaryName product, u.code dosageUnit,\n" +
+            "\n" +
+            "asnL.quantity  quantityOrdered, l.lotNumber, l.manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate,\n" +
+            "L.quantity quantityReceived, date_part('month',age(  L.expiryDate::date,receiveDate::date))  as shelfLife,r.note\n" +
+            "\n" +
+            "FROM RECEIVES R\n" +
+            "JOIN receive_line_items i ON r.id = i.receiveid\n" +
+            "JOIN Receive_lots L ON i.id = L.receivelineItemId\n" +
+            "JOIN products p ON i.productId = P.ID\n" +
+            "LEFT JOIN wms_locations Lo ON L.locationId = Lo.id\n" +
+            "JOIN SUpply_partners S on r.supplierid = s.id\n" +
+            "JOIN dosage_units U on p.dosageunitId = U.ID\n" +
+            "JOIN ASNs ON R.asnId = ASNS.ID\n" +
+            "JOIN ASN_details it On asns.id = it.asnId\n" +
+            "Join asn_lots asnL ON it.ID = asnL.asndetailId\n" +
+            "\n" +
+            "WHERE r.ID =  #{receiveId}")
+    List<HashMap<String, Object>>getListGrnReport(@Param("receiveId") Long inspectionId);
+
+
+
+
+    @Select(" select wl.name from inspection_lots lo " +
+            " left join wms_locations wl  on (wl.id=lo.passlocationid)" +
+            " left join inspection_line_items li on(li.id=lo.inspectionlineitemid) where inspectionid=#{inspectionId}")
+    ArrayList<String> getListVarStorage(@Param("inspectionId") Long inspectionId);
+
+
 
 
     @Select("select vvm.name as vvm,lo.lotnumber as lotNumber,lo.expirationdate as expirationDate,  \n" +

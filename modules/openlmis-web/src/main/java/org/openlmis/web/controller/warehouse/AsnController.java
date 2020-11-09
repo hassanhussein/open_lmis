@@ -221,6 +221,8 @@ public class AsnController extends BaseController {
         String filePath;
         FileOutputStream outputStream = null;
 
+
+
         if (file.isEmpty()) {
             return "Failed to Store Empty File";
         }
@@ -243,6 +245,11 @@ public class AsnController extends BaseController {
             byteFile = new byte[val];
             inputStream.read(byteFile);
             File newFile = new File(filePath);
+
+            if(newFile.exists()){
+                System.out.println("This file exists");
+                return  "This file exists! Rename or upload another file!";
+            }
             File directory = new File(this.fileStoreLocation);
 
             boolean isFileExist = directory.exists();

@@ -53,9 +53,9 @@
                             <select ui-select2="{width: '90%'}" class="span11" id="supplier"
                                     openlmis-message="label.select.parent.zone"
                                     ng-disabled="viewMode"
-                                    name="supplier"
+                                    name="distributionType"
                                     ng-required="true"
-                                    ng-model="supplierId">
+                                    ng-model="distributionType">
                                 <option value="">Routine</option>
                                 <option value="">Campaign</option>
 
@@ -156,10 +156,10 @@
         <div form-toolbar id="action_buttons" class="action-buttons">
             <div class="form-cell button-row">
                 <input type="submit" class="btn btn-primary save-button"
-                       value="Release for Picking" ng-if="!hasPermission('WMS_APPROVE_DISTRIBUTION')" ng-click="saveDistribution()"/>
+                       value="Release for Picking" ng-disabled="!distributionDate" ng-if="!hasPermission('WMS_APPROVE_DISTRIBUTION')" ng-click="saveDistribution()"/>
 
-                <input type="submit" class="btn btn-primary save-button" ng-if="hasPermission('WMS_APPROVE_DISTRIBUTION')"
-                       value="Approve" ng-click="approveDistribution()"/>
+                <input type="submit"  class="btn btn-primary save-button" ng-if="hasPermission('WMS_APPROVE_DISTRIBUTION')"
+                       value="Approve"  ng-disabled="!distributionDate" ng-click="approveDistribution()"/>
 
                 <input id="cancelButton" type="button" class="btn btn-cancel cancel-button"   openlmis-message="button.cancel"
                        ng-click="cancel()"/>

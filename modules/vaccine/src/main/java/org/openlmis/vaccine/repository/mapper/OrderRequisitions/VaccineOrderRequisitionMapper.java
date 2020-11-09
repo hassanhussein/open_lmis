@@ -102,10 +102,15 @@ public interface VaccineOrderRequisitionMapper {
 
     class SelectVaccineOrder {
         public static String getOrderBySearchParam(Map<String, Object> params){
-            System.out.println("Called search");
             StringBuilder sql = new StringBuilder();
             String column = (String) params.get("column");
-            sql.append("SELECT DISTINCT f.id AS facilityId,r.periodId,f.name facilityName,R.orderDate orderDate,r.createdDate,R.ID,R.STATUS,ra.programid AS programId,pp.name periodName   \n" +
+            String searchParam = (String) params.get("searchParam");
+            Long facilityId = (Long) params.get("facilityId");
+            Long programId = (Long) params.get("programId");
+
+            System.out.println("Called search "+column+" "+searchParam+" "+facilityId+" "+programId);
+
+            sql.append("SELECT distinct  f.id AS facilityId,r.periodId,f.name facilityName,R.orderDate orderDate,r.createdDate,R.ID,R.STATUS,ra.programid AS programId,pp.name periodName   \n" +
                     "               FROM facilities f   \n" +
                     "                 JOIN requisition_group_members m ON m.facilityid = f.id   \n" +
                     "                 JOIN requisition_groups rg ON rg.id = m.requisitiongroupid   \n" +
@@ -114,17 +119,21 @@ public interface VaccineOrderRequisitionMapper {
                     "                 JOIN vaccine_order_requisitions r on f.id = r.facilityId and sn.id = r.supervisorynodeid  \n" +
                     "                 JOIN processing_periods pp on r.periodId = pp.id  ");
             sql.append(" JOIN vaccine_distributions vd on vd.orderid = r.id " +
-                    "  WHERE ra.userId = #{userId}   AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId} ");
+                    "  WHERE ra.userId = #{userId}   and r.programId = #{programId} and  isVerified = false AND  sn.facilityId = #{facilityId}  ");
 
             if(column.equalsIgnoreCase("picklistid")) {
                 sql.append(" AND vd.picklistid=CAST(#{searchParam} as bigint) ");
             }else if(column.equalsIgnoreCase("region")){
-                sql.append(" and (LOWER(f.name) LIKE '%' || LOWER(#{searchParam}) || '%') ");
+                System.out.println("Passed");
+                searchParam=searchParam.toLowerCase();
+               sql.append(" and  (LOWER(f.name) LIKE '%").append(searchParam).append("%') AND R.STATUS  IN('SUBMITTED','UNDER_PICKING') ");
 
             }else if(column.equalsIgnoreCase("orderid")){
                 sql.append(" AND vd.orderid=CAST(#{searchParam} as bigint) ");
             }
             sql.append("ORDER BY id desc limit 10");
+
+           // System.out.println(sql.toString());
             return sql.toString();
         }
     }

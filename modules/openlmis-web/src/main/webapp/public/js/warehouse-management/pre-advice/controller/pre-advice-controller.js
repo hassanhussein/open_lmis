@@ -1169,7 +1169,7 @@ function getFile(file,documentType) {
 
       $scope.openMessage = false;
 
-      },2000);
+      },4000);
 
       getListOfFilesByASNumber($scope.asnCode);
 

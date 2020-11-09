@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<!-- Created with Jaspersoft Studio version 7.5.0.final using JasperReports Library version 6.11.0-0c4056ccaa4d25a5a8c45672d2f764ea3498bebb  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report1" pageWidth="842" pageHeight="800" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="842" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="a0a4e861-0726-422f-b3d5-54b1aefe96ce">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
@@ -72,48 +72,30 @@
 	</parameter>
 	<parameter name="OPERATOR_NAME" class="java.lang.String"/>
 	<parameter name="ISSUE_ID" class="java.lang.Integer" isForPrompting="false"/>
-	<queryString>
-		<![CDATA[SELECT distinct l.lotNumber,to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, i.receiveNumber, lo.code binLocation, S.name supplyName,
- r.invoiceNumber, r.poNumber, p.code productCode, p.primaryName product, u.code dosageUnit,
-
-asnL.quantity  quantityOrdered, l.lotNumber, l.manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate,
-L.quantity quantityReceived, date_part('month',age(  L.expiryDate::date,receiveDate::date))  as shelfLife,r.note
-
-FROM RECEIVES R
-JOIN receive_line_items i ON r.id = i.receiveid
-JOIN Receive_lots L ON i.id = L.receivelineItemId
-JOIN products p ON i.productId = P.ID
-LEFT JOIN wms_locations Lo ON L.locationId = Lo.id
-JOIN SUpply_partners S on r.supplierid = s.id
-JOIN dosage_units U on p.dosageunitId = U.ID
-JOIN ASNs ON R.asnId = ASNS.ID
-JOIN ASN_details it On asns.id = it.asnId
-Join asn_lots asnL ON it.ID = asnL.asndetailId
-
-WHERE r.ID = $P{ORDER_ID}]]>
-	</queryString>
+	<parameter name="HEADER_IMAGE" class="java.lang.String"/>
+	<parameter name="createdBy" class="java.lang.String"/>
 	<field name="product" class="java.lang.String"/>
-	<field name="lotNumber" class="java.lang.String"/>
-	<field name="expiryDate" class="java.lang.String"/>
-	<field name="quantityOrdered" class="java.lang.Integer"/>
-	<field name="quantityReceived" class="java.lang.Integer"/>
-	<field name="shelfLife" class="java.lang.Integer"/>
-	<field name="productCode" class="java.lang.String"/>
-	<field name="receiveDate" class="java.lang.String"/>
-	<field name="binLocation" class="java.lang.String"/>
-	<field name="invoiceNumber" class="java.lang.String"/>
-	<field name="supplyName" class="java.lang.String"/>
-	<field name="poNumber" class="java.lang.String"/>
-	<field name="dosageUnit" class="java.lang.String"/>
+	<field name="lotnumber" class="java.lang.String"/>
+	<field name="expirydate" class="java.lang.String"/>
+	<field name="quantityordered" class="java.lang.Integer"/>
+	<field name="quantityreceived" class="java.lang.Integer"/>
+	<field name="shelflife" class="java.lang.Integer"/>
+	<field name="productcode" class="java.lang.String"/>
+	<field name="receivedate" class="java.lang.String"/>
+	<field name="binlocation" class="java.lang.String"/>
+	<field name="invoicenumber" class="java.lang.String"/>
+	<field name="supplyname" class="java.lang.String"/>
+	<field name="ponumber" class="java.lang.String"/>
+	<field name="dosageunit" class="java.lang.String"/>
 	<field name="note" class="java.lang.String"/>
-	<field name="manufacturingDate" class="java.lang.String"/>
-	<field name="receiveNumber" class="java.lang.String"/>
+	<field name="manufacturingdate" class="java.lang.String"/>
+	<field name="receivenumber" class="java.lang.String"/>
 	<variable name="TOTAL_QUANTITY" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[$F{quantityReceived}]]></variableExpression>
+		<variableExpression><![CDATA[$F{quantityreceived}]]></variableExpression>
 	</variable>
 	<group name="Header">
 		<groupFooter>
-			<band height="47">
+			<band height="56">
 				<textField evaluationTime="Report">
 					<reportElement x="809" y="37" width="19" height="10" uuid="477ffc9d-22bf-46f5-bbf9-a5527705d801"/>
 					<textElement>
@@ -121,12 +103,34 @@ WHERE r.ID = $P{ORDER_ID}]]>
 					</textElement>
 					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="">
+				<textField pattern="">
 					<reportElement x="610" y="37" width="199" height="10" uuid="c6758d1a-4ca3-4899-843f-39a0c2e70009"/>
 					<textElement textAlignment="Right">
 						<font size="8"/>
 					</textElement>
 					<textFieldExpression><![CDATA[msg("Page of", $V{PAGE_NUMBER})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="10" y="10" width="73" height="20" uuid="bc0081ad-8394-42e3-93b4-d0d5a14f141a"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Generated By:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="83" y="10" width="107" height="20" forecolor="#333333" uuid="a2a48da1-7422-479b-ada1-f0da3fc2b962"/>
+					<textFieldExpression><![CDATA[$P{createdBy}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="661" y="13" width="59" height="17" uuid="0c9a6224-6e7c-4c30-8264-ac7a6b2a812e"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Created At:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy HH:mm">
+					<reportElement x="720" y="13" width="81" height="17" forecolor="#333333" uuid="1d89b9aa-362e-4249-8d32-d7ddc908ebdc"/>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -170,7 +174,7 @@ WHERE r.ID = $P{ORDER_ID}]]>
 						<font size="12"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
-					<textFieldExpression><![CDATA["UOM"]]></textFieldExpression>
+					<textFieldExpression><![CDATA["Vials"]]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="335" y="0" width="79" height="20" uuid="bc565ace-1659-44f3-b0b5-a0e4eb877080"/>
@@ -225,14 +229,14 @@ WHERE r.ID = $P{ORDER_ID}]]>
 		<groupFooter>
 			<band height="181">
 				<staticText>
-					<reportElement x="630" y="30" width="165" height="20" uuid="78b51f32-ccee-42c2-b5f8-8145178bc130"/>
+					<reportElement x="601" y="30" width="165" height="20" uuid="78b51f32-ccee-42c2-b5f8-8145178bc130"/>
 					<textElement verticalAlignment="Middle">
 						<font isBold="true"/>
 					</textElement>
 					<text><![CDATA[TOTAL QUANTITY RECEIVED:]]></text>
 				</staticText>
-				<textField>
-					<reportElement x="797" y="30" width="33" height="20" uuid="f004969c-5368-47e2-b986-69287f4ffa5b"/>
+				<textField pattern="#,##0.###">
+					<reportElement x="766" y="30" width="57" height="20" uuid="f004969c-5368-47e2-b986-69287f4ffa5b"/>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isBold="true"/>
 					</textElement>
@@ -367,29 +371,7 @@ WHERE r.ID = $P{ORDER_ID}]]>
 	<pageHeader>
 		<band height="258">
 			<printWhenExpression><![CDATA[$V{PAGE_NUMBER}.intValue() == 1? new Boolean(true) : new Boolean(false)]]></printWhenExpression>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="78" y="22" width="676" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="881bfb2f-2c68-420a-9f84-b67427c46920"/>
-				<textElement textAlignment="Center" verticalAlignment="Top" markup="none">
-					<font size="16" isBold="true"/>
-					<paragraph leftIndent="0"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{OPERATOR_NAME}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="100" y="2" width="641" height="20" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="150ee578-dd77-4a5e-b74a-450bb0260069"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="16" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{label.title.united.republic.tanzania}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
-				<reportElement x="100" y="43" width="641" height="21" isPrintInFirstWholeBand="true" forecolor="#3D9297" uuid="b7f47698-1462-44d8-ac98-448b9ffc09a0"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="16" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{label.title.immunization}]]></textFieldExpression>
-			</textField>
-			<textField isStretchWithOverflow="true">
+			<textField>
 				<reportElement key="" style="table_CH" x="11" y="95" width="813" height="29" forecolor="#FFFFFF" backcolor="#3D9297" uuid="3b568b0c-5330-4957-880a-e9857dc19d0a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="16" isUnderline="false"/>
@@ -403,12 +385,12 @@ WHERE r.ID = $P{ORDER_ID}]]>
 				</textElement>
 				<text><![CDATA[Goods Receipt Note]]></text>
 			</staticText>
-			<textField>
+			<textField pattern="#,##0.###">
 				<reportElement x="702" y="68" width="123" height="17" uuid="0bbe1602-43ce-4344-91a1-9d3396277034"/>
 				<textElement verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{receiveNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{receivenumber}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="672" y="68" width="23" height="17" uuid="6c0aa43f-b01c-41d1-b37f-214cad15efb8"/>
@@ -438,72 +420,70 @@ WHERE r.ID = $P{ORDER_ID}]]>
 					<textElement>
 						<font size="12" isUnderline="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{receiveDate}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{receivedate}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy">
+				<textField pattern="dd-MM-yyyy">
 					<reportElement x="158" y="34" width="122" height="20" isPrintInFirstWholeBand="true" uuid="7315ebe6-10c7-4370-a46f-86ca9343e896"/>
 					<textElement verticalAlignment="Middle">
 						<font size="12" isUnderline="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{binLocation}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{binlocation}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="302" y="14" width="124" height="15" isPrintInFirstWholeBand="true" uuid="88e025ea-56bc-4c7f-9052-0342d4478747"/>
+					<reportElement x="302" y="14" width="124" height="20" isPrintInFirstWholeBand="true" uuid="88e025ea-56bc-4c7f-9052-0342d4478747"/>
 					<textElement>
 						<font size="12" isBold="true" isUnderline="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Supplier Name:"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="424" y="14" width="160" height="15" isPrintInFirstWholeBand="true" uuid="b68e2e7a-e7f1-4cde-865d-68662397c440"/>
+					<reportElement x="424" y="14" width="155" height="20" isPrintInFirstWholeBand="true" uuid="b68e2e7a-e7f1-4cde-865d-68662397c440"/>
 					<textElement>
 						<font size="12" isUnderline="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{supplyName}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{supplyname}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="302" y="37" width="138" height="15" isPrintInFirstWholeBand="true" uuid="a6c86cec-5d90-47f5-af05-20ec4169999b"/>
+					<reportElement x="302" y="37" width="124" height="17" isPrintInFirstWholeBand="true" uuid="a6c86cec-5d90-47f5-af05-20ec4169999b"/>
 					<textElement>
 						<font size="12" isBold="true" isUnderline="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Invoice Number:"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="584" y="14" width="96" height="15" isPrintInFirstWholeBand="true" uuid="3a8e598a-b6d5-409e-99e0-f932a06740b8"/>
+					<reportElement x="584" y="14" width="96" height="20" isPrintInFirstWholeBand="true" uuid="3a8e598a-b6d5-409e-99e0-f932a06740b8"/>
 					<textElement>
 						<font size="12" isBold="true" isUnderline="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA["PO Number:"]]></textFieldExpression>
 				</textField>
 				<textField isBlankWhenNull="true">
-					<reportElement x="440" y="37" width="140" height="15" isPrintInFirstWholeBand="true" uuid="fe212ac3-2455-4f9b-8ff4-2954fc004188"/>
+					<reportElement x="426" y="37" width="154" height="17" isPrintInFirstWholeBand="true" uuid="fe212ac3-2455-4f9b-8ff4-2954fc004188"/>
 					<textElement>
 						<font size="12" isUnderline="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{invoiceNumber}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{invoicenumber}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="677" y="14" width="113" height="15" isPrintInFirstWholeBand="true" uuid="83250d97-1aed-4bab-bd3e-a64817d4661b"/>
+					<reportElement x="677" y="14" width="113" height="20" isPrintInFirstWholeBand="true" uuid="83250d97-1aed-4bab-bd3e-a64817d4661b"/>
 					<textElement>
 						<font size="12" isUnderline="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{poNumber}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{ponumber}]]></textFieldExpression>
 				</textField>
 			</frame>
-			<textField isStretchWithOverflow="true">
+			<textField>
 				<reportElement key="" style="table_CH" mode="Opaque" x="11" y="218" width="813" height="29" forecolor="#FFFFFF" backcolor="#3D9297" uuid="60dfae73-23a1-49bb-a0ce-b5580782f529"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" size="16" isUnderline="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA["Goods Received in Good Condition"]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="11" y="2" width="80" height="62" uuid="d230416d-69f4-461d-be1b-97be1f444dfb"/>
-				<imageExpression><![CDATA[$P{image_dir}+ "logo-tz.png"]]></imageExpression>
-			</image>
-			<image>
-				<reportElement x="754" y="0" width="74" height="64" uuid="e293ea6b-18bc-46e7-a25d-a6d4383a34b4"/>
-				<imageExpression><![CDATA[$P{image_dir}+ "vims-logo-tz.png"]]></imageExpression>
+			<image scaleImage="FillFrame">
+				<reportElement x="0" y="-50" width="842" height="79" uuid="c8d1dd94-ce00-44a3-a029-1baf8a58156e">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{HEADER_IMAGE}]]></imageExpression>
 			</image>
 		</band>
 	</pageHeader>
@@ -534,7 +514,7 @@ WHERE r.ID = $P{ORDER_ID}]]>
 			<textField>
 				<reportElement x="54" y="0" width="99" height="16" uuid="1dd7b202-7dfa-4528-b282-0aa2d3823100"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{productCode}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="153" y="1" width="128" height="16" uuid="6f9118bc-914c-41ce-9802-22279c60bc8d"/>
@@ -544,36 +524,36 @@ WHERE r.ID = $P{ORDER_ID}]]>
 			<textField>
 				<reportElement x="280" y="0" width="55" height="16" uuid="723d0976-5d1d-4adf-9aab-06b7ef9e7b4b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{dosageUnit}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{dosageunit}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="334" y="1" width="80" height="16" uuid="4c54c852-272f-4161-9dbc-48962dd57989"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{quantityOrdered}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quantityordered}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="415" y="0" width="92" height="16" uuid="a53d7c6f-3e26-4d80-9829-5bdba68572d5"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{lotnumber}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="504" y="-1" width="86" height="16" uuid="23f45858-7d5a-4888-8332-d8fc713a861d"/>
-				<textFieldExpression><![CDATA[$F{manufacturingDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{manufacturingdate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="590" y="1" width="86" height="16" uuid="c719144e-781d-4b47-8670-d089161f7e91"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{expiryDate}]]></textFieldExpression>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{expirydate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="681" y="1" width="60" height="16" uuid="35d3042f-247c-4340-9b8b-5a48412a9950"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{shelfLife}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shelflife}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="#,##0.###">
 				<reportElement x="742" y="1" width="86" height="16" uuid="611433da-1851-412e-973e-c470bed5ee0f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{quantityReceived}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quantityreceived}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

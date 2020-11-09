@@ -34,6 +34,19 @@ public class WmsReportRepository {
 
     }
 
+    public  List<HashMap<String, Object>> getGrnReportById(Long receiveId){
+        return lotsOnHandMapper.getListGrnReport(receiveId);
+
+    }
+
+
+    public  ArrayList<String> getStorageLocation(Long inspectionId){
+        return lotsOnHandMapper.getListVarStorage(inspectionId);
+
+    }
+
+
+
     public List<StockCards> getListReports(Long productId,Long warehouseId){
         return lotsOnHandMapper.getListStockOnHand(productId,warehouseId);
     }
