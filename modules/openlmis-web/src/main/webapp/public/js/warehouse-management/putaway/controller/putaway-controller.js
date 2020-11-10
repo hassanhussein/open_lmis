@@ -53,7 +53,10 @@ $scope.movementQueue.push(
     toWarehouse:$scope.toLot.warehouse.name,
     toWareHouseId:$scope.toLot.warehouse.id,
     toBinLocation:$scope.toLot.binLocation.code,
-    toBinLocationId:$scope.toLot.binLocation.id
+    toBinLocationId:$scope.toLot.binLocation.id,
+    vvmId:$scope.fromLot.vvmStatus
+
+
 
 }
 );

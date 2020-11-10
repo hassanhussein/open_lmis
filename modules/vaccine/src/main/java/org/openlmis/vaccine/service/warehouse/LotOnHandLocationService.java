@@ -2,6 +2,7 @@ package org.openlmis.vaccine.service.warehouse;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -104,17 +105,17 @@ public class LotOnHandLocationService {
                 //save PutAway
                 dto.setCreatedBy(userId);
                 dto.setLotId(newLot.getId());
-                dto.setVvmId(vvmData.getVvmId());
+               // dto.setVvmId(vvmData.getVvmId());
                 repository.insertPutAwayDetails(dto);
 
                 event.setLotId(newLot.getId());
-                newLot.setVvmId(vvmData.getVvmId());
+                newLot.setVvmId(dto.getVvmId());
                 event.setLot(newLot);
-                event.setVvmId(vvmData.getVvmId());
+                event.setVvmId(dto.getVvmId());
 
                 //Prepare entry values
                 LocationEntry entry = new LocationEntry();
-                entry.setVvmId(vvmData.getVvmId());
+                entry.setVvmId(dto.getVvmId());
                 entry.setLotId(newLot.getId());
                 entry.setStockCardId(stockCard.getId());
                 entry.setQuantity(dto.getQuantity());
@@ -146,12 +147,11 @@ public class LotOnHandLocationService {
             if (vvmData != null)
                 customProps.put("vvmStatus", vvmData.getVvmId().toString());
             else
-                customProps.put("vvmStatus", "1");
+                customProps.put("vvmStatus", dto.getVvmId().toString());
 
             event.setCustomProps(customProps);
             event.setToBinLocationId(dto.getToBinLocationId());
             event.setFromBinLocationId(dto.getFromBinLocationId());
-
             events.add(event);
 
         }
@@ -307,138 +307,153 @@ public class LotOnHandLocationService {
     }
 
     public List<HashMap<String, Object>> getAllLedgers(Long productId, Long warehouseId, Long year) throws IOException {
-        List<HashMap<String, Object>> ledgers = repository.getAllLedgers(productId, warehouseId, year);
-        JSONArray jsonLedger = new JSONArray(ledgers);
+        try {
+            List<HashMap<String, Object>> ledgers = repository.getAllLedgers(productId, warehouseId, year);
+            JSONArray jsonLedger = new JSONArray(ledgers);
 
-        JSONArray selectedJsonYear = new JSONArray();
+            JSONArray selectedJsonYear = new JSONArray();
 
-        JSONArray previousYear = new JSONArray();
+            JSONArray previousYear = new JSONArray();
 
-        Map<String, Integer> uniqueLedgerItem = new HashMap<String, Integer>();
+            Map<String, Integer> uniqueLedgerItem = new HashMap<String, Integer>();
 
-        //  selectedJsonYear.put("{}");
+            //  selectedJsonYear.put("{}");
 
-        for (int i = 0; i < jsonLedger.length(); i++) {
-            //JSONObject jsonObject=jsonLedger.get(i);
-            JSONObject ledgerObject = jsonLedger.getJSONObject(i);
-            String locationname = ledgerObject.getString("locationname");
-            if (ledgerObject.has("transferlogs")) {
-                String transferlogs = ledgerObject.getString("transferlogs");
+            for (int i = 0; i < jsonLedger.length(); i++) {
+                //JSONObject jsonObject=jsonLedger.get(i);
+                JSONObject ledgerObject = jsonLedger.getJSONObject(i);
+                String locationname = ledgerObject.getString("locationname");
+                if (ledgerObject.has("transferlogs")) {
+                    String transferlogs = ledgerObject.getString("transferlogs");
 
-                String[] arrayLogs = transferlogs.split("-");
+                    String[] arrayLogs = transferlogs.split("-");
 
-                if (arrayLogs.length == 2) {
-                    String fromBin = arrayLogs[0];
-                    String toBin = arrayLogs[1];
+                    if (arrayLogs.length == 2) {
+                        String fromBin = arrayLogs[0];
+                        String toBin = arrayLogs[1];
 
-                    /// System.out.println(fromBin+" :hh: "+toBin);
+                        /// System.out.println(fromBin+" :hh: "+toBin);
 
-                    ledgerObject.put("frombin", fromBin);
-                    ledgerObject.put("toBinCustom", toBin);
+                        ledgerObject.put("frombin", fromBin);
+                        ledgerObject.put("toBinCustom", toBin);
 
+
+                    } else {
+                        String fromBin = arrayLogs[0];
+
+                        ledgerObject.put("frombin", fromBin);
+
+
+                    }
+
+                    //System.out.println(transferlogs);
+                } else {
+                    ledgerObject.put("toBinCustom", locationname);
+
+                }
+                Long lotYear = ledgerObject.getLong("lotyear");
+
+                Integer loh = ledgerObject.getInt("loh");
+
+
+                if (lotYear.equals(year)) {
+                    selectedJsonYear.put(ledgerObject);
+                } else {
+                    if (lotYear < year) {
+                        previousYear.put(ledgerObject);
+                    }
+                }
+
+
+                String keyValue = ledgerObject.getString("lotnumber") + "/" + ledgerObject.getString("locationname") + "/" + ledgerObject.getString("vvm") + "/" + ledgerObject.getString("expirationdate") + "/" + lotYear;
+
+                if (uniqueLedgerItem.containsKey(keyValue)) {
+                    int totalInHand = uniqueLedgerItem.get(keyValue) + loh;
+                    uniqueLedgerItem.put(keyValue, totalInHand);
 
                 } else {
-                    String fromBin = arrayLogs[0];
-
-                    ledgerObject.put("frombin", fromBin);
-
+                    uniqueLedgerItem.put(keyValue, loh);
 
                 }
 
-                //System.out.println(transferlogs);
-            } else {
-                ledgerObject.put("toBinCustom", locationname);
-
             }
-            Long lotYear = ledgerObject.getLong("lotyear");
-
-            Integer loh = ledgerObject.getInt("loh");
 
 
-            if (lotYear.equals(year)) {
-                selectedJsonYear.put(ledgerObject);
-            } else {
-                if (lotYear < year) {
-                    previousYear.put(ledgerObject);
+            JSONArray previousYearBalance = new JSONArray();
+
+
+            for (Map.Entry m : uniqueLedgerItem.entrySet()) {
+
+                String ledgerKey = m.getKey().toString();
+                //uniqueLedgerItem.put(ledgerKey,0);
+                Integer valueLedger = Integer.parseInt(m.getValue().toString());
+                String[] arrayValue = ledgerKey.split("/");
+                String lotnumber = arrayValue[0];
+                String locationname = arrayValue[1];
+                String vvm = arrayValue[2];
+                String expirationdate = arrayValue[3];
+                Long yearDate = Long.parseLong(arrayValue[4]);
+
+
+                JSONObject newPreviousLedgerObject = new JSONObject();
+                newPreviousLedgerObject.put("frombin", locationname);
+
+                //newPreviousLedgerObject.put("toBinCustom",locationname);
+                newPreviousLedgerObject.put("date", year + "-01-01");
+
+                newPreviousLedgerObject.put("lotnumber", lotnumber);
+                newPreviousLedgerObject.put("locationname", locationname);
+                newPreviousLedgerObject.put("vvm", vvm);
+                newPreviousLedgerObject.put("expirationdate", expirationdate);
+
+                if (yearDate < year) {
+                    newPreviousLedgerObject.put("soh", valueLedger);
+                    newPreviousLedgerObject.put("loh", 0);
+                } else {
+                    newPreviousLedgerObject.put("soh", 0);
+                    newPreviousLedgerObject.put("loh", 0);
                 }
+
+                // System.out.println(valueLedger+" donne "+ledgerKey);
+
+
+                int totalPrevious = 0;
+                for (int k = 0; k < previousYear.length(); k++) {
+                    JSONObject ledgerObject = previousYear.getJSONObject(k);
+                    int loh = ledgerObject.getInt("total");
+                    totalPrevious = totalPrevious + loh;
+                }
+                newPreviousLedgerObject.put("total", totalPrevious);
+
+                previousYearBalance.put(newPreviousLedgerObject);
+
+                //System.out.println(m.getKey()+" "+m.getValue());
             }
 
 
-            String keyValue = ledgerObject.getString("lotnumber") + "/" + ledgerObject.getString("locationname") + "/" + ledgerObject.getString("vvm") + "/" + ledgerObject.getString("expirationdate") + "/" + lotYear;
+            ObjectMapper mapper = new ObjectMapper();
 
-            if (uniqueLedgerItem.containsKey(keyValue)) {
-                int totalInHand = uniqueLedgerItem.get(keyValue) + loh;
-                uniqueLedgerItem.put(keyValue, totalInHand);
+            JSONArray sortedLedger = sortArrayList(previousYearBalance, selectedJsonYear);
 
-            } else {
-                uniqueLedgerItem.put(keyValue, loh);
+            List<HashMap<String, Object>> convertLedgerObject = mapper.readValue(sortedLedger.toString(),
+                    new TypeReference<List<HashMap<String, Object>>>() {
+                    });
 
-            }
+            return convertLedgerObject;
+        }catch (Exception e){
+            String s = ExceptionUtils.getStackTrace(e);
+            JSONArray arrayErrors=new JSONArray();
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("errors",s);
+            arrayErrors.put(jsonObject);
 
+            ObjectMapper mapper = new ObjectMapper();
+
+            List<HashMap<String, Object>> convertLedgerObject = mapper.readValue(jsonObject.toString(),
+                    new TypeReference<List<HashMap<String, Object>>>() {
+                    });
+            return convertLedgerObject;
         }
-
-
-        JSONArray previousYearBalance = new JSONArray();
-
-
-        for (Map.Entry m : uniqueLedgerItem.entrySet()) {
-
-            String ledgerKey = m.getKey().toString();
-            //uniqueLedgerItem.put(ledgerKey,0);
-            Integer valueLedger = Integer.parseInt(m.getValue().toString());
-            String[] arrayValue = ledgerKey.split("/");
-            String lotnumber = arrayValue[0];
-            String locationname = arrayValue[1];
-            String vvm = arrayValue[2];
-            String expirationdate = arrayValue[3];
-            Long yearDate = Long.parseLong(arrayValue[4]);
-
-
-            JSONObject newPreviousLedgerObject = new JSONObject();
-            newPreviousLedgerObject.put("frombin", locationname);
-
-            //newPreviousLedgerObject.put("toBinCustom",locationname);
-            newPreviousLedgerObject.put("date", year + "-01-01");
-
-            newPreviousLedgerObject.put("lotnumber", lotnumber);
-            newPreviousLedgerObject.put("locationname", locationname);
-            newPreviousLedgerObject.put("vvm", vvm);
-            newPreviousLedgerObject.put("expirationdate", expirationdate);
-
-            if (yearDate < year) {
-                newPreviousLedgerObject.put("soh", valueLedger);
-                newPreviousLedgerObject.put("loh", 0);
-            } else {
-                newPreviousLedgerObject.put("soh", 0);
-                newPreviousLedgerObject.put("loh", 0);
-            }
-
-            // System.out.println(valueLedger+" donne "+ledgerKey);
-
-
-            int totalPrevious = 0;
-            for (int k = 0; k < previousYear.length(); k++) {
-                JSONObject ledgerObject = previousYear.getJSONObject(k);
-                int loh = ledgerObject.getInt("total");
-                totalPrevious = totalPrevious + loh;
-            }
-            newPreviousLedgerObject.put("total", totalPrevious);
-
-            previousYearBalance.put(newPreviousLedgerObject);
-
-            //System.out.println(m.getKey()+" "+m.getValue());
-        }
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        JSONArray sortedLedger = sortArrayList(previousYearBalance, selectedJsonYear);
-
-        List<HashMap<String, Object>> convertLedgerObject = mapper.readValue(sortedLedger.toString(),
-                new TypeReference<List<HashMap<String, Object>>>() {
-                });
-
-        return convertLedgerObject;
     }
 
     private JSONArray sortArrayList(JSONArray previousLedger, JSONArray selectedLedger) {
