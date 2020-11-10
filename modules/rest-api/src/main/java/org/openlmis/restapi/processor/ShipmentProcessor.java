@@ -99,6 +99,9 @@ public class ShipmentProcessor {
     lineItem.setOrderNumber(order.getOrderNumber());
     lineItem.setOrderId(order.getId());
 
+    if(lineItem.getOrderNumber() != null) {
+      lineItems.add(lineItem);
+    }
   }
 
   private ShipmentLineItem lineItemFromDetail(Order order, ShipmentDetail detail) {
