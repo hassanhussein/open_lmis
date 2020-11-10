@@ -14,7 +14,21 @@
 <div>
   <h2 openlmis-message="label.equipment.my.maintenance.request"></h2>
 
-  <p openlmis-message="label.equipment.my.maintenance.request.description"></p>
+
+  <div class="row-fluid">
+
+    <div class=" search-box-gap pull-right">
+
+    <span>
+     <input id="searchProduct" class="search-query pull-right" ng-change="filterLogs()" type="text"
+            ng-model="query" placeholder="equipment search"/>
+    </span>
+
+    </div>
+
+      <p openlmis-message="label.equipment.my.maintenance.request.description"></p>
+
+  </div>
 
   <div class="alert alert-success" ng-show="message">
     <span ng-bind="message"></span>

@@ -54,4 +54,21 @@ console.log('reached here');
     SaveAndLogMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
   };
 
+  $scope.filterLogs = function () {
+    var filteredLogs = [];
+    var query = $scope.query || "";
+
+      filteredLogs = $.grep($scope.list, function (log) {
+      return log.equipmentName.toLowerCase().indexOf(query.toLowerCase()) != -1;
+    });
+
+    if($scope.query === ""){
+       PendingRequests.get(function (data) {
+       console.log(data);
+         $scope.list = data.logs;
+       });
+    } else
+    $scope.list = filteredLogs;
+  };
+
 }
