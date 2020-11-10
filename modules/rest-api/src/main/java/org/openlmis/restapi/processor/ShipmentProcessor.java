@@ -65,11 +65,6 @@ public class ShipmentProcessor {
     }
 
 
-    shipment
-        .getDetail()
-        .parallelStream()
-        .forEach(detail -> shipmentService.save(lineItemFromDetail(order, detail)));
-
     ShipmentFileInfo shipmentFileInfo = new ShipmentFileInfo();
     shipmentFileInfo.setFileName(shipment.getShipmentNumber());
     shipmentFileInfo.setOrderNumber(shipment.getOrderNumber());
@@ -102,15 +97,6 @@ public class ShipmentProcessor {
     if(lineItem.getOrderNumber() != null) {
       lineItems.add(lineItem);
     }
-  }
-
-  private ShipmentLineItem lineItemFromDetail(Order order, ShipmentDetail detail) {
-    ShipmentLineItem lineItem = new ShipmentLineItem();
-    lineItem.setOrderId(order.getId());
-    lineItem.setProductCode(detail.getShipmentDetailItemNum());
-    lineItem.setProductName(detail.getShipmentDetailItemDescription());
-    lineItem.setQuantityShipped(detail.getShipmentDetailQty().intValue());
-    return lineItem;
   }
 
 }
