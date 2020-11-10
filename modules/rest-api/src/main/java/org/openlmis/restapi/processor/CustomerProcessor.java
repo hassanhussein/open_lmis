@@ -37,7 +37,7 @@ public class CustomerProcessor {
   public void process(Customer customer) {
     Facility facility = facilityService.getByCodeFor(customer.getCustomerId());
 
-    if(facility == null {
+    if(facility == null) {
       facility = facilityService.getByCodeFor(customer.getFacilityCode());
     }
 
