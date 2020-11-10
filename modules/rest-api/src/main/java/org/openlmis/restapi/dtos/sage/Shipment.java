@@ -33,7 +33,11 @@ public class Shipment {
   private String ShipmentNumber;
 
   @JsonProperty("OrderNumber")
+  private String SageOrderNumber;
+
+  @JsonProperty("ElmisRefNumber")
   private String OrderNumber;
+
 
   @JsonProperty("CustomerCode")
   private String CustomerCode;

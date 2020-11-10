@@ -28,6 +28,9 @@ public class Customer {
   @JsonProperty("CustomerId")
   private String customerId;
 
+  @JsonProperty("FacilityCode")
+  private String facilityCode;
+
   @JsonProperty("CustomerUpdatedDate")
   private Date customerUpdatedDate;
 
