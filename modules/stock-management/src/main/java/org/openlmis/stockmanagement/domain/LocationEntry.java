@@ -18,7 +18,7 @@ public class LocationEntry extends BaseModel {
    private Long vvmId;
    private Long stockCardId;
    private Long lotId;
-   private String inputType;
+   private String inputType,transferLogs;
    private Integer packSize;
 
 

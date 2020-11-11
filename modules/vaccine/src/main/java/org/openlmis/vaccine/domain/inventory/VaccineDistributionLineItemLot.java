@@ -32,4 +32,6 @@ public class VaccineDistributionLineItemLot extends BaseModel {
     private Long packSize;
 
     private Long qty;
+    private String transferLogs;
+
 }

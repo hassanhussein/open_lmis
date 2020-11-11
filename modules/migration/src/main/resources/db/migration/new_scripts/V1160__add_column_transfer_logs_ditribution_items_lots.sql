@@ -1,0 +1,5 @@
+ALTER TABLE public.VACCINE_DISTRIBUTION_LINE_ITEM_LOTS
+        DROP COLUMN IF EXISTS transferlogs;
+
+         ALTER TABLE public.VACCINE_DISTRIBUTION_LINE_ITEM_LOTS
+        ADD COLUMN transferlogs character varying(100);

@@ -451,6 +451,7 @@ public class VaccineOrderRequisitionService {
                                 l.setLocationId(h.getLocationId());
                                 l.setStockCardId(h.getStockCardId());
                                 l.setPackSize(h.getPackSize());
+                                l.setTransferLogs(h.getTransferLogs());
                                 arrayList.add(l);
                             }
                             order.setGiven(arrayList);

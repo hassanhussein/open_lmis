@@ -266,7 +266,7 @@ public interface VaccineOrderRequisitionMapper {
             " WHERE orderId = #{id} AND PRODUCTId = #{productId}")*/
 
 
-    @Select("SELECT ITEM.GAP,item.id as distributionLineItemId,LOT.ID,LOT.PACKSIZE, LOT.LOTID,LOT.VVMID,LOT.LOCATIONID,LOT.STOCKCARDID,LOT.QUANTITY,(LOT.PACKSIZE*LOT.QUANTITY) QTY FROM  VACCINE_DISTRIBUTION_LINE_ITEM_LOTS LOT  \n" +
+    @Select("SELECT ITEM.GAP,item.id as distributionLineItemId,LOT.transferLogs,LOT.ID,LOT.PACKSIZE, LOT.LOTID,LOT.VVMID,LOT.LOCATIONID,LOT.STOCKCARDID,LOT.QUANTITY,(LOT.PACKSIZE*LOT.QUANTITY) QTY FROM  VACCINE_DISTRIBUTION_LINE_ITEM_LOTS LOT  \n" +
             " LEFT JOIN VACCINE_DISTRIBUTION_LINE_ITEMS ITEM ON ITEM.id = lot.distributionlineitemid \n" +
             " LEFT JOIN VACCINE_DISTRIBUTIONS  D ON  item.distributionId  = D.id \n" +
             " WHERE D.orderId = #{id}  AND ITEM.PRODUCTId =#{productId}")
