@@ -261,7 +261,7 @@ console.log($scope.distribution_list);
   console.log(distribution);
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
-  $scope.$parent.message="Distribution updated successfully"
+  $scope.$parent.message="Distribution updated successfully";
   $location.path('');
                   console.log('distributed');
 
@@ -369,7 +369,7 @@ var lineItem = {};
                       var packSize=1;
 
                       if(lot.packSize){
-                      packSize=lot.packSize
+                      packSize=lot.packSize;
                       }
 
 
@@ -429,7 +429,7 @@ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
-    $scope.$parent.message="Distribution approved successfully!"
+    $scope.$parent.message="Distribution approved successfully!";
 
   $location.path('');
                   console.log('distributed');
