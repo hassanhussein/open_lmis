@@ -320,9 +320,9 @@
                                             <th class="col-product" style="width:100px !important;max-width:100px !important">
                                             Unit Of Measure
                                             </th>
-                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important;">Received Qty</th>
-                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" ng-if="lotInspected" >Passed Qty</th>
-                                            <th  class="col-add-lot" style="width:100px !important; max-width:100px !important" ng-if="lotInspected">Failed Qty</th>
+                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important;">Received Quantity</th>
+                                            <th  class="col-add-lot" style="width:100px !important;max-width:100px !important" ng-if="lotInspected" >Passed Quantity</th>
+                                            <th  class="col-add-lot" style="width:100px !important; max-width:100px !important" ng-if="lotInspected">Failed Quantity</th>
                                             <th ng-if="!viewMode" style="width:100px !important;max-width:100px !important" class="col-add-lot"><span>Inspect</span></th>
 
                                         </tr>
@@ -772,7 +772,7 @@
         <div class="modal-body">
 
             <div  class="alert alert-danger" ng-show="lotError">
-                {{lotsWithError}} : Passed Qty + Failed Qty should be equal to Counted Qty
+                {{lotsWithError}} : Passed Quantity + Failed Quantity should be equal to Counted Quantity
             </div>
 
             <div  class="alert alert-danger" ng-show="lotsWithLocationError">
@@ -794,9 +794,9 @@
                 <tr class="gradient-header">
                     <th style="width:19%">Lots</th>
                     <th >No. of Boxes </th>
-                    <th style="width:14%">Received Qty(Vials)</th>
+                    <th style="width:14%">Received Quantity(Vials)</th>
                     <th style="width:24%">VVM Status </th>
-                    <th style="width:14%">Failed Qty(Vials)</th>
+                    <th style="width:14%">Failed Quantity(Vials)</th>
                     <th >Fail Reason</th>
                     <th style="width:19%">Fail Location</th>
                 </tr>
@@ -844,7 +844,7 @@
                         </div>
                     </td>
 
-                    <td style="text-align:right" class="cell-input col-general"><input type="text" numeric-validator="positiveInteger" ng-model="vvm.failed.quantity" ng-change="failedQuantityChanged(vvm)" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)||vvm.quantity==0||vvm.quantity>lot.receivedQuantity||vvm.quantity==undefined"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Qty Should be less/equal than Received Qty</span>
+                    <td style="text-align:right" class="cell-input col-general"><input type="text" numeric-validator="positiveInteger" ng-model="vvm.failed.quantity" ng-change="failedQuantityChanged(vvm)" ng-disabled="hasExpired(lot)||isDisabled(inspection.status)||vvm.quantity==0||vvm.quantity>lot.receivedQuantity||vvm.quantity==undefined"/><span class="field-error" ng-show="lot.failQuantityError"> Failed Quantity Should be less/equal than Received Quantity</span>
 
 
 
