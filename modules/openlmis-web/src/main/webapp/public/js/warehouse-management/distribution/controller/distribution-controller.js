@@ -11,7 +11,7 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, UpdateDistributionOrderStatus,localStorageService,ApproveOnlyDistribution) {
+function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, UpdateDistributionOrderStatus,localStorageService,ApproveOnlyDistribution,StockEventWms) {
 
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
@@ -160,6 +160,7 @@ stockCardId:lot.stockCardId,
 vvmId:lot.vvmId,
 packSize:lot.packSize,
 binLocation:lot.binLocation,
+transferLogs:lot.binLocation+"-"+req.name,
 quantity:lotQuantity/lot.packSize
 
 });
@@ -260,7 +261,7 @@ console.log($scope.distribution_list);
   console.log(distribution);
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
-  $scope.$parent.message="Distribution updated successfully"
+  $scope.$parent.message="Distribution updated successfully";
   $location.path('');
                   console.log('distributed');
 
@@ -365,8 +366,14 @@ var lineItem = {};
 
                       l.facilityName=facility.name;
 
+                      var packSize=1;
 
-                     l.quantity = lotQuantity/lot.packSize;
+                      if(lot.packSize){
+                      packSize=lot.packSize;
+                      }
+
+
+                     l.quantity = lotQuantity/packSize;
                      event.lots=lot;
                      lineItem.lots.push(lot);
                      events.push(event);
@@ -395,7 +402,7 @@ var lineItem = {};
 
 
 
-StockEvent.save({facilityId: homeFacility}, events, function (data) {
+StockEventWms.save({facilityId: homeFacility}, events, function (data) {
  console.log(data);
  if (data.success) {
 $scope.distribution_list=[];
@@ -422,7 +429,7 @@ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 console.log($scope.distribution_list);
   $scope.$parent.distributed = true;
-    $scope.$parent.message="Distribution approved successfully!"
+    $scope.$parent.message="Distribution approved successfully!";
 
   $location.path('');
                   console.log('distributed');

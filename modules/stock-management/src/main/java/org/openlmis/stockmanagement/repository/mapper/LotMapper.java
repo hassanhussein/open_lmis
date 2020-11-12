@@ -97,13 +97,15 @@ public interface LotMapper {
 
   //The commented query is for WMS ..please create a separate function
 
-/* @Insert("INSERT INTO public.lot_location_entries(\n" +
-         "           lotid, type, quantity, locationid,vvmid,stockCardId, \n" +
+ @Insert("INSERT INTO public.lot_location_entries(\n" +
+         "           lotid, type, quantity, locationid,vvmid,transferLogs,stockCardId, \n" +
          "            createdBy, \n" +
          "            createdDate, modifiedBy, modifiedDate)\n" +
-         "    VALUES ( #{lotId}, #{inputType},#{quantity}, #{locationId},#{vvmId},#{stockCardId}, \n" +
+         "    VALUES ( #{lotId}, #{inputType},#{quantity}, #{locationId},#{vvmId},#{transferLogs},#{stockCardId}, \n" +
          "             #{createdBy}, NOW(), \n" +
-         "            #{modifiedBy}, now());")*/
+         "            #{modifiedBy}, now());")
+ @Options(useGeneratedKeys = true)
+ void insertLotOnHandWms(LocationEntry lotOnHand);
 
  @Insert("INSERT into lots_on_hand " +
          " (stockCardId, lotId, quantityOnHand, effectiveDate " +

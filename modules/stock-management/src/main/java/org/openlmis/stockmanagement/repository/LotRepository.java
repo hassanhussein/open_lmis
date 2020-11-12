@@ -48,16 +48,16 @@ public class LotRepository {
 
   public void saveLotOnHandDistribution(LocationEntry lotOnHand){
     //Lot On hand insertLotOnHand function need to be reference insert lot on hand entry function for WMS
-   // mapper.insertLotOnHand(lotOnHand);
+    mapper.insertLotOnHandWms(lotOnHand);
   }
 
   //Please add separate lot on hand for WMS..I have commented the WMS function
 
- /* public void saveLotOnHand(LocationEntry lotOnHand) {
+  /*public void insertLotOnHandWms(LocationEntry lotOnHand) {
     if (null == lotOnHand.getId()) {
-      mapper.insertLotOnHand(lotOnHand);
+      mapper.insertLotOnHandWms(lotOnHand);
     } else {
-      mapper.updateLotOnHand(lotOnHand);
+      mapper.updateLotOnHandWms(lotOnHand);
     }
   }*/
 

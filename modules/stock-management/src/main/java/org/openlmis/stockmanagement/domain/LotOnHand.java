@@ -41,6 +41,8 @@ public class LotOnHand extends BaseModel {
 
   private Long vvmId;
 
+  private String transferLogs;
+
   @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
   @JsonDeserialize(using=DateDeserializer.class)
   private Date effectiveDate;

@@ -13,10 +13,7 @@ package org.openlmis.stockmanagement.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.repository.ProductRepository;
 import org.openlmis.core.service.*;
-import org.openlmis.stockmanagement.domain.Lot;
-import org.openlmis.stockmanagement.domain.LotOnHand;
-import org.openlmis.stockmanagement.domain.StockCard;
-import org.openlmis.stockmanagement.domain.StockCardEntry;
+import org.openlmis.stockmanagement.domain.*;
 import org.openlmis.stockmanagement.repository.LotRepository;
 import org.openlmis.stockmanagement.repository.StockCardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,11 +164,44 @@ public class StockCardService {
   }
 
   @Transactional
+  public void addStockCardEntryWms(StockCardEntry entry) {
+
+    System.out.println("Stock called!");
+
+    StockCard card = getOrCreateStockCard(entry.getStockCard().getFacility().getId(), entry.getStockCard().getProduct().getCode());//entry.getStockCard();
+
+    card.addToTotalQuantityOnHand(entry.getQuantity());
+    repository.persistStockCardEntry(entry);
+
+    LocationEntry lotOnHand = entry.getLots();
+    if (null != lotOnHand) {
+      System.out.println("Stock on hand not empty"+lotOnHand.toString());
+      lotOnHand.setInputType("DEBIT");
+
+      //lotOnHand.addToQuantityOnHand(entry.getQuantity());
+      lotRepository.saveLotOnHandDistribution(lotOnHand);
+    }else{
+      //System.out.println("Stock on hand empty");
+    }
+    repository.updateStockCard(card);
+
+  }
+
+  @Transactional
   public void addStockCardEntries(List<StockCardEntry> entries) {
     for (StockCardEntry entry : entries) {
       addStockCardEntry(entry);
     }
   }
+
+  @Transactional
+  public void addStockCardEntriesWms(List<StockCardEntry> entries) {
+    for (StockCardEntry entry : entries) {
+      addStockCardEntryWms(entry);
+    }
+  }
+
+
 
   public void updateTotalStockOnHand(Long id, Long total) {
     repository.updateTotalStockOnHand(id,total);

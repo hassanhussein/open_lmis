@@ -367,7 +367,7 @@ public class StockCardController extends BaseController {
             if (!any(rights, with("MANAGE_STOCK"))) {
                 return OpenLmisResponse.error(messageService.message("error.permission.stock.card.manage"), HttpStatus.FORBIDDEN);
             }
-            System.out.println("passed 4: ");
+            System.out.println("passed 4:");
 
             // get or create stock card
             StockCard card = service.getOrCreateStockCard(facilityId, productCode);
@@ -428,6 +428,196 @@ public class StockCardController extends BaseController {
         service.addStockCardEntries(entries);
         return OpenLmisResponse.success(messageService.message("success.stock.adjusted"));
     }
+
+
+
+
+
+
+
+    @RequestMapping(value = "facilitiesWms/{facilityId}/stockCards", method = POST, headers = ACCEPT_JSON)
+    @ApiOperation(value="Update stock cards at a facility.",
+            notes = "Updates stock cards at a facility. This is done by providing a list of stock events." +
+                    "<p>Path parameters (required):" +
+                    "<ul>" +
+                    "<li><strong>facilityId</strong> (Long) - facility for the stock cards in which to update.</li>" +
+                    "</ul>" +
+                    "<p>" +
+                    "<p>Body parameters (required):" +
+                    "<ul>" +
+                    "<li>" +
+                    "<strong>stock events</strong> (Array of stock event objects) - a list of stock events to " +
+                    "process for update." +
+                    "<p>" +
+                    "<p>Stock event properties" +
+                    "<ul>" +
+                    "<li><strong>type</strong> (String, required) - type code of stock event (choices are ISSUE, " +
+                    "RECEIPT, ADJUSTMENT).</li>" +
+                    "<li><strong>facilityId</strong> (Long, required for ISSUE/RECEIPT types) - facility id where" +
+                    "stock is going to/coming from.</li>" +
+                    "<li><strong>productCode</strong> (String, required) - product code of the stock being " +
+                    "processed.</li>" +
+                    "<li><strong>quantity</strong> (Long, required) - quantity of stock being processed. Specify as a " +
+                    "positive number. For ISSUE, this amount is decremented, for RECEIPT, this amount is incremented, " +
+                    "for ADJUSTMENT, it depends on the adjustment reason.</li>" +
+                    "<li><strong>reasonName</strong> (String, required for ADJUSTMENT types) - reason code for the " +
+                    "adjustment.</li>" +
+                    "<li><strong>lotId</strong> (Long, optional) - lot id of a particular lot that will be processed. " +
+                    "This and lot are optional; if lotId is specified, lot is ignored.</li>" +
+                    "<li><strong>lot</strong> (Object, optional) - lot object of a particular lot that will be " +
+                    "processed. If lot with the specified code, manufacturerName, and expirationDate do not exist, a " +
+                    "lot will be created.</li>" +
+                    "<li><strong>customProps</strong> (Object, optional) - an object of custom properties (keys and " +
+                    "values) to specify custom fields for the stock event." +
+                    "</ul>" +
+                    "</li>" +
+                    "</ul>" +
+                    "<p>" +
+                    "<p>Example stock event list JSON:" +
+                    "<pre><code>" +
+                    "[\n" +
+                    "    {\n" +
+                    "        \"type\": \"ADJUSTMENT\",\n" +
+                    "        \"productCode\": \"V001\",\n" +
+                    "        \"quantity\": 50,\n" +
+                    "        \"reasonName\": \"TRANSFER_IN\",\n" +
+                    "        \"lotId\": 1\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "        \"type\": \"ISSUE\",\n" +
+                    "        \"facilityId\": 19077,\n" +
+                    "        \"productCode\": \"V001\",\n" +
+                    "        \"quantity\": 50,\n" +
+                    "        \"customProps\": {\n" +
+                    "            \"occurred\": \"2015-10-01\"\n" +
+                    "        }\n" +
+                    "    },\n" +
+                    "    {\n" +
+                    "        \"type\": \"RECEIPT\",\n" +
+                    "        \"facilityId\": 19074,\n" +
+                    "        \"productCode\": \"V001\",\n" +
+                    "        \"quantity\": 50,\n" +
+                    "        \"lot\": {\n" +
+                    "            \"lotCode\": \"C1\",\n" +
+                    "            \"manufacturerName\": \"Manufacturer 3\",\n" +
+                    "            \"expirationDate\": \"2016-07-01\"\n" +
+                    "        },\n" +
+                    "        \"customProps\": {\n" +
+                    "            \"vvmStatus\": \"1\"\n" +
+                    "        }\n" +
+                    "    }\n" +
+                    "]\n" +
+                    "</code></pre>")
+    @Transactional
+    public ResponseEntity processStockWms(@PathVariable long facilityId,
+                                       @RequestBody(required = true) List<StockEvent> events,
+                                       HttpServletRequest request) {
+
+
+        System.out.println(events.toString());
+
+        // verify we have something to do and facility exists
+        if(null == events || 0 >= events.size()) return OpenLmisResponse.success(messageService.message("success.stock.event.none"));
+        if(null == facilityRepository.getById(facilityId))
+            return OpenLmisResponse.error(messageService.message("error.facility.unknown"), HttpStatus.BAD_REQUEST);
+
+        // convert events to entries
+        Long userId = loggedInUserId(request);
+        List<StockCardEntry> entries = new ArrayList<>();
+        for(StockEvent event : events) {
+            logger.debug("Processing event: " + event);
+            System.out.println("passed 1: ");
+
+            // validate event
+            if(!event.isValid())
+                return OpenLmisResponse.error(messageService.message("error.stock.event.invalid"), HttpStatus.BAD_REQUEST);
+            System.out.println("passed 2: ");
+
+            // validate product
+            String productCode = event.getProductCode();
+            if(null == productService.getByCode(productCode))
+                return OpenLmisResponse.error(messageService.message("error.product.unknown"), HttpStatus.BAD_REQUEST);
+
+            // validate reason
+            StockAdjustmentReason reason = null;
+            if (StockEventType.ADJUSTMENT == event.getType()) {
+                reason = stockAdjustmentReasonRepository.getAdjustmentReasonByName(
+                        event.getReasonName());
+                if(null == reason)
+                    return OpenLmisResponse.error(messageService.message("error.stockadjustmentreason.unknown"),
+                            HttpStatus.BAD_REQUEST);
+                System.out.println("passed 3: ");
+
+            }
+
+            // validate permissions
+            List<Right> rights = roleRightsService.getRightsForUserFacilityAndProductCode(userId, facilityId, productCode);
+            if (!any(rights, with("MANAGE_STOCK"))) {
+                return OpenLmisResponse.error(messageService.message("error.permission.stock.card.manage"), HttpStatus.FORBIDDEN);
+            }
+            System.out.println("passed 4: ");
+
+            // get or create stock card
+            StockCard card = service.getOrCreateStockCard(facilityId, productCode);
+            if(null == card)
+                return OpenLmisResponse.error(messageService.message("error.stock.card.get"), HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println("passed 5: ");
+
+            // get or create lot, if lot is being used
+            StringBuilder str = new StringBuilder();
+            Long lotId = event.getLotId();
+            Lot lotObj = event.getLot();
+            LotOnHand lotOnHand = service.getLotOnHand(lotId, lotObj, productCode, card, str);
+            if (!str.toString().equals("")) {
+                System.out.println("message:"+str.toString());
+                return OpenLmisResponse.error(messageService.message(str.toString()), HttpStatus.BAD_REQUEST);
+            }
+            System.out.println("passed 6: ");
+
+            // create entry from event
+            long quantity = event.getPositiveOrNegativeQuantity(reason);
+
+            StockCardEntryType entryType = StockCardEntryType.ADJUSTMENT;
+            switch (event.getType()) {
+                case ISSUE: entryType = StockCardEntryType.DEBIT;
+                    break;
+                case RECEIPT: entryType = StockCardEntryType.CREDIT;
+                    break;
+                case ADJUSTMENT: entryType = StockCardEntryType.ADJUSTMENT;
+                    break;
+                default: break;
+            }
+            Long onHand = (null != lotObj) ? lotOnHand.getQuantityOnHand() : card.getTotalQuantityOnHand();
+           /* if (!event.isValidIssueQuantity(onHand)) {
+                System.out.println("passed 10");
+
+                return OpenLmisResponse.error(messageService.message("error.stock.quantity.invalid"), HttpStatus.INTERNAL_SERVER_ERROR);
+            }*/
+            //  System.out.println("passed 7:"+lotOnHand.getQuantityOnHand());
+
+            Date occurred = event.getOccurred();
+            String referenceNumber  = event.getReferenceNumber();
+
+            StockCardEntry entry = new StockCardEntry(card, entryType, quantity, occurred, referenceNumber);
+            entry.setAdjustmentReason(reason);
+            entry.setLotOnHand(lotOnHand);
+            Map<String, String> customProps = event.getCustomProps();
+            if (null != customProps) {
+                for (String k : customProps.keySet()) {
+                    entry.addKeyValue(k, customProps.get(k));
+                }
+            }
+            entry.setCreatedBy(userId);
+            entry.setModifiedBy(userId);
+            entry.setLots(event.getLots());
+            entries.add(entry);
+        }
+
+        service.addStockCardEntriesWms(entries);
+        return OpenLmisResponse.success(messageService.message("success.stock.adjusted"));
+    }
+
+
 
 
 

@@ -201,6 +201,12 @@ services.factory('StockEvent', function ($resource) {
 });
 
 
+services.factory('StockEventWms', function ($resource) {
+    return $resource('/api/v2/facilitiesWms/:facilityId/stockCards', {facilityId: '@facilityId'}, {update: {method: "POST"}});
+});
+
+
+
 services.factory('VaccineReportPrograms', function ($resource) {
     return $resource('/vaccine/orderRequisition/programs.json', {}, {});
 });
