@@ -33,7 +33,8 @@ public class LabEquipmentListQueryBuilder {
         FROM("vw_lab_equipment_status");
         writePredicates(filter);
         ORDER_BY("facility_name, equipment_name");
-        return SQL();
+        String query=SQL();
+        return query;
 
     }
 
