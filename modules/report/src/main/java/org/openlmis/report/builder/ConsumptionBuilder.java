@@ -60,6 +60,9 @@ public class ConsumptionBuilder {
         if (filter.getZone() != null && filter.getZone() != 0) {
             WHERE(geoZoneIsFilteredBy("r.provinceid", "r.parent", "r.zoneid", "r.districtid"));
         }
+        if (filter.getProductCategory() != null && filter.getProductCategory() != 0) {
+            WHERE("  r.categoryid =" + filter.getProductCategory());
+        }
         if (filter.getProducts() != null&&!"0".equals(filter.getProducts()) && !filter.getProducts().isEmpty()&& !filter.getProducts().trim().equalsIgnoreCase("")) {
             WHERE(multiProductFilterBy(filter.getProducts(),"r.productid","r.tracer"));
         }
@@ -83,6 +86,9 @@ public class ConsumptionBuilder {
         if (filter.getZone() != null && filter.getZone() != 0) {
             predicate.append(" and (r.zoneid=" + filter.getZone() + " or r.provinceid=" +
                     filter.getZone() + " or r.districtid=" + filter.getZone() + ")");
+        }
+        if (filter.getProductCategory() != null && filter.getProductCategory() != 0) {
+            predicate.append(" and r.categoryid =" + filter.getProductCategory());
         }
         if (filter.getProducts() != null&&!"0".equals(filter.getProducts()) && !filter.getProducts().isEmpty()&& !filter.getProducts().trim().equalsIgnoreCase("")) {
             predicate.append(" and " +multiProductFilterBy(filter.getProducts(),"r.productid","r.tracer"));
