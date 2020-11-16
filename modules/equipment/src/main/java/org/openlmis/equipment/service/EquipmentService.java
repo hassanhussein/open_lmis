@@ -144,4 +144,12 @@ public class EquipmentService {
   public Equipment getByTypeManufacturerAndModel(Long equipmentTypeId, String manufacturer, Long modelId, String model) {
     return repository.getByTypeManufacturerAndModel(equipmentTypeId, manufacturer, modelId, model);
   }
+
+  public List<ColdChainEquipmentDesignation> getAllDesignations(Long equipmentId) {
+    return repository.getDesignationsByEquipmentId(equipmentId);
+  }
+
+  public Equipment getEquipmentByDesignationAndModel(String manufacturer, Long designationId, String model) {
+    return repository.getByDesignationAndModel(manufacturer, designationId, model);
+  }
 }

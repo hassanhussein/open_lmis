@@ -132,7 +132,9 @@ public class EquipmentInventoryController extends BaseController {
   @RequestMapping(value = "by-id", method = RequestMethod.GET)
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_EQUIPMENT_INVENTORY')")
   public ResponseEntity<OpenLmisResponse> getInventory(@RequestParam("id") Long id) {
-    return OpenLmisResponse.response(INVENTORY, service.getInventoryById(id));
+    EquipmentInventory inventory = service.getInventoryById(id);
+    service.checkDesignationPotentials(inventory);
+    return OpenLmisResponse.response(INVENTORY, inventory);
   }
 
   @RequestMapping(value = {"save", "/rest-api/EquipmentInventory/save"}, method = {RequestMethod.PUT, RequestMethod.POST})

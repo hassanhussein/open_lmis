@@ -62,7 +62,7 @@
         <div class="form-group">
           <div class="form-row clearfix">
 
-              <div class="form-cell" ng-if="screenType === 'create'">
+              <div class="form-cell" >
                   <label for="designation" >
                       <span openlmis-message="label.equipment.designation"></span>
                       <span class="label-required">*</span>
@@ -78,6 +78,20 @@
                               </option>
                           </select>
                       </div>
+                    <div ng-if="screenType !== 'create'">
+                       <span ng-if="inventory.possibleDesignations.length <= 1">
+                        <input type="text" ng-model="inventory.equipment.designation.name" readonly="readonly" />
+                      </span>
+                      <span ng-if="inventory.possibleDesignations.length > 1">
+                        <select style="width: 250px;" ui-select2 ng-model="inventory.equipment.designation.id" id="cdesignation"
+                                name="cdesignation" ng-required="true">
+                              <option ng-repeat="designation in inventory.possibleDesignations"
+                                      value="{{designation.id}}">
+                                  {{designation.name}}
+                              </option>
+                          </select>
+                      </span>
+                    </div>
               <span class="field-error" ng-show="inventoryForm.designation.$error.required && showError"
                     openlmis-message="missing.value"></span>
                   </div>

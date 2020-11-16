@@ -48,7 +48,7 @@ public class EquipmentInventoryService {
   private EquipmentInventoryChangeLogMapper changeLogMapper;
 
 
-  public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
+  public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId) {
     return repository.getFacilityInventory(facilityId, programId);
   }
 
@@ -83,11 +83,18 @@ public class EquipmentInventoryService {
     return facilityIds;
   }
 
-  public EquipmentInventory getInventoryById(Long id){
+  public EquipmentInventory getInventoryById(Long id) {
     return repository.getInventoryById(id);
   }
 
-  public void save(EquipmentInventory inventory){
+  public EquipmentInventory checkDesignationPotentials(EquipmentInventory inventory) {
+    // find all designations for this make and model.
+    List<ColdChainEquipmentDesignation> designations = equipmentService.getAllDesignations(inventory.getId());
+    inventory.setPossibleDesignations(designations);
+    return inventory;
+  }
+
+  public void save(EquipmentInventory inventory) {
     // First, may need to save equipment into equipment list
     // Only need to do this for non-CCE
     Equipment equipment = inventory.getEquipment();
@@ -96,12 +103,12 @@ public class EquipmentInventoryService {
       Long equipmentTypeId = equipment.getEquipmentTypeId();
 
       // Check to see if equipment already exists in db
-     // List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
+      // List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
 
       Equipment existingEquipment = equipmentService.getByTypeManufacturerAndModel(equipmentTypeId,
-              equipment.getManufacturer(),
-              equipment.getEquipmentModel().getId(),
-              equipment.getModel());
+          equipment.getManufacturer(),
+          equipment.getEquipmentModel().getId(),
+          equipment.getModel());
 
       //equipment = existingEquipment == null ? equipment : existingEquipment;
 
@@ -129,6 +136,14 @@ public class EquipmentInventoryService {
           .build();
     } else {
       changeLog = getChangeLog(inventory);
+      // Check if designation has changed.
+      EquipmentInventory persistentInventory = this.getInventoryById(inventory.getId());
+      if (!persistentInventory.getEquipment().getDesignation().getId()
+          .equals(inventory.getEquipment().getDesignation().getId())) {
+        Equipment newEquipment = equipmentService.getEquipmentByDesignationAndModel(inventory.getEquipment().getManufacturer(), inventory.getEquipment().getDesignation().getId(), inventory.getEquipment().getModel());
+        inventory.setEquipment(newEquipment);
+      }
+
       repository.update(inventory);
     }
     if (changeLog != null) {
@@ -177,7 +192,7 @@ public class EquipmentInventoryService {
     return changeLogMapper.getChangeLogsAfterDate(date);
   }
 
-  public void updateStatus(EquipmentInventory inventory){
+  public void updateStatus(EquipmentInventory inventory) {
     repository.updateStatus(inventory);
   }
 
@@ -185,24 +200,24 @@ public class EquipmentInventoryService {
     repository.updateNonFunctionalEquipments();
   }
 
-public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
+  public List<ColdChainEquipmentTemperatureStatusDTO> getAllbyId(Long equipmentId) {
     return repository.getAll(equipmentId);
   }
 
-  public void deleteEquipmentInventory(Long inventoryId){
+  public void deleteEquipmentInventory(Long inventoryId) {
     repository.deleteEquipmentInventory(inventoryId);
   }
 
 
-  public List<EquipmentInventory>getInventoryByFacilityAndProgram(Long facilityId, Long programId){
-    return repository.getInventoryByFacilityAndProgram(facilityId,programId);
+  public List<EquipmentInventory> getInventoryByFacilityAndProgram(Long facilityId, Long programId) {
+    return repository.getInventoryByFacilityAndProgram(facilityId, programId);
   }
 
-  public List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes(){
+  public List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes() {
     return equipmentService.getBioChemistryEquipmentTestTypes();
   }
 
-  public List<ManualTestTypes> getManualTestTypes(){
+  public List<ManualTestTypes> getManualTestTypes() {
     return equipmentService.getManualTestTypes();
   }
 
@@ -210,19 +225,19 @@ public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
     return repository.findBySerialNumber(serialNumber);
   }
 
-    public Integer getInventoryCountBySearch(String searchParam, Long userId, Long typeId, Long programId, Long equipmentTypeId) {
+  public Integer getInventoryCountBySearch(String searchParam, Long userId, Long typeId, Long programId, Long equipmentTypeId) {
 
-      long[] facilityIds = getFacilityIds(userId, typeId, programId);
-      Integer count = repository.getInventoryCountBySearch(searchParam,programId, equipmentTypeId, facilityIds);
-      System.out.println(count);
+    long[] facilityIds = getFacilityIds(userId, typeId, programId);
+    Integer count = repository.getInventoryCountBySearch(searchParam, programId, equipmentTypeId, facilityIds);
+    System.out.println(count);
 
-      logger.info(count);
-      return count;
-    }
+    logger.info(count);
+    return count;
+  }
 
-  public List<EquipmentInventory> searchInventory(String searchParam, Long userId, Long typeId, Long programId, Long equipmentTypeId,Pagination pagination) {
+  public List<EquipmentInventory> searchInventory(String searchParam, Long userId, Long typeId, Long programId, Long equipmentTypeId, Pagination pagination) {
     long[] facilityIds = getFacilityIds(userId, typeId, programId);
 
-    return repository.searchInventory(searchParam,programId, equipmentTypeId, facilityIds,pagination);
+    return repository.searchInventory(searchParam, programId, equipmentTypeId, facilityIds, pagination);
   }
 }
