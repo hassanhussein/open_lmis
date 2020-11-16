@@ -64,18 +64,46 @@
                     </div>
                        <table  ng-show="datarows.length > 0" class="table-bordered table table-striped" ng-table="tableParams">
                                 <tbody>
-                                <tr ng-repeat="row in datarows">
-                                    <td data-title="'#'" class="number" style="width:10px">{{ row.no }}</td>
+                                <tr ng-repeat-start="row in datarows">
+
+                                    <td data-title="'#'" class="number" style="width:10px"><a ng-click="expand(row)">
+                                        <span ng-if="row.expand" style="font-size:1.2em; float: left;">-</span>
+                                        <span ng-if="!row.expand" style="font-size:1.2em; float: left;">+</span>
+                                    </a>{{ row.no }}</td>
                                     <td data-title="getLocalMessage('label.facility.code')" style="width:80px" sortable="facilityCode">{{row.facilityCode}}</td>
                                      <td data-title="getLocalMessage('label.facility.name')" style="width:80px" sortable="facilityName">{{ row.facilityName }}</td>
                                     <td data-title="getLocalMessage('label.facility.type')" style="width:30%" sortable="facilityType">{{ row.facilityType }}</td>
                                     <td data-title="getLocalMessage('label.district')" style="width:80px" sortable="district">{{ row.district }}</td>
                                     <td data-title="getLocalMessage('label.zone')"  style="width:80px" sortable="zone">{{ row.zone }}</td>
-                                    <td data-title="getLocalMessage('label.equipment.type')" style="width:80px" sortable="equipmentType">{{row.equipmentType }}</td>
-                                    <td data-title="getLocalMessage('label.equipment.model')" style="width:80px" sortable="model">{{ row.model }}</td>
-                                    <td data-title="getLocalMessage('label.equipment.serial')" style="width:80px" sortable="serialNumber">{{ row.serialNumber }}</td>
-                                    <td data-title="getLocalMessage('label.equipment.name')" sortable="equipmentName">{{ row.equipmentName}}</td>
-                                    <td data-title="getLocalMessage('label.equipment.status')" sortable="operationalStatus">{{ row.operationalStatus}}</td>
+                                    <td data-title="getLocalMessage('label.column.equipment.count')" style="width:80px" sortable="equipmentsCount">{{row.equipmentsCount }}</td>
+
+                                </tr>
+
+                                <tr ng-repeat-end ng-show="row.equipmentStatusReportList.length>0 && row.expand" >
+                                    <td colspan="7" class="sub-report">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th openlmis-message="label.equipment.type"></th>
+                                                <th openlmis-message="label.equipment.model"></th>
+                                                <th openlmis-message="label.equipment.serial"></th>
+                                                <th openlmis-message="label.equipment.name"></th>
+                                                <th openlmis-message="label.equipment.status"></th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr  ng-repeat="p in row.equipmentStatusReportList">
+                                                <td  style="width:80px" sortable="equipmentType">{{row.equipmentType }}</td>
+                                                <td  style="width:80px" sortable="model">{{ row.model }}</td>
+                                                <td style="width:80px" sortable="serialNumber">{{ row.serialNumber }}</td>
+                                                <td  sortable="equipmentName">{{ row.equipmentName}}</td>
+                                                <td  sortable="operationalStatus">{{ row.operationalStatus}}</td>
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -85,3 +113,21 @@
     </div>
 
 </div>
+
+
+<style>
+    .sub-report {
+        background-color: #d9d9d9;
+    }
+
+    .sub-report table{
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .sub-report table tr td{
+        background-color:#f9f9f9;
+    }
+
+    .sub-report
+</style>
+

@@ -428,7 +428,7 @@ public class InteractiveReportController extends BaseController {
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         LabEquipmentStatusReportDataProvider provider = (LabEquipmentStatusReportDataProvider) report.getReportDataProvider();
         List<LabEquipmentStatusReport> labEquipmentStatusList = (List<LabEquipmentStatusReport>)
-                provider.getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+                provider.getReportHtmlBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, labEquipmentStatusList);
     }

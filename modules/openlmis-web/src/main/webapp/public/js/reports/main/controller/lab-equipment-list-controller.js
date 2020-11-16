@@ -10,12 +10,16 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function LabEquipmentListReportController($scope,  LabEquipmentListReport, ngTableParams ) {
+function LabEquipmentListReportController($scope, LabEquipmentListReport, ngTableParams) {
+    $scope.expand = function (r) {
+        r.expand=!r.expand;
 
-    $scope.exportReport   = function (type){
+    };
+
+    $scope.exportReport = function (type) {
         $scope.filter.pdformat = 1;
         var params = jQuery.param($scope.getSanitizedParameter());
-        var url = '/reports/download/lab_equipment_list/' + type +'?' + params;
+        var url = '/reports/download/lab_equipment_list/' + type + '?' + params;
         window.open(url);
     };
 
@@ -27,11 +31,11 @@ function LabEquipmentListReportController($scope,  LabEquipmentListReport, ngTab
     });
 
 
-    $scope.OnFilterChanged = function() {
+    $scope.OnFilterChanged = function () {
         // clear old data if there was any
         $scope.data = $scope.datarows = [];
         $scope.filter.max = 10000;
-        LabEquipmentListReport.get($scope.getSanitizedParameter(), function(data) {
+        LabEquipmentListReport.get($scope.getSanitizedParameter(), function (data) {
             if (data.pages !== undefined && data.pages.rows !== undefined) {
                 $scope.data = data.pages.rows;
                 $scope.paramsChanged($scope.tableParams);

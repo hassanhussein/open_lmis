@@ -16,13 +16,20 @@ import org.apache.ibatis.session.RowBounds;
 import org.openlmis.report.mapper.LabEquipmentMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.LabEquipmentListReportParam;
+import org.openlmis.report.model.report.LabEquipmentStatusGroupByFacilityReport;
+import org.openlmis.report.model.report.LabEquipmentStatusReport;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.openlmis.report.util.StringHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 @NoArgsConstructor
@@ -37,7 +44,19 @@ public class LabEquipmentStatusReportDataProvider extends ReportDataProvider {
     @Override
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
         RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return mapper.getFilteredSortedLabEquipmentStatusReport(getReportFilterData(filterCriteria), rowBounds, this.getUserId());
+        List<LabEquipmentStatusReport> labEquipmentStatusReportList = mapper.getFilteredSortedLabEquipmentStatusReport(getReportFilterData(filterCriteria), rowBounds, this.getUserId());
+        return labEquipmentStatusReportList;
+    }
+    @Override
+    public List<? extends ResultRow> getReportHtmlBody(Map<String, String[]> filterCriteria, Map<String, String[]> sorter, int page, int pageSize) {
+        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
+        List<LabEquipmentStatusReport> labEquipmentStatusReportList = mapper.getFilteredSortedLabEquipmentStatusReport(getReportFilterData(filterCriteria), rowBounds, this.getUserId());
+        Map<String, List<LabEquipmentStatusReport>> facilityReportList =
+                labEquipmentStatusReportList.stream().
+                        sorted(Comparator.comparing(LabEquipmentStatusReport::getFacilityCode)).
+                        collect(Collectors.groupingBy(
+                                e -> e.getFacilityCode(), Collectors.mapping((LabEquipmentStatusReport e) -> e, toList())));
+        return this.convert(facilityReportList);
     }
 
     public LabEquipmentListReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
@@ -45,11 +64,11 @@ public class LabEquipmentStatusReportDataProvider extends ReportDataProvider {
         LabEquipmentListReportParam labEquipmentReportParam = new LabEquipmentListReportParam();
 
         labEquipmentReportParam.setProgramId(StringHelper.isBlank(filterCriteria, "program") ? 0L : Long.parseLong(filterCriteria.get("program")[0]));
-        labEquipmentReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone") ? 0: Long.parseLong(filterCriteria.get("zone")[0]));
-        labEquipmentReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria,"facilityType") ? 0 : Long.parseLong(filterCriteria.get("facilityType")[0])); //defaults to 0
-        labEquipmentReportParam.setFacilityId(StringHelper.isBlank( filterCriteria, "facility")? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
-        labEquipmentReportParam.setEquipmentTypeId(StringHelper.isBlank( filterCriteria, "equipmentType")? 0L : Long.parseLong(filterCriteria.get("equipmentType")[0]));
-        labEquipmentReportParam.setEquipmentId(StringHelper.isBlank( filterCriteria, "equipment")? 0L : Long.parseLong(filterCriteria.get("equipment")[0]));
+        labEquipmentReportParam.setZoneId(StringHelper.isBlank(filterCriteria, "zone") ? 0 : Long.parseLong(filterCriteria.get("zone")[0]));
+        labEquipmentReportParam.setFacilityTypeId(StringHelper.isBlank(filterCriteria, "facilityType") ? 0 : Long.parseLong(filterCriteria.get("facilityType")[0])); //defaults to 0
+        labEquipmentReportParam.setFacilityId(StringHelper.isBlank(filterCriteria, "facility") ? 0L : Long.parseLong(filterCriteria.get("facility")[0]));
+        labEquipmentReportParam.setEquipmentTypeId(StringHelper.isBlank(filterCriteria, "equipmentType") ? 0L : Long.parseLong(filterCriteria.get("equipmentType")[0]));
+        labEquipmentReportParam.setEquipmentId(StringHelper.isBlank(filterCriteria, "equipment") ? 0L : Long.parseLong(filterCriteria.get("equipment")[0]));
 
         return labEquipmentReportParam;
     }
@@ -57,5 +76,27 @@ public class LabEquipmentStatusReportDataProvider extends ReportDataProvider {
     @Override
     public String getFilterSummary(Map<String, String[]> params) {
         return filterHelper.getProgramGeoZoneFacility(params);
+    }
+
+    public List<LabEquipmentStatusGroupByFacilityReport> convert(Map<String, List<LabEquipmentStatusReport>> eqStringListMap) {
+        List<LabEquipmentStatusGroupByFacilityReport> facilityReportList = new ArrayList<>();
+        eqStringListMap.forEach((k, v) -> {
+            LabEquipmentStatusReport r = v.get(0);
+            LabEquipmentStatusGroupByFacilityReport facilityReport = new LabEquipmentStatusGroupByFacilityReport();
+            facilityReport.setFacilityCode(r.getFacilityCode());
+            facilityReport.setFacilityName(r.getFacilityName());
+            facilityReport.setEquipmentStatusReportList(v);
+            facilityReport.setFacilityType(r.getFacilityType());
+            facilityReport.setDistrict(r.getDistrict());
+            facilityReport.setZone(r.getZone());
+            facilityReport.setEquipmentType(r.getEquipmentType());
+            facilityReport.setModel(r.getModel());
+            facilityReport.setSerialNumber(r.getSerialNumber());
+            facilityReport.setEquipmentName(r.getEquipmentName());
+            facilityReport.setOperationalStatus(r.getOperationalStatus());
+            facilityReport.setEquipmentsCount(v.size());
+            facilityReportList.add(facilityReport);
+        });
+        return facilityReportList;
     }
 }
