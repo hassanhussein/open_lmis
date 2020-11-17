@@ -29,7 +29,7 @@ public class ConsumptionBuilder {
         SELECT("sum(r.consumption) consumption");
         SELECT("sum(r.amc) amc");
         SELECT(" round(100*((sum(r.consumption) - COALESCE(sum(r.amc), 0)) /" +
-                " COALESCE(NULLIF(avg(r.amc), 0), 1))::numeric, 4) AS consumptionrate");
+                " COALESCE(NULLIF(sum(r.amc), 0), 1))::numeric, 4) AS consumptionrate");
         SELECT("( SELECT df.description" +
                 "           FROM data_range_flags_configuration df\n" +
                 "          WHERE LOWER(category)= 'consumption' and df.range @> round(100*\n" +

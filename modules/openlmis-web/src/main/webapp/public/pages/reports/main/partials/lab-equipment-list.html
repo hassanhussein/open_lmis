@@ -84,6 +84,7 @@
                                         <table>
                                             <thead>
                                             <tr>
+                                                <th style="max-width: 10px !important;">#</th>
                                                 <th openlmis-message="label.equipment.type"></th>
                                                 <th openlmis-message="label.equipment.model"></th>
                                                 <th openlmis-message="label.equipment.serial"></th>
@@ -94,11 +95,12 @@
                                             </thead>
                                             <tbody>
                                             <tr  ng-repeat="p in row.equipmentStatusReportList">
-                                                <td  style="width:80px" sortable="equipmentType">{{row.equipmentType }}</td>
-                                                <td  style="width:80px" sortable="model">{{ row.model }}</td>
-                                                <td style="width:80px" sortable="serialNumber">{{ row.serialNumber }}</td>
-                                                <td  sortable="equipmentName">{{ row.equipmentName}}</td>
-                                                <td  sortable="operationalStatus">{{ row.operationalStatus}}</td>
+                                                <td style="text-align:right ;max-width: 10px !important;">{{ $index+1 }}</td>
+                                                <td  style="width:80px" sortable="equipmentType">{{p.equipmentType }}</td>
+                                                <td  style="width:80px" sortable="model">{{ p.model }}</td>
+                                                <td style="width:80px" sortable="serialNumber">{{ p.serialNumber }}</td>
+                                                <td  sortable="equipmentName">{{ p.equipmentName}}</td>
+                                                <td  sortable="operationalStatus">{{ p.operationalStatus}}</td>
 
                                             </tr>
                                             </tbody>
