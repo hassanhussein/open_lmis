@@ -41,6 +41,8 @@ public class ColdChainEquipmentDTO {
 
   private String serialNumber;
 
+  private String designation;
+
   private String model;
 
   private Boolean isSerialNumberVerified;

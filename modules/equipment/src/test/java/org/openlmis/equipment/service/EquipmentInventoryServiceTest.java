@@ -23,10 +23,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.db.categories.UnitTests;
-import org.openlmis.equipment.domain.Equipment;
-import org.openlmis.equipment.domain.EquipmentInventory;
-import org.openlmis.equipment.domain.EquipmentModel;
-import org.openlmis.equipment.domain.EquipmentType;
+import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.repository.EquipmentInventoryRepository;
 import org.openlmis.equipment.repository.EquipmentRepository;
 import org.openlmis.equipment.repository.mapper.EquipmentInventoryChangeLogMapper;
@@ -219,6 +216,9 @@ public class EquipmentInventoryServiceTest {
     equipmentType.setColdChain(true);
     Equipment equipment = new Equipment();
     equipment.setEquipmentType(equipmentType);
+    equipment.setDesignation(new ColdChainEquipmentDesignation());
+    equipment.getDesignation().setId(1L);
+
     EquipmentInventory inventory = new EquipmentInventory();
     inventory.setId(1L);
     inventory.setSerialNumber("123");
@@ -228,6 +228,7 @@ public class EquipmentInventoryServiceTest {
     EquipmentInventory persistedInventory = new EquipmentInventory();
     persistedInventory.setSerialNumber("123");
     persistedInventory.setIsActive(true);
+    persistedInventory.setEquipment(equipment);
     when(repository.getInventoryById(inventory.getId())).thenReturn(persistedInventory);
 
     // Do the call
@@ -285,6 +286,8 @@ public class EquipmentInventoryServiceTest {
     equipment.setEquipmentType(equipmentType);
     equipment.setEquipmentTypeId(equipmentType.getId());
     equipment.setManufacturer("Manu");
+    equipment.setDesignation(new ColdChainEquipmentDesignation());
+    equipment.getDesignation().setId(1L);
     equipment.setModel("123");
     equipment.setEquipmentModel(model);
     EquipmentInventory inventory = new EquipmentInventory();
@@ -302,6 +305,7 @@ public class EquipmentInventoryServiceTest {
     EquipmentInventory persistedInventory = new EquipmentInventory();
     persistedInventory.setSerialNumber("123");
     persistedInventory.setIsActive(true);
+    persistedInventory.setEquipment(equipment);
     when(repository.getInventoryById(inventory.getId())).thenReturn(persistedInventory);
 
     // Do the call

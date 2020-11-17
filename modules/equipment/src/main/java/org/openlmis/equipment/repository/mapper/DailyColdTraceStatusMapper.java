@@ -96,6 +96,7 @@ public interface DailyColdTraceStatusMapper {
       "  r.code                              regionCode, " +
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
+      "  ecced.name                          designation, " +
       "  d.code                              districtCode, " +
       "  f.name AS                           facilityName, " +
       "  f.code AS                           facilityCode, " +
@@ -104,6 +105,8 @@ public interface DailyColdTraceStatusMapper {
       "  i.serialnumber " +
       " FROM equipment_inventories i " +
       "  JOIN equipments e ON e.id = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipments ecce on ecce.equipmentid = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipment_designations ecced on ecce.designationid = ecced.id" +
       "  JOIN facilities f ON i.facilityid = f.id " +
       "  JOIN geographic_zones d ON f.geographiczoneid = d.id " +
       "  JOIN geographic_zones r ON r.id = d.parentid " +
@@ -117,6 +120,7 @@ public interface DailyColdTraceStatusMapper {
       "  r.code                              regionCode, " +
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
+      "  ecced.name                          designation, " +
       "  d.code                              districtCode, " +
       "  f.name AS                           facilityName, " +
       "  f.code AS                           facilityCode, " +
@@ -126,6 +130,8 @@ public interface DailyColdTraceStatusMapper {
       "  i.isSerialNumberVerified " +
       " FROM equipment_inventories i " +
       "  JOIN equipments e ON e.id = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipments ecce on ecce.equipmentid = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipment_designations ecced on ecce.designationid = ecced.id" +
       "  JOIN facilities f ON i.facilityid = f.id " +
       "  JOIN geographic_zones d ON f.geographiczoneid = d.id " +
       "  JOIN geographic_zones r ON r.id = d.parentid " +
@@ -140,6 +146,7 @@ public interface DailyColdTraceStatusMapper {
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
       "  d.code                              districtCode, " +
+      "  ecced.name                          designation, " +
       "  f.name AS                           facilityName, " +
       "  f.code AS                           facilityCode, " +
       "  e.name                              equipmentName, " +
@@ -148,6 +155,8 @@ public interface DailyColdTraceStatusMapper {
       "  i.isSerialNumberVerified " +
       " FROM equipment_inventories i " +
       "  JOIN equipments e ON e.id = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipments ecce on ecce.equipmentid = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipment_designations ecced on ecce.designationid = ecced.id" +
       "  JOIN facilities f ON i.facilityid = f.id " +
       "  JOIN geographic_zones d ON f.geographiczoneid = d.id " +
       "  JOIN geographic_zones r ON r.id = d.parentid " +
@@ -161,6 +170,7 @@ public interface DailyColdTraceStatusMapper {
       "  r.name                              regionName, " +
       "  d.name                              districtName, " +
       "  d.code                              districtCode, " +
+      "  ecced.name                          designation, " +
       "  f.name AS                           facilityName, " +
       "  f.code AS                           facilityCode, " +
       "  e.name                              equipmentName, " +
@@ -169,6 +179,8 @@ public interface DailyColdTraceStatusMapper {
       "  i.isSerialNumberVerified " +
       " FROM equipment_inventories i " +
       "  JOIN equipments e ON e.id = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipments ecce on ecce.equipmentid = i.equipmentid " +
+      "  JOIN equipment_cold_chain_equipment_designations ecced on ecce.designationid = ecced.id" +
       "  JOIN facilities f ON i.facilityid = f.id " +
       "  JOIN geographic_zones d ON f.geographiczoneid = d.id " +
       "  JOIN geographic_zones r ON r.id = d.parentid " +

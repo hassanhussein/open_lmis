@@ -60,6 +60,8 @@ public class EquipmentInventory extends BaseModel {
   private String remark;
   private Boolean submittedDailyStatus = false;
 
+  List<ColdChainEquipmentDesignation> possibleDesignations;
+
 
   public String getDateLastAssessedString() {
     return DateUtil.getFormattedDate(this.dateLastAssessed, "yyyy-MM-dd");
