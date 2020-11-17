@@ -201,7 +201,7 @@
 
                 <div class="form-field row-fluid">
 
-                    <select ng-disabled="!stockMovement.quantity" name="toBin" id="toBin" ui-select2="{width: '100%'}" ng-model="stockMovement.toBin" ng-disabled="stockMovement.toWarehouseId==undefined?true:false"
+                    <select  name="toBin" id="toBin" ui-select2="{width: '100%'}" ng-model="stockMovement.toBin" ng-disabled="stockMovement.toWarehouseId==undefined?true:false"
 
                             ng-required="true"   ng-options="location.id as (location.code+' ('+location.type.code+')') for location in stockMovement.locations2"
                     >
