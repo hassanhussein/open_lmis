@@ -28,7 +28,7 @@ public class StockCard extends BaseModel {
 
   private Product product;
 
-  private Long totalQuantityOnHand;
+  private Long totalQuantityOnHand,totalQuantity;
 
   @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
   @JsonDeserialize(using=DateDeserializer.class)

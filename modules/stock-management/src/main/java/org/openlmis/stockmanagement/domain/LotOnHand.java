@@ -30,7 +30,7 @@ public class LotOnHand extends BaseModel {
 
   private Long lotId;
   private Long locationId;
-  private Long quantityOnHand;
+  private Long quantityOnHand,totalQuantity;
   private Long stockCardId;
   private Long packSize;
 
