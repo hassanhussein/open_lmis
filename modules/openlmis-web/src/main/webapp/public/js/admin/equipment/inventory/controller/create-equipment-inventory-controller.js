@@ -111,6 +111,7 @@ function CreateEquipmentInventoryController($scope, $location, $routeParams,GetE
       $scope.inventory = data.inventory;
 
       if ($routeParams.from === "0") {
+        $scope.previousDesignation = $scope.inventory.equipment.designation.id;
         // Edit inventory at my facility, show facility as readonly
         // Facility is already set, so just set the display name
         $scope.facilityDisplayName = $scope.inventory.facility.code + " - " + $scope.inventory.facility.name;
