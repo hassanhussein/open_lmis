@@ -1,5 +1,22 @@
 function InspectionController($scope,AsnLookups,docService,DocumentList,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
 
+
+function failedIfExpired(){
+angular.forEach($scope.lineItem.lots,function(lot){
+  if($scope.hasExpired(lot)){
+    lot.vvm[0].failed.quantity=lot.vvm[0].quantity
+    lot.vvm[0].failed.reasonId=1
+
+    lot.vvm[1].failed.quantity=lot.vvm[1].quantity
+    lot.vvm[1].failed.reasonId=1
+
+  }
+
+})
+}
+
+
+
 $scope.displayDocumentTypes = [];
 $scope.globalErrorFlag=true;
 
@@ -91,6 +108,9 @@ function getListOfFilesByASNumber(asnNumber) {
 
       });
 }
+
+
+
 
 function getOnlyMatchedDocumentTypes(documentTypes, docs) {
 
@@ -574,6 +594,9 @@ return true;
 return false;
 };
 
+
+failedIfExpired()
+
 $scope.sumBoxes=function(){
 
 var sum=0;
@@ -836,6 +859,31 @@ if(!$scope.hasExpired(lot)){
 
          $scope.inspectLotModal = false;
   $scope.lotInspected=true;
+
+$scope.totalFailQty=0
+angular.forEach($scope.lineItem.lots,function(lot){
+   var vvmSum=0;
+   angular.forEach(lot.vvm,function(status){
+        if(status.failed.quantity){
+            vvmSum+=status.failed.quantity
+        }
+   });
+   $scope.totalFailQty+=vvmSum
+    });
+
+
+
+    $scope.totalPassQty=0
+    console.log($scope.lineItem.lots)
+    var totalQty=0;
+    angular.forEach($scope.lineItem.lots,function(lot){
+
+      totalQty+=lot.receivedQuantity;
+//       $scope.totalPassQty+=lot.receivedQuantity
+        });
+
+        $scope.totalPassQty=totalQty-$scope.totalFailQty;
+
 
 
 

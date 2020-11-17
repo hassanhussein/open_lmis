@@ -824,7 +824,7 @@
                 <tr>
                     <td>
                         <div class="span4">VVM Update:</div>
-                        <div class="span8"><input type="checkbox" ng-disabled="viewMode" ng-change="vvmUpdateChanged(lot)" ng-model="lot.vvmUpdate">
+                        <div class="span8"><input type="checkbox" ng-disabled="viewMode||hasExpired(lot)" ng-change="vvmUpdateChanged(lot)" ng-model="lot.vvmUpdate">
                         </div>
                     </td>
                     <td></td>
