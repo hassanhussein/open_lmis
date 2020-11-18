@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
 import static org.openlmis.restapi.response.RestResponse.success;
@@ -45,6 +46,21 @@ public class RestEquipmentController extends BaseController  {
     public ResponseEntity<RestResponse> addEquipmentInventory(@RequestBody EquipmentInventory agent, Principal principal) {
         try {
             restEquipmentService.addEquipmentInventory(agent, loggedInUserId(principal));
+            return success("message.success.agent.created");
+
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+    }
+    @RequestMapping(value = "/rest-api/equipment-inventoryList", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> addEquipmentInventoryList(@RequestBody List<EquipmentInventory> equipmentList, Principal principal) {
+        try {
+            if(equipmentList!=null && !equipmentList.isEmpty()) {
+                equipmentList.stream().forEach((agent)->{
+                    restEquipmentService.addEquipmentInventory(agent, loggedInUserId(principal));
+                });
+
+            }
             return success("message.success.agent.created");
 
         } catch (DataException e) {
