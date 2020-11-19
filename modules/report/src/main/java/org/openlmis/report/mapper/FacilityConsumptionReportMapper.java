@@ -45,7 +45,7 @@ public interface FacilityConsumptionReportMapper {
 
     @SelectProvider(type = FacilityConsumptionQueryBuilder.class, method = "getPeriodsQuery")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
-    List<String> getPeriods(
+    List<Object> getPeriods(
             @Param("filterCriteria") ReportParameter filterCriteria,
             @Param("userId") Long userId
     );

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Created by takepc on 5/26/2019.
@@ -169,7 +170,9 @@ public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     public FacilityConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {
         FacilityConsumptionReportParam param = ParameterAdaptor.parse(filterCriteria, FacilityConsumptionReportParam.class);
         param.setAcceptedRnrStatuses(configuredAcceptedRnrStatuses);
-        this.periodList = reportMapper.getPeriods(param, this.getUserId());
+        List<Object> periodObjectList=reportMapper.getPeriods(param, this.getUserId());
+        this.periodList= periodObjectList.stream().map(o->String.valueOf(o)).collect(Collectors.toList());
+//        this.periodList = reportMapper.getPeriods(param, this.getUserId());
         String crossTabColumn = this.constructCrossTabColumnSection();
         String crossColumnHeader = this.constructTabColumnHeader();
         param.setCrossTabColumn(crossTabColumn);
