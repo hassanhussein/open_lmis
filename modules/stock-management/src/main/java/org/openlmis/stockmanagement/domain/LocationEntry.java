@@ -20,6 +20,7 @@ public class LocationEntry extends BaseModel {
    private Long lotId;
    private String inputType,transferLogs;
    private Integer packSize;
+   private Lot lot;
 
 
 
