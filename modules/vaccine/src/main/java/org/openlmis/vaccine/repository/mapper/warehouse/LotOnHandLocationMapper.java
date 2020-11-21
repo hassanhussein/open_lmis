@@ -106,7 +106,7 @@ public interface LotOnHandLocationMapper {
             "                                                                 case when se.type ='DEBIT' then -1 * se.quantity else se.quantity end as total, \n" +
             "                                    \n" +
             "                                                                 \n" +
-            "                                                                vvmst.name vvm,(select to_char(max(expirationDate), 'dd-MM-yyyy')::DATE expirationDate from lots where id=se.lotid limit 1) as expirationDate,(select lotnumber from lots where id=se.lotid limit 1) as lotNumber\n" +
+            "                                                                vvmst.name vvm,(select to_char(max(expirationDate), 'yyyy-MM-dd')::DATE expirationDate from lots where id=se.lotid limit 1) as expirationDate,(select lotnumber from lots where id=se.lotid limit 1) as lotNumber\n" +
             "                                                               \n" +
             "                                                               from lot_location_entries se \n" +
             "                                                                JOIN wms_locations loc ON loc.id = se.locationId\n" +

@@ -116,7 +116,7 @@ Stock on Hand
         <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ ledger.issued?(ledger.issued | number:0):''}}</td>
         <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.adjustment?(ledger.adjustment | number:0):''}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.lotnumber}} (<span style="color:#94969A">{{ledger.locationname}}</span>)</td>
-        <td class="col-lot cell-input  disabled padding2px">{{ledger.expirationdate}}</td>
+        <td class="col-lot cell-input  disabled padding2px">{{ledger.expirationdate | date:'dd-MM-yyyy'}}</td>
         <td class="col-lot cell-input  disabled padding2px">{{ledger.vvm}}</td>
         <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.loh | number}}</td>
         <td class="col-lot cell-input  disabled padding2px" style="text-align:right">{{ledger.soh | number}}</td>
