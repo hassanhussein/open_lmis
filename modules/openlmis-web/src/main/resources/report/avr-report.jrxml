@@ -141,6 +141,11 @@
 	<field name="shippedprovidedcomment" class="java.lang.String"/>
 	<field name="rec_releaseCertificate" class="java.lang.String"/>
 	<field name="varnumber" class="java.lang.String"/>
+	<field name="icepackflag" class="java.lang.String"/>
+	<field name="dryice" class="java.lang.String"/>
+	<field name="vvmflag" class="java.lang.String"/>
+	<field name="cccardflag" class="java.lang.String"/>
+	<field name="electronicdevices" class="java.lang.String"/>
 	<group name="GroupByProduct">
 		<groupExpression><![CDATA[$F{product}]]></groupExpression>
 		<groupHeader>
@@ -1032,6 +1037,31 @@ WHO recommends all UN agencies, countries and non-governmental organizations pro
 					<reportElement x="221" y="203" width="103" height="13" uuid="8d093855-0eb4-4bf1-9c18-ebae2f54784e"/>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{isshippedprovided}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="188" y="19" width="92" height="13" uuid="091523be-55c5-4cd6-9ca2-f74be9d24368"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{dryice}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="289" y="19" width="92" height="13" uuid="5cd9739a-4f47-4bee-99ac-2c0450d68218"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{icepackflag}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="189" y="35" width="92" height="13" uuid="af2dd65b-2220-4dc4-b777-4f3fdc805d7c"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{vvmflag}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="284" y="36" width="92" height="13" uuid="1a317322-a1e1-4f1d-87f2-3a63fbb1f064"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{cccardflag}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="386" y="35" width="92" height="13" uuid="0962bf2f-2344-4b90-b514-16ac0462ef1c"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{electronicdevices}]]></textFieldExpression>
 				</textField>
 			</frame>
 			<staticText>

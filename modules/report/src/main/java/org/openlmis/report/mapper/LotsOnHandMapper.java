@@ -180,6 +180,11 @@ public interface LotsOnHandMapper {
             "            pp.manufacturer, \n" +
             "             \n" +
             "            case when i.isshipped=true then 'Yes' else 'No' end as isshipped, \n" +
+            "            case when ii.icepackflag=true then ', Icepacks' else '' end as icepackflag, \n" +
+            "            case when ii.cccardflag=true then ', Cold-chain Card' else '' end as cccardflag, \n" +
+            "            case when ii.electronicdeviceflag=true then ', Electronic devices' else '' end as electronicdevices, \n" +
+            "            case when ii.dryiceflag=true then 'Dry Ice' else '' end as dryice, \n" +
+            "            case when ii.vvmflag=true then 'VVM' else '' end as vvmflag, \n" +
             "            case when isshippedprovided= true then 'Yes' else 'No' end as isshippedprovided, \n" +
             "            shippedcomment, shippedprovidedcomment, \n" +
             "            i.varNumber  \n" +
