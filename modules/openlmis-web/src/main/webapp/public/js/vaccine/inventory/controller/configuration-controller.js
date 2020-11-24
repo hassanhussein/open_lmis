@@ -55,19 +55,20 @@ function VaccineInventoryConfigurationController($scope,programs,DemographicEsti
                 }else{
                     $scope.usedProducts = data.programProductList;
                     angular.forEach($scope.usedProducts,function(value){
+                            var keepGoing = true;
+                            value.id = null;
+
                         angular.forEach(configdata.Configurations,function(value1){
-                            if(value.product.id === value1.product.id){
-                                if(value.programProductIsa){
-                                    value.schedule  = value.programProductIsa.isa.dosesPerYear;
-                                    value.coverage  = value.programProductIsa.isa.whoRatio ;
-                                    value.denominatorEstimateCategoryId = value.programProductIsa.isa.populationSource;
-                                }
+
+                            if(value.product.id === value1.product.id&&keepGoing){
+                              keepGoing=false
+
                                 value.id  = value1.id ;
                                 value.type  = value1.type ;
                                 value.productId  = value1.productId;
-                                //value.schedule  = value1.schedule;
+                                value.schedule  = value1.schedule;
 
-                                //value.coverage  = value1.coverage ;
+                                value.coverage  = value1.coverage ;
 
                                 //value.presentation  = value1.presentation;
                                 value.presentation  = value.product.dosesPerDispensingUnit;
@@ -81,8 +82,14 @@ function VaccineInventoryConfigurationController($scope,programs,DemographicEsti
                                 value.ordering = value1.ordering;
                                 value.dropOut  = value1.dropOut ;
 
-                                //value.denominatorEstimateCategoryId = value1.denominatorEstimateCategoryId;
+                                value.denominatorEstimateCategoryId = value1.denominatorEstimateCategoryId;
+                                if(value.programProductIsa){
+                                                               //    value.schedule  = value.programProductIsa.isa.dosesPerYear;
+                                                                //   value.coverage  = value.programProductIsa.isa.whoRatio ;
+                                                                 //  value.denominatorEstimateCategoryId = value.programProductIsa.isa.populationSource;
+                                                               }
 
+                                return true;
                             }
                         });
                     });
@@ -104,8 +111,8 @@ function VaccineInventoryConfigurationController($scope,programs,DemographicEsti
                 'type':'PRODUCT',
                 'productId':value.product.id,
                 'schedule': (value.schedule)?value.schedule:null,
-                'coverage':(value.coverage)?value.schedule:null,
-                'presentation':(value.presentation)?value.schedule:null,
+                'coverage':(value.coverage)?value.coverage:null,
+                'presentation':(value.presentation)?value.presentation:null,
                 'packedVolumePerDose':(value.packedVolumePerDose)?value.packedVolumePerDose:null,
                 'administrationMode':(value.administrationMode)?value.administrationMode:null,
                 'dilutionSyringe':(value.dilutionSyringe)?value.dilutionSyringe:null,
@@ -119,10 +126,12 @@ function VaccineInventoryConfigurationController($scope,programs,DemographicEsti
 
             };
             $scope.configurations.push(prodObject);
-            //console.log(prodObject);
+            console.log(prodObject);
+
+             console.log($scope.configurations);
         });
 
-        console.log(product);
+
         $scope.saveConfigurations();
     };
 
@@ -186,6 +195,8 @@ function VaccineInventoryConfigurationController($scope,programs,DemographicEsti
     {
         SaveVaccineInventoryConfigurations.update($scope.configurations,function(data){
             $scope.configurations=data.Configurations;
+            console.log("configuration");
+                        console.log(data.Configurations);
             updateProductToDisplay($scope.configurations);
         });
     };
