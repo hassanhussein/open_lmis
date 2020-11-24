@@ -26,6 +26,12 @@ public class LotRepository {
     return mapper.getLotOnHandByStockCardAndLot(stockCardId, lotId);
   }
 
+  public LocationEntry getLotOnHandByStockCardAndLotWms(Long stockCardId, Long lotId) {
+    return mapper.getLotOnHandByStockCardAndLotWms(stockCardId, lotId);
+  }
+
+
+
   public LotOnHand getLotOnHandByStockCardAndLotObject(Long stockCardId, Lot lot) {
     return mapper.getLotOnHandByStockCardAndLotObject(stockCardId, lot);
   }

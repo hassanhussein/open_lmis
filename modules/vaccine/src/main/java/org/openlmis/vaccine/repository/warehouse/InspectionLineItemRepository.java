@@ -43,6 +43,10 @@ public class InspectionLineItemRepository {
                         lotVVm.setLotNumber(lot.getLotNumber());
                         lotVVm.setPassLocationId(lot.getPassLocationId());
                         lotVVm.setExpiryDate(lot.getExpiryDate());
+                        lotVVm.setBoxNumber(lot.getBoxNumber());
+                        lotVVm.setReceivedQuantity(lot.getReceivedQuantity());
+
+
 
                         InspectionFailProblem failed = lotVVm.getFailed();
                         lotVVm.setFailQuantity(failed.getQuantity());

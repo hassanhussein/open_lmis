@@ -44,12 +44,19 @@ public class VaccineInventoryConfigurationService {
     public void save(List<VaccineInventoryProductConfiguration> configurations) {
 
         for (VaccineInventoryProductConfiguration configuration : configurations) {
+
             Long productId = (configuration.getProductId() == null) ? configuration.getProduct().getId() : configuration.getProductId();
             configuration.setProductId(productId);
-            if (configuration.getId() == null) {
+            System.out.println("Product ID:"+productId);
+           // System.out.println(configuration.toString());
 
+
+            if (configuration.getId() == null) {
+               // System.out.println("Passed Saved: "+productId);
                 repository.insert(configuration);
             } else {
+               // System.out.println(configuration.getId()+ " Passed update: "+productId);
+
                 repository.update(configuration);
             }
         }

@@ -195,14 +195,16 @@ public interface EquipmentMapper {
   @Select("select * from manual_test_types")
   List<ManualTestTypes> getManualTestTypes();
 
-  @Select("select distinct d.* from equipment_inventories ei " +
-      " join equipments e on ei.equipmentId = e.id" +
-      " join equipment_cold_chain_equipments ce on ce.equipmentId = ei.equipmentId " +
+  @Select("select distinct d.* from  " +
+      " equipments e " +
+      " join equipment_cold_chain_equipments ce on ce.equipmentId = e.id " +
       " join equipment_cold_chain_equipment_designations d on d.id = ce.designationId " +
-      " join (select eq.* from equipment_inventories ee join equipments eq on eq.id = ee.equipmentId where ee.id = #{equipmentId}) s " +
+      " join (select eq.* from equipments eq where eq.id = #{equipmentId}) s " +
       " on e.manufacturer = s.manufacturer and e.model = s.model")
   List<ColdChainEquipmentDesignation> getPossibleDesignations(@Param("equipmentId") Long equipmentId);
 
-  @Select("select * from equipments where manufacturer = #{manufacturer} and  model = #{model} and designationid = #{designationId}")
+  @Select("select * from equipments e " +
+      "join equipment_cold_chain_equipments ce on ce.equipmentId = e.id " +
+      "where e.manufacturer = #{manufacturer} and  e.model = #{model} and ce.designationid = #{designationId}")
   Equipment getByDesignationAndModel(@Param("manufacturer") String manufacturer, @Param("designationId") Long designationId, @Param("model") String model);
 }

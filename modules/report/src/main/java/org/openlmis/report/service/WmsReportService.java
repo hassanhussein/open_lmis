@@ -138,7 +138,7 @@ public class WmsReportService {
 
             String storageString=dataListStorage.toString();
            // System.out.println(dataListStorage.toString());
-            System.out.println(json);
+           // System.out.println(json);
 
             ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(json.getBytes());
 

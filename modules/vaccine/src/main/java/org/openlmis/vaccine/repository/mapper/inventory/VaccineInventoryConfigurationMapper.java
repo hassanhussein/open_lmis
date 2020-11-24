@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface VaccineInventoryConfigurationMapper {
 
-    @Select("SELECT *" +
+    @Select("SELECT * " +
             " FROM vaccine_inventory_product_configurations ")
     @Results({
             @Result(property = "product", column = "productId", javaType = Product.class,

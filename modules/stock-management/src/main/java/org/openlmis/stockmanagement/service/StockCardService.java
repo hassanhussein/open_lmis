@@ -112,6 +112,31 @@ public class StockCardService {
   }
 
 
+
+
+  public LocationEntry getLotOnHandWms(Long lotId, Lot lotObj, String productCode, StockCard card, StringBuilder str) {
+    LocationEntry lotOnHand = null;
+    if (null != lotId) { // Lot specified by id
+      lotOnHand = lotRepository.getLotOnHandByStockCardAndLotWms(card.getId(), lotId);
+      if (null == lotOnHand) {
+        str.append("error.lot.unknown");
+      }
+    } else if (null != lotObj) { // Lot specified by object
+      if (null == lotObj.getProduct()) {
+        lotObj.setProduct(productRepository.getByCode(productCode));
+      }
+      if (!lotObj.isValid()) {
+        str.append("error.lot.invalid");
+      } else {
+        //TODO:  this call might create a lot if it doesn't exist, need to implement permission check
+      //  lotOnHand = getOrCreateLotOnHand(lotObj, card);
+      }
+    }
+
+    return lotOnHand;
+  }
+
+
   public LotOnHand getLotOnHand(Long lotId, Lot lotObj, String productCode, StockCard card, StringBuilder str) {
     LotOnHand lotOnHand = null;
     if (null != lotId) { // Lot specified by id

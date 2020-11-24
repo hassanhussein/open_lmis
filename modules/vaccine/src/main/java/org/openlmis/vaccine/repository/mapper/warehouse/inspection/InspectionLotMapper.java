@@ -26,16 +26,16 @@ public interface InspectionLotMapper {
     @Update(" UPDATE public.inspection_lots\n" +
             "   SET  inspectionLineItemId=#{inspectionLineItemId}, lotNumber=#{lotNumber}, countedQuantity=#{countedQuantity}, \n" +
             "       passQuantity=#{passQuantity}, passLocationId=#{passLocationId}, failQuantity=#{failedQuantity}, failReason=#{failedReason}, \n" +
-            "       failLocationId=#{failLocationId}, vvmStatus=#{vvmStatus}, modifiedBy=#{modifiedBy}, \n" +
+            "       failLocationId=#{failLocationId},boxNumber=#{boxNumber}, vvmStatus=#{vvmStatus}, modifiedBy=#{modifiedBy}, \n" +
             "       modifiedDate=NOW(), expiryDate=#{expiryDate}, receivedQuantity=#{receivedQuantity}\n" +
             " WHERE id = #{id} ")
     void update(InspectionLot lot);
 
     @Insert("INSERT INTO public.inspection_lots(\n" +
-            "           inspectionLineItemId, lotNumber,passQuantity,countedQuantity, passLocationId,vvmStatus,expiryDate,faillocationid,failquantity,failreason,failVvmId, \n" +
+            "           inspectionLineItemId, lotNumber,boxNumber,receivedQuantity,passQuantity,countedQuantity, passLocationId,vvmStatus,expiryDate,faillocationid,failquantity,failreason,failVvmId, \n" +
             "             createdDate,\n" +
             "             modifiedBy, modifiedDate)\n" +
-            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{passQuantity},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate},#{failLocationId},#{failQuantity},#{failReason},#{failVvmId}, \n" +
+            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{boxNumber},#{receivedQuantity},#{passQuantity},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate},#{failLocationId},#{failQuantity},#{failReason},#{failVvmId}, \n" +
             "           now(),  \n" +
             "            #{modifiedBy}, now()) on conflict(inspectionLineItemId,lotNumber,passLocationId,vvmStatus) DO UPDATE \n" +
             "SET passQuantity=#{passQuantity},faillocationid=#{failLocationId},failquantity=#{failQuantity},failreason=#{failReason},failVvmId=#{failVvmId};")
@@ -43,7 +43,7 @@ public interface InspectionLotMapper {
     void updateOrSave(VVMLots lots);
 
 
-    @Delete("delete from inspection_lots where id=#{inspectionLotId}")
+    @Delete("delete from inspection_lots where inspectionlineitemid=#{inspectionLotId}")
     Integer deleteLotByInspectionLineItem(Long inspectionLotId);
 
 

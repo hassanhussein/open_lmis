@@ -567,7 +567,7 @@ public class StockCardController extends BaseController {
             StringBuilder str = new StringBuilder();
             Long lotId = event.getLotId();
             Lot lotObj = event.getLot();
-            LotOnHand lotOnHand = service.getLotOnHand(lotId, lotObj, productCode, card, str);
+            LocationEntry lotOnHand = service.getLotOnHandWms(lotId, lotObj, productCode, card, str);
             if (!str.toString().equals("")) {
                 System.out.println("message:"+str.toString());
                 return OpenLmisResponse.error(messageService.message(str.toString()), HttpStatus.BAD_REQUEST);
@@ -587,7 +587,7 @@ public class StockCardController extends BaseController {
                     break;
                 default: break;
             }
-            Long onHand = (null != lotObj) ? lotOnHand.getQuantityOnHand() : card.getTotalQuantityOnHand();
+            Long onHand = (null != lotObj) ? lotOnHand.getQuantity() : card.getTotalQuantityOnHand();
            /* if (!event.isValidIssueQuantity(onHand)) {
                 System.out.println("passed 10");
 
@@ -600,7 +600,7 @@ public class StockCardController extends BaseController {
 
             StockCardEntry entry = new StockCardEntry(card, entryType, quantity, occurred, referenceNumber);
             entry.setAdjustmentReason(reason);
-            entry.setLotOnHand(lotOnHand);
+           // entry.setLotOnHand(lotOnHand);
             Map<String, String> customProps = event.getCustomProps();
             if (null != customProps) {
                 for (String k : customProps.keySet()) {

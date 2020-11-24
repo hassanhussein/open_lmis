@@ -89,7 +89,7 @@ public class EquipmentInventoryService {
 
   public EquipmentInventory checkDesignationPotentials(EquipmentInventory inventory) {
     // find all designations for this make and model.
-    List<ColdChainEquipmentDesignation> designations = equipmentService.getAllDesignations(inventory.getId());
+    List<ColdChainEquipmentDesignation> designations = equipmentService.getAllDesignations(inventory.getEquipment().getId());
     inventory.setPossibleDesignations(designations);
     return inventory;
   }
@@ -142,6 +142,7 @@ public class EquipmentInventoryService {
           .equals(inventory.getEquipment().getDesignation().getId())) {
         Equipment newEquipment = equipmentService.getEquipmentByDesignationAndModel(inventory.getEquipment().getManufacturer(), inventory.getEquipment().getDesignation().getId(), inventory.getEquipment().getModel());
         inventory.setEquipment(newEquipment);
+        inventory.setEquipmentId(newEquipment.getId());
       }
 
       repository.update(inventory);
@@ -173,7 +174,6 @@ public class EquipmentInventoryService {
           .previousValue("true")
           .newValue("false")
           .fieldName("IS_ACTIVE")
-          .previousValue(persistedInventory.getIsActive().toString())
           .build();
     } else if (!persistedInventory.getIsActive() && inventory.getIsActive()) {
       return EquipmentInventoryChangeLog.builder()
@@ -182,7 +182,14 @@ public class EquipmentInventoryService {
           .newValue("true")
           .fieldName("IS_ACTIVE")
           .equipmentInventoryId(inventory.getId())
-          .previousValue(persistedInventory.getIsActive().toString())
+          .build();
+    }else if (!persistedInventory.getEquipment().getDesignation().getId().equals(inventory.getEquipment().getDesignation().getId())){
+      return EquipmentInventoryChangeLog.builder()
+          .changeType("DESIGNATION_CHANGE")
+          .previousValue(persistedInventory.getEquipment().getDesignation().getName())
+          .newValue(inventory.getEquipment().getDesignation().getName())
+          .fieldName("DESIGNATION")
+          .equipmentInventoryId(inventory.getId())
           .build();
     }
     return null;

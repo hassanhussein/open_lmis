@@ -59,6 +59,19 @@ public interface LotMapper {
   })
   LotOnHand getLotOnHandByStockCardAndLot(@Param("stockCardId")Long stockCardId, @Param("lotId")Long lotId);
 
+    @Select("SELECT DISTINCT ON(lot_location_entries.lotId) * " +
+            " FROM lot_location_entries" +
+            " WHERE stockcardid = #{stockCardId}" +
+            "   AND lotid = #{lotId}")
+    @Results({
+            @Result(
+                    property = "lot", column = "lotId", javaType = Lot.class,
+                    one = @One(select = "getById"))
+    })
+    LocationEntry getLotOnHandByStockCardAndLotWms(@Param("stockCardId")Long stockCardId, @Param("lotId")Long lotId);
+
+
+
   @Select("SELECT  DISTINCT ON(loh.lotId) *" +
       " FROM lots_on_hand loh" +
       "   JOIN lots l ON l.id = loh.lotid" +

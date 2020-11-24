@@ -90,7 +90,7 @@ public class InspectionController extends BaseController {
          /*   if(inspect.getStatus().equalsIgnoreCase("RELEASED")) {
                 service.updateStockCard(inspect.getId());
             }*/
-            return success("Inspection Updated Successiful");
+            return success("Inspection Updated Successful");
 
         } catch (DataException e) {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
