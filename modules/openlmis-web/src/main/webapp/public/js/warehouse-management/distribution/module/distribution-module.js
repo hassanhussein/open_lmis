@@ -9,7 +9,7 @@
  */
 
 
-var distributionModule = angular.module('distribution', ['openlmis', 'ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable','lr.upload','ngFileUpload','angularFileUpload']).
+var distributionModule = angular.module('distribution', ['openlmis', 'dynamicNumber','ui.bootstrap.modal','leaflet-directive', 'ui.bootstrap.dialog', 'ui.bootstrap.dropdownToggle', 'ui.bootstrap.pagination', 'ngDraggable','lr.upload','ngFileUpload','angularFileUpload']).
     config(['$routeProvider', function ($routeProvider) {
       $routeProvider.
 

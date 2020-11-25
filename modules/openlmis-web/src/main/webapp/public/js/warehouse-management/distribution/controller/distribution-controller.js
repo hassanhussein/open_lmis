@@ -13,6 +13,9 @@
  */
 function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, UpdateDistributionOrderStatus,localStorageService,ApproveOnlyDistribution,StockEventWms) {
 
+
+$scope.qty=[]
+$scope.vialPresentationErrorList=[];
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
      }();
@@ -67,6 +70,51 @@ $scope.requstions.push({
 });
 
 
+$scope.initializeQty=function (){
+
+
+
+
+
+$scope.requstions.forEach(function(region){
+var productArray=[];
+    $scope.soh.forEach(function(product){
+        var lotArray=[];
+        product.lots.forEach(function(lot){
+            lotArray.push('')
+        })
+
+
+        productArray.push(lotArray)
+
+    })
+$scope.qty.push(productArray)
+
+})
+
+
+
+
+}
+
+$scope.initializeQty();
+
+
+$scope.checkVialPresentation=function(){
+$scope.vialPresentationErrorList=[]
+    _.each($scope.requstions,function(region){
+        _.each(region.ordered,function(order){
+           _.each(order.given,function(lot){
+           console.log(lot)
+                if(!Number.isInteger(parseInt(lot.qty,10)/parseInt(lot.packSize,10))){
+                        $scope.vialPresentationErrorList.push(`Batch: ${lot.number}(${lot.vvmId}) Quantity Issued should be multiple of ${lot.packSize}`)
+                }
+           })
+        })
+    })
+
+}
+
 
 
 
@@ -78,8 +126,9 @@ var given = _.findWhere(ordered.given,{lotId:lot.lotId,vvmId:lot.vvmId,locationI
 if(given===undefined){
     return '';
 }
-console.log(given.qty);
+
 return given.qty;
+
 
 
 };
@@ -118,18 +167,32 @@ return '';
 return ordered.gap;
 
 };
-$scope.giveLot=function(req,prod,lot,qty,regionIndex){
-//console.log(lot);
+$scope.giveLot=function(req,prod,lot,qty,regionIndex,productIndex,lotIndex){
+
+
+
+
+
+
+
+
+
+
+
 var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
 var given= _.findWhere(ordered.given,{lotId:lot.lotId,vvmId:lot.vvmId,locationId:lot.locationId});
-if(qty===""){
+if(qty==="" ||qty==0){
 qty=0;
 }
-console.log("called filled");
 
-console.log(ordered.given);
+
+
+//check vialPresentaion here
+//if(qty>0){
+//    $scope.vialPresentationError=!isInteger(qty/lot.lot.packSize)?true:false
+//}
 
 //deduct soh for this product for this lot
 var lotQuantity=0;
@@ -141,15 +204,13 @@ if(given){
 given.qty=qty;
 given.quantity=lotQuantity/lot.packSize;
 
-//console.log('edit lot')
+
 }else{
 //push this lot
 //var lotQuantity=0;
  if(qty){
       lotQuantity=parseInt(qty,10);
   }
-
-  console.log(lotQuantity+" ii");
 
 ordered.given.push({
 lotId:lot.lotId,
@@ -166,6 +227,8 @@ quantity:lotQuantity/lot.packSize
 });
 }
 
+$scope.checkVialPresentation()
+
 //find lot sum
 var sum=0;
 ordered.given.forEach(function(given){
@@ -179,11 +242,34 @@ var all_requisitions=_.filter($scope.requstions,function(req){
 return;
 }
 );
+
+//reset other inputs when qty<lot.maxSoh
+if(qty<lot.maxSoh){
+
+$scope.qty.forEach(function(region,qtyRegionIndex){
+
+    region.forEach(function(product,qtyProductIndex){
+        product.forEach(function(lot,qtyLotIndex){
+        if(qtyLotIndex>lotIndex && qtyProductIndex==productIndex ){
+        console.log('reset')
+
+        $scope.qty[qtyRegionIndex][qtyProductIndex][qtyLotIndex]=''
+        }
+
+        })
+    })
+})
+
+}
+
+
+
+
+
 lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.lotId,lot.locationId,prod.productId);
 if(Number.isNaN(lot.amount)){
 lot.amount=lot.maxSoh;
 }
-//console.log("Giving "+qty+"of"+prod.product+" of lot "+lot.number+" to "+req.name)
 };
 
 
@@ -226,7 +312,19 @@ $scope.cancel=function(){
 
 
 
+$scope.releaseForPickingDistribution=function(
+if(vialPresentationErrorList.length){
+return;
+}
+
+$scope.saveDistribution()
+
+)
+
+
 $scope.saveDistribution = function () {
+
+
 
 //if ($scope.distributionForm.$error.required) {
 //            $scope.showError = true;
@@ -255,21 +353,19 @@ $scope.requstions.forEach(function(req){
 
 });
 
-console.log($scope.distribution_list);
+
 
  SaveOnlyDistribution.save($scope.distribution_list, function (distribution) {
-  console.log(distribution);
-console.log($scope.distribution_list);
+
   $scope.$parent.distributed = true;
   $scope.$parent.message="Distribution updated successfully";
   $location.path('');
-                  console.log('distributed');
+
 
                         });
 
   UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
-                 console.log(distribution);
-                    console.log('distributedsa');
+
   });
 
 };
@@ -316,14 +412,13 @@ var lineItem = {};
 
 
 
-            console.log(product);
+
 
              lineItem.productId = product.productId;
              lineItem.quantity = product.totalQuantity;
               var totalQuantity=0;
 
-              console.log("given lot");
-              console.log(product.given);
+
             var l = {};
                           lineItem.lots = [];
 
@@ -339,7 +434,7 @@ var lineItem = {};
 
 
              if (lotQuantity !== null && lotQuantity > 0) {
-                                         console.log("here again");
+
                 totalQuantity=totalQuantity+lotQuantity;
 
                      var event = {};
@@ -390,9 +485,9 @@ var lineItem = {};
                 }
 
             });
-                         console.log("distribution");
 
-             console.log(distribution);
+
+
            distributionLineItemList.push(distribution);
 
 });
@@ -403,7 +498,7 @@ var lineItem = {};
 
 
 StockEventWms.save({facilityId: homeFacility}, events, function (data) {
- console.log(data);
+
  if (data.success) {
 $scope.distribution_list=[];
 //console.log($scope.)
@@ -427,19 +522,19 @@ $scope.requstions.forEach(function(req){
 ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 
-console.log($scope.distribution_list);
+
   $scope.$parent.distributed = true;
     $scope.$parent.message="Distribution approved successfully!";
 
   $location.path('');
-                  console.log('distributed');
+
 
                         });
 
 
 
 UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
-                    console.log('distributed');
+
   });
 
                     }
@@ -481,7 +576,7 @@ DistributionController.resolve = {
               $timeout(function () {
 
                   GetCurrentStock.get({}, function (data) {
-                 console.log(data);
+
 
                       deferred.resolve(data);
                   });
@@ -503,7 +598,7 @@ DistributionController.resolve = {
                             facilityId: $route.current.params.facilityId
                         },
                         function (data) {
-                        console.log(data.pendingRequest);
+
                         deferred.resolve(data.pendingRequest);
 
                         });
