@@ -48,7 +48,7 @@ public class VaccineCoverageItem extends BaseModel {
   private Long regularMale;
   private Long regularFemale;
 
-  private Long outreachMale;
+  private long outreachMale=0;
   private Long outreachFemale;
 
   private Long campaignMale;
