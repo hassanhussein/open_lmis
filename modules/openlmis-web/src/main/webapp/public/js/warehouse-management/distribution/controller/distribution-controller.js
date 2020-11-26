@@ -14,7 +14,7 @@
 function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, UpdateDistributionOrderStatus,localStorageService,ApproveOnlyDistribution,StockEventWms) {
 
 
-$scope.qty=[]
+$scope.qty=[];
 $scope.vialPresentationErrorList=[];
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
@@ -81,39 +81,39 @@ var productArray=[];
     $scope.soh.forEach(function(product){
         var lotArray=[];
         product.lots.forEach(function(lot){
-            lotArray.push('')
-        })
+            lotArray.push('');
+        });
 
 
-        productArray.push(lotArray)
+        productArray.push(lotArray);
 
-    })
-$scope.qty.push(productArray)
+    });
+$scope.qty.push(productArray);
 
-})
-
-
+});
 
 
-}
+
+
+};
 
 $scope.initializeQty();
 
 
 $scope.checkVialPresentation=function(){
-$scope.vialPresentationErrorList=[]
+$scope.vialPresentationErrorList=[];
     _.each($scope.requstions,function(region){
         _.each(region.ordered,function(order){
            _.each(order.given,function(lot){
-           console.log(lot)
+           console.log(lot);
                 if(!Number.isInteger(parseInt(lot.qty,10)/parseInt(lot.packSize,10))){
-                        $scope.vialPresentationErrorList.push(`Batch: ${lot.number}(${lot.vvmId}) Quantity Issued should be multiple of ${lot.packSize}`)
+                        $scope.vialPresentationErrorList.push('Batch: ${lot.number}(${lot.vvmId}) Quantity Issued should be multiple of ${lot.packSize}');
                 }
-           })
-        })
-    })
+           });
+        });
+    });
 
-}
+};
 
 
 
@@ -183,7 +183,7 @@ var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
 var given= _.findWhere(ordered.given,{lotId:lot.lotId,vvmId:lot.vvmId,locationId:lot.locationId});
-if(qty==="" ||qty==0){
+if(qty==="" ||qty===0){
 qty=0;
 }
 
@@ -227,7 +227,7 @@ quantity:lotQuantity/lot.packSize
 });
 }
 
-$scope.checkVialPresentation()
+$scope.checkVialPresentation();
 
 //find lot sum
 var sum=0;
@@ -251,14 +251,14 @@ $scope.qty.forEach(function(region,qtyRegionIndex){
     region.forEach(function(product,qtyProductIndex){
         product.forEach(function(lot,qtyLotIndex){
         if(qtyLotIndex>lotIndex && qtyProductIndex==productIndex ){
-        console.log('reset')
+        console.log('reset');
 
-        $scope.qty[qtyRegionIndex][qtyProductIndex][qtyLotIndex]=''
+        $scope.qty[qtyRegionIndex][qtyProductIndex][qtyLotIndex]='';
         }
 
-        })
-    })
-})
+        });
+    });
+});
 
 }
 
@@ -317,7 +317,7 @@ if(vialPresentationErrorList.length){
 return;
 }
 
-$scope.saveDistribution()
+$scope.saveDistribution();
 
 };
 
