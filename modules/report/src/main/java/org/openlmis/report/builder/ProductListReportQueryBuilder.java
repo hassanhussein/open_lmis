@@ -38,7 +38,8 @@ public class ProductListReportQueryBuilder {
 
        predicate += " and pp.programId = " + program;
 
-       predicate += " and pp.productCategoryId = " + productCategory;
+       if(productCategory != null && !productCategory.isEmpty())
+         predicate += " and pp.productCategoryId = " + productCategory;
 
        return predicate;
     }

@@ -42,7 +42,7 @@ public class FacilityReportQueryBuilder {
         LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
         LEFT_OUTER_JOIN("facility_owners FS on FS.facilityid = F.id");
         JOIN("USERS U ON U.facilityId = f.id");
-        WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId + " )");
+       // WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId + " )");
         WHERE(facilityStatusFilteredBy("F.active", reportType));
         if (filter.getZone() != 0) {
             WHERE("( F.geographicZoneId = #{filterCriteria.zone} or GZ.region_id = #{filterCriteria.zone} or GZ.zone_id = #{filterCriteria.zone} or GZ.parent = #{filterCriteria.zone} ) ");
@@ -62,12 +62,17 @@ public class FacilityReportQueryBuilder {
         }*/
         if (filter.getProgram() != 0) {
             WHERE(programIsFilteredBy("ps.programId"));
-            WHERE("F.id in (select facility_id from vw_user_facilities" +
-                    " where user_id = cast( #{userId} as int4) and program_id = cast(#{filterCriteria.program} as int4))");
+        }
+        if(filter.getSchedule() != 0) {
+
+    //        WHERE("F.id in (select facility_id from vw_user_facilities" +
+       //             " where user_id = cast( #{userId} as int4) and program_id = cast(#{filterCriteria.program} as int4))");
             WHERE("F.id in (select m.facilityid from requisition_group_members m where m.requisitionGroupId in (select rpgs.requisitionGroupId from requisition_group_program_schedules rpgs where" +
                     " rpgs.programId = #{filterCriteria.program} and rpgs.scheduleid = #{filterCriteria.schedule}) )");
             WHERE("ps.active = true");
         }
+
+
         String query = SQL();
         return query;
     }

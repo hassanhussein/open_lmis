@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="facility_list" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="2.593742460100003"/>
 	<property name="ireport.x" value="108"/>
@@ -119,7 +119,7 @@ WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
 					<textFieldExpression><![CDATA[$F{facilityType}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement mode="Transparent" x="410" y="0" width="60" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267"/>
+					<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="430" y="0" width="109" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="56fa579b-f8be-4f08-bcb3-14f443e36267"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -127,7 +127,7 @@ WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
 					<textFieldExpression><![CDATA[$F{district}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement mode="Transparent" x="470" y="0" width="78" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="59a3d167-b987-4be7-ba88-37db139fd2c4"/>
+					<reportElement mode="Transparent" x="539" y="0" width="78" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="59a3d167-b987-4be7-ba88-37db139fd2c4"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
@@ -135,36 +135,15 @@ WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
 					<textFieldExpression><![CDATA[$F{owner}]]></textFieldExpression>
 				</textField>
 				<textField pattern="" isBlankWhenNull="true">
-					<reportElement mode="Transparent" x="548" y="0" width="89" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="95ee177b-33b1-4733-91bb-0546e8a46527"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{address1}]]></textFieldExpression>
-				</textField>
-				<textField pattern="" isBlankWhenNull="true">
-					<reportElement mode="Transparent" x="637" y="0" width="96" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f273ee02-b78f-4369-8430-7315db848516"/>
+					<reportElement mode="Transparent" x="617" y="0" width="185" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="f273ee02-b78f-4369-8430-7315db848516"/>
 					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 						<paragraph lineSpacing="Single"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{phoneNumber}]]></textFieldExpression>
 				</textField>
-				<textField pattern="" isBlankWhenNull="true">
-					<reportElement positionType="Float" mode="Transparent" x="733" y="0" width="69" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="7df807f8-c34b-424e-97a6-7ca7b6152c74">
-						<property name="local_mesure_unitx" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.x" value="px"/>
-						<property name="local_mesure_unitwidth" value="pixel"/>
-						<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					</reportElement>
-					<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
-						<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
-						<paragraph lineSpacing="Single"/>
-					</textElement>
-					<textFieldExpression><![CDATA[$F{fax}.toUpperCase() == "NULL"?"-":$F{fax}]]></textFieldExpression>
-				</textField>
 				<textField>
-					<reportElement x="344" y="0" width="66" height="20" uuid="77e67e05-1eff-466c-8a2b-c84f3bd231e3"/>
+					<reportElement x="344" y="0" width="86" height="20" uuid="77e67e05-1eff-466c-8a2b-c84f3bd231e3"/>
 					<textElement verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{province}]]></textFieldExpression>
 				</textField>
@@ -244,46 +223,32 @@ WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
 				<textFieldExpression><![CDATA[$R{label.facility.type}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="410" y="0" width="60" height="27" uuid="172d7d45-8a90-440a-ac15-4634af623433"/>
+				<reportElement x="430" y="0" width="109" height="27" uuid="172d7d45-8a90-440a-ac15-4634af623433"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.district}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="470" y="0" width="78" height="27" uuid="1a162b59-959e-4f20-932a-615bae98fdda"/>
+				<reportElement x="539" y="0" width="78" height="27" uuid="1a162b59-959e-4f20-932a-615bae98fdda"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.ownership}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="548" y="0" width="89" height="27" uuid="e147f2da-46a4-44cf-b4e0-640d83f4520a"/>
-				<textElement verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{label.address}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="637" y="0" width="96" height="27" uuid="675e95c7-295b-4520-842f-c29db111054e"/>
+				<reportElement x="617" y="0" width="185" height="27" uuid="675e95c7-295b-4520-842f-c29db111054e"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{label.phone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="733" y="0" width="68" height="27" uuid="1b9a54b9-b517-4540-b4ae-12ff91b28070"/>
+				<reportElement x="344" y="0" width="86" height="27" uuid="270883bf-33d7-4b8b-aae9-a8dba205f172"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{label.fax}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="344" y="0" width="66" height="27" uuid="270883bf-33d7-4b8b-aae9-a8dba205f172"/>
-				<textElement verticalAlignment="Middle">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{label.province}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{label.region}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
