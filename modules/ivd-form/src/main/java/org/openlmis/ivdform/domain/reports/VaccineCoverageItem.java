@@ -45,11 +45,11 @@ public class VaccineCoverageItem extends BaseModel {
   private String displayName;
   private String productName;
 
-  private Long regularMale;
+  private long regularMale=0;
   private Long regularFemale;
 
   private long outreachMale=0;
-  private Long outreachFemale;
+  private long outreachFemale=0;
 
   private Long campaignMale;
   private Long campaignFemale;
@@ -61,8 +61,8 @@ public class VaccineCoverageItem extends BaseModel {
   private String ageGroupName;
   private Long ageCategoryId;
 
-  private Long regularOutReachMale;
-  private Long regularOutReachFeMale;
+  private long regularOutReachMale=0;
+  private long regularOutReachFeMale=0;
 
   public void copyValuesFrom(VaccineCoverageItem source){
     this.setRegularMale(source.getRegularMale());
