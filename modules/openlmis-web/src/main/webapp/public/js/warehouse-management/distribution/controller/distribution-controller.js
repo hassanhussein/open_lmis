@@ -312,14 +312,14 @@ $scope.cancel=function(){
 
 
 
-$scope.releaseForPickingDistribution=function(
+$scope.releaseForPickingDistribution=function(){
 if(vialPresentationErrorList.length){
 return;
 }
 
 $scope.saveDistribution()
 
-)
+};
 
 
 $scope.saveDistribution = function () {
