@@ -22,8 +22,8 @@ public interface SCPortalInterfaceMapper {
             "LIMIT 100 ")
     List<HashMap<String, Object>> getAllProducts();
 
-    @Select(" SELECT f.code as \"facility_id\", productcode as \"product_code\"\n" +
-            ", 4 as \"level\", stockinhand::text as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"updated_at\" \n" +
+    @Select(" SELECT f.code as \"facilityId\", productcode as \"productCode\"\n" +
+            ", 4 as \"level\", stockinhand::text as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"updatedAt\" \n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "JOIN facilities F on r.facilityId = F.ID" +
@@ -32,12 +32,12 @@ public interface SCPortalInterfaceMapper {
 
     List<HashMap<String, Object>> getStockInHand();
 
-    @Select("   SELECT f.code as facility_id, productcode as product_code,\n" +
-            "                       quantityReceived::text as quantity_received,\n" +
-            "                       beginningBalance::text as begining_balance, \n" +
+    @Select("   SELECT f.code as facilityId, productcode as productCode,\n" +
+            "                       quantityReceived::text as quantityReceived,\n" +
+            "                       beginningBalance::text as beginningBalance, \n" +
             "                       case when totallossesandadjustments < 0 then \n" +
             "                       (-1 * coalesce(totallossesandadjustments,0))::text  else\n" +
-            "                       totallossesandadjustments::text end as adjustment_quantity,\n" +
+            "                       totallossesandadjustments::text end as adjustmentQuantity,\n" +
             "                       to_char(pp.enddate,'YYYY-MM-dd') as period,\n" +
             "                       lower(ft.description) as reason\n" +
             "                        from requisitions r\n" +
@@ -52,10 +52,10 @@ public interface SCPortalInterfaceMapper {
             "                        limit 100")
     List<HashMap<String, Object>> getWastages();
 
-    @Select(" SELECT f.code as facility_id, productcode as \"product_code\",\n" +
-            "           amc::text as \"actual_consumed\",\n" +
+    @Select(" SELECT f.code as facilityId, productcode as \"productCode\",\n" +
+            "           amc::text as \"actualConsumed\",\n" +
             "                      to_char(pp.enddate,'YYYY-MM-dd') as period,\n" +
-            "           normalizedconsumption::text as \"forecast_consumed\"\n" +
+            "           normalizedconsumption::text as \"forecastConsumed\"\n" +
             "            from requisitions r\n" +
             "            JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "            JOIN facilities F on r.facilityId = F.ID\n" +

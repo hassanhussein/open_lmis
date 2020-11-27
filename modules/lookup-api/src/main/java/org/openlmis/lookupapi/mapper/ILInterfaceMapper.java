@@ -73,33 +73,35 @@ public interface ILInterfaceMapper {
     @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
     void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
 
-    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", F.CODE as \"order_from_facility_id\",  \n" +
-            "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"order_type\" , \n" +
-            "QuantityApproved as \"ordered_quantity\", quantityReceived as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
+    @Select("select pr.code as \"programCode\", o.ordernumber as \"orderId\", p.code as \"productCode\", F.CODE as \"orderFromFacilityId\",  \n" +
+            "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"orderType\" , \n" +
+            "QuantityApproved as \"orderedQuantity\", quantityReceived as \"deliveredQuantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"orderDate\",\n" +
             "\n" +
-            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivery_promise_date\",\n" +
-            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivered_date\",\n" +
-            " 189790-1 as \"delivery_from_facility_id\",\n" +
-            "r.status as \"order_status\",\n" +
-            "30 as target_days\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"deliveryPromiseDate\",\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"deliveryDate\",\n" +
+            " 189790-1 as \"deliveryFromFacilityId\",\n" +
+            "r.status as \"orderStatus\",\n" +
+            "30 as targetDays\n" +
             "from requisitions r\n" +
             "\n" +
             "JOIN requisition_line_items i On r.id = i.rnrid\n" +
             "JOIN orders o ON r.id = o.id\n" +
             "JOIN products p ON i.productcode = p.code\n" +
             "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN programs pr ON r.programId = pr.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
             " WHERE f.code NOT IN('.') AND f.code IS NOT NULL " +
             "limit 100")
     List<HashMap<String, Object>> getOrderDelivery();
 
-    @Select(" select p.code as \"product_code\", f.code as \"facility_id\",  to_char(r.modifieddate, 'yyyy-MM-dd') as \"date\",\n" +
-            "stockinhand as \"available_quantity\", quantityReceived as \"stock_quantity\", case when amc > 0 then stockinhand/ amc else 0 end as \"stock_of_month\"\n" +
+    @Select(" select pr.code as \"programCode\", p.code as \"productCode\", f.code as \"facility_id\",  to_char(r.modifieddate, 'yyyy-MM-dd') as \"period\",\n" +
+            "stockinhand as \"availableQuantity\", quantityReceived as \"stockQuantity\", case when amc > 0 then stockinhand/ amc else 0 end as \"stockOfMonth\"\n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i On r.id = i.rnrid\n" +
             "JOIN orders o ON r.id = o.id\n" +
             "JOIN products p ON i.productcode = p.code\n" +
             "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN programs pr ON r.programId = pr.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
             " where f.code is not null \n" +
             "limit 100")
