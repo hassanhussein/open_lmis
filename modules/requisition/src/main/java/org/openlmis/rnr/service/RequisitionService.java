@@ -169,7 +169,9 @@ public class RequisitionService {
         // if program supports equipments, initialize it here.
         if (program.getIsEquipmentConfigured()) {
             populateEquipments(requisition);
-            populateManualTests(requisition);
+            if (!program.getIsEquipmentTestDisabled()) {
+                populateManualTests(requisition);
+            }
         }
 
         requisition.setSourceApplication(sourceApplication);

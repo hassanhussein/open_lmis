@@ -171,6 +171,7 @@ public interface ProgramMapper {
     @Update("UPDATE programs SET " +
             "code = #{code}, name = #{name}, " +
             "isEquipmentConfigured = #{isEquipmentConfigured}, " +
+            "isEquipmentTestDisabled = #{isEquipmentTestDisabled}, " +
             "showNonFullSupplyTab = #{showNonFullSupplyTab}, " +
             "hideSkippedProducts = #{hideSkippedProducts}, " +
             "enableSkipPeriod = #{enableSkipPeriod}," +

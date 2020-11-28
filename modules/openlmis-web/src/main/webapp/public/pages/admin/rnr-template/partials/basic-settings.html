@@ -90,12 +90,22 @@
       </div>
     </div>
     <div class="form-row clearfix row-fluid">
-      <div class="span6">
+      <div class="span4">
         <div class="form-cell">
           <div class="checkbox">
             <label for="equipmentApplies">
               <input class="checkbox" ng-model="program.isEquipmentConfigured" id="equipmentApplies" type="checkbox"/>
               <span openlmis-message="admin.program.equipment.applies"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div ng-if="program.isEquipmentConfigured" class="span6">
+        <div class="form-cell">
+          <div class="checkbox">
+            <label for="equipmentTestApplies">
+              <input class="checkbox" ng-model="program.isEquipmentTestDisabled" id="equipmentTestApplies" type="checkbox"/>
+              <span openlmis-message="admin.program.equipment.test.disabled"</span>
             </label>
           </div>
         </div>

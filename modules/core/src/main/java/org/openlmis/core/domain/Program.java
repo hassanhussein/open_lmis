@@ -51,6 +51,8 @@ public class Program extends BaseModel implements Importable {
     private Boolean regimenTemplateConfigured;
     @ImportField(name = "Equipment Configured", type = "boolean")
     private Boolean isEquipmentConfigured;
+    @ImportField(name = "Equipment Test Disabled", type = "boolean")
+    private Boolean isEquipmentTestDisabled;
     @ImportField(name = "Enable Skip Period", type = "boolean")
     private Boolean enableSkipPeriod;
 
