@@ -41,6 +41,7 @@ public class Equipment extends BaseModel implements Importable{
   @ImportField(mandatory = true, name = "Equipment Type", nested = "code")
   private EquipmentType equipmentType;
 
+  private Long modelId;
   private Long equipmentTypeId;
 
   @ImportField(mandatory = true, name = "Manufacturer")

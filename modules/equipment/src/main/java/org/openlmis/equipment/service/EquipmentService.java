@@ -50,7 +50,9 @@ public class EquipmentService {
   public List<Equipment> getAll(){
       return repository.getAll();
   }
-
+  public List<Equipment> getAllEquipments(){
+    return repository.getAllEquipments();
+  }
   public List<ColdChainEquipment> getAllCCE(Long equipmentTypeId, Pagination page){
     return coldChainEquipmentRepository.getAll(equipmentTypeId,page);
   }

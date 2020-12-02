@@ -35,7 +35,9 @@ public class EquipmentRepository {
   public List<Equipment> getAll(){
     return mapper.getAll();
   }
-
+  public List<Equipment> getAllEquipments(){
+    return mapper.getAllEquipmnets();
+  }
   public List<Equipment> getAllByType(Long equipmentTypeId) {
     return mapper.getAllByType(equipmentTypeId);
   }

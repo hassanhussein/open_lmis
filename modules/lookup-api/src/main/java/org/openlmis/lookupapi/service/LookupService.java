@@ -303,6 +303,10 @@ public class LookupService {
         return this.equipmentProductRepository.getByProgramEquipmentId(4l);
     }
 
+    public List<Equipment> getAllEquipmentsEquipments() {
+        return this.equipmentRepository.getAllEquipments();
+    }
+
     public List<Equipment> getAllEquipments() {
         return this.equipmentRepository.getAll();
     }

@@ -412,7 +412,7 @@ public class LookupController {
 
     @RequestMapping(value = "/rest-api/lookup/equipments")
     public ResponseEntity getAllEquipments() {
-        return RestResponse.response("equipments", lookupService.getAllEquipments());
+        return RestResponse.response("equipments", lookupService.getAllEquipmentsEquipments());
     }
 
     @RequestMapping(value = "/rest-api/lookup/equipment-cold-chain-equipments")
