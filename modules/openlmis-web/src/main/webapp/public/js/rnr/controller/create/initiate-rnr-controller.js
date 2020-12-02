@@ -97,18 +97,6 @@ function InitiateRnrController($scope, $location, ProgramProductCategories, Requ
             $scope.selectedFacilityId = null;
         }
     };
-    $scope.loadProductCategoriesForProgram = function () {
-        if ($scope.selectedProgram.id) {
-            ProgramProductCategories.get({programId: $scope.selectedProgram.id}, function (data) {
-                $scope.productCategories = data.productCategoryList;
-                $scope.selectedProductCategoryId = null;
-                $scope.error = null;
-            }, {});
-        } else {
-            $scope.productCategories = null;
-            $scope.selectedProductCategoryId = null;
-        }
-    };
 
     var getPeriodSpecificButton = function (activeForRnr) {
         return '<input type="button" ng-click="initRnr(row.entity)" openlmis-message="button.proceed" class="btn btn-primary btn-small grid-btn" ng-show="' + activeForRnr + '"/>';
@@ -211,17 +199,13 @@ function InitiateRnrController($scope, $location, ProgramProductCategories, Requ
     $scope.programOptionMessage = function () {
         return optionMessage($scope.programs, messageService.get("label.select.program"));
     };
-    $scope.productCategoryOptionMessage = function () {
-        return optionMessage($scope.programs, messageService.get("label.select.product.category "));
-    };
-    $scope.refreshForProgram=function () {
-        $scope. loadFacilitiesForProgram();
-        $scope.loadProductCategoriesForProgram();
+
+    $scope.refreshForProgram = function () {
+        $scope.loadFacilitiesForProgram();
 
     };
-    $scope.refreshForProgramForMyfacility=function () {
-        $scope. loadPeriods();
-        $scope.loadProductCategoriesForProgram();
+    $scope.refreshForProgramForMyfacility = function () {
+        $scope.loadPeriods();
 
     };
     $scope.loadPeriods = function () {
@@ -251,13 +235,10 @@ function InitiateRnrController($scope, $location, ProgramProductCategories, Requ
     };
 
     $scope.initRnr = function (selectedPeriod) {
-        var selectedProductCategory = (typeof($scope.selectedProductCategory) !== "undefined" && $scope.selectedProductCategory)?
-            JSON.parse($scope.selectedProductCategory):"";
         var data = {
             selectedType: $scope.selectedType,
             selectedProgram: $scope.selectedProgram,
             selectedFacilityId: $scope.selectedFacilityId,
-            selectedProductCategory: $scope.selectedProductCategory,
             isNavigatedBack: true
         };
         navigateBackService.setData(data);
@@ -286,8 +267,7 @@ function InitiateRnrController($scope, $location, ProgramProductCategories, Requ
                     }
                     $scope.$parent.rnrData = data;
                     createRnrPath = '/create-rnr/' + $scope.$parent.rnrData.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id +
-                        "?supplyType=fullSupply&page=1" +
-                        "&productCategory=" + selectedProductCategory.id + "&category=" + selectedProductCategory.name;
+                        "?supplyType=fullSupply&page=1";
                     $location.url(createRnrPath);
                 });
             } else if (hasPermission('CREATE_REQUISITION')) {
@@ -300,8 +280,7 @@ function InitiateRnrController($scope, $location, ProgramProductCategories, Requ
                 }, {}, function (data) {
                     $scope.$parent.rnrData = data;
                     createRnrPath = '/create-rnr/' + $scope.$parent.rnrData.rnr.id + '/' + $scope.selectedFacilityId + '/' + $scope.selectedProgram.id +
-                        "?supplyType=fullSupply&page=1&" +
-                        "productCategory=" + selectedProductCategory.id + "&category=" + selectedProductCategory.name;
+                        "?supplyType=fullSupply&page=1&";
                     $location.url(createRnrPath);
                 }, function (data) {
                     $scope.error = data.data.error ? data.data.error : messageService.get("error.requisition.not.exist");

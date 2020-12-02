@@ -8,26 +8,48 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function CreateRequisitionController($scope, requisitionData, comments, pageSize, rnrColumns, lossesAndAdjustmentsTypes, facilityApprovedProducts, requisitionRights, equipmentOperationalStatus,
-                                     regimenTemplate, showMaxStock, $location, DeleteRequisition, SkipRequisition, Requisitions, $routeParams, $dialog, requisitionService, $q) {
+function CreateRequisitionController($scope, requisitionData, comments, pageSize, rnrColumns, lossesAndAdjustmentsTypes,
+                                     facilityApprovedProducts, requisitionRights, equipmentOperationalStatus,
+                                     regimenTemplate, showMaxStock, $location, DeleteRequisition, SkipRequisition,
+                                     Requisitions, $routeParams, $dialog, requisitionService, $q, programProductCategories) {
 
     var NON_FULL_SUPPLY = 'nonFullSupply';
     var FULL_SUPPLY = 'fullSupply';
     var REGIMEN = 'regimen';
     var EQUIPMENT = 'equipment';
-
+    $scope.productCategories = programProductCategories;
+    $scope.productCategories.push({"name": " select all", "id": 0});
+    var allFullItems = requisitionData.rnr.fullSupplyLineItems;
+    $scope.productCategoryChanged = function (selectedProductCategory) {
+        $scope.loadRequisitions();
+        $scope.filterLineItemsByCategory(selectedProductCategory);
+    };
     $scope.showMaxStock = showMaxStock;
 
     $scope.pageSize = pageSize;
-    if ($routeParams.category !== "undefined" && typeof($routeParams.category) !== "undefined" && $routeParams.category) {
-        var allFullItems = requisitionData.rnr.fullSupplyLineItems;
-        var categoryFilter = {productCategory: $routeParams.category};
-        var allLineItems = _.where(allFullItems, categoryFilter);
-        requisitionData.rnr.fullSupplyLineItems = allLineItems;
-    }
+
+
     $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, equipmentOperationalStatus);
     $scope.rnrComments = comments;
+    $scope.filterLineItemsByCategory = function (selectedProductCategory) {
+        if (selectedProductCategory !== "undefined" && typeof(selectedProductCategory) !== "undefined" && selectedProductCategory) {
+            var allLineItems = [];
+            var productCategory = (typeof(selectedProductCategory) !== "undefined" && selectedProductCategory) ?
+                JSON.parse(selectedProductCategory) : "";
+            if (productCategory.id !== 0) {
+                var categoryFilter = {productCategory: productCategory.name};
+                allLineItems = _.where(allFullItems, categoryFilter);
+            } else {
+                allLineItems = allFullItems;
+            }
+            requisitionData.rnr.fullSupplyLineItems = allLineItems;
+            $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths, equipmentOperationalStatus);
+            $scope.rnrComments = comments;
+            requisitionService.refreshGrid($scope, $location, $routeParams, true);
+        }
+    };
 
+    $scope.filterLineItemsByCategory();
     $scope.deleteRnR = function () {
 
         var callBack = function (result) {
@@ -86,7 +108,6 @@ function CreateRequisitionController($scope, requisitionData, comments, pageSize
     $scope.lossesAndAdjustmentTypes = lossesAndAdjustmentsTypes;
     $scope.facilityApprovedProducts = facilityApprovedProducts;
     $scope.equipmentOperationalStatus = equipmentOperationalStatus;
-
     $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns,
         ['quantityApproved', 'remarks']);
 
@@ -329,6 +350,12 @@ function CreateRequisitionController($scope, requisitionData, comments, pageSize
         $scope.submitError = $scope.submitMessage = $scope.error = $scope.message = "";
     }
 
+    $scope.loadRequisitions = function () {
+        Requisitions.get({id: $scope.rnr.id}, function (data) {
+            requisitionData = data;
+            allFullItems = requisitionData.rnr.fullSupplyLineItems;
+        });
+    };
     function removeExtraDataForPostFromRnr() {
         var rnr = {
             "id": $scope.rnr.id,
@@ -464,6 +491,15 @@ CreateRequisitionController.resolve = {
         $timeout(function () {
             ProgramRegimenTemplate.get({programId: $route.current.params.program}, function (data) {
                 deferred.resolve(data.template);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    programProductCategories: function ($q, $timeout, $route, ProgramProductCategories) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            ProgramProductCategories.get({programId: $route.current.params.program}, function (data) {
+                deferred.resolve(data.productCategoryList);
             }, {});
         }, 100);
         return deferred.promise;
