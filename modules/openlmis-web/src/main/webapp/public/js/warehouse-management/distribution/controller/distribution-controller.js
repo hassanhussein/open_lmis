@@ -120,7 +120,7 @@ $scope.allFieldsFieldErrorList=[];
  _.each($scope.requstions,function(region){
         _.each(region.ordered,function(order){
            _.each(order.given,function(lot){
-                if(lot.qty && parseInt(lot.qty,10)>=0)){
+                if(lot.qty && parseInt(lot.qty,10)>=0){
                         $scope.allFieldsFieldErrorList.push('Please fill all quantity issued for '+region.name);
                 }
            });
