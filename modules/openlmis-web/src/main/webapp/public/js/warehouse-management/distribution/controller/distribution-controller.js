@@ -327,7 +327,7 @@ $scope.releaseForPickingDistribution=function(){
 
 $scope.checkAllFields();
 if($scope.vialPresentationErrorList.length||$scope.allFieldsFieldErrorList.length){
-return
+return;
 
 
 }
@@ -579,7 +579,7 @@ UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribu
 
 
 
-};
+}
 
 DistributionController.resolve = {
 
