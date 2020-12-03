@@ -783,6 +783,9 @@ console.log($scope.fiiCost);
 
             newLot.expirationDate = $filter('date')($scope.newLot.expirationDate, "yyyy-MM-dd");
         }
+
+    newLot.manufactureDate = $filter('date')($scope.newLot.manufactureDate, "yyyy-MM-dd");
+
         Lot.create(newLot, function(data) {
             $scope.newLotModal = false;
             $scope.batchCreated=true;

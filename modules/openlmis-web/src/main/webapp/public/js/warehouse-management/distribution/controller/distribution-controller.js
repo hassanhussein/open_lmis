@@ -65,7 +65,7 @@ $scope.requstions.push({
 
 });
 
-console.log($scope.requstions);
+//console.log($scope.requstions);
 
 
 });
@@ -115,7 +115,6 @@ $scope.vialPresentationErrorList=[];
 
 };
 
-
 $scope.checkAllFields=function(){
 $scope.allFieldsFieldErrorList=[];
  _.each($scope.requstions,function(region){
@@ -128,11 +127,6 @@ $scope.allFieldsFieldErrorList=[];
         });
     });
 };
-
-
-
-
-
 
 
 
@@ -200,7 +194,7 @@ var region =$scope.requstions[regionIndex];
 var ordered = _.findWhere(region.ordered,{productId:prod.productId});
 
 var given= _.findWhere(ordered.given,{lotId:lot.lotId,vvmId:lot.vvmId,locationId:lot.locationId});
-if(qty==="" ||qty==0){
+if(qty==="" ||qty===0){
 qty=0;
 }
 
@@ -244,7 +238,7 @@ quantity:lotQuantity/lot.packSize
 });
 }
 
-$scope.checkVialPresentation()
+$scope.checkVialPresentation();
 
 //find lot sum
 var sum=0;
@@ -268,14 +262,14 @@ $scope.qty.forEach(function(region,qtyRegionIndex){
     region.forEach(function(product,qtyProductIndex){
         product.forEach(function(lot,qtyLotIndex){
         if(qtyLotIndex>lotIndex && qtyProductIndex==productIndex ){
-        console.log('reset')
+        console.log('reset');
 
-        $scope.qty[qtyRegionIndex][qtyProductIndex][qtyLotIndex]=''
+        $scope.qty[qtyRegionIndex][qtyProductIndex][qtyLotIndex]='';
         }
 
-        })
-    })
-})
+        });
+    });
+});
 
 }
 
@@ -333,12 +327,15 @@ $scope.releaseForPickingDistribution=function(){
 
 $scope.checkAllFields();
 if($scope.vialPresentationErrorList.length||$scope.allFieldsFieldErrorList.length){
+$scope.releaseForPickingDistribution=function(){
+if(vialPresentationErrorList.length){
 return;
 }
 
-$scope.saveDistribution()
+$scope.saveDistribution();
 
 }
+};
 
 
 $scope.saveDistribution = function () {

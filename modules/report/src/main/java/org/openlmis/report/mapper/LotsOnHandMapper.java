@@ -208,7 +208,7 @@ public interface LotsOnHandMapper {
     @Select("SELECT distinct l.lotNumber,to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, i.receiveNumber, lo.code binLocation, S.name supplyName,\n" +
             " r.invoiceNumber, r.poNumber, p.code productCode, p.primaryName product, u.code dosageUnit,\n" +
             "\n" +
-            "asnL.quantity  quantityOrdered, l.lotNumber, l.manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate,\n" +
+            "asnL.quantity  quantityOrdered, l.lotNumber, to_char(L.manufacturingDate,'dd/MM/YYYY') manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate,\n" +
             "L.quantity quantityReceived, date_part('month',age(  L.expiryDate::date,receiveDate::date))  as shelfLife,r.note\n" +
             "\n" +
             "FROM RECEIVES R\n" +

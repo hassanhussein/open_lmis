@@ -280,6 +280,8 @@ public class VaccineOrderRequisitionService {
                 if(searchParam.equals("%")){
                     return orderRequisitionRepository.getPendingRequest(userId, facilityId, programId);
                 }else {
+                    System.out.println("Passed:"+searchParam);
+
                     return orderRequisitionRepository.searchPendingRequest(userId, facilityId, programId,searchParam,column);
 
                 }
