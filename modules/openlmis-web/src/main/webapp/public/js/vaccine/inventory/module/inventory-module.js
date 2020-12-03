@@ -8,7 +8,7 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.   See the GNU Affero General Public License for more details.
  */
 
-angular.module('vaccine-inventory', ['openlmis','ngGrid', 'ngTable','ui.bootstrap','angularCombine','ui.bootstrap.modal','ui.bootstrap.pagination','barcodeGenerator'])
+angular.module('vaccine-inventory', ['openlmis','dynamicNumber','ngGrid', 'ngTable','ui.bootstrap','angularCombine','ui.bootstrap.modal','ui.bootstrap.pagination','barcodeGenerator'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.
             when('/stock-adjustment', {controller:StockAdjustmentController, templateUrl:'partials/stock-adjustment.html',resolve:StockAdjustmentController.resolve}).

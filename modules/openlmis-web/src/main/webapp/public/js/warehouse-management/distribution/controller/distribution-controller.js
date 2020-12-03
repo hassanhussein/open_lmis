@@ -11,11 +11,12 @@
  *    You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-function DistributionController($q,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, UpdateDistributionOrderStatus,localStorageService,ApproveOnlyDistribution,StockEventWms) {
+function DistributionController($q,$timeout,homeFacility,StockEvent,wmsSoh,all_orders,UpdateOrderRequisitionStatus,SaveDistributionList,StockCards,$window,$scope,$filter,$routeParams, $route,$location, $rootScope,SaveOnlyDistribution, UpdateDistributionOrderStatus,localStorageService,ApproveOnlyDistribution,StockEventWms) {
 
 
-$scope.qty=[]
+$scope.qty=[];
 $scope.vialPresentationErrorList=[];
+$scope.allFieldsFieldErrorList=[];
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
      }();
@@ -64,7 +65,7 @@ $scope.requstions.push({
 
 });
 
-//console.log($scope.requstions);
+console.log($scope.requstions);
 
 
 });
@@ -81,39 +82,55 @@ var productArray=[];
     $scope.soh.forEach(function(product){
         var lotArray=[];
         product.lots.forEach(function(lot){
-            lotArray.push('')
-        })
+            lotArray.push('');
+        });
 
 
-        productArray.push(lotArray)
+        productArray.push(lotArray);
 
-    })
-$scope.qty.push(productArray)
+    });
+$scope.qty.push(productArray);
 
-})
-
-
+});
 
 
-}
+
+
+};
 
 $scope.initializeQty();
 
 
 $scope.checkVialPresentation=function(){
-$scope.vialPresentationErrorList=[]
+$scope.vialPresentationErrorList=[];
     _.each($scope.requstions,function(region){
         _.each(region.ordered,function(order){
            _.each(order.given,function(lot){
-           console.log(lot)
                 if(!Number.isInteger(parseInt(lot.qty,10)/parseInt(lot.packSize,10))){
-                        $scope.vialPresentationErrorList.push(`Batch: ${lot.number}(${lot.vvmId}) Quantity Issued should be multiple of ${lot.packSize}`)
+                        $scope.vialPresentationErrorList.push('Batch: '+lot.number+' ('+lot.vvmId+') Quantity Issued should be multiple of '+lot.packSize);
                 }
-           })
-        })
-    })
+           });
+        });
+    });
 
-}
+};
+
+
+$scope.checkAllFields=function(){
+$scope.allFieldsFieldErrorList=[];
+ _.each($scope.requstions,function(region){
+        _.each(region.ordered,function(order){
+           _.each(order.given,function(lot){
+                if(lot.qty && parseInt(lot.qty,10)>=0)){
+                        $scope.allFieldsFieldErrorList.push('Please fill all quantity issued for '+region.name);
+                }
+           });
+        });
+    });
+};
+
+
+
 
 
 
@@ -306,20 +323,22 @@ if (ordered!==undefined) {
 
 
 $scope.cancel=function(){
- $scope.$parent.distributed = true;
+ $scope.$parent.distributed = false;
   $location.path('');
 };
 
 
 
-$scope.releaseForPickingDistribution=function(
-if(vialPresentationErrorList.length){
+$scope.releaseForPickingDistribution=function(){
+
+$scope.checkAllFields();
+if($scope.vialPresentationErrorList.length||$scope.allFieldsFieldErrorList.length){
 return;
 }
 
 $scope.saveDistribution()
 
-)
+}
 
 
 $scope.saveDistribution = function () {
@@ -359,6 +378,13 @@ $scope.requstions.forEach(function(req){
 
   $scope.$parent.distributed = true;
   $scope.$parent.message="Distribution updated successfully";
+
+  $timeout(function(){
+
+        $scope.$parent.distributed = false;
+
+        },4000);
+
   $location.path('');
 
 
@@ -525,6 +551,12 @@ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
   $scope.$parent.distributed = true;
     $scope.$parent.message="Distribution approved successfully!";
+
+    $timeout(function(){
+
+            $scope.$parent.distributed = false;
+
+            },4000);
 
   $location.path('');
 

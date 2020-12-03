@@ -61,7 +61,7 @@ function VaccineInventoryConfigurationController($scope,programs,DemographicEsti
                         angular.forEach(configdata.Configurations,function(value1){
 
                             if(value.product.id === value1.product.id&&keepGoing){
-                              keepGoing=false
+                              keepGoing=false;
 
                                 value.id  = value1.id ;
                                 value.type  = value1.type ;

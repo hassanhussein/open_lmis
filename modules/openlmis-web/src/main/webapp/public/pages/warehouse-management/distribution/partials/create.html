@@ -77,6 +77,14 @@
 
                 </div>
 
+
+                <div class="alert alert-danger" ng-show="allFieldsFieldErrorList.length">
+                    <ul>
+                        <li ng-repeat="error in allFieldsFieldErrorList">{{error}}</li>
+                    </ul>
+
+                </div>
+
                 <div class="rnr-table">
                     <div style="width:40%;" class="float-left left-table parent">
                         <table class="table table-bordered" fixed-table-header>
