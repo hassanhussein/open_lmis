@@ -327,15 +327,12 @@ $scope.releaseForPickingDistribution=function(){
 
 $scope.checkAllFields();
 if($scope.vialPresentationErrorList.length||$scope.allFieldsFieldErrorList.length){
-$scope.releaseForPickingDistribution=function(){
-if(vialPresentationErrorList.length){
-return;
-}
+return
 
+
+}
 $scope.saveDistribution();
-
 };
-}
 
 
 $scope.saveDistribution = function () {
@@ -641,4 +638,3 @@ DistributionController.resolve = {
 
 };
 
-}
