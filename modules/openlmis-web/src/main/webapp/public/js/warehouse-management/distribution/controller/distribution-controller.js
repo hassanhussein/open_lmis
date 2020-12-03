@@ -334,8 +334,8 @@ return;
 
 $scope.saveDistribution();
 
-}
 };
+}
 
 
 $scope.saveDistribution = function () {
@@ -582,7 +582,7 @@ UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribu
 
 
 
-}
+};
 
 DistributionController.resolve = {
 
@@ -640,3 +640,5 @@ DistributionController.resolve = {
         },
 
 };
+
+}
