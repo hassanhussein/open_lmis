@@ -17,14 +17,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.openlmis.upload.Importable;
+import org.openlmis.upload.annotation.ImportField;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class ELMISInterfaceDataSet extends BaseModel {
+public class ELMISInterfaceDataSet extends BaseModel implements Importable {
 
+    @ImportField(mandatory = true, name = "Interface id")
     private Long interfaceId;
+    @ImportField(mandatory = true, name = "Data set name")
     private String dataSetname;
+    @ImportField(mandatory = true, name = "Data set id")
     private String dataSetId;
 }

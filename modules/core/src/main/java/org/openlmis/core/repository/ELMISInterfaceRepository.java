@@ -220,4 +220,16 @@ public class ELMISInterfaceRepository {
     public List<productDTO> getProductListForCovid() {
         return mapper.getProductListForCovid();
     }
+
+    public ELMISInterfaceDataSet getElmisInterfaceProductCodeAndInterfaceId(Long interfaceId, String dataSetname) {
+         return mapper.getElmisInterfaceProductCodeAndInterfaceId(interfaceId,dataSetname);
+    }
+
+    public void updateDataSet(ELMISInterfaceDataSet elmisInterfaceDataSet){
+        mapper.updateDataSet(elmisInterfaceDataSet);
+    }
+
+    public Integer insertDataSet(ELMISInterfaceDataSet elmisInterfaceDataSet) {
+       return mapper.insertDataSet(elmisInterfaceDataSet);
+    }
 }

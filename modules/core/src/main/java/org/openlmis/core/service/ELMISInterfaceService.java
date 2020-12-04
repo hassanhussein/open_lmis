@@ -58,6 +58,9 @@ public class ELMISInterfaceService {
     @Autowired
     private FacilityService facilityService;
 
+    @Autowired
+    private ProductService productService;
+
     @Value("${interface.document.uploadLocation}")
     private String fileStoreLocation;
 
@@ -447,4 +450,23 @@ public class ELMISInterfaceService {
 
         return null;
     }
+
+    public ELMISInterfaceDataSet getElmisInterfaceProductCodeAndInterfaceId(ELMISInterfaceDataSet dataSet) {
+
+            return repository.getElmisInterfaceProductCodeAndInterfaceId(dataSet.getInterfaceId(),
+                    dataSet.getDataSetname());
+    }
+
+    public void saveUploadedDataSet(ELMISInterfaceDataSet dataSet) {
+        Product product = productService.getByCode(dataSet.getDataSetname());
+
+        if(dataSet != null && product != null) {
+            if(dataSet.getId() != null) {
+                repository.updateDataSet(dataSet);
+            } else {
+                repository.insertDataSet(dataSet);
+            }
+        }
+    }
+
 }

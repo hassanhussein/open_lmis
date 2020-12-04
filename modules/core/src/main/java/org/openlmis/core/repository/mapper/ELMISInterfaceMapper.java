@@ -67,6 +67,7 @@ public interface ELMISInterfaceMapper {
             "            modifiedby, modifieddate, createdby, createddate)" +
             "    VALUES (#{interfaceId}, #{dataSetname}, #{dataSetId}, " +
             "     #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()))")
+    @Options(useGeneratedKeys = true)
     Integer insertDataSet(ELMISInterfaceDataSet dataSet);
 
     @Delete("DELETE from interface_dataset where id = #{id}")
@@ -239,4 +240,8 @@ public interface ELMISInterfaceMapper {
             "JOIN programs pr ON pp.programId = PR.ID\n" +
             "WHERE PROGRAMID = 12")
     List<productDTO> getProductListForCovid();
+
+    @Select(" SELECT * FROM interface_dataset WHERE interfaceId=#{interfaceId} and dataSetname=#{dataSetname}")
+    ELMISInterfaceDataSet getElmisInterfaceProductCodeAndInterfaceId(@Param("interfaceId") Long interfaceId,
+                                                                     @Param("dataSetname") String dataSetname);
 }

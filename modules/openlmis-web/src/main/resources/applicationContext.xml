@@ -569,6 +569,16 @@
                     </bean>
                 </entry>
 
+                <entry key="elmis-model">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Interface Data Set"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ELMISInterfaceDataSet</value>
+                        </property>
+                        <property name="recordHandler" ref="elmisInterfaceDataSetPersistenceHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>
