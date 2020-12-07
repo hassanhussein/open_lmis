@@ -59,6 +59,10 @@ angular.module('mainReport', ['openlmis', 'ngTable', 'angularCombine', 'ui.boots
             controller: ListFacilitiesController,
             templateUrl: 'partials/facility-list.html',
             reloadOnSearch: false
+        }).when('/product-list', {
+            controller: ListProductsController,
+            templateUrl: 'partials/product-list.html',
+            reloadOnSearch: false
         }).when('/lab-equipments-by-donor', {
             controller: LabEquipmentListByDonorReportController,
             templateUrl: 'partials/lab-equipments-by-donor.html',

@@ -96,6 +96,9 @@ public class RequisitionPredicateHelper {
   public static String facilityStatusFilteredBy(String field, String facilityStatusList) {
     return String.format("%1$s in ('%2$s')", field, facilityStatusList);
   }
+  public static String productStatusFilteredBy(String field, String facilityStatusList) {
+    return String.format("%1$s in ('%2$s')", field, facilityStatusList);
+  }
   public static String facilityOwnerIsFilteredBy(String field) {
     return String.format("%s= #{filterCriteria.facilityOwner}", field);
   }

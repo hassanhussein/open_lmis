@@ -894,14 +894,14 @@ public class InteractiveReportController extends BaseController {
                                          @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                                          @RequestParam(value = "max", required = false, defaultValue = "10") int max,
                                          HttpServletRequest request) {
-       Report report = reportManager.getReportByKey("audit_trail");
-       report.getReportDataProvider().setUserId(loggedInUserId(request));
-       List<AuditTrailReport> auditTrailList = (List<AuditTrailReport>) report.getReportDataProvider()
-               .getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
+        Report report = reportManager.getReportByKey("audit_trail");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<AuditTrailReport> auditTrailList = (List<AuditTrailReport>) report.getReportDataProvider()
+                .getReportBody(request.getParameterMap(), request.getParameterMap(), page, pageSize);
 
-       int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
+        int totalCount = report.getReportDataProvider().getReportTotalCount(request.getParameterMap());
 
-       return new Pages(page, totalCount, auditTrailList);
+        return new Pages(page, totalCount, auditTrailList);
     }
 
     @RequestMapping(value = "/reportdata/emergencyRequest", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -920,12 +920,13 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, reportList);
     }
+
     @RequestMapping(value = "/reportdata/detail-rejected-rnrs", method = GET, headers = BaseController.ACCEPT_JSON)
     public Pages getDetailRejectedRNRReportData( //@PathVariable(value = "reportKey") String reportKey,
-                                                @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
-                                                HttpServletRequest request
+                                                 @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                 @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                 // @RequestParam(value = "period", required = false, defaultValue = "0") int period ,
+                                                 HttpServletRequest request
     ) {
 
 
@@ -936,6 +937,7 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, reportList);
     }
+
     @RequestMapping(value = "/reportdata/emergency-order-geozones", method = GET, headers = BaseController.ACCEPT_JSON)
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AGGREGATE_CONSUMPTION_REPORT')")
     public Pages getEmergencyRnrTotalByGeographicZone(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
@@ -952,12 +954,13 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, reportList);
     }
+
     @RequestMapping(value = "/reportdata/pending-approval", method = GET, headers = BaseController.ACCEPT_JSON)
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AGGREGATE_CONSUMPTION_REPORT')")
     public Pages getPendingRequistions(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                      @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
-                                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                      HttpServletRequest request
+                                       @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                       HttpServletRequest request
     ) {
         Report report = reportManager.getReportByKey("pending-requisitions");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
@@ -972,14 +975,32 @@ public class InteractiveReportController extends BaseController {
     @RequestMapping(value = "/reportdata/requisition-group-members", method = GET, headers = BaseController.ACCEPT_JSON)
 //    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AGGREGATE_CONSUMPTION_REPORT')")
     public Pages getRequisitionGroupMember(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                       @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
-                                       @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                       HttpServletRequest request
+                                           @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                           @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                           HttpServletRequest request
     ) {
         Report report = reportManager.getReportByKey("requisition-group-member-report");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
         List<EmergencyRequistionReport> reportList =
                 (List<EmergencyRequistionReport>) report
+                        .getReportDataProvider()
+                        .getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, reportList);
+    }
+
+
+    @RequestMapping(value = "/reportdata/product-list-report", method = GET, headers = BaseController.ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AGGREGATE_CONSUMPTION_REPORT')")
+    public Pages getProductList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                HttpServletRequest request
+    ) {
+        Report report = reportManager.getReportByKey("product-list-report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<ProductReport> reportList =
+                (List<ProductReport>) report
                         .getReportDataProvider()
                         .getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 

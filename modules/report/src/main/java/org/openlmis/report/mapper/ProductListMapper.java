@@ -13,7 +13,12 @@
 package org.openlmis.report.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.ResultSetType;
+import org.openlmis.report.builder.FacilityReportQueryBuilder;
+import org.openlmis.report.builder.ProductQueryBuilder;
 import org.openlmis.report.model.dto.ProductList;
+import org.openlmis.report.model.params.ProductReportParam;
+import org.openlmis.report.model.report.ProductReport;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +26,7 @@ import java.util.List;
 @Repository
 public interface ProductListMapper {
 
-   // mahmed 07.11.2013 full product list
+    // mahmed 07.11.2013 full product list
     @Select(value = "SELECT\n" +
             "products.id,\n" +
             "products.code,\n" +
@@ -46,10 +51,36 @@ public interface ProductListMapper {
             "LEFT OUTER JOIN product_forms ON  products.formid  = product_forms.id  \n" +
             "LEFT OUTER JOIN dosage_units ON  products.dosageunitid =  dosage_units.id  \n")
     @Results(value = {
-        @Result(property = "id", column = "id"),
-        @Result(property = "programs", javaType = List.class, column = "id",
-            many = @Many(select = "getProgramsForProduct"))
+            @Result(property = "id", column = "id"),
+            @Result(property = "programs", javaType = List.class, column = "id",
+                    many = @Many(select = "getProgramsForProduct"))
     })
     List<ProductList> getList();
+
+
+    @SelectProvider(type = ProductQueryBuilder.class, method = "getQuery")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = 10, timeout = 0, useCache = true, flushCache = true)
+    @Results(value = {
+            @Result(column = "id", property = "id"),
+            @Result(column = "code", property = "code"),
+            @Result(column = "fullname", property = "fullName"),
+            @Result(column = "primaryName", property = "primaryName"),
+            @Result(column = "strength", property = "strength"),
+            @Result(column = "dispensingUnit", property = "dispensingUnit"),
+            @Result(column = "active", property = "active"),
+            @Result(column = "dosageCode", property = "dosageUnitCode"),
+            @Result(column = "dosageUnitId", property = "dosageUnitId"),
+            @Result(column = "packSize", property = "packSize"),
+            @Result(column = "packRoundingThreshold", property = "packRoundingThreshold"),
+            @Result(column = "dosesPerDispensingUnit", property = "dosesPerDispensingUnit"),
+            @Result(column = "fullSupply", property = "fullSupply"),
+            @Result(column = "programid", property = "programId"),
+            @Result(column = "program", property = "programName"),
+            @Result(column = "programcode", property = "programCode")
+    })
+    List<ProductReport> SelectFilteredSortedPagedProducts(
+            @Param("filterCriteria") ProductReportParam filterCriteria,
+            @Param("userId") Long userId
+    );
 
 }

@@ -702,6 +702,15 @@
                     <property name="title" value="report.title.requisitions.pending.approval"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="product-list-report"/>
+                    <property name="template" value="product-list-report.jasper"/>
+                    <property name="reportDataProvider" ref="productReportDataProvider"/>
+                    <property name="id" value=" Product List Report"/>
+                    <property name="name" value="Product List  Report"/>
+                    <property name="title" value="report.title.product.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

@@ -1600,4 +1600,9 @@ services.factory('RequisitionScheduleGroupMembers', function ($resource) {
     return $resource('/reports/reportdata/requisition-group-members.json', {}, {});
 });
 
+services.factory('ProductReportList', function ($resource) {
+    return $resource('/reports/reportdata/product-list-report.json', {}, {});
+});
+
+
 

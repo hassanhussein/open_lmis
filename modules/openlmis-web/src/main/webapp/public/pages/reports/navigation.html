@@ -146,7 +146,9 @@
           <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#facility-list?status=true" openlmis-message="menu.report.facility.list"></a>
           </li>
-
+          <li ng-show="hasPermission('VIEW_FACILITY_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#product-list?status=true" openlmis-message="menu.report.product.list"></a>
+          </li>
           <li ng-show="hasPermission('VIEW_USER_SUMMARY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#user-summary" openlmis-message="menu.report.user.summary"></a>
           </li>
