@@ -121,10 +121,12 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
                 var events=[];
                 $scope.stockCardsToDisplay.forEach(function(st){
                     st.stockCards.forEach(function(s){
+                    console.log(s);
                         if(s.lotsOnHand !==undefined && s.lotsOnHand.length>0){
                             s.lotsOnHand.forEach(function(l){
-                                if(l.quantity !== undefined && (l.quantity - l.quantityOnHand) !== 0)
+                                if(l.quantity!=null &&l.quantity !== undefined && (l.quantity - l.quantityOnHand) !== 0)
                                 {
+                                        console.log(l);
                                         l.adjustmentReasons.forEach(function(reason){
                                             var event={};
                                             event.type= "ADJUSTMENT";

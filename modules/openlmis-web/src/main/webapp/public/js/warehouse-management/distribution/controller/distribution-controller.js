@@ -577,8 +577,6 @@ UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribu
 
 
 
-
-
 }
 
 DistributionController.resolve = {
