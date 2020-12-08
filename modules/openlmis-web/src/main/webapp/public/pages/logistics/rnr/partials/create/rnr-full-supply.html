@@ -33,15 +33,21 @@
            ng-click="showAddSkippedProductsModal()"
            class="pull-right btn btn-primary"
            openlmis-message="button.add"/>
-
-    <select ui-select2 placeholder="label.select.product.category"
-            id="productCategoriesList" class="span3"
-            ng-model="selectedProductCategory" ng-change="productCategoryChanged(selectedProductCategory)">
-        <option value=""></option>
-        <option ng-repeat="category in productCategories | orderBy: 'displayOrder'"
-                value="{{category}}">{{category.name}}
-        </option>
-    </select>
+    <div class="row-fluid">
+        <div class="span2">
+            <label openlmis-message="label.product.category"></label>
+        </div>
+        <div class="span10">
+        <select ui-select2 placeholder="label.select.product.category"
+                id="productCategoriesList" class="span3"
+                ng-model="selectedProductCategory" ng-change="productCategoryChanged(selectedProductCategory)">
+            <option value=""></option>
+            <option ng-repeat="category in productCategories | orderBy: 'displayOrder'"
+                    value="{{category}}">{{category.name}}
+            </option>
+        </select>
+        </div>
+    </div>
     <div class="clearfix"></div>
 
     <div class="rnr-table" ng-show="page.fullSupply.length" tab-scroll bottom-offset="180" adjust-height>
