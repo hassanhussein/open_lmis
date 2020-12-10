@@ -123,7 +123,7 @@ public interface VaccineOrderRequisitionMapper {
             if(column.equalsIgnoreCase("picklistid")||column.equalsIgnoreCase("orderid")) {
             sql.append(" JOIN vaccine_distributions vd on vd.orderid = r.id " );
             }
-            sql.append("  WHERE ra.userId = ").append(userId).append("   and r.programId = ").append(programId).append(" AND R.STATUS  IN('SUBMITTED','UNDER_PICKING') and  isVerified = false AND  sn.facilityId =").append(facilityId);
+            sql.append("  WHERE ra.userId = ").append(userId).append("   and r.programId = ").append(programId).append(" AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','ISSUED') and  isVerified = false AND  sn.facilityId =").append(facilityId);
 
             if(column.equalsIgnoreCase("picklistid")) {
                 sql.append(" AND vd.picklistid=CAST(#{searchParam} as bigint) ");
