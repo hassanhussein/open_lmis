@@ -90,8 +90,8 @@ public interface ILInterfaceMapper {
             "JOIN program_products pp On pp.productid = p.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
             " JOIN processing_periods per ON r.periodId = per.id" +
-            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL "+
-            " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE"
+            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL ORDER BY R.ID DESC LIMIT 1000 "
+          //  " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE"
     )
     List<HashMap<String, Object>> getOrderDelivery(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
@@ -105,7 +105,9 @@ public interface ILInterfaceMapper {
             " JOIN processing_periods per ON r.periodiD = per.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
             "  WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL  " +
-            " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE"
+            " ORDER BY R.ID DESC LIMIT 1000" +
+           // " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
+            " "
             )
     List<HashMap<String, Object>> getEmergencyCommodites(@Param("startDate") String startDate, @Param("endDate") String endDate);
 

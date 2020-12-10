@@ -12,7 +12,7 @@ public interface SCPortalInterfaceMapper {
 
     @Select(" SELECT 'COVID19' as \"program\", \n" +
             "p.code as \"product_code\", \n" +
-            "p.description as name\n, " +
+            "p.primaryName as name\n, " +
             " p.description || p.dispensingunit as description, " +
             " case when pc.code = 'msus' then 'medical supplies' else 'pharmaceuticals' end as category  " +
             " FROM program_products pP\n" +
@@ -20,7 +20,7 @@ public interface SCPortalInterfaceMapper {
             "JOIN products p ON p.id = pp.productId \n" +
             "join programs pr ON pr.id = pp.programId and pr.id =1\n" +
             "join product_categories pc ON pp.productcategoryid = pc.id\n" +
-            " ")
+            "")
     List<HashMap<String, Object>> getAllProducts();
 
     @Select(" SELECT f.hfrcode as \"facility_id\", productcode as \"product_code\"\n" +
@@ -30,8 +30,9 @@ public interface SCPortalInterfaceMapper {
             "JOIN facilities F on r.facilityId = F.ID" +
             " JOIN processing_periods per ON r.periodiD = per.id" +
             " where f.code::text is not null\n" +
-            "               and  f.hfrcode::text not in ('.','-') \n" +
-            " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
+            "               and  f.hfrcode::text not in ('.','-') " +
+            " ORDER BY R.ID DESC LIMIT 1000\n" +
+          //  " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
 
             "")
 
@@ -55,7 +56,8 @@ public interface SCPortalInterfaceMapper {
             "                      where f.code::text is not null  \n" +
             "               and  f.hfrcode::text not in ('.','-') \n" +
             "                and type in ('LOST', 'DAMAGED','EXPIRED' )\n" +
-            " and pp.startDate>= #{startDate}::DATE and pp.endDate <=#{endDate}::DATE" +
+            " ORDER BY R.ID DESC LIMIT 1000" +
+           // " and pp.startDate>= #{startDate}::DATE and pp.endDate <=#{endDate}::DATE" +
 
             "                        ")
     List<HashMap<String, Object>> getWastages(@Param("startDate") String startDate, @Param("endDate") String endDate);
@@ -71,7 +73,8 @@ public interface SCPortalInterfaceMapper {
             "            JOIN processing_periods pp on r.periodId = pp.id\n" +
             "            JOIN losses_adjustments_types ft ON l.type = ft.name\n" +
             "            where f.hfrcode::text is not null and f.code::text not in ('.','-')\n" +
-            " and pp.startDate::date >= #{startDate}::DATE and pp.endDate::date <=#{endDate}::DATE" +
+            "  ORDER BY R.ID DESC LIMIT 1000" +
+           // " and pp.startDate::date >= #{startDate}::DATE and pp.endDate::date <=#{endDate}::DATE" +
             "            ")
     List<HashMap<String,Object>> getForeCastingData(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
