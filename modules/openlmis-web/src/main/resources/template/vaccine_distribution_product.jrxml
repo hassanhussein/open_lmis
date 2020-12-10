@@ -16,6 +16,11 @@
 				<box>
 					<pen lineWidth="1.0"/>
 				</box>
+				<subreport>
+					<reportElement x="11" y="0" width="531" height="40" uuid="c797c7bf-ae63-4931-890c-b2f12bc5d5f5"/>
+					<dataSourceExpression><![CDATA[((net.sf.jasperreports.engine.data.JsonDataSource)$P{REPORT_DATA_SOURCE}).subDataSource("itemLots")]]></dataSourceExpression>
+					<subreportExpression><![CDATA[JasperCompileManager.compileReport($P{vaccine_distribution_lots})]]></subreportExpression>
+				</subreport>
 				<textField isBlankWhenNull="true">
 					<reportElement x="142" y="9" width="101" height="21" uuid="b39d394f-5bfe-44cf-a770-ec0af4c2c01d"/>
 					<textElement>

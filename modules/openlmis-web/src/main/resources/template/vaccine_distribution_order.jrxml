@@ -115,12 +115,6 @@
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{binLocation}]]></textFieldExpression>
 			</textField>
-			<rectangle>
-				<reportElement x="351" y="0" width="70" height="20" uuid="9a85138a-4cd1-4238-bfa7-bbaef5351196"/>
-				<graphicElement>
-					<pen lineWidth="0.7"/>
-				</graphicElement>
-			</rectangle>
 		</band>
 	</detail>
 	<columnFooter>
