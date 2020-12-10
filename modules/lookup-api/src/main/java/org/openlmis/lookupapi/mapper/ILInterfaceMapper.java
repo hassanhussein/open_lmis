@@ -114,7 +114,7 @@ public interface ILInterfaceMapper {
             "JOIN products p ON i.productcode = p.code\n" +
             "JOIN program_products pp On pp.productid = p.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
-            " where f.code is not null \n" +
-            "limit 100")
+            " where f.code is not null \n"
+            )
     List<HashMap<String, Object>> getThScpEmergencyCommodites();
 }
