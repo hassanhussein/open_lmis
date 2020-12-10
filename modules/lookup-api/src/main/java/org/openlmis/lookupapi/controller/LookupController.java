@@ -480,6 +480,14 @@ public class LookupController {
     }
 */
 
+    //THSP
+
+    @RequestMapping(value = "/rest-api/thscp-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getThScpEmergencyCommodites() {
+        return RestResponse.response("data", lookupService.getThScpEmergencyCommodites());
+    }
+
+
     @RequestMapping(value = "/rest-api/sc-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getEmergencystockpiles() {
         return RestResponse.response("data", lookupService.getEmergencyCommodites());

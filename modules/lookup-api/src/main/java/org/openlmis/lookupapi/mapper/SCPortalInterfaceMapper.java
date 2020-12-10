@@ -19,25 +19,26 @@ public interface SCPortalInterfaceMapper {
             "JOIN products p ON p.id = pp.productId \n" +
             "join programs pr ON pr.id = pp.programId and pr.id =1\n" +
             "join product_categories pc ON pp.productcategoryid = pc.id\n" +
-            "LIMIT 100 ")
+            " ")
     List<HashMap<String, Object>> getAllProducts();
 
-    @Select(" SELECT f.code as \"facilityId\", productcode as \"productCode\"\n" +
-            ", 4 as \"level\", stockinhand::text as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"updatedAt\" \n" +
+    @Select(" SELECT f.code as \"facility_id\", productcode as \"product_code\"\n" +
+            ", 4 as \"level\", stockinhand::text as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"updated_at\" \n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "JOIN facilities F on r.facilityId = F.ID" +
             " where f.code::text is not null\n" +
-            "limit 100 ")
+            "               and  f.code::text not in ('.','-') \n" +
+            "")
 
     List<HashMap<String, Object>> getStockInHand();
 
-    @Select("   SELECT f.code as facilityId, productcode as productCode,\n" +
-            "                       quantityReceived::text as quantityReceived,\n" +
-            "                       beginningBalance::text as beginningBalance, \n" +
+    @Select("   SELECT f.code as facility_id, productcode as product_code,\n" +
+            "                       quantityReceived::text as quantity_received,\n" +
+            "                       beginningBalance::text as begining_balance, \n" +
             "                       case when totallossesandadjustments < 0 then \n" +
             "                       (-1 * coalesce(totallossesandadjustments,0))::text  else\n" +
-            "                       totallossesandadjustments::text end as adjustmentQuantity,\n" +
+            "                       totallossesandadjustments::text end as adjustment_quantity,\n" +
             "                       to_char(pp.enddate,'YYYY-MM-dd') as period,\n" +
             "                       lower(ft.description) as reason\n" +
             "                        from requisitions r\n" +
@@ -47,22 +48,22 @@ public interface SCPortalInterfaceMapper {
             "                        JOIN processing_periods pp on r.periodId = pp.id\n" +
             "                        JOIN losses_adjustments_types ft ON l.type = ft.name \n" +
             "                      where f.code::text is not null  \n" +
-            "               and  f.code::text not in ('.') \n" +
+            "               and  f.code::text not in ('.','-') \n" +
             "                and type in ('LOST', 'DAMAGED','EXPIRED' )\n" +
-            "                        limit 100")
+            "                        ")
     List<HashMap<String, Object>> getWastages();
 
-    @Select(" SELECT f.code as facilityId, productcode as \"productCode\",\n" +
-            "           amc::text as \"actualConsumed\",\n" +
+    @Select(" SELECT f.code as facility_id, productcode as \"product_code\",\n" +
+            "           amc::text as \"actual_consumed\",\n" +
             "                      to_char(pp.enddate,'YYYY-MM-dd') as period,\n" +
-            "           normalizedconsumption::text as \"forecastConsumed\"\n" +
+            "           normalizedconsumption::text as \"forecast_consumed\"\n" +
             "            from requisitions r\n" +
             "            JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "            JOIN facilities F on r.facilityId = F.ID\n" +
             "            JOIN requisition_line_item_losses_adjustments L on l.requisitionlineitemid = i.id\n" +
             "            JOIN processing_periods pp on r.periodId = pp.id\n" +
             "            JOIN losses_adjustments_types ft ON l.type = ft.name\n" +
-            "            where f.code::text is not null and f.code::text not in ('.')\n" +
-            "            limit 100")
+            "            where f.code::text is not null and f.code::text not in ('.','-')\n" +
+            "            ")
     List<HashMap<String,Object>> getForeCastingData();
 }

@@ -278,4 +278,11 @@ public class LookupService {
 
       return scPortalInterfaceMapper.getWastages();
     }
+
+
+    public List<HashMap<String,Object>> getThScpEmergencyCommodites() {
+
+      return interfaceMapper.getThScpEmergencyCommodites();
+    }
+
 }
