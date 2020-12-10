@@ -252,21 +252,21 @@ public class LookupService {
     return interfaceMapper.getByFacilityCode(hfr.facIDNumber);
   }
 
-  public List<HashMap<String,Object>>getStockInHand(){
-    return scPortalInterfaceMapper.getStockInHand();
+  public List<HashMap<String,Object>>getStockInHand(String startDate, String endDate){
+    return scPortalInterfaceMapper.getStockInHand(startDate, endDate);
   }
   public List<HashMap<String,Object>>getAllProducts(){
     return scPortalInterfaceMapper.getAllProducts();
   }
 
 
-    public List<HashMap<String, Object>> getOrderDelivery() {
-      return interfaceMapper.getOrderDelivery();
+    public List<HashMap<String, Object>> getOrderDelivery(String startDate, String endDate) {
+      return interfaceMapper.getOrderDelivery(startDate, endDate);
     }
 
-    public List<HashMap<String,Object>> getEmergencyCommodites() {
+    public List<HashMap<String,Object>> getEmergencyCommodites(String startDate, String endDate) {
 
-      return interfaceMapper.getEmergencyCommodites();
+      return interfaceMapper.getEmergencyCommodites(startDate, endDate);
     }
 
     public List<HashMap<String,Object>> getForeCastingData() {
@@ -280,9 +280,22 @@ public class LookupService {
     }
 
 
+
     public List<HashMap<String,Object>> getThScpEmergencyCommodites() {
 
       return interfaceMapper.getThScpEmergencyCommodites();
     }
+
+    public List<HashMap<String, Object>> getThScpOrderDelivery() {
+      return interfaceMapper.getThScpOrderDelivery();
+    }
+
+  public List<HashMap<String, Object>> getThScpPrograms() {
+    return  interfaceMapper.getThScpPrograms();
+  }
+
+  public List<HashMap<String,Object>>getThScpStockInHand(){
+    return scPortalInterfaceMapper.getThScpStockInHand();
+  }
 
 }

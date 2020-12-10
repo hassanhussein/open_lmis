@@ -487,15 +487,34 @@ public class LookupController {
         return RestResponse.response("data", lookupService.getThScpEmergencyCommodites());
     }
 
+    @RequestMapping(value = "/rest-api/thscp-portal-order-delivery", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getThScpOrderDelivery() {
+        return RestResponse.response("data", lookupService.getThScpOrderDelivery());
+    }
 
+    @RequestMapping(value = "/rest-api/thscp-portal-programs", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getThScpPrograms() {
+        return RestResponse.response("data", lookupService.getThScpPrograms());
+    }
+
+    @RequestMapping(value = "/rest-api/thscp-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getThScpStockInHand() {
+        return RestResponse.response("data", lookupService.getThScpStockInHand());
+    }
+
+
+    //Start of COVID 19
     @RequestMapping(value = "/rest-api/sc-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getEmergencystockpiles() {
-        return RestResponse.response("data", lookupService.getEmergencyCommodites());
+    public ResponseEntity getEmergencystockpiles(@RequestParam(value = "startDate") String startDate,
+                                                 @RequestParam(value = "endDate" ) String endDate
+                                                 ) {
+        return RestResponse.response("data", lookupService.getEmergencyCommodites(startDate,endDate));
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-order-delivery", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getOrderDelivery() {
-        return RestResponse.response("data", lookupService.getOrderDelivery());
+    public ResponseEntity getOrderDelivery(@RequestParam(value = "startDate") String startDate,
+                                           @RequestParam(value = "endDate" ) String endDate) {
+        return RestResponse.response("data", lookupService.getOrderDelivery(startDate, endDate));
     }
 
    @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
@@ -504,8 +523,11 @@ public class LookupController {
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getStockInHand() {
-        return RestResponse.response("data", lookupService.getStockInHand());
+    public ResponseEntity getStockInHand(
+            @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "endDate" ) String endDate
+    ) {
+        return RestResponse.response("data", lookupService.getStockInHand(startDate, endDate));
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-products", method = RequestMethod.GET, headers = ACCEPT_JSON)

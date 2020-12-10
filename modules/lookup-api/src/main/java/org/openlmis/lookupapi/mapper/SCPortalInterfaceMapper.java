@@ -1,5 +1,6 @@
 package org.openlmis.lookupapi.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -27,11 +28,15 @@ public interface SCPortalInterfaceMapper {
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "JOIN facilities F on r.facilityId = F.ID" +
+            " JOIN processing_periods per ON r.periodiD = per.id" +
             " where f.code::text is not null\n" +
             "               and  f.code::text not in ('.','-') \n" +
+            " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
+
             "")
 
-    List<HashMap<String, Object>> getStockInHand();
+    List<HashMap<String, Object>> getStockInHand(@Param("startDate") String startDate,
+                                                 @Param("endDate") String endDate);
 
     @Select("   SELECT f.code as facility_id, productcode as product_code,\n" +
             "                       quantityReceived::text as quantity_received,\n" +
@@ -66,4 +71,16 @@ public interface SCPortalInterfaceMapper {
             "            where f.code::text is not null and f.code::text not in ('.','-')\n" +
             "            ")
     List<HashMap<String,Object>> getForeCastingData();
+
+    @Select(" SELECT i.amc as \"monthsOfStock\", i.quantityDispensed as \"consumedQuantity\",  pr.code as \"programCode\", f.code as \"facilityId\", productcode as \"productCode\"\n" +
+            ", 4 as \"facilityLevel\", stockinhand::text as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"period\" \n" +
+            " , r.id as \"stockId\" " +
+            "from requisitions r\n" +
+            "JOIN requisition_line_items i on r.id = i.rnrid\n" +
+            "JOIN facilities F on r.facilityId = F.ID" +
+            " JOIN programs pr On r.programId = pr.id" +
+            " where f.code::text is not null\n" +
+            "               and  f.code::text not in ('.','-') \n" +
+            "")
+    List<HashMap<String, Object>> getThScpStockInHand();
 }
