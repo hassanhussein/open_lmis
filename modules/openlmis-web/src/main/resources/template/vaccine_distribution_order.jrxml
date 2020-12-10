@@ -79,9 +79,33 @@
 	<detail>
 		<band height="29" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField pattern="#,##0.###" isBlankWhenNull="true">
+				<reportElement x="-11" y="1" width="81" height="19" forecolor="#666666" uuid="179aac7f-954a-4eb7-b894-a2b67a114cb4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="0cb2cc98-1535-40be-a52c-a6e91fa989d4"/>
+				</reportElement>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{lotNumber}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="25"/>
+		<band height="25">
+			<textField>
+				<reportElement x="140" y="0" width="80" height="20" uuid="7a8ac2c3-2cee-446f-959a-40d869452fa1"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{report.total.quantity}]]></textFieldExpression>
+			</textField>
+			<textField pattern="##,###" isBlankWhenNull="true">
+				<reportElement x="220" y="0" width="60" height="20" forecolor="#666666" uuid="97e5054a-f65c-4881-a9c1-a607c25b5198">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e26264d-0f91-4e61-8882-e7889390bd63"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" markup="html"/>
+				<textFieldExpression><![CDATA[$V{totalQuantity}]]></textFieldExpression>
+			</textField>
+		</band>
 	</columnFooter>
 </jasperReport>
