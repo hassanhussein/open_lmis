@@ -536,13 +536,17 @@ public class LookupController {
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-wastages", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getWastages() {
-        return RestResponse.response("data", lookupService.getWastages());
+    public ResponseEntity getWastages(    @RequestParam(value = "startDate") String startDate,
+                                          @RequestParam(value = "endDate" ) String endDate) {
+        return RestResponse.response("data", lookupService.getWastages(startDate, endDate));
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-forecasting", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getForeCastingData() {
-        return RestResponse.response("data", lookupService.getForeCastingData());
+    public ResponseEntity getForeCastingData(
+            @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "endDate" ) String endDate
+    ) {
+        return RestResponse.response("data", lookupService.getForeCastingData(startDate,endDate));
     }
 
 }

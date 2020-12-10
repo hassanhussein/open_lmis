@@ -73,7 +73,7 @@ public interface ILInterfaceMapper {
     @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
     void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
 
-    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", F.CODE as \"order_from_facility_id\",  \n" +
+    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", f.hfrcode as \"order_from_facility_id\",  \n" +
             "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"order_type\" , \n" +
             "QuantityApproved as \"ordered_quantity\", quantityReceived as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
             "\n" +
@@ -90,12 +90,12 @@ public interface ILInterfaceMapper {
             "JOIN program_products pp On pp.productid = p.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
             " JOIN processing_periods per ON r.periodId = per.id" +
-            " WHERE f.code NOT IN('.','-') AND f.code IS NOT NULL "+
+            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL "+
             " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE"
     )
     List<HashMap<String, Object>> getOrderDelivery(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
-    @Select(" select p.code as \"product_code\", f.code as \"facility_id\",  to_char(r.modifieddate, 'yyyy-MM-dd') as \"date\",\n" +
+    @Select(" select p.code as \"product_code\", f.hfrcode as \"facility_id\",  to_char(r.modifieddate, 'yyyy-MM-dd') as \"date\",\n" +
             "stockinhand as \"available_quantity\", quantityReceived as \"stock_quantity\", case when amc > 0 then stockinhand/ amc else 0 end as \"stock_of_month\"\n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i On r.id = i.rnrid\n" +
@@ -104,7 +104,7 @@ public interface ILInterfaceMapper {
             "JOIN program_products pp On pp.productid = p.id " +
             " JOIN processing_periods per ON r.periodiD = per.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
-            "  WHERE f.code NOT IN('.','-') AND f.code IS NOT NULL  " +
+            "  WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL  " +
             " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE"
             )
     List<HashMap<String, Object>> getEmergencyCommodites(@Param("startDate") String startDate, @Param("endDate") String endDate);

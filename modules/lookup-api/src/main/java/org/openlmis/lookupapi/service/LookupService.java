@@ -269,14 +269,14 @@ public class LookupService {
       return interfaceMapper.getEmergencyCommodites(startDate, endDate);
     }
 
-    public List<HashMap<String,Object>> getForeCastingData() {
+    public List<HashMap<String,Object>> getForeCastingData(String startDate, String endDate) {
 
-      return scPortalInterfaceMapper.getForeCastingData();
+      return scPortalInterfaceMapper.getForeCastingData(startDate,endDate);
     }
 
-    public List<HashMap<String,Object>> getWastages() {
+    public List<HashMap<String,Object>> getWastages(String startDate, String endDate) {
 
-      return scPortalInterfaceMapper.getWastages();
+      return scPortalInterfaceMapper.getWastages(startDate, endDate);
     }
 
 
