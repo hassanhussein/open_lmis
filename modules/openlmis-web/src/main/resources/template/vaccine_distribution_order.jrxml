@@ -116,7 +116,7 @@
 				<textFieldExpression><![CDATA[$F{binLocation}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="351" y="3" width="79" height="17" uuid="7bbf950b-8492-4edb-a55a-5d49c901a2a0"/>
+				<reportElement x="350" y="0" width="79" height="17" uuid="7bbf950b-8492-4edb-a55a-5d49c901a2a0"/>
 			</rectangle>
 		</band>
 	</detail>

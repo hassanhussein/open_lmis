@@ -414,11 +414,13 @@ public class WmsReportService {
 
                     sumAmount=sumAmount+amount;
 
-                    vaccineListObjectLot.put("quantityIssued",quantityTotal);
-                    vaccineListObjectLot.put("itemLots", vaccineListItemLOt);
-                    vaccineListObjectLot.put("amount", amount);
+                    if(vaccineListItemLOt.size()>0) {
+                        vaccineListObjectLot.put("quantityIssued", quantityTotal);
+                        vaccineListObjectLot.put("itemLots", vaccineListItemLOt);
+                        vaccineListObjectLot.put("amount", amount);
 
-                    jsonArrayLot.put(vaccineListObjectLot);
+                        jsonArrayLot.put(vaccineListObjectLot);
+                    }
 
 
                 }
