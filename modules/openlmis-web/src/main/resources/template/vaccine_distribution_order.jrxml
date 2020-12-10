@@ -129,6 +129,14 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$R{report.total.quantity}]]></textFieldExpression>
 			</textField>
+			<textField pattern="##,###" isBlankWhenNull="true">
+				<reportElement x="220" y="0" width="60" height="20" forecolor="#666666" uuid="97e5054a-f65c-4881-a9c1-a607c25b5198">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7e26264d-0f91-4e61-8882-e7889390bd63"/>
+				</reportElement>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" markup="html"/>
+				<textFieldExpression><![CDATA[$V{totalQuantity}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnFooter>
 </jasperReport>
