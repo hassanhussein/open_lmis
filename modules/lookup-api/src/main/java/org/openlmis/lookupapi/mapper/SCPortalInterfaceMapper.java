@@ -72,7 +72,7 @@ public interface SCPortalInterfaceMapper {
             "            JOIN requisition_line_item_losses_adjustments L on l.requisitionlineitemid = i.id\n" +
             "            JOIN processing_periods pp on r.periodId = pp.id\n" +
             "            JOIN losses_adjustments_types ft ON l.type = ft.name\n" +
-            "            where f.hfrcode::text is not null and f.code::text not in ('.','-')\n" +
+            "            where f.hfrcode::text is not null and f.hfrcode::text not in ('.','-')\n" +
             "  ORDER BY R.ID DESC LIMIT 1000" +
            // " and pp.startDate::date >= #{startDate}::DATE and pp.endDate::date <=#{endDate}::DATE" +
             "            ")
