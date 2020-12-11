@@ -153,6 +153,7 @@ public class EquipmentInventoryRepository {
   }
 
   public void deleteEquipmentInventory(Long inventoryId){
+    mapper.deleteEquipmentInventoryChangeLogs(inventoryId);
     mapper.deleteEquipmentInventoryStatuses(inventoryId);
     mapper.deleteEquipmentFromIDVReport(inventoryId);
     mapper.deleteEquipmentInventory(inventoryId);

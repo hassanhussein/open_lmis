@@ -130,6 +130,11 @@ public interface EquipmentInventoryMapper {
     @Delete("Delete from equipment_inventories where id=#{inventoryId} ")
     Integer deleteEquipmentInventory(@Param("inventoryId") Long inventoryId);
 
+  @Delete("Delete from equipment_inventory_change_logs where equipmentinventoryid=#{inventoryId} ")
+  Integer deleteEquipmentInventoryChangeLogs(@Param("inventoryId") Long inventoryId);
+
+
+
     @Select("select * from equipment_inventories where serialNumber = #{serialNumber} " +
         "order by (case when isSerialNumberVerified = true then 1 else 2 end) asc limit 1")
     EquipmentInventory findInventoryBySerialNumber(@Param("serialNumber") String serialNumber);
