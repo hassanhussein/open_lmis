@@ -42,8 +42,8 @@ public interface SCPortalInterfaceMapper {
                                                  @Param("endDate") String endDate);
 
     @Select("   SELECT f.hfrcode as facility_id, productcode as product_code,\n" +
-            "                       quantityReceived::text as quantity_received,\n" +
-            "                       beginningBalance::text as begining_balance, \n" +
+            "                     CASE WHEN quantityReceived IS NULL THEN 0::TEXT ELSE quantityReceived::text END as quantity_received,\n" +
+            "                     CASE WHEN beginningBalance IS NULL THEN 0::TEXT ELSE beginningBalance::text END as begining_balance, \n" +
             "                       case when totallossesandadjustments < 0 then \n" +
             "                       (-1 * coalesce(totallossesandadjustments,0))::text  else\n" +
             "                       totallossesandadjustments::text end as adjustment_quantity,\n" +
@@ -55,7 +55,7 @@ public interface SCPortalInterfaceMapper {
             "                        JOIN requisition_line_item_losses_adjustments L on l.requisitionlineitemid = i.id\n" +
             "                        JOIN processing_periods pp on r.periodId = pp.id\n" +
             "                        JOIN losses_adjustments_types ft ON l.type = ft.name \n" +
-            "                      where f.code::text is not null  \n" +
+            "                      where f.hfrcode::text is not null  \n" +
             "               and  f.hfrcode::text not in ('.','-') \n" +
             "                and type in ('LOST', 'DAMAGED','EXPIRED' )\n" +
             " ORDER BY R.ID DESC LIMIT 1000" +
