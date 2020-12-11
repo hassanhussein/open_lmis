@@ -24,7 +24,8 @@ public interface SCPortalInterfaceMapper {
     List<HashMap<String, Object>> getAllProducts();
 
     @Select(" SELECT f.hfrcode as \"facility_id\", productcode as \"product_code\"\n" +
-            ", 4 as \"level\", stockinhand::text as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"updated_at\" \n" +
+            ", 4 as \"level\", " +
+            " CASE WHEN stockinhand is null then 0 else stockinhand::text END as \"quantity\", to_char(r.modifieddate, 'yyyy-MM-dd') as \"updated_at\" \n" +
             "from requisitions r\n" +
             "JOIN requisition_line_items i on r.id = i.rnrid\n" +
             "JOIN facilities F on r.facilityId = F.ID" +
@@ -63,7 +64,7 @@ public interface SCPortalInterfaceMapper {
     List<HashMap<String, Object>> getWastages(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
     @Select(" SELECT f.hfrcode as facility_id, productcode as \"product_code\",\n" +
-            "           amc::text as \"actual_consumed\",\n" +
+            "          CASE WHEN amc is null THEN 0 ELSE amc::text END as \"actual_consumed\",\n" +
             "                      to_char(pp.enddate,'YYYY-MM-dd') as period,\n" +
             "           normalizedconsumption::text as \"forecast_consumed\"\n" +
             "            from requisitions r\n" +

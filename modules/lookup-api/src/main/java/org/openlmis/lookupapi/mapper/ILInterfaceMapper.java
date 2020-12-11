@@ -75,11 +75,12 @@ public interface ILInterfaceMapper {
 
     @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", f.hfrcode as \"order_from_facility_id\",  \n" +
             "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"order_type\" , \n" +
-            "QuantityApproved as \"ordered_quantity\", quantityReceived as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
+            " CASE WHEN QuantityApproved IS NULL THEN 0 ELSE QuantityApproved END as \"ordered_quantity\", " +
+            " CASE WHEN quantityReceived IS NULL THEN 0 ELSE quantityReceived END as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
             "\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivery_promise_date\",\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivered_date\",\n" +
-            " 189790-1 as \"delivery_from_facility_id\",\n" +
+            "'189790-1'::text as \"delivery_from_facility_id\",\n" +
             "r.status as \"order_status\",\n" +
             "30 as target_days\n" +
             "from requisitions r\n" +
@@ -95,19 +96,21 @@ public interface ILInterfaceMapper {
     )
     List<HashMap<String, Object>> getOrderDelivery(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
-    @Select(" select p.code as \"product_code\", f.hfrcode as \"facility_id\",  to_char(r.modifieddate, 'yyyy-MM-dd') as \"date\",\n" +
-            "stockinhand as \"available_quantity\", quantityReceived as \"stock_quantity\", case when amc > 0 then stockinhand/ amc else 0 end as \"stock_of_month\"\n" +
-            "from requisitions r\n" +
-            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
-            "JOIN orders o ON r.id = o.id\n" +
-            "JOIN products p ON i.productcode = p.code\n" +
-            "JOIN program_products pp On pp.productid = p.id " +
-            " JOIN processing_periods per ON r.periodiD = per.id" +
-            " JOIN facilities f ON r.facilityId = F.ID" +
-            "  WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL  " +
-            " ORDER BY R.ID DESC LIMIT 1000" +
+    @Select(
            // " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
-            " "
+            "  select p.code as product_code, f.hfrcode as facility_id,  to_char(r.modifieddate, 'yyyy-MM-dd') as date,\n" +
+                    "            Case when (stockinhand is null) THEN 0 else stockinhand END  as available_quantity, \n" +
+                    "\t    Case when (quantityReceived is null) THEN 0 else quantityReceived END as stock_quantity, \n" +
+                    "            case when amc > 0 then coalesce(stockinhand/ amc,0) else 0 end as stock_of_month\n" +
+                    "            from requisitions r\n" +
+                    "            JOIN requisition_line_items i On r.id = i.rnrid\n" +
+                    "            JOIN orders o ON r.id = o.id\n" +
+                    "            JOIN products p ON i.productcode = p.code\n" +
+                    "            JOIN program_products pp On pp.productid = p.id\n" +
+                    "             JOIN processing_periods per ON r.periodiD = per.id\n" +
+                    "            JOIN facilities f ON r.facilityId = F.ID\n" +
+                    "              WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL  \n" +
+                    "             ORDER BY R.ID DESC LIMIT 1000 "
             )
     List<HashMap<String, Object>> getEmergencyCommodites(@Param("startDate") String startDate, @Param("endDate") String endDate);
 
@@ -134,7 +137,7 @@ public interface ILInterfaceMapper {
             "\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"deliveryPromiseDate\",\n" +
             "to_char(r.modifieddate, 'yyyy-MM-dd') as \"deliveryDate\",\n" +
-            " 189790-1 as \"deliveryFromFacilityId\",\n" +
+            " '189790-1'::text as \"deliveryFromFacilityId\",\n" +
             "r.status as \"orderStatus\",\n" +
             "30 as targetDays\n" +
             "from requisitions r\n" +
