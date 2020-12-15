@@ -1,0 +1,1 @@
+update public.products set expiredShelfLife=0 where expiredShelfLife is null;

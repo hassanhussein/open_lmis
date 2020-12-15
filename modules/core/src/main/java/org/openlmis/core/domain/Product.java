@@ -151,6 +151,9 @@ public class Product extends BaseModel implements Importable {
   @ImportField(type = "int", name = "Expected Shelf Life")
   private Integer expectedShelfLife;
 
+  private Integer expiredShelfLife=0;
+
+
   @ImportField(name = "Special Storage Instructions")
   private String specialStorageInstructions;
 

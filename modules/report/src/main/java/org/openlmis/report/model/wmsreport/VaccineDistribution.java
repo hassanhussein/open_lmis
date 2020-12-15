@@ -17,7 +17,7 @@ public class VaccineDistribution {
     private  Long pickListId;
     private  int orderId, toFacilityId, periodId;
     private String facilityName, facilityTypeFrom, facilityTypeTo, fromZoneName,
-            toZoneName, toDescription, fromDescription, fromFacilityName;
+            toZoneName, toDescription, fromDescription, fromFacilityName,voucherNumber;
 
     public int getId() {
         return id;
@@ -77,5 +77,8 @@ public class VaccineDistribution {
 
     public String getFromFacilityName() {
         return fromFacilityName;
+    }
+    public String getVoucherNumber() {
+        return voucherNumber;
     }
 }

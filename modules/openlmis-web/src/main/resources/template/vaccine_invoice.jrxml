@@ -23,11 +23,12 @@
 	<field name="fromFacilityName" class="java.lang.String"/>
 	<field name="pickListId" class="java.lang.Long"/>
 	<field name="sumAmount" class="java.lang.Integer"/>
+	<field name="voucherNumber" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="330" splitType="Stretch">
+		<band height="297" splitType="Stretch">
 			<image scaleImage="FillFrame">
 				<reportElement x="-10" y="-10" width="647" height="59" uuid="dcbbabc0-acf3-4af1-8e80-18aa29f20228">
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
@@ -42,15 +43,15 @@
 				<text><![CDATA[SALES INVOICE]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="530" y="70" width="46" height="14" uuid="547c5054-b285-4da3-beaa-f37cd4bae066"/>
+				<reportElement x="490" y="70" width="28" height="14" uuid="547c5054-b285-4da3-beaa-f37cd4bae066"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[POD No:]]></text>
+				<text><![CDATA[No:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="587" y="70" width="50" height="14" uuid="79feca87-d6ad-43b3-a21c-eb5ef5e17fb5"/>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+				<reportElement x="518" y="70" width="119" height="14" uuid="79feca87-d6ad-43b3-a21c-eb5ef5e17fb5"/>
+				<textFieldExpression><![CDATA[$F{voucherNumber}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="0" y="90" width="637" height="20" backcolor="#C3DFF2" uuid="ea687be0-f1bb-4fcf-8747-3ceda1cd0bd7"/>
@@ -91,12 +92,6 @@
 				<reportElement x="90" y="270" width="80" height="20" uuid="0460d93c-b222-47df-965b-d2c2844b93bc"/>
 				<textFieldExpression><![CDATA[$F{pickListId}]]></textFieldExpression>
 			</textField>
-			<rectangle>
-				<reportElement x="0" y="310" width="637" height="20" backcolor="#C3DFF2" uuid="9fa4d170-e25c-4c80-ae81-8c6acc07105a"/>
-				<graphicElement>
-					<pen lineColor="#FFFCFC"/>
-				</graphicElement>
-			</rectangle>
 			<frame>
 				<reportElement x="470" y="115" width="167" height="106" uuid="9b42fd09-bcee-4c72-a94c-bad642707c8e"/>
 				<box>
@@ -174,9 +169,9 @@
 		</band>
 	</title>
 	<detail>
-		<band height="45">
+		<band height="23">
 			<subreport>
-				<reportElement x="0" y="0" width="637" height="40" uuid="ed4ad531-ddea-48d6-9c1a-44aefe12867d"/>
+				<reportElement x="0" y="0" width="637" height="20" uuid="ed4ad531-ddea-48d6-9c1a-44aefe12867d"/>
 				<subreportParameter name="vaccine_distribution_lots">
 					<subreportParameterExpression><![CDATA[$P{vaccine_distribution_lots}]]></subreportParameterExpression>
 				</subreportParameter>

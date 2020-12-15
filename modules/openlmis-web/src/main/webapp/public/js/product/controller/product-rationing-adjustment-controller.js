@@ -120,7 +120,9 @@ function ProductRationingAdjustmentController($scope, $timeout,productDTO,season
   };
 
   $scope.save = function () {
-    //alert(JSON.stringify($scope.seasonalityAdjustment));
+  //console.log("called");
+   // alert(JSON.stringify($scope.seasonalityAdjustment));
+  // console.log()
    /* if ($scope.productForm.$error.required) {
       $scope.showError = true;
       $scope.error = "form.error";

@@ -68,6 +68,8 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
 
     setProductReferenceData();
 
+    console.log($scope.product);
+
     if ($scope.product.id) {
       Products.update({id: $scope.product.id}, {product: $scope.product, programProducts: $scope.programProducts, productPriceSchedules : $scope.priceSchedules}, success, error);
     }

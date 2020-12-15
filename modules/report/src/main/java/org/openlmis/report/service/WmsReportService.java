@@ -387,6 +387,7 @@ public class WmsReportService {
             String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
                     .writeValueAsString(vaccineList);
             JSONArray outputData = new JSONArray(json);
+            //System.out.println(outputData);
             for (int i = 0; i < outputData.length(); i++) {
                 JSONObject vaccineListObject = outputData.getJSONObject(i);
 
@@ -397,7 +398,7 @@ public class WmsReportService {
                 String jsonItem = new ObjectMapper().writerWithDefaultPrettyPrinter()
                         .writeValueAsString(vaccineListItem);
 
-                // System.out.println(jsonItem);
+
                 JSONArray outputDataItem = new JSONArray(jsonItem);
                 JSONArray jsonArrayLot = new JSONArray();
 

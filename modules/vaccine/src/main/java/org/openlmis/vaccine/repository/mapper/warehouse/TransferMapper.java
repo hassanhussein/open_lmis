@@ -75,7 +75,7 @@ public interface TransferMapper {
             "            JOIN products P ON lo.productId = P.ID \n" +
             "             JOIN vvm_statuses vvm On e.vvmId = vvm.id\n " +
             "               left join WMS_LOCATIONS Lsc ON e.LocationId = LSC.ID" +
-            "            where productId= #{productId} and Lsc.typeid<>9  and vvm.id<3 and expirationDate>now()\n" +
+            "            where productId= #{productId} and Lsc.typeid<>9  and vvm.id<3 and expirationDate>now() and (Lo.expirationDate::date-current_date)>p.expiredShelfLife \n" +
             "             group by  p.primaryName ,lo.id ,expirationDate, stockCardId, lotNumber, e.lotId,vvm.id,e.vvmId,vvm.name,e.locationId,loc.code\n" +
             "             order by vvm.id desc,Lo.expirationDate asc) st where quantityOnHand>0 ")
     List<LotOnHandExtDTO> getLotOnHandExtaBy(@Param("productId") Long id);

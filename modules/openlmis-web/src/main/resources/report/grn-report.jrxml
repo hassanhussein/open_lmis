@@ -505,6 +505,7 @@
 			</line>
 			<textField>
 				<reportElement mode="Transparent" x="11" y="0" width="43" height="17" forecolor="#000000" backcolor="#333333" uuid="8e910cc5-50ce-4966-833f-67e15559039f"/>
+				<box padding="2"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
 					<font fontName="SansSerif" size="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
 					<paragraph lineSpacing="Single"/>
@@ -513,26 +514,30 @@
 			</textField>
 			<textField>
 				<reportElement x="54" y="0" width="99" height="16" uuid="1dd7b202-7dfa-4528-b282-0aa2d3823100"/>
+				<box padding="1"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="153" y="1" width="128" height="16" uuid="6f9118bc-914c-41ce-9802-22279c60bc8d"/>
+				<box padding="1"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="0" width="55" height="16" uuid="723d0976-5d1d-4adf-9aab-06b7ef9e7b4b"/>
+				<reportElement x="283" y="0" width="52" height="16" uuid="723d0976-5d1d-4adf-9aab-06b7ef9e7b4b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{dosageunit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
 				<reportElement x="334" y="1" width="80" height="16" uuid="4c54c852-272f-4161-9dbc-48962dd57989"/>
+				<box padding="1"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{quantityordered}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="415" y="0" width="92" height="16" uuid="a53d7c6f-3e26-4d80-9829-5bdba68572d5"/>
+				<box padding="1"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{lotnumber}]]></textFieldExpression>
 			</textField>

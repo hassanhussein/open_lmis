@@ -76,7 +76,7 @@ public interface VaccineStockStatusMapper {
             "\tfto.name as facilityTypeTo,\n" +
             "\tv.periodid as periodId,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
             "\tgo.name as toZoneName,\n" +
-            "\tv.orderid as orderId ,f.name as facilityName,f.description as to_description,fo.description as fromDescription,fo.name as fromFacilityName\n" +
+            "\tv.orderid as orderId,v.voucherNumber,f.name as facilityName,f.description as to_description,fo.description as fromDescription,fo.name as fromFacilityName\n" +
             "FROM vaccine_distributions v\n" +
             " left join facilities f  on(f.id=v.tofacilityid)\n" +
             " left join facilities fo  on(f.id=v.fromfacilityid)\n" +
@@ -94,7 +94,7 @@ public interface VaccineStockStatusMapper {
             "\tfto.name as facilityTypeTo,\n" +
             "\tv.periodid as periodId ,vo.id,vo.orderdate as orderDate,gf.name as fromZoneName,\n" +
             "\tgf.name as toZoneName,\n" +
-            "\tv.orderid as orderId,f.name as facilityName,f.description as toDescription,fo.description as fromDescription,fo.name as fromFacilityName\n" +
+            "\tv.orderid as orderId,v.voucherNumber as voucherNumber,f.name as facilityName,f.description as toDescription,fo.description as fromDescription,fo.name as fromFacilityName\n" +
             "FROM vaccine_distributions v\n" +
             " left join facilities f  on(f.id=v.tofacilityid)\n" +
             " left join facilities fo  on(f.id=v.fromfacilityid)\n" +
