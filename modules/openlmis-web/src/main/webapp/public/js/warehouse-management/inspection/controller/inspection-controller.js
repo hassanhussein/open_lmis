@@ -1,6 +1,49 @@
 function InspectionController($scope,AsnLookups,docService,DocumentList,GetAllClearingAgents,$window,VaccineDiscardingReasons ,inspection, UpdateInspection,$location,vvmList,$timeout,GetLocationBy){
 
 
+
+
+
+ $scope.calculateTotal=function(){
+ $scope.inspection_date = angular.copy($scope.inspection.inspectionDate);
+ console.log($scope.inspection_date)
+ $scope.lotInspected=true;
+ $scope.totalFailQty=0;
+ angular.forEach($scope.lineItem.lots,function(lot){
+    var vvmSum=0;
+    angular.forEach(lot.vvm,function(status){
+         if(status.failed.quantity){
+             vvmSum+=status.failed.quantity;
+         }
+    });
+    $scope.totalFailQty+=vvmSum;
+     });
+
+
+
+
+    $scope.totalPassQty=0;
+    console.log($scope.lineItem.lots);
+    var totalQty=0;
+    angular.forEach($scope.lineItem.lots,function(lot){
+
+      totalQty+=lot.receivedQuantity;
+//       $scope.totalPassQty+=lot.receivedQuantity
+        });
+
+
+            $scope.totalPassQty=0;
+        if($scope.inspection_date!=null){
+        $scope.totalPassQty=totalQty-$scope.totalFailQty;
+        }
+
+
+
+
+
+ };
+
+
 function failedIfExpired(){
 angular.forEach($scope.lineItem.lots,function(lot){
   if($scope.hasExpired(lot)){
@@ -417,6 +460,10 @@ $scope.productSum($scope.lineItem);
 
 //   $scope.locations = [{"id":1,"name":'AA11'},{"id":2,"name":'BB11'},{"id":4,"name":'AA17'}];
    $scope.failReasons = [{"id":1,"name":'Temperature'},{"id":2,"name":'Rain'},{"id":3,"name":'Opened Vial'}];
+
+
+
+$scope.calculateTotal()
 
 
 $scope.hasZero=function(lot){
@@ -888,6 +935,10 @@ angular.forEach($scope.lineItem.lots,function(lot){
 
 
      };
+
+
+
+
 
 
   inspectionLotFormValidator=function(){
