@@ -55,7 +55,7 @@ requisitionsWithProduct.ordered=_.filter(requisitionsWithProduct.ordered,functio
 
        return _.contains($scope.listOfProductIds,product.productId);
 
-})
+});
 $scope.requstions.push({
                              fromFacilityId:19075,
                              toFacilityId:requisitionsWithProduct.facilityId,
@@ -72,7 +72,7 @@ $scope.requstions.push({
 
 });
 
-console.log($scope.requstions)
+
 
 // remove orders which we do not have soh
 //
@@ -82,7 +82,7 @@ console.log($scope.requstions)
 //})
 
 
-console.log($scope.requstions);
+
 
 
 });
@@ -146,7 +146,7 @@ _.each($scope.requstions,function(region){
 
 //           console.log(lot)
                 if(soh_lot.amount<0){
-                var totalIssued=(soh_lot.amount*-1)+soh_lot.maxSoh
+                var totalIssued=(soh_lot.amount*-1)+soh_lot.maxSoh;
                 var valueToInsert=totalIssued+' doses Issued for Batch: '+lot.number+' (VVM'+lot.vvmId+')  exceed SOH of '+soh_lot.maxSoh;
                 if(!$scope.issuedErrorList.includes(valueToInsert)){
                   $scope.issuedErrorList.push(valueToInsert);
@@ -164,7 +164,7 @@ $scope.checkAllFields=function(){
 $scope.allFieldsFieldErrorList=[];
 
  _.each($scope.requstions,function(region){
- console.log(region)
+
         _.each(region.ordered,function(order){
         var msg='Please fill all quantity issued for '+region.name;
         if(order.given.length===0 && !$scope.allFieldsFieldErrorList.includes(msg)){
@@ -172,7 +172,7 @@ $scope.allFieldsFieldErrorList=[];
 
         }
            _.each(order.given,function(lot){
-                console.log(lot.qty)
+
                 if(lot.qty && parseInt(lot.qty,10)<0 && !$scope.allFieldsFieldErrorList.includes(msg)){
                         $scope.allFieldsFieldErrorList.push(msg);
                 }
@@ -315,7 +315,7 @@ if(qty<lot.maxSoh){
 $scope.qty.forEach(function(region,qtyRegionIndex){
 
     region.forEach(function(product,qtyProductIndex){
-    console.log(product)
+
         product.forEach(function(lot,qtyLotIndex){
         if(qtyLotIndex>lotIndex && qtyProductIndex==productIndex ){
         $scope.qty[qtyRegionIndex][qtyProductIndex][qtyLotIndex]='';
@@ -347,9 +347,9 @@ lot.amount=lot.maxSoh;
 $scope.issuedErrorList=[];
 $scope.soh.forEach(function(product){
     product.lots.forEach(function(lot){
-    $scope.checkIssued(lot)
-    })
-})
+    $scope.checkIssued(lot);
+    });
+});
 
 
 };
@@ -401,7 +401,7 @@ return;
 
 
 }
-console.log('released')
+
 //return;
 
 $scope.saveDistribution();

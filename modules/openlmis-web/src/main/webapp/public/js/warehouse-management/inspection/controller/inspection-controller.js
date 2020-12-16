@@ -6,7 +6,7 @@ function InspectionController($scope,AsnLookups,docService,DocumentList,GetAllCl
 
  $scope.calculateTotal=function(){
  $scope.inspection_date = angular.copy($scope.inspection.inspectionDate);
- console.log($scope.inspection_date)
+
  $scope.lotInspected=true;
  $scope.totalFailQty=0;
  angular.forEach($scope.lineItem.lots,function(lot){
@@ -33,7 +33,7 @@ function InspectionController($scope,AsnLookups,docService,DocumentList,GetAllCl
 
 
             $scope.totalPassQty=0;
-        if($scope.inspection_date!=null){
+        if($scope.inspection_date!==null){
         $scope.totalPassQty=totalQty-$scope.totalFailQty;
         }
 
@@ -463,7 +463,7 @@ $scope.productSum($scope.lineItem);
 
 
 
-$scope.calculateTotal()
+$scope.calculateTotal();
 
 
 $scope.hasZero=function(lot){
