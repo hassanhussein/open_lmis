@@ -85,6 +85,13 @@
 
                 </div>
 
+                <div class="alert alert-danger" ng-show="issuedErrorList.length">
+                    <ul>
+                        <li ng-repeat="error in issuedErrorList">{{error}}</li>
+                    </ul>
+
+                </div>
+
                 <div class="rnr-table">
                     <div style="width:40%;" class="float-left left-table parent">
                         <table class="table table-bordered" fixed-table-header>
@@ -149,7 +156,7 @@
                             </tr>
                             <tr ng-repeat-end ng-repeat="lot in p.lots" ng-init="lotIndex = $index" class="inner-tr-height">
                                 <td class="cell-input col-beginningBalance"  ng-repeat="req in requstions" >
-                                    <input num-pos="true" num-neg="false" num-int="10" num-thousand="true" awnum ng-change="giveLot(req,p,lot,qty[$index][productIndex][lotIndex],$index,productIndex,lotIndex)"  ng-init="qty[$index][productIndex][lotIndex]=getQuantity(req,p,lot,$index)" ng-model="qty[$index][productIndex][lotIndex]"  ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)||(qty[$index][productIndex][lotIndex]=='' && lot.amount<=0)" type="text">
+                                    <input num-pos="true" num-neg="false" num-int="10" num-thousand="true" awnum ng-change="giveLot(req,p,lot,qty[$index][productIndex][lotIndex],$index,productIndex,lotIndex)"  ng-init="qty[$index][productIndex][lotIndex]=getQuantity(req,p,lot,$index)" ng-model="qty[$index][productIndex][lotIndex]"  ng-disabled="(lotIndex>0 && p.lots[lotIndex-1].amount>0)||((qty[$index][productIndex][lotIndex]=='' || qty[$index][productIndex][lotIndex]==0) && lot.amount<=0)" type="text">
                                 </td>
                             </tr>
 

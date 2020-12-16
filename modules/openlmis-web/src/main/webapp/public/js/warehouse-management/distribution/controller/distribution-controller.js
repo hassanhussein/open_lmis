@@ -17,6 +17,8 @@ function DistributionController($q,$timeout,homeFacility,StockEvent,wmsSoh,all_o
 $scope.qty=[];
 $scope.vialPresentationErrorList=[];
 $scope.allFieldsFieldErrorList=[];
+$scope.issuedErrorList=[];
+
      $scope.loadRights = function () {
             $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
      }();
@@ -35,7 +37,7 @@ $scope.allFieldsFieldErrorList=[];
 
 //console.log(all_orders);
 $scope.soh=wmsSoh.stocks;
-
+$scope.listOfProductIds=_.pluck($scope.soh,'productId');
 
 
 
@@ -48,7 +50,12 @@ $scope.requstions=[];
 
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
  var requisitionsWithProduct=_.findWhere(all_orders,{id:rwp.id});
-//console.log(all_orders);
+//console.log(requisitionsWithProduct);
+requisitionsWithProduct.ordered=_.filter(requisitionsWithProduct.ordered,function(product){
+
+       return _.contains($scope.listOfProductIds,product.productId);
+
+})
 $scope.requstions.push({
                              fromFacilityId:19075,
                              toFacilityId:requisitionsWithProduct.facilityId,
@@ -65,7 +72,17 @@ $scope.requstions.push({
 
 });
 
-//console.log($scope.requstions);
+console.log($scope.requstions)
+
+// remove orders which we do not have soh
+//
+//$scope.requstions=_.filter($scope.requstions,function(region){
+//
+//  _.each()
+//})
+
+
+console.log($scope.requstions);
 
 
 });
@@ -107,7 +124,7 @@ $scope.vialPresentationErrorList=[];
         _.each(region.ordered,function(order){
            _.each(order.given,function(lot){
                 if(!Number.isInteger(parseInt(lot.qty,10)/parseInt(lot.packSize,10))){
-                        $scope.vialPresentationErrorList.push('Batch: '+lot.number+' ('+lot.vvmId+') Quantity Issued should be multiple of '+lot.packSize);
+                        $scope.vialPresentationErrorList.push('Batch: '+lot.number+' ('+lot.vvmId+') Quantity Issued to '+region.name+' should be multiple of '+lot.packSize);
                 }
            });
         });
@@ -115,13 +132,49 @@ $scope.vialPresentationErrorList=[];
 
 };
 
-$scope.checkAllFields=function(){
-$scope.allFieldsFieldErrorList=[];
- _.each($scope.requstions,function(region){
+
+$scope.checkIssued=function(soh_lot){
+//if less than Remaining SOH
+//$scope.Math = window.Math;
+//console.log($scope.Math.max(soh_lot.amount,soh_lot.maxSoh))
+//console.log(soh_lot)
+
+
+_.each($scope.requstions,function(region){
         _.each(region.ordered,function(order){
            _.each(order.given,function(lot){
-                if(lot.qty && parseInt(lot.qty,10)>=0){
-                        $scope.allFieldsFieldErrorList.push('Please fill all quantity issued for '+region.name);
+
+//           console.log(lot)
+                if(soh_lot.amount<0){
+                var totalIssued=(soh_lot.amount*-1)+soh_lot.maxSoh
+                var valueToInsert=totalIssued+' doses Issued for Batch: '+lot.number+' (VVM'+lot.vvmId+')  exceed SOH of '+soh_lot.maxSoh;
+                if(!$scope.issuedErrorList.includes(valueToInsert)){
+                  $scope.issuedErrorList.push(valueToInsert);
+                }
+
+                }
+           });
+        });
+    });
+
+
+};
+
+$scope.checkAllFields=function(){
+$scope.allFieldsFieldErrorList=[];
+
+ _.each($scope.requstions,function(region){
+ console.log(region)
+        _.each(region.ordered,function(order){
+        var msg='Please fill all quantity issued for '+region.name;
+        if(order.given.length===0 && !$scope.allFieldsFieldErrorList.includes(msg)){
+            $scope.allFieldsFieldErrorList.push(msg);
+
+        }
+           _.each(order.given,function(lot){
+                console.log(lot.qty)
+                if(lot.qty && parseInt(lot.qty,10)<0 && !$scope.allFieldsFieldErrorList.includes(msg)){
+                        $scope.allFieldsFieldErrorList.push(msg);
                 }
            });
         });
@@ -157,7 +210,8 @@ $scope.getLotSumPerRegion=function(lotId,locationId,productId){
    order.given.forEach(function(giv){
     if (giv.lotId===lotId&&giv.locationId===locationId){
     qty=giv.qty;
-    if(giv.qty===""){
+
+    if(giv.qty==="" || qty===null){
     qty=0;
     }
     sum+=parseInt(qty,10);
@@ -166,6 +220,7 @@ $scope.getLotSumPerRegion=function(lotId,locationId,productId){
    }
    });
    });
+
 return sum;
 };
 
@@ -260,11 +315,19 @@ if(qty<lot.maxSoh){
 $scope.qty.forEach(function(region,qtyRegionIndex){
 
     region.forEach(function(product,qtyProductIndex){
+    console.log(product)
         product.forEach(function(lot,qtyLotIndex){
         if(qtyLotIndex>lotIndex && qtyProductIndex==productIndex ){
-        console.log('reset');
-
         $scope.qty[qtyRegionIndex][qtyProductIndex][qtyLotIndex]='';
+                $scope.soh[productIndex].lots[qtyLotIndex].amount=$scope.soh[productIndex].lots[qtyLotIndex].maxSoh;
+
+
+//               console.log($scope.soh[productIndex].lots[qtyLotIndex].amount);
+//            $scope.soh.forEach(function(sohProduct,sohProductIndex){
+//                product.lots.forEach(function(sohLot,sohLotIndex)){
+//                 if(sohProductIndex=== && )
+//                }
+//            })
         }
 
         });
@@ -276,11 +339,19 @@ $scope.qty.forEach(function(region,qtyRegionIndex){
 
 
 
-
 lot.amount=lot.maxSoh-$scope.getLotSumPerRegion(lot.lotId,lot.locationId,prod.productId);
 if(Number.isNaN(lot.amount)){
 lot.amount=lot.maxSoh;
 }
+
+$scope.issuedErrorList=[];
+$scope.soh.forEach(function(product){
+    product.lots.forEach(function(lot){
+    $scope.checkIssued(lot)
+    })
+})
+
+
 };
 
 
@@ -324,13 +395,16 @@ $scope.cancel=function(){
 
 
 $scope.releaseForPickingDistribution=function(){
-
 $scope.checkAllFields();
-if($scope.vialPresentationErrorList.length||$scope.allFieldsFieldErrorList.length){
+if($scope.vialPresentationErrorList.length>0||$scope.allFieldsFieldErrorList.length>0||$scope.issuedErrorList.length>0){
+console.log($scope.allFieldsFieldErrorList);
 return;
 
 
 }
+console.log('released')
+return;
+
 $scope.saveDistribution();
 };
 
