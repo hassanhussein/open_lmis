@@ -45,7 +45,22 @@ $scope.listOfProductIds=_.pluck($scope.soh,'productId');
 
 
 //console.log($scope.requisitionsWithoutProducts);
+//console.log(localStorageService.get('wms_orders'));
+
+
+if($scope.$parent.orders!==undefined){
+localStorageService.remove('wms_orders');
+localStorageService.add('wms_orders',JSON.stringify($scope.$parent.orders));
 $scope.requisitionsWithoutProducts=$scope.$parent.orders;
+
+}else{
+
+$scope.requisitionsWithoutProducts=JSON.parse(localStorageService.get('wms_orders'));
+
+}
+
+
+//$scope.requisitionsWithoutProducts=$scope.$parent.orders;
 $scope.requstions=[];
 
 $scope.requisitionsWithoutProducts.forEach(function(rwp){
