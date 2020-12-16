@@ -397,13 +397,12 @@ $scope.cancel=function(){
 $scope.releaseForPickingDistribution=function(){
 $scope.checkAllFields();
 if($scope.vialPresentationErrorList.length>0||$scope.allFieldsFieldErrorList.length>0||$scope.issuedErrorList.length>0){
-console.log($scope.allFieldsFieldErrorList);
 return;
 
 
 }
 console.log('released')
-return;
+//return;
 
 $scope.saveDistribution();
 };
@@ -479,6 +478,13 @@ $scope.requstions.forEach(function(req){
 
 
 $scope.approveDistribution=function(){
+
+$scope.checkAllFields();
+if($scope.vialPresentationErrorList.length>0||$scope.allFieldsFieldErrorList.length>0||$scope.issuedErrorList.length>0){
+return;
+
+
+}
 
 
 var events = [];
