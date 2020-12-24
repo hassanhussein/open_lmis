@@ -141,4 +141,8 @@ public class ProcessingPeriodRepository {
   public ProcessingPeriod getFullProcessingPeriodForCurrentMonth(String code){
     return mapper.getFullProcessingPeriodForCurrentMonth(code);
   }
+
+    public List<ProcessingPeriod> getByStartDate() {
+       return mapper.getByStartDate();
+    }
 }

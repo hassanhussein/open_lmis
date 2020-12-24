@@ -290,8 +290,8 @@ public class LookupService {
       return interfaceMapper.getThScpOrderDelivery();
     }
 
-  public List<HashMap<String, Object>> getThScpPrograms() {
-    return  interfaceMapper.getThScpPrograms();
+  public List<HashMap<String, Object>> getThScpPrograms(RowBounds rowBounds) {
+    return  interfaceMapper.getThScpPrograms(rowBounds);
   }
 
   public List<HashMap<String,Object>>getThScpStockInHand(){

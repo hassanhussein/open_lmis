@@ -1,6 +1,7 @@
 package org.openlmis.lookupapi.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.MSDStockDTO;
@@ -153,5 +154,5 @@ public interface ILInterfaceMapper {
     List<HashMap<String, Object>> getThScpOrderDelivery();
 
     @Select("SELECT * FROM PROGRAMS where active = true")
-    List<HashMap<String, Object>> getThScpPrograms();
+    List<HashMap<String, Object>> getThScpPrograms(@Param("RowBounds") RowBounds rowBounds);
 }

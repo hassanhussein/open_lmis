@@ -493,8 +493,12 @@ public class LookupController {
     }
 
     @RequestMapping(value = "/rest-api/thscp-portal-programs", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getThScpPrograms() {
-        return RestResponse.response("data", lookupService.getThScpPrograms());
+    public ResponseEntity getThScpPrograms(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                           @RequestParam(value = "max", required = false, defaultValue = "10") int max
+                                           )
+    {
+        RowBounds rowBounds = new RowBounds(page,max);
+        return RestResponse.response("data", lookupService.getThScpPrograms(rowBounds));
     }
 
     @RequestMapping(value = "/rest-api/thscp-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
