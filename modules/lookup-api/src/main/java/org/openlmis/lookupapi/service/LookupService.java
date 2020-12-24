@@ -298,4 +298,7 @@ public class LookupService {
     return scPortalInterfaceMapper.getThScpStockInHand();
   }
 
+  public Integer getTotalThScpPrograms() {
+     return interfaceMapper.getTotalThScpPrograms();
+  }
 }

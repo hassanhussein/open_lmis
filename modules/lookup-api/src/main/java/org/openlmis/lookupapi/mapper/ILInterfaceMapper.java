@@ -155,4 +155,7 @@ public interface ILInterfaceMapper {
 
     @Select("SELECT * FROM PROGRAMS where active = true")
     List<HashMap<String, Object>> getThScpPrograms(@Param("RowBounds") RowBounds rowBounds);
+
+    @Select("SELECT count(*) FROM PROGRAMS where active = true")
+    Integer getTotalThScpPrograms();
 }

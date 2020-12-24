@@ -46,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 
+import static java.lang.Integer.parseInt;
 import static javax.security.auth.callback.ConfirmationCallback.OK;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -497,8 +498,14 @@ public class LookupController {
                                            @RequestParam(value = "max", required = false, defaultValue = "10") int max
                                            )
     {
-        RowBounds rowBounds = new RowBounds(page,max);
-        return RestResponse.response("data", lookupService.getThScpPrograms(rowBounds));
+        Pagination pagination = new Pagination(page,max);
+        Integer totalProgram = lookupService.getTotalThScpPrograms();
+        pagination.setTotalRecords(totalProgram);
+        ResponseEntity<RestResponse> responseEntity =
+                RestResponse.response("data", lookupService.getThScpPrograms(pagination));
+        responseEntity.getBody().addData("pagination", pagination);
+
+        return responseEntity;
     }
 
     @RequestMapping(value = "/rest-api/thscp-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
