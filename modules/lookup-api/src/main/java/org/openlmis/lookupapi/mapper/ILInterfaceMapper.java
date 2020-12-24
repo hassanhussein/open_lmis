@@ -158,4 +158,13 @@ public interface ILInterfaceMapper {
 
     @Select("SELECT count(*) FROM PROGRAMS where active = true")
     Integer getTotalThScpPrograms();
+
+    @Select(" SELECT COUNT(*) "+
+            " FROM program_products pP\n" +
+            "\n" +
+            "JOIN products p ON p.id = pp.productId \n" +
+            "join programs pr ON pr.id = pp.programId and pr.id =1\n" +
+            "join product_categories pc ON pp.productcategoryid = pc.id\n" +
+            "")
+    Integer getTotalProducts();
 }

@@ -24,6 +24,10 @@ import org.apache.ibatis.session.RowBounds;
 import org.json.JSONObject;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.web.OpenLmisResponse;
+import org.openlmis.equipment.domain.ColdChainEquipment;
+import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.ResponseMessage;
@@ -35,6 +39,7 @@ import org.openlmis.report.model.dto.Program;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -45,6 +50,7 @@ import javax.servlet.http.HttpServletRequest;
 
 
 import java.io.IOException;
+import java.util.List;
 
 import static java.lang.Integer.parseInt;
 import static javax.security.auth.callback.ConfirmationCallback.OK;
@@ -422,19 +428,28 @@ public class LookupController {
         return ResponseEntity.ok(OK);
     }
 
+   //C19
 
-/*   @RequestMapping(value = "/rest-api/sc-portal-products", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getAllProducts(HttpServletRequest request){
 
-        try {
-            lookupService.getAllProducts();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok(OK);
+
+  /*  @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getStockInHand(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                           @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalProducts();
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getStockInHand());
+        response.getBody().addData("pagination", pagination);
+        return response;
     }*/
 
- /*   @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
+ /*
+ @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getStockInHand(HttpServletRequest request){
 
         try {
@@ -534,17 +549,39 @@ public class LookupController {
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getStockInHand(
+    public ResponseEntity<OpenLmisResponse> getStockInHand(
             @RequestParam(value = "startDate") String startDate,
-            @RequestParam(value = "endDate" ) String endDate
-    ) {
-        return RestResponse.response("data", lookupService.getStockInHand(startDate, endDate));
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalStockInHand(startDate);
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getStockInHand(startDate, pagination));
+        response.getBody().addData("pagination", pagination);
+        return response;
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-products", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getAllProducts() {
-        return RestResponse.response("data", lookupService.getAllProducts());
+    public ResponseEntity<OpenLmisResponse> getAllProducts(@RequestParam(value = "page", defaultValue = "1") Integer page,
+                                                           @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalProducts();
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getAllProducts(pagination));
+        response.getBody().addData("pagination", pagination);
+        return response;
     }
+
 
     @RequestMapping(value = "/rest-api/sc-portal-wastages", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getWastages(    @RequestParam(value = "startDate") String startDate,
@@ -559,5 +596,5 @@ public class LookupController {
     ) {
         return RestResponse.response("data", lookupService.getForeCastingData(startDate,endDate));
     }
-
+   //End Of covid APIs
 }

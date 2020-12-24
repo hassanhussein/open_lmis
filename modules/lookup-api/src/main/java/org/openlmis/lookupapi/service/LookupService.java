@@ -252,11 +252,11 @@ public class LookupService {
     return interfaceMapper.getByFacilityCode(hfr.facIDNumber);
   }
 
-  public List<HashMap<String,Object>>getStockInHand(String startDate, String endDate){
-    return scPortalInterfaceMapper.getStockInHand(startDate, endDate);
+  public List<HashMap<String,Object>>getStockInHand(String startDate, Pagination pagination){
+    return scPortalInterfaceMapper.getStockInHand(startDate,pagination);
   }
-  public List<HashMap<String,Object>>getAllProducts(){
-    return scPortalInterfaceMapper.getAllProducts();
+  public List<HashMap<String,Object>>getAllProducts(Pagination pagination){
+    return scPortalInterfaceMapper.getAllProducts(pagination);
   }
 
 
@@ -300,5 +300,13 @@ public class LookupService {
 
   public Integer getTotalThScpPrograms() {
      return interfaceMapper.getTotalThScpPrograms();
+  }
+
+  public Integer getTotalProducts() {
+    return interfaceMapper.getTotalProducts();
+  }
+
+  public Integer getTotalStockInHand(String startDate) {
+    return scPortalInterfaceMapper.getTotalStockInHand(startDate);
   }
 }

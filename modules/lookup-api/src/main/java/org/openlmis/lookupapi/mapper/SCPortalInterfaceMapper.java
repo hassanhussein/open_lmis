@@ -2,6 +2,7 @@ package org.openlmis.lookupapi.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public interface SCPortalInterfaceMapper {
             "join programs pr ON pr.id = pp.programId and pr.id =1\n" +
             "join product_categories pc ON pp.productcategoryid = pc.id\n" +
             "")
-    List<HashMap<String, Object>> getAllProducts();
+    List<HashMap<String, Object>> getAllProducts(@Param("RowBounds") RowBounds rowBounds);
 
     @Select(
             "    SELECT f.hfrcode as facility_id, productcode as product_code\n" +
@@ -32,14 +33,14 @@ public interface SCPortalInterfaceMapper {
                     "            JOIN facilities F on r.facilityId = F.ID\n" +
                     "             JOIN processing_periods per ON r.periodiD = per.id\n" +
                     "             where f.code::text is not null\n" +
-                    "                           and  f.hfrcode::text not in ('.','-') \n" +
-                    "             ORDER BY R.ID DESC LIMIT 1000"+
+                    "                           and  f.hfrcode::text not in ('.','-') " +
+                    " and per.startDate >= #{startDate}::date and stockinhand >0\n" +
+                    "             ORDER BY R.ID DESC "+
           //  " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
 
             "")
 
-    List<HashMap<String, Object>> getStockInHand(@Param("startDate") String startDate,
-                                                 @Param("endDate") String endDate);
+    List<HashMap<String, Object>> getStockInHand(@Param("startDate") String startDate, @Param("RowBounds") RowBounds rowBounds);
 
     @Select("   SELECT f.hfrcode as facility_id, productcode as product_code,\n" +
             "                     CASE WHEN quantityReceived IS NULL THEN 0::TEXT ELSE quantityReceived::text END as quantity_received,\n" +
@@ -91,4 +92,14 @@ public interface SCPortalInterfaceMapper {
             "               and  f.code::text not in ('.','-') \n" +
             "")
     List<HashMap<String, Object>> getThScpStockInHand();
+
+    @Select("\n" +
+            "SELECT  COUNT(*) from requisitions r    \n" +
+            "JOIN requisition_line_items i on r.id = i.rnrid \n" +
+            "JOIN facilities F on r.facilityId = F.ID \n" +
+            "JOIN processing_periods per ON r.periodiD = per.id  \n" +
+            "where f.code::text is not null \n" +
+            "and  f.hfrcode::text not in ('.','-') \n" +
+            "and per.startDate >= #{startDate}::date and stockinhand >0 \n")
+    Integer getTotalStockInHand(@Param("startDate") String startDate);
 }
