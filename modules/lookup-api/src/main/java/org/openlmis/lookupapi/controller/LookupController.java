@@ -540,8 +540,8 @@ public class LookupController {
 
         Pagination pagination = new Pagination(page, max);
 
-        Integer totalCount = lookupService.getTotalEmergencyCommodites(startDate);
-        pagination.setTotalRecords(totalCount);
+       // Integer totalCount = lookupService.getTotalEmergencyCommodites(startDate);
+     //   pagination.setTotalRecords(totalCount);
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getEmergencyCommodites(startDate, pagination));
@@ -558,8 +558,8 @@ public class LookupController {
 
         Pagination pagination = new Pagination(page, max);
 
-        Integer totalCount = lookupService.getTotalOrderDelivery(startDate);
-        pagination.setTotalRecords(totalCount);
+      //  Integer totalCount = lookupService.getTotalOrderDelivery(startDate);
+      //  pagination.setTotalRecords(totalCount);
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getOrderDelivery(startDate, pagination));
@@ -575,8 +575,8 @@ public class LookupController {
 
         Pagination pagination = new Pagination(page, max);
 
-        Integer totalCount = lookupService.getTotalHFRFacilities();
-        pagination.setTotalRecords(totalCount);
+       // Integer totalCount = lookupService.getTotalHFRFacilities();
+       // pagination.setTotalRecords(totalCount);
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getAllHFRFacilities(pagination));
@@ -598,7 +598,7 @@ public class LookupController {
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getStockInHand(startDate, pagination));
-        //response.getBody().addData("pagination", pagination);
+        response.getBody().addData("pagination", pagination);
         return response;
     }
 
@@ -609,8 +609,8 @@ public class LookupController {
 
         Pagination pagination = new Pagination(page, max);
 
-        Integer totalCount = lookupService.getTotalProducts();
-        pagination.setTotalRecords(totalCount);
+       // Integer totalCount = lookupService.getTotalProducts();
+        // /pagination.setTotalRecords(totalCount);
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getAllProducts(pagination));
@@ -627,8 +627,8 @@ public class LookupController {
 
         Pagination pagination = new Pagination(page, max);
 
-        Integer totalCount = lookupService.getTotalWastages(startDate);
-        pagination.setTotalRecords(totalCount);
+     //   Integer totalCount = lookupService.getTotalWastages(startDate);
+      //  pagination.setTotalRecords(totalCount);
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getWastages(startDate,pagination));
@@ -646,8 +646,8 @@ public class LookupController {
 
         Pagination pagination = new Pagination(page, max);
 
-        Integer totalCount = lookupService.getTotalForeCastingData(startDate);
-        pagination.setTotalRecords(totalCount);
+      //  Integer totalCount = lookupService.getTotalForeCastingData(startDate);
+      //  pagination.setTotalRecords(totalCount);
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getForeCastingData(startDate,pagination));
