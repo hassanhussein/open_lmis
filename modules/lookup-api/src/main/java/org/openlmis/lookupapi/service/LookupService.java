@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -240,8 +241,12 @@ public class LookupService {
     return programReferenceData;
   }
 
-  public List<HashMap<String,Object>>getAllHFRFacilities(){
-    return interfaceMapper.getAllHFRFacilities();
+  public List<HashMap<String,Object>>getAllHFRFacilities(Pagination pagination){
+    return interfaceMapper.getAllHFRFacilities(pagination);
+  }
+
+  public List<HashMap<String,Object>>getHFRFacilities(){
+    return interfaceMapper.getHFRFacilities();
   }
 
   public void refreshViewsBy(String view){
@@ -260,23 +265,23 @@ public class LookupService {
   }
 
 
-    public List<HashMap<String, Object>> getOrderDelivery(String startDate, String endDate) {
-      return interfaceMapper.getOrderDelivery(startDate, endDate);
+    public List<HashMap<String, Object>> getOrderDelivery(String startDate, Pagination pagination) {
+      return interfaceMapper.getOrderDelivery(startDate, pagination);
     }
 
-    public List<HashMap<String,Object>> getEmergencyCommodites(String startDate, String endDate) {
+    public List<HashMap<String,Object>> getEmergencyCommodites(String startDate, Pagination pagination) {
 
-      return interfaceMapper.getEmergencyCommodites(startDate, endDate);
+      return interfaceMapper.getEmergencyCommodites(startDate, pagination);
     }
 
-    public List<HashMap<String,Object>> getForeCastingData(String startDate, String endDate) {
+    public List<HashMap<String,Object>> getForeCastingData(String startDate, Pagination pagination) {
 
-      return scPortalInterfaceMapper.getForeCastingData(startDate,endDate);
+      return scPortalInterfaceMapper.getForeCastingData(startDate,pagination);
     }
 
-    public List<HashMap<String,Object>> getWastages(String startDate, String endDate) {
+    public List<HashMap<String,Object>> getWastages(String startDate, Pagination pagination) {
 
-      return scPortalInterfaceMapper.getWastages(startDate, endDate);
+      return scPortalInterfaceMapper.getWastages(startDate, pagination);
     }
 
 
@@ -308,5 +313,25 @@ public class LookupService {
 
   public Integer getTotalStockInHand(String startDate) {
     return scPortalInterfaceMapper.getTotalStockInHand(startDate);
+  }
+
+  public Integer getTotalWastages(String startDate) {
+    return scPortalInterfaceMapper.getTotalWastages(startDate);
+  }
+
+  public Integer getTotalForeCastingData(String startDate) {
+   return scPortalInterfaceMapper.getTotalForeCastingData(startDate);
+  }
+
+  public Integer getTotalEmergencyCommodites(String startDate) {
+    return interfaceMapper.getTotalEmergencyCommodites(startDate);
+  }
+
+  public Integer getTotalOrderDelivery(String startDate) {
+    return interfaceMapper.getTotalOrderDelivery(startDate);
+  }
+
+  public Integer getTotalHFRFacilities() {
+    return interfaceMapper.getTotalHfrFacilities();
   }
 }

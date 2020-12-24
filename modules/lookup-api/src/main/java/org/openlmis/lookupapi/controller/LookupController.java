@@ -368,7 +368,7 @@ public class LookupController {
 
     @RequestMapping(value = "/rest-api/lookup/hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getAllFacilities() {
-        return RestResponse.response("facilities", lookupService.getAllHFRFacilities());
+        return RestResponse.response("facilities", lookupService.getHFRFacilities());
     }
 
 
@@ -530,22 +530,59 @@ public class LookupController {
 
 
     //Start of COVID 19
+
     @RequestMapping(value = "/rest-api/sc-portal-emergency-commodities", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getEmergencystockpiles(@RequestParam(value = "startDate") String startDate,
-                                                 @RequestParam(value = "endDate" ) String endDate
-                                                 ) {
-        return RestResponse.response("data", lookupService.getEmergencyCommodites(startDate,endDate));
+    public ResponseEntity<OpenLmisResponse> getEmergencystockpiles(
+            @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalEmergencyCommodites(startDate);
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getEmergencyCommodites(startDate, pagination));
+        response.getBody().addData("pagination", pagination);
+        return response;
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-order-delivery", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getOrderDelivery(@RequestParam(value = "startDate") String startDate,
-                                           @RequestParam(value = "endDate" ) String endDate) {
-        return RestResponse.response("data", lookupService.getOrderDelivery(startDate, endDate));
+    public ResponseEntity<OpenLmisResponse> getOrderDelivery(
+            @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalOrderDelivery(startDate);
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getOrderDelivery(startDate, pagination));
+        response.getBody().addData("pagination", pagination);
+        return response;
     }
 
-   @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getAllHFRFacilities() {
-        return RestResponse.response("data", lookupService.getAllHFRFacilities());
+    @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllHFRFacilities (
+            @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalHFRFacilities();
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getAllHFRFacilities(pagination));
+        response.getBody().addData("pagination", pagination);
+        return response;
     }
 
     @RequestMapping(value = "/rest-api/sc-portal-stock-in-hand", method = RequestMethod.GET, headers = ACCEPT_JSON)
@@ -582,19 +619,42 @@ public class LookupController {
         return response;
     }
 
-
     @RequestMapping(value = "/rest-api/sc-portal-wastages", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getWastages(    @RequestParam(value = "startDate") String startDate,
-                                          @RequestParam(value = "endDate" ) String endDate) {
-        return RestResponse.response("data", lookupService.getWastages(startDate, endDate));
+    public ResponseEntity<OpenLmisResponse> getWastages(
+            @RequestParam(value = "startDate") String startDate,
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalWastages(startDate);
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getWastages(startDate,pagination));
+        response.getBody().addData("pagination", pagination);
+        return response;
     }
+
 
     @RequestMapping(value = "/rest-api/sc-portal-forecasting", method = RequestMethod.GET, headers = ACCEPT_JSON)
-    public ResponseEntity getForeCastingData(
+    public ResponseEntity<OpenLmisResponse> getForeCastingData(
             @RequestParam(value = "startDate") String startDate,
-            @RequestParam(value = "endDate" ) String endDate
-    ) {
-        return RestResponse.response("data", lookupService.getForeCastingData(startDate,endDate));
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "max", required = false, defaultValue = "10") int max
+    ){
+
+        Pagination pagination = new Pagination(page, max);
+
+        Integer totalCount = lookupService.getTotalForeCastingData(startDate);
+        pagination.setTotalRecords(totalCount);
+
+        ResponseEntity<OpenLmisResponse> response =
+                OpenLmisResponse.response("data",lookupService.getForeCastingData(startDate,pagination));
+        response.getBody().addData("pagination", pagination);
+        return response;
     }
+
    //End Of covid APIs
 }
