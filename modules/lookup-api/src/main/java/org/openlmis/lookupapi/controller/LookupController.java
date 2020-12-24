@@ -569,7 +569,6 @@ public class LookupController {
 
     @RequestMapping(value = "/rest-api/sc-portal-hfr-facilities", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getAllHFRFacilities (
-            @RequestParam(value = "startDate") String startDate,
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @RequestParam(value = "max", required = false, defaultValue = "10") int max
     ){
@@ -594,12 +593,12 @@ public class LookupController {
 
         Pagination pagination = new Pagination(page, max);
 
-        Integer totalCount = lookupService.getTotalStockInHand(startDate);
-        pagination.setTotalRecords(totalCount);
+        //Integer totalCount = lookupService.getTotalStockInHand(startDate);
+       // pagination.setTotalRecords(totalCount);
 
         ResponseEntity<OpenLmisResponse> response =
                 OpenLmisResponse.response("data",lookupService.getStockInHand(startDate, pagination));
-        response.getBody().addData("pagination", pagination);
+        //response.getBody().addData("pagination", pagination);
         return response;
     }
 
