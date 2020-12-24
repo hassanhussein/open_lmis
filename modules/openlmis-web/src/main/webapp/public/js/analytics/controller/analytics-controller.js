@@ -5,6 +5,7 @@ function AnalyticsFunction(notifications,$stateParams, GetEmergencyAndRegularRnR
     $scope.stockAvailabilityDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjI5fSwicGFyYW1zIjp7fSwiaWF0IjoxNTk4MjYxOTIxfQ.DL5Bg84TX9piTpkPV7qWK4fuZGUi8-mV6akR9c106EA?tracer=true#bordered&titled");
     $scope.requisitionsDashboardUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjMwfSwicGFyYW1zIjp7fSwiaWF0IjoxNTk4MjU1ODQ2fQ.ZRgC14-wKY8KD9CO0keABm6aNozR9kkRG3m99yzmibQ#bordered=true&titled=true");
     $scope.reportingUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjMxfSwicGFyYW1zIjp7fSwiaWF0IjoxNTk4MjU2MTQzfQ.OefMgzh8s56T3N8i-B5un-H3BnJwto8dwPAVLO4kHE0#bordered=true&titled=true");
+    $scope.fillRateUrl = $sce.trustAsResourceUrl("https://dashboard.tz.elmis-dev.org/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZXNvdXJjZSI6eyJkYXNoYm9hcmQiOjM3fSwicGFyYW1zIjp7fSwiaWF0IjoxNjA4NjM3MjIxfQ.Y8DjCa54RJ34RD66hx30mYv45U-KYGq6SyWA1-WmeeQ#bordered&titled");
     $scope.notifications = notifications;
 
 
