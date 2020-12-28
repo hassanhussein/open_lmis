@@ -1119,7 +1119,9 @@ public class RequisitionService {
     criteria.setEmergency(false);
     List<ProcessingPeriod> processingPeriods  = getProcessingPeriods(criteria);
     if(!processingPeriods.isEmpty()) {
-      statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+      if(!configurationSettingsService.getByKey("COUNTRY").getValue().equalsIgnoreCase("Zanzibar")) {
+        statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+      }
     }
     return true;
   }
