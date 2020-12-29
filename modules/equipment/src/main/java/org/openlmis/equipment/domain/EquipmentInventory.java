@@ -93,7 +93,7 @@ public class EquipmentInventory extends BaseModel implements Importable{
   @ImportField(name = "Remark")
   private String remark;
 
-  @ImportField(mandatory = true, name = "Program Code", nested = "code")
+  @ImportField( name = "Program Code", nested = "code")
   private Program program;
 
   @ImportField(mandatory = true, name = "Equipment Model", nested = "code")
