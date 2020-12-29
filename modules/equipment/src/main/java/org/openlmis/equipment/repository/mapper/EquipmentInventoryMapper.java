@@ -88,7 +88,7 @@ public interface EquipmentInventoryMapper {
             ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
             ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasStabilizer}" +
             ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{nameOfSparePart}, #{remark})")
-    @Options(useGeneratedKeys = true)
+    @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void insert(EquipmentInventory inventory);
 
     @Update("UPDATE equipment_inventories " +
@@ -132,7 +132,7 @@ public interface EquipmentInventoryMapper {
     EquipmentInventory findInventoryBySerialNumber(@Param("serialNumber") String serialNumber);
 
     @Select("select * from equipment_inventories where facilityid = #{facilityId} and " +
-            "programid = #{programId} and equipmentid = #{equipmentId} and (serialnumber = #{serialNumber} or serialnumber is null)" +
+            " equipmentid = #{equipmentId} and (serialnumber = #{serialNumber} or serialnumber is null)" +
             " order by createdDate asc limit 1")
     EquipmentInventory getInventoryByFacilityProgramEquipmentSerialNumber(@Param("facilityId") Long facilityId,
                                                                           @Param("programId") Long programId,

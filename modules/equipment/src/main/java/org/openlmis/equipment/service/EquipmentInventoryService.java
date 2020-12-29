@@ -195,9 +195,6 @@ public class EquipmentInventoryService {
         if (equipmentInventory.getEquipmentId() == null)
             throw new DataException("equipment.missing.data");
 
-        if (equipmentInventory.getProgramId() == null)
-            throw new DataException("program.missing.data");
-
         if (equipmentInventory.getFacilityId() == null)
             throw new DataException("facility.missing.data");
     }
