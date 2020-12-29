@@ -37,179 +37,183 @@ import static org.openlmis.core.domain.RightName.MANAGE_EQUIPMENT_INVENTORY;
 @Component
 public class EquipmentInventoryService {
 
-  @Autowired
-  EquipmentInventoryRepository repository;
+    @Autowired
+    EquipmentInventoryRepository repository;
 
-  Logger logger = Logger.getLogger(EquipmentInventoryService.class);
+    Logger logger = Logger.getLogger(EquipmentInventoryService.class);
 
-  @Autowired
-  private FacilityService facilityService;
+    @Autowired
+    private FacilityService facilityService;
 
-  @Autowired
-  private EquipmentRepository equipmentRepository;
+    @Autowired
+    private EquipmentRepository equipmentRepository;
 
-  @Autowired EquipmentOperationalStatusService equipmentOperationalStatusService;
-  @Autowired EquipmentService equipmentService;
-  @Autowired ProgramService programService;
+    @Autowired
+    EquipmentOperationalStatusService equipmentOperationalStatusService;
+    @Autowired
+    EquipmentService equipmentService;
+    @Autowired
+    ProgramService programService;
 
-  public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId){
-    return repository.getFacilityInventory(facilityId, programId);
-  }
-
-  public List<EquipmentInventory> getInventory(Long userId, Long typeId, Long programId, Long equipmentTypeId, Pagination pagination) {
-    long[] facilityIds = getFacilityIds(userId, typeId, programId);
-
-    return repository.getInventory(programId, equipmentTypeId, facilityIds, pagination);
-  }
-
-  public Integer getInventoryCount(Long userId, Long typeId, Long programId, Long equipmentTypeId) {
-    long[] facilityIds = getFacilityIds(userId, typeId, programId);
-
-    return repository.getInventoryCount(programId, equipmentTypeId, facilityIds);
-  }
-
-  private long[] getFacilityIds(Long userId, Long typeId, Long programId) {
-    // Get list of facilities
-    List<Facility> facilities;
-    if (typeId == 0) {
-      facilities = Arrays.asList(facilityService.getHomeFacility(userId));
-    } else {
-      facilities = facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
+    public List<EquipmentInventory> getInventoryForFacility(Long facilityId, Long programId) {
+        return repository.getFacilityInventory(facilityId, programId);
     }
 
-    // From facilities, get facility ids
-    long[] facilityIds = new long[facilities.size()];
-    int index = 0;
-    for (Facility f : facilities) {
-      facilityIds[index++] = f.getId();
+    public List<EquipmentInventory> getInventory(Long userId, Long typeId, Long programId, Long equipmentTypeId, Pagination pagination) {
+        long[] facilityIds = getFacilityIds(userId, typeId, programId);
+
+        return repository.getInventory(programId, equipmentTypeId, facilityIds, pagination);
     }
 
-    return facilityIds;
-  }
+    public Integer getInventoryCount(Long userId, Long typeId, Long programId, Long equipmentTypeId) {
+        long[] facilityIds = getFacilityIds(userId, typeId, programId);
 
-  public EquipmentInventory getInventoryById(Long id){
-    return repository.getInventoryById(id);
-  }
-
-  public void save(EquipmentInventory inventory){
-    // First, may need to save equipment into equipment list
-    // Only need to do this for non-CCE
-    Equipment equipment = inventory.getEquipment();
-    if (!equipment.getEquipmentType().getIsColdChain()) {
-      //Boolean equipmentFound = false;
-      Long equipmentTypeId = equipment.getEquipmentTypeId();
-
-      // Check to see if equipment already exists in db
-     // List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
-
-      Equipment existingEquipment = equipmentService.getByTypeManufacturerAndModel(equipmentTypeId,
-              equipment.getManufacturer(),
-              equipment.getEquipmentModel().getId(),
-              equipment.getModel());
-
-      //equipment = existingEquipment == null ? equipment : existingEquipment;
-
-      equipment.setModifiedBy(inventory.getModifiedBy());
-      equipment.setModel(null);
-      if (existingEquipment == null) {
-        equipment.setCreatedBy(inventory.getCreatedBy());
-        equipmentRepository.insert(equipment);
-      } else {
-        equipmentRepository.update(equipment);
-      }
-
-      // Make sure equipmentId is set for the inventory save, equipment.id is filled in after insert
-      inventory.setEquipmentId(equipment.getId());
+        return repository.getInventoryCount(programId, equipmentTypeId, facilityIds);
     }
 
-    if(inventory.getId() == null){
-      repository.insert(inventory);
-    } else{
-      repository.update(inventory);
+    private long[] getFacilityIds(Long userId, Long typeId, Long programId) {
+        // Get list of facilities
+        List<Facility> facilities;
+        if (typeId == 0) {
+            facilities = Arrays.asList(facilityService.getHomeFacility(userId));
+        } else {
+            facilities = facilityService.getUserSupervisedFacilities(userId, programId, MANAGE_EQUIPMENT_INVENTORY);
+        }
+
+        // From facilities, get facility ids
+        long[] facilityIds = new long[facilities.size()];
+        int index = 0;
+        for (Facility f : facilities) {
+            facilityIds[index++] = f.getId();
+        }
+
+        return facilityIds;
     }
-  }
 
-  public void updateStatus(EquipmentInventory inventory){
-    repository.updateStatus(inventory);
-  }
-
-  public void updateNonFunctionalEquipments() {
-    repository.updateNonFunctionalEquipments();
-  }
-
-public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
-    return repository.getAll(equipmentId);
-  }
-
-  public void deleteEquipmentInventory(Long inventoryId){
-    repository.deleteEquipmentInventory(inventoryId);
-  }
-
-
-  public List<EquipmentInventory>getInventoryByFacilityAndProgram(Long facilityId, Long programId){
-    return repository.getInventoryByFacilityAndProgram(facilityId,programId);
-  }
-
-  public List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes(){
-    return equipmentService.getBioChemistryEquipmentTestTypes();
-  }
-
-  public List<ManualTestTypes> getManualTestTypes(){
-    return equipmentService.getManualTestTypes();
-  }
-
-  public EquipmentInventory getInventoryBySerialNumber(String serialNumber) {
-    return repository.findBySerialNumber(serialNumber);
-  }
-
-  public EquipmentInventory getExistingInventoryForUpload
-          (EquipmentInventory equipmentInventory) {
-    EquipmentInventory inventory = loadEquipmentInventoryUploadFields(equipmentInventory);
-    return repository.getInventoryByFacilityProgramEquipmentSerialNumber(
-            inventory.getFacilityId(),
-            inventory.getProgramId(),
-            inventory.getEquipmentId(),
-            inventory.getSerialNumber());
-  }
-
-  public void uploadEquipmentInventory(EquipmentInventory equipmentInventory) {
-    EquipmentInventory inventory = loadEquipmentInventoryUploadFields(equipmentInventory);
-    validateEquipmentInventoryUploadFields(inventory);
-
-    if(inventory.getId() == null){
-      repository.insert(inventory);
-    } else {
-      repository.update(inventory);
+    public EquipmentInventory getInventoryById(Long id) {
+        return repository.getInventoryById(id);
     }
-  }
 
-  private void validateEquipmentInventoryUploadFields
-          (EquipmentInventory equipmentInventory) {
+    public void save(EquipmentInventory inventory) {
+        // First, may need to save equipment into equipment list
+        // Only need to do this for non-CCE
+        Equipment equipment = inventory.getEquipment();
+        if (!equipment.getEquipmentType().getIsColdChain()) {
+            //Boolean equipmentFound = false;
+            Long equipmentTypeId = equipment.getEquipmentTypeId();
 
-     if(equipmentInventory.getOperationalStatusId() == null)
-       throw new DataException("equipment.operational.status.missing.data");
+            // Check to see if equipment already exists in db
+            // List<Equipment> equipments = equipmentService.getAllByType(equipmentTypeId);
 
-     if(equipmentInventory.getEquipmentId() == null)
-       throw new DataException("equipment.missing.data");
+            Equipment existingEquipment = equipmentService.getByTypeManufacturerAndModel(equipmentTypeId,
+                    equipment.getManufacturer(),
+                    equipment.getEquipmentModel().getId(),
+                    equipment.getModel());
 
-    if(equipmentInventory.getProgramId() == null)
-      throw new DataException("program.missing.data");
+            //equipment = existingEquipment == null ? equipment : existingEquipment;
 
-    if(equipmentInventory.getFacilityId() == null)
-      throw new DataException("facility.missing.data");
-  }
+            equipment.setModifiedBy(inventory.getModifiedBy());
+            equipment.setModel(null);
+            if (existingEquipment == null) {
+                equipment.setCreatedBy(inventory.getCreatedBy());
+                equipmentRepository.insert(equipment);
+            } else {
+                equipmentRepository.update(equipment);
+            }
 
-  private EquipmentInventory loadEquipmentInventoryUploadFields(EquipmentInventory equipmentInventory) {
-    EquipmentOperationalStatus status =  equipmentOperationalStatusService
-            .getByCode(equipmentInventory.getEquipmentOperationalStatus().getCode());
+            // Make sure equipmentId is set for the inventory save, equipment.id is filled in after insert
+            inventory.setEquipmentId(equipment.getId());
+        }
 
-    Equipment equipment = equipmentService.getEquipmentByNameAndModelCode(
-            equipmentInventory.getEquipment().getName(),
-            equipmentInventory.getEquipmentModel().getCode());
+        if (inventory.getId() == null) {
+            repository.insert(inventory);
+        } else {
+            repository.update(inventory);
+        }
+    }
 
-    Program program = programService.getByCode(equipmentInventory.getProgram().getCode());
+    public void updateStatus(EquipmentInventory inventory) {
+        repository.updateStatus(inventory);
+    }
 
-    Facility facility = facilityService.getFacilityByCode(equipmentInventory.getFacility().getCode());
+    public void updateNonFunctionalEquipments() {
+        repository.updateNonFunctionalEquipments();
+    }
+
+    public List<ColdChainEquipmentTemperatureStatusDTO> getAllbyId(Long equipmentId) {
+        return repository.getAll(equipmentId);
+    }
+
+    public void deleteEquipmentInventory(Long inventoryId) {
+        repository.deleteEquipmentInventory(inventoryId);
+    }
+
+
+    public List<EquipmentInventory> getInventoryByFacilityAndProgram(Long facilityId, Long programId) {
+        return repository.getInventoryByFacilityAndProgram(facilityId, programId);
+    }
+
+    public List<NonFunctionalTestTypes> getBioChemistryEquipmentTestTypes() {
+        return equipmentService.getBioChemistryEquipmentTestTypes();
+    }
+
+    public List<ManualTestTypes> getManualTestTypes() {
+        return equipmentService.getManualTestTypes();
+    }
+
+    public EquipmentInventory getInventoryBySerialNumber(String serialNumber) {
+        return repository.findBySerialNumber(serialNumber);
+    }
+
+    public EquipmentInventory getExistingInventoryForUpload
+            (EquipmentInventory equipmentInventory) {
+        EquipmentInventory inventory = loadEquipmentInventoryUploadFields(equipmentInventory);
+        return repository.getInventoryByFacilityProgramEquipmentSerialNumber(
+                inventory.getFacilityId(),
+                inventory.getProgramId(),
+                inventory.getEquipmentId(),
+                inventory.getSerialNumber());
+    }
+
+    public void uploadEquipmentInventory(EquipmentInventory equipmentInventory) {
+        EquipmentInventory inventory = loadEquipmentInventoryUploadFields(equipmentInventory);
+        validateEquipmentInventoryUploadFields(inventory);
+
+        if (inventory.getId() == null) {
+            repository.insert(inventory);
+        } else {
+            repository.update(inventory);
+        }
+    }
+
+    private void validateEquipmentInventoryUploadFields
+            (EquipmentInventory equipmentInventory) {
+
+        if (equipmentInventory.getOperationalStatusId() == null)
+            throw new DataException("equipment.operational.status.missing.data");
+
+        if (equipmentInventory.getEquipmentId() == null)
+            throw new DataException("equipment.missing.data");
+
+        if (equipmentInventory.getProgramId() == null)
+            throw new DataException("program.missing.data");
+
+        if (equipmentInventory.getFacilityId() == null)
+            throw new DataException("facility.missing.data");
+    }
+
+    private EquipmentInventory loadEquipmentInventoryUploadFields(EquipmentInventory equipmentInventory) {
+        EquipmentOperationalStatus status = equipmentOperationalStatusService
+                .getByCode(equipmentInventory.getEquipmentOperationalStatus().getCode());
+
+        Equipment equipment = equipmentService.getEquipmentByNameAndModelCode(
+                equipmentInventory.getEquipment().getName(),
+                equipmentInventory.getEquipmentModel().getCode());
+        Program program = null;
+        if (equipmentInventory.getProgram() != null && equipmentInventory.getProgram().getCode() != null && !equipmentInventory.getProgram().getCode().trim().equals("")) {
+            program = programService.getByCode(equipmentInventory.getProgram().getCode());
+        }
+        Facility facility = facilityService.getFacilityByCode(equipmentInventory.getFacility().getCode());
 
     /*equipmentInventory.setProgramId(Optional.ofNullable(program.getId()).orElse(null));
     equipmentInventory.setEquipmentId(Optional.ofNullable(equipment.getId()).orElse(null));
@@ -217,11 +221,11 @@ public List<ColdChainEquipmentTemperatureStatusDTO>getAllbyId(Long equipmentId){
     equipmentInventory.setOperationalStatusId(Optional.ofNullable(status.getId()).orElse(null));
     */
 
-    Optional.ofNullable(equipment).ifPresent(e -> equipmentInventory.setEquipmentId(e.getId()));
-    Optional.ofNullable(program).ifPresent(p -> equipmentInventory.setProgramId(p.getId()));
-    Optional.ofNullable(facility).ifPresent(f -> equipmentInventory.setFacilityId(f.getId()));
-    Optional.ofNullable(status).ifPresent(s -> equipmentInventory.setOperationalStatusId(s.getId()));
+        Optional.ofNullable(equipment).ifPresent(e -> equipmentInventory.setEquipmentId(e.getId()));
+        Optional.ofNullable(program).ifPresent(p -> equipmentInventory.setProgramId(p.getId()));
+        Optional.ofNullable(facility).ifPresent(f -> equipmentInventory.setFacilityId(f.getId()));
+        Optional.ofNullable(status).ifPresent(s -> equipmentInventory.setOperationalStatusId(s.getId()));
 
-    return equipmentInventory;
-  }
+        return equipmentInventory;
+    }
 }
