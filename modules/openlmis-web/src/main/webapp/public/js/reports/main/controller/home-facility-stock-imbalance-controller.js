@@ -119,7 +119,7 @@ function HomeFacilityStockImbalanceController($scope, $window, $routeParams, Sto
                 $scope.all = false;
             }
         });
-
+        $scope.allStatus = status;
         $scope.applyUrl();
         $scope.OnFilterChanged();
     };
