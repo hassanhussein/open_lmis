@@ -193,5 +193,7 @@ public interface ProcessingPeriodMapper {
 
     ProcessingPeriod getFullProcessingPeriodForCurrentMonth(@Param("program") String program);
 
-
+    @Select("select * from processing_periods where numberofmonths in(3) and\n" +
+            "            startdate::date >='2020-01-01' and scheduleId NOT IN (47)")
+    List<ProcessingPeriod> getByStartDate();
 }

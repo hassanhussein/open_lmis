@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.HashMap;
 import java.util.List;
 
@@ -240,8 +241,12 @@ public class LookupService {
     return programReferenceData;
   }
 
-  public List<HashMap<String,Object>>getAllHFRFacilities(){
-    return interfaceMapper.getAllHFRFacilities();
+  public List<HashMap<String,Object>>getAllHFRFacilities(Pagination pagination){
+    return interfaceMapper.getAllHFRFacilities(pagination);
+  }
+
+  public List<HashMap<String,Object>>getHFRFacilities(){
+    return interfaceMapper.getHFRFacilities();
   }
 
   public void refreshViewsBy(String view){
@@ -252,31 +257,31 @@ public class LookupService {
     return interfaceMapper.getByFacilityCode(hfr.facIDNumber);
   }
 
-  public List<HashMap<String,Object>>getStockInHand(String startDate, String endDate){
-    return scPortalInterfaceMapper.getStockInHand(startDate, endDate);
+  public List<HashMap<String,Object>>getStockInHand(String startDate, Pagination pagination){
+    return scPortalInterfaceMapper.getStockInHand(startDate,pagination);
   }
-  public List<HashMap<String,Object>>getAllProducts(){
-    return scPortalInterfaceMapper.getAllProducts();
+  public List<HashMap<String,Object>>getAllProducts(Pagination pagination){
+    return scPortalInterfaceMapper.getAllProducts(pagination);
   }
 
 
-    public List<HashMap<String, Object>> getOrderDelivery(String startDate, String endDate) {
-      return interfaceMapper.getOrderDelivery(startDate, endDate);
+    public List<HashMap<String, Object>> getOrderDelivery(String startDate, Pagination pagination) {
+      return interfaceMapper.getOrderDelivery(startDate, pagination);
     }
 
-    public List<HashMap<String,Object>> getEmergencyCommodites(String startDate, String endDate) {
+    public List<HashMap<String,Object>> getEmergencyCommodites(String startDate, Pagination pagination) {
 
-      return interfaceMapper.getEmergencyCommodites(startDate, endDate);
+      return interfaceMapper.getEmergencyCommodites(startDate, pagination);
     }
 
-    public List<HashMap<String,Object>> getForeCastingData(String startDate, String endDate) {
+    public List<HashMap<String,Object>> getForeCastingData(String startDate, Pagination pagination) {
 
-      return scPortalInterfaceMapper.getForeCastingData(startDate,endDate);
+      return scPortalInterfaceMapper.getForeCastingData(startDate,pagination);
     }
 
-    public List<HashMap<String,Object>> getWastages(String startDate, String endDate) {
+    public List<HashMap<String,Object>> getWastages(String startDate, Pagination pagination) {
 
-      return scPortalInterfaceMapper.getWastages(startDate, endDate);
+      return scPortalInterfaceMapper.getWastages(startDate, pagination);
     }
 
 
@@ -290,12 +295,43 @@ public class LookupService {
       return interfaceMapper.getThScpOrderDelivery();
     }
 
-  public List<HashMap<String, Object>> getThScpPrograms() {
-    return  interfaceMapper.getThScpPrograms();
+  public List<HashMap<String, Object>> getThScpPrograms(RowBounds rowBounds) {
+    return  interfaceMapper.getThScpPrograms(rowBounds);
   }
 
   public List<HashMap<String,Object>>getThScpStockInHand(){
     return scPortalInterfaceMapper.getThScpStockInHand();
   }
 
+  public Integer getTotalThScpPrograms() {
+     return interfaceMapper.getTotalThScpPrograms();
+  }
+
+  public Integer getTotalProducts() {
+    return interfaceMapper.getTotalProducts();
+  }
+
+  public Integer getTotalStockInHand(String startDate) {
+    return scPortalInterfaceMapper.getTotalStockInHand(startDate);
+  }
+
+  public Integer getTotalWastages(String startDate) {
+    return scPortalInterfaceMapper.getTotalWastages(startDate);
+  }
+
+  public Integer getTotalForeCastingData(String startDate) {
+   return scPortalInterfaceMapper.getTotalForeCastingData(startDate);
+  }
+
+  public Integer getTotalEmergencyCommodites(String startDate) {
+    return interfaceMapper.getTotalEmergencyCommodites(startDate);
+  }
+
+  public Integer getTotalOrderDelivery(String startDate) {
+    return interfaceMapper.getTotalOrderDelivery(startDate);
+  }
+
+  public Integer getTotalHFRFacilities() {
+    return interfaceMapper.getTotalHfrFacilities();
+  }
 }

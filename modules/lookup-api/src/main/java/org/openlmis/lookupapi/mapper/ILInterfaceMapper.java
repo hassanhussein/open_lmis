@@ -1,6 +1,7 @@
 package org.openlmis.lookupapi.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.MSDStockDTO;
@@ -47,8 +48,10 @@ public interface ILInterfaceMapper {
     HealthFacilityDTO getByFacilityCode(@Param("facIDNumber") String facIDNumber);
 
     @Select("select * from hfr_facilities")
-    List<HashMap<String,Object>>getAllHFRFacilities();
+    List<HashMap<String,Object>>getAllHFRFacilities(@Param("RowBounds") RowBounds rowBounds);
 
+    @Select("select * from hfr_facilities")
+    List<HashMap<String,Object>>getHFRFacilities();
 
     @Insert(" INSERT INTO public.msd_stock_statuses(\n" +
             "             ilId, facilityId, productId, onHandDate, onHandQuantity, \n" +
@@ -91,10 +94,24 @@ public interface ILInterfaceMapper {
             "JOIN program_products pp On pp.productid = p.id" +
             " JOIN facilities f ON r.facilityId = F.ID" +
             " JOIN processing_periods per ON r.periodId = per.id" +
-            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL ORDER BY R.ID DESC LIMIT 1000 "
-          //  " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE"
+            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL" +
+            " and per.startDate>= #{startDate}::DATE AND r.programId = 1 AND quantityApproved > 0  " +
+            " ORDER BY R.ID DESC "
     )
-    List<HashMap<String, Object>> getOrderDelivery(@Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<HashMap<String, Object>> getOrderDelivery(@Param("startDate") String startDate, @Param("RowBounds") RowBounds rowBounds);
+
+    @Select(" SELECT COUNT(*) from requisitions r\n" +
+            "\n" +
+            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
+            "JOIN orders o ON r.id = o.id\n" +
+            "JOIN products p ON i.productcode = p.code\n" +
+            "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN facilities f ON r.facilityId = F.ID" +
+            " JOIN processing_periods per ON r.periodId = per.id" +
+            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL" +
+            " and per.startDate>= #{startDate}::DATE AND r.programId = 1 AND quantityApproved > 0  "
+    )
+    Integer getTotalOrderDelivery(@Param("startDate") String startDate);
 
     @Select(
            // " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
@@ -109,10 +126,10 @@ public interface ILInterfaceMapper {
                     "            JOIN program_products pp On pp.productid = p.id\n" +
                     "             JOIN processing_periods per ON r.periodiD = per.id\n" +
                     "            JOIN facilities f ON r.facilityId = F.ID\n" +
-                    "              WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL  \n" +
-                    "             ORDER BY R.ID DESC LIMIT 1000 "
+                    "              WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL AND per.startDate >= #{startDate}::date AND r.programId = 1 \n" +
+                    "             ORDER BY R.ID DESC  "
             )
-    List<HashMap<String, Object>> getEmergencyCommodites(@Param("startDate") String startDate, @Param("endDate") String endDate);
+    List<HashMap<String, Object>> getEmergencyCommodites(@Param("startDate") String startDate, @Param("RowBounds") RowBounds rowBounds);
 
     //THSCP
 
@@ -153,5 +170,32 @@ public interface ILInterfaceMapper {
     List<HashMap<String, Object>> getThScpOrderDelivery();
 
     @Select("SELECT * FROM PROGRAMS where active = true")
-    List<HashMap<String, Object>> getThScpPrograms();
+    List<HashMap<String, Object>> getThScpPrograms(@Param("RowBounds") RowBounds rowBounds);
+
+    @Select("SELECT count(*) FROM PROGRAMS where active = true")
+    Integer getTotalThScpPrograms();
+
+    @Select(" SELECT COUNT(*) "+
+            " FROM program_products pP\n" +
+            "\n" +
+            "JOIN products p ON p.id = pp.productId \n" +
+            "join programs pr ON pr.id = pp.programId and pr.id =1\n" +
+            "join product_categories pc ON pp.productcategoryid = pc.id\n" +
+            "")
+    Integer getTotalProducts();
+
+    @Select(
+                    "        SELECT COUNT(*) from requisitions r\n" +
+                    "            JOIN requisition_line_items i On r.id = i.rnrid\n" +
+                    "            JOIN orders o ON r.id = o.id\n" +
+                    "            JOIN products p ON i.productcode = p.code\n" +
+                    "            JOIN program_products pp On pp.productid = p.id\n" +
+                    "             JOIN processing_periods per ON r.periodiD = per.id\n" +
+                    "            JOIN facilities f ON r.facilityId = F.ID\n" +
+                    "              WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL AND per.startDate >= #{startDate}::date AND r.programId = 1 \n"
+    )
+    Integer getTotalEmergencyCommodites(@Param("startDate") String startDate);
+
+    @Select("select count(*) from hfr_facilities")
+    Integer getTotalHfrFacilities();
 }
