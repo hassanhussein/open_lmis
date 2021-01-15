@@ -47,10 +47,6 @@ angular.module('manualTestTypes', ['openlmis', 'ui.bootstrap', 'ui.bootstrap.dro
         controller: ManualTestResultTypeController,
         templateUrl: 'partials/create-result-type.html',
         mode: 'EDIT'
-    }).when('/chat', {
-        controller: ChatController,
-        templateUrl: 'partials/chat.html',
-        mode: 'chat'
     }).otherwise({redirectTo: '/list'});
 
 }]).run(function($rootScope,$http, $sce) {
