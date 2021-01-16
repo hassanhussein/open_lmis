@@ -12,7 +12,6 @@
 
 package org.openlmis.report.builder;
 
-import javafx.scene.input.KeyCode;
 import org.openlmis.report.model.params.FacilityConsumptionReportParam;
 
 import java.util.Map;
