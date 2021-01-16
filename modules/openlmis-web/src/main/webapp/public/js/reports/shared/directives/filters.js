@@ -1191,6 +1191,42 @@ app.directive('serviceContractFilter', [function () {
     };
 }]);
 
+app.directive('rnrStatusFilter', [function () {
+
+    return {
+        restrict: 'E',
+        require: '^filterContainer',
+        link: function (scope, elm, attr) {
+            scope.statuses = [{
+                'key': 0,
+                'value': '--All status--'
+            }, {
+                'key': 'RELEASED_NO_ORDER',
+                'value': 'RELEASED_NO_ORDER'
+            }, {
+                'key': 'IN_APPROVAL',
+                'value': 'IN_APPROVAL'
+            }, {
+                'key': 'INITIATED',
+                'value': 'INITIATED'
+            }, {
+                'key': 'SUBMITTED',
+                'value': 'SUBMITTED'
+            }, {
+                'key': 'SKIPPED',
+                'value': 'SKIPPED'
+            }, {
+                'key': 'RELEASED',
+                'value': 'RELEASED'
+            }, {
+                'key': 'AUTHORIZED',
+                'value': 'AUTHORIZED'
+            }];
+
+        },
+        templateUrl: 'filter-rnr-status'
+    };
+}]);
 app.directive('donorFilter', ['GetDonors', function (GetDonors) {
 
     return {

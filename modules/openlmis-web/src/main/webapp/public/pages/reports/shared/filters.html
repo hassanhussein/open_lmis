@@ -832,3 +832,17 @@
 
     </div>
 </script>
+
+<script type="text/ng-template" id="filter-rnr-status">
+    <div>
+        <label for="serviceRnrStatus" class="labels" openlmis-message="label.rnr.status">
+            <span ng-show="requiredFilters.serviceRnrStatus" class="label-required">*</span></label><div>
+        <select id="serviceRnrStatus" ui-select2 class="input-large"
+                ng-model="filter.status" ng-change="notifyFilterChanged('rnr-status-changed');">
+            <option  ng-repeat="status in statuses" value="{{status.key}}"
+                     ng-selected="filter.status == status.key">{{status.value}}</option>
+        </select>
+
+    </div>
+    </div>
+</script>

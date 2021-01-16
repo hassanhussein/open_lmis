@@ -1006,4 +1006,21 @@ public class InteractiveReportController extends BaseController {
 
         return new Pages(page, max, reportList);
     }
+
+    @RequestMapping(value = "/reportdata/rnr-status-list-report", method = GET, headers = BaseController.ACCEPT_JSON)
+//    @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_AGGREGATE_CONSUMPTION_REPORT')")
+    public Pages getRnrStatusList(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
+                                @RequestParam(value = "max", required = false, defaultValue = "100") int max,
+                                HttpServletRequest request
+    ) {
+        Report report = reportManager.getReportByKey("rnr-status-list-report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<RnRDetailReport> reportList =
+                (List<RnRDetailReport>) report
+                        .getReportDataProvider()
+                        .getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, reportList);
+    }
 }

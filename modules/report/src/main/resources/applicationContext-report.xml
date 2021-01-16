@@ -711,6 +711,15 @@
                     <property name="title" value="report.title.product.list"/>
                     <property name="version" value="1.0"/>
                 </bean>
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="rnr-status-list-report"/>
+                    <property name="template" value="rnr-status-list-report.jasper"/>
+                    <property name="reportDataProvider" ref="rnRStatusReportReportDataProvider"/>
+                    <property name="id" value=" RnR Status List Report"/>
+                    <property name="name" value=" RnR Status List Report"/>
+                    <property name="title" value="report.title.rnr.status.list"/>
+                    <property name="version" value="1.0"/>
+                </bean>
             </list>
         </constructor-arg>
     </bean>

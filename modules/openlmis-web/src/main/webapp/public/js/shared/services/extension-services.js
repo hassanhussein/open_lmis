@@ -1603,6 +1603,10 @@ services.factory('RequisitionScheduleGroupMembers', function ($resource) {
 services.factory('ProductReportList', function ($resource) {
     return $resource('/reports/reportdata/product-list-report.json', {}, {});
 });
+services.factory('FacilityRnRStatusesReportList', function ($resource) {
+    return $resource('/reports/reportdata/rnr-status-list-report.json', {}, {});
+});
+
 
 
 

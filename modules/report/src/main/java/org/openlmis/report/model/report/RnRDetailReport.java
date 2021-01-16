@@ -9,42 +9,39 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.openlmis.report.model.report;
 
-package org.openlmis.report.model.params;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.openlmis.report.annotations.RequiredParam;
-import org.openlmis.report.model.ReportParameter;
+import org.openlmis.report.model.ResultRow;
 
-@Getter
-@Setter
+import java.util.Date;
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FacilityConsumptionReportParam
-        extends BaseParam implements ReportParameter {
-
-    @RequiredParam
-    private Long program;
-    private Long zone;
-    private Long period;
-    private Long schedule;
-    private Long facility;
-    private String products;
-    private Long product;
-    private Long productCategory;
-    private String periodStart;
-    private String periodEnd;
-    private String date;
-    private Boolean disaggregated;
-    private Boolean isEmergency;
-    private String reportType;
-    private Boolean allReportType;
-    private String crossTabColumn;
-    private String crossColumnHeader;
-    private Boolean adjustedConsumption;
-    private Boolean feFacility;
+public class RnRDetailReport implements ResultRow {
+    private Long rnrid;
     private String status;
+    private Boolean emergency;
+    private Long zoneid;
+    private String district;
+    private Long districtid;
+    private Long provinceid;
+    private String province;
+    private String facility;
+    private Long facilityid;
+    private String facilitycode;
+    private Boolean feconfigured;
+    private Long facilitytypeid;
+    private String facilitytype;
+    private String program;
+    private Long programid;
+    private Long periodid;
+    private String period;
+    private Date startdate;
+    private Date enddate;
+    private Long categoryid;
+    private String productcategory;
 }
