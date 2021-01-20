@@ -39,7 +39,8 @@ public class RequistionStatusReportsBuilder {
         FacilityConsumptionReportParam filter = (FacilityConsumptionReportParam) params.get("filterCriteria");
         String query = "";
         BEGIN();
-        SELECT("rnrid");
+
+        SELECT("distinct rnrid");
         SELECT("status");
         SELECT("emergency");
         SELECT("zoneid");
@@ -59,9 +60,10 @@ public class RequistionStatusReportsBuilder {
         SELECT("period");
         SELECT("startdate");
         SELECT("enddate");
-        SELECT("productcategory");
+
         FROM("mv_requisition r");
         writePredicates(filter);
+       ORDER_BY("province , district,  facility ");
         query = SQL();
         return query;
 

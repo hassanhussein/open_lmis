@@ -50,9 +50,8 @@ public interface RequisitionStatusReportsMapper {
             @Result(property = "perioidid", column = "perioidid"),
             @Result(property = "period", column = "period"),
             @Result(property = "startdate", column = "startdate"),
-            @Result(property = "enddate", column = "enddate"),
-            @Result(property = "categoryid", column = "categoryid"),
-            @Result(property = "productcategory", column = "productcategory")})
+            @Result(property = "enddate", column = "enddate")
+            })
     List<RnRDetailReport> getRequisitionList(@Param("filterCriteria") ReportParameter filterCriteria,
                                              @Param("userId") Long userId);
     @SelectProvider(type = RequistionStatusReportsBuilder.class, method = "getRequisitionListCountQuery")

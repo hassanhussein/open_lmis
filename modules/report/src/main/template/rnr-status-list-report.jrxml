@@ -79,7 +79,7 @@ WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
 	<group name="ProgramAreas">
-		<groupExpression><![CDATA[$F{facilitycode}+$F{rnrid}]]></groupExpression>
+		<groupExpression><![CDATA[$F{facilitycode}]]></groupExpression>
 		<groupHeader>
 			<band height="42">
 				<staticText>
