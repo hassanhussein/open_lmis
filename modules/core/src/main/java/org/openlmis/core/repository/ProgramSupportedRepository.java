@@ -97,7 +97,9 @@ public class ProgramSupportedRepository {
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
     return mapper.getAllByFacilityId(facilityId);
   }
-
+  public List<ProgramSupported> getAllByFacilityCode(String facilityCode) {
+    return mapper.getAllByFacilityCode(facilityCode);
+  }
   public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
     return mapper.getBy(facilityId, programId);
   }
@@ -125,4 +127,7 @@ public class ProgramSupportedRepository {
     return !(ps1.getStartDate().equals(ps2.getStartDate()));
   }
 
+  public List<ProgramSupported> getAll() {
+    return mapper.getAll();
+  }
 }

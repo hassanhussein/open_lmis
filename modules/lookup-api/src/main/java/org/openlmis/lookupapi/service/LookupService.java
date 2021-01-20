@@ -21,6 +21,7 @@ import org.openlmis.core.repository.RegimenRepository;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.service.ProgramSupportedService;
 import org.openlmis.equipment.domain.*;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.*;
@@ -140,6 +141,8 @@ public class LookupService {
     private DonorRepository donorRepository;
     @Autowired
     private EquipmentTestItemsRepository equipmentTestItemsRepository;
+    @Autowired
+    private ProgramSupportedService programSupportedService;
 
     public List<Program> getAllPrograms() {
         return programMapper.getAll();
@@ -368,5 +371,13 @@ public class LookupService {
 
     public List<EquipmentTestItems> getAllEquipmentTestItems() {
         return equipmentTestItemsRepository.getAllEquipmentTestItems();
+    }
+
+    public List<ProgramSupported> getAllProgramsSupportedByFacilityCode(String facilityCode) {
+        return programSupportedService.getAllByFacilityCode(facilityCode);
+    }
+
+    public List<ProgramSupported> getAllProgramsSupported() {
+        return programSupportedService.getAll();
     }
 }

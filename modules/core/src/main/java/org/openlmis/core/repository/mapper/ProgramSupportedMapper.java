@@ -24,51 +24,68 @@ import java.util.List;
  */
 @Repository
 public interface ProgramSupportedMapper {
-  @Insert("INSERT INTO programs_supported" +
-    "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
-    "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
-  @Options(flushCache = true, useGeneratedKeys = true)
-  void insert(ProgramSupported programSupported);
+    @Insert("INSERT INTO programs_supported" +
+            "(facilityId, programId, active, startDate, createdBy, modifiedBy, modifiedDate) VALUES (" +
+            "#{facilityId}, #{program.id}, #{active}, #{startDate}, #{createdBy}, #{modifiedBy}, #{modifiedDate})")
+    @Options(flushCache = true, useGeneratedKeys = true)
+    void insert(ProgramSupported programSupported);
 
-  @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
-  @Results({
-    @Result(property = "program", javaType = Program.class, column = "programId",
-      one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+    @Select("SELECT * FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
+    @Results({
+            @Result(property = "program", javaType = Program.class, column = "programId",
+                    one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    })
+    ProgramSupported getBy(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
-  @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
-  void delete(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
+    @Delete("DELETE FROM programs_supported WHERE facilityId = #{facilityId} AND programId = #{programId}")
+    void delete(@Param(value = "facilityId") Long facilityId, @Param(value = "programId") Long programId);
 
-  @Select({"SELECT * FROM programs_supported",
-    "WHERE facilityId = #{facilityId}",
-    "ORDER BY programId"})
-  @Results({
-    @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
-  })
-  List<ProgramSupported> getAllByFacilityId(Long facilityId);
+    @Select({"SELECT * FROM programs_supported",
+            "WHERE facilityId = #{facilityId}",
+            "ORDER BY programId"})
+    @Results({
+            @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    })
+    List<ProgramSupported> getAllByFacilityId(Long facilityId);
 
-  @Update("UPDATE programs_supported SET active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
-    "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
-    //TODO use COALESCE for modifiedDate
-  void update(ProgramSupported programSupported);
+    @Update("UPDATE programs_supported SET active=#{active}, startDate=#{startDate}, modifiedDate=#{modifiedDate}, modifiedBy=#{modifiedBy}" +
+            "WHERE facilityId=#{facilityId} AND programId=#{program.id}")
+        //TODO use COALESCE for modifiedDate
+    void update(ProgramSupported programSupported);
 
-  @Select({"SELECT P.code FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
-    "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
-  @Results({
-    @Result(property = "program.code", column = "code")
-  })
-  List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
+    @Select({"SELECT P.code FROM programs_supported PS INNER JOIN programs P ON P.id = PS.programId ",
+            "WHERE PS.facilityId = #{facilityId} AND PS.active = TRUE AND P.active = TRUE"})
+    @Results({
+            @Result(property = "program.code", column = "code")
+    })
+    List<ProgramSupported> getActiveProgramsByFacilityId(Long facilityId);
 
 
-  @Delete({"DELETE FROM programs_supported PS USING facilities F",
-    "WHERE PS.facilityId = F.id AND F.parentFacilityId = #{id}"})
-  int deleteVirtualFacilityProgramSupported(Facility parentFacility);
+    @Delete({"DELETE FROM programs_supported PS USING facilities F",
+            "WHERE PS.facilityId = F.id AND F.parentFacilityId = #{id}"})
+    int deleteVirtualFacilityProgramSupported(Facility parentFacility);
 
-  @Insert({"INSERT INTO programs_supported(facilityId, programId, active, startDate, createdBy, modifiedBy)",
-    "SELECT C.virtualFacilityId, programId, active, startDate, createdBy, modifiedBy",
-    "FROM programs_supported PS, ",
-    "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
-    "WHERE PS.facilityId = #{id}"})
-  void copyToVirtualFacilities(Facility parentFacility);
+    @Insert({"INSERT INTO programs_supported(facilityId, programId, active, startDate, createdBy, modifiedBy)",
+            "SELECT C.virtualFacilityId, programId, active, startDate, createdBy, modifiedBy",
+            "FROM programs_supported PS, ",
+            "(SELECT id as virtualFacilityId FROM facilities where parentFacilityId=#{id}) AS C",
+            "WHERE PS.facilityId = #{id}"})
+    void copyToVirtualFacilities(Facility parentFacility);
+
+
+    @Select({"SELECT ps.* FROM programs_supported ps" +
+            " inner join facilities f on ps.facilityid= f.id",
+            "WHERE f.code = #{facilityCode}",
+            "ORDER BY programId"})
+    @Results({
+            @Result(property = "program", javaType = Program.class,
+                    column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    })
+    List<ProgramSupported> getAllByFacilityCode(String facilityCode);
+
+    @Select({"SELECT * FROM programs_supported"})
+    @Results({
+            @Result(property = "program", javaType = Program.class, column = "programId", one = @One(select = "org.openlmis.core.repository.mapper.ProgramMapper.getById"))
+    })
+    List<ProgramSupported> getAll();
 }

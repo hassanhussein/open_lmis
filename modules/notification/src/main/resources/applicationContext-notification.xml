@@ -25,7 +25,8 @@
 
     <context:component-scan base-package="org.openlmis.notification"/>
     <rabbit:annotation-driven/>
-    <rabbit:connection-factory id="connectionFactory" host="localhost" port="5672" username="guest" password="guest"/>
+    <rabbit:connection-factory id="connectionFactory" host="${mb.server.url}" port="${mb.server.port}"
+                               username="${mb.server.username}" password="${mb.server.password}"/>
     <rabbit:admin connection-factory="connectionFactory"/>
     <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"/>
     <bean id="rabbitListenerContainerFactory"

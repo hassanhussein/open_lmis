@@ -53,6 +53,9 @@ public class ProgramSupportedService {
   public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
     return repository.getAllByFacilityId(facilityId);
   }
+  public List<ProgramSupported> getAllByFacilityCode(String facilityCode) {
+    return repository.getAllByFacilityCode(facilityCode);
+  }
 
   public void updateSupportedPrograms(Facility facility) {
     Facility facilityForNotification = cloneFacility(facility);
@@ -154,4 +157,9 @@ public class ProgramSupportedService {
   public void updateForVirtualFacilities(Facility parentFacility) {
     repository.updateForVirtualFacilities(parentFacility);
   }
+
+  public List<ProgramSupported> getAll() {
+    return repository.getAll();
+  }
+
 }

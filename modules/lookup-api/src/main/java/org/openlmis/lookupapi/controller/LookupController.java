@@ -70,7 +70,7 @@ public class LookupController {
     public static final String REGIMEN_COMBINATION_CONSTITUENTS = "regimen-combination-constituents";
     public static final String REGIMEN_CONSTITUENT_DOSAGES = "regimen-constituent-dosages";
     private static final String PROGRAM_REFERENCE_DATA = "ProgramReferenceData";
-
+    public static final String PROGRAMS_SUPPORTED = "programs-supported";
 
     @Autowired
     private LookupService lookupService;
@@ -455,4 +455,18 @@ public class LookupController {
         return RestResponse.response("equipment-test-items", lookupService.getAllEquipmentTestItems());
     }
 
+
+    @ApiOperation(value = "Programs-Supported", notes = "Returns a list of Programs Supported by a faciliyt.", response = ProgramSupported.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successful request", response = Program.class),
+            @ApiResponse(code = 500, message = "Internal server error")}
+    )
+    @RequestMapping(value = "/rest-api/lookup/programs-supported/{facility_code}", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getProgramsSupportedByFacility(@PathVariable("facility_code") String facilityCode) {
+        return RestResponse.response(PROGRAMS_SUPPORTED, lookupService.getAllProgramsSupportedByFacilityCode(facilityCode));
+    }
+    @RequestMapping(value = "/rest-api/lookup/programs-supported", method = RequestMethod.GET, headers = ACCEPT_JSON)
+    public ResponseEntity getAllProgramsSupported() {
+        return RestResponse.response(PROGRAMS_SUPPORTED, lookupService.getAllProgramsSupported());
+    }
 }
