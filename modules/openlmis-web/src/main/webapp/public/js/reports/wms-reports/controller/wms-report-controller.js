@@ -17,7 +17,9 @@ function WmsReportController($scope,$filter,$window, $location, reports, $routeP
                      {'id':2,code:'grn', name:'GRN'},
                      {'id':3,code:'inspect', name:'Vaccine Arrival Report'},
                      {'id':4,code:'par', name:'Product Arrival Report'},
-                     {'id':5,code:'var', name:'Inspection Report'}
+                     {'id':5,code:'var', name:'Inspection Report'},
+                      {'id':6,code:'dist', name:'Distribution Report'}
+
                      ];
   $scope.report  = {};
   $scope.report.currentFilters  = [{name:'program'},{name:'dateRange2'},{name:'product'},{name:'search1'},{name:'year00'},{name:'custom'}];

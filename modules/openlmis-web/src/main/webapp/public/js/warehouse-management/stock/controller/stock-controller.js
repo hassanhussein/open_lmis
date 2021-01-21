@@ -319,10 +319,14 @@ $scope.stockMovement.quantity="";
         if (stockMovement == "adjustment") {
             return;
         }
-
+        console.log("stockMovement");
+console.log(stockMovement);
 
         stockMovement.notify = true;
         TransferRecords.save({}, stockMovement, function (data) {
+
+                   console.log(stockMovement);
+
 
             $scope.showMessage = true;
             $scope.message = "Successiful Saved";

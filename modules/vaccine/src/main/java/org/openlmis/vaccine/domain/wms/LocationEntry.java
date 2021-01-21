@@ -22,6 +22,8 @@ public class LocationEntry extends BaseModel {
    private Long lotId;
    private Boolean isTransferred;
    private String transferLogs;
+   private String reason;
+   private String movementType;
 
 
    @JsonIgnore

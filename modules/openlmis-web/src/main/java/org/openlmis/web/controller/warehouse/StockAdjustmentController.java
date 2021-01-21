@@ -38,9 +38,11 @@ public class StockAdjustmentController extends BaseController {
     @RequestMapping(value = "save", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> save(@RequestBody Adjustment item, HttpServletRequest request) {
         //Long userId = loggedInUserId(request);
+        System.out.println("Adjustment");
         long userId=307;
         item.setCreatedBy(userId);
         item.setModifiedBy(userId);
+        item.setMovementType("ADJUSTMENT");
         Facility facility = facilityService.getHomeFacility(userId);
         long facilityID=0;
         try{
@@ -79,6 +81,7 @@ public class StockAdjustmentController extends BaseController {
                     item.setVvmId(toVvmId);
                     item.setType("CREDIT");
                     item.setId(null);
+                    item.setMovementType("ADJUSTMENT");
                     item.setQuantity(Math.abs(item.getQuantity()));
 
                    // System.out.println("Passed: " + item.toString());
@@ -90,6 +93,7 @@ public class StockAdjustmentController extends BaseController {
                 item.setType("CREDIT");
                 item.setId(null);
                 item.setQuantity(Math.abs(item.getQuantity()));
+                item.setMovementType("ADJUSTMENT");
 
                 // System.out.println("Passed: " + item.toString());
 
@@ -102,6 +106,7 @@ public class StockAdjustmentController extends BaseController {
                 item.setType("CREDIT");
                 item.setId(null);
                 item.setQuantity(Math.abs(item.getQuantity()));
+                item.setMovementType("ADJUSTMENT");
 
                 ///System.out.println("Passed: " + item.toString());
 

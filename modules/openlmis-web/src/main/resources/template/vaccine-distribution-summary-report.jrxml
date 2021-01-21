@@ -8,32 +8,22 @@
 	<style name="BandStyle"/>
 	<style name="Crosstab Data Text" hTextAlign="Center" hImageAlign="Center"/>
 	<subDataset name="dataset1" uuid="091a1376-c476-4867-9ced-423695e8c98e">
-
-		<field name="facilityName" class="java.lang.String">
-
-		</field>
-		<field name="product" class="java.lang.String">
-
-		</field>
-		<field name="district" class="java.lang.String">
-
-		</field>
-		<field name="region" class="java.lang.String">
-
-		</field>
-		<field name="quantityIssued" class="java.lang.Integer">
-
-		</field>
+		<field name="facilityName" class="java.lang.String"/>
+		<field name="product" class="java.lang.String"/>
+		<field name="district" class="java.lang.String"/>
+		<field name="region" class="java.lang.String"/>
+		<field name="quantityIssued" class="java.lang.Integer"/>
+		<field name="lotNumber" class="java.lang.String"/>
 	</subDataset>
 	<parameter name="HEADER_IMAGE" class="java.lang.String"/>
-
 	<parameter name="VIMS_LOGO" class="java.io.InputStream"/>
-
+	<parameter name="createdBy" class="java.lang.String"/>
 	<field name="product" class="java.lang.String"/>
 	<field name="district" class="java.lang.String"/>
 	<field name="facilityName" class="java.lang.String"/>
 	<field name="region" class="java.lang.String"/>
 	<field name="quantityIssued" class="java.lang.Integer"/>
+	<field name="lotNumber" class="java.lang.String"/>
 	<variable name="TOTAL_PAGES" class="java.lang.Integer">
 		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
 	</variable>
@@ -60,6 +50,35 @@
 			</staticText>
 		</band>
 	</title>
+	<columnFooter>
+		<band height="60">
+			<staticText>
+				<reportElement x="12" y="30" width="58" height="30" forecolor="#666666" uuid="ad7bd46c-f230-4206-a457-559f77830fbc"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Printed By: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="70" y="30" width="100" height="30" backcolor="#666666" uuid="13821790-f78c-4c52-9ae2-7cd897281e91"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{createdBy}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="980" y="20" width="70" height="30" forecolor="#666666" backcolor="#666666" uuid="3a332c01-6262-415c-9e01-a9d1fff189ae"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Printed Date:]]></text>
+			</staticText>
+			<textField pattern="MMM d, yyyy">
+				<reportElement x="1050" y="20" width="100" height="30" uuid="d9e352ee-5501-46e4-bdcf-b433b4058a6c"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
 	<summary>
 		<band height="240">
 			<line>
@@ -70,179 +89,128 @@
 				<crosstabDataset>
 					<dataset resetType="Report"/>
 				</crosstabDataset>
-				<rowGroup name="region" width="70">
+				<rowGroup name="productD" width="70" totalPosition="End">
+					<bucket class="java.lang.Object">
+						<bucketExpression><![CDATA[$F{product}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField>
+								<reportElement style="Crosstab Data Text" mode="Opaque" x="0" y="0" width="70" height="40" backcolor="#E5E5E5" uuid="8382dcc7-a725-4925-9355-780fc6f2e85a"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{productD}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="lotNumber" width="70" totalPosition="End">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{lotNumber}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField>
+								<reportElement style="Crosstab Data Text" mode="Opaque" x="0" y="0" width="70" height="20" backcolor="#5ABAA7" uuid="a95fce72-4365-4466-8d21-2de8a9bed375"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{lotNumber}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="regionD" height="20" totalPosition="End">
 					<bucket class="java.lang.String">
 						<bucketExpression><![CDATA[$F{region}]]></bucketExpression>
 					</bucket>
-					<crosstabRowHeader>
-						<cellContents backcolor="#F0F8FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
-							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="70" height="28" uuid="141af3c3-f13b-464c-907c-86e0ec19b473"/>
-								<textElement textAlignment="Left" verticalAlignment="Bottom"/>
-								<textFieldExpression><![CDATA[$V{region}]]></textFieldExpression>
-							</textField>
-						</cellContents>
-					</crosstabRowHeader>
-					<crosstabTotalRowHeader>
-						<cellContents/>
-					</crosstabTotalRowHeader>
-				</rowGroup>
-				<rowGroup name="district" width="72">
-					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{district}]]></bucketExpression>
-					</bucket>
-					<crosstabRowHeader>
-						<cellContents backcolor="#F0F8FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
-							<textField pattern="">
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="72" height="28" uuid="a28f8e27-88e2-4dab-9be8-0a80a636cd5a"/>
-								<textElement verticalAlignment="Bottom"/>
-								<textFieldExpression><![CDATA[$V{district}]]></textFieldExpression>
-							</textField>
-						</cellContents>
-					</crosstabRowHeader>
-					<crosstabTotalRowHeader>
-						<cellContents/>
-					</crosstabTotalRowHeader>
-				</rowGroup>
-				<rowGroup name="facilityName" width="72">
-					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{facilityName}]]></bucketExpression>
-					</bucket>
-					<crosstabRowHeader>
-						<cellContents backcolor="#F0F8FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
-							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="0" width="72" height="28" uuid="a28f8e27-88e2-4dab-9be8-0a80a636cd5a"/>
-								<textElement verticalAlignment="Bottom"/>
-								<textFieldExpression><![CDATA[$V{facilityName}]]></textFieldExpression>
-							</textField>
-						</cellContents>
-					</crosstabRowHeader>
-					<crosstabTotalRowHeader>
-						<cellContents/>
-					</crosstabTotalRowHeader>
-				</rowGroup>
-				<columnGroup name="product" height="42">
-					<bucket class="java.lang.String">
-						<bucketExpression><![CDATA[$F{product}]]></bucketExpression>
-					</bucket>
 					<crosstabColumnHeader>
-						<cellContents backcolor="#F0F8FF" mode="Opaque">
-							<box>
-								<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-							</box>
+						<cellContents>
 							<textField>
-								<reportElement style="Crosstab Data Text" x="0" y="17" width="69" height="25" backcolor="#17888F" uuid="2154b315-bcaa-4cff-96b1-4c4057f75dde"/>
-								<textElement verticalAlignment="Middle">
-									<font isBold="true"/>
-								</textElement>
-								<textFieldExpression><![CDATA[$V{product}]]></textFieldExpression>
+								<reportElement style="Crosstab Data Text" mode="Opaque" x="0" y="0" width="69" height="20" backcolor="#5ABAA7" uuid="73c37693-4d75-49ec-bba9-e7be7408682f"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textFieldExpression><![CDATA[$V{regionD}]]></textFieldExpression>
 							</textField>
 						</cellContents>
 					</crosstabColumnHeader>
 					<crosstabTotalColumnHeader>
-						<cellContents/>
+						<cellContents>
+							<box>
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="91" height="20" backcolor="#B2D6EF" uuid="49bd527d-4158-4f0c-b4dd-4f5b56d9d06a"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</cellContents>
 					</crosstabTotalColumnHeader>
 				</columnGroup>
 				<measure name="productMeasure" class="java.lang.Integer">
 					<measureExpression><![CDATA[$F{quantityIssued}]]></measureExpression>
 				</measure>
-				<crosstabCell width="69" height="28">
+				<measure name="totalRegion" class="java.lang.Integer" calculation="Sum">
+					<measureExpression><![CDATA[$F{quantityIssued}]]></measureExpression>
+				</measure>
+				<crosstabCell width="69" height="20">
 					<cellContents>
 						<box>
 							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
 						</box>
 						<textField pattern="#,##0" isBlankWhenNull="true">
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="69" height="28" uuid="842a49b6-d52f-47bc-bd73-c80869bc7cef"/>
-							<textElement textAlignment="Right" verticalAlignment="Bottom"/>
+							<reportElement style="Crosstab Data Text" x="0" y="0" width="69" height="20" uuid="842a49b6-d52f-47bc-bd73-c80869bc7cef"/>
+							<textElement textAlignment="Center" verticalAlignment="Middle"/>
 							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell height="25" rowTotalGroup="region">
-					<cellContents backcolor="#005FB3" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="bf285714-5242-4b11-a5ac-624783038fb7"/>
-							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
+				<crosstabCell width="91" height="20" columnTotalGroup="regionD">
+					<cellContents>
+						<textField pattern="#,##0">
+							<reportElement style="Crosstab Data Text" mode="Opaque" x="0" y="0" width="91" height="20" backcolor="#B2D6EF" uuid="29559f75-a134-4def-bd3f-84f18c0f9ab5"/>
+							<box leftPadding="4">
+								<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+							</box>
+							<textElement textAlignment="Left" verticalAlignment="Middle"/>
+							<textFieldExpression><![CDATA[$V{totalRegion}]]></textFieldExpression>
 						</textField>
 					</cellContents>
 				</crosstabCell>
-				<crosstabCell width="50" columnTotalGroup="product">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="4b6482fa-c0aa-44b4-a824-5fd46d067d3f"/>
-							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
+				<crosstabCell width="69" height="20" rowTotalGroup="productD">
+					<cellContents/>
 				</crosstabCell>
-				<crosstabCell rowTotalGroup="region" columnTotalGroup="product">
-					<cellContents backcolor="#005FB3" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" forecolor="#FFFFFF" uuid="11095e77-f4a7-45d4-a74b-09f1756939de"/>
-							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
+				<crosstabCell width="91" height="20" rowTotalGroup="productD" columnTotalGroup="regionD">
+					<cellContents/>
 				</crosstabCell>
-				<crosstabCell height="25" rowTotalGroup="facilityName">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="30ee8bea-a632-4fdf-8a2b-dbbd5fcf429e"/>
-							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
+				<crosstabCell width="69" height="20" rowTotalGroup="lotNumber">
+					<cellContents/>
 				</crosstabCell>
-				<crosstabCell rowTotalGroup="facilityName" columnTotalGroup="product">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="d1d09da2-331d-4b9d-81f3-d99d784dc588"/>
-							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-				<crosstabCell height="25" rowTotalGroup="district">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="30ee8bea-a632-4fdf-8a2b-dbbd5fcf429e"/>
-							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
-				</crosstabCell>
-				<crosstabCell rowTotalGroup="district" columnTotalGroup="product">
-					<cellContents backcolor="#BFE1FF" mode="Opaque">
-						<box>
-							<pen lineWidth="0.5" lineStyle="Solid" lineColor="#000000"/>
-						</box>
-						<textField>
-							<reportElement style="Crosstab Data Text" x="0" y="0" width="50" height="25" uuid="d1d09da2-331d-4b9d-81f3-d99d784dc588"/>
-							<textFieldExpression><![CDATA[$V{productMeasure}]]></textFieldExpression>
-						</textField>
-					</cellContents>
+				<crosstabCell width="91" height="20" rowTotalGroup="lotNumber" columnTotalGroup="regionD">
+					<cellContents/>
 				</crosstabCell>
 			</crosstab>
 		</band>
