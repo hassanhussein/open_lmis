@@ -620,7 +620,7 @@
 					<textElement textAlignment="Right" verticalAlignment="Bottom">
 						<font size="9"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$R{label.reviewed.by.lmu}+':']]></textFieldExpression>
+					<textFieldExpression><![CDATA[$R{label.reviewed.by.reg}+':']]></textFieldExpression>
 				</textField>
 				<textField>
 					<reportElement x="3" y="153" width="95" height="19" uuid="4da27e7d-a4bc-45b7-87fe-b209d30bb783"/>
