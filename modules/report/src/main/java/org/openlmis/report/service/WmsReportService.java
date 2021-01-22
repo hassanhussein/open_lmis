@@ -182,6 +182,7 @@ public class WmsReportService {
                 if(stockListObject.has("reason")) {
                     customObject.put("reason", stockListObject.get("reason"));
                 }
+
                 customObject.put("createdname",stockListObject.get("createdname"));
                 newjsonStock.put(customObject);
             }

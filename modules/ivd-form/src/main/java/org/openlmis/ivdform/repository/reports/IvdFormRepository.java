@@ -84,6 +84,8 @@ public class IvdFormRepository {
   public void update(VaccineReport fromDb, VaccineReport report, Long userId) {
     fromDb.setModifiedBy(userId);
     fromDb.copyValuesFrom(report);
+   // System.out.println(fromDb.toString());
+
     mapper.update(fromDb);
     saveDetails(fromDb, report, userId);
   }

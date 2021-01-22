@@ -119,6 +119,7 @@ public class LineItemService {
 
     public void saveCoverageLineItems(VaccineReport dbVersion, List<VaccineCoverageItem> lineItems, Long reportId, Long userId) {
         for (VaccineCoverageItem lineItem : emptyIfNull(lineItems)) {
+            //System.out.println("Passed here men:"+lineItem.getId());
 
             if (null != dbVersion) {
                 Optional<VaccineCoverageItem> dbCoverageLineItem = dbVersion.getCoverageLineItems()
