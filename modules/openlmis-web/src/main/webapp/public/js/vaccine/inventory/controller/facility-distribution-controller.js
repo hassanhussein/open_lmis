@@ -93,6 +93,7 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
     };
 
     $scope.loadStockCards = function () {
+
         StockCards.get({facilityId: $scope.homeFacility.id}, function (data) {
             $scope.stockCards = data.stockCards;
         });
@@ -303,12 +304,14 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
         });
     }
 
+
+
     if ($scope.userPrograms.length > 1) {
         $scope.showPrograms = true;
         //TODO: load stock cards on program change
         $scope.selectedProgram = $scope.userPrograms[0];
         $scope.loadSupervisedFacilities($scope.userPrograms[0]);
-        $scope.loadStockCards();
+       // $scope.loadStockCards();
         $scope.searchDate = $scope.toDay;
         $scope.loadDistributionsByDate($scope.toDay);
     }
@@ -316,7 +319,7 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
         $scope.showPrograms = false;
         $scope.selectedProgram = $scope.userPrograms[0];
         $scope.loadSupervisedFacilities($scope.userPrograms[0].id);
-        $scope.loadStockCards();
+        //$scope.loadStockCards();
         $scope.searchDate = $scope.toDay;
         $scope.loadDistributionsByDate($scope.toDay);
     }

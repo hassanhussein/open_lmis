@@ -74,6 +74,7 @@ public class WmsReportService {
 
 
 
+
     public void exportGrnReport(Long receiveId,String language,String currentName, HttpServletResponse response)throws IOException, JRException{
         try {
             // String dataList= String.valueOf(wmsReportRepository.getVarReportById(inspectionId));
@@ -123,6 +124,51 @@ public class WmsReportService {
         }
 
     }
+
+    public void  exportStockStatus(String reportFormat, Long facilityId, String currentName, HttpServletResponse response){
+        try {
+            List<HashMap<String, Object>> stock = wmsReportRepository.getAllStockStatus(facilityId);
+
+
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/StockStatus.jrxml"));
+
+
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
+
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(stock);
+
+            System.out.println(json);
+
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(json.getBytes());
+
+            //Load file and compile it
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            // JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stock);
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+            parameters.put("listData", dataSource);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            //JasperExportManager.exportReportToPdfFile(jasperPrint,path+"\\"+reportName+".pdf");
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void  exportStockMovement(String reportFormat, Long facilityId, String currentName, HttpServletResponse response){
         try {

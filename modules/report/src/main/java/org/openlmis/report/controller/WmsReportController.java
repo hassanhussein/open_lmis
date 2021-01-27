@@ -93,6 +93,8 @@ public class WmsReportController extends BaseController {
         wmsReportService.exportReportVaccineSummary("PDF", facilityId, currentName, response);
     }
 
+
+
     @RequestMapping(value = "/stock-movement-report", params = {"facilityId", "docType"})
     public void generateStockMovementReport(@RequestParam String docType, @RequestParam Long facilityId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
             , HttpServletResponse response) throws IOException, JRException {
@@ -100,6 +102,15 @@ public class WmsReportController extends BaseController {
         User userDetails = userRepository.getById(userId);
         String currentName = userDetails.getFullName();
         wmsReportService.exportStockMovement("PDF", facilityId, currentName, response);
+    }
+
+    @RequestMapping(value = "/stock-status-report", params = {"facilityId", "docType"})
+    public void generateStockStatusReport(@RequestParam String docType, @RequestParam Long facilityId, @RequestParam(required = false, defaultValue = "en") String lang, HttpServletRequest request
+            , HttpServletResponse response) throws IOException, JRException {
+        Long userId = loggedInUserId(request);
+        User userDetails = userRepository.getById(userId);
+        String currentName = userDetails.getFullName();
+        wmsReportService.exportStockStatus("PDF", facilityId, currentName, response);
     }
 
 

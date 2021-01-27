@@ -200,9 +200,13 @@ public class StockRequirementsService
 
                 //Get product EOP for order level calculation
                 FacilityTypeApprovedProduct facilityTypeApprovedProduct=facilityApprovedProductRepository.getFacilityApprovedProductByProgramProductIdAndFacilityTypeCode(facilityProgramProduct.getId(), vaccineRequirements.getFacilityCode());
-                newSupplyRequirements.setMinMonthsOfStock(facilityTypeApprovedProduct.getMinMonthsOfStock());
-                newSupplyRequirements.setMaxMonthsOfStock(facilityTypeApprovedProduct.getMaxMonthsOfStock());
-                newSupplyRequirements.setEop(facilityTypeApprovedProduct.getEop());
+               try {
+                   newSupplyRequirements.setMinMonthsOfStock(facilityTypeApprovedProduct.getMinMonthsOfStock());
+                   newSupplyRequirements.setMaxMonthsOfStock(facilityTypeApprovedProduct.getMaxMonthsOfStock());
+                   newSupplyRequirements.setEop(facilityTypeApprovedProduct.getEop());
+               }catch (Exception e){
+                   e.printStackTrace();
+               }
 
                 //Category
                 ProgramProduct programProduct = facilityTypeApprovedProduct.getProgramProduct();

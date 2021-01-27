@@ -113,6 +113,9 @@ public interface ProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById"))})
   Product getById(Long id);
 
+  @Select("SELECT * FROM products WHERE id=#{id}")
+  Product getMinById(Long id);
+
   @Select("SELECT active FROM products WHERE LOWER(code) = LOWER(#{code})")
   boolean isActive(String code);
 

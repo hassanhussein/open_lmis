@@ -118,6 +118,16 @@ public interface VaccineStockStatusMapper {
             "             \n" +
             "                                                                           ) AS ledger order by id ) X ")
     List<HashMap<String, Object>>getAllStockMovement(@Param("facilityId") Long facilityId);
+    @Select("select sum(lhl.quantity) as totalQuantityOnHand,pr.primaryname as productName,(select to_char(modifieddate, 'dd/MM/YYYY')  from lots where productid=lo.productid limit 1) modifieddate,0.5 as mos from lot_location_entries lhl   \n" +
+            "                                      \n" +
+            "                                     join  stock_cards s on (s.id = lhl.stockcardid)   \n" +
+            "                                     join lots lo on(lo.id=lhl.lotid)   \n" +
+            "                                     join products pr on(pr.id=lo.productid)   \n" +
+            "                                     join wms_locations wl on(wl.id=lhl.locationid)   \n" +
+            "                                     join warehouses wh on(wh.id=wl.warehouseid) group by   lo.productid,pr.primaryname,wh.name")
+    List<HashMap<String, Object>>getAllStockStatus(@Param("facilityId") Long facilityId);
+
+
 
     @Select("SELECT vd.id,vd.distributionid as distributionId,f.name as facilityName,p.primaryname as product,g.name as district,\n" +
             "g.code as region,vd.quantity as quantityIssued\n" +
