@@ -16,7 +16,8 @@ app.directive('commentBox',function (RequisitionComment, $routeParams) {
     restrict:'E',
     scope:{
       show:'=',
-      updatable:'='
+      updatable:'=',
+      rnr: '='
     },
     link:function (scope) {
 
@@ -33,6 +34,12 @@ app.directive('commentBox',function (RequisitionComment, $routeParams) {
           scope.$apply();
         }
       };
+
+      scope.$watch("rnr", function(newValue, oldValue) {
+        RequisitionComment.get({id: newValue}, function(data) {
+          scope.rnrComments = data.comments;
+        }, {});
+      });
 
       scope.$watch("show", function () {
         if (scope.show) {
