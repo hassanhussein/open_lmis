@@ -339,6 +339,10 @@ public class LookupService {
         return manualTestTypeRepository.getAll();
     }
 
+    public ManualTestType getAllManualTestType(Long id) {
+        return manualTestTypeRepository.getById(id);
+    }
+
     public List<EquipmentOperationalStatus> getAllEquipmentOprationalStatuses() {
         return statusRepository.getAll();
     }
