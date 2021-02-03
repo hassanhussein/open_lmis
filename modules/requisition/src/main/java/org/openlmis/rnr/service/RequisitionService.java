@@ -888,13 +888,11 @@ public class RequisitionService {
 
   private void updateRejectionLevel(Rnr requisition) {
     String level= "";
-    System.out.println(requisition.getStatus());
-    if(requisition.getStatus().equals(IN_APPROVAL)) {
+    if(requisition.getStatus().equals(AUTHORIZED)) {
       level = "REJECTED_AT_DISTRICT";
-    } else if(requisition.getStatus().equals(APPROVED)){
+    } else if(requisition.getStatus().equals(IN_APPROVAL)){
       level = "REJECTED_AT_REGION";
     }
-    System.out.println(level);
     Long id = requisitionRepository.getLastUpdatedStatusId(requisition.getId());
     requisitionRepository.updateStatusChangesLevel(level,id);
   }
