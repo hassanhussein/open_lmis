@@ -31,6 +31,7 @@ public class RequisitionStatusChange {
   private String userName;
   private User createdBy;
   private Date createdDate;
+  private String rejectionLevel;
 
   public RequisitionStatusChange(Rnr requisition) {
     this.rnrId = requisition.getId();

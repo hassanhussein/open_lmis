@@ -661,4 +661,11 @@ private DataHealthCheckMapper dataHealthCheckMapper;
         return otherFundsRespository.getFundingSources(facilityId);
     }
 
+    public Long getLastUpdatedStatusId(Long rnrId) {
+        return requisitionStatusChangeMapper.getLastUpdatedStatusId(rnrId);
+    }
+
+    public void updateStatusChangesLevel(String level, Long id) {
+        requisitionStatusChangeMapper.updateStatusChangesLevel(level, id);
+    }
 }

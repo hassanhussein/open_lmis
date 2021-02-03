@@ -41,4 +41,9 @@ public interface RequisitionStatusChangeMapper {
     @Result(column = "userId", property = "createdBy.id")
   })
   List<RequisitionStatusChange> getByRnrId(Long rnrId);
+  @Select(" select id from requisition_status_changes where rnrId = #{rnrId} order by id desc limit 1")
+  Long getLastUpdatedStatusId(@Param("rnrId") Long rnrId);
+
+  @Update(" Update requisition_status_changes SET rejectionLevel = #{level} WHERE id =#{id}")
+  void updateStatusChangesLevel(@Param("level") String level, @Param("id") Long id);
 }

@@ -877,12 +877,27 @@ public class RequisitionService {
   public void rejectRnR(Long rnrId, Long userId) {
     Rnr rnr = this.getFullRequisitionById(rnrId);
     rnr.setModifiedBy(userId);
+    RnrStatus rejectionStatus = rnr.getStatus();
     rnr.setStatus(RnrStatus.INITIATED);
     setApprovedNull(rnr);
     requisitionRepository.update(rnr);
     logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
+    rnr.setStatus(rejectionStatus);
+    updateRejectionLevel(rnr);
   }
 
+  private void updateRejectionLevel(Rnr requisition) {
+    String level= "";
+    System.out.println(requisition.getStatus());
+    if(requisition.getStatus().equals(IN_APPROVAL)) {
+      level = "REJECTED_AT_DISTRICT";
+    } else if(requisition.getStatus().equals(APPROVED)){
+      level = "REJECTED_AT_REGION";
+    }
+    System.out.println(level);
+    Long id = requisitionRepository.getLastUpdatedStatusId(requisition.getId());
+    requisitionRepository.updateStatusChangesLevel(level,id);
+  }
   private void setApprovedNull(Rnr rnr) {
     for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
       lineItem.setQuantityApproved(null);
