@@ -372,7 +372,7 @@ var RegularRnrLineItem = base2.Base.extend({
   },
 
   validateStockoutDays : function() {
-    return ((!_.isNumber(this.stockOutDays) && this.quantityOnHand > 0) || ((this.daysInPeriod >= this.stockOutDays) && (this.quantityOnHand > 0 || this.stockOutDays > 0)) );
+    return ( (!_.isNumber(this.stockOutDays) && !_.isNumber(this.quantityOnHand) ) || (!_.isNumber(this.stockOutDays) && _.isNumber(this.quantityOnHand) && this.quantityOnHand > 0) || ((this.daysInPeriod >= this.stockOutDays) && (this.quantityOnHand > 0 || this.stockOutDays > 0)) );
   },
 
   validateRequiredFieldsForFullSupply: function () {
