@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
+import org.openlmis.lookupapi.model.ResponseMessage;
 import org.openlmis.lookupapi.service.InterfaceService;
 import org.openlmis.lookupapi.service.LookupService;
 import org.openlmis.report.model.dto.Facility;
@@ -37,7 +38,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.service.ResponseMessage;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -375,7 +375,7 @@ public class LookupController {
                 return ResponseEntity.ok(jsonObject.toString());
 
             }else {
-                return ResponseEntity.status(NO_CONTENT).body("Empty Object");
+                return ResponseEntity.status("NO_CONTENT").body("Empty Object");
             }
 
         } catch (DataException | IOException e) {
