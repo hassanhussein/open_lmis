@@ -78,6 +78,8 @@ public class LookupController {
     public static final String REGIMEN_COMBINATION_CONSTITUENTS = "regimen-combination-constituents";
     public static final String REGIMEN_CONSTITUENT_DOSAGES = "regimen-constituent-dosages";
     private static final String PROGRAM_REFERENCE_DATA ="ProgramReferenceData" ;
+    private static final String RECEIVED_MESSAGE = "Facility Received Successful";
+
 
     @Autowired
     private LookupService lookupService;
@@ -336,7 +338,7 @@ public class LookupController {
             @ApiResponse(code = 200, message = "Successful request", response = HealthFacilityDTO.class),
             @ApiResponse(code = 500, message = "Internal server error")}
     )
-    @RequestMapping(value = "/rest-api/hfr-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/hfr-list-T", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity postTransaction(@RequestBody HealthFacilityDTO dto, HttpServletRequest request){
 
        try {
@@ -348,7 +350,7 @@ public class LookupController {
         return ResponseEntity.ok(OK);
     }
 
-    @RequestMapping(value = "/rest-api/heath-facility-registry-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/hfr-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity saveHFRRecords(@RequestBody String jsonString, HttpServletRequest request){
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -375,7 +377,7 @@ public class LookupController {
                 return ResponseEntity.ok(jsonObject.toString());
 
             }else {
-                return ResponseEntity.status("NO_CONTENT").body("Empty Object");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Empty Object");
             }
 
         } catch (DataException | IOException e) {
