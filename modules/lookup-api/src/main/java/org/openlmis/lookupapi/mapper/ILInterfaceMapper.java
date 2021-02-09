@@ -21,7 +21,7 @@ public interface ILInterfaceMapper {
             "            postorupdate, region, registrationstatus, updatedat, villagemtaa, \n" +
             "            ward, zone, districtCode, councilCode,facilityTypeGroupCode,ownershipCode)\n" +
             "    VALUES ( #{commFacName}, #{council}, #{createdAt}, #{district}, #{facIDNumber}, #{facilityType}, \n" +
-            "            #{facilityTypeGroup},CAST(#{latitude} as double precision), CAST(#{longitude} as double precision), #{name}, #{oSchangeClosedtoOperational}, \n" +
+            "            #{facilityTypeGroup},#{latitude}, #{longitude}, #{name}, #{oSchangeClosedtoOperational}, \n" +
             "            #{oSchangeOpenedtoClose}, #{operatingStatus}, #{ownership}, #{ownershipGroup}, \n" +
             "            #{postorUpdate}, #{region}, #{registrationStatus}, #{updatedAt}, #{villageMtaa}, \n" +
             "            #{ward}, #{zone}, #{districtCode}, #{councilCode}, #{facilityTypeGroupCode}, #{ownershipCode}); ")
@@ -30,7 +30,7 @@ public interface ILInterfaceMapper {
 
     @Update("UPDATE public.hfr_facilities\n" +
             "   SET  commfacname=#{commFacName}, council=#{council}, createdat=#{createdAt}, district=#{district}, \n" +
-            "       facilitytype=#{facilityType}, facilitytypegroup= #{facilityTypeGroup}, latitude=CAST(#{latitude} as double precision), longitude=CAST(#{longitude} AS double precision), \n" +
+            "       facilitytype=#{facilityType}, facilitytypegroup= #{facilityTypeGroup}, latitude=#{latitude}, longitude=#{longitude}, \n" +
             "       name=#{name}, oschangeclosedtooperational=#{oSchangeClosedtoOperational}, oschangeopenedtoclose=#{oSchangeOpenedtoClose}, \n" +
             "       operatingstatus=#{operatingStatus}, ownership=#{ownership}, ownershipgroup=#{ownershipGroup}, postorupdate=#{postorUpdate}, \n" +
             "       region=#{region}, registrationstatus= #{registrationStatus}, updatedat=#{updatedAt}, villagemtaa=#{villageMtaa}, ward=#{ward}, \n" +
