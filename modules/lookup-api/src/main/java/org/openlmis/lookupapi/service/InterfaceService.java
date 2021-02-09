@@ -168,4 +168,29 @@ public class InterfaceService {
 
     }
 
+    public void saveHFR(HealthFacilityDTO dto){
+
+        if(dto != null){
+            //  if(!dto.getIlIDNumber().isEmpty()) {
+            //HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
+
+            HealthFacilityDTO savedFacility = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
+
+            if (savedFacility == null) {
+                //if(facilityDTO == null) {
+                interfaceMapper.insert(dto);
+      /*}else
+        interfaceMapper.update(dto);*/
+
+            } else {
+                // if (hfr.getFacIDNumber() != null){
+                interfaceMapper.update(dto);
+                // }
+            }
+            // }
+
+        }
+
+    }
+
 }
