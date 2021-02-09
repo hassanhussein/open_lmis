@@ -27,6 +27,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
+
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,4 +42,16 @@ public class Notifications extends BaseModel{
     private String type;
     private String urgency;
 
+    @Override
+    public String toString() {
+        return "'notification':{" +
+                "'name':" + name  +
+                ", 'code':" + code  +
+                ", 'message':" + message  +
+                ", 'description':" + description +
+                ", 'type':" + type  +
+                ", 'urgency':" + urgency  +
+                ", 'messageSent':" + new Date() +
+                '}';
+    }
 }

@@ -25,50 +25,40 @@ package org.openlmis.notification.service;
 
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.ExchangeTypes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.rabbitmq.client.Channel;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.TimeoutException;
 
 
 @Service
 public class ProducerServiceImpl implements ProducerService {
+    @Autowired
+    AmqpTemplate aTemplate;
 
     /**
-     *  The name of the Exchange
+     * The name of the Exchange
      */
     private static final String EXCHANGE_NAME = "messages";
 
     /**
-     *  This method publishes a message
+     * This method publishes a message
+     *
      * @param message
      */
+
     @Override
     public void produceMessage(String message) {
-        try {
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("localhost");
-            factory.setPort(5672);
-            factory.setUsername("guest");
-            factory.setPassword("guest");
-            Connection connection = factory.newConnection();
-            Channel channel = connection.createChannel();
-            
-            channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+        aTemplate.convertAndSend("my.routingkey.1", message);// send
 
-            
-            channel.basicPublish(EXCHANGE_NAME, "", null, message.getBytes());
-            System.out.println(" [x] Sent '" + message  + "'");
-            
-            channel.close();
-            connection.close();
-        } catch (IOException io) {
-            System.out.println("IOException");
-            io.printStackTrace();
-        } catch (TimeoutException toe) {
-            System.out.println("TimeoutException : " + toe.getMessage());
-            toe.printStackTrace();
-        }
+//        aTemplate.convertAndSend(message);// send
+
+
     }
 }

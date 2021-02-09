@@ -10,6 +10,7 @@
 
 package org.openlmis.core.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -32,65 +33,66 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @JsonSerialize(include = NON_EMPTY)
 public class ProgramProduct extends BaseModel implements Importable {
 
-  @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
-  private Program program;
+    @ImportField(name = "Program Code", type = "String", nested = "code", mandatory = true)
+    private Program program;
 
-  @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
-  private Product product;
+    @ImportField(name = "Product Code", type = "String", nested = "code", mandatory = true)
+    private Product product;
 
-  @ImportField(name = "Doses Per Month", type = "int", mandatory = true)
-  private Integer dosesPerMonth;
+    @ImportField(name = "Doses Per Month", type = "int", mandatory = true)
+    private Integer dosesPerMonth;
 
-  @ImportField(name = "Is Active", type = "boolean", mandatory = true)
-  private Boolean active;
+    @ImportField(name = "Is Active", type = "boolean", mandatory = true)
+    private Boolean active;
 
-  @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
-  private ProductCategory productCategory;
+    @ImportField(mandatory = true, type = "String", name = "Product Category", nested = "code")
+    private ProductCategory productCategory;
 
-  private Long productCategoryId;
+    private Long productCategoryId;
 
-  @ImportField(name = "Full Supply", type = "boolean", mandatory = true)
-  private boolean fullSupply;
+    @ImportField(name = "Full Supply", type = "boolean", mandatory = true)
+    private boolean fullSupply;
 
-  @ImportField(name = "Display Order", type = "int")
-  private Integer displayOrder;
+    @ImportField(name = "Display Order", type = "int")
+    private Integer displayOrder;
 
-  ProgramProductISA programProductIsa;
+    ProgramProductISA programProductIsa;
+    @JsonIgnore
+    private Money currentPrice;
 
-  private Money currentPrice;
+    public ProgramProduct(Long id) {
+        super(id);
+    }
 
-  public ProgramProduct(Long id) {
-    super(id);
-  }
+    public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
+        this.program = program;
+        this.product = product;
+        this.dosesPerMonth = dosesPerMonth;
+        this.active = active;
+    }
 
-  public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active) {
-    this.program = program;
-    this.product = product;
-    this.dosesPerMonth = dosesPerMonth;
-    this.active = active;
-  }
+    public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active, Money currentPrice) {
+        this.program = program;
+        this.product = product;
+        this.dosesPerMonth = dosesPerMonth;
+        this.active = active;
+        this.currentPrice = currentPrice;
+    }
 
-  public ProgramProduct(Program program, Product product, Integer dosesPerMonth, Boolean active, Money currentPrice) {
-    this.program = program;
-    this.product = product;
-    this.dosesPerMonth = dosesPerMonth;
-    this.active = active;
-    this.currentPrice = currentPrice;
-  }
+    @JsonIgnore
+    public void validate() {
+        if (currentPrice.isNegative()) throw new DataException("programProduct.invalid.current.price");
+    }
 
-  public void validate() {
-    if (currentPrice.isNegative()) throw new DataException("programProduct.invalid.current.price");
-  }
-
-  public ProgramProduct(ProgramProduct programProduct) {
-    this.id = programProduct.id;
-    this.program = programProduct.program;
-    this.product = programProduct.product;
-    this.dosesPerMonth = programProduct.dosesPerMonth;
-    this.active = programProduct.active;
-    this.currentPrice = programProduct.currentPrice;
-    this.programProductIsa = programProduct.programProductIsa;
-    this.displayOrder = programProduct.displayOrder;
-    this.fullSupply = programProduct.fullSupply;
-  }
+    public ProgramProduct(ProgramProduct programProduct) {
+        this.id = programProduct.id;
+        this.program = programProduct.program;
+        this.product = programProduct.product;
+        this.dosesPerMonth = programProduct.dosesPerMonth;
+        this.active = programProduct.active;
+        this.currentPrice = programProduct.currentPrice;
+        this.programProductIsa = programProduct.programProductIsa;
+        this.displayOrder = programProduct.displayOrder;
+        this.fullSupply = programProduct.fullSupply;
+    }
 }

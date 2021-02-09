@@ -23,6 +23,7 @@ import org.openlmis.report.util.ParameterAdaptor;
 import org.openlmis.report.util.SelectedFilterHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,9 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-/**
- * Created by takepc on 5/26/2019.
- */
+
 public abstract class ConsumptionReportDataProvider extends ReportDataProvider {
     @Value("${report.status.considered.accepted}")
     protected String configuredAcceptedRnrStatuses;

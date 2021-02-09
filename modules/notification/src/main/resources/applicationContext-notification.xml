@@ -27,14 +27,29 @@
     <rabbit:annotation-driven/>
     <rabbit:connection-factory id="connectionFactory" host="${mb.server.url}" port="${mb.server.port}"
                                username="${mb.server.username}" password="${mb.server.password}"/>
+    <!--<rabbit:connection-factory id="connectionFactory" host="localhost" username="guest" password="guest" />-->
     <rabbit:admin connection-factory="connectionFactory"/>
-    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory"/>
-    <bean id="rabbitListenerContainerFactory"
-          class="org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory">
-        <property name="connectionFactory" ref="connectionFactory"/>
-        <property name="concurrentConsumers" value="3"/>
-        <property name="maxConcurrentConsumers" value="10"/>
-    </bean>
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="MESSAGE-EXCHANGE"/>
+    <!--<bean id="rabbitListenerContainerFactory"-->
+          <!--class="org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory">-->
+        <!--<property name="connectionFactory" ref="connectionFactory"/>-->
+        <!--<property name="concurrentConsumers" value="3"/>-->
+        <!--<property name="maxConcurrentConsumers" value="10"/>-->
+    <!--</bean>-->
+
+    <!-- Create myAnonymousQueue queue -->
+    <rabbit:queue id="myAnonymousQueue"  name="facilityNotificationQueue" />
+    <!-- create myExchange and bind myAnonymousQueue with my.routingkey.1 to the TUTORIAL-EXCHANGE-->
+    <rabbit:topic-exchange id="myExchange" name="MESSAGE-EXCHANGE">
+        <rabbit:bindings>
+            <rabbit:binding queue="myAnonymousQueue" pattern="my.#.*"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+    <!-- instantiate TutorialListener -->
+    <bean id="aListener" class="org.openlmis.notification.service.NotificationMessageListener" />
+    <!-- glue the listener and myAnonymousQueue to the container-->
+    <rabbit:listener-container   connection-factory="connectionFactory">
+        <rabbit:listener ref="aListener" queues="myAnonymousQueue" /></rabbit:listener-container>
 
     <import resource="classpath:applicationContext-db.xml"/>
     <import resource="classpath:applicationContext-core.xml"/>

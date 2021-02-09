@@ -35,6 +35,9 @@ import java.util.List;
 public class FacilityNotificationService {
     @Autowired
     FacilityNotificationRepository repository;
+    @Autowired
+    ProducerService producerService;
+    public final String NEW_MESSAGE_CREATED="new_facility_message";
 
     public void addNewNotification(Notifications notification) {
         if (notification.getId() != null && !notification.getId().equals(0L)) {
@@ -42,7 +45,8 @@ public class FacilityNotificationService {
         } else {
             repository.addNewNotification(notification);
         }
-
+        producerService.produceMessage("{messageType:"+NEW_MESSAGE_CREATED
+                +""+notification.toString()+"}");
     }
 
 

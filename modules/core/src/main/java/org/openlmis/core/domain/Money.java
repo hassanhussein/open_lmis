@@ -28,7 +28,7 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
 @JsonSerialize(as = BigDecimal.class)
 @JsonDeserialize(using = MoneyDeSerializer.class)
 @EqualsAndHashCode(callSuper = false)
-public class Money extends Number {
+public class Money extends Number  {
 
   private BigDecimal value;
 
