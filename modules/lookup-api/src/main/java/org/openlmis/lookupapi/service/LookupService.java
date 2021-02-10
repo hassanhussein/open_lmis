@@ -31,10 +31,13 @@ import org.openlmis.lookupapi.mapper.ILInterfaceMapper;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.ProgramReferenceData;
 import org.openlmis.report.mapper.lookup.*;
+
+
 import org.openlmis.report.model.dto.*;
 import org.openlmis.report.model.dto.DosageUnit;
 import org.openlmis.report.model.dto.Facility;
 import org.openlmis.report.model.dto.FacilityType;
+import org.openlmis.report.model.dto.GeographicZone;
 import org.openlmis.report.model.dto.ProcessingPeriod;
 import org.openlmis.report.model.dto.Product;
 import org.openlmis.report.model.dto.ProductCategory;
@@ -221,7 +224,8 @@ public class LookupService {
     }
 
     public List<ProgramProduct> getAllProgramProducts() {
-        return programProductMapper.getAll();
+        List<ProgramProduct> programProductList=programProductMapper.getAll();
+        return programProductList;
     }
 
     public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts() {

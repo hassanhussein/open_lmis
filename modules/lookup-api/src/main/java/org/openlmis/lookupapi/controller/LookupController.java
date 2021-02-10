@@ -24,6 +24,7 @@ import org.openlmis.lookupapi.service.InterfaceService;
 import org.openlmis.lookupapi.service.LookupService;
 import org.openlmis.report.model.dto.Facility;
 import org.openlmis.report.model.dto.FacilityType;
+import org.openlmis.report.model.dto.GeographicLevel;
 import org.openlmis.report.model.dto.Program;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
