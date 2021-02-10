@@ -206,23 +206,23 @@ public interface LotsOnHandMapper {
     List<HashMap<String, Object>>getListVarReport(@Param("inspectionId") Long inspectionId);
 
     @Select("SELECT distinct l.lotNumber,to_char(receiveDate, 'dd/MM/YYYY') as receiveDate, i.receiveNumber, lo.code binLocation, S.name supplyName,\n" +
-            " r.invoiceNumber, r.poNumber, p.code productCode, p.primaryName product, u.code dosageUnit,\n" +
-            "\n" +
-            "asnL.quantity  quantityOrdered, l.lotNumber, to_char(L.manufacturingDate,'dd/MM/YYYY') manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate,\n" +
-            "L.quantity quantityReceived, date_part('month',age(L.expiryDate::date,receiveDate::date))  as shelfLife,r.note\n" +
-            "\n" +
-            "FROM RECEIVES R\n" +
-            "JOIN receive_line_items i ON r.id = i.receiveid\n" +
-            "JOIN Receive_lots L ON i.id = L.receivelineItemId\n" +
-            "JOIN products p ON i.productId = P.ID\n" +
-            "LEFT JOIN wms_locations Lo ON L.locationId = Lo.id\n" +
-            "JOIN SUpply_partners S on r.supplierid = s.id\n" +
-            "JOIN dosage_units U on p.dosageunitId = U.ID\n" +
-            "JOIN ASNs ON R.asnId = ASNS.ID\n" +
-            "JOIN ASN_details it On asns.id = it.asnId\n" +
-            "Join asn_lots asnL ON it.ID = asnL.asndetailId\n" +
-            "\n" +
-            "WHERE r.ID =  #{receiveId}")
+            "             r.invoiceNumber, r.poNumber, p.code productCode, p.primaryName product, u.code dosageUnit,\n" +
+            " \n" +
+            "            asnL.quantity  quantityOrdered, l.lotNumber, to_char(L.manufacturingDate,'dd/MM/YYYY') manufacturingDate, to_char(L.expiryDate, 'dd/MM/YYYY') expiryDate, \n" +
+            "            L.quantity quantityReceived, date_part('month',age(L.expiryDate::date,receiveDate::date))  as shelfLife,r.note \n" +
+            "            \n" +
+            "            FROM RECEIVES R \n" +
+            "            JOIN receive_line_items i ON r.id = i.receiveid \n" +
+            "            JOIN Receive_lots L ON i.id = L.receivelineItemId \n" +
+            "            JOIN products p ON i.productId = P.ID \n" +
+            "            LEFT JOIN wms_locations Lo ON L.locationId = Lo.id \n" +
+            "            JOIN SUpply_partners S on r.supplierid = s.id \n" +
+            "            JOIN dosage_units U on p.wmsDosageunitId = U.ID \n" +
+            "            JOIN ASNs ON R.asnId = ASNS.ID \n" +
+            "            JOIN ASN_details it On asns.id = it.asnId \n" +
+            "            Join asn_lots asnL ON it.ID = asnL.asndetailId \n" +
+            "             \n" +
+            "            WHERE r.ID = #{receiveId}")
     List<HashMap<String, Object>>getListGrnReport(@Param("receiveId") Long inspectionId);
 
 

@@ -139,6 +139,19 @@
             </div>
           </div>
         </div>
+
+        <div class="span2">
+          <div class="form-cell">
+            <label id="wmsDosageUnitLabel" for="dosageUnit" openlmis-message="label.product.wms.dosageUnit"></label>
+
+            <div class="form-field">
+              <select class="ui-select-width" id="wmsDosageUnit" ui-select2 ng-model="selectedProductWmsDosageUnitCode"
+                      ng-options="dosageUnit.code as dosageUnit.code for dosageUnit in dosageUnits | orderBy: 'code'">
+                <option value="" openlmis-message="placeholder.select.product.dosageUnit"></option>
+              </select>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="form-row clearfix row-fluid">

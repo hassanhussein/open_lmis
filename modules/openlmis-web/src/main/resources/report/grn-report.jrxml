@@ -178,7 +178,8 @@
 				</textField>
 				<textField>
 					<reportElement x="335" y="0" width="79" height="20" uuid="bc565ace-1659-44f3-b0b5-a0e4eb877080"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<box rightPadding="4"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="12"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
@@ -202,23 +203,24 @@
 				</textField>
 				<textField>
 					<reportElement x="591" y="0" width="85" height="20" uuid="e8d4cd95-2f90-411f-9202-3c6a65d39da2"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<box rightPadding="4"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="12"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Expiry Date"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="676" y="0" width="65" height="20" uuid="d414f1ff-6e7a-4631-bcdb-40fa1fcb2a7e"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<reportElement x="676" y="0" width="74" height="20" uuid="d414f1ff-6e7a-4631-bcdb-40fa1fcb2a7e"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="12"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
 					<textFieldExpression><![CDATA["Shelf Life (Months)"]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="741" y="0" width="82" height="20" uuid="bf2b8662-75d5-4243-993c-5282fd19a030"/>
-					<textElement textAlignment="Left" verticalAlignment="Middle">
+					<reportElement x="750" y="0" width="73" height="20" uuid="bf2b8662-75d5-4243-993c-5282fd19a030"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font size="12"/>
 						<paragraph leftIndent="5"/>
 					</textElement>
@@ -514,25 +516,26 @@
 			</textField>
 			<textField>
 				<reportElement x="54" y="0" width="99" height="16" uuid="1dd7b202-7dfa-4528-b282-0aa2d3823100"/>
-				<box padding="1"/>
+				<box leftPadding="5"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{productcode}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="153" y="1" width="128" height="16" uuid="6f9118bc-914c-41ce-9802-22279c60bc8d"/>
-				<box padding="1"/>
+				<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="0"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="283" y="0" width="52" height="16" uuid="723d0976-5d1d-4adf-9aab-06b7ef9e7b4b"/>
+				<box leftPadding="5"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{dosageunit}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
 				<reportElement x="334" y="1" width="80" height="16" uuid="4c54c852-272f-4161-9dbc-48962dd57989"/>
-				<box padding="1"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{quantityordered}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -543,21 +546,25 @@
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="504" y="-1" width="86" height="16" uuid="23f45858-7d5a-4888-8332-d8fc713a861d"/>
+				<box leftPadding="4"/>
 				<textFieldExpression><![CDATA[$F{manufacturingdate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="590" y="1" width="86" height="16" uuid="c719144e-781d-4b47-8670-d089161f7e91"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{expirydate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="681" y="1" width="60" height="16" uuid="35d3042f-247c-4340-9b8b-5a48412a9950"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="676" y="1" width="74" height="16" uuid="35d3042f-247c-4340-9b8b-5a48412a9950"/>
+				<box leftPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{shelflife}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.###">
-				<reportElement x="742" y="1" width="86" height="16" uuid="611433da-1851-412e-973e-c470bed5ee0f"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<reportElement x="750" y="1" width="78" height="16" uuid="611433da-1851-412e-973e-c470bed5ee0f"/>
+				<box rightPadding="5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{quantityreceived}]]></textFieldExpression>
 			</textField>
 		</band>

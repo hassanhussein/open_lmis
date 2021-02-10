@@ -21,6 +21,8 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       $scope.selectedProductGroupCode = isUndefined($scope.product.productGroup) ? undefined : $scope.product.productGroup.code;
       $scope.selectedProductFormCode = isUndefined($scope.product.form) ? undefined : $scope.product.form.code;
       $scope.selectedProductDosageUnitCode = isUndefined($scope.product.dosageUnit) ? undefined : $scope.product.dosageUnit.code;
+      $scope.selectedProductWmsDosageUnitCode = isUndefined($scope.product.wmsDosageUnit) ? undefined : $scope.product.wmsDosageUnit.code;
+
       refreshAndSortPrograms();
     }
     else {
@@ -53,6 +55,8 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
     $scope.product.productGroup = _.where($scope.productGroups, {code: $scope.selectedProductGroupCode})[0];
     $scope.product.form = _.where($scope.productForms, {code: $scope.selectedProductFormCode})[0];
     $scope.product.dosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductDosageUnitCode})[0];
+      $scope.product.wmsDosageUnit = _.where($scope.dosageUnits, {code: $scope.selectedProductWmsDosageUnitCode})[0];
+
   };
 
   $scope.save = function () {

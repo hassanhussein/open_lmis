@@ -93,7 +93,7 @@ public interface ProductMapper {
   @Update({"UPDATE products SET code = #{code}, alternateItemCode = #{alternateItemCode}, ", "manufacturer = #{manufacturer},",
     "manufacturerCode = #{manufacturerCode}, manufacturerBarcode = #{manufacturerBarCode}, mohBarcode = #{mohBarCode}, ",
     "gtin = #{gtin}, type = #{type}, primaryName = #{primaryName}, fullName = #{fullName}, genericName = #{genericName},",
-    "alternateName=#{alternateName},description=#{description}, ", "strength=#{strength}, formId=#{form.id}, ", "dosageUnitId=#{dosageUnit.id}, dispensingUnit=#{dispensingUnit}, ",
+    "alternateName=#{alternateName},description=#{description}, ", "strength=#{strength}, formId=#{form.id}, ", "dosageUnitId=#{dosageUnit.id}, wmsDosageUnitId=#{wmsDosageUnit.id}, dispensingUnit=#{dispensingUnit}, ",
     "dosesPerDispensingUnit=#{dosesPerDispensingUnit}, ", "packSize=#{packSize},alternatePackSize=#{alternatePackSize}, ", "storeRefrigerated=#{storeRefrigerated},storeRoomTemperature=#{storeRoomTemperature}, ", "hazardous=#{hazardous},",
     "flammable=#{flammable},controlledSubstance=#{controlledSubstance},lightSensitive=#{lightSensitive},approvedByWHO=#{approvedByWHO}, ", "contraceptiveCYP=#{contraceptiveCYP},", "packLength=#{packLength},packWidth=#{packWidth},packHeight=#{packHeight},",
     "packWeight=#{packWeight},packsPerCarton=#{packsPerCarton},", "cartonLength=#{cartonLength},cartonWidth=#{cartonWidth},cartonHeight=#{cartonHeight},cartonsPerPallet=#{cartonsPerPallet},", "expectedShelfLife=#{expectedShelfLife},",
@@ -108,6 +108,9 @@ public interface ProductMapper {
     @Result(
       property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
+    @Result(
+            property = "wmsDosageUnit", column = "wmsDosageUnitId", javaType = DosageUnit.class,
+            one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById")),
     @Result(
       property = "form", column = "formId", javaType = DosageUnit.class,
       one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById"))})

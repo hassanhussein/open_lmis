@@ -118,13 +118,15 @@ public interface VaccineStockStatusMapper {
             "             \n" +
             "                                                                           ) AS ledger order by id ) X ")
     List<HashMap<String, Object>>getAllStockMovement(@Param("facilityId") Long facilityId);
-    @Select("select sum(lhl.quantity) as totalQuantityOnHand,pr.primaryname as productName,(select to_char(modifieddate, 'dd/MM/YYYY')  from lots where productid=lo.productid limit 1) modifieddate,0.5 as mos from lot_location_entries lhl   \n" +
-            "                                      \n" +
-            "                                     join  stock_cards s on (s.id = lhl.stockcardid)   \n" +
-            "                                     join lots lo on(lo.id=lhl.lotid)   \n" +
-            "                                     join products pr on(pr.id=lo.productid)   \n" +
-            "                                     join wms_locations wl on(wl.id=lhl.locationid)   \n" +
-            "                                     join warehouses wh on(wh.id=wl.warehouseid) group by   lo.productid,pr.primaryname,wh.name")
+    @Select("select ((coalesce((select sum(quantity) from lot_location_entries lt where  stockcardid=lhl.stockcardid and lt.type='CREDIT')+coalesce((select sum(quantity) from lot_location_entries lt where   stockcardid=lhl.stockcardid and lt.type='ADJUSTMENT'),0)-coalesce((select sum(quantity) from lot_location_entries lt \n" +
+            "                                  where   stockcardid=lhl.stockcardid and lt.type='DEBIT'),0),0)))  \n" +
+            "                                     totalQuantityOnHand,pr.primaryname as productName,(select to_char(modifieddate, 'dd/MM/YYYY')  from lots where productid=lo.productid limit 1) modifieddate,0.5 as mos from lot_location_entries lhl    \n" +
+            "                                                   \n" +
+            "                                                 join  stock_cards s on (s.id = lhl.stockcardid)    \n" +
+            "                                                 join lots lo on(lo.id=lhl.lotid)    \n" +
+            "                                                 join products pr on(pr.id=lo.productid)    \n" +
+            "                                                 join wms_locations wl on(wl.id=lhl.locationid)    \n" +
+            "                                                 join warehouses wh on(wh.id=wl.warehouseid) group by   lhl.stockcardid, lo.productid,pr.primaryname,wh.name")
     List<HashMap<String, Object>>getAllStockStatus(@Param("facilityId") Long facilityId);
 
 

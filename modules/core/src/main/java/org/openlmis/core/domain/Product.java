@@ -85,6 +85,12 @@ public class Product extends BaseModel implements Importable {
 
   private Long dosageUnitId;
 
+
+  @ImportField(type = "String", name = "Dosage Units", nested = "code")
+  private DosageUnit wmsDosageUnit;
+
+  private Long wmsDosageUnitId;
+
   @ImportField(mandatory = true, name = "Dispensing Units")
   private String dispensingUnit;
 
