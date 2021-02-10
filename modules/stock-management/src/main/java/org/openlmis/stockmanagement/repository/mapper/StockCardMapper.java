@@ -141,7 +141,7 @@ public interface StockCardMapper {
 
   //TODO:  add movement id, reference number
   @Insert("INSERT INTO stock_card_entries (stockcardid" +
-      ", lotid" +
+      ", lotonhandid" +
       ", type" +
       ", quantity" +
       ", notes" +

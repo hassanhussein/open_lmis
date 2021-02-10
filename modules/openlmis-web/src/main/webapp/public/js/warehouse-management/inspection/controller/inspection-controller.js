@@ -802,6 +802,9 @@ var sum=0;
 //    $scope.enabled=false;
 //    }
 
+        console.log($scope.inspection);
+
+
        if ($scope.inspection.id) {
          $scope.inspection.status  = status;
          $scope.inspection.receiptNumber = $scope.inspection.receive.receiveLineItems[0].receiveNumber;

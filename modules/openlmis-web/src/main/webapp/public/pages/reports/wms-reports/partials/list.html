@@ -45,12 +45,11 @@
                                       required="true"
                                       class="form-cell horizontalFilters">
                       </program-filter>
-                      <year-filter ng-if="fltr.name == 'year'"
-                                   default="{{ (fltr.default != undefined) ?fltr.default:undefined}}"
-                                   visible="{{fltr.visible?fltr.visible:'true'}}"
-                                   required="true"
-                                   class="form-cell horizontalFilters">
-                      </year-filter>
+
+
+
+
+
                       <quarter-filter ng-if="fltr.name == 'quarter'"
                                       required="true"
                                       class="form-cell horizontalFilters">
@@ -97,10 +96,10 @@
                                                required="true">
                       </product-category-filter>
 
-                      <product-without-description-filter ng-if="fltr.name == 'product'"
-                                               class="form-cell horizontalFilters"
-                                               required="true">
-                      </product-without-description-filter>
+<!--                      <product-without-description-filter ng-if="filter.report_key!='vdsr'"-->
+<!--                                               class="form-cell horizontalFilters"-->
+<!--                                               required="true">-->
+<!--                      </product-without-description-filter>-->
 
 
                       <vaccine-product-filter
@@ -129,11 +128,43 @@
                     </div>
                     <div class="clearfix"></div>
                   </div>
+
+                  <div  class="form-cell horizontalFilters" ng-if="filter.report_key=='vdsr'">
+                    <label for="sites" class="labels">Sites<span class="label-required">*</span></label><div>
+                    <select id="sites" ui-select2 class="input-large" >
+                      <option ng-repeat="site in sites" value="{{ site.id }}" >{{site.name}}</option>
+                    </select>
+                  </div>
+                  </div>
+
+                  <div  class="form-cell horizontalFilters" ng-if="filter.report_key=='vdsr'">
+                    <label for="productType" class="labels">Product Type<span class="label-required">*</span></label><div>
+                    <select id="productType" ui-select2 class="input-large" >
+                      <option ng-repeat="productType in productTypes" value="{{ productType.id }}" >{{productType.name}}</option>
+                    </select>
+                  </div>
+                  </div>
+
+
+                  <year-filter
+                               default="{{ (fltr.default != undefined) ?fltr.default:undefined}}"
+                               ng-if="filter.report_key=='vdsr'"
+                               required="true"
+                               class="form-cell horizontalFilters">
+                  </year-filter>
+
+
+                  <period-filter
+                                 required="true"
+                                 ng-if="filter.report_key=='vdsr'"
+                                 class="form-cell horizontalFilters">
+                  </period-filter>
+
                   <div class="clearfix"></div>
 
                   <div>
 
-                    <div class="horizontalFilters form-cell" >
+                    <div class="horizontalFilters form-cell" ng-if="filter.report_key!='vdsr'" >
                       <label for="txtPeriodStartDate" class="labels" ><span openlmis-message="label.start.date"></span></label>
                       <div>
                         <input id="txtPeriodStartDate" ng-model="filter.periodStartDate"  ui-date ng-change="OnFilterChanged()"/>
@@ -141,7 +172,7 @@
                     </div>
 
 
-                      <div class="horizontalFilters form-cell" >
+                      <div class="horizontalFilters form-cell" ng-if="filter.report_key!='vdsr'" >
                       <label for="txtPeriodEnddate" class="labels" ><span openlmis-message="label.end.date"></span></label>
                       <div>
                         <input id="txtPeriodEnddate" ng-model="filter.periodEndDate"  ui-date ng-change="OnFilterChanged()"/>
