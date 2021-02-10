@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class VaccineDistributionLineItem extends BaseModel {
     //int id;
-    private String facilityName,product,district,region,productCode;
+    private String facilityName,product,district,region,productCode,lotNumber;
     int quantityIssued, distributionId;
     int unitPrice;
     int amount;

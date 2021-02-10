@@ -56,8 +56,18 @@ public class WmsReportRepository {
     }
 
     public List<VaccineDistributionLineItem> getReportVaccine(Long facilityId){
-        return vaccineStockStatusMapper.vaccineDistributionLineItemList(facilityId);
+        return vaccineStockStatusMapper.vaccineDistributionLineItemListLot(facilityId);
     }
+
+
+    public List<HashMap<String, Object>> getAllStockMovement(Long facilityId) {
+        return vaccineStockStatusMapper.getAllStockMovement(facilityId);
+    }
+    public List<HashMap<String, Object>> getAllStockStatus(Long facilityId) {
+        return vaccineStockStatusMapper.getAllStockStatus(facilityId);
+    }
+
+
     public List<VaccineDistribution> getReportVaccineDistribution(Long orderId){
         return vaccineStockStatusMapper.vaccineDistributionListByOrderId(orderId);
     }

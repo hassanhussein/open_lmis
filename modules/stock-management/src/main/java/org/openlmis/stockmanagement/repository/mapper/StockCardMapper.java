@@ -104,6 +104,19 @@ public interface StockCardMapper {
   })
   List<LotOnHand> getLotsOnHand(@Param("stockCardId")Long stockCardId);
 
+  @Select("SELECT DISTINCT ON (loh.lotId) loh.*" +
+          " FROM lots_on_hand loh" +
+          " WHERE loh.stockcardid = #{stockCardId} ")
+  @Results({@Result(property = "lotId", column = "lotId"),
+          @Result(
+                  property = "keyValues", column = "id", javaType = List.class,
+                  one = @One(select = "getLotOnHandKeyValues")),
+          @Result(
+                  property = "lot", column = "lotId", javaType = Lot.class,
+                  one = @One(select = "org.openlmis.stockmanagement.repository.mapper.LotMapper.getById"))
+  })
+  List<LotOnHand> getLotsOnHandMin(@Param("stockCardId")Long stockCardId);
+
   @Select("SELECT scekv.keycolumn" +
           ", scekv.valuecolumn" +
           ", scekv.modifieddate AS synceddate" +

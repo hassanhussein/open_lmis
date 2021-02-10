@@ -23,6 +23,11 @@ public interface LotMapper {
   })
   Lot getById(@Param("id")Long id);
 
+    @Select("SELECT *" +
+            " FROM lots" +
+            " WHERE id = #{id} limit 1")
+  Lot getMinById(@Param("id")Long id);
+
   @Select("SELECT *" +
       " FROM lots" +
       " WHERE LOWER(lotnumber) = LOWER(#{lotCode})" +

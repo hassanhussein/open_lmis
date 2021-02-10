@@ -131,18 +131,22 @@ public class IvdFormController extends BaseController {
   @ApiOperation(position = 8, value = "Save IVD form")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> saveMultipleForms(@RequestBody String reports, HttpServletRequest request) throws IOException {
-
+   // System.out.println(reports);
     ObjectMapper mapper = new ObjectMapper();
 
     VaccineReport[] readValues = mapper.readValue(reports, VaccineReport[].class);
 
     for(VaccineReport report: readValues) {
 
-      if(report.getFacility().getAllowedToSend()) {
+      if(report.getFacility()!=null) {
+        if (report.getFacility().getAllowedToSend()) {
 
-        service.submitFromOtherApplications(report, loggedInUserId(request));
+          service.submitFromOtherApplications(report, loggedInUserId(request));
 
-      } else {
+        } else {
+          service.save(report, loggedInUserId(request));
+        }
+      }else{
         service.save(report, loggedInUserId(request));
       }
     }

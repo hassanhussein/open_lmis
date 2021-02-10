@@ -68,6 +68,7 @@ public class FacilityRepository {
       throw new DataException("error.duplicate.facility.code");
     } catch (DataIntegrityViolationException integrityViolationException) {
       String errorMessage = integrityViolationException.getMessage().toLowerCase();
+      System.out.println(errorMessage);
       if (errorMessage.contains("foreign key") || errorMessage.contains("not-null constraint")) {
         throw new DataException("error.reference.data.missing");
       }

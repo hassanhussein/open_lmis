@@ -13,7 +13,7 @@ angular.module('wms_reports', ['openlmis', 'ngTable',  'ui.chart', 'angularCombi
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.
                 when('/list', {controller:WmsReportController, templateUrl:'partials/list.html',reloadOnSearch:false, resolve: WmsReportController.resolve}).
-                //when('/designer', {controller:CustomReportDesignerController, templateUrl:'partials/designer.html',reloadOnSearch:false, resolve: CustomReportDesignerController.resolve}).
+                //when('/distribution', {controller:CustomReportDesignerController, templateUrl:'partials/distribution.html',reloadOnSearch:false, resolve: CustomReportDesignerController.resolve}).
                 otherwise({redirectTo:'/list'});
         }]).config(function(angularCombineConfigProvider) {
     angularCombineConfigProvider.addConf(/filter-/, '/public/pages/reports/shared/filters.html');

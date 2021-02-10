@@ -12,14 +12,19 @@
 
 package org.openlmis.lookupapi.controller;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.json.JSONObject;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
+import org.openlmis.lookupapi.model.ResponseMessage;
 import org.openlmis.lookupapi.service.InterfaceService;
 import org.openlmis.lookupapi.service.LookupService;
 import org.openlmis.report.model.dto.Facility;
@@ -36,6 +41,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+
+import java.io.IOException;
 
 import static javax.security.auth.callback.ConfirmationCallback.OK;
 
@@ -71,6 +78,8 @@ public class LookupController {
     public static final String REGIMEN_COMBINATION_CONSTITUENTS = "regimen-combination-constituents";
     public static final String REGIMEN_CONSTITUENT_DOSAGES = "regimen-constituent-dosages";
     private static final String PROGRAM_REFERENCE_DATA ="ProgramReferenceData" ;
+    private static final String RECEIVED_MESSAGE = "Facility Received Successful";
+
 
     @Autowired
     private LookupService lookupService;
@@ -329,7 +338,7 @@ public class LookupController {
             @ApiResponse(code = 200, message = "Successful request", response = HealthFacilityDTO.class),
             @ApiResponse(code = 500, message = "Internal server error")}
     )
-    @RequestMapping(value = "/rest-api/hfr-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/hfr-list-T", method = RequestMethod.POST, headers = ACCEPT_JSON)
     public ResponseEntity postTransaction(@RequestBody HealthFacilityDTO dto, HttpServletRequest request){
 
        try {
@@ -340,6 +349,45 @@ public class LookupController {
         System.out.println("RESPONSE BEFORE");
         return ResponseEntity.ok(OK);
     }
+
+    @RequestMapping(value = "/rest-api/hfr-list", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity saveHFRRecords(@RequestBody String jsonString, HttpServletRequest request){
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            objectMapper.readTree(jsonString);
+            objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+
+            if(jsonString != null && !jsonString.isEmpty() && !jsonString.equalsIgnoreCase("{}") &&  !jsonString.equalsIgnoreCase("{ }") ) {
+
+                HealthFacilityDTO dto = objectMapper.readValue(jsonString, HealthFacilityDTO.class);
+
+                interfaceService.saveHFR(dto);
+
+                ResponseMessage message = new ResponseMessage();
+
+                message.setFacilityCode(dto.getFacIDNumber());
+                message.setFacilityName(dto.getName());
+                message.setOperatingStatus(dto.getOperatingStatus());
+                message.setMessage(RECEIVED_MESSAGE);
+
+                JSONObject jsonObject = new JSONObject(message);
+
+                return ResponseEntity.ok(jsonObject.toString());
+
+            }else {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Empty Object");
+            }
+
+        } catch (DataException | IOException e) {
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+
+        }
+
+    }
+
     @RequestMapping(value = "/rest-api/lookup/program-referece-data/{code}/{facility_code}", method = RequestMethod.GET, headers = ACCEPT_JSON)
     public ResponseEntity getProgramReferenceData(@PathVariable("code") String code,@PathVariable("facility_code") String facilityCode) {
         return RestResponse.response(PROGRAM_REFERENCE_DATA, lookupService.getProgramReferenceData(code,facilityCode));

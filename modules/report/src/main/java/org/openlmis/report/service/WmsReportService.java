@@ -74,6 +74,7 @@ public class WmsReportService {
 
 
 
+
     public void exportGrnReport(Long receiveId,String language,String currentName, HttpServletResponse response)throws IOException, JRException{
         try {
             // String dataList= String.valueOf(wmsReportRepository.getVarReportById(inspectionId));
@@ -112,6 +113,140 @@ public class WmsReportService {
             parameters.put(JRParameter.REPORT_LOCALE, new Locale(language));
 
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public void  exportStockStatus(String reportFormat, Long facilityId, String currentName, HttpServletResponse response){
+        try {
+            List<HashMap<String, Object>> stock = wmsReportRepository.getAllStockStatus(facilityId);
+
+
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/StockStatus.jrxml"));
+
+
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
+
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(stock);
+
+            System.out.println(json);
+
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(json.getBytes());
+
+            //Load file and compile it
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+            // JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stock);
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+            parameters.put("listData", dataSource);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            //JasperExportManager.exportReportToPdfFile(jasperPrint,path+"\\"+reportName+".pdf");
+
+            response.setContentType("application/pdf");
+            response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
+            OutputStream out = response.getOutputStream();
+            JasperExportManager.exportReportToPdfStream(jasperPrint, out);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public void  exportStockMovement(String reportFormat, Long facilityId, String currentName, HttpServletResponse response){
+        try {
+            List<HashMap<String, Object>> stock = wmsReportRepository.getAllStockMovement(facilityId);
+
+
+          //  System.out.println(jsonStock);
+            JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
+
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/StockMovementReport.jrxml"));
+
+
+            File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
+
+            String json = new ObjectMapper().writerWithDefaultPrettyPrinter()
+                    .writeValueAsString(stock);
+            JSONArray jsonStock = new JSONArray(json);
+
+            JSONArray newjsonStock = new JSONArray();
+
+
+            for(int i=0;i<jsonStock.length();i++){
+                JSONObject stockListObject = jsonStock.getJSONObject(i);
+
+                JSONObject customObject=new JSONObject();
+                customObject.put("product",stockListObject.get("product"));
+                customObject.put("lotnumber",stockListObject.get("lotnumber"));
+                if(stockListObject.has("movementtype")) {
+                    customObject.put("movementtype", stockListObject.get("movementtype"));
+                }
+
+                int adjustment=stockListObject.getInt("adjustment");
+                int received=stockListObject.getInt("received");
+                int issued=stockListObject.getInt("issued");
+
+                if(adjustment<0){
+                    issued=adjustment*-1;
+                }
+                if(adjustment>0){
+                    received=adjustment;
+                }
+
+                customObject.put("received",received);
+                customObject.put("issued",issued);
+
+
+                customObject.put("createddate",stockListObject.get("createddate"));
+                if(stockListObject.has("frombin")) {
+                    customObject.put("frombin", stockListObject.get("frombin"));
+                }
+
+                if(stockListObject.has("tobin")) {
+                    customObject.put("tobin", stockListObject.get("tobin"));
+                }
+
+
+                if(stockListObject.has("reason")) {
+                    customObject.put("reason", stockListObject.get("reason"));
+                }
+
+                customObject.put("createdname",stockListObject.get("createdname"));
+                newjsonStock.put(customObject);
+            }
+
+            ByteArrayInputStream jsonDataStream = new ByteArrayInputStream(newjsonStock.toString().getBytes());
+
+            //Load file and compile it
+            JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+           // JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stock);
+            JsonDataSource dataSource = new JsonDataSource(jsonDataStream);
+
+
+            Map<String, Object> parameters = new HashMap<>();
+            parameters.put("createdBy", currentName);
+           // parameters.put("VaccineListData", dataSource);
+            parameters.put("HEADER_IMAGE", imagePath.getAbsolutePath());
+            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+            //JasperExportManager.exportReportToPdfFile(jasperPrint,path+"\\"+reportName+".pdf");
 
             response.setContentType("application/pdf");
             response.addHeader("Content-disposition", "inline; filename=StatisticsrReport1.pdf");
@@ -182,10 +317,12 @@ public class WmsReportService {
 
             JasperReportCompiler jasperReportCompiler = new JasperReportCompiler();
 
-            File file = new File(jasperReportCompiler.getReportPath() + "/" + "vaccine-distribution-summary-report.jrxml");
+            File file = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/vaccine-distribution-summary-report.jrxml"));
+
 
             File imagePath = ResourceUtils.getFile(jasperReportCompiler.getReportPath("template/headerimage.png"));
 
+            System.out.println(stockList.toString());
             //Load file and compile it
             JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(stockList);
@@ -204,6 +341,7 @@ public class WmsReportService {
 
             //return "Report generated in Path: "+path;
         }catch (Exception e){
+            e.printStackTrace();
 
         }
     }

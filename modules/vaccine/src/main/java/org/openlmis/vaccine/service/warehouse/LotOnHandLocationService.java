@@ -101,7 +101,6 @@ public class LotOnHandLocationService {
                 System.out.println(dto.getInspectionId());
                 vvmData = repository.getByLotAndInspection(dto.getLotNumber(), dto.getInspectionId());
 
-
                 //save PutAway
                 dto.setCreatedBy(userId);
                 dto.setLotId(newLot.getId());
@@ -124,6 +123,8 @@ public class LotOnHandLocationService {
                 entry.setModifiedBy(userId);
                 entry.setType(StockCardEntryType.CREDIT);
                 entry.setIsTransferred(false);
+                entry.setReason(" ");
+                entry.setMovementType("PUTAWAY");
 
                 List<StockCardEntryKV> vl = new ArrayList<>();
                 StockCardEntryKV values = new StockCardEntryKV();

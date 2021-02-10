@@ -15,6 +15,7 @@ public class Adjustment extends BaseModel {
     private Long toWarehouseId;
     private Long toBinId;
     private  Boolean isTransfer;
+    private String movementType;
 
     private  String transferLogs;
 

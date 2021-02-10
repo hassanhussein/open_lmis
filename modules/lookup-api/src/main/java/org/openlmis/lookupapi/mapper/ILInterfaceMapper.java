@@ -16,23 +16,23 @@ public interface ILInterfaceMapper {
             "            facilitytypegroup, latitude, longitude, name, oschangeclosedtooperational, \n" +
             "            oschangeopenedtoclose, operatingstatus, ownership, ownershipgroup, \n" +
             "            postorupdate, region, registrationstatus, updatedat, villagemtaa, \n" +
-            "            ward, zone,IlIDNumber)\n" +
+            "            ward, zone, districtCode, councilCode,facilityTypeGroupCode,ownershipCode)\n" +
             "    VALUES ( #{commFacName}, #{council}, #{createdAt}, #{district}, #{facIDNumber}, #{facilityType}, \n" +
-            "            #{facilityTypeGroup},CAST(#{latitude} as double precision), CAST(#{longitude} as double precision), #{name}, #{oSchangeClosedtoOperational}, \n" +
+            "            #{facilityTypeGroup},#{latitude}, #{longitude}, #{name}, #{oSchangeClosedtoOperational}, \n" +
             "            #{oSchangeOpenedtoClose}, #{operatingStatus}, #{ownership}, #{ownershipGroup}, \n" +
             "            #{postorUpdate}, #{region}, #{registrationStatus}, #{updatedAt}, #{villageMtaa}, \n" +
-            "            #{ward}, #{zone},#{IlIDNumber}); ")
+            "            #{ward}, #{zone}, #{districtCode}, #{councilCode}, #{facilityTypeGroupCode}, #{ownershipCode}); ")
     @Options(useGeneratedKeys = true)
     Integer insert(HealthFacilityDTO dto);
 
     @Update("UPDATE public.hfr_facilities\n" +
-            "   SET  commfacname=#{commFacName}, council=#{council}, createdat=#{createdAt}, district=#{district},facidNumber=#{facIDNumber}, \n" +
-            "       facilitytype=#{facilityType}, facilitytypegroup= #{facilityTypeGroup}, latitude=CAST(#{latitude} as double precision), longitude=CAST(#{longitude} AS double precision), \n" +
+            "   SET  commfacname=#{commFacName}, council=#{council}, createdat=#{createdAt}, district=#{district}, \n" +
+            "       facilitytype=#{facilityType}, facilitytypegroup= #{facilityTypeGroup}, latitude=#{latitude}, longitude=#{longitude}, \n" +
             "       name=#{name}, oschangeclosedtooperational=#{oSchangeClosedtoOperational}, oschangeopenedtoclose=#{oSchangeOpenedtoClose}, \n" +
             "       operatingstatus=#{operatingStatus}, ownership=#{ownership}, ownershipgroup=#{ownershipGroup}, postorupdate=#{postorUpdate}, \n" +
             "       region=#{region}, registrationstatus= #{registrationStatus}, updatedat=#{updatedAt}, villagemtaa=#{villageMtaa}, ward=#{ward}, \n" +
-            "       zone=#{zone}\n" +
-            " WHERE IlIDNumber= #{IlIDNumber} ;")
+            "       zone=#{zone}, districtCode = #{districtCode},councilCode = #{councilCode}, facilityTypeGroupCode=#{facilityTypeGroupCode}, ownershipCode=#{ownershipCode}  \n" +
+            " WHERE facidNumber=#{facIDNumber} ;")
     void update(HealthFacilityDTO dto);
 
     @Select("select * from hfr_facilities WHERE IlIDNumber = #{IlIDNumber} limit 1")

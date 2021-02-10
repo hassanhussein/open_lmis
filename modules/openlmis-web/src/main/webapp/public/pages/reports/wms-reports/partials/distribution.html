@@ -1,0 +1,243 @@
+<!--
+  ~ Electronic Logistics Management Information System (eLMIS) is a supply chain management system for health commodities in a developing country setting.
+  ~
+  ~ Copyright (C) 2015  John Snow, Inc (JSI). This program was produced for the U.S. Agency for International Development (USAID). It was prepared under the USAID | DELIVER PROJECT, Task Order 4.
+  ~
+  ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<div class="row-fluid sortable ui-sortable">
+    <div class="box span12">
+        <div class="box-header">
+            <h2>
+                <i class="icon-edit"></i>
+                <span class="break"></span>
+                Reports
+            </h2>
+        </div>
+        <filter-container>
+            <div>
+                <form ng-submit="filterGrid()" name="filterForm" novalidate>
+                    <div class="app-form">
+                        <select ui-select2 style="width: 450px;" ng-change="OnReportTypeChanged(filter.report_key)"
+                                ng-model="filter.report_key">
+                            <option></option>
+
+                            <option value="{{r.code}}" ng-selected="r.code == filter.report_key"
+                                    ng-repeat="r in  report_list">
+                                {{$index + 1}} - {{r.name}}
+                            </option>
+
+                        </select>
+
+                        <div class="clearfix"></div>
+
+                        <div class="row-fluid">
+                            <div class="sidebar" ng-if="report.currentFilters.length > 0">
+                                <div class="">
+                                    <div ng-repeat="fltr in report.currentFilters">
+                                        <div class="row-fluid">
+                                            <program-filter ng-if="fltr.name == 'program'" visible="{{fltr.visible?fltr.visible:'true'}}"
+                                                            required="true"
+                                                            class="form-cell horizontalFilters">
+                                            </program-filter>
+                                            <year-filter ng-if="fltr.name == 'year'"
+                                                         default="{{ (fltr.default != undefined) ?fltr.default:undefined}}"
+                                                         visible="{{fltr.visible?fltr.visible:'true'}}"
+                                                         required="true"
+                                                         class="form-cell horizontalFilters">
+                                            </year-filter>
+                                            <quarter-filter ng-if="fltr.name == 'quarter'"
+                                                            required="true"
+                                                            class="form-cell horizontalFilters">
+                                            </quarter-filter>
+                                            <schedule-filter ng-if="fltr.name == 'schedule'" visible="{{fltr.visible?fltr.visible:'true'}}"
+                                                             default="{{ (fltr.default != undefined) ? fltr.default : undefined}}"
+                                                             required="true"
+                                                             class="form-cell horizontalFilters">
+                                            </schedule-filter>
+
+                                            <period-filter ng-if="fltr.name == 'period'"
+                                                           required="true"
+                                                           class="form-cell horizontalFilters">
+                                            </period-filter>
+                                            <zone-filter ng-if="fltr.name == 'zone'"
+                                                         noZone="{{fltr.noZone?fltr.noZone: false}}"
+                                                         required="true"
+                                                         class="form-cell horizontalFilters">
+                                            </zone-filter>
+                                            <regimen-category-filter ng-if="fltr.name == 'regimen-category'"
+                                                                     required="true"
+                                                                     class="form-cell horizontalFilters">
+                                            </regimen-category-filter>
+                                            <regimen-filter ng-if="fltr.name == 'regimen'"
+                                                            required="true"
+                                                            class="form-cell horizontalFilters">
+                                            </regimen-filter>
+                                            <facility-type-filter ng-if="fltr.name == 'facility-type'"
+                                                                  class="form-cell horizontalFilters"
+                                                                  required="true">
+                                            </facility-type-filter>
+                                            <facility-filter ng-if="fltr.name == 'facility'"
+                                                             class="form-cell horizontalFilters"
+                                                             required="true">
+                                            </facility-filter>
+
+                                            <static-year-month-filter ng-if="fltr.name == 'period'"
+                                                                      class="form-cell horizontalFilters"
+                                                                      required="true">
+                                            </static-year-month-filter>
+
+                                            <product-category-filter ng-if="fltr.name == 'product-category'"
+                                                                     class="form-cell horizontalFilters"
+                                                                     required="true">
+                                            </product-category-filter>
+
+                                            <product-without-description-filter ng-if="fltr.name == 'product'"
+                                                                                class="form-cell horizontalFilters"
+                                                                                required="true">
+                                            </product-without-description-filter>
+
+
+                                            <vaccine-product-filter
+                                                    ng-if="fltr.name == 'vaccine-product'"
+                                                    required="true"
+                                                    class="form-cell horizontalFilters">
+                                            </vaccine-product-filter>
+                                            <vaccine-zone-filter
+                                                    ng-if="fltr.name == 'vaccine-zone'"
+                                                    required="true"
+                                                    class="form-cell horizontalFilters">
+                                            </vaccine-zone-filter>
+
+
+
+                                            <product-filter ng-if="fltr.name == 'productQ'"
+                                                            label="{{fltr.label? fltr.label: 'name'}}"
+                                                            tracer="{{fltr.tracer? fltr.tracer :''}}"
+                                                            required="true"
+                                                            class="form-cell horizontalFilters">
+                                            </product-filter>
+
+
+
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div>
+
+                                        <div class="horizontalFilters form-cell" >
+                                            <label for="txtPeriodStartDate" class="labels" ><span openlmis-message="label.start.date"></span></label>
+                                            <div>
+                                                <input id="txtPeriodStartDate" ng-model="filter.periodStartDate"  ui-date ng-change="OnFilterChanged()"/>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="horizontalFilters form-cell" >
+                                            <label for="txtPeriodEnddate" class="labels" ><span openlmis-message="label.end.date"></span></label>
+                                            <div>
+                                                <input id="txtPeriodEnddate" ng-model="filter.periodEndDate"  ui-date ng-change="OnFilterChanged()"/>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+
+
+                                    <br/>
+                                    <div class="horizontalFilters" style="margin-left:150px!important;">
+
+                                        <input type="submit" class="btn btn-primary" ng-click="searchReport()"
+                                               title="Search" value="Search"
+                                        >
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="float-right" ng-class="{'content-body': report.currentFilters.length > 0}">
+                                <div class="box" style="padding-top: 0px;margin-top:0px; ">
+                                    <div class="box-content" style="min-height: 400px;">
+                                        <h4>
+                                            {{selectedKey.name}}
+                                            <a class="pull-right btn btn-small btn-primary" ng-show="data.length > 0" href=""
+                                               ng-click="exportExcel();" ><span openlmis-message="button.export.excel"></span></a>
+                                        </h4>
+                                        <hr/>
+                                        <span ng-show="meta" style="padding-right: 5px; font-size: 9px" class="pull-right">
+                    As of <strong>{{ meta.date | date : 'hh:mm a dd-MMM-yyyy' }}</strong>
+                  </span>
+                                        <div>
+                                            {{report.description}}
+                                        </div>
+                                        <table ng-show="reportList.length == 0">
+                                            <tr>
+                                                <td>No data to show under selected filters</td>
+                                            </tr>
+                                        </table>
+                                        <div client-side-sort-pagination ng-show="reportList.length > 0"
+                                             style=" overflow-x: auto;min-width: 100%;table-layout: fixed;">
+                                            <table ng-table="tableParams" class="table table-bordered ng-table">
+                                                <thead>
+                                                <tr>
+                                                    <th class="header">#</th>
+                                                    <th class="header"> Report #</th>
+                                                    <th class="header"> AWB Number</th>
+                                                    <th class="header"> Receipt Number</th>
+                                                    <th class="header"> Product</th>
+                                                    <th class="header"> Inspection Date</th>
+                                                    <th class="header"> </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="row in reportList">
+                                                    <td style="width: 20px; max-width: 30px" ng-bind="($index + 1)"></td>
+                                                    <td style="min-width: 150px;" >
+                                                        {{row.ins_receiptnumber | date }}
+                                                    </td>
+                                                    <td style="min-width: 150px;" >
+                                                        {{row.ins_inspectiondate }}
+                                                    </td>
+                                                    <td style="min-width: 150px;" >
+                                                        {{row.product }}
+                                                    </td>
+                                                    <td style="min-width: 150px;" >
+                                                        {{row.insi_quantitycounted }}
+                                                    </td>
+                                                    <td style="min-width: 150px;" >
+                                                        {{row.ins_status }}
+                                                    </td>
+                                                    <td style="min-width: 150px;" >
+                         <span class="print-button" style="background-color:#4897BA !important;">
+                          <a id="printButton" style="background-color:#4897BA !important;"
+                             class="btn btn-primary"
+                             ng-click="print(row)"
+                             target="_blank">PDF</a>
+                               </span>
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+            </div>
+        </filter-container>
+    </div>
+</div>

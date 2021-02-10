@@ -9,9 +9,8 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function WmsReportController($scope,$filter,$window,siteList, $location, reports, $routeParams, $timeout, GetReportDataValue) {
+function WmsReportController($scope,$filter,$window, $location, reports, $routeParams, $timeout, GetReportDataValue) {
 
-$scope.sites=siteList;
   $scope.categories = ['WMS reports'];
   $scope.report_list = [
                      {'id':1,code:'preAdvice', name:'Pre-Advice'},
@@ -19,13 +18,9 @@ $scope.sites=siteList;
                      {'id':3,code:'inspect', name:'Vaccine Arrival Report'},
                      {'id':4,code:'par', name:'Product Arrival Report'},
                      {'id':5,code:'var', name:'Inspection Report'},
-                       {'id':6,code:'vdsr', name:'Vaccine Distribution Summary Report'}
-                     ];
+                      {'id':6,code:'dist', name:'Distribution Report'}
 
-  $scope.productTypes=[
-    {'id':1,name:'Vaccines/Accociated Products'},
-    {'id':2,name:'Other Items'}
-  ];
+                     ];
   $scope.report  = {};
   $scope.report.currentFilters  = [{name:'program'},{name:'dateRange2'},{name:'product'},{name:'search1'},{name:'year00'},{name:'custom'}];
 
@@ -249,8 +244,6 @@ $scope.sites=siteList;
   $scope.loadReportFromExternalUrl = function () {
     if (!angular.isUndefined($routeParams.report_key))
       $scope.filter.report_key = $routeParams.report_key;
-
-      console.log($scope.filter.report_key);
     $scope.OnFilterChanged();
   };
 
@@ -258,16 +251,6 @@ $scope.sites=siteList;
 }
 
 WmsReportController.resolve = {
-
-  siteList: function ($q, $timeout, GetSiteList) {
-    var deferred = $q.defer();
-    $timeout(function () {
-      GetSiteList.get({}, function (data) {
-        deferred.resolve(data.sites);
-      }, {});
-    }, 100);
-    return deferred.promise;
-  },
   reports: function ($q, $timeout) {
     var deferred = $q.defer();
     $timeout(function () {
