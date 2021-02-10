@@ -57,7 +57,7 @@ public interface ILInterfaceMapper {
             "              facilityId, productId, onHandDate, onHandQuantity, \n" +
             "            partDescription,mos, createdDate, createdBy)\n" +
             "    VALUES ( #{facilityId}, #{productId}, #{onHandDate}, #{onHandQuantity}, \n" +
-            "           #{partDescription}, #{mos}, NOW(), now()) ")
+            "           #{partDescription}, #{mos}, NOW(), #{createdBy}) ")
     @Options(useGeneratedKeys = true)
     Integer insertMsdStock(MSDStockDTO dto);
 

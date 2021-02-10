@@ -113,122 +113,121 @@ public class LookupService {
   @Autowired
   private SCPortalInterfaceMapper scPortalInterfaceMapper;
 
-  public List<Program> getAllPrograms() {
+  public List<Program> getAllPrograms(){
     return programMapper.getAll();
   }
 
-  public Program getProgramByCode(String code) {
+  public Program getProgramByCode(String code){
     return programMapper.getProgramByCode(code);
   }
 
-  public List<RegimenCategory> getAllRegimenCategories() {
+  public List<RegimenCategory> getAllRegimenCategories(){
     return regimenCategoryReportMapper.getAll();
   }
 
-  public List<DosageFrequency> getAllDosageFrequencies() {
+  public List<DosageFrequency> getAllDosageFrequencies(){
     return regimenRepository.getAllDosageFrequencies();
   }
 
-  public List<RegimenProductCombination> getAllRegimenProductCombinations() {
+  public List<RegimenProductCombination> getAllRegimenProductCombinations(){
     return regimenRepository.getAllRegimenProductCombinations();
   }
 
-  public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents() {
+  public List<RegimenCombinationConstituent> getAllRegimenCombinationConstituents(){
     return regimenRepository.getAllRegimenCombinationConstituents();
   }
 
-  public List<ProcessingSchedule> getAllProcessingSchedules() {
+  public List<ProcessingSchedule> getAllProcessingSchedules(){
     return processingScheduleMapper.getAll();
   }
 
-  public List<ProcessingPeriod> getAllProcessingPeriods() {
+  public List<ProcessingPeriod> getAllProcessingPeriods(){
     return processingPeriodMapper.getAll();
   }
 
-  public Product getProductByCode(String code) {
+  public Product getProductByCode(String code){
     return productMapper.getProductByCode(code);
   }
 
-  public List<GeographicLevel> getAllGeographicLevels() {
+  public List<GeographicLevel> getAllGeographicLevels(){
     return geographicLevelMapper.getAll();
   }
 
-  public List<org.openlmis.report.model.dto.GeographicZone> getAllZones() {
+  public List<org.openlmis.report.model.dto.GeographicZone> getAllZones(){
     return geographicZoneMapper.getAll();
   }
 
-  public List<ProductCategory> getAllProductCategories() {
+  public List<ProductCategory> getAllProductCategories(){
     return this.productCategoryMapper.getAll();
   }
 
-  public List<org.openlmis.core.domain.Product> getFullProductList(RowBounds rowBounds) {
+  public List<org.openlmis.core.domain.Product> getFullProductList(RowBounds rowBounds){
     return productMapper.getFullProductList(rowBounds);
   }
 
-  public List<RegimenConstituentDosage> getAllRegimenConstituentDosages() {
+  public List<RegimenConstituentDosage> getAllRegimenConstituentDosages(){
     return regimenRepository.getAllRegimenConstituentsDosages();
   }
 
-  public List<Regimen> getAllRegimens() {
+  public List<Regimen> getAllRegimens(){
     return regimenReportMapper.getAll();
   }
 
-  public List<DosageUnit> getDosageUnits() {
+  public List<DosageUnit> getDosageUnits(){
     return dosageUnitMapper.getAll();
   }
 
-  public List<FacilityType> getAllFacilityTypes() {
+  public List<FacilityType> getAllFacilityTypes(){
     return facilityTypeMapper.getAllFacilityTypes();
   }
 
-  public List<Facility> getAllFacilities(RowBounds bounds) {
+  public List<Facility> getAllFacilities(RowBounds bounds){
     return facilityReportMapper.getAll(bounds);
   }
 
-  public Facility getFacilityByCode(String code) {
+  public Facility getFacilityByCode(String code){
     return facilityReportMapper.getFacilityByCode(code);
   }
 
-  public List<ProgramProduct> getAllProgramProducts() {
+  public List<ProgramProduct> getAllProgramProducts(){
     return programProductMapper.getAll();
   }
 
-  public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts() {
+  public List<FacilityTypeApprovedProduct> getAllFacilityTypeApprovedProducts(){
     return facilityApprovedProductMapper.getAll();
   }
 
-  public List<AdjustmentType> getAllAdjustmentTypes() {
+  public List<AdjustmentType> getAllAdjustmentTypes(){
     return adjustmentTypeReportMapper.getAll();
   }
 
   @Transactional
   public void saveHFR(HealthFacilityDTO dto){
 
-    if(dto != null){
+    if (dto != null){
       //  if(!dto.getIlIDNumber().isEmpty()) {
-            //HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
+      //HealthFacilityDTO hfr = interfaceMapper.getByTransactionId(dto.getIlIDNumber());
 
-            HealthFacilityDTO savedFacility = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
+      HealthFacilityDTO savedFacility = interfaceMapper.getByFacilityCode(dto.getFacIDNumber());
 
-            if (savedFacility == null) {
-                //if(facilityDTO == null) {
-                interfaceMapper.insert(dto);
+      if (savedFacility == null){
+        //if(facilityDTO == null) {
+        interfaceMapper.insert(dto);
         /*}else
           interfaceMapper.update(dto);*/
 
-            } else {
-                // if (hfr.getFacIDNumber() != null){
-                interfaceMapper.update(dto);
-                // }
-            }
-       // }
+      } else {
+        // if (hfr.getFacIDNumber() != null){
+        interfaceMapper.update(dto);
+        // }
+      }
+      // }
 
     }
 
   }
 
-
-  public ProgramReferenceData getProgramReferenceData(String code, String facilityCode) {
+  public ProgramReferenceData getProgramReferenceData(String code, String facilityCode){
     Facility facility = null;
     Program program = null;
     List<FacilityTypeApprovedProduct> facilityTypeApprovedProductList = null;
@@ -237,7 +236,7 @@ public class LookupService {
     program = programMapper.getProgramByCode(code);
     facility = facilityReportMapper.getFacilityByCode(facilityCode);
     processingPeriodList = processingPeriodMapper.getPeriodsByProgramCode(code);
-    if (facility != null && program != null) {
+    if (facility != null && program != null){
       facilityTypeApprovedProductList = facilityApprovedProductMapper.getAllByFacilityAndProgramId(Long.valueOf(facility.getId()), Long.valueOf(program.getId()));
 
       programReferenceData.setFacility(facility);
@@ -248,11 +247,11 @@ public class LookupService {
     return programReferenceData;
   }
 
-  public List<HashMap<String,Object>>getAllHFRFacilities(Pagination pagination){
+  public List<HashMap<String, Object>> getAllHFRFacilities(Pagination pagination){
     return interfaceMapper.getAllHFRFacilities(pagination);
   }
 
-  public List<HashMap<String,Object>>getHFRFacilities(){
+  public List<HashMap<String, Object>> getHFRFacilities(){
     return interfaceMapper.getHFRFacilities();
   }
 
@@ -260,110 +259,109 @@ public class LookupService {
     interfaceMapper.refreshViewsBy(view);
   }
 
-  public BaseModel getByHfrCode(HealthFacilityDTO hfr) {
+  public BaseModel getByHfrCode(HealthFacilityDTO hfr){
     return interfaceMapper.getByFacilityCode(hfr.facIDNumber);
   }
 
-  public List<HashMap<String,Object>>getStockInHand(String startDate, Pagination pagination){
-    return scPortalInterfaceMapper.getStockInHand(startDate,pagination);
+  public List<HashMap<String, Object>> getStockInHand(String startDate, Pagination pagination){
+    return scPortalInterfaceMapper.getStockInHand(startDate, pagination);
   }
-  public List<HashMap<String,Object>>getAllProducts(Pagination pagination){
+
+  public List<HashMap<String, Object>> getAllProducts(Pagination pagination){
     return scPortalInterfaceMapper.getAllProducts(pagination);
   }
 
-
-    public List<HashMap<String, Object>> getOrderDelivery(String startDate, Pagination pagination) {
-      return interfaceMapper.getOrderDelivery(startDate, pagination);
-    }
-
-    public List<HashMap<String,Object>> getEmergencyCommodites(String startDate, Pagination pagination) {
-
-      return interfaceMapper.getEmergencyCommodites(startDate, pagination);
-    }
-
-    public List<HashMap<String,Object>> getForeCastingData(String startDate, Pagination pagination) {
-
-      return scPortalInterfaceMapper.getForeCastingData(startDate,pagination);
-    }
-
-    public List<HashMap<String,Object>> getWastages(String startDate, Pagination pagination) {
-
-      return scPortalInterfaceMapper.getWastages(startDate, pagination);
-    }
-
-
-
-    public List<HashMap<String,Object>> getThScpEmergencyCommodites() {
-
-      return interfaceMapper.getThScpEmergencyCommodites();
-    }
-
-    public List<HashMap<String, Object>> getThScpOrderDelivery() {
-      return interfaceMapper.getThScpOrderDelivery();
-    }
-
-  public List<HashMap<String, Object>> getThScpPrograms(RowBounds rowBounds) {
-    return  interfaceMapper.getThScpPrograms(rowBounds);
+  public List<HashMap<String, Object>> getOrderDelivery(String startDate, Pagination pagination){
+    return interfaceMapper.getOrderDelivery(startDate, pagination);
   }
 
-  public List<HashMap<String,Object>>getThScpStockInHand(){
+  public List<HashMap<String, Object>> getEmergencyCommodites(String startDate, Pagination pagination){
+
+    return interfaceMapper.getEmergencyCommodites(startDate, pagination);
+  }
+
+  public List<HashMap<String, Object>> getForeCastingData(String startDate, Pagination pagination){
+
+    return scPortalInterfaceMapper.getForeCastingData(startDate, pagination);
+  }
+
+  public List<HashMap<String, Object>> getWastages(String startDate, Pagination pagination){
+
+    return scPortalInterfaceMapper.getWastages(startDate, pagination);
+  }
+
+  public List<HashMap<String, Object>> getThScpEmergencyCommodites(){
+
+    return interfaceMapper.getThScpEmergencyCommodites();
+  }
+
+  public List<HashMap<String, Object>> getThScpOrderDelivery(){
+    return interfaceMapper.getThScpOrderDelivery();
+  }
+
+  public List<HashMap<String, Object>> getThScpPrograms(RowBounds rowBounds){
+    return interfaceMapper.getThScpPrograms(rowBounds);
+  }
+
+  public List<HashMap<String, Object>> getThScpStockInHand(){
     return scPortalInterfaceMapper.getThScpStockInHand();
   }
 
-  public Integer getTotalThScpPrograms() {
-     return interfaceMapper.getTotalThScpPrograms();
+  public Integer getTotalThScpPrograms(){
+    return interfaceMapper.getTotalThScpPrograms();
   }
 
-  public Integer getTotalProducts() {
+  public Integer getTotalProducts(){
     return interfaceMapper.getTotalProducts();
   }
 
-  public Integer getTotalStockInHand(String startDate) {
+  public Integer getTotalStockInHand(String startDate){
     return scPortalInterfaceMapper.getTotalStockInHand(startDate);
   }
 
-  public Integer getTotalWastages(String startDate) {
+  public Integer getTotalWastages(String startDate){
     return scPortalInterfaceMapper.getTotalWastages(startDate);
   }
 
-  public Integer getTotalForeCastingData(String startDate) {
-   return scPortalInterfaceMapper.getTotalForeCastingData(startDate);
+  public Integer getTotalForeCastingData(String startDate){
+    return scPortalInterfaceMapper.getTotalForeCastingData(startDate);
   }
 
-  public Integer getTotalEmergencyCommodites(String startDate) {
+  public Integer getTotalEmergencyCommodites(String startDate){
     return interfaceMapper.getTotalEmergencyCommodites(startDate);
   }
 
-  public Integer getTotalOrderDelivery(String startDate) {
+  public Integer getTotalOrderDelivery(String startDate){
     return interfaceMapper.getTotalOrderDelivery(startDate);
   }
 
-  public Integer getTotalHFRFacilities() {
+  public Integer getTotalHFRFacilities(){
     return interfaceMapper.getTotalHfrFacilities();
   }
 
-  public String insertDailyMSDStockStatus(List<MSDStockDTO> dtos) {
+  public String insertDailyMSDStockStatus(List<MSDStockDTO> dtos, Long userId){
     org.openlmis.core.domain.Facility facility = facilityService.getByCode(dtos.get(0).getPlant());
 
-    if (facility != null && !dtos.isEmpty()) {
+    if (facility != null && !dtos.isEmpty()){
       interfaceMapper.deleteByPlant(facility.getId());
-      System.out.println("Reached Here");
-        for (MSDStockDTO stock : dtos) {
-          org.openlmis.core.domain.Product product = productService.getByCode(stock.getPartNum());
-          if(product != null) {
-            stock.setProductId(product.getId());
-            stock.setFacilityId(facility.getId());
-            stock.setOnHandDate(stock.getDate());
-            interfaceMapper.insertMsdStock(stock);
-          } else {
-            return "Product code is not matching";
-          }
+      for (MSDStockDTO stock : dtos) {
+        org.openlmis.core.domain.Product product = productService.getByCode(stock.getPartNum());
+        if (product != null){
+          stock.setProductId(product.getId());
+          stock.setFacilityId(facility.getId());
+          stock.setOnHandDate(stock.getDate());
+          stock.setCreatedBy(userId);
+          interfaceMapper.insertMsdStock(stock);
+        } else {
+          return "Product code is not matching";
         }
+      }
 
       return "Successfully Inserted";
     } else {
       return "Facility is not mapped  or Empty opject is submitted";
     }
+
   }
 
 }
