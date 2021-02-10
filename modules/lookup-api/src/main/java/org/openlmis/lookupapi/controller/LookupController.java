@@ -376,6 +376,12 @@ public class LookupController {
         return RestResponse.response("manual-test-types", lookupService.getAllManualTestTypes());
     }
 
+    @RequestMapping(value = "/rest-api/lookup/manual-test-type/{id}")
+    public ResponseEntity getManualTestTypeById(@PathVariable(value = "id") Long id) {
+        return RestResponse.response("manual-test-type", lookupService.getAllManualTestType(id));
+    }
+
+
     @RequestMapping(value = "/rest-api/lookup/equipment-types")
     public ResponseEntity getAllEquipmentTypes() {
         return RestResponse.response("equipment-types", lookupService.getAllEquipmentTypes());
