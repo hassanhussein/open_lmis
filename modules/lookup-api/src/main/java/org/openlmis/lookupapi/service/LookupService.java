@@ -21,6 +21,8 @@ import org.openlmis.core.repository.RegimenRepository;
 import org.openlmis.core.repository.mapper.FacilityApprovedProductMapper;
 import org.openlmis.core.repository.mapper.ProcessingScheduleMapper;
 import org.openlmis.core.repository.mapper.ProgramProductMapper;
+import org.openlmis.core.service.FacilityService;
+import org.openlmis.core.service.ProductService;
 import org.openlmis.lookupapi.mapper.DosageUnitReportMapper;
 import org.openlmis.lookupapi.mapper.GeographicLevelReportMapper;
 import org.openlmis.lookupapi.mapper.ILInterfaceMapper;
@@ -51,6 +53,8 @@ import java.util.List;
 @NoArgsConstructor
 public class LookupService {
 
+  @Autowired
+  private FacilityService facilityService;
 
   @Autowired
   private ProgramReportMapper programMapper;
@@ -102,6 +106,9 @@ public class LookupService {
 
   @Autowired
   private ILInterfaceMapper interfaceMapper;
+
+  @Autowired
+  private ProductService productService;
 
   @Autowired
   private SCPortalInterfaceMapper scPortalInterfaceMapper;
@@ -334,4 +341,29 @@ public class LookupService {
   public Integer getTotalHFRFacilities() {
     return interfaceMapper.getTotalHfrFacilities();
   }
+
+  public String insertDailyMSDStockStatus(List<MSDStockDTO> dtos) {
+    org.openlmis.core.domain.Facility facility = facilityService.getByCode(dtos.get(0).getPlant());
+
+    if (facility != null && !dtos.isEmpty()) {
+      interfaceMapper.deleteByPlant(facility.getId());
+      System.out.println("Reached Here");
+        for (MSDStockDTO stock : dtos) {
+          org.openlmis.core.domain.Product product = productService.getByCode(stock.getPartNum());
+          if(product != null) {
+            stock.setProductId(product.getId());
+            stock.setFacilityId(facility.getId());
+            stock.setOnHandDate(stock.getDate());
+            interfaceMapper.insertMsdStock(stock);
+          } else {
+            return "Product code is not matching";
+          }
+        }
+
+      return "Successfully Inserted";
+    } else {
+      return "Facility is not mapped  or Empty opject is submitted";
+    }
+  }
+
 }

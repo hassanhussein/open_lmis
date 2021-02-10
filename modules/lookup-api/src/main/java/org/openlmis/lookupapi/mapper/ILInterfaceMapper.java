@@ -54,10 +54,10 @@ public interface ILInterfaceMapper {
     List<HashMap<String,Object>>getHFRFacilities();
 
     @Insert(" INSERT INTO public.msd_stock_statuses(\n" +
-            "             ilId, facilityId, productId, onHandDate, onHandQuantity, \n" +
-            "            mos, createdDate, createdBy)\n" +
-            "    VALUES ( #{ilID}, #{facilityId}, #{productId}, #{onHandDate}, #{onHandQuantity}, \n" +
-            "            #{mos}, #{createdDate}, #{createdBy}) ")
+            "              facilityId, productId, onHandDate, onHandQuantity, \n" +
+            "            partDescription,mos, createdDate, createdBy)\n" +
+            "    VALUES ( #{facilityId}, #{productId}, #{onHandDate}, #{onHandQuantity}, \n" +
+            "           #{partDescription}, #{mos}, NOW(), now()) ")
     @Options(useGeneratedKeys = true)
     Integer insertMsdStock(MSDStockDTO dto);
 
@@ -198,4 +198,7 @@ public interface ILInterfaceMapper {
 
     @Select("select count(*) from hfr_facilities")
     Integer getTotalHfrFacilities();
+
+    @Delete("DELETE FROM msd_stock_statuses WHERE facilityId = #{facilityId}")
+    void deleteByPlant(@Param("facilityId") Long facilityId);
 }

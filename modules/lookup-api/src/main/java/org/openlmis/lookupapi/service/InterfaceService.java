@@ -295,7 +295,10 @@ public class InterfaceService {
      String username = settingService.getByKey(USERNAME).getValue();
      String password = settingService.getByKey(PASSWORD).getValue();
      String url = settingService.getByKey(DHIS2_URL).getValue();
-
+        System.out.println(username);
+        System.out.println(password);
+        System.out.println(url);
+        System.out.println("Users List");
       if(getCurrentPeriod() != null) {
 
         for(ProcessingPeriod period: getCurrentPeriod()) {

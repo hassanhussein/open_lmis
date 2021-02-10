@@ -22,9 +22,6 @@ import java.util.Date;
 @Getter
 public class MSDStockDTO extends BaseModel{
 
-    @JsonProperty("IL_IDNumber")
-    public String ilId;
-
     @JsonProperty("Plant")
     public String plant;
 
@@ -43,7 +40,7 @@ public class MSDStockDTO extends BaseModel{
     @JsonProperty("Date")
     public String date;
 
-    public Date onHandDate;
+    public String onHandDate;
 
     @JsonProperty("MonthOfStock")
     public Integer mos;

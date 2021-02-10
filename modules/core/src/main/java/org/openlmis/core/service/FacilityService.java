@@ -234,6 +234,14 @@ public class FacilityService {
         return facility;
     }
 
+    public Facility getByCode(String facilityCode) {
+        Facility facility;
+        if ((facility = facilityRepository.getByCode(facilityCode)) == null) {
+            throw new DataException(ERROR_FACILITY_CODE_INVALID);
+        }
+        return facility;
+    }
+
     public List<Facility> getChildFacilities(Facility facility) {
         return facilityRepository.getChildFacilities(facility);
     }

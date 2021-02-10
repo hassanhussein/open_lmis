@@ -10,13 +10,13 @@ public class InterfaceAPIService {
  @Autowired
  private InterfaceService service;
 
-// @Scheduled(fixedRate=38800000, initialDelay=5000)
+ @Scheduled(fixedRate=38800000, initialDelay=5000)
  public void ScheduledMethod() {
-     service.methodOne();
-     service.methodTwo();
-     service.methodThree();
-     service.methodFour();
-     service.methodFive();
+     //service.methodOne();
+    // service.methodTwo();
+     //service.methodThree();
+     //service.methodFour();
+     //service.methodFive();
  }
 
 }

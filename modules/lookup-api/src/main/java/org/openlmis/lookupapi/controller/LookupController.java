@@ -30,6 +30,7 @@ import org.openlmis.equipment.domain.Equipment;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
+import org.openlmis.lookupapi.model.MSDStockDTO;
 import org.openlmis.lookupapi.model.ResponseMessage;
 import org.openlmis.lookupapi.service.InterfaceService;
 import org.openlmis.lookupapi.service.LookupService;
@@ -425,6 +426,14 @@ public class LookupController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return ResponseEntity.ok(OK);
+    }
+
+    @RequestMapping(value = "/rest-api/msd-daily-stock-status", method = RequestMethod.POST, headers = ACCEPT_JSON)
+    public ResponseEntity storeDailyStockStatusFromMSD(@RequestBody List<MSDStockDTO> msd, HttpServletRequest request){
+
+        lookupService.insertDailyMSDStockStatus(msd);
+
         return ResponseEntity.ok(OK);
     }
 
