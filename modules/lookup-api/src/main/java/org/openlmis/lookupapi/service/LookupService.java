@@ -352,8 +352,6 @@ public class LookupService {
           stock.setOnHandDate(stock.getDate());
           stock.setCreatedBy(userId);
           interfaceMapper.insertMsdStock(stock);
-        } else {
-          return "Product code is not matching";
         }
       }
 
