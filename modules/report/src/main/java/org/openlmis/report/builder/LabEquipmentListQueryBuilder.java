@@ -29,7 +29,7 @@ public class LabEquipmentListQueryBuilder {
         LabEquipmentListReportParam filter = (LabEquipmentListReportParam) params.get("filterCriteria");
         BEGIN();
         SELECT("facility_code AS facilityCode, facility_name AS facilityName, facility_type AS facilityType, disrict as district, zone," +
-                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, equipment_status AS operationalStatus");
+                " region, equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, equipment_status AS operationalStatus");
         FROM("vw_lab_equipment_status");
         writePredicates(filter);
         ORDER_BY("facility_name, equipment_name");
@@ -43,7 +43,7 @@ public class LabEquipmentListQueryBuilder {
         LabEquipmentListReportParam filter = (LabEquipmentListReportParam) params.get("filterCriteria");
         BEGIN();
         SELECT("facility_code AS facilityCode, facility_name AS facilityName, facility_type AS facilityType, disrict as district, zone," +
-                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Functioning' AS operationalStatus," +
+                " region, equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Functioning' AS operationalStatus," +
                 " case when contract.contractid is null THEN 'NO' else 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
                 //" case when hasservicecontract = 'f' THEN 'NO' when hasservicecontract = 't' THEN 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
 
@@ -64,7 +64,7 @@ public class LabEquipmentListQueryBuilder {
         LabEquipmentListReportParam filter = (LabEquipmentListReportParam) params.get("filterCriteria");
         BEGIN();
         SELECT("facility_code AS facilityCode, facility_name AS facilityName, facility_type AS facilityType, disrict as district, zone," +
-                " equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Not Functioning' AS operationalStatus," +
+                " region,equipment_type AS equipmentType, equipment_model AS model, serial_number AS serialNumber, equipment_name AS equipmentName, 'Not Functioning' AS operationalStatus," +
                 " case when contract.contractid is null THEN 'NO' else 'YES' END AS serviceContract, contract.name AS vendorName, contract.contractid as contractId");
         FROM("vw_lab_equipment_status");
         LEFT_OUTER_JOIN("(SELECT distinct name, vendorid, equipment_service_contracts.id contractid, equipmentid, facilityid FROM equipment_service_contracts JOIN equipment_service_contract_equipments ON\n" +

@@ -28,6 +28,7 @@ public class LabEquipmentStatusGroupByFacilityReport implements ResultRow {
     private String facilityCode;
     private String facilityType;
     private String zone;
+    private String region;
     private String serviceContract;
     private String vendorName;
     private String contractId;

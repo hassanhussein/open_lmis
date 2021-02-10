@@ -89,6 +89,7 @@ public class LabEquipmentStatusReportDataProvider extends ReportDataProvider {
             facilityReport.setFacilityType(r.getFacilityType());
             facilityReport.setDistrict(r.getDistrict());
             facilityReport.setZone(r.getZone());
+            facilityReport.setRegion(r.getRegion());
             facilityReport.setEquipmentType(r.getEquipmentType());
             facilityReport.setModel(r.getModel());
             facilityReport.setSerialNumber(r.getSerialNumber());

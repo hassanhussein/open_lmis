@@ -41,7 +41,8 @@ public class LabEquipmentStatusReport  implements ResultRow {
     private String facilityType;
    // @Column(name = "zone")
     private String zone;
-
+    // @Column(name = "region")
+    private String region;
     //@Column(name = "hasservicecontract")
     private String serviceContract;
    // @Column(name = "contract.name")
