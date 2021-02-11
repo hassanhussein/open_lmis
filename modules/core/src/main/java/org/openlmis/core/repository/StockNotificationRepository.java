@@ -35,7 +35,7 @@ public class StockNotificationRepository {
 
     public void insert(StockOutNotificationDTO notification) {
          mapper.insert(notification);
-         saveDetails(notification);
+         //saveDetails(notification);
     }
 
     public void update(StockOutNotificationDTO notification) {

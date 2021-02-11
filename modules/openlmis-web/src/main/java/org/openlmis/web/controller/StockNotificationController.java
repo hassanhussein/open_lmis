@@ -44,11 +44,11 @@ public class StockNotificationController extends BaseController {
         ModelAndView modelAndView = new ModelAndView("notificationPDF");
 
         StockOutNotificationDTO notification = stockNotificationService.getById(id);
-        Facility facility  = facilityService.getByCodeFor(notification.getSoldTo());
+        Facility facility  = facilityService.getByCodeFor(notification.getCustomerId());
 
         modelAndView.addObject("notification",notification);
         modelAndView.addObject("facility",facility);
-        System.out.println(notification.getInvoiceNumber());
+        System.out.println(notification.getQuoteNumber());
         return modelAndView;
     }
 

@@ -122,10 +122,10 @@ public class NotificationPdfModel {
     }
 
     private void addFirstLine(StockOutNotificationDTO notification, PdfPTable table) {
-        String text = String.format("Legal Number"+ ": %s", notification.getLegalNumber());
+        String text = String.format("Legal Number"+ ": %s", notification.getCustomerId());
         insertCell(table, text, 1);
         text = String.format("sendTo" + ": %s",
-               notification.getSoldTo());
+               notification.getCustomerId());
         insertCell(table, text, 1);
       /*  text = String.format(messageService.message("label.facility.maximumStock") + ": %s",
                 facility.getFacilityType().getNominalMaxMonth());
@@ -164,9 +164,9 @@ public class NotificationPdfModel {
 
     private void addHeading(PdfPTable table) throws DocumentException {
         Chunk chunk = new Chunk(String.format("MSD Invoice" + ": %s (%s)",
-                this.notification.getInvoiceNumber(),
-                this.notification.getShipTo()), H1_FONT);
-        System.out.println(this.notification.getInvoiceNumber());
+                this.notification.getQuoteNumber(),
+                this.notification.getCustomerName()), H1_FONT);
+        System.out.println(this.notification.getQuoteNumber());
         PdfPCell cell = new PdfPCell(new Phrase(chunk));
         cell.setColspan(5);
         cell.setPadding(10);
@@ -199,7 +199,7 @@ public class NotificationPdfModel {
        Chunk title = new Chunk("Sales Invoice", font1);
 
        Chunk leftDetails = new Chunk("TIN: 101-060-195", TITLE_FONT);
-       leftDetails.append("\n").append("\n").append("Invoice No. ").append(this.notification.getInvoiceNumber());
+       leftDetails.append("\n").append("\n").append("Invoice No. ").append(this.notification.getQuoteNumber());
 
        Chunk rightDetails = new Chunk("ISO 90001:2015 CERTIFIED",TITLE_FONT);
        rightDetails.append("\n").append("\n").append("Zone: ").append(this.notification.getZone());
@@ -243,8 +243,8 @@ public class NotificationPdfModel {
 
         Chunk leftDetails = new Chunk("Sold To ", font1);
 
-        leftDetails.append("\n").append(this.notification.getSoldTo())
-                .append("\n").append(this.notification.getSoldToCustomerName())
+        leftDetails.append("\n").append(this.notification.getCustomerId())
+                .append("\n").append(this.notification.getCustomerName())
                 .append(" ( ").append(this.facility.getGeographicZone().getName()).append(") ")
                  .append("\n").append("P.O.Box ").append((this.facility.getAddress1()==null)?" ":this.facility.getAddress1())
                 .append(" ")
@@ -255,8 +255,8 @@ public class NotificationPdfModel {
 
         Chunk rightDetails = new Chunk("Ship To ", font1);
 
-        rightDetails.append("\n").append(this.notification.getShipTo())
-                .append("\n").append(this.notification.getShipToCustomerName())
+        rightDetails.append("\n").append(this.notification.getCustomerId())
+                .append("\n").append(this.notification.getCustomerName())
                 .append(" ( ").append(this.facility.getGeographicZone().getName()).append(") ")
                 .append("\n").append("P.O.Box ").append((this.facility.getAddress1()==null)?" ":this.facility.getAddress1())
                 .append(" ")
@@ -307,35 +307,35 @@ public class NotificationPdfModel {
 */
         Phrase leftPhrase = new Phrase();
         leftPhrase.add(new Chunk(" Sales Order no :  ", font1));
-        leftPhrase.add(new Chunk(this.notification.getMsdOrderNumber()));
+        leftPhrase.add(new Chunk(this.notification.getQuoteNumber()));
         leftPhrase.add(Chunk.NEWLINE);
         leftPhrase.add(Chunk.NEWLINE);
         leftPhrase.add(new Chunk(" Invoice Date: ", font1));
-        leftPhrase.add(new Chunk(this.notification.getInvoiceDate()));
+        leftPhrase.add(new Chunk(this.notification.getNoticationDate().toString()));
         leftPhrase.add(Chunk.NEWLINE);
         leftPhrase.add(Chunk.NEWLINE);
         leftPhrase.add(new Chunk(" Cust Ref: ", font1));
-        leftPhrase.add(new Chunk(this.notification.getShipToCustomerName()));
+        leftPhrase.add(new Chunk(this.notification.getCustomerName()));
         leftPhrase.add(Chunk.NEWLINE);
         leftPhrase.add(Chunk.NEWLINE);
         leftPhrase.add(new Chunk(" Ship Via: ", font1));
-        leftPhrase.add(new Chunk(this.notification.getShipVia()));
+        leftPhrase.add(new Chunk(this.notification.getCustomerId()));
 
         Phrase rightPhrase = new Phrase();
         rightPhrase.add(new Chunk(" Sales Category : ", font1));
-        rightPhrase.add(new Chunk(this.notification.getSalesCategory()));
+        rightPhrase.add(new Chunk(this.notification.getComment()));
         rightPhrase.add(Chunk.NEWLINE);
         rightPhrase.add(Chunk.NEWLINE);
         rightPhrase.add(new Chunk(" Payment Terms : ", font1));
-        rightPhrase.add(new Chunk(this.notification.getPaymentTerms()));
+      //  rightPhrase.add(new Chunk(this.notification.getPaymentTerms()));
         rightPhrase.add(Chunk.NEWLINE);
         rightPhrase.add(Chunk.NEWLINE);
         rightPhrase.add(new Chunk(" Sales Person: ", font1));
-        rightPhrase.add(new Chunk(this.notification.getSalesPerson()));
+        //rightPhrase.add(new Chunk(this.notification.getSalesPerson()));
         rightPhrase.add(Chunk.NEWLINE);
         rightPhrase.add(Chunk.NEWLINE);
         rightPhrase.add(new Chunk(" Del Term: ", font1));
-        rightPhrase.add(new Chunk(this.notification.getPaymentTerms()));
+      //  rightPhrase.add(new Chunk(this.notification.getPaymentTerms()));
 
         PdfPCell titleCell = new PdfPCell(new Phrase(" "));
         titleCell.setBorder(Rectangle.NO_BORDER);

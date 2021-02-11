@@ -12,30 +12,22 @@ import java.util.List;
 public interface StockNotificationMapper {
 
     @Insert("INSERT INTO public.stock_out_notifications(\n" +
-            "            invoiceNumber, zone, soldTo, soldToCustomerName, shipTo, \n" +
-            "            shipToCustomerName, msdOrderNumber, elmisOrderNumber, invoiceDate, \n" +
-            "            shipVia, salesCategory, paymentTerms, salesPerson, comment, invoiceLineTotal, \n" +
-            "            invoiceLineDiscount, invoiceMiscellanousCharges, invoiceTotal, \n" +
-            "            legalNumber, createdBy, createdDate, modifiedBy, modifiedDate)\n" +
-            "    VALUES ( #{invoiceNumber}, #{zone}, #{soldTo}, #{soldToCustomerName}, #{shipTo}, \n" +
-            "            #{shipToCustomerName}, #{msdOrderNumber}, #{elmisOrderNumber}, #{invoiceDate}, \n" +
-            "            #{shipVia}, #{salesCategory}, #{paymentTerms}, #{salesPerson}, #{comment}, #{invoiceLineTotal}, \n" +
-            "            #{invoiceLineDiscount}, #{invoiceMiscellanousCharges}, #{invoiceTotal}, \n" +
-            "            #{legalNumber}, #{createdBy}, NOW(), #{modifiedBy}, now());  ")
-
+            " quoteNumber, customerId, customerName, hfrCode, elmisOrderNumber, \n" +
+            " noticationDate, zone, comment, createdBy, createdDate, modifiedBy, modifiedDate)\n" +
+            " VALUES (#{quoteNumber}, #{customerId}, #{customerName}, #{hfrCode}, #{elmisOrderNumber},\n" +
+            " #{noticationDate}, #{zone}, #{comment}, #{createdBy}, NOW(), #{modifiedBy}, NOW());")
     @Options(useGeneratedKeys = true)
     public Integer insert(StockOutNotificationDTO notification);
 
-    @Update(" UPDATE stock_out_notifications SET  zone = #{zone},soldTo=#{soldTo},soldToCustomerName =#{soldToCustomerName}," +
-            " shipTo = #{shipTo},shipToCustomerName= #{shipToCustomerName},msdOrderNumber=#{msdOrderNumber},elmisOrderNumber= #{elmisOrderNumber}," +
-            " invoiceDate=#{invoiceDate}, shipVia=#{shipVia},salesCategory=#{salesCategory}, paymentTerms=#{paymentTerms},salesPerson=#{salesPerson}," +
-            " comment=#{comment}, invoiceLineTotal=#{invoiceLineTotal}, invoiceLineDiscount=#{invoiceLineDiscount},invoiceMiscellanousCharges=#{invoiceMiscellanousCharges}," +
-            "   invoiceTotal=#{invoiceTotal}, legalNumber=#{legalNumber}, modifiedBy=#{modifiedBy},modifiedDate=NOW() " +
-            "   WHERE invoiceNumber=#{invoiceNumber} ")
+    @Update(" UPDATE public.stock_out_notifications\n" +
+            "\tSET  customerId=#{customerId}, \n" +
+            "\tcustomerName=#{customerName}, hfrCode=#{hfrCode}, elmisOrderNumber=#{elmisOrderNumber},\n" +
+            "\tnoticationDate=#{noticationDate}, zone=#{zone}, comment=#{comment}, modifiedBy=#{modifiedBy}, modifieddate=NOW()\n" +
+            "\tWHERE quoteNumber=#{quoteNumber};")
     public void update(StockOutNotificationDTO notification);
 
-    @Select("SELECT * FROM stock_out_notifications where lower(invoiceNumber) = lower(#{invoiceNumber})")
-    public StockOutNotificationDTO getByInvoiceNumber(@Param("invoiceNumber") String invoiceNumber);
+    @Select("SELECT * FROM stock_out_notifications where lower(quoteNumber) = lower(#{quoteNumber})")
+    public StockOutNotificationDTO getByInvoiceNumber(@Param("quoteNumber") String invoiceNumber);
 
     @Select(" SELECT * FROM stock_out_notifications WHERE id = #{id} ")
             @Results(value = {
