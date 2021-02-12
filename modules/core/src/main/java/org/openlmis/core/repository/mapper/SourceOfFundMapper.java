@@ -23,7 +23,7 @@ public interface SourceOfFundMapper {
     void update(SourceOfFundDTO dto);
 
     @Select(" SELECT * FROM source_of_funds where lower(code) = lower(#{code})")
-    SourceOfFundDTO getByCode(@Param("code")String code,@Param("name")String name);
+    SourceOfFundDTO getByCode(@Param("code")String code);
 
 
 }
