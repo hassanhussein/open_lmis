@@ -73,7 +73,7 @@ public class RestPODServiceTest {
     OrderPOD spyOrderPod = spy(orderPod);
     doNothing().when(spyOrderPod).validate();
     when(orderService.getByOrderNumber("ORD")).thenReturn(new Order(4L));
-    when(productService.getByCode("productCode")).thenReturn(new Product());
+    when(productService.getByAlternateItemCode("productCode")).thenReturn(new Product());
     doNothing().when(podService).checkPermissions(orderPod);
     when(podService.getPODByOrderId(4L)).thenReturn(null);
     Rnr rnr = new Rnr();

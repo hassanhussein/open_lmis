@@ -91,6 +91,17 @@ public interface ProductMapper {
       one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
   Product getByCode(String code);
 
+
+  @Select("SELECT * FROM products WHERE LOWER(alternateitemcode)=LOWER(#{alternateItemCode})")
+  @Results({
+          @Result(
+                  property = "form", column = "formId", javaType = ProductForm.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.ProductFormMapper.getById")),
+          @Result(
+                  property = "dosageUnit", column = "dosageUnitId", javaType = DosageUnit.class,
+                  one = @One(select = "org.openlmis.core.repository.mapper.DosageUnitMapper.getById"))})
+  Product getByAlternateItemCode(String alternateItemCode);
+
   @Update({"UPDATE products SET code = #{code}, alternateItemCode = #{alternateItemCode}, ", "manufacturer = #{manufacturer},",
     "manufacturerCode = #{manufacturerCode}, manufacturerBarcode = #{manufacturerBarCode}, mohBarcode = #{mohBarCode}, ",
     "gtin = #{gtin}, type = #{type}, primaryName = #{primaryName}, fullName = #{fullName}, genericName = #{genericName},",
