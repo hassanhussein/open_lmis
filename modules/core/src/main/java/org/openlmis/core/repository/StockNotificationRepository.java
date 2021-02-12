@@ -40,7 +40,7 @@ public class StockNotificationRepository {
 
     public void update(StockOutNotificationDTO notification) {
         mapper.update(notification);
-        saveDetails(notification);
+        //saveDetails(notification);
     }
 
     public StockOutNotificationDTO getByInvoiceNumber(String invoiceNumber) {

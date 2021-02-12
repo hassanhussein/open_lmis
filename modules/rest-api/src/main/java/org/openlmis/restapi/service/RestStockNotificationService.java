@@ -72,7 +72,7 @@ public class RestStockNotificationService {
                 repository.update(notification);
             }
 //Not send comment for now
-         //   prepareEmailNotification(notification, request);
+           //prepareEmailNotification(notification, request);
 
         }
 

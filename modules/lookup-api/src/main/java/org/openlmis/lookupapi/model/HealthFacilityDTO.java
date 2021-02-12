@@ -40,11 +40,14 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
         "Latitude",
         "Longitude",
         "RegistrationStatus",
+        "OpenedDate",
         "CreatedAt",
         "UpdatedAt",
+        "ClosedDate",
         "OSchangeOpenedtoClose",
         "OSchangeClosedtoOperational",
-        "PostorUpdate"
+        "PostorUpdate",
+        ""
 })
 
 @Data
@@ -128,6 +131,10 @@ public class HealthFacilityDTO  extends BaseModel implements Importable {
     @JsonProperty("Longitude")
     public String longitude;
 
+    @ImportField(name = "OpenedDate")
+    @JsonProperty("OpenedDate")
+    public String openedDate;
+
     @ImportField(name = "Registration Status")
     @JsonProperty("RegistrationStatus")
     public String registrationStatus;
@@ -139,6 +146,10 @@ public class HealthFacilityDTO  extends BaseModel implements Importable {
     @ImportField(name = "UpdatedAt")
     @JsonProperty("UpdatedAt")
     public String updatedAt;
+
+    @ImportField(name = "ClosedDate")
+    @JsonProperty("ClosedDate")
+    public String closedDate;
 
     @ImportField(name = "OSchangeOpenedtoClose")
     @JsonProperty("OSchangeOpenedtoClose")
