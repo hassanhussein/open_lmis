@@ -84,7 +84,7 @@ public class RestPODService {
   private List<String> getInvalidProductCodes(List<OrderPODLineItem> orderPodLineItems) {
     List<String> invalidProductCodes = new ArrayList<>();
     for (OrderPODLineItem orderPodLineItem : orderPodLineItems) {
-      if (productService.getByCode(orderPodLineItem.getProductCode()) == null) {
+      if (productService.getByAlternateItemCode(orderPodLineItem.getProductCode()) == null) {
         invalidProductCodes.add(orderPodLineItem.getProductCode());
       }
     }
