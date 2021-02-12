@@ -63,7 +63,7 @@ public class RestStockNotificationService {
 
         if (notification != null) {
 
-            StockOutNotificationDTO not = repository.getByInvoiceNumber(notification.getInvoiceNumber());
+            StockOutNotificationDTO not = repository.getByInvoiceNumber(notification.getQuoteNumber());
 
             if (not == null) {
                 repository.insert(notification);
@@ -71,8 +71,8 @@ public class RestStockNotificationService {
                 notification.setId(not.getId());
                 repository.update(notification);
             }
-
-            prepareEmailNotification(notification, request);
+//Not send comment for now
+           //prepareEmailNotification(notification, request);
 
         }
 
@@ -88,14 +88,14 @@ public class RestStockNotificationService {
                 order= orderService.getByOrderNumber(notificationData.elmisOrderNumber);
 
         if(order == null) {
-            order  = orderService.getLatestOrderByFacility(notificationData.getSoldTo());
+            order  = orderService.getLatestOrderByFacility(notificationData.getCustomerId());
         }
 
         if (order != null) {
 
             Rnr rnr = requisitionService.getFullRequisitionById(order.getId());
 
-            Facility facility = facilityService.getByCodeFor(notification.getSoldTo());
+            Facility facility = facilityService.getByCodeFor(notification.getCustomerId());
 
            // List<FacilitySupervisor> supervisorList = facilityService.getFacilitySupervisorsByRight();
 
@@ -119,7 +119,7 @@ public class RestStockNotificationService {
     public void sendResponse(StockOutNotificationDTO notification) {
 
         NotificationResponseDTO notificationResponse = new NotificationResponseDTO();
-        notificationResponse.setInvoiceNumber(notification.getInvoiceNumber());
+        notificationResponse.setInvoiceNumber(notification.getQuoteNumber());
         notificationResponse.setMessage("Received Successful");
         notificationResponse.setSource("elmis");
         notificationResponse.setStatusCode("200");

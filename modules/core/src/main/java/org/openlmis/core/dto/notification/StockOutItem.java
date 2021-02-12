@@ -8,17 +8,11 @@ import org.openlmis.core.domain.BaseModel;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "itemCode",
-        "itemDescription",
-        "uom",
-        "quantity",
-        "missingItemStatus"
-})
 public class StockOutItem  extends NotificationLineItem {
 
     private Long notificationId;
@@ -31,11 +25,14 @@ public class StockOutItem  extends NotificationLineItem {
     public String uom;
     @JsonProperty("quantity")
     public String quantity;
+    @JsonProperty("quantityShipped")
+    public String quantityShipped;
+    @JsonProperty("quantityOrdered")
+    public String quantityOrdered;
     @JsonProperty("missingItemStatus")
     public String missingItemStatus;
-
-
-
+    @JsonProperty("dueDate")
+    public Date dueDate;
 
     public List<VisibleColumn> getColumns() {
 
@@ -44,9 +41,13 @@ public class StockOutItem  extends NotificationLineItem {
         visibleColumns.add(new VisibleColumn("itemDescription","Item Description", true,40));
         visibleColumns.add(new VisibleColumn("uom","uom", true,40));
         visibleColumns.add(new VisibleColumn("quantity","Quantity", true,40));
+        visibleColumns.add(new VisibleColumn("quantityShipped","Quantity Shipped", true,40));
+        visibleColumns.add(new VisibleColumn("quantityOrdered","Quantity Ordered", true,40));
         visibleColumns.add(new VisibleColumn("missingItemStatus","Missing Status", true,40));
+        visibleColumns.add(new VisibleColumn("dueDate","Due Date", true,40));
         return visibleColumns;
     }
+
 
     @Override
     public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException {

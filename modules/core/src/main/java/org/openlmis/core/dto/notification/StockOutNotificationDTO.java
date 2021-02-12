@@ -8,85 +8,32 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Facility;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "invoiceNumber",
-        "zone",
-        "soldTo",
-        "soldToCustomerName",
-        "shipTo",
-        "shipToCustomerName",
-        "msdOrderNumber",
-        "elmisOrderNumber",
-        "invoiceDate",
-        "shipVia",
-        "salesCategory",
-        "paymentTerms",
-        "salesPerson",
-        "comment",
-        "invoiceLineTotal",
-        "invoicelineDiscount",
-        "invoiceMiscellanousCharges",
-        "invoiceTotal",
-        "legalNumber",
-        "fullFilledItems",
-        "stockOutItems",
-        "inSufficientFundingItems",
-        "rationingItems",
-        "closeToExpireItems",
-        "phasedOutItems"
-})
 public class StockOutNotificationDTO extends BaseModel {
-
-    @JsonProperty("invoiceNumber")
-    public String invoiceNumber;
-    @JsonProperty("zone")
-    public String zone;
-    @JsonProperty("soldTo")
-    public String soldTo;
-    @JsonProperty("soldToCustomerName")
-    public String soldToCustomerName;
-    @JsonProperty("shipTo")
-    public String shipTo;
-    @JsonProperty("shipToCustomerName")
-    public String shipToCustomerName;
-    @JsonProperty("msdOrderNumber")
-    public String msdOrderNumber;
-    @JsonProperty("elmisOrderNumber")
+    //start new
+    public String quoteNumber;
+    public String customerId;
+    public String customerName;
+    public String hfrCode;
     public String elmisOrderNumber;
-    @JsonProperty("invoiceDate")
-    public String invoiceDate;
-    @JsonProperty("shipVia")
-    public String shipVia;
-    @JsonProperty("salesCategory")
-    public String salesCategory;
-    @JsonProperty("paymentTerms")
-    public String paymentTerms;
-    @JsonProperty("salesPerson")
-    public String salesPerson;
-    @JsonProperty("comment")
+    public Date noticationDate;
+    public String zone;
     public String comment;
-    @JsonProperty("invoiceLineTotal")
-    public String invoiceLineTotal;
-    @JsonProperty("invoicelineDiscount")
-    public String invoiceLineDiscount;
-    @JsonProperty("invoiceMiscellanousCharges")
-    public String invoiceMiscellanousCharges;
-    @JsonProperty("invoiceTotal")
-    public String invoiceTotal;
-    @JsonProperty("legalNumber")
-    public String legalNumber;
-    @JsonProperty("fullFilledItems")
-    public List<FullFilledItem> fullFilledItems = new ArrayList<>();
+
+    @JsonProperty("rationingItems")
+    public List<RationingItem> rationingItems = new ArrayList<>();
     @JsonProperty("stockOutItems")
     public List<StockOutItem> stockOutItems = new ArrayList<>();
     @JsonProperty("inSufficientFundingItems")
     public List<InSufficientFundingItem> inSufficientFundingItems = new ArrayList<>();
-    @JsonProperty("rationingItems")
-    public List<RationingItem> rationingItems = new ArrayList<>();
+
+    //end new
+    @JsonProperty("fullFilledItems")
+    public List<FullFilledItem> fullFilledItems = new ArrayList<>();
     @JsonProperty("closeToExpireItems")
     public List<CloseToExpireItem> closeToExpireItems = new ArrayList<>();
     @JsonProperty("phasedOutItems")
