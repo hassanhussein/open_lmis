@@ -66,7 +66,7 @@ public class BudgetLineItemRepository {
   public void saveBudgetDetails(List<BudgetLineItemDTO> items, BudgetDTO budget) {
      mapper.deleteBudgetLineItems(budget.getId());
     for(BudgetLineItemDTO lineItem : emptyIfNull(items)){
-
+      System.out.println(lineItem.getAllocatedBudget());
       if (lineItem.getId() == null) {
         lineItem.setId(budget.getId());
 
@@ -76,6 +76,7 @@ public class BudgetLineItemRepository {
         lineItem.setPeriodDate(budget.getReceivedDate());
         lineItem.setBudgetId(budget.getId());
         lineItem.setFacilityId(budget.getFacilityId());
+        lineItem.setAllocatedBudget(lineItem.getAllocatedBudget());
 
         mapper.insertBudgetLineItem(lineItem);
       } else {
