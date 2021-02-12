@@ -2,8 +2,10 @@ package org.openlmis.core.repository;
 
 import org.apache.ibatis.annotations.Param;
 import org.openlmis.core.dto.SourceOfFundDTO;
+import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.SourceOfFundMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,16 +20,23 @@ public class SourceOfFundRepository {
         return mapper.getAll(program);
     }
 
-    public SourceOfFundDTO getByCode(String code,String name) {
-        return mapper.getByCode(code,name);
+    public SourceOfFundDTO getByCode(String code) {
+        return mapper.getByCode(code);
     }
 
     public void update(SourceOfFundDTO fundDTO) {
-        mapper.update(fundDTO);
-
+        try {
+            mapper.update(fundDTO);
+        }  catch (DuplicateKeyException duplicateKeyException) {
+            throw new DataException("Code or Name arleady exists");
+        }
     }
 
     public void insert(SourceOfFundDTO fundDTO) {
-        mapper.Insert(fundDTO);
+        try {
+            mapper.Insert(fundDTO);
+        }  catch (DuplicateKeyException duplicateKeyException) {
+            throw new DataException("Code or Name Arleady exists");
+        }
     }
 }

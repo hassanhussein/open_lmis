@@ -16,7 +16,7 @@ public class SourceOfFundService {
     ProgramService programService;
 
     public SourceOfFundDTO getExisting(SourceOfFundDTO fundDTO) {
-        return repository.getByCode(fundDTO.getCode(),fundDTO.getName());
+        return repository.getByCode(fundDTO.getCode());
     }
 
     public void save(SourceOfFundDTO fundDTO) {
@@ -37,7 +37,8 @@ public class SourceOfFundService {
 
     public void saveSDPFund(SourceOfFundDTO fundDTO, Long userId){
 
-        SourceOfFundDTO fundDTO1 = repository.getByCode(fundDTO.getCode(),fundDTO.getName());
+        SourceOfFundDTO fundDTO1 = repository.getByCode(fundDTO.getCode());
+
         if(fundDTO1 == null){
             repository.insert(fundDTO);
         }else {

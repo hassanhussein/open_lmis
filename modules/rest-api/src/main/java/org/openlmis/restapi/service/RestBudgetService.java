@@ -77,7 +77,8 @@ public class RestBudgetService {
 
                 Program p  = programService.getById(programs.get(0).getProgram().getId());
 
-                ProcessingPeriod period = processingScheduleService.getCurrentPeriodBySchedule(facility,p,programs.get(0).getStartDate());
+                ProcessingPeriod period = processingScheduleService
+                        .getCurrentPeriodBySchedule(facility,p,programs.get(0).getStartDate());
 
                 if(period != null){
 
