@@ -50,7 +50,7 @@ public interface RnrLineItemMapper {
           "                            WHERE LOWER(category)= 'consumption' \n" +
           "\t\t  and df.range @> round(100*(rli.normalizedconsumption- COALESCE(rli.amc, 0))::bigInt /\n" +
           "\t\t\t\t\t\t\t\t\t COALESCE(NULLIF(rli.amc, 0), 1)\n" +
-          "                   , 4))::numeric AS flagcolor\n" +
+          "                   , 4)) AS flagcolor\n" +
           "                    FROM requisition_line_items rli  \n" +
           "           inner join  requisitions r on r.id=rli.rnrid  \n" +
           "            inner join products p on p.code=rli.productcode  \n" +
