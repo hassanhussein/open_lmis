@@ -25,7 +25,14 @@ import static java.math.BigDecimal.ROUND_HALF_UP;
  * Money represents data type for all monetary entities. Provides methods to add, multiply, compare monetary entity.
  */
 @Data
-@JsonSerialize(as = BigDecimal.class)
+/*
+this serializer is throwing com.fasterxml.jackson.databind.JsonMappingException while intiating rnr.
+Any problem  from commenting serializer can be restored back to orginal form.
+
+*/
+//@JsonSerialize(as = BigDecimal.class)
+
+
 @JsonDeserialize(using = MoneyDeSerializer.class)
 @EqualsAndHashCode(callSuper = false)
 public class Money extends Number  {

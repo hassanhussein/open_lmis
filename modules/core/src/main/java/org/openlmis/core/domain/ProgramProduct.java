@@ -57,7 +57,7 @@ public class ProgramProduct extends BaseModel implements Importable {
     private Integer displayOrder;
 
     ProgramProductISA programProductIsa;
-    @JsonIgnore
+
     private Money currentPrice;
 
     public ProgramProduct(Long id) {

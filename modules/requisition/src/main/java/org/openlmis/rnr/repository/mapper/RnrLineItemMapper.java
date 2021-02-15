@@ -41,22 +41,24 @@ public interface RnrLineItemMapper {
   @Options(useGeneratedKeys = true, keyProperty = "lineItem.id")
   public Integer insert(@Param("lineItem") RnrLineItem rnrLineItem, @Param("previousNormalizedConsumptions") String previousNormalizedConsumptions);
 
-  @Select({"SELECT rli.*, p.strength, p.primaryname , " +
-          " round(100*((rli.normalizedconsumption - COALESCE(rli.amc, 0)) /" +
-                  " COALESCE(NULLIF(rli.amc, 0), 1))::numeric, 4) AS consumptionrate ,"+
-         "( SELECT df.description" +
-                  "           FROM data_range_flags_configuration df\n" +
-                  "          WHERE LOWER(category)= 'consumption' and df.range @> round(100*\n" +
-                  "  (" +
-                  "rli.normalizedconsumption- COALESCE(rli.amc, 0)) / COALESCE(NULLIF(rli.amc, 0), 1)\n" +
-                  " , 4)::numeric) AS flagcolor"+
-          "          FROM requisition_line_items rli " ,
-          " inner join  requisitions r on r.id=rli.rnrid " ,
-          "  inner join products p on p.code=rli.productcode " ,
-          "          left outer join program_products pmp on pmp.programid=r.programid and pmp.productid=p.id  " ,
-          "          left outer join  product_categories c on  c.id=pmp.productcategoryid " ,
-          "          WHERE rnrId = #{rnrId} and rli.fullSupply = true                   " ,
-          "          order by c.displayorder,rli.productdisplayorder ;"})
+  @Select({"   \n" +
+          "\t\t\t\tSELECT rli.*, p.strength, p.primaryname ,  \n" +
+          "           round(100*(rli.normalizedconsumption - COALESCE(rli.amc, 0)::bigInt) / \n" +
+          "                   COALESCE(NULLIF(rli.amc, 0), 1)::numeric, 4) AS consumptionrate ,\n" +
+          "         ( SELECT df.description \n" +
+          "                             FROM data_range_flags_configuration df\n" +
+          "                            WHERE LOWER(category)= 'consumption' \n" +
+          "\t\t  and df.range @> round(100*(rli.normalizedconsumption- COALESCE(rli.amc, 0))::bigInt /\n" +
+          "\t\t\t\t\t\t\t\t\t COALESCE(NULLIF(rli.amc, 0), 1)\n" +
+          "                   , 4))::numeric AS flagcolor\n" +
+          "                    FROM requisition_line_items rli  \n" +
+          "           inner join  requisitions r on r.id=rli.rnrid  \n" +
+          "            inner join products p on p.code=rli.productcode  \n" +
+          "                    left outer join program_products pmp on pmp.programid=r.programid \n" +
+          "\t\t\t\t\tand pmp.productid=p.id   \n" +
+          "                    left outer join  product_categories c on  c.id=pmp.productcategoryid                     \n" +
+          "\t\t\t\t\tWHERE rnrId = #{rnrId} and rli.fullSupply = true \n" +
+          "                    order by c.displayorder,rli.productdisplayorder ;"})
   @Results(value = {
     @Result(property = "id", column = "id"),
     @Result(property = "productStrength", column = "strength"),
