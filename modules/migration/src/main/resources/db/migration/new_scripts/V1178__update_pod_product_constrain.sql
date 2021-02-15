@@ -1,0 +1,1 @@
+ALTER TABLE pod_line_items DROP CONSTRAINT pod_line_items_productcode_fkey;
