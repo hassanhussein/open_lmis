@@ -224,7 +224,7 @@ services.factory('requisitionService', function(messageService) {
             return 'scrollable';
         });
 
-        if (reportOnlyPeriod && patientLineItemsCount===0) {
+        if (reportOnlyPeriod || patientLineItemsCount===0) {
             fullSupplyVisibleColumns.scrollable = _.filter(fullSupplyVisibleColumns.scrollable, function(column) {
                 return _.contains(['skipped', 'product', 'productCode', 'dispensingUnit',
                     'stockInHand', 'stockOutDays'
