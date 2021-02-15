@@ -113,7 +113,7 @@ public interface ILInterfaceMapper {
     )
     Integer getTotalOrderDelivery(@Param("startDate") String startDate);
 
-    @Select(
+/*    @Select(
            // " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
             "  select p.code as product_code, f.hfrcode as facility_id,  to_char(r.modifieddate, 'yyyy-MM-dd') as date,\n" +
                     "            Case when (stockinhand is null) THEN 0 else stockinhand END  as available_quantity, \n" +
@@ -128,7 +128,8 @@ public interface ILInterfaceMapper {
                     "            JOIN facilities f ON r.facilityId = F.ID\n" +
                     "              WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL AND per.startDate >= #{startDate}::date AND r.programId = 1 \n" +
                     "             ORDER BY R.ID DESC  "
-            )
+            )*/
+    @Select("select * from covid_emergency_commodities ")
     List<HashMap<String, Object>> getEmergencyCommodites(@Param("startDate") String startDate, @Param("RowBounds") RowBounds rowBounds);
 
     //THSCP

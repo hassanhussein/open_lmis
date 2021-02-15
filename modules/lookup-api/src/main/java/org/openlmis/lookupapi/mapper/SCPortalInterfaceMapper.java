@@ -84,7 +84,7 @@ public interface SCPortalInterfaceMapper {
             "                        ")
     Integer getTotalWastages(@Param("startDate") String startDate);
 
-    @Select(" SELECT f.hfrcode as facility_id, productcode as \"product_code\",\n" +
+/*    @Select(" SELECT f.hfrcode as facility_id, productcode as \"product_code\",\n" +
             "          CASE WHEN amc is null THEN 0::TEXT ELSE amc::text END as \"actual_consumed\",\n" +
             "                      to_char(pp.enddate,'YYYY-MM-dd') as period,\n" +
             "           normalizedconsumption::text as \"forecast_consumed\"\n" +
@@ -98,7 +98,8 @@ public interface SCPortalInterfaceMapper {
             "   and r.programId = 1 \n" +
             "  ORDER BY R.ID DESC " +
            // " and pp.startDate::date >= #{startDate}::DATE and pp.endDate::date <=#{endDate}::DATE" +
-            "            ")
+            "            ")*/
+    @Select("select * from covid_forecasts")
     List<HashMap<String,Object>> getForeCastingData(@Param("startDate") String startDate, @Param("RowBounds") RowBounds rowBounds);
 
     @Select(" SELECT f.hfrcode as facility_id, productcode as \"product_code\",\n" +
