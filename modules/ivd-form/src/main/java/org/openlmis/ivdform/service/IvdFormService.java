@@ -174,8 +174,14 @@ public class IvdFormService {
 
     @Transactional
     public void save(VaccineReport report, Long userId) {
-        VaccineReport reportFromDb = getVaccineReportFromDbForUpdate(report);
-        repository.update(reportFromDb, report, userId);
+        try {
+            VaccineReport reportFromDb = getVaccineReportFromDbForUpdate(report);
+            repository.update(reportFromDb, report, userId);
+
+           // System.out.println("Success");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Transactional
@@ -205,7 +211,12 @@ public class IvdFormService {
     }
 
     private VaccineReport getVaccineReportFromDbForUpdate(VaccineReport report) {
+        System.out.println("Facility: "+report.getFacilityId()+" Period: "+report.getPeriodId());
+
+
         Long id = this.getReportIdForFacilityAndPeriod(report.getFacilityId(), report.getPeriodId());
+        System.out.println(id);
+
         VaccineReport reportFromDb = repository.getByIdWithFullDetails(id);
         if (ReportStatus.APPROVED.equals(reportFromDb.getStatus()) || ReportStatus.SUBMITTED.equals(reportFromDb.getStatus())) {
             throw new FormAlreadySubmittedException("ivd.form.exception.form.already.submitted");
