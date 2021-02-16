@@ -18,6 +18,8 @@ function NavigationController($scope, ConfigSettingsByKey, localStorageService, 
     $scope.homePage =  data.settings.value;
   });
 
+
+
   $scope.loadRights = function () {
     $scope.rights = localStorageService.get(localStorageKeys.RIGHT);
 

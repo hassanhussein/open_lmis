@@ -215,7 +215,7 @@ public class IvdFormService {
 
 
         Long id = this.getReportIdForFacilityAndPeriod(report.getFacilityId(), report.getPeriodId());
-        System.out.println(id);
+       // System.out.println(id);
 
         VaccineReport reportFromDb = repository.getByIdWithFullDetails(id);
         if (ReportStatus.APPROVED.equals(reportFromDb.getStatus()) || ReportStatus.SUBMITTED.equals(reportFromDb.getStatus())) {

@@ -26,6 +26,10 @@ function HeaderController($scope, localStorageService, loginConfig, ConfigSettin
     });
   }
 
+ConfigSettingsByKey.get({key: 'LOGO_FILE_NAME'}, function (data){
+   //console.log(data);
+      $scope.systemLogo =  data.settings.value;
+    });
 
 
   $scope.logout = function () {
