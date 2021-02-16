@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
+import org.openlmis.ivdform.domain.RequisitionForm;
 import org.openlmis.ivdform.domain.reports.VaccineReport;
 import org.openlmis.ivdform.service.IvdFormService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,7 +152,24 @@ public class IvdFormController extends BaseController {
       }
     }
 
-    return OpenLmisResponse.response(REPORT, "Successiful saved");
+    return OpenLmisResponse.response(REPORT, "Successfully saved");
+  }
+
+
+
+  @RequestMapping(value = {"/rest-api/ivd/saveRequisition"}, method = {RequestMethod.PUT})
+  @ApiOperation(position = 9, value = "Save Requisition form")
+  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
+  public ResponseEntity<OpenLmisResponse> saveRequisitionForms(@RequestBody String reports, HttpServletRequest request) throws IOException {
+   //  System.out.println(reports);
+    ObjectMapper mapper = new ObjectMapper();
+
+    RequisitionForm readValues = mapper.readValue(reports, RequisitionForm.class);
+
+    service.saveRequisition(readValues, loggedInUserId(request));
+
+
+    return OpenLmisResponse.response(REPORT, "Successfully saved");
   }
 
 

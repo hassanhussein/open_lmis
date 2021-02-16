@@ -15,6 +15,8 @@ package org.openlmis.ivdform.repository.mapper.reports;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.ivdform.domain.RequisitionForm;
+import org.openlmis.ivdform.domain.RequisitionProductForm;
 import org.openlmis.ivdform.domain.reports.DiseaseLineItem;
 import org.openlmis.ivdform.domain.reports.VaccineReport;
 import org.openlmis.ivdform.dto.ReportStatusDTO;
@@ -25,6 +27,26 @@ import java.util.List;
 
 @Repository
 public interface IvdFormMapper {
+    @Insert("INSERT INTO vaccine_order_requisitions (periodId,programId,status,supervisoryNodeId,facilityId,orderDate," +
+            " createdBy, createdDate,modifiedBy,modifiedDate,emergency,reason )    " +
+            "VALUES (#{periodId},#{programId},#{status},#{supervisoryNodeId},#{facilityId},#{requestedDeliveryDateTime}," +
+            "#{createdBy}, NOW(),#{modifiedBy},NOW(),#{emergency},#{description} )")
+    @Options(useGeneratedKeys = true)
+    Long saveRequisition(RequisitionForm requisitionGroup);
+
+    @Insert("INSERT INTO vaccine_order_requisition_line_items  " +
+            "(orderId,productId,productName,maximumStock,reOrderLevel,bufferStock,stockOnHand,quantityRequested,orderedDate,createdBy, createdDate,modifiedBy,modifiedDate)   " +
+            "VALUES(#{orderId},#{productId},#{productName},#{maximumStock},#{reOrderLevel},#{bufferStock},#{stockOnHand},#{quantityRequested},#{orderedDate},#{createdBy}, NOW(),#{modifiedBy},NOW())  ")
+    @Options(useGeneratedKeys = true)
+    Integer saveRequisitionItem(RequisitionProductForm item);
+
+
+   /* @Insert("INSERT INTO requisition_groups" +
+            "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +
+            "VALUES (#{code}, #{name}, #{description}, #{supervisoryNode.id}, #{createdBy}, #{createdBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP))")
+    @Options(useGeneratedKeys = true)
+    Integer saveRequisition(RequisitionForm requisitionGroup);*/
+
 
     @Insert("INSERT into vaccine_reports (periodId, programId, facilityId, status, supervisoryNodeId, majorImmunizationActivities, plannedOutreachImmunizationSessions, fixedImmunizationSessions, outreachImmunizationSessions,outreachImmunizationSessionsCanceled, submissionDate, createdBy, createdDate, modifiedBy, modifiedDate) " +
             " values (#{periodId}, #{programId}, #{facilityId}, #{status}, #{supervisoryNodeId}, #{majorImmunizationActivities}, #{plannedOutreachImmunizationSessions} , #{fixedImmunizationSessions}, #{outreachImmunizationSessions}, #{outreachImmunizationSessionsCanceled}, #{submissionDate}, #{createdBy}, NOW(), #{modifiedBy}, NOW() )")

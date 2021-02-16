@@ -15,6 +15,8 @@ package org.openlmis.ivdform.repository.reports;
 import org.openlmis.core.domain.ConfigurationSetting;
 import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.GeographicZoneService;
+import org.openlmis.ivdform.domain.RequisitionForm;
+import org.openlmis.ivdform.domain.RequisitionProductForm;
 import org.openlmis.ivdform.domain.reports.DiseaseLineItem;
 import org.openlmis.ivdform.domain.reports.ReportStatus;
 import org.openlmis.ivdform.domain.reports.ReportStatusChange;
@@ -51,6 +53,15 @@ public class IvdFormRepository {
   public void insert(VaccineReport report, Long userId) {
     mapper.insert(report);
     saveDetails(null, report, userId);
+  }
+  public Long saveRequisition(RequisitionForm requisitionForm, Long userId){
+    requisitionForm.setCreatedBy(userId);
+    return mapper.saveRequisition(requisitionForm);
+  }
+
+  public Integer saveRequisitionItem(RequisitionProductForm requisitionItem, Long userId){
+    requisitionItem.setCreatedBy(userId);
+    return mapper.saveRequisitionItem(requisitionItem);
   }
 
 

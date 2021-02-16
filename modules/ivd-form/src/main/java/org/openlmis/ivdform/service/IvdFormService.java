@@ -18,6 +18,8 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
+import org.openlmis.core.repository.mapper.ProductMapper;
+import org.openlmis.core.repository.mapper.ProgramMapper;
 import org.openlmis.core.service.*;
 import org.openlmis.demographics.service.AnnualFacilityDemographicEstimateService;
 import org.openlmis.equipment.domain.EquipmentInventory;
@@ -141,6 +143,13 @@ public class IvdFormService {
 
     @Autowired
     ProductDoseAgeGroupService productDoseAgeGroupService;
+    @Autowired
+    ProgramMapper programMapper;
+    @Autowired
+    SupervisoryNodeService supervisoryNodeService;
+    @Autowired
+    ProductMapper productMapper;
+
 
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
@@ -170,6 +179,25 @@ public class IvdFormService {
                     , (openPeriods == null || openPeriods.isEmpty()) ? "No past period " : openPeriods.get(0).getPeriodName()
                     , period.getName());
         }
+    }
+    @Transactional
+    public void saveRequisition(RequisitionForm requisitionForm, Long userId){
+        Facility facility=facilityService.getById(requisitionForm.getFacilityId());
+        Program program=programMapper.getByCode(requisitionForm.getProgramCode());
+        requisitionForm.setProgramId(program.getId());
+        requisitionForm.setSupervisoryNodeId(supervisoryNodeService.getFor(facility, program).getId());
+        requisitionForm.setStatus("SUBMITTED");
+       Long id=repository.saveRequisition(requisitionForm,userId);
+       if(id!=null){
+           for(RequisitionProductForm requisitionItem: requisitionForm.getRequisitionList()) {
+               Product product=productMapper.getById(requisitionItem.getProductId());
+                requisitionItem.setOrderId(requisitionForm.getId());
+                requisitionItem.setOrderedDate(requisitionForm.getRequestedDeliveryDateTime());
+                requisitionItem.setProductName(product.getPrimaryName());
+                repository.saveRequisitionItem(requisitionItem,userId);
+           }
+       }
+      System.out.println(requisitionForm.toString());
     }
 
     @Transactional
