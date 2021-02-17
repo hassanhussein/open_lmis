@@ -180,6 +180,26 @@ public class IvdFormService {
                     , period.getName());
         }
     }
+    public RequisitionForm getByRequestNumber(String orderId){
+        return repository.getByRequestNumber(orderId);
+    }
+
+
+
+    @Transactional
+    public void updateRequisition(RequisitionForm requisitionForm,Long id, Long userId){
+            repository.deleteByOrderRequisitionItem(id);
+            for(RequisitionProductForm requisitionItem: requisitionForm.getRequisitionList()) {
+                Product product=productMapper.getById(requisitionItem.getProductId());
+                requisitionItem.setOrderId(id);
+                requisitionItem.setOrderedDate(requisitionForm.getRequestedDeliveryDateTime());
+                requisitionItem.setProductName(product.getPrimaryName());
+                repository.saveRequisitionItem(requisitionItem,userId);
+            }
+
+        //System.out.println(requisitionForm.toString());
+    }
+
     @Transactional
     public void saveRequisition(RequisitionForm requisitionForm, Long userId){
         Facility facility=facilityService.getById(requisitionForm.getFacilityId());
@@ -198,7 +218,7 @@ public class IvdFormService {
                 repository.saveRequisitionItem(requisitionItem,userId);
            }
        }
-      System.out.println(requisitionForm.toString());
+      //System.out.println(requisitionForm.toString());
     }
 
     @Transactional

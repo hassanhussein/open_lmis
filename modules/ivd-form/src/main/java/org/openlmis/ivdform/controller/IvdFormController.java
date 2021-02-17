@@ -167,8 +167,21 @@ public class IvdFormController extends BaseController {
 
      RequisitionForm readValues = mapper.readValue(reports, RequisitionForm.class);
 
-     service.saveRequisition(readValues, loggedInUserId(request));
+     String orderId=readValues.getOrderId();
 
+     RequisitionForm requisitionFormInstance=service.getByRequestNumber(orderId);
+    if(requisitionFormInstance!=null){
+      String status=requisitionFormInstance.getStatus();
+      if(status.equals("SUBMITTED")){
+        service.updateRequisition(readValues,requisitionFormInstance.getId(),loggedInUserId(request));
+        return OpenLmisResponse.response(REPORT, "Successfully updated!");
+
+      }else{
+        return OpenLmisResponse.response(REPORT, "You can not update this Order!");
+      }
+    }else {
+      service.saveRequisition(readValues, loggedInUserId(request));
+    }
 
      return OpenLmisResponse.response(REPORT, "Successfully saved");
    }catch (Exception e){

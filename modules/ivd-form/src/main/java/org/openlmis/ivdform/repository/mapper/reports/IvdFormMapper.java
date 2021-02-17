@@ -15,6 +15,7 @@ package org.openlmis.ivdform.repository.mapper.reports;
 import org.apache.ibatis.annotations.*;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.ProcessingPeriod;
+import org.openlmis.core.domain.Program;
 import org.openlmis.ivdform.domain.RequisitionForm;
 import org.openlmis.ivdform.domain.RequisitionProductForm;
 import org.openlmis.ivdform.domain.reports.DiseaseLineItem;
@@ -40,6 +41,12 @@ public interface IvdFormMapper {
     @Options(useGeneratedKeys = true)
     Integer saveRequisitionItem(RequisitionProductForm item);
 
+    @Delete("DELETE FROM vaccine_order_requisition_line_items WHERE orderId=#{orderId}")
+    public void deleteByOrderRequisitionItem(Long orderId);
+
+
+    @Select("SELECT * FROM vaccine_order_requisitions WHERE requestNumber = #{requestNumber}")
+    RequisitionForm getByRequestNumber(String requestNumber);
 
    /* @Insert("INSERT INTO requisition_groups" +
             "(code, name, description, supervisoryNodeId, createdBy, modifiedBy, modifiedDate) " +

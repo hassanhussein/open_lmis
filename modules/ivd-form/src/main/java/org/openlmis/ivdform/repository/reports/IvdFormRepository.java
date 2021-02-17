@@ -54,9 +54,17 @@ public class IvdFormRepository {
     mapper.insert(report);
     saveDetails(null, report, userId);
   }
+
+  public void deleteByOrderRequisitionItem(Long id){
+    mapper.deleteByOrderRequisitionItem(id);
+  }
   public Long saveRequisition(RequisitionForm requisitionForm, Long userId){
     requisitionForm.setCreatedBy(userId);
     return mapper.saveRequisition(requisitionForm);
+  }
+
+  public RequisitionForm getByRequestNumber(String orderId){
+    return mapper.getByRequestNumber(orderId);
   }
 
   public Integer saveRequisitionItem(RequisitionProductForm requisitionItem, Long userId){
