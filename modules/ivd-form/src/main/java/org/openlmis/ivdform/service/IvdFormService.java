@@ -189,6 +189,7 @@ public class IvdFormService {
         requisitionForm.setStatus("SUBMITTED");
        Long id=repository.saveRequisition(requisitionForm,userId);
        if(id!=null){
+           System.out.println("Passed here requ");
            for(RequisitionProductForm requisitionItem: requisitionForm.getRequisitionList()) {
                Product product=productMapper.getById(requisitionItem.getProductId());
                 requisitionItem.setOrderId(requisitionForm.getId());

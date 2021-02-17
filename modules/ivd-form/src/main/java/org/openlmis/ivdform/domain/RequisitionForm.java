@@ -20,7 +20,7 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 public class RequisitionForm extends BaseModel {
     private Long periodId;
     private Long programId;
-    private Long orderId;
+    private String orderId;
     private Long facilityId;
     private Long userId;
     private Long supervisoryNodeId;

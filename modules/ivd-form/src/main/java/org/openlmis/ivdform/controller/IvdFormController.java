@@ -161,15 +161,20 @@ public class IvdFormController extends BaseController {
   @ApiOperation(position = 9, value = "Save Requisition form")
   @PreAuthorize("@permissionEvaluator.hasPermission(principal,'CREATE_IVD')")
   public ResponseEntity<OpenLmisResponse> saveRequisitionForms(@RequestBody String reports, HttpServletRequest request) throws IOException {
-   //  System.out.println(reports);
-    ObjectMapper mapper = new ObjectMapper();
+   try {
+     //  System.out.println(reports);
+     ObjectMapper mapper = new ObjectMapper();
 
-    RequisitionForm readValues = mapper.readValue(reports, RequisitionForm.class);
+     RequisitionForm readValues = mapper.readValue(reports, RequisitionForm.class);
 
-    service.saveRequisition(readValues, loggedInUserId(request));
+     service.saveRequisition(readValues, loggedInUserId(request));
 
 
-    return OpenLmisResponse.response(REPORT, "Successfully saved");
+     return OpenLmisResponse.response(REPORT, "Successfully saved");
+   }catch (Exception e){
+     e.printStackTrace();
+     return OpenLmisResponse.response(REPORT, "Failed to save data. MAY BE YOU HAVE already submitted this request.");
+   }
   }
 
 

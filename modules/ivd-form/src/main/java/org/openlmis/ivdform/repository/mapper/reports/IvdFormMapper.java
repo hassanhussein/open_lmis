@@ -28,9 +28,9 @@ import java.util.List;
 @Repository
 public interface IvdFormMapper {
     @Insert("INSERT INTO vaccine_order_requisitions (periodId,programId,status,supervisoryNodeId,facilityId,orderDate," +
-            " createdBy, createdDate,modifiedBy,modifiedDate,emergency,reason )    " +
+            " createdBy, createdDate,modifiedBy,modifiedDate,emergency,reason,requestNumber)    " +
             "VALUES (#{periodId},#{programId},#{status},#{supervisoryNodeId},#{facilityId},#{requestedDeliveryDateTime}," +
-            "#{createdBy}, NOW(),#{modifiedBy},NOW(),#{emergency},#{description} )")
+            "#{createdBy}, NOW(),#{modifiedBy},NOW(),#{emergency},#{description},#{orderId})")
     @Options(useGeneratedKeys = true)
     Long saveRequisition(RequisitionForm requisitionGroup);
 
