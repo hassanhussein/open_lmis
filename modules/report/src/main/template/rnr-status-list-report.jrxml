@@ -151,25 +151,32 @@ WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
 					<textFieldExpression><![CDATA[$R{label.period.name}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="308" y="20" width="154" height="22" printWhenGroupChanges="ProgramAreas" uuid="a305dbb9-b4cb-49b4-98b0-d2addcea15d9"/>
+					<reportElement x="308" y="20" width="111" height="22" printWhenGroupChanges="ProgramAreas" uuid="a305dbb9-b4cb-49b4-98b0-d2addcea15d9"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.start.date}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="462" y="20" width="156" height="22" printWhenGroupChanges="ProgramAreas" uuid="07fb1afe-6c70-4bf3-9c03-d70dc59f8888"/>
+					<reportElement x="419" y="20" width="121" height="22" printWhenGroupChanges="ProgramAreas" uuid="07fb1afe-6c70-4bf3-9c03-d70dc59f8888"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.end.date}]]></textFieldExpression>
 				</textField>
 				<textField>
-					<reportElement x="618" y="20" width="183" height="22" printWhenGroupChanges="ProgramAreas" uuid="3f1ad6c8-072e-4903-805e-c15f22c0ae01"/>
+					<reportElement x="540" y="20" width="116" height="22" printWhenGroupChanges="ProgramAreas" uuid="3f1ad6c8-072e-4903-805e-c15f22c0ae01"/>
 					<textElement verticalAlignment="Middle">
 						<font size="10" isBold="true"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$R{label.ivd.form.status}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="656" y="20" width="145" height="22" printWhenGroupChanges="ProgramAreas" uuid="55067dd7-b35a-4923-be77-c132cd0f5e88"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$R{header.order.number}]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -281,20 +288,24 @@ WHERE (F.geographicZoneId IN (SELECT DISTINCT district_id
 				<textFieldExpression><![CDATA[$F{period}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="308" y="1" width="154" height="19" uuid="c3f0c18e-42c3-43f5-8e24-fe8a22d4f527"/>
+				<reportElement x="308" y="1" width="111" height="19" uuid="c3f0c18e-42c3-43f5-8e24-fe8a22d4f527"/>
 				<textFieldExpression><![CDATA[$F{startdate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="618" y="0" width="183" height="20" uuid="937e232f-8733-4552-9f73-67c70712988c"/>
+				<reportElement x="540" y="0" width="116" height="20" uuid="937e232f-8733-4552-9f73-67c70712988c"/>
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="462" y="0" width="156" height="20" uuid="fd144b7f-982d-4530-b11f-5e68c479388c"/>
+				<reportElement x="419" y="0" width="121" height="20" uuid="fd144b7f-982d-4530-b11f-5e68c479388c"/>
 				<textFieldExpression><![CDATA[$F{enddate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="23" y="0" width="131" height="20" uuid="1c8bd599-c4d7-41a5-9af3-96d877e11dba"/>
 				<textFieldExpression><![CDATA[$F{program}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="656" y="1" width="145" height="19" uuid="dcc86dfa-e2b5-4b4b-9cb1-d975ed00d4f3"/>
+				<textFieldExpression><![CDATA[$F{status}=="RELEASED"?$F{rnrid}:""]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

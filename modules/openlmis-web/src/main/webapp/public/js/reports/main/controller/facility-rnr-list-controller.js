@@ -13,7 +13,7 @@ function ListFacilityRnRStatusesController($scope, FacilityRnRStatusesReportList
     $scope.perioderror = "";
     $scope.allReportType = false;
     $scope.OnFilterChanged = function () {
-        var filterParam=$scope.getSanitizedParameter();
+        var filterParam = $scope.getSanitizedParameter();
         FacilityRnRStatusesReportList.get(filterParam, function (data) {
             $scope.data = generateParentChildReport(data.pages.rows);
             console.log($scope.data);
@@ -21,18 +21,27 @@ function ListFacilityRnRStatusesController($scope, FacilityRnRStatusesReportList
         });
     };
 
-    var generateParentChildReport = function(data) {
-        var rnrs = _.uniq(data, function (item, key, a) { return item.rnrid; });
-        val = _.uniq(rnrs, function (item, key, a) { return item.facilityid; });
+    var generateParentChildReport = function (data) {
+        var rnrs = _.uniq(data, function (item, key, a) {
+            return item.rnrid;
+        });
+        val = _.uniq(rnrs, function (item, key, a) {
+            return item.facilityid;
+        });
 
-        _.each(val, function(row){
+        _.each(val, function (row) {
             row.programProgramReportList = _.chain(rnrs).where({facilityid: row.facilityid})
-                .map(function(row){ return {'period': row.period,
-                "startdate":row.startdate,
-                "enddate":row.enddate,
-                "program":row.program,
-                "emergency":row.emergency,
-                "status":row.status };}).value();
+                .map(function (row) {
+                    return {
+                        'period': row.period,
+                        "startdate": row.startdate,
+                        "enddate": row.enddate,
+                        "program": row.program,
+                        "emergency": row.emergency,
+                        "rnrid": row.rnrid,
+                        "status": row.status
+                    };
+                }).value();
         });
         return val;
     };
@@ -95,7 +104,7 @@ function ListFacilityRnRStatusesController($scope, FacilityRnRStatusesReportList
     $scope.exportReport = function (type) {
         var params = jQuery.param($scope.getSanitizedParameter());
         var url = '/reports/download/rnr-status-list-report/' + type + '?' + params;
-       
+
 
         window.open(url, '_BLANK');
     };

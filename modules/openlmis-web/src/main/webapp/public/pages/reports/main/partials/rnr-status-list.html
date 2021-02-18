@@ -101,6 +101,7 @@
                                                 <th openlmis-message="label.start.date"></th>
                                                 <th openlmis-message="label.end.date"></th>
                                                 <th openlmis-message="label.ivd.form.status"></th>
+                                                <th openlmis-message="header.order.number"></th>
 
                                             </tr>
                                             </thead>
@@ -111,6 +112,8 @@
                                                 <td>{{ p.startdate |date }}</td>
                                                 <td>{{ p.enddate |date }}</td>
                                                 <td>{{ p.status }}</td>
+                                                <td ng-if="p.status =='RELEASED'">{{p.rnrid}}</td>
+                                                <td ng-if="p.status !='RELEASED'"></td>
 
 
                                             </tr>

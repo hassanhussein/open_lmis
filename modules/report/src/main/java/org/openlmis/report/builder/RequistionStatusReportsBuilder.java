@@ -40,26 +40,26 @@ public class RequistionStatusReportsBuilder {
         String query = "";
         BEGIN();
 
-        SELECT("distinct rnrid");
-        SELECT("status");
-        SELECT("emergency");
-        SELECT("zoneid");
-        SELECT("district");
-        SELECT("districtid");
-        SELECT("provinceid");
-        SELECT("province");
-        SELECT("facility");
-        SELECT("facilitycode");
-        SELECT("facilityid");
-        SELECT("feconfigured");
-        SELECT("facilitytypeid");
-        SELECT("facilitytype");
-        SELECT("program");
-        SELECT("programid");
-        SELECT("periodid");
-        SELECT("period");
-        SELECT("startdate");
-        SELECT("enddate");
+        SELECT("distinct r.rnrid");
+        SELECT("r.status");
+        SELECT("r.emergency");
+        SELECT("r.zoneid");
+        SELECT("r.district");
+        SELECT("r.districtid");
+        SELECT("r.provinceid");
+        SELECT("r.province");
+        SELECT("r.facility");
+        SELECT("r.facilitycode");
+        SELECT("r.facilityid");
+        SELECT("r.feconfigured");
+        SELECT("r.facilitytypeid");
+        SELECT("r.facilitytype");
+        SELECT("r.program");
+        SELECT("r.programid");
+        SELECT("r.periodid");
+        SELECT("r.period");
+        SELECT("r.startdate");
+        SELECT("r.enddate");
 
         FROM("mv_requisition r");
         writePredicates(filter);
@@ -75,7 +75,7 @@ public class RequistionStatusReportsBuilder {
 
         WHERE(programIsFilteredBy("r.programid"));
         WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));
-        if (filter.getStatus() != null && !filter.getStatus().trim().equals("")) {
+        if (filter.getStatus() != null && !filter.getStatus().trim().equals("")&& !filter.getStatus().trim().equals("0")) {
             WHERE("r.status=#{filterCriteria.status}");
         }
         if (filter.getPeriodStart() != null)
