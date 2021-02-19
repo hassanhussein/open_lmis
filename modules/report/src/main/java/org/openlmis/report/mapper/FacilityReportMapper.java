@@ -26,7 +26,7 @@ import java.util.List;
 @Repository
 public interface FacilityReportMapper {
 
-    @SelectProvider(type=FacilityReportQueryBuilder.class, method="getExportQuery")
+    @SelectProvider(type=FacilityReportQueryBuilder.class, method="getAllFacilities")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
     @Results(value = {
             @Result(column="id", property="id"),
@@ -45,7 +45,8 @@ public interface FacilityReportMapper {
             @Result(column="activeprogram", property="activeProgram"),
             @Result(column="programid", property="programId"),
             @Result(column="startdate", property="startDate"),
-            @Result(column="province", property="province")
+            @Result(column="province", property="province"),
+            @Result(column="groupName", property="groupName")
     })
     List<FacilityReport> SelectFilteredSortedPagedFacilities(
             @Param("filterCriteria") FacilityReportParam filterCriteria,
