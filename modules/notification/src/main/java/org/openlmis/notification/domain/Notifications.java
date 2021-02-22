@@ -44,7 +44,7 @@ public class Notifications extends BaseModel{
 
     @Override
     public String toString() {
-        return "'notification':{" +
+        return "'message':{" +
                 "'name':" + name  +
                 ", 'code':" + code  +
                 ", 'message':" + message  +
