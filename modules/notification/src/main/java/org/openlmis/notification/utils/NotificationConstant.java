@@ -21,45 +21,11 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-package org.openlmis.notification.service;
-
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import org.springframework.amqp.core.AmqpTemplate;
-import org.springframework.amqp.core.ExchangeTypes;
-import org.springframework.amqp.core.Message;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-import com.rabbitmq.client.Channel;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.concurrent.TimeoutException;
+package org.openlmis.notification.utils;
 
 
-@Service
-public class ProducerServiceImpl implements ProducerService {
-    @Autowired
-    AmqpTemplate aTemplate;
-
-    /**
-     * The name of the Exchange
-     */
-    private static final String EXCHANGE_NAME = "messages";
-
-    /**
-     * This method publishes a message
-     *
-     * @param message
-     */
-
-    @Override
-    public void produceMessage(String message) {
-
-        aTemplate.convertAndSend("messages.facility.notification.1", message);// send
-
-
-
-    }
+public class NotificationConstant {
+    public static final String NEW_MESSAGE_CREATED="MSG_000001";
+    public static final String NMESSAGE_UPDATED="MSG_000002";
 }
+

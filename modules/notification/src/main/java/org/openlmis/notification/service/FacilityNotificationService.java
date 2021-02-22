@@ -26,6 +26,7 @@ package org.openlmis.notification.service;
 import org.openlmis.notification.domain.FacilityNotification;
 import org.openlmis.notification.domain.Notifications;
 import org.openlmis.notification.repository.FacilityNotificationRepository;
+import org.openlmis.notification.utils.NotificationConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,7 +38,7 @@ public class FacilityNotificationService {
     FacilityNotificationRepository repository;
     @Autowired
     ProducerService producerService;
-    public final String NEW_MESSAGE_CREATED="new_facility_message";
+
 
     public void addNewNotification(Notifications notification) {
         if (notification.getId() != null && !notification.getId().equals(0L)) {
@@ -45,8 +46,8 @@ public class FacilityNotificationService {
         } else {
             repository.addNewNotification(notification);
         }
-        producerService.produceMessage("{messageType:"+NEW_MESSAGE_CREATED
-                +""+notification.toString()+"}");
+        producerService.produceMessage("{code:"+ NotificationConstant.NEW_MESSAGE_CREATED
+                +" , "+notification.toString()+"}");
     }
 
 

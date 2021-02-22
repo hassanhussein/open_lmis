@@ -39,17 +39,18 @@
 
     <!-- Create myAnonymousQueue queue -->
     <rabbit:queue id="myAnonymousQueue"  name="facilityNotificationQueue" />
+    <rabbit:queue id="myAnonymousQueue1"  name="MSG_000001" />
     <!-- create myExchange and bind myAnonymousQueue with my.routingkey.1 to the TUTORIAL-EXCHANGE-->
     <rabbit:topic-exchange id="myExchange" name="MESSAGE-EXCHANGE">
         <rabbit:bindings>
-            <rabbit:binding queue="myAnonymousQueue" pattern="my.#.*"></rabbit:binding>
+            <rabbit:binding queue="myAnonymousQueue1" pattern="messages.facility.notification.*"></rabbit:binding>
         </rabbit:bindings>
     </rabbit:topic-exchange>
     <!-- instantiate TutorialListener -->
     <bean id="aListener" class="org.openlmis.notification.service.NotificationMessageListener" />
     <!-- glue the listener and myAnonymousQueue to the container-->
     <rabbit:listener-container   connection-factory="connectionFactory">
-        <rabbit:listener ref="aListener" queues="myAnonymousQueue" /></rabbit:listener-container>
+        <rabbit:listener ref="aListener" queues="myAnonymousQueue1" /></rabbit:listener-container>
 
     <import resource="classpath:applicationContext-db.xml"/>
     <import resource="classpath:applicationContext-core.xml"/>
