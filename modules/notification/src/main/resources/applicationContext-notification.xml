@@ -39,7 +39,7 @@
 
     <!-- Create myAnonymousQueue queue -->
     <rabbit:queue id="myAnonymousQueue"  name="facilityNotificationQueue" />
-    <rabbit:queue id="myAnonymousQueue1"  name="MSG_000001" />
+    <rabbit:queue id="myAnonymousQueue1"  name="MSG_000011" />
     <!-- create myExchange and bind myAnonymousQueue with my.routingkey.1 to the TUTORIAL-EXCHANGE-->
     <rabbit:topic-exchange id="myExchange" name="MESSAGE-EXCHANGE">
         <rabbit:bindings>

@@ -22,6 +22,8 @@
 package org.openlmis.notification.domain;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,14 +46,14 @@ public class Notifications extends BaseModel{
 
     @Override
     public String toString() {
-        return "'message':{" +
-                "'name':" + name  +
-                ", 'code':" + code  +
-                ", 'message':" + message  +
-                ", 'description':" + description +
-                ", 'type':" + type  +
-                ", 'urgency':" + urgency  +
-                ", 'messageSent':" + new Date() +
-                '}';
+        ObjectMapper mapper =new ObjectMapper();
+        String notificationsString ="";
+        try {
+            notificationsString="\"messages\":"+mapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return notificationsString;
     }
 }

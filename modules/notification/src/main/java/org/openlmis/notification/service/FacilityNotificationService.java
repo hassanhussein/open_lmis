@@ -46,8 +46,8 @@ public class FacilityNotificationService {
         } else {
             repository.addNewNotification(notification);
         }
-        producerService.produceMessage("{'cmd':'"+ NotificationConstant.NEW_MESSAGE_CREATED
-                +"' , "+notification.toString()+"}");
+        producerService.produceMessage("{\"cmd\":\""+ NotificationConstant.NEW_MESSAGE_CREATED
+                +"\" , "+notification.toString()+"}");
     }
 
 
