@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function ListSettingController($scope, $location, Settings, SettingUpdator,isZnz) {
+function ListSettingController($scope, $location, Settings, SettingUpdator) {
 
 
 
@@ -18,7 +18,6 @@ function ListSettingController($scope, $location, Settings, SettingUpdator,isZnz
     $scope.visibleTab = tab;
   };
 
-  console.log(isZnz)
 
   Settings.get(function (data){
      $scope.settings = data.settings;
@@ -57,4 +56,4 @@ ListSettingController.resolve = {
 
 
 
-}
+};

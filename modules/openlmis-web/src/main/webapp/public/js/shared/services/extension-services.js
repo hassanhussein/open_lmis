@@ -1473,7 +1473,7 @@ services.factory('CheckInstance',function(Settings){
              if (settings.ADMIN[0].value==="ZANZIBAR"){
              return true;
              }
-             console.log('i have returned')
+
              return false;
 
           });
