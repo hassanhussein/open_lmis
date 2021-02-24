@@ -9,7 +9,9 @@
  *
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-function ViewIvdFormDetailController($scope, $location, $window, report, discardingReasons, operationalStatuses, ColdTraceStatus, ColdTraceAlarms, ColdTraceToken) {
+function ViewIvdFormDetailController($scope, $location, $window,isZnz, report, discardingReasons, operationalStatuses, ColdTraceStatus, ColdTraceAlarms, ColdTraceToken,Settings) {
+
+$scope.isZnz=isZnz;
 
   // initial state of the display
   $scope.report = new VaccineReport(report);
@@ -118,6 +120,24 @@ ViewIvdFormDetailController.resolve = {
     }, 100);
     return deferred.promise;
   },
+  isZnz:function($q, $timeout,Settings){
+   var deferred = $q.defer();
+
+
+       $timeout(function () {
+
+         Settings.get({}, function (data) {
+           var settings=_.groupBy(data.settings.list,'groupName');
+           if (settings.ADMIN[0].value==="ZANZIBAR"){
+           deferred.resolve(true);
+
+                        }else{
+                        deferred.resolve(false);
+                        }
+         }, {});
+       }, 100);
+           return deferred.promise;
+          },
   discardingReasons: function ($q, $timeout, $route, VaccineDiscardingReasons) {
     var deferred = $q.defer();
 

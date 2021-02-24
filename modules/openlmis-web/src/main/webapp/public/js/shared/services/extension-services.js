@@ -1463,3 +1463,21 @@ services.factory('ApproveOnlyDistribution', function ($resource) {
 services.factory('GetAllClearingAgents', function ($resource) {
     return $resource('/rest-api/warehouse/all-clearing-agents.json', {}, {});
 });
+
+
+services.factory('CheckInstance',function(Settings){
+    return {
+        isZnz:function(){
+            Settings.get(function (data){
+             var settings=_.groupBy(data.settings.list,'groupName');
+             if (settings.ADMIN[0].value==="ZANZIBAR"){
+             return true;
+             }
+             console.log('i have returned')
+             return false;
+
+          });
+
+        }
+    };
+});

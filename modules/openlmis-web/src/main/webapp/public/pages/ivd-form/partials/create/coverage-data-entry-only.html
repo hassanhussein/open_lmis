@@ -4,13 +4,25 @@
     <tr>
       <th colspan="6" openlmis-message="label.vaccine.coverage.monthly.coverage"></th>
     </tr>
-    <tr>
+    <tr ng-show="!isZnz">
       <th colspan="4" openlmis-message="label.vaccine.coverage.within.catchment"></th>
       <th colspan="2"  rowspan="2"  openlmis-message="label.vaccine.coverage.outside.catchment"></th>
     </tr>
-    <tr>
-      <th colspan="2">At Facility</th>
+
+    <tr ng-show="isZnz">
+      <th colspan="4" >At Facility</th>
+      <th colspan="2"  rowspan="2">Out Reach</th>
+    </tr>
+
+    <tr ng-show="!isZnz">
+      <th colspan="2">At Facility </th>
       <th colspan="2" rowspan="1">Out Reach</th>
+      <!-- <th rowspan="2"></th>
+       <th></th>-->
+    </tr>
+    <tr ng-show="isZnz">
+      <th colspan="2">&lt; 1 yr </th>
+      <th colspan="2" rowspan="1">&gt;=1 yr</th>
       <!-- <th rowspan="2"></th>
        <th></th>-->
     </tr>

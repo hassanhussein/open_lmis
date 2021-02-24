@@ -35,7 +35,7 @@ angular.module('setting', ['openlmis', 'textAngular', 'ui.bootstrap', 'ui.bootst
   }]);
 
   $routeProvider.
-    when('/list', {controller: ListSettingController, templateUrl: 'partials/list.html'}).
+    when('/list', {controller: ListSettingController, templateUrl: 'partials/list.html',resolve: ListSettingController.resolve}).
     otherwise({redirectTo: '/list'});
 }]).run(function ($rootScope, AuthorizationService) {
   $rootScope.roleSelected = "selected";

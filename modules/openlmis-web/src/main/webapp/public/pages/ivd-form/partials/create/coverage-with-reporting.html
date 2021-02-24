@@ -4,17 +4,37 @@
     <th colspan="4" openlmis-message="label.vaccine.coverage.monthly.coverage"></th>
     <th colspan="4" openlmis-message="label.vaccine.coverage.cumulative.coverage"></th>
   </tr>
-  <tr>
-    <th colspan="6" openlmis-message="label.vaccine.coverage.within.catchment"></th>
+
+  <tr ng-show="!isZnz">
+    <th colspan="6" >At Facility</th>
     <th colspan="3" openlmis-message="label.vaccine.coverage.outside.catchment"></th>
     <th colspan="2" openlmis-message="label.vaccine.coverage.total.vaccination"></th>
     <th colspan="2" openlmis-message="label.vaccine.coverage.within.catchment"></th>
     <th colspan="1" openlmis-message="label.vaccine.coverage.outside"></th>
     <th openlmis-message="label.vaccine.coverage.total"></th>
   </tr>
-  <tr>
+  <tr ng-show="isZnz">
+    <th colspan="6" >At Facility</th>
+    <th colspan="3" > Out Reach</th>
+    <th colspan="2" openlmis-message="label.vaccine.coverage.total.vaccination"></th>
+    <th colspan="2" openlmis-message="label.vaccine.coverage.within.catchment"></th>
+    <th colspan="1" openlmis-message="label.vaccine.coverage.outside"></th>
+    <th openlmis-message="label.vaccine.coverage.total"></th>
+  </tr>
+  <tr ng-show="!isZnz">
     <th colspan="2">At Facility</th>
     <th colspan="2">Out Reach</th>
+    <th colspan="2">Total Vaccination</th>
+    <th colspan="3"></th>
+    <th colspan="2"></th>
+    <th colspan="2"></th>
+    <th colspan="1"></th>
+    <th></th>
+  </tr>
+
+  <tr ng-show="isZnz">
+    <th colspan="2">&lt; 1 yr</th>
+    <th colspan="2">&gt;=1 yr</th>
     <th colspan="2">Total Vaccination</th>
     <th colspan="3"></th>
     <th colspan="2"></th>
