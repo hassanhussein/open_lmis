@@ -40,7 +40,7 @@ function TimelinessReportController($scope, messageService, $window, getTimeline
             }
         });
         if ($scope.filter.period !== undefined) {
-            getTimelinessReportingDates.get({periodId: $scope.filter.period}, function (data) {
+            getTimelinessReportingDates.get({periodId: $scope.filter.period, programId: $scope.filter.program}, function (data) {
 
                 $scope.reportingDates = data.reportingDates;
 
