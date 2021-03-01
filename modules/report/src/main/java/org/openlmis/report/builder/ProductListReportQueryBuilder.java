@@ -8,7 +8,8 @@ public class ProductListReportQueryBuilder {
 
         Map filterCriteria = (Map) params.get("filterCriteria");
 
-        return "    SELECT fap.*, pp.*, pgm.*, FT.name as facilityType, pgm.name as programName, pgm.active, p.code productCode, p.primaryName productName,\n" +
+        String sql = "    SELECT fap.*, pp.*, pgm.*, FT.name as facilityType, pgm.name as " +
+              "programName, pgm.active, p.code productCode, p.primaryName productName,\n" +
                 "   pgm.code as program_code, \n" +
                 "      p.*, p.code as product_code \n" +
                 "      FROM facility_approved_products fap \n" +
@@ -23,6 +24,8 @@ public class ProductListReportQueryBuilder {
                 "      AND p.active = TRUE and fap.isActive = TRUE \n" +
                 "      AND pp.active = TRUE\n" +
                 "      ORDER BY pc.displayOrder, pc.name, pp.displayOrder NULLS LAST, p.code";
+
+        return sql;
 
     }
 
@@ -42,6 +45,23 @@ public class ProductListReportQueryBuilder {
          predicate += " and pp.productCategoryId = " + productCategory;
 
        return predicate;
+    }
+
+
+    public String getAllProducts () {
+      return "SELECT p.id, p.code productCode, p.alternateItemCode as otherItemCode,  p" +
+              ".primaryName productName, fap.maxmonthsofstock, fap.minmonthsofstock , fap.eop, \n" +
+              " FT.name as facilityType, pgm.name as programName, fap.isactive, pc.name as category, pf.code as productForm,\n" +
+              "  p.dispensingUnit as dispensingUnit,  p.packsize as packSize, p.tracer, p" +
+              ".fullsupply as fullSupply\n" +
+              "      FROM facility_approved_products fap \n" +
+              "      INNER JOIN FACILITY_TYPES FT ON FT.id = fap.facilityTypeId\n" +
+              "      INNER JOIN program_products pp ON pp.id = fap.programProductId\n" +
+              "      INNER JOIN products p ON p.id = pp.productId \n" +
+              "      INNER JOIN product_categories pc ON pc.id = pp.productCategoryId \n" +
+              "      INNER JOIN programs pgm ON pp.programId = pgm.id \n" +
+              "      INNER JOIN product_forms pf on pf.id=p.formid\n" +
+              "      order by p.code desc";
     }
 
 

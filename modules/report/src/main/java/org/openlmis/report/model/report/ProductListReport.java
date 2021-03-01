@@ -12,6 +12,8 @@ public class ProductListReport  implements ResultRow {
 
     private String productCode;
 
+    private String alternateItemCode;
+
     private String productName;
 
     private Double maxMonthsOfStock;
@@ -21,5 +23,19 @@ public class ProductListReport  implements ResultRow {
     private Double eop;
 
     private Boolean isActive;
+
+    private Long id;
+
+    private String category;
+
+    private String productForm;
+
+    private String dispensingUnit;
+
+    private String packSize;
+
+    private boolean tracer;
+
+    private boolean fullSupply;
 
 }

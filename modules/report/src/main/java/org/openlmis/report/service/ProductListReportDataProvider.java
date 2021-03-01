@@ -26,8 +26,7 @@ public class ProductListReportDataProvider extends ReportDataProvider {
     @Override
     @Transactional
     public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-        RowBounds rowBounds = new RowBounds((page - 1) * pageSize, pageSize);
-        return mapper.getFilteredSortedProductListReport(filterCriteria, rowBounds,this.getUserId());
+        return mapper.getFilteredSortedProductListReport(filterCriteria, getUserId());
     }
 
     @Override

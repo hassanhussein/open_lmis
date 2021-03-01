@@ -15,11 +15,10 @@ import java.util.Map;
 @Repository
 public interface ProductListReportMapper {
 
-    @SelectProvider(type = ProductListReportQueryBuilder.class, method = "getQuery")
+    @SelectProvider(type = ProductListReportQueryBuilder.class, method = "getAllProducts")
     @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize = -1, timeout = 0, useCache = false, flushCache = false)
     public List<ProductListReport> getFilteredSortedProductListReport(
             @Param("filterCriteria") Map params,
-            @Param("rowBounds") RowBounds rowBounds,
             @Param("userId") Long userId
     );
 

@@ -554,9 +554,11 @@ public class ReportLookupController extends BaseController {
   @RequestMapping(value = "/reportingDates/getTimelinessReportingDates", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getTimelinessReportingDates(
     @RequestParam("periodId") Long periodId,
+    @RequestParam("programId") Long programId,
     HttpServletRequest request
   ) {
-    return OpenLmisResponse.response(REPORTING_DATES, reportLookupService.getTimelinessReportingDates(periodId));
+    return OpenLmisResponse.response(REPORTING_DATES,
+            reportLookupService.getTimelinessReportingDates(periodId, programId));
   }
 
   @RequestMapping(value = "/rmnch-products.json", method = GET, headers = BaseController.ACCEPT_JSON)
