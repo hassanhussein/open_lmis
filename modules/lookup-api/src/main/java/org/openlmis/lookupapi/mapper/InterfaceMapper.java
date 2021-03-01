@@ -70,7 +70,7 @@ public interface InterfaceMapper {
          "JOIN interface_dataset se ON r.productcode::text = se.datasetname::text and interfaceid = 7\n" +
          "JOIN processing_periods pp ON r.periodid = pp.id\n" +
          "JOIN facilities f ON r.facility_id = F.id\n" +
-         "where programID = 1::int and year = 2020::int and EMERGENCY = FALSE  " +
+         "where programID = 1::int and year = 2021::int and EMERGENCY = FALSE  " +
          " and EMERGENCY = FALSE  AND hfrcode IS NOT NULL and hfrcode not in('-', '.') and\n" +
          "periodId = #{periodId}\n" +
          "and ZONE_ID=#{zoneId}\n" +
@@ -93,7 +93,7 @@ public interface InterfaceMapper {
          "JOIN programs pr ON r.programId = PR.ID\n" +
          "JOIN interface_dataset se ON item.productcode::text = se.datasetname::text and interfaceid = 1\n" +
          "where\n" +
-         " pr.id= 1 and extract(year from pp.startdate) = 2020 and pp.id = #{periodId} and scheduleid=#{scheduleId} and d.zone_id=#{zoneId}\n" +
+         " pr.id= 1 and extract(year from pp.startdate) = 2021 and pp.id = #{periodId} and scheduleid=#{scheduleId} and d.zone_id=#{zoneId}\n" +
          " and hfrcode is not null and hfrcode not in('-', '.') and stockinhand > 0\n" +
          "group by\n" +
          " hfrcode, pp.name, productcode,pp.startdate,pp.enddate,datasetid\n" +
@@ -113,7 +113,7 @@ public interface InterfaceMapper {
          "JOIN programs pr ON r.programId = PR.ID\n" +
          "JOIN interface_dataset se ON item.productcode::text = se.datasetname::text and interfaceid = 3\n" +
          "where\n" +
-         " pr.id= 1 and extract(year from pp.startdate) = 2020 and \n" +
+         " pr.id= 1 and extract(year from pp.startdate) = 2021 and \n" +
          " pp.id =#{periodId} AND pp.scheduleId = #{scheduleId} " +
          "and d.zone_id=#{zoneId}\n" +
          " and hfrcode is not null and hfrcode not in('-', '.') and quantityapproved > 0\n" +
@@ -135,7 +135,7 @@ public interface InterfaceMapper {
          "JOIN programs pr ON r.programId = PR.ID\n" +
          "JOIN interface_dataset se ON item.productcode::text = se.datasetname::text and interfaceid = 2\n" +
          "where\n" +
-         " pr.id= 1 and extract(year from pp.startdate) = 2020 and pp.id = #{periodId} and scheduleid=#{scheduleId} and d.zone_id=#{zoneId}\n" +
+         " pr.id= 1 and extract(year from pp.startdate) = 2021 and pp.id = #{periodId} and scheduleid=#{scheduleId} and d.zone_id=#{zoneId}\n" +
          " and hfrcode is not null and hfrcode not in('-', '.') AND quantityreceived > 0\n" +
          "group by\n" +
          " hfrcode, pp.name, productcode,pp.startdate,pp.enddate,datasetid\n" +

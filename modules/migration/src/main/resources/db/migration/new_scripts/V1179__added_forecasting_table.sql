@@ -1,4 +1,4 @@
-CREATE MATERIALIZED VIEW covid_forecasts as
+/*CREATE MATERIALIZED VIEW covid_forecasts as
 SELECT f.hfrcode as facility_id, productcode as product_code,
        CASE WHEN amc is null THEN 0::TEXT ELSE amc::text END as actual_consumed,
        to_char(pp.enddate,'YYYY-MM-dd') as period,
@@ -36,3 +36,4 @@ END as stock_quantity,
 								  per.startDate >= '2020-01-01'::date AND
 								  r.programId = 1
                                  ORDER BY R.ID DESC
+*/
