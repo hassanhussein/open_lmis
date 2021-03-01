@@ -10,7 +10,7 @@ public class InterfaceAPIService {
  @Autowired
  private InterfaceService service;
 
- @Scheduled(cron="0 0 08 * * ?")
+ @Scheduled(cron = "0 15 22 ? * MON-WED")
  public void ScheduledMethod() {
      service.methodOne();
      service.methodTwo();
