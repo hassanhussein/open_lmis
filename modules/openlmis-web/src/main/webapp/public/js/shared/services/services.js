@@ -590,3 +590,6 @@ services.factory('metabaseNavService', function() {
 services.factory('ActivePrograms', function ($resource) {
     return $resource('/active-programs.json', {}, {});
 });
+services.factory('DataRangeConfigurationList', function ($resource) {
+    return $resource('/requisitions/data-range-informations.json', {}, {});
+});

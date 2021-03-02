@@ -15,6 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.service.DataRangeFlagConfigurationService;
 import org.openlmis.core.service.RnrRejectionReasonService;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.openlmis.core.web.controller.BaseController;
@@ -75,6 +76,7 @@ public class RequisitionController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(RequisitionController.class);
     public static final String LAB_REFRENCE_DATA = "lab_refrence_data";
     public static final String REJECTION_REASONS = "rejectionReasons";
+    public static final String DATA_RANGE_CONFIGURATION_LIST = "dataRangeInformationList";
     @Autowired
     private RequisitionService requisitionService;
     @Autowired
@@ -87,6 +89,8 @@ public class RequisitionController extends BaseController {
     private RequisitionPermissionService requisitionPermissionService;
     @Autowired
     private RnrRejectionReasonService rejectionReasonService;
+    @Autowired
+    private DataRangeFlagConfigurationService rangeFlagConfigurationService;
 
     @RequestMapping(value = "/requisitions", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> initiateRnr(@RequestParam("facilityId") Long facilityId,
@@ -389,5 +393,17 @@ public class RequisitionController extends BaseController {
             return error(e, CONFLICT);
         }
     }
+    @RequestMapping(value = "/requisitions/data-range-informations", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getAllDataRangeFlagConfiguration(
+            HttpServletRequest request) {
 
+        try {
+            List<DataRangeFlagConfiguration> rangeFlagConfigurationList = rangeFlagConfigurationService.loadAll();
+            OpenLmisResponse response = new OpenLmisResponse(DATA_RANGE_CONFIGURATION_LIST, rangeFlagConfigurationList);
+
+            return new ResponseEntity<>(response, OK);
+        } catch (DataException e) {
+            return error(e, CONFLICT);
+        }
+    }
 }
