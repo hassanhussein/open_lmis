@@ -36,7 +36,7 @@ public class SettingController extends BaseController {
 
 
   @RequestMapping(value = "/settings", method = RequestMethod.GET, headers = "Accept=application/json")
-  @PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SETTING')")
+  //@PreAuthorize("@permissionEvaluator.hasPermission(principal,'MANAGE_SETTING')")
   public ResponseEntity<OpenLmisResponse> getAll() {
     ConfigurationDTO dto = new ConfigurationDTO();
     dto.setList( configurationService.getConfigurations() );
