@@ -17,6 +17,8 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.ProgramSupported;
 import org.openlmis.core.dto.ProgramSupportedEventDTO;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,134 +34,138 @@ import java.util.List;
 @Service
 public class ProgramSupportedService {
 
-  @Autowired
-  ProgramSupportedRepository repository;
+    @Autowired
+    ProgramSupportedRepository repository;
 
-  @Autowired
-  ProgramService programService;
+    @Autowired
+    ProgramService programService;
 
-  @Autowired
-  FacilityService facilityService;
+    @Autowired
+    FacilityService facilityService;
 
-  @Autowired
-  EventService eventService;
+    @Autowired
+    EventService eventService;
 
-  @Autowired
-  FacilityProgramProductService facilityProgramProductService;
+    @Autowired
+    FacilityProgramProductService facilityProgramProductService;
 
-  Logger logger = Logger.getLogger(ProgramSupportedService.class);
+    Logger logger = Logger.getLogger(ProgramSupportedService.class);
 
 
-  public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
-    return repository.getAllByFacilityId(facilityId);
-  }
-  public List<ProgramSupported> getAllByFacilityCode(String facilityCode) {
-    return repository.getAllByFacilityCode(facilityCode);
-  }
-
-  public void updateSupportedPrograms(Facility facility) {
-    Facility facilityForNotification = cloneFacility(facility);
-    boolean updated = repository.updateSupportedPrograms(facility);
-    if (updated) {
-      repository.updateForVirtualFacilities(facility);
-      notifyProgramSupportedUpdated(facilityForNotification);
+    public List<ProgramSupported> getAllByFacilityId(Long facilityId) {
+        return repository.getAllByFacilityId(facilityId);
     }
-  }
 
-  private Facility cloneFacility(Facility facility) {
-    Facility facilityForNotification = new Facility();
-    facilityForNotification.setCode(facility.getCode());
-    facilityForNotification.setId(facility.getId());
-    ArrayList<ProgramSupported> supportedPrograms = new ArrayList<>();
-    for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
-      supportedPrograms.add(programSupported);
+    public List<ProgramSupported> getAllByFacilityCode(String facilityCode) {
+        return repository.getAllByFacilityCode(facilityCode);
     }
-    facilityForNotification.setSupportedPrograms(supportedPrograms);
-    return facilityForNotification;
-  }
 
-  public ProgramSupported getFilledByFacilityIdAndProgramId(Long facilityId, Long programId) {
-    ProgramSupported programSupported = repository.getByFacilityIdAndProgramId(facilityId, programId);
-    programSupported.setProgramProducts(facilityProgramProductService.getForProgramAndFacility(programId, facilityId));
-    return programSupported;
-  }
-
-  public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
-    return repository.getByFacilityIdAndProgramId(facilityId, programId);
-  }
-
-  public void uploadSupportedProgram(ProgramSupported programSupported) {
-    programSupported.isValid();
-
-    Facility facility = new Facility();
-    facility.setCode(programSupported.getFacilityCode());
-
-    facility = facilityService.getByCode(facility);
-    programSupported.setFacilityId(facility.getId());
-
-    Program program = programService.getByCode(programSupported.getProgram().getCode());
-    programSupported.setProgram(program);
-
-    if (programSupported.getId() == null) {
-      repository.addSupportedProgram(programSupported);
-    } else {
-      repository.updateSupportedProgram(programSupported);
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
+    public void updateSupportedPrograms(Facility facility) {
+        Facility facilityForNotification = cloneFacility(facility);
+        boolean updated = repository.updateSupportedPrograms(facility);
+        if (updated) {
+            repository.updateForVirtualFacilities(facility);
+            notifyProgramSupportedUpdated(facilityForNotification);
+        }
     }
-  }
 
-  public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
-    Facility facility = getFacility(programSupported);
-
-    Program program = getProgram(programSupported);
-
-    return getByFacilityIdAndProgramId(facility.getId(), program.getId());
-  }
-
-  private Program getProgram(ProgramSupported programSupported) {
-    Program program = programService.getByCode(programSupported.getProgram().getCode());
-
-    if (program == null)
-      throw new DataException("program.code.invalid");
-    return program;
-  }
-
-  private Facility getFacility(ProgramSupported programSupported) {
-    Facility facility = new Facility();
-    facility.setCode(programSupported.getFacilityCode());
-    facility = facilityService.getByCode(facility);
-
-    if (facility == null)
-      throw new DataException("error.facility.code.invalid");
-    return facility;
-  }
-
-  public void notifyProgramSupportedUpdated(Facility facility) {
-    try {
-      List<ProgramSupported> programsSupported = facility.getSupportedPrograms();
-
-      ProgramSupportedEventDTO eventDTO = new ProgramSupportedEventDTO(facility.getCode(), programsSupported);
-      eventService.notify(eventDTO.createEvent());
-
-      for (Facility virtualFacility : facilityService.getChildFacilities(facility)) {
-        eventDTO = new ProgramSupportedEventDTO(virtualFacility.getCode(), programsSupported);
-        eventService.notify(eventDTO.createEvent());
-      }
-
-    } catch (URISyntaxException e) {
-      logger.error("Failed to generate program supported event feed", e);
+    private Facility cloneFacility(Facility facility) {
+        Facility facilityForNotification = new Facility();
+        facilityForNotification.setCode(facility.getCode());
+        facilityForNotification.setId(facility.getId());
+        ArrayList<ProgramSupported> supportedPrograms = new ArrayList<>();
+        for (ProgramSupported programSupported : facility.getSupportedPrograms()) {
+            supportedPrograms.add(programSupported);
+        }
+        facilityForNotification.setSupportedPrograms(supportedPrograms);
+        return facilityForNotification;
     }
-  }
 
-  public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
-    return repository.getActiveByFacilityId(facilityId);
-  }
+    public ProgramSupported getFilledByFacilityIdAndProgramId(Long facilityId, Long programId) {
+        ProgramSupported programSupported = repository.getByFacilityIdAndProgramId(facilityId, programId);
+        programSupported.setProgramProducts(facilityProgramProductService.getForProgramAndFacility(programId, facilityId));
+        return programSupported;
+    }
 
-  public void updateForVirtualFacilities(Facility parentFacility) {
-    repository.updateForVirtualFacilities(parentFacility);
-  }
+    public ProgramSupported getByFacilityIdAndProgramId(Long facilityId, Long programId) {
+        return repository.getByFacilityIdAndProgramId(facilityId, programId);
+    }
 
-  public List<ProgramSupported> getAll() {
-    return repository.getAll();
-  }
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
+    public void uploadSupportedProgram(ProgramSupported programSupported) {
+        programSupported.isValid();
+
+        Facility facility = new Facility();
+        facility.setCode(programSupported.getFacilityCode());
+
+        facility = facilityService.getByCode(facility);
+        programSupported.setFacilityId(facility.getId());
+
+        Program program = programService.getByCode(programSupported.getProgram().getCode());
+        programSupported.setProgram(program);
+
+        if (programSupported.getId() == null) {
+            repository.addSupportedProgram(programSupported);
+        } else {
+            repository.updateSupportedProgram(programSupported);
+        }
+    }
+
+    public ProgramSupported getProgramSupported(ProgramSupported programSupported) {
+        Facility facility = getFacility(programSupported);
+
+        Program program = getProgram(programSupported);
+
+        return getByFacilityIdAndProgramId(facility.getId(), program.getId());
+    }
+
+    private Program getProgram(ProgramSupported programSupported) {
+        Program program = programService.getByCode(programSupported.getProgram().getCode());
+
+        if (program == null)
+            throw new DataException("program.code.invalid");
+        return program;
+    }
+
+    private Facility getFacility(ProgramSupported programSupported) {
+        Facility facility = new Facility();
+        facility.setCode(programSupported.getFacilityCode());
+        facility = facilityService.getByCode(facility);
+
+        if (facility == null)
+            throw new DataException("error.facility.code.invalid");
+        return facility;
+    }
+
+    public void notifyProgramSupportedUpdated(Facility facility) {
+        try {
+            List<ProgramSupported> programsSupported = facility.getSupportedPrograms();
+
+            ProgramSupportedEventDTO eventDTO = new ProgramSupportedEventDTO(facility.getCode(), programsSupported);
+            eventService.notify(eventDTO.createEvent());
+
+            for (Facility virtualFacility : facilityService.getChildFacilities(facility)) {
+                eventDTO = new ProgramSupportedEventDTO(virtualFacility.getCode(), programsSupported);
+                eventService.notify(eventDTO.createEvent());
+            }
+
+        } catch (URISyntaxException e) {
+            logger.error("Failed to generate program supported event feed", e);
+        }
+    }
+
+    public List<ProgramSupported> getActiveByFacilityId(Long facilityId) {
+        return repository.getActiveByFacilityId(facilityId);
+    }
+
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
+    public void updateForVirtualFacilities(Facility parentFacility) {
+        repository.updateForVirtualFacilities(parentFacility);
+    }
+
+    public List<ProgramSupported> getAll() {
+        return repository.getAll();
+    }
 
 }

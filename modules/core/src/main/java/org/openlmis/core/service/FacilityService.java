@@ -22,6 +22,8 @@ import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +85,7 @@ public class FacilityService {
     private AuditService auditService;
 
     @Transactional
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
     public void update(Facility facility) {
         save(facility);
         programSupportedService.updateSupportedPrograms(facility);
@@ -122,6 +125,7 @@ public class FacilityService {
     }
 
     @Transactional
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
     public void updateEnabledAndActiveFor(Facility facility) {
         facility = facilityRepository.updateEnabledAndActiveFor(facility);
 
@@ -138,7 +142,7 @@ public class FacilityService {
         List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
         return facilityRepository.getFacilitiesBy(programId, requisitionGroups);
     }
-
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void save(Facility newFacility) {
         newFacility.validate();
 
@@ -158,7 +162,7 @@ public class FacilityService {
             }
         }
     }
-
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
     public void updateAndNotifyForVirtualFacilities(Facility parentFacility) {
         facilityRepository.updateVirtualFacilities(parentFacility);
         notify(getChildFacilities(parentFacility));
@@ -414,6 +418,7 @@ public class FacilityService {
     }
 
     @Transactional
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void insertHfrFacilityTypeMapping(HfrFacilityTypeDTO dto){
          if(dto !=null){
              FacilityType facilityType = facilityTypeService.getFacilityTypeByCode(dto.getVimsCode());

@@ -43,7 +43,7 @@
     <!-- create myExchange and bind myAnonymousQueue with my.routingkey.1 to the TUTORIAL-EXCHANGE-->
     <rabbit:topic-exchange id="myExchange" name="MESSAGE-EXCHANGE">
         <rabbit:bindings>
-            <rabbit:binding queue="myAnonymousQueue1" pattern="messages.facility.notification.*"></rabbit:binding>
+            <rabbit:binding queue="myAnonymousQueue1" pattern="messages.facility.notification.#"></rabbit:binding>
         </rabbit:bindings>
     </rabbit:topic-exchange>
     <!-- instantiate TutorialListener -->

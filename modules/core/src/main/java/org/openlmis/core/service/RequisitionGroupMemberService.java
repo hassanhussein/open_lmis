@@ -16,6 +16,8 @@ import org.openlmis.core.domain.Program;
 import org.openlmis.core.domain.RequisitionGroup;
 import org.openlmis.core.domain.RequisitionGroupMember;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,7 @@ public class RequisitionGroupMemberService {
     this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
     this.programRepository = programRepository;
   }
-
+  @Loggable(action = TableActionEnum.INSERT_ACTION)
   public void save(RequisitionGroupMember requisitionGroupMember) {
     setIdsForRequisitionGroupMemberEntitiesAndValidate(requisitionGroupMember);
 
@@ -59,7 +61,7 @@ public class RequisitionGroupMemberService {
       requisitionGroupMemberRepository.update(requisitionGroupMember);
     }
   }
-
+  @Loggable(action = TableActionEnum.UPDATE_ACTION)
   public void updateMembersForVirtualFacilities(Facility parentFacility) {
     requisitionGroupMemberRepository.updateMembersForVirtualFacilities(parentFacility);
   }

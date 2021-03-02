@@ -1,3 +1,4 @@
+
 /*
  * This program is part of the OpenLMIS logistics management information system platform software.
  * Copyright © 2013 VillageReach
@@ -8,36 +9,15 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
+package org.openlmis.core.logging;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-include "modules:authentication",
-        "modules:core",
-        "modules:db",
-        "modules:demographics",
-        "modules:distribution",
-        "modules:email",
-        "modules:equipment",
-        "modules:export",
-        "modules:help",
-        "modules:ivd-form",
-        "modules:logging",
-        "modules:lookup-api",
-        "modules:migration",
-        "modules:openlmis-web",
-        "modules:notification",
-        "modules:report",
-        "modules:reporting",
-        "modules:requisition",
-        "modules:rest-api",
-        "modules:shipment",
-        "modules:sms",
-        "modules:stock-management",
-        "modules:upload",
-        "modules:vaccine"
-
-//        "test-modules:functional-tests",
-//        "test-modules:service-tests",
-//        "test-modules:test-core",
-//        "test-modules:webservice-test"
-
-
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Loggable {
+    TableActionEnum action();
+}

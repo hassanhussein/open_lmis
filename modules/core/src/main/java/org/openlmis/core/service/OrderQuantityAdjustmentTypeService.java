@@ -12,6 +12,8 @@
 package org.openlmis.core.service;
 
 import org.openlmis.core.domain.OrderQuantityAdjustmentType;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.OrderQuantityAdjustmentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,32 +25,34 @@ public class OrderQuantityAdjustmentTypeService {
     @Autowired
     private OrderQuantityAdjustmentTypeRepository quantityAdjustmentTypeRepository;
 
-
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void addOrderQuantityAdjustmentType(OrderQuantityAdjustmentType quantityAdjustmentType) {
         this.quantityAdjustmentTypeRepository.addOrderQuantityAdjustmentType(quantityAdjustmentType);
 
     }
 
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
     public void updateOrderQuantityAdjustmentType(OrderQuantityAdjustmentType quantityAdjustmentType) {
         this.quantityAdjustmentTypeRepository.updateOrderQuantityAdjustmentType(quantityAdjustmentType);
     }
 
+    @Loggable(action = TableActionEnum.DELETE_ACTION)
     public void deleteOrderQuantityAdjustmentType(OrderQuantityAdjustmentType quantityAdjustmentType) {
         this.quantityAdjustmentTypeRepository.deleteOrderQuantityAdjustmentType(quantityAdjustmentType);
 
     }
 
     public List<OrderQuantityAdjustmentType> loadOrderQuantityAdjustmentTypeList() {
-        return  this.quantityAdjustmentTypeRepository.loadOrderQuantityAdjustmentTypeList();
+        return this.quantityAdjustmentTypeRepository.loadOrderQuantityAdjustmentTypeList();
     }
 
     public OrderQuantityAdjustmentType loadOrderQuantityAdjustmentType(Long id) {
-        return  this.quantityAdjustmentTypeRepository.loadOrderQuantityAdjustmentType(id);
+        return this.quantityAdjustmentTypeRepository.loadOrderQuantityAdjustmentType(id);
     }
 
     public List<OrderQuantityAdjustmentType> searchForQuantityAdjustmentType(String param) {
-        List<OrderQuantityAdjustmentType> quantityAdjustmentTypeList=null;
-        quantityAdjustmentTypeList=this.quantityAdjustmentTypeRepository.searchForQuantityAdjustmentType(param);
+        List<OrderQuantityAdjustmentType> quantityAdjustmentTypeList = null;
+        quantityAdjustmentTypeList = this.quantityAdjustmentTypeRepository.searchForQuantityAdjustmentType(param);
         return quantityAdjustmentTypeList;
     }
 }

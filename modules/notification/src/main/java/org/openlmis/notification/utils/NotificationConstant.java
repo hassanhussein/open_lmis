@@ -26,6 +26,7 @@ package org.openlmis.notification.utils;
 
 public class NotificationConstant {
     public static final String NEW_MESSAGE_CREATED="MSG_000001";
-    public static final String NMESSAGE_UPDATED="MSG_000002";
+    public static final String MESSAGE_UPDATED="MSG_000002";
+    public static final String CORE_TABLE_DATA_CHANGED="MSG_000003";
 }
 

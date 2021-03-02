@@ -13,6 +13,8 @@ package org.openlmis.core.service;
 import org.openlmis.core.domain.ManualTestResultCategory;
 import org.openlmis.core.domain.ManualTestResultType;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ManualTestResultCategoryRepository;
 import org.openlmis.core.repository.ManualTestResultTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +36,15 @@ public class ManualTestResultCategoryService {
     public ManualTestResultCategory getById(Long id){
         return repository.getById(id);
     }
-
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void insert(ManualTestResultCategory type){
         repository.insert(type);
     }
-
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void  update(ManualTestResultCategory type){
         repository.update(type);
     }
-
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void save(ManualTestResultCategory testResultType) {
         try
         {
@@ -54,7 +56,7 @@ public class ManualTestResultCategoryService {
                 throw new DataException("Invalid code, the provided Result Category code already exists");
         }
     }
-
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void remove(Long id) {
         repository.remove(id);
     }
