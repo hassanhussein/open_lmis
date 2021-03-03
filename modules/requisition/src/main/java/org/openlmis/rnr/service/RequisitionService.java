@@ -1126,7 +1126,7 @@ public class RequisitionService {
 
   public Boolean saveBudgetFromMSDApi(Long facilityId,Long programId) {
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+   /* RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
     criteria.setFacilityId(facilityId);
     criteria.setProgramId(programId);
     criteria.setEmergency(false);
@@ -1135,7 +1135,7 @@ public class RequisitionService {
       if(!configurationSettingsService.getByKey("COUNTRY").getValue().equalsIgnoreCase("Zanzibar")) {
         statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
       }
-    }
+    }*/
     return true;
   }
 
