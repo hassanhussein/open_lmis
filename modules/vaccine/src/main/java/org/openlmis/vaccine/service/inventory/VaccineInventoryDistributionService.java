@@ -178,35 +178,38 @@ public Long save(VaccineDistribution distribution, Long userId) {
             System.out.println("Line Item id "+lineItem.getId());
 
 
+            try {
+                //repository.deleteLotsByLineItem(lineItem.getId());
+                if (lineItem.getLots() != null) {
+                    System.out.println("Line Item id " + lineItem.getLots());
 
-            //repository.deleteLotsByLineItem(lineItem.getId());
-            if (lineItem.getLots() != null) {
-                System.out.println("Line Item id "+lineItem.getLots());
+                    for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
+                        lot.setModifiedBy(userId);
+                        lot.setCreatedBy(userId);
+                        lot.setDistributionLineItemId(lineItem.getDistributionLineItemId());
+                        if (lot.getQuantity() != null) {
+                            lot.setQuantity(lot.getQuantity());
+                        } else {
+                            lot.setQuantity(lot.getQty());
+                        }
 
-                for (VaccineDistributionLineItemLot lot : lineItem.getLots()) {
-                    lot.setModifiedBy(userId);
-                    lot.setCreatedBy(userId);
-                    lot.setDistributionLineItemId(lineItem.getDistributionLineItemId());
-                    if(lot.getQuantity()!=null){
-                        lot.setQuantity(lot.getQuantity());
-                    }else{
-                        lot.setQuantity(lot.getQty());
-                    }
+                        if (lot.getPackSize() == null) {
+                            long parkSize = 1;
+                            lot.setPackSize(parkSize);
+                        }
 
-                    if(lot.getPackSize()==null){
-                        long parkSize=1;
-                        lot.setPackSize(parkSize);
-                    }
-
-                    System.out.println(lot.getQty());
-                    if (lot.getId() != null) {
-                        repository.updateDistributionLineItemLot(lot);
-                   } else {
-                        if(lot.getLotId() !=null) {
-                            repository.saveDistributionLineItemLot(lot);
+                        System.out.println(lot.getQty());
+                        if (lot.getId() != null) {
+                            repository.updateDistributionLineItemLot(lot);
+                        } else {
+                            if (lot.getLotId() != null) {
+                                repository.saveDistributionLineItemLot(lot);
+                            }
                         }
                     }
                 }
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
 

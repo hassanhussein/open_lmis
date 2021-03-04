@@ -129,6 +129,7 @@ public class StockRequirementsService
                         requirements.setId(existingRequirements.getId());
                         update(requirements);
                     } else {
+
                         save(requirements);
                     }
 
