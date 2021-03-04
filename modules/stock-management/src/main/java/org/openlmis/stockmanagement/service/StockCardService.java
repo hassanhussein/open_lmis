@@ -173,18 +173,22 @@ public class StockCardService {
 
   @Transactional
   public void addStockCardEntry(StockCardEntry entry) {
+    try {
 
-    StockCard card = getOrCreateStockCard(entry.getStockCard().getFacility().getId(), entry.getStockCard().getProduct().getCode());//entry.getStockCard();
+      StockCard card = getOrCreateStockCard(entry.getStockCard().getFacility().getId(), entry.getStockCard().getProduct().getCode());//entry.getStockCard();
 
-    card.addToTotalQuantityOnHand(entry.getQuantity());
-    repository.persistStockCardEntry(entry);
+      card.addToTotalQuantityOnHand(entry.getQuantity());
+      repository.persistStockCardEntry(entry);
 
-    LotOnHand lotOnHand = entry.getLotOnHand();
-    if (null != lotOnHand) {
-      lotOnHand.addToQuantityOnHand(entry.getQuantity());
-      lotRepository.saveLotOnHand(lotOnHand);
+      LotOnHand lotOnHand = entry.getLotOnHand();
+      if (null != lotOnHand) {
+        lotOnHand.addToQuantityOnHand(entry.getQuantity());
+        lotRepository.saveLotOnHand(lotOnHand);
+      }
+      repository.updateStockCard(card);
+    }catch (Exception e){
+      e.printStackTrace();
     }
-    repository.updateStockCard(card);
 
   }
 

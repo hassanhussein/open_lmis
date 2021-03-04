@@ -68,10 +68,14 @@ public class LotRepository {
   }*/
 
   public void saveLotOnHand(LotOnHand lotOnHand) {
-    if (null == lotOnHand.getId()) {
-      mapper.insertLotOnHand(lotOnHand);
-    } else {
-      mapper.updateLotOnHand(lotOnHand);
+    try {
+      if (null == lotOnHand.getId()) {
+        mapper.insertLotOnHand(lotOnHand);
+      } else {
+        mapper.updateLotOnHand(lotOnHand);
+      }
+    }catch (Exception e){
+      e.printStackTrace();
     }
   }
 
