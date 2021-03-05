@@ -9,6 +9,7 @@
   -->
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
+
 <div class="rnr-tabs clearfix">
     <ul class="clearfix">
         <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
@@ -29,7 +30,9 @@
     </ul>
   <span class="pull-right">
         <a id="consumptionRateConfiguration"  ng-click="showConsumptionRateColorInfoModal()" href="" class="btn">
-          <i class="icon-info-sign"></i>
+          <i data-toggle="tooltip"
+                  data-html="true"
+                  data-title="<table><tr><td style='color:lightGreen;'></td><td>Show Data Configuration Color Information</td></tr></table>" class="icon-info-sign"></i>
         </a>
     <a id="resizeViewButton" full-screen href="" class="btn">
       <i class="icon-resize-full"></i>
@@ -41,47 +44,8 @@
        target="_blank"></a>
   </span>
 </div>
-<div id="consumptionRateColorInfo" modal="consumptionRateColorInfoModal"  options="{'backdrop':'static', 'escape':false}">
-    <div class="modal-header">
-        <h3 openlmis-message="label.consumption.configuration.rate.color.information"></h3>
-    </div>
-    <div class="modal-body">
+<ng-include src="'/public/pages/logistics/rnr/partials/approve/data-range-configuration-info-modal.html'"></ng-include>
 
-        <div  class="adjustment-field">
-
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr class="gradient-header">
-
-                    <th><span openlmis-message="label.data.range.flag.display.name"></span></th>
-                    <th><span openlmis-message="label.data.range.flag.min.value"></span></th>
-                    <th><span openlmis-message="label.data.range.flag.max.value"></span></th>
-                    <th ><span  openlmis-message="label.description"></span></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="type in dataRangeConfigurationList | filter : query">
-
-
-                    <td>{{type.displayname}}</td>
-                    <td>{{type.minvalue}}</td>
-                    <td>{{type.maxvalue}}</td>
-                    <td ng-style="{'background-color': type.description}">{{type.description}}</td>
-
-                </tr>
-                </tbody>
-            </table>
-
-        </div>
-        <div class="modal-footer">
-
-            <input type="button"
-                   ng-click="closeConsumptionRateColorInfoModal();"
-                   class="btn btn-close"
-                   openlmis-message="button.close"/>
-        </div>
-    </div>
-</div>
 <form name="approvalForm" novalidate>
 
   <span ng-show="visibleTab === 'nonFullSupply'">

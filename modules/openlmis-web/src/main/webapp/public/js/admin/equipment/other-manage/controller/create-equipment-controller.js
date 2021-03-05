@@ -11,7 +11,15 @@
  */
 
 function CreateEquipmentController($scope, $routeParams, $location, Equipment,EquipmentType, EquipmentTypes, SaveEquipment, messageService, ColdChainDesignations,ColdChainPqsStatus,EquipmentEnergyTypes, Donors,currentEquipmentTypeId) {
-
+    $('.infoIcon').mouseenter(
+        function(){$(this).popover({placement: 'top',trigger: 'manual',html:true}).popover('show');
+        });
+    $('.infoIcon').mouseleave(
+        function(){$(this).popover('destroy');
+        });
+    // $('body').on('.popover','mouseleave', function(){
+    //     $('.infoIcon').popover('destroy');
+    // });
   $scope.currentEquipmentTypeId=currentEquipmentTypeId.get();
   if( $scope.currentEquipmentTypeId === undefined)
   {
