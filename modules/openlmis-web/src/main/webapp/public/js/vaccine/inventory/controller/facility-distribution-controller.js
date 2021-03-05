@@ -43,8 +43,9 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
                 $scope.dateOptions = {
                     dateFormat: 'dd/mm/yy',
                     changeYear: false,
-                    minDate: new Date($scope.startDate),
-                    maxDate: new Date($scope.endDate)
+                    maxDate: new Date()
+                    //minDate: new Date($scope.startDate),
+                   // maxDate: new Date($scope.endDate)
                 };
 
             });
@@ -95,6 +96,9 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
     $scope.loadStockCards = function () {
 
         StockCards.get({facilityId: $scope.homeFacility.id}, function (data) {
+            console.log("stock card");
+            console.log(data.stockCards);
+
             $scope.stockCards = data.stockCards;
         });
     };
@@ -110,6 +114,8 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
             endDate:endDate,
             type: $scope.type
         }, function (data) {
+        console.log("success");
+        console.log(data);
             $scope.distributionsByDate = data.distributions;
         });
     };
@@ -311,7 +317,7 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
         //TODO: load stock cards on program change
         $scope.selectedProgram = $scope.userPrograms[0];
         $scope.loadSupervisedFacilities($scope.userPrograms[0]);
-       // $scope.loadStockCards();
+        $scope.loadStockCards();
         $scope.searchDate = $scope.toDay;
         $scope.loadDistributionsByDate($scope.toDay);
     }
@@ -319,7 +325,7 @@ function FacilityDistributionController($scope, $filter,Period, $location, Facil
         $scope.showPrograms = false;
         $scope.selectedProgram = $scope.userPrograms[0];
         $scope.loadSupervisedFacilities($scope.userPrograms[0].id);
-        //$scope.loadStockCards();
+        $scope.loadStockCards();
         $scope.searchDate = $scope.toDay;
         $scope.loadDistributionsByDate($scope.toDay);
     }
