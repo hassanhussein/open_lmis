@@ -22,7 +22,7 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class AggregateConsumptionQueryBuilder {
 
-  public static String getAggregateSelect(AggregateConsumptionReportParam filter) {
+  public static String getAggregateSelect(AggregateConsumptionReportParam filter, Boolean canViewNationalReport) {
 
     BEGIN();
     SELECT("p.code");
@@ -40,7 +40,7 @@ public class AggregateConsumptionQueryBuilder {
     INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
     INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
 
-    writePredicates(filter);
+    writePredicates(filter, canViewNationalReport);
 
     GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code");
     ORDER_BY("p.primaryName");
@@ -49,7 +49,7 @@ public class AggregateConsumptionQueryBuilder {
   }
 
 
-  public static String getDisAggregateSelect(AggregateConsumptionReportParam filter) {
+  public static String getDisAggregateSelect(AggregateConsumptionReportParam filter, Boolean canViewNationalReport) {
 
     BEGIN();
     SELECT("f.code facilityCode");
@@ -70,17 +70,18 @@ public class AggregateConsumptionQueryBuilder {
     INNER_JOIN("program_products ppg on ppg.programId = r.programId and ppg.productId = p.id");
     INNER_JOIN("facility_types ft ON ft.id =f.typeId");
     INNER_JOIN("dosage_units ds ON ds.id = p.dosageunitid");
-    writePredicates(filter);
+    writePredicates(filter, canViewNationalReport);
     GROUP_BY("p.code, p.primaryName, p.dispensingUnit, p.strength, ds.code,f.Code,f.name,ft.name ");
     ORDER_BY("p.primaryName");
     return SQL();
 
   }
 
-  private static void writePredicates(AggregateConsumptionReportParam filter) {
+  private static void writePredicates(AggregateConsumptionReportParam filter, Boolean canViewNationalReport) {
 
     WHERE(programIsFilteredBy("r.programId"));
     WHERE(periodIsFilteredBy("r.periodId"));
+    if(!canViewNationalReport)
     WHERE(userHasPermissionOnFacilityBy("r.facilityId"));
     WHERE(rnrStatusFilteredBy("r.status", filter.getAcceptedRnrStatuses()));/*
     WHERE(periodStartDateRangeFilteredBy("pp.startdate", filter.getPeriodStart().trim()));
@@ -108,10 +109,11 @@ public class AggregateConsumptionQueryBuilder {
   public static String getQuery(Map params){
 
     AggregateConsumptionReportParam filter = (AggregateConsumptionReportParam) params.get("filterCriteria");
+    Boolean canViewNationalReport = (Boolean) params.get("canViewNationalReport");
     if (filter.getDisaggregated())
-    return getDisAggregateSelect(filter);
+    return getDisAggregateSelect(filter, canViewNationalReport);
     else
-     return getAggregateSelect(filter);
+     return getAggregateSelect(filter, canViewNationalReport);
 
   }
 

@@ -34,7 +34,8 @@ public interface AggregateConsumptionReportMapper {
       @Param("filterCriteria") ReportParameter filterCriteria,
       @Param("SortCriteria") Map<String, String[]> sortCriteria,
       @Param("RowBounds") RowBounds rowBounds,
-      @Param("userId") Long userId
+      @Param("userId") Long userId,
+      @Param("canViewNationalReport") Boolean canViewNationalReport
   );
 
 }
