@@ -49,7 +49,7 @@ public interface StockNotificationMapper {
             })
     StockOutNotificationDTO getById(Long id);
 
-    @Select("select P.NAME programName, n.id, invoiceNumber, soldto,soldtoCustomerName,  d.district_name,region_name,zone_name, orderNumber, msdOrderNumber, invoicedate, salescategory, n.comment\n" +
+   /* @Select("select P.NAME programName, n.id, invoiceNumber, soldto,soldtoCustomerName,  d.district_name,region_name,zone_name, orderNumber, msdOrderNumber, invoicedate, salescategory, n.comment\n" +
             "             from stock_out_notifications n\n" +
             "            JOIN orders o ON n.elmisOrdernumber = o.orderNumber\n" +
             "            JOIN requisitions r ON o.id = r.id \n" +
@@ -71,6 +71,7 @@ public interface StockNotificationMapper {
             "SELECT DISTINCT F.id FROM facilities F INNER JOIN users U ON U.facilityId = F.id\n" +
             "INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId\n" +
             "WHERE U.id =#{userId} AND RR.rightName in ('VIEW_OUT_OF_STOCK_NOTIFICATION') AND RA.supervisoryNodeId IS NULL)\n" +
-            ")")
+            ")")*/
+    @Select(" ")
     List<HashMap<String, Object>> getStockBy(@Param("facilityIds") String facilityIds, @Param("userId") Long userId);
 }
