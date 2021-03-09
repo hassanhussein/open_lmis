@@ -18,7 +18,6 @@
         <div class="span6">
             <div class="form-group">
                 <h3 openlmis-message="label.basicInformation"></h3>
-
                 <div class="form-row clearfix">
                     <div class="form-cell">
                         <label for="firstName" openlmis-message="create.user.firstName"><span class="label-required">
@@ -102,8 +101,7 @@
                 </div>
                 <div class="form-row clearfix">
                     <div class="form-cell">
-                        <label for="zone" class="labels" openlmis-message="label.vaccine.geographic.zone"><span
-                                class="label-required">*</span></label>
+                        <label for="zone" class="labels" openlmis-message="label.vaccine.geographic.zone"></label>
 
                         <div class="form-field">
 
@@ -131,7 +129,7 @@
                         <label class="labels" openlmis-message="label.facility"></label>
 
                         <div class="form-field">
-                            <select ui-select2 id="facility-name" style="width:240px;" name="facility" ng-model="preference.facility"  required="true">
+                            <select ui-select2 id="facility-name" style="width:240px;" name="facility" ng-model="preference.facility"  required="false">
                                 <option  ng-repeat="option in allFacilities" value="{{ option.id }}">{{ option.code }} - {{ option.name }}</option>
                             </select>
                         </div>
@@ -140,7 +138,7 @@
 
                 <div class="form-row clearfix">
                     <div class="form-cell">
-                        <label class="labels" openlmis-message="label.product"><span class="label-required">*</span></label>
+                        <label class="labels" openlmis-message="label.product"></label>
 
                         <div class="form-field">
                             <select ui-select2="productSelectOption" style="width:240px;" name="product" class="input-sm"  ng-model="preference.products" ng-change="processProductsFilter()" openlmis-message="placeholder.select.product"

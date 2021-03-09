@@ -468,6 +468,7 @@ public class VaccineDashboardService {
 
         List<HashMap<String, Object>> stockStatusList = null;
         try {
+            //System.out.println(facility.toString());
             stockStatusList = repository.getFacilityVaccineInventoryStockStatus(facility.getId(), date);
         } catch (Exception ex) {
             LOGGER.warn("error occured.... ", ex);

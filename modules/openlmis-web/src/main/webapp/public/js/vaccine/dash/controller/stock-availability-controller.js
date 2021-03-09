@@ -1,4 +1,4 @@
-function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCategorizationByFacilityData, GetCoverageByRegionSummary, GetPerformanceMonitoringData,
+function StockAvailabilityControllerFunc1(defaultYear,defaultProduct,$scope, $timeout, GetCategorizationByFacilityData, GetCoverageByRegionSummary, GetPerformanceMonitoringData,
                                           GetDistributionOfDistrictPerPerformanceData, GetFacilityClassificationDrillDownData, GetDistrictClassificationSummaryData, GetCategorizationByDistrictDrillDownData, GetCategorizationByDistrictData,
                                           GetCoverageByDistrictData, GetInventoryByMaterialFacilityListData, VaccineDashboardFacilityInventoryStockStatus, GetCoverageMapInfo, GetInventorySummaryByLocationData, GetInventorySummaryByMaterialData,
                                           StockCardsByCategory, GetDistrictInventorySummaryData, GetRegionInventorySummaryData, homeFacility, FacilityInventoryStockStatusData, GetPeriodForDashboard, YearFilteredData, ProductFilteredData,
@@ -860,7 +860,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     $scope.successModal = false;
 
     function showCategorizationPopup(events, data,year,level) {
-            console.log(data.point);
+         //   console.log(data.point);
         var parameters = {period: data.point.category,year: parseInt(year, 10), indicator: events.name};
 
 
@@ -1641,8 +1641,8 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         GetPeriodForDashboard.get(currentDate).then(function (data) {
 
-            $scope.filter.product = 2421;
-            $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
+            $scope.filter.product = defaultProduct;
+            $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': parseInt(defaultProduct,10)});
             $scope.years = YearFilteredData.sort(function (a, b) {
                 return b - a;
             });
@@ -1651,8 +1651,8 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
             $scope.products = $scope.findProductToDisplay;
 
             $scope.filter.period = data.id;
-            var pa = {year: currentDate, product: 2421, period: parseInt(data.id, 10), dose: 3};
-            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(2421, 10)});
+            var pa = {year: currentDate, product: defaultProduct, period: parseInt(data.id, 10), dose: 3};
+            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(defaultProduct, 10)});
             var para = angular.extend(pa, currentDate, {
                 periodName: data.name,
                 productName: $scope.productToDisplay.name
@@ -1740,22 +1740,24 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
     } else {
        var charts = ['myStockVaccine1', 'myStockSyringe1'];
-
+       // console.log(defaultYear);
         var currentDate2 = (defaultYear === null || defaultYear === undefined)?new Date().getFullYear()-1:defaultYear;
         GetPeriodForDashboard.get(currentDate2).then(function (data) {
 
-            $scope.filter.product = 2421;
-            $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': 2421});
+          //  console.log(defaultProduct);
+            $scope.filter.product = defaultProduct;
+            $scope.findProductToDisplay = _.where(ProductFilteredData, {'id': parseInt(defaultProduct,10)});
             $scope.years = YearFilteredData.sort(function (a, b) {
                 return b - a;
             });
             $scope.filter.year = currentDate2;
 
             $scope.products = $scope.findProductToDisplay;
+            //console.log($scope.products);
 
             $scope.filter.period = data.id;
-            var par = {year: currentDate2, product: 2421, period: parseInt(data.id, 10), dose: 3};
-            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(2421, 10)});
+            var par = {year: currentDate2, product: defaultProduct, period: parseInt(data.id, 10), dose: 3};
+            $scope.productToDisplay = _.findWhere($scope.products, {id: parseInt(defaultProduct, 10)});
             var para = angular.extend(par, currentDate2, {
                 periodName: data.name,
                 productName: $scope.productToDisplay.name
@@ -1824,7 +1826,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         };
         if ($scope.filter.product === null || $scope.filter.product === undefined) {
-            $scope.filter.product = 2412;
+            $scope.filter.product = defaultProduct;
         }
 
 
@@ -1866,7 +1868,7 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
 
         $scope.vaccineCoverageByProductAndDoseFunc = function (params) {
             GetCoverageByProductAndDoseData.get(params).then(function (coverage) {
-               console.log(coverage);
+              // console.log(coverage);
                 if (!isUndefined(coverage))
                     coverageByProductAndDose(coverage, params);
             });
@@ -2446,12 +2448,12 @@ function StockAvailabilityControllerFunc1(defaultYear,$scope, $timeout, GetCateg
     }
 
     function coverageByProductAndDose(coverage, params) {
-            console.log(coverage);
+         //   console.log(coverage);
         var colors = {'WARN': '#ffdb00', 'BAD': '#ff0d00', 'NORMAL': '#ABC9AA', 'GOOD': '#006600'};
         var dataValues = [];
         var totalVaccinated = [];
         coverage.forEach(function (data) {
-        console.log(data);
+       // console.log(data);
             totalVaccinated.push({name: 'vaccinated', color: 'blue', y: data.total});
             dataValues.push({name: 'byChart', color: colors[data.coverageclassification], y: data.coverage});
         });
@@ -2860,7 +2862,20 @@ StockAvailabilityControllerFunc1.resolve = {
             });
         }, 100);
         return deferred.promise;
-    }
+    },
+
+
+     defaultProduct: function($q, $timeout, ConfigSettingsByKey){
+            var deferred = $q.defer();
+            $timeout(function () {
+                ConfigSettingsByKey.get({key: 'VACCINE_DASHBOARD_DEFAULT_PRODUCT'}, function (data){
+
+                   // console.log(data);
+                    deferred.resolve(data.settings.value);
+                });
+            }, 100);
+            return deferred.promise;
+        }
 
 
 };

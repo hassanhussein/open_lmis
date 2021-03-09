@@ -910,7 +910,7 @@ public interface VaccineDashboardMapper {
             "      join stock_cards sc on sc.id=sce.stockcardid " +
             "      where " +
             "   (SELECT date_part('YEAR',sce.createddate::DATE)) = ( SELECT date_part('YEAR', #{date}::DATE )) AND " +
-            " sc.facilityid=#{facilityId} and sc.productid=vvisc.product_id and sce.createddate <=#{date}::DATE)::numeric(10,2) / vvisc.monthly_stock::numeric(10,2), 2) " +
+            " sc.facilityid=#{facilityId} and sc.productid=vvisc.product_id and sce.createddate <=#{date}::DATE)::numeric(12,2) / vvisc.monthly_stock::numeric(12,2), 2) " +
             "  END AS mos," +
             "  CASE WHEN (select NOW()::DATE) =#{date}::DATE THEN " +
             "       vvisc.color " +
@@ -936,7 +936,7 @@ public interface VaccineDashboardMapper {
             "    gz.parentid AS geographic_zone_parent_id,\n" +
             "    p.primaryname AS product,\n" +
             "        CASE\n" +
-            "            WHEN sr.isavalue > 0 THEN round(sc.totalquantityonhand::numeric(10,2) / sr.isavalue::numeric(10,2), 1)\n" +
+            "            WHEN sr.isavalue > 0 THEN round(sc.totalquantityonhand::numeric(12,2) / sr.isavalue::numeric(12,2), 1)\n" +
             "            ELSE 0::numeric\n" +
             "        END AS mos,\n" +
             "    sr.isavalue AS monthly_stock,\n" +

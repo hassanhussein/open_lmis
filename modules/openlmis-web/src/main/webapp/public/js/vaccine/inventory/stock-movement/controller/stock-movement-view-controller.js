@@ -67,9 +67,12 @@ console.log($routeParams);
         var total = 0;
         c.lotsOnHand.forEach(function (l) {
             var x = ((l.quantity === '' || l.quantity === undefined) ? 0 : parseInt(l.quantity, 10));
+            if(!isNaN(x)){
             total = total + x;
+            }
 
         });
+
         $scope.total = total;
         c.sum = parseInt(c.quantityRequested, 10) - total;
     };

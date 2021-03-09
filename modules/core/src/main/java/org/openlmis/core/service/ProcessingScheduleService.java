@@ -155,6 +155,7 @@ public class ProcessingScheduleService {
     }
 
   public List<ProcessingPeriod> getAllPeriodsByYear(Long year) {
+    System.out.println(""+year);
         return periodRepository.getAllPeriodsByYear(year);
     }
 }

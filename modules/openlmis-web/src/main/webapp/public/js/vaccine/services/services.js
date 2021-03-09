@@ -969,7 +969,7 @@ services.factory('GetPeriodForDashboard', function ($q, $timeout, $resource, Rep
         var deferred = $q.defer();
         $timeout(function () {
             ReportPeriodsByYear.get({year: parseInt(params, 10)}, function (data) {
-
+                console.log(data);
                 var period = {};
                 if (data !== undefined) {
                     period = data.periods[0];

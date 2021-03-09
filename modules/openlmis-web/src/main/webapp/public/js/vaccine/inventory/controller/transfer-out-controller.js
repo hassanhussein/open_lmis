@@ -95,7 +95,9 @@ function TransferOutController($scope,$location, $document,$window,configuration
       };
 
       $scope.cancel=function(){
-        $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+      $window.location.reload(true);
+
+       // $window.location='/public/pages/vaccine/dash/index3.html#/home';
       };
 
      if($scope.userPrograms.length > 1)
@@ -220,7 +222,10 @@ function TransferOutController($scope,$location, $document,$window,configuration
                          var url = '/vaccine/orderRequisition/issue/print/'+$scope.distributionId;
                          printWindow.location.href=url;
                          $timeout(function(){
-                            $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
+                            $window.location.reload(true);
+
+
+                           // $window.location='/public/pages/vaccine/dashboard/index.html#/dashboard';
                          },900);
                       });
 

@@ -248,7 +248,7 @@ public class UserController extends BaseController {
     @RequestMapping(value = "/users/{userId}/preferences", method = PUT, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> updateUserPreferences(@PathVariable(value = "userId") Long userId, @RequestParam("programId") Long programId,
                                                                   @RequestParam("facilityId") Long facilityId, @RequestParam("products") List<Long> productListId,
-                                                                  @RequestParam("geographicZoneId") Long geographicZoneId,
+                                                                  @RequestParam(required = false) Long geographicZoneId,
                                                                   @RequestBody User user,
                                                                   HttpServletRequest request) {
       Long currentUser = loggedInUserId(request);
