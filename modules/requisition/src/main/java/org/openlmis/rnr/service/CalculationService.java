@@ -165,7 +165,7 @@ public class CalculationService {
   }
 
   private void fillPreviousNCsInLineItems(Rnr requisition, Integer numberOfMonths, Date trackingDate) {
-    if (numberOfMonths >= 3 && !(requisition.isEmergency() || requisition.isForVirtualFacility())) {
+    if (numberOfMonths >= 2 && !(requisition.isEmergency() || requisition.isForVirtualFacility())) {
       return;
     }
 
