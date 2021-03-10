@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.GeoZoneMapDTO;
 import org.openlmis.core.dto.GeographicZoneGeometry;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.GeographicZoneRepository;
 import org.openlmis.core.repository.mapper.GeographicZoneGeoJSONMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +46,7 @@ public class GeographicZoneService {
   public void setPageSize(@Value("${search.page.size}") String pageSize) {
     this.pageSize = Integer.parseInt(pageSize);
   }
-
+  @Loggable(action = TableActionEnum.INSERT_ACTION)
   public void save(GeographicZone geographicZone) {
     geographicZone.validateMandatoryFields();
     geographicZone.setLevel(repository.getGeographicLevelByCode(geographicZone.getLevel().getCode()));

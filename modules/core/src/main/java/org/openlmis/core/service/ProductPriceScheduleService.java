@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Product;
 import org.openlmis.core.domain.ProductPriceSchedule;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ProductPriceScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,7 @@ public class ProductPriceScheduleService {
   }
 
   @Transactional
+  @Loggable(action = TableActionEnum.INSERT_ACTION)
   public void saveAll(List<ProductPriceSchedule> productPriceSchedules, Product product) {
 
     for (ProductPriceSchedule productPriceSchedule : productPriceSchedules) {

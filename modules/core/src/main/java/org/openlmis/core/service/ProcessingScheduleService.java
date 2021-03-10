@@ -13,6 +13,8 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ProcessingPeriodRepository;
 import org.openlmis.core.repository.ProcessingScheduleRepository;
 import org.openlmis.core.repository.RequisitionGroupProgramScheduleRepository;
@@ -32,133 +34,138 @@ import java.util.List;
 @NoArgsConstructor
 public class ProcessingScheduleService {
 
-  private ProcessingScheduleRepository repository;
-  private ProcessingPeriodRepository periodRepository;
-  private RequisitionGroupRepository requisitionGroupRepository;
-  private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
+    private ProcessingScheduleRepository repository;
+    private ProcessingPeriodRepository periodRepository;
+    private RequisitionGroupRepository requisitionGroupRepository;
+    private RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository;
 
-  @Autowired
-  public ProcessingScheduleService(ProcessingScheduleRepository scheduleRepository, ProcessingPeriodRepository periodRepository,
-                                   RequisitionGroupRepository requisitionGroupRepository, RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
-    this.repository = scheduleRepository;
-    this.periodRepository = periodRepository;
-    this.requisitionGroupRepository = requisitionGroupRepository;
-    this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
-  }
-
-  public List<ProcessingSchedule> getAll() {
-    return repository.getAll();
-  }
-
-  public ProcessingSchedule save(ProcessingSchedule processingSchedule) {
-    if (processingSchedule.getId() == null || processingSchedule.getId() == 0) {
-      repository.create(processingSchedule);
-    } else {
-      repository.update(processingSchedule);
+    @Autowired
+    public ProcessingScheduleService(ProcessingScheduleRepository scheduleRepository, ProcessingPeriodRepository periodRepository,
+                                     RequisitionGroupRepository requisitionGroupRepository, RequisitionGroupProgramScheduleRepository requisitionGroupProgramScheduleRepository) {
+        this.repository = scheduleRepository;
+        this.periodRepository = periodRepository;
+        this.requisitionGroupRepository = requisitionGroupRepository;
+        this.requisitionGroupProgramScheduleRepository = requisitionGroupProgramScheduleRepository;
     }
-    return repository.get(processingSchedule.getId());
-  }
 
-  public List<ProcessingPeriod> getAllPeriods(Long scheduleId) {
-    return periodRepository.getAll(scheduleId);
-  }
-
-  public ProcessingSchedule get(Long id) {
-    ProcessingSchedule processingSchedule = repository.get(id);
-    if (processingSchedule == null) {
-      throw new DataException("error.schedule.not.found");
+    public List<ProcessingSchedule> getAll() {
+        return repository.getAll();
     }
-    return processingSchedule;
-  }
 
-  public void savePeriod(ProcessingPeriod processingPeriod) throws ParseException {
-    periodRepository.insert(processingPeriod);
-  }
-
-  public void deletePeriod(Long processingPeriodId) {
-    periodRepository.delete(processingPeriodId);
-  }
-
-  public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriodId) {
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
-    return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
-      startingPeriodId, programStartDate, new Date());
-  }
-
-  public List<ProcessingPeriod> getOpenPeriods(Long facilityId, Long programId, Long startingPeriodId){
-    return periodRepository.getOpenPeriods(facilityId, programId, startingPeriodId);
-  };
-
-  private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
-    RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
-    if (requisitionGroup == null)
-      throw new DataException("error.no.requisition.group");
-
-    return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId());
-  }
-
-  public ProcessingPeriod getPeriodById(Long periodId) {
-    return periodRepository.getById(periodId);
-  }
-
-  public List<ProcessingPeriod> getAllPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
-    return periodRepository.getAllPeriodsForDateRange(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), startDate, endDate);
-  }
-
-  public List<ProcessingPeriod> getUsedPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
-
-    return periodRepository.getRnrPeriodsForDateRange(facility.getId(),program.getId(), startDate, endDate);
-  }
-
-  public ProcessingSchedule getByCode(String code) {
-    return repository.getByCode(code);
-  }
-
-  public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
-    return periodRepository.getAllPeriodsBefore(scheduleId, beforeDate);
-  }
-
-  public ProcessingPeriod getPeriodForDate(Facility facility, Program program, Date date) {
-    RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
-    return periodRepository.getPeriodForDate(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), date);
-  }
-
-  public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId, Date programStartDate) {
-    RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
-    return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
-  }
-
-  public List<ProcessingPeriod> getCurrentPeriodForDistribution(Long facilityId, Long programId,Date programStartDate) {
-    RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
-    return periodRepository.getCurrentPeriodForDistribution(schedule.getProcessingSchedule().getId(), programStartDate);
-  }
- public ProcessingPeriod getCurrentPeriodNew(Long facilityId, Long programId, Date programStartDate) {
-    RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
-    return periodRepository.getCurrentPeriodNew(schedule.getProcessingSchedule().getId(), programStartDate);
-  }
-
-  public List<ProcessingPeriod> getNPreviousPeriodsInDescOrder(ProcessingPeriod currentPeriod, Integer n) {
-    return periodRepository.getNPreviousPeriods(currentPeriod, n);
-  }
-
-  public Integer findM(ProcessingPeriod period) {
-    List<ProcessingPeriod> nPreviousPeriods = periodRepository.getNPreviousPeriods(period, 1);
-    if (nPreviousPeriods.size() > 0) {
-      return nPreviousPeriods.get(0).getNumberOfMonths();
+    public ProcessingSchedule save(ProcessingSchedule processingSchedule) {
+        if (processingSchedule.getId() == null || processingSchedule.getId() == 0) {
+            repository.create(processingSchedule);
+        } else {
+            repository.update(processingSchedule);
+        }
+        return repository.get(processingSchedule.getId());
     }
-    return period.getNumberOfMonths();
-  }
 
-  public List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
+    public List<ProcessingPeriod> getAllPeriods(Long scheduleId) {
+        return periodRepository.getAll(scheduleId);
+    }
+
+    public ProcessingSchedule get(Long id) {
+        ProcessingSchedule processingSchedule = repository.get(id);
+        if (processingSchedule == null) {
+            throw new DataException("error.schedule.not.found");
+        }
+        return processingSchedule;
+    }
+
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
+    public void savePeriod(ProcessingPeriod processingPeriod) throws ParseException {
+        periodRepository.insert(processingPeriod);
+    }
+
+    @Loggable(action = TableActionEnum.DELETE_ACTION)
+    public void deletePeriod(Long processingPeriodId) {
+        periodRepository.delete(processingPeriodId);
+    }
+
+    public List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriod(Long facilityId, Long programId, Date programStartDate, Long startingPeriodId) {
+        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(new Facility(facilityId), new Program(programId));
+        return periodRepository.getAllPeriodsAfterDateAndPeriod(requisitionGroupProgramSchedule.getProcessingSchedule().getId(),
+                startingPeriodId, programStartDate, new Date());
+    }
+
+    public List<ProcessingPeriod> getOpenPeriods(Long facilityId, Long programId, Long startingPeriodId) {
+        return periodRepository.getOpenPeriods(facilityId, programId, startingPeriodId);
+    }
+
+    ;
+
+    private RequisitionGroupProgramSchedule getSchedule(Facility facility, Program program) {
+        RequisitionGroup requisitionGroup = requisitionGroupRepository.getRequisitionGroupForProgramAndFacility(program, facility);
+        if (requisitionGroup == null)
+            throw new DataException("error.no.requisition.group");
+
+        return requisitionGroupProgramScheduleRepository.getScheduleForRequisitionGroupAndProgram(requisitionGroup.getId(), program.getId());
+    }
+
+    public ProcessingPeriod getPeriodById(Long periodId) {
+        return periodRepository.getById(periodId);
+    }
+
+    public List<ProcessingPeriod> getAllPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
+        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
+        return periodRepository.getAllPeriodsForDateRange(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), startDate, endDate);
+    }
+
+    public List<ProcessingPeriod> getUsedPeriodsForDateRange(Facility facility, Program program, Date startDate, Date endDate) {
+
+        return periodRepository.getRnrPeriodsForDateRange(facility.getId(), program.getId(), startDate, endDate);
+    }
+
+    public ProcessingSchedule getByCode(String code) {
+        return repository.getByCode(code);
+    }
+
+    public List<ProcessingPeriod> getAllPeriodsBefore(Long scheduleId, Date beforeDate) {
+        return periodRepository.getAllPeriodsBefore(scheduleId, beforeDate);
+    }
+
+    public ProcessingPeriod getPeriodForDate(Facility facility, Program program, Date date) {
+        RequisitionGroupProgramSchedule requisitionGroupProgramSchedule = getSchedule(facility, program);
+        return periodRepository.getPeriodForDate(requisitionGroupProgramSchedule.getProcessingSchedule().getId(), date);
+    }
+
+    public ProcessingPeriod getCurrentPeriod(Long facilityId, Long programId, Date programStartDate) {
+        RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
+        return periodRepository.getCurrentPeriod(schedule.getProcessingSchedule().getId(), programStartDate);
+    }
+
+    public List<ProcessingPeriod> getCurrentPeriodForDistribution(Long facilityId, Long programId, Date programStartDate) {
+        RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
+        return periodRepository.getCurrentPeriodForDistribution(schedule.getProcessingSchedule().getId(), programStartDate);
+    }
+
+    public ProcessingPeriod getCurrentPeriodNew(Long facilityId, Long programId, Date programStartDate) {
+        RequisitionGroupProgramSchedule schedule = getSchedule(new Facility(facilityId), new Program(programId));
+        return periodRepository.getCurrentPeriodNew(schedule.getProcessingSchedule().getId(), programStartDate);
+    }
+
+    public List<ProcessingPeriod> getNPreviousPeriodsInDescOrder(ProcessingPeriod currentPeriod, Integer n) {
+        return periodRepository.getNPreviousPeriods(currentPeriod, n);
+    }
+
+    public Integer findM(ProcessingPeriod period) {
+        List<ProcessingPeriod> nPreviousPeriods = periodRepository.getNPreviousPeriods(period, 1);
+        if (nPreviousPeriods.size() > 0) {
+            return nPreviousPeriods.get(0).getNumberOfMonths();
+        }
+        return period.getNumberOfMonths();
+    }
+
+    public List<ProcessingPeriod> getAllPeriodsForScheduleAndYear(Long scheduleId, Long year) {
         return periodRepository.getAllPeriodsForScheduleAndYear(scheduleId, year);
     }
 
-  public List<ProcessingPeriod> getAllPeriodsByYear(Long year) {
+    public List<ProcessingPeriod> getAllPeriodsByYear(Long year) {
         return periodRepository.getAllPeriodsByYear(year);
     }
 
-  public List<ProcessingPeriod> getPeriodsForDateRange(Date rangeStart, Date rangeEnd) {
-    return periodRepository.getPeriodsForDateRange(rangeStart, rangeEnd);
-  }
+    public List<ProcessingPeriod> getPeriodsForDateRange(Date rangeStart, Date rangeEnd) {
+        return periodRepository.getPeriodsForDateRange(rangeStart, rangeEnd);
+    }
 }

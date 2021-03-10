@@ -13,6 +13,8 @@ package org.openlmis.core.service;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,36 +29,37 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductGroupService {
 
-  private ProductGroupRepository repository;
+    private ProductGroupRepository repository;
 
-  @Autowired
-  public ProductGroupService(ProductGroupRepository repository) {
-    this.repository = repository;
-  }
-
-  public void save(ProductGroup productGroup) {
-    if (productGroup.getId() == null) {
-      repository.insert(productGroup);
+    @Autowired
+    public ProductGroupService(ProductGroupRepository repository) {
+        this.repository = repository;
     }
-    repository.update(productGroup);
-  }
 
-  public ProductGroup getByCode(String code) {
-    return repository.getByCode(code);
-  }
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
+    public void save(ProductGroup productGroup) {
+        if (productGroup.getId() == null) {
+            repository.insert(productGroup);
+        }
+        repository.update(productGroup);
+    }
 
-  public List<ProductGroup> getAll() {
-    return repository.getAll();
-  }
+    public ProductGroup getByCode(String code) {
+        return repository.getByCode(code);
+    }
 
-  public ProductGroup validateAndReturn(ProductGroup group) {
-    if (group == null) return null;
+    public List<ProductGroup> getAll() {
+        return repository.getAll();
+    }
 
-    String productGroupCode = group.getCode();
-    if (productGroupCode == null || productGroupCode.isEmpty()) return null;
+    public ProductGroup validateAndReturn(ProductGroup group) {
+        if (group == null) return null;
 
-    group = repository.getByCode(productGroupCode);
-    if (group == null) throw new DataException("error.reference.data.invalid.product.group");
-    return group;
-  }
+        String productGroupCode = group.getCode();
+        if (productGroupCode == null || productGroupCode.isEmpty()) return null;
+
+        group = repository.getByCode(productGroupCode);
+        if (group == null) throw new DataException("error.reference.data.invalid.product.group");
+        return group;
+    }
 }
