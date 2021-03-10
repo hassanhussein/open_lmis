@@ -119,6 +119,15 @@ DROP SEQUENCE IF EXISTS logging.t_history_id_seq;
 --------------------------------------------------------------------------------------------------------------------------
 drop SCHEMA if exists logging;
 
+-- Extension: hstore
+
+DROP EXTENSION IF EXISTS hstore;
+
+CREATE EXTENSION hstore
+    SCHEMA public
+    VERSION "1.4";
+
+
 -----------------------------------------------------------------------------------------------------------------------------
 /*
 
