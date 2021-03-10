@@ -24,6 +24,9 @@ public class InspectionLotRepository {
     public void updateOrSave(VVMLots lots){
         mapper.updateOrSave(lots);
     }
+    public void save(InspectionLot lots){
+        mapper.save(lots);
+    }
 
 
 }

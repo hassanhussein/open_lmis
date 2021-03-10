@@ -24,7 +24,7 @@ public class InspectionLineItemRepository {
         mapper.update(lineItem);
 
         if (!lineItem.getLots().isEmpty()) {
-            //System.out.println("ID:"+lineItem.getId());
+            System.out.println("ID:"+lineItem.getId());
             inspectionLotRepository.deleteLotByInspectionLineItem(lineItem.getId());
 
             for (InspectionLot lot : lineItem.getLots()) {
@@ -34,38 +34,49 @@ public class InspectionLineItemRepository {
                     lot.setPassQuantity(lot.getReceivedQuantity());
                 }
 
-                inspectionLotRepository.update(lot);
-                //System.out.println("passed: "+lot);
+               // System.out.println("passed: "+lot);
                 if(lot.getVvm()!=null) {
-                    for (VVMLots lotVVm : lot.getVvm()) {
+                    if(lot.getVvm().size()>0&&lot.getVvm().get(0).getQuantity()>0&&lot.getVvm().get(0).getQuantity()!=null) {
+                        for (VVMLots lotVVm : lot.getVvm()) {
 
-                        lotVVm.setInspectionLineItemId(lot.getInspectionLineItemId());
-                        lotVVm.setLotNumber(lot.getLotNumber());
-                        lotVVm.setPassLocationId(lot.getPassLocationId());
-                        lotVVm.setExpiryDate(lot.getExpiryDate());
-                        lotVVm.setBoxNumber(lot.getBoxNumber());
-                        lotVVm.setReceivedQuantity(lot.getReceivedQuantity());
+                            lotVVm.setInspectionLineItemId(lot.getInspectionLineItemId());
+                            lotVVm.setLotNumber(lot.getLotNumber());
+                            lotVVm.setPassLocationId(lot.getPassLocationId());
+                            lotVVm.setExpiryDate(lot.getExpiryDate());
+                            lotVVm.setBoxNumber(lot.getBoxNumber());
+                            lotVVm.setReceivedQuantity(lot.getReceivedQuantity());
 
+                            try {
+                                InspectionFailProblem failed = lotVVm.getFailed();
+                                lotVVm.setFailQuantity(failed.getQuantity());
+                                lotVVm.setFailReason(failed.getReasonId());
+                                lotVVm.setFailLocationId(failed.getLocationId());
+                                lotVVm.setFailVvmId(failed.getVvmId());
+                            }catch (Exception e){
+                                //e.printStackTrace();
+                            }
 
+                            // if(failed.getQuantity()!=null){
+                            //    lotVVm.setQuantity(lotVVm.getQuantity());
+                            //}
+                            // System.out.println("Failed:"+failed.getQuantity());
+                            //lotVVm.set
+                            if (lotVVm.getQuantity() != null) {
+                                lotVVm.setPassQuantity(lotVVm.getQuantity());
+                                inspectionLotRepository.updateOrSave(lotVVm);
+                            } /*else {
+                                inspectionLotRepository.save(lot);
 
-                        InspectionFailProblem failed = lotVVm.getFailed();
-                        lotVVm.setFailQuantity(failed.getQuantity());
-                        lotVVm.setFailReason(failed.getReasonId());
-                        lotVVm.setFailLocationId(failed.getLocationId());
-                        lotVVm.setFailVvmId(failed.getVvmId());
-
-                        // if(failed.getQuantity()!=null){
-                        //    lotVVm.setQuantity(lotVVm.getQuantity());
-                        //}
-                        // System.out.println("Failed:"+failed.getQuantity());
-                        //lotVVm.set
-                        if (lotVVm.getQuantity() != null) {
-                            lotVVm.setPassQuantity(lotVVm.getQuantity());
-                            inspectionLotRepository.updateOrSave(lotVVm);
+                            }
+*/
+                            //System.out.println("passed: "+lotVVm.getQuantity());
                         }
-
-                        //System.out.println("passed: "+lotVVm.getQuantity());
+                    }else{
+                        inspectionLotRepository.save(lot);
                     }
+                }else{
+                    inspectionLotRepository.save(lot);
+
                 }
             }
         }

@@ -27,6 +27,7 @@ import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisiti
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderStatus;
 import org.openlmis.vaccine.domain.inventory.*;
 import org.openlmis.vaccine.dto.BatchExpirationNotificationDTO;
+import org.openlmis.vaccine.dto.OrderRequisitionDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionAlertDTO;
 import org.openlmis.vaccine.dto.VaccineDistributionNotification;
 import org.openlmis.vaccine.repository.inventory.VaccineDistributionStatusChangeRepository;
@@ -120,6 +121,7 @@ public Long save(VaccineDistribution distribution, Long userId) {
                  distribution.setId(dbDistribution.getId());
              }
         }
+        distribution.setFromFacilityId(homeFacilityId);
 
         //System.out.println(distribution+" Ditribution ID");
         if (distribution.getId() != null) {
@@ -146,6 +148,18 @@ public Long save(VaccineDistribution distribution, Long userId) {
             VaccineDistributionStatusChange statusChange = new VaccineDistributionStatusChange(distribution,userId);
             statusChangeRepository.insert(statusChange);
 
+        }
+
+        try{
+            OrderRequisitionDTO orderRequisitionDTO=new OrderRequisitionDTO();
+            orderRequisitionDTO.setId(distribution.getOrderId());
+            orderRequisitionDTO.setVoucherNumber(distribution.getVoucherNumber());
+            orderRequisitionDTO.setDistributionDate(distribution.getDistributionDate());
+            orderRequisitionDTO.setDistributionType(distribution.getDistributionType());
+            statusChangeRepository.updateOrderItem(orderRequisitionDTO);
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
        List<VaccineDistributionLineItem> itemList = repository.getItemByDistributionId(distribution.getId());
@@ -477,7 +491,9 @@ public Long save(VaccineDistribution distribution, Long userId) {
         for (VaccineDistribution distribution : distributions) {
             distribution.setCreatedBy(userId);
             distribution.setModifiedBy(userId);
-            distribution.setStatus("PICKED");
+            distribution.setStatus("PENDING");
+
+            // distribution.setStatus("PICKED");
             save(distribution,userId);
         }
 

@@ -85,6 +85,8 @@ public class InspectionController extends BaseController {
         try{
             inspect.setId(id);
             inspect.setModifiedBy(loggedInUserId(request));
+
+           // System.out.println(inspect.toString());
             service.save(inspect, loggedInUserId(request));
 
          /*   if(inspect.getStatus().equalsIgnoreCase("RELEASED")) {

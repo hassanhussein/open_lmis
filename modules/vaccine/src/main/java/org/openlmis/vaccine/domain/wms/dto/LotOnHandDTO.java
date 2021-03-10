@@ -29,7 +29,7 @@ public class LotOnHandDTO {
     private Long locationId;
     private Long stockCardId;
 
-    private  Long packSize;
+    private  long packSize=1;
 
     private Long vvmId;
     private String binLocation;

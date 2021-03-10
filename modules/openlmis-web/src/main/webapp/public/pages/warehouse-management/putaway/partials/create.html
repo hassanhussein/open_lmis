@@ -77,7 +77,7 @@
                 </label>
 
                 <div class="form-field">
-                    <input type="text" ng-model="fromLot.passQuantity" ng-disabled="true"/>
+                    <input type="text" ng-model="fromLot.passedQuantity" ng-disabled="true"/>
 
                 </div>
 
@@ -148,7 +148,7 @@
                 </label>
 
                 <div class="form-field">
-                    <input type="text" ng-model="toLot.passQuantity" numeric-validator="positiveInteger"
+                    <input type="text" ng-model="toLot.passedQuantity" numeric-validator="positiveInteger"
                            ng-disabled="!toLot.binLocation"/>
 
                 </div>
@@ -167,7 +167,7 @@
         </div>
         <div class="span6">
 
-            <input ng-disabled="!toLot.passQuantity || toLot.passQuantity==0" type="button"
+            <input ng-disabled="!toLot.passedQuantity || toLot.passedQuantity==0" type="button"
                    class="btn btn-primary pull-right" ng-click="addToQueue()"
                    value="Add" style="margin-left:10px;margin-right:10px"/>
 

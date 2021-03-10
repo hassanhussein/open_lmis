@@ -30,7 +30,7 @@ public class VVMLots extends BaseModel {
 
     private Long passLocationId;
 
-    private Long failQuantity;
+    private long failQuantity=0;
     private Long failedQuantity;
     private Long failedReason;
     private Long failReason;

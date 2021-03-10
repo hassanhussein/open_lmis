@@ -33,7 +33,7 @@ $scope.quantityError=false;
 
 
 //validate if putaway quantity is less than passed quantity
-if(parseInt($scope.toLot.passQuantity,10)>parseInt($scope.fromLot.passQuantity,10)){
+if(parseInt($scope.toLot.passedQuantity,10)>parseInt($scope.fromLot.passedQuantity,10)){
 $scope.quantityError=true;
  return;
 }
@@ -45,7 +45,7 @@ $scope.movementQueue.push(
     productId:$scope.lineItem.product.id,
     lotNumber:$scope.fromLot.lotNumber,
     lotId:$scope.fromLot.id,
-    quantity:$scope.toLot.passQuantity,
+    quantity:$scope.toLot.passedQuantity,
     fromWarehouse:$scope.fromLot.location.house.name,
     fromWareHouseId:$scope.fromLot.location.house.id,
     fromBinLocationId:$scope.fromLot.location.id,
@@ -64,9 +64,9 @@ $scope.movementQueue.push(
 console.log($scope.movementQueue);
 
 //deduct the quantity
-$scope.fromLot.passQuantity-=parseInt($scope.toLot.passQuantity,10);
+$scope.fromLot.passedQuantity-=parseInt($scope.toLot.passedQuantity,10);
 //if quantity == 0 remove that lot from list
-if($scope.fromLot.passQuantity===0){
+if($scope.fromLot.passedQuantity===0){
     $scope.lineItem.lots.splice($scope.lineItem.lots.indexOf($scope.fromLot),1);
     $scope.fromLot='';
     $scope.toLot.warehouse='';
@@ -75,7 +75,7 @@ if($scope.fromLot.passQuantity===0){
 }
     $scope.toLot.warehouse="";
     $scope.toLot.binLocation="";
-    $scope.toLot.passQuantity="";
+    $scope.toLot.passedQuantity="";
     $scope.toLot.passQuantity='';
 };
 

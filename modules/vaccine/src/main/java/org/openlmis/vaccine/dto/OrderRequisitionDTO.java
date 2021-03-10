@@ -1,11 +1,14 @@
 package org.openlmis.vaccine.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.SupervisoryNode;
+import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.core.utils.DateUtil;
 import org.openlmis.vaccine.domain.VaccineOrderRequisition.VaccineOrderRequisition;
 
@@ -41,12 +44,16 @@ public class OrderRequisitionDTO extends SupervisoryNode{
     private Boolean isVerified;
 
     private Date createdDate;
+    String voucherNumber;
 
     //Used to view pending requisition
 
     String facilityName;
     String orderDate;
     Long orderId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    Date distributionDate;
+    String distributionType;
 
     List<PendingRequestDTO> ordered = new ArrayList<>();
 
@@ -68,10 +75,8 @@ public class OrderRequisitionDTO extends SupervisoryNode{
 
     String productCode;
 
-    String distributionType;
 
     private Date receivedDate;
-
 
 
 

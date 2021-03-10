@@ -217,7 +217,7 @@ public interface LotsOnHandMapper {
             "            JOIN products p ON i.productId = P.ID \n" +
             "            LEFT JOIN wms_locations Lo ON L.locationId = Lo.id \n" +
             "            JOIN SUpply_partners S on r.supplierid = s.id \n" +
-            "            JOIN dosage_units U on p.wmsDosageunitId = U.ID \n" +
+            "            LEFT JOIN dosage_units U on p.wmsDosageunitId = U.ID \n" +
             "            JOIN ASNs ON R.asnId = ASNS.ID \n" +
             "            JOIN ASN_details it On asns.id = it.asnId \n" +
             "            Join asn_lots asnL ON it.ID = asnL.asndetailId \n" +

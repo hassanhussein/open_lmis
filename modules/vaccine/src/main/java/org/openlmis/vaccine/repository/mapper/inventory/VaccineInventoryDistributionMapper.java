@@ -38,7 +38,7 @@ public interface VaccineInventoryDistributionMapper {
     Integer saveDistribution(VaccineDistribution vaccineDistribution);
 
     @Update("update vaccine_distributions set " +
-            " status=#{status},distributionDate=#{distributionDate}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
+            " status=#{status},distributionType=#{distributionType},distributionDate=#{distributionDate}, modifiedby=#{modifiedBy}, modifieddate=NOW(),remarks = #{remarks} " +
             " where id=#{id}"
     )
     Integer updateDistribution(VaccineDistribution vaccineDistribution);
@@ -189,7 +189,7 @@ public interface VaccineInventoryDistributionMapper {
             "            (select name fromFacilityName from facilities where id =fromFacilityId ),\n" +
             "            (select cellphone from users where id=s.modifiedby),\n" +
             "            (select concat(firstname,' ',lastName) as modifiedBy from users where id=s.modifiedby),\n" +
-            "            s.modifieddate,distributionDate,s.modifiedBy,voucherNumber,d.status,orderdate  \n" +
+            "            s.modifieddate,d.distributionDate,s.modifiedBy,d.voucherNumber,d.status,orderdate  \n" +
             "            FROM vaccine_distributions d  \n" +
             "            JOIN vaccine_distribution_status_changes s ON d.id = s.distributionId \n" +
             "            JOIN vaccine_order_requisitions o ON d.orderId = o.id \n" +
@@ -206,7 +206,7 @@ public interface VaccineInventoryDistributionMapper {
             "            (select name fromFacilityName from facilities where id =fromFacilityId ),\n" +
             "            (select cellphone from users where id=s.modifiedby),\n" +
             "            (select concat(firstname,' ',lastName) as modifiedBy from users where id=s.modifiedby),\n" +
-            "            s.modifieddate,distributionDate,s.modifiedBy,voucherNumber,d.status,orderdate  \n" +
+            "            s.modifieddate,d.distributionDate,s.modifiedBy,d.voucherNumber,d.status,orderdate  \n" +
             "            FROM vaccine_distributions d  \n" +
             "            JOIN vaccine_distribution_status_changes s ON d.id = s.distributionId \n" +
             "            JOIN vaccine_order_requisitions o ON d.orderId = o.id \n" +
@@ -368,7 +368,7 @@ public interface VaccineInventoryDistributionMapper {
             "            (select name fromFacilityName from facilities where id =fromFacilityId ),\n" +
             "            (select cellphone from users where id=s.modifiedby),\n" +
             "            (select concat(firstname,' ',lastName) as modifiedBy from users where id=s.modifiedby),\n" +
-            "            s.modifieddate,distributionDate,s.modifiedBy,voucherNumber,d.status,orderdate  \n" +
+            "            s.modifieddate,d.distributionDate,s.modifiedBy,d.voucherNumber,d.status,orderdate  \n" +
             "            FROM vaccine_distributions d  \n" +
             "            JOIN vaccine_distribution_status_changes s ON d.id = s.distributionId \n" +
             "            JOIN vaccine_order_requisitions o ON d.orderId = o.id \n" +

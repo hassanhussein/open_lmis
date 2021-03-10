@@ -116,10 +116,10 @@ public class ReceiveController extends BaseController {
 
             if(receive.getStatus().equalsIgnoreCase("Received")) {
                 savedReceive = service.save(receive, loggedInUserId(principal), null,false);
-
+                //System.out.println("Passed received");
                 service.updateInspection(id);
 
-              //  service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
+              // service.updateStockCardDetails(savedReceive,loggedInUserId(principal));
             }else {
 
                service.save(receive, loggedInUserId(principal), null,true);

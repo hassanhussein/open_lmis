@@ -39,10 +39,13 @@ $scope.issuedErrorList=[];
 $scope.soh=wmsSoh.stocks;
 $scope.listOfProductIds=_.pluck($scope.soh,'productId');
 
-
-
-
-
+/*if(all_orders){
+if(all_orders.length>0){
+console.log(all_orders);
+$scope.distributionDate=all_orders.distributionDate;
+$scope.distributionType="CAMPAIGN";
+}
+}*/
 
 //console.log($scope.requisitionsWithoutProducts);
 //console.log(localStorageService.get('wms_orders'));
@@ -511,11 +514,13 @@ var distribution = {};
 
 distribution.fromFacilityId = facility.fromFacilityId;
 distribution.toFacilityId = facility.toFacilityId;
-distribution.distributionDate = "2020-05-21";
+//distribution.distributionDate = "2020-05-21";
 distribution.periodId = facility.periodId;
 distribution.orderId = facility.orderId;
 distribution.status = "PICKED";
-distribution.distributionType = "SCHEDULED";
+//distribution.distributionType = "SCHEDULED";
+distribution.distributionDate=$scope.distributionDate;
+distribution.distributionType=$scope.distributionType;
 distribution.remarks = facility.remarks;
 distribution.programId = facility.programId;
 distribution.lineItems = [];
@@ -627,11 +632,14 @@ $scope.requstions.forEach(function(req){
 
     req.lineItems=req.ordered;
     req.status="PICKED";
-
+   req.distributionDate=$scope.distributionDate;
+   req.distributionType=$scope.distributionType;
 
     $scope.distribution_list.push(req);
 
 });
+
+//console.log($scope.distribution_list);
 
 
 ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
@@ -654,9 +662,12 @@ ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {
 
 
 
+
+
 UpdateDistributionOrderStatus.update($scope.distribution_list, function(distribution){
 
   });
+
 
                     }
  });

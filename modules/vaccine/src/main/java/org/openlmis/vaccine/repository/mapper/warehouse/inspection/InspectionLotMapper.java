@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface InspectionLotMapper {
 
-    @Select("SELECT *,failvvmid as failVvmId, failquantity as failedQuantity,failreason as failedReason FROM inspection_lots WHERE inspectionLineItemId = #{lineItemId} ")
+    @Select("SELECT *,(passQuantity-failquantity) as passedQuantity, failvvmid as failVvmId, failquantity as failedQuantity,failreason as failedReason FROM inspection_lots WHERE inspectionLineItemId = #{lineItemId} ")
     @Results(value = {
             @Result(column = "id", property = "id"),
             @Result(column = "passLocationId", property = "passLocationId"),
@@ -37,11 +37,19 @@ public interface InspectionLotMapper {
             "             modifiedBy, modifiedDate)\n" +
             "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{boxNumber},#{receivedQuantity},#{passQuantity},#{quantity}, #{passLocationId},#{vvmId},#{expiryDate},#{failLocationId},#{failQuantity},#{failReason},#{failVvmId}, \n" +
             "           now(),  \n" +
-            "            #{modifiedBy}, now()) on conflict(inspectionLineItemId,lotNumber,passLocationId,vvmStatus) DO UPDATE \n" +
-            "SET passQuantity=#{passQuantity},faillocationid=#{failLocationId},failquantity=#{failQuantity},failreason=#{failReason},failVvmId=#{failVvmId};")
+            "            #{modifiedBy}, now()) ")
     @Options(useGeneratedKeys = true)
     void updateOrSave(VVMLots lots);
 
+    @Insert("INSERT INTO public.inspection_lots(\n" +
+            "           inspectionLineItemId, lotNumber,boxNumber,receivedQuantity,passQuantity,countedQuantity, passLocationId,vvmStatus,expiryDate,faillocationid,failquantity,failreason,failVvmId, \n" +
+            "             createdDate,\n" +
+            "             modifiedBy, modifiedDate)\n" +
+            "    VALUES ( #{inspectionLineItemId}, #{lotNumber},#{boxNumber},#{receivedQuantity},#{passQuantity},#{countedQuantity}, #{passLocationId},#{vvmStatus},#{expiryDate},#{failLocationId},#{failQuantity},#{failReason},#{failVvmId}, \n" +
+            "           now(),  \n" +
+            "            #{modifiedBy}, now()) ")
+    @Options(useGeneratedKeys = true)
+    void save(InspectionLot lots);
 
     @Delete("delete from inspection_lots where inspectionlineitemid=#{inspectionLotId}")
     Integer deleteLotByInspectionLineItem(Long inspectionLotId);

@@ -34,7 +34,7 @@
 
                         <div class="form-field">
                             <input id="receiptDate"
-                                   type="text"
+                                   type="text" autocomplete="off"
                                    ui-date="{dateFormat: 'dd/mm/yy', changeYear: false,maxDate:'today',minDate:period.stringStartDate}"
                                    ui-date-format="yy-mm-dd"
                                    ng-model="distributionDate" name="distributionDate"
@@ -56,8 +56,8 @@
                                     name="distributionType"
                                     ng-required="true"
                                     ng-model="distributionType">
-                                <option value="">Routine</option>
-                                <option value="">Campaign</option>
+                                <option value="ROUTINE">Routine</option>
+                                <option value="CAMPAIGN">Campaign</option>
 
 
                             </select>

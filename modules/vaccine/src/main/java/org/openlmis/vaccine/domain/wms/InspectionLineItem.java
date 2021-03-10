@@ -31,7 +31,7 @@ public class InspectionLineItem extends BaseModel {
 
     private Integer passLocationId;
 
-    private Integer failQuantity;
+    private Integer failQuantity=0;
 
     private Integer failReason;
 
