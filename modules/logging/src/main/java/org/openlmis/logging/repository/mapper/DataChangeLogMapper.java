@@ -12,15 +12,13 @@ package org.openlmis.logging.repository.mapper;
 
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.ResultSetType;
-import org.apache.ibatis.session.RowBounds;
 import org.openlmis.logging.domain.TransactionBatch;
 import org.openlmis.logging.domain.TransactionHistory;
 import org.openlmis.logging.domain.params.DataTransactionSearchParameter;
-import org.openlmis.logging.repository.build.DataChangeLogQueryBuilder;
+import org.openlmis.logging.repository.builder.DataChangeLogQueryBuilder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Repository

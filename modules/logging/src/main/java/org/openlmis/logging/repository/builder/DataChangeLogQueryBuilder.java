@@ -27,8 +27,8 @@ public class DataChangeLogQueryBuilder {
         FROM(" logging.t_history_batch t");
     }
 
-    public static String getSearchQuery(Map params) {
-        DataTransactionSearchParameter filter = (DataTransactionSearchParameter) params.get("filterCriteria");
+    public static String getSearchQuery( DataTransactionSearchParameter filter) {
+
         String query;
         BEGIN();
         basicSearchQuery();
@@ -38,8 +38,8 @@ public class DataChangeLogQueryBuilder {
 
     }
 
-    public static String getTransactionDate(Map params) {
-        DataTransactionSearchParameter filter = (DataTransactionSearchParameter) params.get("filterCriteria");
+    public static String getTransactionDate( DataTransactionSearchParameter filter) {
+
         String query;
         BEGIN();
         basicSearchQuery();
