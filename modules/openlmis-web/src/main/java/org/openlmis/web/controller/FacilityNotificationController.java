@@ -39,6 +39,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Date;
+
 import static org.openlmis.core.web.OpenLmisResponse.success;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -57,6 +59,8 @@ public class FacilityNotificationController extends BaseController {
             Long userId = loggedInUserId(request);
             notification.setModifiedBy(userId);
             notification.setCreatedBy(userId);
+            notification.setCreatedDate(new Date());
+            notification.setModifiedDate(new Date());
             service.addNewNotification(notification);
         } catch (DuplicateKeyException exp) {
             return OpenLmisResponse.error("Duplicate Notifications Exists in DB.", HttpStatus.BAD_REQUEST);
