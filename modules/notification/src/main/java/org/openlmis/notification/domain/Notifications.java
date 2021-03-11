@@ -22,13 +22,16 @@
 package org.openlmis.notification.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.serializer.DateDeserializer;
 
 import java.util.Date;
 
@@ -36,7 +39,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @JsonSerialize()
-public class Notifications extends BaseModel{
+public class Notifications extends BaseModel {
     private String name;
     private String code;
     private String message;
@@ -44,12 +47,20 @@ public class Notifications extends BaseModel{
     private String type;
     private String urgency;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = DateDeserializer.class)
+    private Date notificationCreatedDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonDeserialize(using = DateDeserializer.class)
+    private Date notificationModificationDate;
+
     @Override
     public String toString() {
-        ObjectMapper mapper =new ObjectMapper();
-        String notificationsString ="";
+        ObjectMapper mapper = new ObjectMapper();
+        String notificationsString = "";
         try {
-            notificationsString="\"messages\":"+mapper.writeValueAsString(this);
+            notificationsString = "\"messages\":" + mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
