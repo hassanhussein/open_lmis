@@ -200,7 +200,10 @@ public class OrderSummaryReportDataProvider extends ReportDataProvider {
 
         TimeZone timeZone = TimeZone.getTimeZone(configurationService.getByKey(Constants.LOCAL_TIME_SETTINGS).getValue());
 
-        dateFormat.setTimeZone(timeZone);
+        String[] availableIDs = TimeZone.getAvailableIDs();
+
+//Disable timezone configuration since the server has moved to Tanzania
+//        dateFormat.setTimeZone(timeZone);
 
         List<RequisitionStatusChange> changes = reportMapper.getLastUsersWhoActedOnRnr(orderReportParam.getOrderId(), RnrStatus.AUTHORIZED.name());
         if (!changes.isEmpty()) {
