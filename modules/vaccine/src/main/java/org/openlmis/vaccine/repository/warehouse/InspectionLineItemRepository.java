@@ -35,8 +35,8 @@ public class InspectionLineItemRepository {
                 }
 
                // System.out.println("passed: "+lot);
-                if(lot.getVvm()!=null&&lot.getVvm().size()>0) {
-                    if(lot.getVvm().size()>0&&lot.getVvm().get(0).getQuantity()!=null&&lot.getVvm().get(0).getQuantity()>0) {
+
+                    if(lot.getVvm()!=null&&lot.getVvm().size()>0&&lot.getVvm().get(0).getQuantity()!=null&&lot.getVvm().get(0).getQuantity()>0) {
                         for (VVMLots lotVVm : lot.getVvm()) {
 
                             lotVVm.setInspectionLineItemId(lot.getInspectionLineItemId());
@@ -71,9 +71,7 @@ public class InspectionLineItemRepository {
 */
                             //System.out.println("passed: "+lotVVm.getQuantity());
                         }
-                    }else{
-                        inspectionLotRepository.save(lot);
-                    }
+
                 }else{
                     inspectionLotRepository.save(lot);
 
