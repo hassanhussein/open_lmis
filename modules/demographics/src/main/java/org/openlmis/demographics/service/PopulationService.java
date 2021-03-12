@@ -4,12 +4,14 @@ import org.openlmis.core.domain.*;
 import org.openlmis.core.repository.FacilityRepository;
 import org.openlmis.core.repository.RequisitionGroupRepository;
 import org.openlmis.core.repository.SupervisoryNodeRepository;
+import org.openlmis.core.service.ConfigurationSettingService;
 import org.openlmis.core.service.FacilityService;
 import org.openlmis.demographics.domain.AnnualDistrictEstimateEntry;
 import org.openlmis.demographics.domain.AnnualFacilityEstimateEntry;
 import org.openlmis.demographics.repository.AnnualDistrictEstimateRepository;
 import org.openlmis.report.mapper.lookup.FacilityLevelMapper;
 import org.openlmis.report.model.dto.FacilityLevelTree;
+import org.openlmis.report.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,8 @@ public class PopulationService {
 
     @Autowired
     SupervisoryNodeRepository supervisoryNodeRepository;
-
+    @Autowired
+    ConfigurationSettingService settingService;
     @Autowired
     RequisitionGroupRepository requisitionGroupRepository;
 
@@ -56,6 +59,7 @@ public class PopulationService {
 
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         String facilityCode = facility.getFacilityType().getCode().toLowerCase();
+
         if (facilityCode.equals("heac") || facilityCode.equals("disp")) // "heac" == Health Facility; "disp" == Dispensary
         {
             if(populationSource == null)
@@ -82,14 +86,18 @@ public class PopulationService {
                Therefore, a facility without a geoZone should be treated as though it has no DemographyEstimate.
                In that case, fall back to using the Facility’s catchment population. */
             GeographicZone geoZone = facility.getGeographicZone();
+
             if(geoZone == null)
                 return getNonNullFacilityCatchmentPopulation(facility);
 
             AnnualDistrictEstimateEntry estimateEntry = annualDistrictEstimateRepository.getEntryBy(currentYear, geoZone.getId(), program.getId(), populationSource);
-            if(estimateEntry != null)
+            if(estimateEntry != null) {
+                System.out.println(""+estimateEntry.getValue());
                 return estimateEntry.getValue(); //Note that if the user hasn't specified a value, annualFacilityDemographicEstimateService.getEstimateValuesForFacility() will have done its best to compute one which will, most likely, not equal facility.getCatchmentPopulation().
-            else
+            } else {
+              //  System.out.println("Catchments");
                 return getNonNullFacilityCatchmentPopulation(facility);
+            }
         }
         else if(facilityCode.equals("rvs"))
         {
@@ -129,6 +137,7 @@ public class PopulationService {
             Long totalPopulation = 0L;
             for(Facility childFacility : facilities)
             {
+                System.out.println(childFacility);
                 totalPopulation += getPopulation(childFacility, program, populationSource);
             }
             return totalPopulation;
@@ -136,17 +145,28 @@ public class PopulationService {
         }
         else if(facilityCode.equals("cvs"))
         {
-            List<Facility> facilities = facilityRepository.getAllByFacilityTypeCode("rvs");
+            List<Facility> facilities=null;
+            ConfigurationSetting configuration = settingService.getByKey(Constants.REPORT_COUNTRY_TITLE_KEY);
+
+            String countryName=configuration.getValue();
+            if(countryName.equals("Zanzibar")) {
+                facilities = facilityRepository.getAllByFacilityTypeCode("dvs");
+            }else{
+                 facilities = facilityRepository.getAllByFacilityTypeCode("rvs");
+            }
             Long totalPopulation = 0L;
             for(Facility rvs : facilities)
             {
                 totalPopulation += getPopulation(rvs, program, populationSource);
             }
 
+         ///   System.out.println("Total: "+totalPopulation);
+
             if(totalPopulation.intValue() > 0)
                 return  totalPopulation;
-            else
+            else {
                 return getNonNullFacilityCatchmentPopulation(facility);
+            }
         }
 
         return getNonNullFacilityCatchmentPopulation(facility);

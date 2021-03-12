@@ -200,7 +200,9 @@ public interface FacilityMapper {
           @Result(property = "facilityType", column = "typeId", javaType = Long.class,
                   one = @One(select = "getFacilityTypeById")),
           @Result(property = "operatedBy", column = "operatedById", javaType = Long.class,
-                  one = @One(select = "getFacilityOperatorById"))
+                  one = @One(select = "getFacilityOperatorById")),
+          @Result(property = "geographicZone.id", column = "geographicZoneId")
+
   })
   List<Facility> getAllByFacilityTypeCode(String typeCode);
 
