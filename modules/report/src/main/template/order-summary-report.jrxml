@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="order-summary-report" language="groovy" pageWidth="595" pageHeight="890" columnWidth="545" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ed759f09-4d2c-46c9-b606-42da2355eabd">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="51"/>
@@ -49,6 +49,7 @@
 	<parameter name="PERIOD" class="java.lang.String"/>
 	<parameter name="DEPOT" class="java.lang.String"/>
 	<parameter name="TYPE" class="java.lang.String"/>
+	<parameter name="PRINTED_DATE" class="java.lang.String" isForPrompting="false"/>
 	<queryString>
 		<![CDATA[SELECT facilities.name facilityName, facilities.code facilityCode,geographic_zones.name as region, requisition_line_items.productcode::text ProductCode,products.description,requisition_line_items.packstoship packsToShip, requisition_line_items.packSize,requisition_line_item_losses_adjustments.quantity Discrepancy
         FROM  orders
@@ -552,7 +553,7 @@
 					<textElement verticalAlignment="Bottom">
 						<font size="9"/>
 					</textElement>
-					<textFieldExpression><![CDATA[(new SimpleDateFormat("dd/MM/yy h:m a").format(new Date()))]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$P{PRINTED_DATE}]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="310" y="193" width="90" height="1" forecolor="#8C8C8C" uuid="c86681ef-1a40-4485-a250-5a82e8550513">
