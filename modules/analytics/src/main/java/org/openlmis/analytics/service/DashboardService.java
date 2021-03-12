@@ -1,0 +1,40 @@
+package org.openlmis.analytics.service;
+
+import lombok.NoArgsConstructor;
+import org.openlmis.analytics.Repository.DashboardRepository;
+import org.openlmis.analytics.domain.Dashboard;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+
+@Component
+@NoArgsConstructor
+public class DashboardService{
+
+    @Autowired
+    private DashboardRepository repository;
+
+    public List<Dashboard> getAllUsers() {
+        return repository.getUsers();
+    }
+
+    public List<HashMap<String,Object>> getStockStatusSummary(Long userId, Long product, Long program, Long year,Long schedule){
+        return repository.getStockStatusSummary(userId,product,program,year,schedule);
+    }
+
+    public List<HashMap<String,Object>> getStockAvailableForPeriod(Long userId, Long period){
+        return repository.getStockAvailableForPeriod(userId,period);
+    }
+
+    public List<HashMap<String,Object>> getStockForProductandProgram(Long userId,Long program, Long period){
+        return repository.getStockForProductandProgram(userId,program,period);
+    }
+
+    public List<HashMap<String,Object>> getConsumptioTrends(Long userId, Long year){
+        return repository.getConsumptioTrends(userId,year);
+    }
+
+}
+

@@ -348,7 +348,7 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
                     }, function (data) {
                         if (attr.default === undefined && data.schedules.length === 1) {
                             scope.filter.schedule = data.schedules[0].id;
-                            scope.notifyFilterChanged('schedule-changed');
+                            scope.notifyFilterChanged('scheduled_materialized_views.sql-changed');
                         }
                         else {
                             makeMonthlyScheduleDefault(data.schedules);
@@ -368,7 +368,7 @@ app.directive('scheduleFilter', ['ReportSchedules', 'ReportProgramSchedules', '$
                 }
 
                 if (!$routeParams.schedule) {
-                    scope.schedules = scope.unshift([], 'report.filter.select.schedule');
+                    scope.schedules = scope.unshift([], 'report.filter.select.scheduled_materialized_views.sql');
                 }
                 scope.subscribeOnChanged('schedule', 'program', loadSchedules, true);
 
@@ -2592,7 +2592,7 @@ app.directive('periodByYearFilter', ['ReportPeriods', 'ReportPeriodsByYear', '$r
 
                 // scope.subscribeOnChanged('period', 'program', onParentChanged, false);
                 scope.subscribeOnChanged('period', 'year', onParentChanged, false);
-                //scope.subscribeOnChanged('period', 'schedule', onParentChanged, true);
+                //scope.subscribeOnChanged('period', 'scheduled_materialized_views.sql', onParentChanged, true);
             },
             templateUrl: 'filter-period-template'
         };

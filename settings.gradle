@@ -32,7 +32,8 @@ include "modules:authentication",
         "modules:sms",
         "modules:stock-management",
         "modules:upload",
-        "modules:vaccine"
+        "modules:vaccine",
+        "modules:analytics"
 
 //        "test-modules:functional-tests",
 //        "test-modules:service-tests",

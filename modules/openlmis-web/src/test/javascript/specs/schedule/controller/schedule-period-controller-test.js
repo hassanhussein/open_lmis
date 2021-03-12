@@ -28,7 +28,7 @@ describe("Period", function () {
       ctrl = $controller(SchedulePeriodController, {$scope: scope, $routeParams: routeParams, schedule: schedule});
     }));
 
-    it('should show all the periods for given schedule and the schedule for these periods', function () {
+    it('should show all the periods for given scheduled_materialized_views.sql and the scheduled_materialized_views.sql for these periods', function () {
       $httpBackend.flush();
       expect(scope.schedule).toEqual(schedule);
       expect(scope.periodList).toEqual([existingPeriod]);

@@ -158,4 +158,27 @@ public interface ProcessingPeriodMapper {
             "             join programs p on p.id = sc.programid where p.code = #{program}) " +
             "         order by name")
     List<ProcessingPeriod> getPeriodsByProgramCode(String code);
+
+
+  @Select("         SELECT * FROM  (\n" +
+          "             \n" +
+          "               WITH Q AS (\n" +
+          "            \n" +
+          "                           SELECT pp.* \n" +
+          "                            FROM \n" +
+          "                               processing_schedules s \n" +
+          "                             inner join processing_periods pp ON pp.scheduleid = s.id \n" +
+          "                            where enableOrder = true and s.id in \n" +
+          "                                  (select scheduleId from requisition_group_program_schedules sc\n" +
+          "                                join programs p on p.id = sc.programId where lower(p.code) = lower(#{program})) \n" +
+          "                              order by name\n" +
+          "                              \n" +
+          "                           )\n" +
+          "                \n" +
+          "                select * from Q\n" +
+          " WHERE ENDDATE::date = (select date_trunc('month',NOW()::date) - '1month'::interval-'1day'::interval)::DATE\n" +
+          "\t\t\t\t )X limit 1\n" +
+          "\t\t\t\t ")
+
+  ProcessingPeriod getFullProcessingPeriodForCurrentMonth(@Param("program") String program);
 }

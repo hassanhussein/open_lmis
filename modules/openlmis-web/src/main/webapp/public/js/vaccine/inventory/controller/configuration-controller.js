@@ -65,7 +65,7 @@ function VaccineInventoryConfigurationController($scope,programs,DemographicEsti
                                 value.id  = value1.id ;
                                 value.type  = value1.type ;
                                 value.productId  = value1.productId;
-                                //value.schedule  = value1.schedule;
+                                //value.scheduled_materialized_views.sql  = value1.scheduled_materialized_views.sql;
 
                                 //value.coverage  = value1.coverage ;
 

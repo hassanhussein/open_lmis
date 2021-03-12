@@ -130,4 +130,9 @@ public class ProcessingPeriodRepository {
   public List<ProcessingPeriod> getPeriodsForDateRange(Date rangeStart, Date rangeEnd) {
     return mapper.getPeriodsForDateRange(rangeStart, rangeEnd);
   }
+
+  public ProcessingPeriod getFullProcessingPeriodForCurrentMonth(String code){
+    return mapper.getFullProcessingPeriodForCurrentMonth(code);
+  }
+
 }

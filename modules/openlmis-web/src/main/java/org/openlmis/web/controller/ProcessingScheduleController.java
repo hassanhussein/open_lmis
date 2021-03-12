@@ -32,7 +32,7 @@ import static org.openlmis.core.web.OpenLmisResponse.error;
 import static org.openlmis.core.web.OpenLmisResponse.success;
 
 /**
- * This controller handles endpoint related to list, create, update, get details for a schedule
+ * This controller handles endpoint related to list, create, update, get details for a scheduled_materialized_views.sql
  */
 
 @Controller
@@ -40,7 +40,7 @@ import static org.openlmis.core.web.OpenLmisResponse.success;
 public class ProcessingScheduleController extends BaseController {
 
   public static final String SCHEDULES = "schedules";
-  public static final String SCHEDULE = "schedule";
+  public static final String SCHEDULE = "scheduled_materialized_views.sql";
 
   @Autowired
   private ProcessingScheduleService processingScheduleService;

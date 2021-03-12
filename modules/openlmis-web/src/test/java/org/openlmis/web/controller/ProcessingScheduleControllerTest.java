@@ -51,7 +51,7 @@ public class ProcessingScheduleControllerTest {
   @Rule
   public ExpectedException expectedEx = org.junit.rules.ExpectedException.none();
 
-  String scheduleName = "Test schedule name";
+  String scheduleName = "Test scheduled_materialized_views.sql name";
 
   private static final Long userId = 1L;
   private MockHttpServletRequest httpServletRequest = new MockHttpServletRequest();
@@ -112,7 +112,7 @@ public class ProcessingScheduleControllerTest {
   public void shouldCreateAndReturnANewSchedule() {
     ProcessingSchedule processingSchedule = new ProcessingSchedule("testCode", "testName");
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
-    when(messageService.message("message.schedule.created.success", "Test schedule name")).thenReturn("'Test schedule name' created successfully");
+    when(messageService.message("message.schedule.created.success", "Test scheduled_materialized_views.sql name")).thenReturn("'Test scheduled_materialized_views.sql name' created successfully");
     when(processingScheduleService.save(processingSchedule)).thenReturn(mockedSchedule);
     when(mockedSchedule.getName()).thenReturn(scheduleName);
 
@@ -156,7 +156,7 @@ public class ProcessingScheduleControllerTest {
     ProcessingSchedule mockedSchedule = mock(ProcessingSchedule.class);
     when(processingScheduleService.save(processingSchedule)).thenReturn(mockedSchedule);
     when(mockedSchedule.getName()).thenReturn(scheduleName);
-    when(messageService.message("message.schedule.updated.success", "Test schedule name")).thenReturn("'Test schedule name' updated successfully");
+    when(messageService.message("message.schedule.updated.success", "Test scheduled_materialized_views.sql name")).thenReturn("'Test scheduled_materialized_views.sql name' updated successfully");
 
     ResponseEntity<OpenLmisResponse> response = processingScheduleController.update(processingSchedule, 1L, httpServletRequest);
     assertThat(processingSchedule.getModifiedBy(), is(userId));
