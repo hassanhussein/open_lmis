@@ -119,10 +119,12 @@ public class AnnualDistrictDemographicEstimateService {
 
     List<Facility> facilities = facilityService.getUserSupervisedFacilities(userId, programId, RightName.MANAGE_DEMOGRAPHIC_ESTIMATES);
     String facilityIds = commaSeparator.commaSeparateIds(facilities);
+    System.out.println(facilityIds);
 
     List<EstimateFormLineItem> districts = repository.getDistrictLineItems(facilityIds);
-
+  //  System.out.println("passed");
     for (EstimateFormLineItem dto : districts) {
+      System.out.println("called");
       dto.setDistrictEstimates(repository.getDistrictEstimates(year, dto.getId(), programId));
       dto.setFacilityEstimates(repository.getFacilityEstimateAggregate(year, dto.getId(), programId));
       if (dto.getDistrictEstimates().isEmpty()) {

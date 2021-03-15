@@ -66,6 +66,7 @@
           <th ng-repeat-end="" class="span1" ng-if="column.name != 'productName' && column.name != 'skipped'">
             {{column.label}}
           </th>
+
           <th ng-show="showStockStatusReportColumns" openlmis-message="label.children.immunized"></th>
           <th ng-show="showStockStatusReportColumns" openlmis-message="label.usage.rate.formula"></th>
           <th ng-show="showStockStatusReportColumns" openlmis-message="label.wastage.rate.formula"></th>
@@ -124,6 +125,8 @@
                                                                                               ng-model="product.remarks"
                                                                                               type="text"/></td>
           <td ng-repeat-end="" ng-if="false"></td>
+          <td ng-show="showStockStatusReportColumns" style="background-color:silver;" class="number">
+          </td>
           <td ng-show="showStockStatusReportColumns" style="background-color:silver;" class="number">
             <span>
               {{product.childrenImmunized() | number : 0}}

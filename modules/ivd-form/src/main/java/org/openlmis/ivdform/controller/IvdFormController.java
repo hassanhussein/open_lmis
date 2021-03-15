@@ -78,6 +78,7 @@ public class IvdFormController extends BaseController {
             @PathVariable Long periodId,
             HttpServletRequest request
     ) {
+        System.out.println("Passed here");
         return OpenLmisResponse.response(REPORT, service.initialize(facilityId, programId, periodId, loggedInUserId(request), false));
     }
 

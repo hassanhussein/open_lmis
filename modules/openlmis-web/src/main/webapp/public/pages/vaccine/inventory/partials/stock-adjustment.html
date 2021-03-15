@@ -111,7 +111,7 @@
                            ng-disabled="c.lotsOnHand[0].isSkipped"
                            ng-model="c.lotsOnHand[0].quantity"
                            numeric-validator="positiveInteger"
-                           maxlength="10"
+                           maxlength="11"
                            ng-init="max=(c.lotsOnHand[0].hasExpired)?0:''"
                            maximum="{{max}}"
                            type="text"
@@ -216,7 +216,7 @@
                            ng-required="lot.isSkipped ===false"
                            ng-disabled="lot.isSkipped"
                            ng-model="lot.quantity"
-                           maxlength="{{isCentralUser?10:5}}" type="text"
+                           maxlength="{{isCentralUser?11:8}}" type="text"
                            num-pos="true" num-neg="false" num-int="10" num-thousand="true" awnum
 
                            ng-init="max=(lot.hasExpired)?0:''"

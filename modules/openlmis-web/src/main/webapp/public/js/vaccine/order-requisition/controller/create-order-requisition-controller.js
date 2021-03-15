@@ -12,6 +12,8 @@
 function CreateVaccineOrderRequisition($scope, $dialog,$routeParams, $window, report,
                                        VaccineOrderRequisitionSubmit, GetFacilitySupervisorsByProgram,SendMessages,SettingsByKey,$filter) {
 
+
+    console.log(report);
     $scope.report = new VaccineOrderRequisition(report);
 
    /* SettingsByKey.get({key: 'VACCINE_ORDER_REQUISITION_SUPERVISOR_NOTIFICATION_EMAIL_TEMPLATE'}, function (data) {
