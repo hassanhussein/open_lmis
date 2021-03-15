@@ -92,7 +92,6 @@ public class PopulationService {
 
             AnnualDistrictEstimateEntry estimateEntry = annualDistrictEstimateRepository.getEntryBy(currentYear, geoZone.getId(), program.getId(), populationSource);
             if(estimateEntry != null) {
-                System.out.println(""+estimateEntry.getValue());
                 return estimateEntry.getValue(); //Note that if the user hasn't specified a value, annualFacilityDemographicEstimateService.getEstimateValuesForFacility() will have done its best to compute one which will, most likely, not equal facility.getCatchmentPopulation().
             } else {
               //  System.out.println("Catchments");
