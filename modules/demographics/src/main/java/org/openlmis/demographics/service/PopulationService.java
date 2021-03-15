@@ -137,7 +137,7 @@ public class PopulationService {
             Long totalPopulation = 0L;
             for(Facility childFacility : facilities)
             {
-                System.out.println(childFacility);
+                //System.out.println(childFacility);
                 totalPopulation += getPopulation(childFacility, program, populationSource);
             }
             return totalPopulation;
