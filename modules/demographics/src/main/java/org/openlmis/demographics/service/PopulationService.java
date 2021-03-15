@@ -146,10 +146,10 @@ public class PopulationService {
         else if(facilityCode.equals("cvs"))
         {
             List<Facility> facilities=null;
-            ConfigurationSetting configuration = settingService.getByKey(Constants.REPORT_COUNTRY_TITLE_KEY);
+            ConfigurationSetting configuration = settingService.getByKey(Constants.SYSTEM_DEPLOYMENT_INSTANCE);
 
             String countryName=configuration.getValue();
-            if(countryName.equals("Zanzibar")) {
+            if(countryName.equals("ZANZIBAR")) {
                 facilities = facilityRepository.getAllByFacilityTypeCode("dvs");
             }else{
                  facilities = facilityRepository.getAllByFacilityTypeCode("rvs");
