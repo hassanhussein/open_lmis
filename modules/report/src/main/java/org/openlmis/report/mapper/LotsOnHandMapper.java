@@ -36,7 +36,7 @@ public interface LotsOnHandMapper {
             "            RECEIPTNUMBER as hdr_reportnumber, \n" +
             "            to_char(now(), 'DD/MM/YYYY') as hdr_dateofreport, \n" +
             "            'AAABBCC'||', '||to_char(r.receivedate, 'DD/MM/YYYY') as hdr_nameofcoldstore, \n" +
-            "            'CVS'||', '|| to_char(inspectionDate, 'DD/MM/YYYY') as hdr_completiontime, \n" +
+            "            'CVS'||', '|| to_char(inspectionDate, 'DD/MM/YYYY HH24:MI') as hdr_completiontime, \n" +
             "            i.id as ins_id, \n" +
             "            i.receiveid as ins_receiveid, \n" +
             "             to_char(i.inspectiondate , 'DD/MM/YYYY HH24:MI') as ins_inspectiondate, \n" +
@@ -228,7 +228,7 @@ public interface LotsOnHandMapper {
 
 
 
-    @Select(" select wl.name from inspection_lots lo " +
+    @Select(" select distinct wl.name from inspection_lots lo " +
             " left join wms_locations wl  on (wl.id=lo.passlocationid)" +
             " left join inspection_line_items li on(li.id=lo.inspectionlineitemid) where inspectionid=#{inspectionId}")
     ArrayList<String> getListVarStorage(@Param("inspectionId") Long inspectionId);

@@ -146,6 +146,9 @@
 	<field name="vvmflag" class="java.lang.String"/>
 	<field name="cccardflag" class="java.lang.String"/>
 	<field name="electronicdevices" class="java.lang.String"/>
+	<variable name="totalBox" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{insi_boxcounted}]]></variableExpression>
+	</variable>
 	<group name="GroupByProduct">
 		<groupExpression><![CDATA[$F{product}]]></groupExpression>
 		<groupHeader>
@@ -1013,7 +1016,7 @@ WHO recommends all UN agencies, countries and non-governmental organizations pro
 				<textField isBlankWhenNull="true">
 					<reportElement x="187" y="3" width="92" height="13" uuid="b6db6d9f-932e-48f7-8d5b-e882add5888a"/>
 					<textElement verticalAlignment="Middle"/>
-					<textFieldExpression><![CDATA[$F{insi_boxcounted}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{totalBox}]]></textFieldExpression>
 				</textField>
 				<line>
 					<reportElement x="2" y="32" width="553" height="1" uuid="599b9e54-8484-49a4-ab27-ba84b8b0b6c4"/>

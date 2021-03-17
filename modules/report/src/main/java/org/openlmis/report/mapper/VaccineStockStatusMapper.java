@@ -212,7 +212,7 @@ public interface VaccineStockStatusMapper {
     @Select("SELECT vd.distributionlineitemid as distributionLineItemId,\n" +
             "\tvd.id,loc.code binLocation,vd.distributionlineitemid," +
             "\tvd.lotid as lotId ,\n" +
-            "\tvd.quantity,\n" +
+            "\tvd.quantity,(vd.quantity/vd.packsize) vialsNumber,\n" +
             "\tvs.name as vvmStatus,\n" +
             "\tl.lotnumber as lotNumber,l.expirationdate as expirationDate\n" +
             "FROM vaccine_distribution_line_item_lots vd " +

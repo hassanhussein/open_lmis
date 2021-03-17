@@ -562,13 +562,19 @@ var lineItem = {};
                      event.productCode = product.productCode;
                      event.facilityId = facility.toFacilityId;
                      event.occurred = distribution.distributionDate;
-                     event.quantity = lotQuantity;
+                     //event.quantity = lotQuantity;
                      event.customProps = {};
                      event.customProps.occurred = distribution.distributionDate;
                      event.customProps.issuedto = facility.name;
 
+                      var packSize=1;
+
+                       if(lot.packSize){
+                       packSize=lot.packSize;
+                       }
+
                      event.lotId = lot.lotId;
-                     event.quantity = lotQuantity;
+                     event.quantity = lotQuantity/packSize;
 
 
                      l.lotId = lot.lotId;
@@ -581,16 +587,12 @@ var lineItem = {};
 
                       l.facilityName=facility.name;
 
-                      var packSize=1;
 
-                      if(lot.packSize){
-                      packSize=lot.packSize;
-                      }
 
 
                      l.quantity = lotQuantity/packSize;
-                     event.lots=lot;
-                     lineItem.lots.push(lot);
+                     event.lots=l;
+                     lineItem.lots.push(l);
                      events.push(event);
 
              }
@@ -639,7 +641,7 @@ $scope.requstions.forEach(function(req){
 
 });
 
-//console.log($scope.distribution_list);
+console.log($scope.distribution_list);
 
 
 ApproveOnlyDistribution.save($scope.distribution_list, function (distribution) {

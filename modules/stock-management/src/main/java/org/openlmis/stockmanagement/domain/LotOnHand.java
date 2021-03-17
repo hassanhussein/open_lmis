@@ -81,8 +81,9 @@ public class LotOnHand extends BaseModel {
   public Map<String, String> getCustomProps() {
     try {
       if (null == strategy) strategy = new LatestSyncedStrategy();
+      Map<String, String> customProps=null;
 
-      Map<String, String> customProps = StockManagementUtils.getKeyValueAggregate(keyValues, strategy);
+      customProps = StockManagementUtils.getKeyValueAggregate(keyValues, strategy);
 
       if (customProps.isEmpty()) {
         customProps.put("vvmstatus", "1");
@@ -90,7 +91,7 @@ public class LotOnHand extends BaseModel {
 
       return customProps.isEmpty() ? null : customProps;
     }catch (Exception e){
-      e.printStackTrace();
+    //  e.printStackTrace();
       return null;
     }
   }
