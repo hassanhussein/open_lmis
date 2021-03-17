@@ -35,7 +35,7 @@ $scope.issuedErrorList=[];
 
   $scope.$parent.distributed = false;
 
-//console.log(all_orders);
+//console.log($scope);
 $scope.soh=wmsSoh.stocks;
 $scope.listOfProductIds=_.pluck($scope.soh,'productId');
 

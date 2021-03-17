@@ -39,7 +39,7 @@ public interface LotsOnHandMapper {
             "            'CVS'||', '|| to_char(inspectionDate, 'DD/MM/YYYY') as hdr_completiontime, \n" +
             "            i.id as ins_id, \n" +
             "            i.receiveid as ins_receiveid, \n" +
-            "             to_char(i.inspectiondate , 'DD/MM/YYYY') as ins_inspectiondate, \n" +
+            "             to_char(i.inspectiondate , 'DD/MM/YYYY HH24:MI') as ins_inspectiondate, \n" +
             "            i.inspectionnote as ins_inspectionnote, \n" +
             "            i.inspectedby as ins_inspectedby, \n" +
             "            i.status as ins_status, \n" +
@@ -72,7 +72,7 @@ public interface LotsOnHandMapper {
             "            ii.cccardflag as insi_cccardflag, \n" +
             "            ii.electronicdeviceflag as insi_electronicdeviceflag, \n" +
             "            ii.createdby as insi_createdby, \n" +
-            "            to_char(ii.createddate,'DD/MM/YYYY')  as insi_createddate, \n" +
+            "            to_char(ii.createddate,'DD/MM/YYYY HH24:MI')  as insi_createddate, \n" +
             "            ii.modifiedby as insi_modifiedby, \n" +
             "            to_char(ii.modifieddate,'DD/MM/YYYY') as insi_modifieddate, \n" +
             "            ii.othermonitor as insi_othermonitor, \n" +
