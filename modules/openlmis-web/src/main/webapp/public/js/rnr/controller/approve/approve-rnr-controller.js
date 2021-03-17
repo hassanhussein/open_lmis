@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, $location, pageSize, $routeParams, $dialog, requisitionService, $q,rnrRejectionReasons) {
+function ApproveRnrController($scope, requisitionData, comments, Requisitions, RejectRequisition, rnrColumns, regimenTemplate, equipmentOperationalStatus, showMaxStock, $location, pageSize, $routeParams, $dialog, requisitionService, $q, rnrRejectionReasons,dataRangeConfigurationList) {
 
     $scope.canApproveRnr = requisitionData.canApproveRnr;
     $scope.rnr = new Rnr(requisitionData.rnr, rnrColumns, requisitionData.numberOfMonths);
@@ -27,6 +27,7 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
     $scope.errorPages = {};
     $scope.shownErrorPages = [];
     $scope.rnrComments = comments;
+    $scope.dataRangeConfigurationList=dataRangeConfigurationList;
     var REJECTION_REASONS = rnrRejectionReasons;
     var NON_FULL_SUPPLY = 'nonFullSupply';
 
@@ -42,7 +43,7 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
                     return r.name;
                 });
                 if (other.length > 0) {
-                    reasons = reasons +"," + other;
+                    reasons = reasons + "," + other;
                 }
                 RejectRequisition.post({id: $scope.rnr.id, reasons: reasons}, function () {
                     OpenLmisDialog.newDialog({
@@ -180,6 +181,15 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
         $scope.message = "";
     }
 
+    $scope.showConsumptionRateColorInfoModal = function () {
+
+        // $scope.consumptionRateColorInfoModal = true;
+        $scope.consumptionRateColorInfoModal = true;
+    };
+
+    $scope.closeConsumptionRateColorInfoModal = function () {
+        $scope.consumptionRateColorInfoModal = false;
+    };
 }
 
 ApproveRnrController.resolve = {
@@ -254,6 +264,15 @@ ApproveRnrController.resolve = {
         $timeout(function () {
             RejectionReasons.get({}, function (data) {
                 deferred.resolve(data.rejectionReasons);
+            }, {});
+        }, 100);
+        return deferred.promise;
+    },
+    dataRangeConfigurationList: function ($q, $timeout, $route, DataRangeConfigurationList) {
+        var deferred = $q.defer();
+        $timeout(function () {
+            DataRangeConfigurationList.get({}, function (data) {
+                deferred.resolve(data.dataRangeInformationList);
             }, {});
         }, 100);
         return deferred.promise;

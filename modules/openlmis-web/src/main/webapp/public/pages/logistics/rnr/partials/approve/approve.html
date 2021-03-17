@@ -9,6 +9,7 @@
   -->
 
 <ng-include src="'/public/pages/logistics/rnr/partials/header.html'"></ng-include>
+
 <div class="rnr-tabs clearfix">
     <ul class="clearfix">
         <li ng-class="{'selected': (visibleTab == 'fullSupply' || visibleTab == undefined), 'has-error': fullSupplyTabError}">
@@ -28,6 +29,11 @@
         </li>
     </ul>
   <span class="pull-right">
+        <a id="consumptionRateConfiguration"  ng-click="showConsumptionRateColorInfoModal()" href="" class="btn">
+          <i data-toggle="tooltip"
+                  data-html="true"
+                  data-title="<table><tr><td style='color:lightGreen;'></td><td>Show Data Configuration Color Information</td></tr></table>" class="icon-info-sign"></i>
+        </a>
     <a id="resizeViewButton" full-screen href="" class="btn">
       <i class="icon-resize-full"></i>
     </a>
@@ -38,6 +44,7 @@
        target="_blank"></a>
   </span>
 </div>
+<ng-include src="'/public/pages/logistics/rnr/partials/approve/data-range-configuration-info-modal.html'"></ng-include>
 
 <form name="approvalForm" novalidate>
 

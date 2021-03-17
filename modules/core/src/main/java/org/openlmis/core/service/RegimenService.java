@@ -11,6 +11,8 @@
 package org.openlmis.core.service;
 
 import org.openlmis.core.domain.*;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.RegimenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,6 +114,7 @@ public class RegimenService {
         return repository.getDosageUnits();
     }
 
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void saveRegimenTree(List<Regimen> regimenTreeList, Long aLong) {
         for (Regimen regimen : regimenTreeList) {
             List<RegimenProductCombination> productCombinationList = regimen.getProductCombinationList();

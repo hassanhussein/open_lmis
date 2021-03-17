@@ -16,6 +16,8 @@ import org.openlmis.core.domain.BaseModel;
 import org.openlmis.core.domain.Program;
 import org.openlmis.core.event.ProgramChangeEvent;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ProgramRepository;
 import org.openlmis.core.repository.ProgramSupportedRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +133,7 @@ public class ProgramService {
         return program;
     }
 
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
     public Program update(Program program) {
         return programRepository.update(program);
     }
@@ -143,6 +146,7 @@ public class ProgramService {
         return programRepository.getByCode(program.getCode());
     }
 
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void save(Program record) {
         Program program = this.programRepository.getByCode(record.getCode());
         if (program != null) {

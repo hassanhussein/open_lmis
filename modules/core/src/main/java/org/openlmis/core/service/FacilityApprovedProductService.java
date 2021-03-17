@@ -15,6 +15,8 @@ import org.openlmis.core.domain.FacilityType;
 import org.openlmis.core.domain.FacilityTypeApprovedProduct;
 import org.openlmis.core.domain.Pagination;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.FacilityApprovedProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +57,7 @@ public class FacilityApprovedProductService {
   public List<FacilityTypeApprovedProduct> getNonFullSupplyFacilityApprovedProductByFacilityAndProgram(Long facilityId, Long programId) {
     return repository.getNonFullSupplyProductsByFacilityAndProgram(facilityId, programId);
   }
-
+  @Loggable(action = TableActionEnum.INSERT_ACTION)
   public void save(FacilityTypeApprovedProduct facilityTypeApprovedProduct) {
     fillProgramProductIds(facilityTypeApprovedProduct);
     FacilityType facilityType = facilityService.getFacilityTypeByCode(facilityTypeApprovedProduct.getFacilityType());
@@ -95,13 +97,14 @@ public class FacilityApprovedProductService {
     facilityTypeApprovedProduct.getProgramProduct().setId(programProductId);
   }
 
+  @Loggable(action = TableActionEnum.INSERT_ACTION)
   public void saveAll(List<FacilityTypeApprovedProduct> facilityTypeApprovedProducts, Long userId) {
     for (FacilityTypeApprovedProduct facilityTypeApprovedProduct : facilityTypeApprovedProducts) {
       facilityTypeApprovedProduct.setCreatedBy(userId);
       save(facilityTypeApprovedProduct);
     }
   }
-
+  @Loggable(action = TableActionEnum.DELETE_ACTION)
   public void delete(Long id) {
     repository.delete(id);
   }

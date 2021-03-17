@@ -12,6 +12,8 @@ package org.openlmis.core.service;
 
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.ProductCategory;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ProductCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,7 @@ public class ProductCategoryService {
         return repository.getByCode(code);
     }
 
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void save(ProductCategory productCategory) {
         if (productCategory.getId() != null) {
             repository.update(productCategory);

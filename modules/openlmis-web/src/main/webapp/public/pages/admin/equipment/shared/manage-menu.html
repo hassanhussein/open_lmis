@@ -27,7 +27,11 @@
                 <span id="equipment-list" openlmis-message="label.equipment.list" ></span>
             </a>
         </li>
-
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageOtherEquipmentSelected">
+            <a href="/public/pages/admin/equipment/other-manage/index.html">
+                <span id="other-equipment-list" openlmis-message="label.other.equipment.list" ></span>
+            </a>
+        </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageServiceTypeSelected">
           <a href="/public/pages/admin/equipment/service-type/index.html">
             <span id="equipment-service-type" openlmis-message="label.equipment.service.types" ></span>

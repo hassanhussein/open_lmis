@@ -23,17 +23,22 @@
 
 package org.openlmis.notification.service;
 
+import org.apache.commons.io.input.ObservableInputStream;
+import org.openlmis.core.event.DataChangeEvent;
 import org.openlmis.notification.domain.FacilityNotification;
 import org.openlmis.notification.domain.Notifications;
 import org.openlmis.notification.repository.FacilityNotificationRepository;
 import org.openlmis.notification.utils.NotificationConstant;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 @Component
-public class FacilityNotificationService {
+public class FacilityNotificationService  {
     @Autowired
     FacilityNotificationRepository repository;
     @Autowired
@@ -84,4 +89,7 @@ public class FacilityNotificationService {
     public void acknowledgeNotificationReceival(FacilityNotification facilityNotification) {
         repository.acknowledgeNotificationReceival(facilityNotification);
     }
+
+
+
 }

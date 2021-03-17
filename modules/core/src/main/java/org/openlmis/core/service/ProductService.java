@@ -15,6 +15,8 @@ import org.openlmis.core.audit.AuditAction;
 import org.openlmis.core.audit.AuditService;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ProductGroupRepository;
 import org.openlmis.core.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +55,7 @@ public class ProductService {
   AuditService auditService;
 
   @Transactional
+  @Loggable(action = TableActionEnum.INSERT_ACTION)
   public void save(Product product) {
 
     product.validate();

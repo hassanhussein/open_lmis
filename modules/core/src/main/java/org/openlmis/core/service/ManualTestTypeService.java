@@ -12,6 +12,8 @@ package org.openlmis.core.service;
 
 import org.openlmis.core.domain.ManualTestType;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ManualTestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -28,34 +30,37 @@ public class ManualTestTypeService {
     @Autowired
     private ManualTestTypeRepository repository;
 
-    public List<ManualTestType> getAll(){
+    public List<ManualTestType> getAll() {
         return repository.getAll();
     }
 
-    public ManualTestType getById(Long id){
+    public ManualTestType getById(Long id) {
         return repository.getById(id);
     }
 
-    public void insert(ManualTestType type){
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
+    public void insert(ManualTestType type) {
         repository.insert(type);
     }
 
-    public void  update(ManualTestType type){
+    @Loggable(action = TableActionEnum.UPDATE_ACTION)
+    public void update(ManualTestType type) {
         repository.update(type);
     }
 
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void save(ManualTestType testType) {
-        try
-        {
-            if(testType.getId() == null)
+        try {
+            if (testType.getId() == null)
                 repository.insert(testType);
             else
                 repository.update(testType);
         } catch (DuplicateKeyException e) {
-                throw new DataException("Invalid code, the provided code already exists");
+            throw new DataException("Invalid code, the provided code already exists");
         }
     }
 
+    @Loggable(action = TableActionEnum.DELETE_ACTION)
     public void remove(Long id) {
         repository.remove(id);
     }

@@ -13,6 +13,8 @@ package org.openlmis.core.service;
 import org.openlmis.core.domain.ManualTestResultType;
 import org.openlmis.core.domain.ManualTestType;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.logging.Loggable;
+import org.openlmis.core.logging.TableActionEnum;
 import org.openlmis.core.repository.ManualTestResultTypeRepository;
 import org.openlmis.core.repository.ManualTestTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,34 +29,37 @@ public class ManualTestResultTypeService {
     @Autowired
     private ManualTestResultTypeRepository repository;
 
-    public List<ManualTestResultType> getAll(){
+    public List<ManualTestResultType> getAll() {
         return repository.getAll();
     }
 
-    public ManualTestResultType getById(Long id){
+    public ManualTestResultType getById(Long id) {
         return repository.getById(id);
     }
 
-    public void insert(ManualTestResultType type){
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
+    public void insert(ManualTestResultType type) {
         repository.insert(type);
     }
 
-    public void  update(ManualTestResultType type){
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
+    public void update(ManualTestResultType type) {
         repository.update(type);
     }
 
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void save(ManualTestResultType testResultType) {
-        try
-        {
-            if(testResultType.getId() == null)
+        try {
+            if (testResultType.getId() == null)
                 repository.insert(testResultType);
             else
                 repository.update(testResultType);
         } catch (DuplicateKeyException e) {
-                throw new DataException("Invalid code, the provided Result Type code already exists");
+            throw new DataException("Invalid code, the provided Result Type code already exists");
         }
     }
 
+    @Loggable(action = TableActionEnum.INSERT_ACTION)
     public void remove(Long id) {
         repository.remove(id);
     }

@@ -55,6 +55,7 @@ public class ProducerServiceImpl implements ProducerService {
      */
 
     @Override
+    @Async
     public void produceMessage(String message) {
 
         aTemplate.convertAndSend("messages.facility.notification.1", message);// send

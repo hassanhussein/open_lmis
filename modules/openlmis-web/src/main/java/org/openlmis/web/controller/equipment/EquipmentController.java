@@ -77,7 +77,7 @@ public class EquipmentController extends BaseController {
 
       Pagination pagination = new Pagination(page, parseInt(limit));
       EquipmentType equipmentType=equipmentTypeService.getTypeById(equipmentTypeId);
-      if(equipmentType.getIsColdChain())
+      if(equipmentType.getIsColdChain()!=null && equipmentType.getIsColdChain())
       {
           List<ColdChainEquipment> equipments=service.getAllCCE(equipmentTypeId,pagination);
           pagination.setTotalRecords(service.getCCECountByType(equipmentTypeId));

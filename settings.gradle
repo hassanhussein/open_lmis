@@ -20,6 +20,7 @@ include "modules:authentication",
         "modules:export",
         "modules:help",
         "modules:ivd-form",
+        "modules:logging",
         "modules:lookup-api",
         "modules:migration",
         "modules:openlmis-web",
@@ -39,3 +40,5 @@ include "modules:authentication",
 //        "test-modules:service-tests",
 //        "test-modules:test-core",
 //        "test-modules:webservice-test"
+
+
