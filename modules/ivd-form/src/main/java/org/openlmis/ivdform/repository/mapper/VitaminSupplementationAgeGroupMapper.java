@@ -21,6 +21,6 @@ import java.util.List;
 @Repository
 public interface VitaminSupplementationAgeGroupMapper {
 
-  @Select("select * from vaccine_vitamin_supplementation_age_groups")
+  @Select("select * from vaccine_vitamin_supplementation_age_groups order by displayOrder asc")
   List<VitaminSupplementationAgeGroup> getAll();
 }
