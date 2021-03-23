@@ -11968,7 +11968,7 @@ function $RootScopeProvider(){
        */
       $evalAsync: function(expr) {
         // if we are outside of an $digest loop and this is the first time we are scheduling async
-        // task also schedule async auto-flush
+        // task also scheduled_materialized_views.sql async auto-flush
         if (!$rootScope.$$phase && !$rootScope.$$asyncQueue.length) {
           $browser.defer(function() {
             if ($rootScope.$$asyncQueue.length) {

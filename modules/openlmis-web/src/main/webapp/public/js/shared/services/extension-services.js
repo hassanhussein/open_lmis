@@ -541,7 +541,7 @@ services.factory('OrderFillRateSummaryReport', function ($resource) {
 });
 
 services.factory('GetOrderFillRateSummary', function ($resource) {
-    return $resource('/reports/OrderFillRateSummary/program/:programId/period/:periodId/schedule/:scheduleId/facilityTypeId/:facilityTypeId/zone/:zoneId/status/:status/orderFillRateSummary.json', {}, {});
+    return $resource('/reports/OrderFillRateSummary/program/:programId/period/:periodId/scheduled_materialized_views.sql/:scheduleId/facilityTypeId/:facilityTypeId/zone/:zoneId/status/:status/orderFillRateSummary.json', {}, {});
 });
 
 services.factory('StockedOutFacilityList', function ($resource) {
@@ -1607,6 +1607,6 @@ services.factory('FacilityRnRStatusesReportList', function ($resource) {
     return $resource('/reports/reportdata/rnr-status-list-report.json', {}, {});
 });
 
-
-
-
+services.factory('GetRejectedRnRByZoneReport', function ($resource) {
+    return $resource('/reports/reportdata/zone-rejected-rnr', {}, {});
+});

@@ -25,7 +25,7 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 /**
- * A front end for the price schedule service
+ * A front end for the price scheduled_materialized_views.sql service
  */
 @Controller
 public class PriceScheduleController {

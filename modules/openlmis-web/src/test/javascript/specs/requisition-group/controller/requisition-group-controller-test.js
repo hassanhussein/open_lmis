@@ -157,7 +157,7 @@ describe("Requisition Group Controller", function () {
     expect(scope.successMessage).toEqual("");
   });
 
-  it('should not save requisition group if at least one program schedule is under edit', function () {
+  it('should not save requisition group if at least one program scheduled_materialized_views.sql is under edit', function () {
     scope.requisitionGroup = {"code": "N100", "name": "group 100", "supervisoryNode": {"facility": {"code": "F10", "name": "village dispensary"}}};
     scope.requisitionGroupForm = {"$error": {"required": false}};
     scope.requisitionGroupProgramSchedules[0].underEdit = true;
@@ -273,7 +273,7 @@ describe("Requisition Group Controller", function () {
     expect(scope.addNew).toBeTruthy();
   });
 
-  it('should update processing schedule', function () {
+  it('should update processing scheduled_materialized_views.sql', function () {
     scope.schedules = [
       {"id": 2, "name": "SCH2", "code": "Yearly"},
       {"id": 1, "name": "SCH1", "code": "Monthly"}
@@ -338,7 +338,7 @@ describe("Requisition Group Controller", function () {
     expect(scope.addNew).toBeFalsy();
   });
 
-  it('should be able to find program schedule under edit', function () {
+  it('should be able to find program scheduled_materialized_views.sql under edit', function () {
     scope.requisitionGroupProgramSchedules = [
       {"name": "Malaria", "underEdit": false},
       {"name": "Essential Medicines", "underEdit": true}

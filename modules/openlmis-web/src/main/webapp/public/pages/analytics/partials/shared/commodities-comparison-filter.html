@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col s6">
+        <filter-container>
+                <program-without-select-filter class="form-cell horizontalFilters" required="true"></program-without-select-filter>
+                <schedule-without-select-filter class="form-cell horizontalFilters" required="true"></schedule-without-select-filter>
+                <year-without-select-filter class="form-cell horizontalFilters" required="true"></year-without-select-filter>
+        </filter-container>
+        <br>
+        <button ng-class="minimizePropagation($event)" ng-click="onFilterChange(filter)">
+            Update
+        </button>
+    </div>
+    <div class="col s6"></div>
+
+</div>
+
+
+

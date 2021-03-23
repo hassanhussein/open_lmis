@@ -28,7 +28,7 @@ ResolveDashboardFormData = {
                return {
                 yearOptionAll : messageService.get('input.year.option.all'),
                 programOptionSelect : messageService.get('input.program.option.select'),
-                scheduleOptionSelect : messageService.get('input.schedule.option.select'),
+                scheduleOptionSelect : messageService.get('input.scheduled_materialized_views.sql.option.select'),
                 geographicZoneNational : messageService.get('input.geographic.zone.national'),
                 facilityOptionSelect : messageService.get('input.facility.option.select'),
                 periodOptionSelect : messageService.get('input.period.option.select')

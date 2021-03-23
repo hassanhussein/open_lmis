@@ -32,7 +32,7 @@ import static org.openlmis.core.web.OpenLmisResponse.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 /**
- * This controller handles endpoint related to list, create, update, get details for a period for given schedule
+ * This controller handles endpoint related to list, create, update, get details for a period for given scheduled_materialized_views.sql
  */
 
 @Controller
@@ -90,5 +90,15 @@ public class ProcessingPeriodController extends BaseController {
   public ResponseEntity<OpenLmisResponse> get(@PathVariable("id") Long id) {
     ProcessingPeriod processingPeriod = processingScheduleService.getPeriodById(id);
     return response("period", processingPeriod);
+  }
+
+  @RequestMapping(value = "/full-reported-period/{program}", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getFullProcessingPeriodForCurrentMonth(@PathVariable("program") Long program) {
+    return response("period", processingScheduleService.getFullProcessingPeriodForCurrentMonth(program));
+  }
+
+  @RequestMapping(value = "/default-program", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getDefaultProgram() {
+    return response("program", processingScheduleService.getDefaultProgramForDashboard());
   }
 }

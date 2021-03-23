@@ -95,6 +95,7 @@
     <import resource="classpath:/applicationContext-notification.xml" />
     <import resource="classpath:/applicationContext-vaccine.xml" />
     <import resource="classpath:/applicationContext-stock-management.xml" />
+    <import resource="classpath:/applicationContext-analytics.xml" />
 
     <bean id="userAuthenticationProvider" class="org.openlmis.authentication.web.UserAuthenticationProvider"/>
 

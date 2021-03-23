@@ -1,3 +1,4 @@
+/*
 package org.openlmis.report.controller;
 
 import lombok.NoArgsConstructor;
@@ -29,6 +30,7 @@ private static final String REPORTING_RATE="reportingRate";
     private static final String PROUDCT_SUPPLY_STATUSES="supplyStatuses";
     private static final String RNR_STAUS_CHANGE_TIMELINE="rnrStatusTimeLine";
     private static final String USERS="users";
+
     @Autowired
 private DashboardService dashboardService;
     @RequestMapping(value = "/reporting-rate", method = GET, headers = ACCEPT_JSON)
@@ -119,3 +121,4 @@ private DashboardService dashboardService;
         return OpenLmisResponse.response("aggregateExpiry", dashboardService.getAggregateExpiry(program));
     }
 }
+*/

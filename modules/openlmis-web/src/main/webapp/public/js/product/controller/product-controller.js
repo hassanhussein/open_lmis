@@ -110,7 +110,7 @@ function ProductController($scope, productGroups, productForms, dosageUnits, pro
       else
       {
 
-          $scope.error = "Duplicate Price schedule category";
+          $scope.error = "Duplicate Price scheduled_materialized_views.sql category";
       }
   };
 

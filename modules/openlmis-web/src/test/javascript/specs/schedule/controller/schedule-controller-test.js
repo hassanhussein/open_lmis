@@ -32,7 +32,7 @@ describe("Schedule", function () {
       expect(scope.schedules).toEqual([existingSchedule]);
     });
 
-    it('should create a new schedule', function () {
+    it('should create a new scheduled_materialized_views.sql', function () {
       scope.newSchedule = {"code": "newCode", "name": "newName", "description": "newDescription"};
       var newScheduleWithId = {"id": 2, "code": "newCode", "name": "newName", "description": "newDescription"};
       var expectedScheduleBackupMap = [];
@@ -54,7 +54,7 @@ describe("Schedule", function () {
       expect(scope.message).toEqual("success message");
     });
 
-    it('should show error on failure of creation of a new schedule', function () {
+    it('should show error on failure of creation of a new scheduled_materialized_views.sql', function () {
       scope.newSchedule = {"code": "newCode", "name": "newName", "description": "newDescription"};
       scope.createScheduleForm = {$invalid: false};
       $httpBackend.expectPOST('/schedules.json').respond(400, {"error": "errorMsg"});
@@ -65,7 +65,7 @@ describe("Schedule", function () {
       expect(scope.creationError).toEqual("errorMsg");
     });
 
-    xit('should update an existing schedule', function () {
+    xit('should update an existing scheduled_materialized_views.sql', function () {
       var updatedSchedule = {"id": 1, "code": "newCode", "name": "newName", "description": "newDescription", "modifiedBy": "", "modifiedDate": "12345"};
       var expectedScheduleBackupMap = [];
       expectedScheduleBackupMap[1] = {"code": "newCode", "name": "newName", "description": "newDescription"};
@@ -82,7 +82,7 @@ describe("Schedule", function () {
       expect(scope.message).toEqual("success message");
     });
 
-    it('should show failure error on updating an existing schedule', function () {
+    it('should show failure error on updating an existing scheduled_materialized_views.sql', function () {
       var updatedSchedule = {"id": 1, "code": "newCode", "name": "newName", "description": "newDescription"};
       $httpBackend.expectPUT('/schedules/1.json').respond(400, {"error": "errorMsg"});
       scope.schedulesBackupMap[1] = updatedSchedule;
@@ -93,13 +93,13 @@ describe("Schedule", function () {
       expect(scope.schedulesBackupMap[1].error).toEqual("errorMsg");
     });
 
-    it('should set correct schedule in the scope and navigate to period', function () {
+    it('should set correct scheduled_materialized_views.sql in the scope and navigate to period', function () {
       var selectedSchedule = {"id": 1, "code": "newCode", "name": "newName", "description": "newDescription"};
       scope.navigateToPeriodFor(selectedSchedule);
       expect(location.path()).toEqual("/manage-period/1");
     });
 
-    it('should do nothing on canceling schedule edit', function () {
+    it('should do nothing on canceling scheduled_materialized_views.sql edit', function () {
       var scheduleUnderEdit = {"id": 1, "code": "editedCode", "name": "editedName", "description": "editedDescription"};
       scope.schedulesBackupMap = [
         {},
