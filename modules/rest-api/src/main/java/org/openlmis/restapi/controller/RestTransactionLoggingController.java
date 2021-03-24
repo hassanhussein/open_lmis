@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.response;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
 public class RestTransactionLoggingController extends BaseController {
@@ -31,7 +32,7 @@ public class RestTransactionLoggingController extends BaseController {
     @Autowired
     private RestTransactionLoggingService service;
 
-    @RequestMapping(value = "/rest-api/data-transaction-change-logs", method = GET, headers = BaseController.ACCEPT_JSON)
+    @RequestMapping(value = "/rest-api/data-transaction-change-logs", method = POST, headers = BaseController.ACCEPT_JSON)
     public ResponseEntity<RestResponse> dataTransactionChangeLogs(@RequestBody DataTransactionSearchParameter parameter) {
         List<TransactionBatch> transactionBatchList = service.loadTransactionBatchHistory(parameter);
         return response(DATA_TRANACTION_LOGS, transactionBatchList);
