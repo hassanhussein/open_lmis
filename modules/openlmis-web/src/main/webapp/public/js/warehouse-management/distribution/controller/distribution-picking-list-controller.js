@@ -33,7 +33,7 @@ if ($scope.distributionForm.$error.required) {
 //                console.log($scope.pendingRequisition);
                 $scope.orderList=_.filter($scope.pendingRequisition,function(order){
 
-                return order.status!="SUBMITTED" && new Date($scope.toDate)>=new Date(order.orderDate) && new Date($scope.fromDate)<=new Date(order.orderDate);
+                return order.status!="SUBMITTED" && new Date($scope.toDate)>=new Date(order.distributionDate) && new Date($scope.fromDate)<=new Date(order.distributionDate);
 
                 });
 

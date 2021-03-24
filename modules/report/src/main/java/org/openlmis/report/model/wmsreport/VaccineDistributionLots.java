@@ -14,7 +14,7 @@ public class VaccineDistributionLots {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private  int id;
-    int lotId,quantity=0, distributionLineItemId;
+    int lotId,quantity=0, distributionLineItemId,vialsNumber=0;
     String received=" ";
     String lotNumber,vvmStatus,binLocation;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

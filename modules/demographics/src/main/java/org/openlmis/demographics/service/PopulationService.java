@@ -92,7 +92,6 @@ public class PopulationService {
 
             AnnualDistrictEstimateEntry estimateEntry = annualDistrictEstimateRepository.getEntryBy(currentYear, geoZone.getId(), program.getId(), populationSource);
             if(estimateEntry != null) {
-                System.out.println(""+estimateEntry.getValue());
                 return estimateEntry.getValue(); //Note that if the user hasn't specified a value, annualFacilityDemographicEstimateService.getEstimateValuesForFacility() will have done its best to compute one which will, most likely, not equal facility.getCatchmentPopulation().
             } else {
               //  System.out.println("Catchments");
@@ -137,7 +136,7 @@ public class PopulationService {
             Long totalPopulation = 0L;
             for(Facility childFacility : facilities)
             {
-                System.out.println(childFacility);
+                //System.out.println(childFacility);
                 totalPopulation += getPopulation(childFacility, program, populationSource);
             }
             return totalPopulation;
@@ -146,10 +145,10 @@ public class PopulationService {
         else if(facilityCode.equals("cvs"))
         {
             List<Facility> facilities=null;
-            ConfigurationSetting configuration = settingService.getByKey(Constants.REPORT_COUNTRY_TITLE_KEY);
+            ConfigurationSetting configuration = settingService.getByKey(Constants.SYSTEM_DEPLOYMENT_INSTANCE);
 
             String countryName=configuration.getValue();
-            if(countryName.equals("Zanzibar")) {
+            if(countryName.equals("ZANZIBAR")) {
                 facilities = facilityRepository.getAllByFacilityTypeCode("dvs");
             }else{
                  facilities = facilityRepository.getAllByFacilityTypeCode("rvs");

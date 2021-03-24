@@ -264,16 +264,20 @@ public class VaccineOrderRequisitionController extends BaseController {
         configuration = settingService.getByKey(Constants.REPORT_COUNTRY_TITLE_KEY);
 
         String countryName=configuration.getValue();
+
+        configuration = settingService.getByKey(Constants.LOGO_FILE_NAME_KEY);
+
+        String LOGO_FILE_NAME_KEY=configuration.getValue();
+
         String separator = System.getProperty("file.separator");
 
         String logoPath=imgResource.getFile().getAbsolutePath() +separator;
-        if(countryName.equals("Zanzibar")){
-            logoPath=imgResource.getFile().getAbsolutePath() +separator+"znz"+ separator;
-        }
+
 
         configuration=  settingService.getByKey(Constants.REPORT_PROGRAM_TITLE);
         map.put(Constants.REPORT_PROGRAM_TITLE,configuration.getValue());
-
+        map.put("logo_path", logoPath+LOGO_FILE_NAME_KEY);
+        map.put("COUNTRY_NAME", countryName);
         map.put("image_dir", logoPath);
         map.put("ISSUE_ID", id.intValue());
         return new ModelAndView(jasperView, map);

@@ -92,7 +92,7 @@ public interface VaccineOrderRequisitionMapper {
             "     JOIN role_assignments ra ON ra.supervisorynodeid = sn.id OR ra.supervisorynodeid = sn.parentid " +
             "     JOIN vaccine_order_requisitions r on f.id = r.facilityId and sn.id = r.supervisorynodeid " +
             "     JOIN processing_periods pp on r.periodId = pp.id " +
-            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId}")
+            "     WHERE ra.userId = #{userId} AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','PENDING','ISSUED') AND  isVerified = false AND r.programId = #{programId} AND sn.facilityId = #{facilityId} order by r.id desc limit 20")
       List<OrderRequisitionDTO> getPendingRequest(@Param("userId") Long userId, @Param("facilityId") Long facilityId, @Param("programId") Long programId);
 
     @SelectProvider(type = VaccineOrderRequisitionMapper.SelectVaccineOrder.class, method = "getOrderBySearchParam")
@@ -123,7 +123,7 @@ public interface VaccineOrderRequisitionMapper {
             if(column.equalsIgnoreCase("picklistid")||column.equalsIgnoreCase("orderid")) {
             sql.append(" JOIN vaccine_distributions vd on vd.orderid = r.id " );
             }
-            sql.append("  WHERE ra.userId = ").append(userId).append("   and r.programId = ").append(programId).append(" AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','ISSUED') and  isVerified = false AND  sn.facilityId =").append(facilityId);
+            sql.append("  WHERE ra.userId = ").append(userId).append("   and r.programId = ").append(programId).append(" AND R.STATUS  IN('SUBMITTED','UNDER_PICKING','PENDING','ISSUED') and  isVerified = false AND  sn.facilityId =").append(facilityId);
 
             if(column.equalsIgnoreCase("picklistid")) {
                 sql.append(" AND vd.picklistid=CAST(#{searchParam} as bigint) ");
@@ -270,7 +270,7 @@ public interface VaccineOrderRequisitionMapper {
             " WHERE orderId = #{id} AND PRODUCTId = #{productId}")*/
 
 
-    @Select("SELECT ITEM.GAP,item.id as distributionLineItemId,LOT.transferLogs,LOT.ID,LOT.PACKSIZE, LOT.LOTID,LOT.VVMID,LOT.LOCATIONID,LOT.STOCKCARDID,LOT.QUANTITY,(LOT.PACKSIZE*LOT.QUANTITY) QTY FROM  VACCINE_DISTRIBUTION_LINE_ITEM_LOTS LOT  \n" +
+    @Select("SELECT ITEM.GAP,item.id as distributionLineItemId,LOT.transferLogs,LOT.ID,LOT.PACKSIZE, LOT.LOTID,LOT.VVMID,LOT.LOCATIONID,LOT.STOCKCARDID,LOT.QUANTITY,LOT.QUANTITY QTY FROM  VACCINE_DISTRIBUTION_LINE_ITEM_LOTS LOT  \n" +
             " LEFT JOIN VACCINE_DISTRIBUTION_LINE_ITEMS ITEM ON ITEM.id = lot.distributionlineitemid \n" +
             " LEFT JOIN VACCINE_DISTRIBUTIONS  D ON  item.distributionId  = D.id \n" +
             " WHERE D.orderId = #{id}  AND ITEM.PRODUCTId =#{productId}")

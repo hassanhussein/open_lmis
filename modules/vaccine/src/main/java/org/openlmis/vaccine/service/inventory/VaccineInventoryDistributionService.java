@@ -201,18 +201,18 @@ public Long save(VaccineDistribution distribution, Long userId) {
                         lot.setModifiedBy(userId);
                         lot.setCreatedBy(userId);
                         lot.setDistributionLineItemId(lineItem.getDistributionLineItemId());
-                        if (lot.getQuantity() != null) {
-                            lot.setQuantity(lot.getQuantity());
-                        } else {
-                            lot.setQuantity(lot.getQty());
-                        }
 
                         if (lot.getPackSize() == null) {
                             long parkSize = 1;
                             lot.setPackSize(parkSize);
                         }
 
-                        System.out.println(lot.getQty());
+                        if (lot.getQuantity() != null) {
+                            lot.setQuantity(lot.getQuantity()*lot.getPackSize());
+                        } else {
+                            lot.setQuantity(lot.getQty()*lot.getPackSize());
+                        }
+
                         if (lot.getId() != null) {
                             repository.updateDistributionLineItemLot(lot);
                         } else {
