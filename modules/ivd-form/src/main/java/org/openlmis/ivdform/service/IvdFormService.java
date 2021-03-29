@@ -260,7 +260,7 @@ public class IvdFormService {
     }
 
     private VaccineReport getVaccineReportFromDbForUpdate(VaccineReport report) {
-        System.out.println("Facility: "+report.getFacilityId()+" Period: "+report.getPeriodId());
+        //System.out.println("Facility: "+report.getFacilityId()+" Period: "+report.getPeriodId());
 
 
         Long id = this.getReportIdForFacilityAndPeriod(report.getFacilityId(), report.getPeriodId());

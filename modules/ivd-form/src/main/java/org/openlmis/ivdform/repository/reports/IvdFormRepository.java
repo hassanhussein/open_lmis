@@ -74,7 +74,7 @@ public class IvdFormRepository {
 
 
   private void saveDetails(VaccineReport dbVersion, VaccineReport report, Long userId) {
-    System.out.println(report.getLogisticsLineItems());
+    //System.out.println(report.getLogisticsLineItems());
     lineItemService.saveLogisticsLineItems(dbVersion, report.getLogisticsLineItems(), report.getId(), userId);
     lineItemService.saveDiseaseLineItems(dbVersion, report.getDiseaseLineItems(), report.getId());
     lineItemService.saveCoverageLineItems(dbVersion, report.getCoverageLineItems(), report.getId(),userId);
