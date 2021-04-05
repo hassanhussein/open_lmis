@@ -43,7 +43,7 @@ public abstract class EntityDeserializer<T extends BaseModel> extends JsonDeseri
     private static final ThreadLocal<SimpleDateFormat> sdf =
             ThreadLocal.<SimpleDateFormat>withInitial(
                     () -> {
-                        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                     });
 
     @Override

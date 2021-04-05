@@ -9,6 +9,7 @@
  */
 package org.openlmis.logging.converter;
 
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.AllArgsConstructor;
@@ -37,23 +38,38 @@ public class EntityConverterImp {
 
 
     public TransactionHistory convert(TransactionHistory transaction) {
-        ObjectMapper mapper = new ObjectMapper();
-        SimpleModule module = new SimpleModule();
         TransactionSerializationInfo serializationInfo = transactionSerializationInfoMap.get(transaction.getTabname());
         if (serializationInfo != null) {
-            module.addDeserializer(serializationInfo.getObjectType().getClass(), serializationInfo.getJsonDeserializer());
-            mapper.registerModule(module);
             BaseModel newProgram = null;
-            try {
-                newProgram = mapper.readValue(transaction.getNewVal(), serializationInfo.getObjectType().getClass());
-                BaseModel oldProgram = mapper.readValue(transaction.getOldVal(), serializationInfo.getObjectType().getClass());
-                transaction.setNewBaseModel(newProgram);
-                transaction.setOldBaseModel(oldProgram);
-                transaction.setObjectName(serializationInfo.getTitle());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            newProgram = this.tableEntityJsonStringToBaseModelTypeObject(transaction.getNewVal(),
+                    serializationInfo.getObjectType().getClass(), serializationInfo.getJsonDeserializer());
+            BaseModel oldProgram = this.tableEntityJsonStringToBaseModelTypeObject(transaction.getOldVal(),
+                    serializationInfo.getObjectType().getClass(), serializationInfo.getJsonDeserializer());
+            transaction.setNewBaseModel(newProgram);
+            transaction.setOldBaseModel(oldProgram);
+            transaction.setObjectName(serializationInfo.getTitle());
+
         }
         return transaction;
+    }
+
+    public BaseModel tableEntityJsonStringToBaseModelTypeObject(String jsonString, Class<? extends BaseModel> classType, JsonDeserializer deserializer) {
+        BaseModel baseModel = null;
+        ObjectMapper mapper = null;
+        SimpleModule module = null;
+        try {
+            if (jsonString != null && !jsonString.trim().equalsIgnoreCase("")) {
+                mapper = new ObjectMapper();
+                module = new SimpleModule();
+                module.addDeserializer(classType, deserializer);
+                mapper.registerModule(module);
+                baseModel = mapper.readValue(jsonString, classType);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return baseModel;
     }
 }
