@@ -4,6 +4,9 @@ import org.openlmis.report.model.params.RejectedRnRReportParam;
 
 import java.util.Map;
 
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.periodIsFilteredBy;
+import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.programIsFilteredBy;
+
 public class RejectedRnRReportQueryBuilder {
 
     public static String getQuery(Map params) {
@@ -64,6 +67,40 @@ public class RejectedRnRReportQueryBuilder {
         return query;
     }
 
+    private static String writePredicates2(RejectedRnRReportParam filter) {
+
+        String predicate = "";
+        predicate += " where lower(c.status)=lower('"+filter.getStatus()+"')::text and " + programIsFilteredBy("r.programId") +
+                " AND " + periodIsFilteredBy("r.periodId") ;
+
+        predicate +=   " and (d.parent = " + filter.getZone() + "::INT or  d.region_id = " +  filter.getZone() + "::INT " +
+                " or  d.district_id = " +  filter.getZone() + "::INT " +
+                " or  d.zone_id = " +  filter.getZone() + "::INT " +
+                "  or  0 = " + filter.getZone() + "::INT) ";
+
+        return predicate;
+    }
+
+    public static String getRejectionsByZone(Map params) {
+
+        RejectedRnRReportParam filter =(RejectedRnRReportParam)params.get("filterCriteria");
+
+        return  " select districtId,district_name districtName,region_name as regionName,zone_name as zoneName, count(*) rejectionCount from ( \n" +
+                "                  select count(*), rnrid, zone_name,d.district_id districtId,d.district_name,d.region_name from requisition_status_changes c \n" +
+                "                    join requisitions r on r.id = c.rnrid \n" +
+                "                    join facilities f on f.id = r.facilityid \n" +
+                "                    join vw_districts d on d.district_id = f.geographiczoneid \n" +
+                writePredicates2(filter)
+                //  "                    where c.status = 'AUTHORIZED' and r.programid ="+filter.getProgram()+" and r.periodId = "+filter.getPeriod()
+
+                + " group by rnrid, d.zone_name,d.district_id ,d.district_name,d.region_name having count(*) > 1\n" +
+                "                ) a\n" +
+                "                group by districtId, a.district_name,a.region_name, a.zone_name\n" +
+                "               \n" +
+                "                order by a.zone_name, a.region_name, a.district_name,rejectionCount";
+
+
+    }
 
 }
 

@@ -30,4 +30,11 @@ public interface RejectedRnRReportMapper {
                                                                  @Param("SortCriteria") Map<String, String[]> sortCriteria,
                                                                  @Param("RowBounds") RowBounds rowBounds,
                                                                  @Param("userId") Long userId);
+
+    @SelectProvider(type=RejectedRnRReportQueryBuilder.class, method="getRejectionsByZone")
+    @Options(resultSetType = ResultSetType.SCROLL_SENSITIVE, fetchSize=10,timeout=0,useCache=true,flushCache=true)
+    public List<RejectedRnRReport> getRejectionByZone(@Param("filterCriteria") ReportParameter filterCriteria,
+                                                      @Param("SortCriteria") Map<String, String[]> sortCriteria,
+                                                      @Param("RowBounds") RowBounds rowBounds,
+                                                      @Param("userId") Long userId);
 }

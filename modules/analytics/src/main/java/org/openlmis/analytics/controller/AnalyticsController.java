@@ -354,7 +354,7 @@ public class AnalyticsController extends BaseController {
 
     @RequestMapping(value = "/tz-district.json", method = GET, headers = ACCEPT_JSON)
     public @ResponseBody Object getDistrictMapJSON() {
-        ClassPathResource resource = new ClassPathResource("/static/tz-district.json");
+        ClassPathResource resource = new ClassPathResource("/static/zm-district.json");
         try {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(resource.getInputStream(), Object.class);
@@ -457,4 +457,10 @@ public class AnalyticsController extends BaseController {
        return OpenLmisResponse.response("cases", this.covidMapper.getCasesPerDesignatedFacilities());
    }
 
+    @RequestMapping(value = "/features", method = GET, headers = BaseController.ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getFeatures(
+            HttpServletRequest request
+    ) {
+        return OpenLmisResponse.response("features", service.createMapObject());
+    }
 }

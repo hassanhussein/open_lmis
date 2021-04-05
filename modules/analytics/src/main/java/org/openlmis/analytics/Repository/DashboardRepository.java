@@ -1,7 +1,10 @@
 package org.openlmis.analytics.Repository;
 
 import org.openlmis.analytics.Repository.Mapper.AnalyticsMapper;
+import org.openlmis.analytics.Repository.Mapper.GeoCoordinateGeneratorMapper;
 import org.openlmis.analytics.domain.Dashboard;
+import org.openlmis.core.domain.GeographicZone;
+import org.openlmis.core.dto.GeographicZoneGeometry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +16,9 @@ public class DashboardRepository {
 
     @Autowired
     private AnalyticsMapper mapper;
+
+    @Autowired
+    private GeoCoordinateGeneratorMapper geoCoordinateGeneratorMapper;
 
     public List<Dashboard> getUsers(){
         return mapper.getUsers();
@@ -32,5 +38,15 @@ public class DashboardRepository {
 
     public List<HashMap<String,Object>> getConsumptioTrends(Long userId, Long year){
         return mapper.getConsumptioTrends(userId,year);
+    }
+
+    public List<GeographicZone> getAllProvinces () {
+        return geoCoordinateGeneratorMapper.getAllProvinces();
+    }
+    public List<GeographicZone> getDistrictByParentId (Long parent) {
+        return geoCoordinateGeneratorMapper.getDistrictByParentId(parent);
+    }
+    public GeographicZoneGeometry getGeometryById (Long parent) {
+        return geoCoordinateGeneratorMapper.getGeometryById(parent);
     }
 }
