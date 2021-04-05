@@ -24,4 +24,372 @@
     <context:component-scan base-package="org.openlmis.logging"/>
     <import resource="classpath:applicationContext-db.xml"/>
     <import resource="classpath:applicationContext-core.xml"/>
+    <import resource="classpath:applicationContext-equipment.xml"/>
+    <import resource="classpath:applicationContext-requisition.xml"/>
+
+    <bean id="entityConverterImp" class="org.openlmis.logging.converter.EntityConverterImp">
+        <constructor-arg index="0">
+            <list>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                <property name="key" value="equipment_category"/>
+                <property name="jsonDeserializer" ref="equipmentCategoryDeserializer"/>
+                <property name="title" value="EquipmentCategory"/>
+                <property name="objectType">
+                    <bean class="org.openlmis.equipment.domain.EquipmentCategory">
+
+                    </bean>
+                </property>
+            </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_cold_chain_equipment_designations"/>
+                    <property name="jsonDeserializer" ref="coldChainEquipmentDesignationDeserializer"/>
+                    <property name="title" value="ColdChainEquipmentDesignation"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.ColdChainEquipmentDesignation">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_cold_chain_equipment_pqs_status"/>
+                    <property name="jsonDeserializer" ref="coldChainEquipmentPqsStatusDeserializer"/>
+                    <property name="title" value="ColdChainEquipmentPqsStatus"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.ColdChainEquipmentPqsStatus">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_cold_chain_equipments"/>
+                    <property name="jsonDeserializer" ref="coldChainEquipmentDeserializer"/>
+                    <property name="title" value="ColdChainEquipment"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.ColdChainEquipment">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_energy_types"/>
+                    <property name="jsonDeserializer" ref="equipmentEnergyTypeDeserializer"/>
+                    <property name="title" value="EquipmentEnergyType"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.EquipmentEnergyType">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_functional_test_types"/>
+                    <property name="jsonDeserializer" ref="equipmentFunctionalTestTypesDeserializer"/>
+                    <property name="title" value="EquipmentFunctionalTestTypes"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.EquipmentFunctionalTestTypes">
+
+                        </bean>
+                    </property>
+                </bean>
+                <!-- time 3:00 -->
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_inventories"/>
+                    <property name="jsonDeserializer" ref="equipmentInventoryDeserializer"/>
+                    <property name="title" value="EquipmentInventory"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.EquipmentInventory">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_model"/>
+                    <property name="jsonDeserializer" ref="equipmentModelDeserializer"/>
+                    <property name="title" value="EquipmentModel"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.EquipmentModel">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_operational_status"/>
+                    <property name="jsonDeserializer" ref="equipmentOperationalStatusDeserializer"/>
+                    <property name="title" value="EquipmentOperationalStatus"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.EquipmentOperationalStatus">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_service_types"/>
+                    <property name="jsonDeserializer" ref="serviceTypeDeserializer"/>
+                    <property name="title" value="ServiceType"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.ServiceType">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_service_vendors"/>
+                    <property name="jsonDeserializer" ref="vendorDeserializer"/>
+                    <property name="title" value="Vendor"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.Vendor">
+
+                        </bean>
+                    </property>
+                </bean>
+
+                <!-- time 11:13 PM-->
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_test_items"/>
+                    <property name="jsonDeserializer" ref="equipmentTestItemsDeserializer"/>
+                    <property name="title" value="EquipmentTestItems"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.EquipmentTestItems">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="manual_test_result_category"/>
+                    <property name="jsonDeserializer" ref="manualTestResultCategoryDeserializer"/>
+                    <property name="title" value="ManualTestResultCategory"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.ManualTestResultCategory">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="manual_test_result_type"/>
+                    <property name="jsonDeserializer" ref="manualTestResultTypeDeserializer"/>
+                    <property name="title" value="ManualTestResultType"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.ManualTestResultType">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_type_programs"/>
+                    <property name="jsonDeserializer" ref="programEquipmentTypeDeserializer"/>
+                    <property name="title" value="ProgramEquipmentType"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.ProgramEquipmentType">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipment_types"/>
+                    <property name="jsonDeserializer" ref="equipmentTypeDeserializer"/>
+                    <property name="title" value="EquipmentType"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.EquipmentType">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="equipments"/>
+                    <property name="jsonDeserializer" ref="equipmentDeserializer"/>
+                    <property name="title" value="Equipment"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.equipment.domain.Equipment">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="facilities"/>
+                    <property name="jsonDeserializer" ref="facilityDeserializer"/>
+                    <property name="title" value="Facility"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.Facility">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="facility_approved_products"/>
+                    <property name="jsonDeserializer" ref="facilityTypeApprovedProductDeserializer"/>
+                    <property name="title" value="FacilityTypeApprovedProduct"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.FacilityTypeApprovedProduct">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="geographic_levels"/>
+                    <property name="jsonDeserializer" ref="geographicLevelDeserializer"/>
+                    <property name="title" value="GeographicLevel"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.GeographicLevel">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="geographic_zones"/>
+                    <property name="jsonDeserializer" ref="geographicZoneDeserializer"/>
+                    <property name="title" value="GeographicZone"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.GeographicZone">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="losses_adjustments_types"/>
+                    <property name="jsonDeserializer" ref="lossesAndAdjustmentsTypeDeserializer"/>
+                    <property name="title" value="LossesAndAdjustmentsType"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.rnr.domain.LossesAndAdjustmentsType">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="processing_periods"/>
+                    <property name="jsonDeserializer" ref="processingPeriodDeserializer"/>
+                    <property name="title" value="ProcessingPeriod"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.ProcessingPeriod">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="processing_schedules"/>
+                    <property name="jsonDeserializer" ref="processingScheduleDeserializer"/>
+                    <property name="title" value="ProcessingSchedule"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.ProcessingSchedule">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="product_categories"/>
+                    <property name="jsonDeserializer" ref="productCategoryDeserializer"/>
+                    <property name="title" value="ProductCategory"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.ProductCategory">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="products"/>
+                    <property name="jsonDeserializer" ref="productDeserializer"/>
+                    <property name="title" value="Product"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.Product">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="program_products"/>
+                    <property name="jsonDeserializer" ref="programProductDeserializer"/>
+                    <property name="title" value="ProgramProduct"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.ProgramProduct">
+
+                        </bean>
+                    </property>
+                </bean>
+
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="programs"/>
+                    <property name="jsonDeserializer" ref="programDeserializer"/>
+                    <property name="title" value="Program"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.Program">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="programs_supported"/>
+                    <property name="jsonDeserializer" ref="programSupportedDeserializer"/>
+                    <property name="title" value="ProgramSupported"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.ProgramSupported">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="regimen_categories"/>
+                    <property name="jsonDeserializer" ref="regimenCategoryDeserializer"/>
+                    <property name="title" value="RegimenCategory"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.RegimenCategory">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="regimen_combination_constituents"/>
+                    <property name="jsonDeserializer" ref="regimenCombinationConstituentDeserializer"/>
+                    <property name="title" value="RegimenCombinationConstituent"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.RegimenCombinationConstituent">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="regimen_constituents_dosages"/>
+                    <property name="jsonDeserializer" ref="regimenConstituentDosageDeserializer"/>
+                    <property name="title" value="RegimenConstituentDosage"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.RegimenConstituentDosage">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="regimen_line_items"/>
+                    <property name="jsonDeserializer" ref="regimenLineItemDeserializer"/>
+                    <property name="title" value="RegimenLineItem"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.rnr.domain.RegimenLineItem">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="regimen_product_combinations"/>
+                    <property name="jsonDeserializer" ref="regimenProductCombinationDeserializer"/>
+                    <property name="title" value="RegimenProductCombination"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.RegimenProductCombination">
+
+                        </bean>
+                    </property>
+                </bean>
+                <bean class="org.openlmis.logging.converter.TransactionSerializationInfo">
+                    <property name="key" value="regimens"/>
+                    <property name="jsonDeserializer" ref="regimenDeserializer"/>
+                    <property name="title" value="Regimen"/>
+                    <property name="objectType">
+                        <bean class="org.openlmis.core.domain.Regimen">
+
+                        </bean>
+                    </property>
+                </bean>
+
+
+
+            </list>
+
+        </constructor-arg>
+
+    </bean>
 </beans>

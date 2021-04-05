@@ -7,32 +7,24 @@
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
-package org.openlmis.logging.domain;
+package org.openlmis.logging.converter;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
 
-import java.util.Date;
+import org.openlmis.core.domain.Product;
+import org.openlmis.core.domain.ProgramSupported;
+import org.springframework.stereotype.Component;
 
-@EqualsAndHashCode(callSuper = false)
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class TransactionHistory extends BaseModel {
-    private TransactionBatch transactionBatch;
-    private Date tstamp;
-    private String schemaName;
-    private String tabname;
-    private String objectName;
-    private String operation;
-    private String who;
-    private String newVal;
-    private String oldVal;
-    private BaseModel newBaseModel;
-    private BaseModel oldBaseModel;
-    private String sql;
+@Component
+public class ProgramSupportedDeserializer extends EntityDeserializer<ProgramSupported> {
 
+
+    @Override
+    public void createEntity() {
+        super.setBaseModel(new ProgramSupported());
+    }
+
+    @Override
+    public void mapValues() {
+
+    }
 }

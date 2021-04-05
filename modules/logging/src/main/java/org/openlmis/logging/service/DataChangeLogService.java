@@ -11,6 +11,7 @@ package org.openlmis.logging.service;
 
 
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.logging.converter.EntityConverterImp;
 import org.openlmis.logging.domain.TransactionBatch;
 import org.openlmis.logging.domain.TransactionHistory;
 import org.openlmis.logging.domain.params.DataTransactionSearchParameter;
@@ -27,6 +28,9 @@ import java.util.UUID;
 public class DataChangeLogService {
     @Autowired
     private DataChangeLogRepository repository;
+
+    @Autowired
+    private EntityConverterImp converterImp;
 
     public void logDataChangeTransaction() {
         TransactionBatch transactionBatch = prepareBatchTransactionBatch();
@@ -65,6 +69,14 @@ public class DataChangeLogService {
             }
         }
         transactionBatchList = this.repository.searchTransactionBacthList(parameter, sortCriteria, rowBounds, userId);
+        if (transactionBatchList != null && !transactionBatchList.isEmpty()) {
+            transactionBatchList.forEach(tb -> {
+                if(tb.getTransactionHistoryList()!=null && !tb.getTransactionHistoryList().isEmpty()){
+                    tb.getTransactionHistoryList().forEach(t->converterImp.convert(t));
+                }
+
+            });
+        }
         return transactionBatchList;
     }
 }

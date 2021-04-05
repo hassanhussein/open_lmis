@@ -42,5 +42,7 @@ public class EquipmentType extends BaseModel implements Importable {
   @ImportField(name = "Equipment Category Code", nested = "code")
   private EquipmentCategory category;
   private Long categoryid;
+  private Long displayOrder;
+  private Boolean isProgramIndependent;
 
 }

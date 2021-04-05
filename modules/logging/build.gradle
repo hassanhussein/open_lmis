@@ -27,7 +27,10 @@ dependencies {
             'commons-codec:commons-codec:1.7',
             project(':modules:db'),
             project(':modules:core'),
-            project(':modules:email')
+            project(':modules:email'),
+            project(':modules:equipment'),
+            project(':modules:requisition')
+
 
 
     testCompile  project(':modules:db'),

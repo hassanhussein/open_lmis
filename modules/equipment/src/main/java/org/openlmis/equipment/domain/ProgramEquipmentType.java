@@ -30,4 +30,6 @@ public class ProgramEquipmentType extends BaseModel {
   Boolean enableTestCount;
   Boolean enableTotalColumn;
   Integer displayOrder;
+  Long programId;
+  Long equipmentTypeId;
 }

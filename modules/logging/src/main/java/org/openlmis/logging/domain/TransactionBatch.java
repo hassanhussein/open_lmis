@@ -14,7 +14,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.logging.converter.EntityConverterImp;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,4 +33,6 @@ public class TransactionBatch extends BaseModel {
 
         return UUID.randomUUID();
     }
+
+
 }

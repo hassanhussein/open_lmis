@@ -22,4 +22,5 @@ public class ManualTestResultType extends BaseModel{
     private String description;
     private ManualTestResultCategory testResultCategory;
     private Long displayOrder;
+    private Long resultCategoryId;
 }
