@@ -12,10 +12,10 @@ You should have received a copy of the GNU Affero General Public License along w
 
 System Requirements
 ---------------------------
-- JDK 7
-- Postgresql 9
+- JDK 7 +
+- Postgresql 9 +
 - Git
-- Gradle 2.3
+- Gradle 3.2.1
   * **For Linux users**
     * Download the source binary directly from the gradle website.
     * Copy the downloaded folder to `/usr/bin`
@@ -61,7 +61,7 @@ IntelliJ IDEA Setup
 1. Run `gradle idea` to create the IntelliJ project files (may take some time downloading dependencies).
 2. Open the open-lmis.ipr file (may take some time indexing files, first time only).
 3. Install Lombok plugin according to the IntelliJ version.
-4. To run individual tests in IntelliJ, configure your IntelliJ preferences to enable "annotation processing"
+4. To run individual tests in IntelliJ, configure your IntelliJ preferences to enable `````"annotation processing"`````
 
 Jasmine Tests
 -------------------
@@ -112,9 +112,9 @@ This can be caused by the timezone in `postgresql.conf` being different than you
 
 Tech Stack
 ---------------------------------
- - Java 1.7
- - Gradle 2.3
- - Postgres 9
+ - Java 1.7 +
+ - Gradle 3.2.1
+ - Postgres 9 +
  - Spring
  - Mybatis
  - Angularjs
