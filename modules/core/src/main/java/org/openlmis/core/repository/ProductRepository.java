@@ -82,6 +82,10 @@ public class ProductRepository {
     return mapper.getByCode(code);
   }
 
+  public Product getByAlternateItemCode(String alternateItemCode) {
+    return mapper.getByAlternateItemCode(alternateItemCode);
+  }
+
   public DosageUnit getDosageUnitByCode(String code) {
     return mapper.getDosageUnitByCode(code);
   }

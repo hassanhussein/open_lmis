@@ -1,39 +1,56 @@
-<div class="comments-popup total_cost" ng-hide="!show">
+<div class="comments-popup"  style="width:390px !important" ng-hide="!show">
     <!--
-      ~ This program is part of the OpenLMIS logistics management information system platform software.
-      ~ Copyright © 2013 VillageReach
-      ~
-      ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-      ~  
-      ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
-      ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
-     -->
+       ~ This program is part of the OpenLMIS logistics management information system platform software.
+       ~ Copyright © 2013 VillageReach
+       ~
+       ~ This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+       ~
+       ~ This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more details.
+       ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+       -->
     <h4>
         <span openlmis-message="allocated.budget.header"></span>
         <a class="link-minimize" href="" ng-click="show=false">
             <i class="icon-remove" id="totalCostPopupClose"></i>
         </a>
     </h4>
-
     <small>
-        <div>
-            <span class="rnr-cost" openlmis-message="label.full.supply"></span>&colon;
-            <strong class="pull-right">
-                <span openlmis-message="label.currency.symbol"></span>
-                <span class="cell-text" id="fullSupplyItemsCost"
-                      ng-bind="fullSupplyCost | currency:''"></span>
-            </strong>
-        </div>
-        <div>
-            <span class="rnr-cost" openlmis-message="label.non.full.supply"></span>&colon;
-            <strong class="pull-right">
-                <span openlmis-message="label.currency.symbol"></span>
-                <span class="cell-text" id="nonFullSupplyItemsCost"
-                      ng-bind="nonFullSupplyCost | currency:''"></span>
-            </strong>
-        </div>
 
-        <div ng-show="$parent.rnr.sourceOfFunds.length > 0 && viewSourceOfFund == true)">
+        <div>
+            <span class="rnr-cost">Allocated Budget</span>&colon;
+            <strong class="pull-right">
+                <span class="cell-text" id="nonFullSupplyItemsCost"
+                      ng-bind="allocatedBudget | currency: ''"></span>
+                <span openlmis-message="label.currency.symbol"></span>
+            </strong>
+        </div>
+        <div>
+            <span class="rnr-cost">Total Supplemental</span>&colon;
+            <strong class="pull-right">
+                <span class="cell-text" id="nonFullSupplyItemsCost"
+                      ng-bind="totalSources | currency: ''"></span>
+                <span openlmis-message="label.currency.symbol"></span>
+            </strong>
+        </div>
+        <div>
+            <span class="rnr-cost" >Total RnR Cost</span>&colon;
+            <strong class="pull-right">
+                <span class="cell-text" id="fullSupplyItemsCost"
+                      ng-bind="totalRnrCost | currency: ''"></span>
+                <span openlmis-message="label.currency.symbol"></span>
+            </strong>
+        </div>
+        <div>
+            <span class="rnr-cost">Net Balance</span>&colon;
+            <strong class="pull-right">
+                <span ng-show="((allocatedBudget + totalSources) - totalRnrCost) < 0" class="icon-warning-sign budget-exceeded-icon"></span>
+                <span class="cell-text" id="nonFullSupplyItemsCost"
+                      ng-bind="(allocatedBudget + totalSources) - totalRnrCost | currency: ''"></span>
+                <span openlmis-message="label.currency.symbol"></span>
+            </strong>
+        </div>
+        <!--        <div ng-show="$parent.rnr.sourceOfFunds.length > 0 && viewSourceOfFund == true)">-->
+        <div ng-show="false">
             <h4>
                 <strong>Other Sources Of Fund</strong>
             </h4>
@@ -45,12 +62,9 @@
                         <span class="cell-text" id="nonFullSupplyItemsCost"
                               ng-bind="source.quantity | currency:''"></span>
                     </strong>
-
                 </div>
-
             </div>
         </div>
-
         <div ng-show="$parent.$parent.$parent.rnr.sourceOfFunds.length > 0 && ($parent.$parent.$parent.rnr.status == 'AUTHORIZED' && $parent.$parent.$parent.rnr.displayOtherSources == true)">
             <h4>
                 <strong>Other Sources Of Fund</strong>
@@ -63,127 +77,92 @@
                         <span class="cell-text" id="nonFullSupplyItemsCost"
                               ng-bind="source.quantity | currency:''"></span>
                     </strong>
-
                 </div>
-
             </div>
         </div>
-
     </small>
     <small>
-
         <div ng-form="sourceOfFundForm" ng-show="fundingSources.length > 0 && $parent.$parent.$parent.rnr.period.enableOrder && $parent.$parent.$parent.rnr.program.enableMonthlyReporting && ($parent.$parent.$parent.rnr.status != 'AUTHORIZED')">
-
             <h4>
                 <span openlmis-message="header.add.supplemental.fund"></span>
             </h4>
             <span>
+            <div >
+               <table class="table-container" >
+                  <tr>
+                     <td>
+                        <select ng-model="sourceOfFund.name"
+                                ng-options="i as i.name for i in fundsToDisplay"
+                                style="width: 130px !important;">
+                           <option value="">Select Source</option>
+                        </select>
+                     </td>
+                     <td> <input
+                             name="quantity{{currentRnrLineItem.id}}"
+                             ng-disabled="formDisabled || sourceOfFund.skipped"
+                             ng-model="sourceOfFund.quantity"
+                             ng-trim="false"
+                             ng-keyup="checkAmount($event,sourceOfFund.quantity, sourceOfFund.name)"
+                             openlmis-message="label.amount"
+                             style="width: 130px !important; margin-left: 10px"
+                             type="number"/>
+                     </td>
+                     <td>
+                        <input class="btn btn-primary" id="addLossesAndAdjustment1"
+                               ng-click="addRow(sourceOfFund)"
+                               ng-disabled="!(sourceOfFund.name && sourceOfFund.quantity)"
+                               openlmis-message="button.add"
+                               style="margin-left: 10px"
+                               type="button"/>
+                     </td>
+                  </tr>
+                   <tr><td  style="width: 130px !important;"></td><td style="width: 130px !important; margin-left: 10px">Balance : {{sourceOfFund.name.amount || 0 | currency: ''}} TZS</td></tr>
 
-                     <div class="row-fluid scrollable pull-left clearfix " style="width:250px" >
-
-                            <table class="table-bordered" style="width:250px">
-                                <tr>
-                                    <td>
-                                           <select ng-model="sourceOfFund.name"
-                                                   ng-options="i as i.name for i in fundsToDisplay"
-                                                   style="width: 100px !important;">
-                                            <option value="">Select Source</option>
-                                           </select>
-
-                                    </td>
-
-                                    <td>   <input maxlength="8"
-                                                  name="quantity{{currentRnrLineItem.id}}"
-                                                  ng-disabled="formDisabled || sourceOfFund.skipped"
-                                                  ng-model="sourceOfFund.quantity" ng-trim="false"
-                                                  numeric-validator="positiveInteger"
-                                                  openlmis-message="placeholder.amount"
-                                                  style="width: 100px !important;"
-                                                  type="text"/>
-                                         <span ng-hide='true' class="cell-text"
-                                               ng-bind="sourceOfFund.rnrId"></span>
-                                    </td>
-                                    <td style="text-align: center; vertical-align: middle;">
-
-
-                                       <input class="btn btn-primary" id="addLossesAndAdjustment1"
-                                              ng-click="addRow(sourceOfFund)"
-                                              ng-disabled="!(sourceOfFund.name && sourceOfFund.quantity)"
-                                              openlmis-message="button.add"
-                                              type="button"/>
-
-
-                                    </td>
-
-                                </tr>
-                            </table>
-
-                    </div>
-
-                       <div class="row-fluid pull-left" style="width:100% !important;max-height: 150px !important;">
-                        <ul style="list-style: none; height: 150px; overflow: auto">
-          <li ng-repeat="adjustment in sourceOfFund.sourceOfFunds">
-
-                   <span class="pull-left" style="float: left; display: block; width: 100px;">{{adjustment.name}}</span>
-
-            <span style="width:100px !important">
-
-            <input keyboard="true" maxlength="8"
-                   name="{{adjustment.quantity}}"
-                   ng-change="reEvaluateTotalSourceOfFund(); resetModalErrorAndSetFormDirty()"
-                   ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
-                   ng-disabled="formDisabled"
-                   ng-model="adjustment.quantity"
-                   ng-required="true"
-                   numeric-validator="positiveInteger"
-                   openlmis-message="placeholder.quantity"
-                   style="width:100px !important"
-                   type="text"
-            />
-          </span>
-
-            <span style="width:1 px !important; margin-right: 0px;">
-            <a class="close" href=""
-               ng-click="removeSourceOfFund(adjustment)"
-               ng-hide="formDisabled">&times;</a>
-          </span>
-
-
-
-          </li></ul>
-
-
-
-                </div>
-
-                  <div class="adjustment-total clearfix alert alert-warning"
-                       ng-show="sourceOfFund.sourceOfFunds.length > 0">
-                      <span class="pull-left" style="float: left; display: block; width: 3px;" openlmis-message="label.losses.total"></span>
-
-                      <span class="pull-right" ng-bind="totalSources | number"></span>
-               </div>
-
-                   <div class="modal-footer">
-                      <input class="btn btn-primary save-button" id="lossesAndAdjustmentsDone1"
-                             ng-click="saveFacilityFundingSources(sourceOfFund.sourceOfFunds);equipmentError=''"
-                             ng-disabled="sourceOfFund.sourceOfFunds.length .length === 0 || sourceOfFundForm.$invalid"
-                             openlmis-message="button.done" type="button"/>
-
-                       <span class="pull-right" ng-show="displayLimit" style="color:#35797F">{{messageToDisplay}}</span>
-
-                    </div>
-
-
-
-            </span>
-
-
+               </table>
+            </div>
+            <div  style="width:100% !important; min-height: 150px;">
+               <ul style="list-style: none; overflow: auto">
+                  <li ng-repeat="adjustment in sourceOfFund.sourceOfFunds">
+                     <span class="pull-left" style="float: left; display: block; width: 100px;">{{adjustment.name}}</span>
+                     <span style="width:100px !important">
+                     <input keyboard="true" maxlength="8"
+                            name="{{adjustment.quantity}}"
+                            ng-change="reEvaluateTotalSourceOfFund(); resetModalErrorAndSetFormDirty()"
+                            ng-class="highlightRequiredFieldInModal(adjustment.quantity)"
+                            ng-disabled="true"
+                            ng-model="adjustment.quantity"
+                            ng-required="true"
+                            numeric-validator="positiveInteger"
+                            openlmis-message="placeholder.quantity"
+                            style="width:100px !important"
+                            type="text"
+                     />
+                     </span>
+                     <span style="width:1 px !important; margin-right: 0px;">
+                     <a class="close" href=""
+                        ng-click="removeSourceOfFund(adjustment)"
+                        ng-hide="formDisabled">&times;</a>
+                     </span>
+                  </li>
+               </ul>
+            </div>
+            <div class="adjustment-total clearfix "
+                 ng-show="sourceOfFund.sourceOfFunds.length > 0">
+               <span class="pull-left" style="float: left; display: block; width: 3px;" openlmis-message="label.losses.total"></span>
+            <strong class="pull-right">
+                <span class="cell-text" ng-bind="totalSources | currency:''"></span>
+                <span openlmis-message="label.currency.symbol"></span>
+            </strong>
+            </div>
+            <div class="modal-footer">
+               <input class="btn btn-primary save-button" id="lossesAndAdjustmentsDone1"
+                      ng-click="saveFacilityFundingSources(sourceOfFund.sourceOfFunds);equipmentError=''"
+                      ng-disabled="sourceOfFund.sourceOfFunds.length .length === 0 || sourceOfFundForm.$invalid"
+                      openlmis-message="button.done" type="button"/>
+               <span class="pull-right" ng-show="displayLimit" style="color:#35797F">{{messageToDisplay}}</span>
+            </div>
+         </span>
         </div>
-
-
     </small>
-
     <span class="beak-down"></span>
-
-
 </div>

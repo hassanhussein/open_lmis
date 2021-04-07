@@ -105,6 +105,11 @@
       </div>
     </li>
 
+    <li ng-show="true">
+      <a href="/public/pages/reports/notification/index.html#home"
+      >Notification</a>
+    </li>
+
     <li class="has-children"  ng-show="hasPermission('VIEW_FACILITY_REPORT')">
       <a href="" openlmis-message="link.facility.report"></a>
       <div class="submenu">
@@ -169,6 +174,11 @@
 
           <li ng-show="hasPermission('VIEW_USER_SUMMARY_REPORT')">
             <a ng-href="/public/pages/reports/main/index.html#user-summary" openlmis-message="menu.report.user.summary"></a>
+          </li>
+
+          <li ng-show="hasPermission('VIEW_STOCK_IMBALANCE_REPORT')">
+            <a ng-href="/public/pages/reports/main/index.html#product-list"
+               >Product List </a>
           </li>
 
           <li class="beak"></li>

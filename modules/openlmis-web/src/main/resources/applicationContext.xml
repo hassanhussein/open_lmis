@@ -529,6 +529,56 @@
                     </bean>
                 </entry>
 
+                <entry key="upload-descipline">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Discipline List"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.equipment.domain.Discipline</value>
+                        </property>
+                        <property name="recordHandler" ref="disciplinePercistenceHandler"/>
+                    </bean>
+                </entry>
+
+                <entry key="elmis-category">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Equipment Category"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.equipment.domain.EquipmentCategory</value>
+                        </property>
+                        <property name="recordHandler" ref="equipmentCategoryPercistenceHandler"/>
+                    </bean>
+                </entry>
+
+                <entry key="elmis-type">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Equipment Type"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.equipment.domain.EquipmentType</value>
+                        </property>
+                        <property name="recordHandler" ref="equipmentTypePercistenceHandler"/>
+                    </bean>
+                </entry>
+
+                <entry key="elmis-model">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Equipment Model List"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.equipment.domain.EquipmentModel</value>
+                        </property>
+                        <property name="recordHandler" ref="equipmentModelPercistanceHandler"/>
+                    </bean>
+                </entry>
+
+                <entry key="elmis-model">
+                    <bean class="org.openlmis.web.model.UploadBean">
+                        <property name="displayName" value="Interface Data Set"/>
+                        <property name="importableClass">
+                            <value type="java.lang.Class">org.openlmis.core.domain.ELMISInterfaceDataSet</value>
+                        </property>
+                        <property name="recordHandler" ref="elmisInterfaceDataSetPersistenceHandler"/>
+                    </bean>
+                </entry>
+
             </map>
         </constructor-arg>
     </bean>

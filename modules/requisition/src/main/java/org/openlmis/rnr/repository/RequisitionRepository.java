@@ -13,6 +13,7 @@ package org.openlmis.rnr.repository;
 import org.openlmis.core.domain.*;
 import org.openlmis.core.dto.*;
 import org.openlmis.core.exception.DataException;
+import org.openlmis.core.repository.OtherFundsRespository;
 import org.openlmis.core.repository.SourceOfFundRepository;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.SignatureMapper;
@@ -97,6 +98,9 @@ public class RequisitionRepository {
 
     @Autowired
     private PatientRecordMapper patientRecordMapper;
+
+    @Autowired
+    private OtherFundsRespository otherFundsRespository;
 
 @Autowired
 private DataHealthCheckMapper dataHealthCheckMapper;
@@ -223,6 +227,7 @@ private DataHealthCheckMapper dataHealthCheckMapper;
         for (PatientLineItem patientLineItem : patientLineItems) {
             patientLineItem.setRnrId(requisition.getId());
             patientLineItem.setModifiedBy(requisition.getModifiedBy());
+            patientLineItem.setSkipped(!patientLineItem.getCategory().isDisplay());
             patientLineItemMapper.insert(patientLineItem);
         }
     }
@@ -652,4 +657,15 @@ private DataHealthCheckMapper dataHealthCheckMapper;
         return requisitionMapper.getLastRequisitionWithPatientRecoord(facility, program);
     }
 
+    public List<OtherFundsDTO> getFundingSources(Long facilityId) {
+        return otherFundsRespository.getFundingSources(facilityId);
+    }
+
+    public Long getLastUpdatedStatusId(Long rnrId) {
+        return requisitionStatusChangeMapper.getLastUpdatedStatusId(rnrId);
+    }
+
+    public void updateStatusChangesLevel(String level, Long id) {
+        requisitionStatusChangeMapper.updateStatusChangesLevel(level, id);
+    }
 }

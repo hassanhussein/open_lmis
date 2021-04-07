@@ -1,8 +1,15 @@
-function EquipmentCategoryController($rootScope, $scope, EquipmentCategories, EquipmentTypes, EquipmentFunctionalTestTypes, $routeParams, $location){
+function EquipmentCategoryController($rootScope, $scope, DisciplineList, EquipmentCategories, EquipmentTypes, EquipmentFunctionalTestTypes, $routeParams, $location){
     $scope.EquipmentCategory  = getAllEquipmentCategory();
     $scope.EquipmentCategoryId  = $routeParams.id || 0;
     $scope.cmd = $routeParams.cmd || '';
     $scope.functionalTestTypes = EquipmentFunctionalTestTypes.query();
+
+    DisciplineList.get(function(data){
+    console.log(data);
+         $scope.disciplines = data.disciplines;
+
+    });
+
     EquipmentTypes.get(function(data){
          $scope.equipmentTypes = data.equipment_types;
 
@@ -76,5 +83,17 @@ function EquipmentCategoryController($rootScope, $scope, EquipmentCategories, Eq
 
     $scope.getEquipmentTypesWithNoCategories = function(){
         return _.without(_.pluck($scope.equipmentTypes.equipment_types,'id'), _.chain($scope.EquipmentCategory).pluck('equipmentTypeIds').reduceRight(function(a, b) { return a.concat(b); }, []).value());
+    };
+
+    $scope.hideTypes = function (category) {
+        category.add = true;
+        category.editMode = true;
+        category.hideAdd = false;
+    };
+
+    $scope.EditTypes = function (category) {
+        category.add = false;
+        category.editMode = true;
+        category.hideEdit = true;
     };
 }

@@ -36,5 +36,6 @@ public class FacilityReportParam
   private String statusList;
   private Long facilityOwner;
   private Long facility;
+  private Long schedule;
 
 }

@@ -48,6 +48,23 @@
               </div>
             </div>
 
+            <div>
+              <label for="name">
+                <span>Discipline</span>
+                <span class="label-required"> *</span>
+              </label>
+              <div class="form-field">
+                <select name="disciplineId" id="functionalTestType" ng-model="equipmentCategory.disciplineId">
+                  <option value="">--select descipline--</option>
+                  <option value="{{discipline.id}}" ng-repeat="discipline in disciplines track by discipline.id" ng-selected="discipline.id == equipmentCategory.disciplineId">
+                    {{discipline.name}}</option>
+                </select>
+                <span class="field-error" ng-show="equipmentCategoryForm.discipline.$error.required && showError" openlmis-message="missing.value">
+                </span>
+                </span>
+              </div>
+            </div>
+
             <div form-toolbar id="action_buttons" class="action-buttons">
               <div class="form-cell button-row">
                 <input ng-disabled="equipmentCategoryForm.$invalid" type="submit" class="btn btn-primary save-button" value="Save" />

@@ -211,4 +211,8 @@ public class EquipmentService {
     }
 
   }
+
+    public List<Equipment> getAllByTypeCategory(Long equipmentTypeId, Long equipmentCategoryId) {
+    return repository.getAllByTypeCategory(equipmentTypeId,equipmentCategoryId);
+    }
 }

@@ -128,4 +128,38 @@ public class RequisitionCellFactory {
     return cell;
   }
 
+
+  public static void createCell2(List<PdfPCell> result,
+                                 ColumnType columnType,
+                                 String columnValue,
+                                 String currency) throws IOException, BadElementException {
+    DecimalFormat moneyFormatter = new DecimalFormat("#,##0.00");
+    DecimalFormat formatter = new DecimalFormat("#,##0");
+
+
+    switch (columnType) {
+      case TEXT:
+        result.add(textCell(columnValue));
+        break;
+      case BOOLEAN:
+        PdfPCell pdfPCell = Boolean.valueOf(columnValue) ? imageCell() : textCell("");
+        result.add(pdfPCell);
+        break;
+      case NUMERIC:
+        if(!columnValue.isEmpty() && NumberUtils.isNumber(columnValue))
+          result.add(numberCell(formatter.format(Double.parseDouble(columnValue))));
+        else
+          result.add(numberCell(columnValue));
+        break;
+      case CURRENCY:
+        if(!columnValue.isEmpty() && NumberUtils.isNumber(columnValue))
+          result.add(numberCell(currency + moneyFormatter.format(Double.parseDouble(columnValue))));
+        else
+          result.add(numberCell(currency));
+        break;
+
+    }
+  }
+
+
 }

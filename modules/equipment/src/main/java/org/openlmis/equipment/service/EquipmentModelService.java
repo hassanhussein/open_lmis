@@ -10,6 +10,7 @@
 package org.openlmis.equipment.service;
 
 import org.openlmis.equipment.domain.EquipmentModel;
+import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class EquipmentModelService {
 
     @Autowired
     EquipmentModelRepository repository;
+
+    @Autowired
+    EquipmentTypeService equipmentTypeService;
 
     public List<EquipmentModel> getAll() {
         return repository.getAll();
@@ -49,5 +53,21 @@ public class EquipmentModelService {
 
     public EquipmentModel getByCode(String code) {
         return repository.getByCode(code);
+    }
+
+    public void uploadEquipment(EquipmentModel model) {
+
+        EquipmentType equipmentType = equipmentTypeService.getTypeByCode(model.getEquipmentType().getCode());
+
+        if(equipmentType != null) {
+
+            model.setEquipmentTypeId(equipmentType.getId());
+
+            if(model.getId() == null) {
+                insertEquipmentModel(model);
+            }else {
+                updateEquipmentModel(model);
+            }
+        }
     }
 }

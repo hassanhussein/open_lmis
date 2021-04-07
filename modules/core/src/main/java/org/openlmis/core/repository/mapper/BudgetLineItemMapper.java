@@ -54,7 +54,7 @@ public interface BudgetLineItemMapper {
 
   @Insert({
           "INSERT INTO budget_line_items (facilityId, programId, budgetFileId, periodId, periodDate, allocatedBudget, notes,budgetId,additive, fundSourceCode,creditValue) ",
-          "VALUES (#{facilityId}, #{programId}, #{budgetFileId}, #{periodId}, #{periodDate}::date,  " +
+          "VALUES (#{facilityId}, #{programId}, #{budgetFileId}, #{periodId}, NOW()::date,  " +
                   " CAST (#{allocatedBudget} AS DOUBLE PRECISION) " +
                   " , #{notes},#{budgetId},#{additive}, #{fundSourceCode}, #{creditValue})"
   })

@@ -61,4 +61,8 @@ public class MaintenanceRequestRepository {
   public List<Log> getFullHistory(Long inventoryId){
     return mapper.getFullHistory(inventoryId);
   }
+
+  public void updateApprovedStatus(Long id) {
+     mapper.updateApprovedStatus(id);
+  }
 }

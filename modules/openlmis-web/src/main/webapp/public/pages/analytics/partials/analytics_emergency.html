@@ -82,7 +82,7 @@ font-weight:bold;
             <li class="active"><a href="#stock-status" data-toggle="tab">Commodities Stock Status</a></li>
             <li><a href="#summary" data-toggle="tab">Designated Facilities Summary Report</a></li>
             <li><a href="#inbound" data-toggle="tab">Inbound Shipments</a></li>
-            <li><a href="#cases"  data-toggle="tab">Cases/Patients</a></li>
+            <li><a href="#cases" ng-show="false" data-toggle="tab">Cases/Patients</a></li>
         </ul>
     </div>
 
@@ -220,10 +220,8 @@ font-weight:bold;
                     </div>
                     <div class="row">
                         <div class="box-icon" style="float:right; margin-right:20px"  >
-                            <a id="pdf-button" href="" ng-click="exportReport('PDF')"
-                               class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
-                            <a id="xls-button"  href="" ng-click="exportReport('XLS')"
-                               class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+                            <a id="pdf-button" href="" ng-click="exportSummaryReport(drillDownData)"
+                               class='btn-small btn-info'><span >Export</span></a>
                         </div>
                     </div>
                     <div class="card-content" ng-controller="EmergencyCommoditiesController">
@@ -236,7 +234,7 @@ font-weight:bold;
                 </div>
             </div>
             </div>
-            <div class="tab-pane" id="inbound">
+            <div style="background:white" class="tab-pane" id="inbound" ng-controller="StockInboundController">
                 <div class="row" style="float:top; padding:10px; background:white">
                     <filter-container>
                     <form>
@@ -261,16 +259,14 @@ font-weight:bold;
                     </form>
                     </filter-container>
                 </div>
-                <div id="pipeline"></div>
+               <div><div style="margin-left:40px; margin-right:40px" id="pipeline"></div></div>
                 <div class="row" style="background:white">
                     <div class="box-icon" style="float:right; margin-right:20px"  >
-                        <a id="pdf-button" href="" ng-click="exportReport('PDF')"
-                           class='btn-small btn-info'><span openlmis-message="label.pdf"></span></a>
-                        <a id="xls-button"  href="" ng-click="exportReport('XLS')"
-                           class='btn-small btn-info'><span openlmis-message="label.excel"></span></a>
+                        <a id="pdf-button" href="" ng-click="exportPipelineReport(pipelineData)"
+                           class='btn-small btn-info'><span >Export</span></a>
                     </div>
                 </div>
-                <div class="card-content" ng-controller="StockInboundController" style="padding:10px; background:white;">
+                <div class="card-content"  style="padding:10px; background:white;">
                     <div style="height: 600px !important;">
                         <div class="card-action" style="background-color: #17888f; padding:8px">
                             <span style="color:white; ">Inbound List</span>

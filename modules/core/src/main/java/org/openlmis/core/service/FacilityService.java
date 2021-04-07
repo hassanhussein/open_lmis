@@ -234,6 +234,14 @@ public class FacilityService {
         return facility;
     }
 
+    public Facility getByCode(String facilityCode) {
+        Facility facility;
+        if ((facility = facilityRepository.getByCode(facilityCode)) == null) {
+            throw new DataException(ERROR_FACILITY_CODE_INVALID);
+        }
+        return facility;
+    }
+
     public List<Facility> getChildFacilities(Facility facility) {
         return facilityRepository.getChildFacilities(facility);
     }
@@ -477,5 +485,22 @@ public class FacilityService {
             facilityRepository.updateFacilityByCode(dto1);
         }
 
+    }
+
+   public List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(Long facilityId, Long programId) {
+        return facilityRepository.getSupervisorFacilityIncludingHomeFacility(facilityId, programId);
+    }
+
+    public List<FacilitySupervisor> getFacilitySupervisorsByRight() {
+        return facilityRepository.getFacilitySupervisorByRight();
+    }
+
+    public List<Facility> getUserSupervisedFacilitiesBy(Long userId, String... rightNames) {
+
+        List<SupervisoryNode> supervisoryNodes = supervisoryNodeService.getAllSupervisoryNodesInHierarchyBy(userId, rightNames);
+        List<RequisitionGroup> requisitionGroups = requisitionGroupService.getRequisitionGroupsBy(supervisoryNodes);
+        List<Program> programs = programSupportedService.getAllActiveProgram();
+
+        return facilityRepository.getFacilitiesWithPrograms(programs, requisitionGroups);
     }
 }

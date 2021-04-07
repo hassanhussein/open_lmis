@@ -128,4 +128,8 @@ public class MaintenanceRequestService {
   public List<Log> getFullHistory(Long inventoryId) {
     return repository.getFullHistory(inventoryId);
   }
+
+  public void updateApprovedStatus(Long id) {
+     repository.updateApprovedStatus(id);
+  }
 }

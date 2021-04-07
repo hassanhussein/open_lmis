@@ -82,12 +82,12 @@ public interface EquipmentInventoryMapper {
       " ( facilityId, equipmentId, programId, serialNumber" +
       ", yearOfInstallation, purchasePrice, sourceOfFund, replacementRecommended, reasonForReplacement" +
       ", nameOfAssessor, dateLastAssessed, isActive, dateDecommissioned, hasStabilizer" +
-      ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate,nameOfSparePart, remark) " +
+      ", primaryDonorId, createdBy, createdDate, modifiedBy, modifiedDate,nameOfSparePart, remark, dateOfInstallation) " +
       "values " +
       " ( #{facilityId}, #{equipmentId}, #{programId}, #{serialNumber}" +
       ", #{yearOfInstallation}, #{purchasePrice}, #{sourceOfFund}, #{replacementRecommended}, #{reasonForReplacement}" +
       ", #{nameOfAssessor}, #{dateLastAssessed}, #{isActive}, #{dateDecommissioned}, #{hasStabilizer}" +
-      ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{nameOfSparePart}, #{remark})")
+      ", #{primaryDonorId}, #{createdBy}, NOW(), #{modifiedBy}, NOW(), #{nameOfSparePart}, #{remark}, #{dateOfInstallation})")
   @Options(useGeneratedKeys = true)
   void insert(EquipmentInventory inventory);
 
@@ -100,7 +100,7 @@ public interface EquipmentInventoryMapper {
       " dateLastAssessed = #{dateLastAssessed}, hasStabilizer = #{hasStabilizer} " +
       " , isActive = #{isActive}, dateDecommissioned = #{dateDecommissioned}, primaryDonorId = #{primaryDonorId} " +
       " , modifiedBy = #{modifiedBy}, modifiedDate = NOW(), " +
-      " nameOfSparePart = #{nameOfSparePart}, remark = #{remark}" +
+      " nameOfSparePart = #{nameOfSparePart}, remark = #{remark}, dateOfInstallation = #{dateOfInstallation} " +
       " WHERE id = #{id}")
   void update(EquipmentInventory inventory);
 

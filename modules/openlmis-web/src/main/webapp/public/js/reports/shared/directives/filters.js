@@ -456,6 +456,7 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
             if (!angular.isUndefined($scope.filter) && !angular.isUndefined($scope.filter.program)) {
 
                 var service = TreeGeographicZoneListByProgram;
+
                 if (attr.nozone) {
                     service = TreeGeographicTreeByProgramNoZones;
                 }
@@ -509,7 +510,6 @@ app.directive('zoneFilter', ['TreeGeographicZoneList', 'TreeGeographicZoneListBy
                         name: scope.filter.zoneName.replace(/\+/g, ' ')
                     };
                 }
-
                 if (attr.districtOnly) {
                     scope.showDistrictOnly = true;
                 }
@@ -3576,5 +3576,40 @@ app.directive('productWithoutSelectFilterSized', ['ReportProductsByProgram', 'me
             templateUrl: 'filter-product-template-without-select3'
         };
 
+    }
+]);
+
+app.directive('userDistrictFilter', ['GetDistrictUserOnly', 'SettingsByKey',
+    function (GetDistrictUserOnly, SettingsByKey) {
+
+        // When a program filter changes
+        var onProgramChanged = function ($scope) {
+
+            if (isUndefined($scope.filter) || isUndefined($scope.filter.program) || $scope.filter.program === 0) {
+                $scope.zones = {};
+                return;
+            }
+            GetDistrictUserOnly.get({
+                program: $scope.filter.program
+            }, function (data) {
+                $scope.zones = data.zone;
+            });
+        };
+
+        return {
+            restrict: 'E',
+            require: '^filterContainer',
+            link: function (scope, elm, attr) {
+
+                var onParentChanged = function () {
+                    onProgramChanged(scope);
+                };
+                scope.subscribeOnChanged('zone', 'program', onParentChanged, true);
+                scope.$watch('filter.program', function (value) {
+                    onProgramChanged(scope);
+                });
+            },
+            templateUrl: 'filter-user-district-template'
+        };
     }
 ]);

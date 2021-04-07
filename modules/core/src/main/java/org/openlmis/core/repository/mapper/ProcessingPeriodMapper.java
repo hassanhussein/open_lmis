@@ -153,17 +153,17 @@ public interface ProcessingPeriodMapper {
             "         order by name")
     List<ProcessingPeriod> getPeriodsByProgramCode(String code);
 
-
-    @Select("SELECT * FROM processing_periods " +
-            "WHERE scheduleId = #{scheduleId} " +
-            "AND endDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id = #{startingPeriodId}) " +
-            "AND startDate <= #{beforeDate} " +
-            "AND endDate >= #{afterDate}" +
-            "ORDER BY startDate")
+    @Select("SELECT * FROM processing_periods \n" +
+            "WHERE scheduleId = #{scheduleId}\n" +
+            "AND endDate > (SELECT pp.endDate FROM processing_periods pp WHERE pp.id =  #{startingPeriodId}) \n" +
+            "AND startDate <= #{beforeDate} \n" +
+            "AND endDate >= #{afterDate}\n" +
+            "ORDER BY endDate asc" )
     List<ProcessingPeriod> getAllPeriodsAfterDateAndPeriodForByMonthlyReporting(@Param(value = "scheduleId") Long scheduleId,
-                                                           @Param(value = "startingPeriodId") Long startingPeriodId,
-                                                           @Param(value = "afterDate") Date afterDate,
-                                                           @Param(value = "beforeDate") Date beforeDate);
+                                                                                @Param(value = "startingPeriodId") Long startingPeriodId,
+                                                                                @Param(value = "afterDate") Date afterDate,
+                                                                                @Param(value = "beforeDate") Date beforeDate,
+                                                                                @Param(value="enabledPeriod") Boolean enabledPeriod);
 
 
     @Select("SELECT * FROM processing_periods where scheduleId = #{scheduleId} and \n" +
@@ -193,5 +193,7 @@ public interface ProcessingPeriodMapper {
 
     ProcessingPeriod getFullProcessingPeriodForCurrentMonth(@Param("program") String program);
 
-
+    @Select("select * from processing_periods where numberofmonths in(3) and\n" +
+            "            startdate::date >='2020-01-01' and scheduleId NOT IN (47)")
+    List<ProcessingPeriod> getByStartDate();
 }

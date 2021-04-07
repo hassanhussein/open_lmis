@@ -1,6 +1,6 @@
 function RejectedControllerFunction($scope,$location,$routeParams,$rootScope,$stateParams, GetRejectedRnRByZoneReport,$state) {
     "use strict";
-    $scope.statuses = [{code:'INITIATED',name:'District Rejected'},{code:'AUTHORIZED',name:'LMU Rejected'}];
+    $scope.statuses = [{code:'INITIATED',name:'District Rejected'},{code:'AUTHORIZED',name:'Regional Rejected'}];
     $scope.default_status = 'AUTHORIZED';
      $scope.filter = $stateParams;
      console.log($scope);

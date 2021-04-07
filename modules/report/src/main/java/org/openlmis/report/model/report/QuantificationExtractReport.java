@@ -27,4 +27,7 @@ public class QuantificationExtractReport implements ResultRow {
     private String periodName;
     private String district;
 
+    private Integer adjustedConsumptionInPacks;
+    private Integer adjustedConsumption;
+
 }

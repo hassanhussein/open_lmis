@@ -1426,3 +1426,24 @@ services.factory('MonitoringReportApprove', function($resource){
 services.factory('GetCOVIDDesignatedFacilities', function($resource){
     return $resource('/api/dashboard/getCOVIDDesignatedFacilities.json', {}, update);
 });
+
+
+services.factory('GetNotificationById', function($resource){
+    return $resource('/all-notifications/:id.json', {id:'@id'}, {});
+});
+
+services.factory('GetDistrictUserOnly', function($resource){
+    return $resource('/reports/geographic-zones/user-district.json', {}, {});
+});
+
+services.factory('GetAllLongs', function($resource){
+    return $resource('/rest-api/getLLINLogs.json', {}, {});
+});
+
+services.factory('GetProductReport', function($resource){
+    return $resource('/reports/reportdata/productListReport.json', {}, {});
+});
+
+services.factory('DisciplineList', function($resource){
+    return $resource('/discipline-list.json', {}, {});
+});

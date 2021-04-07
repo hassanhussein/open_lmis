@@ -12,6 +12,7 @@
 
 
 function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, SaveAndLogMaintenanceRequest, messageService, $routeParams, $location) {
+console.log('reached here');
 
   $scope.$parent.message = '';
 
@@ -21,6 +22,7 @@ function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, S
   $scope.nextDateOfServiceForCurrent = null;
 
   PendingRequests.get(function (data) {
+  console.log(data);
     $scope.list = data.logs;
   });
 
@@ -45,8 +47,28 @@ function MyRequestsController($scope, PendingRequests, SaveMaintenanceRequest, S
       $scope.error = messageService.get(response.data.error);
     };
     $scope.currentRequest.resolved = true;
+
+      console.log( $scope.currentRequest);
+
     SaveMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
     SaveAndLogMaintenanceRequest.save($scope.currentRequest, successHandler, errorHandler);
+  };
+
+  $scope.filterLogs = function () {
+    var filteredLogs = [];
+    var query = $scope.query || "";
+
+      filteredLogs = $.grep($scope.list, function (log) {
+      return log.equipmentName.toLowerCase().indexOf(query.toLowerCase()) != -1;
+    });
+
+    if($scope.query === ""){
+       PendingRequests.get(function (data) {
+       console.log(data);
+         $scope.list = data.logs;
+       });
+    } else
+    $scope.list = filteredLogs;
   };
 
 }

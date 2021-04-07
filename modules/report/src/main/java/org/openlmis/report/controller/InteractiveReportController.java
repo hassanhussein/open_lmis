@@ -931,13 +931,13 @@ public class InteractiveReportController extends BaseController {
     @PreAuthorize("@permissionEvaluator.hasPermission(principal,'VIEW_DISTRICT_CONSUMPTION_REPORT')")
     public OpenLmisResponse getQuantificationReportSummaryData(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                      @RequestParam(value = "max", required = false, defaultValue = "10") int max,
-                                                     @RequestParam(value = "limit", defaultValue="100") String limit,
+                                                     @RequestParam(value = "limit", defaultValue="10") String limit,
                                                      HttpServletRequest request
 
     ) {
         Report report = reportManager.getReportByKey("quantification_extract");
         report.getReportDataProvider().setUserId(loggedInUserId(request));
-        List<QuantificationExtractReport> quantificationExtractReportList = (List<QuantificationExtractReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, parseInt(limit));
+        List<QuantificationExtractReport> quantificationExtractReportList = (List<QuantificationExtractReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), 1, 10);
         OpenLmisResponse pages = new OpenLmisResponse("rows",quantificationExtractReportList);
         return pages;
     }
@@ -1176,6 +1176,21 @@ public class InteractiveReportController extends BaseController {
                 (List<AggregateStockStatusReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
 
         return new Pages(page, max, aggregateStockStatusReportList);
+    }
+
+
+ @RequestMapping(value = "/reportdata/productListReport", method = GET, headers = BaseController.ACCEPT_JSON)
+
+    public Pages getProductListReport(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                               @RequestParam(value = "max", required = false, defaultValue = "10") int max,
+                                                               HttpServletRequest request
+    ) {
+        Report report = reportManager.getReportByKey("product_list_report");
+        report.getReportDataProvider().setUserId(loggedInUserId(request));
+        List<ProductListReport> productListReportList =
+                (List<ProductListReport>) report.getReportDataProvider().getReportBody(request.getParameterMap(), request.getParameterMap(), page, max);
+
+        return new Pages(page, max, productListReportList);
     }
 
 

@@ -12,6 +12,7 @@
 
 package org.openlmis.equipment.service;
 
+import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.EquipmentType;
 import org.openlmis.equipment.repository.EquipmentTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class EquipmentTypeService {
     @Autowired
     private EquipmentTypeRepository repository;
 
+    @Autowired
+    private EquipmentCategoryService equipmentCategoryService;
+
     public List<EquipmentType> getAll() {
         return repository.getAll();
     }
@@ -34,6 +38,7 @@ public class EquipmentTypeService {
     }
 
     public void save(EquipmentType type) {
+
         if (type.getId() == null) {
             repository.insert(type);
         } else {
@@ -43,5 +48,15 @@ public class EquipmentTypeService {
 
     public EquipmentType getTypeByCode(String code) {
         return repository.getTypeByCode(code);
+    }
+
+    public void uploadEquipment(EquipmentType type) {
+
+        EquipmentCategory category = equipmentCategoryService.getByCode(type.getEquipmentCategory().getCode());
+
+        if(category != null) {
+            type.setCategoryId(category.getId());
+            save(type);
+        }
     }
 }

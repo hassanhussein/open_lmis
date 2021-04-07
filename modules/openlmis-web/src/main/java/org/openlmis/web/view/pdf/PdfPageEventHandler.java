@@ -65,6 +65,7 @@ public class PdfPageEventHandler extends PdfPageEventHelper {
   }
 
   private void addPageFooterInfo(PdfWriter writer, Document document) {
+
     PdfContentByte contentByte = writer.getDirectContent();
     contentByte.saveState();
 

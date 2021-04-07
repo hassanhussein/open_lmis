@@ -151,6 +151,45 @@
             width: 500px;
             z-index: 99;
         }
+
+      #circle {
+        position: absolute;
+        background-color: #E1141E;
+        border: 1px solid red;
+        color: #FFF;
+        height: 18px;
+        font-size: 12px;
+        font-weight: normal;
+        text-align: center !important;
+
+        padding: 1px 3px;
+        margin: -13px 0 0 64px !important;
+
+        cursor: pointer;
+        border-radius: 50%;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        z-index: 1;
+        /*
+                width:20px;
+        */
+    }
+
+        #Library {
+        background: url('/public/images/Bell-321.png') no-repeat center;
+        width: 20px;
+        height: 20px;
+        position: relative !important;
+        background-size: 49px;
+        color: blue;
+        color: blue !important;
+        /*
+                margin: -4px 0 0 10px;
+        */
+
+        margin-top: -0.5em;
+        padding-right: 18px
+    }
 </style>
 
 <div id="tab">
@@ -467,7 +506,16 @@
                     <!--  <div class="pull-left "><span style="font-size: 12px">National Supply Chain Indicator , {{displayCurrentDate}}</span>
                       </div>-->
 
+
+
+
+
                     <div class="pull-right control-accordion">
+
+                        <div id="circle" style="margin: -13px 0 0 65px !important">
+                             <span ng-hide="false"> {{notifications.length}}
+                             </span>
+                        </div>
                         <span style="height:2px !important">
                             <a id="expandAll" href="javascript:void(0);" onClick="accordion.expandCollapse('expand')"
                             >
@@ -482,8 +530,11 @@
                                                                                   style="color:#0E5B76">
                    remove_circle_outline
                 </i></a>
+                <a id="collapseAll" href="javascript:void(0);"
+                   ng-href="/public/pages/reports/notification/index.html#/home"  target="_blank"
+                ><i class="material-icons md-18" style="color:red">alarm_on</i></a>
 
-                    </span>
+                </span>
 
                     </div>
 
@@ -1555,6 +1606,26 @@
                                 </div>
 
 
+                                <div class="col s12 m6 l6" ng-show="false">
+                                    <div class="section grey lighten-5 card row3-height" overlay-section="provincesWithMostRegularOrders">
+
+                                        <div class="card-action" style="background-color: #17888f;">
+                                            <span style="color:white">Regions with Most Emergency Orders (Past 3 Months)</span>
+                                        </div>
+                                        <div class="card-content">
+                                            <span style="font-size: x-small;top: 0px !important;color: #0c9083;text-align: center"></span>
+
+                                            <div id="emergencyByRegion" style="height: 300px;margin:0 auto "></div>
+<!--
+                                            <div id="addText" style="left:0px; top:0px;"></div>
+-->
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
                                 <!-- R&R Status Summary -->
                                 <div class="col s12 m6 l6">
                                     <div class="grey lighten-5 card row3-height " overlay-section="rnrStatusSummary">
@@ -1570,7 +1641,7 @@
                                 </div>
                             </div>
 
-                            <div class="row orderFillRate" ng-show="true">
+                            <div class="row orderFillRate" ng-show="false">
 
                                 <!-- Provinces with Most Emergency Orders (Past 3 Months)  -->
                                 <div class="col s12 m4 l4">

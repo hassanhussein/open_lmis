@@ -2,10 +2,11 @@ package org.openlmis.core.repository;
 
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
 import org.openlmis.core.repository.mapper.notificationMapper.StockNotificationMapper;
-import org.openlmis.core.service.notification.*;
+import org.openlmis.core.service.Notification.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -34,12 +35,12 @@ public class StockNotificationRepository {
 
     public void insert(StockOutNotificationDTO notification) {
          mapper.insert(notification);
-         saveDetails(notification);
+         //saveDetails(notification);
     }
 
     public void update(StockOutNotificationDTO notification) {
         mapper.update(notification);
-        saveDetails(notification);
+        //saveDetails(notification);
     }
 
     public StockOutNotificationDTO getByInvoiceNumber(String invoiceNumber) {
@@ -56,4 +57,11 @@ public class StockNotificationRepository {
         stockOutItemService.save(notification);
     }
 
+    public StockOutNotificationDTO getById(Long id) {
+        return mapper.getById(id);
+    }
+
+    public List<HashMap<String, Object>> getStockBy(String facilityIds, Long userId) {
+        return mapper.getStockBy(facilityIds,userId);
+    }
 }

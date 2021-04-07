@@ -14,7 +14,9 @@ package org.openlmis.report.service;
 
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
+import org.openlmis.core.domain.User;
 import org.openlmis.report.mapper.AggregateConsumptionReportMapper;
+import org.openlmis.report.mapper.UserPermissionMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.AggregateConsumptionReportParam;
 import org.openlmis.report.util.ParameterAdaptor;
@@ -45,10 +47,23 @@ public class AggregateConsumptionReportDataProvider extends ReportDataProvider {
   @Autowired
   private ReportPaginationHelper paginationHelper;
 
+  @Autowired
+  private UserPermissionMapper userPermissionMapper;
+
+  Boolean canViewNationalReport = false;
+
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
     paginationHelper.setPageSize(pageSize + "");
-    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
+    List<User> userPermission = userPermissionMapper.getPermissionToViewNationalReport(this.getUserId());
+
+    if(userPermission.isEmpty()) {
+      canViewNationalReport = false;
+    } else {
+      canViewNationalReport = true;
+    }
+    return reportMapper.getAggregateConsumptionReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId(),
+            canViewNationalReport);
   }
 
   public AggregateConsumptionReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

@@ -40,10 +40,6 @@ GetCummulativeCasesTrendData, GetCasesPerDesignatedFacilitiesData) {
             {
                 field: 'stockonhand',
                 displayName: 'Stock on Hand'
-            },
-            {
-                field: 'ordered',
-                displayName: 'Quantity on Order'
             }
 
         ]
@@ -377,17 +373,66 @@ console.log(e);
     };
 
 
-    $scope.exportReport= function(exportFormat)
+
+
+
+
+    $scope.exportSummaryReport= function(data)
     {
-//            $scope.filter.pdformat = 1;
-//            var params = jQuery.param($scope.distributionSumaryReportParams);
-//            var url = '/reports/download/vaccine_received_summary_report/' + type + '?' + params;
-//            $window.open(url, "_BLANK");
-    };
+
+var head = ["Item",  "Stock on Hand", "Last Update"];
+
+
+var csv = JSON2CSV(data, head);
+var downloadLink = document.createElement("a");
+var blob = new Blob(["\ufeff", csv]);
+var url = URL.createObjectURL(blob);
+downloadLink.href = url;
+downloadLink.download = "data.csv";
+
+document.body.appendChild(downloadLink);
+downloadLink.click();
+document.body.removeChild(downloadLink);
+};
+
+function JSON2CSV(objArray, head) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+    var line = '';
+
+            for (var index in head) {
+                line += head[index] + ',';
+            }
+
+        line = line.slice(0, -1);
+        str += line + '\r\n';
+
+
+
+    for (var i = 0; i < array.length; i++) {
+         line = '';
+
+        if ($("#quote").is(':checked')) {
+            for (var x in array[i]) {
+                var value = array[i][x] + "";
+                line += '"' + value.replace(/"/g, '""') + '",';
+            }
+        } else {
+            for (var y in array[i]) {
+                line += array[i][y] + ',';
+            }
+        }
+
+        line = line.slice(0, -1);
+        str += line + '\r\n';
+    }
+    return str;
+}
 }
 
 app.controller('StockInboundController', function($rootScope, $scope, GetInboundReportsData) {
 
+  $scope.pipelineData = "";
     $rootScope.loadInboundReport = function(params) {
         $scope.pipelineReport(params);
     };
@@ -403,7 +448,7 @@ app.controller('StockInboundController', function($rootScope, $scope, GetInbound
                     visible: false
                 },
                 yAxis: {
-                    gridLineWidth: 1,
+                    gridLineWidth: 3,
                     title: null,
                     labels: {
                         enabled: false
@@ -506,4 +551,55 @@ app.controller('StockInboundController', function($rootScope, $scope, GetInbound
        }
        return inboundData;
     };
+       $scope.exportPipelineReport= function(data)
+        {
+
+    var head = ["Expected Arrival Date", "Item", 'UOM',  "Receiving Location", "Track Number",  "Upload Date", "Source", "Quantity on Order", "Status"];
+
+
+    var csv = JSON2CSV($scope.pipelineData, head);
+    var downloadLink = document.createElement("a");
+    var blob = new Blob(["\ufeff", csv]);
+    var url = URL.createObjectURL(blob);
+    downloadLink.href = url;
+    downloadLink.download = "data.csv";
+
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+    };
+
+function JSON2CSV(objArray, head) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+    var line = '';
+
+            for (var index in head) {
+                line += head[index] + ',';
+            }
+
+        line = line.slice(0, -1);
+        str += line + '\r\n';
+
+
+
+    for (var i = 0; i < array.length; i++) {
+         line = '';
+
+        if ($("#quote").is(':checked')) {
+            for (var x in array[i]) {
+                var value = array[i][x] + "";
+                line += '"' + value.replace(/"/g, '""') + '",';
+            }
+        } else {
+            for (var y in array[i]) {
+                line += array[i][y] + ',';
+            }
+        }
+
+        line = line.slice(0, -1);
+        str += line + '\r\n';
+    }
+    return str;
+}
 });

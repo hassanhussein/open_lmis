@@ -15,6 +15,7 @@ package org.openlmis.email.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.openlmis.email.dto.EmailAttachmentDTO;
 import org.springframework.mail.SimpleMailMessage;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class EmailMessage extends SimpleMailMessage {
 	private boolean sent;
 
 	private List<EmailAttachment> emailAttachments = new ArrayList<>();
+	private List<EmailAttachmentDTO> emailAttachmentList = new ArrayList<>();
 
 	public EmailMessage() {
 		super();

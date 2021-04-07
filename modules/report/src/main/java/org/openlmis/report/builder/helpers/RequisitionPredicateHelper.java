@@ -139,4 +139,9 @@ public class RequisitionPredicateHelper {
     return String.format("%s = #{filterCriteria.schedule}", field);
   }
 
+  public static String userHasPermissionOnNationalReport(String field) {
+    return String.format("%s in (     SELECT * FROM facilities F INNER JOIN users U ON U.facilityId = F.id\n" +
+            "    INNER JOIN role_assignments RA ON RA.userId = U.id INNER JOIN role_rights RR ON RR.roleId = RA.roleId\n" +
+            "    WHERE U.id = 2 AND RR.rightName IN ('VIEW_NATIONAL_LEVEL_REPORTS') ", field);
+  }
 }

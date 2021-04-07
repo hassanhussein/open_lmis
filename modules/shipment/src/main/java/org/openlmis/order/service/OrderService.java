@@ -58,31 +58,22 @@ public class OrderService {
   private static final String RELEASE_PREVIOUS_RANDRS_WITHOUT_ORDER = "AUTO_RELEASE_PREVIOUS_REQUISITIONS_WITHOUT_ORDER";
 
   private static String SUPPLY_LINE_MISSING_COMMENT = "order.ftpComment.supplyline.missing";
-
-  @Autowired
-  private OrderConfigurationRepository orderConfigurationRepository;
-
-  @Autowired
-  private OrderRepository orderRepository;
-
-  @Autowired
-  private ConfigurationSettingService configurationSettingService;
-
-  @Autowired
-  private RequisitionService requisitionService;
-
-  @Autowired
-  private SupplyLineService supplyLineService;
-
-  @Autowired
-  private OrderEventService orderEventService;
-
   @Autowired
   RoleAssignmentService roleAssignmentService;
-
   @Autowired
   FulfillmentPermissionService fulfillmentPermissionService;
-
+  @Autowired
+  private OrderConfigurationRepository orderConfigurationRepository;
+  @Autowired
+  private OrderRepository orderRepository;
+  @Autowired
+  private ConfigurationSettingService configurationSettingService;
+  @Autowired
+  private RequisitionService requisitionService;
+  @Autowired
+  private SupplyLineService supplyLineService;
+  @Autowired
+  private OrderEventService orderEventService;
   @Autowired
   private ProgramService programService;
 
@@ -99,11 +90,6 @@ public class OrderService {
   private CommaSeparator commaSeparator;
 
   private Integer pageSize;
-
-  @Autowired
-  public void setPageSize(@Value("${order.page.size}") String pageSize) {
-    this.pageSize = Integer.parseInt(pageSize);
-  }
 
   @Transactional
   public void convertToOrder(List<Rnr> rnrList, Long userId) {
@@ -267,6 +253,11 @@ public class OrderService {
     return pageSize;
   }
 
+  @Autowired
+  public void setPageSize(@Value("${order.page.size}") String pageSize) {
+    this.pageSize = Integer.parseInt(pageSize);
+  }
+
   public List<Order> searchByStatusAndRight(Long userId, List<OrderStatus> statuses, Long programId, Long facilityId) {
     List<FulfillmentRoleAssignment> fulfilmentRolesWithRight = roleAssignmentService.getFulfilmentRolesWithRight(userId, RightName.MANAGE_POD);
 
@@ -352,5 +343,11 @@ public class OrderService {
     return orderRepository.getByProductAndExpectedDate(code,trackingNumber);
   }
 
+  public Order getByOrderNumberWithRequisition( String orderNumber){
+    return orderRepository.getByOrderNumberWithRequisition(orderNumber);
+  }
 
+    public Order getLatestOrderByFacility(String soldTo) {
+      return orderRepository.getLatestOrderByFacility(soldTo);
+    }
 }

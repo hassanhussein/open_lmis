@@ -28,6 +28,8 @@ public class EmailAttachment {
 
   protected Date createdDate;
 
+  private byte[] fileSource;
+
   public DataSource getFileDataSource() {
     if(fileDataSource != null){
       return fileDataSource;

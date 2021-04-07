@@ -22,8 +22,8 @@ public interface SourceOfFundMapper {
             " , programId = #{programId} where id = #{id}")
     void update(SourceOfFundDTO dto);
 
-    @Select(" SELECT * FROM source_of_funds where lower(code) = lower(#{code}) and lower(name) = lower(#{name})")
-    SourceOfFundDTO getByCode(@Param("code")String code,@Param("name")String name);
+    @Select(" SELECT * FROM source_of_funds where lower(code) = lower(#{code})")
+    SourceOfFundDTO getByCode(@Param("code")String code);
 
 
 }

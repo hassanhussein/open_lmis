@@ -59,6 +59,9 @@ public class ReportLookupService {
   private UserSummaryExReportMapper userSummaryExReportMapper;
 
   @Autowired
+  private ProgramService programService;
+
+  @Autowired
   private RegimenReportMapper regimenReportMapper;
 
   @Autowired
@@ -121,9 +124,6 @@ public class ReportLookupService {
   private FacilityService facilityService;
 
   @Autowired
-  private ProgramService programService;
-
-  @Autowired
   private SupervisoryNodeService supervisoryNodeService;
 
   @Autowired
@@ -154,7 +154,6 @@ public class ReportLookupService {
     return productMapper.getAll();
   }
 
-
   public List<RegimenCategory> getAllRegimenCategory() {
     return regimenCategoryReportMapper.getAll();
   }
@@ -176,14 +175,14 @@ public class ReportLookupService {
   }
 
   public List<Product> getProductsActiveUnderProgram(Long programId) {
-    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")) {
+    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
       return productMapper.getProductsForProgramPickCategoryFromProgramProduct(programId);
     }
     return productMapper.getProductsForProgram(programId);
   }
 
   public List<Product> getProductListByCategory(Integer programId, Integer categoryId) {
-    if (categoryId == null || categoryId <= 0) {
+    if (categoryId == null || categoryId <= 0){
       return productMapper.getAll();
     }
     return productMapper.getProductListByCategory(programId, categoryId);
@@ -196,7 +195,6 @@ public class ReportLookupService {
   public List<FacilityType> getFacilityTypes() {
     return facilityTypeMapper.getAll();
   }
-
 
   public List<FacilityType> getFacilityTypesForProgram(Long programId) {
     return facilityTypeMapper.getForProgram(programId);
@@ -228,7 +226,7 @@ public class ReportLookupService {
   }
 
   public List<ProductCategory> getCategoriesForProgram(int programId) {
-    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")) {
+    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
       return this.productCategoryMapper.getForProgramUsingProgramProductCategory(programId);
     }
     return this.productCategoryMapper.getForProgram(programId);
@@ -244,7 +242,7 @@ public class ReportLookupService {
     int now = calendar.get(Calendar.YEAR);
     List<Integer> years = new ArrayList<>();
 
-    if (startYear == 0 || startYear > now) {
+    if (startYear == 0 || startYear > now){
       years.add(now);
       return years;
     }
@@ -284,36 +282,34 @@ public class ReportLookupService {
     return geographicZoneMapper.getAll();
   }
 
-
-  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone, Long facilityOperator,Long facilityOwner, Long userId) {
+  public List<Facility> getFacilities(Long program, Long schedule, Long type, Long requisitionGroup, Long zone, Long facilityOperator, Long facilityOwner, Long userId) {
     // this method does not work if no program is specified
-    if (program == 0L) {
+    if (program == 0L){
       return null;
     }
 
-    if (schedule == 0 && type == 0) {
+    if (schedule == 0 && type == 0){
       return facilityReportMapper.getFacilitiesByProgram(program, zone, facilityOperator, facilityOwner, userId);
     }
 
-    if (type == 0 && requisitionGroup == 0) {
+    if (type == 0 && requisitionGroup == 0){
       return facilityReportMapper.getFacilitiesByProgramSchedule(program, schedule, zone, facilityOperator, facilityOwner, userId);
     }
 
-    if (type == 0 && requisitionGroup != 0) {
+    if (type == 0 && requisitionGroup != 0){
       return facilityReportMapper.getFacilitiesByProgramScheduleAndRG(program, schedule, requisitionGroup, zone, facilityOperator, facilityOwner, userId);
     }
 
-    if (requisitionGroup == 0 && type != 0) {
-      return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, facilityOwner,userId,  type);
+    if (requisitionGroup == 0 && type != 0){
+      return facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, facilityOwner, userId, type);
     }
 
-    if (requisitionGroup == 0) {
+    if (requisitionGroup == 0){
       return facilityReportMapper.getFacilitiesByPrgraomScheduleType(program, schedule, type, zone, facilityOperator, facilityOwner, userId);
     }
 
-    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone, facilityOperator,facilityOwner);
+    return facilityReportMapper.getFacilitiesByPrgraomScheduleTypeAndRG(program, schedule, type, requisitionGroup, zone, facilityOperator, facilityOwner);
   }
-
 
   public List<Facility> getFacilityByGeographicZoneTree(Long userId, Long zoneId, Long programId) {
     return facilityReportMapper.getFacilitiesByGeographicZoneTree(userId, zoneId, programId);
@@ -331,7 +327,6 @@ public class ReportLookupService {
     return productGroupReportMapper.getAll();
   }
 
-
   public org.openlmis.core.domain.Facility getFacilityForRnrId(Long rnrId) {
     return requisitionMapper.getFacilityForRnrId(rnrId);
   }
@@ -343,14 +338,14 @@ public class ReportLookupService {
   public List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(Long userId, Long supervisoryNodeId) {
     return programMapper.getUserSupervisedActiveProgramsBySupervisoryNode(userId, supervisoryNodeId);
   }
-  public List<Program> getUserSupervisedActiveProgramsBySupervisoryNode( Long supervisoryNodeId) {
-    return programMapper.getUserSupervisedActiveAllProgramsBySupervisoryNode( supervisoryNodeId);
+
+  public List<Program> getUserSupervisedActiveProgramsBySupervisoryNode(Long supervisoryNodeId) {
+    return programMapper.getUserSupervisedActiveAllProgramsBySupervisoryNode(supervisoryNodeId);
   }
 
   public List<SupervisoryNode> getAllSupervisoryNodesByUserHavingActiveProgram(Long userId) {
     return supervisoryNodeReportMapper.getAllSupervisoryNodesByUserHavingActiveProgram(userId);
   }
-
 
   public List<UserRoleAssignmentsReport> getAllRolesBySupervisoryNodeHavingProgram(Long roleId, Long programId, Long supervisoryNodeId) {
     return userSummaryExReportMapper.getUserRoleAssignments(roleId, programId, supervisoryNodeId);
@@ -361,11 +356,11 @@ public class ReportLookupService {
   }
 
   public UserSummaryParams getReportFilterData(Map<String, String[]> filterCriteria) {
-    if (filterCriteria != null) {
+    if (filterCriteria != null){
       userSummaryParam = new UserSummaryParams();
-      userSummaryParam.setRoleId(filterCriteria.get("roleId")==null || StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0])); //defaults to 0
-      userSummaryParam.setProgramId(filterCriteria.get("programId")==null ||StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
-      userSummaryParam.setSupervisoryNodeId(filterCriteria.get("supervisoryNodeId")==null||StringUtils.isBlank(filterCriteria.get("supervisoryNodeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNodeId")[0]));
+      userSummaryParam.setRoleId(filterCriteria.get("roleId") == null || StringUtils.isBlank(filterCriteria.get("roleId")[0]) ? 0 : Long.parseLong(filterCriteria.get("roleId")[0])); //defaults to 0
+      userSummaryParam.setProgramId(filterCriteria.get("programId") == null || StringUtils.isBlank(filterCriteria.get("programId")[0]) ? 0 : Long.parseLong(filterCriteria.get("programId")[0]));
+      userSummaryParam.setSupervisoryNodeId(filterCriteria.get("supervisoryNodeId") == null || StringUtils.isBlank(filterCriteria.get("supervisoryNodeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("supervisoryNodeId")[0]));
     }
 
     return userSummaryParam;
@@ -375,7 +370,6 @@ public class ReportLookupService {
     return equipmentTypeReportMapper.getEquipmentTypeList();
   }
 
-
   public GeoZoneTree getGeoZoneTree(Long userId) {
     List<GeoZoneTree> zones = geographicZoneMapper.getGeoZonesForUser(userId);
     GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
@@ -383,8 +377,8 @@ public class ReportLookupService {
     return tree;
   }
 
-  public GeoZoneTree getGeoZoneTreeWithOutZones(Long programId,Long userId) {
-    List<GeoZoneTree> allGeozones = geographicZoneMapper.getGeoZones(programId,userId);
+  public GeoZoneTree getGeoZoneTreeWithOutZones(Long programId, Long userId) {
+    List<GeoZoneTree> allGeozones = geographicZoneMapper.getGeoZones(programId, userId);
     GeoZoneTree tree = geographicZoneMapper.getParentZoneTree();
     List<GeoZoneTree> zoneList = this.loadZoneList(tree, allGeozones);
     List<GeoZoneTree> regions = this.loadZoneChildren(zoneList, allGeozones);
@@ -396,7 +390,6 @@ public class ReportLookupService {
     tree.setChildren(regions);
     return tree;
   }
-
 
   private static void order(List<GeoZoneTree> zoneList) {
 
@@ -416,7 +409,7 @@ public class ReportLookupService {
     List<GeoZoneTree> children = new ArrayList<>();
     for (GeoZoneTree t : geoSourceList) {
       for (GeoZoneTree zoneTree : zoneList) {
-        if (t.getParentId() == zoneTree.getId()) {
+        if (t.getParentId() == zoneTree.getId()){
           children.add(t);
         }
       }
@@ -428,7 +421,7 @@ public class ReportLookupService {
     List<GeoZoneTree> children = new ArrayList<>();
     for (GeoZoneTree t : geoSourceList) {
 
-      if (t.getParentId() == root.getId()) {
+      if (t.getParentId() == root.getId()){
         children.add(t);
 
       }
@@ -447,7 +440,7 @@ public class ReportLookupService {
     // find children from the source
     List<GeoZoneTree> children = new ArrayList<>();
     for (GeoZoneTree t : source) {
-      if (t.getParentId() == tree.getId()) {
+      if (t.getParentId() == tree.getId()){
         children.add(t);
       }
     }
@@ -458,7 +451,6 @@ public class ReportLookupService {
       populateChildren(zone, source);
     }
   }
-
 
   public List<OrderFillRateSummaryReport> getOrderFillRateSummary(Long programId, Long periodId, Long scheduleId, Long facilityTypeId, Long userId, Long zoneId, String status) {
     return orderFillRateSummaryListMapper.getOrderFillRateSummaryReportData(programId, periodId, scheduleId, facilityTypeId, userId, zoneId, status);
@@ -480,7 +472,7 @@ public class ReportLookupService {
 
       for (ProductCategoryProductTree productCategoryProduct : productCategoryProducts) {
 
-        if (pc.getId() == productCategoryProduct.getCategory_id()) {
+        if (pc.getId() == productCategoryProduct.getCategory_id()){
           object.getChildren().add(productCategoryProduct);
         }
       }
@@ -513,7 +505,7 @@ public class ReportLookupService {
 
         for (YearSchedulePeriodTree period : yearSchedulePeriodTree) {
 
-          if (schedule.getId() == period.getGroupid() && period.getYear().equals(year.toString())) {
+          if (schedule.getId() == period.getGroupid() && period.getYear().equals(year.toString())){
             scheduleObject.getChildren().add(period);
           }
         }
@@ -560,11 +552,10 @@ public class ReportLookupService {
     zone = StringUtils.isBlank(filterCriteria.get("zoneId")[0]) ? 0 : Long.parseLong(filterCriteria.get("zoneId")[0]);
     type = StringUtils.isBlank(filterCriteria.get("facilityTypeId")[0]) ? 0 : Long.parseLong(filterCriteria.get("facilityTypeId")[0]);
 
-    facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator,facilityOwner, userId, type);
+    facilitiesList = this.facilityReportMapper.getFacilitiesByProgramZoneFacilityType(program, zone, facilityOperator, facilityOwner, userId, type);
 
     return facilitiesList;
   }
-
 
   public List<TimelinessReport> getTimelinessStatusData(Long programId, Long periodId, Long scheduleId, Long zoneId, String status) {
     return timelinessStatusReportMapper.getTimelinessStatusData(programId, periodId, scheduleId, zoneId, status);
@@ -574,7 +565,16 @@ public class ReportLookupService {
     return timelinessStatusReportMapper.getFacilityRnRStatusData(programId, periodId, scheduleId, zoneId, status, facilityIds);
   }
 
-  public List<TimelinessReport> getTimelinessReportingDates(Long periodId) {
+  public List<TimelinessReport> getTimelinessReportingDates(Long periodId, Long programId) {
+
+    // This needs to be removed when we shift to get timeliness dates by programs
+    org.openlmis.core.domain.Program program = programService.getById(programId);
+
+    if (program.getCode().equals("zilshosp"))
+      return timelinessStatusReportMapper.getTimelinessReportingDatesPerProgram(periodId,
+              "MSD_ZONE_REPORTING_CUT_OFF_DATE_FOR_ZILSHOSP",
+              "UNSCHEDULED_REPORTING_CUT_OFF_DATE_FOR_ZILSHOSP");
+
     return timelinessStatusReportMapper.getTimelinessReportingDates(periodId);
   }
 
@@ -586,7 +586,6 @@ public class ReportLookupService {
     return processingPeriodMapper.getLastPeriods(programId);
   }
 
-
   public List<YearSchedulePeriodTree> getVaccineYearSchedulePeriodTree() {
     List<YearSchedulePeriodTree> yearSchedulePeriodTree = processingPeriodMapper.getVaccineYearSchedulePeriodTree();
 
@@ -595,7 +594,7 @@ public class ReportLookupService {
     Set<Integer> scheduleIds = new HashSet<>();
     for (YearSchedulePeriodTree periodTree : yearSchedulePeriodTree) {
       years.add(periodTree.getYear());
-      if (!scheduleIds.contains(periodTree.getGroupid())) {
+      if (!scheduleIds.contains(periodTree.getGroupid())){
         scheduleIds.add(periodTree.getGroupid());
         schedules.add(new Schedule(periodTree.getGroupid(), periodTree.getGroupname(), null, null));
       }
@@ -617,11 +616,11 @@ public class ReportLookupService {
 
         for (YearSchedulePeriodTree period : yearSchedulePeriodTree) {
 
-          if (schedule.getId() == period.getGroupid() && period.getYear().equals(year)) {
+          if (schedule.getId() == period.getGroupid() && period.getYear().equals(year)){
             scheduleObject.getChildren().add(period);
           }
         }
-        if (scheduleObject.getChildren().size() > 0) {
+        if (scheduleObject.getChildren().size() > 0){
 
           yearObject.getChildren().add(scheduleObject);
         }
@@ -637,10 +636,8 @@ public class ReportLookupService {
   public List<YearSchedulePeriodTree> getVaccineYearSchedulePeriodTreeWithoutSchedule() {
     List<YearSchedulePeriodTree> yearSchedulePeriodTree = processingPeriodMapper.getVaccineYearSchedulePeriodTree();
 
-
     return yearSchedulePeriodTree;
   }
-
 
   public Long getCurrentPeriodIdForVaccine() {
     return processingPeriodMapper.getCurrentPeriodIdForVaccine();
@@ -648,7 +645,6 @@ public class ReportLookupService {
 
   //New
   public List<FacilityLevelTree> getFacilityByLevel(Long programId, Long userId) {
-
 
     org.openlmis.core.domain.Facility homeFacility = facilityService.getHomeFacility(userId);
 
@@ -671,7 +667,7 @@ public class ReportLookupService {
 
       for (FacilityLevelTree tree : parentTree) {
 
-        if ((tree.getParentId() == facilityObject.getParentId()) && (tree.getSuperVisedFacilityId() == facilityObject.getSuperVisedFacilityId())) {
+        if ((tree.getParentId() == facilityObject.getParentId()) && (tree.getSuperVisedFacilityId() == facilityObject.getSuperVisedFacilityId())){
 
           facilityObject.getChildren().add(tree);
 
@@ -684,7 +680,6 @@ public class ReportLookupService {
 
     }
 
-
     return treeList;
 
   }
@@ -693,20 +688,19 @@ public class ReportLookupService {
 
   public Map<String, Object> getCustomPeriodDates(Long period) {
 
-
     Map<String, Object> dates = new HashMap<String, Object>();
 
-    if (period != null && period < 5 && period > 0) {
+    if (period != null && period < 5 && period > 0){
       DateTime
-        sDate = periodStartDate(period),
-        eDate = periodEndDate();
+              sDate = periodStartDate(period),
+              eDate = periodEndDate();
 
       String startDate = sDate.toString(VACCINE_DATE_FORMAT);
       String endDate = eDate.toString(VACCINE_DATE_FORMAT);
       String startDateString = sDate.toString(VACCINE_DATE_FORMAT_FOR_RANGE);
       String endDateString = eDate.toString(VACCINE_DATE_FORMAT_FOR_RANGE);
 
-      if (startDate != null && endDate != null) {
+      if (startDate != null && endDate != null){
         dates.put("startDate", startDate);
         dates.put("endDate", endDate);
         dates.put("startDateString", startDateString);
@@ -749,26 +743,27 @@ public class ReportLookupService {
   }
 
   public List<Product> getProductsActiveUnderProgramWithoutDescriptions(Long programId) {
-    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")) {
+    if (configurationService.getBoolValue("ALLOW_PRODUCT_CATEGORY_PER_PROGRAM")){
       return productMapper.getProductsForProgramPickCategoryFromProgramProductWDescriptions(programId);
     }
     return productMapper.getProductsForProgramWithoutDescriptions(programId);
   }
+
   public List<Product> getProgramProductsWithoutDescriptionsAndSyringes(Long programId) {
     return productMapper.getProgramProductsWithoutDescriptionsAndSyringes(programId);
   }
 
-  public AdjustmentType getAdjustmentByName(String name){
+  public AdjustmentType getAdjustmentByName(String name) {
     return adjustmentTypeReportMapper.getAdjustmentByName(name);
   }
 
-  public List<FacilityOperator> getAllFacilityOperators(){
+  public List<FacilityOperator> getAllFacilityOperators() {
     return facilityService.getAllOperators();
   }
 
   public List<FacilityType> getFacilityLevelsWithoutProgram(Long userId) {
 
-    List<org.openlmis.core.domain.Program> program =  programService.getAllIvdPrograms();
+    List<org.openlmis.core.domain.Program> program = programService.getAllIvdPrograms();
     List<org.openlmis.core.domain.Facility> facilities = facilityService.getUserSupervisedFacilities(userId, program.get(0).getId(), MANAGE_EQUIPMENT_INVENTORY);
     facilities.add(facilityService.getHomeFacility(userId));
     String facilityIds = StringHelper.getStringFromListIds(facilities);
@@ -776,8 +771,8 @@ public class ReportLookupService {
     return facilityTypeMapper.getLevelsWithoutProgram(program.get(0).getId(), facilityIds);
   }
 
-  public List<HashMap<String,Object>> getRejectedRnR(String status,Long program,Long period,String zone,Integer page){
-    return rejectionRnRReportMapper.getRnRRejected(status,program,period,zone,getPagination(page));
+  public List<HashMap<String, Object>> getRejectedRnR(String status, Long program, Long period, String zone, Integer page) {
+    return rejectionRnRReportMapper.getRnRRejected(status, program, period, zone, getPagination(page));
   }
 
   public Pagination getPagination(Integer page) {
@@ -785,4 +780,8 @@ public class ReportLookupService {
     return new Pagination(page, pageSize2);
   }
 
+  public List<HashMap<String, Object>> getUserDistrict(Long programId, Long userId) {
+
+    return geographicZoneMapper.getUserDistricts(programId, userId);
+  }
 }

@@ -48,6 +48,7 @@ public class    FacilityReport implements ResultRow {
     private Date startDate;
     private String province;
     private String userName;
+    private String groupName;
     public FacilityReport(String code,String facilityName,String facilityType,boolean active){
         this.code  = code;
         this.facilityName = facilityName;

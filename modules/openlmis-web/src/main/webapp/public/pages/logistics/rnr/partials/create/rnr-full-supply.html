@@ -317,12 +317,14 @@
 
         <span ng-switch-when="nextMonthPatient" class="position-relative">
             <input ng-required="true"
-                   ng-disabled="formDisabled || rnrLineItem.skipped"
+                   ng-disabled="formDisabled || rnrLineItem.skipped || (column.calculationOption == 'LOCK_FACILITY_OPEN_DISTRICT')"
                    id="{{getId(column.name, $parent)}}"
-                   type="number" name="nextMonthPatient{{rnrLineItem['id']}}"
+                   type="text" name="nextMonthPatient{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"
                    numeric-validator="positiveInteger" maxlength="8"
-                   ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"/>
+                   ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
+                   ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"
+                   class="small-width-ie"/>
             <span class="rnr-form-error" id="nextMonthPatient{{rnrLineItem['id']}}"
                   style="display:none;" openlmis-message="error.number.only">
           </span>

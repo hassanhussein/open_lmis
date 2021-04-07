@@ -84,8 +84,7 @@ public interface COVIDMapper {
     );
 
 
-    @Select("select product as product, a.enddate::DATE as last_update,  stockinhand as stockOnHand,\n" +
-            "quantityrequested as ordered\n" +
+    @Select("select product as product, a.enddate::DATE as last_update,  stockinhand as stockOnHand \n" +
             "from requisition_line_items rli\n" +
             "join ( select pp.id , pp.enddate, r.id as rnrid from  requisitions r \n" +
             "join programs p on p.id=r.programid\n" +
@@ -97,8 +96,7 @@ public interface COVIDMapper {
     List<HashMap<String,Object>> getCOVIDReportByFacility( @Param("facility") Long facility
     );
 
-    @Select("select product as product, MAX(r.periodid) as last_update,  SUM(stockinhand) as stockOnHand,\n" +
-            "            SUM(quantityrequested) as ordered\n" +
+    @Select("select product as product, (select enddate::DATE from processing_periods where id=MAX(r.periodid)) as last_update,  SUM(stockinhand) as stockOnHand \n" +
             "            from requisition_line_items rli\n" +
             "            join requisitions r on r.id=rli.rnrid\n" +
             "             where ROW(periodid,facilityid) IN (select MAX(periodid), facilityid \n" +

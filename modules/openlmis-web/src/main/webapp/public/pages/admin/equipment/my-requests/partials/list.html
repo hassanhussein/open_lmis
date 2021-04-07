@@ -14,7 +14,21 @@
 <div>
   <h2 openlmis-message="label.equipment.my.maintenance.request"></h2>
 
-  <p openlmis-message="label.equipment.my.maintenance.request.description"></p>
+
+  <div class="row-fluid">
+
+    <div class=" search-box-gap pull-right">
+
+    <span>
+     <input id="searchProduct" class="search-query pull-right" ng-change="filterLogs()" type="text"
+            ng-model="query" placeholder="equipment search"/>
+    </span>
+
+    </div>
+
+      <p openlmis-message="label.equipment.my.maintenance.request.description"></p>
+
+  </div>
 
   <div class="alert alert-success" ng-show="message">
     <span ng-bind="message"></span>
@@ -38,9 +52,9 @@
         <td>{{$index + 1}}</td>
         <td>{{row.facilityName}}</td>
         <td>{{row.equipmentName}}</td>
-        <td>{{row.requestedDateString}}</td>
+        <td>{{row.requestDate | date: 'dd-MM-yyyy'}}</td>
         <td>{{row.reason}}</td>
-        <td>{{row.recommendedDateString}}</td>
+        <td>{{row.recommendedDate | date: 'dd-MM-yyyy'}}</td>
         <th class="span1"><input type="button" class="btn btn-small" ng-click="respondToRequest(row)" value="Respond"/></th>
       </tr>
       <tr ng-show="list == undefined || list.length == 0">
@@ -54,13 +68,23 @@
        options="{'backdrop':'static', 'escape':false}">
     <div class="modal-header">
       <h3>
-        <span>Register Response</span>
+        <span>Service Report</span>
       </h3>
     </div>
 
     <div class="modal-body">
       <form name="maintenanceRequestResponseForm">
         <div>
+          <div class="row-fluid">
+            <div class="span6">
+              <label for="findingForCurrentValue"><span>Findings</span></label>
+            </div>
+            <div class="span4">
+              <textarea ng-required="true" type="text"
+                        name="findingForCurrentValue" id="findingForCurrentValue"
+                        ng-model="currentRequest.maintenanceDetails.finding"></textarea>
+            </div>
+          </div>
           <div class="row-fluid">
             <div class="span6">
               <label for="servicePerformedValue"><span>Service Performed</span></label>
@@ -71,16 +95,7 @@
                         ng-model="currentRequest.maintenanceDetails.servicePerformed"></textarea>
             </div>
           </div>
-          <div class="row-fluid">
-            <div class="span6">
-              <label for="findingForCurrentValue"><span>Finding</span></label>
-            </div>
-            <div class="span4">
-              <textarea ng-required="true" type="text"
-                        name="findingForCurrentValue" id="findingForCurrentValue"
-                        ng-model="currentRequest.maintenanceDetails.finding"></textarea>
-            </div>
-          </div>
+
           <div class="row-fluid">
             <div class="span6">
               <label for="responseCommentValue"><span>Comment</span></label>
@@ -101,8 +116,8 @@
                 id="nextVisitDateValue"
                 name="nextVisitDateValue"
                 ng-required="false"
-                type="date"
-                />
+                ui-date="{dateFormat: 'dd/mm/yy',minDate:'today',changeYear: true}" ui-date-format="yy-mm-dd"
+               />
             </div>
           </div>
         </div>
@@ -112,7 +127,7 @@
     </div>
 
     <div class="modal-footer">
-      <input type="button" class="btn btn-primary save-button" value="Update"
+      <input type="button" class="btn btn-primary save-button" value="Send email to requester"
              ng-click="saveResponse()"/>
       <input type="button"
              ng-click="closeModal();error=''"

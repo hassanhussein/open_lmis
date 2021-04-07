@@ -150,4 +150,9 @@ public class SupervisoryNodeRepository {
   }
 
 
+  public List<SupervisoryNode> getAllSupervisoryNodesInHierarchyByWithAllProgram(Long userId, String... rightNames) {
+    return supervisoryNodeMapper.getAllSupervisoryNodesInHierarchyByWithAllProgram(userId,
+            commaSeparateRightNames(rightNames));
+  }
+
 }

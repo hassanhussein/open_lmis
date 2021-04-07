@@ -82,6 +82,21 @@
                 </div>
               </span>
 
+              <span ng-switch-when="nextMonthPatient" class="position-relative">
+            <input ng-required="true"
+                   ng-disabled="rnr.status === 'IN_APPROVAL' || (patientCount > 0 && rnr.status != 'AUTHORIZED' && (column.calculationOption == 'LOCK_FACILITY_OPEN_DISTRICT'))"
+                   id="{{getId(column.name, $parent)}}"
+                   type="text" name="nextMonthPatient{{rnrLineItem['id']}}"
+                   ng-model="rnrLineItem[column.name]"
+                   numeric-validator="positiveInteger" maxlength="8"
+                   ng-change="rnr.fillConsumptionOrStockInHand(rnrLineItem)"
+                   ng-class="highlightRequired(showError, rnrLineItem[column.name], rnrLineItem.skipped)"
+                   class="small-width-ie"/>
+            <span class="rnr-form-error" id="nextMonthPatient{{rnrLineItem['id']}}"
+                  style="display:none;" openlmis-message="error.number.only">
+          </span>
+        </span>
+
               <span ng-switch-when="quantityApproved" class="position-relative">
                 <input ng-change='rnr.fillPacksToShip(rnrLineItem)' ng-required="true" type="text"
                        ng-model="rnrLineItem[column.name]" numeric-validator="positiveInteger" maxlength="8"
@@ -104,14 +119,14 @@
                 <input id="{{getId(column.name, $parent)}}" type="text"
                        name="reasonForRequestedQuantity{{rnrLineItem['id']}}"
                        ng-model="rnrLineItem[column.name]"
-                       ng-disabled="!(patientCount > 0 && rnr.status == 'IN_APPROVAL')"
+                       ng-disabled="rnrLineItem['skipped']  || (patientCount > 0 && rnr.status === 'AUTHORIZED')"
                        maxlength="250"/>
               </span>
 
               <span ng-switch-when="quantityReceived"
               ng-class="getCellErrorClass(rnrLineItem)" class="position-relative">
             <input ng-required="true"
-                   ng-disabled="!(patientCount > 0 && rnr.status == 'IN_APPROVAL')"
+                   ng-disabled="rnrLineItem['skipped'] || (patientCount > 0 && rnr.status === 'AUTHORIZED')"
                    id="{{getId(column.name, $parent)}}" type="text"
                    name="quantityReceived{{rnrLineItem['id']}}"
                    ng-model="rnrLineItem[column.name]"

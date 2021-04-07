@@ -132,4 +132,8 @@ public class ProgramRepository {
     public Program getMonthlyEnabledProgram(Long programId) {
        return mapper.getMonthlyEnabledProgram(programId);
     }
+
+  public List<Program> getAllActiveProgram() {
+    return mapper.getAllActiveProgram();
+  }
 }

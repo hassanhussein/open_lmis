@@ -32,6 +32,11 @@ function CreateServiceRequestController($scope, $location, $routeParams, Equipme
     $location.path('');
   };
 
+
+  $scope.enablePPM = function (current){
+     console.log(current);
+  };
+
   $scope.save = function () {
 
     if ($scope.requestForm.$valid) {

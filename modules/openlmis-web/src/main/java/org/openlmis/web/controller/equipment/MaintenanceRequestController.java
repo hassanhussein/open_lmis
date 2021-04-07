@@ -11,20 +11,25 @@
  */
 package org.openlmis.web.controller.equipment;
 
+import org.openlmis.core.exception.DataException;
+import org.openlmis.equipment.domain.EquipmentCategory;
+import org.openlmis.equipment.domain.MaintenanceLog;
 import org.openlmis.equipment.domain.MaintenanceRequest;
+import org.openlmis.equipment.dto.Log;
 import org.openlmis.equipment.service.MaintenanceRequestService;
 import org.openlmis.core.web.controller.BaseController;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.util.*;
+
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @Controller
 @RequestMapping(value="/equipment/maintenance-request/")
@@ -84,6 +89,29 @@ public class MaintenanceRequestController extends BaseController {
     ResponseEntity<OpenLmisResponse> response = OpenLmisResponse.success(messageService.message("message.maintenance.request.saved"));
     response.getBody().addData(LOG, maintenanceRequest);
     return response;
+  }
+
+
+  @RequestMapping(value = "/update-equipment-maintenance-status/{id}", method = RequestMethod.PUT)
+  public ResponseEntity updateApprovedStatus(@RequestBody @PathVariable("id") Long id) {
+
+    try {
+      service.updateApprovedStatus(id);
+    } catch (DuplicateKeyException ex) {
+      throw new DataException("Not updated");
+    }
+
+    return OpenLmisResponse.success("Approved succesifull");
+  }
+
+  @RequestMapping(value = "{id}/print-list", method = GET, headers = ACCEPT_PDF)
+  public ModelAndView mantainanceHistory(@PathVariable (value = "id") Long id, HttpServletRequest request) {
+    ModelAndView modelAndView = new ModelAndView("equipmentHistory");
+
+    List<Log> log = service.getFullHistory(id);
+    modelAndView.addObject("history",log);
+
+    return modelAndView;
   }
 
 }

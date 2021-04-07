@@ -9,7 +9,28 @@
   ~
   ~ You should have received a copy of the GNU Affero General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<style>
 
+    .some-class {
+      float: left;
+      clear: none;
+    }
+
+    label {
+      float: left;
+      clear: none;
+      display: block;
+      padding: 0px 1em 0px 8px;
+    }
+
+    input[type=radio],
+    input.radio {
+      float: left;
+      clear: none;
+      margin: 2px 0 0 2px;
+    }
+
+</style>
 <div>
   <h2 openlmis-message="label.equipment.maintenance.request.form"></h2>
 
@@ -20,6 +41,7 @@
   <form ng-submit="save()" name="requestForm" novalidate>
     <div>
       <div class="form-row clearfix">
+        <div class="span8">
         <label><span openlmis-message="label.equipment.maintenance.service.vendor"></span> <span class="label-required">*</span>
         </label>
 
@@ -30,6 +52,26 @@
           <span class="field-error" ng-show="requestForm.vendor.$error.required && showError"
                 openlmis-message="missing.value"></span>
         </div>
+
+
+
+        </div>
+
+        <div class="span4">
+
+          <div class="span4 form-field">
+
+              <div class="form-field">
+                <input ng-change="enablePPM(current)" type="radio" class="radio" ng-model="current.isSelected" name="checkPPM" ng-value="true" id="ppm" />
+                <label for="ppm">PPM</label>
+                <input ng-change="enablePPM(current)" type="radio" class="radio" ng-model="current.isSelected" name="checkPPM" ng-value="false" id="cm" />
+                <label for="cm">Corrective Maintenance</label>
+              </div>
+
+          </div>
+
+        </div>
+
       </div>
       <div class="form-row clearfix">
         <label><span openlmis-message="label.equipment.reason.for.requesting.maintenance"></span> <span
@@ -37,24 +79,47 @@
         </label>
 
         <div class="form-field">
-          <textarea style="width:100%" name="reason" ng-model="current.reason" ng-required="true"></textarea>
+          <textarea style="width:100%" name="reason" ng-model="current.reason" ng-required="true" ng-disabled="current.isSelected"></textarea>
           <span class="field-error" ng-show="requestForm.reason.$error.required && showError"
                 openlmis-message="missing.value"></span>
         </div>
       </div>
 
       <div class="form-row clearfix">
-        <label><span openlmis-message="label.equipment.recommended.maintenance.visit.date"></span><span
-          class="label-required">*</span>
-        </label>
+        <div class="span6">
+          <label><span openlmis-message="label.equipment.recommended.maintenance.visit.date"></span><span
+                  class="label-required">*</span>
+          </label>
 
-        <div class="form-field">
-          <input ng-required="true" ng-model="current.recommendedDate" name="recommendedDate" id="recommendedDate"
-                 ng-change="blurDateFields();" ui-date="{dateFormat: 'dd/mm/yy', changeYear: true}"
-                 ui-date-format="yy-dd-mm"/>
-          <span class="field-error" ng-show="requestForm.recommendedDate.$error.required && showError"
-                openlmis-message="missing.value"></span>
+          <div class="form-field">
+
+            <input ng-model="current.recommendedDate" name="recommendedDate" id="recommendedDate" type="text" ng-disabled="current.isSelected"
+                   ui-date="{dateFormat: 'dd/mm/yy',minDate:'today',changeYear: false}" ui-date-format="yy-mm-dd"
+                   readonly ng-change="blurDateFields()" ng-required="true"/>
+
+            <span class="field-error" ng-show="requestForm.recommendedDate.$error.required && showError"
+                  openlmis-message="missing.value"></span>
+          </div>
+
         </div>
+
+        <div class="span6">
+          <label><span>Equipment Breakdown Date </span><span
+                  class="label-required">*</span>
+          </label>
+
+          <div class="form-field">
+
+            <input ng-disabled="current.isSelected" ng-model="current.breakDownDate" name="breakDownDate" id="breakDownDate" type="text"
+                   ui-date="{dateFormat: 'dd/mm/yy',maxDate:'today',changeYear: true}" ui-date-format="yy-mm-dd"
+                   readonly ng-change="blurDateFields()" ng-required="true"/>
+
+            <span class="field-error" ng-show="requestForm.breakDownDate.$error.required && showError"
+                  openlmis-message="missing.value"></span>
+          </div>
+
+        </div>
+
       </div>
 
       <div class="form-row clearfix">

@@ -132,7 +132,7 @@ public class OrderCsvHelper {
 
   private void writeValue(Writer writer, Object columnValue) throws IOException {
     if (encloseValuesWithQuotes) {
-      writer.write("\"" + (columnValue).toString() + "\"");
+        writer.write("\"" + (columnValue).toString() + "\"");
     } else {
       writer.write((columnValue).toString());
     }

@@ -140,4 +140,11 @@ public class OrderRepository {
       return orderMapper.getByProductAndExpectedDate(code,trackingNumber);
   }
 
+  public Order getByOrderNumberWithRequisition( String orderNumber){
+      return orderMapper.getByOrderNumberWithRequisition(orderNumber);
+  }
+
+    public Order getLatestOrderByFacility(String soldTo) {
+     return orderMapper.getLatestOrderByFacility(soldTo);
+    }
 }

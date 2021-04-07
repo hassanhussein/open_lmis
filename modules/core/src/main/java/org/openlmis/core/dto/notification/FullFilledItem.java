@@ -7,6 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 
@@ -22,7 +26,7 @@ import org.openlmis.core.domain.BaseModel;
         "unitPrice",
         "amount"
 })
-public class FullFilledItem extends BaseModel {
+public class FullFilledItem extends NotificationLineItem {
 
     private Long notificationId;
 
@@ -45,4 +49,35 @@ public class FullFilledItem extends BaseModel {
     @JsonProperty("amount")
     public String amount;
 
+    public List<VisibleColumn> getColumns() {
+
+        List<VisibleColumn>  visibleColumns = new ArrayList<>();
+
+        visibleColumns.add(new VisibleColumn("itemCode","Item Code", true,40));
+        visibleColumns.add(new VisibleColumn("itemDescription","Item Description", true,40));
+        visibleColumns.add(new VisibleColumn("uom","uom", true,40));
+        visibleColumns.add(new VisibleColumn("quantity","Quantity", true,40));
+        visibleColumns.add(new VisibleColumn("batchSerialNo","Batch Serial No", true,40));
+        visibleColumns.add(new VisibleColumn("batchQuantity","Batch Quantity", true,40));
+        visibleColumns.add(new VisibleColumn("expiryDate","Expiry Date", true,40));
+        visibleColumns.add(new VisibleColumn("unitPrice","Unit Price", true,40));
+        visibleColumns.add(new VisibleColumn("amount","Amount", true,40));
+        return visibleColumns;
+    }
+
+    @Override
+    public String getValue(String columnName) throws NoSuchFieldException, IllegalAccessException {
+        return null;
+    }
+
+    public Object getValueFor(String fieldName) {
+        Object value = null;
+        try {
+            Field field = this.getClass().getDeclaredField(fieldName);
+            value = field.get(this);
+        } catch (Exception e) {
+            System.out.println(e.fillInStackTrace());
+        }
+        return value;
+    }
 }

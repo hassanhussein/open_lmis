@@ -154,4 +154,8 @@ public class ProgramSupportedService {
   public void updateForVirtualFacilities(Facility parentFacility) {
     repository.updateForVirtualFacilities(parentFacility);
   }
+
+  public List<Program> getAllActiveProgram() {
+    return programService.getAllActiveProgram();
+  }
 }

@@ -32,6 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.activation.DataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
@@ -108,9 +109,21 @@ public class EmailService {
       messageHelper.setSubject(oMessage.getSubject());
 
       List<EmailAttachment> emailAttachments = oMessage.getEmailAttachments();
+
       if (emailAttachments != null) {
+
         for (EmailAttachment attachment : emailAttachments) {
-          messageHelper.addAttachment(attachment.getAttachmentName(), attachment.getFileDataSource());
+          DataSource attachmentDataSource;
+
+          if(attachment.getAttachmentPath() == null) {
+
+           attachmentDataSource = new ByteArrayDataSource(attachment.getFileSource(), attachment.getAttachmentFileType());
+
+          } else {
+
+            attachmentDataSource = attachment.getFileDataSource();
+          }
+          messageHelper.addAttachment(attachment.getAttachmentName(), attachmentDataSource);
         }
       }
     } catch (MessagingException e) {

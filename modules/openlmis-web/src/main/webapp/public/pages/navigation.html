@@ -372,6 +372,10 @@
               <a href="/public/pages/admin/sms/index.html">Messages</a>
           </li>
 
+          <li ng-show="hasPermission('MANAGE_SETTING')">
+              <a href="/public/pages/admin/log/index.html">Logs</a>
+          </li>
+
           <li class="has-children">
             <a id="manage-option" href="javascript: void(0);" openlmis-message="link.admin.manage"></a>
 
@@ -610,13 +614,16 @@ vertical-align: top !important;">
 
       </li>
 
-      <li ng-show="hasPermission('VIEW_VIMS_NOTIFICATION')">
+
+      <li ng-show="hasPermission('VIEW_ZNZ_DASHBOARD')">
+          <a id="analytics-menu" href="/public/pages/analytics/index.html#/znzdashboard"
+              >Dashboard</a>
+      </li>
+
+      <li ng-show="hasPermission('VIEW_STOCK_OUT_NOTIFICATION_MENU')">
           <ng-include src="'/public/pages/notification.html'"></ng-include>
       </li>
-      <li ng-show="hasPermission('VIEW_COVID_19_DASHBOARD')">
-          <a id="analytics-menu" href="/public/pages/analytics/index.html#/emergency"
-             style="color:#FF0000" >COVID-19</a>
-      </li>
+
       <li>
           <a href="/public/pages/customer-support-desk/index.html#/main-desk" openlmis-message="link.support"></a>
       </li>

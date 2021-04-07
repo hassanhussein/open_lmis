@@ -141,6 +141,8 @@ public class RequisitionService {
   @Autowired
   private FacilityTypeService facilityTypeService;
 
+  @Autowired ProcessingPeriodService processingPeriodService;
+
   @Autowired
   public void setRequisitionSearchStrategyFactory(RequisitionSearchStrategyFactory requisitionSearchStrategyFactory) {
     this.requisitionSearchStrategyFactory = requisitionSearchStrategyFactory;
@@ -582,17 +584,21 @@ public class RequisitionService {
     }
 
     Long periodIdForLastRequisition = null;
+    Boolean enabledPeriod = null;
+
     if (lastRegularRequisition != null) {
       if (lastRegularRequisition.preAuthorize()) {
         throw new DataException("error.rnr.previous.not.filled");
       }
       periodIdForLastRequisition = lastRegularRequisition.getPeriod().getId();
+
+      enabledPeriod = processingPeriodService.getById(periodIdForLastRequisition).getEnableOrder();
     }
     //Original Settings
     List<ProcessingPeriod> periods;
 
     if(null != enabledProgram)
-      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition, enabledPeriod);
     else
       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facility.getId(), program.getId(), programStartDate, periodIdForLastRequisition);
 
@@ -619,9 +625,13 @@ public class RequisitionService {
 
     List<ProcessingPeriod> periods;
 
+    Boolean enabledPeriod = null;
+
+    if(periodIdOfLastRequisitionToEnterPostSubmitFlow != null)
+     enabledPeriod = processingPeriodService.getById(periodIdOfLastRequisitionToEnterPostSubmitFlow).getEnableOrder();
 
     if(null != program)
-      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
+      periods = processingScheduleService.getAllPeriodsAfterDateAndPeriodForMonthlyReporting(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow,enabledPeriod);
     else
       periods = processingScheduleService.getAllPeriodsAfterDateAndPeriod(facilityId, programId, programStartDate, periodIdOfLastRequisitionToEnterPostSubmitFlow);
 
@@ -867,12 +877,25 @@ public class RequisitionService {
   public void rejectRnR(Long rnrId, Long userId) {
     Rnr rnr = this.getFullRequisitionById(rnrId);
     rnr.setModifiedBy(userId);
+    RnrStatus rejectionStatus = rnr.getStatus();
     rnr.setStatus(RnrStatus.INITIATED);
     setApprovedNull(rnr);
     requisitionRepository.update(rnr);
     logStatusChangeAndNotify(rnr, false, RnrStatus.INITIATED.toString());
+    rnr.setStatus(rejectionStatus);
+    updateRejectionLevel(rnr);
   }
 
+  private void updateRejectionLevel(Rnr requisition) {
+    String level= "";
+    if(requisition.getStatus().equals(AUTHORIZED)) {
+      level = "REJECTED_LEVEL1";
+    } else if(requisition.getStatus().equals(IN_APPROVAL)){
+      level = "REJECTED_LEVEL2";
+    }
+    Long id = requisitionRepository.getLastUpdatedStatusId(requisition.getId());
+    requisitionRepository.updateStatusChangesLevel(level,id);
+  }
   private void setApprovedNull(Rnr rnr) {
     for (RnrLineItem lineItem : rnr.getFullSupplyLineItems()) {
       lineItem.setQuantityApproved(null);
@@ -935,6 +958,10 @@ public class RequisitionService {
 
   public List<SourceOfFundDTO>getAllSourcesOfFund(Long program){
     return requisitionRepository.getAllSourcesOfFund(program);
+  }
+
+  public List<OtherFundsDTO>getFundingSources(Long facilityId){
+    return requisitionRepository.getFundingSources(facilityId);
   }
 
   public void insertSourceOfFundLineItem(SourceOfFundLineItemDTO dto) {
@@ -1099,14 +1126,16 @@ public class RequisitionService {
 
   public Boolean saveBudgetFromMSDApi(Long facilityId,Long programId) {
 
-    RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
+   /* RequisitionSearchCriteria criteria = new RequisitionSearchCriteria();
     criteria.setFacilityId(facilityId);
     criteria.setProgramId(programId);
     criteria.setEmergency(false);
     List<ProcessingPeriod> processingPeriods  = getProcessingPeriods(criteria);
     if(!processingPeriods.isEmpty()) {
-      statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
-    }
+      if(!configurationSettingsService.getByKey("COUNTRY").getValue().equalsIgnoreCase("Zanzibar")) {
+        statementService.fetchBudgetData(facilityId, programId, processingPeriods.get(0).getId(), dateFormat.format(getLastSixMonthsFromCurrentDate()), dateFormat.format(new Date()));
+      }
+    }*/
     return true;
   }
 

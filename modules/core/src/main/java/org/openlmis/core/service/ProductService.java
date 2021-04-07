@@ -102,6 +102,10 @@ public class ProductService {
     return repository.getByCode(code);
   }
 
+  public Product getByAlternateItemCode(String alternateItemCode) {
+    return repository.getByAlternateItemCode(alternateItemCode);
+  }
+
   public boolean isActive(String code) {
     return repository.isActive(code);
   }

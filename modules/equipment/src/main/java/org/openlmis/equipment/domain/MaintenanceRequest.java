@@ -12,12 +12,15 @@
 
 package org.openlmis.equipment.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.core.serializer.DateDeserializer;
 
 import java.util.Date;
 
@@ -35,6 +38,8 @@ public class MaintenanceRequest extends BaseModel {
 
   private Date requestDate;
   private String reason;
+
+  @JsonDeserialize(using = DateDeserializer.class)
   private Date recommendedDate;
   private String comment;
 
@@ -47,6 +52,8 @@ public class MaintenanceRequest extends BaseModel {
   private MaintenanceLog maintenanceDetails;
   // end of hack
 
+  @JsonDeserialize(using = DateDeserializer.class)
+  private Date breakDownDate;
 
   public String getRequestedDateString() {
     return getFormattedDate(this.requestDate);
@@ -54,6 +61,9 @@ public class MaintenanceRequest extends BaseModel {
 
   public String getRecommendedDateString() {
     return getFormattedDate(this.recommendedDate);
+  }
+  public String getBreakDownDateDateString() {
+    return getFormattedDate(this.breakDownDate);
   }
 
 }

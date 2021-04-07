@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU Affero General Public License along with this program.  If not, see http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-function NavigationController($scope, ConfigSettingsByKey, localStorageService, Locales, $location, $window, CustomReportList, $timeout
+function NavigationController($scope,GetNotificationList, ConfigSettingsByKey, localStorageService, Locales, $location, $window, CustomReportList, $timeout
 
 ) {
 
@@ -91,5 +91,19 @@ $scope.homeLinkClicked=function(){
   }
   $timeout(hideEmptyReportCategory, 0);
 
+$scope.notificationList = [];
+
+GetNotificationList.get({program:0}, function (data) {
+
+ $scope.notificationList = data.notifications;
+
+}, {});
+
+
+$scope.openNotificationLink = function () {
+
+$window.location = '/public/pages/reports/notification/index.html#/home';
+
+};
 
 }

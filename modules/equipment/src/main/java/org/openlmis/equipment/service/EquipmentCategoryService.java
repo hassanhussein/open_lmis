@@ -4,6 +4,7 @@ package org.openlmis.equipment.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openlmis.equipment.domain.Discipline;
 import org.openlmis.equipment.domain.EquipmentCategory;
 import org.openlmis.equipment.domain.EquipmentFunctionalTestTypes;
 import org.openlmis.equipment.repository.EquipmentCategoryRepository;
@@ -42,5 +43,43 @@ public class EquipmentCategoryService {
 
     public EquipmentCategory getByCode(String code) {
         return repository.getByCategory(code);
+    }
+
+
+    public List<Discipline> getAllDisciplines() {
+
+        return repository.getAllDisciplines();
+    }
+
+    public Discipline getDisciplineByCode(Discipline discipline) {
+
+        if(discipline.getCode() != null) {
+            return repository.getDisciplineByCode(discipline.getCode());
+        } else
+            return null;
+    }
+
+    public void saveDiscipline(Discipline discipline) {
+
+        if(discipline.getId() == null) {
+
+            repository.insertDiscpline(discipline);
+
+        }else {
+            repository.UpdateDiscipline(discipline);
+        }
+    }
+
+    public void uploadEquipment(EquipmentCategory equipmentCategory) {
+
+        Discipline discipline = repository.getDisciplineByCode(equipmentCategory.getDiscipline().getCode());
+        if(discipline != null) {
+            equipmentCategory.setDisciplineId(discipline.getId());
+            if (equipmentCategory.getId() == null) {
+                insertEquipmentCategory(equipmentCategory);
+            } else {
+                updateEquipmentCategory(equipmentCategory);
+            }
+        }
     }
 }

@@ -518,7 +518,7 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
     // Stock Out Rate Graph
     $rootScope.loadStockOutRateTrendForTracer = function(params, gzLevel) {
 
-         params.year = new Date().getFullYear();
+        params.year = new Date().getFullYear();
 
         if (params.indicator == 'allTracerProducts' || !params.indicator) {
             GetStockOutRateTrendOfTracerProductsData.get(params).then(function(data) {
@@ -552,8 +552,8 @@ function StockOutRateController($scope, $http, $location, Program, Period, Produ
                 }
             },
             yAxis: {
-                minValue: 0,
-                maxValue: 100,
+                min: 0,
+                max: 100,
                 title: {
                     text: 'Stock Availability'
                 },

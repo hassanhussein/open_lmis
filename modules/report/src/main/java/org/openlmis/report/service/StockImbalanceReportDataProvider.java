@@ -15,7 +15,9 @@ package org.openlmis.report.service;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.session.RowBounds;
 import org.openlmis.core.domain.Pagination;
+import org.openlmis.core.domain.User;
 import org.openlmis.report.mapper.StockImbalanceReportMapper;
+import org.openlmis.report.mapper.UserPermissionMapper;
 import org.openlmis.report.model.ResultRow;
 import org.openlmis.report.model.params.StockImbalanceReportParam;
 import org.openlmis.report.model.report.StockImbalanceReport;
@@ -43,12 +45,23 @@ public class StockImbalanceReportDataProvider extends ReportDataProvider {
   @Autowired
   private ReportPaginationHelper paginationHelper;
 
+  @Autowired
+  private UserPermissionMapper userPermissionMapper;
+
   @Value("${report.status.considered.accepted}")
   private String configuredAcceptedRnrStatuses;
 
+  Boolean canViewNationalReport = false;
+
   @Override
   public List<? extends ResultRow> getReportBody(Map<String, String[]> filterCriteria, Map<String, String[]> sortCriteria, int page, int pageSize) {
-    return  reportMapper.getReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId());
+    List<User> userPermission = userPermissionMapper.getPermissionToViewNationalReport(this.getUserId());
+    if(userPermission.isEmpty()) {
+      canViewNationalReport = false;
+    } else {
+      canViewNationalReport = true;
+    }
+    return  reportMapper.getReport(getReportFilterData(filterCriteria), sortCriteria, paginationHelper.getPagination(page), this.getUserId(), canViewNationalReport);
   }
 
   public StockImbalanceReportParam getReportFilterData(Map<String, String[]> filterCriteria) {

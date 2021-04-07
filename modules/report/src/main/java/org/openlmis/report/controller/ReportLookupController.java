@@ -554,9 +554,11 @@ public class ReportLookupController extends BaseController {
   @RequestMapping(value = "/reportingDates/getTimelinessReportingDates", method = GET, headers = BaseController.ACCEPT_JSON)
   public ResponseEntity<OpenLmisResponse> getTimelinessReportingDates(
     @RequestParam("periodId") Long periodId,
+    @RequestParam("programId") Long programId,
     HttpServletRequest request
   ) {
-    return OpenLmisResponse.response(REPORTING_DATES, reportLookupService.getTimelinessReportingDates(periodId));
+    return OpenLmisResponse.response(REPORTING_DATES,
+            reportLookupService.getTimelinessReportingDates(periodId, programId));
   }
 
   @RequestMapping(value = "/rmnch-products.json", method = GET, headers = BaseController.ACCEPT_JSON)
@@ -663,6 +665,13 @@ public class ReportLookupController extends BaseController {
     Pagination pagination = this.reportLookupService.getPagination(page);
     response.getBody().addData("pagination", pagination);
     return response;
+  }
+
+  @RequestMapping(value = "/geographic-zones/user-district", method = GET, headers = ACCEPT_JSON)
+  public ResponseEntity<OpenLmisResponse> getUserDistrict(@RequestParam("program") Long program, HttpServletRequest request) {
+
+    return OpenLmisResponse.response(ZONE, reportLookupService.getUserDistrict(program,loggedInUserId(request)));
+
   }
 
 }

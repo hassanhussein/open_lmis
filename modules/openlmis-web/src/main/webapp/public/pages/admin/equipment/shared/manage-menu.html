@@ -22,6 +22,34 @@
                 <span id="programEquipmentProduct-list" openlmis-message="label.program.equipments" ></span>
             </a>
         </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageEnergyTypeSelected">
+            <a href="/public/pages/admin/equipment/equipment-energe-type/index.html">
+                <span id="energy-Type" openlmis-message="link.manage.energy.type"></span>
+            </a>
+        </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="lotSelected">
+            <a href="/public/pages/admin/equipment/lot/index.html">
+                <span id="lot" openlmis-message="link.manage.lot"></span>
+            </a>
+        </li>
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageModelSelected">
+            <a href="/public/pages/admin/equipment/model/index.html">
+                <span id="equipement_model" openlmis-message="link.manage.equipment.model" ></span>
+            </a>
+        </li>
+
+        <!--  <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="hfrSelected">
+              <a href="/public/pages/admin/equipment/hfr-facility/index.html">
+                  <span>Facility List</span>
+              </a>
+          </li>-->
+        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="equipmentCategorySelected">
+            <a href="/public/pages/admin/equipment/category/index.html">
+                <span id="equipment-category" openlmis-message="link.manage.equipment-category"></span>
+            </a>
+        </li>
+
+
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageEquipmentSelected">
             <a href="/public/pages/admin/equipment/manage/index.html">
                 <span id="equipment-list" openlmis-message="label.equipment.list" ></span>
@@ -60,32 +88,7 @@
                 <span id="cold-chain-resignation" openlmis-message="link.manage.equipment.resignation" ></span>
             </a>
         </li>
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageEnergyTypeSelected">
-            <a href="/public/pages/admin/equipment/equipment-energe-type/index.html">
-                <span id="energy-Type" openlmis-message="link.manage.energy.type"></span>
-            </a>
-        </li>
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="lotSelected">
-            <a href="/public/pages/admin/equipment/lot/index.html">
-                <span id="lot" openlmis-message="link.manage.lot"></span>
-            </a>
-        </li>
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="manageModelSelected">
-            <a href="/public/pages/admin/equipment/model/index.html">
-                <span id="equipement_model" openlmis-message="link.manage.equipment.model" ></span>
-            </a>
-        </li>
 
-      <!--  <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="hfrSelected">
-            <a href="/public/pages/admin/equipment/hfr-facility/index.html">
-                <span>Facility List</span>
-            </a>
-        </li>-->
-        <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="equipmentCategorySelected">
-            <a href="/public/pages/admin/equipment/category/index.html">
-                <span id="equipment-category" openlmis-message="link.manage.equipment-category"></span>
-            </a>
-        </li>
         <li ng-show="hasPermission('MANAGE_EQUIPMENT_SETTINGS')" ng-class="equipmentFunctionalTestTypeSelected">
             <a href="/public/pages/admin/equipment/functional-test-types/index.html">
                 <span id="equipment-functional-test-types" openlmis-message="link.manage.equipment-functional-test-types"></span>

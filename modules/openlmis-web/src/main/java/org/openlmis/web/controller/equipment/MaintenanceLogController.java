@@ -63,7 +63,7 @@ public class MaintenanceLogController extends BaseController {
   public ResponseEntity<OpenLmisResponse> save(@RequestBody MaintenanceRequest maintenanceRequest, HttpServletRequest request){
     maintenanceRequest.setModifiedBy(loggedInUserId(request));
     maintenanceRequest.setModifiedDate(new Date());
-    service.save(maintenanceRequest);
+    service.save(maintenanceRequest, loggedInUserId(request));
     return OpenLmisResponse.response(STATUS,"success");
   }
 

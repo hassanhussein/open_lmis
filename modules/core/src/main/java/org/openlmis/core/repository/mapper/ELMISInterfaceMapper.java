@@ -19,9 +19,11 @@ import org.openlmis.core.domain.ELMISInterface;
 import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.dto.*;
+import org.openlmis.core.dto.covid.productDTO;
 import org.openlmis.core.repository.ELMISInterfaceRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -65,6 +67,7 @@ public interface ELMISInterfaceMapper {
             "            modifiedby, modifieddate, createdby, createddate)" +
             "    VALUES (#{interfaceId}, #{dataSetname}, #{dataSetId}, " +
             "     #{modifiedBy}, COALESCE(#{modifiedDate}, CURRENT_TIMESTAMP), #{createdBy}, COALESCE(#{createdDate}, NOW()))")
+    @Options(useGeneratedKeys = true)
     Integer insertDataSet(ELMISInterfaceDataSet dataSet);
 
     @Delete("DELETE from interface_dataset where id = #{id}")
@@ -105,8 +108,17 @@ public interface ELMISInterfaceMapper {
     Integer updateFacilityMapping(ELMISInterfaceFacilityMapping mapping);
 
 
-    @Select("SELECT * FROM vw_bed_nets_data WHERE reporting_year >= 2017")
-    List<ELMISInterfaceDataSetDTO>getMosquitoNetData();
+    @Select("SELECT * FROM vw_bed_nets_data WHERE period::INT=#{period}::INT")
+    List<ELMISInterfaceDataSetDTO>getMosquitoNetData(@Param("period") Long period);
+
+    @Select("\n" +
+            "SELECT \n" +
+            "to_char(generate_series, 'YYYYMM')::int AS period\n" +
+            " from generate_series(\n" +
+            " ((SELECT value::INT from configuration_settings where key = 'LLIN_STARTING_REPORTING_YEAR' LIMIT 1) ||'-01-01')::date\n" +
+            ", now(), '1 month') order by period desc ")
+    List<ELMISInterfaceDataSetDTO>getReportedPeriodMosquitoNetData();
+
 
     @Select("REFRESH MATERIALIZED VIEW  vw_bed_nets_data")
     void refreshMaterializedView();
@@ -206,4 +218,30 @@ public interface ELMISInterfaceMapper {
 
     @Select("Refresh materialized view ${tableName}")
     void refreshViewsByName(@Param("tableName") String tableName);
+
+    @Select(" Select * from interface_logs ")
+    List<InterfaceLogDTO>getAllLogs();
+
+    @Insert(" INSERT INTO public.interface_logs (\n" +
+            "            details, isSent, fileName, statusCode, createdDate)\n" +
+            "    VALUES (#{details}, #{isSent}, #{fileName}, #{statusCode}, NOW());")
+    @Options(useGeneratedKeys = true)
+    public Integer insertLogs(InterfaceLogDTO interfaceLog);
+
+    @Select(" SELECT * FROM vw_bed_nets_data WHERE reporting_year >= (SELECT value::INT from configuration_settings where key = 'LLIN_STARTING_REPORTING_YEAR' LIMIT 1) and value > 0 ")
+    List<ELMISInterfaceDataSetDTO> getMosquitoNetDataBy();
+
+
+    @Select("\n" +
+            "select p.id, P.PRIMARYNAME as \"name\", P.CODE PRODUCT_CODE, P.PRIMARYNAME description, pc.name category,'COVID19' as \"program\"  from program_products pp \n" +
+            "\n" +
+            "JOIN products p on pp.productId = P.ID\n" +
+            "join product_categories pc ON pp.productCategoryID = pc.id\n" +
+            "JOIN programs pr ON pp.programId = PR.ID\n" +
+            "WHERE PROGRAMID = 12")
+    List<productDTO> getProductListForCovid();
+
+    @Select(" SELECT * FROM interface_dataset WHERE interfaceId=#{interfaceId} and dataSetname=#{dataSetname}")
+    ELMISInterfaceDataSet getElmisInterfaceProductCodeAndInterfaceId(@Param("interfaceId") Long interfaceId,
+                                                                     @Param("dataSetname") String dataSetname);
 }

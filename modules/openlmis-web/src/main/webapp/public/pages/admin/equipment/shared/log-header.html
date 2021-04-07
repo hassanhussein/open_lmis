@@ -32,6 +32,12 @@
         <label><span openlmis-message="label.equipment.serial"></span>: <strong>{{inventory.serialNumber}}</strong>
         </label>
       </div>
+      <span class="pull-right print-button" style="background-color:#4897BA !important;">
+    <a id="printButton" style="background-color:#4897BA !important;"
+       class="btn btn-primary"
+       openlmis-message="button.print" ng-click="print(inventory)"
+       target="_blank"></a>
+         </span>
     </div>
     <div class="clearfix"></div>
   </div>

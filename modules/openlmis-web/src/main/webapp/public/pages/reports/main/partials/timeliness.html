@@ -132,6 +132,9 @@
                                 <td data-title="'Unscheduled Reporters'" class="number" style="width:8%;!important;"
                                     sortable="unscheduled">{{ row.unscheduled | number }}
                                 </td>
+                                <td data-title="'Not Reported'" class="number" style="width:8%;!important;"
+                                    sortable="unscheduled">{{ row.expected - (row.reportedOnTime + row.reportedLate) | number }}
+                                </td>
                                 <td data-title="'Non Reporting'" class="number" style="width:10%;!important;"
                                     sortable="unscheduled">
                                     <a ng-href="/public/pages/reports/main/index.html#/non-reporting?schedule={{filter.schedule}}&zone={{row.zoneId}}&year={{filter.year}}&period={{filter.period}}&program={{filter.program}}"
@@ -143,7 +146,7 @@
                                     <div class="number" style="float:right;!important;">{{((row.reportedOnTime /
                                         row.expected) *100).toFixed(0)}} %
                                     </div>
-                                    <div ng-show="(row.reportedOnTime + row.reportedLate) !=0" class="progress"
+                                    <div ng-show="(row.reportedOnTime + row.reportedLate ) !=0" class="progress"
                                          style="margin-bottom:0px;width:90%">
 
                                         <div class="bar bar-success leaflet-clickable"
@@ -154,7 +157,7 @@
                                         <div class="bar bar-danger leaflet-clickable"
                                              ng-click="getTimelinessLateReported(row, this);"
                                              style="width: {{(100-((row.reportedOnTime / row.expected) * 100).toFixed(2))}}%">
-                                            {{row.reportedLate}}
+                                            {{row.reportedLate + (row.expected - (row.reportedOnTime + row.reportedLate))}}
                                         </div>
 
                                     </div>

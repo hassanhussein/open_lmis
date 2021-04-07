@@ -11,13 +11,16 @@
 //  Description:
 //  Comment box behavior on the R&R screen
 
-app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,RequisitionFacilitySourceOfFund,$timeout) {
+app.directive('displayCost', function ($interval,$rootScope,$q,RequisitionFacilitySourceOfFund,$timeout,FundsSource) {
   return {
     scope: {
       show: '=',
       fullSupplyCost: '=',
       nonFullSupplyCost: '=',
-      facilitySourceOfFund: '='
+      facilitySourceOfFund: '=',
+      allocatedBudget: '=',
+      totalRnrCost: '=',
+      totalSupplementalFund : '='
     },
     link:function (scope,rootScope) {
 
@@ -28,20 +31,25 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
       scope.$parent.$parent.$parent.rnr.allowSubmissionIfNoSourceOfFundDefined = false;
       }
 
+   scope.checkAmount = function(e,amt, selectedOption) {
+      if(amt>selectedOption.amount){ //assuming maxAmount is 10
+          scope.sourceOfFund.quantity = selectedOption.amount;
+          e.preventDefault();
+        }
+    };
     scope.sourceOfFundList = [{name:'User Fees', code:'UF', total:500000,quantity:0}, {name:'RBF Fees', code:'rbf',total:2000, quantity:0}];
 
-
-     scope.loadOtherSource = function(){
+    scope.loadOtherSource = function(){
 
                  var deferred = $q.defer();
                    var parameter = {
 
-                        'program':scope.$parent.$parent.$parent.rnr.program.id
+                        'facility':scope.$parent.$parent.$parent.rnr.facility.id
 
                         };
 
-                   FundingSource.get(parameter, function (data) {
-                   console.log(data);
+
+                   FundsSource.get(parameter, function (data) {
 
                             scope.fundingSources = data.sources;
 
@@ -58,8 +66,9 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
      };
 
 
-       $rootScope.$on('loadSourceOfFunds', function (event,data) {
+    $rootScope.$on('loadSourceOfFunds', function (event,data) {
            var loadOther = scope.loadOtherSource();
+           console.log(loadOther);
 
            var openPopupMenu = scope.$parent.$parent.$parent.rnr.openPopupMenu;
 
@@ -82,8 +91,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
       });
 
 
-    scope.showFacilitySourceOfFund = function(source)
-    {
+    scope.showFacilitySourceOfFund = function(source){
 
         scope.oldAdjustmentReason = angular.copy(source.sourceOfFunds);
 
@@ -92,6 +100,8 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
         scope.sourceOfFund.sourceOfFunds=((source.sourceOfFunds === undefined)?[]:source.sourceOfFunds);
         //Remove reason already exist from drop down
          scope.reEvaluateTotalSourceOfFund();
+
+
          updateFundingSource(source.sourceOfFunds);
 
 
@@ -158,9 +168,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
 
           };
 
-     scope.removeSourceOfFund = function(fundingSource)
-
-       {
+     scope.removeSourceOfFund = function(fundingSource){
 
            scope.sourceOfFund.sourceOfFunds =  $.grep(scope.sourceOfFund.sourceOfFunds, function (reasonObj) {
                    return (fundingSource !== reasonObj);
@@ -172,8 +180,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
       };
 
 
-   function reEvaluateTotalSourceOfFund()
-        {
+   function reEvaluateTotalSourceOfFund(){
             var totalAdjustments = 0;
             scope.totalSources = 0;
 
@@ -186,8 +193,7 @@ app.directive('displayCost', function (FundingSource,$interval,$rootScope,$q,Req
 
      scope.reEvaluateTotalSourceOfFund = function() {reEvaluateTotalSourceOfFund();};
 
-    function updateFundingSource(funds)
-        {
+    function updateFundingSource(funds){
             var adjustmentReasonsForLot =  _.pluck(funds, 'name');
 
              scope.fundsToDisplay = $.grep(scope.fundingSources, function (adjustmentTypeObject) {

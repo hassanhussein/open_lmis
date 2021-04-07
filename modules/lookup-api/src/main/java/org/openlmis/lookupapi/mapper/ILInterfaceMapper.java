@@ -1,9 +1,11 @@
 package org.openlmis.lookupapi.mapper;
 
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.session.RowBounds;
 import org.openlmis.lookupapi.model.FacilityMsdCodeDTO;
 import org.openlmis.lookupapi.model.HealthFacilityDTO;
 import org.openlmis.lookupapi.model.MSDStockDTO;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -19,7 +21,7 @@ public interface ILInterfaceMapper {
             "            postorupdate, region, registrationstatus, updatedat, villagemtaa, \n" +
             "            ward, zone, districtCode, councilCode,facilityTypeGroupCode,ownershipCode)\n" +
             "    VALUES ( #{commFacName}, #{council}, #{createdAt}, #{district}, #{facIDNumber}, #{facilityType}, \n" +
-            "            #{facilityTypeGroup},CAST(#{latitude} as double precision), CAST(#{longitude} as double precision), #{name}, #{oSchangeClosedtoOperational}, \n" +
+            "            #{facilityTypeGroup},#{latitude}, #{longitude}, #{name}, #{oSchangeClosedtoOperational}, \n" +
             "            #{oSchangeOpenedtoClose}, #{operatingStatus}, #{ownership}, #{ownershipGroup}, \n" +
             "            #{postorUpdate}, #{region}, #{registrationStatus}, #{updatedAt}, #{villageMtaa}, \n" +
             "            #{ward}, #{zone}, #{districtCode}, #{councilCode}, #{facilityTypeGroupCode}, #{ownershipCode}); ")
@@ -28,7 +30,7 @@ public interface ILInterfaceMapper {
 
     @Update("UPDATE public.hfr_facilities\n" +
             "   SET  commfacname=#{commFacName}, council=#{council}, createdat=#{createdAt}, district=#{district}, \n" +
-            "       facilitytype=#{facilityType}, facilitytypegroup= #{facilityTypeGroup}, latitude=CAST(#{latitude} as double precision), longitude=CAST(#{longitude} AS double precision), \n" +
+            "       facilitytype=#{facilityType}, facilitytypegroup= #{facilityTypeGroup}, latitude=#{latitude}, longitude=#{longitude}, \n" +
             "       name=#{name}, oschangeclosedtooperational=#{oSchangeClosedtoOperational}, oschangeopenedtoclose=#{oSchangeOpenedtoClose}, \n" +
             "       operatingstatus=#{operatingStatus}, ownership=#{ownership}, ownershipgroup=#{ownershipGroup}, postorupdate=#{postorUpdate}, \n" +
             "       region=#{region}, registrationstatus= #{registrationStatus}, updatedat=#{updatedAt}, villagemtaa=#{villageMtaa}, ward=#{ward}, \n" +
@@ -46,14 +48,16 @@ public interface ILInterfaceMapper {
     HealthFacilityDTO getByFacilityCode(@Param("facIDNumber") String facIDNumber);
 
     @Select("select * from hfr_facilities")
-    List<HashMap<String,Object>>getAllHFRFacilities();
+    List<HashMap<String,Object>>getAllHFRFacilities(@Param("RowBounds") RowBounds rowBounds);
 
+    @Select("select * from hfr_facilities")
+    List<HashMap<String,Object>>getHFRFacilities();
 
     @Insert(" INSERT INTO public.msd_stock_statuses(\n" +
-            "             ilId, facilityId, productId, onHandDate, onHandQuantity, \n" +
-            "            mos, createdDate, createdBy)\n" +
-            "    VALUES ( #{ilID}, #{facilityId}, #{productId}, #{onHandDate}, #{onHandQuantity}, \n" +
-            "            #{mos}, #{createdDate}, #{createdBy}) ")
+            "              facilityId, productId, onHandDate, onHandQuantity, \n" +
+            "            partDescription,mos, createdDate, createdBy)\n" +
+            "    VALUES ( #{facilityId}, #{productId}, #{onHandDate}, #{onHandQuantity}, \n" +
+            "           #{partDescription}, #{mos}, NOW(), #{createdBy}) ")
     @Options(useGeneratedKeys = true)
     Integer insertMsdStock(MSDStockDTO dto);
 
@@ -71,4 +75,131 @@ public interface ILInterfaceMapper {
 
     @Update("update hfr_facilities SET activatedByMsd = true, msdCode = #{msdCode}, activatedDate = #{activatedDate} WHERE facIdNumber = #{facIdNumber}\n")
     void activateByMSDFacilityCode(FacilityMsdCodeDTO msd);
+
+    @Select("select o.ordernumber as \"order_id\", p.code as \"product_code\", f.hfrcode as \"order_from_facility_id\",  \n" +
+            "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"order_type\" , \n" +
+            " CASE WHEN QuantityApproved IS NULL THEN 0 ELSE QuantityApproved END as \"ordered_quantity\", " +
+            " CASE WHEN quantityReceived IS NULL THEN 0 ELSE quantityReceived END as \"delivered_quantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"order_date\",\n" +
+            "\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivery_promise_date\",\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"delivered_date\",\n" +
+            "'189790-1'::text as \"delivery_from_facility_id\",\n" +
+            "r.status as \"order_status\",\n" +
+            "30 as target_days\n" +
+            "from requisitions r\n" +
+            "\n" +
+            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
+            "JOIN orders o ON r.id = o.id\n" +
+            "JOIN products p ON i.productcode = p.code\n" +
+            "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN facilities f ON r.facilityId = F.ID" +
+            " JOIN processing_periods per ON r.periodId = per.id" +
+            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL" +
+            " and per.startDate>= #{startDate}::DATE AND r.programId = 1 AND quantityApproved > 0  " +
+            " ORDER BY R.ID DESC "
+    )
+    List<HashMap<String, Object>> getOrderDelivery(@Param("startDate") String startDate, @Param("RowBounds") RowBounds rowBounds);
+
+    @Select(" SELECT COUNT(*) from requisitions r\n" +
+            "\n" +
+            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
+            "JOIN orders o ON r.id = o.id\n" +
+            "JOIN products p ON i.productcode = p.code\n" +
+            "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN facilities f ON r.facilityId = F.ID" +
+            " JOIN processing_periods per ON r.periodId = per.id" +
+            " WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL" +
+            " and per.startDate>= #{startDate}::DATE AND r.programId = 1 AND quantityApproved > 0  "
+    )
+    Integer getTotalOrderDelivery(@Param("startDate") String startDate);
+
+/*    @Select(
+           // " and per.startDate>= #{startDate}::DATE and per.endDate <=#{endDate}::DATE" +
+            "  select p.code as product_code, f.hfrcode as facility_id,  to_char(r.modifieddate, 'yyyy-MM-dd') as date,\n" +
+                    "            Case when (stockinhand is null) THEN 0 else stockinhand END  as available_quantity, \n" +
+                    "\t    Case when (quantityReceived is null) THEN 0 else quantityReceived END as stock_quantity, \n" +
+                    "            case when amc > 0 then coalesce(stockinhand/ amc,0) else 0 end as stock_of_month\n" +
+                    "            from requisitions r\n" +
+                    "            JOIN requisition_line_items i On r.id = i.rnrid\n" +
+                    "            JOIN orders o ON r.id = o.id\n" +
+                    "            JOIN products p ON i.productcode = p.code\n" +
+                    "            JOIN program_products pp On pp.productid = p.id\n" +
+                    "             JOIN processing_periods per ON r.periodiD = per.id\n" +
+                    "            JOIN facilities f ON r.facilityId = F.ID\n" +
+                    "              WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL AND per.startDate >= #{startDate}::date AND r.programId = 1 \n" +
+                    "             ORDER BY R.ID DESC  "
+            )*/
+    @Select("select * from covid_emergency_commodities ")
+    List<HashMap<String, Object>> getEmergencyCommodites(@Param("startDate") String startDate, @Param("RowBounds") RowBounds rowBounds);
+
+    //THSCP
+
+    @Select(" select pr.code as \"programCode\",  p.code as \"productCode\", f.code as \"facility_id\",  to_char(r.modifieddate, 'yyyy-MM-dd') as \"period\",\n" +
+            "stockinhand as \"availableQuantity\", quantityReceived as \"stockQuantity\", case when amc > 0 then stockinhand/ amc else 0 end as \"stockOfMonth\"\n" +
+            "from requisitions r\n" +
+            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
+            "JOIN orders o ON r.id = o.id\n" +
+            "JOIN products p ON i.productcode = p.code\n" +
+            "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN programs pr ON pp.programId = pr.id" +
+            " JOIN facilities f ON r.facilityId = F.ID" +
+            " where f.code is not null \n"
+            )
+    List<HashMap<String, Object>> getThScpEmergencyCommodites();
+
+
+    @Select("select" +
+            " pr.code as \"programCode\", o.ordernumber as \"orderId\", p.code as \"productCode\", F.CODE as \"orderFromFacilityId\",  \n" +
+            "case when (r.emergency = false) then 'Emergency' else 'Regular' end as \"orderType\" , \n" +
+            "QuantityApproved as \"orderedQuantity\", quantityReceived as \"deliveredQuantity\", to_char(r.createdDate, 'yyyy-MM-dd') as \"orderDate\",\n" +
+            "\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"deliveryPromiseDate\",\n" +
+            "to_char(r.modifieddate, 'yyyy-MM-dd') as \"deliveryDate\",\n" +
+            " '189790-1'::text as \"deliveryFromFacilityId\",\n" +
+            "r.status as \"orderStatus\",\n" +
+            "30 as targetDays\n" +
+            "from requisitions r\n" +
+            "\n" +
+            "JOIN requisition_line_items i On r.id = i.rnrid\n" +
+            "JOIN orders o ON r.id = o.id\n" +
+            "JOIN products p ON i.productcode = p.code\n" +
+            "JOIN program_products pp On pp.productid = p.id" +
+            " JOIN programs pr ON pp.programID = pr.id" +
+            " JOIN facilities f ON r.facilityId = F.ID" +
+            " WHERE f.code NOT IN('.','-') AND f.code IS NOT NULL "
+    )
+    List<HashMap<String, Object>> getThScpOrderDelivery();
+
+    @Select("SELECT * FROM PROGRAMS where active = true")
+    List<HashMap<String, Object>> getThScpPrograms(@Param("RowBounds") RowBounds rowBounds);
+
+    @Select("SELECT count(*) FROM PROGRAMS where active = true")
+    Integer getTotalThScpPrograms();
+
+    @Select(" SELECT COUNT(*) "+
+            " FROM program_products pP\n" +
+            "\n" +
+            "JOIN products p ON p.id = pp.productId \n" +
+            "join programs pr ON pr.id = pp.programId and pr.id =1\n" +
+            "join product_categories pc ON pp.productcategoryid = pc.id\n" +
+            "")
+    Integer getTotalProducts();
+
+    @Select(
+                    "        SELECT COUNT(*) from requisitions r\n" +
+                    "            JOIN requisition_line_items i On r.id = i.rnrid\n" +
+                    "            JOIN orders o ON r.id = o.id\n" +
+                    "            JOIN products p ON i.productcode = p.code\n" +
+                    "            JOIN program_products pp On pp.productid = p.id\n" +
+                    "             JOIN processing_periods per ON r.periodiD = per.id\n" +
+                    "            JOIN facilities f ON r.facilityId = F.ID\n" +
+                    "              WHERE f.hfrcode NOT IN('.','-') AND f.hfrcode IS NOT NULL AND per.startDate >= #{startDate}::date AND r.programId = 1 \n"
+    )
+    Integer getTotalEmergencyCommodites(@Param("startDate") String startDate);
+
+    @Select("select count(*) from hfr_facilities")
+    Integer getTotalHfrFacilities();
+
+    @Delete("DELETE FROM msd_stock_statuses WHERE facilityId = #{facilityId}")
+    void deleteByPlant(@Param("facilityId") Long facilityId);
 }

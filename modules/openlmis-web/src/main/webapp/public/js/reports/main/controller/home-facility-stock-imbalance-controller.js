@@ -15,11 +15,6 @@ function HomeFacilityStockImbalanceController($scope, $window, $routeParams, Sto
     $scope.facilityName;
     $scope.facilityCode;
     $scope.requisitionGroup;
-    $scope.filter = {};
-
-        $scope.currentPage = 1;
-        $scope.pageSize = 10;
-        $scope.page = 1;
 
     if (!$routeParams.dashboardView) {
         (function init() {
@@ -44,12 +39,12 @@ function HomeFacilityStockImbalanceController($scope, $window, $routeParams, Sto
         });
     }
 
-            $scope.exportReport   = function (type){
-                $scope.filter.pdformat = 1;
-                var params = jQuery.param($scope.getSanitizedParameter());
-                var url = '/reports/download/home_facility_stock_imbalance/' + type + '?' + params;
-                $window.open(url, '_blank');
-            };
+    $scope.exportReport = function(type) {
+        $scope.filter.pdformat = 1;
+        var params = jQuery.param($scope.getSanitizedParameter());
+        var url = '/reports/download/home_facility_stock_imbalance/' + type + '?' + params;
+        $window.open(url, '_blank');
+    };
 
 
     $scope.allPrinting = function(params) {
@@ -113,6 +108,7 @@ function HomeFacilityStockImbalanceController($scope, $window, $routeParams, Sto
         $scope.onCheckboxChanged();
     };
 
+    $scope.allStatus;
     $scope.onCheckboxChanged = function() {
         var status = 'NS';
         _.keys($scope.statuses).forEach(function(key) {
@@ -123,13 +119,7 @@ function HomeFacilityStockImbalanceController($scope, $window, $routeParams, Sto
                 $scope.all = false;
             }
         });
-        if ($scope.filter === undefined) {
-            $scope.filter = {
-                status: status
-            };
-        } else {
-            $scope.filter.status = status;
-        }
+        $scope.allStatus = status;
         $scope.applyUrl();
         $scope.OnFilterChanged();
     };
@@ -141,30 +131,21 @@ function HomeFacilityStockImbalanceController($scope, $window, $routeParams, Sto
     $scope.OnFilterChanged = function() {
         //clear old data if there was any
         $scope.data = $scope.datarows = [];
-        $scope.filter.max = 10000;
-        $scope.filter.limit = $scope.pageSize;
-        $scope.filter.page = $scope.page;
 
-        //variable to manage counts on pagination
-        $scope.countFactor = $scope.pageSize * ($scope.page - 1);
-
-
-        if ($scope.filter.status === undefined && !$routeParams.dashboardView) {
+        if ($scope.allStatus === undefined && !$routeParams.dashboardView) {
             //By Default, show stocked out
-            $scope.statuses = {
-                'SO': true
-            };
-            $scope.filter.status = 'SO';
+            $scope.allStatus = 'SO';
             $scope.applyUrl();
         }
 
+        $scope.facilityName = $scope.getSanitizedParameter().facilityName;
+        $scope.facilityCode = $scope.getSanitizedParameter().facilityCode;
+        $scope.requisitionGroup = $scope.getSanitizedParameter().requisitionGroup;
 
-            $scope.facilityName = $scope.filter.facilityName;
-            $scope.facilityCode = $scope.filter.facilityCode;
-            $scope.requisitionGroup = $scope.filter.requisitionGroup;
+        $scope.params = $scope.getSanitizedParameter();
+        $scope.params.status = $scope.allStatus;
 
-            var allParams = angular.extend($scope.filter, $scope.getSanitizedParameter());
-        StockImbalanceHomeFacilityReport.get(allParams, function(data) {
+        StockImbalanceHomeFacilityReport.get($scope.params, function(data) {
             if (data.openLmisResponse !== undefined && data.openLmisResponse.rows !== undefined) {
 
                 $scope.pagination = data.openLmisResponse.pagination;

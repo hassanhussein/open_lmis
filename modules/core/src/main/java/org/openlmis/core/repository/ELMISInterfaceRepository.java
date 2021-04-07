@@ -19,6 +19,7 @@ import org.openlmis.core.domain.ELMISInterfaceDataSet;
 import org.openlmis.core.domain.ELMISInterfaceFacilityMapping;
 import org.openlmis.core.domain.Facility;
 import org.openlmis.core.dto.*;
+import org.openlmis.core.dto.covid.productDTO;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.repository.mapper.ELMISInterfaceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Repository
@@ -158,8 +160,12 @@ public class ELMISInterfaceRepository {
         }
     }
 
-    public List<ELMISInterfaceDataSetDTO> getMosquitoNetData(){
-        return mapper.getMosquitoNetData();
+    public List<ELMISInterfaceDataSetDTO> getMosquitoNetData(Long period){
+        return mapper.getMosquitoNetData(period);
+    }
+
+   public List<ELMISInterfaceDataSetDTO> getReportedPeriodMosquitoNetData(){
+        return mapper.getReportedPeriodMosquitoNetData();
     }
 
 
@@ -197,5 +203,33 @@ public class ELMISInterfaceRepository {
 
     public void refreshViewsByName(String tableName) {
         mapper.refreshViewsByName(tableName);
+    }
+
+    public List<InterfaceLogDTO> getAllLogs() {
+       return mapper.getAllLogs();
+    }
+
+    public Integer insertLogs(InterfaceLogDTO dto){
+       return mapper.insertLogs(dto);
+    }
+
+    public List<ELMISInterfaceDataSetDTO> getMosquitoNetDataBy() {
+        return mapper.getMosquitoNetDataBy();
+    }
+
+    public List<productDTO> getProductListForCovid() {
+        return mapper.getProductListForCovid();
+    }
+
+    public ELMISInterfaceDataSet getElmisInterfaceProductCodeAndInterfaceId(Long interfaceId, String dataSetname) {
+         return mapper.getElmisInterfaceProductCodeAndInterfaceId(interfaceId,dataSetname);
+    }
+
+    public void updateDataSet(ELMISInterfaceDataSet elmisInterfaceDataSet){
+        mapper.updateDataSet(elmisInterfaceDataSet);
+    }
+
+    public Integer insertDataSet(ELMISInterfaceDataSet elmisInterfaceDataSet) {
+       return mapper.insertDataSet(elmisInterfaceDataSet);
     }
 }

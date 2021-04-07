@@ -68,7 +68,8 @@
     </span>
 
         <display-cost ng-show="showFundingSource" show="showCost" full-supply-cost="rnr.fullSupplyItemsSubmittedCost"
-                      non-full-supply-cost="rnr.nonFullSupplyItemsSubmittedCost"></display-cost>
+                      non-full-supply-cost="rnr.nonFullSupplyItemsSubmittedCost" allocated-budget="rnr.allocatedBudget"
+                      total-rnr-cost="rnr.calculateTotalLineItemCost()" total-supplemental-fund="rnr.totalSources"></display-cost>
 
    </div>
 </div>

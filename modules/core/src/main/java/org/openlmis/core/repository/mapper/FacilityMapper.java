@@ -328,6 +328,8 @@ public interface FacilityMapper {
             " JOIN FACILITIES F ON S.facilityId = F.id ")
     Facility getParentFacility(@Param("facilityId")Long facilityId);
 
+
+
   public class SelectFacilities {
     @SuppressWarnings(value = "unused")
     public static String getFacilitiesCountBy(Map<String, Object> params) {
@@ -632,5 +634,74 @@ Integer insertHfrMapping(HfrMappingDTO dto);
 
   @Update(" update facilities set latitude = #{latitude}, longitude = #{longitude} where code = #{code} ")
   void updateFacilityByCode(FacilityDTO dto);
+
+
+  @Select("\n" +
+          "\n" +
+          "(SELECT  DISTINCT userid as userId, username,firstName ||' '|| lastName as name, email as contact   \n" +
+          "                           FROM facilities f  \n" +
+          "                           JOIN requisition_group_members m ON m.facilityId = f.Id   \n" +
+          "                           JOIN requisition_groups rg ON rg.id = m.requisitionGroupId  \n" +
+          "                           JOIN supervisory_nodes sn ON sn.id = rg.supervisoryNodeId  \n" +
+          "                           JOIN role_assignments ra ON ra.supervisoryNodeId = sn.id  \n" +
+          "                           JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
+          "                           JOIN users  on users.id = ra.userId AND users.active = true  \n" +
+          "                           and restrictlogin= false \n" +
+          "                           WHERE f.Id = #{facilityId}  and ra.programId =#{programId} and rr.rightName in ('VIEW_OUT_OF_STOCK_NOTIFICATION') \n" +
+          "                           and users.email is not null\n" +
+          "                           ORDER BY username)\n" +
+          "UNION \n" +
+          "(SELECT  DISTINCT u.id as userId, username,firstName ||' '|| lastName as name, email as contact   FROM\n" +
+          "\n" +
+          "(select * from vw_user_facilities where facility_id =#{facilityId}  and program_id=#{programId} and\n" +
+          " user_id in ( SELECT DISTINCT ra.userId FROM  \n" +
+          "          supervisory_nodes s \n" +
+          "           INNER JOIN role_assignments ra ON s.id = ra.supervisoryNodeId  \n" +
+          "          INNER JOIN role_rights rr ON ra.roleId = rr.roleId  \n" +
+          "           WHERE rr.rightName in ('VIEW_OUT_OF_STOCK_NOTIFICATION')  \n" +
+          "           AND ra.programId =#{programId}))X\n" +
+          "           JOIN USERS U ON x.user_id = U.id and u.email is not null)\n" +
+          "\n" +
+          "\n" +
+          "\n")
+
+  List<FacilitySupervisor> getSupervisorFacilityIncludingHomeFacility(@Param("facilityId") Long facilityId, @Param("programId") Long programId);
+/*
+  @Select("\n" +
+          "                            SELECT DISTINCT Users.ID  as userId, rr.rightname, username,firstName ||' '|| lastName as name, email as contact   \n" +
+          "                           FROM facilities f  \n" +
+          "                           JOIN requisition_group_members m ON m.facilityId = f.Id   \n" +
+          "                           JOIN USERS ON F.ID = USERS.facilityID AND users.active = true  and restrictlogin= false\n" +
+          "                           JOIN requisition_groups rg ON rg.id = m.requisitionGroupId  \n" +
+          "                           JOIN supervisory_nodes sn ON sn.id = rg.supervisoryNodeId  \n" +
+          "                           JOIN role_assignments ra ON ra.supervisoryNodeId = sn.id  AND RA.USERID = users.id\n" +
+          "                           INNER JOIN role_rights rr ON ra.roleId = rr.roleId \n" +
+          "                           WHERE   RR.RIGHTNAME = 'VIEW_OUT_OF_STOCK_NOTIFICATION' \n" +
+          "                           and users.email is not null\n" +
+          "                           ORDER BY USername\n")*/
+  @Select("                         SELECT DISTINCT Users.ID  as userId, username,firstName ||' '|| lastName as name, email as contact   \n" +
+          "                           FROM facilities f  \n" +
+          "                           JOIN USERS ON F.ID = USERS.facilityID AND users.active = true  and restrictlogin= false\n" +
+          "                            \n" +
+          "                           and users.email is not null and f.isHIDTU = true \n" +
+          "                           ORDER BY USername")
+  List<FacilitySupervisor> getFacilitySuperVisorByRight();
+
+  @Select("SELECT DISTINCT f.code, f.name, f.description, f.id, f.geographicZoneId FROM facilities f " +
+          "INNER JOIN programs_supported ps ON f.id=ps.facilityId " +
+          "INNER JOIN requisition_group_members rgm ON f.id= rgm.facilityId " +
+          "INNER JOIN requisition_group_program_schedules rgps ON (rgps.programId = ps.programId AND rgps.requisitionGroupId=rgm.requisitionGroupId) " +
+          "WHERE ps.programId = ANY(#{programIds}::INTEGER[]) " +
+          "AND rgm.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+          "AND rgps.requisitionGroupId = ANY(#{requisitionGroupIds}::INTEGER[]) " +
+          "AND f.active = TRUE " +
+          "AND ps.active = TRUE " +
+          "AND f.virtualFacility = FALSE " +
+          " ORDER BY f.name ")
+  @Results(value = {
+          @Result(property = "geographicZone.id", column = "geographicZoneId")
+  })
+  List<Facility> getFacilitiesWithPrograms(@Param("programIds") String programIds, @Param("requisitionGroupIds") String commaSeparateIds);
+
 
 }

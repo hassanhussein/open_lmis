@@ -46,4 +46,10 @@ public interface TimelinessStatusReportMapper {
     @Select("select * from fn_get_timeliness_Reporting_Dates(#{periodId}::int) ")
     public List<TimelinessReport>getTimelinessReportingDates(@Param("periodId") Long periodId);
 
+
+    @Select("select * from fn_new_get_timeliness_reporting_dates(#{periodId}::int, #{cutOffKey}::text,#{unScheduleCutOffKey}::text) ")
+    public List<TimelinessReport>getTimelinessReportingDatesPerProgram(@Param("periodId") Long periodId,
+                                                             @Param("cutOffKey") String cutOffKey,
+                                                             @Param("unScheduleCutOffKey") String unScheduleCutOffKey);
+
 }

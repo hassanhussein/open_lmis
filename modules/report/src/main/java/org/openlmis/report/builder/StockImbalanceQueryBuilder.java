@@ -29,6 +29,8 @@ public class StockImbalanceQueryBuilder {
 
         StockImbalanceReportParam filter = (StockImbalanceReportParam) params.get(FILTER_CRITERIA_LABEL);
         Map sortCriteria = (Map) params.get("SortCriteria");
+        Boolean canViewNationalReport = (Boolean) params.get("canViewNationalReport");
+
         BEGIN();
         SELECT("distinct supplyingFacility, facilityTypeName facilityType,  facility, facilityCode, d.district_name districtName, d.region_name as regionName, d.zone_name zoneName, product, productCode,  stockInHand as physicalCount,  amc,  mos months,  required, ordered as orderQuantity, " +
                 "status");
@@ -42,7 +44,10 @@ public class StockImbalanceQueryBuilder {
         WHERE("(amc != 0 or stockInHand != 0 or reported_figures > 0)");
         WHERE(periodIsFilteredBy("periodId"));
         WHERE(programIsFilteredBy("vw_stock_status.programId"));
-        WHERE(userHasPermissionOnFacilityBy("facility_id"));
+
+        if(!canViewNationalReport) {
+            WHERE(userHasPermissionOnFacilityBy("facility_id"));
+        }
         if (filter.getFacilityType() != 0) {
             WHERE(facilityTypeIsFilteredBy("vw_stock_status.facilityTypeId"));
         }
@@ -67,6 +72,8 @@ public class StockImbalanceQueryBuilder {
 
     public static String getReportQuery(Map params) {
         StockImbalanceReportParam filter = (StockImbalanceReportParam) params.get(FILTER_CRITERIA_LABEL);
+        Boolean canViewNationalReport = (Boolean) params.get("canViewNationalReport");
+
         return "SELECT  \n" +
                 "supplyingFacility, \n" +
                 "facilityTypeName facilityType,  \n" +
@@ -85,20 +92,22 @@ public class StockImbalanceQueryBuilder {
                 "a.status\n" +
                 "\n" +
                 " FROM ( SELECT * from mv_stock_imbalance_by_facility_report WHERE \n" +
-                getPredicate(filter) + " ) a \n" +
+                getPredicate(filter, canViewNationalReport) + " ) a \n" +
                 " WHERE status in ('" + filter.getStatus().replaceAll(",", "','") + "')" +
                 " ORDER BY supplyingFacility asc, facility asc, product asc";
 
     }
 
-    private static String getPredicate(StockImbalanceReportParam filter) {
+    private static String getPredicate(StockImbalanceReportParam filter, Boolean canViewNationalReport) {
         String predicate = "";
         String reportType = filter.getReportType().replaceAll(",", "','").replaceAll("EM", "t").replaceAll("RE", "f");
 
         predicate += "  " + periodIsFilteredBy(" periodid ");
         predicate += " AND fullSupply = true ";
         predicate += " AND " + programIsFilteredBy("programId");
-        predicate += " AND " + userHasPermissionOnFacilityBy("facility_id");
+        if(!canViewNationalReport) {
+            predicate += " AND " + userHasPermissionOnFacilityBy("facility_id");
+        }
         if (filter.getFacilityType() != 0) {
             predicate += " AND " + facilityTypeIsFilteredBy("facility_type_id");
         }
@@ -128,7 +137,7 @@ public class StockImbalanceQueryBuilder {
         BEGIN();
         SELECT(" count(*) totalRecords");
         FROM(" mv_stock_imbalance_by_facility_report where fullSupply = true ");
-        getPredicate(filter);
+        getPredicate(filter, false);
         return SQL();
     }
 }

@@ -27,7 +27,7 @@ import java.text.MessageFormat;
 // todo: make the passive mode configurable.
 @Service
 public class OrderFtpSender {
-  private static final String CAMEL_FTP_PATTERN = "ftp://{0}@{1}:{2}{3}?password={4}&passiveMode=true";
+  private static final String CAMEL_FTP_PATTERN = "ftps://{0}@{1}:{2}{3}?password={4}&passiveMode=true";
 
   public void sendFile(FacilityFtpDetails supplyingFacility, File file) {
     CamelContext context = new DefaultCamelContext();

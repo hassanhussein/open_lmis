@@ -106,7 +106,12 @@ public class RnrLineItem extends LineItem {
     private Integer quantityToIssue;
     private Integer nextMonthPatient;
     private String patientCalculationFormula;
-
+    private String alternateItemCode;
+    private String owner;
+    private String revision;
+    private String uom;
+    private String quoteDate;
+    private String priceCode;
 
     @SuppressWarnings("unused")
     private Boolean skipped = false;
@@ -412,7 +417,7 @@ public class RnrLineItem extends LineItem {
     }
 
     public void copyApproverEditableFields(RnrLineItem lineItem, ProgramRnrTemplate template) {
-        String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS, SKIPPED, QUANTITY_RECEIVED, REMARKS_FOR_TB};
+        String[] approverEditableFields = {QUANTITY_APPROVED, REMARKS, SKIPPED, QUANTITY_RECEIVED, REMARKS_FOR_TB, NEXT_MONTH_PATIENT};
 
         for (String fieldName : approverEditableFields) {
             copyField(fieldName, lineItem, template);
@@ -486,6 +491,7 @@ public class RnrLineItem extends LineItem {
 
         this.productCategory = category.getName();
         this.productCategoryDisplayOrder = category.getDisplayOrder();
+        this.alternateItemCode = product.getAlternateItemCode();
     }
 
     private void requestedQuantityConditionalValidation(ProgramRnrTemplate template) {

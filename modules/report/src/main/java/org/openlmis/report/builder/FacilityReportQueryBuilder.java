@@ -20,55 +20,63 @@ import static org.openlmis.report.builder.helpers.RequisitionPredicateHelper.*;
 
 public class FacilityReportQueryBuilder {
 
-    public static String getExportQuery(Map params) {
+  public static String getExportQuery(Map params) {
 
-        FacilityReportParam filter = (FacilityReportParam) params.get("filterCriteria");
-        Long userId = (Long) params.get("userId");
-        String reportType = filter.getStatusList() != null && !filter.getStatusList().isEmpty() ?
-                filter.getStatusList().replaceAll(",", "','").replaceAll("AC", "t").replaceAll("IN", "f") : "f";
-        BEGIN();
-        SELECT("DISTINCT F.id, F.code, F.name, F.active as active, U.firstName || ' '|| U.lastName as userName, " +
-                "FT.name as facilityType, GZ.district_name as district, GZ.region_name as province," +
-                "FO.code as owner," +
-                "F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates," +
-                "F.mainphone as phoneNumber," +
-                " F.fax as fax ," +
-                "ps.id supportprogramid,ps.active activeprogram,ps.startdate,  p.id programid, p.code programcode, p.name programname");
-        FROM("facilities F");
-        JOIN("facility_types FT on FT.id = F.typeid");
-        LEFT_OUTER_JOIN("programs_supported ps on ps.facilityid = F.id");
-      LEFT_OUTER_JOIN("programs p on ps.programid=p.id");
-        LEFT_OUTER_JOIN("vw_districts GZ on GZ.district_id = F.geographiczoneid");
-        LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
-        LEFT_OUTER_JOIN("facility_owners FS on FS.facilityid = F.id");
-        JOIN("USERS U ON U.facilityId = f.id");
-        WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId + " )");
-        WHERE(facilityStatusFilteredBy("F.active", reportType));
-        if (filter.getZone() != 0) {
-            WHERE("( F.geographicZoneId = #{filterCriteria.zone} or GZ.region_id = #{filterCriteria.zone} or GZ.zone_id = #{filterCriteria.zone} or GZ.parent = #{filterCriteria.zone} ) ");
-        }
-        if (filter.getFacilityType() != 0) {
-            WHERE(facilityTypeIsFilteredBy("F.typeId"));
-        }
-        if (filter.getPeriodStart() != null && !filter.getPeriodStart().trim().isEmpty()) {
+    FacilityReportParam filter = (FacilityReportParam) params.get("filterCriteria");
+    Long userId = (Long) params.get("userId");
+    String reportType = filter.getStatusList() != null && !filter.getStatusList().isEmpty() ?
+            filter.getStatusList().replaceAll(",", "','").replaceAll("AC", "t").replaceAll("IN", "f") : "f";
+    BEGIN();
+    SELECT("DISTINCT F.id, F.code, F.name, F.active as active, U.firstName || ' '|| U.lastName as userName, " +
+            "FT.name as facilityType, GZ.district_name as district, GZ.region_name as province," +
+            "FO.code as owner," +
+            "F.latitude::text ||',' ||  F.longitude::text  ||', ' || F.altitude::text gpsCoordinates," +
+            "F.mainphone as phoneNumber," +
+            " F.fax as fax ," +
+            "ps.id supportprogramid,ps.active activeprogram,ps.startdate,  p.id programid, p.code programcode, p.name programname");
+    FROM("facilities F");
+    JOIN("facility_types FT on FT.id = F.typeid");
+    LEFT_OUTER_JOIN("programs_supported ps on ps.facilityid = F.id");
+    LEFT_OUTER_JOIN("programs p on ps.programid=p.id");
+    LEFT_OUTER_JOIN("vw_districts GZ on GZ.district_id = F.geographiczoneid");
+    LEFT_OUTER_JOIN("facility_operators FO on FO.id = F.operatedbyid");
+    LEFT_OUTER_JOIN("facility_owners FS on FS.facilityid = F.id");
+    JOIN("USERS U ON U.facilityId = f.id");
+    // WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId + " )");
+    WHERE(facilityStatusFilteredBy("F.active", reportType));
+    if (filter.getZone() != 0){
+      WHERE("( F.geographicZoneId = #{filterCriteria.zone} or GZ.region_id = #{filterCriteria.zone} or GZ.zone_id = #{filterCriteria.zone} or GZ.parent = #{filterCriteria.zone} ) ");
+    }
+    if (filter.getFacilityType() != 0){
+      WHERE(facilityTypeIsFilteredBy("F.typeId"));
+    }
+
+      /*  if (filter.getPeriodStart() != null && !filter.getPeriodStart().trim().isEmpty()) {
             WHERE(startDateFilteredBy("ps.startdate", filter.getPeriodStart().trim()));
         }
         if (filter.getPeriodEnd() != null && !filter.getPeriodEnd().trim().isEmpty()) {
             WHERE(endDateFilteredBy("ps.startdate", filter.getPeriodEnd().trim()));
-        }
-        if (filter.getFacilityOwner() != 0) {
+        }*/
+       /* if (filter.getFacilityOwner() != 0) {
             WHERE(facilityOwnerIsFilteredBy("FS.ownerid"));
-        }
-        if (filter.getProgram() != 0) {
-            WHERE(programIsFilteredBy("ps.programId"));
-            WHERE("F.id in (select facility_id from vw_user_facilities" +
-                    " where user_id = cast( #{userId} as int4) and program_id = cast(#{filterCriteria.program} as int4))");
-            WHERE("F.id in (select m.facilityid from requisition_group_members m where m.requisitionGroupId in (select rpgs.requisitionGroupId from requisition_group_program_schedules rpgs where rpgs.programId = #{filterCriteria.program}) )");
-            WHERE("ps.active = true");
-        }
-        String query = SQL();
-        return query;
+        }*/
+    if (filter.getProgram() != 0){
+      WHERE(programIsFilteredBy("ps.programId"));
     }
+    if (filter.getSchedule() != 0){
+
+      //        WHERE("F.id in (select facility_id from vw_user_facilities" +
+      //             " where user_id = cast( #{userId} as int4) and program_id = cast(#{filterCriteria.program} as int4))");
+      WHERE("F.id in (select m.facilityid from requisition_group_members m where m.requisitionGroupId in (select rpgs.requisitionGroupId from requisition_group_program_schedules rpgs where" +
+              " rpgs.programId = #{filterCriteria.program} and rpgs.scheduleid = #{filterCriteria.schedule}) )");
+      WHERE("ps.active = true");
+    }
+
+    String query = SQL();
+    System.out.println(query);
+    return query;
+  }
+
   public static String getQuery(Map params) {
 
     FacilityReportParam filter1 = (FacilityReportParam) params.get("filterCriteria");
@@ -86,22 +94,22 @@ public class FacilityReportQueryBuilder {
     JOIN("Users u on u.facilityId = f.id ");
     WHERE("F.geographicZoneId in (select distinct district_id from vw_user_facilities where user_id = " + userId + " )");
     WHERE(facilityStatusFilteredBy("F.active", reportType));
-    if (filter1.getZone() != 0) {
+    if (filter1.getZone() != 0){
       WHERE("( F.geographicZoneId = #{filterCriteria.zone} or GZ.region_id = #{filterCriteria.zone} or GZ.zone_id = #{filterCriteria.zone} or GZ.parent = #{filterCriteria.zone} ) ");
     }
-    if (filter1.getFacilityType() != 0) {
+    if (filter1.getFacilityType() != 0){
       WHERE(facilityTypeIsFilteredBy("F.typeId"));
     }
-    if (filter1.getPeriodStart() != null && !filter1.getPeriodStart().trim().isEmpty()) {
+    if (filter1.getPeriodStart() != null && !filter1.getPeriodStart().trim().isEmpty()){
       WHERE(startDateFilteredBy("ps.startdate", filter1.getPeriodStart().trim()));
     }
-    if (filter1.getPeriodEnd() != null && !filter1.getPeriodEnd().trim().isEmpty()) {
+    if (filter1.getPeriodEnd() != null && !filter1.getPeriodEnd().trim().isEmpty()){
       WHERE(endDateFilteredBy("ps.startdate", filter1.getPeriodEnd().trim()));
     }
-    if (filter1.getFacilityOwner() != 0) {
+    if (filter1.getFacilityOwner() != 0){
       WHERE(facilityOwnerIsFilteredBy("FS.ownerid"));
     }
-    if (filter1.getProgram() != 0) {
+    if (filter1.getProgram() != 0){
       WHERE(programIsFilteredBy("ps.programId"));
       WHERE("F.id in (select facility_id from vw_user_facilities where user_id = cast( #{userId} as int4) and program_id = cast(#{filterCriteria.program} as int4))");
       WHERE("F.id in (select m.facilityid from requisition_group_members m where m.requisitionGroupId in (select rpgs.requisitionGroupId from requisition_group_program_schedules rpgs where rpgs.programId = #{filterCriteria.program}) )");
@@ -110,7 +118,8 @@ public class FacilityReportQueryBuilder {
     String query = SQL();
     return query;
   }
-    public static String getProgramSupportedQuery(Map params) {
+
+  public static String getProgramSupportedQuery(Map params) {
     /*
     select ps.id,ps.active,ps.startdate,
   p.id programid, p.code, p.name
@@ -118,22 +127,43 @@ from programs_supported ps
 INNER JOIN programs p on ps.programid=p.id
 where ps.facilityid=#{filterCriteria.facilityId} and ps.active=true
      */
-        FacilityReportParam filter = (FacilityReportParam) params.get("filterCriteria");
-        Long userId = (Long) params.get("userId");
-        BEGIN();
-        SELECT("DISTINCT ps.id,ps.active,ps.startdate,  p.id programid, p.code, p.name");
-        FROM("programs_supported ps");
-        INNER_JOIN("programs p on ps.programid=p.id");
-        WHERE("ps.active=true");
-        if (filter.getPeriodStart() != null && !filter.getPeriodStart().trim().isEmpty()) {
-            WHERE(startDateFilteredBy("ps.startdate", filter.getPeriodStart().trim()));
-        }
-        if (filter.getPeriodEnd() != null && !filter.getPeriodEnd().trim().isEmpty()) {
-            WHERE(endDateFilteredBy("ps.startdate", filter.getPeriodEnd().trim()));
-        }
-        WHERE(facilityIsFilteredBy(" ps.facilityid"));
-        String query = SQL();
-        return query;
-
+    FacilityReportParam filter = (FacilityReportParam) params.get("filterCriteria");
+    Long userId = (Long) params.get("userId");
+    BEGIN();
+    SELECT("DISTINCT ps.id,ps.active,ps.startdate,  p.id programid, p.code, p.name");
+    FROM("programs_supported ps");
+    INNER_JOIN("programs p on ps.programid=p.id");
+    WHERE("ps.active=true");
+    if (filter.getPeriodStart() != null && !filter.getPeriodStart().trim().isEmpty()){
+      WHERE(startDateFilteredBy("ps.startdate", filter.getPeriodStart().trim()));
     }
+    if (filter.getPeriodEnd() != null && !filter.getPeriodEnd().trim().isEmpty()){
+      WHERE(endDateFilteredBy("ps.startdate", filter.getPeriodEnd().trim()));
+    }
+    WHERE(facilityIsFilteredBy(" ps.facilityid"));
+    String query = SQL();
+    return query;
+
+  }
+
+
+  public String getAllFacilities ()
+  {
+    return "SELECT DISTINCT F.id, F.code, F.name, F.active as active, FT.name as facilityType, \n" +
+            "GZ.district_name as District, GZ.region_name as province,FO.code as owner,F" +
+            ".mainphone " +
+            "as phoneNumber, MAX(ps.name) as groupName\n" +
+            "FROM facilities F\n" +
+            "LEFT join requisition_group_members rgm on rgm.facilityid= f.id\n" +
+            "LEFT join requisition_groups rg on rg.id = rgm.requisitiongroupid\n" +
+            "LEFT join requisition_group_program_schedules rgps on rgps.requisitiongroupid = rg.id\n" +
+            "LEFT join processing_schedules ps on ps.id = rgps.scheduleid\n" +
+            "LEFT JOIN vw_districts GZ on GZ.district_id = F.geographiczoneid\n" +
+            "LEFT  JOIN facility_operators FO on FO.id = F.operatedbyid\n" +
+            "LEFT  JOIN facility_owners FS on FS.facilityid = F.id\n" +
+            "left JOIN facility_types FT on FT.id = F.typeid\n" +
+            "group by F.id, F.code, F.name, F.active , FT.name , \n" +
+            "GZ.district_name , GZ.region_name ,FO.code ,F.mainphone \n" +
+            "order by F.id desc";
+  }
 }

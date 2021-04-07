@@ -727,7 +727,7 @@
 
                 <bean class="org.openlmis.report.Report">
                     <property name="reportKey" value="home_facility_aggregate_consumption"/>
-                    <property name="template" value="aggregate-consumption.jasper"/>
+                    <property name="template" value="aggregate-consumption_extract.jasper"/>
                     <property name="reportDataProvider" ref="aggregateConsumptionHomeFacilityReportDataProvider"/>
                     <property name="id" value="RP-Aggregate_Consumption"/>
                     <property name="name" value="Aggregate Consumption Report"/>
@@ -748,7 +748,7 @@
                     <property name="reportKey" value="home_facility_quantification_extract"/>
                     <property name="template" value="aggregate-consumption_extract.jasper"/>
                     <property name="reportDataProvider" ref="quantificationExtractHomeFacilityReportServiceDataProvider"/>
-                    <property name="id" value="quantification_extract_report"/>
+                    <property name="id" value="facility-quantification-extract"/>
                     <property name="name" value="Quantification Extract Report"/>
                     <property name="title" value="report.title.quantification.extract.report"/>
                     <property name="version" value="1.0"/>
@@ -771,6 +771,16 @@
                     <property name="id" value="RP_disaggregated Stock Status Report"/>
                     <property name="name" value="RP_disaggregated Stock Status Report"/>
                     <property name="title" value="report.title.monthly.stock.status.report"/>
+                    <property name="version" value="1.0"/>
+                </bean>
+
+                <bean class="org.openlmis.report.Report">
+                    <property name="reportKey" value="product_list_report"/>
+                    <property name="template" value="product-list-report.jasper"/>
+                    <property name="reportDataProvider" ref="productListReportDataProvider"/>
+                    <property name="id" value="RP_product List Report"/>
+                    <property name="name" value="Product List Report"/>
+                    <property name="title" value="report.title.product.list.report"/>
                     <property name="version" value="1.0"/>
                 </bean>
             </list>

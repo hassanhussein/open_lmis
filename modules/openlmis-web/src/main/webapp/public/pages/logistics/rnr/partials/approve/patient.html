@@ -23,12 +23,12 @@
                 </tr>
                 </thead>
                 <tbody ng-repeat="patientLineItem in page.patient">
-                <tr>
+                <tr ng-show="!patientLineItem.skipped ">
                     <td class="productCategory" colspan="{{(patientColumns|filter:{fixed : true}).length}}"
                         ng-show="showCategory($index)"
                         ng-bind="patientLineItem.category.name"></td>
                 </tr>
-                <tr>
+                <tr ng-show="!patientLineItem.skipped ">
                     <td class="cell-input col-{{ patientColumn.name }}"
                         ng-repeat="patientColumn in patientColumns | filter:{fixed : true}">
                         <ng-switch on="patientColumn.name">
@@ -64,18 +64,18 @@
                 </tr>
                 </thead>
                 <tbody ng-repeat="patientLineItem in page.patient">
-                <tr>
-                    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length + 4}}"
+                <tr ng-show="!patientLineItem.skipped">
+                    <td class="productCategory" colspan="{{visibleColumns.fullSupply.scrollable.length + 14}}"
                         ng-show="showCategory($index)">
                         &nbsp;
                     </td>
                 </tr>
-                <tr>
+                <tr ng-show="!patientLineItem.skipped">
                     <td class="cell-input col-beginningBalance"
                         ng-repeat="patientColumn in patientColumns | filter:{fixed : false}">
                         <ng-switch on="patientColumn.name">
                           <span ng-switch-default class="cell-text">
-                            <span ng-bind="patientLineItem[patientColumn.name]"
+                            <span ng-bind="patientLineItem[patientColumn.name] || 0"
                                   ng-disabled="disableInput($index + 1, patientLineItem.patientDisplayOrder)"
                                   class="padding2px"></span>
                           </span>

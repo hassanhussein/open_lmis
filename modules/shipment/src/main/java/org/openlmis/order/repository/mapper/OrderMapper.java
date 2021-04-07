@@ -244,4 +244,20 @@ public interface OrderMapper {
   @Select("SELECT * FROM in_bound_details WHERE lower(productCode)=lower(#{productCode}) and trackingNumber=#{trackingNumber}")
   InBoundDTO getByProductAndExpectedDate(@Param("productCode") String productCode,@Param("trackingNumber") String trackingNumber );
 
+  @Select(" SELECT * FROM orders  " +
+          " INNER JOIN requisitions r on r.id = orders.id WHERE orderNumber = #{orderNumber}")
+  @Results({
+          @Result(property = "id", column = "id"),
+          @Result(property = "rnr.id", column = "id"),
+          @Result(property = "supplyLine", javaType = SupplyLine.class, column = "supplyLineId",
+                  one = @One(select = "org.openlmis.core.repository.mapper.SupplyLineMapper.getById"))
+  })
+  Order getByOrderNumberWithRequisition(@Param("orderNumber") String orderNumber);
+
+  @Select("select * from orders JOIN requisitions r ON orders.id = r.id \n" +
+          "JOIN Facilities F ON r.facilityId = f.id\n" +
+          "where orderNumber is not null and LOWER(f.code) = LOWER(#{soldTo}) AND orderNumber <>'0' and r.status = 'RELEASED' \n" +
+          "Order By r.id desc\n" +
+          "limit 1")
+  Order getLatestOrderByFacility(@Param("soldTo") String soldTo);
 }

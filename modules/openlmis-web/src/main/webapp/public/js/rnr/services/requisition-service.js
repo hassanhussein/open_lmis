@@ -116,7 +116,7 @@ services.factory('requisitionService', function(messageService) {
         $scope.page[$scope.visibleTab] = lineItemMap[$scope.visibleTab].slice($scope.pageSize * ($scope.currentPage - 1),
             $scope.pageSize * $scope.currentPage);
 
-        if ($scope.rnr.patientLineItems.length > 0)
+        if ($scope.rnr.patientLineItems.length > 0 && $scope.rnr.program.code !='TB-MDR')
             updateCalculatedColumn($scope.page[$scope.visibleTab], $scope.rnr.patientLineItems);
 
     };
@@ -224,7 +224,7 @@ services.factory('requisitionService', function(messageService) {
             return 'scrollable';
         });
 
-        if (reportOnlyPeriod && patientLineItemsCount===0) {
+        if (reportOnlyPeriod) {
             fullSupplyVisibleColumns.scrollable = _.filter(fullSupplyVisibleColumns.scrollable, function(column) {
                 return _.contains(['skipped', 'product', 'productCode', 'dispensingUnit',
                     'stockInHand', 'stockOutDays'

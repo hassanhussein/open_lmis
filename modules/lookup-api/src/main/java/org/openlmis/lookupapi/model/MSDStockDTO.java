@@ -9,7 +9,6 @@ import org.openlmis.core.domain.BaseModel;
 import java.util.Date;
 
 @JsonPropertyOrder({
-        "IL_IDNumber",
         "Plant",
         "PartNum",
         "UOM",
@@ -21,9 +20,6 @@ import java.util.Date;
 @Setter
 @Getter
 public class MSDStockDTO extends BaseModel{
-
-    @JsonProperty("IL_IDNumber")
-    public String ilId;
 
     @JsonProperty("Plant")
     public String plant;
@@ -43,12 +39,12 @@ public class MSDStockDTO extends BaseModel{
     @JsonProperty("Date")
     public String date;
 
-    public Date onHandDate;
+    public String onHandDate;
 
     @JsonProperty("MonthOfStock")
     public Integer mos;
 
     @JsonProperty("OnHandQty")
-    public Integer onHandQuantity;
+    public double onHandQuantity;
 
 }
