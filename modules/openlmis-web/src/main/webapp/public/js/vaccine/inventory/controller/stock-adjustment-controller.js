@@ -195,6 +195,30 @@ function StockAdjustmentController($scope, $timeout,$window,$routeParams,$dialog
      };
 
 
+function checkUncheck(check){
+       _.each($scope.stockCardsToDisplay,function(productCategory){
+               _.each(productCategory.stockCards,function(product){
+               if(product.lotsOnHand.length){
+                   _.each(product.lotsOnHand,function(lot){
+                                       lot.isSkipped=check;
+                                   });
+               }else{
+               product.isSkipped=check;
+               }
+               });
+            });
+}
+
+    $scope.checkAllChanged=function(){
+    if($scope.checkAll){
+    checkUncheck(true);
+    console.log($scope.stockCardsToDisplay)
+    console.log('its checked');
+    }else{
+       checkUncheck(false);
+    }
+    }
+
       function reEvaluateTotalAdjustmentReasons()
       {
              var totalAdjustments = 0;

@@ -30,12 +30,14 @@ function ViewVaccineOrderRequisitionController($scope,StockCards, $window, $root
             facilityId: parseInt(facilit.id, 10),
             programId: parseInt(program[0].id, 10)
         }, function (data) {
+
+        console.log(data)
             $scope.pendingRequisition = data.pendingRequest;
             $scope.numberOfPages = Math.ceil($scope.pendingRequisition.length / $scope.pageSize) || 1;
             $scope.currentPage = (utils.isValidPage($routeParams.page, $scope.numberOfPages)) ? parseInt($routeParams.page, 10) : 1;
             $scope.pageLineItems = $scope.pendingRequisition.slice($scope.pageSize * ($scope.currentPage - 1), $scope.pageSize * $scope.currentPage);
             if (!$scope.pendingRequisition.length)   $scope.noRequisitions = true;
-            console.log($scope.pageLineItems);
+//            console.log($scope.pageLineItems);
 
         });
     };
