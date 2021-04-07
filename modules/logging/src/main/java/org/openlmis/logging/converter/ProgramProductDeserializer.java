@@ -10,10 +10,7 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Program;
-import org.openlmis.core.domain.ProgramProduct;
-import org.openlmis.core.serializer.MoneySerializer;
+import org.openlmis.report.model.dto.ProgramProduct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,14 +36,12 @@ public class ProgramProductDeserializer extends EntityDeserializer<ProgramProduc
         final String isacoefficientsid = node.get("isacoefficientsid").asText();
 
 
-        Program program = new Program(programid);
-        Product product = new Product();
-        product.setId(productid);
-        baseModel.setProgram(program);
-        baseModel.setProduct(product);
+
+
+        baseModel.setProgramId(programid);
+        baseModel.setProductId(productid);
         baseModel.setDosesPerMonth(dosespermonth);
         baseModel.setActive(active);
-        baseModel.setCurrentPrice(readMoneyValue(currentprice));
         baseModel.setDisplayOrder(displayorder);
         baseModel.setProductCategoryId(productcategoryid);
         baseModel.setFullSupply(fullsupply);

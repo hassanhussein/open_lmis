@@ -14,8 +14,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+
 import org.openlmis.logging.domain.TransactionHistory;
+import org.openlmis.report.model.dto.BaseDtoModel;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,10 +41,10 @@ public class EntityConverterImp {
     public TransactionHistory convert(TransactionHistory transaction) {
         TransactionSerializationInfo serializationInfo = transactionSerializationInfoMap.get(transaction.getTabname());
         if (serializationInfo != null) {
-            BaseModel newProgram = null;
+            BaseDtoModel newProgram = null;
             newProgram = this.tableEntityJsonStringToBaseModelTypeObject(transaction.getNewVal(),
                     serializationInfo.getObjectType().getClass(), serializationInfo.getJsonDeserializer());
-            BaseModel oldProgram = this.tableEntityJsonStringToBaseModelTypeObject(transaction.getOldVal(),
+            BaseDtoModel oldProgram = this.tableEntityJsonStringToBaseModelTypeObject(transaction.getOldVal(),
                     serializationInfo.getObjectType().getClass(), serializationInfo.getJsonDeserializer());
             transaction.setNewBaseModel(newProgram);
             transaction.setOldBaseModel(oldProgram);
@@ -53,8 +54,8 @@ public class EntityConverterImp {
         return transaction;
     }
 
-    public BaseModel tableEntityJsonStringToBaseModelTypeObject(String jsonString, Class<? extends BaseModel> classType, JsonDeserializer deserializer) {
-        BaseModel baseModel = null;
+    public BaseDtoModel tableEntityJsonStringToBaseModelTypeObject(String jsonString, Class<? extends BaseDtoModel> classType, JsonDeserializer deserializer) {
+        BaseDtoModel baseModel = null;
         ObjectMapper mapper = null;
         SimpleModule module = null;
         try {

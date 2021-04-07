@@ -10,9 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.GeographicLevel;
-import org.openlmis.core.domain.GeographicZone;
-import org.openlmis.core.domain.Product;
+
+import org.openlmis.report.model.dto.GeographicZone;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -29,20 +28,18 @@ public class GeographicZoneDeserializer extends EntityDeserializer<GeographicZon
 
         final String code = node.get("code").asText();
         final String name = node.get("name").asText();
-        final Long levelid = node.get("levelid").asLong();
-        final Long parentid = node.get("parentid").asLong();
+        final Integer levelid = node.get("levelid").asInt();
+        final Integer parentid = node.get("parentid").asInt();
         final Long catchmentpopulation = node.get("catchmentpopulation").asLong();
         final Double latitude = node.get("latitude").asDouble();
         final Double longitude = node.get("longitude").asDouble();
 
 
-        GeographicLevel level = new GeographicLevel(levelid);
-        GeographicZone parentZone = new GeographicZone();
-        parentZone.setId(parentid);
+
         baseModel.setCode(code);
         baseModel.setName(name);
-        baseModel.setLevel(level);
-        baseModel.setParent(parentZone);
+        baseModel.setLevelId(levelid);
+        baseModel.setParentId(parentid);
         baseModel.setLatitude(latitude);
         baseModel.setLongitude(longitude);
         baseModel.setCatchmentPopulation(catchmentpopulation);

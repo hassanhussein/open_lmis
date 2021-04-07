@@ -10,9 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Regimen;
-import org.openlmis.core.domain.RegimenCategory;
+
+import org.openlmis.report.model.dto.Regimen;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,10 +33,9 @@ public class RegimenDeserializer extends EntityDeserializer<Regimen> {
         final Boolean active = node.get("active").asBoolean();
 
 
-        RegimenCategory category= new RegimenCategory();
-        category.setId(categoryid);
+
         baseModel.setProgramId(programid);
-        baseModel.setCategory(category);
+        baseModel.setCategoryId(categoryid);
         baseModel.setCode(code);
         baseModel.setName(name);
         baseModel.setActive(active);

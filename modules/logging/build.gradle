@@ -29,6 +29,7 @@ dependencies {
             project(':modules:core'),
             project(':modules:email'),
             project(':modules:equipment'),
+            project(':modules:report'),
             project(':modules:requisition')
 
 

@@ -26,6 +26,7 @@ import org.openlmis.core.domain.Facility;
 import org.openlmis.core.domain.Money;
 import org.openlmis.core.serializer.DateDeserializer;
 import org.openlmis.core.serializer.DateSerializer;
+import org.openlmis.report.model.dto.BaseDtoModel;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -35,7 +36,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @JsonSerialize()
-public abstract class EntityDeserializer<T extends BaseModel> extends JsonDeserializer {
+public abstract class EntityDeserializer<T extends BaseDtoModel> extends JsonDeserializer {
     protected T baseModel;
     protected ObjectCodec oc;
     protected JsonNode node;
@@ -63,7 +64,7 @@ public abstract class EntityDeserializer<T extends BaseModel> extends JsonDeseri
     public abstract void createEntity();
 
     public void mapBasicValues() {
-        final Long id = node.get("id").asLong();
+        final Integer id = node.get("id").asInt();
         final Long createdby = node.get("createdby").asLong();
         final String createddate = node.get("createddate").asText();
         final Long modifiedby = node.get("modifiedby").asLong();

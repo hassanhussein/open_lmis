@@ -29,9 +29,9 @@ import static com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion.
 @AllArgsConstructor
 @JsonSerialize(include = NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Facility {
+public class Facility extends BaseDtoModel{
 
-  private Integer id;
+
   private String code;
   private String name;
   private String description;

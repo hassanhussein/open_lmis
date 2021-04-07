@@ -11,7 +11,7 @@ package org.openlmis.logging.converter;
 
 
 import org.openlmis.core.domain.Product;
-import org.openlmis.equipment.domain.ColdChainEquipmentPqsStatus;
+import  org.openlmis.report.model.dto.ColdChainEquipmentPqsStatus;
 import org.springframework.stereotype.Component;
 
 @Component

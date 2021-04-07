@@ -20,8 +20,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Regimen {
-  private int id;
+public class Regimen extends BaseDtoModel {
+
   private String name;
   private String code;
   private Long programId;

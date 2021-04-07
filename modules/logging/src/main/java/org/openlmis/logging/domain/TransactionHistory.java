@@ -13,7 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.openlmis.core.domain.BaseModel;
+
+import org.openlmis.report.model.dto.BaseDtoModel;
 
 import java.util.Date;
 
@@ -21,7 +22,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionHistory extends BaseModel {
+public class TransactionHistory extends BaseDtoModel {
     private TransactionBatch transactionBatch;
     private Date tstamp;
     private String schemaName;
@@ -31,8 +32,8 @@ public class TransactionHistory extends BaseModel {
     private String who;
     private String newVal;
     private String oldVal;
-    private BaseModel newBaseModel;
-    private BaseModel oldBaseModel;
+    private BaseDtoModel newBaseModel;
+    private BaseDtoModel oldBaseModel;
     private String sql;
 
 }

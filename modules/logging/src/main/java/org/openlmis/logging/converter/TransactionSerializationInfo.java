@@ -13,13 +13,14 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import lombok.Getter;
 import lombok.Setter;
 import org.openlmis.core.domain.BaseModel;
+import org.openlmis.report.model.dto.BaseDtoModel;
 
 @Getter
 @Setter
 public class TransactionSerializationInfo {
     private String key;
     private JsonDeserializer jsonDeserializer;
-    private BaseModel objectType;
+    private BaseDtoModel objectType;
     // report properties used by report design
     private String title;
     private String subTitle;

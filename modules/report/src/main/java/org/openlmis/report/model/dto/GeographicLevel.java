@@ -21,8 +21,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeographicLevel {
-  int id;
+public class GeographicLevel extends BaseDtoModel {
+
   String code;
   String name;
   Integer levelNumber;

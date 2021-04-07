@@ -11,7 +11,7 @@ package org.openlmis.logging.converter;
 
 
 import org.openlmis.core.domain.Product;
-import org.openlmis.equipment.domain.Equipment;
+import org.openlmis.report.model.dto.Equipment;
 import org.springframework.stereotype.Component;
 
 @Component

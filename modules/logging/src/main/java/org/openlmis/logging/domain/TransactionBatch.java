@@ -15,6 +15,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.openlmis.core.domain.BaseModel;
 import org.openlmis.logging.converter.EntityConverterImp;
+import org.openlmis.report.model.dto.BaseDtoModel;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionBatch extends BaseModel {
+public class TransactionBatch extends BaseDtoModel {
 
     private UUID uuid;
     private List<TransactionHistory> transactionHistoryList;

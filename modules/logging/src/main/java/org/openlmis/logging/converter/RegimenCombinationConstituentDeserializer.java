@@ -10,10 +10,7 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.RegimenCombinationConstituent;
-import org.openlmis.core.domain.RegimenConstituentDosage;
-import org.openlmis.core.domain.RegimenProductCombination;
+import org.openlmis.report.model.dto.RegimenCombinationConstituent;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,14 +30,11 @@ public class RegimenCombinationConstituentDeserializer extends EntityDeserialize
         final Long productcomboid = node.get("productcomboid").asLong();
         final Long productid = node.get("productid").asLong();
 
-        RegimenConstituentDosage dosage= new RegimenConstituentDosage();
-        RegimenProductCombination combination= new RegimenProductCombination();
-        Product product= new Product();
-        dosage.setId(defaultdosageid);
-        combination.setId(productcomboid);
-        baseModel.setDefaultDosage(dosage);
-        baseModel.setProductCombination(combination);
-        baseModel.setProduct(product);
+
+
+        baseModel.setDefaultDosageId(defaultdosageid);
+        baseModel.setProductCombinationId(productcomboid);
+        baseModel.setProductId(productid);
 
     }
 }

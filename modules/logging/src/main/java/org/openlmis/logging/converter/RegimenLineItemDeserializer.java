@@ -10,8 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.Product;
-import org.openlmis.rnr.domain.RegimenLineItem;
+
+import org.openlmis.report.model.dto.RegimenLineItem;
 import org.springframework.stereotype.Component;
 
 @Component

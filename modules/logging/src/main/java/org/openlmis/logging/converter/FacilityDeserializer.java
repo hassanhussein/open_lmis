@@ -16,7 +16,8 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.openlmis.core.domain.*;
+
+import org.openlmis.report.model.dto.Facility;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -42,13 +43,13 @@ public class FacilityDeserializer extends EntityDeserializer<Facility> {
 
         final String address1 = node.get("address1").asText();
         final String address2 = node.get("address2").asText();
-        final Long geographiczoneid = node.get("geographiczoneid").asLong();
-        final Long typeid = node.get("typeid").asLong();
+        final Integer geographiczoneid = node.get("geographiczoneid").asInt();
+        final Integer typeid = node.get("typeid").asInt();
         final Long catchmentpopulation = node.get("catchmentpopulation").asLong();
         final Double latitude = node.get("latitude").asDouble();
         final Double longitude = node.get("longitude").asDouble();
         final Double altitude = node.get("altitude").asDouble();
-        final Long operatedbyid = node.get("operatedbyid").asLong();
+        final Integer operatedbyid = node.get("operatedbyid").asInt();
         final Double coldstoragegrosscapacity = node.get("coldstoragegrosscapacity").asDouble();
         final Double coldstoragenetcapacity = node.get("coldstoragenetcapacity").asDouble();
         final Boolean suppliesothers = node.get("suppliesothers").asBoolean();
@@ -78,21 +79,19 @@ public class FacilityDeserializer extends EntityDeserializer<Facility> {
         baseModel.setFax(fax);
         baseModel.setAddress1(address1);
         baseModel.setAddress2(address2);
-        GeographicZone zone= new GeographicZone();
-        zone.setId(geographiczoneid);
-        baseModel.setGeographicZone(zone);
-        FacilityType type= new FacilityType();
-        type.setId(typeid);
-        baseModel.setFacilityType(type);
 
+        baseModel.setGeographicZoneId(geographiczoneid);
+
+
+        baseModel.setTypeId(typeid);
+//baseModel.setFac
 
         baseModel.setCatchmentPopulation(catchmentpopulation);
         baseModel.setLatitude(latitude);
         baseModel.setLongitude(longitude);
         baseModel.setAltitude(altitude);
-        FacilityOperator operator=new FacilityOperator();
-        operator.setId(operatedbyid);
-        baseModel.setOperatedBy(operator);
+
+        baseModel.setOperatedById(operatedbyid);
         baseModel.setColdStorageGrossCapacity(coldstoragegrosscapacity);
         baseModel.setColdStorageNetCapacity(coldstoragegrosscapacity);
         baseModel.setSuppliesOthers(suppliesothers);
@@ -100,20 +99,14 @@ public class FacilityDeserializer extends EntityDeserializer<Facility> {
         baseModel.setOnline(online);
 
         baseModel.setSatellite(satellite);
-        baseModel.setParentFacilityId(parentfacilityid);
+
         baseModel.setHasElectricity(haselectricity);
-        baseModel.setHasElectronicSCC(haselectronicscc);
-        baseModel.setHasElectronicDAR(haselectronicdar);
+        baseModel.setHasElectricity(haselectronicscc);
+        baseModel.setHasElectronicDar(haselectronicdar);
         // facility.setGoLiveDate(shownonfullsupplytab);
         // facility.setGoDownDate(hideskippedproducts);
         baseModel.setComment(comment);
 
-        baseModel.setEnabled(enabled);
-        baseModel.setVirtualFacility(virtualfacility);
-        PriceSchedule priceSchedule=new PriceSchedule();
-        priceSchedule.setId(pricescheduleid);
-        baseModel.setPriceSchedule(priceSchedule);
-        baseModel.setFeConfigured(feconfigured);
 
     }
 }

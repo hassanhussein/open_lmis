@@ -21,10 +21,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EquipmentType {
+public class EquipmentType extends BaseDtoModel {
 
-  private Integer id;
-  private String code;
-  private String name;
-  private Integer displayOrder;
+
+    private String code;
+    private String name;
+    private Integer displayOrder;
+    private Boolean isColdChain;
+    private Boolean isBioChemistry;
+    private Boolean isProgramIndependent;
 }

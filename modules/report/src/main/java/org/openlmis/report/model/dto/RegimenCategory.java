@@ -21,8 +21,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegimenCategory {
-  private int id;
+public class RegimenCategory extends BaseDtoModel{
+
   private String code;
   private String name;
   private Integer displayOrder;

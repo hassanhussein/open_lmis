@@ -25,6 +25,7 @@
     <import resource="classpath:applicationContext-db.xml"/>
     <import resource="classpath:applicationContext-core.xml"/>
     <import resource="classpath:applicationContext-equipment.xml"/>
+    <import resource="classpath:applicationContext-report.xml"/>
     <import resource="classpath:applicationContext-requisition.xml"/>
 
     <bean id="entityConverterImp" class="org.openlmis.logging.converter.EntityConverterImp">
@@ -35,7 +36,7 @@
                 <property name="jsonDeserializer" ref="equipmentCategoryDeserializer"/>
                 <property name="title" value="EquipmentCategory"/>
                 <property name="objectType">
-                    <bean class="org.openlmis.equipment.domain.EquipmentCategory">
+                    <bean class="org.openlmis.report.model.dto.EquipmentCategory">
 
                     </bean>
                 </property>
@@ -45,7 +46,7 @@
                     <property name="jsonDeserializer" ref="coldChainEquipmentDesignationDeserializer"/>
                     <property name="title" value="ColdChainEquipmentDesignation"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.ColdChainEquipmentDesignation">
+                        <bean class="org.openlmis.report.model.dto.ColdChainEquipmentDesignation">
 
                         </bean>
                     </property>
@@ -55,7 +56,7 @@
                     <property name="jsonDeserializer" ref="coldChainEquipmentPqsStatusDeserializer"/>
                     <property name="title" value="ColdChainEquipmentPqsStatus"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.ColdChainEquipmentPqsStatus">
+                        <bean class="org.openlmis.report.model.dto.ColdChainEquipmentPqsStatus">
 
                         </bean>
                     </property>
@@ -65,7 +66,7 @@
                     <property name="jsonDeserializer" ref="coldChainEquipmentDeserializer"/>
                     <property name="title" value="ColdChainEquipment"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.ColdChainEquipment">
+                        <bean class="org.openlmis.report.model.dto.ColdChainEquipment">
 
                         </bean>
                     </property>
@@ -75,7 +76,7 @@
                     <property name="jsonDeserializer" ref="equipmentEnergyTypeDeserializer"/>
                     <property name="title" value="EquipmentEnergyType"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.EquipmentEnergyType">
+                        <bean class="org.openlmis.report.model.dto.EquipmentEnergyType">
 
                         </bean>
                     </property>
@@ -85,7 +86,7 @@
                     <property name="jsonDeserializer" ref="equipmentFunctionalTestTypesDeserializer"/>
                     <property name="title" value="EquipmentFunctionalTestTypes"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.EquipmentFunctionalTestTypes">
+                        <bean class="org.openlmis.report.model.dto.EquipmentFunctionalTestTypes">
 
                         </bean>
                     </property>
@@ -96,7 +97,7 @@
                     <property name="jsonDeserializer" ref="equipmentInventoryDeserializer"/>
                     <property name="title" value="EquipmentInventory"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.EquipmentInventory">
+                        <bean class="org.openlmis.report.model.dto.EquipmentInventory">
 
                         </bean>
                     </property>
@@ -106,7 +107,7 @@
                     <property name="jsonDeserializer" ref="equipmentModelDeserializer"/>
                     <property name="title" value="EquipmentModel"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.EquipmentModel">
+                        <bean class="org.openlmis.report.model.dto.EquipmentModel">
 
                         </bean>
                     </property>
@@ -116,7 +117,7 @@
                     <property name="jsonDeserializer" ref="equipmentOperationalStatusDeserializer"/>
                     <property name="title" value="EquipmentOperationalStatus"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.EquipmentOperationalStatus">
+                        <bean class="org.openlmis.report.model.dto.EquipmentOperationalStatus">
 
                         </bean>
                     </property>
@@ -126,7 +127,7 @@
                     <property name="jsonDeserializer" ref="serviceTypeDeserializer"/>
                     <property name="title" value="ServiceType"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.ServiceType">
+                        <bean class="org.openlmis.report.model.dto.ServiceType">
 
                         </bean>
                     </property>
@@ -136,7 +137,7 @@
                     <property name="jsonDeserializer" ref="vendorDeserializer"/>
                     <property name="title" value="Vendor"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.Vendor">
+                        <bean class="org.openlmis.report.model.dto.Vendor">
 
                         </bean>
                     </property>
@@ -148,7 +149,7 @@
                     <property name="jsonDeserializer" ref="equipmentTestItemsDeserializer"/>
                     <property name="title" value="EquipmentTestItems"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.EquipmentTestItems">
+                        <bean class="org.openlmis.report.model.dto.EquipmentTestItems">
 
                         </bean>
                     </property>
@@ -158,7 +159,7 @@
                     <property name="jsonDeserializer" ref="manualTestResultCategoryDeserializer"/>
                     <property name="title" value="ManualTestResultCategory"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.ManualTestResultCategory">
+                        <bean class="org.openlmis.report.model.dto.ManualTestResultCategory">
 
                         </bean>
                     </property>
@@ -168,7 +169,7 @@
                     <property name="jsonDeserializer" ref="manualTestResultTypeDeserializer"/>
                     <property name="title" value="ManualTestResultType"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.ManualTestResultType">
+                        <bean class="org.openlmis.report.model.dto.ManualTestResultType">
 
                         </bean>
                     </property>
@@ -178,7 +179,7 @@
                     <property name="jsonDeserializer" ref="programEquipmentTypeDeserializer"/>
                     <property name="title" value="ProgramEquipmentType"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.ProgramEquipmentType">
+                        <bean class="org.openlmis.report.model.dto.ProgramEquipmentType">
 
                         </bean>
                     </property>
@@ -188,7 +189,7 @@
                     <property name="jsonDeserializer" ref="equipmentTypeDeserializer"/>
                     <property name="title" value="EquipmentType"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.EquipmentType">
+                        <bean class="org.openlmis.report.model.dto.EquipmentType">
 
                         </bean>
                     </property>
@@ -198,7 +199,7 @@
                     <property name="jsonDeserializer" ref="equipmentDeserializer"/>
                     <property name="title" value="Equipment"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.equipment.domain.Equipment">
+                        <bean class="org.openlmis.report.model.dto.Equipment">
 
                         </bean>
                     </property>
@@ -208,7 +209,7 @@
                     <property name="jsonDeserializer" ref="facilityDeserializer"/>
                     <property name="title" value="Facility"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.Facility">
+                        <bean class="org.openlmis.report.model.dto.Facility">
 
                         </bean>
                     </property>
@@ -218,7 +219,7 @@
                     <property name="jsonDeserializer" ref="facilityTypeApprovedProductDeserializer"/>
                     <property name="title" value="FacilityTypeApprovedProduct"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.FacilityTypeApprovedProduct">
+                        <bean class="org.openlmis.report.model.dto.FacilityTypeApprovedProduct">
 
                         </bean>
                     </property>
@@ -228,7 +229,7 @@
                     <property name="jsonDeserializer" ref="geographicLevelDeserializer"/>
                     <property name="title" value="GeographicLevel"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.GeographicLevel">
+                        <bean class="org.openlmis.report.model.dto.GeographicLevel">
 
                         </bean>
                     </property>
@@ -238,7 +239,7 @@
                     <property name="jsonDeserializer" ref="geographicZoneDeserializer"/>
                     <property name="title" value="GeographicZone"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.GeographicZone">
+                        <bean class="org.openlmis.report.model.dto.GeographicZone">
 
                         </bean>
                     </property>
@@ -248,7 +249,7 @@
                     <property name="jsonDeserializer" ref="lossesAndAdjustmentsTypeDeserializer"/>
                     <property name="title" value="LossesAndAdjustmentsType"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.rnr.domain.LossesAndAdjustmentsType">
+                        <bean class="org.openlmis.report.model.dto.LossesAndAdjustmentsType">
 
                         </bean>
                     </property>
@@ -258,7 +259,7 @@
                     <property name="jsonDeserializer" ref="processingPeriodDeserializer"/>
                     <property name="title" value="ProcessingPeriod"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.ProcessingPeriod">
+                        <bean class="org.openlmis.report.model.dto.ProcessingPeriod">
 
                         </bean>
                     </property>
@@ -268,7 +269,7 @@
                     <property name="jsonDeserializer" ref="processingScheduleDeserializer"/>
                     <property name="title" value="ProcessingSchedule"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.ProcessingSchedule">
+                        <bean class="org.openlmis.report.model.dto.ProcessingSchedule">
 
                         </bean>
                     </property>
@@ -278,7 +279,7 @@
                     <property name="jsonDeserializer" ref="productCategoryDeserializer"/>
                     <property name="title" value="ProductCategory"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.ProductCategory">
+                        <bean class="org.openlmis.report.model.dto.ProductCategory">
 
                         </bean>
                     </property>
@@ -288,7 +289,7 @@
                     <property name="jsonDeserializer" ref="productDeserializer"/>
                     <property name="title" value="Product"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.Product">
+                        <bean class="org.openlmis.report.model.dto.Product">
 
                         </bean>
                     </property>
@@ -298,7 +299,7 @@
                     <property name="jsonDeserializer" ref="programProductDeserializer"/>
                     <property name="title" value="ProgramProduct"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.ProgramProduct">
+                        <bean class="org.openlmis.report.model.dto.ProgramProduct">
 
                         </bean>
                     </property>
@@ -309,7 +310,7 @@
                     <property name="jsonDeserializer" ref="programDeserializer"/>
                     <property name="title" value="Program"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.Program">
+                        <bean class="org.openlmis.report.model.dto.Program">
 
                         </bean>
                     </property>
@@ -319,7 +320,7 @@
                     <property name="jsonDeserializer" ref="programSupportedDeserializer"/>
                     <property name="title" value="ProgramSupported"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.ProgramSupported">
+                        <bean class="org.openlmis.report.model.dto.ProgramSupported">
 
                         </bean>
                     </property>
@@ -329,7 +330,7 @@
                     <property name="jsonDeserializer" ref="regimenCategoryDeserializer"/>
                     <property name="title" value="RegimenCategory"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.RegimenCategory">
+                        <bean class="org.openlmis.report.model.dto.RegimenCategory">
 
                         </bean>
                     </property>
@@ -339,7 +340,7 @@
                     <property name="jsonDeserializer" ref="regimenCombinationConstituentDeserializer"/>
                     <property name="title" value="RegimenCombinationConstituent"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.RegimenCombinationConstituent">
+                        <bean class="org.openlmis.report.model.dto.RegimenCombinationConstituent">
 
                         </bean>
                     </property>
@@ -349,7 +350,7 @@
                     <property name="jsonDeserializer" ref="regimenConstituentDosageDeserializer"/>
                     <property name="title" value="RegimenConstituentDosage"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.RegimenConstituentDosage">
+                        <bean class="org.openlmis.report.model.dto.RegimenConstituentDosage">
 
                         </bean>
                     </property>
@@ -359,7 +360,7 @@
                     <property name="jsonDeserializer" ref="regimenLineItemDeserializer"/>
                     <property name="title" value="RegimenLineItem"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.rnr.domain.RegimenLineItem">
+                        <bean class="org.openlmis.report.model.dto.RegimenLineItem">
 
                         </bean>
                     </property>
@@ -369,7 +370,7 @@
                     <property name="jsonDeserializer" ref="regimenProductCombinationDeserializer"/>
                     <property name="title" value="RegimenProductCombination"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.RegimenProductCombination">
+                        <bean class="org.openlmis.report.model.dto.RegimenProductCombination">
 
                         </bean>
                     </property>
@@ -379,7 +380,7 @@
                     <property name="jsonDeserializer" ref="regimenDeserializer"/>
                     <property name="title" value="Regimen"/>
                     <property name="objectType">
-                        <bean class="org.openlmis.core.domain.Regimen">
+                        <bean class="org.openlmis.report.model.dto.Regimen">
 
                         </bean>
                     </property>

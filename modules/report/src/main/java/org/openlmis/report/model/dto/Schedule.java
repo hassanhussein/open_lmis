@@ -21,8 +21,14 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Schedule {
-  private Integer id;
+public class Schedule extends BaseDtoModel{
+  public Schedule(Integer id, String name, String code, String description) {
+    super(id);
+    this.name = name;
+    this.code = code;
+    this.description = description;
+  }
+
   private String name;
   private String code;
   private String description;

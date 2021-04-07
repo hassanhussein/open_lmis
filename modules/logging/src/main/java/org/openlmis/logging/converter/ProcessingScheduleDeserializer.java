@@ -10,8 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.ProcessingSchedule;
-import org.openlmis.core.domain.Product;
+
+import org.openlmis.report.model.dto.ProcessingSchedule;
 import org.springframework.stereotype.Component;
 
 @Component

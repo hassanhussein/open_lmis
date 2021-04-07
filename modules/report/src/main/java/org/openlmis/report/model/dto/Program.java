@@ -21,9 +21,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Program {
+public class Program extends BaseDtoModel{
 
-  private Integer id;
+
   private String name;
   private String code;
   private String description;

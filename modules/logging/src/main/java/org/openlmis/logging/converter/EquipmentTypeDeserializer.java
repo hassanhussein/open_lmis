@@ -11,7 +11,8 @@ package org.openlmis.logging.converter;
 
 
 import org.openlmis.core.domain.Product;
-import org.openlmis.equipment.domain.EquipmentType;
+
+import org.openlmis.report.model.dto.EquipmentType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,7 +29,7 @@ public class EquipmentTypeDeserializer extends EntityDeserializer<EquipmentType>
 
         final String code = node.get("code").asText();
         final String name = node.get("name").asText();
-        final Long displayorder = node.get("displayorder").asLong();
+        final Integer displayorder = node.get("displayorder").asInt();
         final Boolean iscoldchain = node.get("iscoldchain").asBoolean();
         final Boolean isbiochemistry = node.get("isbiochemistry").asBoolean();
         final Boolean categoryid = node.get("categoryid").asBoolean();
@@ -40,7 +41,7 @@ public class EquipmentTypeDeserializer extends EntityDeserializer<EquipmentType>
         baseModel.setCode(code);
         baseModel.setName(name);
         baseModel.setDisplayOrder(displayorder);
-        baseModel.setIsBioChemistry(iscoldchain);
+        baseModel.setIsColdChain(iscoldchain);
         baseModel.setIsBioChemistry(isbiochemistry);
         baseModel.setIsProgramIndependent(isprogramindependent);
 

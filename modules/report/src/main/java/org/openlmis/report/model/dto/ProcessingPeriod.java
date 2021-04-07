@@ -23,8 +23,8 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProcessingPeriod {
-  private Integer id;
+public class ProcessingPeriod extends BaseDtoModel{
+
   private String name;
   private String description;
   private Date startdate;

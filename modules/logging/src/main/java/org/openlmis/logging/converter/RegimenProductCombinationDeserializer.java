@@ -10,9 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.Regimen;
-import org.openlmis.core.domain.RegimenProductCombination;
+
+import org.openlmis.report.model.dto.RegimenProductCombination;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,9 +30,8 @@ public class RegimenProductCombinationDeserializer extends EntityDeserializer<Re
         final String name = node.get("name").asText();
 
 
-        Regimen regimen= new Regimen();
-        regimen.setId(regimenid);
-        baseModel.setRegimen(regimen);
+
+        baseModel.setRegimenId(regimenid);
         baseModel.setName(name);
 
     }

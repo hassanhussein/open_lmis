@@ -10,10 +10,7 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.FacilityType;
-import org.openlmis.core.domain.FacilityTypeApprovedProduct;
-import org.openlmis.core.domain.Product;
-import org.openlmis.core.domain.ProgramProduct;
+import org.openlmis.report.model.dto.FacilityTypeApprovedProduct;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,11 +32,8 @@ public class FacilityTypeApprovedProductDeserializer extends EntityDeserializer<
         final Double eop = node.get("eop").asDouble();
 
 
-        FacilityType facilityType= new FacilityType(facilitytypeid);
-        ProgramProduct programProduct = new ProgramProduct(programproductid);
-
-        baseModel.setFacilityType(facilityType);
-        baseModel.setProgramProduct(programProduct);
+        baseModel.setFacilityTypeId(facilitytypeid);
+        baseModel.setProgramProductId(programproductid);
         baseModel.setMaxMonthsOfStock(maxmonthsofstock);
         baseModel.setMinMonthsOfStock(minmonthsofstock);
         baseModel.setEop(eop);

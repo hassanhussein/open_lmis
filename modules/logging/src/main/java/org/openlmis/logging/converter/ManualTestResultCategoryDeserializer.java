@@ -10,8 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.ManualTestResultCategory;
-import org.openlmis.core.domain.Product;
+
+import org.openlmis.report.model.dto.ManualTestResultCategory;
 import org.springframework.stereotype.Component;
 
 @Component

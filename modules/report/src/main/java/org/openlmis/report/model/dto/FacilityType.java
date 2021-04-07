@@ -21,9 +21,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FacilityType {
+public class FacilityType extends BaseDtoModel{
 
-  private Integer id;
+
   private String name;
   private String code;
   private Integer nominalMaxmonth;

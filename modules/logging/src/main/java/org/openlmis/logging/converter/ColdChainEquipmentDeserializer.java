@@ -11,7 +11,8 @@ package org.openlmis.logging.converter;
 
 
 import org.openlmis.core.domain.Product;
-import org.openlmis.equipment.domain.ColdChainEquipment;
+
+import org.openlmis.report.model.dto.ColdChainEquipment;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,7 +27,7 @@ public class ColdChainEquipmentDeserializer extends EntityDeserializer<ColdChain
     @Override
     public void mapValues() {
 
-        final Long equipmentid = node.get("equipmentid").asLong();
+        final Integer equipmentid = node.get("equipmentid").asInt();
         final Long designationid = node.get("designationid").asLong();
         final String ccecode = node.get("ccecode").asText();
         final String pqscode = node.get("pqscode").asText();

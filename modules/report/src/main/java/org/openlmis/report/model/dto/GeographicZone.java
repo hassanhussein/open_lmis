@@ -21,9 +21,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GeographicZone {
+public class GeographicZone extends BaseDtoModel {
 
-  private Integer id;
+
   private String name;
   private String parent;
   private Integer parentId;

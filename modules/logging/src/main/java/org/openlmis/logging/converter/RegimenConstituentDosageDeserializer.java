@@ -10,7 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.*;
+
+import org.openlmis.report.model.dto.RegimenConstituentDosage;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -32,18 +33,13 @@ public class RegimenConstituentDosageDeserializer extends EntityDeserializer<Reg
         final Double quantity = node.get("quantity").asDouble();
         final Long dosageunitid = node.get("dosageunitid").asLong();
         final Long dosagefrequencyid = node.get("dosagefrequencyid").asLong();
-        RegimenCombinationConstituent constituent = new RegimenCombinationConstituent();
-        DosageUnit dosageUnit = new DosageUnit();
-        DosageFrequency dosageFrequency = new DosageFrequency();
-        constituent.setId(regimenproductid);
-        dosageUnit.setId(dosageunitid);
-        dosageFrequency.setId(dosagefrequencyid);
+
 
         BigDecimal quantityBigDecimal = new BigDecimal(quantity);
-        baseModel.setRegimenConstituent(constituent);
+        baseModel.setRegimenConstituentId(regimenproductid);
         baseModel.setQuantity(quantityBigDecimal);
-        baseModel.setDosageUnit(dosageUnit);
-        baseModel.setDosageFrequency(dosageFrequency);
+        baseModel.setDosageUnitId(dosageunitid);
+        baseModel.setDosageFrequencyId(dosagefrequencyid);
 
     }
 }

@@ -10,8 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.ProcessingPeriod;
-import org.openlmis.core.domain.Product;
+
+import org.openlmis.report.model.dto.ProcessingPeriod;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -27,7 +27,7 @@ public class ProcessingPeriodDeserializer extends EntityDeserializer<ProcessingP
     public void mapValues() {
 
         final String name = node.get("name").asText();
-        final Long scheduleid = node.get("scheduleid").asLong();
+        final Integer scheduleid = node.get("scheduleid").asInt();
         final String description = node.get("description").asText();
         final String startdate = node.get("startdate").asText();
         final String enddate = node.get("enddate").asText();
@@ -38,10 +38,9 @@ public class ProcessingPeriodDeserializer extends EntityDeserializer<ProcessingP
         baseModel.setName(name);
         baseModel.setScheduleId(scheduleid);
         baseModel.setDescription(description);
-        baseModel.setStartDate(reaDateValue(startdate));
-        baseModel.setEndDate(reaDateValue(enddate));
-        baseModel.setNumberOfMonths(numberofmonths);
-        baseModel.setEnableOrder(enableorder);
+        baseModel.setStartdate(reaDateValue(startdate));
+        baseModel.setEnddate(reaDateValue(enddate));
+
 
     }
 }

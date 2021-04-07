@@ -22,7 +22,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RnRTimeLine {
+public class RnRTimeLine extends BaseDtoModel{
     private Long rnrId;
     private Long facilityId;
     private String facility;

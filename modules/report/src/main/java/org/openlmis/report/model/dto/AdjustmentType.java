@@ -21,7 +21,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AdjustmentType {
+public class AdjustmentType extends BaseDtoModel{
 
   private String name;
   private String description;

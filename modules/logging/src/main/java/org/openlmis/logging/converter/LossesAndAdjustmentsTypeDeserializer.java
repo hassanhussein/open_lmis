@@ -10,9 +10,8 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.core.domain.Product;
-import org.openlmis.rnr.domain.LossesAndAdjustments;
-import org.openlmis.rnr.domain.LossesAndAdjustmentsType;
+
+import org.openlmis.report.model.dto.LossesAndAdjustmentsType;
 import org.springframework.stereotype.Component;
 
 @Component

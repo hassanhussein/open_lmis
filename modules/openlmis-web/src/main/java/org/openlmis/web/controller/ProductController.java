@@ -17,7 +17,6 @@ import org.openlmis.core.domain.ProductCategory;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.core.service.*;
 import org.openlmis.core.web.controller.BaseController;
-import org.openlmis.report.model.dto.*;
 import org.openlmis.web.form.ProductDTO;
 import org.openlmis.core.web.OpenLmisResponse;
 import org.springframework.beans.factory.annotation.Autowired;

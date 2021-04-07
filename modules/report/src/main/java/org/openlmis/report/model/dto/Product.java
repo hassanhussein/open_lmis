@@ -21,9 +21,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class Product extends BaseDtoModel {
 
-  private Integer id;
+
   private String name;
   private String primaryName;
   private String code;
