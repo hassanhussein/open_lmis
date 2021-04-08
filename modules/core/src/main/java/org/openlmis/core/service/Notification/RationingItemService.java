@@ -1,4 +1,4 @@
-package org.openlmis.core.service.Notification;
+package org.openlmis.core.service.notification;
 
 import org.openlmis.core.dto.notification.RationingItem;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;

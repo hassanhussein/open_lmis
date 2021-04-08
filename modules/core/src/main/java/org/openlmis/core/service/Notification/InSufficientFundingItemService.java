@@ -1,4 +1,4 @@
-package org.openlmis.core.service.Notification;
+package org.openlmis.core.service.notification;
 
 import org.openlmis.core.dto.notification.InSufficientFundingItem;
 import org.openlmis.core.dto.notification.StockOutNotificationDTO;
