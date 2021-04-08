@@ -74,5 +74,5 @@ test-modules/service-tests/
 
 .classpath
 /bin/
-run
+runserver
 stop

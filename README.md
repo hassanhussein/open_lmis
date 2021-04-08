@@ -15,7 +15,7 @@ System Requirements
 - JDK 7 +
 - Postgresql 9 +
 - Git
-- Gradle 3.2.1
+- Gradle 3.2
   * **For Linux users**
     * Download the source binary directly from the gradle website.
     * Copy the downloaded folder to `/usr/bin`
@@ -113,7 +113,7 @@ This can be caused by the timezone in `postgresql.conf` being different than you
 Tech Stack
 ---------------------------------
  - Java 1.7 +
- - Gradle 3.2.1
+ - Gradle 3.2
  - Postgres 9 +
  - Spring
  - Mybatis
