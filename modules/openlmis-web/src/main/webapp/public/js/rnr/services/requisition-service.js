@@ -225,7 +225,6 @@ services.factory('requisitionService', function(messageService) {
         });
         console.log(patientLineItemsCount);
         var validateUndefinedValue = (patientLineItemsCount === undefined)? 0:patientLineItemsCount;
-        console.log(parseInt(validateUndefinedValue,10));
 
         if (reportOnlyPeriod || parseInt(validateUndefinedValue,10) === 0) {
             fullSupplyVisibleColumns.scrollable = _.filter(fullSupplyVisibleColumns.scrollable, function(column) {
