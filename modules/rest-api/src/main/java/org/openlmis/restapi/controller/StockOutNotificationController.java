@@ -26,7 +26,7 @@ public class StockOutNotificationController extends BaseController {
 private RestStockNotificationService service;
 
     @ApiOperation(value = "Accepts Out of Stock Notification Status!", httpMethod = "POST")
-    @RequestMapping(value = "/rest-api/oos-notification.json", method = RequestMethod.POST)
+    @RequestMapping(value = "/rest-api/oos-notification-api", method = RequestMethod.POST)
     public ResponseEntity<OpenLmisResponse> submitOoos(@RequestBody StockOutNotificationDTO notification, BindingResult bindingResult, HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             return OpenLmisResponse.error(bindingResult.getGlobalError().toString(), HttpStatus.BAD_REQUEST);
@@ -40,7 +40,7 @@ private RestStockNotificationService service;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        service.sendResponse(notification);
+      //  service.sendResponse(notification);
         return OpenLmisResponse.success("Saved Successiful!");
     }
 }
