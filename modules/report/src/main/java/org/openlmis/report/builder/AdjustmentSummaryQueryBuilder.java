@@ -31,7 +31,12 @@ public class AdjustmentSummaryQueryBuilder {
     SELECT("t.description  AS  adjustmentType, extract(year from processing_periods_start_date) as year, initcap(to_char(processing_periods_start_date, 'mon')) as month");
     SELECT("adjutment_qty adjustment, processing_periods_name as period, product_category_name category, adjustment_type");
     SELECT("adjutment_qty * case when adjustment_additive  = 't' then 1 else -1 end AS signedadjustment ");
-    SELECT("adjutment_qty * pp.currentPrice as price");
+    SELECT("CASE WHEN p.packsize > 0 THEN \n" +
+            "(adjutment_qty/p.packsize) * pp.currentPrice\n" +
+            "ELSE\n" +
+            "adjutment_qty * pp.currentPrice\n" +
+            "END\n" +
+            "as price");
     SELECT(" coalesce(beginningbalance,0) + coalesce(quantityreceived,0)  as total ");
     FROM(" mv_requisition_adjustment ");
     JOIN(" facilities f on f.id = mv_requisition_adjustment.facility_id ");
