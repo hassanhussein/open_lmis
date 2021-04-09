@@ -16,7 +16,7 @@ function ApproveRnrController($scope, requisitionData, comments, Requisitions, R
   $scope.rnrColumns = rnrColumns;
   $scope.regimenColumns = regimenTemplate ? regimenTemplate.columns : [];
   $scope.pageSize = pageSize;
-  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, [], !$scope.rnr.period.enableOrder);
+  $scope.visibleColumns = requisitionService.getMappedVisibleColumns(rnrColumns, RegularRnrLineItem.frozenColumns, [], !$scope.rnr.period.enableOrder, $scope.rnr.patientLineItems.length);
   $scope.error = $scope.message = "";
   $scope.regimenCount = $scope.rnr.regimenLineItems.length;
   $scope.patientCount = $scope.rnr.patientLineItems.length;

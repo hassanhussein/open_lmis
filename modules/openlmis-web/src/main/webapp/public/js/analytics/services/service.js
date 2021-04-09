@@ -640,6 +640,9 @@ services.factory('GetNumberOfEmergency', function($resource) {
 services.factory('GetPercentageOfEmergencyOrderByProgram', function($resource) {
     return $resource('/api//dashboard/getPercentageOfEmergencyOrderByProgram.json', {}, {});
 });
+services.factory('GetPendingWorkload', function($resource) {
+    return $resource('/api/dashboard/getPendingWorkload.json', {}, {});
+});
 services.factory('GetEmergencyOrderByProgram', function($resource) {
     return $resource('/api//dashboard/getEmergencyOrderByProgram.json', {}, {});
 });
@@ -826,6 +829,26 @@ services.factory('GetGeoStockStatusDetails', function($resource) {
 
 services.factory('StockOutRate', function($resource) {
     return $resource('/api/dashboard/getStockOutRate.json', {}, {});
+});
+
+services.factory('GetPendingWorkloadData', function($q, $timeout, $resource, GetPendingWorkload) {
+    function get() {
+        var deferred = $q.defer();
+        $timeout(function() {
+            GetPendingWorkload.get(function(data) {
+                var rnrStatus = [];
+                if (data !== undefined) {
+                    rnrStatus = data.status;
+                }
+                deferred.resolve(rnrStatus);
+            });
+
+        }, 100);
+        return deferred.promise;
+    }
+    return {
+        get: get
+    };
 });
 
 services.factory('StockOutRateData', function($q, $timeout, $resource, StockOutRate) {
