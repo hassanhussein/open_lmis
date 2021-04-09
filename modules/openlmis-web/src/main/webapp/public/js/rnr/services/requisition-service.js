@@ -223,10 +223,9 @@ services.factory('requisitionService', function(messageService) {
 
             return 'scrollable';
         });
-        console.log(patientLineItemsCount);
         var validateUndefinedValue = (patientLineItemsCount === undefined)? 0:patientLineItemsCount;
 
-        if (reportOnlyPeriod || parseInt(validateUndefinedValue,10) === 0) {
+        if (reportOnlyPeriod && parseInt(validateUndefinedValue,10) ===0) {
             fullSupplyVisibleColumns.scrollable = _.filter(fullSupplyVisibleColumns.scrollable, function(column) {
                 return _.contains(['skipped', 'product', 'productCode', 'dispensingUnit',
                     'stockInHand', 'stockOutDays'
