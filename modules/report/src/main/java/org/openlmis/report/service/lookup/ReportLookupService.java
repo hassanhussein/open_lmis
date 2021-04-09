@@ -16,6 +16,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.openlmis.core.domain.*;
+import org.openlmis.core.domain.ProductGroup;
 import org.openlmis.core.repository.helper.CommaSeparator;
 import org.openlmis.core.repository.mapper.FacilityMapper;
 import org.openlmis.core.service.*;
