@@ -232,6 +232,10 @@ public class AnalyticsController extends BaseController {
     public ResponseEntity<OpenLmisResponse> getPercentageOfEmergencyOrderByProgram() {
         return OpenLmisResponse.response("emergency", this.requisitionStatusMapper.getPercentageOfEmergencyOrderByProgram());
     }
+    @RequestMapping(value = "/getPendingWorkload", method = GET, headers = ACCEPT_JSON)
+    public ResponseEntity<OpenLmisResponse> getPendingWorkload() {
+        return OpenLmisResponse.response("status", this.requisitionStatusMapper.pendingWorkLoad());
+    }
     @RequestMapping(value = "/getEmergencyOrderByProgram.json", method = GET, headers = ACCEPT_JSON)
     public ResponseEntity<OpenLmisResponse> getEmergencyOrderByProgram() {
         return OpenLmisResponse.response("emergency", this.requisitionStatusMapper.getEmergencyOrderByProgram());
