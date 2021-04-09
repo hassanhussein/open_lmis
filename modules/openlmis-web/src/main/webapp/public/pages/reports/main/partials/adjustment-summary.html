@@ -30,7 +30,7 @@
         <div class="sidebar">
           <div class="app-form " style="padding: 5px;">
             <form ng-submit="filterGrid()" name="filterForm" novalidate>
-              <div filter-container class="clearfix">
+              <div filter-container class="clearfix" id="table-wrapper">
                 <program-filter class="form-cell horizontalFilters" required="true"></program-filter>
                 <schedule-filter class="form-cell horizontalFilters" required="true"></schedule-filter>
                 <year-filter class="form-cell horizontalFilters" required="true"></year-filter>
@@ -69,7 +69,7 @@
 
           <div ng-show="datarows.length > 0">
             <div top-right-table-summary></div>
-            <table ng-show="datarows.length > 0" class="table-bordered table table-striped pull-right" ng-table="">
+            <table ng-show="datarows.length > 0" class="table-bordered table custom-table-style table-striped table-responsive pull-right" ng-table="">
               <tbody>
               <tr ng-repeat="row in datarows">
                 <td data-title="'#'" class="number" style="width:20px;">{{ row.no + countFactor}}</td>
