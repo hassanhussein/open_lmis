@@ -56,7 +56,7 @@ public class FacilityDeserializer extends EntityDeserializer<Facility> {
         final Boolean sdp = node.get("sdp").asBoolean();
         final Boolean online = node.get("online").asBoolean();
         final Boolean satellite = node.get("satellite").asBoolean();
-        final Long parentfacilityid = node.get("parentfacilityid").asLong();
+        final Integer parentfacilityid = node.get("parentfacilityid").asInt();
         final Boolean haselectricity = node.get("haselectricity").asBoolean();
         final Boolean haselectronicscc = node.get("haselectronicscc").asBoolean();
         final Boolean haselectronicdar = node.get("haselectronicdar").asBoolean();
@@ -99,12 +99,14 @@ public class FacilityDeserializer extends EntityDeserializer<Facility> {
         baseModel.setOnline(online);
 
         baseModel.setSatellite(satellite);
+        baseModel.setSatelliteParentId(parentfacilityid);
 
         baseModel.setHasElectricity(haselectricity);
         baseModel.setHasElectricity(haselectronicscc);
         baseModel.setHasElectronicDar(haselectronicdar);
-        // facility.setGoLiveDate(shownonfullsupplytab);
-        // facility.setGoDownDate(hideskippedproducts);
+
+        baseModel.setGoLiveDate(reaDateValue(golivedate));
+         baseModel.setGoDownDate(reaDateValue(godowndate));
         baseModel.setComment(comment);
 
 

@@ -10,16 +10,17 @@
 package org.openlmis.logging.converter;
 
 
-import org.openlmis.report.model.dto.Product;
+
+import org.openlmis.report.model.dto.ProductDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProductDeserializer extends EntityDeserializer<Product> {
+public class ProductDeserializer extends EntityDeserializer<ProductDTO> {
 
 
     @Override
     public void createEntity() {
-        super.setBaseModel(new Product());
+        super.setBaseModel(new ProductDTO());
     }
 
     @Override
@@ -73,16 +74,61 @@ public class ProductDeserializer extends EntityDeserializer<Product> {
         final Boolean active = node.get("active").asBoolean();
 
         final Boolean fullsupply = node.get("fullsupply").asBoolean();
-        final String tracer = node.get("tracer").asText();
+        final Boolean tracer = node.get("tracer").asBoolean();
         final Boolean roundtozero = node.get("roundtozero").asBoolean();
         final Boolean archived = node.get("archived").asBoolean();
         final Integer packroundingthreshold = node.get("packroundingthreshold").asInt();
         final Integer mslpacksize = node.get("mslpacksize").asInt();
 
 
-        baseModel.setCode(code);
-        baseModel.setPrimaryName(primaryname);
-        baseModel.setTracer(tracer);
 
+        baseModel.setCode(code);
+        baseModel.setAlternateItemCode(alternateitemcode);
+        baseModel.setManufacturer(manufacturer);
+        baseModel.setManufacturerCode(manufacturercode);
+        baseModel.setManufacturerBarCode(manufacturerbarcode);
+        baseModel.setMohBarCode(mohbarcode);
+        baseModel.setGtin(gtin);
+        baseModel.setType(type);
+        baseModel.setPrimaryName(primaryname);
+        baseModel.setFullName(fullname);
+        baseModel.setGenericName(genericname);
+        baseModel.setAlternateName(alternatename);
+        baseModel.setDescription(description);
+        baseModel.setDescription(description);
+        baseModel.setStrength(strength);
+        baseModel.setFormId(formid);
+        baseModel.setDosageUnitId(dosageunitid);
+        baseModel.setProductGroupId(productgroupid);
+        baseModel.setDispensingUnit(dispensingunit);
+        baseModel.setDosesPerDispensingUnit(dosesperdispensingunit);
+        baseModel.setPackSize(packsize);
+        baseModel.setAlternatePackSize(alternatepacksize);
+        baseModel.setStoreRefrigerated(storerefrigerated);
+        baseModel.setStoreRoomTemperature(storeroomtemperature);
+        baseModel.setHazardous(hazardous);
+        baseModel.setFlammable(flammable);
+        baseModel.setControlledSubstance(controlledsubstance);
+        baseModel.setLightSensitive(lightsensitive);
+        baseModel.setApprovedByWHO(approvedbywho);
+        baseModel.setContraceptiveCYP(contraceptivecyp);
+        baseModel.setPackLength(packlength);
+        baseModel.setPackWidth(packwidth);
+        baseModel.setPackWeight(packweight);
+        baseModel.setPacksPerCarton(packspercarton);
+        baseModel.setCartonLength(cartonlength);
+        baseModel.setCartonWidth(cartonwidth);
+        baseModel.setCartonHeight(cartonheight);
+        baseModel.setCartonsPerPallet(cartonsperpallet);
+        baseModel.setExpectedShelfLife(expectedshelflife);
+        baseModel.setSpecialStorageInstructions(specialstorageinstructions);
+        baseModel.setSpecialTransportInstructions(specialtransportinstructions);
+        baseModel.setActive(active);
+        baseModel.setFullSupply(fullsupply);
+        baseModel.setTracer(tracer);
+        baseModel.setRoundToZero(roundtozero);
+        baseModel.setArchived(archived);
+        baseModel.setPackRoundingThreshold(packroundingthreshold);
+        baseModel.setMslPackSize(mslpacksize);
     }
 }

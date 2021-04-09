@@ -9,27 +9,20 @@
  */
 package org.openlmis.logging.converter;
 
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.ObjectCodec;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-
 import org.openlmis.report.model.dto.Program;
+import org.openlmis.report.model.dto.ProgramDTO;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Date;
 
 @Component
-public class ProgramDeserializer extends EntityDeserializer<Program> {
+public class ProgramDeserializer extends EntityDeserializer<ProgramDTO> {
 
 
     @Override
     public void createEntity() {
-        super.setBaseModel(new Program());
+        super.setBaseModel(new ProgramDTO());
     }
 
     @Override
@@ -58,6 +51,13 @@ public class ProgramDeserializer extends EntityDeserializer<Program> {
         baseModel.setCode(code);
         baseModel.setName(name);
         baseModel.setDescription(description);
-
+        baseModel.setActive(active);
+        baseModel.setTemplateConfigured(templateconfigured);
+        baseModel.setRegimenTemplateConfigured(regimentemplateconfigured);
+        baseModel.setBudgetingApplies(budgetingapplies);
+        baseModel.setPush(push);
+        baseModel.setIsEquipmentConfigured(isequipmentconfigured);
+        baseModel.setHideSkippedProducts(hideskippedproducts);
+        baseModel.setShowNonFullSupplyTab(shownonfullsupplytab);
     }
 }
