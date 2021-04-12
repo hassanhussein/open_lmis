@@ -525,12 +525,12 @@ function AnalyticsFunction(notifications, $stateParams, GetEmergencyAndRegularRn
 
         GetPendingWorkloadData.get({
             associatedDashlets: ['pendingWorkloadReport']
-        }).then( data => {
+        }).then( function (data) {
             var chartId = 'pendingWorkload';
             var category = _.pluck(data, 'status');
             var value = _.pluck(data, 'count');
             loadTheChart(category, value, chartId, 'column', 'R&R', '', '# of requisitions');
-        })
+        });
 
         // GetTrendOfEmergencyOrdersSubmittedPerMonthData.get({
         //     associatedDashlets: ['trendOfEmergencyOrderPerMonth', 'trendOfRegularOrdersSubmittedPerMonth']
