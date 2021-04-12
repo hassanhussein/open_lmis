@@ -202,4 +202,12 @@ public interface ILInterfaceMapper {
 
     @Delete("DELETE FROM msd_stock_statuses WHERE facilityId = #{facilityId}")
     void deleteByPlant(@Param("facilityId") Long facilityId);
+
+    @Select(" REFRESH MATERIALIZED VIEW mv_stock_imbalance_by_facility_report;\n" +
+            "REFRESH MATERIALIZED VIEW mv_requisition_adjustment;\n" +
+            "REFRESH MATERIALIZED VIEW mv_quantification_extraction;\n" +
+            "Refresh materialized view mv_dashboard_consumption_summary;\n" +
+            "REFRESH MATERIALIZED VIEW mv_logistics_summary_report;\n" +
+            "REFRESH MATERIALIZED VIEW mv_dashboard_wastage_line_items;")
+    void refreshViews();
 }

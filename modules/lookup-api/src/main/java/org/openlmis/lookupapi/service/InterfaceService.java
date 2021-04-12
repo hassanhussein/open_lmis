@@ -113,7 +113,10 @@ public class InterfaceService {
     @Async("myExecutor")
     public void sendResponse(HealthFacilityDTO d) throws InterruptedException {
 
-        String username = settingService.getByKey(IL_USERNAME).getValue();
+        interfaceMapper.refreshViews();
+        System.out.println("completed to run materialized");
+
+      /*  String username = settingService.getByKey(IL_USERNAME).getValue();
         System.out.println(username);
         String password = settingService.getByKey(IL_PASSWORD).getValue();
         System.out.println(password);
@@ -142,7 +145,7 @@ public class InterfaceService {
             }
 
 
-        }
+        }*/
 
 
     }
