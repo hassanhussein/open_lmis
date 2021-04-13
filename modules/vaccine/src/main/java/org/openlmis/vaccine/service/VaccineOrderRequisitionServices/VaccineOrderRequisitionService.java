@@ -271,7 +271,7 @@ public class VaccineOrderRequisitionService {
     }
 
     public List<OrderRequisitionDTO> getPendingRequest(Long userId, Long facilityId,String searchParam,String column) {
-
+        //System.out.println(userId+" USERID");
         List<Program> vaccineProgram = programService.getAllIvdPrograms();
         if (vaccineProgram != null) {
             Long programId = vaccineProgram.get(0).getId();
