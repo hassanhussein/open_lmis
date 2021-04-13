@@ -31,6 +31,22 @@
     </bean>
 
     <bean id="restApiAuthenticationProvider"
-                class="org.openlmis.restapi.authentication.RestApiAuthenticationProvider"/>
+          class="org.openlmis.restapi.authentication.RestApiAuthenticationProvider"/>
+
+    <bean id="modelConversionProcessor" class="org.openlmis.restapi.converter.ModelConversionProcessor">
+        <constructor-arg index="0">
+            <list>
+                <bean class="org.openlmis.restapi.converter.ModelConversionInfo">
+                    <property name="key" value="EquipmentInventoryStatus"/>
+                    <property name="entityConverter" ref="equipmentOperationalStatusAdapter"/>
+
+                </bean>
+
+
+            </list>
+
+        </constructor-arg>
+
+    </bean>
 
 </beans>

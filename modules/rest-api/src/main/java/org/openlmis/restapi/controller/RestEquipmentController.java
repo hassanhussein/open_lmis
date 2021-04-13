@@ -16,8 +16,11 @@
 package org.openlmis.restapi.controller;
 
 import lombok.NoArgsConstructor;
+import org.openlmis.core.domain.Facility;
 import org.openlmis.core.exception.DataException;
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.restapi.converter.ModelConversionProcessor;
+import org.openlmis.restapi.domain.FacilityEquipmentStatusReport;
 import org.openlmis.restapi.response.RestResponse;
 import org.openlmis.restapi.service.RestAgentService;
 import org.openlmis.restapi.service.RestEquipmentService;
@@ -31,13 +34,15 @@ import java.security.Principal;
 import java.util.List;
 
 import static org.openlmis.restapi.response.RestResponse.error;
+import static org.openlmis.restapi.response.RestResponse.response;
 import static org.openlmis.restapi.response.RestResponse.success;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @NoArgsConstructor
-public class RestEquipmentController extends BaseController  {
+public class RestEquipmentController extends BaseController {
 
     @Autowired
     private RestEquipmentService restEquipmentService;
@@ -52,11 +57,12 @@ public class RestEquipmentController extends BaseController  {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
     }
+
     @RequestMapping(value = "/rest-api/equipment-inventoryList", method = POST, headers = ACCEPT_JSON)
     public ResponseEntity<RestResponse> addEquipmentInventoryList(@RequestBody List<EquipmentInventory> equipmentList, Principal principal) {
         try {
-            if(equipmentList!=null && !equipmentList.isEmpty()) {
-                equipmentList.stream().forEach((agent)->{
+            if (equipmentList != null && !equipmentList.isEmpty()) {
+                equipmentList.stream().forEach((agent) -> {
                     restEquipmentService.addEquipmentInventory(agent, loggedInUserId(principal));
                 });
 
@@ -67,4 +73,18 @@ public class RestEquipmentController extends BaseController  {
             return error(e.getOpenLmisMessage(), BAD_REQUEST);
         }
     }
+
+
+    @RequestMapping(value = "/rest-api/equipment-inventory-statuses", method = POST, headers = ACCEPT_JSON)
+    public ResponseEntity<RestResponse> submitEquipmentStatus(@RequestBody FacilityEquipmentStatusReport report, Principal principal) {
+
+
+        try {
+            restEquipmentService.addEquipmentStatus(report, loggedInUserId(principal));
+        } catch (DataException e) {
+            return error(e.getOpenLmisMessage(), BAD_REQUEST);
+        }
+        return success("message.success.agent.created");
+    }
+
 }

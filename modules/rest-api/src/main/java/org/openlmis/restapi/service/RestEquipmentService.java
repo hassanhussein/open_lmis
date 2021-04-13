@@ -11,16 +11,37 @@
 package org.openlmis.restapi.service;
 
 import org.openlmis.equipment.domain.EquipmentInventory;
+import org.openlmis.equipment.domain.EquipmentInventoryStatus;
 import org.openlmis.equipment.service.EquipmentInventoryService;
+import org.openlmis.restapi.converter.ModelConversionProcessor;
+import org.openlmis.restapi.domain.FacilityEquipmentStatusReport;
+import org.openlmis.rnr.domain.EquipmentLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class RestEquipmentService {
     @Autowired
     EquipmentInventoryService inventoryService;
-    public EquipmentInventory addEquipmentInventory(EquipmentInventory inventory,Long userId){
+
+    @Autowired
+    private ModelConversionProcessor conversionProcessor;
+
+    public EquipmentInventory addEquipmentInventory(EquipmentInventory inventory, Long userId) {
         inventoryService.uploadEquipmentInventory(inventory);
         return inventory;
     }
+
+    public void addEquipmentStatus(FacilityEquipmentStatusReport report, Long aLong) {
+
+        List<EquipmentInventoryStatus> equipmentInventoryStatusList = null;
+
+        equipmentInventoryStatusList = (List<EquipmentInventoryStatus>)
+                conversionProcessor.process(report.getReportList(),
+                        "EquipmentInventoryStatus");
+        inventoryService.addEquipmentStatus(equipmentInventoryStatusList);
+    }
+
 }

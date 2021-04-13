@@ -181,10 +181,18 @@ public class EquipmentInventoryRepository {
     }
 
     public List<EquipmentInventory> getEquipmentInventoriesForFacilityByCode(String facilityInfo) {
-        return mapper.getEquipmentInventoriesForFacilityByCode( facilityInfo);
+        return mapper.getEquipmentInventoriesForFacilityByCode(facilityInfo);
     }
 
     public List<EquipmentInventory> getEquipmentInventoriesForFacilityId(Long facilityId) {
-        return mapper.getEquipmentInventoriesForFacilityId( facilityId);
+        return mapper.getEquipmentInventoriesForFacilityId(facilityId);
     }
+
+    public void addEquipmentStatus(List<EquipmentInventoryStatus> equipmentInventoryStatusList) {
+
+        for (EquipmentInventoryStatus status : equipmentInventoryStatusList) {
+            equipmentInventoryStatusMapper.insert(status);
+        }
+    }
+
 }

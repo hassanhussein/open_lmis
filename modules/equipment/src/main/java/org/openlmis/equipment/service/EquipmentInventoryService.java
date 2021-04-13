@@ -225,4 +225,9 @@ public class EquipmentInventoryService {
 
         return equipmentInventory;
     }
+
+    public void addEquipmentStatus(List<EquipmentInventoryStatus> equipmentInventoryStatusList) {
+
+        repository.addEquipmentStatus(equipmentInventoryStatusList);
+    }
 }
