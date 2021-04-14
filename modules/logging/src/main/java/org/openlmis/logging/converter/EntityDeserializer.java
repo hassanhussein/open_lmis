@@ -37,15 +37,45 @@ import java.util.Date;
 @NoArgsConstructor
 @JsonSerialize()
 public abstract class EntityDeserializer<T extends BaseDtoModel> extends JsonDeserializer {
+    enum DateFormat
+
+    {
+        FULL_TIME_STAMP,
+        TIME_STAMP_ONLY,
+        DATE_ONLY;
+
+
+    }
+
     protected T baseModel;
     protected ObjectCodec oc;
     protected JsonNode node;
     protected ObjectMapper mapper;
-    private static final ThreadLocal<SimpleDateFormat> sdf =
+    private static final ThreadLocal<SimpleDateFormat> sftf =
             ThreadLocal.<SimpleDateFormat>withInitial(
                     () -> {
                         return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                     });
+    private static final ThreadLocal<SimpleDateFormat> stf =
+            ThreadLocal.<SimpleDateFormat>withInitial(
+                    () -> {
+                        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    });
+    private static final ThreadLocal<SimpleDateFormat> sdf =
+            ThreadLocal.<SimpleDateFormat>withInitial(
+                    () -> {
+                        return new SimpleDateFormat("yyyy-MM-dd");
+                    });
+
+    private SimpleDateFormat getDateFormat(String dateFormat) {
+        if (dateFormat.equalsIgnoreCase(DateFormat.DATE_ONLY.toString())) {
+            return sdf.get();
+        } else if (dateFormat.equalsIgnoreCase(DateFormat.TIME_STAMP_ONLY.toString())) {
+            return stf.get();
+        } else {
+            return sftf.get();
+        }
+    }
 
     @Override
     public T deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
@@ -72,25 +102,28 @@ public abstract class EntityDeserializer<T extends BaseDtoModel> extends JsonDes
 
         baseModel.setId(id);
         baseModel.setCreatedBy(createdby);
-        baseModel.setCreatedDate(reaDateValue(createddate));
+        baseModel.setCreatedDate(reaDateValue(createddate, DateFormat.FULL_TIME_STAMP.toString()));
         baseModel.setModifiedBy(modifiedby);
         baseModel.setModifiedBy(modifiedby);
-        baseModel.setModifiedDate(reaDateValue(modifieddate));
+        baseModel.setModifiedDate(reaDateValue(modifieddate, DateFormat.FULL_TIME_STAMP.toString()));
 
     }
 
     public abstract void mapValues();
 
-    public Date reaDateValue(String stringDate) {
+    public Date reaDateValue(String stringDate, String format) {
 
         Date date = null;
-        try {
-            date = sdf.get().parse(stringDate);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (stringDate != null && !stringDate.trim().equalsIgnoreCase("")&& !stringDate.trim().equalsIgnoreCase("null")) {
+            try {
+                date = this.getDateFormat(format).parse(stringDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return date;
     }
+
     public Money readMoneyValue(String moneyAsString) {
         Money money = null;
         try {

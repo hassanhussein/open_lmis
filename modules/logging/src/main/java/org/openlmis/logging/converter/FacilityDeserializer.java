@@ -105,8 +105,8 @@ public class FacilityDeserializer extends EntityDeserializer<Facility> {
         baseModel.setHasElectricity(haselectronicscc);
         baseModel.setHasElectronicDar(haselectronicdar);
 
-        baseModel.setGoLiveDate(reaDateValue(golivedate));
-         baseModel.setGoDownDate(reaDateValue(godowndate));
+        baseModel.setGoLiveDate(reaDateValue(golivedate,DateFormat.DATE_ONLY.toString()));
+         baseModel.setGoDownDate(reaDateValue(godowndate,DateFormat.DATE_ONLY.toString()));
         baseModel.setComment(comment);
 
 

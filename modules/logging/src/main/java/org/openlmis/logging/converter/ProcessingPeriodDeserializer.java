@@ -38,8 +38,8 @@ public class ProcessingPeriodDeserializer extends EntityDeserializer<ProcessingP
         baseModel.setName(name);
         baseModel.setScheduleId(scheduleid);
         baseModel.setDescription(description);
-        baseModel.setStartdate(reaDateValue(startdate));
-        baseModel.setEnddate(reaDateValue(enddate));
+        baseModel.setStartdate(reaDateValue(startdate,DateFormat.FULL_TIME_STAMP.toString()));
+        baseModel.setEnddate(reaDateValue(enddate,DateFormat.FULL_TIME_STAMP.toString()));
 
 
     }
