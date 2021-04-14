@@ -46,7 +46,7 @@ public interface RejectionReasonMapper {
     })
     List<RejectionReason> getByRnrId(Long rnrId);
 
-    @Select("select * from rejections ")
+    @Select("select * from rejections where is_active=true")
     List<Map<String,Object>>getAllRejections();
 
     @Insert("INSERT INTO public.rejection_reasons(\n" +
